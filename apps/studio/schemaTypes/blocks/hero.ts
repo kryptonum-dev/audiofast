@@ -14,7 +14,7 @@ export const hero = defineType({
       type: "string",
       title: "Badge",
       description:
-        "Optional badge text displayed above the title, useful for highlighting new features or promotions",
+        "Optional badgedisplayed above the title, useful for highlighting new features or promotions",
     }),
     defineField({
       name: "title",
