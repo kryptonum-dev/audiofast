@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "lint": "eslint . --max-warnings 0"
+    "lint": "bun run eslint . --max-warnings 0"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",

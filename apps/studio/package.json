@@ -5,15 +5,15 @@
   "main": "package.json",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "sanity dev",
-    "format": "prettier --write .",
-    "start": "sanity start",
-    "lint": "eslint .",
-    "build": "sanity build",
-    "deploy": "sanity deploy",
-    "type": "sanity schema extract --enforce-required-fields && sanity typegen generate",
-    "check-types": "tsc --noEmit",
-    "postinstall": "sanity exec scripts/cli-alert-for-data.ts"
+    "dev": "bun run sanity dev",
+    "format": "bun run prettier --write .",
+    "start": "bun run sanity start",
+    "lint": "bun run eslint .",
+    "build": "bun run sanity build",
+    "deploy": "bun run sanity deploy",
+    "type": "bun run sanity schema extract --enforce-required-fields && bun run sanity typegen generate",
+    "check-types": "bun run tsc --noEmit",
+    "postinstall": "bun run sanity exec scripts/cli-alert-for-data.ts"
   },
   "keywords": [
     "sanity"

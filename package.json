@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "check-types": "turbo check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "build": "bun run turbo build",
+    "dev": "bun run turbo dev",
+    "lint": "bun run turbo lint",
+    "check-types": "bun run turbo check-types",
+    "format": "bun run prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
@@ -16,8 +16,16 @@
     "turbo": "^2.5.4",
     "typescript": "5.7.3"
   },
-  "packageManager": "pnpm@10.12.2",
+  "packageManager": "bun@1.1.42",
   "engines": {
     "node": ">=20"
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "trustedDependencies": [
+    "core-js-pure",
+    "studio"
+  ]
 }
