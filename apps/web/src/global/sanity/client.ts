@@ -1,3 +1,7 @@
+import type { SanityImageSource } from "@sanity/asset-utils";
+import createImageUrlBuilder from "@sanity/image-url";
+import { createClient } from "next-sanity";
+
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {
     throw new Error(errorMessage);
@@ -25,3 +29,23 @@ export const apiVersion =
  */
 export const studioUrl =
   process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || "http://localhost:3333";
+
+export const client = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: process.env.NODE_ENV === "production",
+  perspective: "published",
+  stega: {
+    studioUrl,
+    enabled: process.env.NEXT_PUBLIC_VERCEL_ENV === "preview",
+  },
+});
+
+const imageBuilder = createImageUrlBuilder({
+  projectId: projectId,
+  dataset: dataset,
+});
+
+export const urlFor = (source: SanityImageSource) =>
+  imageBuilder.image(source).auto("format").fit("max").format("webp");

@@ -2,7 +2,7 @@ import type {
   QueryBlogSlugPageDataResult,
   QueryHomePageDataResult,
   QueryImageTypeResult,
-} from "./lib/sanity/sanity.types";
+} from "./sanity/sanity.types";
 
 export type PageBuilderBlockTypes = NonNullable<
   NonNullable<QueryHomePageDataResult>["pageBuilder"]

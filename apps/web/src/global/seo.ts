@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import type { Maybe } from "@/types";
-import { capitalize } from "@/utils";
+import type { Maybe } from "@/global/types";
+import { capitalize } from "@/global/utils";
 
-import { getBaseUrl } from "../config";
+import { BASE_URL } from "./constants";
 
 // Site-wide configuration interface
 interface SiteConfig {
@@ -46,8 +46,7 @@ function generateOgImageUrl(params: OgImageParams = {}): string {
   if (id) searchParams.set("id", id);
   if (type) searchParams.set("type", type);
 
-  const baseUrl = getBaseUrl();
-  return `${baseUrl}/api/og?${searchParams.toString()}`;
+  return `${BASE_URL}/api/og?${searchParams.toString()}`;
 }
 
 function buildPageUrl({
@@ -88,8 +87,7 @@ export function getSEOMetadata(page: PageSeoData = {}): Metadata {
     ...pageOverrides
   } = page;
 
-  const baseUrl = getBaseUrl();
-  const pageUrl = buildPageUrl({ baseUrl, slug });
+  const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug });
 
   // Build default metadata values
   const defaultTitle = extractTitle({
@@ -114,11 +112,11 @@ export function getSEOMetadata(page: PageSeoData = {}): Metadata {
   const defaultMetadata: Metadata = {
     title: fullTitle,
     description: defaultDescription,
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(BASE_URL),
     creator: siteConfig.title,
     authors: [{ name: siteConfig.title }],
     icons: {
-      icon: `${baseUrl}/favicon.ico`,
+      icon: `${BASE_URL}/favicon.ico`,
     },
     keywords: allKeywords,
     robots: seoNoIndex ? "noindex, nofollow" : "index, follow",
