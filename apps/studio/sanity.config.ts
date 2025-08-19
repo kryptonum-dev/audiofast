@@ -47,18 +47,6 @@ export default defineConfig({
     media(),
     presentationUrl(),
   ],
-
-  form: {
-    image: {
-      assetSources: (sources) =>
-        sources.filter((source) => source.name !== 'sanity-default'),
-    },
-    // Disable the default for file assets
-    file: {
-      assetSources: (sources) =>
-        sources.filter((source) => source.name !== 'sanity-default'),
-    },
-  },
   document: {
     newDocumentOptions: (prev, { creationContext }) => {
       const { type } = creationContext;

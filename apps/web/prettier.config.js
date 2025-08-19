@@ -6,6 +6,8 @@ const config = {
   printWidth: 80,
   semi: true,
   bracketSpacing: true,
+  singleQuote: true,
+  trailingComma: "es5",
 };
 
 export default config;

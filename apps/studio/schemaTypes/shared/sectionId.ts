@@ -24,7 +24,7 @@ export default [
         const isDuplicate = components.some(
           (component) =>
             component._key !== currentComponent._key &&
-            component.sectionId === value,
+            component.sectionId === value
         );
         if (isDuplicate)
           return 'Ten ID sekcji jest już używany w innym komponencie. ID sekcji muszą być unikalne.';

@@ -87,7 +87,7 @@ function validateFormat(slug: string): SlugValidationError[] {
 }
 
 function getDocumentTypeConfig(
-  sanityDocumentType: string,
+  sanityDocumentType: string
 ): SlugValidationOptions {
   switch (sanityDocumentType) {
     case 'blog':
@@ -116,7 +116,7 @@ function getDocumentTypeConfig(
 
 function validatePrefixes(
   slug: string,
-  options: SlugValidationOptions,
+  options: SlugValidationOptions
 ): SlugValidationError[] {
   const errors: SlugValidationError[] = [];
   const { documentType, requiredPrefix, allowedPrefixes, sanityDocumentType } =
@@ -135,7 +135,7 @@ function validatePrefixes(
   // Check against allowed prefixes if specified
   if (allowedPrefixes && allowedPrefixes.length > 0) {
     const hasValidPrefix = allowedPrefixes.some((prefix) =>
-      slug.startsWith(prefix),
+      slug.startsWith(prefix)
     );
     if (!hasValidPrefix) {
       const prefixList = allowedPrefixes.join('", "');
@@ -160,7 +160,7 @@ function validatePrefixes(
 
 export function validateSlug(
   slug: string | undefined | null,
-  options: SlugValidationOptions = {},
+  options: SlugValidationOptions = {}
 ): SlugValidationError[] {
   if (!slug) {
     return [
@@ -190,7 +190,7 @@ export function validateSlug(
  */
 export function validateSanitySlug(
   slug: { current?: string } | undefined,
-  options: SlugValidationOptions = {},
+  options: SlugValidationOptions = {}
 ): string | true {
   const errors = validateSlug(slug?.current, options);
   return errors.length > 0
@@ -202,7 +202,7 @@ export function validateSanitySlug(
  * Helper function to create type-specific validators
  */
 export function createSlugValidator(
-  options: SlugValidationOptions,
+  options: SlugValidationOptions
 ): (slug: { current?: string } | undefined) => string | true {
   return (slug) => validateSanitySlug(slug, options);
 }
@@ -213,7 +213,7 @@ export function createSlugValidator(
  */
 export function validateSlugForDocumentType(
   slug: string | undefined | null,
-  sanityDocumentType: string,
+  sanityDocumentType: string
 ): string[] {
   const errors = validateSlug(slug, { sanityDocumentType });
   return errors.map((error) => error.message);
@@ -257,7 +257,7 @@ export function cleanSlug(slug: string, sanityDocumentType?: string): string {
  */
 function applyDocumentTypeRules(
   slug: string,
-  sanityDocumentType: string,
+  sanityDocumentType: string
 ): string {
   switch (sanityDocumentType) {
     case 'blog':
@@ -305,7 +305,7 @@ function applyDocumentTypeRules(
  */
 export function cleanSlugWithValidation(
   slug: string,
-  sanityDocumentType?: string,
+  sanityDocumentType?: string
 ): {
   cleanedSlug: string;
   wasChanged: boolean;

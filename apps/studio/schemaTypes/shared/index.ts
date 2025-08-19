@@ -12,6 +12,7 @@ export const portableTextField = defineField({
 export const buttonsField = defineField({
   name: 'buttons',
   type: 'array',
+  title: 'Przyciski',
   of: [{ type: 'button' }],
   description:
     'Dodaj jeden lub więcej klikanych przycisków, których odwiedzający mogą używać do nawigacji po Twojej stronie',

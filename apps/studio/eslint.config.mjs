@@ -28,10 +28,11 @@ export default [
       'prettier/prettier': [
         'error',
         {
-          singleQuote: true,
+          printWidth: 80,
           semi: true,
           bracketSpacing: true,
-          printWidth: 80,
+          singleQuote: true,
+          trailingComma: 'es5',
         },
       ],
       'simple-import-sort/imports': 'error',

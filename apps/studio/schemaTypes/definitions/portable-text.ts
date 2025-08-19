@@ -1,15 +1,12 @@
 import { LinkIcon } from '@sanity/icons';
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { CustomInput } from '../../components/CustomInput';
 
 const portableTextMembers = [
   defineArrayMember({
     name: 'block',
     type: 'block',
-    styles: [
-      { title: 'Normalny', value: 'normal' },
-      { title: 'H2', value: 'h2' },
-      { title: 'H3', value: 'h3' },
-    ],
+    styles: [{ title: 'Normalny', value: 'normal' }],
     lists: [
       { title: 'Numerowana', value: 'number' },
       { title: 'Wypunktowana', value: 'bullet' },
@@ -39,12 +36,20 @@ const portableTextMembers = [
 
 export const portableText = defineType({
   name: 'portableText',
+  components: {
+    // @ts-ignore
+    input: CustomInput,
+  },
   type: 'array',
   of: portableTextMembers,
 });
 
-export const headingPortableText = defineType({
-  name: 'headingPortableText',
+export const portableTextHeading = defineType({
+  name: 'portableTextHeading',
+  components: {
+    // @ts-ignore
+    input: CustomInput,
+  },
   type: 'array',
   of: [
     defineArrayMember({
@@ -65,16 +70,20 @@ type Type = NonNullable<(typeof memberTypes)[number]>;
 
 export const customPortableText = (
   type: Type[],
-  options?: { name?: string; title?: string; group?: string },
+  options?: { name?: string; title?: string; group?: string }
 ) => {
   const { name } = options ?? {};
   const customMembers = portableTextMembers.filter(
-    (member) => member.name && type.includes(member.name),
+    (member) => member.name && type.includes(member.name)
   );
   return defineField({
     ...options,
     name: name ?? 'portableText',
     type: 'array',
     of: customMembers,
+    components: {
+      // @ts-ignore
+      input: CustomInput,
+    },
   });
 };

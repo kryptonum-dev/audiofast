@@ -30,7 +30,7 @@ export const getTitleCase = (name: string) => {
 
 export const createRadioListLayout = (
   items: Array<string | { title: string; value: string }>,
-  options?: StringOptions,
+  options?: StringOptions
 ): StringOptions => {
   const list = items.map((item) => {
     if (typeof item === 'string') {
@@ -50,7 +50,7 @@ export const createRadioListLayout = (
 
 export const parsePortableTextToString = (
   value: unknown,
-  maxWords: number | undefined = undefined,
+  maxWords: number | undefined = undefined
 ) => {
   if (!Array.isArray(value)) return 'No Content';
 
@@ -83,7 +83,7 @@ export interface RetryOptions {
 }
 export async function retryPromise<T>(
   promiseFn: () => Promise<T>,
-  options: RetryOptions = {},
+  options: RetryOptions = {}
 ): Promise<T> {
   const {
     maxRetries = 3,
@@ -140,7 +140,7 @@ export function buildTree(pages: Page[]): Tree {
   function createNode(
     item: Page,
     pathSoFar: string,
-    isFolder: boolean,
+    isFolder: boolean
   ): TreeNode {
     return {
       ...item,
@@ -156,7 +156,7 @@ export function buildTree(pages: Page[]): Tree {
   function processSegments(
     item: Page,
     segments: string[],
-    currentFolder: Tree,
+    currentFolder: Tree
   ): void {
     let pathSoFar = '';
 
@@ -336,9 +336,26 @@ export const getPresentationUrl = () => {
   const presentationUrl = process.env.SANITY_STUDIO_PRESENTATION_URL;
   if (!presentationUrl) {
     throw new Error(
-      'SANITY_STUDIO_PRESENTATION_URL must be set in production environment',
+      'SANITY_STUDIO_PRESENTATION_URL must be set in production environment'
     );
   }
 
   return presentationUrl;
 };
+
+/**
+ * Converts an array of Portable Text blocks to plain text
+ * @param blocks - Array of Portable Text blocks
+ * @returns Plain text string
+ */
+export function toPlainText(blocks = []) {
+  if (!Array.isArray(blocks)) return '';
+  return blocks
+    .map((block: { _type?: string; children?: { text: string }[] }) => {
+      if (block._type !== 'block' || !block.children) {
+        return '';
+      }
+      return block.children.map((child) => child.text).join('');
+    })
+    .join('\n\n');
+}

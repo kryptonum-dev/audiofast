@@ -1,12 +1,13 @@
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
+  Book,
   CogIcon,
   File,
   HomeIcon,
   type LucideIcon,
   MessageCircleQuestion,
-  PanelBottomIcon,
-  PanelTopDashedIcon,
+  PanelBottom,
+  PanelTop,
   Settings2,
 } from 'lucide-react';
 import type {
@@ -83,7 +84,7 @@ const createIndexListWithOrderableItems = ({
               S.document()
                 .views([S.view.form()])
                 .schemaType(index.type)
-                .documentId(index.type),
+                .documentId(index.type)
             ),
           orderableDocumentListDeskItem({
             type: list.type,
@@ -92,53 +93,58 @@ const createIndexListWithOrderableItems = ({
             icon: list.icon ?? File,
             title: `${listTitle}`,
           }),
-        ]),
+        ])
     );
 };
 
 export const structure = (
   S: StructureBuilder,
-  context: StructureResolverContext,
+  context: StructureResolverContext
 ) => {
   return S.list()
     .title('Content')
     .items([
-      createSingleTon({ S, type: 'homePage', icon: HomeIcon }),
+      createSingleTon({
+        S,
+        type: 'homePage',
+        title: 'Strona główna',
+        icon: HomeIcon,
+      }),
+      createList({ S, type: 'page', title: 'Podstrony', icon: Book }),
       S.divider(),
-      createList({ S, type: 'page', title: 'Pages' }),
       createList({
         S,
         type: 'faq',
-        title: 'FAQs',
+        title: 'Elementy FAQ',
         icon: MessageCircleQuestion,
       }),
       S.divider(),
       S.listItem()
-        .title('Site Configuration')
+        .title('Konfiguracja strony')
         .icon(Settings2)
         .child(
           S.list()
-            .title('Site Configuration')
+            .title('Konfiguracja strony')
             .items([
               createSingleTon({
                 S,
                 type: 'navbar',
-                title: 'Navigation',
-                icon: PanelTopDashedIcon,
+                title: 'Nawigacja',
+                icon: PanelTop,
               }),
               createSingleTon({
                 S,
                 type: 'footer',
-                title: 'Footer',
-                icon: PanelBottomIcon,
+                title: 'Stopka',
+                icon: PanelBottom,
               }),
               createSingleTon({
                 S,
                 type: 'settings',
-                title: 'Global Settings',
+                title: 'Ustawienia globalne',
                 icon: CogIcon,
               }),
-            ]),
+            ])
         ),
     ]);
 };
