@@ -48,7 +48,7 @@ export const createRadioListLayout = (
   };
 };
 
-export const parseRichTextToString = (
+export const parsePortableTextToString = (
   value: unknown,
   maxWords: number | undefined = undefined,
 ) => {
@@ -298,10 +298,6 @@ export function createPageTemplate() {
     {
       title: "Page",
       type: "page",
-    },
-    {
-      title: "Blog",
-      type: "blog",
     },
   ];
   return pages.map((page) => {

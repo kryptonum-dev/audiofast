@@ -2,49 +2,48 @@ import { defineField, defineType } from "sanity";
 
 import { createRadioListLayout, isValidUrl } from "../../utils/helper";
 
-const allLinkableTypes = [
-  { type: "blog" },
-  { type: "blogIndex" },
-  { type: "page" },
-];
+const allLinkableTypes = [{ type: "page" }];
 
 export const customUrl = defineType({
   name: "customUrl",
   type: "object",
   description:
-    "Configure a link that can point to either an internal page or external website",
+    "Skonfiguruj link, który może wskazywać na stronę wewnętrzną lub zewnętrzną stronę internetową",
   fields: [
     defineField({
       name: "type",
       type: "string",
       description:
-        "Choose whether this link points to another page on your site (internal) or to a different website (external)",
-      options: createRadioListLayout(["internal", "external"]),
+        "Wybierz, czy ten link wskazuje na inną stronę w Twojej witrynie (wewnętrzny) czy na inną stronę internetową (zewnętrzny)",
+      options: createRadioListLayout([
+        { title: "Wewnętrzny", value: "internal" },
+        { title: "Zewnętrzny", value: "external" },
+      ]),
       initialValue: () => "external",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "openInNewTab",
-      title: "Open in new tab",
+      title: "Otwórz w nowej karcie",
       type: "boolean",
       description:
-        "When enabled, clicking this link will open the destination in a new browser tab instead of navigating away from the current page",
+        "Gdy włączone, kliknięcie tego linku otworzy miejsce docelowe w nowej karcie przeglądarki zamiast przechodzić z bieżącej strony",
       initialValue: () => false,
     }),
     defineField({
       name: "external",
       type: "string",
-      title: "URL",
+      title: "Adres URL",
       description:
-        "Enter either a full web address (URL) starting with https:// for external sites, or a relative path like /about for internal pages",
+        "Wprowadź pełny adres internetowy (URL) zaczynający się od https:// dla stron zewnętrznych lub ścieżkę względną jak /o-nas dla stron wewnętrznych",
       hidden: ({ parent }) => parent?.type !== "external",
       validation: (Rule) => [
         Rule.custom((value, { parent }) => {
           const type = (parent as { type?: string })?.type;
           if (type === "external") {
-            if (!value) return "URL can't be empty";
+            if (!value) return "URL nie może być pusty";
             const isValid = isValidUrl(value);
-            if (!isValid) return "Invalid URL";
+            if (!isValid) return "Nieprawidłowy URL";
           }
           return true;
         }),
@@ -54,16 +53,17 @@ export const customUrl = defineType({
       name: "href",
       type: "string",
       description:
-        "Technical field used internally to store the complete URL - you don't need to modify this",
+        "Pole techniczne używane wewnętrznie do przechowywania pełnego URL - nie musisz tego modyfikować",
       initialValue: () => "#",
       hidden: true,
       readOnly: true,
     }),
     defineField({
       name: "internal",
+      title: "Strona wewnętrzna",
       type: "reference",
       description:
-        "Select which page on your website this link should point to",
+        "Wybierz, na którą stronę w Twojej witrynie ten link ma wskazywać",
       options: { disableNew: true },
       hidden: ({ parent }) => parent?.type !== "internal",
       to: allLinkableTypes,
@@ -71,7 +71,7 @@ export const customUrl = defineType({
         rule.custom((value, { parent }) => {
           const type = (parent as { type?: string })?.type;
           if (type === "internal" && !value?._ref)
-            return "internal can't be empty";
+            return "link wewnętrzny nie może być pusty";
           return true;
         }),
       ],
@@ -91,7 +91,7 @@ export const customUrl = defineType({
         url?.length > 30 ? `${url.substring(0, 30)}...` : url;
 
       return {
-        title: `${urlType === "external" ? "External" : "Internal"} Link`,
+        title: `Link ${urlType === "external" ? "zewnętrzny" : "wewnętrzny"}`,
         subtitle: `${truncatedUrl}${newTabIndicator}`,
       };
     },

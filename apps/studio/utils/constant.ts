@@ -20,23 +20,23 @@ export const GROUPS: FieldGroupDefinition[] = [
   {
     name: GROUP.MAIN_CONTENT,
     icon: ComposeIcon,
-    title: "Content",
+    title: "Treść",
     default: true,
   },
   { name: GROUP.SEO, icon: SearchIcon, title: "SEO" },
   {
     name: GROUP.OG,
     icon: InsertAboveIcon,
-    title: "Open Graph",
+    title: "Open Graph (OG)",
   },
   {
     name: GROUP.CARD,
     icon: BlockElementIcon,
-    title: "Card",
+    title: "Karty",
   },
   {
     name: GROUP.RELATED,
     icon: InlineElementIcon,
-    title: "Related",
+    title: "Powiązane",
   },
 ];

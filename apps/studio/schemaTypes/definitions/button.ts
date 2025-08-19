@@ -1,39 +1,41 @@
-import { Command } from "lucide-react";
+import { Link } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
-import { capitalize, createRadioListLayout } from "../../utils/helper";
+import { createRadioListLayout } from "../../utils/helper";
 
-const buttonVariants = ["default", "secondary", "outline", "link"];
+const buttonVariants = [
+  { title: "Główny", value: "primary" },
+  { title: "Drugorzędny", value: "secondary" },
+];
 
 export const button = defineType({
   name: "button",
-  title: "Button",
+  title: "Przycisk",
   type: "object",
-  icon: Command,
+  icon: Link,
   fields: [
     defineField({
       name: "variant",
       type: "string",
-      description:
-        "Choose the button's visual style - default is solid, secondary is less prominent, outline has a border, and link looks like regular text",
-      initialValue: () => "default",
+      description: "Wybierz styl przycisku",
+      initialValue: () => "primary",
       options: createRadioListLayout(buttonVariants, {
         direction: "horizontal",
       }),
     }),
     defineField({
       name: "text",
-      title: "Button Text",
+      title: "Tekst przycisku",
       type: "string",
-      description:
-        "The text that appears on the button, like 'Learn More' or 'Get Started'",
+      description: "Tekst, który pojawi się na przycisku",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "url",
-      title: "Url",
+      title: "Adres URL",
       type: "customUrl",
       description:
-        "Where the button links to - can be an internal page or external website",
+        "Gdzie przekierowuje przycisk - może być stroną wewnętrzną lub zewnętrzną",
     }),
   ],
   preview: {
@@ -58,9 +60,12 @@ export const button = defineType({
       const truncatedUrl =
         url?.length > 30 ? `${url.substring(0, 30)}...` : url;
 
+      const variantTitle = buttonVariants.find(
+        (v) => v.value === variant,
+      )?.title;
       return {
-        title: title || "Untitled Button",
-        subtitle: `${capitalize(variant ?? "default")} • ${truncatedUrl}${newTabIndicator}`,
+        title: title || "Nienazwany przycisk",
+        subtitle: `${variantTitle} • ${truncatedUrl}${newTabIndicator}`,
       };
     },
   },

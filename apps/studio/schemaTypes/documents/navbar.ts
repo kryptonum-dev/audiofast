@@ -1,26 +1,27 @@
 import { LayoutPanelLeft, Link, PanelTop } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
-import { buttonsField, iconField } from "../common";
+import { buttonsField } from "../shared";
 
 const navbarLink = defineField({
   name: "navbarLink",
   type: "object",
   icon: Link,
-  title: "Navigation Link",
-  description: "Individual navigation link with name and URL",
+  title: "Link nawigacyjny",
+  description: "Pojedynczy link nawigacyjny z nazwą i URL",
   fields: [
     defineField({
       name: "name",
       type: "string",
-      title: "Link Text",
-      description: "The text that will be displayed for this navigation link",
+      title: "Tekst linku",
+      description:
+        "Tekst, który będzie wyświetlany dla tego linku nawigacyjnego",
     }),
     defineField({
       name: "url",
       type: "customUrl",
-      title: "Link URL",
-      description: "The URL that this link will navigate to when clicked",
+      title: "URL linku",
+      description: "URL, do którego będzie prowadził ten link po kliknięciu",
     }),
   ],
   preview: {
@@ -39,7 +40,7 @@ const navbarLink = defineField({
 
       return {
         title: title || "Untitled Link",
-        subtitle: `${urlType === "external" ? "External" : "Internal"} • ${truncatedUrl}${newTabIndicator}`,
+        subtitle: `${urlType === "external" ? "Zewnętrzny" : "Wewnętrzny"} • ${truncatedUrl}${newTabIndicator}`,
         media: Link,
       };
     },
@@ -50,27 +51,27 @@ const navbarColumnLink = defineField({
   name: "navbarColumnLink",
   type: "object",
   icon: LayoutPanelLeft,
-  title: "Navigation Column Link",
-  description: "A link within a navigation column",
+  title: "Link kolumny nawigacyjnej",
+  description: "Link w kolumnie nawigacyjnej",
   fields: [
-    iconField,
     defineField({
       name: "name",
       type: "string",
-      title: "Link Text",
-      description: "The text that will be displayed for this navigation link",
+      title: "Tekst linku",
+      description:
+        "Tekst, który będzie wyświetlany dla tego linku nawigacyjnego",
     }),
     defineField({
       name: "description",
       type: "string",
-      title: "Description",
-      description: "The description for this navigation link",
+      title: "Opis",
+      description: "Opis dla tego linku nawigacyjnego",
     }),
     defineField({
       name: "url",
       type: "customUrl",
-      title: "Link URL",
-      description: "The URL that this link will navigate to when clicked",
+      title: "URL linku",
+      description: "URL, do którego będzie prowadził ten link po kliknięciu",
     }),
   ],
   preview: {
@@ -89,7 +90,7 @@ const navbarColumnLink = defineField({
 
       return {
         title: title || "Untitled Link",
-        subtitle: `${urlType === "external" ? "External" : "Internal"} • ${truncatedUrl}${newTabIndicator}`,
+        subtitle: `${urlType === "external" ? "Zewnętrzny" : "Wewnętrzny"} • ${truncatedUrl}${newTabIndicator}`,
         media: Link,
       };
     },
@@ -100,22 +101,22 @@ const navbarColumn = defineField({
   name: "navbarColumn",
   type: "object",
   icon: LayoutPanelLeft,
-  title: "Navigation Column",
-  description: "A column of navigation links with an optional title",
+  title: "Kolumna nawigacyjna",
+  description: "Kolumna linków nawigacyjnych z opcjonalnym tytułem",
   fields: [
     defineField({
       name: "title",
       type: "string",
-      title: "Column Title",
+      title: "Tytuł kolumny",
       description:
-        "The heading text displayed above this group of navigation links",
+        "Tekst nagłówka wyświetlany nad tą grupą linków nawigacyjnych",
     }),
     defineField({
       name: "links",
       type: "array",
-      title: "Column Links",
+      title: "Linki kolumny",
       validation: (rule) => [rule.required(), rule.unique()],
-      description: "The list of navigation links to display in this column",
+      description: "Lista linków nawigacyjnych do wyświetlenia w tej kolumnie",
       of: [navbarColumnLink],
     }),
   ],
@@ -135,26 +136,26 @@ const navbarColumn = defineField({
 
 export const navbar = defineType({
   name: "navbar",
-  title: "Site Navigation",
+  title: "Nawigacja strony",
   type: "document",
   icon: PanelTop,
-  description: "Configure the main navigation structure for your site",
+  description: "Konfiguruj główną strukturę nawigacji dla swojej strony",
   fields: [
     defineField({
       name: "label",
       type: "string",
-      initialValue: "Navbar",
-      title: "Navigation Label",
+      initialValue: "Nawigacja",
+      title: "Etykieta nawigacji",
       description:
-        "Internal label to identify this navigation configuration in the CMS",
+        "Wewnętrzna etykieta do identyfikacji tej konfiguracji nawigacji w CMS",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "columns",
       type: "array",
-      title: "Navigation Structure",
+      title: "Struktura nawigacji",
       description:
-        "Build your navigation menu using columns and links. Add either a column of links or individual links.",
+        "Zbuduj swoje menu nawigacji używając kolumn i linków. Dodaj kolumnę linków lub pojedyncze linki.",
       of: [navbarColumn, navbarLink],
     }),
     buttonsField,

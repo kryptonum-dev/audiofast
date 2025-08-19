@@ -1,43 +1,43 @@
 import { MessageCircleQuestion } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
-import { parseRichTextToString } from "../../utils/helper";
-import { richTextField } from "../common";
+import { parsePortableTextToString } from "../../utils/helper";
+import { portableTextField } from "../shared";
 
 export const faq = defineType({
   name: "faq",
   type: "document",
-  title: "Frequently Asked Question",
+  title: "Najczęściej zadawane pytanie",
   description:
-    "A simple question and answer pair that helps visitors find information quickly. Think of it like writing down the questions customers often ask, along with clear answers.",
+    "Prosta para pytanie-odpowiedź, która pomaga odwiedzającym szybko znaleźć informacje. Pomyśl o tym jak o zapisywaniu pytań, które klienci często zadają, wraz z jasnymi odpowiedziami.",
   icon: MessageCircleQuestion,
   fields: [
     defineField({
       name: "title",
-      title: "Question",
+      title: "Pytanie",
       type: "string",
       description:
-        "Write the question exactly as someone might ask it. For example: 'How do I reset my password?'",
+        "Napisz pytanie dokładnie tak, jak ktoś mógłby je zadać. Na przykład: 'Jak mogę zresetować swoje hasło?'",
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      ...richTextField,
-      title: "Answer",
+      ...portableTextField,
+      title: "Odpowiedź",
       description:
-        "Write a friendly, clear answer that directly addresses the question. Keep it simple enough that anyone can understand it.",
+        "Napisz przyjazną, jasną odpowiedź, która bezpośrednio odnosi się do pytania. Utrzymuj ją na tyle prostą, żeby każdy mógł ją zrozumieć.",
     }),
   ],
   preview: {
     select: {
       title: "title",
-      richText: "richText",
+      portableText: "portableText",
     },
-    prepare: ({ title, richText }) => {
+    prepare: ({ title, portableText }) => {
       // Create a playful subtitle with emojis
-      const subtitle = `${parseRichTextToString(richText, 20)}`;
+      const subtitle = `${parsePortableTextToString(portableText, 20)}`;
 
       return {
-        title: `❓ ${title || "Untitled Question"}`,
+        title: `❓ ${title || "Nie ma tytułu"}`,
         subtitle,
       };
     },

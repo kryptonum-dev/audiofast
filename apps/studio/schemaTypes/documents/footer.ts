@@ -9,8 +9,8 @@ const footerColumnLink = defineField({
     defineField({
       name: "name",
       type: "string",
-      title: "Name",
-      description: "Name for the link",
+      title: "Nazwa",
+      description: "Nazwa dla linku",
     }),
     defineField({
       name: "url",
@@ -33,7 +33,7 @@ const footerColumnLink = defineField({
 
       return {
         title: title || "Untitled Link",
-        subtitle: `${urlType === "external" ? "External" : "Internal"} • ${truncatedUrl}${newTabIndicator}`,
+        subtitle: `${urlType === "external" ? "Zewnętrzny" : "Wewnętrzny"} • ${truncatedUrl}${newTabIndicator}`,
         media: Link,
       };
     },
@@ -48,14 +48,14 @@ const footerColumn = defineField({
     defineField({
       name: "title",
       type: "string",
-      title: "Title",
-      description: "Title for the column",
+      title: "Tytuł",
+      description: "Tytuł dla kolumny",
     }),
     defineField({
       name: "links",
       type: "array",
-      title: "Links",
-      description: "Links for the column",
+      title: "Linki",
+      description: "Linki dla kolumny",
       of: [footerColumnLink],
     }),
   ],
@@ -76,29 +76,29 @@ const footerColumn = defineField({
 export const footer = defineType({
   name: "footer",
   type: "document",
-  title: "Footer",
-  description: "Footer content for your website",
+  title: "Stopka",
+  description: "Treść stopki dla Twojej strony internetowej",
   fields: [
     defineField({
       name: "label",
       type: "string",
-      initialValue: "Footer",
-      title: "Label",
-      description: "Label used to identify footer in the CMS",
+      initialValue: "Stopka",
+      title: "Etykieta",
+      description: "Etykieta używana do identyfikacji stopki w CMS",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "subtitle",
       type: "text",
       rows: 2,
-      title: "Subtitle",
-      description: "Subtitle that sits beneath the logo in the footer",
+      title: "Podtytuł",
+      description: "Podtytuł, który znajduje się pod logo w stopce",
     }),
     defineField({
       name: "columns",
       type: "array",
-      title: "Columns",
-      description: "Columns for the footer",
+      title: "Kolumny",
+      description: "Kolumny dla stopki",
       of: [footerColumn],
     }),
   ],

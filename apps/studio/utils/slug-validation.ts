@@ -24,7 +24,7 @@ function validateBasicStructure(slug: string): SlugValidationError[] {
   if (!slug.startsWith("/")) {
     errors.push({
       type: "structure",
-      message: "URL path must start with a forward slash (/)",
+      message: "Ścieżka URL musi zaczynać się od ukośnika (/)",
     });
   }
 
@@ -32,7 +32,7 @@ function validateBasicStructure(slug: string): SlugValidationError[] {
   if (slug.includes("//")) {
     errors.push({
       type: "structure",
-      message: "Multiple consecutive slashes (//) are not allowed",
+      message: "Wiele następujących po sobie ukośników (//) nie jest dozwolone",
     });
   }
 
@@ -40,7 +40,7 @@ function validateBasicStructure(slug: string): SlugValidationError[] {
   if (slug.endsWith("/") && slug !== "/") {
     errors.push({
       type: "structure",
-      message: "Trailing slashes are not recommended",
+      message: "Końcowe ukośniki nie są zalecane",
     });
   }
 
@@ -56,7 +56,7 @@ function validateCharacters(slug: string): SlugValidationError[] {
     const uniqueChars = [...new Set(invalidChars)].join(", ");
     errors.push({
       type: "characters",
-      message: `Invalid characters found: ${uniqueChars}`,
+      message: `Znaleziono nieprawidłowe znaki: ${uniqueChars}`,
     });
   }
 
@@ -71,7 +71,7 @@ function validateFormat(slug: string): SlugValidationError[] {
     errors.push({
       type: "format",
       message:
-        "Spaces should be replaced with hyphens (-) for SEO-friendly URLs",
+        "Spacje powinny być zastąpione myślnikami (-) dla URL-i przyjaznych SEO",
     });
   }
 
@@ -79,7 +79,7 @@ function validateFormat(slug: string): SlugValidationError[] {
   if (slug !== slug.toLowerCase()) {
     errors.push({
       type: "format",
-      message: "URLs should be lowercase for consistency",
+      message: "URL-e powinny być napisane małymi literami dla spójności",
     });
   }
 
@@ -92,22 +92,22 @@ function getDocumentTypeConfig(
   switch (sanityDocumentType) {
     case "blog":
       return {
-        documentType: "Blog post",
+        documentType: "Wpis na blogu",
         requiredPrefix: "/blog/",
       };
     case "blogIndex":
       return {
-        documentType: "Blog index",
+        documentType: "Strona główna bloga",
         requiredPrefix: "/blog",
       };
     case "homePage":
       return {
-        documentType: "Home page",
+        documentType: "Strona główna",
         requiredPrefix: "/",
       };
     case "page":
       return {
-        documentType: "Page",
+        documentType: "Strona",
       };
     default:
       return {};
@@ -127,7 +127,7 @@ function validatePrefixes(
     if (!slug.startsWith(requiredPrefix)) {
       errors.push({
         type: "prefix",
-        message: `${documentType} URLs must start with "${requiredPrefix}"`,
+        message: `URL-e typu ${documentType} muszą zaczynać się od "${requiredPrefix}"`,
       });
     }
   }
@@ -141,7 +141,7 @@ function validatePrefixes(
       const prefixList = allowedPrefixes.join('", "');
       errors.push({
         type: "prefix",
-        message: `URL must start with one of: "${prefixList}"`,
+        message: `URL musi zaczynać się od jednego z: "${prefixList}"`,
       });
     }
   }
@@ -151,7 +151,7 @@ function validatePrefixes(
     errors.push({
       type: "prefix",
       message:
-        'Pages cannot use "/blog" prefix - this is reserved for blog content',
+        'Strony nie mogą używać prefiksu "/blog" - jest zarezerwowany dla treści bloga',
     });
   }
 
@@ -166,7 +166,7 @@ export function validateSlug(
     return [
       {
         type: "required",
-        message: "URL path is required",
+        message: "Ścieżka URL jest wymagana",
       },
     ];
   }
@@ -318,7 +318,7 @@ export function cleanSlugWithValidation(
     return {
       cleanedSlug: "/",
       wasChanged: true,
-      changes: ["Added default '/' path"],
+      changes: ["Dodano domyślną ścieżkę '/'"],
     };
   }
 
@@ -326,38 +326,38 @@ export function cleanSlugWithValidation(
 
   // Track changes
   if (cleaned !== cleaned.toLowerCase()) {
-    changes.push("Converted to lowercase");
+    changes.push("Zamieniono na małe litery");
     cleaned = cleaned.toLowerCase();
   }
 
   if (cleaned.includes("  ") || cleaned.includes(" ")) {
-    changes.push("Replaced spaces with hyphens");
+    changes.push("Zastąpiono spacje myślnikami");
     cleaned = cleaned.replace(/\s+/g, "-");
   }
 
   if (cleaned.includes("//")) {
-    changes.push("Fixed multiple consecutive slashes");
+    changes.push("Naprawiono wiele następujących po sobie ukośników");
     cleaned = cleaned.replace(/\/+/g, "/");
   }
 
   const invalidCharRegex = /[^a-z0-9\-/]/;
   if (invalidCharRegex.exec(cleaned)) {
-    changes.push("Removed invalid characters");
+    changes.push("Usunięto nieprawidłowe znaki");
     cleaned = cleaned.replace(/[^a-z0-9\-/]/g, "");
   }
 
   if (cleaned.includes("--")) {
-    changes.push("Fixed multiple consecutive hyphens");
+    changes.push("Naprawiono wiele następujących po sobie myślników");
     cleaned = cleaned.replace(/-+/g, "-");
   }
 
   if (cleaned.endsWith("/") && cleaned !== "/") {
-    changes.push("Removed trailing slash");
+    changes.push("Usunięto końcowy ukośnik");
     cleaned = cleaned.replace(/\/+$/, "");
   }
 
   if (!cleaned.startsWith("/") && cleaned) {
-    changes.push("Added leading slash");
+    changes.push("Dodano początkowy ukośnik");
     cleaned = `/${cleaned}`;
   }
 
@@ -366,7 +366,7 @@ export function cleanSlugWithValidation(
     const beforeTypeRules = cleaned;
     cleaned = applyDocumentTypeRules(cleaned, sanityDocumentType);
     if (beforeTypeRules !== cleaned) {
-      changes.push(`Applied ${sanityDocumentType} type rules`);
+      changes.push(`Zastosowano reguły typu ${sanityDocumentType}`);
     }
   }
 

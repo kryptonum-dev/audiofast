@@ -2,46 +2,45 @@ import { HomeIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
 import { GROUP, GROUPS } from "../../utils/constant";
-import { ogFields } from "../../utils/og-fields";
-import { seoFields } from "../../utils/seo-fields";
 import { createSlug } from "../../utils/slug";
 import { createSlugValidator } from "../../utils/slug-validation";
-import { pageBuilderField } from "../common";
+import { pageBuilderField } from "../shared";
+import { ogFields, seoFields } from "../shared/seo";
 
 export const homePage = defineType({
   name: "homePage",
   type: "document",
-  title: "Home Page",
+  title: "Strona główna",
   icon: HomeIcon,
   description:
-    "This is where you create the main page visitors see when they first come to your website. Think of it like the front door to your online home - you can add a welcoming title, a short description, and build the page with different sections like pictures, text, and buttons.",
+    "To tutaj tworzysz główną stronę, którą widzą odwiedzający, gdy po raz pierwszy przychodzą na Twoją stronę internetową. Pomyśl o tym jak o drzwiach wejściowych do Twojego internetowego domu - możesz dodać przyjazny tytuł, krótki opis i zbudować stronę z różnymi sekcjami jak obrazy, tekst i przyciski.",
   groups: GROUPS,
   fields: [
     defineField({
       name: "title",
       type: "string",
       description:
-        "The main heading that will appear at the top of your home page",
+        "Główny nagłówek, który pojawi się na górze Twojej strony głównej",
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
       name: "description",
-      title: "Description",
+      title: "Opis",
       type: "text",
       description:
-        "A short summary that tells visitors what your website is about. This text also helps your page show up in Google searches.",
+        "Krótkie podsumowanie, które mówi odwiedzającym, o czym jest Twoja strona internetowa. Ten tekst również pomaga Twojej stronie pojawiać się w wyszukiwaniach Google.",
       rows: 3,
       group: GROUP.MAIN_CONTENT,
       validation: (rule) => [
         rule
           .min(140)
           .warning(
-            "The meta description should be at least 140 characters for optimal SEO visibility in search results",
+            "Meta opis powinien mieć co najmniej 140 znaków dla optymalnej widoczności SEO w wynikach wyszukiwania",
           ),
         rule
           .max(160)
           .warning(
-            "The meta description should not exceed 160 characters as it will be truncated in search results",
+            "Meta opis nie powinien przekraczać 160 znaków, ponieważ zostanie obcięty w wynikach wyszukiwania",
           ),
       ],
     }),
@@ -49,7 +48,7 @@ export const homePage = defineType({
       name: "slug",
       type: "slug",
       description:
-        "The web address for your home page. Usually this is just '/' for the main page of your website.",
+        "Adres internetowy Twojej strony głównej. Zwykle to jest po prostu '/' dla głównej strony Twojej witryny.",
       group: GROUP.MAIN_CONTENT,
       options: {
         source: "title",
@@ -58,7 +57,7 @@ export const homePage = defineType({
       validation: (Rule) =>
         Rule.required().custom(
           createSlugValidator({
-            documentType: "Home page",
+            documentType: "Strona główna",
             requiredPrefix: "/",
           }),
         ),

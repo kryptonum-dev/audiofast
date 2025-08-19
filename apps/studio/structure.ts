@@ -1,16 +1,13 @@
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import {
-  BookMarked,
   CogIcon,
   File,
-  FileText,
   HomeIcon,
   type LucideIcon,
   MessageCircleQuestion,
   PanelBottomIcon,
   PanelTopDashedIcon,
   Settings2,
-  User,
 } from "lucide-react";
 import type {
   StructureBuilder,
@@ -109,19 +106,12 @@ export const structure = (
       createSingleTon({ S, type: "homePage", icon: HomeIcon }),
       S.divider(),
       createList({ S, type: "page", title: "Pages" }),
-      createIndexListWithOrderableItems({
-        S,
-        index: { type: "blogIndex", icon: BookMarked },
-        list: { type: "blog", title: "Blogs", icon: FileText },
-        context,
-      }),
       createList({
         S,
         type: "faq",
         title: "FAQs",
         icon: MessageCircleQuestion,
       }),
-      createList({ S, type: "author", title: "Authors", icon: User }),
       S.divider(),
       S.listItem()
         .title("Site Configuration")

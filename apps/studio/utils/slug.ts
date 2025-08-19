@@ -18,7 +18,7 @@ export function defineSlug(
   return defineField({
     ...schema,
     name: schema.name ?? "slug",
-    title: schema?.title ?? "URL",
+    title: schema?.title ?? "Adres URL",
     type: "slug",
     components: {
       ...schema.components,

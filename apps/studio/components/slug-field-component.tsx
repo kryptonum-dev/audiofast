@@ -182,7 +182,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
       {currentSlug && (
         <Stack space={2}>
           <Text size={1} weight="medium">
-            Preview
+            Podgląd
           </Text>
           <Flex align="center" gap={2}>
             <UrlPreview style={{ flex: 1 }}>
@@ -194,7 +194,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
             <CopyButton
               icon={CopyIcon}
               onClick={handleCopyUrl}
-              title="Copy URL"
+              title="Kopiuj URL"
               mode="ghost"
               padding={2}
             />
@@ -206,12 +206,12 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
       <Stack space={2}>
         <Flex align="center" justify="space-between">
           <Text size={1} weight="medium">
-            URL Path
+            Ścieżka URL
           </Text>
           <Flex gap={2}>
             {slugFormatErrors.length > 0 && (
               <Button
-                text="Clean Up"
+                text="Wyczyść"
                 onClick={handleCleanUp}
                 disabled={readOnly}
                 mode="ghost"
@@ -221,7 +221,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
             )}
             <GenerateButton
               icon={GenerateIcon}
-              text="Generate"
+              text="Generuj"
               onClick={handleGenerate}
               disabled={!document?.title || readOnly}
               mode="ghost"
@@ -262,7 +262,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
               onChange={handleInputChange}
               onFocus={() => setIsEditing(true)}
               onBlur={() => setIsEditing(false)}
-              placeholder="Enter URL path (e.g., about-us or blog/my-post)"
+              placeholder="Wprowadź ścieżkę URL (np. o-nas lub blog/moj-post)"
               disabled={readOnly}
             />
           </Box>
@@ -270,9 +270,9 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
 
         {/* Helper Text */}
         <Text size={1} muted>
-          Must start with a forward slash (/). Use forward slashes to create
-          nested paths. Only lowercase letters, numbers, hyphens, and slashes
-          are allowed.
+          Musi zaczynać się od ukośnika (/). Użyj ukośników, aby tworzyć
+          zagnieżdżone ścieżki. Dozwolone są tylko małe litery, cyfry, myślniki
+          i ukośniki.
         </Text>
       </Stack>
 

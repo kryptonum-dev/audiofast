@@ -3,57 +3,56 @@ import { defineField, defineType } from "sanity";
 
 import { PathnameFieldComponent } from "../../components/slug-field-component";
 import { GROUP, GROUPS } from "../../utils/constant";
-import { ogFields } from "../../utils/og-fields";
-import { seoFields } from "../../utils/seo-fields";
 import { createSlug, isUnique } from "../../utils/slug";
 import { createSlugValidator } from "../../utils/slug-validation";
-import { pageBuilderField } from "../common";
+import { pageBuilderField } from "../shared";
+import { ogFields, seoFields } from "../shared/seo";
 
 export const page = defineType({
   name: "page",
-  title: "Page",
+  title: "Strona",
   type: "document",
   icon: DocumentIcon,
   description:
-    "Create a new page for your website, like an 'About Us' or 'Contact' page. Each page has its own web address and content that you can customize.",
+    "Utwórz nową stronę dla swojej witryny, taką jak 'O nas' lub 'Kontakt'. Każda strona ma swój własny adres internetowy i treść, którą możesz dostosować.",
   groups: GROUPS,
   fields: [
     defineField({
       name: "title",
       type: "string",
-      title: "Title",
+      title: "Tytuł",
       description:
-        "The main heading that appears at the top of your page and in browser tabs",
+        "Główny nagłówek, który pojawia się na górze strony i w zakładkach przeglądarki",
       group: GROUP.MAIN_CONTENT,
-      validation: (Rule) => Rule.required().error("A page title is required"),
+      validation: (Rule) => Rule.required().error("Tytuł strony jest wymagany"),
     }),
     defineField({
       name: "description",
       type: "text",
-      title: "Description",
+      title: "Opis",
       description:
-        "A brief summary of what this page is about. This text helps search engines understand your page and may appear in search results.",
+        "Krótkie podsumowanie tego, o czym jest ta strona. Ten tekst pomaga wyszukiwarkom zrozumieć Twoją stronę i może pojawić się w wynikach wyszukiwania.",
       rows: 3,
       group: GROUP.MAIN_CONTENT,
       validation: (rule) => [
         rule
           .min(140)
           .warning(
-            "The meta description should be at least 140 characters for optimal SEO visibility in search results",
+            "Meta opis powinien mieć co najmniej 140 znaków dla optymalnej widoczności SEO w wynikach wyszukiwania",
           ),
         rule
           .max(160)
           .warning(
-            "The meta description should not exceed 160 characters as it will be truncated in search results",
+            "Meta opis nie powinien przekraczać 160 znaków, ponieważ zostanie obcięty w wynikach wyszukiwania",
           ),
       ],
     }),
     defineField({
       name: "slug",
       type: "slug",
-      title: "URL",
+      title: "Adres URL",
       description:
-        "The web address for this page (for example, '/about-us' would create a page at yourdomain.com/about-us)",
+        "Adres internetowy dla tej strony (na przykład, '/o-nas' utworzy stronę pod adresem twoja-domena.com/o-nas)",
       group: GROUP.MAIN_CONTENT,
       components: {
         field: PathnameFieldComponent,
@@ -65,18 +64,18 @@ export const page = defineType({
       },
       validation: (Rule) =>
         Rule.required()
-          .error("A URL slug is required for the page")
+          .error("Slug URL jest wymagany dla strony")
           .custom((slug) => {
             // First run basic validation
             const basicValidation = createSlugValidator({
-              documentType: "Page",
+              documentType: "Strona",
             })(slug);
 
             if (basicValidation !== true) return basicValidation;
 
             // Then check that pages don't use blog prefixes
             if (slug?.current?.startsWith("/blog")) {
-              return 'Pages cannot use "/blog" prefix - this is reserved for blog content';
+              return 'Strony nie mogą używać prefiksu "/blog" - jest zarezerwowany dla treści bloga';
             }
 
             return true;
@@ -85,9 +84,9 @@ export const page = defineType({
     defineField({
       name: "image",
       type: "image",
-      title: "Image",
+      title: "Obraz",
       description:
-        "A main picture for this page that can be used when sharing on social media or in search results",
+        "Główny obraz dla tej strony, który może być używany podczas udostępniania w mediach społecznościowych lub w wynikach wyszukiwania",
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,

@@ -1,7 +1,7 @@
 import { Star } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
-import { buttonsField, richTextField } from "../common";
+import { buttonsField, portableTextField } from "../shared";
 
 export const hero = defineType({
   name: "hero",
@@ -23,7 +23,7 @@ export const hero = defineType({
       description:
         "The main heading text for the hero section that captures attention",
     }),
-    richTextField,
+    portableTextField,
     defineField({
       name: "image",
       type: "image",
