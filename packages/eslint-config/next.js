@@ -52,7 +52,15 @@ export const nextJsConfig = [
     settings: { react: { version: "detect" } },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
-      "prettier/prettier": "error",
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "semi": true,
+          "bracketSpacing": true,
+          "printWidth": 80,
+        },
+      ],
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
       "react/react-in-jsx-scope": "off",

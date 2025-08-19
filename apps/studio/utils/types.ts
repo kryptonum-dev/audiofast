@@ -4,11 +4,11 @@ import type {
   ObjectSchemaType,
   SlugDefinition,
   SlugOptions,
-} from "sanity";
+} from 'sanity';
 import type {
   NavigatorOptions as PresentationNavigatorOptions,
   PresentationPluginOptions,
-} from "sanity/presentation";
+} from 'sanity/presentation';
 
 export type NormalizedCreatablePage = {
   title: string;
@@ -20,7 +20,7 @@ export type PagesNavigatorOptions = {
 };
 
 export type PagesNavigatorPluginOptions = PresentationPluginOptions & {
-  navigator?: Pick<PresentationNavigatorOptions, "maxWidth" | "minWidth">;
+  navigator?: Pick<PresentationNavigatorOptions, 'maxWidth' | 'minWidth'>;
   creatablePages?: Array<NormalizedCreatablePage | string>;
   title?: string;
 };
@@ -29,7 +29,7 @@ export type Page = {
   _rev: string;
   _id: string;
   _originalId: string;
-  _type: Exclude<"string", "folder">;
+  _type: Exclude<'string', 'folder'>;
   _updatedAt: string;
   _createdAt: string;
   slug: string | null;
@@ -41,8 +41,8 @@ export type PageTreeNode = Page & {
   edited?: boolean;
 };
 
-export type FolderTreeNode = Omit<Page, "_type"> & {
-  _type: "folder";
+export type FolderTreeNode = Omit<Page, '_type'> & {
+  _type: 'folder';
   title: string;
   children: Tree;
 };
@@ -100,7 +100,7 @@ export interface SectionOptions extends ObjectOptions {
  *
  * The `custom` property is strictly typed to include what the toolkit needs for scaffolding the website & studio.
  */
-export interface SectionSchema extends Omit<ObjectDefinition, "options"> {
+export interface SectionSchema extends Omit<ObjectDefinition, 'options'> {
   options: SectionOptions;
 }
 
@@ -150,7 +150,7 @@ export type PathnameOptions = SlugOptions & {
 
 export type PathnameParams = Omit<
   SlugDefinition,
-  "type" | "options" | "name"
+  'type' | 'options' | 'name'
 > & {
   name?: string;
   options?: PathnameOptions;

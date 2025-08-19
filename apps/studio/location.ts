@@ -1,21 +1,21 @@
-import { defineLocations } from "sanity/presentation";
+import { defineLocations } from 'sanity/presentation';
 
 export const locations = {
   blog: defineLocations({
     select: {
-      title: "title",
-      slug: "slug.current",
+      title: 'title',
+      slug: 'slug.current',
     },
     resolve: (doc) => {
       return {
         locations: [
           {
-            title: doc?.title || "Untitled",
+            title: doc?.title || 'Untitled',
             href: `${doc?.slug}`,
           },
           {
-            title: "Blog",
-            href: "/blog",
+            title: 'Blog',
+            href: '/blog',
           },
         ],
       };
@@ -23,15 +23,15 @@ export const locations = {
   }),
   home: defineLocations({
     select: {
-      title: "title",
-      slug: "slug.current",
+      title: 'title',
+      slug: 'slug.current',
     },
     resolve: () => {
       return {
         locations: [
           {
-            title: "Home",
-            href: "/",
+            title: 'Home',
+            href: '/',
           },
         ],
       };
@@ -39,14 +39,14 @@ export const locations = {
   }),
   page: defineLocations({
     select: {
-      title: "title",
-      slug: "slug.current",
+      title: 'title',
+      slug: 'slug.current',
     },
     resolve: (doc) => {
       return {
         locations: [
           {
-            title: doc?.title || "Untitled",
+            title: doc?.title || 'Untitled',
             href: `${doc?.slug}`,
           },
         ],

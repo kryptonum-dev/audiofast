@@ -3,7 +3,7 @@ import {
   GenerateIcon,
   LinkIcon,
   WarningOutlineIcon,
-} from "@sanity/icons";
+} from '@sanity/icons';
 import {
   Badge,
   Box,
@@ -13,9 +13,9 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import type { ChangeEvent } from "react";
-import { useCallback, useMemo, useState } from "react";
+} from '@sanity/ui';
+import type { ChangeEvent } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   getPublishedId,
   type ObjectFieldProps,
@@ -25,15 +25,15 @@ import {
   unset,
   useFormValue,
   useValidationStatus,
-} from "sanity";
-import slugify from "slugify";
-import { styled } from "styled-components";
+} from 'sanity';
+import slugify from 'slugify';
+import { styled } from 'styled-components';
 
-import { getDocumentPath } from "../utils/helper";
+import { getDocumentPath } from '../utils/helper';
 import {
-  validateSlugForDocumentType,
   cleanSlug,
-} from "../utils/slug-validation";
+  validateSlugForDocumentType,
+} from '../utils/slug-validation';
 
 const presentationOriginUrl = process.env.SANITY_STUDIO_PRESENTATION_URL;
 
@@ -75,7 +75,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
     () =>
       validation.validation.find(
         (v) =>
-          (v?.path.includes("current") || v?.path.includes("slug")) &&
+          (v?.path.includes('current') || v?.path.includes('slug')) &&
           v.message,
       ),
     [validation.validation],
@@ -89,9 +89,9 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const currentSlug = value?.current || "";
+  const currentSlug = value?.current || '';
   const segments = useMemo(
-    () => currentSlug.split("/").filter(Boolean),
+    () => currentSlug.split('/').filter(Boolean),
     [currentSlug],
   );
 
@@ -106,10 +106,10 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
     (newValue?: string) => {
       // Validate the new value and set validation errors
       const patch =
-        typeof newValue === "string"
+        typeof newValue === 'string'
           ? set({
               current: newValue,
-              _type: "slug",
+              _type: 'slug',
             })
           : unset();
 
@@ -137,7 +137,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
 
     // Keep existing path structure if it exists
     if (segments.length > 1) {
-      const basePath = segments.slice(0, -1).join("/");
+      const basePath = segments.slice(0, -1).join('/');
       const fullPath = `/${basePath}/${newSlug}`;
       handleChange(fullPath);
     } else {
@@ -158,7 +158,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
     slug: currentSlug,
   });
 
-  const fullUrl = `${presentationOriginUrl ?? ""}${localizedPathname}`;
+  const fullUrl = `${presentationOriginUrl ?? ''}${localizedPathname}`;
 
   const handleCopyUrl = useCallback(() => {
     navigator.clipboard.writeText(fullUrl);
@@ -240,7 +240,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
             {segments.map((segment, index) => (
               <Flex key={`${segment}-${index}`} align="center" gap={1}>
                 <PathSegment padding={2} radius={2}>
-                  <Text size={1} style={{ fontFamily: "monospace" }}>
+                  <Text size={1} style={{ fontFamily: 'monospace' }}>
                     {segment}
                   </Text>
                 </PathSegment>

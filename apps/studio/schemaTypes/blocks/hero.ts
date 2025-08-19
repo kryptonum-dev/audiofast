@@ -1,35 +1,35 @@
-import { Star } from "lucide-react";
-import { defineField, defineType } from "sanity";
+import { Star } from 'lucide-react';
+import { defineField, defineType } from 'sanity';
 
-import { buttonsField, portableTextField } from "../shared";
+import { buttonsField, portableTextField } from '../shared';
 
 export const hero = defineType({
-  name: "hero",
-  title: "Hero",
+  name: 'hero',
+  title: 'Hero',
   icon: Star,
-  type: "object",
+  type: 'object',
   fields: [
     defineField({
-      name: "badge",
-      type: "string",
-      title: "Badge",
+      name: 'badge',
+      type: 'string',
+      title: 'Badge',
       description:
-        "Optional badgedisplayed above the title, useful for highlighting new features or promotions",
+        'Optional badgedisplayed above the title, useful for highlighting new features or promotions',
     }),
     defineField({
-      name: "title",
-      type: "string",
-      title: "Title",
+      name: 'title',
+      type: 'string',
+      title: 'Title',
       description:
-        "The main heading text for the hero section that captures attention",
+        'The main heading text for the hero section that captures attention',
     }),
     portableTextField,
     defineField({
-      name: "image",
-      type: "image",
-      title: "Image",
+      name: 'image',
+      type: 'image',
+      title: 'Image',
       description:
-        "The main hero image - should be high quality and visually impactful",
+        'The main hero image - should be high quality and visually impactful',
       options: {
         hotspot: true,
       },
@@ -38,11 +38,11 @@ export const hero = defineType({
   ],
   preview: {
     select: {
-      title: "title",
+      title: 'title',
     },
     prepare: ({ title }) => ({
       title,
-      subtitle: "Hero Block",
+      subtitle: 'Hero Block',
     }),
   },
 });

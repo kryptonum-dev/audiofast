@@ -1,59 +1,59 @@
-import { LinkIcon } from "@sanity/icons";
-import { defineArrayMember, defineField, defineType } from "sanity";
+import { LinkIcon } from '@sanity/icons';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
 const portableTextMembers = [
   defineArrayMember({
-    name: "block",
-    type: "block",
+    name: 'block',
+    type: 'block',
     styles: [
-      { title: "Normalny", value: "normal" },
-      { title: "H2", value: "h2" },
-      { title: "H3", value: "h3" },
+      { title: 'Normalny', value: 'normal' },
+      { title: 'H2', value: 'h2' },
+      { title: 'H3', value: 'h3' },
     ],
     lists: [
-      { title: "Numerowana", value: "number" },
-      { title: "Wypunktowana", value: "bullet" },
+      { title: 'Numerowana', value: 'number' },
+      { title: 'Wypunktowana', value: 'bullet' },
     ],
     marks: {
       annotations: [
         {
-          name: "customLink",
-          type: "object",
-          title: "Link wewnętrzny/zewnętrzny",
+          name: 'customLink',
+          type: 'object',
+          title: 'Link wewnętrzny/zewnętrzny',
           icon: LinkIcon,
           fields: [
             defineField({
-              name: "customLink",
-              type: "customUrl",
+              name: 'customLink',
+              type: 'customUrl',
             }),
           ],
         },
       ],
       decorators: [
-        { title: "Pogrubienie", value: "strong" },
-        { title: "Kursywa", value: "em" },
+        { title: 'Pogrubienie', value: 'strong' },
+        { title: 'Kursywa', value: 'em' },
       ],
     },
   }),
 ];
 
 export const portableText = defineType({
-  name: "portableText",
-  type: "array",
+  name: 'portableText',
+  type: 'array',
   of: portableTextMembers,
 });
 
 export const headingPortableText = defineType({
-  name: "headingPortableText",
-  type: "array",
+  name: 'headingPortableText',
+  type: 'array',
   of: [
     defineArrayMember({
-      type: "block",
-      styles: [{ title: "Normalny", value: "normal" }],
+      type: 'block',
+      styles: [{ title: 'Normalny', value: 'normal' }],
       lists: [],
       marks: {
         annotations: [],
-        decorators: [{ title: "Pogrubienie", value: "strong" }],
+        decorators: [{ title: 'Pogrubienie', value: 'strong' }],
       },
     }),
   ],
@@ -73,8 +73,8 @@ export const customPortableText = (
   );
   return defineField({
     ...options,
-    name: name ?? "portableText",
-    type: "array",
+    name: name ?? 'portableText',
+    type: 'array',
     of: customMembers,
   });
 };

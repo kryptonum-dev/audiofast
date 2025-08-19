@@ -1,28 +1,28 @@
-import { assist } from "@sanity/assist";
-import { visionTool } from "@sanity/vision";
-import { defineConfig } from "sanity";
-import { presentationTool } from "sanity/presentation";
-import { structureTool } from "sanity/structure";
-import { iconPicker } from "sanity-plugin-icon-picker";
-import { media } from "sanity-plugin-media";
+import { assist } from '@sanity/assist';
+import { visionTool } from '@sanity/vision';
+import { defineConfig } from 'sanity';
+import { presentationTool } from 'sanity/presentation';
+import { structureTool } from 'sanity/structure';
+import { iconPicker } from 'sanity-plugin-icon-picker';
+import { media } from 'sanity-plugin-media';
 
-import { Logo } from "./components/logo";
-import { locations } from "./location";
-import { presentationUrl } from "./plugins/presentation-url";
-import { schemaTypes } from "./schemaTypes";
-import { structure } from "./structure";
-import { createPageTemplate, getPresentationUrl } from "./utils/helper";
+import { Logo } from './components/logo';
+import { locations } from './location';
+import { presentationUrl } from './plugins/presentation-url';
+import { schemaTypes } from './schemaTypes';
+import { structure } from './structure';
+import { createPageTemplate, getPresentationUrl } from './utils/helper';
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "";
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
 const dataset = process.env.SANITY_STUDIO_DATASET;
 const title = process.env.SANITY_STUDIO_TITLE;
 
 export default defineConfig({
-  name: "default",
-  title: title ?? "Turbo Studio",
+  name: 'default',
+  title: title ?? 'Turbo Studio',
   projectId: projectId,
   icon: Logo,
-  dataset: dataset ?? "production",
+  dataset: dataset ?? 'production',
   mediaLibrary: {
     enabled: true,
   },
@@ -34,7 +34,7 @@ export default defineConfig({
       previewUrl: {
         origin: getPresentationUrl(),
         previewMode: {
-          enable: "/api/presentation-draft",
+          enable: '/api/presentation-draft',
         },
       },
     }),
@@ -51,18 +51,18 @@ export default defineConfig({
   form: {
     image: {
       assetSources: (sources) =>
-        sources.filter((source) => source.name !== "sanity-default"),
+        sources.filter((source) => source.name !== 'sanity-default'),
     },
     // Disable the default for file assets
     file: {
       assetSources: (sources) =>
-        sources.filter((source) => source.name !== "sanity-default"),
+        sources.filter((source) => source.name !== 'sanity-default'),
     },
   },
   document: {
     newDocumentOptions: (prev, { creationContext }) => {
       const { type } = creationContext;
-      if (type === "global") return [];
+      if (type === 'global') return [];
       return prev;
     },
   },

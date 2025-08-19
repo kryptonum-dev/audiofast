@@ -1,6 +1,6 @@
-import { pageBuilderBlocks } from "./blocks";
-import { definitions } from "./definitions";
-import { documents, singletons } from "./documents";
+import { pageBuilderBlocks } from './blocks';
+import { definitions } from './definitions';
+import { documents, singletons } from './documents';
 
 // Creating a new constant 'schemaTypes' which is a copy of the 'documents' array
 export const schemaTypes = [...documents, ...definitions, ...pageBuilderBlocks];

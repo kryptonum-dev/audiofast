@@ -1,4 +1,4 @@
-import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
   CogIcon,
   File,
@@ -8,14 +8,14 @@ import {
   PanelBottomIcon,
   PanelTopDashedIcon,
   Settings2,
-} from "lucide-react";
+} from 'lucide-react';
 import type {
   StructureBuilder,
   StructureResolverContext,
-} from "sanity/structure";
+} from 'sanity/structure';
 
-import type { SchemaType, SingletonType } from "./schemaTypes";
-import { getTitleCase } from "./utils/helper";
+import type { SchemaType, SingletonType } from './schemaTypes';
+import { getTitleCase } from './utils/helper';
 
 type Base<T = SchemaType> = {
   id?: string;
@@ -101,41 +101,41 @@ export const structure = (
   context: StructureResolverContext,
 ) => {
   return S.list()
-    .title("Content")
+    .title('Content')
     .items([
-      createSingleTon({ S, type: "homePage", icon: HomeIcon }),
+      createSingleTon({ S, type: 'homePage', icon: HomeIcon }),
       S.divider(),
-      createList({ S, type: "page", title: "Pages" }),
+      createList({ S, type: 'page', title: 'Pages' }),
       createList({
         S,
-        type: "faq",
-        title: "FAQs",
+        type: 'faq',
+        title: 'FAQs',
         icon: MessageCircleQuestion,
       }),
       S.divider(),
       S.listItem()
-        .title("Site Configuration")
+        .title('Site Configuration')
         .icon(Settings2)
         .child(
           S.list()
-            .title("Site Configuration")
+            .title('Site Configuration')
             .items([
               createSingleTon({
                 S,
-                type: "navbar",
-                title: "Navigation",
+                type: 'navbar',
+                title: 'Navigation',
                 icon: PanelTopDashedIcon,
               }),
               createSingleTon({
                 S,
-                type: "footer",
-                title: "Footer",
+                type: 'footer',
+                title: 'Footer',
                 icon: PanelBottomIcon,
               }),
               createSingleTon({
                 S,
-                type: "settings",
-                title: "Global Settings",
+                type: 'settings',
+                title: 'Global Settings',
                 icon: CogIcon,
               }),
             ]),
