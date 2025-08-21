@@ -17,5 +17,12 @@ export const singletonType = singletons.map(({ name }) => name);
 // Defining a new type 'SingletonType' which is a union of all the types in the 'singletonType' array
 export type SingletonType = (typeof singletonType)[number];
 
+// Defining a new constant 'singletonActions' which is a set of actions that are allowed for singleton types
+export const singletonActions = new Set([
+  'publish',
+  'discardChanges',
+  'restore',
+]);
+
 // Exporting the 'schemaTypes' constant as the default export of this module
 export default schemaTypes;

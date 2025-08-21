@@ -1,22 +1,22 @@
-import { HomeIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
+import { AlertTriangle } from 'lucide-react';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 
-export const homePage = defineType({
-  name: 'homePage',
+export const notFound = defineType({
+  name: 'notFound',
   type: 'document',
-  title: 'Strona główna',
-  icon: HomeIcon,
+  title: 'Nie znaleziono strony (404)',
+  icon: AlertTriangle,
   description:
-    'To tutaj tworzysz główną stronę, którą widzą odwiedzający, gdy po raz pierwszy przychodzą na Twoją stronę internetową. Pomyśl o tym jak o drzwiach wejściowych do Twojego internetowego domu - możesz dodać przyjazny tytuł, krótki opis i zbudować stronę z różnymi sekcjami jak obrazy, tekst i przyciski.',
+    'Strona błędu 404, która wyświetla się, gdy użytkownik próbuje odwiedzić stronę, która nie istnieje. Pomaga użytkownikom wrócić na właściwą ścieżkę na Twojej stronie.',
   groups: GROUPS,
   fields: [
     ...defineSlugForDocument({
-      slug: '/',
+      slug: '/404',
       group: GROUP.MAIN_CONTENT,
     }),
     pageBuilderField,
@@ -29,9 +29,9 @@ export const homePage = defineType({
       slug: 'slug.current',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Strona główna',
-      media: HomeIcon,
-      subtitle: description || 'Strona główna',
+      title: name || 'Nie znaleziono strony (404)',
+      media: AlertTriangle,
+      subtitle: description || 'Nie znaleziono strony (404)',
     }),
   },
 });

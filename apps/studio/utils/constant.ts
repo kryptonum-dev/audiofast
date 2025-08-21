@@ -7,6 +7,7 @@ import {
   UsersIcon,
 } from '@sanity/icons';
 import type { FieldGroupDefinition } from 'sanity';
+import { isProduction } from './helper';
 
 export const GROUP = {
   SEO: 'seo',
@@ -46,3 +47,13 @@ export const GROUPS: FieldGroupDefinition[] = [
     title: 'Powiązane',
   },
 ];
+
+/**
+ * Global declaration of the base url for the application.
+ * This constant is used for constructing full URLs and determining external links.
+ * @constant
+ * @type {string}
+ */
+export const WEB_BASE_URL: string = isProduction()
+  ? 'https://www.audiofast.pl/'
+  : 'http://localhost:3000';

@@ -359,3 +359,7 @@ export function toPlainText(blocks = []) {
     })
     .join('\n\n');
 }
+
+export function isProduction() {
+  return process.env.NODE_ENV === 'production';
+}

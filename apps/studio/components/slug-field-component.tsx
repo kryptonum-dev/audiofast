@@ -1,9 +1,4 @@
-import {
-  CopyIcon,
-  GenerateIcon,
-  LinkIcon,
-  WarningOutlineIcon,
-} from '@sanity/icons';
+import { CopyIcon, SyncIcon, WarningOutlineIcon } from '@sanity/icons';
 import {
   Badge,
   Box,
@@ -14,10 +9,9 @@ import {
   Text,
   TextInput,
 } from '@sanity/ui';
-import type { ChangeEvent } from 'react';
-import { useCallback, useMemo, useState } from 'react';
+import type { FocusEvent } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import {
-  getPublishedId,
   type ObjectFieldProps,
   type SanityDocument,
   set,
@@ -26,279 +20,450 @@ import {
   useFormValue,
   useValidationStatus,
 } from 'sanity';
-import slugify from 'slugify';
 import { styled } from 'styled-components';
 
-import { getDocumentPath } from '../utils/helper';
-import {
-  cleanSlug,
-  validateSlugForDocumentType,
-} from '../utils/slug-validation';
-
-const presentationOriginUrl = process.env.SANITY_STUDIO_PRESENTATION_URL;
-
-const CopyButton = styled(Button)`
-  cursor: pointer;
-`;
+import { getPresentationUrl } from '../utils/helper';
+import { slugify } from '../utils/slugify';
+import { WEB_BASE_URL } from '../utils/constant';
 
 const GenerateButton = styled(Button)`
   cursor: pointer;
+  > span:nth-of-type(2) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
 `;
 
-const SlugInput = styled(TextInput)`
-  font-family: monospace;
-  font-size: 14px;
+const CopyButton = styled(Button)`
+  margin-left: auto;
+  cursor: pointer;
+  > span:nth-of-type(2) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
 `;
 
-const PathSegment = styled(Card)`
-  background: var(--card-muted-bg-color);
-  border: 1px solid var(--card-border-color);
-`;
+interface PathnameFieldComponentProps extends ObjectFieldProps<SlugValue> {
+  prefix?: string;
+}
 
-const UrlPreview = styled.div`
-  font-family: monospace;
-  font-size: 12px;
-  color: var(--card-muted-fg-color);
-  background: var(--card-muted-bg-color);
-  padding: 8px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--card-border-color);
-  word-break: break-all;
-  overflow-wrap: break-word;
-`;
-
-export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
+export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
   const document = useFormValue([]) as SanityDocument;
-  const publishedId = getPublishedId(document?._id);
-  const validation = useValidationStatus(publishedId, document?._type);
+  const validation = useValidationStatus(
+    document?._id.replace(/^drafts\./, ''),
+    document?._type
+  );
+  const nameField = useFormValue(['name']) as string;
+
   const slugValidationError = useMemo(
     () =>
       validation.validation.find(
         (v) =>
-          (v?.path.includes('current') || v?.path.includes('slug')) &&
-          v.message,
+          (v?.path.includes('current') || v?.path.includes('slug')) && v.message
       ),
-    [validation.validation],
+    [validation.validation]
   );
-
   const {
     inputProps: { onChange, value, readOnly },
     title,
     description,
+    prefix,
   } = props;
 
-  const [isEditing, setIsEditing] = useState(false);
+  // Extract prefix and main content for display
+  const { prefixPart, mainContent } = useMemo(() => {
+    if (!value?.current) return { prefixPart: '', mainContent: '' };
 
-  const currentSlug = value?.current || '';
-  const segments = useMemo(
-    () => currentSlug.split('/').filter(Boolean),
-    [currentSlug],
-  );
+    // Handle root path specially
+    if (value.current === '/') {
+      return {
+        prefixPart: '',
+        mainContent: '',
+      };
+    }
 
-  // Validation for slug format
-  const slugFormatErrors = useMemo(() => {
-    if (!document?._type) return [];
+    if (prefix && value.current.startsWith(prefix)) {
+      // Remove the expected prefix and trailing slash to get the main content
+      const contentWithoutPrefix = value.current
+        .replace(prefix, '')
+        .replace(/\/$/, '');
+      return {
+        prefixPart: prefix.replace(/\/$/, ''), // Remove trailing slash from prefix for display
+        mainContent: contentWithoutPrefix,
+      };
+    }
 
-    return validateSlugForDocumentType(currentSlug, document._type);
-  }, [currentSlug, document?._type]);
+    // If no defined prefix, treat the whole path as main content (without leading/trailing slashes)
+    return {
+      prefixPart: '',
+      mainContent: value.current.replace(/^\/+|\/+$/g, ''), // Remove leading and trailing slashes
+    };
+  }, [value, prefix]);
+
+  const fullPathInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = useCallback(
-    (newValue?: string) => {
-      // Validate the new value and set validation errors
-      const patch =
-        typeof newValue === 'string'
-          ? set({
-              current: newValue,
-              _type: 'slug',
-            })
-          : unset();
+    (value?: string) => {
+      if (!value) {
+        onChange(unset());
+        return;
+      }
 
-      onChange(patch);
+      let finalValue: string;
+
+      // If user is typing a full path (starts with /), use it as-is but ensure trailing slash
+      if (value.startsWith('/')) {
+        finalValue = value === '/' ? value : `${value.replace(/\/+$/, '')}/`;
+      } else {
+        // If user is typing just the content part, add prefix and trailing slash
+        const cleanValue = value.trim();
+        if (prefix && cleanValue) {
+          finalValue = `${prefix}${cleanValue}/`;
+        } else if (cleanValue) {
+          finalValue = `/${cleanValue}/`;
+        } else {
+          finalValue = prefix || '/';
+        }
+      }
+
+      onChange(
+        set({
+          current: finalValue,
+          _type: 'slug',
+        })
+      );
     },
-    [onChange],
+    [onChange, prefix]
   );
 
-  const handleInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const rawValue = e.target.value;
-      // Allow users to type anything - don't clean while typing
-      handleChange(rawValue);
-    },
-    [handleChange],
-  );
-  const handleGenerate = useCallback(() => {
-    const title = document?.title as string | undefined;
-    if (!title) return;
+  const handleBlur = useCallback((e: FocusEvent<HTMLInputElement>) => {
+    // No longer need to set folder lock state
+  }, []);
 
-    const newSlug = slugify(title, {
-      lower: true,
-      remove: /[^a-zA-Z0-9\s-]/g,
-    });
+  const localizedPathname = `${WEB_BASE_URL}${value?.current || '/'}`;
 
-    // Keep existing path structure if it exists
-    if (segments.length > 1) {
-      const basePath = segments.slice(0, -1).join('/');
-      const fullPath = `/${basePath}/${newSlug}`;
-      handleChange(fullPath);
-    } else {
-      const fullPath = `/${newSlug}`;
-      handleChange(fullPath);
+  // Function to generate slug from name field
+  const generateSlug = useCallback(() => {
+    if (!nameField) return;
+
+    // Generate the slugified version of the name (this will be the main content)
+    const slugified = slugify(nameField);
+
+    // Use handleChange to properly construct the full path with prefix and trailing slash
+    handleChange(slugified);
+  }, [nameField, handleChange]);
+
+  // Input validation for real-time feedback
+  const inputValidation = useMemo(() => {
+    if (!mainContent) return null;
+
+    const errors = [];
+
+    // Check for invalid characters at the beginning
+    if (mainContent.startsWith('/')) {
+      errors.push('Nie można zaczynać od "/"');
     }
-  }, [document?.title, handleChange, segments]);
 
-  const handleCleanUp = useCallback(() => {
-    if (!currentSlug || !document?._type) return;
+    // Check for invalid characters at the end
+    if (mainContent.endsWith('-')) {
+      errors.push('Nie może kończyć się "-"');
+    }
 
-    const cleanValue = cleanSlug(currentSlug, document._type);
-    handleChange(cleanValue);
-  }, [currentSlug, document?._type, handleChange]);
+    // Check for invalid characters in general
+    const invalidChars = mainContent.match(/[^a-z0-9-]/gi);
+    if (invalidChars) {
+      const uniqueChars = [...new Set(invalidChars)].join(', ');
+      errors.push(`Nieprawidłowe znaki: ${uniqueChars}`);
+    }
 
-  const localizedPathname = getDocumentPath({
-    ...document,
-    slug: currentSlug,
-  });
+    // Check for multiple consecutive hyphens
+    if (mainContent.includes('--')) {
+      errors.push('Wiele następujących po sobie myślników nie jest dozwolone');
+    }
 
-  const fullUrl = `${presentationOriginUrl ?? ''}${localizedPathname}`;
+    return errors.length > 0 ? errors : null;
+  }, [mainContent]);
 
-  const handleCopyUrl = useCallback(() => {
-    navigator.clipboard.writeText(fullUrl);
-  }, [fullUrl]);
+  // Handle input change with validation
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = e.currentTarget.value;
+
+      // Clean the input as user types
+      let cleanedValue = inputValue;
+
+      // Remove leading slashes as user types
+      cleanedValue = cleanedValue.replace(/^\/+/, '');
+
+      // Remove invalid characters (keep only a-z, 0-9, and single hyphens)
+      cleanedValue = cleanedValue.replace(/[^a-z0-9-]/gi, '');
+
+      // Replace multiple consecutive hyphens with single hyphen
+      cleanedValue = cleanedValue.replace(/-+/g, '-');
+
+      // Remove trailing hyphens (but allow typing them temporarily)
+      // This creates a balance - user can type but sees immediate feedback
+      const hasTrailingHyphen = cleanedValue.endsWith('-');
+      if (hasTrailingHyphen && cleanedValue.length > 1) {
+        // Allow one trailing hyphen for typing, but show warning
+        cleanedValue = cleanedValue.replace(/-+$/, '-');
+      }
+
+      // Update the input field to reflect the cleaned value
+      if (e.currentTarget.value !== cleanedValue) {
+        e.currentTarget.value = cleanedValue;
+      }
+
+      handleChange(cleanedValue);
+    },
+    [handleChange]
+  );
+
+  const pathInput = useMemo(() => {
+    // Determine if we should show the generate button
+    const showGenerateButton = Boolean(nameField) && !readOnly;
+
+    // Handle special fixed paths
+    if (value?.current === '/') {
+      return (
+        <Stack space={2}>
+          <Flex gap={1} align="center">
+            {/* Root path display */}
+            <Card
+              paddingX={2}
+              paddingY={2}
+              border
+              radius={1}
+              tone="transparent"
+              style={{
+                backgroundColor: 'var(--card-muted-bg-color)',
+              }}>
+              <Text muted size={2}>
+                /
+              </Text>
+            </Card>
+            <Text muted size={2}>
+              (Strona główna)
+            </Text>
+          </Flex>
+        </Stack>
+      );
+    }
+
+    // Handle other fixed paths (like /blog, /404, etc.) that don't end with /
+    if (value?.current && !value.current.endsWith('/') && readOnly) {
+      return (
+        <Stack space={2}>
+          <Flex gap={1} align="center">
+            {/* Fixed path display */}
+            <Card
+              paddingX={2}
+              paddingY={2}
+              border
+              radius={1}
+              tone="transparent"
+              style={{
+                backgroundColor: 'var(--card-muted-bg-color)',
+              }}>
+              <Text muted size={2}>
+                {value.current}
+              </Text>
+            </Card>
+            <Text muted size={2}>
+              (Ścieżka stała)
+            </Text>
+          </Flex>
+        </Stack>
+      );
+    }
+
+    return (
+      <Stack space={2}>
+        <Flex gap={1} align="center">
+          {/* Leading slash indicator for non-prefix paths */}
+          {!prefixPart && (
+            <Card
+              paddingX={2}
+              paddingY={2}
+              border
+              radius={1}
+              tone="transparent"
+              style={{
+                backgroundColor: 'var(--card-muted-bg-color)',
+              }}>
+              <Text muted size={2}>
+                /
+              </Text>
+            </Card>
+          )}
+          {/* Prefix indicator */}
+          {prefixPart && (
+            <>
+              <Card
+                paddingX={2}
+                paddingY={2}
+                border
+                radius={1}
+                tone="transparent"
+                style={{
+                  backgroundColor: 'var(--card-muted-bg-color)',
+                }}>
+                <Text muted size={2}>
+                  {prefixPart}
+                </Text>
+              </Card>
+              <Text muted size={2}>
+                /
+              </Text>
+            </>
+          )}
+
+          {/* Main content input */}
+          <Box flex={1}>
+            <TextInput
+              value={mainContent}
+              onChange={handleInputChange}
+              ref={fullPathInputRef}
+              onBlur={handleBlur}
+              disabled={readOnly}
+              placeholder={
+                prefixPart ? 'Wprowadź nazwę' : 'Wprowadź nazwę strony'
+              }
+              style={{ width: '100%' }}
+            />
+          </Box>
+
+          {/* Trailing slash indicator (only show for non-root paths) */}
+          {value?.current !== '/' && (
+            <Card
+              paddingX={2}
+              paddingY={2}
+              border
+              radius={1}
+              tone="transparent"
+              style={{
+                backgroundColor: 'var(--card-muted-bg-color)',
+              }}>
+              <Text muted size={2}>
+                /
+              </Text>
+            </Card>
+          )}
+
+          {/* Generate button */}
+          {showGenerateButton && (
+            <GenerateButton
+              icon={SyncIcon}
+              onClick={generateSlug}
+              title="Wygeneruj slug z nazwy"
+              mode="bleed"
+              tone="primary"
+              padding={2}
+              fontSize={1}>
+              <span />
+            </GenerateButton>
+          )}
+        </Flex>
+      </Stack>
+    );
+  }, [
+    value,
+    prefixPart,
+    mainContent,
+    handleInputChange,
+    handleBlur,
+    readOnly,
+    generateSlug,
+    nameField,
+  ]);
 
   return (
     <Stack space={3}>
-      {/* Header */}
-      <Stack space={2}>
+      <Stack space={2} flex={1}>
         <Text size={1} weight="semibold">
           {title}
         </Text>
         {description && (
-          <Text size={1} muted>
+          <Text
+            size={1}
+            style={{ color: 'var(--card-fg-color)', marginTop: '8px' }}>
             {description}
           </Text>
         )}
       </Stack>
 
-      {/* URL Preview */}
-      {currentSlug && (
-        <Stack space={2}>
-          <Text size={1} weight="medium">
-            Podgląd
-          </Text>
-          <Flex align="center" gap={2}>
-            <UrlPreview style={{ flex: 1 }}>
-              <Flex align="center" gap={1}>
-                <LinkIcon style={{ flexShrink: 0 }} />
-                <span>{fullUrl}</span>
-              </Flex>
-            </UrlPreview>
+      {typeof value?.current === 'string' && (
+        <Flex direction="column" gap={2}>
+          <Flex align="center">
+            <p
+              style={{
+                textOverflow: 'ellipsis',
+                margin: 0,
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                color: 'var(--card-muted-fg-color)',
+                fontSize: '0.8125rem',
+              }}>
+              {localizedPathname}
+            </p>
             <CopyButton
               icon={CopyIcon}
-              onClick={handleCopyUrl}
-              title="Kopiuj URL"
-              mode="ghost"
-              padding={2}
-            />
+              onClick={() => navigator.clipboard.writeText(localizedPathname)}
+              title="Kopiuj link"
+              mode="bleed"
+              tone="primary"
+              fontSize={1}>
+              <span />
+            </CopyButton>
           </Flex>
-        </Stack>
+        </Flex>
       )}
 
-      {/* Path Editor */}
-      <Stack space={2}>
-        <Flex align="center" justify="space-between">
-          <Text size={1} weight="medium">
-            Ścieżka URL
-          </Text>
-          <Flex gap={2}>
-            {slugFormatErrors.length > 0 && (
-              <Button
-                text="Wyczyść"
-                onClick={handleCleanUp}
-                disabled={readOnly}
-                mode="ghost"
-                tone="positive"
-                fontSize={1}
-              />
-            )}
-            <GenerateButton
-              icon={GenerateIcon}
-              text="Generuj"
-              onClick={handleGenerate}
-              disabled={!document?.title || readOnly}
-              mode="ghost"
-              tone="primary"
-              fontSize={1}
-            />
-          </Flex>
-        </Flex>
+      {pathInput}
 
-        {/* Visual Path Segments */}
-        {segments.length > 0 && !isEditing && (
-          <Flex align="center" gap={1} wrap="wrap">
-            <Text size={1} muted>
-              /
-            </Text>
-            {segments.map((segment, index) => (
-              <Flex key={`${segment}-${index}`} align="center" gap={1}>
-                <PathSegment padding={2} radius={2}>
-                  <Text size={1} style={{ fontFamily: 'monospace' }}>
-                    {segment}
-                  </Text>
-                </PathSegment>
-                {index < segments.length - 1 && (
-                  <Text size={1} muted>
-                    /
-                  </Text>
-                )}
-              </Flex>
-            ))}
-          </Flex>
-        )}
-
-        {/* Input Field */}
-        <Flex gap={2} align="center">
-          <Box flex={1}>
-            <SlugInput
-              value={currentSlug}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
-              placeholder="Wprowadź ścieżkę URL (np. o-nas lub blog/moj-post)"
-              disabled={readOnly}
-            />
-          </Box>
-        </Flex>
-
-        {/* Helper Text */}
-        <Text size={1} muted>
-          Musi zaczynać się od ukośnika (/). Użyj ukośników, aby tworzyć
-          zagnieżdżone ścieżki. Dozwolone są tylko małe litery, cyfry, myślniki
-          i ukośniki.
-        </Text>
-      </Stack>
-
-      {/* Format Validation Errors */}
-      {slugFormatErrors.length > 0 && (
+      {/* Input validation warnings */}
+      {inputValidation && (
         <Stack space={2}>
-          {slugFormatErrors.map((error) => (
-            <Badge key={error} tone="critical" padding={3} radius={2}>
-              <Flex gap={2} align="center">
+          {inputValidation.map((error, index) => (
+            <Badge
+              key={index}
+              tone="critical"
+              padding={4}
+              style={{
+                borderRadius: 'var(--card-radius)',
+              }}>
+              <Flex gap={4} align="center">
                 <WarningOutlineIcon />
-                <Text size={1}>{error}</Text>
+                <Text size={1} color="red">
+                  {error}
+                </Text>
               </Flex>
             </Badge>
           ))}
         </Stack>
       )}
 
-      {/* Sanity Validation Error */}
-      {slugValidationError && (
-        <Badge tone="critical" padding={3} radius={2}>
-          <Flex gap={2} align="center">
+      {slugValidationError ? (
+        <Badge
+          tone="critical"
+          padding={4}
+          style={{
+            borderRadius: 'var(--card-radius)',
+          }}>
+          <Flex gap={4} align="center">
             <WarningOutlineIcon />
-            <Text size={1}>{slugValidationError.message}</Text>
+            <Text size={1} color="red">
+              {slugValidationError.message}
+            </Text>
           </Flex>
         </Badge>
-      )}
+      ) : null}
     </Stack>
   );
 }

@@ -3,14 +3,15 @@ import { defineLocations } from 'sanity/presentation';
 export const locations = {
   blog: defineLocations({
     select: {
-      title: 'title',
       slug: 'slug.current',
+      name: 'name',
     },
     resolve: (doc) => {
+      console.log(doc);
       return {
         locations: [
           {
-            title: doc?.title || 'Untitled',
+            title: doc?.name || 'Untitled',
             href: `${doc?.slug}`,
           },
           {
@@ -30,7 +31,7 @@ export const locations = {
       return {
         locations: [
           {
-            title: 'Home',
+            title: 'Strona główna',
             href: '/',
           },
         ],
@@ -39,14 +40,14 @@ export const locations = {
   }),
   page: defineLocations({
     select: {
-      title: 'title',
       slug: 'slug.current',
+      name: 'name',
     },
     resolve: (doc) => {
       return {
         locations: [
           {
-            title: doc?.title || 'Untitled',
+            title: doc?.name || 'Untitled',
             href: `${doc?.slug}`,
           },
         ],

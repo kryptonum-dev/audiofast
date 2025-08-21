@@ -1,14 +1,23 @@
+import { DocumentIcon } from '@sanity/icons';
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
+  AlertTriangle,
   Book,
+  BookOpen,
   CogIcon,
   File,
+  FileArchive,
   HomeIcon,
+  Link,
+  Lock,
   type LucideIcon,
   MessageCircleQuestion,
   PanelBottom,
   PanelTop,
+  SearchIcon,
   Settings2,
+  ShieldIcon,
+  Users2Icon,
 } from 'lucide-react';
 import type {
   StructureBuilder,
@@ -60,18 +69,20 @@ type CreateIndexList = {
   list: Base;
   index: Base<SingletonType>;
   context: StructureResolverContext;
+  fullTitle?: string;
 };
 
 const createIndexListWithOrderableItems = ({
   S,
   index,
+  fullTitle,
   list,
   context,
 }: CreateIndexList) => {
   const indexTitle = index.title ?? getTitleCase(index.type);
   const listTitle = list.title ?? getTitleCase(list.type);
   return S.listItem()
-    .title(listTitle)
+    .title(fullTitle ?? listTitle)
     .icon(index.icon ?? File)
     .child(
       S.list()
@@ -112,6 +123,14 @@ export const structure = (
       }),
       createList({ S, type: 'page', title: 'Podstrony', icon: Book }),
       S.divider(),
+      createIndexListWithOrderableItems({
+        S,
+        index: { type: 'blog', title: 'Strona Bloga', icon: Book },
+        list: { type: 'blog-article', title: 'Wpisy na blogu', icon: BookOpen },
+        fullTitle: 'Blog',
+        context,
+      }),
+      S.divider(),
       createList({
         S,
         type: 'faq',
@@ -143,6 +162,37 @@ export const structure = (
                 type: 'settings',
                 title: 'Ustawienia globalne',
                 icon: CogIcon,
+              }),
+              createList({
+                S,
+                type: 'socialMedia',
+                title: 'Media społecznościowe',
+                icon: Users2Icon,
+              }),
+              createSingleTon({
+                S,
+                type: 'notFound',
+                title: 'Nie znaleziono strony (404)',
+                icon: AlertTriangle,
+              }),
+
+              createSingleTon({
+                S,
+                type: 'termsAndConditions',
+                title: 'Regulamin',
+                icon: FileArchive,
+              }),
+              createSingleTon({
+                S,
+                type: 'privacyPolicy',
+                title: 'Polityka prywatności',
+                icon: Lock,
+              }),
+              createSingleTon({
+                S,
+                type: 'redirects',
+                title: 'Przekierowania',
+                icon: Link,
               }),
             ])
         ),

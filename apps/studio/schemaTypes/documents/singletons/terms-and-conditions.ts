@@ -1,22 +1,22 @@
-import { HomeIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
+import { FileArchive } from 'lucide-react';
 
-export const homePage = defineType({
-  name: 'homePage',
+export const termsAndConditions = defineType({
+  name: 'termsAndConditions',
   type: 'document',
-  title: 'Strona główna',
-  icon: HomeIcon,
+  title: 'Regulamin',
+  icon: FileArchive,
   description:
-    'To tutaj tworzysz główną stronę, którą widzą odwiedzający, gdy po raz pierwszy przychodzą na Twoją stronę internetową. Pomyśl o tym jak o drzwiach wejściowych do Twojego internetowego domu - możesz dodać przyjazny tytuł, krótki opis i zbudować stronę z różnymi sekcjami jak obrazy, tekst i przyciski.',
+    'Strona regulaminu określa zasady korzystania z Twojej strony internetowej lub usług. Zawiera warunki użytkowania, które użytkownicy muszą zaakceptować.',
   groups: GROUPS,
   fields: [
     ...defineSlugForDocument({
-      slug: '/',
+      slug: '/regulamin',
       group: GROUP.MAIN_CONTENT,
     }),
     pageBuilderField,
@@ -29,9 +29,9 @@ export const homePage = defineType({
       slug: 'slug.current',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Strona główna',
-      media: HomeIcon,
-      subtitle: description || 'Strona główna',
+      title: name || 'Regulamin',
+      media: FileArchive,
+      subtitle: description || 'Regulamin',
     }),
   },
 });

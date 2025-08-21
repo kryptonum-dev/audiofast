@@ -1,5 +1,6 @@
 import { CogIcon } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
+
 import { GROUP, GROUPS } from '../../../utils/constant';
 
 export const settings = defineType({

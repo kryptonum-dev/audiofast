@@ -9,9 +9,15 @@ import { media } from 'sanity-plugin-media';
 import { Logo } from './components/logo';
 import { locations } from './location';
 import { presentationUrl } from './plugins/presentation-url';
-import { schemaTypes } from './schemaTypes';
+import {
+  schemaTypes,
+  singletonActions,
+  SingletonType,
+  singletonType,
+} from './schemaTypes';
 import { structure } from './structure';
 import { createPageTemplate, getPresentationUrl } from './utils/helper';
+import { singletons } from './schemaTypes/documents';
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
 const dataset = process.env.SANITY_STUDIO_DATASET;
@@ -47,10 +53,36 @@ export default defineConfig({
     media(),
     presentationUrl(),
   ],
+
   document: {
+    actions: (input, context) => {
+      // For singleton types
+      if (
+        singletons
+          .map((singleton) => singleton.name)
+          .includes(context.schemaType as SingletonType)
+      ) {
+        return input.filter(
+          ({ action }) => action && singletonActions.has(action)
+        );
+      }
+
+      // For socialMedia - allow only viewing, deleting and custom actions
+      if (context.schemaType === 'socialMedia') {
+        return input.filter(({ action }) => {
+          if (!action) return true;
+          return action === 'publish' || action === 'discardChanges';
+        });
+      }
+
+      // For all other types
+      return input;
+    },
     newDocumentOptions: (prev, { creationContext }) => {
-      const { type } = creationContext;
-      if (type === 'global') return [];
+      const { type, schemaType } = creationContext;
+      if (type === 'structure' && schemaType == 'socialMedia') {
+        return [];
+      }
       return prev;
     },
   },

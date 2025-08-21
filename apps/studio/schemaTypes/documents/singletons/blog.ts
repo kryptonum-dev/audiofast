@@ -1,22 +1,20 @@
-import { HomeIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
+import { BookOpen } from 'lucide-react';
 
-export const homePage = defineType({
-  name: 'homePage',
+export const blog = defineType({
+  name: 'blog',
   type: 'document',
-  title: 'Strona główna',
-  icon: HomeIcon,
-  description:
-    'To tutaj tworzysz główną stronę, którą widzą odwiedzający, gdy po raz pierwszy przychodzą na Twoją stronę internetową. Pomyśl o tym jak o drzwiach wejściowych do Twojego internetowego domu - możesz dodać przyjazny tytuł, krótki opis i zbudować stronę z różnymi sekcjami jak obrazy, tekst i przyciski.',
+  title: 'Blog',
+  icon: BookOpen,
   groups: GROUPS,
   fields: [
     ...defineSlugForDocument({
-      slug: '/',
+      slug: '/blog/',
       group: GROUP.MAIN_CONTENT,
     }),
     pageBuilderField,
@@ -29,9 +27,9 @@ export const homePage = defineType({
       slug: 'slug.current',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Strona główna',
-      media: HomeIcon,
-      subtitle: description || 'Strona główna',
+      title: name || 'Blog',
+      media: BookOpen,
+      subtitle: description || 'Blog',
     }),
   },
 });
