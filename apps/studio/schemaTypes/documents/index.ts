@@ -1,16 +1,27 @@
+import { blogArticle } from './collections/blog-article';
+import { brand } from './collections/brand';
 import { faq } from './collections/faq';
 import { page } from './collections/page';
+import { product } from './collections/product';
+import { productCategoryParent } from './collections/product-category-parent';
+import { productCategorySub } from './collections/product-category-sub';
+import { review } from './collections/review';
 import socialMedia from './collections/social-media';
+import { store } from './collections/store';
+import { blog } from './singletons/blog';
+import { brands } from './singletons/brands';
 import { footer } from './singletons/footer';
 import { homePage } from './singletons/home-page';
 import { navbar } from './singletons/navbar';
 import { notFound } from './singletons/not-found';
 import { privacyPolicy } from './singletons/privacy-policy';
+import { productCategories } from './singletons/product-categories';
+import { products } from './singletons/products';
 import redirects from './singletons/redirects';
+import { reviews } from './singletons/reviews';
 import { settings } from './singletons/settings';
+import { stores } from './singletons/stores';
 import { termsAndConditions } from './singletons/terms-and-conditions';
-import { blogArticle } from './collections/blog-article';
-import { blog } from './singletons/blog';
 
 export const singletons = [
   homePage,
@@ -22,8 +33,24 @@ export const singletons = [
   termsAndConditions,
   notFound,
   blog,
+  reviews,
+  products,
+  productCategories,
+  stores,
+  brands,
 ];
 
-export const collection = [page, faq, socialMedia, blogArticle];
+export const collection = [
+  page,
+  faq,
+  socialMedia,
+  blogArticle,
+  review,
+  product,
+  productCategoryParent,
+  productCategorySub,
+  store,
+  brand,
+];
 
 export const documents = [...collection, ...singletons];

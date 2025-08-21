@@ -1,5 +1,5 @@
-import { defineField, defineType } from 'sanity';
 import { AlertTriangle } from 'lucide-react';
+import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';

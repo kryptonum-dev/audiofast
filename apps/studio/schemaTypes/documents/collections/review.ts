@@ -2,26 +2,26 @@ import {
   orderRankField,
   orderRankOrdering,
 } from '@sanity/orderable-document-list';
-import { FileTextIcon } from 'lucide-react';
+import { MessageSquareText } from 'lucide-react';
 import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { getSEOFields } from '../../shared/seo';
 
-export const blogArticle = defineType({
-  name: 'blog-article',
-  title: 'Wpis na blogu',
+export const review = defineType({
+  name: 'review',
+  title: 'Recenzja',
   type: 'document',
-  icon: FileTextIcon,
+  icon: MessageSquareText,
   groups: GROUPS,
   orderings: [orderRankOrdering],
   description:
-    'Artykuł blogowy, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis, autora i treść, aby utworzyć nowy artykuł dla czytających.',
+    'Recenzja produktu audio, która zostanie opublikowana na stronie internetowej. Dodaj tytuł, opis i treść, aby utworzyć nową recenzję produktu.',
   fields: [
-    orderRankField({ type: 'blog' }),
+    orderRankField({ type: 'reviews' }),
     ...defineSlugForDocument({
-      prefix: '/blog/',
+      prefix: '/recenzje/',
       group: GROUP.MAIN_CONTENT,
     }),
     ...getSEOFields(),
@@ -32,9 +32,9 @@ export const blogArticle = defineType({
       description: 'description',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Artykuł blogowy',
-      media: FileTextIcon,
-      subtitle: description || 'Artykuł blogowy',
+      title: name || 'Recenzja',
+      media: MessageSquareText,
+      subtitle: description || 'Recenzja produktu',
     }),
   },
 });

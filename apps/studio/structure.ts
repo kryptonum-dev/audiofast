@@ -1,23 +1,13 @@
-import { DocumentIcon } from '@sanity/icons';
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
-  AlertTriangle,
-  Book,
+  Award,
   BookOpen,
-  CogIcon,
   File,
-  FileArchive,
-  HomeIcon,
-  Link,
-  Lock,
   type LucideIcon,
-  MessageCircleQuestion,
-  PanelBottom,
-  PanelTop,
-  SearchIcon,
   Settings2,
-  ShieldIcon,
-  Users2Icon,
+  Speaker,
+  Star,
+  Store,
 } from 'lucide-react';
 import type {
   StructureBuilder,
@@ -25,87 +15,84 @@ import type {
 } from 'sanity/structure';
 
 import type { SchemaType, SingletonType } from './schemaTypes';
+import { schemaTypes } from './schemaTypes';
 import { getTitleCase } from './utils/helper';
 
-type Base<T = SchemaType> = {
-  id?: string;
-  type: T;
-  preview?: boolean;
+type CreateSingleTon = {
+  S: StructureBuilder;
+  type: SingletonType;
   title?: string;
   icon?: LucideIcon;
 };
 
-type CreateSingleTon = {
-  S: StructureBuilder;
-} & Base<SingletonType>;
-
+/**
+ * Enhanced singleton creator that automatically resolves title and icon from schema definitions
+ * Just pass the schema type name and it will handle the rest
+ */
 const createSingleTon = ({ S, type, title, icon }: CreateSingleTon) => {
-  const newTitle = title ?? getTitleCase(type);
+  const schema = schemaTypes.find((item) => item.name === type) as {
+    title?: string;
+    icon?: LucideIcon;
+  };
+
+  const resolvedTitle = title ?? schema?.title ?? getTitleCase(type);
+  const resolvedIcon = icon ?? schema?.icon ?? File;
+
   return S.listItem()
-    .title(newTitle)
-    .icon(icon ?? File)
-    .child(S.document().schemaType(type).documentId(type));
+    .title(resolvedTitle)
+    .icon(resolvedIcon)
+    .child(
+      S.document().schemaType(type).documentId(type).views([S.view.form()]) // Only content view, no preview
+    );
 };
 
-type CreateList = {
+type CreateCollection = {
   S: StructureBuilder;
-} & Base;
+  context: StructureResolverContext;
+  type: SchemaType;
+  title?: string;
+  icon?: LucideIcon;
+  orderable?: boolean;
+  id?: string;
+};
 
-// This function creates a list item for a type. It takes a StructureBuilder instance (S),
-// a type, an icon, and a title as parameters. It generates a title for the type if not provided,
-// and uses a default icon if not provided. It then returns a list item with the generated or
-// provided title and icon.
+/**
+ * Enhanced collection creator with orderable support
+ * Set orderable: true to enable drag & drop ordering
+ * Only shows content view (no preview)
+ */
+const createCollection = ({
+  S,
+  context,
+  type,
+  title,
+  icon,
+  orderable = false,
+  id,
+}: CreateCollection) => {
+  const schema = schemaTypes.find((item) => item.name === type) as {
+    title?: string;
+    icon?: LucideIcon;
+  };
 
-const createList = ({ S, type, icon, title, id }: CreateList) => {
-  const newTitle = title ?? getTitleCase(type);
+  const resolvedTitle = title ?? schema?.title ?? getTitleCase(type);
+  const resolvedIcon = icon ?? schema?.icon ?? File;
+
+  if (orderable) {
+    return orderableDocumentListDeskItem({
+      type,
+      S,
+      context,
+      icon: resolvedIcon,
+      title: resolvedTitle,
+      id: id ?? type,
+    });
+  }
+
   return S.documentTypeListItem(type)
     .id(id ?? type)
-    .title(newTitle)
-    .icon(icon ?? File);
-};
-
-type CreateIndexList = {
-  S: StructureBuilder;
-  list: Base;
-  index: Base<SingletonType>;
-  context: StructureResolverContext;
-  fullTitle?: string;
-};
-
-const createIndexListWithOrderableItems = ({
-  S,
-  index,
-  fullTitle,
-  list,
-  context,
-}: CreateIndexList) => {
-  const indexTitle = index.title ?? getTitleCase(index.type);
-  const listTitle = list.title ?? getTitleCase(list.type);
-  return S.listItem()
-    .title(fullTitle ?? listTitle)
-    .icon(index.icon ?? File)
-    .child(
-      S.list()
-        .title(indexTitle)
-        .items([
-          S.listItem()
-            .title(indexTitle)
-            .icon(index.icon ?? File)
-            .child(
-              S.document()
-                .views([S.view.form()])
-                .schemaType(index.type)
-                .documentId(index.type)
-            ),
-          orderableDocumentListDeskItem({
-            type: list.type,
-            S,
-            context,
-            icon: list.icon ?? File,
-            title: `${listTitle}`,
-          }),
-        ])
-    );
+    .title(resolvedTitle)
+    .icon(resolvedIcon);
 };
 
 export const structure = (
@@ -115,28 +102,111 @@ export const structure = (
   return S.list()
     .title('Content')
     .items([
-      createSingleTon({
-        S,
-        type: 'homePage',
-        title: 'Strona główna',
-        icon: HomeIcon,
-      }),
-      createList({ S, type: 'page', title: 'Podstrony', icon: Book }),
+      createSingleTon({ S, type: 'homePage' }),
+      createCollection({ S, context, type: 'page' }),
       S.divider(),
-      createIndexListWithOrderableItems({
-        S,
-        index: { type: 'blog', title: 'Strona Bloga', icon: Book },
-        list: { type: 'blog-article', title: 'Wpisy na blogu', icon: BookOpen },
-        fullTitle: 'Blog',
-        context,
-      }),
-      S.divider(),
-      createList({
-        S,
-        type: 'faq',
-        title: 'Elementy FAQ',
-        icon: MessageCircleQuestion,
-      }),
+      S.listItem()
+        .title('Blog')
+        .icon(BookOpen)
+        .child(
+          S.list()
+            .title('Blog')
+            .items([
+              createSingleTon({ S, type: 'blog' }),
+              createCollection({
+                S,
+                context,
+                type: 'blog-article',
+                orderable: false,
+                title: 'Wpisy na blogu',
+              }),
+            ])
+        ),
+      S.listItem()
+        .title('Recenzje')
+        .icon(Star)
+        .child(
+          S.list()
+            .title('Recenzje')
+            .items([
+              createSingleTon({ S, type: 'reviews' }),
+              createCollection({
+                S,
+                context,
+                type: 'review',
+                orderable: false,
+                title: 'Lista recenzji',
+              }),
+            ])
+        ),
+      S.listItem()
+        .title('Produkty')
+        .icon(Speaker)
+        .child(
+          S.list()
+            .title('Produkty')
+            .items([
+              createSingleTon({ S, type: 'products' }),
+              createCollection({
+                S,
+                context,
+                type: 'product',
+                orderable: true,
+                title: 'Lista produktów',
+              }),
+              S.divider(),
+              createSingleTon({ S, type: 'productCategories' }),
+              createCollection({
+                S,
+                context,
+                type: 'productCategoryParent',
+                orderable: true,
+                title: 'Kategorie nadrzędne',
+              }),
+              createCollection({
+                S,
+                context,
+                type: 'productCategorySub',
+                orderable: true,
+                title: 'Kategorie podrzędne',
+              }),
+            ])
+        ),
+      S.listItem()
+        .title('Salony')
+        .icon(Store)
+        .child(
+          S.list()
+            .title('Salony')
+            .items([
+              createSingleTon({ S, type: 'stores' }),
+              createCollection({
+                S,
+                context,
+                type: 'store',
+                orderable: true,
+                title: 'Lista salonów',
+              }),
+            ])
+        ),
+      S.listItem()
+        .title('Marki')
+        .icon(Award)
+        .child(
+          S.list()
+            .title('Marki')
+            .items([
+              createSingleTon({ S, type: 'brands' }),
+              createCollection({
+                S,
+                context,
+                type: 'brand',
+                orderable: true,
+                title: 'Lista marek',
+              }),
+            ])
+        ),
+      createCollection({ S, context, type: 'faq' }),
       S.divider(),
       S.listItem()
         .title('Konfiguracja strony')
@@ -145,55 +215,14 @@ export const structure = (
           S.list()
             .title('Konfiguracja strony')
             .items([
-              createSingleTon({
-                S,
-                type: 'navbar',
-                title: 'Nawigacja',
-                icon: PanelTop,
-              }),
-              createSingleTon({
-                S,
-                type: 'footer',
-                title: 'Stopka',
-                icon: PanelBottom,
-              }),
-              createSingleTon({
-                S,
-                type: 'settings',
-                title: 'Ustawienia globalne',
-                icon: CogIcon,
-              }),
-              createList({
-                S,
-                type: 'socialMedia',
-                title: 'Media społecznościowe',
-                icon: Users2Icon,
-              }),
-              createSingleTon({
-                S,
-                type: 'notFound',
-                title: 'Nie znaleziono strony (404)',
-                icon: AlertTriangle,
-              }),
-
-              createSingleTon({
-                S,
-                type: 'termsAndConditions',
-                title: 'Regulamin',
-                icon: FileArchive,
-              }),
-              createSingleTon({
-                S,
-                type: 'privacyPolicy',
-                title: 'Polityka prywatności',
-                icon: Lock,
-              }),
-              createSingleTon({
-                S,
-                type: 'redirects',
-                title: 'Przekierowania',
-                icon: Link,
-              }),
+              createSingleTon({ S, type: 'navbar' }),
+              createSingleTon({ S, type: 'footer' }),
+              createSingleTon({ S, type: 'settings' }),
+              createCollection({ S, context, type: 'socialMedia' }),
+              createSingleTon({ S, type: 'notFound' }),
+              createSingleTon({ S, type: 'termsAndConditions' }),
+              createSingleTon({ S, type: 'privacyPolicy' }),
+              createSingleTon({ S, type: 'redirects' }),
             ])
         ),
     ]);

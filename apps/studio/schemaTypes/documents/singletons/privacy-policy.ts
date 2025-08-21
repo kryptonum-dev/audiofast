@@ -1,10 +1,10 @@
-import { defineField, defineType } from 'sanity';
+import { Lock } from 'lucide-react';
+import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
-import { Lock } from 'lucide-react';
 
 export const privacyPolicy = defineType({
   name: 'privacyPolicy',

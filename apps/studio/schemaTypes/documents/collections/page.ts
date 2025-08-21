@@ -1,4 +1,3 @@
-import { DocumentIcon } from '@sanity/icons';
 import { Book } from 'lucide-react';
 import { defineType } from 'sanity';
 
@@ -11,7 +10,7 @@ export const page = defineType({
   name: 'page',
   title: 'Podstrona',
   type: 'document',
-  icon: DocumentIcon,
+  icon: Book,
   description:
     "Utwórz nową stronę dla swojej witryny, taką jak 'O nas' lub 'Kontakt'. Każda strona ma swój własny adres internetowy i treść, którą możesz dostosować.",
   groups: GROUPS,

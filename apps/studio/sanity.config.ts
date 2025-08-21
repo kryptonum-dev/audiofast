@@ -9,15 +9,11 @@ import { media } from 'sanity-plugin-media';
 import { Logo } from './components/logo';
 import { locations } from './location';
 import { presentationUrl } from './plugins/presentation-url';
-import {
-  schemaTypes,
-  singletonActions,
-  SingletonType,
-  singletonType,
-} from './schemaTypes';
+import type { SingletonType } from './schemaTypes';
+import { schemaTypes, singletonActions, singletonType } from './schemaTypes';
+import { singletons } from './schemaTypes/documents';
 import { structure } from './structure';
 import { createPageTemplate, getPresentationUrl } from './utils/helper';
-import { singletons } from './schemaTypes/documents';
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
 const dataset = process.env.SANITY_STUDIO_DATASET;
@@ -80,9 +76,21 @@ export default defineConfig({
     },
     newDocumentOptions: (prev, { creationContext }) => {
       const { type, schemaType } = creationContext;
-      if (type === 'structure' && schemaType == 'socialMedia') {
+
+      // Prevent creation of singleton documents
+      if (
+        singletons
+          .map((singleton) => singleton.name)
+          .includes(schemaType as SingletonType)
+      ) {
         return [];
       }
+
+      // Prevent creation of socialMedia documents from structure
+      if (type === 'structure' && schemaType === 'socialMedia') {
+        return [];
+      }
+
       return prev;
     },
   },

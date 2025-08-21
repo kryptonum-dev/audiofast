@@ -2,26 +2,26 @@ import {
   orderRankField,
   orderRankOrdering,
 } from '@sanity/orderable-document-list';
-import { FileTextIcon } from 'lucide-react';
+import { FolderOpen } from 'lucide-react';
 import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { getSEOFields } from '../../shared/seo';
 
-export const blogArticle = defineType({
-  name: 'blog-article',
-  title: 'Wpis na blogu',
+export const productCategoryParent = defineType({
+  name: 'productCategoryParent',
+  title: 'Kategoria nadrzędna',
   type: 'document',
-  icon: FileTextIcon,
+  icon: FolderOpen,
   groups: GROUPS,
   orderings: [orderRankOrdering],
   description:
-    'Artykuł blogowy, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis, autora i treść, aby utworzyć nowy artykuł dla czytających.',
+    'Główna kategoria produktów audio. Kategorie nadrzędne grupują produkty w szerokie tematy.',
   fields: [
-    orderRankField({ type: 'blog' }),
+    orderRankField({ type: 'productCategories' }),
     ...defineSlugForDocument({
-      prefix: '/blog/',
+      prefix: '/kategorie/',
       group: GROUP.MAIN_CONTENT,
     }),
     ...getSEOFields(),
@@ -32,9 +32,9 @@ export const blogArticle = defineType({
       description: 'description',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Artykuł blogowy',
-      media: FileTextIcon,
-      subtitle: description || 'Artykuł blogowy',
+      title: name || 'Kategoria nadrzędna',
+      media: FolderOpen,
+      subtitle: description || 'Główna kategoria produktów',
     }),
   },
 });

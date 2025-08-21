@@ -25,16 +25,7 @@ export default [
     },
     ignores: ['dist', 'node_modules', '.sanity'],
     rules: {
-      'prettier/prettier': [
-        'error',
-        {
-          printWidth: 80,
-          semi: true,
-          bracketSpacing: true,
-          singleQuote: true,
-          trailingComma: 'es5',
-        },
-      ],
+      // 'prettier/prettier': 'off', // Disabled to avoid formatting conflicts
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',

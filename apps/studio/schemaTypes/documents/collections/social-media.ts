@@ -1,5 +1,6 @@
 import { Users2Icon } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
+
 import { isProduction, isValidUrl } from '../../../utils/helper';
 
 export default defineType({

@@ -1,5 +1,5 @@
-import { HomeIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
+import { Home } from 'lucide-react';
+import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
@@ -10,7 +10,7 @@ export const homePage = defineType({
   name: 'homePage',
   type: 'document',
   title: 'Strona główna',
-  icon: HomeIcon,
+  icon: Home,
   description:
     'To tutaj tworzysz główną stronę, którą widzą odwiedzający, gdy po raz pierwszy przychodzą na Twoją stronę internetową. Pomyśl o tym jak o drzwiach wejściowych do Twojego internetowego domu - możesz dodać przyjazny tytuł, krótki opis i zbudować stronę z różnymi sekcjami jak obrazy, tekst i przyciski.',
   groups: GROUPS,
@@ -30,7 +30,7 @@ export const homePage = defineType({
     },
     prepare: ({ name, description }) => ({
       title: name || 'Strona główna',
-      media: HomeIcon,
+      media: Home,
       subtitle: description || 'Strona główna',
     }),
   },

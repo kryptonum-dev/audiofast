@@ -1,4 +1,4 @@
-import { FileArchive } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
@@ -6,17 +6,17 @@ import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 
-export const termsAndConditions = defineType({
-  name: 'termsAndConditions',
+export const brands = defineType({
+  name: 'brands',
   type: 'document',
-  title: 'Regulamin',
-  icon: FileArchive,
-  description:
-    'Strona regulaminu określa zasady korzystania z Twojej strony internetowej lub usług. Zawiera warunki użytkowania, które użytkownicy muszą zaakceptować.',
+  title: 'Strona marek',
+  icon: Award,
   groups: GROUPS,
+  description:
+    'Strona z markami produktów audio. Skonfiguruj treść strony, na której będą wyświetlane wszystkie marki.',
   fields: [
     ...defineSlugForDocument({
-      slug: '/regulamin',
+      slug: '/marki/',
       group: GROUP.MAIN_CONTENT,
     }),
     pageBuilderField,
@@ -29,9 +29,9 @@ export const termsAndConditions = defineType({
       slug: 'slug.current',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Regulamin',
-      media: FileArchive,
-      subtitle: description || 'Regulamin',
+      title: name || 'Marki',
+      media: Award,
+      subtitle: description || 'Strona marek',
     }),
   },
 });

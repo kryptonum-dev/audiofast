@@ -1,22 +1,22 @@
-import { FileArchive } from 'lucide-react';
 import { defineType } from 'sanity';
+import { FolderTree } from 'lucide-react';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 
-export const termsAndConditions = defineType({
-  name: 'termsAndConditions',
+export const productCategories = defineType({
+  name: 'productCategories',
   type: 'document',
-  title: 'Regulamin',
-  icon: FileArchive,
-  description:
-    'Strona regulaminu określa zasady korzystania z Twojej strony internetowej lub usług. Zawiera warunki użytkowania, które użytkownicy muszą zaakceptować.',
+  title: 'Strona kategorii',
+  icon: FolderTree,
   groups: GROUPS,
+  description:
+    'Strona z kategoriami produktów audio. Skonfiguruj treść strony, na której będą wyświetlane wszystkie kategorie produktów.',
   fields: [
     ...defineSlugForDocument({
-      slug: '/regulamin',
+      slug: '/kategorie/',
       group: GROUP.MAIN_CONTENT,
     }),
     pageBuilderField,
@@ -29,9 +29,9 @@ export const termsAndConditions = defineType({
       slug: 'slug.current',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Regulamin',
-      media: FileArchive,
-      subtitle: description || 'Regulamin',
+      title: name || 'Kategorie produktów',
+      media: FolderTree,
+      subtitle: description || 'Strona kategorii',
     }),
   },
 });

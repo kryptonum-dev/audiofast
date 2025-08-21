@@ -61,7 +61,7 @@ export const button = defineType({
         url?.length > 30 ? `${url.substring(0, 30)}...` : url;
 
       const variantTitle = buttonVariants.find(
-        (v) => v.value === variant,
+        (v) => v.value === variant
       )?.title;
       return {
         title: title || 'Nienazwany przycisk',

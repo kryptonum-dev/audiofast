@@ -1,15 +1,15 @@
-import { defineField, defineType } from 'sanity';
+import { BookOpen } from 'lucide-react';
+import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
-import { BookOpen } from 'lucide-react';
 
 export const blog = defineType({
   name: 'blog',
   type: 'document',
-  title: 'Blog',
+  title: 'Strona bloga',
   icon: BookOpen,
   groups: GROUPS,
   fields: [

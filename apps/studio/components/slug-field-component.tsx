@@ -22,9 +22,8 @@ import {
 } from 'sanity';
 import { styled } from 'styled-components';
 
-import { getPresentationUrl } from '../utils/helper';
-import { slugify } from '../utils/slugify';
 import { WEB_BASE_URL } from '../utils/constant';
+import { slugify } from '../utils/slugify';
 
 const GenerateButton = styled(Button)`
   cursor: pointer;

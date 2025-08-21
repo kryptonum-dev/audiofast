@@ -2,26 +2,26 @@ import {
   orderRankField,
   orderRankOrdering,
 } from '@sanity/orderable-document-list';
-import { FileTextIcon } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
 import { getSEOFields } from '../../shared/seo';
 
-export const blogArticle = defineType({
-  name: 'blog-article',
-  title: 'Wpis na blogu',
+export const store = defineType({
+  name: 'store',
+  title: 'Salon',
   type: 'document',
-  icon: FileTextIcon,
+  icon: MapPin,
   groups: GROUPS,
   orderings: [orderRankOrdering],
   description:
-    'Artykuł blogowy, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis, autora i treść, aby utworzyć nowy artykuł dla czytających.',
+    'Salon sprzedaży produktów audio. Dodaj nazwę, adres i informacje kontaktowe salonu.',
   fields: [
-    orderRankField({ type: 'blog' }),
+    orderRankField({ type: 'stores' }),
     ...defineSlugForDocument({
-      prefix: '/blog/',
+      prefix: '/salony/',
       group: GROUP.MAIN_CONTENT,
     }),
     ...getSEOFields(),
@@ -32,9 +32,9 @@ export const blogArticle = defineType({
       description: 'description',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Artykuł blogowy',
-      media: FileTextIcon,
-      subtitle: description || 'Artykuł blogowy',
+      title: name || 'Salon',
+      media: MapPin,
+      subtitle: description || 'Salon sprzedaży',
     }),
   },
 });
