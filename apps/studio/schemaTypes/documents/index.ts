@@ -1,3 +1,4 @@
+import { award } from './collections/award';
 import { blogArticle } from './collections/blog-article';
 import { brand } from './collections/brand';
 import { faq } from './collections/faq';
@@ -51,6 +52,7 @@ export const collection = [
   productCategorySub,
   store,
   brand,
+  award,
 ];
 
 export const documents = [...collection, ...singletons];

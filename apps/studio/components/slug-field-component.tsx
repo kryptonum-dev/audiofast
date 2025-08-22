@@ -23,7 +23,7 @@ import {
 import { styled } from 'styled-components';
 
 import { WEB_BASE_URL } from '../utils/constant';
-import { slugify } from '../utils/slugify';
+import { slugify } from '../utils/helper';
 
 const GenerateButton = styled(Button)`
   cursor: pointer;

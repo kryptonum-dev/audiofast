@@ -7,6 +7,7 @@ import {
   UsersIcon,
 } from '@sanity/icons';
 import type { FieldGroupDefinition } from 'sanity';
+
 import { isProduction } from './helper';
 
 export const GROUP = {

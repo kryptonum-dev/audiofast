@@ -154,6 +154,12 @@ export const structure = (
                 orderable: true,
                 title: 'Lista produktów',
               }),
+              createCollection({
+                S,
+                context,
+                type: 'award',
+                title: 'Lista nagród',
+              }),
               S.divider(),
               createSingleTon({ S, type: 'productCategories' }),
               createCollection({

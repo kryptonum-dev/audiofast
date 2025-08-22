@@ -1,8 +1,6 @@
 import { defineField, type SlugDefinition, type SlugOptions } from 'sanity';
-import { isUniqueSlug } from './is-unique-slug';
 import { PathnameFieldComponent } from '../components/slug-field-component';
-import { slugify } from './slugify';
-import { isProduction } from './helper';
+import { isProduction, isUniqueSlug, slugify } from './helper';
 
 type DefineSlugConfig = {
   source?: string;
@@ -33,7 +31,7 @@ export const defineSlugForDocument = ({
           ...(group ? { group } : {}),
           description:
             'Nazwa dokumentu, używana do wyświetlania w ścieżce nawigacyjnej.',
-          validation: (Rule) => Rule.required(),
+          validation: (Rule) => Rule.required().error('Nazwa jest wymagana'),
         }),
       ]),
   defineField({
@@ -129,6 +127,8 @@ export const defineSlugForDocument = ({
             return 'W slugu jest literówka. Pamiętaj, że slug może zawierać tylko małe litery, cyfry i myślniki, oraz musi kończyć się ukośnikiem.';
           }
           return true;
-        }).required()),
+        })
+          .required()
+          .error('Slug jest wymagany')),
   }),
 ];
