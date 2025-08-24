@@ -3,17 +3,20 @@ import {
   Award,
   BookOpen,
   File,
+  FileIcon,
   type LucideIcon,
   Settings2,
   Speaker,
   Star,
   Store,
+  TableIcon,
 } from 'lucide-react';
 import type {
   StructureBuilder,
   StructureResolverContext,
 } from 'sanity/structure';
 
+import { UnifiedFeaturesManager } from './components/UnifiedFeaturesManager';
 import type { SchemaType, SingletonType } from './schemaTypes';
 import { schemaTypes } from './schemaTypes';
 import { getTitleCase } from './utils/helper';
@@ -147,13 +150,29 @@ export const structure = (
             .title('Produkty')
             .items([
               createSingleTon({ S, type: 'products' }),
-              createCollection({
-                S,
-                context,
-                type: 'product',
-                orderable: true,
-                title: 'Lista produktów',
-              }),
+              S.listItem()
+                .title('Lista produktów')
+                .icon(Speaker)
+                .child(
+                  S.documentList()
+                    .title('Lista produktów')
+                    .filter('_type == "product"')
+                    .child((documentId) =>
+                      S.document()
+                        .documentId(documentId)
+                        .schemaType('product')
+                        .views([
+                          S.view
+                            .form()
+                            .title('Zawartość')
+                            .icon(() => '📂'),
+                          S.view
+                            .component(UnifiedFeaturesManager)
+                            .title('Menedżer cech')
+                            .icon(() => '🔍'),
+                        ])
+                    )
+                ),
               createCollection({
                 S,
                 context,
