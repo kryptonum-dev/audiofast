@@ -3,20 +3,19 @@ import {
   Award,
   BookOpen,
   File,
-  FileIcon,
   type LucideIcon,
   Settings2,
   Speaker,
   Star,
   Store,
-  TableIcon,
 } from 'lucide-react';
 import type {
   StructureBuilder,
   StructureResolverContext,
 } from 'sanity/structure';
 
-import { UnifiedFeaturesManager } from './components/UnifiedFeaturesManager';
+import { FeaturesConfigurator } from './components/features-configurator/FeaturesConfigurator';
+import { ProductFrontendPreview } from './components/ProductFrontendPreview';
 import type { SchemaType, SingletonType } from './schemaTypes';
 import { schemaTypes } from './schemaTypes';
 import { getTitleCase } from './utils/helper';
@@ -167,9 +166,13 @@ export const structure = (
                             .title('Zawartość')
                             .icon(() => '📂'),
                           S.view
-                            .component(UnifiedFeaturesManager)
-                            .title('Menedżer cech')
-                            .icon(() => '🔍'),
+                            .component(FeaturesConfigurator)
+                            .title('Konfigurator cech')
+                            .icon(() => '🧩'),
+                          S.view
+                            .component(ProductFrontendPreview)
+                            .title('Podgląd produktu')
+                            .icon(() => '👁️'),
                         ])
                     )
                 ),

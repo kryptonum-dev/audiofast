@@ -3,5 +3,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.workingDirectories": ["apps/studio", "apps/web"]
+  "eslint.workingDirectories": ["apps/studio", "apps/web"],
+  "postman.settings.dotenv-detection-notification-visibility": false
 }
