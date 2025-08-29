@@ -14,8 +14,6 @@ import type {
   StructureResolverContext,
 } from 'sanity/structure';
 
-import { FeaturesConfigurator } from './components/features-configurator/FeaturesConfigurator';
-import { ProductFrontendPreview } from './components/ProductFrontendPreview';
 import type { SchemaType, SingletonType } from './schemaTypes';
 import { schemaTypes } from './schemaTypes';
 import { getTitleCase } from './utils/helper';
@@ -149,33 +147,13 @@ export const structure = (
             .title('Produkty')
             .items([
               createSingleTon({ S, type: 'products' }),
-              S.listItem()
-                .title('Lista produktów')
-                .icon(Speaker)
-                .child(
-                  S.documentList()
-                    .title('Lista produktów')
-                    .filter('_type == "product"')
-                    .child((documentId) =>
-                      S.document()
-                        .documentId(documentId)
-                        .schemaType('product')
-                        .views([
-                          S.view
-                            .form()
-                            .title('Zawartość')
-                            .icon(() => '📂'),
-                          S.view
-                            .component(FeaturesConfigurator)
-                            .title('Konfigurator cech')
-                            .icon(() => '🧩'),
-                          S.view
-                            .component(ProductFrontendPreview)
-                            .title('Podgląd produktu')
-                            .icon(() => '👁️'),
-                        ])
-                    )
-                ),
+              createCollection({
+                S,
+                context,
+                type: 'product',
+                orderable: true,
+                title: 'Lista produktów',
+              }),
               createCollection({
                 S,
                 context,
