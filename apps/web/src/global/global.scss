@@ -1,1 +1,199 @@
-// There will be global styles here
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --neutral-white: #ffffff;
+  --neutral-black: #000000;
+  --neutral-200: #f8f8f8;
+  --neutral-300: #f7f3f3;
+  --neutral-400: #e7e7e7;
+  --neutral-500: #c5c5c5;
+  --neutral-600: #5b5a5a;
+  --neutral-700: #303030;
+  --neutral-800: #141414;
+  --primary-red: #fe0140;
+  --primary-error: #ff6a00;
+  --primary-success: #009116;
+
+  --typography-body-xl: 1.125rem;
+  --typography-body-l: 1rem;
+  --typography-body-m: 0.875rem;
+  --typography-body-s: 0.75rem;
+
+  --typography-header-xl: clamp(2rem, calc(2.625vw / 0.48), 3.375rem);
+  --typography-header-l: clamp(1.75rem, calc(2vw / 0.48), 2.5rem);
+  --typography-header-m: clamp(1.25rem, calc(1.25vw / 0.48), 1.5rem);
+
+  // Font families - using Next.js font optimization
+  --font-family-poppins: var(--font-poppins), system-ui, sans-serif;
+  --font-family-switzer: var(--font-switzer), system-ui, sans-serif;
+
+  //   --easing: cubic-bezier(0.19, 1, 0.22, 1);
+
+  --pageMargin: clamp(1rem, calc(1.5vw / 0.48), 2rem);
+  @media (max-width: 56.1875rem) and (min-width: 37.5rem) {
+    --pageMargin: clamp(2.5rem, calc(5vw / 0.48), 5rem);
+  }
+}
+
+svg {
+  max-width: 100%;
+  display: block;
+  height: auto;
+}
+canvas {
+  touch-action: pan-y;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+label {
+  display: block;
+}
+button {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  user-select: none;
+}
+::placeholder {
+  color: inherit;
+}
+sup {
+  font-size: 0.62em;
+  vertical-align: top;
+}
+textarea {
+  display: block;
+}
+input,
+textarea,
+button,
+select {
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  appearance: none;
+  border: none;
+  border-radius: 0;
+}
+ul,
+ol {
+  list-style-type: none;
+}
+summary {
+  cursor: pointer;
+  list-style: none;
+  &::marker,
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+iframe {
+  border: none;
+  display: block;
+}
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+picture,
+img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  vertical-align: bottom;
+  object-fit: cover;
+}
+
+:focus {
+  outline: none;
+}
+:focus-visible {
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 123px;
+}
+body {
+  min-width: 320px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-size: var(--typography-body-l, 1rem);
+  background-color: var(--neutral-white, #ffffff);
+  line-height: 1.5;
+  font-family: var(--font-family-body);
+  color: var(--neutral-600, #5b5a5a);
+  font-weight: 300;
+
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+
+  footer {
+    margin-top: auto !important;
+  }
+}
+
+.max-width {
+  max-width: 82.375rem;
+  width: calc(100% - var(--pageMargin) * 2);
+  margin: 0 auto;
+  height: 100%;
+}
+
+main {
+  position: relative;
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  overflow-wrap: anywhere;
+}
+h1,
+.h1,
+h2,
+.h2 {
+  line-height: 1.16;
+  font-family: var(--font-family-switzer);
+  font-weight: 500;
+  color: var(--neutral-700, #303030);
+  letter-spacing: -0.03em;
+  -webkit-text-stroke-width: 0.25px;
+  -webkit-text-stroke-color: var(--Neutral-700, #303030);
+  font-size: var(--typography-header-m, 1.5rem);
+
+  strong {
+  }
+
+  .alter {
+    color: var(--neutral-white, #ffffff);
+    font-weight: 400;
+  }
+}
+
+.link {
+}
