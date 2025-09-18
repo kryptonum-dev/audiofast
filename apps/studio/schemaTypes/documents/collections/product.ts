@@ -6,7 +6,7 @@ import { BookAudio, Package, Settings } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
-import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
+import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { getSEOFields } from '../../shared/seo';
 
 export const product = defineType({

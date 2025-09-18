@@ -6,7 +6,7 @@ import { MessageSquareText } from 'lucide-react';
 import { defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
-import { defineSlugForDocument } from '../../../utils/define-slug-for-document';
+import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { getSEOFields } from '../../shared/seo';
 
 export const review = defineType({

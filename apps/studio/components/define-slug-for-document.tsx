@@ -1,6 +1,7 @@
 import { defineField, type SlugDefinition, type SlugOptions } from 'sanity';
-import { PathnameFieldComponent } from '../components/slug-field-component';
-import { isProduction, isUniqueSlug, slugify } from './helper';
+
+import { isProduction, isUniqueSlug, slugify } from '../utils/helper';
+import { PathnameFieldComponent } from './slug-field-component';
 
 type DefineSlugConfig = {
   source?: string;

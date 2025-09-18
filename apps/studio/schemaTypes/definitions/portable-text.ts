@@ -1,7 +1,7 @@
 import { LinkIcon } from '@sanity/icons';
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
-import { CustomInput } from '../../components/CustomInput';
+import { CustomInput } from '../../components/custom-input';
 
 const portableTextMembers = [
   defineArrayMember({

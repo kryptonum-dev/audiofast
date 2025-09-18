@@ -10,7 +10,7 @@ import { Logo } from './components/logo';
 import { locations } from './location';
 import { presentationUrl } from './plugins/presentation-url';
 import type { SingletonType } from './schemaTypes';
-import { schemaTypes, singletonActions, singletonType } from './schemaTypes';
+import { schemaTypes, singletonActions } from './schemaTypes';
 import { singletons } from './schemaTypes/documents';
 import { structure } from './structure';
 import { createPageTemplate, getPresentationUrl } from './utils/helper';

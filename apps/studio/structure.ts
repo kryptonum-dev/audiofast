@@ -103,7 +103,7 @@ export const structure = (
     .title('Content')
     .items([
       createSingleTon({ S, type: 'homePage' }),
-      createCollection({ S, context, type: 'page' }),
+      createCollection({ S, context, type: 'page', title: 'Podstrony' }),
       S.divider(),
       S.listItem()
         .title('Blog')

@@ -1,8 +1,9 @@
 ---
-description: 
+description:
 globs: apps/studio/**.*
 alwaysApply: false
 ---
+
 # Sanity Development Guidelines
 
 ## Sanity Schema Rules
@@ -14,7 +15,7 @@ When creating sanity schema make sure to include an appropriate icon for the sch
 For TypeScript files, always import the necessary Sanity types:
 
 ```typescript
-import {defineField, defineType, defineArrayMember} from 'sanity'
+import { defineField, defineType, defineArrayMember } from 'sanity';
 ```
 
 Always use `defineField` on every field and `defineType` throughout the whole type. Only import `defineArrayMember` if needed:
@@ -32,17 +33,19 @@ defineType({
         defineArrayMember({
           type: 'object',
           name: 'type-name-in-array',
-          fields: [defineField({type: 'string', name: 'title', title: 'Title'})],
+          fields: [
+            defineField({ type: 'string', name: 'title', title: 'Title' }),
+          ],
         }),
       ],
     }),
   ],
-})
+});
 ```
 
 ### Adding icons
 
-When adding icons to a schema, make sure you use the default sanity/icons first, and then if no icon is relevant, refer to any other iconset the user has installed - e.g lucide-react.
+When adding icons to a schema, make sure you use the default lucide icons first, and then if no icon is relevant, refer sanity/icons or to any other iconset the user has installed.
 
 ### Structuring files and folders
 
@@ -63,41 +66,29 @@ This is a rough idea of how to structure folders and files, ensuring you always 
     │   │   ├── .env.example
     │   │   ├── .gitignore
     │   │   ├── components/
-    │   │   │   ├── logo.tsx
-    │   │   │   └── slug-field-component.tsx
+    │   │   │   ├── Logo.tsx
+    │   │   │   └── SlugFieldComponent.tsx
     │   │   ├── plugins/
     │   │   │   └── presentation-url.ts
     │   │   ├── schemaTypes/
     │   │   │   ├── common.ts
     │   │   │   ├── index.ts
     │   │   │   ├── blocks/
-    │   │   │   │   ├── cta.ts
-    │   │   │   │   ├── faq-accordion.ts
-    │   │   │   │   ├── feature-cards-icon.ts
     │   │   │   │   ├── hero.ts
-    │   │   │   │   ├── image-link-cards.ts
-    │   │   │   │   ├── index.ts
-    │   │   │   │   └── subscribe-newsletter.ts
+    │   │   │   │   └── index.ts
     │   │   │   ├── definitions/
     │   │   │   │   ├── button.ts
     │   │   │   │   ├── custom-url.ts
     │   │   │   │   ├── index.ts
     │   │   │   │   ├── pagebuilder.ts
-    │   │   │   │   └── rich-text.ts
+    │   │   │   │   └── portable-text.ts
     │   │   │   └── documents/
-    │   │   │       ├── author.ts
-    │   │   │       ├── blog.ts
-    │   │   │       ├── faq.ts
-    │   │   │       └── page.ts
+    │   │   │       ├── collections/
+    │   │   │       ├── singletons/
+    │   │   │       ├── index.ts
     │   │   └── utils/
-    │   │       ├── const-mock-data.ts
     │   │       ├── constant.ts
     │   │       ├── helper.ts
-    │   │       ├── mock-data.ts
-    │   │       ├── og-fields.ts
-    │   │       ├── parse-body.ts
-    │   │       ├── seo-fields.ts
-    │   │       ├── slug.ts
     │   │       └── types.ts
 
 ### Layout of page builder index example
@@ -115,7 +106,7 @@ import { calculator } from './calculator';
 import { navigationCards } from './navigation-cards';
 import { quinstreetEmbed } from './quinstreet-embed';
 import { quote } from './quote';
-import { richTextBlock } from './rich-text-block';
+import { portableTextBlock } from './portable-text-block';
 import { socialProof } from './social-proof';
 import { splitForm } from './split-form';
 import { statsCard } from './stats-card';
@@ -135,7 +126,7 @@ export const pagebuilderBlocks = [
   iconGrid,
   exploreHero,
   splitForm,
-  richTextBlock,
+  portableTextBlock,
   calculator,
   htmlEmbed,
   rvEmbed,
@@ -151,26 +142,29 @@ When writing any Sanity schema, always include a description, name, title, and t
 Use these templates when implementing common fields:
 
 #### Eyebrow
+
 ```typescript
 defineField({
   name: 'eyebrow',
   title: 'Eyebrow',
   description: 'The smaller text that sits above the title to provide context',
   type: 'string',
-})
+});
 ```
 
 #### Title
+
 ```typescript
 defineField({
   name: 'title',
   title: 'Title',
   description: 'The large text that is the primary focus of the block',
   type: 'string',
-})
+});
 ```
 
 #### Heading Level Toggle
+
 ```typescript
 defineField({
   name: 'isHeadingOne',
@@ -179,31 +173,35 @@ defineField({
   description:
     'By default the title is a <h2> tag. If you use this as the top block on the page, you can toggle this on to make it a <h1> instead',
   initialValue: false,
-})
+});
 ```
 
 #### Rich Text
+
 ```typescript
 defineField({
-  name: 'richText',
+  name: 'portableText',
   title: 'Rich Text',
-  description: 'Large body of text that has links, ordered/unordered lists and headings.',
-  type: 'richText',
-})
+  description:
+    'Large body of text that has links, ordered/unordered lists and headings.',
+  type: 'portableText',
+});
 ```
 
 #### Buttons
+
 ```typescript
 defineField({
   name: 'buttons',
   title: 'Buttons',
   description: 'Add buttons here, the website will handle the styling',
   type: 'array',
-  of: [{type: 'button'}],
-})
+  of: [{ type: 'button' }],
+});
 ```
 
 #### Image
+
 ```typescript
 defineField({
   name: 'image',
@@ -218,7 +216,7 @@ defineField({
       title: 'Alt Text',
     }),
   ],
-})
+});
 ```
 
 ### Type Generation
@@ -233,7 +231,6 @@ sanity schema extract && sanity typegen generate --enforce-required-fields
 
 Whenever there is an image within a GROQ query, do not expand it unless explicitly instructed to do so.
 
-
 ## GROQ Query Structure and Organization
 
 - Import `defineQuery` and `groq` from `next-sanity` at the top of query files
@@ -246,12 +243,12 @@ Whenever there is an image within a GROQ query, do not expand it unless explicit
 - Use camelCase for all query names
 - Prefix query names with action verb (get, getAll, etc.) followed by content type
 - Suffix all queries with "Query" (e.g., `getAllBlogIndexTranslationsQuery`)
-- Prefix reusable fragments with underscore (e.g., `_richText`, `_buttons`)
+- Prefix reusable fragments with underscore (e.g., `_portableText`, `_buttons`)
 
 ### Fragment Reuse
 
 - Define common projection fragments at the top of the file
-- Create reusable fragments for repeated patterns (e.g., `_richText`, `_buttons`, `_icon`)
+- Create reusable fragments for repeated patterns (e.g., `_portableText`, `_buttons`, `_icon`)
 - Use string interpolation to include fragments in queries
 - Ensure fragments are composable and focused on specific use cases
 
@@ -285,7 +282,6 @@ Whenever there is an image within a GROQ query, do not expand it unless explicit
 - Maintain consistent whitespace and indentation
 - Use comments to explain complex query logic
 
-
 ## File Naming Conventions
 
 - Use kebab-case for ALL file names
@@ -309,8 +305,8 @@ When asked to produce schema from screenshots, follow these guidelines:
 
 - Tiny text above a title is likely an **eyebrow**
 - Large text without formatting that looks like a header should be a **title** or **subtitle**
-- Text with formatting (bold, italic, lists) likely needs **richText**
+- Text with formatting (bold, italic, lists) likely needs **portableText**
 - Images should include **alt text** fields
 - Background images should be handled appropriately
 - Use reusable button arrays for button patterns
-- If `richTextField` or `buttonsField` exists in the project, use them
+- If `portableText` or `buttonsField` exists in the project, use them
