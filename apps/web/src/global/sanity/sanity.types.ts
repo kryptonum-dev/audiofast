@@ -14,48 +14,48 @@
 
 // Source: schema.json
 export type SubscribeNewsletter = {
-  _type: "subscribeNewsletter";
+  _type: 'subscribeNewsletter';
   title?: string;
   subTitle?: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-    listItem?: "number" | "bullet";
+    style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+    listItem?: 'number' | 'bullet';
     markDefs?: Array<{
       customLink?: CustomUrl;
-      _type: "customLink";
+      _type: 'customLink';
       _key: string;
     }>;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
   helperText?: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-    listItem?: "number" | "bullet";
+    style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+    listItem?: 'number' | 'bullet';
     markDefs?: Array<{
       customLink?: CustomUrl;
-      _type: "customLink";
+      _type: 'customLink';
       _key: string;
     }>;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
 };
 
 export type ImageLinkCards = {
-  _type: "imageLinkCards";
+  _type: 'imageLinkCards';
   eyebrow?: string;
   title: string;
   richText?: Array<
@@ -63,32 +63,32 @@ export type ImageLinkCards = {
         children?: Array<{
           marks?: Array<string>;
           text?: string;
-          _type: "span";
+          _type: 'span';
           _key: string;
         }>;
-        style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-        listItem?: "number" | "bullet";
+        style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+        listItem?: 'number' | 'bullet';
         markDefs?: Array<{
           customLink?: CustomUrl;
-          _type: "customLink";
+          _type: 'customLink';
           _key: string;
         }>;
         level?: number;
-        _type: "block";
+        _type: 'block';
         _key: string;
       }
     | {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         caption?: string;
-        _type: "image";
+        _type: 'image';
         _key: string;
       }
   >;
@@ -103,23 +103,23 @@ export type ImageLinkCards = {
     image?: {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
-      _type: "image";
+      _type: 'image';
     };
     url?: CustomUrl;
-    _type: "imageLinkCard";
+    _type: 'imageLinkCard';
     _key: string;
   }>;
 };
 
 export type FaqAccordion = {
-  _type: "faqAccordion";
+  _type: 'faqAccordion';
   eyebrow?: string;
   title: string;
   subtitle?: string;
@@ -130,33 +130,33 @@ export type FaqAccordion = {
   };
   faqs: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "faq";
+    [internalGroqTypeReferenceTo]?: 'faq';
   }>;
 };
 
 export type FeatureCardsIcon = {
-  _type: "featureCardsIcon";
+  _type: 'featureCardsIcon';
   eyebrow?: string;
   title?: string;
   richText?: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-    listItem?: "number" | "bullet";
+    style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+    listItem?: 'number' | 'bullet';
     markDefs?: Array<{
       customLink?: CustomUrl;
-      _type: "customLink";
+      _type: 'customLink';
       _key: string;
     }>;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
   cards?: Array<{
@@ -166,27 +166,27 @@ export type FeatureCardsIcon = {
       children?: Array<{
         marks?: Array<string>;
         text?: string;
-        _type: "span";
+        _type: 'span';
         _key: string;
       }>;
-      style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-      listItem?: "number" | "bullet";
+      style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+      listItem?: 'number' | 'bullet';
       markDefs?: Array<{
         customLink?: CustomUrl;
-        _type: "customLink";
+        _type: 'customLink';
         _key: string;
       }>;
       level?: number;
-      _type: "block";
+      _type: 'block';
       _key: string;
     }>;
-    _type: "featureCardIcon";
+    _type: 'featureCardIcon';
     _key: string;
   }>;
 };
 
 export type Cta = {
-  _type: "cta";
+  _type: 'cta';
   eyebrow?: string;
   title?: string;
   richText?: Array<
@@ -194,32 +194,32 @@ export type Cta = {
         children?: Array<{
           marks?: Array<string>;
           text?: string;
-          _type: "span";
+          _type: 'span';
           _key: string;
         }>;
-        style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-        listItem?: "number" | "bullet";
+        style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+        listItem?: 'number' | 'bullet';
         markDefs?: Array<{
           customLink?: CustomUrl;
-          _type: "customLink";
+          _type: 'customLink';
           _key: string;
         }>;
         level?: number;
-        _type: "block";
+        _type: 'block';
         _key: string;
       }
     | {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         caption?: string;
-        _type: "image";
+        _type: 'image';
         _key: string;
       }
   >;
@@ -231,7 +231,7 @@ export type Cta = {
 };
 
 export type Hero = {
-  _type: "hero";
+  _type: 'hero';
   badge?: string;
   title?: string;
   richText?: Array<
@@ -239,46 +239,46 @@ export type Hero = {
         children?: Array<{
           marks?: Array<string>;
           text?: string;
-          _type: "span";
+          _type: 'span';
           _key: string;
         }>;
-        style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-        listItem?: "number" | "bullet";
+        style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+        listItem?: 'number' | 'bullet';
         markDefs?: Array<{
           customLink?: CustomUrl;
-          _type: "customLink";
+          _type: 'customLink';
           _key: string;
         }>;
         level?: number;
-        _type: "block";
+        _type: 'block';
         _key: string;
       }
     | {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         caption?: string;
-        _type: "image";
+        _type: 'image';
         _key: string;
       }
   >;
   image?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   buttons?: Array<
     {
@@ -309,8 +309,8 @@ export type PageBuilder = Array<
 >;
 
 export type Button = {
-  _type: "button";
-  variant?: "default" | "secondary" | "outline" | "link";
+  _type: 'button';
+  variant?: 'default' | 'secondary' | 'outline' | 'link';
   text?: string;
   url?: CustomUrl;
 };
@@ -320,39 +320,39 @@ export type RichText = Array<
       children?: Array<{
         marks?: Array<string>;
         text?: string;
-        _type: "span";
+        _type: 'span';
         _key: string;
       }>;
-      style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-      listItem?: "number" | "bullet";
+      style?: 'normal' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline';
+      listItem?: 'number' | 'bullet';
       markDefs?: Array<{
         customLink?: CustomUrl;
-        _type: "customLink";
+        _type: 'customLink';
         _key: string;
       }>;
       level?: number;
-      _type: "block";
+      _type: 'block';
       _key: string;
     }
   | {
       asset?: {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
       };
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       caption?: string;
-      _type: "image";
+      _type: 'image';
       _key: string;
     }
 >;
 
 export type Navbar = {
   _id: string;
-  _type: "navbar";
+  _type: 'navbar';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -365,16 +365,16 @@ export type Navbar = {
           name?: string;
           description?: string;
           url?: CustomUrl;
-          _type: "navbarColumnLink";
+          _type: 'navbarColumnLink';
           _key: string;
         }>;
-        _type: "navbarColumn";
+        _type: 'navbarColumn';
         _key: string;
       }
     | {
         name?: string;
         url?: CustomUrl;
-        _type: "navbarLink";
+        _type: 'navbarLink';
         _key: string;
       }
   >;
@@ -387,7 +387,7 @@ export type Navbar = {
 
 export type Footer = {
   _id: string;
-  _type: "footer";
+  _type: 'footer';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -398,17 +398,17 @@ export type Footer = {
     links?: Array<{
       name?: string;
       url?: CustomUrl;
-      _type: "footerColumnLink";
+      _type: 'footerColumnLink';
       _key: string;
     }>;
-    _type: "footerColumn";
+    _type: 'footerColumn';
     _key: string;
   }>;
 };
 
 export type Settings = {
   _id: string;
-  _type: "settings";
+  _type: 'settings';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -418,14 +418,14 @@ export type Settings = {
   logo?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   contactEmail?: string;
   socialLinks?: {
@@ -439,29 +439,29 @@ export type Settings = {
 
 export type BlogIndex = {
   _id: string;
-  _type: "blogIndex";
+  _type: 'blogIndex';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   title?: string;
   description?: string;
   slug: Slug;
-  displayFeaturedBlogs?: "yes" | "no";
-  featuredBlogsCount?: "1" | "2" | "3";
+  displayFeaturedBlogs?: 'yes' | 'no';
+  featuredBlogsCount?: '1' | '2' | '3';
   pageBuilder?: PageBuilder;
   seoTitle?: string;
   seoDescription?: string;
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   ogTitle?: string;
   ogDescription?: string;
@@ -469,7 +469,7 @@ export type BlogIndex = {
 
 export type HomePage = {
   _id: string;
-  _type: "homePage";
+  _type: 'homePage';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -482,14 +482,14 @@ export type HomePage = {
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   ogTitle?: string;
   ogDescription?: string;
@@ -497,7 +497,7 @@ export type HomePage = {
 
 export type Author = {
   _id: string;
-  _type: "author";
+  _type: 'author';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -506,21 +506,21 @@ export type Author = {
   image?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   bio?: string;
 };
 
 export type Faq = {
   _id: string;
-  _type: "faq";
+  _type: 'faq';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -530,7 +530,7 @@ export type Faq = {
 
 export type Page = {
   _id: string;
-  _type: "page";
+  _type: 'page';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -540,14 +540,14 @@ export type Page = {
   image?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   pageBuilder?: PageBuilder;
   seoTitle?: string;
@@ -555,14 +555,14 @@ export type Page = {
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   seoNoIndex?: boolean;
   ogTitle?: string;
@@ -571,7 +571,7 @@ export type Page = {
 
 export type Blog = {
   _id: string;
-  _type: "blog";
+  _type: 'blog';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -581,23 +581,23 @@ export type Blog = {
   slug: Slug;
   authors: Array<{
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
     _key: string;
-    [internalGroqTypeReferenceTo]?: "author";
+    [internalGroqTypeReferenceTo]?: 'author';
   }>;
   publishedAt?: string;
   image: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   richText?: RichText;
   seoTitle?: string;
@@ -605,14 +605,14 @@ export type Blog = {
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   seoNoIndex?: boolean;
   seoHideFromLists?: boolean;
@@ -621,34 +621,34 @@ export type Blog = {
 };
 
 export type CustomUrl = {
-  _type: "customUrl";
-  type: "internal" | "external";
+  _type: 'customUrl';
+  type: 'internal' | 'external';
   openInNewTab?: boolean;
   external?: string;
   href?: string;
   internal?:
     | {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "blog";
+        [internalGroqTypeReferenceTo]?: 'blog';
       }
     | {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "blogIndex";
+        [internalGroqTypeReferenceTo]?: 'blogIndex';
       }
     | {
         _ref: string;
-        _type: "reference";
+        _type: 'reference';
         _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "page";
+        [internalGroqTypeReferenceTo]?: 'page';
       };
 };
 
 export type SanityAssistInstructionTask = {
-  _type: "sanity.assist.instructionTask";
+  _type: 'sanity.assist.instructionTask';
   path?: string;
   instructionKey?: string;
   started?: string;
@@ -657,7 +657,7 @@ export type SanityAssistInstructionTask = {
 };
 
 export type SanityAssistTaskStatus = {
-  _type: "sanity.assist.task.status";
+  _type: 'sanity.assist.task.status';
   tasks?: Array<
     {
       _key: string;
@@ -666,7 +666,7 @@ export type SanityAssistTaskStatus = {
 };
 
 export type SanityAssistSchemaTypeAnnotations = {
-  _type: "sanity.assist.schemaType.annotations";
+  _type: 'sanity.assist.schemaType.annotations';
   title?: string;
   fields?: Array<
     {
@@ -676,28 +676,28 @@ export type SanityAssistSchemaTypeAnnotations = {
 };
 
 export type SanityAssistOutputType = {
-  _type: "sanity.assist.output.type";
+  _type: 'sanity.assist.output.type';
   type?: string;
 };
 
 export type SanityAssistOutputField = {
-  _type: "sanity.assist.output.field";
+  _type: 'sanity.assist.output.field';
   path?: string;
 };
 
 export type SanityAssistInstructionContext = {
-  _type: "sanity.assist.instruction.context";
+  _type: 'sanity.assist.instruction.context';
   reference: {
     _ref: string;
-    _type: "reference";
+    _type: 'reference';
     _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "assist.instruction.context";
+    [internalGroqTypeReferenceTo]?: 'assist.instruction.context';
   };
 };
 
 export type AssistInstructionContext = {
   _id: string;
-  _type: "assist.instruction.context";
+  _type: 'assist.instruction.context';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -706,20 +706,20 @@ export type AssistInstructionContext = {
     children?: Array<{
       marks?: Array<string>;
       text?: string;
-      _type: "span";
+      _type: 'span';
       _key: string;
     }>;
-    style?: "normal";
+    style?: 'normal';
     listItem?: never;
     markDefs?: null;
     level?: number;
-    _type: "block";
+    _type: 'block';
     _key: string;
   }>;
 };
 
 export type SanityAssistInstructionUserInput = {
-  _type: "sanity.assist.instruction.userInput";
+  _type: 'sanity.assist.instruction.userInput';
   message: string;
   description?: string;
 };
@@ -729,7 +729,7 @@ export type SanityAssistInstructionPrompt = Array<{
     | {
         marks?: Array<string>;
         text?: string;
-        _type: "span";
+        _type: 'span';
         _key: string;
       }
     | ({
@@ -742,21 +742,21 @@ export type SanityAssistInstructionPrompt = Array<{
         _key: string;
       } & SanityAssistInstructionUserInput)
   >;
-  style?: "normal";
+  style?: 'normal';
   listItem?: never;
   markDefs?: null;
   level?: number;
-  _type: "block";
+  _type: 'block';
   _key: string;
 }>;
 
 export type SanityAssistInstructionFieldRef = {
-  _type: "sanity.assist.instruction.fieldRef";
+  _type: 'sanity.assist.instruction.fieldRef';
   path?: string;
 };
 
 export type SanityAssistInstruction = {
-  _type: "sanity.assist.instruction";
+  _type: 'sanity.assist.instruction';
   prompt?: SanityAssistInstructionPrompt;
   icon?: string;
   title?: string;
@@ -773,7 +773,7 @@ export type SanityAssistInstruction = {
 };
 
 export type SanityAssistSchemaTypeField = {
-  _type: "sanity.assist.schemaType.field";
+  _type: 'sanity.assist.schemaType.field';
   path?: string;
   instructions?: Array<
     {
@@ -783,7 +783,7 @@ export type SanityAssistSchemaTypeField = {
 };
 
 export type IconPicker = {
-  _type: "iconPicker";
+  _type: 'iconPicker';
   provider?: string;
   name?: string;
   svg?: string;
@@ -791,7 +791,7 @@ export type IconPicker = {
 
 export type MediaTag = {
   _id: string;
-  _type: "media.tag";
+  _type: 'media.tag';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -799,7 +799,7 @@ export type MediaTag = {
 };
 
 export type SanityImagePaletteSwatch = {
-  _type: "sanity.imagePaletteSwatch";
+  _type: 'sanity.imagePaletteSwatch';
   background?: string;
   foreground?: string;
   population?: number;
@@ -807,7 +807,7 @@ export type SanityImagePaletteSwatch = {
 };
 
 export type SanityImagePalette = {
-  _type: "sanity.imagePalette";
+  _type: 'sanity.imagePalette';
   darkMuted?: SanityImagePaletteSwatch;
   lightVibrant?: SanityImagePaletteSwatch;
   darkVibrant?: SanityImagePaletteSwatch;
@@ -818,14 +818,14 @@ export type SanityImagePalette = {
 };
 
 export type SanityImageDimensions = {
-  _type: "sanity.imageDimensions";
+  _type: 'sanity.imageDimensions';
   height?: number;
   width?: number;
   aspectRatio?: number;
 };
 
 export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
+  _type: 'sanity.imageHotspot';
   x?: number;
   y?: number;
   height?: number;
@@ -833,7 +833,7 @@ export type SanityImageHotspot = {
 };
 
 export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
+  _type: 'sanity.imageCrop';
   top?: number;
   bottom?: number;
   left?: number;
@@ -842,7 +842,7 @@ export type SanityImageCrop = {
 
 export type SanityFileAsset = {
   _id: string;
-  _type: "sanity.fileAsset";
+  _type: 'sanity.fileAsset';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -864,7 +864,7 @@ export type SanityFileAsset = {
 
 export type SanityImageAsset = {
   _id: string;
-  _type: "sanity.imageAsset";
+  _type: 'sanity.imageAsset';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -886,7 +886,7 @@ export type SanityImageAsset = {
 };
 
 export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
+  _type: 'sanity.imageMetadata';
   location?: Geopoint;
   dimensions?: SanityImageDimensions;
   palette?: SanityImagePalette;
@@ -897,20 +897,20 @@ export type SanityImageMetadata = {
 };
 
 export type Geopoint = {
-  _type: "geopoint";
+  _type: 'geopoint';
   lat?: number;
   lng?: number;
   alt?: number;
 };
 
 export type Slug = {
-  _type: "slug";
+  _type: 'slug';
   current: string;
   source?: string;
 };
 
 export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
+  _type: 'sanity.assetSourceData';
   name?: string;
   id?: string;
   url?: string;
@@ -983,7 +983,7 @@ export type QueryImageTypeResult = {
 // Query: *[_type == "homePage" && _id == "homePage"][0]{    ...,    _id,    _type,    "slug": slug.current,    title,    description,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    "cards": array::compact(cards[]{      ...,        richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    })  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },    })  }  }  }
 export type QueryHomePageDataResult = {
   _id: string;
-  _type: "homePage";
+  _type: 'homePage';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -993,7 +993,7 @@ export type QueryHomePageDataResult = {
   pageBuilder: Array<
     | {
         _key: string;
-        _type: "cta";
+        _type: 'cta';
         eyebrow?: string;
         title?: string;
         richText: Array<
@@ -1001,35 +1001,35 @@ export type QueryHomePageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -1043,7 +1043,7 @@ export type QueryHomePageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -1051,16 +1051,16 @@ export type QueryHomePageDataResult = {
         > | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
       }
     | {
         _key: string;
-        _type: "faqAccordion";
+        _type: 'faqAccordion';
         eyebrow?: string;
         title: string;
         subtitle?: string;
@@ -1074,41 +1074,41 @@ export type QueryHomePageDataResult = {
         faqs: Array<{
           title: string;
           _id: string;
-          _type: "faq";
+          _type: 'faq';
           richText: Array<
             | {
                 children?: Array<{
                   marks?: Array<string>;
                   text?: string;
-                  _type: "span";
+                  _type: 'span';
                   _key: string;
                 }>;
-                style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-                listItem?: "bullet" | "number";
+                style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+                listItem?: 'bullet' | 'number';
                 markDefs: Array<
                   | {
                       customLink?: CustomUrl;
-                      _type: "customLink";
+                      _type: 'customLink';
                       _key: string;
                       openInNewTab: boolean | null;
-                      href: string | "#" | null;
+                      href: string | '#' | null;
                     }
                   | {
                       customLink?: CustomUrl;
-                      _type: "customLink";
+                      _type: 'customLink';
                       _key: string;
                     }
                 > | null;
                 level?: number;
-                _type: "block";
+                _type: 'block';
                 _key: string;
               }
             | {
                 asset?: {
                   _ref: string;
-                  _type: "reference";
+                  _type: 'reference';
                   _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
                 };
                 media?: unknown;
                 hotspot: {
@@ -1122,7 +1122,7 @@ export type QueryHomePageDataResult = {
                   top: number | null;
                 } | null;
                 caption: string | null;
-                _type: "image";
+                _type: 'image';
                 _key: string;
                 id: string | null;
                 preview: string | null;
@@ -1132,34 +1132,34 @@ export type QueryHomePageDataResult = {
       }
     | {
         _key: string;
-        _type: "featureCardsIcon";
+        _type: 'featureCardsIcon';
         eyebrow?: string;
         title?: string;
         richText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
         cards: Array<{
@@ -1169,36 +1169,36 @@ export type QueryHomePageDataResult = {
             children?: Array<{
               marks?: Array<string>;
               text?: string;
-              _type: "span";
+              _type: 'span';
               _key: string;
             }>;
-            style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-            listItem?: "bullet" | "number";
+            style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+            listItem?: 'bullet' | 'number';
             markDefs: Array<
               | {
                   customLink?: CustomUrl;
-                  _type: "customLink";
+                  _type: 'customLink';
                   _key: string;
                   openInNewTab: boolean | null;
-                  href: string | "#" | null;
+                  href: string | '#' | null;
                 }
               | {
                   customLink?: CustomUrl;
-                  _type: "customLink";
+                  _type: 'customLink';
                   _key: string;
                 }
             > | null;
             level?: number;
-            _type: "block";
+            _type: 'block';
             _key: string;
           }> | null;
-          _type: "featureCardIcon";
+          _type: 'featureCardIcon';
           _key: string;
         }> | null;
       }
     | {
         _key: string;
-        _type: "hero";
+        _type: 'hero';
         badge?: string;
         title?: string;
         richText: Array<
@@ -1206,35 +1206,35 @@ export type QueryHomePageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -1248,7 +1248,7 @@ export type QueryHomePageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -1270,16 +1270,16 @@ export type QueryHomePageDataResult = {
         } | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
       }
     | {
         _key: string;
-        _type: "imageLinkCards";
+        _type: 'imageLinkCards';
         eyebrow?: string;
         title: string;
         richText: Array<
@@ -1287,35 +1287,35 @@ export type QueryHomePageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -1329,7 +1329,7 @@ export type QueryHomePageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -1337,9 +1337,9 @@ export type QueryHomePageDataResult = {
         > | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
@@ -1361,7 +1361,7 @@ export type QueryHomePageDataResult = {
             } | null;
           } | null;
           url?: CustomUrl;
-          _type: "imageLinkCard";
+          _type: 'imageLinkCard';
           _key: string;
           openInNewTab: boolean | null;
           href: string | null;
@@ -1369,60 +1369,60 @@ export type QueryHomePageDataResult = {
       }
     | {
         _key: string;
-        _type: "subscribeNewsletter";
+        _type: 'subscribeNewsletter';
         title?: string;
         subTitle: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
         helperText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
       }
@@ -1432,14 +1432,14 @@ export type QueryHomePageDataResult = {
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   ogTitle?: string;
   ogDescription?: string;
@@ -1448,7 +1448,7 @@ export type QueryHomePageDataResult = {
 // Query: *[_type == "page" && slug.current == $slug][0]{    ...,    "slug": slug.current,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    "cards": array::compact(cards[]{      ...,        richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    })  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },    })  }  }  }
 export type QuerySlugPageDataResult = {
   _id: string;
-  _type: "page";
+  _type: 'page';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -1458,19 +1458,19 @@ export type QuerySlugPageDataResult = {
   image?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   pageBuilder: Array<
     | {
         _key: string;
-        _type: "cta";
+        _type: 'cta';
         eyebrow?: string;
         title?: string;
         richText: Array<
@@ -1478,35 +1478,35 @@ export type QuerySlugPageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -1520,7 +1520,7 @@ export type QuerySlugPageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -1528,16 +1528,16 @@ export type QuerySlugPageDataResult = {
         > | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
       }
     | {
         _key: string;
-        _type: "faqAccordion";
+        _type: 'faqAccordion';
         eyebrow?: string;
         title: string;
         subtitle?: string;
@@ -1551,41 +1551,41 @@ export type QuerySlugPageDataResult = {
         faqs: Array<{
           title: string;
           _id: string;
-          _type: "faq";
+          _type: 'faq';
           richText: Array<
             | {
                 children?: Array<{
                   marks?: Array<string>;
                   text?: string;
-                  _type: "span";
+                  _type: 'span';
                   _key: string;
                 }>;
-                style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-                listItem?: "bullet" | "number";
+                style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+                listItem?: 'bullet' | 'number';
                 markDefs: Array<
                   | {
                       customLink?: CustomUrl;
-                      _type: "customLink";
+                      _type: 'customLink';
                       _key: string;
                       openInNewTab: boolean | null;
-                      href: string | "#" | null;
+                      href: string | '#' | null;
                     }
                   | {
                       customLink?: CustomUrl;
-                      _type: "customLink";
+                      _type: 'customLink';
                       _key: string;
                     }
                 > | null;
                 level?: number;
-                _type: "block";
+                _type: 'block';
                 _key: string;
               }
             | {
                 asset?: {
                   _ref: string;
-                  _type: "reference";
+                  _type: 'reference';
                   _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
                 };
                 media?: unknown;
                 hotspot: {
@@ -1599,7 +1599,7 @@ export type QuerySlugPageDataResult = {
                   top: number | null;
                 } | null;
                 caption: string | null;
-                _type: "image";
+                _type: 'image';
                 _key: string;
                 id: string | null;
                 preview: string | null;
@@ -1609,34 +1609,34 @@ export type QuerySlugPageDataResult = {
       }
     | {
         _key: string;
-        _type: "featureCardsIcon";
+        _type: 'featureCardsIcon';
         eyebrow?: string;
         title?: string;
         richText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
         cards: Array<{
@@ -1646,36 +1646,36 @@ export type QuerySlugPageDataResult = {
             children?: Array<{
               marks?: Array<string>;
               text?: string;
-              _type: "span";
+              _type: 'span';
               _key: string;
             }>;
-            style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-            listItem?: "bullet" | "number";
+            style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+            listItem?: 'bullet' | 'number';
             markDefs: Array<
               | {
                   customLink?: CustomUrl;
-                  _type: "customLink";
+                  _type: 'customLink';
                   _key: string;
                   openInNewTab: boolean | null;
-                  href: string | "#" | null;
+                  href: string | '#' | null;
                 }
               | {
                   customLink?: CustomUrl;
-                  _type: "customLink";
+                  _type: 'customLink';
                   _key: string;
                 }
             > | null;
             level?: number;
-            _type: "block";
+            _type: 'block';
             _key: string;
           }> | null;
-          _type: "featureCardIcon";
+          _type: 'featureCardIcon';
           _key: string;
         }> | null;
       }
     | {
         _key: string;
-        _type: "hero";
+        _type: 'hero';
         badge?: string;
         title?: string;
         richText: Array<
@@ -1683,35 +1683,35 @@ export type QuerySlugPageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -1725,7 +1725,7 @@ export type QuerySlugPageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -1747,16 +1747,16 @@ export type QuerySlugPageDataResult = {
         } | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
       }
     | {
         _key: string;
-        _type: "imageLinkCards";
+        _type: 'imageLinkCards';
         eyebrow?: string;
         title: string;
         richText: Array<
@@ -1764,35 +1764,35 @@ export type QuerySlugPageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -1806,7 +1806,7 @@ export type QuerySlugPageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -1814,9 +1814,9 @@ export type QuerySlugPageDataResult = {
         > | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
@@ -1838,7 +1838,7 @@ export type QuerySlugPageDataResult = {
             } | null;
           } | null;
           url?: CustomUrl;
-          _type: "imageLinkCard";
+          _type: 'imageLinkCard';
           _key: string;
           openInNewTab: boolean | null;
           href: string | null;
@@ -1846,60 +1846,60 @@ export type QuerySlugPageDataResult = {
       }
     | {
         _key: string;
-        _type: "subscribeNewsletter";
+        _type: 'subscribeNewsletter';
         title?: string;
         subTitle: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
         helperText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
       }
@@ -1909,14 +1909,14 @@ export type QuerySlugPageDataResult = {
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   seoNoIndex?: boolean;
   ogTitle?: string;
@@ -1929,7 +1929,7 @@ export type QuerySlugPagePathsResult = Array<string>;
 // Query: *[_type == "blogIndex"][0]{    ...,    _id,    _type,    title,    description,    "displayFeaturedBlogs" : displayFeaturedBlogs == "yes",    "featuredBlogsCount" : featuredBlogsCount,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    "cards": array::compact(cards[]{      ...,        richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    })  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },    })  }  },    "slug": slug.current,    "blogs": *[_type == "blog" && (seoHideFromLists != true)] | order(orderRank asc){        _type,  _id,  title,  description,  "slug":slug.current,  orderRank,    image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },  publishedAt,    authors[0]->{    _id,    name,    position,      image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  }  }    }  }
 export type QueryBlogIndexPageDataResult = {
   _id: string;
-  _type: "blogIndex";
+  _type: 'blogIndex';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -1937,11 +1937,11 @@ export type QueryBlogIndexPageDataResult = {
   description: string | null;
   slug: string;
   displayFeaturedBlogs: false | true;
-  featuredBlogsCount: "1" | "2" | "3" | null;
+  featuredBlogsCount: '1' | '2' | '3' | null;
   pageBuilder: Array<
     | {
         _key: string;
-        _type: "cta";
+        _type: 'cta';
         eyebrow?: string;
         title?: string;
         richText: Array<
@@ -1949,35 +1949,35 @@ export type QueryBlogIndexPageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -1991,7 +1991,7 @@ export type QueryBlogIndexPageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -1999,16 +1999,16 @@ export type QueryBlogIndexPageDataResult = {
         > | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
       }
     | {
         _key: string;
-        _type: "faqAccordion";
+        _type: 'faqAccordion';
         eyebrow?: string;
         title: string;
         subtitle?: string;
@@ -2022,41 +2022,41 @@ export type QueryBlogIndexPageDataResult = {
         faqs: Array<{
           title: string;
           _id: string;
-          _type: "faq";
+          _type: 'faq';
           richText: Array<
             | {
                 children?: Array<{
                   marks?: Array<string>;
                   text?: string;
-                  _type: "span";
+                  _type: 'span';
                   _key: string;
                 }>;
-                style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-                listItem?: "bullet" | "number";
+                style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+                listItem?: 'bullet' | 'number';
                 markDefs: Array<
                   | {
                       customLink?: CustomUrl;
-                      _type: "customLink";
+                      _type: 'customLink';
                       _key: string;
                       openInNewTab: boolean | null;
-                      href: string | "#" | null;
+                      href: string | '#' | null;
                     }
                   | {
                       customLink?: CustomUrl;
-                      _type: "customLink";
+                      _type: 'customLink';
                       _key: string;
                     }
                 > | null;
                 level?: number;
-                _type: "block";
+                _type: 'block';
                 _key: string;
               }
             | {
                 asset?: {
                   _ref: string;
-                  _type: "reference";
+                  _type: 'reference';
                   _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
                 };
                 media?: unknown;
                 hotspot: {
@@ -2070,7 +2070,7 @@ export type QueryBlogIndexPageDataResult = {
                   top: number | null;
                 } | null;
                 caption: string | null;
-                _type: "image";
+                _type: 'image';
                 _key: string;
                 id: string | null;
                 preview: string | null;
@@ -2080,34 +2080,34 @@ export type QueryBlogIndexPageDataResult = {
       }
     | {
         _key: string;
-        _type: "featureCardsIcon";
+        _type: 'featureCardsIcon';
         eyebrow?: string;
         title?: string;
         richText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
         cards: Array<{
@@ -2117,36 +2117,36 @@ export type QueryBlogIndexPageDataResult = {
             children?: Array<{
               marks?: Array<string>;
               text?: string;
-              _type: "span";
+              _type: 'span';
               _key: string;
             }>;
-            style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-            listItem?: "bullet" | "number";
+            style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+            listItem?: 'bullet' | 'number';
             markDefs: Array<
               | {
                   customLink?: CustomUrl;
-                  _type: "customLink";
+                  _type: 'customLink';
                   _key: string;
                   openInNewTab: boolean | null;
-                  href: string | "#" | null;
+                  href: string | '#' | null;
                 }
               | {
                   customLink?: CustomUrl;
-                  _type: "customLink";
+                  _type: 'customLink';
                   _key: string;
                 }
             > | null;
             level?: number;
-            _type: "block";
+            _type: 'block';
             _key: string;
           }> | null;
-          _type: "featureCardIcon";
+          _type: 'featureCardIcon';
           _key: string;
         }> | null;
       }
     | {
         _key: string;
-        _type: "hero";
+        _type: 'hero';
         badge?: string;
         title?: string;
         richText: Array<
@@ -2154,35 +2154,35 @@ export type QueryBlogIndexPageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -2196,7 +2196,7 @@ export type QueryBlogIndexPageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -2218,16 +2218,16 @@ export type QueryBlogIndexPageDataResult = {
         } | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
       }
     | {
         _key: string;
-        _type: "imageLinkCards";
+        _type: 'imageLinkCards';
         eyebrow?: string;
         title: string;
         richText: Array<
@@ -2235,35 +2235,35 @@ export type QueryBlogIndexPageDataResult = {
               children?: Array<{
                 marks?: Array<string>;
                 text?: string;
-                _type: "span";
+                _type: 'span';
                 _key: string;
               }>;
-              style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-              listItem?: "bullet" | "number";
+              style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+              listItem?: 'bullet' | 'number';
               markDefs: Array<
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                     openInNewTab: boolean | null;
-                    href: string | "#" | null;
+                    href: string | '#' | null;
                   }
                 | {
                     customLink?: CustomUrl;
-                    _type: "customLink";
+                    _type: 'customLink';
                     _key: string;
                   }
               > | null;
               level?: number;
-              _type: "block";
+              _type: 'block';
               _key: string;
             }
           | {
               asset?: {
                 _ref: string;
-                _type: "reference";
+                _type: 'reference';
                 _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
               };
               media?: unknown;
               hotspot: {
@@ -2277,7 +2277,7 @@ export type QueryBlogIndexPageDataResult = {
                 top: number | null;
               } | null;
               caption: string | null;
-              _type: "image";
+              _type: 'image';
               _key: string;
               id: string | null;
               preview: string | null;
@@ -2285,9 +2285,9 @@ export type QueryBlogIndexPageDataResult = {
         > | null;
         buttons: Array<{
           text: string | null;
-          variant: "default" | "link" | "outline" | "secondary" | null;
+          variant: 'default' | 'link' | 'outline' | 'secondary' | null;
           _key: string;
-          _type: "button";
+          _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
@@ -2309,7 +2309,7 @@ export type QueryBlogIndexPageDataResult = {
             } | null;
           } | null;
           url?: CustomUrl;
-          _type: "imageLinkCard";
+          _type: 'imageLinkCard';
           _key: string;
           openInNewTab: boolean | null;
           href: string | null;
@@ -2317,60 +2317,60 @@ export type QueryBlogIndexPageDataResult = {
       }
     | {
         _key: string;
-        _type: "subscribeNewsletter";
+        _type: 'subscribeNewsletter';
         title?: string;
         subTitle: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
         helperText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
-            _type: "span";
+            _type: 'span';
             _key: string;
           }>;
-          style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-          listItem?: "bullet" | "number";
+          style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+          listItem?: 'bullet' | 'number';
           markDefs: Array<
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
                 openInNewTab: boolean | null;
-                href: string | "#" | null;
+                href: string | '#' | null;
               }
             | {
                 customLink?: CustomUrl;
-                _type: "customLink";
+                _type: 'customLink';
                 _key: string;
               }
           > | null;
           level?: number;
-          _type: "block";
+          _type: 'block';
           _key: string;
         }> | null;
       }
@@ -2380,19 +2380,19 @@ export type QueryBlogIndexPageDataResult = {
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   ogTitle?: string;
   ogDescription?: string;
   blogs: Array<{
-    _type: "blog";
+    _type: 'blog';
     _id: string;
     title: string;
     description: string | null;
@@ -2438,7 +2438,7 @@ export type QueryBlogIndexPageDataResult = {
 // Query: *[_type == "blog" && slug.current == $slug][0]{    ...,    "slug": slug.current,      authors[0]->{    _id,    name,    position,      image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  }  },      image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    "cards": array::compact(cards[]{      ...,        richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    })  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },    })  }  }  }
 export type QueryBlogSlugPageDataResult = {
   _id: string;
-  _type: "blog";
+  _type: 'blog';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -2485,35 +2485,35 @@ export type QueryBlogSlugPageDataResult = {
         children?: Array<{
           marks?: Array<string>;
           text?: string;
-          _type: "span";
+          _type: 'span';
           _key: string;
         }>;
-        style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
-        listItem?: "bullet" | "number";
+        style?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'inline' | 'normal';
+        listItem?: 'bullet' | 'number';
         markDefs: Array<
           | {
               customLink?: CustomUrl;
-              _type: "customLink";
+              _type: 'customLink';
               _key: string;
               openInNewTab: boolean | null;
-              href: string | "#" | null;
+              href: string | '#' | null;
             }
           | {
               customLink?: CustomUrl;
-              _type: "customLink";
+              _type: 'customLink';
               _key: string;
             }
         > | null;
         level?: number;
-        _type: "block";
+        _type: 'block';
         _key: string;
       }
     | {
         asset?: {
           _ref: string;
-          _type: "reference";
+          _type: 'reference';
           _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
         };
         media?: unknown;
         hotspot: {
@@ -2527,7 +2527,7 @@ export type QueryBlogSlugPageDataResult = {
           top: number | null;
         } | null;
         caption: string | null;
-        _type: "image";
+        _type: 'image';
         _key: string;
         id: string | null;
         preview: string | null;
@@ -2538,14 +2538,14 @@ export type QueryBlogSlugPageDataResult = {
   seoImage?: {
     asset?: {
       _ref: string;
-      _type: "reference";
+      _type: 'reference';
       _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset';
     };
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    _type: "image";
+    _type: 'image';
   };
   seoNoIndex?: boolean;
   seoHideFromLists?: boolean;
@@ -2560,7 +2560,7 @@ export type QueryBlogPathsResult = Array<string>;
 // Query: *[_type == "homePage" && _id == $id][0]{      _id,  _type,  "title": select(    defined(ogTitle) => ogTitle,    defined(seoTitle) => seoTitle,    title  ),  "description": select(    defined(ogDescription) => ogDescription,    defined(seoDescription) => seoDescription,    description  ),  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",  "dominantColor": image.asset->metadata.palette.dominant.background,  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max",   "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",  "date": coalesce(date, _createdAt)  }
 export type QueryHomePageOGDataResult = {
   _id: string;
-  _type: "homePage";
+  _type: 'homePage';
   title: string | null;
   description: string | null;
   image: null;
@@ -2573,7 +2573,7 @@ export type QueryHomePageOGDataResult = {
 // Query: *[_type == "page" && _id == $id][0]{      _id,  _type,  "title": select(    defined(ogTitle) => ogTitle,    defined(seoTitle) => seoTitle,    title  ),  "description": select(    defined(ogDescription) => ogDescription,    defined(seoDescription) => seoDescription,    description  ),  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",  "dominantColor": image.asset->metadata.palette.dominant.background,  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max",   "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",  "date": coalesce(date, _createdAt)  }
 export type QuerySlugPageOGDataResult = {
   _id: string;
-  _type: "page";
+  _type: 'page';
   title: string | null;
   description: string | null;
   image: string | null;
@@ -2586,7 +2586,7 @@ export type QuerySlugPageOGDataResult = {
 // Query: *[_type == "blog" && _id == $id][0]{      _id,  _type,  "title": select(    defined(ogTitle) => ogTitle,    defined(seoTitle) => seoTitle,    title  ),  "description": select(    defined(ogDescription) => ogDescription,    defined(seoDescription) => seoDescription,    description  ),  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",  "dominantColor": image.asset->metadata.palette.dominant.background,  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max",   "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",  "date": coalesce(date, _createdAt)  }
 export type QueryBlogPageOGDataResult = {
   _id: string;
-  _type: "blog";
+  _type: 'blog';
   title: string | null;
   description: string | null;
   image: string | null;
@@ -2600,7 +2600,7 @@ export type QueryBlogPageOGDataResult = {
 export type QueryGenericPageOGDataResult =
   | {
       _id: string;
-      _type: "blog";
+      _type: 'blog';
       title: string | null;
       description: string | null;
       image: string | null;
@@ -2611,7 +2611,7 @@ export type QueryGenericPageOGDataResult =
     }
   | {
       _id: string;
-      _type: "blogIndex";
+      _type: 'blogIndex';
       title: string | null;
       description: string | null;
       image: null;
@@ -2622,7 +2622,7 @@ export type QueryGenericPageOGDataResult =
     }
   | {
       _id: string;
-      _type: "homePage";
+      _type: 'homePage';
       title: string | null;
       description: string | null;
       image: null;
@@ -2633,7 +2633,7 @@ export type QueryGenericPageOGDataResult =
     }
   | {
       _id: string;
-      _type: "page";
+      _type: 'page';
       title: string | null;
       description: string | null;
       image: string | null;
@@ -2666,7 +2666,7 @@ export type QueryNavbarDataResult = {
   columns: Array<
     | {
         _key: string;
-        type: "link";
+        type: 'link';
         name: string | null;
         description: null;
         openInNewTab: boolean | null;
@@ -2674,7 +2674,7 @@ export type QueryNavbarDataResult = {
       }
     | {
         _key: string;
-        type: "column";
+        type: 'column';
         title: string | null;
         links: Array<{
           _key: string;
@@ -2688,9 +2688,9 @@ export type QueryNavbarDataResult = {
   > | null;
   buttons: Array<{
     text: string | null;
-    variant: "default" | "link" | "outline" | "secondary" | null;
+    variant: 'default' | 'link' | 'outline' | 'secondary' | null;
     _key: string;
-    _type: "button";
+    _type: 'button';
     openInNewTab: boolean | null;
     href: string | null;
   }> | null;
@@ -2711,7 +2711,7 @@ export type QuerySitemapDataResult = {
 // Query: *[_type == "settings"][0]{    _id,    _type,    siteTitle,    logo {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }    },    siteDescription,    socialLinks{      linkedin,      facebook,      twitter,      instagram,      youtube    }  }
 export type QueryGlobalSeoSettingsResult = {
   _id: string;
-  _type: "settings";
+  _type: 'settings';
   siteTitle: string;
   logo: {
     id: string | null;
@@ -2740,7 +2740,7 @@ export type QueryGlobalSeoSettingsResult = {
 // Query: *[_type == "settings"][0]{    _id,    _type,    siteTitle,    siteDescription,    "logo": logo.asset->url + "?w=80&h=40&dpr=3&fit=max",    "socialLinks": socialLinks,    "contactEmail": contactEmail,  }
 export type QuerySettingsDataResult = {
   _id: string;
-  _type: "settings";
+  _type: 'settings';
   siteTitle: string;
   siteDescription: string;
   logo: string | null;
@@ -2755,8 +2755,8 @@ export type QuerySettingsDataResult = {
 } | null;
 
 // Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
+import '@sanity/client';
+declare module '@sanity/client' {
   interface SanityQueries {
     '\n  *[_type == "page" && defined(image)][0]{\n    \n  image {\n    \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n\n  }.image\n': QueryImageTypeResult;
     '*[_type == "homePage" && _id == "homePage"][0]{\n    ...,\n    _id,\n    _type,\n    "slug": slug.current,\n    title,\n    description,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image {\n    \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    }\n  }\n,\n    \n  _type == "featureCardsIcon" => {\n    ...,\n    \n  richText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      \n  richText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n,\n    })\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image {\n    \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n,\n    })\n  }\n\n  }\n\n  }': QueryHomePageDataResult;

@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import type { Maybe } from "@/global/types";
-import { capitalize } from "@/global/utils";
+import type { Maybe } from '@/global/types';
+import { capitalize } from '@/global/utils';
 
-import { BASE_URL } from "./constants";
+import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
+import { sanityFetch } from './sanity/live';
+import { queryDefaultOGImage } from './sanity/query';
 
 // Site-wide configuration interface
 interface SiteConfig {
@@ -15,39 +17,27 @@ interface SiteConfig {
 
 // Page-specific SEO data interface
 interface PageSeoData extends Metadata {
-  title?: string;
-  description?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+  };
   slug?: string;
-  contentId?: string;
-  contentType?: string;
   keywords?: string[];
-  seoNoIndex?: boolean;
-  pageType?: Extract<Metadata["openGraph"], { type: string }>["type"];
-}
-
-// OpenGraph image generation parameters
-interface OgImageParams {
-  type?: string;
-  id?: string;
+  noNotIndex?: boolean;
+  openGraph?: {
+    title?: string;
+    description?: string;
+    seoImage?: string;
+  };
 }
 
 // Default site configuration
 const siteConfig: SiteConfig = {
-  title: "Roboto Studio Demo",
-  description: "Roboto Studio Demo",
-  twitterHandle: "@studioroboto",
-  keywords: ["roboto", "studio", "demo", "sanity", "next", "react", "template"],
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  twitterHandle: '@audiofast',
+  keywords: ['audiofast', 'audio', 'premium', 'quality', 'sound', 'equipment'],
 };
-
-function generateOgImageUrl(params: OgImageParams = {}): string {
-  const { type, id } = params;
-  const searchParams = new URLSearchParams();
-
-  if (id) searchParams.set("id", id);
-  if (type) searchParams.set("type", type);
-
-  return `${BASE_URL}/api/og?${searchParams.toString()}`;
-}
 
 function buildPageUrl({
   baseUrl,
@@ -56,7 +46,7 @@ function buildPageUrl({
   baseUrl: string;
   slug: string;
 }): string {
-  const normalizedSlug = slug.startsWith("/") ? slug : `/${slug}`;
+  const normalizedSlug = slug.startsWith('/') ? slug : `/${slug}`;
   return `${baseUrl}${normalizedSlug}`;
 }
 
@@ -70,38 +60,38 @@ function extractTitle({
   siteTitle: string;
 }): string {
   if (pageTitle) return pageTitle;
-  if (slug && slug !== "/") return capitalize(slug.replace(/^\//, ""));
+  if (slug && slug !== '/') return capitalize(slug.replace(/^\//, ''));
   return siteTitle;
 }
 
-export function getSEOMetadata(page: PageSeoData = {}): Metadata {
+export async function getSEOMetadata(
+  page: PageSeoData = {}
+): Promise<Metadata> {
   const {
-    title: pageTitle,
-    description: pageDescription,
-    slug = "/",
-    contentId,
-    contentType,
+    seo,
+    slug = '/',
     keywords: pageKeywords = [],
-    seoNoIndex = false,
-    pageType = "website",
+    noNotIndex = false,
+    openGraph,
     ...pageOverrides
   } = page;
 
   const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug });
 
+  const { data }: { data: { defaultOGImage: string } } = await sanityFetch({
+    query: queryDefaultOGImage,
+  });
+
+  const ogImage = openGraph?.seoImage || data?.defaultOGImage;
+
   // Build default metadata values
   const defaultTitle = extractTitle({
-    pageTitle,
+    pageTitle: seo?.title,
     slug,
     siteTitle: siteConfig.title,
   });
-  const defaultDescription = pageDescription || siteConfig.description;
+  const defaultDescription = seo?.description || siteConfig.description;
   const allKeywords = [...siteConfig.keywords, ...pageKeywords];
-
-  const ogImage = generateOgImageUrl({
-    type: contentType,
-    id: contentId,
-  });
 
   const fullTitle =
     defaultTitle === siteConfig.title
@@ -119,28 +109,28 @@ export function getSEOMetadata(page: PageSeoData = {}): Metadata {
       icon: `${BASE_URL}/favicon.ico`,
     },
     keywords: allKeywords,
-    robots: seoNoIndex ? "noindex, nofollow" : "index, follow",
+    robots: noNotIndex ? 'noindex, nofollow' : 'index, follow',
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       images: [ogImage],
       creator: siteConfig.twitterHandle,
-      title: defaultTitle,
-      description: defaultDescription,
+      title: openGraph?.title || defaultTitle,
+      description: openGraph?.description || defaultDescription,
     },
     alternates: {
       canonical: pageUrl,
     },
     openGraph: {
-      type: pageType ?? "website",
-      countryName: "UK",
-      description: defaultDescription,
-      title: defaultTitle,
+      type: 'website',
+      countryName: 'PL',
+      description: openGraph?.description || defaultDescription,
+      title: openGraph?.title || defaultTitle,
       images: [
         {
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: defaultTitle,
+          alt: openGraph?.title || defaultTitle,
           secureUrl: ogImage,
         },
       ],

@@ -10,3 +10,20 @@ export const BASE_URL: string =
     : process.env.VERCEL_ENV === 'preview'
       ? `https://${process.env.VERCEL_URL}`
       : 'http://localhost:3000';
+
+/**
+ * Global declaration of the site title for the application.
+ * This constant is used for constructing full URLs and determining external links.
+ * @constant
+ * @type {string}
+ */
+export const SITE_TITLE: string = 'Audiofast';
+
+/**
+ * Global declaration of the site description for the application.
+ * This constant is used for constructing full URLs and determining external links.
+ * @constant
+ * @type {string}
+ */
+export const SITE_DESCRIPTION: string =
+  'Jesteśmy dystrybutorem sprzętu audio klasy premium. Oferujemy wyłącznie starannie wyselekcjonowane marki, które łączą technologiczną precyzję z zapewnieniem doskonałego dźwięku.';
