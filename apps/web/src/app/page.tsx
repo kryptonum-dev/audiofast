@@ -1,16 +1,15 @@
+import { PageBuilder } from '../components/shared/PageBuilder';
 import Button from '../components/ui/Button';
-import { sanityFetch } from '../global/sanity/live';
+import { client } from '../global/sanity/client';
 import { queryHomePage } from '../global/sanity/query';
 import { getSEOMetadata } from '../global/seo';
 
 async function fetchHomePageData() {
-  return await sanityFetch({
-    query: queryHomePage,
-  });
+  return await client.fetch(queryHomePage);
 }
 
 export async function generateMetadata() {
-  const { data: homePageData } = await fetchHomePageData();
+  const homePageData = await fetchHomePageData();
   return getSEOMetadata(
     homePageData
       ? {
@@ -23,24 +22,7 @@ export async function generateMetadata() {
 }
 
 export default async function Page() {
-  const { data: homePageData } = await fetchHomePageData();
+  const homePageData = await fetchHomePageData();
 
-  console.log(homePageData.pageBuilder[0].buttons);
-
-  return (
-    <section
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        margin: '40px auto',
-        padding: '40px',
-      }}
-    >
-      <h1 style={{ marginBottom: '40px' }}>Hello World</h1>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <Button>Przykładowy button</Button>
-        <Button variant="secondary">Przykładowy button</Button>
-      </div>
-    </section>
-  );
+  return <PageBuilder pageBuilder={homePageData.pageBuilder} />;
 }

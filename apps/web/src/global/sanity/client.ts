@@ -17,6 +17,12 @@ export const projectId = assertValue(
   'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID'
 );
 
+if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === undefined) {
+  throw new Error(
+    'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID'
+  );
+}
+
 /**
  * see https://www.sanity.io/docs/api-versioning for how versioning works
  */
@@ -36,10 +42,7 @@ export const client = createClient({
   apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
   perspective: 'published',
-  stega: {
-    studioUrl,
-    enabled: process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview',
-  },
+  // Live visual editing disabled
 });
 
 const imageBuilder = createImageUrlBuilder({

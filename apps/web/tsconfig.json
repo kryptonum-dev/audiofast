@@ -21,7 +21,8 @@
     "next.config.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/components/pageBuilder/Hero/index.tss"
   ],
   "exclude": ["node_modules"]
 }

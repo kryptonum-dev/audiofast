@@ -3,10 +3,10 @@ import {
   orderRankOrdering,
 } from '@sanity/orderable-document-list';
 import { Tag } from 'lucide-react';
-import { defineType } from 'sanity';
+import { defineField, defineType } from 'sanity';
 
-import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { GROUP, GROUPS } from '../../../utils/constant';
 import { getSEOFields } from '../../shared/seo';
 
 export const brand = defineType({
@@ -24,17 +24,29 @@ export const brand = defineType({
       prefix: '/marki/',
       group: GROUP.MAIN_CONTENT,
     }),
+    defineField({
+      name: 'logo',
+      title: 'Logo Marki',
+      type: 'image',
+      description: 'Logo marki w formacie SVG.',
+      options: {
+        accept: '.svg',
+      },
+      validation: (Rule) => Rule.required(),
+      group: GROUP.MAIN_CONTENT,
+    }),
     ...getSEOFields(),
   ],
   preview: {
     select: {
       name: 'name',
-      description: 'description',
+      logo: 'logo',
+      seo: 'seo',
     },
-    prepare: ({ name, description }) => ({
+    prepare: ({ name, logo, seo }) => ({
       title: name || 'Marka',
-      media: Tag,
-      subtitle: description || 'Marka produktów audio',
+      subtitle: seo?.description || 'Marka produktów audio',
+      media: logo || Tag,
     }),
   },
 });

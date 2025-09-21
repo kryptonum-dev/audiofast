@@ -4,7 +4,7 @@ import type { Maybe } from '@/global/types';
 import { capitalize } from '@/global/utils';
 
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
-import { sanityFetch } from './sanity/live';
+import { client } from './sanity/client';
 import { queryDefaultOGImage } from './sanity/query';
 
 // Site-wide configuration interface
@@ -78,9 +78,8 @@ export async function getSEOMetadata(
 
   const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug });
 
-  const { data }: { data: { defaultOGImage: string } } = await sanityFetch({
-    query: queryDefaultOGImage,
-  });
+  const data: { defaultOGImage: string } =
+    await client.fetch(queryDefaultOGImage);
 
   const ogImage = openGraph?.seoImage || data?.defaultOGImage;
 

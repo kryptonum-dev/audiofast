@@ -5,10 +5,6 @@ import type {
   SlugDefinition,
   SlugOptions,
 } from 'sanity';
-import type {
-  NavigatorOptions as PresentationNavigatorOptions,
-  PresentationPluginOptions,
-} from 'sanity/presentation';
 
 export type NormalizedCreatablePage = {
   title: string;
@@ -19,8 +15,8 @@ export type PagesNavigatorOptions = {
   creatablePages?: Array<NormalizedCreatablePage>;
 };
 
-export type PagesNavigatorPluginOptions = PresentationPluginOptions & {
-  navigator?: Pick<PresentationNavigatorOptions, 'maxWidth' | 'minWidth'>;
+export type PagesNavigatorPluginOptions = {
+  navigator?: { maxWidth?: number; minWidth?: number };
   creatablePages?: Array<NormalizedCreatablePage | string>;
   title?: string;
 };

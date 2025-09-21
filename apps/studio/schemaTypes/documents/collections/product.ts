@@ -5,8 +5,9 @@ import {
 import { BookAudio, Package, Settings } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
-import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { GROUP, GROUPS } from '../../../utils/constant';
+import { customPortableText } from '../../definitions/portable-text';
 import { getSEOFields } from '../../shared/seo';
 
 export const product = defineType({
@@ -42,17 +43,13 @@ export const product = defineType({
         'Zdjęcia produktu. Pierwsze zdjęcie będzie głównym zdjęciem produktu.',
       of: [{ type: 'image' }],
       validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .error('Produkt musi mieć co najmniej jedno zdjęcie'),
+        Rule.min(1).error('Produkt musi mieć co najmniej jedno zdjęcie'),
       group: GROUP.MAIN_CONTENT,
     }),
-    defineField({
+    customPortableText({
       name: 'shortDescription',
       title: 'Krótki opis',
-      type: 'portableText',
       description: 'Krótki opis produktu wyświetlany na górze strony.',
-      validation: (Rule) => Rule.required().error('Krótki opis jest wymagany'),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
@@ -104,16 +101,15 @@ export const product = defineType({
       type: 'object',
       description: 'Szczegółowy opis produktu z nagłówkiem i treścią.',
       fields: [
-        defineField({
+        customPortableText({
           name: 'heading',
           title: 'Nagłówek szczegółów',
-          type: 'portableTextHeading',
           description: 'Nagłówek sekcji szczegółów produktu.',
+          type: 'heading',
         }),
-        defineField({
+        customPortableText({
           name: 'content',
           title: 'Treść szczegółów',
-          type: 'portableText',
           description:
             'Szczegółowy opis produktu, specyfikacja i inne informacje.',
         }),
@@ -194,9 +190,9 @@ export const product = defineType({
         },
       ],
       validation: (Rule) =>
-        Rule.required()
-          .min(1)
-          .error('Produkt musi być dostępny w co najmniej jednym salonie'),
+        Rule.min(1).error(
+          'Produkt musi być dostępny w co najmniej jednym salonie'
+        ),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({

@@ -17,6 +17,7 @@ export const button = defineType({
     defineField({
       name: 'variant',
       type: 'string',
+      title: 'Styl przycisku',
       description: 'Wybierz styl przycisku',
       initialValue: () => 'primary',
       options: createRadioListLayout(buttonVariants, {

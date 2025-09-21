@@ -1,19 +1,16 @@
 import { assist } from '@sanity/assist';
 import { visionTool } from '@sanity/vision';
 import { defineConfig } from 'sanity';
-import { presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 import { iconPicker } from 'sanity-plugin-icon-picker';
 import { media } from 'sanity-plugin-media';
 
 import { Logo } from './components/logo';
-import { locations } from './location';
-import { presentationUrl } from './plugins/presentation-url';
 import type { SingletonType } from './schemaTypes';
 import { schemaTypes, singletonActions } from './schemaTypes';
 import { singletons } from './schemaTypes/documents';
 import { structure } from './structure';
-import { createPageTemplate, getPresentationUrl } from './utils/helper';
+import { createPageTemplate } from './utils/helper';
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
 const dataset = process.env.SANITY_STUDIO_DATASET;
@@ -29,17 +26,6 @@ export default defineConfig({
     enabled: true,
   },
   plugins: [
-    presentationTool({
-      resolve: {
-        locations,
-      },
-      previewUrl: {
-        origin: getPresentationUrl(),
-        previewMode: {
-          enable: '/api/presentation-draft',
-        },
-      },
-    }),
     assist(),
     structureTool({
       structure,
@@ -47,7 +33,6 @@ export default defineConfig({
     visionTool(),
     iconPicker(),
     media(),
-    presentationUrl(),
   ],
 
   document: {

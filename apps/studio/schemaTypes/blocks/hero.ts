@@ -1,48 +1,153 @@
 import { Star } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
-import { buttonsField, portableTextField } from '../shared';
+import { parsePortableTextToString } from '../../utils/helper';
+import { customPortableText } from '../definitions/portable-text';
 
 export const hero = defineType({
   name: 'hero',
-  title: 'Hero',
+  title: 'Sekcja Hero',
   icon: Star,
   type: 'object',
   fields: [
     defineField({
-      name: 'badge',
+      name: 'title2',
+      title: 'Tytuł2',
       type: 'string',
-      title: 'Badge',
-      description:
-        'Optional badgedisplayed above the title, useful for highlighting new features or promotions',
+      description: 'Tytuł2 sekcji hero',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'title',
-      type: 'string',
-      title: 'Title',
+      name: 'slides',
+      type: 'array',
+      title: 'Slajdy',
       description:
-        'The main heading text for the hero section that captures attention',
+        'Dodaj jeden lub więcej slajdów do karuzeli hero. Każdy slajd może zawierać obraz, nagłówek, tekst i przycisk',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'heroSlide',
+          title: 'Slajd Hero',
+          fields: [
+            customPortableText({
+              name: 'title',
+              title: 'Nagłówek',
+              description: 'Główny nagłówek slajdu',
+              type: 'heading',
+            }),
+            customPortableText({
+              name: 'description',
+              title: 'Paragraf',
+              description: 'Tekst opisowy pod tytułem',
+            }),
+            defineField({
+              name: 'image',
+              title: 'Zdjęcie w tle',
+              type: 'image',
+              description: 'Główne zdjęcie slajdu',
+              options: {
+                hotspot: true,
+              },
+
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: 'mobileImage',
+              title: 'Zdjęcie na urządzenia mobilne',
+              type: 'image',
+              description:
+                'Opcjonalne zdjęcie na urządzenia mobilne (zdjęcie zmienia się poniżej progu 768 pikseli)',
+              options: {
+                hotspot: true,
+              },
+            }),
+            defineField({
+              name: 'button',
+              title: 'Przycisk',
+              type: 'button',
+              description:
+                'Główny przycisk wezwania do działania dla tego slajdu',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: {
+              title: 'title',
+              description: 'description',
+              media: 'image',
+            },
+            prepare: ({ title, description, media }) => {
+              const titleText = parsePortableTextToString(title);
+              const descriptionText = parsePortableTextToString(description);
+
+              return {
+                title:
+                  titleText === 'No Content'
+                    ? 'Slajd bez tytułu'
+                    : titleText || 'Slajd bez tytułu',
+                subtitle:
+                  descriptionText === 'No Content'
+                    ? 'Slajd Hero'
+                    : descriptionText || 'Slajd Hero',
+                media,
+              };
+            },
+          },
+        }),
+      ],
+      validation: (Rule) =>
+        Rule.min(1)
+          .error('Minimum 1 slajd')
+          .max(5)
+          .error('Maksimum 5 slajdów')
+          .required()
+          .error('Slajdy są wymagane'),
     }),
-    portableTextField,
     defineField({
-      name: 'image',
-      type: 'image',
-      title: 'Image',
-      description:
-        'The main hero image - should be high quality and visually impactful',
-      options: {
-        hotspot: true,
-      },
+      name: 'brands',
+      title: 'Marki',
+      type: 'array',
+      description: 'Wybierz marki do wyświetlenia pod sekcją hero',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{ type: 'brand' }],
+        }),
+      ],
+      validation: (Rule) => [
+        Rule.min(6).error('Minimum 6 marek'),
+        Rule.max(16).error('Maksimum 16 marek'),
+        Rule.required().error('Marki są wymagane'),
+      ],
     }),
-    buttonsField,
   ],
   preview: {
     select: {
-      title: 'title',
+      slides: 'slides',
+      brands: 'brands',
     },
-    prepare: ({ title }) => ({
-      title,
-      subtitle: 'Hero Block',
-    }),
+    prepare: ({ slides, brands }) => {
+      const slideCount = slides?.length || 0;
+      const brandCount = brands?.length || 0;
+
+      // Polish pluralization for slides (slajd)
+      const getSlideText = (count: number) => {
+        if (count === 1) return 'slajd';
+        if (count >= 2 && count <= 4) return 'slajdy';
+        return 'slajdów'; // 0, 5+
+      };
+
+      // Polish pluralization for brands (marka)
+      const getBrandText = (count: number) => {
+        if (count === 1) return 'marka';
+        if (count >= 2 && count <= 4) return 'marki';
+        return 'marek'; // 0, 5+
+      };
+
+      return {
+        title: 'Sekcja Hero',
+        subtitle: `${slideCount} ${getSlideText(slideCount)}, ${brandCount} ${getBrandText(brandCount)}`,
+      };
+    },
   },
 });

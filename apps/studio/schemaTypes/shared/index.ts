@@ -1,10 +1,10 @@
 import { defineField } from 'sanity';
 
 import { GROUP } from '../../utils/constant';
+import { customPortableText } from '../definitions/portable-text';
 
-export const portableTextField = defineField({
+export const portableTextField = customPortableText({
   name: 'portableText',
-  type: 'portableText',
   description:
     'Edytor tekstu, który pozwala dodawać formatowanie, takie jak pogrubiony tekst, linki i punktory',
 });

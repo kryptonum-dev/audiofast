@@ -1,7 +1,8 @@
 import { MessageCircleQuestion } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { defineType } from 'sanity';
 
 import { toPlainText } from '../../../utils/helper';
+import { customPortableText } from '../../definitions/portable-text';
 
 export const faq = defineType({
   name: 'faq',
@@ -11,19 +12,16 @@ export const faq = defineType({
     'Prosta para pytanie-odpowiedź, która pomaga odwiedzającym szybko znaleźć informacje. Pomyśl o tym jak o zapisywaniu pytań, które klienci często zadają, wraz z jasnymi odpowiedziami.',
   icon: MessageCircleQuestion,
   fields: [
-    defineField({
+    customPortableText({
       name: 'title',
       title: 'Pytanie',
-      type: 'portableTextHeading',
       description:
         "Napisz pytanie dokładnie tak, jak ktoś mógłby je zadać. Na przykład: 'Jak mogę zresetować swoje hasło?'",
-      validation: (Rule) => Rule.required(),
+      type: 'heading',
     }),
-    defineField({
+    customPortableText({
       name: 'answer',
-      type: 'portableText',
       title: 'Odpowiedź',
-      validation: (Rule) => Rule.required(),
       description:
         'Napisz przyjazną, jasną odpowiedź, która bezpośrednio odnosi się do pytania. Utrzymuj ją na tyle prostą, żeby każdy mógł ją zrozumieć.',
     }),

@@ -1,12 +1,105 @@
 import { defineQuery } from 'next-sanity';
 
-const pageBuilderFragment = /* groq */ `
-  pageBuilder[]{
+export const imageFields = /* groq */ `
+  "id": asset._ref,
+  "preview": asset->metadata.lqip,
+  "alt": asset->altText,
+  "naturalWidth": asset->metadata.dimensions.width,
+  "naturalHeight": asset->metadata.dimensions.height,
+  hotspot {
+    x,
+    y,
+    width,
+    height
+  },
+  crop {
+    bottom,
+    left,
+    right,
+    top
+  }
+`;
+// Base fragments for reusable query parts
+export const imageFragment = (name: string = 'image') => /* groq */ `
+  ${name} {
+    ${imageFields}
+  }
+`;
+
+const customLinkFragment = /* groq */ `
+  ...customLink{
+    openInNewTab,
+    "href": select(
+      type == "internal" => internal->slug.current,
+      type == "external" => external,
+      "#"
+    ),
+  }
+`;
+
+const markDefsFragment = /* groq */ `
+  markDefs[]{
     ...,
-    _type,
+    ${customLinkFragment}
+  }
+`;
+
+const portableTextFragment = (name: string = 'portableText') => /* groq */ `
+  ${name}[]{
+    ...,
+    _type == "block" => {
+      ...,
+      ${markDefsFragment}
+    },
 
   }
 `;
+
+export const queryDefaultOGImage = defineQuery(`*[_type == "settings"][0]{
+    "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
+  }`);
+
+const buttonFragment = (name: string = 'button') => /* groq */ `
+${name}{
+  text,
+  variant,
+  _key,
+  _type,
+  "openInNewTab": url.openInNewTab,
+  "href": select(
+    url.type == "internal" => url.internal->slug.current,
+    url.type == "external" => url.external,
+    url.href
+  ),
+}
+`;
+
+const heroBlock = /* groq */ `
+  _type == "hero" => {
+    ...,
+    slides[]{
+      ${imageFragment('image')},
+      ${imageFragment('mobileImage')},
+      ${buttonFragment('button')},
+      ${portableTextFragment('title')},
+      ${portableTextFragment('description')},
+    },
+    brands[]->{
+      ${imageFragment('logo')},
+      name,
+      "slug": slug.current
+    }
+  }
+`;
+
+export const pageBuilderFragment = /* groq */ `
+  pageBuilder[]{
+    ...,
+    _type,
+      ${heroBlock}
+  }
+`;
+
 export const queryHomePage =
   defineQuery(`*[_type == "homePage" && _id == "homePage"][0]{
     _id,
@@ -21,22 +114,3 @@ export const queryHomePage =
     },
     ${pageBuilderFragment}
   }`);
-
-export const queryDefaultOGImage = defineQuery(`*[_type == "settings"][0]{
-    "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
-  }`);
-
-const buttonsFragment = /* groq */ `
-buttons[]{
-  text,
-  variant,
-  _key,
-  _type,
-  "openInNewTab": url.openInNewTab,
-  "href": select(
-    url.type == "internal" => url.internal->slug.current,
-    url.type == "external" => url.external,
-    url.href
-  ),
-}
-`;

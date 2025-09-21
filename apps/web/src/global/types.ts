@@ -1,34 +1,15 @@
-import type {
-  QueryBlogSlugPageDataResult,
-  QueryHomePageDataResult,
-  QueryImageTypeResult,
-} from './sanity/sanity.types';
-
-export type PageBuilderBlockTypes = NonNullable<
-  NonNullable<QueryHomePageDataResult>['pageBuilder']
->[number]['_type'];
-
-export type PagebuilderType<T extends PageBuilderBlockTypes> = Extract<
-  NonNullable<NonNullable<QueryHomePageDataResult>['pageBuilder']>[number],
-  { _type: T }
->;
-
-export type SanityButtonProps = NonNullable<
-  NonNullable<PagebuilderType<'hero'>>['buttons']
->[number];
-
-// export type SanityImageProps = Extract<
-//   NonNullable<QueryImageTypeResult>,
-//   { alt: string; blurData: string | null; dominantColor: string | null }
-// >;
-export type SanityImageProps = NonNullable<QueryImageTypeResult>;
-
-export type SanityRichTextProps =
-  NonNullable<QueryBlogSlugPageDataResult>['richText'];
-
-export type SanityRichTextBlock = Extract<
-  NonNullable<NonNullable<SanityRichTextProps>[number]>,
-  { _type: 'block' }
->;
+import type { QueryHomePageResult } from './sanity/sanity.types';
 
 export type Maybe<T> = T | null | undefined;
+
+// Shared Page Builder helpers derived from the shared pageBuilder fragment
+export type PageBuilderBlock = NonNullable<
+  NonNullable<QueryHomePageResult>['pageBuilder']
+>[number];
+
+export type PageBuilderBlockType = PageBuilderBlock['_type'];
+
+export type BlockOf<T extends PageBuilderBlockType> = Extract<
+  PageBuilderBlock,
+  { _type: T }
+>;
