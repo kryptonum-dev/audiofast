@@ -1,0 +1,186 @@
+.paginationDots {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem; // Adjusted for exact 44px height
+  border-radius: 2rem;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  height: 2.75rem; // Exact 44px height
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  // Premium glow effect
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02)
+    );
+    z-index: -1;
+    opacity: 0.6;
+  }
+
+  &[data-outline='light'] {
+    .dot {
+      outline-color: var(--neutral-white, #ffffff);
+    }
+  }
+}
+
+.indicator {
+  position: absolute;
+  top: 0.625rem;
+  height: 1.5rem;
+  width: 2.5rem; // Smaller pill width for breathing room
+  border-radius: 1.25rem; // Adjusted border radius
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  z-index: 1;
+
+  // Center the pill on each dot - precise calculation for new padding
+  // Dot centers: 0.875rem (padding) + 0.75rem (dot center) + index * 2rem = 1.625rem + index * 2rem
+  // Pill left edge: dot center - 1.25rem (half of 2.5rem pill width)
+  left: calc(0.375rem + var(--active-index) * 2rem);
+  transform: translateX(0);
+
+  // Smooth morphing transitions
+  transition:
+    left 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 400ms ease;
+
+  // Premium glow and depth
+  box-shadow:
+    0 2px 8px rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  // Enhanced glow effect
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02)
+    );
+    z-index: -1;
+    transition: inherit;
+    opacity: 0.8;
+  }
+
+  // Subtle inner highlight
+  &::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    height: 50%;
+    border-radius: inherit;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.1)
+    );
+    transition: inherit;
+  }
+}
+
+.dot {
+  position: relative;
+  z-index: 2;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  // Subtle inner dot - always visible for visual hierarchy
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition:
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 200ms ease,
+      opacity 300ms ease;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+
+    &::after {
+      background: rgba(255, 255, 255, 0.6);
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+  }
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &[data-active='true'] {
+    &::after {
+      background: rgba(255, 255, 255, 0.8);
+      transform: translate(-50%, -50%) scale(1.3);
+    }
+  }
+
+  // Premium focus styles
+  &:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 3px;
+    outline-style: solid;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
+  }
+
+  .dot {
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+
+    &:hover {
+      transform: none;
+
+      &::after {
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    &[data-active='true'] {
+      &::after {
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+}

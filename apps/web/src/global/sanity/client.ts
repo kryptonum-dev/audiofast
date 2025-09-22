@@ -1,5 +1,5 @@
-import type { SanityImageSource } from '@sanity/asset-utils';
 import createImageUrlBuilder from '@sanity/image-url';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { createClient } from 'next-sanity';
 
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
@@ -23,6 +23,11 @@ if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === undefined) {
   );
 }
 
+export const readToken = assertValue(
+  process.env.NEXT_PUBLIC_SANITY_API_READ_TOKEN,
+  'Missing environment variable: SANITY_API_READ_TOKEN'
+);
+
 /**
  * see https://www.sanity.io/docs/api-versioning for how versioning works
  */
@@ -36,19 +41,20 @@ export const apiVersion =
 export const studioUrl =
   process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'http://localhost:3333';
 
+const isPreviewEnv =
+  process.env.NODE_ENV !== 'production' || process.env.VERCEL_ENV === 'preview';
+
 export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: process.env.NODE_ENV === 'production',
-  perspective: 'published',
+  useCdn: process.env.NODE_ENV === 'production' && !isPreviewEnv,
+  perspective: isPreviewEnv ? 'previewDrafts' : 'published',
+  ...(isPreviewEnv ? { token: readToken } : {}),
   // Live visual editing disabled
 });
 
-const imageBuilder = createImageUrlBuilder({
-  projectId: projectId,
-  dataset: dataset,
-});
+const imageBuilder = createImageUrlBuilder({ projectId, dataset });
 
 export const urlFor = (source: SanityImageSource) =>
   imageBuilder.image(source).auto('format').fit('max').format('webp');

@@ -53,3 +53,20 @@ export function parseChildrenToSlug(children: PortableTextBlock['children']) {
   if (!children) return '';
   return convertToSlug(children.map((child) => child.text).join(''));
 }
+
+/**
+ * Fetches raw SVG text from a public URL. Returns undefined on failure.
+ * Intended for client-side usage to inline trusted SVGs from the Sanity CDN.
+ */
+export async function imageToInlineSvg(url: string) {
+  if (!url) return null;
+  try {
+    const response = await fetch(url);
+    const contentType = response.headers.get('content-type');
+    if (contentType !== 'image/svg+xml') return null;
+    const svgContent = await response.text();
+    return svgContent;
+  } catch (error) {
+    throw new Error(`Error fetching SVG: ${error}`);
+  }
+}

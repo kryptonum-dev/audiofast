@@ -6,10 +6,10 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string | React.ReactNode;
     children?: React.ReactNode;
-    variant?: 'primary' | 'secondary';
-    openInNewTab?: boolean;
+    variant: 'primary' | 'secondary' | null;
+    openInNewTab?: boolean | null;
     className?: string;
-    href?: string;
+    href?: string | null;
     iconUsed?: 'arrowUp' | 'arrowDown' | 'arrowLeft' | 'arrowRight';
   };
 

@@ -85,9 +85,9 @@ const heroBlock = /* groq */ `
       ${portableTextFragment('description')},
     },
     brands[]->{
-      ${imageFragment('logo')},
       name,
-      "slug": slug.current
+      "slug": slug.current,
+      "logoSvgUrl": logo.asset->url,
     }
   }
 `;

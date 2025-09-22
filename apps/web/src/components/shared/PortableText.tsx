@@ -1,8 +1,10 @@
 import React from 'react';
 import PortableText from 'react-portable-text';
 
+import type { PortableTextValue } from '@/global/types';
+
 type Props = {
-  value: unknown[];
+  value: PortableTextValue;
   className?: string;
   headingLevel?: 'h1' | 'h2' | 'h3' | 'h4';
 };

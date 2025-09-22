@@ -34,11 +34,13 @@ export const hero = defineType({
               title: 'Nagłówek',
               description: 'Główny nagłówek slajdu',
               type: 'heading',
+              maxLength: 90,
             }),
             customPortableText({
               name: 'description',
               title: 'Paragraf',
               description: 'Tekst opisowy pod tytułem',
+              maxLength: 350,
             }),
             defineField({
               name: 'image',

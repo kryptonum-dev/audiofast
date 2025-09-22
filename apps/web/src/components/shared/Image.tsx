@@ -166,11 +166,8 @@ export default function AppImage(props: AppImageProps) {
     ? 'blur'
     : ('empty' as const);
 
-  // console.debug('[AppImage] finalSrc', finalSrc);
-  console.log(finalSrc);
   return (
     <Image
-      // src is required by Next/Image but unused by custom loader
       src={finalSrc}
       alt={alt ?? (image as SanityRawImage).alt ?? ''}
       sizes={sizes}

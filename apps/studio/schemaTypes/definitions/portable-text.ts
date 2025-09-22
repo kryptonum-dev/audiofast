@@ -3,6 +3,7 @@ import type { Rule } from 'sanity';
 import { defineArrayMember, defineField } from 'sanity';
 
 import { CustomInput } from '../../components/custom-input';
+import { toPlainText } from '../../utils/helper';
 
 // Default building blocks for the portable text "block" member
 const ALL_STYLES = [{ title: 'Normalny', value: 'normal' }] as const;
@@ -96,6 +97,10 @@ export const customPortableText = (options?: {
   optional?: boolean;
   type?: 'default' | 'heading';
   include?: PortableTextInclude;
+  /** Maksymalna liczba znaków dozwolona w treści Portable Text */
+  maxLength?: number;
+  /** Alias wspierający literówkę – traktowany tak samo jak maxLength */
+  maxLenght?: number;
 }) => {
   const {
     name,
@@ -103,6 +108,8 @@ export const customPortableText = (options?: {
     optional,
     validation,
     type: variant,
+    maxLength: maxLengthProp,
+    maxLenght: maxLenghtAlias,
     ...rest
   } = options ?? {};
 
@@ -126,18 +133,44 @@ export const customPortableText = (options?: {
   const ofMembers =
     members.length > 0 ? members : [buildBlockMember(effectiveInclude)];
 
-  const finalValidation =
-    validation ??
-    (optional
-      ? undefined
-      : (rule: Rule) => rule.required().error('To pole jest wymagane'));
+  const userMaxLength =
+    typeof maxLengthProp === 'number'
+      ? maxLengthProp
+      : typeof maxLenghtAlias === 'number'
+        ? maxLenghtAlias
+        : undefined;
+
+  // Compose validation into a single custom rule so the correct message is shown
+  const finalValidation = (rule: Rule) => {
+    let composed = rule.custom((value) => {
+      const isEmpty = !value || !Array.isArray(value) || value.length === 0;
+      if (isEmpty) {
+        return optional ? true : 'To pole jest wymagane';
+      }
+      if (typeof userMaxLength === 'number' && userMaxLength > 0) {
+        const plain = toPlainText(value as unknown[]);
+        const len = plain.trim().length;
+        if (len > userMaxLength) {
+          return `Przekroczono maksymalną długość tekstu: ${userMaxLength} znaków (obecnie ${len}).`;
+        }
+      }
+      return true;
+    }) as unknown as Rule;
+
+    // Allow caller to chain more rules if needed
+    if (typeof validation === 'function') {
+      composed = validation(composed) as Rule;
+    }
+
+    return composed;
+  };
 
   return defineField({
     ...rest,
     name: name ?? 'portableText',
     type: 'array',
     of: ofMembers,
-    ...(finalValidation ? { validation: finalValidation } : {}),
+    validation: finalValidation,
     components: {
       // @ts-ignore
       input: CustomInput,

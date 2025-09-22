@@ -1372,9 +1372,9 @@ export type QueryHomePageResult = {
       description: null;
     }>;
     brands: Array<{
-      logo: null;
-      name: null;
-      slug: null;
+      logoSvgUrl: string | null;
+      name: string | null;
+      slug: string | null;
     }>;
   }> | null;
 } | null;
