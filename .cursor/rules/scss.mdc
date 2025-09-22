@@ -1,0 +1,13 @@
+---
+globs: apps/web/**.*
+alwaysApply: false
+---
+
+# SCSS Guidelines
+
+- Always nest the classes that are children of each other
+- Always use rem instead of px, make the assumption that 1rem px 16px, use em only for letter-spacing. The only time you should use px is when giving a fixed width/height to the image container.
+- Always write media queries at the end of the SCSS file, after each styles block, write media queries in rem, use primarly max-widht queries with a not full value, so for example: _max-width: 767 -> max-width: 47.9375_
+- For aniamtion durations always use "ms" instead of "s"
+- Never use "transition all"
+- Try to use fluid sizes as much as possible, so using "margin: clamp(1rem, calc(1vw / 0.48), 2rem);" as an example.

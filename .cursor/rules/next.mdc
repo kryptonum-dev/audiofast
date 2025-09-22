@@ -30,3 +30,4 @@ alwaysApply: false
 - Use the new Link component without requiring a child <a> tag
 - Leverage parallel routes for complex layouts and parallel data fetching
 - Implement intercepting routes for modal patterns and nested UIs
+- Use semantic elements (e.g., <header>, <main>, <footer>, <article>, <section>)
