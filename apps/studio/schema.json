@@ -17,7 +17,7 @@
           "value": {
             "type": "string"
           },
-          "optional": true
+          "optional": false
         },
         "slides": {
           "type": "objectAttribute",
@@ -357,7 +357,7 @@
                       }
                     }
                   },
-                  "optional": true
+                  "optional": false
                 },
                 "mobileImage": {
                   "type": "objectAttribute",
@@ -434,7 +434,7 @@
                     "type": "inline",
                     "name": "button"
                   },
-                  "optional": true
+                  "optional": false
                 },
                 "_type": {
                   "type": "objectAttribute",
@@ -457,7 +457,7 @@
               }
             }
           },
-          "optional": true
+          "optional": false
         },
         "brands": {
           "type": "objectAttribute",
@@ -501,7 +501,7 @@
               }
             }
           },
-          "optional": true
+          "optional": false
         }
       }
     }
@@ -546,7 +546,7 @@
           "value": {
             "type": "string"
           },
-          "optional": true
+          "optional": false
         },
         "url": {
           "type": "objectAttribute",
@@ -599,7 +599,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -607,7 +607,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -627,18 +627,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -774,7 +774,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -782,7 +782,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -802,18 +802,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -949,7 +949,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -957,7 +957,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -977,18 +977,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -1124,7 +1124,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -1132,7 +1132,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -1152,18 +1152,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -1299,7 +1299,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -1307,7 +1307,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -1327,18 +1327,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -1474,7 +1474,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -1482,7 +1482,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -1502,18 +1502,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -1649,7 +1649,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -1657,7 +1657,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -1677,18 +1677,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -1824,7 +1824,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -1832,7 +1832,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -1852,18 +1852,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -1999,7 +1999,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -2007,7 +2007,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -2027,18 +2027,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -2286,7 +2286,7 @@
             }
           }
         },
-        "optional": true
+        "optional": false
       }
     }
   },
@@ -2367,7 +2367,7 @@
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "links": {
         "type": "objectAttribute",
@@ -2381,7 +2381,7 @@
                 "value": {
                   "type": "string"
                 },
-                "optional": true
+                "optional": false
               },
               "url": {
                 "type": "objectAttribute",
@@ -2412,7 +2412,7 @@
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "newsletter": {
         "type": "objectAttribute",
@@ -2424,14 +2424,14 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "buttonLabel": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
@@ -2479,7 +2479,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "tel": {
         "type": "objectAttribute",
@@ -2560,11 +2560,11 @@
                   }
                 }
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "contactEmail": {
         "type": "objectAttribute",
@@ -2615,7 +2615,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -2623,7 +2623,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -2643,18 +2643,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "openGraph": {
         "type": "objectAttribute",
@@ -2790,7 +2790,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "logo": {
         "type": "objectAttribute",
@@ -2910,7 +2910,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -2918,7 +2918,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "seo": {
         "type": "objectAttribute",
@@ -2930,18 +2930,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -3121,14 +3121,14 @@
           },
           "dereferencesTo": "productCategoryParent"
         },
-        "optional": true
+        "optional": false
       },
       "name": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -3136,7 +3136,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "seo": {
         "type": "objectAttribute",
@@ -3148,18 +3148,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -3316,7 +3316,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -3324,7 +3324,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "seo": {
         "type": "objectAttribute",
@@ -3336,18 +3336,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -3504,14 +3504,14 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "name": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -3519,7 +3519,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "imageGallery": {
         "type": "objectAttribute",
@@ -3791,7 +3791,7 @@
           },
           "dereferencesTo": "brand"
         },
-        "optional": true
+        "optional": false
       },
       "awards": {
         "type": "objectAttribute",
@@ -4108,7 +4108,7 @@
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "duplicateGalleryInDetails": {
         "type": "objectAttribute",
@@ -4129,14 +4129,14 @@
                 "value": {
                   "type": "string"
                 },
-                "optional": true
+                "optional": false
               },
               "value": {
                 "type": "objectAttribute",
                 "value": {
                   "type": "string"
                 },
-                "optional": true
+                "optional": false
               },
               "_type": {
                 "type": "objectAttribute",
@@ -4311,18 +4311,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -4479,7 +4479,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -4487,7 +4487,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "logo": {
         "type": "objectAttribute",
@@ -4556,7 +4556,7 @@
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "seo": {
         "type": "objectAttribute",
@@ -4568,18 +4568,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -4736,7 +4736,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -4744,7 +4744,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "seo": {
         "type": "objectAttribute",
@@ -4756,18 +4756,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -4924,7 +4924,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -4932,7 +4932,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "seo": {
         "type": "objectAttribute",
@@ -4944,18 +4944,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -5105,7 +5105,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "link": {
         "type": "objectAttribute",
@@ -5181,14 +5181,14 @@
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "iconString": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       }
     }
   },
@@ -5533,7 +5533,7 @@
         "value": {
           "type": "string"
         },
-        "optional": true
+        "optional": false
       },
       "slug": {
         "type": "objectAttribute",
@@ -5541,7 +5541,7 @@
           "type": "inline",
           "name": "slug"
         },
-        "optional": true
+        "optional": false
       },
       "pageBuilder": {
         "type": "objectAttribute",
@@ -5561,18 +5561,18 @@
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             },
             "description": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
-              "optional": true
+              "optional": false
             }
           }
         },
-        "optional": true
+        "optional": false
       },
       "doNotIndex": {
         "type": "objectAttribute",
@@ -5710,7 +5710,7 @@
           "value": {
             "type": "string"
           },
-          "optional": true
+          "optional": false
         },
         "url": {
           "type": "objectAttribute",
@@ -5751,7 +5751,7 @@
               }
             ]
           },
-          "optional": true
+          "optional": false
         },
         "openInNewTab": {
           "type": "objectAttribute",
@@ -6364,7 +6364,7 @@
             },
             "dereferencesTo": "assist.instruction.context"
           },
-          "optional": true
+          "optional": false
         }
       }
     }
@@ -6543,7 +6543,7 @@
           "value": {
             "type": "string"
           },
-          "optional": true
+          "optional": false
         },
         "description": {
           "type": "objectAttribute",
@@ -7523,7 +7523,7 @@
           "value": {
             "type": "string"
           },
-          "optional": true
+          "optional": false
         },
         "source": {
           "type": "objectAttribute",

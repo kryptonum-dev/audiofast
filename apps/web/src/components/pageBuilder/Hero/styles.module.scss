@@ -1,7 +1,8 @@
 .hero {
   max-width: 85.375rem;
   width: 100%;
-  margin: 0 auto 2.5rem;
+  margin: 0 auto 3.25rem;
+  position: relative;
 }
 
 .carousel {
@@ -88,8 +89,8 @@
   place-items: center;
   width: 100%;
   margin: 0 auto;
-  padding-top: clamp(5rem, calc(6vw / 0.48), 6rem);
-  padding-bottom: clamp(7rem, calc(9vw / 0.48), 9rem);
+  padding-top: clamp(4.5rem, calc(5.5vw / 0.48), 5.5rem);
+  padding-bottom: 10.5rem;
   color: var(--neutral-white, #ffffff);
   max-width: 47rem;
   text-align: center;
@@ -130,7 +131,7 @@
       }
 
       &.cta {
-        transition-delay: 300ms; // Reduced by half for faster CTA
+        transition-delay: 300ms;
       }
     }
   }
@@ -188,7 +189,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: clamp(1rem, calc(3vw / 0.48), 3rem);
+  bottom: clamp(4rem, calc(5vw / 0.48), 5rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,6 +223,16 @@
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes focusPulse {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.2;
   }
 }
 
@@ -269,6 +280,171 @@
       transform: none;
     }
   }
+
+  // Disable focus pulse animation for reduced motion
+  .brandItem:focus-visible::before {
+    animation: none;
+  }
+}
+
+// Brand Marquee Styles
+.brands {
+  width: calc(100% - 4rem);
+  overflow: hidden;
+  background: var(--neutral-white, #ffffff);
+  border-radius: 0.5rem;
+  max-width: 71rem;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  bottom: 0;
+  padding: clamp(1rem, calc(1vw / 0.48), 1.25rem)
+    clamp(1.75rem, calc(3vw / 0.48), 4rem);
+  border: 1px solid var(--neutral-400, #e7e7e7);
+  z-index: 10;
+
+  &:hover {
+    .track {
+      animation-play-state: paused;
+
+      .brandList {
+        transform: translateX(-1rem);
+      }
+    }
+  }
+
+  // Reset and pause marquee when any brand item has keyboard focus
+  &:has(.brandItem:focus-visible) {
+    .track {
+      animation-play-state: paused;
+      animation-delay: -0s; // Reset animation to start
+      transform: translate3d(0, 0, 0); // Reset to beginning position
+
+      .brandList {
+        transform: translateX(0); // Center the list
+      }
+    }
+  }
+}
+
+.track {
+  animation: marqueeScroll 20s linear infinite;
+  width: max-content;
+  will-change: transform;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.brandList {
+  display: flex;
+  align-items: center;
+  gap: clamp(2rem, calc(2.5vw / 0.48), 3.5rem);
+  will-change: transform;
+  transition: transform 600ms ease-out;
+}
+
+.brandItem {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: block;
+  transition:
+    transform 300ms ease-out,
+    background-color 300ms ease-out,
+    box-shadow 300ms ease-out;
+  border-radius: 0.25rem;
+  outline-offset: 0.25rem;
+  padding: 0.75rem 1rem;
+  position: relative;
+
+  &:hover {
+    .brandLogo {
+      filter: brightness(0.3);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary-500, #2563eb);
+    outline-offset: 0.125rem;
+    background-color: var(--primary-50, #eff6ff);
+    transform: scale(1.05);
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+
+    .brandLogo {
+      filter: brightness(0.2);
+    }
+  }
+
+  // Ensure focus styles work during animation
+  &:focus-visible::before {
+    content: '';
+    position: absolute;
+    inset: -0.25rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(
+      45deg,
+      var(--primary-500, #2563eb),
+      var(--primary-400, #3b82f6)
+    );
+    opacity: 0.1;
+    z-index: -1;
+    animation: focusPulse 2s ease-in-out infinite;
+  }
+}
+
+.brandLogo {
+  max-width: 93px;
+  width: 100%;
+  max-height: 46px;
+  height: auto;
+  object-fit: contain;
+  filter: brightness(0);
+  transition: filter 300ms ease-out;
+}
+
+// With two identical sets, move by exactly 50% of the total width
+// so the reset frame is identical to the first frame (no jump).
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(
+      calc(-50% - clamp(1rem, calc(1.25vw / 0.48), 1.75rem)),
+      0,
+      0
+    );
+  }
+}
+
+@media (max-width: 37.4375rem) {
+  .track {
+    animation: marqueeScroll 15s linear infinite;
+  }
+}
+
+@media (max-width: 31.1875rem) {
+  .carousel {
+    .content a {
+      width: 100%;
+      max-width: 22rem;
+    }
+    .controls {
+      width: 100%;
+      justify-content: space-between;
+      padding: 0 var(--pageMargin);
+      gap: 0.25rem;
+      max-width: 26rem;
+    }
+  }
+
+  .brands {
+    width: 100%;
+  }
 }
 
 @media (max-width: 25.5625rem) {
@@ -286,7 +462,6 @@
       width: 100%;
       justify-content: space-between;
       padding: 0 var(--pageMargin);
-      max-width: 21rem;
       gap: 0.25rem;
     }
   }

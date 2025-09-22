@@ -87,7 +87,7 @@ const heroBlock = /* groq */ `
     brands[]->{
       name,
       "slug": slug.current,
-      "logoSvgUrl": logo.asset->url,
+      ${imageFragment('logo')},
     }
   }
 `;

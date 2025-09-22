@@ -11,7 +11,20 @@ export default function MobileNavToggle() {
     setIsMenuOpen((prev) => !prev);
   }, []);
 
-  // Handle ESC key and body scroll lock
+  // Initial setup for keyboard navigation on mobile
+  useEffect(() => {
+    const navLinks = document.querySelectorAll('#main-navigation a');
+    const isMobile = window.innerWidth <= 699; // 43.6875rem = ~699px
+
+    // On mobile: initially remove links from tab order (menu starts closed)
+    if (isMobile) {
+      navLinks.forEach((link) => {
+        (link as HTMLElement).tabIndex = -1;
+      });
+    }
+  }, []); // Run once on mount
+
+  // Handle ESC key, body scroll lock, and keyboard navigation
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isMenuOpen) {
@@ -19,20 +32,45 @@ export default function MobileNavToggle() {
       }
     };
 
+    // Get navigation links for tabIndex management
+    const navLinks = document.querySelectorAll('#main-navigation a');
+    const isMobile = window.innerWidth <= 699; // 43.6875rem = ~699px
+
     if (isMenuOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden'; // Prevent background scroll
       // Add class to trigger mobile nav styles
       document.documentElement.classList.add('mobile-nav-open');
+
+      // On mobile: make links focusable when menu is open
+      if (isMobile) {
+        navLinks.forEach((link) => {
+          (link as HTMLElement).tabIndex = 0;
+        });
+      }
     } else {
       document.body.style.overflow = '';
       document.documentElement.classList.remove('mobile-nav-open');
+
+      // On mobile: remove links from tab order when menu is closed
+      if (isMobile) {
+        navLinks.forEach((link) => {
+          (link as HTMLElement).tabIndex = -1;
+        });
+      }
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = '';
       document.documentElement.classList.remove('mobile-nav-open');
+
+      // Cleanup: restore normal tabbing on component unmount
+      if (isMobile) {
+        navLinks.forEach((link) => {
+          (link as HTMLElement).removeAttribute('tabindex');
+        });
+      }
     };
   }, [isMenuOpen]);
 

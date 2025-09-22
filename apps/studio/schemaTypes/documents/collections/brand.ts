@@ -28,10 +28,6 @@ export const brand = defineType({
       name: 'logo',
       title: 'Logo Marki',
       type: 'image',
-      description: 'Logo marki w formacie SVG.',
-      options: {
-        accept: '.svg',
-      },
       validation: (Rule) => Rule.required(),
       group: GROUP.MAIN_CONTENT,
     }),

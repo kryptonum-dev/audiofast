@@ -1,48 +1,52 @@
-'use server';
+import Link from 'next/link';
 
+import AppImage from '@/components/shared/Image';
 import type { BlockOf } from '@/global/types';
-import { imageToInlineSvg } from '@/global/utils';
 
 import styles from './styles.module.scss';
 
 export type BrandMarqueeProps = Pick<BlockOf<'hero'>, 'brands'>;
 
-export default async function BrandMarquee({ brands }: BrandMarqueeProps) {
-  console.log(brands);
+export default function BrandMarquee({ brands }: BrandMarqueeProps) {
+  if (!brands || brands.length === 0) {
+    return null;
+  }
 
-  // Fetch SVG texts on the server for inline rendering
-  const svgTexts = await Promise.all(
-    brands?.map((b) =>
-      b.logoSvgUrl ? imageToInlineSvg(b.logoSvgUrl) : Promise.resolve(undefined)
-    ) || []
-  );
-
-  console.log(svgTexts);
-
-  const enriched = brands.map((b, i) => ({ ...b, svg: svgTexts[i] }));
-  const items = [...enriched, ...enriched];
-  const originalLength = enriched.length;
+  const duplicatedBrands = [...brands, ...brands];
 
   return (
     <div className={styles.brands} aria-label="Nasze marki">
       <div className={styles.track}>
-        {items.map((brand, idx) => {
-          const isDuplicate = idx >= originalLength;
-          const key = `${brand?.slug || 'brand'}-${idx}`;
-          if (brand.svg) {
-            // Modify original markup to set width/preserveAspectRatio while keeping all internals intact
+        <nav className={styles.brandList}>
+          {duplicatedBrands.map((brand, idx) => {
+            const key = `${brand?.slug || 'brand'}-${idx}`;
+            const isDuplicate = idx >= brands.length;
+
+            if (!brand?.logo) {
+              return null;
+            }
 
             return (
-              <span
+              <Link
                 key={key}
-                className={styles.brandLogo}
+                className={styles.brandItem}
                 aria-hidden={isDuplicate}
-                dangerouslySetInnerHTML={{ __html: brand.svg }}
-              />
+                href={brand.slug}
+                aria-label={`Przejdź do marki ${brand.name}`}
+                tabIndex={isDuplicate ? -1 : 0}
+              >
+                <AppImage
+                  image={brand.logo}
+                  alt={brand.name || 'Logo marki'}
+                  sizes="193px"
+                  quality={90}
+                  className={styles.brandLogo}
+                  priority={!isDuplicate && idx < 6}
+                />
+              </Link>
             );
-          }
-          return null;
-        })}
+          })}
+        </nav>
       </div>
     </div>
   );

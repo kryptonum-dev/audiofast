@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 
 import styles from './styles.module.scss';
 
@@ -28,17 +28,6 @@ export default function PaginationDots({
   const containerRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current || !indicatorRef.current) return;
-
-    // Set CSS custom properties for smooth morphing
-    containerRef.current.style.setProperty(
-      '--active-index',
-      activeIndex.toString()
-    );
-    containerRef.current.style.setProperty('--total-count', count.toString());
-  }, [activeIndex, count]);
-
   if (!count || count <= 1) return null;
 
   return (
@@ -49,6 +38,12 @@ export default function PaginationDots({
       className={styles.paginationDots}
       data-outline={outline}
       data-count={count}
+      style={
+        {
+          '--active-index': activeIndex.toString(),
+          '--total-count': count.toString(),
+        } as React.CSSProperties
+      }
     >
       <div ref={indicatorRef} className={styles.indicator} aria-hidden="true" />
       {Array.from({ length: count }).map((_, i) => (

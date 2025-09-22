@@ -16,7 +16,7 @@ export default async function RootLayout({
     <html lang="en" className={poppins.className}>
       <body>
         <Header />
-        {children}
+        <main id="main">{children}</main>
       </body>
     </html>
   );

@@ -16,6 +16,8 @@ export default async function Header() {
 
   return (
     <header className={styles.header}>
+      {/* Skip link - first element in tab order for accessibility */}
+      <SkipLink />
       <div className={styles.container}>
         <Link
           href="/"
@@ -26,6 +28,9 @@ export default async function Header() {
         </Link>
 
         <div className={styles.navWrapper}>
+          {/* Mobile Menu Toggle Component - first in tab order */}
+          <MobileNavToggle />
+
           {/* Single navigation list used for both desktop and mobile */}
           <nav
             className={styles.nav}
@@ -46,12 +51,17 @@ export default async function Header() {
               </Link>
             ))}
           </nav>
-
-          {/* Mobile Menu Toggle Component */}
-          <MobileNavToggle />
         </div>
       </div>
     </header>
+  );
+}
+
+function SkipLink() {
+  return (
+    <a href="#main" className={styles.skipLink}>
+      Przejdź do treści głównej
+    </a>
   );
 }
 
