@@ -15,8 +15,9 @@
 // Source: schema.json
 export type Hero = {
   _type: 'hero';
-  slides: Array<{
-    title: Array<{
+  title2?: string;
+  slides?: Array<{
+    title?: Array<{
       children?: Array<{
         marks?: Array<string>;
         text?: string;
@@ -30,7 +31,7 @@ export type Hero = {
       _type: 'block';
       _key: string;
     }>;
-    description: Array<{
+    description?: Array<{
       children?: Array<{
         marks?: Array<string>;
         text?: string;
@@ -38,7 +39,7 @@ export type Hero = {
         _key: string;
       }>;
       style?: 'normal';
-      listItem?: 'number' | 'bullet';
+      listItem?: 'bullet' | 'number';
       markDefs?: Array<{
         customLink?: CustomUrl;
         _type: 'customLink';
@@ -48,7 +49,7 @@ export type Hero = {
       _type: 'block';
       _key: string;
     }>;
-    image: {
+    image?: {
       asset?: {
         _ref: string;
         _type: 'reference';
@@ -72,11 +73,11 @@ export type Hero = {
       crop?: SanityImageCrop;
       _type: 'image';
     };
-    button: Button;
+    button?: Button;
     _type: 'heroSlide';
     _key: string;
   }>;
-  brands: Array<{
+  brands?: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -85,45 +86,17 @@ export type Hero = {
   }>;
 };
 
-export type PortableTextHeading = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: 'span';
-    _key: string;
-  }>;
-  style?: 'normal';
-  listItem?: never;
-  markDefs?: null;
-  level?: number;
-  _type: 'block';
-  _key: string;
-}>;
-
 export type PageBuilder = Array<
   {
     _key: string;
   } & Hero
 >;
 
-export type PortableText = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: 'span';
-    _key: string;
-  }>;
-  style?: 'normal';
-  listItem?: 'number' | 'bullet';
-  markDefs?: Array<{
-    customLink?: CustomUrl;
-    _type: 'customLink';
-    _key: string;
-  }>;
-  level?: number;
-  _type: 'block';
-  _key: string;
-}>;
+export type ButtonWithNoVariant = {
+  _type: 'buttonWithNoVariant';
+  text?: string;
+  url?: CustomUrl;
+};
 
 export type Brands = {
   _id: string;
@@ -131,12 +104,12 @@ export type Brands = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -162,12 +135,12 @@ export type Stores = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -193,12 +166,12 @@ export type ProductCategories = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -224,12 +197,12 @@ export type Products = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -255,12 +228,12 @@ export type Reviews = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -286,12 +259,12 @@ export type Blog = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -317,12 +290,12 @@ export type NotFound = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -348,12 +321,12 @@ export type TermsAndConditions = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -379,12 +352,12 @@ export type PrivacyPolicy = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -426,10 +399,10 @@ export type Navbar = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  buttons: Array<
+  buttons?: Array<
     {
       _key: string;
-    } & Button
+    } & ButtonWithNoVariant
   >;
 };
 
@@ -439,22 +412,22 @@ export type Footer = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  highlightedSocialMedia: Array<{
+  highlightedSocialMedia?: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     _key: string;
     [internalGroqTypeReferenceTo]?: 'socialMedia';
   }>;
-  links: Array<{
-    name: string;
+  links?: Array<{
+    name?: string;
     url?: CustomUrl;
     _type: 'footerLink';
     _key: string;
   }>;
   newsletter?: {
-    label: string;
-    buttonLabel: string;
+    label?: string;
+    buttonLabel?: string;
   };
 };
 
@@ -464,10 +437,10 @@ export type Settings = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  email: string;
+  email?: string;
   tel?: string;
-  seo: {
-    img: {
+  seo?: {
+    img?: {
       asset?: {
         _ref: string;
         _type: 'reference';
@@ -489,12 +462,12 @@ export type HomePage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   openGraph?: {
     title?: string;
@@ -520,7 +493,7 @@ export type Award = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
+  name?: string;
   logo?: {
     asset?: {
       _ref: string;
@@ -542,11 +515,11 @@ export type Store = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name: string;
-  slug: Slug;
-  seo: {
-    title: string;
-    description: string;
+  name?: string;
+  slug?: Slug;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -575,17 +548,17 @@ export type ProductCategorySub = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  parentCategory: {
+  parentCategory?: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'productCategoryParent';
   };
-  name: string;
-  slug: Slug;
-  seo: {
-    title: string;
-    description: string;
+  name?: string;
+  slug?: Slug;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -614,11 +587,11 @@ export type ProductCategoryParent = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name: string;
-  slug: Slug;
-  seo: {
-    title: string;
-    description: string;
+  name?: string;
+  slug?: Slug;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -647,10 +620,10 @@ export type Product = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  subtitle: string;
-  name: string;
-  slug: Slug;
-  imageGallery: Array<{
+  subtitle?: string;
+  name?: string;
+  slug?: Slug;
+  imageGallery?: Array<{
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -663,9 +636,26 @@ export type Product = {
     _type: 'image';
     _key: string;
   }>;
-  shortDescription: PortableText;
+  shortDescription?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      customLink?: CustomUrl;
+      _type: 'customLink';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
   isArchived?: boolean;
-  brand: {
+  brand?: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -678,18 +668,48 @@ export type Product = {
     _key: string;
     [internalGroqTypeReferenceTo]?: 'award';
   }>;
-  details: {
-    heading?: PortableTextHeading;
-    content?: PortableText;
+  details?: {
+    heading?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal';
+      listItem?: never;
+      markDefs?: null;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
+    content?: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal';
+      listItem?: 'bullet' | 'number';
+      markDefs?: Array<{
+        customLink?: CustomUrl;
+        _type: 'customLink';
+        _key: string;
+      }>;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }>;
   };
   duplicateGalleryInDetails?: boolean;
   technicalData?: Array<{
-    title: string;
-    value: string;
+    title?: string;
+    value?: string;
     _type: 'technicalDataItem';
     _key: string;
   }>;
-  availableInStores: Array<{
+  availableInStores?: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -711,9 +731,9 @@ export type Product = {
     [internalGroqTypeReferenceTo]?: 'product';
   }>;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -742,9 +762,9 @@ export type Brand = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name: string;
-  slug: Slug;
-  logo: {
+  name?: string;
+  slug?: Slug;
+  logo?: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -756,9 +776,9 @@ export type Brand = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -787,11 +807,11 @@ export type Review = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name: string;
-  slug: Slug;
-  seo: {
-    title: string;
-    description: string;
+  name?: string;
+  slug?: Slug;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -820,11 +840,11 @@ export type BlogArticle = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name: string;
-  slug: Slug;
-  seo: {
-    title: string;
-    description: string;
+  name?: string;
+  slug?: Slug;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -852,9 +872,9 @@ export type SocialMedia = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
+  name?: string;
   link?: string;
-  icon: {
+  icon?: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -866,7 +886,7 @@ export type SocialMedia = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  iconString: string;
+  iconString?: string;
 };
 
 export type Faq = {
@@ -875,8 +895,38 @@ export type Faq = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title: PortableTextHeading;
-  answer: PortableText;
+  title?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal';
+    listItem?: never;
+    markDefs?: null;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
+  answer?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'normal';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      customLink?: CustomUrl;
+      _type: 'customLink';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }>;
 };
 
 export type Page = {
@@ -885,12 +935,12 @@ export type Page = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name: string;
-  slug: Slug;
+  name?: string;
+  slug?: Slug;
   pageBuilder?: PageBuilder;
-  seo: {
-    title: string;
-    description: string;
+  seo?: {
+    title?: string;
+    description?: string;
   };
   doNotIndex?: boolean;
   openGraph?: {
@@ -914,13 +964,13 @@ export type Page = {
 export type Button = {
   _type: 'button';
   variant?: 'primary' | 'secondary';
-  text: string;
+  text?: string;
   url?: CustomUrl;
 };
 
 export type CustomUrl = {
   _type: 'customUrl';
-  type: 'internal' | 'external';
+  type?: 'internal' | 'external';
   openInNewTab?: boolean;
   external?: string;
   href?: string;
@@ -1032,7 +1082,7 @@ export type SanityAssistOutputField = {
 
 export type SanityAssistInstructionContext = {
   _type: 'sanity.assist.instruction.context';
-  reference: {
+  reference?: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -1065,7 +1115,7 @@ export type AssistInstructionContext = {
 
 export type SanityAssistInstructionUserInput = {
   _type: 'sanity.assist.instruction.userInput';
-  message: string;
+  message?: string;
   description?: string;
 };
 
@@ -1234,7 +1284,7 @@ export type Geopoint = {
 
 export type Slug = {
   _type: 'slug';
-  current: string;
+  current?: string;
   source?: string;
 };
 
@@ -1247,9 +1297,8 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes =
   | Hero
-  | PortableTextHeading
   | PageBuilder
-  | PortableText
+  | ButtonWithNoVariant
   | Brands
   | Stores
   | ProductCategories
@@ -1312,17 +1361,29 @@ export declare const internalGroqTypeReferenceTo: unique symbol;
 export type QueryDefaultOGImageResult = {
   defaultOGImage: string | null;
 } | null;
+// Variable: queryNavbar
+// Query: *[_type == "navbar"][0]{  buttons[]{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),}}
+export type QueryNavbarResult = {
+  buttons: Array<{
+    text: string | null;
+    variant: null;
+    _key: string;
+    _type: 'buttonWithNoVariant';
+    openInNewTab: boolean | null;
+    href: string | null;
+  }> | null;
+} | null;
 // Variable: queryHomePage
-// Query: *[_type == "homePage" && _id == "homePage"][0]{    _id,    _type,    "slug": slug.current,    name,    seo,    openGraph{      title,      description,      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",    },      pageBuilder[]{    ...,    _type,        _type == "hero" => {    ...,    slides[]{        image {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },        mobileImage {      "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },        description{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    _type == "image" => {        "id": asset._ref,  "preview": asset->metadata.lqip,  hotspot {    x,    y  },  crop {    bottom,    left,    right,    top  },      "caption": caption    }  },    },    brands[]{      logo,      name,      slug    }  }  }  }
+// Query: *[_type == "homePage" && _id == "homePage"][0]{    _id,    _type,    "slug": slug.current,    name,    seo,    openGraph{      title,      description,      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",    },      pageBuilder[]{    ...,    _type,        _type == "hero" => {    ...,    slides[]{        image {      "id": asset._ref,  "preview": asset->metadata.lqip,  "alt": asset->altText,  "naturalWidth": asset->metadata.dimensions.width,  "naturalHeight": asset->metadata.dimensions.height,  hotspot {    x,    y,    width,    height  },  crop {    bottom,    left,    right,    top  }  },        mobileImage {      "id": asset._ref,  "preview": asset->metadata.lqip,  "alt": asset->altText,  "naturalWidth": asset->metadata.dimensions.width,  "naturalHeight": asset->metadata.dimensions.height,  hotspot {    x,    y,    width,    height  },  crop {    bottom,    left,    right,    top  }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,      "logoSvgUrl": logo.asset->url,    }  }  }  }
 export type QueryHomePageResult = {
   _id: string;
   _type: 'homePage';
-  slug: string;
-  name: string;
+  slug: string | null;
+  name: string | null;
   seo: {
-    title: string;
-    description: string;
-  };
+    title?: string;
+    description?: string;
+  } | null;
   openGraph: {
     title: string | null;
     description: string | null;
@@ -1331,13 +1392,19 @@ export type QueryHomePageResult = {
   pageBuilder: Array<{
     _key: string;
     _type: 'hero';
+    title2?: string;
     slides: Array<{
       image: {
         id: string | null;
         preview: string | null;
+        alt: string | null;
+        naturalWidth: number | null;
+        naturalHeight: number | null;
         hotspot: {
           x: number | null;
           y: number | null;
+          width: number | null;
+          height: number | null;
         } | null;
         crop: {
           bottom: number | null;
@@ -1345,13 +1412,18 @@ export type QueryHomePageResult = {
           right: number | null;
           top: number | null;
         } | null;
-      };
+      } | null;
       mobileImage: {
         id: string | null;
         preview: string | null;
+        alt: string | null;
+        naturalWidth: number | null;
+        naturalHeight: number | null;
         hotspot: {
           x: number | null;
           y: number | null;
+          width: number | null;
+          height: number | null;
         } | null;
         crop: {
           bottom: number | null;
@@ -1361,21 +1433,60 @@ export type QueryHomePageResult = {
         } | null;
       } | null;
       button: {
-        text: string;
+        text: string | null;
         variant: 'primary' | 'secondary' | null;
         _key: null;
         _type: 'button';
         openInNewTab: boolean | null;
         href: string | null;
-      };
-      title: null;
-      description: null;
-    }>;
+      } | null;
+      title: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: 'span';
+          _key: string;
+        }>;
+        style?: 'normal';
+        listItem?: never;
+        markDefs: null;
+        level?: number;
+        _type: 'block';
+        _key: string;
+      }> | null;
+      description: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: 'span';
+          _key: string;
+        }>;
+        style?: 'normal';
+        listItem?: 'bullet' | 'number';
+        markDefs: Array<
+          | {
+              customLink?: CustomUrl;
+              _type: 'customLink';
+              _key: string;
+              openInNewTab: boolean | null;
+              href: string | '#' | null;
+            }
+          | {
+              customLink?: CustomUrl;
+              _type: 'customLink';
+              _key: string;
+            }
+        > | null;
+        level?: number;
+        _type: 'block';
+        _key: string;
+      }> | null;
+    }> | null;
     brands: Array<{
-      logoSvgUrl: string | null;
       name: string | null;
       slug: string | null;
-    }>;
+      logoSvgUrl: string | null;
+    }> | null;
   }> | null;
 } | null;
 
@@ -1384,6 +1495,7 @@ import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "settings"][0]{\n    "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"\n  }': QueryDefaultOGImageResult;
-    '*[_type == "homePage" && _id == "homePage"][0]{\n    _id,\n    _type,\n    "slug": slug.current,\n    name,\n    seo,\n    openGraph{\n      title,\n      description,\n      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n    },\n    \n  pageBuilder[]{\n    ...,\n    _type,\n      \n  _type == "hero" => {\n    ...,\n    slides[]{\n      \n  image {\n    \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n,\n      \n  mobileImage {\n    \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n,\n      \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n      \n  title{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n,\n      \n  description{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    _type == "image" => {\n      \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  hotspot {\n    x,\n    y\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n,\n      "caption": caption\n    }\n  }\n,\n    },\n    brands[]{\n      logo,\n      name,\n      slug\n    }\n  }\n\n  }\n\n  }': QueryHomePageResult;
+    '*[_type == "navbar"][0]{\n  \nbuttons[]{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n\n}': QueryNavbarResult;
+    '*[_type == "homePage" && _id == "homePage"][0]{\n    _id,\n    _type,\n    "slug": slug.current,\n    name,\n    seo,\n    openGraph{\n      title,\n      description,\n      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n    },\n    \n  pageBuilder[]{\n    ...,\n    _type,\n      \n  _type == "hero" => {\n    ...,\n    slides[]{\n      \n  image {\n    \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  "alt": asset->altText,\n  "naturalWidth": asset->metadata.dimensions.width,\n  "naturalHeight": asset->metadata.dimensions.height,\n  hotspot {\n    x,\n    y,\n    width,\n    height\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n,\n      \n  mobileImage {\n    \n  "id": asset._ref,\n  "preview": asset->metadata.lqip,\n  "alt": asset->altText,\n  "naturalWidth": asset->metadata.dimensions.width,\n  "naturalHeight": asset->metadata.dimensions.height,\n  hotspot {\n    x,\n    y,\n    width,\n    height\n  },\n  crop {\n    bottom,\n    left,\n    right,\n    top\n  }\n\n  }\n,\n      \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n      \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n\n  }\n,\n    },\n    brands[]->{\n      name,\n      "slug": slug.current,\n      "logoSvgUrl": logo.asset->url,\n    }\n  }\n\n  }\n\n  }': QueryHomePageResult;
   }
 }

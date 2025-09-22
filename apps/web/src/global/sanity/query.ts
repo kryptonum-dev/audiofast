@@ -100,6 +100,10 @@ export const pageBuilderFragment = /* groq */ `
   }
 `;
 
+export const queryNavbar = defineQuery(`*[_type == "navbar"][0]{
+  ${buttonFragment('buttons[]')}
+}`);
+
 export const queryHomePage =
   defineQuery(`*[_type == "homePage" && _id == "homePage"][0]{
     _id,

@@ -1,6 +1,5 @@
 import type { BlockOf } from '@/global/types';
 
-import BrandMarquee from './BrandMarquee';
 import HeroCarousel from './HeroCarousel';
 import styles from './styles.module.scss';
 

@@ -27,3 +27,31 @@ export const SITE_TITLE: string = 'Audiofast';
  */
 export const SITE_DESCRIPTION: string =
   'Jesteśmy dystrybutorem sprzętu audio klasy premium. Oferujemy wyłącznie starannie wyselekcjonowane marki, które łączą technologiczną precyzję z zapewnieniem doskonałego dźwięku.';
+
+/**
+ * Global environment detection for production deployment.
+ * True when running in production environment on Vercel production deployment.
+ * @constant
+ * @type {boolean}
+ */
+export const IS_PRODUCTION_DEPLOYMENT: boolean =
+  process.env.NODE_ENV === 'production' &&
+  process.env.VERCEL_ENV === 'production';
+
+/**
+ * Global environment detection for preview deployment.
+ * True when running in preview environment on Vercel preview deployment.
+ * @constant
+ * @type {boolean}
+ */
+export const IS_PREVIEW_ENV: boolean =
+  process.env.NODE_ENV !== 'production' && process.env.VERCEL_ENV === 'preview';
+
+/**
+ * Global environment detection for preview deployment.
+ * True when running in preview environment on Vercel preview deployment.
+ * @constant
+ * @type {boolean}
+ */
+export const IS_PREVIEW_DEPLOYMENT: boolean =
+  process.env.VERCEL_ENV === 'preview';

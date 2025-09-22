@@ -71,3 +71,47 @@ export const button = defineType({
     },
   },
 });
+
+// Reusable button without variant selection (for navigation, footers, etc.)
+export const buttonWithNoVariant = defineType({
+  name: 'buttonWithNoVariant',
+  title: 'Przycisk bez wariantów',
+  type: 'object',
+  icon: Link,
+  fields: [
+    defineField({
+      name: 'text',
+      title: 'Tekst przycisku',
+      type: 'string',
+      description: 'Tekst, który pojawi się w nawigacji',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'url',
+      title: 'Adres URL',
+      type: 'customUrl',
+      description:
+        'Gdzie przekierowuje link - może być stroną wewnętrzną lub zewnętrzną',
+    }),
+  ],
+  preview: {
+    select: {
+      title: 'text',
+      externalUrl: 'url.external',
+      urlType: 'url.type',
+      internalUrl: 'url.internal.slug.current',
+      openInNewTab: 'url.openInNewTab',
+    },
+    prepare: ({ title, externalUrl, urlType, internalUrl, openInNewTab }) => {
+      const url = urlType === 'external' ? externalUrl : internalUrl;
+      const newTabIndicator = openInNewTab ? ' ↗' : '';
+      const truncatedUrl =
+        url?.length > 30 ? `${url.substring(0, 30)}...` : url;
+
+      return {
+        title: title || 'Nienazwany link',
+        subtitle: `${truncatedUrl}${newTabIndicator}`,
+      };
+    },
+  },
+});

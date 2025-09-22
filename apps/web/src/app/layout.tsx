@@ -3,6 +3,7 @@ import '../global/global.scss';
 import { preconnect, prefetchDNS } from 'react-dom';
 
 import { poppins } from '@/global/fonts';
+import Header from '@/layouts/Header';
 
 export default async function RootLayout({
   children,
@@ -13,7 +14,10 @@ export default async function RootLayout({
   prefetchDNS('https://cdn.sanity.io');
   return (
     <html lang="en" className={poppins.className}>
-      <body>{children}</body>
+      <body>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

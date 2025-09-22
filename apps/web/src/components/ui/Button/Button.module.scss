@@ -31,7 +31,7 @@
       width: 1.5rem;
       height: 1.5rem;
       color: var(--neutral-white, #ffffff);
-      transition: transform 275ms cubic-bezier(0.77, 0, 0.175, 1);
+      transition: transform 350ms cubic-bezier(0.77, 0, 0.175, 1);
 
       &:nth-child(2) {
         position: absolute;
@@ -77,7 +77,7 @@
       background-color: var(--primary-red, #fe0140);
       transform: translateY(-50%) translateX(-15%) scale(0);
       transform-origin: left;
-      transition: transform 300ms cubic-bezier(0.645, 0.045, 0.355, 1);
+      transition: transform 350ms cubic-bezier(0.645, 0.045, 0.355, 1);
       z-index: -1;
       border-radius: 50%;
     }

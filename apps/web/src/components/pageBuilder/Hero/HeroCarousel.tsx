@@ -342,18 +342,15 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                   value={slide.title! as PortableTextValue}
                   className={`${styles.title} ${styles.animateElement}`}
                   headingLevel={i === 0 ? 'h1' : 'h2'}
-                  data-animation-delay="0"
                 />
                 <PortableText
                   value={slide.description! as PortableTextValue}
                   className={`${styles.description} ${styles.animateElement}`}
-                  data-animation-delay="100"
                 />
                 <Button
-                  {...slide.button}
+                  {...slide.button!}
                   className={`${styles.cta} ${styles.animateElement}`}
                   tabIndex={isActive ? 0 : -1}
-                  data-animation-delay="200"
                 />
               </div>
             </header>

@@ -26,7 +26,7 @@
       transform: scale(1);
 
       // Then fade out with scale up
-      animation: fadeOutScale 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeOutScale 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     .bgLayer[data-layer='current'] {
@@ -34,7 +34,7 @@
       transform: scale(1.03);
 
       // Scale down from larger size
-      animation: scaleIn 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: scaleIn 1200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
   }
 }
@@ -43,8 +43,8 @@
   position: absolute;
   inset: 0;
   transition:
-    opacity 800ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 1200ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
 
   &[data-layer='previous'] {
     opacity: 0; // Hidden by default
@@ -121,16 +121,16 @@
       opacity: 1;
       transform: translateY(0);
 
-      &[data-animation-delay='0'] {
+      &.title {
         transition-delay: 100ms;
       }
 
-      &[data-animation-delay='100'] {
+      &.description {
         transition-delay: 200ms;
       }
 
-      &[data-animation-delay='200'] {
-        transition-delay: 200ms; // Reduced by half for faster CTA
+      &.cta {
+        transition-delay: 300ms; // Reduced by half for faster CTA
       }
     }
   }
@@ -161,16 +161,15 @@
 
 .animateElement {
   opacity: 0;
-  transform: translateY(1.5rem);
+  transform: translateY(1rem);
   transition:
-    opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 1000ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: 0ms;
-}
 
-// Button gets more subtle movement
-.cta.animateElement {
-  transform: translateY(0.75rem); // Less movement for button
+  &.cta {
+    transform: translateY(0.6rem);
+  }
 }
 
 .title {
@@ -197,69 +196,9 @@
   z-index: 5;
 }
 
-.brands {
-  position: relative;
-  overflow: hidden;
-  margin-top: clamp(1.25rem, calc(4vw / 0.48), 2.5rem);
-  margin-left: var(--pageMargin);
-  margin-right: var(--pageMargin);
-  border-radius: 0.5rem;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.15),
-    0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.item {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  filter: grayscale(1) brightness(0.6);
-}
-
-.brandLogo {
-  display: block;
-  width: 93px;
-  height: auto;
-  color: #000; // ensure currentColor-based SVGs render black
-}
-
-.brandLogo svg {
-  color: #000;
-}
-
-.brandLogo svg :where(*)[fill='none'] {
-  fill: none !important;
-}
-.brandLogo svg :where(*):not([fill]) {
-  fill: currentColor;
-}
-
-.brandLogo svg :where(*)[stroke='none'] {
-  stroke: none !important;
-}
-.brandLogo svg :where(*):not([stroke]) {
-  stroke: currentColor;
-}
-
-.brandLogo img {
-  width: 93px;
-  height: auto;
-  filter: brightness(0) saturate(100%);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .track {
     animation: none;
-  }
-}
-
-@keyframes marqueeX {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
   }
 }
 
@@ -313,9 +252,9 @@
     transition-timing-function: ease-out;
     transform: none;
 
-    &[data-animation-delay='0'],
-    &[data-animation-delay='100'],
-    &[data-animation-delay='200'] {
+    &.title,
+    &.description,
+    &.cta {
       transition-delay: 0ms;
     }
   }

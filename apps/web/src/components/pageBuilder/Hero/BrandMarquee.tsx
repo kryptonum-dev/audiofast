@@ -1,6 +1,5 @@
 'use server';
 
-import { type SanityRawImage } from '@/components/shared/Image';
 import type { BlockOf } from '@/global/types';
 import { imageToInlineSvg } from '@/global/utils';
 
@@ -8,22 +7,14 @@ import styles from './styles.module.scss';
 
 export type BrandMarqueeProps = Pick<BlockOf<'hero'>, 'brands'>;
 
-type BrandItem = {
-  readonly _key?: string;
-  readonly slug?: string;
-  readonly name?: string;
-  readonly logo?: SanityRawImage | null;
-  readonly logoSvgUrl?: string | null;
-};
-
 export default async function BrandMarquee({ brands }: BrandMarqueeProps) {
   console.log(brands);
 
   // Fetch SVG texts on the server for inline rendering
   const svgTexts = await Promise.all(
-    brands.map((b) =>
+    brands?.map((b) =>
       b.logoSvgUrl ? imageToInlineSvg(b.logoSvgUrl) : Promise.resolve(undefined)
-    )
+    ) || []
   );
 
   console.log(svgTexts);

@@ -11,12 +11,17 @@ export const navbar = defineType({
     defineField({
       name: 'buttons',
       title: 'Linki w nawigacji',
-      description: 'Dodaj linki do nawigacji. Maksymalnie 4 linki.',
+      description: 'Dodaj linki do nawigacji. Maksymalnie 5 linków.',
       type: 'array',
-      of: [{ type: 'button' }],
+      of: [
+        {
+          type: 'buttonWithNoVariant',
+          title: 'Link nawigacji',
+        },
+      ],
       validation: (Rule) => [
         Rule.required().error('Linki w nawigacji są wymagane'),
-        Rule.max(4).error('Maksymalnie 4 linki'),
+        Rule.max(5).error('Maksymalnie 5 linków'),
       ],
     }),
   ],
