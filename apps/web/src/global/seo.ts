@@ -78,7 +78,7 @@ export async function getSEOMetadata(
 
   const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug });
 
-  const data: { defaultOGImage: string } =
+  const data: { defaultOGImage: string | null } | null =
     await client.fetch(queryDefaultOGImage);
 
   const ogImage = openGraph?.seoImage || data?.defaultOGImage;

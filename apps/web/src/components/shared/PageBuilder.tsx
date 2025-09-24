@@ -1,5 +1,6 @@
 import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
 import Hero from '../pageBuilder/Hero';
+import ImageTextColumns from '../pageBuilder/ImageTextColumns';
 import LatestPublication from '../pageBuilder/LatestPublication';
 
 // More specific and descriptive type aliases
@@ -40,6 +41,13 @@ export function PageBuilder({
               <LatestPublication
                 key={block._key}
                 {...(block as BlockByType<'latestPublication'>)}
+              />
+            );
+          case 'imageTextColumns':
+            return (
+              <ImageTextColumns
+                key={block._key}
+                {...(block as BlockByType<'imageTextColumns'>)}
               />
             );
           default:

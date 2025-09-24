@@ -1,4 +1,5 @@
 import { hero } from './hero';
+import { imageTextColumns } from './image-text-columns';
 import { latestPublication } from './latest-publication';
 
-export const pageBuilderBlocks = [hero, latestPublication];
+export const pageBuilderBlocks = [hero, latestPublication, imageTextColumns];

@@ -121,12 +121,23 @@ const latestPublicationBlock = /* groq */ `
   }
 `;
 
+const imageTextColumnsBlock = /* groq */ `
+  _type == "imageTextColumns" => {
+    ...,
+    ${imageFragment('image')},
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('content')},
+    ${buttonFragment('button')},
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
     _type,
       ${heroBlock},
-      ${latestPublicationBlock}
+      ${latestPublicationBlock},
+      ${imageTextColumnsBlock}
   }
 `;
 

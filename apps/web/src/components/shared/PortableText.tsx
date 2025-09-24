@@ -41,6 +41,61 @@ export function PortableTextRenderer({
           </Tag>
         );
       },
+      // Handle heading styles
+      h1: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+        <h1
+          className={
+            isSingleBlock && !enablePortableTextStyles ? className : undefined
+          }
+        >
+          {children}
+        </h1>
+      ),
+      h2: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+        <h2
+          className={
+            isSingleBlock && !enablePortableTextStyles ? className : undefined
+          }
+        >
+          {children}
+        </h2>
+      ),
+      h3: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+        <h3
+          className={
+            isSingleBlock && !enablePortableTextStyles ? className : undefined
+          }
+        >
+          {children}
+        </h3>
+      ),
+      h4: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+        <h4
+          className={
+            isSingleBlock && !enablePortableTextStyles ? className : undefined
+          }
+        >
+          {children}
+        </h4>
+      ),
+      h5: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+        <h5
+          className={
+            isSingleBlock && !enablePortableTextStyles ? className : undefined
+          }
+        >
+          {children}
+        </h5>
+      ),
+      h6: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+        <h6
+          className={
+            isSingleBlock && !enablePortableTextStyles ? className : undefined
+          }
+        >
+          {children}
+        </h6>
+      ),
     },
     list: {
       // Handle bullet lists

@@ -13,8 +13,7 @@ export default function LatestPublication({
   heading,
   publication,
 }: LatestPublicationProps) {
-  const { _type, _createdAt, slug, name, title, description, image } =
-    publication;
+  const { _type, _createdAt, slug, title, description, image } = publication;
 
   // Get the publication type label
   const publicationTypeLabel =

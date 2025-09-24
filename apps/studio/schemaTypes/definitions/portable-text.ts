@@ -6,7 +6,15 @@ import { CustomInput } from '../../components/custom-input';
 import { toPlainText } from '../../utils/helper';
 
 // Default building blocks for the portable text "block" member
-const ALL_STYLES = [{ title: 'Normalny', value: 'normal' }] as const;
+const ALL_STYLES = [
+  { title: 'Normalny', value: 'normal' },
+  { title: 'Nagłówek H1', value: 'h1' },
+  { title: 'Nagłówek H2', value: 'h2' },
+  { title: 'Nagłówek H3', value: 'h3' },
+  { title: 'Nagłówek H4', value: 'h4' },
+  { title: 'Nagłówek H5', value: 'h5' },
+  { title: 'Nagłówek H6', value: 'h6' },
+] as const;
 const ALL_LISTS = [
   { title: 'Numerowana', value: 'number' },
   { title: 'Wypunktowana', value: 'bullet' },
@@ -75,11 +83,19 @@ function buildBlockMember(include?: PortableTextInclude) {
       };
 
   const specifiedLists = include?.lists !== undefined;
+  const specifiedStyles = include?.styles !== undefined;
+
+  // Default to only 'normal' style if no styles specified
+  const finalStyles = specifiedStyles
+    ? styles
+    : [{ title: 'Normalny', value: 'normal' }];
 
   return defineArrayMember({
     name: 'block',
     type: 'block',
-    styles: styles.length ? styles : (ALL_STYLES as unknown as any[]),
+    styles: finalStyles.length
+      ? finalStyles
+      : [{ title: 'Normalny', value: 'normal' }],
     ...(specifiedLists ? { lists } : {}),
     marks,
   });

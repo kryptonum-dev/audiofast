@@ -1,6 +1,7 @@
 import { Newspaper } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
+import { toPlainText } from '../../utils/helper';
 import { customPortableText } from '../definitions/portable-text';
 
 export const latestPublication = defineType({
@@ -39,11 +40,10 @@ export const latestPublication = defineType({
     },
     prepare: ({ heading, publication, publicationType, title, name }) => {
       // Get heading text if available
-      const headingText =
-        heading?.[0]?.children?.[0]?.text || 'Najnowsza publikacja';
+      const headingText = toPlainText(heading) || 'Najnowsza publikacja';
 
       // Get display name - prefer title if it's portable text, fallback to name
-      const displayName = title || name || 'Brak tytułu';
+      const displayName = toPlainText(title) || name || 'Brak tytułu';
 
       // Determine publication type for subtitle
       const typeLabel =
