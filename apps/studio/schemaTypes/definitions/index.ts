@@ -1,5 +1,6 @@
 import { button, buttonWithNoVariant } from './button';
 import { customUrl } from './custom-url';
+import { formState } from './form-state';
 import { pageBuilder } from './pagebuilder';
 
 export const definitions = [
@@ -7,4 +8,5 @@ export const definitions = [
   button,
   buttonWithNoVariant,
   pageBuilder,
+  formState,
 ];

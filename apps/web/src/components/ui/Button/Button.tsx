@@ -10,7 +10,7 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
     openInNewTab?: boolean | null;
     className?: string;
     href?: string | null;
-    iconUsed?: 'arrowUp' | 'arrowDown' | 'arrowLeft' | 'arrowRight';
+    iconUsed?: 'arrowUp' | 'arrowDown' | 'arrowLeft' | 'arrowRight' | 'refresh';
   };
 
 export default function Button({
@@ -28,6 +28,7 @@ export default function Button({
     ...(href && { href }),
     ...(openInNewTab && { target: '_blank', rel: 'noreferrer' }),
     'data-variant': variant,
+    'data-icon': iconUsed,
     className: `${styles.Button}${className ? ` ${className}` : ''}`,
     ...props,
   };
@@ -42,8 +43,10 @@ export default function Button({
         return <ArrowUp />;
       case 'arrowRight':
         return <ArrowUp />;
+      case 'refresh':
+        return <RefreshIcon />;
       default:
-        return null;
+        return <ArrowUp />;
     }
   }, [iconUsed]);
 
@@ -74,6 +77,26 @@ const ArrowUp = () => (
     <defs>
       <clipPath id="a">
         <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const RefreshIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" fill="none">
+    <g
+      stroke="#fff"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.5"
+      clipPath="url(#refresh-clip)"
+    >
+      <path d="M7.5 10.5h-4v4" />
+      <path d="M21.5 12.5c-.887-1.285-2.48-2.033-4-2-1.52-.033-3.113.715-4 2-.887 1.284-2.48 2.033-4 2-1.52.033-3-1-4-2l-2-2" />
+    </g>
+    <defs>
+      <clipPath id="refresh-clip">
+        <path fill="#fff" d="M.5.5h24v24H.5z" />
       </clipPath>
     </defs>
   </svg>

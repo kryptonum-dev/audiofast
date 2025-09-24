@@ -38,7 +38,6 @@ export default function MobileNavToggle() {
 
     if (isMenuOpen) {
       document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden'; // Prevent background scroll
       // Add class to trigger mobile nav styles
       document.documentElement.classList.add('mobile-nav-open');
 

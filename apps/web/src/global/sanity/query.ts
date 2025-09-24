@@ -100,8 +100,41 @@ export const pageBuilderFragment = /* groq */ `
   }
 `;
 
+export const formStateFragment = /* groq */ `
+  formState{
+    success{
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText,
+    },
+    error{
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText,
+    },
+  }
+`;
+
 export const queryNavbar = defineQuery(`*[_type == "navbar"][0]{
   ${buttonFragment('buttons[]')}
+}`);
+
+export const queryFooter = defineQuery(`*[_type == "footer"][0]{
+  highlightedSocialMedia[]->{
+    name,
+    link,
+    iconString,
+  },
+  ${buttonFragment('links[]')},
+  newsletter{
+    label,
+    buttonLabel,
+    ${formStateFragment}
+  }
 }`);
 
 export const queryHomePage =

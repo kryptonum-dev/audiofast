@@ -1,52 +1,11 @@
-import { Link, PanelBottom } from 'lucide-react';
+import { PanelBottom } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
-
-const footerLink = defineField({
-  name: 'footerLink',
-  type: 'object',
-  icon: Link,
-  fields: [
-    defineField({
-      name: 'name',
-      type: 'string',
-      title: 'Nazwa',
-      description: 'Nazwa dla linku',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'url',
-      type: 'customUrl',
-      title: 'URL',
-      description: 'Adres URL dla linku',
-    }),
-  ],
-  preview: {
-    select: {
-      title: 'name',
-      externalUrl: 'url.external',
-      urlType: 'url.type',
-      internalUrl: 'url.internal.slug.current',
-      openInNewTab: 'url.openInNewTab',
-    },
-    prepare({ title, externalUrl, urlType, internalUrl, openInNewTab }) {
-      const url = urlType === 'external' ? externalUrl : internalUrl;
-      const newTabIndicator = openInNewTab ? ' ↗' : '';
-      const truncatedUrl =
-        url?.length > 30 ? `${url.substring(0, 30)}...` : url;
-
-      return {
-        title: title || 'Untitled Link',
-        subtitle: `${urlType === 'external' ? 'Zewnętrzny' : 'Wewnętrzny'} • ${truncatedUrl}${newTabIndicator}`,
-        media: Link,
-      };
-    },
-  },
-});
 
 export const footer = defineType({
   name: 'footer',
   type: 'document',
   title: 'Stopka',
+  icon: PanelBottom,
   description: 'Treść stopki dla Twojej strony internetowej',
   fields: [
     defineField({
@@ -84,7 +43,7 @@ export const footer = defineType({
       name: 'links',
       type: 'array',
       title: 'Linki w stopce',
-      of: [footerLink],
+      of: [{ type: 'buttonWithNoVariant', title: 'Link w stopce' }],
       validation: (rule) => [
         rule.required().error('Linki są wymagane'),
         rule.min(2).error('Minimum 2 linki'),
@@ -108,6 +67,11 @@ export const footer = defineType({
           type: 'string',
           title: 'Etykieta przycisku',
           validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: 'formState',
+          type: 'formState',
+          title: 'Stan formularza',
         }),
       ],
     }),

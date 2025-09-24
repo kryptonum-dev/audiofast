@@ -89,8 +89,8 @@
   place-items: center;
   width: 100%;
   margin: 0 auto;
-  padding-top: clamp(4.5rem, calc(5.5vw / 0.48), 5.5rem);
-  padding-bottom: 10.5rem;
+  padding-top: clamp(4rem, calc(5vw / 0.48), 5rem);
+  padding-bottom: 10rem;
   color: var(--neutral-white, #ffffff);
   max-width: 47rem;
   text-align: center;
@@ -189,7 +189,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: clamp(4rem, calc(5vw / 0.48), 5rem);
+  bottom: clamp(3.5rem, calc(4vw / 0.48), 4rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -328,12 +328,25 @@
 }
 
 .track {
-  animation: marqueeScroll 20s linear infinite;
+  animation: marqueeScroll 25s linear infinite;
   width: max-content;
   will-change: transform;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
+  }
+}
+
+@keyframes marqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(
+      calc(-50% - clamp(1rem, calc(1.25vw / 0.48), 1.75rem)),
+      0,
+      0
+    );
   }
 }
 
@@ -357,7 +370,6 @@
     box-shadow 300ms ease-out;
   border-radius: 0.25rem;
   outline-offset: 0.25rem;
-  padding: 0.75rem 1rem;
   position: relative;
 
   &:hover {
@@ -406,21 +418,6 @@
   transition: filter 300ms ease-out;
 }
 
-// With two identical sets, move by exactly 50% of the total width
-// so the reset frame is identical to the first frame (no jump).
-@keyframes marqueeScroll {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(
-      calc(-50% - clamp(1rem, calc(1.25vw / 0.48), 1.75rem)),
-      0,
-      0
-    );
-  }
-}
-
 @media (max-width: 37.4375rem) {
   .track {
     animation: marqueeScroll 15s linear infinite;
@@ -466,3 +463,6 @@
     }
   }
 }
+
+// With two identical sets, move by exactly 50% of the total width
+// so the reset frame is identical to the first frame (no jump).

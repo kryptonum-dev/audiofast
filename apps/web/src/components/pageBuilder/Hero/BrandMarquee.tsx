@@ -31,7 +31,7 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                 key={key}
                 className={styles.brandItem}
                 aria-hidden={isDuplicate}
-                href={brand.slug}
+                href={brand.slug!}
                 aria-label={`Przejdź do marki ${brand.name}`}
                 tabIndex={isDuplicate ? -1 : 0}
               >

@@ -1,0 +1,12 @@
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+
+  &:focus-visible {
+    outline: 0.125rem solid var(--neutral-white, #ffffff);
+    border-radius: 0.25rem;
+  }
+}

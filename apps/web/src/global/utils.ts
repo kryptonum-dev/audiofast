@@ -9,7 +9,6 @@ export const isValidUrl = (url: string) => {
     new URL(url);
     return true;
   } catch (e) {
-    console.log(e);
     return isRelativeUrl(url);
   }
 };

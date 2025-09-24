@@ -55,3 +55,15 @@ export const IS_PREVIEW_ENV: boolean =
  */
 export const IS_PREVIEW_DEPLOYMENT: boolean =
   process.env.VERCEL_ENV === 'preview';
+
+/**
+ * Global declaration of regex.
+ * @constant
+ * @type {Object}
+ */
+export const REGEX: { email: RegExp; phone: RegExp; string: RegExp } = {
+  email: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+  phone:
+    /^(?:\+(?:\d{1,3}))?(?:[ -]?\(?\d{1,4}\)?[ -]?\d{1,5}[ -]?\d{1,5}[ -]?\d{1,6})$/,
+  string: /^(?!\s+$)(.*?)\s*$/,
+};

@@ -61,19 +61,8 @@
     padding: 1rem clamp(1rem, calc(2vw / 0.48), 2rem);
     margin: 0 auto;
     max-width: 85.375rem;
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: inherit;
-    flex-shrink: 0;
-    margin-bottom: 2px;
-
-    &:focus-visible {
-      outline: 0.125rem solid var(--neutral-white);
-      border-radius: 0.25rem;
+    > a:first-child {
+      margin-bottom: 2px;
     }
   }
 
@@ -87,8 +76,7 @@
   .navLink {
     // Desktop nav links - always focusable and interactive
     font-family: var(--font-family-poppins);
-    font-size: 1rem;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.16;
     letter-spacing: -0.03em;
     color: var(--neutral-white);
