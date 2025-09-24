@@ -1,5 +1,6 @@
 import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
 import Hero from '../pageBuilder/Hero';
+import LatestPublication from '../pageBuilder/LatestPublication';
 
 // More specific and descriptive type aliases
 // Shared block union derived from the shared pageBuilder fragment result
@@ -33,6 +34,13 @@ export function PageBuilder({
           case 'hero':
             return (
               <Hero key={block._key} {...(block as BlockByType<'hero'>)} />
+            );
+          case 'latestPublication':
+            return (
+              <LatestPublication
+                key={block._key}
+                {...(block as BlockByType<'latestPublication'>)}
+              />
             );
           default:
             return null;

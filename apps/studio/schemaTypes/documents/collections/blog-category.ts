@@ -1,24 +1,30 @@
+import {
+  orderRankField,
+  orderRankOrdering,
+} from '@sanity/orderable-document-list';
 import { BookOpen } from 'lucide-react';
 import { defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
-import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 
-export const blog = defineType({
-  name: 'blog',
+export const blogCategory = defineType({
+  name: 'blog-category',
+  title: 'Kategoria bloga',
   type: 'document',
-  title: 'Strona bloga',
   icon: BookOpen,
   groups: GROUPS,
+  orderings: [orderRankOrdering],
+  description:
+    'Kategoria bloga. Kategorie bloga grupują wpisy na blogu w szerokie tematy.',
   fields: [
+    orderRankField({ type: 'blog-category' }),
     ...defineSlugForDocument({
-      slug: '/blog/',
+      prefix: '/blog/',
       group: GROUP.MAIN_CONTENT,
     }),
-    pageBuilderField,
-    ...getSEOFields({ exclude: ['doNotIndex', 'hideFromList'] }),
+    ...getSEOFields(),
   ],
   preview: {
     select: {
@@ -26,10 +32,10 @@ export const blog = defineType({
       description: 'description',
       slug: 'slug.current',
     },
-    prepare: ({ name, description }) => ({
-      title: name || 'Blog',
+    prepare: ({ name, slug }) => ({
+      title: name || 'Kategoria bloga',
       media: BookOpen,
-      subtitle: description || 'Blog',
+      subtitle: slug,
     }),
   },
 });

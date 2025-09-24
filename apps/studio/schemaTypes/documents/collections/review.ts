@@ -3,10 +3,12 @@ import {
   orderRankOrdering,
 } from '@sanity/orderable-document-list';
 import { MessageSquareText } from 'lucide-react';
-import { defineType } from 'sanity';
+import { defineField, defineType } from 'sanity';
 
-import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { GROUP, GROUPS } from '../../../utils/constant';
+import { parsePortableTextToString } from '../../../utils/helper';
+import { customPortableText } from '../../definitions/portable-text';
 import { getSEOFields } from '../../shared/seo';
 
 export const review = defineType({
@@ -24,6 +26,44 @@ export const review = defineType({
       prefix: '/recenzje/',
       group: GROUP.MAIN_CONTENT,
     }),
+    defineField({
+      name: 'image',
+      title: 'Obraz główny',
+      type: 'image',
+      description:
+        'Główny obraz recenzji wyświetlany w sekcji najnowszej publikacji',
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) => Rule.required().error('Obraz główny jest wymagany'),
+    }),
+    customPortableText({
+      name: 'title',
+      title: 'Tytuł recenzji',
+      description:
+        'Główny tytuł recenzji wyświetlany w sekcji najnowszej publikacji',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: [],
+        decorators: ['strong'],
+        annotations: ['customLink'],
+      },
+    }),
+    customPortableText({
+      name: 'description',
+      title: 'Opis recenzji',
+      description:
+        'Krótki opis recenzji wyświetlany w sekcji najnowszej publikacji',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: ['bullet', 'number'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
+      },
+    }),
     ...getSEOFields(),
   ],
   preview: {
@@ -34,7 +74,7 @@ export const review = defineType({
     prepare: ({ name, description }) => ({
       title: name || 'Recenzja',
       media: MessageSquareText,
-      subtitle: description || 'Recenzja produktu',
+      subtitle: parsePortableTextToString(description) || 'Recenzja produktu',
     }),
   },
 });

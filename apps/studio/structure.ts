@@ -120,6 +120,13 @@ export const structure = (
                 orderable: false,
                 title: 'Wpisy na blogu',
               }),
+              createCollection({
+                S,
+                context,
+                type: 'blog-category',
+                orderable: true,
+                title: 'Kategorie bloga',
+              }),
             ])
         ),
       S.listItem()

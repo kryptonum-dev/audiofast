@@ -1,5 +1,6 @@
 import { award } from './collections/award';
 import { blogArticle } from './collections/blog-article';
+import { blogCategory } from './collections/blog-category';
 import { brand } from './collections/brand';
 import { faq } from './collections/faq';
 import { page } from './collections/page';
@@ -46,6 +47,7 @@ export const collection = [
   faq,
   socialMedia,
   blogArticle,
+  blogCategory,
   review,
   product,
   productCategoryParent,

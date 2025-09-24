@@ -27,13 +27,19 @@ export const imageFragment = (name: string = 'image') => /* groq */ `
 `;
 
 const customLinkFragment = /* groq */ `
-  ...customLink{
-    openInNewTab,
-    "href": select(
-      type == "internal" => internal->slug.current,
-      type == "external" => external,
-      "#"
-    ),
+  _type == "customLink" => {
+    ...,
+    customLink{
+      type,
+      openInNewTab,
+      external,
+      "href": select(
+        type == "internal" => internal->slug.current,
+        type == "external" => external,
+        "#"
+      ),
+      "internalSlug": internal->slug.current
+    }
   }
 `;
 
@@ -92,11 +98,35 @@ const heroBlock = /* groq */ `
   }
 `;
 
+const latestPublicationBlock = /* groq */ `
+  _type == "latestPublication" => {
+    ...,
+    ${portableTextFragment('heading')},
+    publication->{
+      _type,
+      _id,
+      _createdAt,
+      "slug": slug.current,
+      name,
+      ${portableTextFragment('title')},
+      ${portableTextFragment('description')},
+      ${imageFragment('image')},
+      _type == "blog-article" => {
+        category->{
+          name,
+          "slug": slug.current,
+        }
+      }
+    }
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
     _type,
-      ${heroBlock}
+      ${heroBlock},
+      ${latestPublicationBlock}
   }
 `;
 

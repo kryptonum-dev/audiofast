@@ -10,6 +10,7 @@
   font-size: var(--typography-body-m, 0.875rem);
   cursor: pointer;
   user-select: none;
+  justify-content: flex-start;
   z-index: 1;
   position: relative;
 
@@ -23,6 +24,7 @@
     grid-column: 2/3;
     grid-row: 1/2;
     margin-bottom: 0.25rem;
+    max-width: fit-content;
   }
 
   // &:not(:has(input:checked)):not(:has(input[aria-invalid='true'])):hover {

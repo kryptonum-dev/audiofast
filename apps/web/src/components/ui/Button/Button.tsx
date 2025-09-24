@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useMemo } from 'react';
 
 import styles from './Button.module.scss';
@@ -6,7 +7,7 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string | React.ReactNode;
     children?: React.ReactNode;
-    variant: 'primary' | 'secondary' | null;
+    variant?: 'primary' | 'secondary' | null;
     openInNewTab?: boolean | null;
     className?: string;
     href?: string | null;
@@ -23,7 +24,7 @@ export default function Button({
   iconUsed = 'arrowUp',
   ...props
 }: Props) {
-  const Element = href ? 'a' : 'button';
+  const Element = href ? Link : 'button';
   const renderedProps = {
     ...(href && { href }),
     ...(openInNewTab && { target: '_blank', rel: 'noreferrer' }),
@@ -51,7 +52,7 @@ export default function Button({
   }, [iconUsed]);
 
   return (
-    <Element {...renderedProps}>
+    <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
         {icon}
         {icon}

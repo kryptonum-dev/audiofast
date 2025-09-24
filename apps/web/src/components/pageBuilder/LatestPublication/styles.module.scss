@@ -1,0 +1,113 @@
+.latestPublication {
+  padding: clamp(1.5rem, calc(3vw / 0.48), 4.5rem) 0 2.5rem;
+  .heading {
+    margin-bottom: 2rem;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(2rem, calc(2.5vw / 0.48), 3rem);
+
+    img {
+      width: 502px;
+      width: clamp(320px, calc(320vw / 7.68), 502px);
+      aspect-ratio: 502 / 405;
+      border-radius: 0.25rem;
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: repeat(3, auto) 1fr;
+      grid-template-areas:
+        'date publicationType'
+        'title title'
+        'description description'
+        'button button';
+
+      .date {
+        grid-area: date;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        svg {
+          margin-bottom: 2px;
+        }
+
+        time {
+          line-height: 1.5;
+          font-style: italic;
+          font-size: var(--typography-body-s, 0.75rem);
+        }
+      }
+
+      .publicationType {
+        grid-area: publicationType;
+        margin-left: 1.5rem;
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border: 1px solid var(--neutral-500, #c5c5c5);
+        border-radius: 0.25rem;
+        font-size: var(--typography-body-s, 0.75rem);
+        line-height: 1.5;
+        color: var(--neutral-700, #303030);
+        -webkit-text-stroke-width: 0.25px;
+        -webkit-text-stroke-color: var(--neutral-700, #303030);
+        justify-self: start;
+      }
+
+      .title {
+        grid-area: title;
+        margin: 0.5rem 0 1rem;
+        font-size: 1.125rem;
+        color: var(--neutral-700, #303030);
+        -webkit-text-stroke-width: 0.25px;
+        -webkit-text-stroke-color: var(--neutral-700, #303030);
+        font-family: var(--font-family-poppins);
+        font-weight: 400;
+        line-height: 1.16;
+
+        a {
+        }
+      }
+
+      .description {
+        grid-area: description;
+        margin-bottom: clamp(1.5rem, calc(1.75vw / 0.48), 2rem);
+        font-size: var(--typography-body-m, 0.875rem);
+        max-width: 36.625rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.5;
+      }
+      > a {
+        grid-area: button;
+        align-self: start;
+      }
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    .container {
+      grid-template-columns: 1fr;
+
+      img {
+        width: 100%;
+      }
+    }
+  }
+
+  @media (max-width: 27.4375rem) {
+    .container .header {
+      a {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
