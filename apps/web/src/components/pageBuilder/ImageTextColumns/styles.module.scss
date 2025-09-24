@@ -39,4 +39,13 @@
       width: 100%;
     }
   }
+
+  @media (max-width: 27.4375rem) {
+    .header {
+      a {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  }
 }

@@ -38,7 +38,10 @@ export default function LatestPublication({
         className={styles.heading}
       />
       <article className={styles.container}>
-        <Image image={image} sizes="502px" />
+        <Image
+          image={image}
+          sizes="(max-width: 37.4375rem) 94vw, (max-width: 56.1875rem) 83vw, 502px"
+        />
         <header className={styles.header}>
           <span className={styles.date}>
             <CalendarIcon />

@@ -17,7 +17,10 @@ export default function ImageTextColumns({
 }: ImageTextColumnsProps) {
   return (
     <section className={`${styles.imageTextColumns} max-width`}>
-      <Image image={image} sizes="502px" />
+      <Image
+        image={image}
+        sizes="(max-width: 37.4375rem) 94vw, (max-width: 56.1875rem) 83vw, 501px"
+      />
       <header className={styles.header}>
         <PortableText
           value={heading}
