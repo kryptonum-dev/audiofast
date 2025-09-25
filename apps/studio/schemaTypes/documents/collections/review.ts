@@ -22,34 +22,25 @@ export const review = defineType({
     'Recenzja produktu audio, która zostanie opublikowana na stronie internetowej. Dodaj tytuł, opis i treść, aby utworzyć nową recenzję produktu.',
   fields: [
     orderRankField({ type: 'reviews' }),
-    ...defineSlugForDocument({
-      prefix: '/recenzje/',
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: 'image',
-      title: 'Obraz główny',
-      type: 'image',
-      description:
-        'Główny obraz recenzji wyświetlany w sekcji najnowszej publikacji',
-      group: GROUP.MAIN_CONTENT,
-      options: {
-        hotspot: true,
-      },
-      validation: (Rule) => Rule.required().error('Obraz główny jest wymagany'),
-    }),
     customPortableText({
-      name: 'title',
-      title: 'Tytuł recenzji',
+      name: 'name',
+      title: 'Nazwa recenzji',
       description:
         'Główny tytuł recenzji wyświetlany w sekcji najnowszej publikacji',
       group: GROUP.MAIN_CONTENT,
       include: {
         styles: ['normal'],
         lists: [],
-        decorators: ['strong'],
+        decorators: [],
         annotations: ['customLink'],
       },
+      validation: (Rule) =>
+        Rule.required().error('Nazwa recenzji jest wymagana'),
+    }),
+    ...defineSlugForDocument({
+      prefix: '/recenzje/',
+      source: 'name',
+      group: GROUP.MAIN_CONTENT,
     }),
     customPortableText({
       name: 'description',
@@ -64,6 +55,18 @@ export const review = defineType({
         annotations: ['customLink'],
       },
     }),
+    defineField({
+      name: 'image',
+      title: 'Obraz główny',
+      type: 'image',
+      description:
+        'Główny obraz recenzji wyświetlany w sekcji najnowszej publikacji',
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) => Rule.required().error('Obraz główny jest wymagany'),
+    }),
     ...getSEOFields(),
   ],
   preview: {
@@ -72,7 +75,7 @@ export const review = defineType({
       description: 'description',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Recenzja',
+      title: parsePortableTextToString(name) || 'Recenzja',
       media: MessageSquareText,
       subtitle: parsePortableTextToString(description) || 'Recenzja produktu',
     }),

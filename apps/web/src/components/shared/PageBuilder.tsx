@@ -1,4 +1,5 @@
 import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
+import FeaturedPublications from '../pageBuilder/FeaturedPublications';
 import Hero from '../pageBuilder/Hero';
 import ImageTextColumns from '../pageBuilder/ImageTextColumns';
 import LatestPublication from '../pageBuilder/LatestPublication';
@@ -48,6 +49,13 @@ export function PageBuilder({
               <ImageTextColumns
                 key={block._key}
                 {...(block as BlockByType<'imageTextColumns'>)}
+              />
+            );
+          case 'featuredPublications':
+            return (
+              <FeaturedPublications
+                key={block._key}
+                {...(block as BlockByType<'featuredPublications'>)}
               />
             );
           default:

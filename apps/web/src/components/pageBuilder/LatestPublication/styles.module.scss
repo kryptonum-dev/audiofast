@@ -26,36 +26,8 @@
         'description description'
         'button button';
 
-      .date {
-        grid-area: date;
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
-
-        svg {
-          margin-bottom: 2px;
-        }
-
-        time {
-          line-height: 1.5;
-          font-style: italic;
-          font-size: var(--typography-body-s, 0.75rem);
-        }
-      }
-
-      .publicationType {
-        grid-area: publicationType;
+      span:nth-of-type(2) {
         margin-left: 1.5rem;
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border: 1px solid var(--neutral-500, #c5c5c5);
-        border-radius: 0.25rem;
-        font-size: var(--typography-body-s, 0.75rem);
-        line-height: 1.5;
-        color: var(--neutral-700, #303030);
-        -webkit-text-stroke-width: 0.25px;
-        -webkit-text-stroke-color: var(--neutral-700, #303030);
-        justify-self: start;
       }
 
       .title {

@@ -7,6 +7,7 @@ import { defineField, defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
+import { parsePortableTextToString } from '../../../utils/helper';
 import { customPortableText } from '../../definitions/portable-text';
 import { getSEOFields } from '../../shared/seo';
 
@@ -21,9 +22,38 @@ export const blogArticle = defineType({
     'Artykuł blogowy, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis, autora i treść, aby utworzyć nowy artykuł dla czytających.',
   fields: [
     orderRankField({ type: 'blog' }),
+    customPortableText({
+      name: 'name',
+      title: 'Nazwa artykułu',
+      description:
+        'Główny tytuł artykułu wyświetlany w sekcji najnowszej publikacji',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: [],
+        decorators: [],
+        annotations: ['customLink'],
+      },
+      validation: (Rule) =>
+        Rule.required().error('Nazwa artykułu jest wymagana'),
+    }),
     ...defineSlugForDocument({
       prefix: '/blog/',
+      source: 'name',
       group: GROUP.MAIN_CONTENT,
+    }),
+    customPortableText({
+      name: 'description',
+      title: 'Opis artykułu',
+      description:
+        'Krótki opis artykułu wyświetlany w sekcji najnowszej publikacji',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: ['bullet', 'number'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
+      },
     }),
     defineField({
       name: 'category',
@@ -45,32 +75,6 @@ export const blogArticle = defineType({
       },
       validation: (Rule) => Rule.required().error('Obraz główny jest wymagany'),
     }),
-    customPortableText({
-      name: 'title',
-      title: 'Tytuł artykułu',
-      description:
-        'Główny tytuł artykułu wyświetlany w sekcji najnowszej publikacji',
-      group: GROUP.MAIN_CONTENT,
-      include: {
-        styles: ['normal'],
-        lists: [],
-        decorators: ['strong'],
-        annotations: ['customLink'],
-      },
-    }),
-    customPortableText({
-      name: 'description',
-      title: 'Opis artykułu',
-      description:
-        'Krótki opis artykułu wyświetlany w sekcji najnowszej publikacji',
-      group: GROUP.MAIN_CONTENT,
-      include: {
-        styles: ['normal'],
-        lists: ['bullet', 'number'],
-        decorators: ['strong', 'em'],
-        annotations: ['customLink'],
-      },
-    }),
     ...getSEOFields(),
   ],
   preview: {
@@ -79,9 +83,9 @@ export const blogArticle = defineType({
       description: 'description',
     },
     prepare: ({ name, description }) => ({
-      title: name || 'Artykuł blogowy',
+      title: parsePortableTextToString(name) || 'Artykuł blogowy',
       media: FileTextIcon,
-      subtitle: description || 'Artykuł blogowy',
+      subtitle: parsePortableTextToString(description) || 'Artykuł blogowy',
     }),
   },
 });

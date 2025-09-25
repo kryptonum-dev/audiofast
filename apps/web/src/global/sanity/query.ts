@@ -98,25 +98,27 @@ const heroBlock = /* groq */ `
   }
 `;
 
+// Reusable publication fragment for both reviews and blog articles
+const publicationFragment = /* groq */ `
+  _id,
+  _createdAt,
+  "slug": slug.current,
+  ${portableTextFragment('name')},
+  ${portableTextFragment('description')},
+  ${imageFragment('image')},
+  "publicationType": select(
+    _type == "review" => "Recenzja",
+    _type == "blog-article" => category->name,
+    "Artykuł"
+  ),
+`;
+
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ...,
     ${portableTextFragment('heading')},
     publication->{
-      _type,
-      _id,
-      _createdAt,
-      "slug": slug.current,
-      name,
-      ${portableTextFragment('title')},
-      ${portableTextFragment('description')},
-      ${imageFragment('image')},
-      _type == "blog-article" => {
-        category->{
-          name,
-          "slug": slug.current,
-        }
-      }
+      ${publicationFragment}
     }
   }
 `;
@@ -131,13 +133,25 @@ const imageTextColumnsBlock = /* groq */ `
   }
 `;
 
+const featuredPublicationsBlock = /* groq */ `
+  _type == "featuredPublications" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${buttonFragment('button')},
+    publications[]->{
+      ${publicationFragment}
+    }
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
     _type,
       ${heroBlock},
       ${latestPublicationBlock},
-      ${imageTextColumnsBlock}
+      ${imageTextColumnsBlock},
+      ${featuredPublicationsBlock}
   }
 `;
 

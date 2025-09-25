@@ -4,9 +4,11 @@ import { defineArrayMember, defineField, defineType } from 'sanity';
 import { parsePortableTextToString } from '../../utils/helper';
 import { customPortableText } from '../definitions/portable-text';
 
+const title = 'Sekcja Hero';
+
 export const hero = defineType({
   name: 'hero',
-  title: 'Sekcja Hero',
+  title,
   icon: Star,
   type: 'object',
   fields: [
@@ -147,7 +149,7 @@ export const hero = defineType({
       };
 
       return {
-        title: 'Sekcja Hero',
+        title,
         subtitle: `${slideCount} ${getSlideText(slideCount)}, ${brandCount} ${getBrandText(brandCount)}`,
       };
     },

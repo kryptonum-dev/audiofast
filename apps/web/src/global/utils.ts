@@ -1,6 +1,8 @@
 import type { PortableTextBlock } from 'next-sanity';
 import slugify from 'slugify';
 
+import type { PortableTextValue } from './types';
+
 export const isRelativeUrl = (url: string) =>
   url.startsWith('/') || url.startsWith('#') || url.startsWith('?');
 
@@ -68,4 +70,40 @@ export async function imageToInlineSvg(url: string) {
   } catch (error) {
     throw new Error(`Error fetching SVG: ${error}`);
   }
+}
+
+/**
+ * Converts PortableText content to plain text string
+ * Handles: normal text, headings (h1-h6), strong, italic, and custom links
+ * @param portableText - PortableText block array
+ * @returns Plain text string with formatting removed
+ */
+export function portableTextToPlainString(
+  portableText: PortableTextValue[]
+): string {
+  if (!Array.isArray(portableText) || portableText.length === 0) {
+    return '';
+  }
+
+  return portableText
+    .map((block) => {
+      // Handle different block types
+      if (block._type === 'block') {
+        // Extract text from children
+        const blockText = (block.children || [])
+          .map((child: PortableTextValue) => {
+            // Extract plain text, ignoring all marks (strong, italic, links, etc.)
+            return child.text || '';
+          })
+          .join('');
+
+        return blockText.trim();
+      }
+
+      // Handle other block types if needed in the future
+      return '';
+    })
+    .filter(Boolean) // Remove empty strings
+    .join(' ') // Join blocks with spaces
+    .trim(); // Remove leading/trailing whitespace
 }

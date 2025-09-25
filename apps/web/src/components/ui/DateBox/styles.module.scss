@@ -1,0 +1,16 @@
+.dateBox {
+  grid-area: date;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  svg {
+    margin-bottom: 2px;
+  }
+
+  time {
+    line-height: 1.5;
+    font-style: italic;
+    font-size: var(--typography-body-s, 0.75rem);
+  }
+}

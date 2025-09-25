@@ -1,7 +1,5 @@
 .footer {
-  width: calc(100% - clamp(2rem, calc(4vw / 0.48), 4rem));
   margin: 2rem auto;
-  max-width: 81.375rem;
   background-color: var(--neutral-800, #141414);
   border: 1px solid var(--neutral-black, #000000);
   border-radius: 0.75rem;

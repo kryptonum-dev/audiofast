@@ -10,13 +10,13 @@
   position: relative;
   cursor: pointer;
 
-  // Premium depth and glow
+  // Premium depth and glow (for ghost variant)
   box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.1),
     0 1px 3px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
-  // Premium glow effect
+  // Premium glow effect (for ghost variant)
   &::before {
     content: '';
     position: absolute;
@@ -53,7 +53,18 @@
   }
 
   &[data-variant='filled'] {
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--neutral-white, #ffffff);
+    border: 1px solid var(--neutral-400, #e7e7e7);
+    box-shadow: none;
+    backdrop-filter: none;
+
+    svg {
+      color: var(--neutral-700, #303030);
+    }
+
+    &::before {
+      display: none;
+    }
   }
 
   &[data-size='sm'] {
@@ -103,13 +114,19 @@
     }
 
     &[data-variant='filled'] {
-      background: rgba(255, 255, 255, 0.2);
+      border-color: var(--neutral-500, #c5c5c5);
+      box-shadow: none;
+
+      svg {
+        color: var(--neutral-800, #141414);
+        transform: none;
+      }
     }
   }
 
   // Apple-like active state
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
     background: rgba(255, 255, 255, 0.15);
     box-shadow:
       0 2px 8px rgba(0, 0, 0, 0.2),
@@ -118,17 +135,21 @@
     svg {
       transform: scale(0.9);
     }
+
+    &[data-variant='filled'] {
+      background: var(--neutral-400, #e7e7e7);
+      box-shadow: none;
+    }
   }
 
   // Premium focus styles
   &:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.6);
-    outline-offset: 3px;
-    transform: scale(1.02);
-    background: rgba(255, 255, 255, 0.1);
+    outline: 2px solid var(--neutral-white, #ffffff);
+    outline-offset: 2px;
 
-    &::before {
-      opacity: 0.9;
+    &[data-variant='filled'] {
+      outline: 2px solid var(--neutral-700, #303030);
+      outline-offset: 2px;
     }
   }
 
@@ -144,6 +165,17 @@
 
       svg {
         transform: none;
+      }
+    }
+
+    &[data-variant='filled'] {
+      svg {
+        color: var(--neutral-500, #c5c5c5);
+      }
+
+      &:hover {
+        background: var(--neutral-white, #ffffff);
+        box-shadow: none;
       }
     }
   }

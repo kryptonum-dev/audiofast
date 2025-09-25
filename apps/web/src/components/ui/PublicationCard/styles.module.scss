@@ -1,0 +1,169 @@
+.publicationCard {
+  align-self: stretch;
+  .link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    border: 1px solid transparent;
+    position: relative;
+    transition:
+      border-color 240ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      background-color 240ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    // Subtle background glow effect
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(48, 48, 48, 0.025);
+      border-radius: inherit;
+      opacity: 0;
+      transition: opacity 240ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    img {
+      width: 100%;
+      aspect-ratio: 289/261;
+      border-radius: 0.5rem;
+    }
+
+    .content {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      grid-template-rows: repeat(2, auto) 1fr;
+      gap: 0.5rem;
+      grid-template-areas:
+        'date publicationType'
+        'title title'
+        'button button';
+      position: relative;
+      z-index: 2; // Above the glow effect
+      transition: transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+      > span:first-of-type {
+        grid-area: publicationType;
+      }
+
+      > span:last-of-type {
+        grid-area: date;
+        align-self: end;
+        height: fit-content;
+      }
+
+      h3,
+      h4 {
+        grid-area: title;
+        -webkit-text-stroke-width: 0.25px;
+        -webkit-text-stroke-color: var(--neutral-700, #303030);
+        color: var(--neutral-700, #303030);
+        font-size: var(--typography-body-l, 1rem);
+        font-family: var(--font-family-poppins);
+        font-weight: 400;
+        line-height: 1.16;
+        transition:
+          color 240ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+          -webkit-text-stroke-color 240ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      a {
+        grid-area: button;
+        align-self: end;
+      }
+    }
+  }
+
+  &[data-layout='horizontal'] {
+    .link {
+      > a {
+        aspect-ratio: 274/221;
+      }
+      .content {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, auto) 1fr;
+        gap: 0.75rem;
+        grid-template-areas:
+          'publicationType'
+          'title'
+          'date';
+
+        > span:first-of-type {
+          justify-self: start;
+        }
+      }
+    }
+  }
+
+  &:hover {
+    .link {
+      border-color: var(--neutral-400);
+      background-color: var(--neutral-200);
+
+      &::before {
+        opacity: 1;
+      }
+
+      .content {
+        h3,
+        h4 {
+          color: var(--neutral-800);
+          -webkit-text-stroke-color: var(--neutral-800);
+        }
+      }
+    }
+  }
+
+  &:active {
+    .link {
+      background-color: var(--neutral-300);
+      transition-duration: 150ms;
+
+      .content {
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  .link:focus-visible {
+    outline: 2px solid var(--neutral-700);
+    outline-offset: -2px;
+    border-color: var(--neutral-600);
+  }
+
+  .link:focus:not(:focus-visible) {
+    border-color: var(--neutral-400);
+    background-color: var(--neutral-200);
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+
+    &::before {
+      transition: none;
+    }
+
+    .imageOverlay > img {
+      transition: none;
+    }
+
+    .content {
+      transition: none;
+
+      h3,
+      h4 {
+        transition: none;
+      }
+    }
+  }
+}
