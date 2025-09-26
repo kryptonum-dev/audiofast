@@ -1,3 +1,4 @@
+import { featuredProducts } from './featured-products';
 import { featuredPublications } from './featured-publications';
 import { hero } from './hero';
 import { imageTextColumns } from './image-text-columns';
@@ -8,4 +9,5 @@ export const pageBuilderBlocks = [
   latestPublication,
   imageTextColumns,
   featuredPublications,
+  featuredProducts,
 ];

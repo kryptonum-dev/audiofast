@@ -14,7 +14,10 @@ export default async function RootLayout({
   preconnect('https://cdn.sanity.io');
   prefetchDNS('https://cdn.sanity.io');
   return (
-    <html lang="en" className={`${poppins.className} ${switzer.variable}`}>
+    <html
+      lang="en"
+      className={`${poppins.className} ${switzer.variable} ${poppins.variable}`}
+    >
       <body>
         <Header />
         <main id="main">{children}</main>

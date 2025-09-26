@@ -36,6 +36,14 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: 'price',
+      title: 'Cena',
+      type: 'number',
+      description: 'Cena produktu.',
+      initialValue: 0,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: 'imageGallery',
       title: 'Galeria zdjęć',
       type: 'array',

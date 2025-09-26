@@ -62,22 +62,24 @@ export default function PublicationsCarousel({
           ))}
         </div>
       </div>
-      <div className={styles.buttons}>
-        <ArrowButton
-          direction="prev"
-          onClick={scrollPrev}
-          disabled={prevBtnDisabled}
-          variant="filled"
-          size="md"
-        />
-        <ArrowButton
-          direction="next"
-          onClick={scrollNext}
-          disabled={nextBtnDisabled}
-          variant="filled"
-          size="md"
-        />
-      </div>
+      {publications.length > 4 && (
+        <div className={styles.buttons}>
+          <ArrowButton
+            direction="prev"
+            onClick={scrollPrev}
+            disabled={prevBtnDisabled}
+            variant="filled"
+            size="md"
+          />
+          <ArrowButton
+            direction="next"
+            onClick={scrollNext}
+            disabled={nextBtnDisabled}
+            variant="filled"
+            size="md"
+          />
+        </div>
+      )}
     </div>
   );
 }

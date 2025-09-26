@@ -32,7 +32,7 @@ export const featuredPublications = defineType({
       title: 'Wyróżnione publikacje',
       type: 'array',
       description:
-        'Wybierz publikacje do wyświetlenia w karuzeli (4-8 elementów)',
+        'Wybierz publikacje do wyświetlenia w karuzeli (5-10 elementów)',
       of: [
         {
           type: 'reference',
@@ -53,8 +53,8 @@ export const featuredPublications = defineType({
         },
       ],
       validation: (Rule) => [
-        Rule.min(4).error('Minimum 4 publikacje'),
-        Rule.max(8).error('Maksimum 8 publikacji'),
+        Rule.min(5).error('Minimum 5 publikacji'),
+        Rule.max(10).error('Maksimum 10 publikacji'),
         Rule.required().error('Publikacje są wymagane'),
         Rule.unique().error('Każda publikacja może być wybrana tylko raz'),
       ],

@@ -113,6 +113,26 @@ const publicationFragment = /* groq */ `
   ),
 `;
 
+// Reusable product fragment for product listings
+const productFragment = /* groq */ `
+  _id,
+  _createdAt,
+  "slug": slug.current,
+  name,
+  subtitle,
+  price,
+  isArchived,
+  brand->{
+    name,
+    "slug": slug.current,
+    ${imageFragment('logo')},
+  },
+  "mainImage": imageGallery[0] {
+    ${imageFields}
+  },
+  ${portableTextFragment('shortDescription')},
+`;
+
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ...,
@@ -144,6 +164,21 @@ const featuredPublicationsBlock = /* groq */ `
   }
 `;
 
+const featuredProductsBlock = /* groq */ `
+  _type == "featuredProducts" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    ${buttonFragment('button')},
+    newProducts[]->{
+      ${productFragment}
+    },
+    bestsellers[]->{
+      ${productFragment}
+    }
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
@@ -151,7 +186,8 @@ export const pageBuilderFragment = /* groq */ `
       ${heroBlock},
       ${latestPublicationBlock},
       ${imageTextColumnsBlock},
-      ${featuredPublicationsBlock}
+      ${featuredPublicationsBlock},
+      ${featuredProductsBlock}
   }
 `;
 
