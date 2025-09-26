@@ -7,6 +7,8 @@ import { defineField, defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
+import { toPlainText } from '../../../utils/helper';
+import { customPortableText } from '../../definitions/portable-text';
 import { getSEOFields } from '../../shared/seo';
 
 export const brand = defineType({
@@ -31,17 +33,29 @@ export const brand = defineType({
       validation: (Rule) => Rule.required(),
       group: GROUP.MAIN_CONTENT,
     }),
+    customPortableText({
+      name: 'description',
+      title: 'Opis Marki',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
+        lists: ['bullet', 'number'],
+      },
+      validation: (Rule) => Rule.required().error('Opis marki jest wymagany'),
+    }),
     ...getSEOFields(),
   ],
   preview: {
     select: {
       name: 'name',
       logo: 'logo',
-      seo: 'seo',
+      description: 'description',
     },
-    prepare: ({ name, logo, seo }) => ({
+    prepare: ({ name, logo, description }) => ({
       title: name || 'Marka',
-      subtitle: seo?.description || 'Marka produktów audio',
+      subtitle: toPlainText(description),
       media: logo || Tag,
     }),
   },

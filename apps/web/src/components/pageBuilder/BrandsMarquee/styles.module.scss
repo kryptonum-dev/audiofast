@@ -1,0 +1,330 @@
+.brandsMarquee {
+  $brandsPaddingVertical: clamp(1.5rem, calc(3vw / 0.48), 3rem);
+  $brandsPaddingHorizontal: clamp(1rem, calc(2vw / 0.48), 4rem);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+  min-height: 37.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, calc(2vw / 0.48), 4rem);
+  padding: $brandsPaddingVertical $brandsPaddingHorizontal;
+  background:
+    linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, #000 100%),
+    linear-gradient(0deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.45) 100%);
+  align-items: stretch;
+
+  picture {
+    inset: 0;
+    position: absolute;
+    z-index: -1;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .header {
+    color: var(--neutral-white, #ffffff);
+    max-width: 34.125rem;
+    max-width: clamp(20rem, calc(20.5vw / 0.48), 34.125rem);
+    flex-shrink: 0;
+    align-self: center;
+
+    .heading {
+      margin-bottom: 1rem;
+      color: var(--neutral-white, #ffffff);
+      animation: fadeInFromBottom 0.4s ease-out;
+    }
+
+    .description {
+      line-height: 1.5;
+      font-size: var(--typography-body-m, 0.875rem);
+      display: -webkit-box;
+      -webkit-line-clamp: 8;
+      line-clamp: 8;
+      -webkit-box-orient: vertical;
+      // max-height: 10rem; // Prevent layout shift
+      overflow: hidden;
+      margin-bottom: 2rem;
+      text-overflow: ellipsis;
+      animation: fadeInFromBottom 0.4s ease-out;
+      animation-delay: 0.1s;
+      animation-fill-mode: both;
+    }
+
+    // Button animation
+    > :global(a),
+    > :global(button) {
+      animation: fadeInFromBottom 0.4s ease-out;
+      animation-delay: 0.2s;
+      animation-fill-mode: both;
+    }
+  }
+
+  // Fade in from bottom animation
+  @keyframes fadeInFromBottom {
+    0% {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .marquees {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    margin: calc(-1 * $brandsPaddingVertical) 0;
+
+    .marqueeContainer {
+      position: relative;
+      height: 100%;
+      width: 12.5rem;
+      overflow: hidden;
+
+      .marqueeTrack {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        white-space: nowrap;
+        animation: scrollVertical 40s linear infinite;
+        height: max-content;
+        left: 0;
+        top: 0%;
+      }
+
+      &[data-direction='reverse'] {
+        .marqueeTrack {
+          bottom: 0%;
+          top: unset;
+          animation-name: scrollVerticalReverse;
+        }
+      }
+
+      &:hover {
+        .marqueeTrack {
+          animation-play-state: paused;
+        }
+
+        .marqueeList {
+          transform: translateY(-1rem);
+        }
+
+        &[data-direction='reverse'] .marqueeList {
+          transform: translateY(1rem);
+        }
+      }
+
+      .marqueeList {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-direction: column;
+        will-change: transform;
+        transition: transform 1000ms ease-out;
+      }
+
+      .brandItem {
+        width: 100%;
+        aspect-ratio: 1/1;
+        display: grid;
+        place-items: center;
+        padding: 0.5rem 1rem;
+        backdrop-filter: blur(6px);
+        border: 1px solid #242323;
+        border-radius: 0.5rem;
+        background-color: rgba(23, 23, 23, 0.65);
+        transition: background-color 300ms;
+
+        .brandLogo {
+          width: 121px;
+          max-height: 100px;
+          object-fit: contain;
+          filter: brightness(0) invert(1);
+          opacity: 0.8;
+          transition:
+            opacity 400ms,
+            transform 180ms ease-out;
+        }
+
+        &:hover {
+          .brandLogo {
+            opacity: 1;
+          }
+        }
+
+        &:focus:not(:focus-visible) {
+          .brandLogo {
+            transform: scale(0.95);
+          }
+        }
+
+        &:focus-visible {
+          outline: none;
+          background-color: rgba(54, 54, 54, 0.65);
+          .brandLogo {
+            opacity: 1;
+          }
+        }
+      }
+
+      &:has(.brandItem:focus-visible) {
+        .marqueeTrack {
+          animation-play-state: paused;
+          animation-delay: -0s;
+          top: 0;
+          bottom: unset;
+          transform: translateY(0) !important;
+
+          .marqueeList {
+            transform: translateY(0);
+            top: 0;
+            bottom: unset;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 62.4375rem) {
+    flex-direction: column;
+    gap: 0rem;
+    justify-content: flex-start;
+
+    .header {
+      max-width: 38rem;
+      height: 18rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .description {
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+
+        &::-webkit-scrollbar {
+          width: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: rgba(255, 255, 255, 0.3);
+          border-radius: 2px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+      }
+    }
+
+    .marquees {
+      flex-direction: column;
+      height: 100%;
+      flex-grow: 1;
+      max-height: 100%;
+      margin: 0;
+      padding: clamp(1.5rem, calc(2vw / 0.48), 2.5rem) 0
+        clamp(1rem, calc(1.5vw / 0.48), 2.5rem);
+      margin: 0 calc(-1 * $brandsPaddingHorizontal);
+      align-items: center;
+
+      .marqueeContainer {
+        height: clamp(8.75rem, calc(12.5vw / 0.48), 12.5rem);
+        width: 100%;
+
+        .marqueeTrack {
+          position: static;
+          height: 100%;
+          width: max-content;
+          animation-name: scrollHorizontal;
+          // animation-play-state: paused;
+
+          .marqueeList {
+            flex-direction: row;
+            height: 100%;
+
+            .brandItem {
+              height: 100%;
+            }
+          }
+        }
+
+        &[data-direction='reverse'] {
+          .marqueeTrack {
+            transform: translateX(-100%);
+            animation-name: scrollHorizontalReverse;
+          }
+        }
+
+        &:hover {
+          .marqueeList {
+            transform: translateX(-1rem);
+          }
+
+          &[data-direction='reverse'] .marqueeList {
+            transform: translateX(1rem);
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 27.4375rem) {
+    .header {
+      height: 20rem;
+      > a {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+  // Vertical animations
+  @keyframes scrollVertical {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+
+  @keyframes scrollVerticalReverse {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(50%);
+    }
+  }
+
+  @keyframes scrollHorizontal {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes scrollHorizontalReverse {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+}

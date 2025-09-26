@@ -1,3 +1,4 @@
+import { brandsMarquee } from './brands-marquee';
 import { featuredProducts } from './featured-products';
 import { featuredPublications } from './featured-publications';
 import { hero } from './hero';
@@ -10,4 +11,5 @@ export const pageBuilderBlocks = [
   imageTextColumns,
   featuredPublications,
   featuredProducts,
+  brandsMarquee,
 ];

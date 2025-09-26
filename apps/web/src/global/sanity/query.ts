@@ -113,6 +113,16 @@ const publicationFragment = /* groq */ `
   ),
 `;
 
+// Reusable brand fragment for brand listings
+const brandFragment = /* groq */ `
+  _id,
+  _createdAt,
+  "slug": slug.current,
+  name,
+  ${portableTextFragment('description')},
+  ${imageFragment('logo')},
+`;
+
 // Reusable product fragment for product listings
 const productFragment = /* groq */ `
   _id,
@@ -179,6 +189,23 @@ const featuredProductsBlock = /* groq */ `
   }
 `;
 
+const brandsMarqueeBlock = /* groq */ `
+  _type == "brandsMarquee" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    ${buttonFragment('button')},
+    ${imageFragment('backgroundImage')},
+    ${imageFragment('mobileImage')},
+    topBrands[]->{
+      ${brandFragment}
+    },
+    bottomBrands[]->{
+      ${brandFragment}
+    }
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
@@ -187,7 +214,8 @@ export const pageBuilderFragment = /* groq */ `
       ${latestPublicationBlock},
       ${imageTextColumnsBlock},
       ${featuredPublicationsBlock},
-      ${featuredProductsBlock}
+      ${featuredProductsBlock},
+      ${brandsMarqueeBlock}
   }
 `;
 
