@@ -10,7 +10,12 @@ import Button from '../../ui/Button';
 import BrandMarqueeList from './BrandMarqueeList';
 import styles from './styles.module.scss';
 
-type BrandSelectorProps = Extract<PageBuilderBlock, { _type: 'brandsMarquee' }>;
+type BrandSelectorProps = Extract<
+  PageBuilderBlock,
+  { _type: 'brandsMarquee' }
+> & {
+  headingLevelOffset: number;
+};
 
 type BrandType = NonNullable<BrandSelectorProps['topBrands']>[number];
 
@@ -29,6 +34,7 @@ export default function BrandSelector({
   bottomBrands,
   heading,
   description,
+  headingLevelOffset,
 }: BrandSelectorProps) {
   const [currentHeader, setCurrentHeader] = useState<HeaderState>({
     heading: heading!,
@@ -166,7 +172,7 @@ export default function BrandSelector({
         <PortableText
           value={currentHeader.heading}
           className={styles.heading}
-          headingLevel="h2"
+          headingLevel={headingLevelOffset === 0 ? 'h1' : 'h2'}
         />
         <PortableText
           value={currentHeader.description}
@@ -181,7 +187,7 @@ export default function BrandSelector({
       </header>
       <div className={styles.marquees}>
         <BrandMarqueeList
-          brands={topBrands}
+          brands={topBrands!}
           direction="normal"
           onBrandHover={handleBrandHover}
           onBrandLeave={handleBrandLeave}
@@ -189,7 +195,7 @@ export default function BrandSelector({
           onBrandInteractionEnd={handleInteractionEnd}
         />
         <BrandMarqueeList
-          brands={bottomBrands}
+          brands={bottomBrands!}
           direction="reverse"
           onBrandHover={handleBrandHover}
           onBrandLeave={handleBrandLeave}

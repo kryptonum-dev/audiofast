@@ -7,7 +7,9 @@ import styles from './styles.module.scss';
 type FeaturedProductsProps = Extract<
   PageBuilderBlock,
   { _type: 'featuredProducts' }
->;
+> & {
+  index: number;
+};
 
 export default function FeaturedProducts({
   heading,
@@ -15,12 +17,20 @@ export default function FeaturedProducts({
   button,
   newProducts,
   bestsellers,
+  index,
 }: FeaturedProductsProps) {
   return (
     <section className={`${styles.featuredProducts} max-width`}>
-      <Carousels newProducts={newProducts} bestsellers={bestsellers}>
+      <Carousels
+        newProducts={newProducts!}
+        bestsellers={bestsellers!}
+        index={index}
+      >
         <>
-          <PortableText value={heading} headingLevel="h2" />
+          <PortableText
+            value={heading}
+            headingLevel={index === 0 ? 'h1' : 'h2'}
+          />
           <PortableText value={description} enablePortableTextStyles />
           <Button {...button} />
         </>

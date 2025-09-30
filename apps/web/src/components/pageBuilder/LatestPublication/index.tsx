@@ -9,20 +9,23 @@ import styles from './styles.module.scss';
 type LatestPublicationProps = Extract<
   PageBuilderBlock,
   { _type: 'latestPublication' }
->;
+> & {
+  index: number;
+};
 
 export default function LatestPublication({
   heading,
   publication,
+  index,
 }: LatestPublicationProps) {
   const { _createdAt, slug, name, description, image, publicationType } =
-    publication;
+    publication!;
 
   return (
     <section className={`${styles.latestPublication} max-width`}>
       <PortableText
         value={heading}
-        headingLevel="h2"
+        headingLevel={index === 0 ? 'h1' : 'h2'}
         className={styles.heading}
       />
       <article className={styles.container}>
@@ -32,10 +35,10 @@ export default function LatestPublication({
         />
         <header className={styles.header}>
           <DateBox _createdAt={_createdAt} />
-          <PublicationType publicationType={publicationType} />
+          <PublicationType publicationType={publicationType!} />
           <PortableText
             value={name}
-            headingLevel="h3"
+            headingLevel={index === 0 ? 'h2' : 'h3'}
             className={styles.title}
           />
           <PortableText

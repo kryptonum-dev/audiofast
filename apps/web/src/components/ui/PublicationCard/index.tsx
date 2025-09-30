@@ -13,7 +13,9 @@ type FeaturedPublicationsType = Extract<
   { _type: 'featuredPublications' }
 >;
 
-export type PublicationType = FeaturedPublicationsType['publications'][number];
+export type PublicationType = NonNullable<
+  FeaturedPublicationsType['publications']
+>[number];
 
 interface PublicationCardProps {
   publication: PublicationType;
@@ -37,10 +39,10 @@ export default function PublicationCard({
       <a href={`/${slug}`} className={styles.link}>
         <Image image={image} sizes={imageSizes} />
         <div className={styles.content}>
-          <PublicationType publicationType={publicationType} />
+          <PublicationType publicationType={publicationType!} />
           <DateBox _createdAt={_createdAt} />
           <Heading className={styles.title}>
-            {portableTextToPlainString(name)}
+            {portableTextToPlainString(name!)}
           </Heading>
           {layout === 'vertical' && (
             <Button href={slug} text="Czytaj artykuł" variant="primary" />

@@ -14,11 +14,13 @@ import type { PortableTextValue } from '@/global/types';
 
 import styles from './styles.module.scss';
 
-export type HeroCarouselProps = Pick<BlockOf<'hero'>, 'slides'>;
+export type HeroCarouselProps = Pick<BlockOf<'hero'>, 'slides'> & {
+  index: number;
+};
 
 const HERO_AUTOPLAY_INTERVAL_MS = 10000;
 
-export default function HeroCarousel({ slides }: HeroCarouselProps) {
+export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
   const count = slides?.length ?? 0;
   const [activeIndex, setActiveIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(0);
@@ -341,7 +343,15 @@ export default function HeroCarousel({ slides }: HeroCarouselProps) {
                 <PortableText
                   value={slide.title! as PortableTextValue}
                   className={`${styles.title} ${styles.animateElement}`}
-                  headingLevel={i === 0 ? 'h1' : 'h2'}
+                  headingLevel={
+                    index === 0
+                      ? i === 0
+                        ? 'h1'
+                        : 'h2'
+                      : i === 0
+                        ? 'h2'
+                        : 'h3'
+                  }
                 />
                 <PortableText
                   value={slide.description! as PortableTextValue}

@@ -150,7 +150,10 @@ export default function FormStates({
   }
 
   return (
-    <div className={`${styles.formStatesWrapper} ${className || ''}`}>
+    <div
+      className={`${styles.formStatesWrapper} ${className || ''}`}
+      data-mode={mode}
+    >
       {currentStateContent}
     </div>
   );

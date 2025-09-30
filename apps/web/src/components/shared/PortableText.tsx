@@ -12,6 +12,7 @@ type Props = {
   value: PortableTextValue;
   className?: string;
   headingLevel?: 'h1' | 'h2' | 'h3' | 'h4';
+  parentHeadingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
   enablePortableTextStyles?: boolean;
 };
 
@@ -19,12 +20,73 @@ export function PortableTextRenderer({
   value,
   className,
   headingLevel,
+  parentHeadingLevel,
   enablePortableTextStyles = false,
 }: Props) {
   if (!value) return null;
 
   // Check if we have only one block
   const isSingleBlock = Array.isArray(value) && value.length === 1;
+
+  // Find the minimum heading level used in the portable text
+  const findMinHeadingLevel = (): number | null => {
+    if (!Array.isArray(value) || !parentHeadingLevel) return null;
+
+    const headingMap: Record<string, number> = {
+      h1: 1,
+      h2: 2,
+      h3: 3,
+      h4: 4,
+      h5: 5,
+      h6: 6,
+    };
+
+    let minLevel: number | undefined = undefined;
+
+    value.forEach((block: { style?: string }) => {
+      if (block.style && headingMap[block.style] !== undefined) {
+        const level = headingMap[block.style];
+        if (
+          level !== undefined &&
+          (minLevel === undefined || level < minLevel)
+        ) {
+          minLevel = level;
+        }
+      }
+    });
+
+    return minLevel ?? null;
+  };
+
+  const minHeadingLevel = findMinHeadingLevel();
+
+  // Helper function to normalize heading levels based on parent context
+  // Maps the lowest heading in portable text to parent+1, maintains relative spacing
+  const getActualHeading = (portableTextLevel: string): React.ElementType => {
+    if (!parentHeadingLevel || minHeadingLevel === null) {
+      // No parent context, use portable text levels as-is
+      return portableTextLevel as React.ElementType;
+    }
+
+    const headingMap: Record<string, number> = {
+      h1: 1,
+      h2: 2,
+      h3: 3,
+      h4: 4,
+      h5: 5,
+      h6: 6,
+    };
+
+    const parentLevel = headingMap[parentHeadingLevel] || 1;
+    const sanityLevel = headingMap[portableTextLevel] || 1;
+
+    // Calculate offset from the minimum heading level found
+    // If min is h3 and current is h4, offset = 4 - 3 = 1
+    const offset = sanityLevel - minHeadingLevel;
+    const actualLevel = Math.min(6, parentLevel + 1 + offset);
+
+    return `h${actualLevel}` as React.ElementType;
+  };
 
   const components = {
     block: {
@@ -42,60 +104,78 @@ export function PortableTextRenderer({
         );
       },
       // Handle heading styles
-      h1: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
-        <h1
-          className={
-            isSingleBlock && !enablePortableTextStyles ? className : undefined
-          }
-        >
-          {children}
-        </h1>
-      ),
-      h2: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
-        <h2
-          className={
-            isSingleBlock && !enablePortableTextStyles ? className : undefined
-          }
-        >
-          {children}
-        </h2>
-      ),
-      h3: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
-        <h3
-          className={
-            isSingleBlock && !enablePortableTextStyles ? className : undefined
-          }
-        >
-          {children}
-        </h3>
-      ),
-      h4: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
-        <h4
-          className={
-            isSingleBlock && !enablePortableTextStyles ? className : undefined
-          }
-        >
-          {children}
-        </h4>
-      ),
-      h5: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
-        <h5
-          className={
-            isSingleBlock && !enablePortableTextStyles ? className : undefined
-          }
-        >
-          {children}
-        </h5>
-      ),
-      h6: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
-        <h6
-          className={
-            isSingleBlock && !enablePortableTextStyles ? className : undefined
-          }
-        >
-          {children}
-        </h6>
-      ),
+      h1: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+        const Tag = getActualHeading('h1');
+        return (
+          <Tag
+            className={
+              isSingleBlock && !enablePortableTextStyles ? className : undefined
+            }
+          >
+            {children}
+          </Tag>
+        );
+      },
+      h2: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+        const Tag = getActualHeading('h2');
+        return (
+          <Tag
+            className={
+              isSingleBlock && !enablePortableTextStyles ? className : undefined
+            }
+          >
+            {children}
+          </Tag>
+        );
+      },
+      h3: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+        const Tag = getActualHeading('h3');
+        return (
+          <Tag
+            className={
+              isSingleBlock && !enablePortableTextStyles ? className : undefined
+            }
+          >
+            {children}
+          </Tag>
+        );
+      },
+      h4: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+        const Tag = getActualHeading('h4');
+        return (
+          <Tag
+            className={
+              isSingleBlock && !enablePortableTextStyles ? className : undefined
+            }
+          >
+            {children}
+          </Tag>
+        );
+      },
+      h5: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+        const Tag = getActualHeading('h5');
+        return (
+          <Tag
+            className={
+              isSingleBlock && !enablePortableTextStyles ? className : undefined
+            }
+          >
+            {children}
+          </Tag>
+        );
+      },
+      h6: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+        const Tag = getActualHeading('h6');
+        return (
+          <Tag
+            className={
+              isSingleBlock && !enablePortableTextStyles ? className : undefined
+            }
+          >
+            {children}
+          </Tag>
+        );
+      },
     },
     list: {
       // Handle bullet lists

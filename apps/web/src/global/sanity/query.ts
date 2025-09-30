@@ -143,6 +143,14 @@ const productFragment = /* groq */ `
   ${portableTextFragment('shortDescription')},
 `;
 
+// Reusable FAQ fragment for FAQ documents
+const faqFragment = /* groq */ `
+  _id,
+  _createdAt,
+  ${portableTextFragment('title')},
+  ${portableTextFragment('answer')},
+`;
+
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ...,
@@ -189,6 +197,25 @@ const featuredProductsBlock = /* groq */ `
   }
 `;
 
+export const formStateFragment = /* groq */ `
+  formState{
+    success{
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText,
+    },
+    error{
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText,
+    },
+  }
+`;
+
 const brandsMarqueeBlock = /* groq */ `
   _type == "brandsMarquee" => {
     ...,
@@ -206,6 +233,31 @@ const brandsMarqueeBlock = /* groq */ `
   }
 `;
 
+const faqSectionBlock = /* groq */ `
+  _type == "faqSection" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    showFaqList,
+    faqList[]->{
+      ${faqFragment}
+    },
+      contactPeople{
+        ${portableTextFragment('heading')},
+        contactPersons[]{
+          ${imageFragment('image')},
+          name,
+          phoneNumber,
+        }
+      },
+      contactForm{
+        ${portableTextFragment('heading')},
+        buttonText,
+        ${formStateFragment}
+      }
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
@@ -215,26 +267,8 @@ export const pageBuilderFragment = /* groq */ `
       ${imageTextColumnsBlock},
       ${featuredPublicationsBlock},
       ${featuredProductsBlock},
-      ${brandsMarqueeBlock}
-  }
-`;
-
-export const formStateFragment = /* groq */ `
-  formState{
-    success{
-      withIcon,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('paragraph')},
-      refreshButton,
-      refreshButtonText,
-    },
-    error{
-      withIcon,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('paragraph')},
-      refreshButton,
-      refreshButtonText,
-    },
+      ${brandsMarqueeBlock},
+      ${faqSectionBlock}
   }
 `;
 

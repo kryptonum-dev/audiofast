@@ -7,14 +7,20 @@ import styles from './styles.module.scss';
 type ImageTextColumnsProps = Extract<
   PageBuilderBlock,
   { _type: 'imageTextColumns' }
->;
+> & {
+  index: number;
+};
 
 export default function ImageTextColumns({
   image,
   heading,
   content,
   button,
+  index,
 }: ImageTextColumnsProps) {
+  // Parent heading level for the section
+  const parentHeading = index === 0 ? 'h1' : 'h2';
+
   return (
     <section className={`${styles.imageTextColumns} max-width`}>
       <Image
@@ -24,13 +30,14 @@ export default function ImageTextColumns({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel="h2"
+          headingLevel={parentHeading}
           className={styles.heading}
         />
         <PortableText
           value={content}
           enablePortableTextStyles
           className={styles.content}
+          parentHeadingLevel={parentHeading}
         />
         <Button {...button} />
       </header>

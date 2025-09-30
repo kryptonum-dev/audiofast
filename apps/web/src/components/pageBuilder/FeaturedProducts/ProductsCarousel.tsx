@@ -12,11 +12,13 @@ interface ProductsCarouselProps {
   products: ProductType[];
   sectionType: 'newProducts' | 'bestsellers';
   onApiChange?: (api: EmblaCarouselType) => void;
+  index: number;
 }
 
 export default function ProductsCarousel({
   products,
   onApiChange,
+  index,
 }: ProductsCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -38,7 +40,7 @@ export default function ProductsCarousel({
             imageSizes="(max-width: 27.4375rem) 286px, (max-width: 43.6875rem) 334px, (max-width: 56.1875rem) 41vw, (max-width: 69.9375rem) 300px, 405px"
             key={product._id}
             product={product}
-            headingLevel="h3"
+            headingLevel={index === 0 ? 'h2' : 'h3'}
             showButton={false}
           />
         ))}

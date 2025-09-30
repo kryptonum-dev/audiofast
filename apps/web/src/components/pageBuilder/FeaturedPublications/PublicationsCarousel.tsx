@@ -12,10 +12,12 @@ import styles from './styles.module.scss';
 
 interface PublicationsCarouselProps {
   publications: PublicationType[];
+  index: number;
 }
 
 export default function PublicationsCarousel({
   publications,
+  index,
 }: PublicationsCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
@@ -57,7 +59,7 @@ export default function PublicationsCarousel({
               key={publication._id}
               publication={publication}
               layout="horizontal"
-              headingLevel="h3"
+              headingLevel={index === 0 ? 'h2' : 'h3'}
             />
           ))}
         </div>

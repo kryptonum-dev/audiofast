@@ -13,6 +13,7 @@ type Props = {
   children: ReactNode;
   newProducts: ProductType[];
   bestsellers: ProductType[];
+  index: number;
 };
 
 type TabType = 'newProducts' | 'bestsellers';
@@ -21,6 +22,7 @@ export default function Carousels({
   children,
   newProducts,
   bestsellers,
+  index,
 }: Props) {
   const [activeTab, setActiveTab] = useState<TabType>('newProducts');
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
@@ -123,6 +125,7 @@ export default function Carousels({
             products={newProducts}
             sectionType="newProducts"
             onApiChange={handleNewProductsApi}
+            index={index}
           />
         )}
         {activeTab === 'bestsellers' && (
@@ -130,6 +133,7 @@ export default function Carousels({
             products={bestsellers}
             sectionType="bestsellers"
             onApiChange={handleBestsellersApi}
+            index={index}
           />
         )}
         {((activeTab === 'newProducts' && newProducts.length > 3) ||

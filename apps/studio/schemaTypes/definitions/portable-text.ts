@@ -117,6 +117,8 @@ export const customPortableText = (options?: {
   maxLength?: number;
   /** Alias wspierający literówkę – traktowany tak samo jak maxLength */
   maxLenght?: number;
+  /** Początkowa wartość jako zwykły tekst, który zostanie przekonwertowany na bloki Portable Text */
+  initialValue?: string;
 }) => {
   const {
     name,
@@ -126,6 +128,7 @@ export const customPortableText = (options?: {
     type: variant,
     maxLength: maxLengthProp,
     maxLenght: maxLenghtAlias,
+    initialValue: initialValueText,
     ...rest
   } = options ?? {};
 
@@ -164,7 +167,7 @@ export const customPortableText = (options?: {
         return optional ? true : 'To pole jest wymagane';
       }
       if (typeof userMaxLength === 'number' && userMaxLength > 0) {
-        const plain = toPlainText(value as unknown[]);
+        const plain = toPlainText(value as any);
         const len = plain.trim().length;
         if (len > userMaxLength) {
           return `Przekroczono maksymalną długość tekstu: ${userMaxLength} znaków (obecnie ${len}).`;
@@ -181,12 +184,33 @@ export const customPortableText = (options?: {
     return composed;
   };
 
+  // Convert initial value string to portable text blocks
+  const initialValueBlocks = initialValueText
+    ? [
+        {
+          _key: `initial-block-${Math.random().toString(36).substr(2, 9)}`,
+          _type: 'block',
+          children: [
+            {
+              _key: `initial-span-${Math.random().toString(36).substr(2, 9)}`,
+              _type: 'span',
+              marks: variant === 'heading' ? ['strong'] : [],
+              text: initialValueText,
+            },
+          ],
+          markDefs: [],
+          style: 'normal',
+        },
+      ]
+    : undefined;
+
   return defineField({
     ...rest,
     name: name ?? 'portableText',
     type: 'array',
     of: ofMembers,
-    validation: finalValidation,
+    validation: finalValidation as any,
+    ...(initialValueBlocks ? { initialValue: initialValueBlocks } : {}),
     components: {
       // @ts-ignore
       input: CustomInput,

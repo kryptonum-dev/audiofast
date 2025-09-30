@@ -7,7 +7,12 @@ import type { PageBuilderBlock } from '../../shared/PageBuilder';
 import BrandSelector from './BrandSelector';
 import styles from './styles.module.scss';
 
-type BrandsMarqueeProps = Extract<PageBuilderBlock, { _type: 'brandsMarquee' }>;
+type BrandsMarqueeProps = Extract<
+  PageBuilderBlock,
+  { _type: 'brandsMarquee' }
+> & {
+  index: number;
+};
 
 function getBackgroundArt(
   backgroundImage: SanityRawImage | undefined,
@@ -55,7 +60,10 @@ function getBackgroundArt(
 }
 
 export default function BrandsMarquee(props: BrandsMarqueeProps) {
-  const { backgroundImage, mobileImage } = props;
+  const { backgroundImage, mobileImage, index } = props;
+
+  // Calculate heading level offset: 0 for first section, 1 for others
+  const headingLevelOffset = index === 0 ? 0 : 1;
 
   // Build optimized image URLs for desktop and mobile
   const backgroundArt = getBackgroundArt(
@@ -79,7 +87,7 @@ export default function BrandsMarquee(props: BrandsMarqueeProps) {
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
       </picture>
-      <BrandSelector {...props} />
+      <BrandSelector {...props} headingLevelOffset={headingLevelOffset} />
     </section>
   );
 }

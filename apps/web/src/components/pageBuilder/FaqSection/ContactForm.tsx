@@ -1,0 +1,259 @@
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+
+import PortableText from '@/src/components/shared/PortableText';
+import Button from '@/src/components/ui/Button';
+import Checkbox from '@/src/components/ui/Checkbox';
+import FormStates, { type FormState } from '@/src/components/ui/FormStates';
+import Input from '@/src/components/ui/Input';
+import { REGEX } from '@/src/global/constants';
+
+import type { ResolvedFaqSection } from '.';
+import styles from './styles.module.scss';
+
+type ContactFormData = {
+  message: string;
+  email: string;
+  name: string;
+  consent: boolean;
+};
+
+type FormStep = 1 | 2;
+
+export default function ContactForm({
+  contactForm,
+  index,
+}: {
+  contactForm: ResolvedFaqSection['contactForm'];
+  index: number;
+}) {
+  const [currentStep, setCurrentStep] = useState<FormStep>(1);
+  const [formState, setFormState] = useState<FormState>('idle');
+  const formRef = useRef<HTMLFormElement>(null);
+  const previousStepRef = useRef<FormStep>(1);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    trigger,
+    setFocus,
+    formState: { errors },
+  } = useForm<ContactFormData>({ mode: 'onTouched' });
+
+  // Focus management when step changes
+  useEffect(() => {
+    // Moving from step 1 to step 2 - focus email input
+    if (currentStep === 2 && previousStepRef.current === 1) {
+      setFocus('email');
+    }
+    // Going back from step 2 to step 1 - focus textarea
+    else if (currentStep === 1 && previousStepRef.current === 2) {
+      setFocus('message');
+    }
+
+    previousStepRef.current = currentStep;
+  }, [currentStep, setFocus]);
+
+  const goBackToStep1 = () => {
+    setCurrentStep(1);
+  };
+
+  const onSubmit = async (data: ContactFormData) => {
+    setFormState('loading');
+
+    try {
+      console.log('Submitting form data:', data);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // For demo purposes
+      const success = false;
+
+      if (success) {
+        setFormState('success');
+        setCurrentStep(1);
+        reset();
+      } else {
+        setFormState('error');
+      }
+    } catch {
+      setFormState('error');
+    }
+  };
+
+  const handleRefresh = () => {
+    const previousFormState = formState;
+    setFormState('idle');
+
+    if (previousFormState === 'success') {
+      // Go back to step 1 for new message
+      setCurrentStep(1);
+      reset();
+
+      // Focus textarea after refresh from success
+      setTimeout(() => {
+        setFocus('message');
+      }, 50);
+    } else if (previousFormState === 'error') {
+      // For error state, stay on current step and focus appropriate input
+      setTimeout(() => {
+        if (currentStep === 1) {
+          setFocus('message');
+        } else {
+          setFocus('email');
+        }
+      }, 50);
+    }
+  };
+
+  const isDisabled = formState === 'loading';
+
+  const handleStep1Submit = async () => {
+    // Trigger validation for the message field
+    const isValid = await trigger('message');
+    if (isValid) {
+      setCurrentStep(2);
+    }
+  };
+
+  return (
+    <div className={styles.formContainer}>
+      <PortableText
+        value={contactForm!.heading}
+        className={styles.formHeading}
+        headingLevel={index === 0 ? 'h2' : 'h3'}
+      />
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit(onSubmit)}
+        className={styles.form}
+        data-step={currentStep}
+      >
+        {/* Step 1 - Message */}
+        <Input
+          label=""
+          textarea
+          disabled={isDisabled}
+          placeholder="Treść wiadomości"
+          register={register('message', {
+            required: {
+              value: true,
+              message: 'Wiadomość jest wymagana',
+            },
+            minLength: {
+              value: 10,
+              message: 'Wiadomość musi mieć co najmniej 10 znaków',
+            },
+          })}
+          errors={errors}
+          className={styles.messageInput}
+        />
+
+        {/* Step 2 - Contact Details */}
+        <Input
+          label="Adres e-mail"
+          name="email"
+          type="email"
+          disabled={isDisabled}
+          register={register('email', {
+            required: { value: true, message: 'E-mail jest wymagany' },
+            pattern: {
+              value: REGEX.email,
+              message: 'Niepoprawny adres e-mail',
+            },
+          })}
+          errors={errors}
+        />
+
+        <Input
+          label="Imię i nazwisko"
+          name="name"
+          disabled={isDisabled}
+          register={register('name', {
+            required: {
+              value: true,
+              message: 'Imię i nazwisko jest wymagane',
+            },
+            minLength: {
+              value: 2,
+              message: 'Imię i nazwisko musi mieć co najmniej 2 znaki',
+            },
+          })}
+          errors={errors}
+        />
+        <Checkbox
+          disabled={isDisabled}
+          label={
+            <>
+              Akceptuję{' '}
+              <Link
+                href="/polityka-prywatnosci"
+                target="_blank"
+                className="link"
+                tabIndex={isDisabled ? -1 : 0}
+              >
+                politykę prywatności
+              </Link>
+            </>
+          }
+          register={register('consent', {
+            required: {
+              value: true,
+              message: 'Zgoda jest wymagana',
+            },
+          })}
+          errors={errors}
+        />
+        <Button
+          type="button"
+          onClick={handleStep1Submit}
+          variant="primary"
+          disabled={isDisabled}
+          className={styles.nextButton}
+        >
+          Przejdź dalej
+        </Button>
+        <div className={styles.buttonGroup}>
+          <button
+            type="button"
+            onClick={goBackToStep1}
+            disabled={isDisabled}
+            className={styles.backButton}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <g stroke="#000">
+                <path d="M5 12h14M5 12l6 6M5 12l6-6" />
+              </g>
+            </svg>
+            Wstecz
+          </button>
+          <Button
+            type="submit"
+            variant="primary"
+            disabled={isDisabled}
+            className={styles.submitButton}
+          >
+            {contactForm!.buttonText}
+          </Button>
+        </div>
+
+        <FormStates
+          formState={formState}
+          formStateData={contactForm?.formState}
+          onRefresh={handleRefresh}
+          mode="light"
+          className={styles.formStates}
+        />
+      </form>
+    </div>
+  );
+}

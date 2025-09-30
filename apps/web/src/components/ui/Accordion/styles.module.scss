@@ -1,0 +1,77 @@
+.accordion {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: background-color 280ms;
+
+  .summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::marker {
+      display: none;
+    }
+
+    .questionText {
+      -webkit-text-stroke-width: 0.25px;
+      -webkit-text-stroke-color: var(--neutral-700, #303030);
+      color: var(--neutral-700, #303030);
+      font-weight: 400;
+      line-height: 1.16;
+    }
+
+    &:hover {
+      color: var(--primary-red);
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    svg {
+      flex-shrink: 0;
+      color: var(--primary-red);
+    }
+  }
+
+  .content {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    transition: grid-template-rows 350ms cubic-bezier(0.18, 0.89, 0.32, 1);
+  }
+
+  .inner {
+    min-height: 0;
+  }
+
+  .answerText {
+    margin-top: 0.25rem;
+    font-size: var(--typography-body-m, 0.875rem);
+    padding: 0 1rem 0.75rem;
+  }
+
+  &[data-expanded='true'] {
+    .content {
+      grid-template-rows: 1fr;
+    }
+  }
+
+  &:has(.summary:hover),
+  &[data-expanded='true'] {
+    background-color: var(--neutral-200, #f8f8f8);
+  }
+
+  &:has(.summary:focus-visible) {
+    outline: 2px solid var(--neutral-700, #303030);
+    outline-offset: 2px;
+  }
+}
