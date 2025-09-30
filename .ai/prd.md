@@ -36,7 +36,7 @@ News, Contact. - Visual emphasis on luxury and high‑end aesthetics.
 - **Product Catalog**: Detailed descriptions of CD players, DACs,
   amplifiers, cables, speakers, signal conditioners, and more.
 - **Brand Pages**: Dedicated subpages for each represented brand
-  (e.g., Wilson Audio, Synergistic Research, MUTEC).
+  (e.g., Wilson Audio, Synergistic Research).
 - **News / Events Section**: Updates on exhibitions, new product
   launches, and industry news.
 - **Contact Information**: Clear and accessible contact details for
