@@ -104,14 +104,19 @@ export async function getSEOMetadata(
     metadataBase: new URL(BASE_URL),
     creator: siteConfig.title,
     authors: [{ name: siteConfig.title }],
+    appleWebApp: {
+      title: fullTitle,
+    },
+    applicationName: fullTitle,
     icons: {
       icon: `${BASE_URL}/favicon.ico`,
     },
+    manifest: `${BASE_URL}/manifest.json`,
     keywords: allKeywords,
     robots: noNotIndex ? 'noindex, nofollow' : 'index, follow',
     twitter: {
       card: 'summary_large_image',
-      images: [ogImage],
+      images: [ogImage!],
       creator: siteConfig.twitterHandle,
       title: openGraph?.title || defaultTitle,
       description: openGraph?.description || defaultDescription,
@@ -126,11 +131,11 @@ export async function getSEOMetadata(
       title: openGraph?.title || defaultTitle,
       images: [
         {
-          url: ogImage,
+          url: ogImage!,
           width: 1200,
           height: 630,
           alt: openGraph?.title || defaultTitle,
-          secureUrl: ogImage,
+          secureUrl: ogImage!,
         },
       ],
       url: pageUrl,
