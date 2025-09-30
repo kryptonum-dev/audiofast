@@ -25,7 +25,6 @@ export default function NewsletterForm({
   buttonLabel?: string;
   formStateResult?: FormStateData;
 }) {
-  console.log(formStateResult);
   const [formState, setFormState] = useState<FormState>('idle');
 
   const {

@@ -1,8 +1,8 @@
 import { Book } from 'lucide-react';
 import { defineType } from 'sanity';
 
-import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { GROUP, GROUPS } from '../../../utils/constant';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 

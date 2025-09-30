@@ -10,7 +10,6 @@ import Button from '@/components/ui/Button';
 import PaginationDots from '@/components/ui/PaginationDots';
 import { urlFor } from '@/global/sanity/client';
 import type { BlockOf } from '@/global/types';
-import type { PortableTextValue } from '@/global/types';
 
 import styles from './styles.module.scss';
 
@@ -341,7 +340,7 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
             >
               <div className={styles.slideContent}>
                 <PortableText
-                  value={slide.title! as PortableTextValue}
+                  value={slide.title!}
                   className={`${styles.title} ${styles.animateElement}`}
                   headingLevel={
                     index === 0
@@ -354,7 +353,7 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
                   }
                 />
                 <PortableText
-                  value={slide.description! as PortableTextValue}
+                  value={slide.description!}
                   className={`${styles.description} ${styles.animateElement}`}
                 />
                 <Button

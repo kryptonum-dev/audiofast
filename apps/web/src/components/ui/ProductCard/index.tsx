@@ -9,11 +9,13 @@ type FeaturedProductsType = Extract<
   { _type: 'featuredProducts' }
 >;
 
-export type ProductType = FeaturedProductsType['newProducts'][number];
+export type ProductType = NonNullable<
+  FeaturedProductsType['newProducts']
+>[number];
 
 interface ProductCardProps {
   product: ProductType;
-  headingLevel?: 'h3' | 'h4';
+  headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
   showButton?: boolean;
 }
@@ -22,7 +24,6 @@ export default function ProductCard({
   product,
   imageSizes = '400px',
   headingLevel = 'h3',
-  showButton = true,
 }: ProductCardProps) {
   const { slug, name, subtitle, price, brand, mainImage } = product;
 
@@ -41,10 +42,10 @@ export default function ProductCard({
 
   return (
     <article className={styles.productCard}>
-      <a href={slug} className={styles.link}>
+      <a href={slug!} className={styles.link}>
         <div className={styles.imgBox}>
           <Image image={mainImage} sizes={imageSizes} fill />
-          <Image image={brand.logo} sizes="90px" />
+          <Image image={brand!.logo} sizes="90px" />
           <button
             className={styles.addToComparison}
             onClick={(e) => {
@@ -59,7 +60,7 @@ export default function ProductCard({
         </div>
         <div className={styles.container}>
           <Heading className={styles.title}>
-            {brand.name} {name}
+            {brand!.name} {name}
           </Heading>
           <p className={styles.subtitle}>{subtitle}</p>
           <div className={styles.priceContainer}>

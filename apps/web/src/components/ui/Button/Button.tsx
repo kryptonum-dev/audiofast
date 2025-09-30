@@ -52,6 +52,7 @@ export default function Button({
   }, [iconUsed]);
 
   return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
         {icon}

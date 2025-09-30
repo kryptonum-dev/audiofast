@@ -1,3 +1,4 @@
+import type { PortableTextBlock } from '@portabletext/react';
 import {
   PortableText,
   type PortableTextComponentProps,
@@ -210,10 +211,7 @@ export function PortableTextRenderer({
     },
     marks: {
       // Handle links
-      customLink: ({
-        children,
-        value,
-      }: PortableTextMarkComponentProps<PortableTextValue>) => {
+      customLink: ({ children, value }: PortableTextMarkComponentProps) => {
         const linkData = value?.customLink || {};
         const href = linkData?.href || '#';
         const linkType = linkData?.type;
@@ -249,15 +247,11 @@ export function PortableTextRenderer({
         );
       },
       // Handle strong/bold text
-      strong: ({
-        children,
-      }: PortableTextMarkComponentProps<PortableTextValue>) => (
+      strong: ({ children }: PortableTextMarkComponentProps) => (
         <strong>{children}</strong>
       ),
       // Handle italic text
-      em: ({ children }: PortableTextMarkComponentProps<PortableTextValue>) => (
-        <em>{children}</em>
-      ),
+      em: ({ children }: PortableTextMarkComponentProps) => <em>{children}</em>,
     },
   };
 
@@ -268,7 +262,10 @@ export function PortableTextRenderer({
       .join(' ');
     return (
       <div className={wrapperClasses}>
-        <PortableText value={value} components={components} />
+        <PortableText
+          value={value as PortableTextBlock}
+          components={components}
+        />
       </div>
     );
   }
@@ -277,13 +274,18 @@ export function PortableTextRenderer({
   if (!isSingleBlock && className) {
     return (
       <div className={className}>
-        <PortableText value={value} components={components} />
+        <PortableText
+          value={value as PortableTextBlock}
+          components={components}
+        />
       </div>
     );
   }
 
   // For single blocks or no wrapper needed, render directly
-  return <PortableText value={value} components={components} />;
+  return (
+    <PortableText value={value as PortableTextBlock} components={components} />
+  );
 }
 
 export default PortableTextRenderer;

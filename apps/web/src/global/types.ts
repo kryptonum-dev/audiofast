@@ -1,8 +1,4 @@
-import type {
-  PortableText as SanityPortableText,
-  PortableTextHeading as SanityPortableTextHeading,
-  QueryHomePageResult,
-} from './sanity/sanity.types';
+import type { QueryHomePageResult } from './sanity/sanity.types';
 
 export type Maybe<T> = T | null | undefined;
 
@@ -19,7 +15,4 @@ export type BlockOf<T extends PageBuilderBlockType> = Extract<
 >;
 
 // Sanity Portable Text helper union used across the app
-export type PortableTextValue =
-  | SanityPortableText
-  | SanityPortableTextHeading
-  | object[];
+export type PortableTextValue = object | object[] | null | undefined;

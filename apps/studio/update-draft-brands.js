@@ -35,7 +35,7 @@ async function updateDraftBrands() {
         },
       ];
 
-      const result = await client.patch(brandId).set({ description }).commit();
+      await client.patch(brandId).set({ description }).commit();
 
       console.log(`✓ Updated ${brandId}`);
     } catch (error) {

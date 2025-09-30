@@ -2,12 +2,16 @@ import sanityStudio from '@sanity/eslint-config-studio';
 import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginPrettier from 'eslint-plugin-prettier';
 import eslintPluginSimpleImportSort from 'eslint-plugin-simple-import-sort';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config} */
 
 export default [
   ...sanityStudio,
+  {
+    ignores: ['dist', 'node_modules', '.sanity'],
+  },
   {
     plugins: {
       prettier: eslintPluginPrettier,
@@ -23,13 +27,20 @@ export default [
         sourceType: 'module',
       },
     },
-    ignores: ['dist', 'node_modules', '.sanity'],
     rules: {
       // 'prettier/prettier': 'off', // Disabled to avoid formatting conflicts
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
       'import/no-default-export': 'off',
+    },
+  },
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
     },
   },
 ];

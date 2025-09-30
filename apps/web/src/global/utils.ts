@@ -10,7 +10,7 @@ export const isValidUrl = (url: string) => {
   try {
     new URL(url);
     return true;
-  } catch (e) {
+  } catch {
     return isRelativeUrl(url);
   }
 };
@@ -79,7 +79,7 @@ export async function imageToInlineSvg(url: string) {
  * @returns Plain text string with formatting removed
  */
 export function portableTextToPlainString(
-  portableText: PortableTextValue[]
+  portableText: PortableTextBlock[]
 ): string {
   if (!Array.isArray(portableText) || portableText.length === 0) {
     return '';
@@ -91,7 +91,7 @@ export function portableTextToPlainString(
       if (block._type === 'block') {
         // Extract text from children
         const blockText = (block.children || [])
-          .map((child: PortableTextValue) => {
+          .map((child: PortableTextBlock['children'][number]) => {
             // Extract plain text, ignoring all marks (strong, italic, links, etc.)
             return child.text || '';
           })

@@ -75,8 +75,7 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
         onClick={() => setShowConfirmDialog(true)}
         disabled={!value || isLoading}
         loading={isLoading}
-        style={{ textAlign: 'center' }}
-      >
+        style={{ textAlign: 'center' }}>
         Przetwórz JSON i zaktualizuj przekierowania
       </Button>
       {showConfirmDialog && (
@@ -84,8 +83,7 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
           header="Potwierdź aktualizację"
           id="confirm-dialog"
           onClose={() => setShowConfirmDialog(false)}
-          zOffset={1000}
-        >
+          zOffset={1000}>
           <Box padding={4}>
             <Stack space={5}>
               <Text>
@@ -97,16 +95,14 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
                   tone="caution"
                   onClick={processJson}
                   loading={isLoading}
-                  style={{ textAlign: 'center' }}
-                >
+                  style={{ textAlign: 'center' }}>
                   Tak, przetwórz i zaktualizuj
                 </Button>
                 <Button
                   mode="ghost"
                   onClick={() => setShowConfirmDialog(false)}
                   disabled={isLoading}
-                  style={{ textAlign: 'center' }}
-                >
+                  style={{ textAlign: 'center' }}>
                   Anuluj
                 </Button>
               </Stack>
@@ -185,8 +181,7 @@ export default defineType({
                       </Box>
                     }
                     placement="top"
-                    portal
-                  >
+                    portal>
                     <span>{isPermanent ? '🔒' : '🔄'}</span>
                   </Tooltip>
                 ),
@@ -204,8 +199,14 @@ export default defineType({
         <>
           Wklej tablicę JSON obiektów przekierowań. Wymagane właściwości:
           <ul>
-            <li>Źródło musi zaczynać się od "/" (np. "/stara-sciezka")</li>
-            <li>Cel musi zaczynać się od "/" (np. "/nowa-sciezka")</li>
+            <li>
+              Źródło musi zaczynać się od &quot;/&quot; (np.
+              &quot;/stara-sciezka&quot;)
+            </li>
+            <li>
+              Cel musi zaczynać się od &quot;/&quot; (np.
+              &quot;/nowa-sciezka&quot;)
+            </li>
             <li>
               isPermanent to opcjonalny boolean (domyślnie true dla stałego
               przekierowania 301)

@@ -5,8 +5,8 @@ import {
 import { Folder } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
-import { GROUP, GROUPS } from '../../../utils/constant';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { GROUP, GROUPS } from '../../../utils/constant';
 import { getSEOFields } from '../../shared/seo';
 
 export const productCategorySub = defineType({

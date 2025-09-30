@@ -1,3 +1,5 @@
+import type { PortableTextBlock } from '@portabletext/react';
+
 import type { QueryHomePageResult } from '@/global/sanity/sanity.types';
 import { portableTextToPlainString } from '@/src/global/utils';
 
@@ -20,7 +22,7 @@ export type PublicationType = NonNullable<
 interface PublicationCardProps {
   publication: PublicationType;
   layout?: 'vertical' | 'horizontal';
-  headingLevel?: 'h3' | 'h4';
+  headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
 }
 
@@ -42,7 +44,7 @@ export default function PublicationCard({
           <PublicationType publicationType={publicationType!} />
           <DateBox _createdAt={_createdAt} />
           <Heading className={styles.title}>
-            {portableTextToPlainString(name!)}
+            {portableTextToPlainString(name! as PortableTextBlock[])}
           </Heading>
           {layout === 'vertical' && (
             <Button href={slug} text="Czytaj artykuł" variant="primary" />
