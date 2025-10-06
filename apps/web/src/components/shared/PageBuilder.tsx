@@ -2,6 +2,7 @@ import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
 import type { ContactForm as ContactFormType } from '../../global/sanity/sanity.types';
 import BrandsMarquee from '../pageBuilder/BrandsMarquee';
 import ContactForm from '../pageBuilder/ContactForm';
+import ContactMap from '../pageBuilder/ContactMap';
 import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
@@ -99,6 +100,14 @@ export function PageBuilder({
               <ContactForm
                 key={block._key}
                 {...(block as unknown as ContactFormType)}
+                index={index}
+              />
+            );
+          case 'contactMap':
+            return (
+              <ContactMap
+                key={block._key}
+                {...(block as BlockByType<'contactMap'>)}
                 index={index}
               />
             );

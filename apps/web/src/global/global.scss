@@ -35,6 +35,8 @@
 
   //   --easing: cubic-bezier(0.19, 1, 0.22, 1);
 
+  --max-width: 81.375rem;
+
   --pageMargin: clamp(1rem, calc(1.5vw / 0.48), 2rem);
   @media (max-width: 56.1875rem) and (min-width: 37.5rem) {
     --pageMargin: clamp(2.5rem, calc(5vw / 0.48), 5rem);
@@ -147,14 +149,14 @@ body {
 }
 
 .max-width {
-  max-width: 81.375rem;
+  max-width: var(--max-width);
   width: calc(100% - var(--pageMargin) * 2);
   margin: 0 auto;
   height: 100%;
 }
 
 .max-width-block {
-  max-width: 81.375rem;
+  max-width: var(--max-width);
   width: calc(100% - 4rem);
   margin: 0 auto;
   height: 100%;

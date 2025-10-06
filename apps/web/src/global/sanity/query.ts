@@ -65,6 +65,12 @@ export const queryDefaultOGImage = defineQuery(`*[_type == "settings"][0]{
     "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
   }`);
 
+export const querySettings = defineQuery(`*[_type == "settings"][0]{
+    address,
+    email,
+    tel,
+  }`);
+
 const buttonFragment = (name: string = 'button') => /* groq */ `
 ${name}{
   text,
@@ -282,6 +288,17 @@ const contactFormBlock = /* groq */ `
   }
 `;
 
+const contactMapBlock = /* groq */ `
+  _type == "contactMap" => {
+    ...,
+    ${portableTextFragment('heading')},
+    useCustomAddress,
+    customAddress,
+    customPhone,
+    customEmail,
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
@@ -293,7 +310,8 @@ export const pageBuilderFragment = /* groq */ `
       ${featuredProductsBlock},
       ${brandsMarqueeBlock},
       ${faqSectionBlock},
-      ${contactFormBlock}
+      ${contactFormBlock},
+      ${contactMapBlock}
   }
 `;
 

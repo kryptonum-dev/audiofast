@@ -13,6 +13,15 @@ export const settings = defineType({
   groups: GROUPS,
   fields: [
     defineField({
+      name: 'address',
+      type: 'string',
+      title: 'Adres',
+      description:
+        'Pełny adres firmy (np. "91-174 Łódź, ul. Romanowska 55e, pasaż lok.9")',
+      group: GROUP.CONTACT,
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'email',
       type: 'string',
       title: 'Email kontaktowy',
