@@ -3,8 +3,8 @@ import '../global/global.scss';
 import { preconnect, prefetchDNS } from 'react-dom';
 
 import { poppins, switzer } from '@/global/fonts';
-import Footer from '@/layouts/Footer';
-import Header from '@/layouts/Header';
+import Footer from '@/src/components/ui/Footer';
+import Header from '@/src/components/ui/Header';
 
 export default async function RootLayout({
   children,

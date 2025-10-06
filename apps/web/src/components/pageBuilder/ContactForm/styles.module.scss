@@ -1,0 +1,170 @@
+.contactForm {
+  background-color: var(--neutral-200, #f8f8f8);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  padding: clamp(1rem, calc(2vw / 0.48), 2rem);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: repeat(2, auto) 1fr;
+  column-gap: 1.5rem;
+  position: relative;
+  isolation: isolate;
+  grid-template-areas:
+    'header contactForm'
+    'contactPeople contactForm'
+    'accountList contactForm';
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+  }
+
+  &::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='108' height='108' viewBox='0 0 108 108' fill='none'%3E%3Crect x='0.5' y='0.5' width='107' height='107' stroke='%23e8e8e8' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 108px 108px;
+    background-position: 50% 0;
+    opacity: 0.2;
+  }
+
+  &::after {
+    box-shadow:
+      inset 3rem 0 3rem -2rem #f8f8f8,
+      inset -3rem 0 3rem -2rem #f8f8f8,
+      inset 0 3rem 3rem -2rem #f8f8f8,
+      inset 0 -3rem 3rem -2rem #f8f8f8;
+    z-index: -1;
+  }
+
+  .header,
+  .contactPeople,
+  .accountList {
+    max-width: 31.125rem;
+    max-width: clamp(19rem, calc(19.5vw / 0.48), 31.125rem);
+  }
+
+  .header {
+    grid-area: header;
+    margin-bottom: clamp(2rem, calc(3vw / 0.48), 3rem);
+    .heading {
+      margin-bottom: 1.5rem;
+    }
+
+    .description {
+      font-size: var(--typography-body-m, 0.875rem);
+      color: var(--neutral-600, #5b5a5a);
+      letter-spacing: -0.03em;
+    }
+  }
+
+  .contactPeople {
+    grid-area: contactPeople;
+    margin-bottom: clamp(2rem, calc(2vw / 0.48), 3rem);
+
+    .heading {
+      color: var(--neutral-700, #303030);
+      font-family: var(--font-family-switzer);
+      font-weight: 500;
+      line-height: 1.16;
+      letter-spacing: -0.03em;
+      text-align: left;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .personList {
+      display: grid;
+      gap: 1rem;
+      justify-content: start;
+    }
+  }
+
+  .accountList {
+    grid-area: accountList;
+
+    .accountItem {
+      &:not(:last-child) {
+        margin-bottom: 1.5rem;
+      }
+
+      .heading {
+        margin-bottom: 0.5rem;
+        color: var(--neutral-700, #303030);
+        font-family: var(--font-family-poppins);
+        line-height: 1.5;
+        font-weight: 600;
+      }
+
+      .accountDetails {
+        display: flex;
+        flex-direction: column;
+        font-size: var(--typography-body-m, 0.875rem);
+        line-height: 1.5;
+        letter-spacing: -0.03em;
+      }
+    }
+  }
+
+  .form {
+    grid-area: contactForm;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    border: 1px solid var(--neutral-400, #5b5a5a);
+    background-color: var(--neutral-white, #ffffff);
+    padding: clamp(1rem, calc(2vw / 0.48), 2rem);
+    gap: 1.5rem;
+    max-width: 30.125rem;
+    position: relative;
+    width: 100%;
+    justify-self: end;
+
+    textarea {
+      min-height: 6rem;
+    }
+
+    [aria-invalid='true'] {
+      margin-bottom: -1.25rem;
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    grid-template-columns: 38rem;
+    justify-content: center;
+    grid-template-rows: repeat(3, auto) 1fr;
+    grid-template-areas:
+      'header'
+      'contactForm'
+      'contactPeople'
+      'accountList';
+
+    &::after,
+    &::before {
+      height: 70%;
+    }
+
+    .header,
+    .contactPeople,
+    .accountList,
+    .form {
+      max-width: 100%;
+    }
+
+    .form {
+      margin-bottom: 2rem;
+    }
+  }
+
+  @media (max-width: 48.0625rem) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 27.4375rem) {
+    width: 100%;
+  }
+}

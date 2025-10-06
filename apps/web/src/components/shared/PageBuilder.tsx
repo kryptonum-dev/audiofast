@@ -1,5 +1,7 @@
 import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
+import type { ContactForm as ContactFormType } from '../../global/sanity/sanity.types';
 import BrandsMarquee from '../pageBuilder/BrandsMarquee';
+import ContactForm from '../pageBuilder/ContactForm';
 import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
@@ -89,6 +91,14 @@ export function PageBuilder({
               <FaqSection
                 key={block._key}
                 {...(block as BlockByType<'faqSection'>)}
+                index={index}
+              />
+            );
+          case 'contactForm':
+            return (
+              <ContactForm
+                key={block._key}
+                {...(block as unknown as ContactFormType)}
                 index={index}
               />
             );

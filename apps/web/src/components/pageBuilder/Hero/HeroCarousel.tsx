@@ -17,7 +17,7 @@ export type HeroCarouselProps = Pick<BlockOf<'hero'>, 'slides'> & {
   index: number;
 };
 
-const HERO_AUTOPLAY_INTERVAL_MS = 10000;
+const HERO_AUTOPLAY_INTERVAL_MS = 8000;
 
 export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
   const count = slides?.length ?? 0;

@@ -14,24 +14,12 @@
   z-index: 1;
   position: relative;
 
-  // a {
-  //   display: inline-flex;
-  //   margin-top: 0.0547rem;
-  //   font-size: var(--typography-body-m, 0.875rem);
-  // }
-
   p {
     grid-column: 2/3;
     grid-row: 1/2;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.125rem;
     max-width: fit-content;
   }
-
-  // &:not(:has(input:checked)):not(:has(input[aria-invalid='true'])):hover {
-  //   .checkmark {
-  //     background-color: var(--neutral-200, #f5f1ec);
-  //   }
-  // }
 
   .checkmark {
     position: relative;

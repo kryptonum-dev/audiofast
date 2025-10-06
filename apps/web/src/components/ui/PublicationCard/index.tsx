@@ -38,7 +38,7 @@ export default function PublicationCard({
 
   return (
     <article className={styles.publicationCard} data-layout={layout}>
-      <a href={`/${slug}`} className={styles.link}>
+      <a href={slug!} className={styles.link}>
         <Image image={image} sizes={imageSizes} />
         <div className={styles.content}>
           <PublicationType publicationType={publicationType!} />

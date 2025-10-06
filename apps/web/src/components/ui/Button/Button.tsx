@@ -11,7 +11,13 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
     openInNewTab?: boolean | null;
     className?: string;
     href?: string | null;
-    iconUsed?: 'arrowUp' | 'arrowDown' | 'arrowLeft' | 'arrowRight' | 'refresh';
+    iconUsed?:
+      | 'arrowUp'
+      | 'arrowDown'
+      | 'arrowLeft'
+      | 'arrowRight'
+      | 'refresh'
+      | 'submit';
   };
 
 export default function Button({
@@ -46,6 +52,8 @@ export default function Button({
         return <ArrowUp />;
       case 'refresh':
         return <RefreshIcon />;
+      case 'submit':
+        return <SubmitIcon />;
       default:
         return <ArrowUp />;
     }
@@ -99,6 +107,25 @@ const RefreshIcon = () => (
     <defs>
       <clipPath id="refresh-clip">
         <path fill="#fff" d="M.5.5h24v24H.5z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const SubmitIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="#fff"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#a)"
+    >
+      <path d="M10 14 21 3M21 3l-6.5 18a.551.551 0 0 1-1 0L10 14l-7-3.5a.55.55 0 0 1 0-1L21 3Z" />
+    </g>
+    <defs>
+      <clipPath id="a">
+        <path fill="#fff" d="M0 0h24v24H0z" />
       </clipPath>
     </defs>
   </svg>

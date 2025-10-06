@@ -1,4 +1,5 @@
 import { brandsMarquee } from './brands-marquee';
+import { contactForm } from './contact-form';
 import { faqSection } from './faq-section';
 import { featuredProducts } from './featured-products';
 import { featuredPublications } from './featured-publications';
@@ -14,4 +15,5 @@ export const pageBuilderBlocks = [
   featuredProducts,
   brandsMarquee,
   faqSection,
+  contactForm,
 ];

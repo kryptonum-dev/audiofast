@@ -1,5 +1,6 @@
 .featuredProducts {
-  padding: clamp(2rem, calc(3vw / 0.48), 4.5rem) 0;
+  padding: clamp(2rem, calc(3vw / 0.48), 4.5rem) 0
+    clamp(2rem, calc(3vw / 0.48), 3rem);
   display: flex;
   align-items: center;
   gap: clamp(1rem, calc(1.5vw / 0.48), 2rem);

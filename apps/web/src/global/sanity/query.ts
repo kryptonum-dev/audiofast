@@ -233,6 +233,15 @@ const brandsMarqueeBlock = /* groq */ `
   }
 `;
 
+const contactPersonBlock = /* groq */ `
+    _type == "contactPerson" => {
+    ${imageFragment('image')},
+    name,
+    phoneNumber,
+  }
+
+`;
+
 const faqSectionBlock = /* groq */ `
   _type == "faqSection" => {
     ...,
@@ -245,16 +254,31 @@ const faqSectionBlock = /* groq */ `
       contactPeople{
         ${portableTextFragment('heading')},
         contactPersons[]{
-          ${imageFragment('image')},
-          name,
-          phoneNumber,
+         ${contactPersonBlock}
         }
       },
       contactForm{
-        ${portableTextFragment('heading')},
-        buttonText,
-        ${formStateFragment}
+     
       }
+  }
+`;
+
+const contactFormBlock = /* groq */ `
+  _type == "contactForm" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    contactPeople{
+      ${portableTextFragment('heading')},
+      contactPersons[]{
+        ${contactPersonBlock}
+      }
+    },
+    accountList[]{
+      ${portableTextFragment('heading')},
+      accountDetails,
+    },
+    ${formStateFragment}
   }
 `;
 
@@ -268,7 +292,8 @@ export const pageBuilderFragment = /* groq */ `
       ${featuredPublicationsBlock},
       ${featuredProductsBlock},
       ${brandsMarqueeBlock},
-      ${faqSectionBlock}
+      ${faqSectionBlock},
+      ${contactFormBlock}
   }
 `;
 
@@ -302,5 +327,27 @@ export const queryHomePage =
       description,
       "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
     },
+    "firstBlockType": pageBuilder[0]._type,
     ${pageBuilderFragment}
   }`);
+
+export const queryAllPageSlugs = defineQuery(`*[_type == "page"]{
+  "slug": slug.current
+}`);
+
+export const queryPageBySlug =
+  defineQuery(`*[_type == "page" && slug.current == $slug][0]{
+  _id,
+  _type,
+  "slug": slug.current,
+  name,
+  seo,
+  doNotIndex,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  },
+  "firstBlockType": pageBuilder[0]._type,
+  ${pageBuilderFragment}
+}`);
