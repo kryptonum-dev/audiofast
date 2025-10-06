@@ -13,15 +13,6 @@ export const settings = defineType({
   groups: GROUPS,
   fields: [
     defineField({
-      name: 'address',
-      type: 'string',
-      title: 'Adres',
-      description:
-        'Pełny adres firmy (np. "91-174 Łódź, ul. Romanowska 55e, pasaż lok.9")',
-      group: GROUP.CONTACT,
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: 'email',
       type: 'string',
       title: 'Email kontaktowy',
@@ -31,8 +22,47 @@ export const settings = defineType({
     defineField({
       name: 'tel',
       type: 'string',
-      title: 'Telefon kontaktowy (opcjonalny)',
+      title: 'Telefon kontaktowy',
       group: GROUP.CONTACT,
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'address',
+      type: 'object',
+      title: 'Adres firmy',
+      description: 'Pełny adres firmy rozdzielony na komponenty',
+      group: GROUP.CONTACT,
+      options: {
+        columns: 2,
+      },
+      fields: [
+        defineField({
+          name: 'streetAddress',
+          type: 'string',
+          title: 'Ulica i numer',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'postalCode',
+          type: 'string',
+          title: 'Kod pocztowy',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'city',
+          type: 'string',
+          title: 'Miasto',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'country',
+          type: 'string',
+          title: 'Kraj',
+          initialValue: 'PL',
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'seo',
@@ -51,14 +81,73 @@ export const settings = defineType({
       ],
       validation: (Rule) => Rule.required(),
     }),
-
     defineField({
-      name: 'contactEmail',
-      type: 'string',
-      title: 'E-mail kontaktowy',
+      name: 'structuredData',
+      type: 'object',
+      title: 'Structured Data (Schema.org)',
       description:
-        'Główny adres e-mail kontaktowy dla Twojej strony internetowej',
-      validation: (rule) => rule.email(),
+        'Dane strukturalne dla lepszego SEO i widoczności w wyszukiwarkach',
+      group: GROUP.SEO,
+      fields: [
+        defineField({
+          name: 'companyName',
+          type: 'string',
+          title: 'Nazwa firmy',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'companyDescription',
+          type: 'text',
+          title: 'Opis firmy',
+          description:
+            'Krótki opis firmy dla SEO i structured data (1-2 zdania)',
+          validation: (Rule) => Rule.required().max(300),
+        }),
+        defineField({
+          name: 'logo',
+          type: 'image',
+          title: 'Logo firmy',
+          description:
+            'Logo firmy - używane w structured data. Preferowany format: kwadratowy, min. 112x112px',
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: 'geo',
+          type: 'object',
+          title: 'Współrzędne geograficzne',
+          description:
+            'Lokalizacja GPS firmy dla map i structured data (opcjonalne)',
+          fields: [
+            defineField({
+              name: 'latitude',
+              type: 'number',
+              title: 'Szerokość geograficzna',
+            }),
+            defineField({
+              name: 'longitude',
+              type: 'number',
+              title: 'Długość geograficzna',
+            }),
+          ],
+        }),
+        defineField({
+          name: 'priceRange',
+          type: 'string',
+          title: 'Przedział cenowy',
+          options: {
+            list: [
+              { title: '$ (Niskie ceny)', value: '$' },
+              { title: '$$ (Średnie ceny)', value: '$$' },
+              { title: '$$$ (Wysokie ceny)', value: '$$$' },
+              { title: '$$$$ (Bardzo wysokie ceny)', value: '$$$$' },
+            ],
+            layout: 'radio',
+          },
+          initialValue: '$$',
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
     }),
   ],
   preview: {

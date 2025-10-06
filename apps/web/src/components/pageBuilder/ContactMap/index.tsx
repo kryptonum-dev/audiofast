@@ -24,7 +24,30 @@ export default async function ContactMap({
         query: querySettings,
       });
 
-  const displayAddress = useCustomAddress ? customAddress : settings?.address;
+  // Format structured address into display string
+  const formatAddress = (
+    addr:
+      | {
+          streetAddress: string | null;
+          postalCode: string | null;
+          city: string | null;
+          country: string | null;
+        }
+      | null
+      | undefined
+  ) => {
+    if (!addr) return '';
+    const parts = [addr.postalCode, addr.city, addr.streetAddress].filter(
+      Boolean
+    );
+    return parts.join(', ');
+  };
+
+  const displayAddress = useCustomAddress
+    ? customAddress
+    : settings?.address
+      ? formatAddress(settings.address)
+      : '';
   const displayPhone = useCustomAddress ? customPhone : settings?.tel;
   const displayEmail = useCustomAddress ? customEmail : settings?.email;
 

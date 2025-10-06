@@ -66,9 +66,25 @@ export const queryDefaultOGImage = defineQuery(`*[_type == "settings"][0]{
   }`);
 
 export const querySettings = defineQuery(`*[_type == "settings"][0]{
-    address,
+    address {
+      streetAddress,
+      postalCode,
+      city,
+      country
+    },
     email,
     tel,
+    structuredData {
+      companyName,
+      companyDescription,
+      "logo": logo.asset->url,
+      geo {
+        latitude,
+        longitude
+      },
+      priceRange,
+    },
+    "socialMedia": *[_type == "socialMedia" && defined(link)].link,
   }`);
 
 const buttonFragment = (name: string = 'button') => /* groq */ `
