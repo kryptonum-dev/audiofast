@@ -13,6 +13,8 @@ import { REGEX } from '@/src/global/constants';
 import type { ContactFormProps } from '.';
 import styles from './styles.module.scss';
 
+type ContactFormComponentProps = Pick<ContactFormProps, 'formState'>;
+
 type ContactFormData = {
   name: string;
   email: string;
@@ -22,7 +24,7 @@ type ContactFormData = {
 
 export default function ContactFormComponent({
   formState: formStateData,
-}: Pick<ContactFormProps, 'formState'>) {
+}: ContactFormComponentProps) {
   const [formState, setFormState] = useState<FormState>('idle');
 
   const {
@@ -150,7 +152,7 @@ export default function ContactFormComponent({
 
       <FormStates
         formState={formState}
-        formStateData={formStateData as any}
+        formStateData={formStateData}
         onRefresh={handleRefresh}
         mode="light"
         className={styles.formStates}

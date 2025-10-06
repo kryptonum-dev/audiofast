@@ -9,11 +9,11 @@ import ArrowButton from '@/components/ui/ArrowButton';
 import Button from '@/components/ui/Button';
 import PaginationDots from '@/components/ui/PaginationDots';
 import { urlFor } from '@/global/sanity/client';
-import type { BlockOf } from '@/global/types';
+import type { PagebuilderType } from '@/global/types';
 
 import styles from './styles.module.scss';
 
-export type HeroCarouselProps = Pick<BlockOf<'hero'>, 'slides'> & {
+export type HeroCarouselProps = Pick<PagebuilderType<'hero'>, 'slides'> & {
   index: number;
 };
 

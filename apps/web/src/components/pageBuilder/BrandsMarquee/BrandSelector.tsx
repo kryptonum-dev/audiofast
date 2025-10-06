@@ -2,18 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import type { PortableTextValue } from '@/global/types';
-import type { PageBuilderBlock } from '@/src/global/types';
+import type { PagebuilderType, PortableTextValue } from '@/global/types';
 
 import PortableText from '../../shared/PortableText';
 import Button from '../../ui/Button';
 import BrandMarqueeList from './BrandMarqueeList';
 import styles from './styles.module.scss';
 
-type BrandSelectorProps = Extract<
-  PageBuilderBlock,
-  { _type: 'brandsMarquee' }
-> & {
+type BrandSelectorProps = PagebuilderType<'brandsMarquee'> & {
   headingLevelOffset: number;
 };
 

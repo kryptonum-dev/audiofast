@@ -153,7 +153,7 @@ const productFragment = /* groq */ `
 const faqFragment = /* groq */ `
   _id,
   _createdAt,
-  ${portableTextFragment('title')},
+  question,
   ${portableTextFragment('answer')},
 `;
 
@@ -253,7 +253,7 @@ const faqSectionBlock = /* groq */ `
     ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
-    showFaqList,
+    displayMode,
     faqList[]->{
       ${faqFragment}
     },
@@ -264,7 +264,11 @@ const faqSectionBlock = /* groq */ `
         }
       },
       contactForm{
-     
+        ${portableTextFragment('heading')},
+        buttonText,
+        formState{
+          ${formStateFragment}
+        }
       }
   }
 `;

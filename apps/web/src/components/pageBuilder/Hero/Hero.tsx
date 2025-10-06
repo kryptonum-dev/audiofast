@@ -1,10 +1,10 @@
-import type { BlockOf } from '@/global/types';
+import type { PagebuilderType } from '@/src/global/types';
 
 import BrandMarquee from './BrandMarquee';
 import HeroCarousel from './HeroCarousel';
 import styles from './styles.module.scss';
 
-export type HeroProps = BlockOf<'hero'> & { index: number };
+export type HeroProps = PagebuilderType<'hero'> & { index: number };
 
 export function Hero(props: HeroProps) {
   return (

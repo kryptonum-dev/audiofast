@@ -194,7 +194,7 @@ export const customPortableText = (options?: {
             {
               _key: `initial-span-${Math.random().toString(36).substr(2, 9)}`,
               _type: 'span',
-              marks: variant === 'heading' ? ['strong'] : [],
+              marks: [],
               text: initialValueText,
             },
           ],

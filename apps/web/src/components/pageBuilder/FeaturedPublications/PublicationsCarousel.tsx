@@ -5,13 +5,14 @@ import useEmblaCarousel, {
 } from 'embla-carousel-react';
 import { useCallback, useEffect, useState } from 'react';
 
+import type { PagebuilderType } from '@/src/global/types';
+
 import ArrowButton from '../../ui/ArrowButton';
-import type { PublicationType } from '../../ui/PublicationCard';
 import PublicationCard from '../../ui/PublicationCard';
 import styles from './styles.module.scss';
 
 interface PublicationsCarouselProps {
-  publications: PublicationType[];
+  publications: PagebuilderType<'featuredPublications'>['publications'];
   index: number;
 }
 
@@ -53,7 +54,7 @@ export default function PublicationsCarousel({
     <div className={styles.carousel}>
       <div className={styles.viewport} ref={emblaRef}>
         <div className={styles.container}>
-          {publications.map((publication) => (
+          {publications!.map((publication) => (
             <PublicationCard
               imageSizes="(max-width: 72rem) 222px, 279px"
               key={publication._id}
@@ -64,7 +65,7 @@ export default function PublicationsCarousel({
           ))}
         </div>
       </div>
-      {publications.length > 4 && (
+      {publications!.length > 4 && (
         <div className={styles.buttons}>
           <ArrowButton
             direction="prev"

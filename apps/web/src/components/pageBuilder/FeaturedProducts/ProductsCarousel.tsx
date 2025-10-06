@@ -4,7 +4,8 @@ import type { EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useEffect } from 'react';
 
-import type { ProductType } from '../../ui/ProductCard';
+import type { ProductType } from '@/src/global/types';
+
 import ProductCard from '../../ui/ProductCard';
 import styles from './styles.module.scss';
 

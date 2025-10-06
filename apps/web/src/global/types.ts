@@ -1,18 +1,25 @@
 import type { QueryHomePageResult } from './sanity/sanity.types';
 
-export type Maybe<T> = T | null | undefined;
-
-// Shared Page Builder helpers derived from the shared pageBuilder fragment
-export type PageBuilderBlock = NonNullable<
+export type PageBuilderBlockTypes = NonNullable<
   NonNullable<QueryHomePageResult>['pageBuilder']
->[number];
+>[number]['_type'];
 
-export type PageBuilderBlockType = PageBuilderBlock['_type'];
-
-export type BlockOf<T extends PageBuilderBlockType> = Extract<
-  PageBuilderBlock,
+export type PagebuilderType<T extends PageBuilderBlockTypes> = Extract<
+  NonNullable<NonNullable<QueryHomePageResult>['pageBuilder']>[number],
   { _type: T }
 >;
+
+export type PublicationType = NonNullable<
+  PagebuilderType<'featuredPublications'>['publications']
+>[number];
+
+export type ProductType = NonNullable<
+  PagebuilderType<'featuredProducts'>['newProducts']
+>[number];
+
+export type ContactPersonType = NonNullable<
+  NonNullable<PagebuilderType<'faqSection'>['contactPeople']>['contactPersons']
+>[number];
 
 // Sanity Portable Text helper union used across the app
 export type PortableTextValue = object | object[] | null | undefined;

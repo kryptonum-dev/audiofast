@@ -1,13 +1,11 @@
-import type { PageBuilderBlock } from '../../shared/PageBuilder';
+import type { PagebuilderType } from '@/src/global/types';
+
 import PortableText from '../../shared/PortableText';
 import Button from '../../ui/Button';
 import PublicationsCarousel from './PublicationsCarousel';
 import styles from './styles.module.scss';
 
-type FeaturedPublicationsProps = Extract<
-  PageBuilderBlock,
-  { _type: 'featuredPublications' }
-> & {
+type FeaturedPublicationsProps = PagebuilderType<'featuredPublications'> & {
   index: number;
 };
 

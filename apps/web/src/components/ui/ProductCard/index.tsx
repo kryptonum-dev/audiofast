@@ -1,17 +1,8 @@
-import type { QueryHomePageResult } from '../../../global/sanity/sanity.types';
+import type { ProductType } from '@/src/global/types';
+
 import Image from '../../shared/Image';
 import Button from '../Button';
 import styles from './styles.module.scss';
-
-// Extract the product type from FeaturedProducts
-type FeaturedProductsType = Extract<
-  NonNullable<NonNullable<QueryHomePageResult>['pageBuilder']>[number],
-  { _type: 'featuredProducts' }
->;
-
-export type ProductType = NonNullable<
-  FeaturedProductsType['newProducts']
->[number];
 
 interface ProductCardProps {
   product: ProductType;

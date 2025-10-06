@@ -29,11 +29,22 @@ export const faqSection = defineType({
         'Krótki opis wprowadzający do sekcji FAQ, wyjaśniający czego można się spodziewać',
     }),
     defineField({
-      name: 'showFaqList',
-      title: 'Pokazuj listę FAQ',
-      type: 'boolean',
-      description: 'Czy wyświetlać listę pytań i odpowiedzi na tej sekcji',
-      initialValue: true,
+      name: 'displayMode',
+      title: 'Co wyświetlić w sekcji',
+      type: 'string',
+      description: 'Wybierz, które elementy mają być widoczne w tej sekcji',
+      options: {
+        list: [
+          { title: 'FAQ i sekcja kontaktowa', value: 'both' },
+          { title: 'Tylko FAQ', value: 'faqOnly' },
+          { title: 'Tylko sekcja kontaktowa', value: 'contactOnly' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      initialValue: 'both',
+      validation: (Rule) =>
+        Rule.required().error('Musisz wybrać tryb wyświetlania'),
     }),
     defineField({
       name: 'faqList',
@@ -63,10 +74,11 @@ export const faqSection = defineType({
       ],
       validation: (Rule) => [
         Rule.custom((value, { parent }) => {
-          const showFaqList = (parent as { showFaqList?: boolean })
-            ?.showFaqList;
+          const displayMode = (parent as { displayMode?: string })?.displayMode;
+          const showFaqList =
+            displayMode === 'both' || displayMode === 'faqOnly';
           if (showFaqList && (!value || value.length < 4)) {
-            return 'Musisz wybrać co najmniej 4 pytania FAQ gdy lista jest włączona';
+            return 'Musisz wybrać co najmniej 4 pytania FAQ gdy lista FAQ jest włączona';
           }
           if (value && value.length > 20) {
             return 'Możesz wybrać maksymalnie 20 pytań FAQ';
@@ -77,8 +89,10 @@ export const faqSection = defineType({
           'Nie możesz wybrać tego samego pytania więcej niż raz'
         ),
       ],
-      hidden: ({ parent }) =>
-        !(parent as { showFaqList?: boolean })?.showFaqList,
+      hidden: ({ parent }) => {
+        const displayMode = (parent as { displayMode?: string })?.displayMode;
+        return displayMode === 'contactOnly';
+      },
     }),
     defineField({
       name: 'contactPeople',
@@ -100,17 +114,41 @@ export const faqSection = defineType({
           type: 'array',
           description: 'Dodaj osoby kontaktowe (minimum 1, maksimum 2)',
           of: [{ type: 'contactPerson' }],
-          validation: (Rule) => [
-            Rule.min(1).error(
-              'Musisz dodać co najmniej jedną osobę kontaktową'
-            ),
-            Rule.max(2).error('Możesz dodać maksymalnie 2 osoby kontaktowe'),
-            Rule.required().error('Lista osób kontaktowych jest wymagana'),
-          ],
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              const document = context.document as any;
+              const displayMode = document?.displayMode;
+              const showContactSection =
+                displayMode === 'both' || displayMode === 'contactOnly';
+
+              if (!showContactSection) {
+                return true;
+              }
+
+              if (!value || value.length < 1) {
+                return 'Musisz dodać co najmniej jedną osobę kontaktową';
+              }
+              if (value.length > 2) {
+                return 'Możesz dodać maksymalnie 2 osoby kontaktowe';
+              }
+              return true;
+            }),
         }),
       ],
       validation: (Rule) =>
-        Rule.required().error('Sekcja osób kontaktowych jest wymagana'),
+        Rule.custom((value, { parent }) => {
+          const displayMode = (parent as { displayMode?: string })?.displayMode;
+          const showContactSection =
+            displayMode === 'both' || displayMode === 'contactOnly';
+          if (showContactSection && !value) {
+            return 'Sekcja osób kontaktowych jest wymagana gdy sekcja kontaktowa jest włączona';
+          }
+          return true;
+        }),
+      hidden: ({ parent }) => {
+        const displayMode = (parent as { displayMode?: string })?.displayMode;
+        return displayMode === 'faqOnly';
+      },
       options: {
         collapsible: true,
         collapsed: false,
@@ -136,13 +174,57 @@ export const faqSection = defineType({
           type: 'string',
           description: 'Tekst wyświetlany na przycisku wysyłania formularza',
           validation: (Rule) =>
-            Rule.required().error('Tekst przycisku jest wymagany'),
+            Rule.custom((value, context) => {
+              const document = context.document as any;
+              const displayMode = document?.displayMode;
+              const showContactSection =
+                displayMode === 'both' || displayMode === 'contactOnly';
+
+              if (!showContactSection) {
+                return true;
+              }
+
+              if (!value) {
+                return 'Tekst przycisku jest wymagany';
+              }
+              return true;
+            }),
           initialValue: 'Wyślij wiadomość',
         }),
-        formState,
+        {
+          ...formState,
+          validation: (Rule) =>
+            Rule.custom((value, context) => {
+              const document = context.document as any;
+              const displayMode = document?.displayMode;
+              const showContactSection =
+                displayMode === 'both' || displayMode === 'contactOnly';
+
+              if (!showContactSection) {
+                return true;
+              }
+
+              if (!value) {
+                return 'Stan formularza jest wymagany';
+              }
+              return true;
+            }),
+        },
       ],
       validation: (Rule) =>
-        Rule.required().error('Formularz kontaktowy jest wymagany'),
+        Rule.custom((value, { parent }) => {
+          const displayMode = (parent as { displayMode?: string })?.displayMode;
+          const showContactSection =
+            displayMode === 'both' || displayMode === 'contactOnly';
+          if (showContactSection && !value) {
+            return 'Formularz kontaktowy jest wymagany gdy sekcja kontaktowa jest włączona';
+          }
+          return true;
+        }),
+      hidden: ({ parent }) => {
+        const displayMode = (parent as { displayMode?: string })?.displayMode;
+        return displayMode === 'faqOnly';
+      },
       options: {
         collapsible: true,
         collapsed: false,
@@ -153,15 +235,21 @@ export const faqSection = defineType({
     select: {
       heading: 'heading',
       description: 'description',
-      showFaqList: 'showFaqList',
+      displayMode: 'displayMode',
     },
-    prepare: ({ heading, description, showFaqList }) => {
+    prepare: ({ heading, description, displayMode }) => {
+      const displayModeText =
+        displayMode === 'both'
+          ? 'FAQ i kontakt'
+          : displayMode === 'faqOnly'
+            ? 'Tylko FAQ'
+            : displayMode === 'contactOnly'
+              ? 'Tylko kontakt'
+              : '';
       return {
         title,
         subtitle:
-          toPlainText(heading) ||
-          toPlainText(description) ||
-          `FAQ ${showFaqList ? 'z listą pytań' : 'bez listy pytań'}`,
+          toPlainText(heading) || toPlainText(description) || displayModeText,
         media: MessageCircleQuestion,
       };
     },

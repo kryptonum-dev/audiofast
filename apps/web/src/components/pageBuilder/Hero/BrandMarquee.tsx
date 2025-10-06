@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
 import AppImage from '@/components/shared/Image';
-import type { BlockOf } from '@/global/types';
+import type { PagebuilderType } from '@/global/types';
 
 import styles from './styles.module.scss';
 
-export type BrandMarqueeProps = Pick<BlockOf<'hero'>, 'brands'>;
+export type BrandMarqueeProps = Pick<PagebuilderType<'hero'>, 'brands'>;
 
 export default function BrandMarquee({ brands }: BrandMarqueeProps) {
   if (!brands || brands.length === 0) {

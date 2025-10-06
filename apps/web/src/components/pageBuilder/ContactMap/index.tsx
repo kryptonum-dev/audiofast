@@ -1,12 +1,12 @@
 import type { QuerySettingsResult } from '@/src/global/sanity/sanity.types';
+import type { PagebuilderType } from '@/src/global/types';
 
 import { sanityFetch } from '../../../global/sanity/client';
 import { querySettings } from '../../../global/sanity/query';
-import type { PageBuilderBlock } from '../../shared/PageBuilder';
 import PortableText from '../../shared/PortableText';
 import styles from './styles.module.scss';
 
-type ContactMapProps = Extract<PageBuilderBlock, { _type: 'contactMap' }> & {
+type ContactMapProps = PagebuilderType<'contactMap'> & {
   index: number;
 };
 

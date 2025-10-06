@@ -1,15 +1,13 @@
+import type { PagebuilderType } from '@/src/global/types';
+
 import Image from '../../shared/Image';
-import type { PageBuilderBlock } from '../../shared/PageBuilder';
 import PortableText from '../../shared/PortableText';
 import Button from '../../ui/Button';
 import DateBox from '../../ui/DateBox';
 import PublicationType from '../../ui/PublicationType';
 import styles from './styles.module.scss';
 
-type LatestPublicationProps = Extract<
-  PageBuilderBlock,
-  { _type: 'latestPublication' }
-> & {
+type LatestPublicationProps = PagebuilderType<'latestPublication'> & {
   index: number;
 };
 

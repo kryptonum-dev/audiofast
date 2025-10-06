@@ -2,19 +2,16 @@
 
 import { useState } from 'react';
 
-import type { FaqSection } from '@/src/global/sanity/sanity.types';
+import type { PagebuilderType } from '@/src/global/types';
 
-import type { FaqType } from '../../ui/Accordion';
 import Accordion from '../../ui/Accordion';
 import styles from './styles.module.scss';
 
-export default function FaqList({
-  faqList,
-}: {
-  faqList: FaqSection['faqList'];
-}) {
+type FaqListProps = NonNullable<PagebuilderType<'faqSection'>['faqList']>;
+
+export default function FaqList({ faqList }: { faqList: FaqListProps }) {
   const [openAccordionId, setOpenAccordionId] = useState<string | null>(
-    faqList?.[0]?._ref || null
+    faqList?.[0]?._id || null
   );
 
   if (!faqList || faqList.length === 0) {
@@ -34,20 +31,20 @@ export default function FaqList({
       <div className={styles.column}>
         {leftColumnItems.map((faq) => (
           <Accordion
-            key={faq._ref}
-            faq={faq as unknown as FaqType}
+            key={faq._id}
+            faq={faq}
             currentOpen={openAccordionId}
-            onToggle={() => handleAccordionToggle(faq._ref)}
+            onToggle={() => handleAccordionToggle(faq._id)}
           />
         ))}
       </div>
       <div className={styles.column}>
         {rightColumnItems.map((faq) => (
           <Accordion
-            key={faq._ref}
-            faq={faq as unknown as FaqType}
+            key={faq._id}
+            faq={faq}
             currentOpen={openAccordionId}
-            onToggle={() => handleAccordionToggle(faq._ref)}
+            onToggle={() => handleAccordionToggle(faq._id)}
           />
         ))}
       </div>

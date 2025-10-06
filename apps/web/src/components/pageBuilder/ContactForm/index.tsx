@@ -1,11 +1,11 @@
-import type { ContactForm as ContactFormType } from '@/src/global/sanity/sanity.types';
+import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../shared/PortableText';
 import ContactPerson from '../../ui/ContactPerson';
 import ContactFormComponent from './ContactForm';
 import styles from './styles.module.scss';
 
-export type ContactFormProps = ContactFormType & {
+export type ContactFormProps = PagebuilderType<'contactForm'> & {
   index: number;
 };
 

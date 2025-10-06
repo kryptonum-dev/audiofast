@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
 import AppImage from '@/components/shared/Image';
-import type { PageBuilderBlock } from '@/src/global/types';
+import type { PagebuilderType } from '@/src/global/types';
 
 import styles from './styles.module.scss';
 
-type BrandSelectorProps = Extract<PageBuilderBlock, { _type: 'brandsMarquee' }>;
+type BrandSelectorProps = PagebuilderType<'brandsMarquee'>;
 type BrandType = NonNullable<BrandSelectorProps['topBrands']>[number];
 
 interface BrandMarqueeListProps {

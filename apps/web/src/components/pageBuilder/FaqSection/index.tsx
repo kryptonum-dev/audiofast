@@ -1,24 +1,34 @@
 import type { FaqSection } from '@/src/global/sanity/sanity.types';
+import type { PagebuilderType } from '@/src/global/types';
 
+import FaqSchema from '../../schema/FaqSchema';
 import PortableText from '../../shared/PortableText';
 import ContactPerson from '../../ui/ContactPerson';
 import ContactForm from './ContactForm';
 import FaqList from './FaqList';
 import styles from './styles.module.scss';
 
-// Extract the FAQ section type from the resolved query result
+type FaqSectionProps = PagebuilderType<'faqSection'> & {
+  index: number;
+};
 
 export default function FaqSection({
   heading,
   description,
-  showFaqList,
+  displayMode,
   faqList,
   contactPeople,
   contactForm,
   index,
-}: FaqSection & { index: number }) {
+}: FaqSectionProps) {
+  const showFaqList =
+    (displayMode === 'both' || displayMode === 'faqOnly') && faqList;
+  const showContactSection =
+    displayMode === 'both' || displayMode === 'contactOnly';
+
   return (
     <section className={`${styles.faqSection} max-width`}>
+      {showFaqList && <FaqSchema faqList={faqList} />}
       <header className={styles.header}>
         <PortableText
           value={heading}
@@ -27,28 +37,32 @@ export default function FaqSection({
         />
         <PortableText value={description} className={styles.description} />
       </header>
-      {showFaqList && <FaqList faqList={faqList!} />}
-      <div className={styles.contactPeople}>
-        <PortableText
-          value={contactPeople!.heading}
-          className={styles.heading}
-          headingLevel={index === 0 ? 'h2' : 'h3'}
-        />
-        <div className={styles.personList}>
-          {contactPeople!.contactPersons!.map((person, idx) => (
-            <ContactPerson
-              person={person}
-              id={idx.toString()}
-              key={idx}
-              className={styles.faqPerson}
+      {showFaqList && <FaqList faqList={faqList} />}
+      {showContactSection && (
+        <>
+          <div className={styles.contactPeople}>
+            <PortableText
+              value={contactPeople!.heading}
+              className={styles.heading}
+              headingLevel={index === 0 ? 'h2' : 'h3'}
             />
-          ))}
-        </div>
-      </div>
-      <div className={styles.divider}>Lub</div>
-      <div className={styles.formWrapper}>
-        <ContactForm contactForm={contactForm} index={index} />
-      </div>
+            <div className={styles.personList}>
+              {contactPeople!.contactPersons!.map((person, idx) => (
+                <ContactPerson
+                  person={person}
+                  id={idx.toString()}
+                  key={idx}
+                  className={styles.faqPerson}
+                />
+              ))}
+            </div>
+          </div>
+          <div className={styles.divider}>Lub</div>
+          <div className={styles.formWrapper}>
+            <ContactForm contactForm={contactForm} index={index} />
+          </div>
+        </>
+      )}
     </section>
   );
 }

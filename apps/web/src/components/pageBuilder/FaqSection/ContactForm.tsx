@@ -10,10 +10,7 @@ import Checkbox from '@/src/components/ui/Checkbox';
 import FormStates, { type FormState } from '@/src/components/ui/FormStates';
 import Input from '@/src/components/ui/Input';
 import { REGEX } from '@/src/global/constants';
-import type {
-  FaqSection,
-  FormState as FormStateType,
-} from '@/src/global/sanity/sanity.types';
+import type { PagebuilderType } from '@/src/global/types';
 
 import styles from './styles.module.scss';
 
@@ -30,7 +27,7 @@ export default function ContactForm({
   contactForm,
   index,
 }: {
-  contactForm: FaqSection['contactForm'];
+  contactForm: PagebuilderType<'faqSection'>['contactForm'];
   index: number;
 }) {
   const [currentStep, setCurrentStep] = useState<FormStep>(1);

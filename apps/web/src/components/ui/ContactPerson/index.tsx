@@ -1,4 +1,4 @@
-import type { ContactPerson } from '@/src/global/sanity/sanity.types';
+import type { ContactPersonType } from '@/src/global/types';
 
 import Image from '../../shared/Image';
 import styles from './styles.module.scss';
@@ -9,7 +9,7 @@ export default function ContactPerson({
   startPos = 'right',
   className = '',
 }: {
-  person: ContactPerson;
+  person: ContactPersonType;
   id: string;
   startPos?: 'left' | 'right';
   className?: string;

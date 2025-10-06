@@ -2,15 +2,12 @@ import { getImageProps } from 'next/image';
 
 import { type SanityRawImage } from '@/components/shared/Image';
 import { urlFor } from '@/global/sanity/client';
+import type { PagebuilderType } from '@/src/global/types';
 
-import type { PageBuilderBlock } from '../../shared/PageBuilder';
 import BrandSelector from './BrandSelector';
 import styles from './styles.module.scss';
 
-type BrandsMarqueeProps = Extract<
-  PageBuilderBlock,
-  { _type: 'brandsMarquee' }
-> & {
+type BrandsMarqueeProps = PagebuilderType<'brandsMarquee'> & {
   index: number;
 };
 

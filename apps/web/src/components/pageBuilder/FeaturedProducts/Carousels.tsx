@@ -4,8 +4,9 @@ import type { EmblaCarouselType } from 'embla-carousel';
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import type { ProductType } from '@/src/global/types';
+
 import ArrowButton from '../../ui/ArrowButton';
-import type { ProductType } from '../../ui/ProductCard';
 import ProductsCarousel from './ProductsCarousel';
 import styles from './styles.module.scss';
 

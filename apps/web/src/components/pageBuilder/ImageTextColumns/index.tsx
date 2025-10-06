@@ -1,13 +1,11 @@
+import type { PagebuilderType } from '@/src/global/types';
+
 import Image from '../../shared/Image';
-import type { PageBuilderBlock } from '../../shared/PageBuilder';
 import PortableText from '../../shared/PortableText';
 import Button from '../../ui/Button';
 import styles from './styles.module.scss';
 
-type ImageTextColumnsProps = Extract<
-  PageBuilderBlock,
-  { _type: 'imageTextColumns' }
-> & {
+type ImageTextColumnsProps = PagebuilderType<'imageTextColumns'> & {
   index: number;
 };
 
@@ -18,7 +16,6 @@ export default function ImageTextColumns({
   button,
   index,
 }: ImageTextColumnsProps) {
-  // Parent heading level for the section
   const parentHeading = index === 0 ? 'h1' : 'h2';
 
   return (

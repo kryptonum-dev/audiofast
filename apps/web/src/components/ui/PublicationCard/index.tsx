@@ -1,6 +1,6 @@
 import type { PortableTextBlock } from '@portabletext/react';
 
-import type { QueryHomePageResult } from '@/global/sanity/sanity.types';
+import type { PublicationType as PublicationTypeProps } from '@/src/global/types';
 import { portableTextToPlainString } from '@/src/global/utils';
 
 import Image from '../../shared/Image';
@@ -9,22 +9,12 @@ import DateBox from '../DateBox';
 import PublicationType from '../PublicationType';
 import styles from './styles.module.scss';
 
-// Extract the publication type from FeaturedPublications
-type FeaturedPublicationsType = Extract<
-  NonNullable<NonNullable<QueryHomePageResult>['pageBuilder']>[number],
-  { _type: 'featuredPublications' }
->;
-
-export type PublicationType = NonNullable<
-  FeaturedPublicationsType['publications']
->[number];
-
-interface PublicationCardProps {
-  publication: PublicationType;
+type PublicationCardProps = {
+  publication: PublicationTypeProps;
   layout?: 'vertical' | 'horizontal';
   headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
-}
+};
 
 export default function PublicationCard({
   publication,

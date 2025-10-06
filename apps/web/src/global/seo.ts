@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 
-import type { Maybe } from '@/global/types';
 import { capitalize } from '@/global/utils';
 
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
@@ -55,7 +54,7 @@ function extractTitle({
   slug,
   siteTitle,
 }: {
-  pageTitle?: Maybe<string>;
+  pageTitle?: string;
   slug: string;
   siteTitle: string;
 }): string {
