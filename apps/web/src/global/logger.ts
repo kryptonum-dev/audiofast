@@ -1,4 +1,4 @@
-import { IS_PREVIEW_DEPLOYMENT, IS_PRODUCTION_DEPLOYMENT } from './constants';
+import { IS_PRODUCTION_DEPLOYMENT } from './constants';
 
 type LogContext = Record<string, unknown> | undefined;
 
@@ -13,7 +13,7 @@ function formatContext(context?: LogContext) {
 
 export function logInfo(message: string, context?: LogContext) {
   // Keep info logs quiet in production unless preview deployment
-  if (IS_PRODUCTION_DEPLOYMENT && !IS_PREVIEW_DEPLOYMENT) return;
+  if (IS_PRODUCTION_DEPLOYMENT) return;
   console.log(`ℹ️ ${message}${formatContext(context)}`);
 }
 

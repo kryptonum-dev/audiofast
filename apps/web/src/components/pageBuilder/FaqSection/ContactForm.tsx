@@ -10,8 +10,11 @@ import Checkbox from '@/src/components/ui/Checkbox';
 import FormStates, { type FormState } from '@/src/components/ui/FormStates';
 import Input from '@/src/components/ui/Input';
 import { REGEX } from '@/src/global/constants';
+import type {
+  FaqSection,
+  FormState as FormStateType,
+} from '@/src/global/sanity/sanity.types';
 
-import type { ResolvedFaqSection } from '.';
 import styles from './styles.module.scss';
 
 type ContactFormData = {
@@ -27,7 +30,7 @@ export default function ContactForm({
   contactForm,
   index,
 }: {
-  contactForm: ResolvedFaqSection['contactForm'];
+  contactForm: FaqSection['contactForm'];
   index: number;
 }) {
   const [currentStep, setCurrentStep] = useState<FormStep>(1);
@@ -248,7 +251,7 @@ export default function ContactForm({
 
         <FormStates
           formState={formState}
-          formStateData={contactForm?.formState}
+          formStateData={contactForm?.formState as any}
           onRefresh={handleRefresh}
           mode="light"
           className={styles.formStates}

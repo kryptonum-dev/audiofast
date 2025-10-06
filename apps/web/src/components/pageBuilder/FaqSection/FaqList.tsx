@@ -2,17 +2,19 @@
 
 import { useState } from 'react';
 
+import type { FaqSection } from '@/src/global/sanity/sanity.types';
+
+import type { FaqType } from '../../ui/Accordion';
 import Accordion from '../../ui/Accordion';
-import type { ResolvedFaqSection } from '.';
 import styles from './styles.module.scss';
 
 export default function FaqList({
   faqList,
 }: {
-  faqList: ResolvedFaqSection['faqList'];
+  faqList: FaqSection['faqList'];
 }) {
   const [openAccordionId, setOpenAccordionId] = useState<string | null>(
-    faqList?.[0]?._id || null
+    faqList?.[0]?._ref || null
   );
 
   if (!faqList || faqList.length === 0) {
@@ -32,20 +34,20 @@ export default function FaqList({
       <div className={styles.column}>
         {leftColumnItems.map((faq) => (
           <Accordion
-            key={faq._id}
-            faq={faq}
+            key={faq._ref}
+            faq={faq as unknown as FaqType}
             currentOpen={openAccordionId}
-            onToggle={() => handleAccordionToggle(faq._id)}
+            onToggle={() => handleAccordionToggle(faq._ref)}
           />
         ))}
       </div>
       <div className={styles.column}>
         {rightColumnItems.map((faq) => (
           <Accordion
-            key={faq._id}
-            faq={faq}
+            key={faq._ref}
+            faq={faq as unknown as FaqType}
             currentOpen={openAccordionId}
-            onToggle={() => handleAccordionToggle(faq._id)}
+            onToggle={() => handleAccordionToggle(faq._ref)}
           />
         ))}
       </div>

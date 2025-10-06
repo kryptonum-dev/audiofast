@@ -2,11 +2,7 @@ import createImageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { createClient, type QueryParams } from 'next-sanity';
 
-import {
-  IS_PREVIEW_DEPLOYMENT,
-  IS_PREVIEW_ENV,
-  IS_PRODUCTION_DEPLOYMENT,
-} from '../constants';
+import { IS_PRODUCTION_DEPLOYMENT } from '../constants';
 import { withErrorLogging } from '../logger';
 
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
@@ -52,10 +48,9 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: IS_PRODUCTION_DEPLOYMENT && !IS_PREVIEW_ENV,
-  perspective: IS_PREVIEW_ENV ? 'previewDrafts' : 'published',
-  ...(IS_PREVIEW_ENV ? { token: readToken } : {}),
-  // Live visual editing disabled
+  useCdn: IS_PRODUCTION_DEPLOYMENT,
+  perspective: IS_PRODUCTION_DEPLOYMENT ? 'published' : 'drafts',
+  ...(!IS_PRODUCTION_DEPLOYMENT ? { token: readToken } : {}),
 });
 
 const imageBuilder = createImageUrlBuilder({ projectId, dataset });
@@ -64,10 +59,9 @@ export const urlFor = (source: SanityImageSource) =>
   imageBuilder.image(source).auto('format').fit('max').format('webp');
 
 /**
- * Enhanced fetch function with sophisticated caching strategy
- * - Development: Always reload for fresh data
- * - Preview: No cache for content preview
- * - Production: Force cache with tags for ISR
+ * Enhanced fetch function with correct Next.js caching strategy
+ * - Development & Preview: always fresh (no-store)
+ * - Production: force-cache with tags for ISR; otherwise no-store
  */
 export async function sanityFetch<QueryResponse>({
   query,
@@ -78,22 +72,18 @@ export async function sanityFetch<QueryResponse>({
   params?: QueryParams;
   tags?: string[];
 }): Promise<QueryResponse> {
-  return await client.fetch<QueryResponse>(query, params, {
-    ...(!IS_PRODUCTION_DEPLOYMENT
-      ? {
-          cache: 'reload',
-        }
-      : {
-          ...(IS_PREVIEW_DEPLOYMENT || !tags
-            ? {
-                cache: 'no-cache',
-              }
-            : {
-                cache: 'force-cache',
-                next: { tags },
-              }),
-        }),
-  });
+  const isProd = IS_PRODUCTION_DEPLOYMENT;
+  const hasTags = Array.isArray(tags) && tags.length > 0;
+
+  return await client.fetch<QueryResponse>(
+    query,
+    params,
+    isProd
+      ? hasTags
+        ? { cache: 'force-cache', next: { tags } }
+        : { cache: 'no-store' }
+      : { cache: 'no-store' }
+  );
 }
 
 /**

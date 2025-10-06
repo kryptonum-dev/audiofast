@@ -1,5 +1,8 @@
-import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
-import type { ContactForm as ContactFormType } from '../../global/sanity/sanity.types';
+import type {
+  ContactForm as ContactFormType,
+  FaqSection as FaqSectionType,
+  QueryHomePageResult,
+} from '../../global/sanity/sanity.types';
 import BrandsMarquee from '../pageBuilder/BrandsMarquee';
 import ContactForm from '../pageBuilder/ContactForm';
 import ContactMap from '../pageBuilder/ContactMap';
@@ -91,7 +94,7 @@ export function PageBuilder({
             return (
               <FaqSection
                 key={block._key}
-                {...(block as BlockByType<'faqSection'>)}
+                {...(block as unknown as FaqSectionType)}
                 index={index}
               />
             );

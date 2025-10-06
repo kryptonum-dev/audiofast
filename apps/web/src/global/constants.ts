@@ -35,26 +35,8 @@ export const SITE_DESCRIPTION: string =
  * @type {boolean}
  */
 export const IS_PRODUCTION_DEPLOYMENT: boolean =
-  process.env.NODE_ENV === 'production' &&
+  process.env.NODE_ENV === 'production' ||
   process.env.VERCEL_ENV === 'production';
-
-/**
- * Global environment detection for preview deployment.
- * True when running in preview environment on Vercel preview deployment.
- * @constant
- * @type {boolean}
- */
-export const IS_PREVIEW_ENV: boolean =
-  process.env.NODE_ENV !== 'production' && process.env.VERCEL_ENV === 'preview';
-
-/**
- * Global environment detection for preview deployment.
- * True when running in preview environment on Vercel preview deployment.
- * @constant
- * @type {boolean}
- */
-export const IS_PREVIEW_DEPLOYMENT: boolean =
-  process.env.VERCEL_ENV === 'preview';
 
 /**
  * Global declaration of regex.

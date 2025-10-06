@@ -1,4 +1,4 @@
-import type { QueryHomePageResult } from '@/src/global/sanity/sanity.types';
+import type { FaqSection } from '@/src/global/sanity/sanity.types';
 
 import PortableText from '../../shared/PortableText';
 import ContactPerson from '../../ui/ContactPerson';
@@ -7,12 +7,6 @@ import FaqList from './FaqList';
 import styles from './styles.module.scss';
 
 // Extract the FAQ section type from the resolved query result
-export type ResolvedFaqSection = Extract<
-  NonNullable<NonNullable<QueryHomePageResult>['pageBuilder']>[number],
-  { _type: 'faqSection' }
-> & {
-  index: number;
-};
 
 export default function FaqSection({
   heading,
@@ -22,7 +16,7 @@ export default function FaqSection({
   contactPeople,
   contactForm,
   index,
-}: ResolvedFaqSection) {
+}: FaqSection & { index: number }) {
   return (
     <section className={`${styles.faqSection} max-width`}>
       <header className={styles.header}>
