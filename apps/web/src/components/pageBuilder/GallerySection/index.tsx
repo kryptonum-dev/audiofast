@@ -1,0 +1,43 @@
+import type { PagebuilderType } from '@/src/global/types';
+
+import Image from '../../shared/Image';
+import PortableText from '../../shared/PortableText';
+import styles from './styles.module.scss';
+
+type GallerySectionProps = PagebuilderType<'gallerySection'> & {
+  index: number;
+};
+
+export default function GallerySection({
+  heading,
+  description,
+  images,
+  index,
+}: GallerySectionProps) {
+  return (
+    <section className={`${styles.gallerySection} max-width`}>
+      <header className={styles.header}>
+        <PortableText
+          value={heading}
+          headingLevel={index === 0 ? 'h1' : 'h2'}
+          className={styles.heading}
+        />
+        <PortableText
+          value={description}
+          enablePortableTextStyles
+          className={styles.description}
+        />
+      </header>
+      <div className={styles.gallery}>
+        {images?.map((image, index) => (
+          <div key={`${image.id}-${index}`} className={styles.galleryItem}>
+            <Image
+              image={image}
+              sizes="(max-width: 27.4375rem) 96vw, (max-width: 37.4375rem) 47vw, (max-width: 56.1875rem) 41vw, (max-width: 85.375rem) 32vw, 430px"
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

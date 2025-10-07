@@ -9,9 +9,9 @@ const title = 'Formularz Kontaktowy';
 
 export const contactForm = defineType({
   name: 'contactForm',
+  title,
   icon: Mail,
   type: 'object',
-  title,
   description:
     'Sekcja z formularzem kontaktowym, osobami kontaktowymi i danymi bankowymi',
   fields: [

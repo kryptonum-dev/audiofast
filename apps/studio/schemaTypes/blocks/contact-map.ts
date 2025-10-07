@@ -8,9 +8,9 @@ const title = 'Mapa kontaktowa';
 
 export const contactMap = defineType({
   name: 'contactMap',
+  title,
   icon: MapPinIcon,
   type: 'object',
-  title,
   description:
     'Sekcja z mapą Google i informacjami kontaktowymi. Domyślnie używa danych z ustawień globalnych.',
   fields: [

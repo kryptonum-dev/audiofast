@@ -8,9 +8,9 @@ const title = 'Obraz z wideo';
 
 export const imageWithVideo = defineType({
   name: 'imageWithVideo',
+  title,
   icon: PlayCircle,
   type: 'object',
-  title,
   description:
     'Sekcja wyświetlająca obraz z opcjonalnym wideo YouTube. Po kliknięciu przycisku odtwarzania otwiera się modal z wideo.',
   fields: [

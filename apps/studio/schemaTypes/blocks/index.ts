@@ -5,6 +5,7 @@ import { contactMap } from './contact-map';
 import { faqSection } from './faq-section';
 import { featuredProducts } from './featured-products';
 import { featuredPublications } from './featured-publications';
+import { gallerySection } from './gallery-section';
 import { hero } from './hero';
 import { imageTextColumns } from './image-text-columns';
 import { imageWithVideo } from './image-with-video';
@@ -22,4 +23,5 @@ export const pageBuilderBlocks = [
   contactMap,
   imageWithVideo,
   blurLinesTextImage,
+  gallerySection,
 ];

@@ -9,9 +9,9 @@ const title = 'Sekcja FAQ';
 
 export const faqSection = defineType({
   name: 'faqSection',
+  title,
   icon: MessageCircleQuestion,
   type: 'object',
-  title,
   description:
     'Sekcja z najczęściej zadawanymi pytaniami, opcją kontaktu z zespołem i formularzem kontaktowym',
   fields: [

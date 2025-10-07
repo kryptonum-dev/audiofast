@@ -6,6 +6,7 @@ import ContactMap from '../pageBuilder/ContactMap';
 import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
+import GallerySection from '../pageBuilder/GallerySection';
 import Hero from '../pageBuilder/Hero';
 import ImageTextColumns from '../pageBuilder/ImageTextColumns';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
@@ -125,6 +126,14 @@ export function PageBuilder({
               <ContactMap
                 key={block._key}
                 {...(block as BlockByType<'contactMap'>)}
+                index={index}
+              />
+            );
+          case 'gallerySection':
+            return (
+              <GallerySection
+                key={block._key}
+                {...(block as BlockByType<'gallerySection'>)}
                 index={index}
               />
             );

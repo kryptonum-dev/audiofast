@@ -8,6 +8,7 @@ const title = 'Lista marek z tekstem';
 
 export const brandsMarquee = defineType({
   name: 'brandsMarquee',
+  title,
   icon: Zap,
   type: 'object',
   description:

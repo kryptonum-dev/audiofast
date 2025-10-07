@@ -216,6 +216,17 @@ const blurLinesTextImageBlock = /* groq */ `
   }
 `;
 
+const gallerySectionBlock = /* groq */ `
+  _type == "gallerySection" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    images[] {
+      ${imageFields}
+    }
+  }
+`;
+
 const imageWithVideoBlock = /* groq */ `
   _type == "imageWithVideo" => {
     ...,
@@ -367,7 +378,8 @@ export const pageBuilderFragment = /* groq */ `
       ${brandsMarqueeBlock},
       ${faqSectionBlock},
       ${contactFormBlock},
-      ${contactMapBlock}
+      ${contactMapBlock},
+      ${gallerySectionBlock}
   }
 `;
 

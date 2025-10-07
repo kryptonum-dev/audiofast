@@ -1,0 +1,48 @@
+.gallerySection {
+  padding: clamp(3rem, calc(4.5vw / 0.48), 4.5rem) 0;
+
+  .header {
+    max-width: 42.625rem;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: clamp(2rem, calc(2.5vw / 0.48), 3rem);
+    .heading {
+      margin-bottom: 2rem;
+    }
+
+    .description {
+      color: #696969;
+      font-size: var(--typography-body-m, 0.875rem);
+    }
+  }
+
+  .gallery {
+    column-count: 3;
+    column-gap: 0.5rem;
+
+    .galleryItem {
+      break-inside: avoid;
+      display: inline-block;
+      width: 100%;
+
+      img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    .gallery {
+      column-count: 2;
+    }
+  }
+
+  @media (max-width: 27.4375rem) {
+    .gallery {
+      column-count: 1;
+    }
+  }
+}

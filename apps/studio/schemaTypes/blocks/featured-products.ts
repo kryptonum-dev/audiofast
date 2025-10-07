@@ -8,6 +8,7 @@ const title = 'Wyróżnione produkty';
 
 export const featuredProducts = defineType({
   name: 'featuredProducts',
+  title,
   icon: Speaker,
   type: 'object',
   description:

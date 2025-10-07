@@ -8,6 +8,7 @@ const title = 'Wyróżnione publikacje';
 
 export const featuredPublications = defineType({
   name: 'featuredPublications',
+  title,
   icon: Highlighter,
   type: 'object',
   description:
