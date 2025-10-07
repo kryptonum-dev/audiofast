@@ -102,6 +102,20 @@ ${name}{
 }
 `;
 
+const buttonWithNoVariantFragment = (name: string = 'button') => /* groq */ `
+${name}{
+  text,
+  _key,
+  _type,
+  "openInNewTab": url.openInNewTab,
+  "href": select(
+    url.type == "internal" => url.internal->slug.current,
+    url.type == "external" => url.external,
+    url.href
+  ),
+}
+`;
+
 const heroBlock = /* groq */ `
   _type == "hero" => {
     ...,
@@ -190,6 +204,17 @@ const imageTextColumnsBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('content')},
     ${buttonFragment('button')},
+  }
+`;
+
+const imageWithVideoBlock = /* groq */ `
+  _type == "imageWithVideo" => {
+    ...,
+    ${imageFragment('image')},
+    youtubeId,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    ${buttonWithNoVariantFragment('button')},
   }
 `;
 
@@ -326,6 +351,7 @@ export const pageBuilderFragment = /* groq */ `
       ${heroBlock},
       ${latestPublicationBlock},
       ${imageTextColumnsBlock},
+      ${imageWithVideoBlock},
       ${featuredPublicationsBlock},
       ${featuredProductsBlock},
       ${brandsMarqueeBlock},

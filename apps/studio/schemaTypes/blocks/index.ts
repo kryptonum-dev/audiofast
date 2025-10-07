@@ -6,6 +6,7 @@ import { featuredProducts } from './featured-products';
 import { featuredPublications } from './featured-publications';
 import { hero } from './hero';
 import { imageTextColumns } from './image-text-columns';
+import { imageWithVideo } from './image-with-video';
 import { latestPublication } from './latest-publication';
 
 export const pageBuilderBlocks = [
@@ -18,4 +19,5 @@ export const pageBuilderBlocks = [
   faqSection,
   contactForm,
   contactMap,
+  imageWithVideo,
 ];

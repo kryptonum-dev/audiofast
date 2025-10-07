@@ -27,7 +27,9 @@ export default function Breadcrumbs({
   ];
 
   const maxWidthClass =
-    firstItemType === 'contactForm' ? 'max-width-block' : 'max-width';
+    firstItemType && ['contactForm', 'imageWithVideo'].includes(firstItemType)
+      ? 'max-width-block'
+      : 'max-width';
 
   return (
     <>

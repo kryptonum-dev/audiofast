@@ -74,4 +74,8 @@
       }
     }
   }
+
+  &[data-first-item-type='imageWithVideo'] {
+    padding: clamp(0.5rem, calc(1vw / 0.48), 1rem) 0;
+  }
 }

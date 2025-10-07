@@ -7,6 +7,7 @@ import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
 import Hero from '../pageBuilder/Hero';
 import ImageTextColumns from '../pageBuilder/ImageTextColumns';
+import ImageWithVideo from '../pageBuilder/ImageWithVideo';
 import LatestPublication from '../pageBuilder/LatestPublication';
 
 // More specific and descriptive type aliases
@@ -59,6 +60,14 @@ export function PageBuilder({
               <ImageTextColumns
                 key={block._key}
                 {...(block as BlockByType<'imageTextColumns'>)}
+                index={index}
+              />
+            );
+          case 'imageWithVideo':
+            return (
+              <ImageWithVideo
+                key={block._key}
+                {...(block as BlockByType<'imageWithVideo'>)}
                 index={index}
               />
             );

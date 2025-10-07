@@ -96,7 +96,14 @@ function buildBlockMember(include?: PortableTextInclude) {
     styles: finalStyles.length
       ? finalStyles
       : [{ title: 'Normalny', value: 'normal' }],
-    ...(specifiedLists ? { lists } : {}),
+    // When lists are explicitly specified (even as empty array), use them
+    // When not specified at all, don't include the lists property (Sanity default)
+    // When include object exists but lists is not in it, explicitly set to empty array
+    ...(specifiedLists
+      ? { lists }
+      : include !== undefined
+        ? { lists: [] }
+        : {}),
     marks,
   });
 }
