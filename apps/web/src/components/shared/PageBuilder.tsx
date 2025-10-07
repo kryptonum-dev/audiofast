@@ -1,4 +1,5 @@
 import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
+import BlurLinesTextImage from '../pageBuilder/BlurLinesTextImage';
 import BrandsMarquee from '../pageBuilder/BrandsMarquee';
 import ContactForm from '../pageBuilder/ContactForm';
 import ContactMap from '../pageBuilder/ContactMap';
@@ -60,6 +61,14 @@ export function PageBuilder({
               <ImageTextColumns
                 key={block._key}
                 {...(block as BlockByType<'imageTextColumns'>)}
+                index={index}
+              />
+            );
+          case 'blurLinesTextImage':
+            return (
+              <BlurLinesTextImage
+                key={block._key}
+                {...(block as BlockByType<'blurLinesTextImage'>)}
                 index={index}
               />
             );

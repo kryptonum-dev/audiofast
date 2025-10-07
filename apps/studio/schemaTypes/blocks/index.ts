@@ -1,3 +1,4 @@
+import { blurLinesTextImage } from './blur-lines-text-image';
 import { brandsMarquee } from './brands-marquee';
 import { contactForm } from './contact-form';
 import { contactMap } from './contact-map';
@@ -20,4 +21,5 @@ export const pageBuilderBlocks = [
   contactForm,
   contactMap,
   imageWithVideo,
+  blurLinesTextImage,
 ];

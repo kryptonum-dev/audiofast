@@ -207,6 +207,15 @@ const imageTextColumnsBlock = /* groq */ `
   }
 `;
 
+const blurLinesTextImageBlock = /* groq */ `
+  _type == "blurLinesTextImage" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    ${imageFragment('image')},
+  }
+`;
+
 const imageWithVideoBlock = /* groq */ `
   _type == "imageWithVideo" => {
     ...,
@@ -351,6 +360,7 @@ export const pageBuilderFragment = /* groq */ `
       ${heroBlock},
       ${latestPublicationBlock},
       ${imageTextColumnsBlock},
+      ${blurLinesTextImageBlock},
       ${imageWithVideoBlock},
       ${featuredPublicationsBlock},
       ${featuredProductsBlock},
