@@ -9,6 +9,7 @@ import FeaturedPublications from '../pageBuilder/FeaturedPublications';
 import GallerySection from '../pageBuilder/GallerySection';
 import Hero from '../pageBuilder/Hero';
 import ImageTextColumns from '../pageBuilder/ImageTextColumns';
+import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
 import LatestPublication from '../pageBuilder/LatestPublication';
 
@@ -78,6 +79,14 @@ export function PageBuilder({
               <ImageWithVideo
                 key={block._key}
                 {...(block as BlockByType<'imageWithVideo'>)}
+                index={index}
+              />
+            );
+          case 'imageWithTextBoxes':
+            return (
+              <ImageWithTextBoxes
+                key={block._key}
+                {...(block as BlockByType<'imageWithTextBoxes'>)}
                 index={index}
               />
             );

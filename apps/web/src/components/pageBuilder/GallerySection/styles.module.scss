@@ -5,9 +5,9 @@
     max-width: 42.625rem;
     margin: 0 auto;
     text-align: center;
-    margin-bottom: clamp(2rem, calc(2.5vw / 0.48), 3rem);
+    margin-bottom: clamp(1.5rem, calc(2.5vw / 0.48), 3rem);
     .heading {
-      margin-bottom: 2rem;
+      margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 2rem);
     }
 
     .description {

@@ -227,6 +227,25 @@ const gallerySectionBlock = /* groq */ `
   }
 `;
 
+const imageWithTextBoxesBlock = /* groq */ `
+  _type == "imageWithTextBoxes" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${imageFragment('image')},
+    boxes[]{
+      _key,
+      "iconUrl": icon.asset->url,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('description')},
+    },
+    cta{
+      showCta,
+      ${portableTextFragment('ctaParagraph')},
+      ${buttonFragment('ctaButton')},
+    }
+  }
+`;
+
 const imageWithVideoBlock = /* groq */ `
   _type == "imageWithVideo" => {
     ...,
@@ -373,6 +392,7 @@ export const pageBuilderFragment = /* groq */ `
       ${imageTextColumnsBlock},
       ${blurLinesTextImageBlock},
       ${imageWithVideoBlock},
+      ${imageWithTextBoxesBlock},
       ${featuredPublicationsBlock},
       ${featuredProductsBlock},
       ${brandsMarqueeBlock},

@@ -126,6 +126,8 @@ export const customPortableText = (options?: {
   maxLenght?: number;
   /** Początkowa wartość jako zwykły tekst, który zostanie przekonwertowany na bloki Portable Text */
   initialValue?: string;
+  /** Function to determine if field should be hidden */
+  hidden?: (context: any) => boolean;
 }) => {
   const {
     name,
@@ -136,6 +138,7 @@ export const customPortableText = (options?: {
     maxLength: maxLengthProp,
     maxLenght: maxLenghtAlias,
     initialValue: initialValueText,
+    hidden,
     ...rest
   } = options ?? {};
 
@@ -218,6 +221,7 @@ export const customPortableText = (options?: {
     of: ofMembers,
     validation: finalValidation as any,
     ...(initialValueBlocks ? { initialValue: initialValueBlocks } : {}),
+    ...(hidden ? { hidden } : {}),
     components: {
       // @ts-ignore
       input: CustomInput,

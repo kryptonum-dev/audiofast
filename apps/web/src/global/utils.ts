@@ -304,3 +304,28 @@ export function portableTextToHtml(
 
   return processedBlocks.join('');
 }
+
+export default async function svgToInlineString(
+  url: string
+): Promise<string | null> {
+  if (!url) return null;
+
+  try {
+    const response = await fetch(url);
+    const contentType = response.headers.get('content-type');
+
+    if (
+      !contentType?.includes('image/svg+xml') &&
+      !contentType?.includes('svg')
+    ) {
+      console.error('URL does not point to an SVG file');
+      return null;
+    }
+
+    const svgContent = await response.text();
+    return svgContent;
+  } catch (error) {
+    console.error(`Error fetching SVG: ${error}`);
+    return null;
+  }
+}

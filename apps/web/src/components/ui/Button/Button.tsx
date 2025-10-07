@@ -17,7 +17,8 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
       | 'arrowLeft'
       | 'arrowRight'
       | 'refresh'
-      | 'submit';
+      | 'submit'
+      | 'phone';
   };
 
 export default function Button({
@@ -54,6 +55,8 @@ export default function Button({
         return <RefreshIcon />;
       case 'submit':
         return <SubmitIcon />;
+      case 'phone':
+        return <PhoneIcon />;
       default:
         return <ArrowUp />;
     }
@@ -64,7 +67,7 @@ export default function Button({
     <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
         {icon}
-        {icon}
+        {iconUsed !== 'phone' && icon}
       </div>
       <div className={styles.textContainer}>
         <span>{text || children}</span>
@@ -126,6 +129,25 @@ const SubmitIcon = () => (
     <defs>
       <clipPath id="a">
         <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const PhoneIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 22" fill="none">
+    <g
+      stroke="#fff"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#a)"
+    >
+      <path d="M5 4.555h4l2 5-2.5 1.5a11 11 0 0 0 5 5l1.5-2.5 5 2v4a2 2 0 0 1-2 2 16 16 0 0 1-15-15 2 2 0 0 1 2-2ZM15 7.555a2 2 0 0 1 2 2M15 3.555a6 6 0 0 1 6 6" />
+    </g>
+    <defs>
+      <clipPath id="a">
+        <path fill="#fff" d="M0 .555h24v24H0z" />
       </clipPath>
     </defs>
   </svg>

@@ -8,6 +8,7 @@ import { featuredPublications } from './featured-publications';
 import { gallerySection } from './gallery-section';
 import { hero } from './hero';
 import { imageTextColumns } from './image-text-columns';
+import { imageWithTextBoxes } from './image-with-text-boxes';
 import { imageWithVideo } from './image-with-video';
 import { latestPublication } from './latest-publication';
 
@@ -22,6 +23,7 @@ export const pageBuilderBlocks = [
   contactForm,
   contactMap,
   imageWithVideo,
+  imageWithTextBoxes,
   blurLinesTextImage,
   gallerySection,
 ];
