@@ -11,6 +11,7 @@ import { imageTextColumns } from './image-text-columns';
 import { imageWithTextBoxes } from './image-with-text-boxes';
 import { imageWithVideo } from './image-with-video';
 import { latestPublication } from './latest-publication';
+import { phoneImageCta } from './phone-image-cta';
 import { teamSection } from './team-section';
 
 export const pageBuilderBlocks = [
@@ -28,4 +29,5 @@ export const pageBuilderBlocks = [
   blurLinesTextImage,
   gallerySection,
   teamSection,
+  phoneImageCta,
 ];

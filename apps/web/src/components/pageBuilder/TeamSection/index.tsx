@@ -1,11 +1,12 @@
+import type { PagebuilderType } from '@/src/global/types';
+
 import type { AppImageProps } from '../../shared/Image';
-import type { PageBuilderBlock } from '../../shared/PageBuilder';
 import PortableText from '../../shared/PortableText';
 import GrayImageCtaCard from '../../ui/GrayImageCtaCard';
 import TeamMemberCard from '../../ui/TeamMemberCard';
 import styles from './styles.module.scss';
 
-type TeamSectionProps = Extract<PageBuilderBlock, { _type: 'teamSection' }> & {
+type TeamSectionProps = PagebuilderType<'teamSection'> & {
   index: number;
 };
 

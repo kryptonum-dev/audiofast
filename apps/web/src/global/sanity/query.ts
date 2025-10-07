@@ -408,6 +408,19 @@ const teamSectionBlock = /* groq */ `
   }
 `;
 
+const phoneImageCtaBlock = /* groq */ `
+  _type == "phoneImageCta" => {
+    ...,
+    ${imageFragment('image')},
+    ${portableTextFragment('primaryHeading')},
+    ${portableTextFragment('primaryDescription')},
+    ${buttonWithNoVariantFragment('ctaButton')},
+    ${portableTextFragment('secondaryHeading')},
+    ${portableTextFragment('secondaryDescription')},
+    phoneNumber,
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
@@ -425,7 +438,8 @@ export const pageBuilderFragment = /* groq */ `
       ${contactFormBlock},
       ${contactMapBlock},
       ${teamSectionBlock},
-      ${gallerySectionBlock}
+      ${gallerySectionBlock},
+      ${phoneImageCtaBlock}
   }
 `;
 

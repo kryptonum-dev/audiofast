@@ -12,6 +12,7 @@ import ImageTextColumns from '../pageBuilder/ImageTextColumns';
 import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
 import LatestPublication from '../pageBuilder/LatestPublication';
+import PhoneImageCta from '../pageBuilder/PhoneImageCta';
 import TeamSection from '../pageBuilder/TeamSection';
 
 // More specific and descriptive type aliases
@@ -152,6 +153,14 @@ export function PageBuilder({
               <GallerySection
                 key={block._key}
                 {...(block as BlockByType<'gallerySection'>)}
+                index={index}
+              />
+            );
+          case 'phoneImageCta':
+            return (
+              <PhoneImageCta
+                key={block._key}
+                {...(block as BlockByType<'phoneImageCta'>)}
                 index={index}
               />
             );
