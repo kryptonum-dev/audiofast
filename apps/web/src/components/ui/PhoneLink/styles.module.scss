@@ -1,0 +1,96 @@
+.phoneLink {
+  margin-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--neutral-600, #5b5a5a);
+  line-height: 1.5;
+  font-size: var(--typography-body-m, 0.875rem);
+
+  div {
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background-color: rgba(197, 78, 71, 0.25);
+    backdrop-filter: blur(2px);
+    width: 1.25rem;
+    aspect-ratio: 1/1;
+    align-self: start;
+    transition: background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+
+    svg {
+      width: 0.875rem;
+      height: 0.875rem;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+  }
+
+  &:hover div {
+    background-color: rgba(197, 78, 71, 0.4);
+    animation: phoneRing 1s ease-in-out infinite;
+
+    svg {
+      transform: scale(1.1);
+    }
+  }
+
+  &:focus:not(:focus-visible) div {
+    animation-name: phoneRingFast;
+  }
+
+  &:focus-visible {
+    outline-offset: 4px;
+    border-radius: 0.25rem;
+  }
+
+  @keyframes phoneRing {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1);
+    }
+    10% {
+      transform: rotate(-3deg) scale(1.05);
+    }
+    20% {
+      transform: rotate(3deg) scale(1.05);
+    }
+    30% {
+      transform: rotate(-3deg) scale(1.05);
+    }
+    40% {
+      transform: rotate(3deg) scale(1.05);
+    }
+    50% {
+      transform: rotate(0deg) scale(1.05);
+    }
+  }
+
+  @keyframes phoneRingFast {
+    0%,
+    100% {
+      transform: rotate(0deg) scale(1.1);
+    }
+    5% {
+      transform: rotate(-4deg) scale(1.15);
+    }
+    15% {
+      transform: rotate(4deg) scale(1.15);
+    }
+    25% {
+      transform: rotate(-4deg) scale(1.15);
+    }
+    35% {
+      transform: rotate(4deg) scale(1.15);
+    }
+    45% {
+      transform: rotate(-4deg) scale(1.15);
+    }
+    55% {
+      transform: rotate(4deg) scale(1.15);
+    }
+    65% {
+      transform: rotate(0deg) scale(1.15);
+    }
+  }
+}

@@ -187,6 +187,16 @@ const faqFragment = /* groq */ `
   ${portableTextFragment('answer')},
 `;
 
+// Reusable team member fragment for team listings
+const teamMemberFragment = /* groq */ `
+  _id,
+  name,
+  position,
+  phoneNumber,
+  ${imageFragment('image')},
+  ${portableTextFragment('description')},
+`;
+
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ...,
@@ -383,6 +393,21 @@ const contactMapBlock = /* groq */ `
   }
 `;
 
+const teamSectionBlock = /* groq */ `
+  _type == "teamSection" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    variant,
+    teamMembers[]->{
+      ${teamMemberFragment}
+    },
+    ${portableTextFragment('secondaryHeading')},
+    ${portableTextFragment('secondaryDescription')},
+    ${buttonWithNoVariantFragment('ctaButton')},
+  }
+`;
+
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
@@ -399,6 +424,7 @@ export const pageBuilderFragment = /* groq */ `
       ${faqSectionBlock},
       ${contactFormBlock},
       ${contactMapBlock},
+      ${teamSectionBlock},
       ${gallerySectionBlock}
   }
 `;

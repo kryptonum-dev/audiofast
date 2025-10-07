@@ -17,6 +17,10 @@ export type ProductType = NonNullable<
   PagebuilderType<'featuredProducts'>['newProducts']
 >[number];
 
+export type TeamMemberType = NonNullable<
+  PagebuilderType<'teamSection'>['teamMembers']
+>[number];
+
 export type ContactPersonType = NonNullable<
   NonNullable<PagebuilderType<'faqSection'>['contactPeople']>['contactPersons']
 >[number];

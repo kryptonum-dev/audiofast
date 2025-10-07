@@ -1,0 +1,36 @@
+.teamMemberCard {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  img {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+  }
+
+  .name {
+    margin-top: 2rem;
+    font-weight: 500;
+    font-size: 1.25rem;
+    font-family: var(--font-family-switzer);
+    color: var(--neutral-800, #141414);
+    line-height: 1.2;
+  }
+
+  .position {
+    color: var(--neutral-black, #000000);
+    font-size: var(--typography-body-m, 0.875rem);
+    font-weight: 300;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  a {
+    margin-bottom: 1rem;
+  }
+
+  .description {
+    font-size: var(--typography-body-m, 0.875rem);
+  }
+}

@@ -12,6 +12,7 @@ import ImageTextColumns from '../pageBuilder/ImageTextColumns';
 import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
 import LatestPublication from '../pageBuilder/LatestPublication';
+import TeamSection from '../pageBuilder/TeamSection';
 
 // More specific and descriptive type aliases
 // Shared block union derived from the shared pageBuilder fragment result
@@ -135,6 +136,14 @@ export function PageBuilder({
               <ContactMap
                 key={block._key}
                 {...(block as BlockByType<'contactMap'>)}
+                index={index}
+              />
+            );
+          case 'teamSection':
+            return (
+              <TeamSection
+                key={block._key}
+                {...(block as BlockByType<'teamSection'>)}
                 index={index}
               />
             );

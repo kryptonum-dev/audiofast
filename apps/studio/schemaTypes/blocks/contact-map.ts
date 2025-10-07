@@ -68,24 +68,6 @@ export const contactMap = defineType({
           return true;
         }),
     }),
-    defineField({
-      name: 'mapLocation',
-      type: 'string',
-      title: 'Lokalizacja mapy',
-      description:
-        'Pełny adres do wyświetlenia na mapie Google (np. "Romanowska 55e, 91-174 Łódź, Polska")',
-      validation: (Rule) =>
-        Rule.required().error('Lokalizacja mapy jest wymagana'),
-    }),
-    defineField({
-      name: 'mapZoom',
-      type: 'number',
-      title: 'Poziom zbliżenia mapy',
-      description: 'Poziom powiększenia mapy (10-20, domyślnie: 15)',
-      initialValue: 15,
-      validation: (Rule) =>
-        Rule.min(10).max(20).error('Poziom zbliżenia musi być między 10 a 20'),
-    }),
   ],
   preview: {
     select: {

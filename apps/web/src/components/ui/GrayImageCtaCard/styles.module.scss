@@ -1,0 +1,121 @@
+.grayImageCtaCard {
+  background-color: var(--neutral-200, #f8f8f8);
+  padding: 1rem 3rem 1rem 1rem;
+  border-radius: 0.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto 1fr auto 1fr auto;
+  column-gap: 2rem;
+  grid-template-areas:
+    'image primaryHeading'
+    'image primaryDescription'
+    'image button'
+    'image secondaryHeading'
+    'image secondaryDescription'
+    'image phone';
+  img {
+    border-radius: 0.5rem;
+    width: clamp(350px, calc(360vw / 7.68), 627px);
+    min-height: auto;
+    height: 100%;
+    grid-area: image;
+  }
+
+  .primaryHeading {
+    -webkit-text-stroke-width: 0.25px;
+    -webkit-text-stroke-color: var(--neutral-700, #303030);
+    color: var(--neutral-700, #303030);
+    font-weight: 500;
+    line-height: 1.16;
+    font-size: var(--typography-header-m, 1.5rem);
+    letter-spacing: -0.03em;
+    margin: 1rem 0;
+    font-family: var(--font-family-switzer);
+    grid-area: primaryHeading;
+  }
+
+  .primaryDescription {
+    grid-area: primaryDescription;
+    font-size: var(--typography-body-m, 0.875rem);
+    margin-bottom: 2rem;
+  }
+
+  a:first-of-type {
+    grid-area: button;
+    align-self: start;
+  }
+
+  .secondaryHeading {
+    grid-area: secondaryHeading;
+    font-family: var(--font-family-switzer);
+    color: var(--neutral-800, #141414);
+    line-height: 1.2;
+    font-weight: 500;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .secondaryDescription {
+    grid-area: secondaryDescription;
+    font-size: var(--typography-body-m, 0.875rem);
+    margin-bottom: 2rem;
+    align-self: start;
+  }
+
+  a:last-of-type {
+    grid-area: phone;
+    justify-self: start;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 56.1875rem) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, auto);
+    margin: 0 auto;
+    padding: 1rem;
+    grid-template-areas:
+      'primaryHeading'
+      'primaryDescription'
+      'button'
+      'image'
+      'secondaryHeading'
+      'secondaryDescription'
+      'phone';
+
+    .primaryHeading {
+      margin-top: 0;
+    }
+
+    .primaryDescription,
+    .secondaryDescription {
+      max-width: 40rem;
+    }
+
+    .secondaryHeading {
+      margin-top: 1rem;
+    }
+
+    .secondaryDescription {
+      margin-bottom: 1rem;
+    }
+
+    a {
+      &:first-of-type {
+        margin-bottom: 1rem;
+      }
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+
+    img {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 27.4375rem) {
+    a {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+}

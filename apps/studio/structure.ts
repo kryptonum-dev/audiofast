@@ -219,6 +219,12 @@ export const structure = (
               }),
             ])
         ),
+      createCollection({
+        S,
+        context,
+        type: 'teamMember',
+        title: 'Zespół',
+      }),
       createCollection({ S, context, type: 'faq' }),
       S.divider(),
       S.listItem()

@@ -10,6 +10,7 @@ import { productCategorySub } from './collections/product-category-sub';
 import { review } from './collections/review';
 import socialMedia from './collections/social-media';
 import { store } from './collections/store';
+import { teamMember } from './collections/team-member';
 import { blog } from './singletons/blog';
 import { brands } from './singletons/brands';
 import { footer } from './singletons/footer';
@@ -54,6 +55,7 @@ export const collection = [
   productCategorySub,
   store,
   brand,
+  teamMember,
   award,
 ];
 

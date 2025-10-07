@@ -1,0 +1,43 @@
+.teamSection {
+  padding: 1rem 0;
+  .header {
+    max-width: 42.375rem;
+    text-align: center;
+    margin: 0 auto clamp(2.5rem, calc(3vw / 0.48), 4rem);
+    .heading {
+      margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+    }
+    .description {
+      font-size: var(--typography-body-m, 0.875rem);
+      font-weight: 400;
+    }
+  }
+
+  .teamMembers {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3rem 1rem;
+
+    > * {
+      flex: 1;
+      min-width: 16rem;
+      max-width: 24rem;
+    }
+  }
+
+  @media (max-width: 41.1875rem) {
+    .teamMembers {
+      flex-direction: column;
+      align-items: center;
+      > * {
+        min-width: auto;
+        width: 100%;
+        max-width: 30rem;
+      }
+    }
+  }
+}

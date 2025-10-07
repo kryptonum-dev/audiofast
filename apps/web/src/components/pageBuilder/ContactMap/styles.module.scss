@@ -161,6 +161,13 @@
     }
   }
 
+  @media (min-width: 81.5rem) {
+    .mapContainer {
+      border-radius: 0.5rem;
+      overflow: hidden;
+    }
+  }
+
   @media (max-width: 67.4375rem) {
     min-height: 38.75rem;
   }
