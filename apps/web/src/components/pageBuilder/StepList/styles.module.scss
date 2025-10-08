@@ -1,0 +1,134 @@
+.stepList {
+  padding: 4rem 0;
+
+  .header {
+    max-width: 48.25rem;
+    margin: 0 auto 3rem;
+
+    .heading {
+      text-align: center;
+      margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+    }
+
+    .paragraph {
+      font-size: var(--typography-body-m, 0.875rem);
+      text-align: center;
+    }
+  }
+
+  .stepsWrapper {
+    position: relative;
+    max-width: 41.5rem;
+    margin: 0 auto;
+  }
+
+  .lineWrapper {
+    position: absolute;
+    left: 1.75rem;
+    top: 3rem;
+    bottom: 3rem;
+    width: 2px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .line {
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-red);
+    transform-origin: top;
+    transform: scaleY(0);
+    will-change: transform;
+  }
+
+  .steps {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 1.5rem;
+    counter-reset: step-counter;
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 0.5rem;
+    counter-increment: step-counter;
+
+    &::before {
+      content: 'Krok ' counter(step-counter);
+      grid-column: 1/2;
+      align-self: start;
+      display: grid;
+      place-items: center;
+      height: 3rem;
+      width: 3.625rem;
+      padding: 0 8px;
+      border-radius: 0.5rem;
+      font-size: var(--typography-body-s, 0.75rem);
+      color: var(--primary-red);
+      font-size: var(--typography-body-m, 0.875rem);
+      line-height: 1.5;
+      background-color: #f9bfbc;
+      transition:
+        background-color 180ms,
+        color 180ms;
+    }
+
+    &:last-of-type::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 3rem;
+      width: 3.625rem;
+      height: 2.5rem;
+      background-color: var(--neutral-white, #ffffff);
+    }
+
+    .content {
+      grid-column: 2/3;
+      padding: 0.5rem;
+      border-radius: 1rem;
+      background-color: var(--neutral-200, #f8f8f8);
+      color: var(--neutral-700, #5b5a5a);
+      transition:
+        background-color 180ms,
+        color 180ms;
+
+      .heading {
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        line-height: 1.16;
+        padding: 0 0.5rem;
+        border-radius: 0.5rem;
+        background-color: var(--neutral-400, #e0e0e0);
+        margin-bottom: 0.5rem;
+        min-height: 3rem;
+        transition:
+          background-color 180ms,
+          color 180ms;
+      }
+
+      .description {
+        font-size: var(--typography-body-m, 0.875rem);
+      }
+    }
+
+    &[data-active='true'] {
+      &:before {
+        background-color: var(--primary-red, #fe0140);
+        color: var(--neutral-white, #ffffff);
+      }
+
+      .content {
+        color: var(--neutral-white, #ffffff);
+        background-color: var(--neutral-700, #303030);
+        .heading {
+          background-color: var(--neutral-600, #5b5a5a);
+        }
+      }
+    }
+  }
+}

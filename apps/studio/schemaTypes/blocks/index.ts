@@ -14,6 +14,7 @@ import { imageWithTextBoxes } from './image-with-text-boxes';
 import { imageWithVideo } from './image-with-video';
 import { latestPublication } from './latest-publication';
 import { phoneImageCta } from './phone-image-cta';
+import { stepList } from './step-list';
 import { teamSection } from './team-section';
 
 export const pageBuilderBlocks = [
@@ -34,4 +35,5 @@ export const pageBuilderBlocks = [
   gallerySection,
   teamSection,
   phoneImageCta,
+  stepList,
 ];

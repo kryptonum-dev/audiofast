@@ -15,6 +15,7 @@ import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
 import LatestPublication from '../pageBuilder/LatestPublication';
 import PhoneImageCta from '../pageBuilder/PhoneImageCta';
+import StepList from '../pageBuilder/StepList';
 import TeamSection from '../pageBuilder/TeamSection';
 
 // More specific and descriptive type aliases
@@ -179,6 +180,14 @@ export function PageBuilder({
               <PhoneImageCta
                 key={block._key}
                 {...(block as BlockByType<'phoneImageCta'>)}
+                index={index}
+              />
+            );
+          case 'stepList':
+            return (
+              <StepList
+                key={block._key}
+                {...(block as BlockByType<'stepList'>)}
                 index={index}
               />
             );
