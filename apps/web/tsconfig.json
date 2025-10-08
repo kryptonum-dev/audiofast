@@ -23,7 +23,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/components/pageBuilder/Hero/index.tss"
+    "src/components/pageBuilder/HeroCarousel/index.ts"
   ],
   "exclude": ["node_modules"]
 }

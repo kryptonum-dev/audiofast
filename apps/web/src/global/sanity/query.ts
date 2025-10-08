@@ -116,8 +116,8 @@ ${name}{
 }
 `;
 
-const heroBlock = /* groq */ `
-  _type == "hero" => {
+const heroCarouselBlock = /* groq */ `
+  _type == "heroCarousel" => {
     ...,
     slides[]{
       ${imageFragment('image')},
@@ -130,6 +130,24 @@ const heroBlock = /* groq */ `
       name,
       "slug": slug.current,
       ${imageFragment('logo')},
+    }
+  }
+`;
+
+const heroStaticBlock = /* groq */ `
+  _type == "heroStatic" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    ${imageFragment('image')},
+    ${buttonFragment('button')},
+    showBlocks,
+    blocksHeading,
+    blocks[]{
+      _key,
+      "iconUrl": icon.asset->url,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('description')}
     }
   }
 `;
@@ -425,7 +443,8 @@ export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
     _type,
-      ${heroBlock},
+      ${heroCarouselBlock},
+      ${heroStaticBlock},
       ${latestPublicationBlock},
       ${imageTextColumnsBlock},
       ${blurLinesTextImageBlock},

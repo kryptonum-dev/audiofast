@@ -116,7 +116,7 @@ export const customPortableText = (options?: {
   title?: string;
   group?: string;
   description?: string;
-  validation?: (rule: Rule) => unknown;
+  validation?: (rule: Rule) => unknown | undefined;
   optional?: boolean;
   type?: 'default' | 'heading';
   include?: PortableTextInclude;
@@ -171,7 +171,7 @@ export const customPortableText = (options?: {
 
   // Compose validation into a single custom rule so the correct message is shown
   const finalValidation = (rule: Rule) => {
-    let composed = rule.custom((value) => {
+    let composed = rule.custom((value, context) => {
       const isEmpty = !value || !Array.isArray(value) || value.length === 0;
       if (isEmpty) {
         return optional ? true : 'To pole jest wymagane';

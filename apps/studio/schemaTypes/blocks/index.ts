@@ -6,7 +6,8 @@ import { faqSection } from './faq-section';
 import { featuredProducts } from './featured-products';
 import { featuredPublications } from './featured-publications';
 import { gallerySection } from './gallery-section';
-import { hero } from './hero';
+import { heroCarousel } from './heroCarousel';
+import { heroStatic } from './heroStatic';
 import { imageTextColumns } from './image-text-columns';
 import { imageWithTextBoxes } from './image-with-text-boxes';
 import { imageWithVideo } from './image-with-video';
@@ -15,7 +16,8 @@ import { phoneImageCta } from './phone-image-cta';
 import { teamSection } from './team-section';
 
 export const pageBuilderBlocks = [
-  hero,
+  heroCarousel,
+  heroStatic,
   latestPublication,
   imageTextColumns,
   featuredPublications,

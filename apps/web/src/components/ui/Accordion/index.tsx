@@ -51,7 +51,7 @@ export default function Accordion({
         }}
       >
         <PlusMinusIcon isOpen={isOpen} />
-        <p>{faq.question}</p>
+        <p className={styles.questionText}>{faq.question}</p>
       </summary>
 
       <div className={styles.content}>

@@ -4,21 +4,14 @@ import { defineArrayMember, defineField, defineType } from 'sanity';
 import { parsePortableTextToString } from '../../utils/helper';
 import { customPortableText } from '../definitions/portable-text';
 
-const title = 'Sekcja Hero';
+const title = 'Sekcja Hero z karuzelą';
 
-export const hero = defineType({
-  name: 'hero',
+export const heroCarousel = defineType({
+  name: 'heroCarousel',
   title,
   icon: Star,
   type: 'object',
   fields: [
-    defineField({
-      name: 'title2',
-      title: 'Tytuł2',
-      type: 'string',
-      description: 'Tytuł2 sekcji hero',
-      validation: (Rule) => Rule.required(),
-    }),
     defineField({
       name: 'slides',
       type: 'array',

@@ -7,7 +7,8 @@ import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
 import GallerySection from '../pageBuilder/GallerySection';
-import Hero from '../pageBuilder/Hero';
+import HeroCarousel from '../pageBuilder/HeroCarousel';
+import HeroStatic from '../pageBuilder/HeroStatic';
 import ImageTextColumns from '../pageBuilder/ImageTextColumns';
 import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
@@ -44,11 +45,19 @@ export function PageBuilder({
     <>
       {blocks.map((block, index) => {
         switch (block._type as BlockType) {
-          case 'hero':
+          case 'heroCarousel':
             return (
-              <Hero
+              <HeroCarousel
                 key={block._key}
-                {...(block as BlockByType<'hero'>)}
+                {...(block as BlockByType<'heroCarousel'>)}
+                index={index}
+              />
+            );
+          case 'heroStatic':
+            return (
+              <HeroStatic
+                key={block._key}
+                {...(block as BlockByType<'heroStatic'>)}
                 index={index}
               />
             );

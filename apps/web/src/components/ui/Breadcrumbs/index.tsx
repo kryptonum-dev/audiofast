@@ -9,14 +9,9 @@ import styles from './styles.module.scss';
 type Props = {
   data?: BreadcrumbItem[];
   firstItemType?: string;
-  theme?: 'light' | 'dark';
 };
 
-export default function Breadcrumbs({
-  data = [],
-  theme = 'light',
-  firstItemType,
-}: Props) {
+export default function Breadcrumbs({ data = [], firstItemType }: Props) {
   const breadcrumbsData = [
     {
       name: 'Strona główna',
@@ -30,6 +25,8 @@ export default function Breadcrumbs({
     firstItemType && ['contactForm', 'imageWithVideo'].includes(firstItemType)
       ? 'max-width-block'
       : 'max-width';
+
+  const theme = firstItemType === 'heroStatic' ? 'dark' : 'light';
 
   return (
     <>

@@ -13,7 +13,10 @@ import type { PagebuilderType } from '@/global/types';
 
 import styles from './styles.module.scss';
 
-export type HeroCarouselProps = Pick<PagebuilderType<'hero'>, 'slides'> & {
+export type HeroCarouselProps = Pick<
+  PagebuilderType<'heroCarousel'>,
+  'slides'
+> & {
   index: number;
 };
 

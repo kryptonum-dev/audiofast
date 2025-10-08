@@ -19,7 +19,7 @@ export default async function ImageWithTextBoxes({
 }: ImageWithTextBoxesProps) {
   // Fetch all SVG icons in parallel
   const boxesWithSvgs = await Promise.all(
-    boxes.map(async (box) => {
+    boxes!.map(async (box) => {
       const svgContent = box.iconUrl
         ? await svgToInlineString(box.iconUrl)
         : null;

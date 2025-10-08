@@ -68,7 +68,6 @@ export default async function Page({
     <>
       <Breadcrumbs
         data={breadcrumbsData}
-        theme="dark"
         firstItemType={pageData.firstBlockType}
       />
       <PageBuilder pageBuilder={pageData.pageBuilder || []} />

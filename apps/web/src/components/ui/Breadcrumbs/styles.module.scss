@@ -78,4 +78,37 @@
   &[data-first-item-type='imageWithVideo'] {
     padding: clamp(0.5rem, calc(1vw / 0.48), 1rem) 0;
   }
+
+  &[data-first-item-type='heroStatic'] {
+    position: absolute;
+    max-width: var(--max-width);
+    width: 100%;
+    padding: 0;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding-left: var(--pageMargin);
+  }
+
+  &[data-theme='dark'] {
+    color: var(--neutral-white, #ffffff);
+
+    .item,
+    span {
+      color: var(--neutral-white, #ffffff);
+    }
+    svg {
+      path {
+        stroke: var(--neutral-white, #ffffff);
+      }
+    }
+    .item:focus:not(:focus-visible) {
+      color: var(--neutral-400, #e7e7e7);
+
+      &::after {
+        transform: scaleX(1);
+      }
+    }
+  }
 }
