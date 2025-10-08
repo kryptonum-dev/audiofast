@@ -347,6 +347,18 @@ const brandsMarqueeBlock = /* groq */ `
   }
 `;
 
+const brandsListBlock = /* groq */ `
+  _type == "brandsList" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    ${portableTextFragment('ctaText')},
+    "brands": *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {
+      ${brandFragment}
+    }
+  }
+`;
+
 const contactPersonBlock = /* groq */ `
     _type == "contactPerson" => {
     ${imageFragment('image')},
@@ -453,6 +465,7 @@ export const pageBuilderFragment = /* groq */ `
       ${featuredPublicationsBlock},
       ${featuredProductsBlock},
       ${brandsMarqueeBlock},
+      ${brandsListBlock},
       ${faqSectionBlock},
       ${contactFormBlock},
       ${contactMapBlock},

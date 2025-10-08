@@ -1,5 +1,5 @@
 .heroStatic {
-  max-width: var(--max-width);
+  max-width: calc(var(--max-width) + var(--pageMargin) * 2);
   width: 100%;
   margin: 0 auto;
   height: 100%;
@@ -69,7 +69,7 @@
     padding: clamp(1rem, calc(2vw / 0.48), 2rem);
     margin: -4rem auto 0;
     width: calc(100% - 4rem);
-    max-width: calc(var(--max-width) - var(--pageMargin) * 2);
+    max-width: var(--max-width);
     z-index: 2;
     position: relative;
 
