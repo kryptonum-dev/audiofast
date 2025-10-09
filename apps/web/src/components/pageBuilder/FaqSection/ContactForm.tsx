@@ -248,7 +248,7 @@ export default function ContactForm({
 
         <FormStates
           formState={formState}
-          formStateData={contactForm?.formState as any}
+          formStateData={contactForm?.formState}
           onRefresh={handleRefresh}
           mode="light"
           className={styles.formStates}

@@ -53,6 +53,7 @@ export default function FaqSection({
                   id={idx.toString()}
                   key={idx}
                   className={styles.faqPerson}
+                  index={index}
                 />
               ))}
             </div>
