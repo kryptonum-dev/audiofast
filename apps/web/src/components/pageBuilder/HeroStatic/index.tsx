@@ -68,8 +68,6 @@ export default async function HeroStatic({
           priority: index === 0,
         }).props;
 
-        console.log(desktop);
-
         return { mobile, desktop };
       })()
     : undefined;

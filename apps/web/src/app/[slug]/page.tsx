@@ -51,6 +51,9 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const pageData = await fetchPageData(slug);
+  console.log(slug);
+
+  console.log(pageData);
 
   if (!pageData) {
     notFound();
@@ -66,10 +69,10 @@ export default async function Page({
 
   return (
     <main id="main" className="page-transition">
-      <Breadcrumbs
+      {/* <Breadcrumbs
         data={breadcrumbsData}
         firstItemType={pageData.firstBlockType}
-      />
+      /> */}
       <PageBuilder pageBuilder={pageData.pageBuilder || []} />
     </main>
   );
