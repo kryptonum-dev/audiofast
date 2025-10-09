@@ -1,0 +1,96 @@
+.notFound {
+  max-width: calc(var(--max-width) + var(--pageMargin) * 2);
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 9rem var(--pageMargin);
+  position: relative;
+  isolation: isolate;
+  flex-grow: 1;
+  text-align: center;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -2;
+  }
+
+  &::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='108' height='108' viewBox='0 0 108 108' fill='none'%3E%3Crect x='0.5' y='0.5' width='107' height='107' stroke='%23f7f3f3' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 108px 108px;
+    background-position: 50% 0;
+    opacity: 0.4;
+  }
+
+  &::after {
+    box-shadow:
+      inset 3rem 6rem 6rem -2rem #fff,
+      inset -3rem 0 3rem -2rem #fff,
+      inset 0 3rem 3rem -2rem #fff,
+      inset 0 -6rem 6rem -2rem #fff;
+    z-index: -1;
+  }
+
+  * {
+    max-width: 42.625rem;
+  }
+
+  .fourOhFour {
+    font-size: clamp(14rem, calc(16vw / 0.48), 16rem);
+    font-weight: 900;
+    font-family: var(--font-family-switzer);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    z-index: 1;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .heading {
+    font-size: var(--typography-header-l, 1.75rem);
+    font-weight: 400;
+    color: var(--neutral-700, #545454);
+    line-height: 1.16;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    font-family: var(--font-family-switzer);
+  }
+
+  .description {
+    font-size: var(--typography-body-m, 0.875rem);
+    color: var(--neutral-800, #141414);
+    margin-bottom: clamp(2rem, calc(3vw / 0.48), 4rem);
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+  }
+
+  @media (max-width: 31.1875rem) {
+    padding: 6rem var(--pageMargin);
+    .fourOhFour {
+      font-size: clamp(11rem, calc(16vw / 0.48), 16rem);
+    }
+    .buttons {
+      flex-direction: column;
+
+      a {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+}

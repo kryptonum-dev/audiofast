@@ -143,7 +143,7 @@ body {
   color: var(--neutral-600, #5b5a5a);
   font-weight: 300;
 
-  min-height: 120dvh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -168,6 +168,9 @@ body {
 
 main {
   position: relative;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 h1,

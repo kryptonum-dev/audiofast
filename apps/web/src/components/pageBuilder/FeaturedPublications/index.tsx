@@ -25,7 +25,6 @@ export default function FeaturedPublications({
         />
         <Button {...button} />
       </header>
-
       <PublicationsCarousel publications={publications!} index={index} />
     </section>
   );

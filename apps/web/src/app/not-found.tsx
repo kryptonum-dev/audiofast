@@ -1,58 +1,29 @@
-import Link from 'next/link';
+import type { Metadata } from 'next';
 
-export default function NotFound() {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '60vh',
-        padding: '2rem',
-        textAlign: 'center',
-      }}
-    >
-      <h1
-        style={{
-          fontSize: '4rem',
-          fontWeight: 'bold',
-          marginBottom: '1rem',
-        }}
-      >
-        404
-      </h1>
-      <h2
-        style={{
-          fontSize: '1.5rem',
-          marginBottom: '1rem',
-        }}
-      >
-        Strona nie została znaleziona
-      </h2>
-      <p
-        style={{
-          fontSize: '1rem',
-          marginBottom: '2rem',
-          maxWidth: '500px',
-        }}
-      >
-        Przepraszamy, ale strona której szukasz nie istnieje lub została
-        przeniesiona.
-      </p>
-      <Link
-        href="/"
-        style={{
-          padding: '0.75rem 1.5rem',
-          backgroundColor: '#000',
-          color: '#fff',
-          textDecoration: 'none',
-          borderRadius: '0.25rem',
-          fontSize: '1rem',
-        }}
-      >
-        Wróć do strony głównej
-      </Link>
-    </div>
-  );
+import NotFoundComponent from '@/src/components/pageBuilder/NotFound';
+import { fetchWithLogging } from '@/src/global/sanity/client';
+import { queryNotFoundPage } from '@/src/global/sanity/query';
+import type { QueryNotFoundPageResult } from '@/src/global/sanity/sanity.types';
+import { getSEOMetadata } from '@/src/global/seo';
+
+async function fetchNotFoundPageData() {
+  return await fetchWithLogging<QueryNotFoundPageResult>({
+    label: 'Not Found Page Data',
+    query: queryNotFoundPage,
+    tags: ['notFound'],
+  });
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const notFoundData = await fetchNotFoundPageData();
+  return getSEOMetadata({
+    seo: notFoundData!.seo!,
+    slug: '/404',
+  });
+}
+
+export default async function NotFound() {
+  const notFoundData = await fetchNotFoundPageData();
+
+  return <NotFoundComponent {...notFoundData!} />;
 }

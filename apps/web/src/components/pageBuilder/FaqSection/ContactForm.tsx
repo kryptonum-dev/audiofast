@@ -35,6 +35,8 @@ export default function ContactForm({
   const formRef = useRef<HTMLFormElement>(null);
   const previousStepRef = useRef<FormStep>(1);
 
+  console.log(contactForm);
+
   const {
     register,
     handleSubmit,

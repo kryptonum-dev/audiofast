@@ -1,33 +1,35 @@
 import { defineQuery } from 'next-sanity';
 
-export const imageFields = /* groq */ `
-  "id": asset._ref,
-  "preview": asset->metadata.lqip,
-  "alt": asset->altText,
-  "naturalWidth": asset->metadata.dimensions.width,
-  "naturalHeight": asset->metadata.dimensions.height,
-  hotspot {
-    x,
-    y,
-    width,
-    height
-  },
-  crop {
-    bottom,
-    left,
-    right,
-    top
-  }
-`;
-// Base fragments for reusable query parts
+// ----------------------------------------
+// Fragments
+// ----------------------------------------
+
 export const imageFragment = (name: string = 'image') => /* groq */ `
   ${name} {
-    ${imageFields}
+    "id": asset._ref,
+    "preview": asset->metadata.lqip,
+    "alt": asset->altText,
+    "naturalWidth": asset->metadata.dimensions.width,
+    "naturalHeight": asset->metadata.dimensions.height,
+    hotspot {
+      x,
+      y,
+      width,
+      height
+    },
+    crop {
+      bottom,
+      left,
+      right,
+      top
+    }
   }
 `;
 
-const customLinkFragment = /* groq */ `
-  _type == "customLink" => {
+const markDefsFragment = (name: string = 'markDefs[]') => /* groq */ `
+  ${name}{
+    ...,
+    _type == "customLink" => {
     ...,
     customLink{
       type,
@@ -41,12 +43,6 @@ const customLinkFragment = /* groq */ `
       "internalSlug": internal->slug.current
     }
   }
-`;
-
-const markDefsFragment = /* groq */ `
-  markDefs[]{
-    ...,
-    ${customLinkFragment}
   }
 `;
 
@@ -55,37 +51,11 @@ const portableTextFragment = (name: string = 'portableText') => /* groq */ `
     ...,
     _type == "block" => {
       ...,
-      ${markDefsFragment}
+      ${markDefsFragment()}
     },
 
   }
 `;
-
-export const queryDefaultOGImage = defineQuery(`*[_type == "settings"][0]{
-    "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
-  }`);
-
-export const querySettings = defineQuery(`*[_type == "settings"][0]{
-    address {
-      streetAddress,
-      postalCode,
-      city,
-      country
-    },
-    email,
-    tel,
-    structuredData {
-      companyName,
-      companyDescription,
-      "logo": logo.asset->url,
-      geo {
-        latitude,
-        longitude
-      },
-      priceRange,
-    },
-    "socialMedia": *[_type == "socialMedia" && defined(link)].link,
-  }`);
 
 const buttonFragment = (name: string = 'button') => /* groq */ `
 ${name}{
@@ -102,19 +72,99 @@ ${name}{
 }
 `;
 
-const buttonWithNoVariantFragment = (name: string = 'button') => /* groq */ `
-${name}{
-  text,
-  _key,
-  _type,
-  "openInNewTab": url.openInNewTab,
-  "href": select(
-    url.type == "internal" => url.internal->slug.current,
-    url.type == "external" => url.external,
-    url.href
+// Reusable publication fragment for both reviews and blog articles
+const publicationFragment = (name: string = 'publication') => /* groq */ `
+  ${name} {
+  _id,
+  _createdAt,
+  "slug": slug.current,
+  ${portableTextFragment('name')},
+  ${portableTextFragment('description')},
+  ${imageFragment('image')},
+  "publicationType": select(
+    _type == "review" => "Recenzja",
+    _type == "blog-article" => category->name,
+    "Artykuł"
   ),
-}
+  }
 `;
+
+// Reusable brand fragment for brand listings
+const brandFragment = (name: string = 'brand') => /* groq */ `
+  ${name} {
+  _id,
+  _createdAt,
+  "slug": slug.current,
+  name,
+  ${portableTextFragment('description')},
+  ${imageFragment('logo')},
+  }
+`;
+
+// Reusable product fragment for product listings
+const productFragment = (name: string = 'product') => /* groq */ `
+  ${name} {
+  _id,
+  _createdAt,
+  "slug": slug.current,
+  name,
+  subtitle,
+  price,
+  isArchived,
+  brand->{
+    name,
+    "slug": slug.current,
+    ${imageFragment('logo')},
+  },
+  "mainImage": ${imageFragment('imageGallery[0]')},
+  ${portableTextFragment('shortDescription')},
+  }
+`;
+
+// Reusable FAQ fragment for FAQ documents
+const faqFragment = (name: string = 'faq') => /* groq */ `
+  ${name} {
+  _id,
+  _createdAt,
+  question,
+  ${portableTextFragment('answer')},
+  }
+`;
+
+// Reusable team member fragment for team listings
+const teamMemberFragment = (name: string = 'teamMember') => /* groq */ `
+  ${name} {
+  _id,
+  name,
+  position,
+  phoneNumber,
+  ${imageFragment('image')},
+  ${portableTextFragment('description')},
+  }
+`;
+
+const formStateFragment = (name: string = 'formState') => /* groq */ `
+  ${name}{
+    success{
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText,
+    },
+    error{
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText,
+    },
+  }
+`;
+
+// ----------------------------------------
+// Page Builder Blocks
+// ----------------------------------------
 
 const heroCarouselBlock = /* groq */ `
   _type == "heroCarousel" => {
@@ -152,76 +202,11 @@ const heroStaticBlock = /* groq */ `
   }
 `;
 
-// Reusable publication fragment for both reviews and blog articles
-const publicationFragment = /* groq */ `
-  _id,
-  _createdAt,
-  "slug": slug.current,
-  ${portableTextFragment('name')},
-  ${portableTextFragment('description')},
-  ${imageFragment('image')},
-  "publicationType": select(
-    _type == "review" => "Recenzja",
-    _type == "blog-article" => category->name,
-    "Artykuł"
-  ),
-`;
-
-// Reusable brand fragment for brand listings
-const brandFragment = /* groq */ `
-  _id,
-  _createdAt,
-  "slug": slug.current,
-  name,
-  ${portableTextFragment('description')},
-  ${imageFragment('logo')},
-`;
-
-// Reusable product fragment for product listings
-const productFragment = /* groq */ `
-  _id,
-  _createdAt,
-  "slug": slug.current,
-  name,
-  subtitle,
-  price,
-  isArchived,
-  brand->{
-    name,
-    "slug": slug.current,
-    ${imageFragment('logo')},
-  },
-  "mainImage": imageGallery[0] {
-    ${imageFields}
-  },
-  ${portableTextFragment('shortDescription')},
-`;
-
-// Reusable FAQ fragment for FAQ documents
-const faqFragment = /* groq */ `
-  _id,
-  _createdAt,
-  question,
-  ${portableTextFragment('answer')},
-`;
-
-// Reusable team member fragment for team listings
-const teamMemberFragment = /* groq */ `
-  _id,
-  name,
-  position,
-  phoneNumber,
-  ${imageFragment('image')},
-  ${portableTextFragment('description')},
-`;
-
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ...,
     ${portableTextFragment('heading')},
-    publication->{
-      ${publicationFragment}
-    }
+      ${publicationFragment('publication->')}
   }
 `;
 
@@ -249,9 +234,7 @@ const gallerySectionBlock = /* groq */ `
     ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
-    images[] {
-      ${imageFields}
-    }
+    ${imageFragment('images[]')}
   }
 `;
 
@@ -281,7 +264,7 @@ const imageWithVideoBlock = /* groq */ `
     youtubeId,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
-    ${buttonWithNoVariantFragment('button')},
+    ${buttonFragment('button')},
   }
 `;
 
@@ -290,9 +273,7 @@ const featuredPublicationsBlock = /* groq */ `
     ...,
     ${portableTextFragment('heading')},
     ${buttonFragment('button')},
-    publications[]->{
-      ${publicationFragment}
-    }
+    ${publicationFragment('publications[]->')}
   }
 `;
 
@@ -302,31 +283,8 @@ const featuredProductsBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
-    newProducts[]->{
-      ${productFragment}
-    },
-    bestsellers[]->{
-      ${productFragment}
-    }
-  }
-`;
-
-export const formStateFragment = /* groq */ `
-  formState{
-    success{
-      withIcon,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('paragraph')},
-      refreshButton,
-      refreshButtonText,
-    },
-    error{
-      withIcon,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('paragraph')},
-      refreshButton,
-      refreshButtonText,
-    },
+    ${productFragment('newProducts[]->')},
+    ${productFragment('bestsellers[]->')},
   }
 `;
 
@@ -338,12 +296,8 @@ const brandsMarqueeBlock = /* groq */ `
     ${buttonFragment('button')},
     ${imageFragment('backgroundImage')},
     ${imageFragment('mobileImage')},
-    topBrands[]->{
-      ${brandFragment}
-    },
-    bottomBrands[]->{
-      ${brandFragment}
-    }
+    ${brandFragment('topBrands[]->')},
+    ${brandFragment('bottomBrands[]->')},
   }
 `;
 
@@ -353,9 +307,7 @@ const brandsListBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${portableTextFragment('ctaText')},
-    "brands": *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {
-      ${brandFragment}
-    }
+    "brands": ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')}
   }
 `;
 
@@ -374,9 +326,7 @@ const faqSectionBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     displayMode,
-    faqList[]->{
-      ${faqFragment}
-    },
+    ${faqFragment('faqList[]->')},
       contactPeople{
         ${portableTextFragment('heading')},
         contactPersons[]{
@@ -386,9 +336,7 @@ const faqSectionBlock = /* groq */ `
       contactForm{
         ${portableTextFragment('heading')},
         buttonText,
-        formState{
-          ${formStateFragment}
-        }
+        ${formStateFragment('formState')}
       }
   }
 `;
@@ -408,7 +356,7 @@ const contactFormBlock = /* groq */ `
       ${portableTextFragment('heading')},
       accountDetails,
     },
-    ${formStateFragment}
+    ${formStateFragment('formState')}
   }
 `;
 
@@ -429,12 +377,10 @@ const teamSectionBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     variant,
-    teamMembers[]->{
-      ${teamMemberFragment}
-    },
+    ${teamMemberFragment('teamMembers[]')},
     ${portableTextFragment('secondaryHeading')},
     ${portableTextFragment('secondaryDescription')},
-    ${buttonWithNoVariantFragment('ctaButton')},
+    ${buttonFragment('ctaButton')},
   }
 `;
 
@@ -444,7 +390,7 @@ const phoneImageCtaBlock = /* groq */ `
     ${imageFragment('image')},
     ${portableTextFragment('primaryHeading')},
     ${portableTextFragment('primaryDescription')},
-    ${buttonWithNoVariantFragment('ctaButton')},
+    ${buttonFragment('ctaButton')},
     ${portableTextFragment('secondaryHeading')},
     ${portableTextFragment('secondaryDescription')},
     phoneNumber,
@@ -489,6 +435,36 @@ export const pageBuilderFragment = /* groq */ `
   }
 `;
 
+// ----------------------------------------
+// Queries
+// ----------------------------------------
+
+export const queryDefaultOGImage = defineQuery(`*[_type == "settings"][0]{
+  "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
+}`);
+
+export const querySettings = defineQuery(`*[_type == "settings"][0]{
+  address {
+    streetAddress,
+    postalCode,
+    city,
+    country
+  },
+  email,
+  tel,
+  structuredData {
+    companyName,
+    companyDescription,
+    "logo": logo.asset->url,
+    geo {
+      latitude,
+      longitude
+    },
+    priceRange,
+  },
+  "socialMedia": *[_type == "socialMedia" && defined(link)].link,
+}`);
+
 export const queryNavbar = defineQuery(`*[_type == "navbar"][0]{
   ${buttonFragment('buttons[]')}
 }`);
@@ -503,7 +479,7 @@ export const queryFooter = defineQuery(`*[_type == "footer"][0]{
   newsletter{
     label,
     buttonLabel,
-    ${formStateFragment}
+    ${formStateFragment('formState')}
   }
 }`);
 
@@ -542,4 +518,21 @@ export const queryPageBySlug =
   },
   "firstBlockType": pageBuilder[0]._type,
   ${pageBuilderFragment}
+}`);
+
+export const queryNotFoundPage = defineQuery(`*[_type == "notFound"][0]{
+  _id,
+  _type,
+  "slug": slug.current,
+  name,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  },
+  ${imageFragment('backgroundImage')},
+  ${portableTextFragment('heading')},
+  ${portableTextFragment('description')},
+  ${buttonFragment('buttons[]')}
 }`);

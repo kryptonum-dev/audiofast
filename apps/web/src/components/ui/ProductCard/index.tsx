@@ -42,7 +42,6 @@ export default function ProductCard({
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              console.log('clicked');
             }}
           >
             <span>Dodaj do porównania</span>

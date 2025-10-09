@@ -105,7 +105,6 @@
 
   .wrapper {
     overflow-y: auto;
-    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -158,6 +157,7 @@
 
 .success {
   color: var(--neutral-600, #5b5a5a);
+  flex-shrink: 0;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='181' height='167' fill='none'%3E%3Cg clip-path='url(%23a)' opacity='.06'%3E%3Cpath stroke='%23009116' stroke-linecap='round' stroke-linejoin='round' stroke-width='11.469' d='M52.929 76.385v59.918a7.491 7.491 0 0 1-7.49 7.49h-14.98a7.488 7.488 0 0 1-7.49-7.49V83.874a7.49 7.49 0 0 1 7.49-7.49h22.47Zm0 0a29.96 29.96 0 0 0 29.959-29.96v-7.49a14.98 14.98 0 0 1 29.959 0v37.45h22.469a14.983 14.983 0 0 1 14.98 14.98l-7.49 37.448c-1.077 4.595-3.12 8.54-5.822 11.242-2.702 2.702-5.916 4.014-9.157 3.738H75.398a22.473 22.473 0 0 1-22.47-22.47'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath fill='%23fff' d='M.5-6h179.755v179.755H.5z'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E")
     center center no-repeat var(--neutral-200, #f8f8f8);
   border: 1px solid var(--primary-success, #009116);

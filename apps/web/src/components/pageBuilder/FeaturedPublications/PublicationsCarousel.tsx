@@ -54,10 +54,10 @@ export default function PublicationsCarousel({
     <div className={styles.carousel}>
       <div className={styles.viewport} ref={emblaRef}>
         <div className={styles.container}>
-          {publications!.map((publication) => (
+          {publications!.map((publication, idx) => (
             <PublicationCard
               imageSizes="(max-width: 72rem) 222px, 279px"
-              key={publication._id}
+              key={idx}
               publication={publication}
               layout="horizontal"
               headingLevel={index === 0 ? 'h2' : 'h3'}

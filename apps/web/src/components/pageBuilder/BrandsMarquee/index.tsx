@@ -68,6 +68,8 @@ export default function BrandsMarquee(props: BrandsMarqueeProps) {
     mobileImage as SanityRawImage | undefined
   );
 
+  console.log(props);
+
   return (
     <section className={`${styles.brandsMarquee} max-width-block`}>
       <picture>
