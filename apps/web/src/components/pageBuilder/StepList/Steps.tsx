@@ -42,7 +42,8 @@ export default function Steps({ steps }: StepsProps) {
       line.style.transform = `scaleY(${progress})`;
     };
 
-    updateLineScale();
+    // Initial call wrapped in RAF to avoid forced reflow
+    requestAnimationFrame(updateLineScale);
 
     let rafId: number;
     const onScroll = () => {

@@ -22,8 +22,11 @@ export default function Input({
 }: InputTypes) {
   const handleExpand = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const textarea = e.target;
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight + 2}px`;
+    // Use requestAnimationFrame to avoid forced reflow
+    requestAnimationFrame(() => {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight + 2}px`;
+    });
   };
   return (
     <label

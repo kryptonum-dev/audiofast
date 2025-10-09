@@ -5,9 +5,10 @@ import localFont from 'next/font/local';
 export const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400'],
-  display: 'swap',
+  display: 'optional', // Changed from 'swap' to 'optional' for better performance
   variable: '--font-poppins',
   preload: true,
+  fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
 
 // Local Font - Switzer (Optimized for Latin characters only)

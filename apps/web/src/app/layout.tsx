@@ -15,8 +15,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Preconnect to critical origins
   preconnect('https://cdn.sanity.io');
   preconnect('https://vercel.live');
+  // Preconnect to Next.js Google Fonts CDN (for Poppins)
+  preconnect('https://fonts.gstatic.com', { crossOrigin: 'anonymous' });
   prefetchDNS('https://cdn.sanity.io');
 
   const settings = await fetchWithLogging<QuerySettingsResult>({
