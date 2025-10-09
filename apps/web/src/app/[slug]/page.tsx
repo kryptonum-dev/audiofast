@@ -37,7 +37,7 @@ export async function generateMetadata({
       ? {
           seo: pageData.seo,
           slug: pageData.slug,
-          openGraph: pageData.openGraph,
+          openGraph: pageData.openGraph || undefined,
           noNotIndex: pageData.doNotIndex,
         }
       : {}
@@ -65,12 +65,12 @@ export default async function Page({
   ];
 
   return (
-    <>
+    <main id="main" className="page-transition">
       <Breadcrumbs
         data={breadcrumbsData}
         firstItemType={pageData.firstBlockType}
       />
       <PageBuilder pageBuilder={pageData.pageBuilder || []} />
-    </>
+    </main>
   );
 }

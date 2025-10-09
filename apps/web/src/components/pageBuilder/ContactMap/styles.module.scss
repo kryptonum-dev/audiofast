@@ -4,6 +4,7 @@
   overflow: hidden;
   padding: clamp(1rem, calc(3.25vw / 0.48), 3.25rem);
   display: flex;
+  width: 100%;
   justify-content: start;
   align-items: flex-end;
   max-width: var(--max-width);

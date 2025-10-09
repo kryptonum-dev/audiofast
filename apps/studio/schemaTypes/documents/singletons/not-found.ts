@@ -1,7 +1,6 @@
 import { AlertTriangle } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
-import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { toPlainText } from '../../../utils/helper';
 import { customPortableText } from '../../definitions/portable-text';

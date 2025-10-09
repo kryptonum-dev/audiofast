@@ -377,7 +377,7 @@ const teamSectionBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     variant,
-    ${teamMemberFragment('teamMembers[]')},
+    ${teamMemberFragment('teamMembers[]->')},
     ${portableTextFragment('secondaryHeading')},
     ${portableTextFragment('secondaryDescription')},
     ${buttonFragment('ctaButton')},

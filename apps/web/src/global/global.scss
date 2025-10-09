@@ -130,6 +130,11 @@ body {
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 123px;
+
+  // Respect reduced motion preferences
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
 }
 body {
   min-width: 320px;
@@ -166,7 +171,8 @@ body {
   }
 }
 
-main {
+main,
+.page-transition {
   position: relative;
   flex-grow: 1;
   display: flex;
@@ -354,5 +360,128 @@ h4 .link {
 
   > :first-child {
     margin-top: 0;
+  }
+}
+
+// Page load animation - applied to page content
+.page-transition {
+  opacity: 0;
+  animation: pageLoadFadeIn 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 50ms;
+  will-change: opacity, transform;
+}
+
+@keyframes pageLoadFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--neutral-white, #ffffff);
+}
+
+.spinnerWrapper {
+  // Entrance animation for the loader
+  opacity: 0;
+  transform: scale(0.9) translateY(0.5rem);
+  animation: loaderFadeIn 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 100ms;
+  will-change: opacity, transform;
+}
+
+.spinner {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinnerRing {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid transparent;
+
+  &:first-child {
+    border-top-color: var(--primary-red, #fe0140);
+    border-right-color: var(--primary-red, #fe0140);
+    animation: spinnerRotate 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  }
+
+  &:last-child {
+    width: 85%;
+    height: 85%;
+    border-top-color: rgba(254, 1, 64, 0.3);
+    border-right-color: rgba(254, 1, 64, 0.3);
+    animation: spinnerRotate 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    animation-direction: reverse;
+    animation-delay: -0.15s;
+  }
+}
+
+// Entrance animation for the loader
+@keyframes loaderFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(0.5rem);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Smooth continuous rotation
+@keyframes spinnerRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Respect reduced motion preferences
+@media (prefers-reduced-motion: reduce) {
+  .spinnerWrapper {
+    animation: loaderFadeInSimple 300ms ease-out forwards;
+    animation-delay: 0ms;
+  }
+
+  .spinnerRing {
+    animation-duration: 2s;
+  }
+}
+
+@keyframes loaderFadeInSimple {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

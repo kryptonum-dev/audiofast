@@ -16,14 +16,22 @@ async function fetchNotFoundPageData() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const notFoundData = await fetchNotFoundPageData();
-  return getSEOMetadata({
-    seo: notFoundData!.seo!,
-    slug: '/404',
-  });
+  return getSEOMetadata(
+    notFoundData
+      ? {
+          seo: notFoundData.seo!,
+          slug: '/404',
+        }
+      : {}
+  );
 }
 
 export default async function NotFound() {
   const notFoundData = await fetchNotFoundPageData();
 
-  return <NotFoundComponent {...notFoundData!} />;
+  return (
+    <main id="main" className="page-transition">
+      <NotFoundComponent {...notFoundData!} />
+    </main>
+  );
 }

@@ -27,5 +27,9 @@ export default async function Page() {
     return null;
   }
 
-  return <PageBuilder pageBuilder={homePageData.pageBuilder || []} />;
+  return (
+    <main id="main" className="page-transition">
+      <PageBuilder pageBuilder={homePageData.pageBuilder || []} />
+    </main>
+  );
 }

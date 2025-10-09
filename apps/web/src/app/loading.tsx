@@ -1,12 +1,11 @@
-import styles from './loading.module.scss';
-
 export default function Loading() {
   return (
-    <div className={styles.loading}>
-      <div className={styles.spinner}>
-        <div className={styles.dot}></div>
-        <div className={styles.dot}></div>
-        <div className={styles.dot}></div>
+    <div className="loading">
+      <div className="spinnerWrapper">
+        <div className="spinner">
+          <div className="spinnerRing"></div>
+          <div className="spinnerRing"></div>
+        </div>
       </div>
     </div>
   );

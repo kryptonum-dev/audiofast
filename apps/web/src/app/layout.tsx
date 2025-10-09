@@ -32,7 +32,7 @@ export default async function RootLayout({
       <head>{settings && <OrganizationSchema settings={settings} />}</head>
       <body>
         <Header />
-        <main id="main">{children}</main>
+        {children}
         <Footer />
       </body>
     </html>

@@ -4,7 +4,7 @@ import { capitalize } from '@/global/utils';
 
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
 import { client } from './sanity/client';
-import { queryDefaultOGImage } from './sanity/query';
+import { queryDefaultOGImage, queryNotFoundPage } from './sanity/query';
 
 // Site-wide configuration interface
 interface SiteConfig {
@@ -66,6 +66,20 @@ function extractTitle({
 export async function getSEOMetadata(
   page: PageSeoData = {}
 ): Promise<Metadata> {
+  let effectivePage = page;
+
+  // If no SEO data is provided and 404 fallback is enabled, fetch 404 page data
+  if (!page.seo || Object.keys(page).length === 0) {
+    const notFoundData = await client.fetch(queryNotFoundPage);
+    if (notFoundData) {
+      effectivePage = {
+        seo: notFoundData.seo,
+        slug: '/404',
+        openGraph: notFoundData.openGraph || undefined,
+      };
+    }
+  }
+
   const {
     seo,
     slug = '/',
@@ -73,7 +87,7 @@ export async function getSEOMetadata(
     noNotIndex = false,
     openGraph,
     ...pageOverrides
-  } = page;
+  } = effectivePage;
 
   const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug });
 
