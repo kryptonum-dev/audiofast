@@ -15,7 +15,7 @@ interface SiteConfig {
 }
 
 // Page-specific SEO data interface
-interface PageSeoData extends Metadata {
+interface PageSeoData extends Omit<Metadata, 'openGraph'> {
   seo?: {
     title?: string | null;
     description?: string | null;
@@ -89,7 +89,7 @@ export async function getSEOMetadata(
     ...pageOverrides
   } = effectivePage;
 
-  const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug });
+  const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug: slug || '' });
 
   const data: { defaultOGImage: string | null } | null =
     await client.fetch(queryDefaultOGImage);
@@ -98,8 +98,8 @@ export async function getSEOMetadata(
 
   // Build default metadata values
   const defaultTitle = extractTitle({
-    pageTitle: seo?.title,
-    slug,
+    pageTitle: seo?.title || undefined,
+    slug: slug || '',
     siteTitle: siteConfig.title,
   });
   const defaultDescription = seo?.description || siteConfig.description;
