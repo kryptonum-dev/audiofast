@@ -24,10 +24,10 @@ export default function PhoneImageCta({
         image={image as unknown as AppImageProps}
         primaryHeading={primaryHeading}
         primaryDescription={primaryDescription}
-        button={ctaButton}
+        button={ctaButton!}
         secondaryHeading={secondaryHeading}
         secondaryDescription={secondaryDescription}
-        phoneNumber={phoneNumber}
+        phoneNumber={phoneNumber!}
         index={index}
       />
     </section>

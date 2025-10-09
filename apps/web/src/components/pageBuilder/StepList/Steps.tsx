@@ -8,7 +8,7 @@ import PortableText from '../../shared/PortableText';
 import styles from './styles.module.scss';
 
 type StepsProps = {
-  steps: PagebuilderType<'stepList'>['steps'];
+  steps: NonNullable<PagebuilderType<'stepList'>['steps']>;
 };
 
 export default function Steps({ steps }: StepsProps) {

@@ -25,7 +25,7 @@ export default function TeamMemberCard({
       <Image image={image} sizes={imageSizes} />
       <Heading className={styles.name}>{name}</Heading>
       <p className={styles.position}>{position}</p>
-      <PhoneLink phoneNumber={phoneNumber} />
+      <PhoneLink phoneNumber={phoneNumber!} />
       <PortableText
         value={description}
         enablePortableTextStyles

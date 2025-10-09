@@ -26,7 +26,7 @@ export default function StepList({
           className={styles.paragraph}
         />
       </header>
-      <Steps steps={steps} />
+      <Steps steps={steps!} />
     </section>
   );
 }
