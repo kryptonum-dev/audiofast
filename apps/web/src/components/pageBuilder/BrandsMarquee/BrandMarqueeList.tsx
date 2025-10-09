@@ -15,6 +15,7 @@ interface BrandMarqueeListProps {
   onBrandLeave: () => void;
   onBrandInteractionStart?: () => void;
   onBrandInteractionEnd?: () => void;
+  index: number;
 }
 
 export default function BrandMarqueeList({
@@ -24,6 +25,7 @@ export default function BrandMarqueeList({
   onBrandLeave,
   onBrandInteractionStart,
   onBrandInteractionEnd,
+  index,
 }: BrandMarqueeListProps) {
   // Duplicate brands for seamless loop
   const duplicatedBrands = [...brands, ...brands];
@@ -67,7 +69,10 @@ export default function BrandMarqueeList({
                   sizes="121px"
                   quality={90}
                   className={styles.brandLogo}
-                  priority={!isDuplicate && idx < 6}
+                  priority={index === 0 && !isDuplicate && idx < 6}
+                  loading={
+                    index === 0 && !isDuplicate && idx < 6 ? 'eager' : 'lazy'
+                  }
                 />
               </Link>
             );

@@ -85,7 +85,11 @@ export default function BrandsMarquee(props: BrandsMarqueeProps) {
           />
         }
       </picture>
-      <BrandSelector {...props} headingLevelOffset={headingLevelOffset} />
+      <BrandSelector
+        {...props}
+        headingLevelOffset={headingLevelOffset}
+        index={index}
+      />
     </section>
   );
 }

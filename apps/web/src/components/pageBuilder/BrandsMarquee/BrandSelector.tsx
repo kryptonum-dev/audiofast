@@ -11,6 +11,7 @@ import styles from './styles.module.scss';
 
 type BrandSelectorProps = PagebuilderType<'brandsMarquee'> & {
   headingLevelOffset: number;
+  index: number;
 };
 
 type BrandType = NonNullable<BrandSelectorProps['topBrands']>[number];
@@ -30,6 +31,7 @@ export default function BrandSelector({
   bottomBrands,
   heading,
   description,
+  index,
   headingLevelOffset,
 }: BrandSelectorProps) {
   const [currentHeader, setCurrentHeader] = useState<HeaderState>({
@@ -183,6 +185,7 @@ export default function BrandSelector({
       </header>
       <div className={styles.marquees}>
         <BrandMarqueeList
+          index={index}
           brands={topBrands!}
           direction="normal"
           onBrandHover={handleBrandHover}
@@ -191,6 +194,7 @@ export default function BrandSelector({
           onBrandInteractionEnd={handleInteractionEnd}
         />
         <BrandMarqueeList
+          index={index}
           brands={bottomBrands!}
           direction="reverse"
           onBrandHover={handleBrandHover}
