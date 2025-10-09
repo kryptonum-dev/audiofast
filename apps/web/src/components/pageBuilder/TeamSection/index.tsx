@@ -51,6 +51,7 @@ export default function TeamSection({
               member={member}
               headingLevel={index === 0 ? 'h2' : 'h3'}
               imageSizes="400px"
+              index={index}
             />
           ))}
         </ul>

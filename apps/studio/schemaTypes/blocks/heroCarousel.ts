@@ -41,22 +41,13 @@ export const heroCarousel = defineType({
               name: 'image',
               title: 'Zdjęcie w tle',
               type: 'image',
-              description: 'Główne zdjęcie slajdu',
+              description:
+                'Główne zdjęcie slajdu (automatycznie optymalizowane dla różnych urządzeń)',
               options: {
                 hotspot: true,
               },
 
               validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'mobileImage',
-              title: 'Zdjęcie na urządzenia mobilne',
-              type: 'image',
-              description:
-                'Opcjonalne zdjęcie na urządzenia mobilne (zdjęcie zmienia się poniżej progu 768 pikseli)',
-              options: {
-                hotspot: true,
-              },
             }),
             defineField({
               name: 'button',

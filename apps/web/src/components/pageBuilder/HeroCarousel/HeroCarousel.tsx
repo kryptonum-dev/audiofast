@@ -169,87 +169,97 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
   const currentArt = useMemo(() => {
     if (!current) return undefined;
 
-    const desktopImg = current.image as SanityRawImage | undefined;
-    const mobileImg = current.mobileImage as SanityRawImage | undefined;
+    const img = current.image as SanityRawImage | undefined;
+    if (!img?.id) return undefined;
 
-    const desktopSrc = desktopImg?.id
-      ? urlFor({ asset: { _ref: desktopImg.id } })
-          .fit('crop')
-          .auto('format')
-          .url()
-      : undefined;
+    // Convert to Sanity image source format
+    const sanitySource = {
+      asset: { _ref: img.id },
+      ...(img.hotspot && { hotspot: img.hotspot }),
+      ...(img.crop && { crop: img.crop }),
+    };
 
-    const mobileSrc = mobileImg?.id
-      ? urlFor({ asset: { _ref: mobileImg.id } })
-          .fit('crop')
-          .auto('format')
-          .url()
-      : undefined;
+    // Desktop: 21:9 aspect ratio (e.g., 1920x823)
+    const desktopSrc = urlFor(sanitySource)
+      .width(2120)
+      .height(823)
+      .fit('crop')
+      .auto('format')
+      .url();
 
-    const mobileUrl = mobileSrc ?? desktopSrc;
-    if (!mobileUrl && !desktopSrc) return undefined;
+    // Mobile: 3:4 aspect ratio (e.g., 600x800)
+    const mobileSrc = urlFor(sanitySource)
+      .width(600)
+      .height(800)
+      .fit('crop')
+      .auto('format')
+      .url();
 
     const mobile = getImageProps({
       alt: '',
-      src: mobileUrl!,
-      width: mobileSrc ? 1200 : 1920,
-      height: mobileSrc ? 1600 : 1080,
-      sizes: '100vw',
+      src: mobileSrc,
+      width: 600,
+      height: 800,
+      sizes: '(max-width: 85.385px) 100vw, 1366px',
+      priority: index === 0,
     }).props;
 
-    const desktop = desktopSrc
-      ? getImageProps({
-          alt: '',
-          src: desktopSrc,
-          width: 1920,
-          height: 1080,
-          sizes: '100vw',
-        }).props
-      : undefined;
+    const desktop = getImageProps({
+      alt: '',
+      src: desktopSrc,
+      width: 1302,
+      height: 556,
+      sizes: '(max-width: 85.385px) 100vw, 1366px',
+      priority: index === 0,
+    }).props;
 
     return { mobile, desktop };
-  }, [current]);
+  }, [current, index]);
 
   const previousArt = useMemo(() => {
     if (!previous || !isTransitioning) return undefined;
 
-    const desktopImg = previous.image as SanityRawImage | undefined;
-    const mobileImg = previous.mobileImage as SanityRawImage | undefined;
+    const img = previous.image as SanityRawImage | undefined;
+    if (!img?.id) return undefined;
 
-    const desktopSrc = desktopImg?.id
-      ? urlFor({ asset: { _ref: desktopImg.id } })
-          .fit('crop')
-          .auto('format')
-          .url()
-      : undefined;
+    // Convert to Sanity image source format
+    const sanitySource = {
+      asset: { _ref: img.id },
+      ...(img.hotspot && { hotspot: img.hotspot }),
+      ...(img.crop && { crop: img.crop }),
+    };
 
-    const mobileSrc = mobileImg?.id
-      ? urlFor({ asset: { _ref: mobileImg.id } })
-          .fit('crop')
-          .auto('format')
-          .url()
-      : undefined;
+    // Desktop: 21:9 aspect ratio (e.g., 1920x823)
+    const desktopSrc = urlFor(sanitySource)
+      .width(2120)
+      .height(823)
+      .fit('crop')
+      .auto('format')
+      .url();
 
-    const mobileUrl = mobileSrc ?? desktopSrc;
-    if (!mobileUrl && !desktopSrc) return undefined;
+    // Mobile: 3:4 aspect ratio (e.g., 600x800)
+    const mobileSrc = urlFor(sanitySource)
+      .width(600)
+      .height(800)
+      .fit('crop')
+      .auto('format')
+      .url();
 
     const mobile = getImageProps({
       alt: '',
-      src: mobileUrl!,
-      width: mobileSrc ? 1200 : 1920,
-      height: mobileSrc ? 1600 : 1080,
-      sizes: '100vw',
+      src: mobileSrc,
+      width: 600,
+      height: 800,
+      sizes: '(max-width: 85.385px) 100vw, 1366px',
     }).props;
 
-    const desktop = desktopSrc
-      ? getImageProps({
-          alt: '',
-          src: desktopSrc,
-          width: 1920,
-          height: 1080,
-          sizes: '100vw',
-        }).props
-      : undefined;
+    const desktop = getImageProps({
+      alt: '',
+      src: desktopSrc,
+      width: 1302,
+      height: 556,
+      sizes: '(max-width: 85.385px) 100vw, 1366px',
+    }).props;
 
     return { mobile, desktop };
   }, [previous, isTransitioning]);
@@ -273,13 +283,11 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
         {previousArt && (
           <div className={styles.bgLayer} data-layer="previous">
             <picture>
-              {previousArt.desktop?.srcSet ? (
-                <source
-                  media="(min-width: 48em)"
-                  srcSet={previousArt.desktop.srcSet}
-                  sizes={previousArt.desktop.sizes}
-                />
-              ) : null}
+              <source
+                media="(min-width: 37.5rem)"
+                srcSet={previousArt.desktop.srcSet}
+                sizes={previousArt.desktop.sizes}
+              />
               {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -299,13 +307,11 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
         {currentArt && (
           <div className={styles.bgLayer} data-layer="current">
             <picture>
-              {currentArt.desktop?.srcSet ? (
-                <source
-                  media="(min-width: 48em)"
-                  srcSet={currentArt.desktop.srcSet}
-                  sizes={currentArt.desktop.sizes}
-                />
-              ) : null}
+              <source
+                media="(min-width: 37.5rem)"
+                srcSet={currentArt.desktop.srcSet}
+                sizes={currentArt.desktop.sizes}
+              />
               {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

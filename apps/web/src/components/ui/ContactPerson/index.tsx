@@ -8,11 +8,13 @@ export default function ContactPerson({
   id,
   startPos = 'right',
   className = '',
+  index,
 }: {
   person: ContactPersonType;
   id: string;
   startPos?: 'left' | 'right';
   className?: string;
+  index: number;
 }) {
   return (
     <a
@@ -27,7 +29,11 @@ export default function ContactPerson({
         <PhoneIcon />
       </div>
       <div className={styles.imageContainer}>
-        <Image image={person.image} sizes="55px" />
+        <Image
+          image={person.image}
+          sizes="55px"
+          loading={index === 0 ? 'eager' : 'lazy'}
+        />
       </div>
     </a>
   );

@@ -23,6 +23,8 @@ export default function ImageTextColumns({
       <Image
         image={image}
         sizes="(max-width: 37.4375rem) 94vw, (max-width: 56.1875rem) 83vw, 501px"
+        priority={index === 0}
+        loading={index === 0 ? 'eager' : 'lazy'}
       />
       <header className={styles.header}>
         <PortableText

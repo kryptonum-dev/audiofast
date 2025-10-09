@@ -29,11 +29,13 @@ export default function GallerySection({
         />
       </header>
       <div className={styles.gallery}>
-        {images?.map((image, index) => (
-          <div key={`${image.id}-${index}`} className={styles.galleryItem}>
+        {images?.map((image, idx) => (
+          <div key={`${image.id}-${idx}`} className={styles.galleryItem}>
             <Image
               image={image}
               sizes="(max-width: 27.4375rem) 96vw, (max-width: 37.4375rem) 47vw, (max-width: 56.1875rem) 41vw, (max-width: 85.375rem) 32vw, 430px"
+              priority={index === 0 && idx === 0}
+              loading={index === 0 ? 'eager' : 'lazy'}
             />
           </div>
         ))}

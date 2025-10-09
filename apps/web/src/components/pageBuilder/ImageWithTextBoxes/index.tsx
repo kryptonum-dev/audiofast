@@ -38,6 +38,8 @@ export default async function ImageWithTextBoxes({
       <Image
         image={image}
         sizes="(max-width: 37.4375rem) 96vw, (max-width: 48.0625rem) 80vw, (max-width: 56.1875rem) 38rem, 29.5625rem"
+        priority={index === 0}
+        loading={index === 0 ? 'eager' : 'lazy'}
       />
       <ul className={styles.boxes}>
         {boxesWithSvgs.map((box) => (

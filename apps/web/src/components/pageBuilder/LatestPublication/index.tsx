@@ -29,6 +29,8 @@ export default function LatestPublication({
       <article className={styles.container}>
         <Image
           image={image}
+          priority={index === 0}
+          loading={index === 0 ? 'eager' : 'lazy'}
           sizes="(max-width: 37.4375rem) 94vw, (max-width: 56.1875rem) 83vw, 502px"
         />
         <header className={styles.header}>

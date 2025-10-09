@@ -44,6 +44,7 @@ export default function ContactForm({
                 person={person}
                 id={idx.toString()}
                 startPos="left"
+                index={index}
               />
             </li>
           ))}

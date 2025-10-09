@@ -44,22 +44,13 @@ export const brandsMarquee = defineType({
       name: 'backgroundImage',
       title: 'Zdjęcie w tle',
       type: 'image',
-      description: 'Główne zdjęcie tła sekcji',
+      description:
+        'Główne zdjęcie tła sekcji (automatycznie optymalizowane dla różnych urządzeń)',
       options: {
         hotspot: true,
       },
       validation: (Rule) =>
         Rule.required().error('Zdjęcie w tle jest wymagane'),
-    }),
-    defineField({
-      name: 'mobileImage',
-      title: 'Zdjęcie na urządzenia mobilne (opcjonalne)',
-      type: 'image',
-      description:
-        'Opcjonalne zdjęcie na urządzenia mobilne (zdjęcie zmienia się poniżej progu 768 pikseli)',
-      options: {
-        hotspot: true,
-      },
     }),
     defineField({
       name: 'topBrands',

@@ -36,13 +36,15 @@ export default function ProductsCarousel({
   return (
     <div className={styles.viewport} ref={emblaRef}>
       <div className={styles.container}>
-        {products.map((product) => (
+        {products.map((product, idx) => (
           <ProductCard
             imageSizes="(max-width: 27.4375rem) 286px, (max-width: 43.6875rem) 334px, (max-width: 56.1875rem) 41vw, (max-width: 69.9375rem) 300px, 405px"
             key={product._id}
             product={product}
             headingLevel={index === 0 ? 'h2' : 'h3'}
             showButton={false}
+            priority={index === 0 && idx === 0}
+            loading={index === 0 ? 'eager' : 'lazy'}
           />
         ))}
       </div>

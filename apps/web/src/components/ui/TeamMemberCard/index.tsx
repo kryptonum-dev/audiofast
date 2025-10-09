@@ -9,12 +9,14 @@ interface TeamMemberCardProps {
   member: TeamMemberType;
   headingLevel?: 'h2' | 'h3' | 'h4';
   imageSizes?: string;
+  index: number;
 }
 
 export default function TeamMemberCard({
   member,
   imageSizes = '400px',
   headingLevel = 'h3',
+  index,
 }: TeamMemberCardProps) {
   const { name, position, phoneNumber, image, description } = member;
 
@@ -22,7 +24,11 @@ export default function TeamMemberCard({
 
   return (
     <div className={styles.teamMemberCard}>
-      <Image image={image} sizes={imageSizes} />
+      <Image
+        image={image}
+        sizes={imageSizes}
+        loading={index === 0 ? 'eager' : 'lazy'}
+      />
       <Heading className={styles.name}>{name}</Heading>
       <p className={styles.position}>{position}</p>
       <PhoneLink phoneNumber={phoneNumber!} />

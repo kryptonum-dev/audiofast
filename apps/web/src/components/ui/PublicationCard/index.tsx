@@ -14,6 +14,8 @@ type PublicationCardProps = {
   layout?: 'vertical' | 'horizontal';
   headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
+  priority?: boolean;
+  loading?: 'eager' | 'lazy';
 };
 
 export default function PublicationCard({
@@ -21,6 +23,8 @@ export default function PublicationCard({
   layout = 'vertical',
   imageSizes = '400px',
   headingLevel = 'h3',
+  priority = false,
+  loading = 'lazy',
 }: PublicationCardProps) {
   const { _createdAt, slug, name, image, publicationType } = publication;
 
@@ -29,7 +33,12 @@ export default function PublicationCard({
   return (
     <article className={styles.publicationCard} data-layout={layout}>
       <a href={slug!} className={styles.link}>
-        <Image image={image} sizes={imageSizes} />
+        <Image
+          image={image}
+          sizes={imageSizes}
+          priority={priority}
+          loading={loading}
+        />
         <div className={styles.content}>
           <PublicationType publicationType={publicationType!} />
           <DateBox _createdAt={_createdAt} />

@@ -9,12 +9,16 @@ interface ProductCardProps {
   headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
   showButton?: boolean;
+  priority?: boolean;
+  loading?: 'eager' | 'lazy';
 }
 
 export default function ProductCard({
   product,
   imageSizes = '400px',
   headingLevel = 'h3',
+  priority = false,
+  loading = 'lazy',
 }: ProductCardProps) {
   const { slug, name, subtitle, price, brand, mainImage } = product;
 
@@ -35,8 +39,14 @@ export default function ProductCard({
     <article className={styles.productCard}>
       <a href={slug!} className={styles.link}>
         <div className={styles.imgBox}>
-          <Image image={mainImage} sizes={imageSizes} fill />
-          <Image image={brand!.logo} sizes="90px" />
+          <Image
+            image={mainImage}
+            sizes={imageSizes}
+            fill
+            priority={priority}
+            loading={loading}
+          />
+          <Image image={brand!.logo} sizes="90px" loading={loading} />
           <button
             className={styles.addToComparison}
             onClick={(e) => {

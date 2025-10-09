@@ -34,6 +34,8 @@ export default function GrayImageCtaCard({
       <Image
         image={image}
         sizes="(max-width: 37.4375rem) 92vw, (max-width: 56.1875rem) 80vw, (max-width: 83.625rem) 50vw, 627px"
+        priority={index === 0}
+        loading={index === 0 ? 'eager' : 'lazy'}
       />
       <PortableText
         value={primaryHeading}

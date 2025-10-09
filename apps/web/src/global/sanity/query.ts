@@ -171,7 +171,6 @@ const heroCarouselBlock = /* groq */ `
     ...,
     slides[]{
       ${imageFragment('image')},
-      ${imageFragment('mobileImage')},
       ${buttonFragment('button')},
       ${portableTextFragment('title')},
       ${portableTextFragment('description')},
@@ -295,7 +294,6 @@ const brandsMarqueeBlock = /* groq */ `
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
     ${imageFragment('backgroundImage')},
-    ${imageFragment('mobileImage')},
     ${brandFragment('topBrands[]->')},
     ${brandFragment('bottomBrands[]->')},
   }

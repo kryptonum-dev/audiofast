@@ -57,6 +57,8 @@ export default function PublicationsCarousel({
           {publications!.map((publication, idx) => (
             <PublicationCard
               imageSizes="(max-width: 72rem) 222px, 279px"
+              priority={index === 0 && idx === 0}
+              loading={index === 0 ? 'eager' : 'lazy'}
               key={idx}
               publication={publication}
               layout="horizontal"
