@@ -2,25 +2,32 @@ import { notFound } from 'next/navigation';
 
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import { client } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/client';
 import { queryAllPageSlugs, queryPageBySlug } from '@/src/global/sanity/query';
+import type { QueryPageBySlugResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
 export async function generateStaticParams() {
-  const pages = await client.fetch<{ slug: string }[]>(queryAllPageSlugs);
+  const pages = await sanityFetch<{ slug: string }[]>({
+    query: queryAllPageSlugs,
+    tags: ['pagesSlugs'],
+  });
 
   return pages
-    .filter((page) => page.slug) // Filter out any pages without slugs
+    .filter((page) => page.slug)
     .map((page) => ({
-      slug: page.slug.replace(/^\//, ''), // Remove leading slash for Next.js routing
+      slug: page.slug.replace(/^\//, ''),
     }));
 }
 
 async function fetchPageData(slug: string) {
-  // Add leading slash back for Sanity query
   const sanitySlug = `/${slug.replace(/^\/+/, '').replace(/\/+$/, '')}/`;
 
-  return await client.fetch(queryPageBySlug, { slug: sanitySlug });
+  return await sanityFetch<NonNullable<QueryPageBySlugResult>>({
+    query: queryPageBySlug,
+    params: { slug: sanitySlug },
+    tags: [sanitySlug],
+  });
 }
 
 export async function generateMetadata({
@@ -29,19 +36,16 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
   const pageData = await fetchPageData(slug);
 
-  return getSEOMetadata(
-    pageData
-      ? {
-          seo: pageData.seo,
-          slug: pageData.slug,
-          openGraph: pageData.openGraph || undefined,
-          noNotIndex: pageData.doNotIndex,
-        }
-      : {}
-  );
+  if (!pageData) return getSEOMetadata();
+
+  return getSEOMetadata({
+    seo: pageData.seo,
+    slug: pageData.slug,
+    openGraph: pageData.openGraph,
+    noNotIndex: pageData.doNotIndex,
+  });
 }
 
 export default async function Page({
@@ -51,9 +55,6 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const pageData = await fetchPageData(slug);
-  console.log(slug);
-
-  console.log(pageData);
 
   if (!pageData) {
     notFound();
@@ -62,17 +63,17 @@ export default async function Page({
   // Build breadcrumbs data from page data
   const breadcrumbsData = [
     {
-      name: pageData.name,
+      name: pageData.name || 'Strona',
       path: pageData.slug || `/${slug}`,
     },
   ];
 
   return (
     <main id="main" className="page-transition">
-      {/* <Breadcrumbs
+      <Breadcrumbs
         data={breadcrumbsData}
-        firstItemType={pageData.firstBlockType}
-      /> */}
+        firstItemType={pageData.firstBlockType || undefined}
+      />
       <PageBuilder pageBuilder={pageData.pageBuilder || []} />
     </main>
   );

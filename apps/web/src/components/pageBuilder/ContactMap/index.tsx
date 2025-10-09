@@ -22,6 +22,7 @@ export default async function ContactMap({
     ? null
     : await sanityFetch<QuerySettingsResult>({
         query: querySettings,
+        tags: ['settings'],
       });
 
   // Format structured address into display string

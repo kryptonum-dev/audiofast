@@ -17,17 +17,17 @@ interface SiteConfig {
 // Page-specific SEO data interface
 interface PageSeoData extends Metadata {
   seo?: {
-    title?: string;
-    description?: string;
-  };
-  slug?: string;
+    title?: string | null;
+    description?: string | null;
+  } | null;
+  slug?: string | null;
   keywords?: string[];
-  noNotIndex?: boolean;
+  noNotIndex?: boolean | null;
   openGraph?: {
-    title?: string;
-    description?: string;
-    seoImage?: string;
-  };
+    title?: string | null;
+    description?: string | null;
+    seoImage?: string | null;
+  } | null;
 }
 
 // Default site configuration
