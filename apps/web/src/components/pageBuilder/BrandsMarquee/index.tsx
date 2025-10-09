@@ -51,7 +51,7 @@ export default function BrandsMarquee(props: BrandsMarqueeProps) {
           src: mobileSrc,
           width: 600,
           height: 800,
-          sizes: '(max-width: 85.385px) 100vw, 1366px',
+          sizes: '(min-width: 85.375rem) 1366px, 100vw',
         }).props;
 
         const desktop = getImageProps({
@@ -59,7 +59,7 @@ export default function BrandsMarquee(props: BrandsMarqueeProps) {
           src: desktopSrc,
           width: 1302,
           height: 556,
-          sizes: '(max-width: 85.385px) 100vw, 1366px',
+          sizes: '(min-width: 85.375rem) 1366px, 100vw',
         }).props;
 
         return { mobile, desktop };

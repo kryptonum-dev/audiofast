@@ -91,6 +91,18 @@
     padding-left: var(--pageMargin);
   }
 
+  &[data-first-item-type='notFound'] {
+    position: absolute;
+    max-width: calc(var(--max-width) + var(--pageMargin) * 2);
+    width: 100%;
+    padding: 0;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    padding-left: var(--pageMargin);
+  }
+
   &[data-theme='dark'] {
     color: var(--neutral-white, #ffffff);
 

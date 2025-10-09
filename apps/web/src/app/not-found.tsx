@@ -6,6 +6,8 @@ import { queryNotFoundPage } from '@/src/global/sanity/query';
 import type { QueryNotFoundPageResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
+import Breadcrumbs from '../components/ui/Breadcrumbs';
+
 async function fetchNotFoundPageData() {
   return await fetchWithLogging<QueryNotFoundPageResult>({
     label: 'Not Found Page Data',
@@ -29,8 +31,16 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function NotFound() {
   const notFoundData = await fetchNotFoundPageData();
 
+  const breadcrumbsData = [
+    {
+      name: 'Nie znaleziono strony',
+      path: '/404',
+    },
+  ];
+
   return (
     <main id="main" className="page-transition">
+      <Breadcrumbs data={breadcrumbsData} firstItemType="notFound" />
       <NotFoundComponent {...notFoundData!} />
     </main>
   );

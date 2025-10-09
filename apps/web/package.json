@@ -11,6 +11,19 @@
     "format": "bun run prettier --write .",
     "check-types": "bun run tsc --noEmit"
   },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
+      "not ie 11"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^7.8.2",

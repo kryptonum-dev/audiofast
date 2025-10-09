@@ -55,7 +55,7 @@ export default async function HeroStatic({
           src: mobileSrc,
           width: 600,
           height: 600,
-          sizes: '(max-width: 85.385px) 100vw, 1366px',
+          sizes: '(min-width: 85.375rem) 1366px, 100vw',
           priority: index === 0,
         }).props;
 
@@ -64,7 +64,7 @@ export default async function HeroStatic({
           src: desktopSrc,
           width: 1302,
           height: 556,
-          sizes: '(max-width: 85.385px) 100vw, 1366px',
+          sizes: '(min-width: 85.375rem) 1366px, 100vw',
           priority: index === 0,
         }).props;
 

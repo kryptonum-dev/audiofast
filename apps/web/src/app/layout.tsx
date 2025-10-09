@@ -16,6 +16,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   preconnect('https://cdn.sanity.io');
+  preconnect('https://vercel.live');
   prefetchDNS('https://cdn.sanity.io');
 
   const settings = await fetchWithLogging<QuerySettingsResult>({
@@ -29,7 +30,24 @@ export default async function RootLayout({
       lang="pl"
       className={`${poppins.className} ${switzer.variable} ${poppins.variable}`}
     >
-      <head>{settings && <OrganizationSchema settings={settings} />}</head>
+      <head>
+        {/* Preload critical fonts */}
+        <link
+          rel="preload"
+          href="/fonts/Switzer-Regular.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Switzer-Medium.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {settings && <OrganizationSchema settings={settings} />}
+      </head>
       <body>
         <Header />
         {children}
