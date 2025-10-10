@@ -124,7 +124,6 @@ export const contactForm = defineType({
         Rule.required().error('Lista kont bankowych jest wymagana'),
       ],
     }),
-
     formState,
   ],
   preview: {
