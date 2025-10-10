@@ -65,6 +65,52 @@ export const settings = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'analytics',
+      type: 'object',
+      title: 'Analityka',
+      description:
+        'Konfiguruj analitykę strony. Pozostaw pola puste, aby wyłączyć śledzenie.',
+      group: GROUP.SEO,
+      fields: [
+        defineField({
+          name: 'gtm_id',
+          type: 'string',
+          title: 'Google Tag Manager ID',
+          description:
+            'Format: GTM-XXXXXXX. ID kontenera do zarządzania narzędziami analitycznymi (GA4, Facebook Pixel, etc.).',
+          validation: (Rule) =>
+            Rule.regex(/^GTM-[A-Z0-9]+$/, {
+              name: 'GTM format',
+              invert: false,
+            }).error('Format: GTM-XXXXXXX'),
+        }),
+        defineField({
+          name: 'ga4_id',
+          type: 'string',
+          title: 'Google Analytics Measurement ID',
+          description:
+            'Format: G-XXXXXXXXXXX. Używane do śledzenia Google Analytics.',
+          validation: (Rule) =>
+            Rule.regex(/^G-[A-Z0-9]+$/, {
+              name: 'GA4 format',
+              invert: false,
+            }).error('Format: G-XXXXXXXXXXX'),
+        }),
+        defineField({
+          name: 'googleAds_id',
+          type: 'string',
+          title: 'Google Ads Conversion ID',
+          description:
+            'Format: AW-XXXXXXXXXX. Używane do śledzenia konwersji i remarketingu w Google Ads.',
+          validation: (Rule) =>
+            Rule.regex(/^AW-[A-Z0-9]+$/, {
+              name: 'Google Ads format',
+              invert: false,
+            }).error('Format: AW-XXXXXXXXXX'),
+        }),
+      ],
+    }),
+    defineField({
       name: 'seo',
       type: 'object',
       title: 'SEO globalne',

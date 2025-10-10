@@ -7,19 +7,19 @@ import { fetchWithLogging } from '@/global/sanity/client';
 import { querySettings } from '@/global/sanity/query';
 import type { QuerySettingsResult } from '@/global/sanity/sanity.types';
 import OrganizationSchema from '@/src/components/schema/OrganizationSchema';
+import Analytics from '@/src/components/shared/Analytics';
+import CookieConsent from '@/src/components/shared/CookieConsent';
 import Footer from '@/src/components/ui/Footer';
 import Header from '@/src/components/ui/Header';
+
+import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Preconnect to critical origins
   preconnect('https://cdn.sanity.io');
-  preconnect('https://vercel.live');
-  // Preconnect to Next.js Google Fonts CDN (for Poppins)
-  preconnect('https://fonts.gstatic.com', { crossOrigin: 'anonymous' });
   prefetchDNS('https://cdn.sanity.io');
 
   const settings = await fetchWithLogging<QuerySettingsResult>({
@@ -34,27 +34,27 @@ export default async function RootLayout({
       className={`${poppins.className} ${switzer.variable} ${poppins.variable}`}
     >
       <head>
-        {/* Preload critical fonts */}
-        <link
-          rel="preload"
-          href="/fonts/Switzer-Regular.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/Switzer-Medium.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        {settings && <OrganizationSchema settings={settings} />}
+        {/* Preconnect to Google Tag Manager for faster loading */}
+        {settings?.analytics?.gtm_id && (
+          <>
+            <link rel="preconnect" href="https://www.googletagmanager.com" />
+            <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+          </>
+        )}
       </head>
       <body>
         <Header />
         {children}
         <Footer />
+        {settings && <OrganizationSchema settings={settings} />}
+        {IS_PRODUCTION_DEPLOYMENT && <CookieConsent />}
+        {IS_PRODUCTION_DEPLOYMENT && settings?.analytics && (
+          <Analytics
+            gtmId={settings.analytics.gtm_id ?? undefined}
+            ga4Id={settings.analytics.ga4_id ?? undefined}
+            googleAdsId={settings.analytics.googleAds_id ?? undefined}
+          />
+        )}
       </body>
     </html>
   );

@@ -450,6 +450,11 @@ export const querySettings = defineQuery(`*[_type == "settings"][0]{
   },
   email,
   tel,
+  analytics {
+    gtm_id,
+    ga4_id,
+    googleAds_id
+  },
   structuredData {
     companyName,
     companyDescription,
