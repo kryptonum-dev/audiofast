@@ -8,6 +8,7 @@ import Link from 'next/link';
 import React from 'react';
 
 import type { PortableTextValue } from '@/global/types';
+import { convertToSlug, portableTextToPlainString } from '@/global/utils';
 
 type Props = {
   value: PortableTextValue;
@@ -15,6 +16,7 @@ type Props = {
   headingLevel?: 'h1' | 'h2' | 'h3' | 'h4';
   parentHeadingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
   enablePortableTextStyles?: boolean;
+  addHeadingIds?: boolean;
 };
 
 export function PortableTextRenderer({
@@ -23,6 +25,7 @@ export function PortableTextRenderer({
   headingLevel,
   parentHeadingLevel,
   enablePortableTextStyles = false,
+  addHeadingIds = false,
 }: Props) {
   if (!value) return null;
 
@@ -105,10 +108,19 @@ export function PortableTextRenderer({
         );
       },
       // Handle heading styles
-      h1: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+      h1: ({
+        children,
+        value: blockValue,
+      }: PortableTextComponentProps<PortableTextValue>) => {
         const Tag = getActualHeading('h1');
+        const id = addHeadingIds
+          ? convertToSlug(
+              portableTextToPlainString([blockValue as PortableTextBlock])
+            )
+          : undefined;
         return (
           <Tag
+            id={id}
             className={
               isSingleBlock && !enablePortableTextStyles ? className : undefined
             }
@@ -117,10 +129,19 @@ export function PortableTextRenderer({
           </Tag>
         );
       },
-      h2: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+      h2: ({
+        children,
+        value: blockValue,
+      }: PortableTextComponentProps<PortableTextValue>) => {
         const Tag = getActualHeading('h2');
+        const id = addHeadingIds
+          ? convertToSlug(
+              portableTextToPlainString([blockValue as PortableTextBlock])
+            )
+          : undefined;
         return (
           <Tag
+            id={id}
             className={
               isSingleBlock && !enablePortableTextStyles ? className : undefined
             }
@@ -129,10 +150,19 @@ export function PortableTextRenderer({
           </Tag>
         );
       },
-      h3: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+      h3: ({
+        children,
+        value: blockValue,
+      }: PortableTextComponentProps<PortableTextValue>) => {
         const Tag = getActualHeading('h3');
+        const id = addHeadingIds
+          ? convertToSlug(
+              portableTextToPlainString([blockValue as PortableTextBlock])
+            )
+          : undefined;
         return (
           <Tag
+            id={id}
             className={
               isSingleBlock && !enablePortableTextStyles ? className : undefined
             }

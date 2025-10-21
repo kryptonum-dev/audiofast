@@ -202,7 +202,6 @@ h2,
   font-weight: 500;
   color: var(--neutral-700, #303030);
   letter-spacing: -0.03em;
-
   -webkit-text-stroke-width: 0.25px;
   -webkit-text-stroke-color: var(--neutral-700, #303030);
   font-size: var(--typography-header-m, 1.5rem);
@@ -350,12 +349,18 @@ h4 .link {
     letter-spacing: -0.03em;
     -webkit-text-stroke-width: 0.25px;
     -webkit-text-stroke-color: var(--neutral-700, #303030);
-    font-size: var(--typography-header-m, 1.5rem);
     margin-top: 1.5rem;
+    font-size: var(--typography-body-xl, 1.125rem);
 
     strong {
       font-weight: 500;
     }
+  }
+
+  h2 {
+    margin-top: clamp(2rem, calc(3vw / 0.48), 3rem);
+    margin-bottom: clamp(1rem, calc(1.75vw / 0.48), 1.5rem);
+    font-size: var(--typography-header-m, 1.5rem);
   }
 
   > :first-child {

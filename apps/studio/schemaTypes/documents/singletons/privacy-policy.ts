@@ -3,7 +3,7 @@ import { defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
-import { pageBuilderField } from '../../shared';
+import { customPortableText } from '../../definitions/portable-text';
 import { getSEOFields } from '../../shared/seo';
 
 export const privacyPolicy = defineType({
@@ -16,22 +16,41 @@ export const privacyPolicy = defineType({
   groups: GROUPS,
   fields: [
     ...defineSlugForDocument({
-      slug: '/polityka-prywatnosci',
+      slug: '/polityka-prywatnosci/',
       group: GROUP.MAIN_CONTENT,
     }),
-    pageBuilderField,
+    customPortableText({
+      name: 'description',
+      title: 'Opis',
+      description: 'Krótki opis polityki prywatności pod nagłówkiem strony',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
+      },
+    }),
+    customPortableText({
+      name: 'content',
+      title: 'Treść',
+      description: 'Treść polityki prywatności',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal', 'h2', 'h3'],
+        lists: ['bullet', 'number'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
+      },
+    }),
     ...getSEOFields({ exclude: ['doNotIndex', 'hideFromList'] }),
   ],
   preview: {
     select: {
       name: 'name',
-      description: 'description',
       slug: 'slug.current',
     },
-    prepare: ({ name, description }) => ({
+    prepare: ({ name }) => ({
       title: name || 'Polityka prywatności',
       media: Lock,
-      subtitle: description || 'Polityka prywatności',
     }),
   },
 });

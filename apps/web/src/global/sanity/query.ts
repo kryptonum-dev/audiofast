@@ -539,3 +539,36 @@ export const queryNotFoundPage = defineQuery(`*[_type == "notFound"][0]{
   ${portableTextFragment('description')},
   ${buttonFragment('buttons[]')}
 }`);
+
+export const queryPrivacyPolicy = defineQuery(`*[_type == "privacyPolicy"][0]{
+  _id,
+  _type,
+  "slug": slug.current,
+  name,
+  ${portableTextFragment('description')},
+  ${portableTextFragment('content')},
+  "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  }
+}`);
+
+export const queryTermsAndConditions =
+  defineQuery(`*[_type == "termsAndConditions"][0]{
+  _id,
+  _type,
+  "slug": slug.current,
+  name,
+  ${portableTextFragment('description')},
+  ${portableTextFragment('content')},
+  "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  }
+}`);
