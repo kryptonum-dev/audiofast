@@ -23,6 +23,6 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - name: Deploy Sanity Studio
         run: |
-          cd ./apps/sanity
+          cd ./apps/studio
           bun install
           bun run sanity deploy
