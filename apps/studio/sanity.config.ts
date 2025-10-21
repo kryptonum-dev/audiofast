@@ -18,7 +18,7 @@ const title = process.env.SANITY_STUDIO_TITLE;
 
 export default defineConfig({
   name: 'default',
-  title: title ?? 'Turbo Studio',
+  title: title ?? 'Audiofast Studio',
   projectId: projectId,
   icon: Logo,
   dataset: dataset ?? 'production',
