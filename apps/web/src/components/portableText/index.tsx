@@ -12,9 +12,13 @@ import type { PortableTextProps } from '@/global/types';
 import { convertToSlug, portableTextToPlainString } from '@/global/utils';
 
 import { ArrowListComponent } from './ArrowList';
+import { ButtonPortableTextComponent } from './Button';
 import { CircleNumberedListComponent } from './CircleNumberedList';
 import { CtaSectionComponent } from './CtaSection';
+import { FeaturedProductsComponent } from './FeaturedProducts';
 import { ImageComponent } from './Image';
+import { QuoteComponent } from './Quote';
+import { TwoColumnTableComponent } from './TwoColumnTable';
 
 type Props = {
   value: PortableTextProps;
@@ -311,6 +315,10 @@ export function PortableTextRenderer({
         ptArrowList: ArrowListComponent,
         ptCircleNumberedList: CircleNumberedListComponent,
         ptCtaSection: CtaSectionComponent,
+        ptTwoColumnTable: TwoColumnTableComponent,
+        ptFeaturedProducts: FeaturedProductsComponent,
+        ptQuote: QuoteComponent,
+        ptButton: ButtonPortableTextComponent,
       },
       ...customComponentTypes,
     },

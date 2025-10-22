@@ -102,6 +102,14 @@ const portableTextFragmentExtended = (
       },
       ${productFragment('products[]->')}
     },
+    _type == "ptTwoColumnTable" => {
+      ...,
+      rows[]{
+        _key,
+        column1,
+        ${portableTextFragment('column2')}
+      }
+    },
   }
 `;
 
@@ -682,8 +690,27 @@ export const queryReviewBySlug =
   ${portableTextFragment('title')},
   ${portableTextFragment('description')},
   ${imageFragment('image')},
+  overrideGallery,
+  ${imageFragment('imageGallery[]')},
   ${portableTextFragmentExtended('content')},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+  "product": *[_type == "product" && references(^._id)][0]{
+    _id,
+    _createdAt,
+    "slug": slug.current,
+    name,
+    subtitle,
+    price,
+    isArchived,
+    brand->{
+      name,
+      "slug": slug.current,
+      ${imageFragment('logo')},
+    },
+    "mainImage": ${imageFragment('imageGallery[0]')},
+    ${imageFragment('imageGallery[]')},
+    ${portableTextFragment('shortDescription')},
+  },
   seo,
   openGraph{
     title,

@@ -1,0 +1,27 @@
+.quote {
+  margin: clamp(2rem, calc(2.5vw / 0.48), 3rem) 0;
+  padding: clamp(1.25rem, calc(2vw / 0.48), 2rem);
+  border-left: 4px solid var(--color-primary, #000);
+  background-color: var(--color-background-secondary, #f5f5f5);
+  font-style: italic;
+  font-size: clamp(1rem, calc(1.125vw / 0.48), 1.125rem);
+  line-height: 1.6;
+  border-radius: 0 0.5rem 0.5rem 0;
+
+  > p {
+    margin: 0;
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  @media (max-width: 37.4375rem) {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+}

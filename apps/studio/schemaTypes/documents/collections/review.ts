@@ -99,6 +99,40 @@ export const review = defineType({
       },
       validation: (Rule) => Rule.required().error('Obraz główny jest wymagany'),
     }),
+    defineField({
+      name: 'overrideGallery',
+      title: 'Nadpisz galerię zdjęć',
+      type: 'boolean',
+      description:
+        'Włącz tę opcję, aby użyć niestandardowej galerii zdjęć dla tej recenzji zamiast galerii z powiązanego produktu. Jeśli wyłączone, zostanie użyta galeria produktu (jeśli istnieje powiązany produkt).',
+      group: GROUP.MAIN_CONTENT,
+      initialValue: false,
+      hidden: ({ document }: any) => document?.destinationType !== 'page',
+    }),
+    defineField({
+      name: 'imageGallery',
+      title: 'Galeria zdjęć recenzji',
+      type: 'array',
+      description:
+        'Dodaj zdjęcia do galerii recenzji (minimum 4 zdjęcia). Ta galeria nadpisze galerię produktu.',
+      group: GROUP.MAIN_CONTENT,
+      of: [{ type: 'image' }],
+      hidden: ({ document }: any) =>
+        document?.destinationType !== 'page' || !document?.overrideGallery,
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const destinationType = (context.document as any)?.destinationType;
+          const overrideGallery = (context.document as any)?.overrideGallery;
+          if (
+            destinationType === 'page' &&
+            overrideGallery === true &&
+            (!value || !Array.isArray(value) || value.length < 4)
+          ) {
+            return 'Galeria musi zawierać minimum 4 zdjęcia gdy nadpisujesz galerię produktu';
+          }
+          return true;
+        }),
+    }),
     customPortableText({
       name: 'content',
       title: 'Treść recenzji',
@@ -116,6 +150,10 @@ export const review = defineType({
         'ptArrowList',
         'ptCircleNumberedList',
         'ptCtaSection',
+        'ptTwoColumnTable',
+        'ptFeaturedProducts',
+        'ptQuote',
+        'ptButton',
       ],
       optional: true,
       hidden: ({ document }: any) => document?.destinationType !== 'page',

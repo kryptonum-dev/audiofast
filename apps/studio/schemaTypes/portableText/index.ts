@@ -52,8 +52,10 @@ const ALL_CUSTOM_COMPONENTS = [
   { name: 'ptArrowList', type: 'ptArrowList' },
   { name: 'ptCircleNumberedList', type: 'ptCircleNumberedList' },
   { name: 'ptCtaSection', type: 'ptCtaSection' },
-  // Add more custom components here as needed:
-  // { name: 'ptTable', type: 'ptTable' },
+  { name: 'ptTwoColumnTable', type: 'ptTwoColumnTable' },
+  { name: 'ptFeaturedProducts', type: 'ptFeaturedProducts' },
+  { name: 'ptQuote', type: 'ptQuote' },
+  { name: 'ptButton', type: 'ptButton' },
 ] as const;
 
 export type PortableTextInclude = {

@@ -22,6 +22,13 @@ export const ptCtaSection = defineType({
       validation: (Rule) => Rule.required().error('Przycisk jest wymagany'),
     }),
     defineField({
+      name: 'showProducts',
+      title: 'Wyświetl produkty',
+      type: 'boolean',
+      description: 'Czy wyświetlić polecane produkty poniżej tekstu?',
+      initialValue: false,
+    }),
+    defineField({
       name: 'products',
       title: 'Produkty',
       type: 'array',
@@ -46,8 +53,15 @@ export const ptCtaSection = defineType({
           },
         },
       ],
+      hidden: ({ parent }: any) => !parent?.showProducts,
       validation: (Rule) =>
-        Rule.required().length(2).error('Musisz wybrać dokładnie 2 produkty'),
+        Rule.custom((value, context) => {
+          const showProducts = (context.parent as any)?.showProducts;
+          if (showProducts && (!value || value.length !== 2)) {
+            return 'Musisz wybrać dokładnie 2 produkty gdy opcja "Wyświetl produkty" jest włączona';
+          }
+          return true;
+        }),
     }),
   ],
   preview: {
@@ -57,15 +71,24 @@ export const ptCtaSection = defineType({
       urlType: 'button.url.type',
       externalUrl: 'button.url.external',
       internalUrl: 'button.url.internal.slug.current',
+      showProducts: 'showProducts',
     },
-    prepare: ({ heading, buttonText, urlType, externalUrl, internalUrl }) => {
+    prepare: ({
+      heading,
+      buttonText,
+      urlType,
+      externalUrl,
+      internalUrl,
+      showProducts,
+    }) => {
       const url = urlType === 'external' ? externalUrl : internalUrl;
       const truncatedUrl =
         url?.length > 30 ? `${url.substring(0, 30)}...` : url;
+      const productsLabel = showProducts ? ' • Z produktami' : '';
       return {
         title: heading || 'Wezwanie do działania',
         subtitle: buttonText
-          ? `${buttonText} → ${truncatedUrl || '(brak linku)'}`
+          ? `${buttonText} → ${truncatedUrl || '(brak linku)'}${productsLabel}`
           : 'Brak przycisku',
         media: FeedbackIcon,
       };

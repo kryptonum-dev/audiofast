@@ -207,7 +207,8 @@ export const product = defineType({
       name: 'reviews',
       title: 'Recenzje',
       type: 'array',
-      description: 'Wybierz recenzje tego produktu (minimum 4, maksimum 10).',
+      description:
+        'Wybierz recenzje tego produktu (maksymalnie 4, opcjonalne).',
       of: [
         {
           type: 'reference',
@@ -226,7 +227,7 @@ export const product = defineType({
         },
       ],
       validation: (Rule) =>
-        Rule.min(4).max(10).error('Produkt musi mieć między 4 a 10 recenzji'),
+        Rule.max(4).error('Produkt może mieć maksymalnie 4 recenzje'),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({

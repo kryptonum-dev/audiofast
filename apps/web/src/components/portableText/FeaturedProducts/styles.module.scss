@@ -1,0 +1,11 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1rem, calc(2vw / 0.48), 2rem);
+  margin: clamp(2rem, calc(2.5vw / 0.48), 3rem) 0;
+
+  @media (max-width: 37.4375rem) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
