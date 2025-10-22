@@ -7,7 +7,7 @@ import BreadcrumbsSchema from '@/src/components/schema/BreadcrumbsSchema';
 import styles from './styles.module.scss';
 
 type Props = {
-  data?: BreadcrumbItem[];
+  data: BreadcrumbItem[];
   firstItemType?: string;
 };
 

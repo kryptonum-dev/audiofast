@@ -1,6 +1,6 @@
 import type { PagebuilderType } from '@/src/global/types';
 
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import Button from '../../ui/Button';
 import PublicationsCarousel from './PublicationsCarousel';
 import styles from './styles.module.scss';

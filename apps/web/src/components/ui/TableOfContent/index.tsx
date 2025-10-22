@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import type { PortableTextValue } from '@/src/global/types';
+import type { PortableTextProps } from '@/src/global/types';
 import { convertToSlug, portableTextToPlainString } from '@/src/global/utils';
 
 import styles from './styles.module.scss';
@@ -14,7 +14,7 @@ type HeadingGroup = {
 
 type Props = {
   title?: string;
-  headings: PortableTextValue[];
+  headings: PortableTextProps[];
 };
 
 export default function TableOfContent({

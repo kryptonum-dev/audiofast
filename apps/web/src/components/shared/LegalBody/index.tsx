@@ -1,13 +1,13 @@
-import type { PortableTextValue } from '@/global/types';
+import type { PortableTextProps } from '@/global/types';
 
+import PortableText from '../../portableText';
 import TableOfContent from '../../ui/TableOfContent';
-import PortableText from '../PortableText';
 import styles from './styles.module.scss';
 type Props = {
-  headings: PortableTextValue[];
+  headings: PortableTextProps[];
   name: string;
-  description: PortableTextValue;
-  content: PortableTextValue;
+  description: PortableTextProps;
+  content: PortableTextProps;
 };
 
 export function LegalBody({ headings, name, description, content }: Props) {

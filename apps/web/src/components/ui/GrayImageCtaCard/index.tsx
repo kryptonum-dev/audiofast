@@ -1,7 +1,7 @@
-import type { PortableTextValue } from '@/src/global/types';
+import type { PortableTextProps } from '@/src/global/types';
 
+import PortableText from '../../portableText';
 import Image, { type AppImageProps } from '../../shared/Image';
-import PortableText from '../../shared/PortableText';
 import type { Props as ButtonProps } from '../../ui/Button/Button';
 import Button from '../../ui/Button/Button';
 import PhoneLink from '../PhoneLink';
@@ -9,10 +9,10 @@ import styles from './styles.module.scss';
 
 type GrayImageCtaCardProps = {
   image: AppImageProps;
-  primaryHeading: PortableTextValue;
-  primaryDescription: PortableTextValue;
-  secondaryHeading: PortableTextValue | string;
-  secondaryDescription: PortableTextValue;
+  primaryHeading: PortableTextProps;
+  primaryDescription: PortableTextProps;
+  secondaryHeading: PortableTextProps | string;
+  secondaryDescription: PortableTextProps;
   button: ButtonProps;
   index: number;
   phoneNumber: string;

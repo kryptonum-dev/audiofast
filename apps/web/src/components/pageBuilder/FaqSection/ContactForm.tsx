@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import PortableText from '@/src/components/shared/PortableText';
+import PortableText from '@/src/components/portableText';
 import Button from '@/src/components/ui/Button';
 import Checkbox from '@/src/components/ui/Checkbox';
 import FormStates, { type FormState } from '@/src/components/ui/FormStates';
@@ -66,8 +66,6 @@ export default function ContactForm({
     setFormState('loading');
 
     try {
-      console.log('Submitting form data:', data);
-
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 

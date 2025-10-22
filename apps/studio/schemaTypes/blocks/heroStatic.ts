@@ -2,7 +2,7 @@ import { Home } from 'lucide-react';
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
 import { toPlainText } from '../../utils/helper';
-import { customPortableText } from '../definitions/portable-text';
+import { customPortableText } from '../portableText';
 
 const title = 'Statyczna sekcja Hero';
 

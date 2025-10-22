@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 
 import type { QueryHomePageResult } from '../../../global/sanity/sanity.types';
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import styles from './styles.module.scss';
 
 // Extract the FAQ type from the resolved QueryHomePageResult

@@ -2,7 +2,7 @@ import { Star } from 'lucide-react';
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
 import { parsePortableTextToString } from '../../utils/helper';
-import { customPortableText } from '../definitions/portable-text';
+import { customPortableText } from '../portableText';
 
 const title = 'Sekcja Hero z karuzelą';
 

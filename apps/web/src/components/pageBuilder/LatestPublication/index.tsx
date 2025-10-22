@@ -1,7 +1,7 @@
 import type { PagebuilderType } from '@/src/global/types';
 
 import Image from '../../shared/Image';
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import Button from '../../ui/Button';
 import DateBox from '../../ui/DateBox';
 import PublicationType from '../../ui/PublicationType';

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import PortableText from '@/src/components/shared/PortableText';
+import PortableText from '@/src/components/portableText';
 import Button from '@/src/components/ui/Button';
 import type { QueryFooterResult } from '@/src/global/sanity/sanity.types';
-import type { PortableTextValue } from '@/src/global/types';
+import type { PortableTextProps } from '@/src/global/types';
 
 import styles from './styles.module.scss';
 
@@ -24,8 +24,8 @@ interface FormStatesProps {
 
 interface StateContentProps {
   withIcon?: boolean;
-  heading?: PortableTextValue | null;
-  paragraph?: PortableTextValue | null;
+  heading?: PortableTextProps;
+  paragraph?: PortableTextProps;
   refreshButton?: boolean;
   refreshButtonText?: string;
   onRefresh?: () => void;
@@ -63,8 +63,8 @@ const SuccessState = ({
   <div className={styles.success} data-mode={mode}>
     <div className={styles.wrapper}>
       {withIcon && <SuccessIcon />}
-      <PortableText className={styles.heading} value={heading} />
-      <PortableText className={styles.paragraph} value={paragraph} />
+      <PortableText className={styles.heading} value={heading!} />
+      <PortableText className={styles.paragraph} value={paragraph!} />
       {refreshButton && (
         <Button
           type="button"
@@ -93,8 +93,8 @@ const ErrorState = ({
   <div className={styles.error} data-mode={mode}>
     <div className={styles.wrapper}>
       {withIcon && <ErrorIcon />}
-      <PortableText value={heading} className={styles.heading} />
-      <PortableText value={paragraph} className={styles.paragraph} />
+      <PortableText value={heading!} className={styles.heading} />
+      <PortableText value={paragraph!} className={styles.paragraph} />
       {refreshButton && (
         <Button
           type="button"

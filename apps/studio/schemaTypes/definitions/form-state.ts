@@ -1,6 +1,6 @@
 import { defineField } from 'sanity';
 
-import { customPortableText } from './portable-text';
+import { customPortableText } from '../portableText';
 
 export const formState = defineField({
   name: 'formState',

@@ -5,6 +5,10 @@ import { defineArrayMember, defineField } from 'sanity';
 import { CustomInput } from '../../components/custom-input';
 import { toPlainText } from '../../utils/helper';
 
+// ----------------------------------------
+// Portable Text Configuration
+// ----------------------------------------
+
 // Default building blocks for the portable text "block" member
 const ALL_STYLES = [
   { title: 'Normalny', value: 'normal' },
@@ -15,14 +19,17 @@ const ALL_STYLES = [
   { title: 'Nagłówek H5', value: 'h5' },
   { title: 'Nagłówek H6', value: 'h6' },
 ] as const;
+
 const ALL_LISTS = [
   { title: 'Numerowana', value: 'number' },
   { title: 'Wypunktowana', value: 'bullet' },
 ] as const;
+
 const ALL_DECORATORS = [
   { title: 'Pogrubienie', value: 'strong' },
   { title: 'Kursywa', value: 'em' },
 ] as const;
+
 const ALL_ANNOTATIONS = [
   {
     name: 'customLink',
@@ -38,13 +45,27 @@ const ALL_ANNOTATIONS = [
   },
 ] as const;
 
-type PortableTextInclude = {
+// Custom component registry
+// To add a new component: Add it here with name/type, export the schema from definitions/index.ts
+const ALL_CUSTOM_COMPONENTS = [
+  { name: 'ptImage', type: 'ptImage' },
+  { name: 'ptArrowList', type: 'ptArrowList' },
+  { name: 'ptCircleNumberedList', type: 'ptCircleNumberedList' },
+  { name: 'ptCtaSection', type: 'ptCtaSection' },
+  // Add more custom components here as needed:
+  // { name: 'ptTable', type: 'ptTable' },
+] as const;
+
+export type PortableTextInclude = {
   members?: ReadonlyArray<'block'>;
   styles?: ReadonlyArray<(typeof ALL_STYLES)[number]['value']>;
   lists?: ReadonlyArray<(typeof ALL_LISTS)[number]['value']>;
   decorators?: ReadonlyArray<(typeof ALL_DECORATORS)[number]['value']>;
   annotations?: ReadonlyArray<(typeof ALL_ANNOTATIONS)[number]['name']>;
 };
+
+export type PortableTextComponentName =
+  (typeof ALL_CUSTOM_COMPONENTS)[number]['name'];
 
 function filterByKey<T extends Record<string, any>, K extends keyof T>(
   items: readonly T[],
@@ -59,28 +80,24 @@ function filterByKey<T extends Record<string, any>, K extends keyof T>(
 function buildBlockMember(include?: PortableTextInclude) {
   const styles = filterByKey(ALL_STYLES, include?.styles, 'value');
   const lists = filterByKey(ALL_LISTS, include?.lists, 'value');
-  const annotations = filterByKey(
-    ALL_ANNOTATIONS,
-    include?.annotations,
-    'name'
-  );
-  const decorators = filterByKey(ALL_DECORATORS, include?.decorators, 'value');
 
-  // Build marks config: if caller specified annotations/decorators, honor them
-  // even when empty (to explicitly disable). Otherwise fall back to defaults.
-  const specifiedAnnotations = include?.annotations !== undefined;
-  const specifiedDecorators = include?.decorators !== undefined;
-  const hasExplicitMarks = specifiedAnnotations || specifiedDecorators;
+  // For annotations and decorators:
+  // - If include object exists: only use what's explicitly specified (default to empty if not specified)
+  // - If no include object: use all defaults
+  const annotations = include
+    ? filterByKey(ALL_ANNOTATIONS, include.annotations ?? [], 'name')
+    : [...ALL_ANNOTATIONS];
 
-  const marks = hasExplicitMarks
-    ? {
-        ...(specifiedAnnotations ? { annotations } : {}),
-        ...(specifiedDecorators ? { decorators } : {}),
-      }
-    : {
-        annotations,
-        decorators,
-      };
+  const decorators = include
+    ? filterByKey(ALL_DECORATORS, include.decorators ?? [], 'value')
+    : [...ALL_DECORATORS];
+
+  // Build marks config
+  // Always explicitly set decorators and annotations (empty arrays if none specified)
+  const marks = {
+    decorators,
+    annotations,
+  };
 
   const specifiedLists = include?.lists !== undefined;
   const specifiedStyles = include?.styles !== undefined;
@@ -120,6 +137,8 @@ export const customPortableText = (options?: {
   optional?: boolean;
   type?: 'default' | 'heading';
   include?: PortableTextInclude;
+  /** Allowlisted custom component types to include in this field */
+  components?: ReadonlyArray<PortableTextComponentName>;
   /** Maksymalna liczba znaków dozwolona w treści Portable Text */
   maxLength?: number;
   /** Alias wspierający literówkę – traktowany tak samo jak maxLength */
@@ -132,6 +151,7 @@ export const customPortableText = (options?: {
   const {
     name,
     include,
+    components,
     optional,
     validation,
     type: variant,
@@ -153,11 +173,27 @@ export const customPortableText = (options?: {
         }
       : include;
 
-  // Currently only the "block" member is available. This is structured
-  // to be easily extended with additional members in the future.
-  const members = (effectiveInclude?.members ?? ['block']).includes('block')
+  // Build base members (block)
+  const members: ReturnType<typeof defineArrayMember>[] = (
+    effectiveInclude?.members ?? ['block']
+  ).includes('block')
     ? [buildBlockMember(effectiveInclude)]
     : [];
+
+  // Extend with allowed custom components (opt-in only)
+  // If components is undefined/not specified, default to empty array (no custom components)
+  const allowedComponents = components
+    ? filterByKey(ALL_CUSTOM_COMPONENTS, components, 'name')
+    : [];
+
+  allowedComponents.forEach((component) => {
+    members.push(
+      defineArrayMember({
+        name: component.name,
+        type: component.type,
+      })
+    );
+  });
 
   const ofMembers =
     members.length > 0 ? members : [buildBlockMember(effectiveInclude)];

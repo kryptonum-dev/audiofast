@@ -2,7 +2,7 @@ import { Tag } from 'lucide-react';
 import { defineType } from 'sanity';
 
 import { toPlainText } from '../../utils/helper';
-import { customPortableText } from '../definitions/portable-text';
+import { customPortableText } from '../portableText';
 
 const title = 'Lista wszystkich marek';
 

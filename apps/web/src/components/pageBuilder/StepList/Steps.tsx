@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 import type { PagebuilderType } from '@/src/global/types';
 
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import styles from './styles.module.scss';
 
 type StepsProps = {

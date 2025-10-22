@@ -1,7 +1,7 @@
 import type { PortableTextBlock } from 'next-sanity';
 import slugify from 'slugify';
 
-import type { PortableTextValue } from './types';
+import type { PortableTextProps } from './types';
 
 export const isRelativeUrl = (url: string) =>
   url.startsWith('/') || url.startsWith('#') || url.startsWith('?');
@@ -79,7 +79,7 @@ export async function imageToInlineSvg(url: string) {
  * @returns Plain text string with formatting removed
  */
 export function portableTextToPlainString(
-  portableText: PortableTextBlock[]
+  portableText: PortableTextBlock[] | PortableTextProps
 ): string {
   if (!Array.isArray(portableText) || portableText.length === 0) {
     return '';
@@ -162,7 +162,7 @@ function escapeHtml(text: string): string {
  * // Returns: "<p>Hello <strong>world</strong>!</p>"
  */
 export function portableTextToHtml(
-  portableText: PortableTextValue | PortableTextBlockWithDetails[]
+  portableText: PortableTextProps | PortableTextBlockWithDetails[]
 ): string {
   if (!portableText) return '';
 

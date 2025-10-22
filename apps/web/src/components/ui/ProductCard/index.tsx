@@ -17,6 +17,7 @@ export default function ProductCard({
   product,
   imageSizes = '400px',
   headingLevel = 'h3',
+  showButton = true,
   priority = false,
   loading = 'lazy',
 }: ProductCardProps) {
@@ -47,16 +48,18 @@ export default function ProductCard({
             loading={loading}
           />
           <Image image={brand!.logo} sizes="90px" loading={loading} />
-          <button
-            className={styles.addToComparison}
-            onClick={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-          >
-            <span>Dodaj do porównania</span>
-            <PlusIcon />
-          </button>
+          {showButton && (
+            <button
+              className={styles.addToComparison}
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            >
+              <span>Dodaj do porównania</span>
+              <PlusIcon />
+            </button>
+          )}
         </div>
         <div className={styles.container}>
           <Heading className={styles.title}>
@@ -65,7 +68,13 @@ export default function ProductCard({
           <p className={styles.subtitle}>{subtitle}</p>
           <div className={styles.priceContainer}>
             <span className={styles.price}>{formatPrice(price)}</span>
-            <Button tabIndex={-1} text="Dowiedz się więcej" variant="primary" />
+            {showButton && (
+              <Button
+                tabIndex={-1}
+                text="Dowiedz się więcej"
+                variant="primary"
+              />
+            )}
           </div>
         </div>
       </a>

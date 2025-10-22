@@ -1,7 +1,7 @@
 import { defineField } from 'sanity';
 
 import { GROUP } from '../../utils/constant';
-import { customPortableText } from '../definitions/portable-text';
+import { customPortableText } from '../portableText';
 
 export const portableTextField = customPortableText({
   name: 'portableText',

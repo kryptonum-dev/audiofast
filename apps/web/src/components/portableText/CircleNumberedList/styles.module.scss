@@ -1,0 +1,30 @@
+.list {
+  list-style: none !important;
+  padding-left: 0rem !important;
+  counter-reset: circle-counter;
+  .item {
+    position: relative;
+    counter-increment: circle-counter;
+    padding-left: 2.25rem;
+
+    &::before {
+      content: counter(circle-counter, decimal-leading-zero);
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: grid;
+      place-items: center;
+      width: 1.75rem;
+      font-weight: 500;
+      height: 1.75rem;
+      border-radius: 50%;
+      color: var(--primary-red, #fe0140);
+      font-family: var(--font-family-poppins);
+      font-size: var(--typography-body-m, 0.875rem);
+      line-height: 1.5;
+      letter-spacing: -0.03em;
+      background: rgba(197, 78, 71, 0.15);
+      backdrop-filter: blur(3.5px);
+    }
+  }
+}

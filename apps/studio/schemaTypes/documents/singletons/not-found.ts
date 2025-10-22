@@ -3,7 +3,7 @@ import { defineField, defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { toPlainText } from '../../../utils/helper';
-import { customPortableText } from '../../definitions/portable-text';
+import { customPortableText } from '../../portableText';
 import { getSEOFields } from '../../shared/seo';
 
 const title = 'Nie znaleziono strony (404)';

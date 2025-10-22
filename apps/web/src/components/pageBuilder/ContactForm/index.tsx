@@ -1,6 +1,6 @@
 import type { PagebuilderType } from '@/src/global/types';
 
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import ContactPerson from '../../ui/ContactPerson';
 import ContactFormComponent from './ContactForm';
 import styles from './styles.module.scss';

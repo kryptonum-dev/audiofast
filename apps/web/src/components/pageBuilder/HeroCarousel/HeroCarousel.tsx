@@ -4,7 +4,7 @@ import { getImageProps } from 'next/image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { type SanityRawImage } from '@/components/shared/Image';
-import PortableText from '@/components/shared/PortableText';
+import PortableText from '@/src/components/portableText';
 import ArrowButton from '@/components/ui/ArrowButton';
 import Button from '@/components/ui/Button';
 import PaginationDots from '@/components/ui/PaginationDots';

@@ -38,8 +38,6 @@ export default function ContactFormComponent({
     setFormState('loading');
 
     try {
-      console.log('Submitting form data:', data);
-
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 

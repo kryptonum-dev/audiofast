@@ -1,7 +1,7 @@
 import { urlFor } from '@/global/sanity/client';
 
 import type { QueryNotFoundPageResult } from '../../../global/sanity/sanity.types';
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import Button from '../../ui/Button';
 import styles from './styles.module.scss';
 

@@ -4,7 +4,7 @@ import { urlFor } from '@/global/sanity/client';
 import type { PagebuilderType } from '@/src/global/types';
 import svgToInlineString from '@/src/global/utils';
 
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import styles from './styles.module.scss';
 
 type HeroStaticProps = PagebuilderType<'heroStatic'> & {

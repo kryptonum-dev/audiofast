@@ -3,7 +3,7 @@ import type { PagebuilderType } from '@/src/global/types';
 
 import { sanityFetch } from '../../../global/sanity/client';
 import { querySettings } from '../../../global/sanity/query';
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import styles from './styles.module.scss';
 
 type ContactMapProps = PagebuilderType<'contactMap'> & {

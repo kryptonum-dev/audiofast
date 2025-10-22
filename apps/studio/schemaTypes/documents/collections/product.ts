@@ -7,7 +7,7 @@ import { defineField, defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
-import { customPortableText } from '../../definitions/portable-text';
+import { customPortableText } from '../../portableText';
 import { getSEOFields } from '../../shared/seo';
 
 export const product = defineType({

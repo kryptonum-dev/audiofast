@@ -1,6 +1,6 @@
 import type { PagebuilderType } from '@/src/global/types';
 
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import Steps from './Steps';
 import styles from './styles.module.scss';
 

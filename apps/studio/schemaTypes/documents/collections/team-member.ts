@@ -5,7 +5,7 @@ import {
 import { Users } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
-import { customPortableText } from '../../definitions/portable-text';
+import { customPortableText } from '../../portableText';
 
 export const teamMember = defineType({
   name: 'teamMember',

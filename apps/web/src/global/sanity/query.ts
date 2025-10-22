@@ -46,6 +46,8 @@ const markDefsFragment = (name: string = 'markDefs[]') => /* groq */ `
   }
 `;
 
+// Simple portable text fragment - only basic blocks, no custom components
+// Used to prevent circular references (e.g., in product shortDescription)
 const portableTextFragment = (name: string = 'portableText') => /* groq */ `
   ${name}[]{
     ...,
@@ -53,7 +55,53 @@ const portableTextFragment = (name: string = 'portableText') => /* groq */ `
       ...,
       ${markDefsFragment()}
     },
+  }
+`;
 
+// Portable text fragment that projects ALL possible custom components
+// The Studio schema controls which components are available per field
+// This fragment fetches everything that might exist, frontend renders what it knows
+const portableTextFragmentExtended = (
+  name: string = 'portableText'
+) => /* groq */ `
+  ${name}[]{
+    ...,
+    _type == "block" => {
+      ...,
+      ${markDefsFragment()}
+    },
+    _type == "ptImage" => {
+      ...,
+      ${imageFragment('image')},
+      ${portableTextFragment('caption')}
+    },
+    _type == "ptArrowList" => {
+      ...,
+      items[]{
+        _key,
+        ${portableTextFragment('content')}
+      }
+    },
+    _type == "ptCircleNumberedList" => {
+      ...,
+      items[]{
+        _key,
+        ${portableTextFragment('content')}
+      }
+    },
+    _type == "ptCtaSection" => {
+      ...,
+      button{
+        text,
+        "href": select(
+          url.type == "internal" => url.internal->slug.current,
+          url.type == "external" => url.external,
+          url.href
+        ),
+        "openInNewTab": url.openInNewTab
+      },
+      ${productFragment('products[]->')}
+    },
   }
 `;
 
@@ -100,9 +148,8 @@ const brandFragment = (name: string = 'brand') => /* groq */ `
   ${imageFragment('logo')},
   }
 `;
-
 // Reusable product fragment for product listings
-const productFragment = (name: string = 'product') => /* groq */ `
+const productFragment = (name: string = 'product'): string => /* groq */ `
   ${name} {
   _id,
   _createdAt,
@@ -564,6 +611,35 @@ export const queryTermsAndConditions =
   name,
   ${portableTextFragment('description')},
   ${portableTextFragment('content')},
+  "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  }
+}`);
+
+export const queryAllBlogPostSlugs =
+  defineQuery(`*[_type == "blog-article" && defined(slug.current)]{
+  "slug": slug.current
+}`);
+
+export const queryBlogPostBySlug =
+  defineQuery(`*[_type == "blog-article" && slug.current == $slug][0]{
+  _id,
+  _type,
+  _createdAt,
+  "slug": slug.current,
+  ${portableTextFragment('name')},
+  ${portableTextFragment('description')},
+  ${imageFragment('image')},
+  category->{
+    _id,
+    name,
+    "slug": slug.current,
+  },
+  ${portableTextFragmentExtended('content')},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
   seo,
   openGraph{

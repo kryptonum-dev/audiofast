@@ -2,7 +2,7 @@ import { MapPinIcon } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
 import { toPlainText } from '../../utils/helper';
-import { customPortableText } from '../definitions/portable-text';
+import { customPortableText } from '../portableText';
 
 const title = 'Mapa kontaktowa';
 

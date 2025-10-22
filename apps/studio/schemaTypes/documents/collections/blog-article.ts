@@ -8,7 +8,7 @@ import { defineField, defineType } from 'sanity';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { parsePortableTextToString } from '../../../utils/helper';
-import { customPortableText } from '../../definitions/portable-text';
+import { customPortableText } from '../../portableText';
 import { getSEOFields } from '../../shared/seo';
 
 export const blogArticle = defineType({
@@ -74,6 +74,24 @@ export const blogArticle = defineType({
         hotspot: true,
       },
       validation: (Rule) => Rule.required().error('Obraz główny jest wymagany'),
+    }),
+    customPortableText({
+      name: 'content',
+      title: 'Treść',
+      description: 'Główna treść artykułu',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal', 'h2', 'h3'],
+        lists: ['bullet', 'number'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
+      },
+      components: [
+        'ptImage',
+        'ptArrowList',
+        'ptCircleNumberedList',
+        'ptCtaSection',
+      ],
     }),
     ...getSEOFields(),
   ],

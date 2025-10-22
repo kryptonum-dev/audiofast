@@ -1,4 +1,7 @@
-import type { QueryHomePageResult } from './sanity/sanity.types';
+import type {
+  QueryBlogPostBySlugResult,
+  QueryHomePageResult,
+} from './sanity/sanity.types';
 
 export type PageBuilderBlockTypes = NonNullable<
   NonNullable<QueryHomePageResult>['pageBuilder']
@@ -25,5 +28,10 @@ export type ContactPersonType = NonNullable<
   NonNullable<PagebuilderType<'faqSection'>['contactPeople']>['contactPersons']
 >[number];
 
-// Sanity Portable Text helper union used across the app
-export type PortableTextValue = object | object[] | null | undefined;
+export type PortableTextProps =
+  NonNullable<QueryBlogPostBySlugResult>['content'];
+
+export type PortableTextPropsBlock = Extract<
+  NonNullable<NonNullable<PortableTextProps>[number]>,
+  { _type: 'block' }
+>;

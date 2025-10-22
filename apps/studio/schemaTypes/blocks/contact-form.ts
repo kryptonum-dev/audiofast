@@ -3,7 +3,7 @@ import { defineField, defineType } from 'sanity';
 
 import { toPlainText } from '../../utils/helper';
 import { formState } from '../definitions/form-state';
-import { customPortableText } from '../definitions/portable-text';
+import { customPortableText } from '../portableText';
 
 const title = 'Formularz Kontaktowy';
 

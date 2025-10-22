@@ -1,7 +1,7 @@
 import type { TeamMemberType } from '@/src/global/types';
 
 import Image from '../../shared/Image';
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import PhoneLink from '../PhoneLink';
 import styles from './styles.module.scss';
 

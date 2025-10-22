@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import type { PagebuilderType, PortableTextValue } from '@/global/types';
+import type { PagebuilderType, PortableTextProps } from '@/global/types';
 
-import PortableText from '../../shared/PortableText';
+import PortableText from '../../portableText';
 import Button from '../../ui/Button';
 import BrandMarqueeList from './BrandMarqueeList';
 import styles from './styles.module.scss';
@@ -17,8 +17,8 @@ type BrandSelectorProps = PagebuilderType<'brandsMarquee'> & {
 type BrandType = NonNullable<BrandSelectorProps['topBrands']>[number];
 
 type HeaderState = {
-  heading: PortableTextValue;
-  description: PortableTextValue;
+  heading: PortableTextProps;
+  description: PortableTextProps;
   buttonText: string;
   buttonHref?: string | null;
 };

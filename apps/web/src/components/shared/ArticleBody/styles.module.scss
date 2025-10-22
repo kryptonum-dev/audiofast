@@ -1,0 +1,94 @@
+.container {
+  max-width: var(--max-width);
+  width: calc(100% - var(--pageMargin) * 2);
+  margin: 0 auto;
+  height: 100%;
+  padding-bottom: clamp(3rem, calc(4vw / 0.48), 5rem);
+  display: grid;
+  grid-template-columns: minmax(16rem, 20rem) 1fr;
+  column-gap: clamp(1.5rem, calc(3.5vw / 0.48), 8rem);
+  align-items: start;
+  grid-template-areas:
+    'tableOfContent header'
+    'tableOfContent body';
+
+  .header {
+    grid-area: header;
+    margin-bottom: clamp(2rem, calc(2vw / 0.48), 3rem);
+    max-width: 44rem;
+    display: grid;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--neutral-300, #e5e5e5);
+    grid-template-columns: auto 1fr;
+    grid-template-rows: repeat(3, auto) 1fr;
+    column-gap: 1rem;
+    grid-template-areas:
+      'publicationType date'
+      'heading heading'
+      'description description'
+      'image image';
+
+    > span {
+      &:first-of-type {
+        grid-area: publicationType;
+      }
+
+      &:nth-of-type(2) {
+        grid-area: date;
+        justify-self: end;
+      }
+    }
+
+    .heading {
+      font-weight: 500;
+      line-height: 1.2;
+      margin: 1rem 0 0.5rem;
+      grid-area: heading;
+      letter-spacing: -0.03em;
+      line-height: 1.16;
+      font-size: var(--typography-header-m, 1.5rem);
+    }
+
+    .description {
+      font-size: var(--typography-body-l, 1rem);
+      grid-area: description;
+      margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+    }
+
+    img {
+      grid-area: image;
+    }
+  }
+
+  .body {
+    max-width: 44rem;
+    grid-area: body;
+
+    ul li::before {
+      top: 10px;
+    }
+  }
+
+  @media (max-width: 69.3125rem) {
+    grid-template-columns: 1fr;
+    max-width: 48rem;
+    grid-template-areas:
+      'header'
+      'tableOfContent'
+      'body';
+
+    > nav {
+      margin-bottom: 2rem;
+    }
+    .header,
+    .body {
+      max-width: 100%;
+    }
+
+    .header {
+      padding: 0;
+      border-bottom: none;
+      margin-bottom: 2rem;
+    }
+  }
+}

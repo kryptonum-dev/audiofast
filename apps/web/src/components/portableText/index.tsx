@@ -2,21 +2,29 @@ import type { PortableTextBlock } from '@portabletext/react';
 import {
   PortableText,
   type PortableTextComponentProps,
+  type PortableTextComponents,
   type PortableTextMarkComponentProps,
 } from '@portabletext/react';
 import Link from 'next/link';
 import React from 'react';
 
-import type { PortableTextValue } from '@/global/types';
+import type { PortableTextProps } from '@/global/types';
 import { convertToSlug, portableTextToPlainString } from '@/global/utils';
 
+import { ArrowListComponent } from './ArrowList';
+import { CircleNumberedListComponent } from './CircleNumberedList';
+import { CtaSectionComponent } from './CtaSection';
+import { ImageComponent } from './Image';
+
 type Props = {
-  value: PortableTextValue;
+  value: PortableTextProps;
   className?: string;
   headingLevel?: 'h1' | 'h2' | 'h3' | 'h4';
   parentHeadingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
   enablePortableTextStyles?: boolean;
   addHeadingIds?: boolean;
+  /** Optional override for custom component types (merges with default registry) */
+  customComponentTypes?: PortableTextComponents['types'];
 };
 
 export function PortableTextRenderer({
@@ -26,6 +34,7 @@ export function PortableTextRenderer({
   parentHeadingLevel,
   enablePortableTextStyles = false,
   addHeadingIds = false,
+  customComponentTypes,
 }: Props) {
   if (!value) return null;
 
@@ -47,17 +56,23 @@ export function PortableTextRenderer({
 
     let minLevel: number | undefined = undefined;
 
-    value.forEach((block: { style?: string }) => {
-      if (block.style && headingMap[block.style] !== undefined) {
-        const level = headingMap[block.style];
-        if (
-          level !== undefined &&
-          (minLevel === undefined || level < minLevel)
-        ) {
-          minLevel = level;
+    value.forEach(
+      (
+        block: NonNullable<NonNullable<PortableTextProps>[number]> & {
+          style?: string;
+        }
+      ) => {
+        if (block.style && headingMap[block.style] !== undefined) {
+          const level = headingMap[block.style];
+          if (
+            level !== undefined &&
+            (minLevel === undefined || level < minLevel)
+          ) {
+            minLevel = level;
+          }
         }
       }
-    });
+    );
 
     return minLevel ?? null;
   };
@@ -95,7 +110,7 @@ export function PortableTextRenderer({
   const components = {
     block: {
       // Handle normal text blocks
-      normal: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+      normal: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
         const Tag = (headingLevel || 'p') as React.ElementType;
         return (
           <Tag
@@ -111,11 +126,13 @@ export function PortableTextRenderer({
       h1: ({
         children,
         value: blockValue,
-      }: PortableTextComponentProps<PortableTextValue>) => {
+      }: PortableTextComponentProps<PortableTextProps>) => {
         const Tag = getActualHeading('h1');
         const id = addHeadingIds
           ? convertToSlug(
-              portableTextToPlainString([blockValue as PortableTextBlock])
+              portableTextToPlainString([
+                blockValue as unknown as PortableTextBlock,
+              ])
             )
           : undefined;
         return (
@@ -132,11 +149,13 @@ export function PortableTextRenderer({
       h2: ({
         children,
         value: blockValue,
-      }: PortableTextComponentProps<PortableTextValue>) => {
+      }: PortableTextComponentProps<PortableTextProps>) => {
         const Tag = getActualHeading('h2');
         const id = addHeadingIds
           ? convertToSlug(
-              portableTextToPlainString([blockValue as PortableTextBlock])
+              portableTextToPlainString([
+                blockValue as unknown as PortableTextBlock,
+              ])
             )
           : undefined;
         return (
@@ -153,11 +172,13 @@ export function PortableTextRenderer({
       h3: ({
         children,
         value: blockValue,
-      }: PortableTextComponentProps<PortableTextValue>) => {
+      }: PortableTextComponentProps<PortableTextProps>) => {
         const Tag = getActualHeading('h3');
         const id = addHeadingIds
           ? convertToSlug(
-              portableTextToPlainString([blockValue as PortableTextBlock])
+              portableTextToPlainString([
+                blockValue as unknown as PortableTextBlock,
+              ])
             )
           : undefined;
         return (
@@ -171,7 +192,7 @@ export function PortableTextRenderer({
           </Tag>
         );
       },
-      h4: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+      h4: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
         const Tag = getActualHeading('h4');
         return (
           <Tag
@@ -183,7 +204,7 @@ export function PortableTextRenderer({
           </Tag>
         );
       },
-      h5: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+      h5: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
         const Tag = getActualHeading('h5');
         return (
           <Tag
@@ -195,7 +216,7 @@ export function PortableTextRenderer({
           </Tag>
         );
       },
-      h6: ({ children }: PortableTextComponentProps<PortableTextValue>) => {
+      h6: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
         const Tag = getActualHeading('h6');
         return (
           <Tag
@@ -210,7 +231,7 @@ export function PortableTextRenderer({
     },
     list: {
       // Handle bullet lists
-      bullet: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+      bullet: ({ children }: PortableTextComponentProps<PortableTextProps>) => (
         <ul
           className={
             isSingleBlock && !enablePortableTextStyles ? className : undefined
@@ -220,7 +241,7 @@ export function PortableTextRenderer({
         </ul>
       ),
       // Handle numbered lists
-      number: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+      number: ({ children }: PortableTextComponentProps<PortableTextProps>) => (
         <ol
           className={
             isSingleBlock && !enablePortableTextStyles ? className : undefined
@@ -232,10 +253,10 @@ export function PortableTextRenderer({
     },
     listItem: {
       // Handle list items for both bullet and number lists
-      bullet: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+      bullet: ({ children }: PortableTextComponentProps<PortableTextProps>) => (
         <li>{children}</li>
       ),
-      number: ({ children }: PortableTextComponentProps<PortableTextValue>) => (
+      number: ({ children }: PortableTextComponentProps<PortableTextProps>) => (
         <li>{children}</li>
       ),
     },
@@ -283,6 +304,16 @@ export function PortableTextRenderer({
       // Handle italic text
       em: ({ children }: PortableTextMarkComponentProps) => <em>{children}</em>,
     },
+    // Custom component types from registry (with optional overrides)
+    types: {
+      ...{
+        ptImage: ImageComponent,
+        ptArrowList: ArrowListComponent,
+        ptCircleNumberedList: CircleNumberedListComponent,
+        ptCtaSection: CtaSectionComponent,
+      },
+      ...customComponentTypes,
+    },
   };
 
   // Apply wrapper only when enablePortableTextStyles is true or multiple blocks need grouping
@@ -293,8 +324,8 @@ export function PortableTextRenderer({
     return (
       <div className={wrapperClasses}>
         <PortableText
-          value={value as PortableTextBlock}
-          components={components}
+          value={value as unknown as PortableTextBlock}
+          components={components as unknown as PortableTextComponents}
         />
       </div>
     );
@@ -305,8 +336,8 @@ export function PortableTextRenderer({
     return (
       <div className={className}>
         <PortableText
-          value={value as PortableTextBlock}
-          components={components}
+          value={value as unknown as PortableTextBlock}
+          components={components as unknown as PortableTextComponents}
         />
       </div>
     );
@@ -314,7 +345,10 @@ export function PortableTextRenderer({
 
   // For single blocks or no wrapper needed, render directly
   return (
-    <PortableText value={value as PortableTextBlock} components={components} />
+    <PortableText
+      value={value as unknown as PortableTextBlock}
+      components={components as unknown as PortableTextComponents}
+    />
   );
 }
 
