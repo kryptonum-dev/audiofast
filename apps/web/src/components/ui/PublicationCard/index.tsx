@@ -1,5 +1,3 @@
-import type { PortableTextBlock } from '@portabletext/react';
-
 import type { PublicationType as PublicationTypeProps } from '@/src/global/types';
 import { portableTextToPlainString } from '@/src/global/utils';
 
@@ -26,13 +24,18 @@ export default function PublicationCard({
   priority = false,
   loading = 'lazy',
 }: PublicationCardProps) {
-  const { _createdAt, slug, name, image, publicationType } = publication;
+  const { _createdAt, slug, title, image, publicationType, openInNewTab } =
+    publication;
 
   const Heading = headingLevel;
 
   return (
     <article className={styles.publicationCard} data-layout={layout}>
-      <a href={slug!} className={styles.link}>
+      <a
+        href={slug!}
+        className={styles.link}
+        {...(openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}
+      >
         <Image
           image={image}
           sizes={imageSizes}
@@ -43,10 +46,15 @@ export default function PublicationCard({
           <PublicationType publicationType={publicationType!} />
           <DateBox _createdAt={_createdAt} />
           <Heading className={styles.title}>
-            {portableTextToPlainString(name! as PortableTextBlock[])}
+            {portableTextToPlainString(title)}
           </Heading>
           {layout === 'vertical' && (
-            <Button href={slug} text="Czytaj artykuł" variant="primary" />
+            <Button
+              href={slug}
+              text="Czytaj artykuł"
+              variant="primary"
+              openInNewTab={openInNewTab}
+            />
           )}
         </div>
       </a>

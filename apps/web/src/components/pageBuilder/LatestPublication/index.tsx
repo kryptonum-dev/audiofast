@@ -1,7 +1,7 @@
 import type { PagebuilderType } from '@/src/global/types';
 
-import Image from '../../shared/Image';
 import PortableText from '../../portableText';
+import Image from '../../shared/Image';
 import Button from '../../ui/Button';
 import DateBox from '../../ui/DateBox';
 import PublicationType from '../../ui/PublicationType';
@@ -16,8 +16,15 @@ export default function LatestPublication({
   publication,
   index,
 }: LatestPublicationProps) {
-  const { _createdAt, slug, name, description, image, publicationType } =
-    publication!;
+  const {
+    _createdAt,
+    slug,
+    title,
+    description,
+    image,
+    publicationType,
+    openInNewTab,
+  } = publication!;
 
   return (
     <section className={`${styles.latestPublication} max-width`}>
@@ -37,7 +44,7 @@ export default function LatestPublication({
           <DateBox _createdAt={_createdAt} />
           <PublicationType publicationType={publicationType!} />
           <PortableText
-            value={name}
+            value={title}
             headingLevel={index === 0 ? 'h2' : 'h3'}
             className={styles.title}
           />
@@ -46,7 +53,11 @@ export default function LatestPublication({
             enablePortableTextStyles
             className={styles.description}
           />
-          <Button href={slug} text="Przeczytaj artykuł" />
+          <Button
+            href={slug}
+            text="Przeczytaj recenzję"
+            openInNewTab={openInNewTab}
+          />
         </header>
       </article>
     </section>

@@ -124,15 +124,32 @@ ${name}{
 const publicationFragment = (name: string = 'publication') => /* groq */ `
   ${name} {
   _id,
+  _type,
   _createdAt,
-  "slug": slug.current,
-  ${portableTextFragment('name')},
+  name,
+  ${portableTextFragment('title')},
   ${portableTextFragment('description')},
   ${imageFragment('image')},
   "publicationType": select(
     _type == "review" => "Recenzja",
     _type == "blog-article" => category->name,
     "Artykuł"
+  ),
+  "destinationType": select(
+    _type == "review" => coalesce(destinationType, "page"),
+    "page"
+  ),
+  "slug": select(
+    _type == "review" && destinationType == "page" => slug.current,
+    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],
+    _type == "review" && destinationType == "external" => externalUrl,
+    _type == "blog-article" => slug.current,
+    slug.current
+  ),
+  "openInNewTab": select(
+    _type == "review" && destinationType == "external" => true,
+    _type == "review" && destinationType == "pdf" => true,
+    false
   ),
   }
 `;
@@ -631,7 +648,8 @@ export const queryBlogPostBySlug =
   _type,
   _createdAt,
   "slug": slug.current,
-  ${portableTextFragment('name')},
+  name,
+  ${portableTextFragment('title')},
   ${portableTextFragment('description')},
   ${imageFragment('image')},
   category->{
@@ -647,4 +665,40 @@ export const queryBlogPostBySlug =
     description,
     "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
   }
+}`);
+
+export const queryAllReviewSlugs =
+  defineQuery(`*[_type == "review" && destinationType == "page" && defined(slug.current)]{
+  "slug": slug.current
+}`);
+
+export const queryReviewBySlug =
+  defineQuery(`*[_type == "review" && destinationType == "page" && slug.current == $slug][0]{
+  _id,
+  _type,
+  _createdAt,
+  "slug": slug.current,
+  name,
+  ${portableTextFragment('title')},
+  ${portableTextFragment('description')},
+  ${imageFragment('image')},
+  ${portableTextFragmentExtended('content')},
+  "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  }
+}`);
+
+export const queryPdfReviewBySlug =
+  defineQuery(`*[_type == "review" && destinationType == "pdf" && string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0] == $slug][0]{
+  _id,
+  name,
+  ${portableTextFragment('title')},
+  "pdfUrl": pdfFile.asset->url,
+  "pdfFilename": pdfFile.asset->originalFilename,
+  "pdfSize": pdfFile.asset->size,
+  "pdfMimeType": pdfFile.asset->mimeType
 }`);

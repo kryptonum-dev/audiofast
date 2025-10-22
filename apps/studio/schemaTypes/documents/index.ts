@@ -21,7 +21,6 @@ import { privacyPolicy } from './singletons/privacy-policy';
 import { productCategories } from './singletons/product-categories';
 import { products } from './singletons/products';
 import redirects from './singletons/redirects';
-import { reviews } from './singletons/reviews';
 import { settings } from './singletons/settings';
 import { stores } from './singletons/stores';
 import { termsAndConditions } from './singletons/terms-and-conditions';
@@ -36,7 +35,6 @@ export const singletons = [
   termsAndConditions,
   notFound,
   blog,
-  reviews,
   products,
   productCategories,
   stores,

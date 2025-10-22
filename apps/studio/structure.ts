@@ -6,7 +6,6 @@ import {
   type LucideIcon,
   Settings2,
   Speaker,
-  Star,
   Store,
 } from 'lucide-react';
 import type {
@@ -129,23 +128,13 @@ export const structure = (
               }),
             ])
         ),
-      S.listItem()
-        .title('Recenzje')
-        .icon(Star)
-        .child(
-          S.list()
-            .title('Recenzje')
-            .items([
-              createSingleTon({ S, type: 'reviews' }),
-              createCollection({
-                S,
-                context,
-                type: 'review',
-                orderable: false,
-                title: 'Lista recenzji',
-              }),
-            ])
-        ),
+      createCollection({
+        S,
+        context,
+        type: 'review',
+        orderable: false,
+        title: 'Recenzje',
+      }),
       S.listItem()
         .title('Produkty')
         .icon(Speaker)

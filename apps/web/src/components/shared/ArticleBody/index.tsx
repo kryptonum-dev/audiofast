@@ -1,5 +1,8 @@
 import type { PortableTextProps } from '@/global/types';
-import type { QueryBlogPostBySlugResult } from '@/src/global/sanity/sanity.types';
+import type {
+  QueryBlogPostBySlugResult,
+  QueryReviewBySlugResult,
+} from '@/src/global/sanity/sanity.types';
 
 import PortableText from '../../portableText';
 import DateBox from '../../ui/DateBox';
@@ -8,11 +11,13 @@ import TableOfContent from '../../ui/TableOfContent';
 import Image from '../Image';
 import styles from './styles.module.scss';
 
-type Props = NonNullable<QueryBlogPostBySlugResult>;
+type Props =
+  | NonNullable<QueryBlogPostBySlugResult>
+  | NonNullable<QueryReviewBySlugResult>;
 
 export function ArticleBody({
   headings,
-  name,
+  title,
   description,
   content,
   image,
@@ -29,7 +34,7 @@ export function ArticleBody({
         <PublicationType publicationType={publicationType!} />
         <DateBox _createdAt={_createdAt} />
         <PortableText
-          value={name}
+          value={title}
           className={styles.heading}
           headingLevel="h1"
         />

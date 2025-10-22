@@ -5,45 +5,45 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
 import {
-  queryAllBlogPostSlugs,
-  queryBlogPostBySlug,
+  queryAllReviewSlugs,
+  queryReviewBySlug,
 } from '@/src/global/sanity/query';
 import type {
-  QueryAllBlogPostSlugsResult,
-  QueryBlogPostBySlugResult,
+  QueryAllReviewSlugsResult,
+  QueryReviewBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import { portableTextToPlainString } from '@/src/global/utils';
 
-type BlogPostPageProps = {
+type ReviewPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-async function fetchBlogPostData(slug: string) {
-  return await sanityFetch<QueryBlogPostBySlugResult>({
-    query: queryBlogPostBySlug,
-    params: { slug: `/blog/${slug}/` },
-    tags: ['blog-article', slug],
+async function fetchReviewData(slug: string) {
+  return await sanityFetch<QueryReviewBySlugResult>({
+    query: queryReviewBySlug,
+    params: { slug: `/recenzje/${slug}/` },
+    tags: ['review', slug],
   });
 }
 
 export async function generateStaticParams() {
-  const posts = await sanityFetch<QueryAllBlogPostSlugsResult>({
-    query: queryAllBlogPostSlugs,
-    tags: ['blog-article'],
+  const reviews = await sanityFetch<QueryAllReviewSlugsResult>({
+    query: queryAllReviewSlugs,
+    tags: ['review'],
   });
 
-  return posts.map((post) => ({
-    slug: post.slug!.replace('/blog/', ''),
+  return reviews.map((review) => ({
+    slug: review.slug!.replace('/recenzje/', '').replace(/\/$/, ''),
   }));
 }
 
-export async function generateMetadata(props: BlogPostPageProps) {
+export async function generateMetadata(props: ReviewPageProps) {
   const { slug } = await props.params;
-  const pageData = await fetchBlogPostData(slug);
+  const pageData = await fetchReviewData(slug);
 
   if (!pageData) {
-    logWarn(`Blog post data not found for slug: ${slug}`);
+    logWarn(`Review data not found for slug: ${slug}`);
     return getSEOMetadata();
   }
 
@@ -54,20 +54,20 @@ export async function generateMetadata(props: BlogPostPageProps) {
   });
 }
 
-export default async function BlogPostPage(props: BlogPostPageProps) {
+export default async function ReviewPage(props: ReviewPageProps) {
   const { slug } = await props.params;
 
-  const pageData = await fetchBlogPostData(slug);
+  const pageData = await fetchReviewData(slug);
 
   if (!pageData) {
-    logWarn(`Blog post data not found for slug: ${slug}, returning 404`);
+    logWarn(`Review data not found for slug: ${slug}, returning 404`);
     notFound();
   }
 
   const breadcrumbsData = [
     {
-      name: 'Blog',
-      path: '/blog',
+      name: 'Recenzje',
+      path: '/recenzje',
     },
     {
       name: pageData.name!,

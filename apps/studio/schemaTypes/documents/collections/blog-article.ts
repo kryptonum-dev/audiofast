@@ -22,18 +22,13 @@ export const blogArticle = defineType({
     'Artykuł blogowy, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis, autora i treść, aby utworzyć nowy artykuł dla czytających.',
   fields: [
     orderRankField({ type: 'blog' }),
-    customPortableText({
+    defineField({
       name: 'name',
       title: 'Nazwa artykułu',
+      type: 'string',
       description:
-        'Główny tytuł artykułu wyświetlany w sekcji najnowszej publikacji',
+        'Krótka nazwa artykułu używana w breadcrumbs i do generowania URL (np. "Najlepsze soundbary 2024")',
       group: GROUP.MAIN_CONTENT,
-      include: {
-        styles: ['normal'],
-        lists: [],
-        decorators: [],
-        annotations: ['customLink'],
-      },
       validation: (Rule) =>
         Rule.required().error('Nazwa artykułu jest wymagana'),
     }),
@@ -41,6 +36,21 @@ export const blogArticle = defineType({
       prefix: '/blog/',
       source: 'name',
       group: GROUP.MAIN_CONTENT,
+    }),
+    customPortableText({
+      name: 'title',
+      title: 'Tytuł artykułu',
+      description:
+        'Główny tytuł artykułu wyświetlany jako nagłówek (może zawierać formatowanie)',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: [],
+        decorators: ['strong'],
+        annotations: ['customLink'],
+      },
+      validation: (Rule) =>
+        Rule.required().error('Tytuł artykułu jest wymagany'),
     }),
     customPortableText({
       name: 'description',
@@ -99,10 +109,11 @@ export const blogArticle = defineType({
     select: {
       name: 'name',
       description: 'description',
+      image: 'image',
     },
-    prepare: ({ name, description }) => ({
-      title: parsePortableTextToString(name) || 'Artykuł blogowy',
-      media: FileTextIcon,
+    prepare: ({ name, description, image }) => ({
+      title: name || 'Artykuł blogowy',
+      media: image || FileTextIcon,
       subtitle: parsePortableTextToString(description) || 'Artykuł blogowy',
     }),
   },
