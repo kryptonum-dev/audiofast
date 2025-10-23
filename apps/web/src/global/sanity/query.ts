@@ -681,6 +681,7 @@ export const queryBlogPostBySlug =
   },
   ${portableTextFragmentExtended('content')},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+  ${pageBuilderFragment},
   seo,
   openGraph{
     title,
@@ -729,6 +730,7 @@ export const queryReviewBySlug =
     overrideGallery == true && count(imageGallery) >= 4 => ${imageFragment('imageGallery[]')},
     ${imageFragment('*[_type == "product" && references(^._id)][0].imageGallery[]')}
   ),
+  ${pageBuilderFragment},
   seo,
   openGraph{
     title,

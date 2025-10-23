@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { ArticleBody } from '@/src/components/shared/ArticleBody';
+import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
@@ -13,7 +14,6 @@ import type {
   QueryBlogPostBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
-import { portableTextToPlainString } from '@/src/global/utils';
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -79,6 +79,9 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
     <main id="main" className="page-transition">
       <Breadcrumbs data={breadcrumbsData} />
       <ArticleBody {...pageData} />
+      {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
+        <PageBuilder pageBuilder={pageData.pageBuilder} />
+      )}
     </main>
   );
 }

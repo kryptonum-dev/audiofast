@@ -17,8 +17,6 @@ export function ImageComponent({
   const { caption, image, layout, image1, image2 } = value;
   const isDouble = layout === 'double';
 
-  console.log(image1, image2);
-
   const singleImageSizes =
     '(max-width: 37.4375rem) 96vw, (max-width: 56.125rem) 83vw, (max-width: 69.3125rem) 768px, 704px';
   const doubleImageSizes =

@@ -9,6 +9,7 @@ import { defineSlugForDocument } from '../../../components/define-slug-for-docum
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { parsePortableTextToString } from '../../../utils/helper';
 import { customPortableText } from '../../portableText';
+import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 
 export const blogArticle = defineType({
@@ -107,6 +108,12 @@ export const blogArticle = defineType({
         'ptButton',
       ],
     }),
+    {
+      ...pageBuilderField,
+      title: 'Niestandardowe sekcje',
+      description:
+        'Dodaj niestandardowe sekcje na końcu artykułu blogowego (opcjonalne).',
+    },
     ...getSEOFields(),
   ],
   preview: {

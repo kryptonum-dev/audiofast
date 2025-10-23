@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { ArticleBody } from '@/src/components/shared/ArticleBody';
+import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import ProductGallery from '@/src/components/ui/ProductGallery';
 import { logWarn } from '@/src/global/logger';
@@ -84,6 +85,9 @@ export default async function ReviewPage(props: ReviewPageProps) {
           images={pageData.gallery}
           className="max-width margin-bottom-sm"
         />
+      )}
+      {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
+        <PageBuilder pageBuilder={pageData.pageBuilder} />
       )}
     </main>
   );

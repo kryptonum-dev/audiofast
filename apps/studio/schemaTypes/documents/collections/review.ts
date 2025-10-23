@@ -13,6 +13,7 @@ import {
   parsePortableTextToString,
 } from '../../../utils/helper';
 import { customPortableText } from '../../portableText';
+import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 
 export const review = defineType({
@@ -213,6 +214,13 @@ export const review = defineType({
           return true;
         }),
     }),
+    {
+      ...pageBuilderField,
+      title: 'Niestandardowe sekcje',
+      description:
+        'Dodaj niestandardowe sekcje na końcu recenzji (opcjonalne).',
+      hidden: ({ document }: any) => document?.destinationType !== 'page',
+    },
     ...(getSEOFields().map((field) => ({
       ...field,
       hidden: ({ document }: any) => document?.destinationType !== 'page',
