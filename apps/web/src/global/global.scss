@@ -364,6 +364,10 @@ h4 .link {
     font-size: var(--typography-header-m, 1.5rem);
   }
 
+  > a {
+    margin-top: 1rem;
+  }
+
   > :first-child {
     margin-top: 0;
   }
@@ -494,4 +498,10 @@ h4 .link {
   100% {
     opacity: 1;
   }
+}
+
+// Utils
+
+.margin-bottom-sm {
+  margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 2rem);
 }

@@ -1,53 +1,77 @@
-.wrapper {
-  width: 100%;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-}
-
 .table {
   width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
 
   tbody {
     width: 100%;
-  }
-}
 
-.row {
-  border-bottom: 1px solid var(--color-border);
+    .row {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 
-  &:last-child {
-    border-bottom: none;
-  }
-}
+      &:last-child {
+        border-bottom: none;
+      }
 
-.cell {
-  padding: 1rem;
-  text-align: left;
-  vertical-align: top;
-  font-size: 1rem;
-  line-height: 1.5;
+      &:nth-child(even) {
+        background-color: var(--neutral-white, #ffffff);
+      }
 
-  &:first-child {
-    font-weight: 500;
-    width: 40%;
-  }
+      .cell {
+        padding: 1rem;
+        font-size: var(--typography-body-m, 0.875rem);
 
-  &:last-child {
-    width: 60%;
+        line-height: 1.5;
+
+        &:first-child {
+          font-weight: 400;
+          color: var(--neutral-700, #303030);
+          -webkit-text-stroke-width: 0.25px;
+          -webkit-text-stroke-color: var(--neutral-700, #303030);
+          text-align: left;
+          vertical-align: top;
+        }
+
+        &:last-child {
+          width: 70%;
+          color: var(--neutral-black, #000000);
+        }
+
+        > p {
+          margin: 0;
+        }
+      }
+    }
   }
 
   @media (max-width: 37.4375rem) {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.9375rem;
+    tbody .row {
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 
-    &:first-child {
-      width: 35%;
-    }
+      &:nth-child(even) {
+        background-color: transparent;
+      }
 
-    &:last-child {
-      width: 65%;
+      .cell {
+        display: block;
+        width: 100% !important;
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9375rem;
+        border-bottom: 1px solid var(--color-border);
+
+        &:first-child {
+          font-weight: 500;
+          padding-bottom: 0;
+        }
+
+        &:last-child {
+          border-bottom: 1px solid var(--color-border);
+        }
+      }
     }
   }
 }

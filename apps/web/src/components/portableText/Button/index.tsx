@@ -13,10 +13,5 @@ export function ButtonPortableTextComponent({
   value,
 }: PortableTextTypeComponentProps<ButtonValue>) {
   const { button } = value;
-  return (
-    <div className={styles.wrapper}>
-      <ButtonComponent {...button} />
-    </div>
-  );
+  return <ButtonComponent {...button} className={styles.ptButton} />;
 }
-

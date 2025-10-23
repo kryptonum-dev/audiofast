@@ -166,6 +166,17 @@
           justify-self: end;
           grid-area: button;
         }
+
+        &[data-layout='vertical'] {
+          flex-direction: column;
+
+          .price,
+          button {
+            align-self: flex-start;
+            width: 100%;
+            max-width: 100%;
+          }
+        }
       }
     }
 

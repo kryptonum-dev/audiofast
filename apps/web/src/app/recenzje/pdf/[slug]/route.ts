@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import { logError, logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';

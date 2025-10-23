@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { ArticleBody } from '@/src/components/shared/ArticleBody';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import ProductGallery from '@/src/components/ui/ProductGallery';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
 import {
@@ -13,7 +14,6 @@ import type {
   QueryReviewBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
-import { portableTextToPlainString } from '@/src/global/utils';
 
 type ReviewPageProps = {
   params: Promise<{ slug: string }>;
@@ -79,6 +79,12 @@ export default async function ReviewPage(props: ReviewPageProps) {
     <main id="main" className="page-transition">
       <Breadcrumbs data={breadcrumbsData} />
       <ArticleBody {...pageData} />
+      {pageData.gallery && pageData.gallery.length >= 4 && (
+        <ProductGallery
+          images={pageData.gallery}
+          className="max-width margin-bottom-sm"
+        />
+      )}
     </main>
   );
 }

@@ -9,12 +9,16 @@ interface ProductCardProps {
   headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
   showButton?: boolean;
+  layout?: 'horizontal' | 'vertical';
+  isClient?: boolean;
   priority?: boolean;
   loading?: 'eager' | 'lazy';
 }
 
 export default function ProductCard({
   product,
+  layout = 'horizontal',
+  isClient = true,
   imageSizes = '400px',
   headingLevel = 'h3',
   showButton = true,
@@ -48,7 +52,7 @@ export default function ProductCard({
             loading={loading}
           />
           <Image image={brand!.logo} sizes="90px" loading={loading} />
-          {showButton && (
+          {isClient && (
             <button
               className={styles.addToComparison}
               onClick={(e) => {
@@ -66,7 +70,7 @@ export default function ProductCard({
             {brand!.name} {name}
           </Heading>
           <p className={styles.subtitle}>{subtitle}</p>
-          <div className={styles.priceContainer}>
+          <div className={styles.priceContainer} data-layout={layout}>
             <span className={styles.price}>{formatPrice(price)}</span>
             {showButton && (
               <Button

@@ -6,6 +6,7 @@ import type {
 
 import PortableText from '../../portableText';
 import DateBox from '../../ui/DateBox';
+import ProductCard from '../../ui/ProductCard';
 import PublicationType from '../../ui/PublicationType';
 import TableOfContent from '../../ui/TableOfContent';
 import Image from '../Image';
@@ -21,15 +22,29 @@ export function ArticleBody({
   description,
   content,
   image,
-  category,
   _createdAt,
   _type,
+  ...props
 }: Props) {
   const publicationType =
-    _type === 'blog-article' ? category?.name : 'Recenzja';
+    _type === 'blog-article' && 'category' in props
+      ? props.category?.name
+      : 'Recenzja';
   return (
-    <article className={`${styles.container} content`}>
-      <TableOfContent headings={headings as unknown as PortableTextProps[]} />
+    <article
+      className={`${styles.container} content`}
+      data-is-review={_type == 'review'}
+    >
+      {_type == 'review' && 'product' in props ? (
+        <div className={styles.reviewHeader}>
+          <TableOfContent
+            headings={headings as unknown as PortableTextProps[]}
+          />
+          <ProductCard product={props.product!} isClient={false} />
+        </div>
+      ) : (
+        <TableOfContent headings={headings as unknown as PortableTextProps[]} />
+      )}
       <header className={styles.header}>
         <PublicationType publicationType={publicationType!} />
         <DateBox _createdAt={_createdAt} />

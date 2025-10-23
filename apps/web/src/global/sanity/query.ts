@@ -73,7 +73,9 @@ const portableTextFragmentExtended = (
     _type == "ptImage" => {
       ...,
       ${imageFragment('image')},
-      ${portableTextFragment('caption')}
+      ${portableTextFragment('caption')},
+      ${imageFragment('image1')},
+      ${imageFragment('image2')},
     },
     _type == "ptArrowList" => {
       ...,
@@ -109,6 +111,18 @@ const portableTextFragmentExtended = (
         column1,
         ${portableTextFragment('column2')}
       }
+    },
+    _type == "ptFeaturedProducts" => {
+      ...,
+      ${productFragment('products[]->')}
+    },
+    _type == "ptQuote" => {
+      ...,
+      ${portableTextFragment('quote')},
+    },
+    _type == "ptButton" => {
+      ...,
+      ${buttonFragment('button')},
     },
   }
 `;
@@ -711,6 +725,10 @@ export const queryReviewBySlug =
     ${imageFragment('imageGallery[]')},
     ${portableTextFragment('shortDescription')},
   },
+  "gallery": select(
+    overrideGallery == true && count(imageGallery) >= 4 => ${imageFragment('imageGallery[]')},
+    ${imageFragment('*[_type == "product" && references(^._id)][0].imageGallery[]')}
+  ),
   seo,
   openGraph{
     title,

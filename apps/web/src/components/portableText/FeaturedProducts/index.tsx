@@ -18,7 +18,8 @@ export function FeaturedProductsComponent({
       {products!.map((product) => (
         <ProductCard
           product={product}
-          showButton={true}
+          isClient={false}
+          layout="vertical"
           headingLevel="h3"
           key={product._id}
           imageSizes="(max-width: 27.4375rem) 96vw, (max-width: 37.4375rem) 46vw, (max-width: 56.125rem) 42vw, (max-width: 69.3125rem) 374px, 342px"
@@ -27,4 +28,3 @@ export function FeaturedProductsComponent({
     </section>
   );
 }
-
