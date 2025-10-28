@@ -38,7 +38,7 @@ export default function OrganizationSchema({ settings }: Props) {
         streetAddress: address.streetAddress,
         addressLocality: address.city,
         postalCode: address.postalCode,
-        addressCountry: address.country,
+        addressCountry: 'PL', // ISO 3166-1 alpha-2 country code for Poland
       }
     : undefined;
 
