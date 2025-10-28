@@ -86,6 +86,7 @@ export const blogArticle = defineType({
       },
       validation: (Rule) => Rule.required().error('Obraz główny jest wymagany'),
     }),
+
     customPortableText({
       name: 'content',
       title: 'Treść',
@@ -108,12 +109,32 @@ export const blogArticle = defineType({
         'ptButton',
       ],
     }),
-    {
-      ...pageBuilderField,
-      title: 'Niestandardowe sekcje',
+    pageBuilderField,
+    defineField({
+      name: 'author',
+      type: 'reference',
+      title: 'Autor',
+      to: [{ type: 'teamMember' }],
       description:
-        'Dodaj niestandardowe sekcje na końcu artykułu blogowego (opcjonalne).',
-    },
+        'Autor artykułu - wymagane dla optymalizacji SEO (structured data)',
+      validation: (Rule) =>
+        Rule.required().error('Autor artykułu jest wymagany'),
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: 'keywords',
+      title: 'Słowa kluczowe',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Słowa kluczowe dla SEO i structured data (np. "soundbar", "audio", "recenzja"). Maksymalnie 10 słów kluczowych.',
+      group: GROUP.MAIN_CONTENT,
+      validation: (Rule) =>
+        Rule.max(10).error('Maksymalnie 10 słów kluczowych'),
+      options: {
+        layout: 'tags',
+      },
+    }),
     ...getSEOFields(),
   ],
   preview: {

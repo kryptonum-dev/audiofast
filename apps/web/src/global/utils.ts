@@ -74,7 +74,7 @@ export async function imageToInlineSvg(url: string) {
 
 /**
  * Converts PortableText content to plain text string
- * Handles: normal text, headings (h1-h6), strong, italic, and custom links
+ * Handles: normal text, headings (h1-h6), strong, italic, custom links, and all custom portable text components
  * @param portableText - PortableText block array
  * @returns Plain text string with formatting removed
  */
@@ -87,7 +87,7 @@ export function portableTextToPlainString(
 
   return portableText
     .map((block) => {
-      // Handle different block types
+      // Handle standard block types (normal text, headings, etc.)
       if (block._type === 'block') {
         // Extract text from children
         const blockText = (block.children || [])
@@ -100,7 +100,102 @@ export function portableTextToPlainString(
         return blockText.trim();
       }
 
-      // Handle other block types if needed in the future
+      // Handle custom portable text components
+      const blockAny = block as Record<string, unknown>;
+
+      // ptImage - Extract caption text and alt text
+      if (block._type === 'ptImage') {
+        const caption = blockAny.caption;
+        const imageAlt = (blockAny.image as Record<string, unknown>)
+          ?.alt as string;
+        const captionText = caption
+          ? portableTextToPlainString(caption as PortableTextProps)
+          : '';
+        return [captionText, imageAlt].filter(Boolean).join(' ');
+      }
+
+      // ptQuote - Extract quote text
+      if (block._type === 'ptQuote') {
+        const quote = blockAny.quote;
+        return quote
+          ? portableTextToPlainString(quote as PortableTextProps)
+          : '';
+      }
+
+      // ptTwoColumnTable - Extract all table cell text
+      if (block._type === 'ptTwoColumnTable') {
+        const rows = blockAny.rows as Array<{
+          column1?: string;
+          column2?: PortableTextProps;
+          _key: string;
+        }>;
+        if (!rows) return '';
+        return rows
+          .map((row) => {
+            const col1 = row.column1 || '';
+            const col2 = row.column2
+              ? portableTextToPlainString(row.column2)
+              : '';
+            return [col1, col2].filter(Boolean).join(' ');
+          })
+          .filter(Boolean)
+          .join(' ');
+      }
+
+      // ptArrowList - Extract all list items
+      if (block._type === 'ptArrowList') {
+        const items = blockAny.items as Array<{
+          content?: PortableTextProps;
+          _key: string;
+        }>;
+        if (!items) return '';
+        return items
+          .map((item) =>
+            item.content ? portableTextToPlainString(item.content) : ''
+          )
+          .filter(Boolean)
+          .join(' ');
+      }
+
+      // ptCircleNumberedList - Extract all list items
+      if (block._type === 'ptCircleNumberedList') {
+        const items = blockAny.items as Array<{
+          content?: PortableTextProps;
+          _key: string;
+        }>;
+        if (!items) return '';
+        return items
+          .map((item) =>
+            item.content ? portableTextToPlainString(item.content) : ''
+          )
+          .filter(Boolean)
+          .join(' ');
+      }
+
+      // ptButton - Extract button text
+      if (block._type === 'ptButton') {
+        const button = blockAny.button as { text?: string };
+        return button?.text || '';
+      }
+
+      // ptCtaSection - Extract heading and button text
+      if (block._type === 'ptCtaSection') {
+        const heading = blockAny.heading as string;
+        const button = blockAny.button as { text?: string };
+        return [heading, button?.text].filter(Boolean).join(' ');
+      }
+
+      // ptFeaturedProducts - Extract product names
+      if (block._type === 'ptFeaturedProducts') {
+        const products = blockAny.products as Array<{ name?: string }>;
+        if (!products) return '';
+        return products
+          .map((product) => product.name || '')
+          .filter(Boolean)
+          .join(' ');
+      }
+
+      // Unknown block type - return empty string
       return '';
     })
     .filter(Boolean) // Remove empty strings

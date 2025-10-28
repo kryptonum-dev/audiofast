@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
+import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import BlogAside from '@/src/components/ui/BlogAside';
 import BlogListing from '@/src/components/ui/BlogListing';
@@ -66,6 +67,11 @@ export default async function BlogPage(props: BlogPageProps) {
 
   return (
     <>
+      <CollectionPageSchema
+        name={blogData.name || 'Blog'}
+        url="/blog/"
+        description={blogData.description}
+      />
       <Breadcrumbs data={breadcrumbsData} firstItemType="heroStatic" />
       <HeroStatic
         heading={blogData.title!}

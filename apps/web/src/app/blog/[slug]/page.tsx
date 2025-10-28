@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 
+import BlogPostSchema from '@/src/components/schema/BlogPostSchema';
 import { ArticleBody } from '@/src/components/shared/ArticleBody';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
@@ -8,10 +9,12 @@ import { sanityFetch } from '@/src/global/sanity/client';
 import {
   queryAllBlogPostSlugs,
   queryBlogPostBySlug,
+  querySettings,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllBlogPostSlugsResult,
   QueryBlogPostBySlugResult,
+  QuerySettingsResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
@@ -64,6 +67,12 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
     notFound();
   }
 
+  // Fetch settings for structured data publisher info
+  const settings = await sanityFetch<QuerySettingsResult>({
+    query: querySettings,
+    tags: ['settings'],
+  });
+
   const breadcrumbsData = [
     {
       name: 'Blog',
@@ -77,6 +86,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
 
   return (
     <main id="main" className="page-transition">
+      <BlogPostSchema blogPost={pageData} settings={settings} />
       <Breadcrumbs data={breadcrumbsData} />
       <ArticleBody {...pageData} />
       {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
