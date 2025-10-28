@@ -142,9 +142,7 @@ ${name}{
 }
 `;
 
-// Reusable publication fragment for both reviews and blog articles
-const publicationFragment = (name: string = 'publication') => /* groq */ `
-  ${name} {
+const publicationBlock = /* groq */ `
   _id,
   _type,
   _createdAt,
@@ -173,6 +171,12 @@ const publicationFragment = (name: string = 'publication') => /* groq */ `
     _type == "review" && destinationType == "pdf" => true,
     false
   ),
+`;
+
+// Reusable publication fragment for both reviews and blog articles
+const publicationFragment = (name: string = 'publication') => /* groq */ `
+  ${name} {
+  ${publicationBlock}
   }
 `;
 
@@ -749,3 +753,75 @@ export const queryPdfReviewBySlug =
   "pdfSize": pdfFile.asset->size,
   "pdfMimeType": pdfFile.asset->mimeType
 }`);
+
+// Query for blog page data (layout, categories, current category, SEO)
+// Parameters:
+// - $category: category slug (optional) - empty string "" for main blog page
+export const queryBlogPageData = defineQuery(`
+  *[_type == "blog"][0] {
+    _id,
+    _type,
+    "slug": slug.current,
+    name,
+    ${portableTextFragment('title')},
+    ${portableTextFragment('description')},
+    ${imageFragment('heroImage')},
+    ${pageBuilderFragment},
+    seo,
+    openGraph{
+      title,
+      description,
+      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+    },
+    "selectedCategory": select(
+      $category != "" => *[_type == "blog-category" && slug.current == $category][0]{
+        _id,
+        name,
+        "slug": slug.current,
+        ${portableTextFragment('title')},
+        ${portableTextFragment('description')},
+        seo,
+        openGraph{
+          title,
+          description,
+          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        }
+      },
+      null
+    ),
+    "categories": *[_type == "blog-category" && defined(slug.current)] | order(orderRank){
+      _id,
+      name,
+      "slug": slug.current,
+      "count": count(*[_type == "blog-article" && category._ref == ^._id && !hideFromList])
+    },
+    "totalCount": count(*[_type == "blog-article" && defined(slug.current) && !hideFromList])
+  }
+`);
+
+// Query for blog articles only (filtered and paginated)
+// Parameters:
+// - $category: category slug (optional) - empty string "" for all articles
+// - $search: search term (optional) - empty string "" for no search
+// - $offset: pagination offset (e.g., 0, 6, 12)
+// - $limit: pagination limit (e.g., 6)
+export const queryBlogArticles = defineQuery(`
+  {
+    "articles": *[
+      _type == "blog-article" 
+      && defined(slug.current)
+      && !hideFromList
+      && ($category == "" || category->slug.current == $category)
+      && ($search == "" || [name, pt::text(title)] match $search)
+    ] | order(_createdAt desc) [$offset...$limit] {
+        ${publicationBlock}
+    },
+    "totalCount": count(*[
+      _type == "blog-article" 
+      && defined(slug.current)
+      && !hideFromList
+      && ($category == "" || category->slug.current == $category)
+      && ($search == "" || [name, pt::text(title)] match $search)
+    ])
+  }
+`);

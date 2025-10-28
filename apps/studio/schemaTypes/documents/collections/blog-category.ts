@@ -7,6 +7,7 @@ import { defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
+import { customPortableText } from '../../portableText';
 import { getSEOFields } from '../../shared/seo';
 
 export const blogCategory = defineType({
@@ -23,6 +24,30 @@ export const blogCategory = defineType({
     ...defineSlugForDocument({
       prefix: '/blog/',
       group: GROUP.MAIN_CONTENT,
+    }),
+    customPortableText({
+      name: 'title',
+      title: 'Tytuł kategorii (opcjonalnie)',
+      description:
+        'Niestandardowy tytuł dla strony kategorii. Jeśli nie ustawiony, używany będzie domyślny tytuł z głównej strony bloga. Ustaw aby nadpisać domyślny tytuł.',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: [],
+        decorators: ['strong'],
+      },
+    }),
+    customPortableText({
+      name: 'description',
+      title: 'Opis kategorii (opcjonalnie)',
+      description:
+        'Niestandardowy opis dla strony kategorii. Jeśli nie ustawiony, używany będzie domyślny opis z głównej strony bloga. Ustaw aby nadpisać domyślny opis.',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: [],
+        decorators: ['strong', 'em'],
+      },
     }),
     ...getSEOFields(),
   ],

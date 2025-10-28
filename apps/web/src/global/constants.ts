@@ -49,3 +49,11 @@ export const REGEX: { email: RegExp; phone: RegExp; string: RegExp } = {
     /^(?:\+(?:\d{1,3}))?(?:[ -]?\(?\d{1,4}\)?[ -]?\d{1,5}[ -]?\d{1,5}[ -]?\d{1,6})$/,
   string: /^(?!\s+$)(.*?)\s*$/,
 };
+
+/**
+ * Global declaration of the number of items per page for the blog.
+ * @constant
+ * @type {number}
+ */
+
+export const BLOG_ITEMS_PER_PAGE: number = 12;

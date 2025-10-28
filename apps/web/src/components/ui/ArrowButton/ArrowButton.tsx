@@ -7,7 +7,7 @@ type Props = {
   onClick: () => void;
   ariaLabel?: string;
   size?: 'sm' | 'md';
-  variant?: 'ghost' | 'filled';
+  variant?: 'ghost' | 'filled' | 'gray';
   disabled?: boolean;
   outline?: 'light' | 'dark';
 };

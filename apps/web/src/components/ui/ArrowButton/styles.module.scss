@@ -67,6 +67,21 @@
     }
   }
 
+  &[data-variant='gray'] {
+    background: var(--neutral-200, #f8f8f8);
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+
+    svg {
+      color: var(--neutral-700, #303030);
+    }
+
+    &::before {
+      display: none;
+    }
+  }
+
   &[data-size='sm'] {
     width: 2.75rem; // Still 44px for accessibility
     height: 2.75rem;
@@ -122,10 +137,21 @@
         transform: none;
       }
     }
+
+    &[data-variant='gray'] {
+      background: var(--neutral-200, #f8f8f8);
+      box-shadow: none;
+      transform: scale(1.05);
+
+      svg {
+        color: var(--neutral-800, #141414);
+        transform: none;
+      }
+    }
   }
 
   // Apple-like active state
-  &:active {
+  &:focus:not(:focus-visible) {
     transform: scale(0.98);
     background: rgba(255, 255, 255, 0.15);
     box-shadow:
@@ -140,6 +166,11 @@
       background: var(--neutral-400, #e7e7e7);
       box-shadow: none;
     }
+
+    &[data-variant='gray'] {
+      background: var(--neutral-400, #e7e7e7);
+      box-shadow: none;
+    }
   }
 
   // Premium focus styles
@@ -147,7 +178,8 @@
     outline: 2px solid var(--neutral-white, #ffffff);
     outline-offset: 2px;
 
-    &[data-variant='filled'] {
+    &[data-variant='filled'],
+    &[data-variant='gray'] {
       outline: 2px solid var(--neutral-700, #303030);
       outline-offset: 2px;
     }
@@ -155,7 +187,7 @@
 
   // Disabled state
   &:disabled {
-    opacity: 0.4;
+    opacity: 0.7;
     cursor: not-allowed;
     transform: none;
 
@@ -175,6 +207,17 @@
 
       &:hover {
         background: var(--neutral-white, #ffffff);
+        box-shadow: none;
+      }
+    }
+
+    &[data-variant='gray'] {
+      svg {
+        color: var(--neutral-500, #c5c5c5);
+      }
+
+      &:hover {
+        background: var(--neutral-200, #f8f8f8);
         box-shadow: none;
       }
     }

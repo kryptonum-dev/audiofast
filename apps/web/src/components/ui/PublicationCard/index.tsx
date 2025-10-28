@@ -49,12 +49,7 @@ export default function PublicationCard({
             {portableTextToPlainString(title)}
           </Heading>
           {layout === 'vertical' && (
-            <Button
-              href={slug}
-              text="Czytaj artykuł"
-              variant="primary"
-              openInNewTab={openInNewTab}
-            />
+            <Button tabIndex={-1} text="Czytaj artykuł" variant="primary" />
           )}
         </div>
       </a>
