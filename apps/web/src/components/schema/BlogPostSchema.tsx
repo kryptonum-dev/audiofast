@@ -50,24 +50,28 @@ export default function BlogPostSchema({ blogPost, settings }: Props) {
     : 0;
 
   // Build image URL with proper dimensions
-  const imageUrl = image?.id
-    ? `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/${process.env.NEXT_PUBLIC_SANITY_DATASET}/${image.id}.jpg?w=1200&h=630&fit=crop`
-    : undefined;
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+  const imageUrl =
+    image?.id && projectId && dataset
+      ? `https://cdn.sanity.io/images/${projectId}/${dataset}/${image.id}.jpg?w=1200&h=630&fit=crop`
+      : undefined;
 
   // Get publisher info from settings
   const publisherName = settings.structuredData?.companyName || 'Audiofast';
   const publisherLogo = settings.structuredData?.logo;
 
   // Build author object
-  const authorSchema = author
-    ? {
-        '@type': 'Person' as const,
-        name: author.name || 'Unknown Author',
-        ...(author.image?.id && {
-          image: `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/${process.env.NEXT_PUBLIC_SANITY_DATASET}/${author.image.id}.jpg?w=400&h=400&fit=crop`,
-        }),
-      }
-    : undefined;
+  const authorSchema =
+    author && projectId && dataset
+      ? {
+          '@type': 'Person' as const,
+          name: author.name || 'Unknown Author',
+          ...(author.image?.id && {
+            image: `https://cdn.sanity.io/images/${projectId}/${dataset}/${author.image.id}.jpg?w=400&h=400&fit=crop`,
+          }),
+        }
+      : undefined;
 
   // Build publisher object
   const publisherSchema = {

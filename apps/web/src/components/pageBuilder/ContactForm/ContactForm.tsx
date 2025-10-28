@@ -34,7 +34,7 @@ export default function ContactFormComponent({
     formState: { errors },
   } = useForm<ContactFormData>({ mode: 'onTouched' });
 
-  const onSubmit = async (data: ContactFormData) => {
+  const onSubmit = async () => {
     setFormState('loading');
 
     try {

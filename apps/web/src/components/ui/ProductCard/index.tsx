@@ -51,7 +51,9 @@ export default function ProductCard({
             priority={priority}
             loading={loading}
           />
-          <Image image={brand!.logo} sizes="90px" loading={loading} />
+          {brand?.logo && (
+            <Image image={brand.logo} sizes="90px" loading={loading} />
+          )}
           {isClient && (
             <button
               className={styles.addToComparison}
@@ -67,7 +69,8 @@ export default function ProductCard({
         </div>
         <div className={styles.container}>
           <Heading className={styles.title}>
-            {brand!.name} {name}
+            {brand?.name && `${brand.name} `}
+            {name}
           </Heading>
           <p className={styles.subtitle}>{subtitle}</p>
           <div className={styles.priceContainer} data-layout={layout}>

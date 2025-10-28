@@ -37,7 +37,7 @@ export async function generateStaticParams() {
   });
 
   return posts.map((post) => ({
-    slug: post.slug!.replace('/blog/', ''),
+    slug: post.slug!.replace('/blog/', '').replace(/\/$/, ''),
   }));
 }
 

@@ -7,6 +7,7 @@ import { sanityFetch } from '@/src/global/sanity/client';
 import { queryTermsAndConditions } from '@/src/global/sanity/query';
 import type { QueryTermsAndConditionsResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
+import type { PortableTextProps } from '@/src/global/types';
 
 async function fetchTermsAndConditionsData() {
   return await sanityFetch<QueryTermsAndConditionsResult>({
@@ -49,7 +50,7 @@ export default async function TermsAndConditionsPage() {
     <main id="main" className="page-transition">
       <Breadcrumbs data={breadcrumbsData} />
       <LegalBody
-        headings={pageData.headings!}
+        headings={pageData.headings as unknown as PortableTextProps[]}
         name={pageData.name!}
         description={pageData.description}
         content={pageData.content}

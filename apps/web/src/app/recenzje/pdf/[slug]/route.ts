@@ -6,6 +6,9 @@ import { sanityFetch } from '@/src/global/sanity/client';
 import { queryPdfReviewBySlug } from '@/src/global/sanity/query';
 import type { QueryPdfReviewBySlugResult } from '@/src/global/sanity/sanity.types';
 
+// Force dynamic rendering - don't prerender PDF routes
+export const dynamic = 'force-dynamic';
+
 type RouteParams = {
   params: Promise<{ slug: string }>;
 };

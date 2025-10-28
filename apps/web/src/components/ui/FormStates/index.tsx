@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 // Extract the formState type to handle the deeply nested nullable structure
-type FormStateData = NonNullable<
+export type FormStateData = NonNullable<
   NonNullable<QueryFooterResult>['newsletter']
 >['formState'];
 

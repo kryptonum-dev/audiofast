@@ -664,7 +664,7 @@ export const queryTermsAndConditions =
 }`);
 
 export const queryAllBlogPostSlugs =
-  defineQuery(`*[_type == "blog-article" && defined(slug.current)]{
+  defineQuery(`*[_type == "blog-article" && defined(slug.current) && !(_id in path("drafts.**"))]{
   "slug": slug.current
 }`);
 
@@ -679,12 +679,12 @@ export const queryBlogPostBySlug =
   ${portableTextFragment('title')},
   ${portableTextFragment('description')},
   ${imageFragment('image')},
-  category->{
+  "category": category->{
     _id,
     name,
     "slug": slug.current,
   },
-  author->{
+  "author": author->{
     _id,
     name,
     position,
@@ -703,7 +703,7 @@ export const queryBlogPostBySlug =
 }`);
 
 export const queryAllReviewSlugs =
-  defineQuery(`*[_type == "review" && destinationType == "page" && defined(slug.current)]{
+  defineQuery(`*[_type == "review" && destinationType == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{
   "slug": slug.current
 }`);
 
@@ -729,7 +729,7 @@ export const queryReviewBySlug =
     subtitle,
     price,
     isArchived,
-    brand->{
+    "brand": brand->{
       name,
       "slug": slug.current,
       ${imageFragment('logo')},

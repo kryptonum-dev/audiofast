@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import PortableText from '@/src/components/portableText';
 import Button from '@/src/components/ui/Button';
 import Checkbox from '@/src/components/ui/Checkbox';
+import type { FormStateData as FormStateDataProps } from '@/src/components/ui/FormStates';
 import FormStates, { type FormState } from '@/src/components/ui/FormStates';
 import Input from '@/src/components/ui/Input';
 import { REGEX } from '@/src/global/constants';
@@ -62,7 +63,7 @@ export default function ContactForm({
     setCurrentStep(1);
   };
 
-  const onSubmit = async (data: ContactFormData) => {
+  const onSubmit = async () => {
     setFormState('loading');
 
     try {
@@ -246,7 +247,7 @@ export default function ContactForm({
 
         <FormStates
           formState={formState}
-          formStateData={contactForm?.formState}
+          formStateData={contactForm?.formState as FormStateDataProps}
           onRefresh={handleRefresh}
           mode="light"
           className={styles.formStates}
