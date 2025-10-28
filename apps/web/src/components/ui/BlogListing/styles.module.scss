@@ -98,11 +98,19 @@
     }
   }
 
+  .articleItem {
+    animation: fadeInUp 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
   .skeletonCard {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    animation: pulse 2000ms cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    animation:
+      fadeInUp 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards,
+      pulse 2000ms cubic-bezier(0.4, 0, 0.6, 1) 500ms infinite;
+    opacity: 0;
 
     .skeletonImage {
       width: 100%;

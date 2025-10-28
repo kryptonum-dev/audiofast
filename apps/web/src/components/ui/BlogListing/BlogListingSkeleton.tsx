@@ -4,7 +4,11 @@ export default function BlogListingSkeleton() {
   return (
     <div className={styles.articlesGrid} data-loading="true">
       {Array.from({ length: 6 }).map((_, index) => (
-        <div key={index} className={styles.skeletonCard}>
+        <div
+          key={index}
+          className={styles.skeletonCard}
+          style={{ animationDelay: `${index * 60}ms` }}
+        >
           <div className={styles.skeletonImage} />
           <div className={styles.skeletonContent}>
             <div className={styles.skeletonPill} />
@@ -21,4 +25,3 @@ export default function BlogListingSkeleton() {
     </div>
   );
 }
-

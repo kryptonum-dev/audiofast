@@ -58,14 +58,19 @@ export default async function BlogListing({
         <>
           <div className={styles.articlesGrid}>
             {articlesData.articles!.map((article, index) => (
-              <PublicationCard
+              <div
                 key={article._id}
-                publication={article}
-                layout="vertical"
-                imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"
-                priority={index === 0}
-                loading={index === 0 ? 'eager' : 'lazy'}
-              />
+                className={styles.articleItem}
+                style={{ animationDelay: `${index * 60}ms` }}
+              >
+                <PublicationCard
+                  publication={article}
+                  layout="vertical"
+                  imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"
+                  priority={index === 0}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                />
+              </div>
             ))}
           </div>
           <Pagination
