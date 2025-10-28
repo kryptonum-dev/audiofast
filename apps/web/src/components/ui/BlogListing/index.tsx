@@ -50,6 +50,9 @@ export default async function BlogListing({
   const urlSearchParams = new URLSearchParams();
   if (searchTerm) urlSearchParams.set('search', searchTerm);
 
+  const ITEMS_PER_ROW = 2;
+  const ROW_DELAY = 80; // delay between rows in ms
+
   return (
     <>
       {!hasArticles ? (
@@ -57,21 +60,26 @@ export default async function BlogListing({
       ) : (
         <>
           <div className={styles.articlesGrid}>
-            {articlesData.articles!.map((article, index) => (
-              <div
-                key={article._id}
-                className={styles.articleItem}
-                style={{ animationDelay: `${index * 60}ms` }}
-              >
-                <PublicationCard
-                  publication={article}
-                  layout="vertical"
-                  imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"
-                  priority={index === 0}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                />
-              </div>
-            ))}
+            {articlesData.articles!.map((article, index) => {
+              const row = Math.floor(index / ITEMS_PER_ROW);
+              const delay = row * ROW_DELAY;
+
+              return (
+                <div
+                  key={article._id}
+                  className={styles.articleItem}
+                  style={{ animationDelay: `${delay}ms` }}
+                >
+                  <PublicationCard
+                    publication={article}
+                    layout="vertical"
+                    imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"
+                    priority={index === 0}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                  />
+                </div>
+              );
+            })}
           </div>
           <Pagination
             totalItems={articlesData.totalCount || 0}

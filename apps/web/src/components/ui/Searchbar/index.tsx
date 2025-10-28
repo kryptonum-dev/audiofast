@@ -17,7 +17,7 @@ export default function Searchbar({
   placeholder = 'Szukaj',
   basePath,
   name = 'search',
-  debounceMs = 300,
+  debounceMs = 500,
   onSearch,
 }: SearchbarProps) {
   const router = useRouter();
