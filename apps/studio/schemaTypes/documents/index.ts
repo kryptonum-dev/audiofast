@@ -8,6 +8,7 @@ import { product } from './collections/product';
 import { productCategoryParent } from './collections/product-category-parent';
 import { productCategorySub } from './collections/product-category-sub';
 import { review } from './collections/review';
+import { reviewAuthor } from './collections/review-author';
 import socialMedia from './collections/social-media';
 import { store } from './collections/store';
 import { teamMember } from './collections/team-member';
@@ -18,11 +19,9 @@ import { homePage } from './singletons/home-page';
 import { navbar } from './singletons/navbar';
 import { notFound } from './singletons/not-found';
 import { privacyPolicy } from './singletons/privacy-policy';
-import { productCategories } from './singletons/product-categories';
 import { products } from './singletons/products';
 import redirects from './singletons/redirects';
 import { settings } from './singletons/settings';
-import { stores } from './singletons/stores';
 import { termsAndConditions } from './singletons/terms-and-conditions';
 
 export const singletons = [
@@ -36,8 +35,6 @@ export const singletons = [
   notFound,
   blog,
   products,
-  productCategories,
-  stores,
   brands,
 ];
 
@@ -48,6 +45,7 @@ export const collection = [
   blogArticle,
   blogCategory,
   review,
+  reviewAuthor,
   product,
   productCategoryParent,
   productCategorySub,

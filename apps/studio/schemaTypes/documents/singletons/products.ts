@@ -1,8 +1,9 @@
 import { BrickWallShield, Package } from 'lucide-react';
-import { defineType } from 'sanity';
+import { defineField, defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
+import { customPortableText } from '../../portableText';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
 
@@ -19,19 +20,59 @@ export const products = defineType({
       slug: '/produkty/',
       group: GROUP.MAIN_CONTENT,
     }),
+    customPortableText({
+      name: 'title',
+      title: 'Tytuł strony produktów',
+      description:
+        'Główny tytuł wyświetlany w sekcji hero na stronie produktów',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: [],
+        decorators: ['strong'],
+        annotations: [],
+      },
+      validation: (Rule) =>
+        Rule.required().error('Tytuł sekcji hero jest wymagany'),
+    }),
+    customPortableText({
+      name: 'description',
+      title: 'Opis strony produktów',
+      description:
+        'Krótki opis wyświetlany pod tytułem w sekcji hero na stronie produktów',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: [],
+        decorators: ['strong', 'em'],
+        annotations: [],
+      },
+      validation: (Rule) =>
+        Rule.required().error('Opis strony produktów jest wymagany'),
+    }),
+    defineField({
+      name: 'heroImage',
+      title: 'Obraz tła strony produktów',
+      type: 'image',
+      description: 'Obraz wyświetlany w tle sekcji hero na stronie produktów',
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        hotspot: true,
+      },
+      validation: (Rule) =>
+        Rule.required().error('Obraz tła sekcji hero jest wymagany'),
+    }),
     pageBuilderField,
     ...getSEOFields({ exclude: ['doNotIndex', 'hideFromList'] }),
   ],
   preview: {
     select: {
       name: 'name',
-      description: 'description',
       slug: 'slug.current',
     },
-    prepare: ({ name, description }) => ({
+    prepare: ({ name }) => ({
       title: name || 'Produkty',
       media: Package,
-      subtitle: description || 'Strona produktów',
     }),
   },
 });

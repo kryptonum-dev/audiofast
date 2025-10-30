@@ -28,6 +28,16 @@ export const review = defineType({
   fields: [
     orderRankField({ type: 'reviews' }),
     defineField({
+      name: 'author',
+      title: 'Autor recenzji',
+      type: 'reference',
+      description: 'Wybierz autora tej recenzji',
+      to: [{ type: 'reviewAuthor' }],
+      validation: (Rule) =>
+        Rule.required().error('Autor recenzji jest wymagany'),
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: 'destinationType',
       title: 'Typ recenzji',
       type: 'string',
@@ -231,11 +241,14 @@ export const review = defineType({
       name: 'name',
       description: 'description',
       image: 'image',
+      authorName: 'author.name',
     },
-    prepare: ({ name, description, image }) => ({
+    prepare: ({ name, description, image, authorName }) => ({
       title: name || 'Recenzja',
       media: image || MessageSquareText,
-      subtitle: parsePortableTextToString(description) || 'Recenzja produktu',
+      subtitle: authorName
+        ? `${authorName} • ${parsePortableTextToString(description) || 'Recenzja produktu'}`
+        : parsePortableTextToString(description) || 'Recenzja produktu',
     }),
   },
 });

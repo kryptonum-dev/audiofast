@@ -2,11 +2,16 @@ import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
   Award,
   BookOpen,
+  Calendar,
   File,
+  FileText,
+  Folder,
+  FolderOpen,
   type LucideIcon,
+  MessageSquareText,
   Settings2,
   Speaker,
-  Store,
+  UserPen,
 } from 'lucide-react';
 import type {
   StructureBuilder,
@@ -111,14 +116,62 @@ export const structure = (
           S.list()
             .title('Blog')
             .items([
-              createSingleTon({ S, type: 'blog' }),
-              createCollection({
-                S,
-                context,
-                type: 'blog-article',
-                orderable: false,
-                title: 'Wpisy na blogu',
-              }),
+              createSingleTon({ S, type: 'blog', icon: FileText }),
+              // Blog articles grouped by year
+              S.listItem()
+                .title('Wpisy na blogu')
+                .icon(BookOpen)
+                .child(async () => {
+                  // Fetch all blog articles with their creation dates
+                  const articles = await context
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<
+                      Array<{ _createdAt: string }>
+                    >(`*[_type == "blog-article"] {_createdAt}`);
+
+                  // Extract unique years and sort them in descending order
+                  const years = [
+                    ...new Set(
+                      articles.map((article) =>
+                        new Date(article._createdAt).getFullYear()
+                      )
+                    ),
+                  ].sort((a, b) => b - a);
+
+                  return S.list()
+                    .title('Wpisy na blogu')
+                    .items([
+                      // "All Articles" option as first item
+                      S.listItem()
+                        .title('Wszystkie wpisy')
+                        .icon(BookOpen)
+                        .child(
+                          S.documentList()
+                            .title('Wszystkie wpisy')
+                            .filter('_type == "blog-article"')
+                            .defaultOrdering([
+                              { field: '_createdAt', direction: 'desc' },
+                            ])
+                        ),
+                      S.divider(),
+                      // Dynamic list items for each year
+                      ...years.map((year) =>
+                        S.listItem()
+                          .title(`${year}`)
+                          .icon(Calendar)
+                          .child(
+                            S.documentList()
+                              .title(`Wpisy z ${year}`)
+                              .filter(
+                                `_type == "blog-article" && dateTime(_createdAt) >= dateTime("${year}-01-01T00:00:00Z") && dateTime(_createdAt) < dateTime("${year + 1}-01-01T00:00:00Z")`
+                              )
+                              .defaultOrdering([
+                                { field: '_createdAt', direction: 'desc' },
+                              ])
+                          )
+                      ),
+                    ]);
+                }),
               createCollection({
                 S,
                 context,
@@ -128,13 +181,69 @@ export const structure = (
               }),
             ])
         ),
-      createCollection({
-        S,
-        context,
-        type: 'review',
-        orderable: false,
-        title: 'Recenzje',
-      }),
+      S.listItem()
+        .title('Recenzje')
+        .icon(MessageSquareText)
+        .child(
+          S.list()
+            .title('Recenzje')
+            .items([
+              // Reviews grouped by author
+              S.listItem()
+                .title('Recenzje według autorów')
+                .icon(MessageSquareText)
+                .child(async () => {
+                  // Fetch all review authors using the Sanity client
+                  const authors = await context
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<
+                      Array<{ _id: string; name: string }>
+                    >(`*[_type == "reviewAuthor"] | order(orderRank) {_id, name}`);
+
+                  return S.list()
+                    .title('Recenzje według autorów')
+                    .items([
+                      // "All Reviews" option as first item
+                      S.listItem()
+                        .title('Wszystkie recenzje')
+                        .icon(MessageSquareText)
+                        .child(
+                          S.documentList()
+                            .title('Wszystkie recenzje')
+                            .filter('_type == "review"')
+                            .defaultOrdering([
+                              { field: '_createdAt', direction: 'desc' },
+                            ])
+                        ),
+                      S.divider(),
+                      // Dynamic list items for each author
+                      ...authors.map((author) =>
+                        S.listItem()
+                          .title(author.name || 'Bez nazwy')
+                          .icon(UserPen)
+                          .child(
+                            S.documentList()
+                              .title(`${author.name} - Recenzje`)
+                              .filter(
+                                '_type == "review" && author._ref == $authorId'
+                              )
+                              .params({ authorId: author._id })
+                              .defaultOrdering([
+                                { field: '_createdAt', direction: 'desc' },
+                              ])
+                          )
+                      ),
+                    ]);
+                }),
+              createCollection({
+                S,
+                context,
+                type: 'reviewAuthor',
+                orderable: false,
+                title: 'Lista autorów',
+              }),
+            ])
+        ),
       S.listItem()
         .title('Produkty')
         .icon(Speaker)
@@ -143,13 +252,53 @@ export const structure = (
             .title('Produkty')
             .items([
               createSingleTon({ S, type: 'products' }),
-              createCollection({
-                S,
-                context,
-                type: 'product',
-                orderable: true,
-                title: 'Lista produktów',
-              }),
+              // Products grouped by brand
+              S.listItem()
+                .title('Produkty według marek')
+                .icon(Speaker)
+                .child(async () => {
+                  // Fetch all brands using the Sanity client
+                  const brands = await context
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<
+                      Array<{ _id: string; name: string; logo?: any }>
+                    >(`*[_type == "brand"] | order(orderRank) {_id, name, logo}`);
+
+                  return S.list()
+                    .title('Produkty według marek')
+                    .items([
+                      // "All Products" option as first item
+                      S.listItem()
+                        .title('Wszystkie produkty')
+                        .icon(Speaker)
+                        .child(
+                          S.documentList()
+                            .title('Wszystkie produkty')
+                            .filter('_type == "product"')
+                            .defaultOrdering([
+                              { field: 'orderRank', direction: 'asc' },
+                            ])
+                        ),
+                      S.divider(),
+                      // Dynamic list items for each brand
+                      ...brands.map((brand) =>
+                        S.listItem()
+                          .title(brand.name || 'Bez nazwy')
+                          .icon(Folder)
+                          .child(
+                            S.documentList()
+                              .title(`${brand.name} - Produkty`)
+                              .filter(
+                                '_type == "product" && brand._ref == $brandId'
+                              )
+                              .params({ brandId: brand._id })
+                              .defaultOrdering([
+                                { field: 'orderRank', direction: 'asc' },
+                              ])
+                          )
+                      ),
+                    ]);
+                }),
               createCollection({
                 S,
                 context,
@@ -157,40 +306,69 @@ export const structure = (
                 title: 'Lista nagród',
               }),
               S.divider(),
-              createSingleTon({ S, type: 'productCategories' }),
               createCollection({
                 S,
                 context,
                 type: 'productCategoryParent',
-                orderable: true,
+                orderable: false,
                 title: 'Kategorie nadrzędne',
               }),
-              createCollection({
-                S,
-                context,
-                type: 'productCategorySub',
-                orderable: true,
-                title: 'Kategorie podrzędne',
-              }),
+              // Sub-categories grouped by parent
+              S.listItem()
+                .title('Kategorie podrzędne')
+                .icon(Folder)
+                .child(async () => {
+                  // Fetch all parent categories
+                  const parentCategories = await context
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<
+                      Array<{ _id: string; name: string }>
+                    >(`*[_type == "productCategoryParent"] | order(orderRank) {_id, name}`);
+
+                  return S.list()
+                    .title('Kategorie podrzędne')
+                    .items([
+                      // "All Sub-categories" option
+                      S.listItem()
+                        .title('Wszystkie podkategorie')
+                        .icon(Folder)
+                        .child(
+                          S.documentList()
+                            .title('Wszystkie podkategorie')
+                            .filter('_type == "productCategorySub"')
+                            .defaultOrdering([
+                              { field: 'orderRank', direction: 'asc' },
+                            ])
+                        ),
+                      S.divider(),
+                      // Dynamic list items for each parent category
+                      ...parentCategories.map((parent) =>
+                        S.listItem()
+                          .title(parent.name || 'Bez nazwy')
+                          .icon(FolderOpen)
+                          .child(
+                            S.documentList()
+                              .title(`${parent.name} - Podkategorie`)
+                              .filter(
+                                '_type == "productCategorySub" && parentCategory._ref == $parentId'
+                              )
+                              .params({ parentId: parent._id })
+                              .defaultOrdering([
+                                { field: 'orderRank', direction: 'asc' },
+                              ])
+                          )
+                      ),
+                    ]);
+                }),
             ])
         ),
-      S.listItem()
-        .title('Salony')
-        .icon(Store)
-        .child(
-          S.list()
-            .title('Salony')
-            .items([
-              createSingleTon({ S, type: 'stores' }),
-              createCollection({
-                S,
-                context,
-                type: 'store',
-                orderable: true,
-                title: 'Lista salonów',
-              }),
-            ])
-        ),
+      createCollection({
+        S,
+        context,
+        type: 'store',
+        orderable: true,
+        title: 'Salony',
+      }),
       S.listItem()
         .title('Marki')
         .icon(Award)

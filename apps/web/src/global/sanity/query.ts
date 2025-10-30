@@ -833,3 +833,183 @@ export const queryBlogArticles = defineQuery(`
     ])
   }
 `);
+
+// ----------------------------------------
+// Products Queries
+// ----------------------------------------
+
+// Query for products page data (layout, categories, current category, SEO)
+// Parameters:
+// - $category: category slug (optional) - empty string "" for main products page
+//   Format: "/kategoria/wzmacniacze/" (full slug with prefix)
+export const queryProductsPageData = defineQuery(`
+  *[_type == "products"][0] {
+    _id,
+    _type,
+    "slug": slug.current,
+    name,
+    ${portableTextFragment('title')},
+    ${portableTextFragment('description')},
+    ${imageFragment('heroImage')},
+    ${pageBuilderFragment},
+    seo,
+    openGraph{
+      title,
+      description,
+      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+    },
+    "selectedCategory": select(
+      $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{
+        _id,
+        name,
+        "slug": slug.current,
+        ${portableTextFragment('title')},
+        ${portableTextFragment('description')},
+        ${imageFragment('heroImage')},
+        customFilters,
+        ${pageBuilderFragment},
+        seo,
+        openGraph{
+          title,
+          description,
+          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        },
+        parentCategory->{
+          _id,
+          name,
+          "slug": slug.current
+        }
+      },
+      null
+    ),
+    "categories": *[_type == "productCategorySub" && defined(slug.current)] | order(orderRank){
+      _id,
+      name,
+      description,
+      "slug": slug.current,
+      parentCategory->{
+        _id,
+        name,
+        "slug": slug.current
+      },
+      "count": count(*[_type == "product" && references(^._id) && defined(slug.current)])
+    },
+    "totalCount": select(
+      $category != "" => count(*[
+        _type == "product" 
+        && defined(slug.current)
+        && $category in categories[]->slug.current
+      ]),
+      count(*[_type == "product" && defined(slug.current)])
+    )
+  }
+`);
+
+// Helper function to get the correct order clause based on sortBy parameter
+function getProductOrderClause(sortBy: string): string {
+  switch (sortBy) {
+    case 'priceAsc':
+      return 'price asc';
+    case 'priceDesc':
+      return 'price desc';
+    case 'oldest':
+      return '_createdAt asc';
+    case 'orderRank':
+      return 'orderRank asc';
+    case 'newest':
+    default:
+      return '_createdAt desc';
+  }
+}
+
+// Query for products listing (filtered and paginated)
+// Parameters:
+// - $category: category slug (optional) - empty string "" for all products
+// - $search: search term (optional) - empty string "" for no search
+// - $offset: pagination offset (e.g., 0, 12, 24)
+// - $limit: pagination limit (e.g., 12)
+// - sortBy: sort order (newest, oldest, priceAsc, priceDesc, orderRank) - default: newest
+//   Note: sortBy is NOT a query parameter but used to build the query dynamically
+// - $brands: array of brand names/slugs (optional) - empty array [] for all brands
+//   Note: Brand filtering now checks both brand name and slug (without /marki/ prefix)
+// - $minPrice: minimum price (optional) - 0 for no minimum
+// - $maxPrice: maximum price (optional) - 999999999 for no maximum
+// - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
+//   Format: [{filterName: "Długość kabla", value: "2m"}, ...]
+//   Note: ALL custom filters must match (AND logic)
+export function getProductsListingQuery(sortBy: string = 'newest') {
+  const orderClause = getProductOrderClause(sortBy);
+
+  return defineQuery(`
+    {
+      "products": *[
+        _type == "product" 
+        && defined(slug.current)
+        && ($category == "" || $category in categories[]->slug.current)
+        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+        && (count($brands) == 0 || brand->name in $brands || brand->slug.current in $brands)
+        && ($minPrice == 0 || price >= $minPrice)
+        && ($maxPrice == 999999999 || price <= $maxPrice)
+        && (
+          count($customFilters) == 0 ||
+          !defined(customFilterValues) ||
+          count($customFilters) <= count(customFilterValues[
+            select(
+              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+              false
+            )
+          ])
+        )
+      ] | order(${orderClause}) [$offset...$limit] {
+        _id,
+        _createdAt,
+        name,
+        subtitle,
+        "slug": slug.current,
+        price,
+        isArchived,
+        ${imageFragment('imageGallery[0]')},
+        brand->{
+          _id,
+          name,
+          ${imageFragment('logo')}
+        },
+        categories[]->{
+          _id,
+          name,
+          "slug": slug.current
+        },
+        awards[]->{
+          _id,
+          name,
+          ${imageFragment('logo')}
+        }
+      },
+    "totalCount": count(*[
+      _type == "product" 
+      && defined(slug.current)
+      && ($category == "" || $category in categories[]->slug.current)
+      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+      && (count($brands) == 0 || brand->name in $brands || brand->slug.current in $brands)
+      && ($minPrice == 0 || price >= $minPrice)
+      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        count($customFilters) == 0 ||
+        !defined(customFilterValues) ||
+        count($customFilters) <= count(customFilterValues[
+          select(
+            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+            false
+          )
+        ])
+      )
+    ])
+    }
+  `);
+}
+
+// Default export for backward compatibility (newest first)
+export const queryProductsListing = getProductsListingQuery('newest');
+
+// TODO: Category filters query will be added later when implementing category pages
+// export const queryCategoryFilters = defineQuery(...);

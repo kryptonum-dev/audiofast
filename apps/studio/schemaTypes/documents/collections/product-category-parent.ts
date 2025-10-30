@@ -1,13 +1,8 @@
-import {
-  orderRankField,
-  orderRankOrdering,
-} from '@sanity/orderable-document-list';
+import { orderRankOrdering } from '@sanity/orderable-document-list';
 import { FolderOpen } from 'lucide-react';
 import { defineType } from 'sanity';
 
-import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
-import { getSEOFields } from '../../shared/seo';
 
 export const productCategoryParent = defineType({
   name: 'productCategoryParent',
@@ -19,22 +14,21 @@ export const productCategoryParent = defineType({
   description:
     'Główna kategoria produktów audio. Kategorie nadrzędne grupują produkty w szerokie tematy.',
   fields: [
-    orderRankField({ type: 'productCategories' }),
-    ...defineSlugForDocument({
-      prefix: '/kategorie/',
+    {
+      name: 'name',
+      title: 'Nazwa kategorii',
+      type: 'string',
+      description: 'Nazwa kategorii nadrzędnej',
       group: GROUP.MAIN_CONTENT,
-    }),
-    ...getSEOFields(),
+    },
   ],
   preview: {
     select: {
       name: 'name',
-      description: 'description',
     },
-    prepare: ({ name, description }) => ({
+    prepare: ({ name }) => ({
       title: name || 'Kategoria nadrzędna',
       media: FolderOpen,
-      subtitle: description || 'Główna kategoria produktów',
     }),
   },
 });

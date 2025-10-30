@@ -424,3 +424,132 @@ export default async function svgToInlineString(
     return null;
   }
 }
+
+// ----------------------------------------
+// Product Filtering Utilities
+// ----------------------------------------
+
+// Known search param keys that are NOT custom filters
+export const STANDARD_SEARCH_PARAMS = [
+  'page',
+  'search',
+  'sortBy',
+  'brands',
+  'minPrice',
+  'maxPrice',
+];
+
+/**
+ * Extract custom filter params from search params and convert to GROQ array format
+ * Matches slugified filter names from URL back to original filter names
+ *
+ * Example URL: ?liczba-wejsc=5&impedancja=8
+ * With availableFilters: ["Liczba wejść", "Impedancja"]
+ * Returns: [{filterName: "Liczba wejść", value: "5"}, {filterName: "Impedancja", value: "8"}]
+ *
+ * @param searchParams - All search parameters from URL
+ * @param availableFilters - Array of original filter names from category (for matching)
+ * @returns Array of filter objects ready for GROQ query
+ */
+export function extractCustomFilters(
+  searchParams: Record<string, string | string[] | undefined>,
+  availableFilters: string[] = []
+): Array<{ filterName: string; value: string }> {
+  const customFilters: Array<{ filterName: string; value: string }> = [];
+
+  for (const [key, value] of Object.entries(searchParams)) {
+    // Skip standard params and undefined/empty values
+    if (STANDARD_SEARCH_PARAMS.includes(key) || !value) {
+      continue;
+    }
+
+    // For custom filters, use the first value if it's an array
+    const filterValue = Array.isArray(value) ? value[0] : value;
+
+    // Only add if we have a valid string value
+    if (filterValue) {
+      // Match slugified URL param back to original filter name
+      const originalFilterName = matchSlugToFilterName(key, availableFilters);
+
+      // Only add if we found a matching filter name
+      if (originalFilterName) {
+        customFilters.push({
+          filterName: originalFilterName,
+          value: filterValue,
+        });
+      }
+    }
+  }
+
+  return customFilters;
+}
+
+/**
+ * Parse brands from search params
+ * Converts URL param to array of brand slugs with proper formatting
+ * Handles both single brand and comma-separated multiple brands
+ * Adds /marki/ prefix if not present to match Sanity brand slug format
+ *
+ * @param brandsParam - Brand parameter from URL (string or string array)
+ * @returns Array of brand slugs/names
+ */
+export function parseBrands(
+  brandsParam: string | string[] | undefined
+): string[] {
+  if (!brandsParam) return [];
+
+  // Convert to array if string (handle comma-separated)
+  const brandsArray = Array.isArray(brandsParam)
+    ? brandsParam
+    : brandsParam.split(',').filter(Boolean);
+
+  // For each brand, add /marki/ prefix if it doesn't have it
+  // This allows matching against brand slugs in Sanity
+  return brandsArray.flatMap((brand) => {
+    const trimmed = brand.trim();
+    if (!trimmed) return [];
+
+    // Return both the original value and the slug with prefix
+    // This allows matching against both brand.name and brand.slug
+    const withPrefix = trimmed.startsWith('/marki/')
+      ? trimmed
+      : `/marki/${trimmed}/`;
+
+    return [withPrefix];
+  });
+}
+
+/**
+ * Slugify filter name for URL (lowercase, remove diacritics, spaces to hyphens)
+ * Example: "Liczba wejść" → "liczba-wejsc"
+ *
+ * @param filterName - Filter name to slugify
+ * @returns URL-safe slugified filter name
+ */
+export function slugifyFilterName(filterName: string): string {
+  return filterName
+    .toLowerCase()
+    .normalize('NFD') // Decompose characters with diacritics
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .trim();
+}
+
+/**
+ * Match a slugified filter name back to its original name from available filters
+ * Example: "liczba-wejsc" with filters ["Liczba wejść", "Moc"] → "Liczba wejść"
+ *
+ * @param slugifiedName - Slugified filter name from URL
+ * @param availableFilters - Array of original filter names from category
+ * @returns Original filter name or undefined if no match
+ */
+export function matchSlugToFilterName(
+  slugifiedName: string,
+  availableFilters: string[]
+): string | undefined {
+  return availableFilters.find(
+    (filterName) => slugifyFilterName(filterName) === slugifiedName
+  );
+}

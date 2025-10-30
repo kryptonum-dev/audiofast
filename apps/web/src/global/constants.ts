@@ -57,3 +57,11 @@ export const REGEX: { email: RegExp; phone: RegExp; string: RegExp } = {
  */
 
 export const BLOG_ITEMS_PER_PAGE: number = 12;
+
+/**
+ * Global declaration of the number of items per page for the products listing.
+ * @constant
+ * @type {number}
+ */
+
+export const PRODUCTS_ITEMS_PER_PAGE: number = 12;

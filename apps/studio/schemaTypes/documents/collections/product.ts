@@ -5,6 +5,7 @@ import {
 import { BookAudio, Package, Settings } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 
+import { CustomFilterValueInput } from '../../../components/custom-filter-value-input';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { customPortableText } from '../../portableText';
@@ -77,6 +78,89 @@ export const product = defineType({
       to: [{ type: 'brand' }],
       validation: (Rule) => Rule.required().error('Marka jest wymagana'),
       group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Kategorie',
+      type: 'array',
+      description:
+        'Wybierz kategorie, do których należy ten produkt. Produkt może należeć do wielu kategorii.',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'productCategorySub' }],
+          options: {
+            filter: ({ document }) => {
+              const selectedIds = Array.isArray(document?.categories)
+                ? document.categories
+                    .map((item: any) => item._ref)
+                    .filter(Boolean)
+                : [];
+              return {
+                filter: '!(_id in $selectedIds)',
+                params: { selectedIds },
+              };
+            },
+          },
+        },
+      ],
+      validation: (Rule) =>
+        Rule.min(1).error(
+          'Produkt musi należeć do co najmniej jednej kategorii'
+        ),
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: 'customFilterValues',
+      title: 'Wartości niestandardowych filtrów',
+      type: 'array',
+      description:
+        'Podaj wartości dla filtrów zdefiniowanych w wybranych kategoriach. Filtry są automatycznie pobierane z przypisanych kategorii.',
+      group: GROUP.MAIN_CONTENT,
+      hidden: ({ document }) =>
+        !document?.categories ||
+        !Array.isArray(document.categories) ||
+        document.categories.length === 0,
+      components: {
+        input: CustomFilterValueInput,
+      },
+      of: [
+        defineField({
+          type: 'object',
+          name: 'filterValue',
+          title: 'Wartość filtra',
+          fields: [
+            defineField({
+              name: 'filterName',
+              title: 'Nazwa filtra',
+              type: 'string',
+              description:
+                'Nazwa filtra z kategorii (np. "Długość kabla", "Moc wzmacniacza")',
+              validation: (Rule) =>
+                Rule.required().error('Nazwa filtra jest wymagana'),
+            }),
+            defineField({
+              name: 'value',
+              title: 'Wartość',
+              type: 'string',
+              description: 'Wartość dla tego filtra (np. "2m", "100W", "8Ω")',
+              validation: (Rule) =>
+                Rule.required().error('Wartość filtra jest wymagana'),
+            }),
+          ],
+          preview: {
+            select: {
+              filterName: 'filterName',
+              value: 'value',
+            },
+            prepare: ({ filterName, value }) => ({
+              title: filterName || 'Filtr',
+              subtitle: value || 'Brak wartości',
+              media: Settings,
+            }),
+          },
+        }),
+      ],
     }),
 
     defineField({
