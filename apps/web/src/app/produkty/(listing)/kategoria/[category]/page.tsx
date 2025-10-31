@@ -2,19 +2,23 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
+import ProductsListing from '@/src/components/products/ProductsListing';
+import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
+import styles from '@/src/components/products/ProductsListing/styles.module.scss';
 import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import ProductsListing from '@/src/components/ui/ProductsListing';
-import ProductsListingSkeleton from '@/src/components/ui/ProductsListing/ProductsListingSkeleton';
-import styles from '@/src/components/ui/ProductsListing/styles.module.scss';
 import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
 import { queryProductsPageData } from '@/src/global/sanity/query';
 import type { QueryProductsPageDataResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
-import { extractCustomFilters, parseBrands } from '@/src/global/utils';
+import {
+  extractCustomFilters,
+  parseBrands,
+  parsePrice,
+} from '@/src/global/utils';
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
@@ -91,8 +95,6 @@ export default async function CategoryPage(props: CategoryPageProps) {
   const currentPage = Number(searchParams.page) || 1;
   const searchTerm = searchParams.search || '';
   const sortBy = searchParams.sortBy || 'newest';
-  const minPrice = Number(searchParams.minPrice) || 0;
-  const maxPrice = Number(searchParams.maxPrice) || 999999999;
   const brands = parseBrands(searchParams.brands);
 
   const productsData = await sanityFetch<QueryProductsPageDataResult>({
@@ -107,6 +109,28 @@ export default async function CategoryPage(props: CategoryPageProps) {
   }
 
   const category = productsData.selectedCategory;
+
+  // Get the actual maximum price for this category
+  const actualMaxPrice = productsData.maxPrice!;
+
+  // Parse and validate prices with edge case handling
+  let minPrice = parsePrice(searchParams.minPrice, 0);
+  let maxPrice = parsePrice(
+    searchParams.maxPrice,
+    actualMaxPrice,
+    actualMaxPrice
+  );
+
+  // Edge case 1: If minPrice > maxPrice, reset both to defaults
+  if (minPrice > maxPrice) {
+    minPrice = 0;
+    maxPrice = actualMaxPrice;
+  }
+
+  // Edge case 2: maxPrice must be at least 1
+  if (maxPrice < 1) {
+    maxPrice = 1;
+  }
 
   // Get available filter names from category for matching slugified URL params
   const availableFilters = category.customFilters || [];

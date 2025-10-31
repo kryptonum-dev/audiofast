@@ -1,6 +1,7 @@
 import type {
   QueryBlogPostBySlugResult,
   QueryHomePageResult,
+  QueryProductsPageDataResult,
 } from './sanity/sanity.types';
 
 export type PageBuilderBlockTypes = NonNullable<
@@ -35,3 +36,11 @@ export type PortableTextPropsBlock = Extract<
   NonNullable<NonNullable<PortableTextProps>[number]>,
   { _type: 'block' }
 >;
+
+export type ProductCategoryType = NonNullable<
+  NonNullable<QueryProductsPageDataResult>['categories']
+>[number];
+
+export type BrandType = NonNullable<
+  NonNullable<QueryProductsPageDataResult>['brands']
+>[number];

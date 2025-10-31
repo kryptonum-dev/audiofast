@@ -5,9 +5,9 @@ import { sanityFetch } from '@/src/global/sanity/client';
 import { queryBlogArticles } from '@/src/global/sanity/query';
 import type { QueryBlogArticlesResult } from '@/src/global/sanity/sanity.types';
 
-import Pagination from '../Pagination';
-import PublicationCard from '../PublicationCard';
-import EmptyState from './EmptyState';
+import EmptyState from '../../ui/EmptyState';
+import Pagination from '../../ui/Pagination';
+import PublicationCard from '../../ui/PublicationCard';
 import styles from './styles.module.scss';
 
 type BlogListingProps = {
@@ -56,7 +56,7 @@ export default async function BlogListing({
   return (
     <>
       {!hasArticles ? (
-        <EmptyState searchTerm={searchTerm} category={category} />
+        <EmptyState searchTerm={searchTerm} category={category} type="blog" />
       ) : (
         <>
           <div className={styles.articlesGrid}>

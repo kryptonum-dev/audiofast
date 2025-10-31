@@ -30,7 +30,10 @@ export default function Pagination({
   const getPageUrl = (pageNum: number): string => {
     if (pageNum < 1 || pageNum > totalPages) return '#';
 
-    const params = new URLSearchParams(searchParams?.toString() || '');
+    // Clone the existing search params properly using the URLSearchParams constructor
+    const params = searchParams
+      ? new URLSearchParams(searchParams)
+      : new URLSearchParams();
 
     if (pageNum > 1) {
       params.set('page', pageNum.toString());

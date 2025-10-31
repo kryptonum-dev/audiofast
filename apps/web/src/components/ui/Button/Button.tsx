@@ -18,7 +18,9 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
       | 'arrowRight'
       | 'refresh'
       | 'submit'
-      | 'phone';
+      | 'phone'
+      | 'clearFilters'
+      | 'applyFilters';
   };
 
 export default function Button({
@@ -57,6 +59,10 @@ export default function Button({
         return <SubmitIcon />;
       case 'phone':
         return <PhoneIcon />;
+      case 'clearFilters':
+        return <ClearFiltersIcon />;
+      case 'applyFilters':
+        return <ApplyFiltersIcon />;
       default:
         return <ArrowUp />;
     }
@@ -67,7 +73,10 @@ export default function Button({
     <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
         {icon}
-        {iconUsed !== 'phone' && icon}
+        {iconUsed !== 'phone' &&
+          iconUsed !== 'clearFilters' &&
+          iconUsed !== 'applyFilters' &&
+          icon}
       </div>
       <div className={styles.textContainer}>
         <span>{text || children}</span>
@@ -148,6 +157,44 @@ const PhoneIcon = () => (
     <defs>
       <clipPath id="a">
         <path fill="#fff" d="M0 .555h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const ClearFiltersIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#clear-filters-clip)"
+    >
+      <path d="m3 3 18 18M8.997 5h9.5a1 1 0 0 1 .5 1.5l-4.049 4.454M13.998 14v5l-4-3v-4l-5-5.5a1 1 0 0 1 .18-1.316" />
+    </g>
+    <defs>
+      <clipPath id="clear-filters-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const ApplyFiltersIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#apply-filters-clip)"
+    >
+      <path d="m12 20-3 1v-8.5L4.52 7.572A2 2 0 0 1 4 6.227V4h16v2.172a2 2 0 0 1-.586 1.414L15 12v3M16 19h6M19 16v6" />
+    </g>
+    <defs>
+      <clipPath id="apply-filters-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
       </clipPath>
     </defs>
   </svg>

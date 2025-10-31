@@ -64,4 +64,17 @@ export const BLOG_ITEMS_PER_PAGE: number = 12;
  * @type {number}
  */
 
-export const PRODUCTS_ITEMS_PER_PAGE: number = 12;
+export const PRODUCTS_ITEMS_PER_PAGE: number = 8;
+
+/**
+ * Sort options for product listings.
+ * @constant
+ * @type {Array<{value: string, label: string}>}
+ */
+export const PRODUCT_SORT_OPTIONS = [
+  { value: 'orderRank', label: 'Od najważniejszych' },
+  { value: 'newest', label: 'Od najnowszych' },
+  { value: 'oldest', label: 'Od najstarszych' },
+  { value: 'priceAsc', label: 'Cena: od najniższej' },
+  { value: 'priceDesc', label: 'Cena: od najwyższej' },
+];

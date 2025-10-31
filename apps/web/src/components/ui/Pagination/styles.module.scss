@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 0.25rem;
   width: fit-content;
 }
 
@@ -91,4 +91,42 @@
   color: var(--neutral-600, #5b5a5a);
   user-select: none;
   padding: 3px;
+}
+
+// Pagination Skeleton Styles
+.paginationSkeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: fit-content;
+}
+
+.arrowSkeleton {
+  width: 44px;
+  height: 44px;
+  background: var(--neutral-200, #f8f8f8);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pageNumberSkeleton {
+  width: 44px;
+  height: 44px;
+  background: var(--neutral-200, #f8f8f8);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.ellipsisSkeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--neutral-400, #e7e7e7);
+  user-select: none;
 }

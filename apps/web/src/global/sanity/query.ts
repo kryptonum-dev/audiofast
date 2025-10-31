@@ -894,6 +894,11 @@ export const queryProductsPageData = defineQuery(`
       },
       "count": count(*[_type == "product" && references(^._id) && defined(slug.current)])
     },
+    "brands": *[_type == "brand" && defined(slug.current)] | order(orderRank){
+      _id,
+      name,
+      "slug": slug.current
+    },
     "totalCount": select(
       $category != "" => count(*[
         _type == "product" 
@@ -901,96 +906,63 @@ export const queryProductsPageData = defineQuery(`
         && $category in categories[]->slug.current
       ]),
       count(*[_type == "product" && defined(slug.current)])
+    ),
+    "maxPrice": select(
+      $category != "" => math::max(*[
+        _type == "product" 
+        && defined(slug.current)
+        && $category in categories[]->slug.current
+        && defined(price)
+      ].price),
+      math::max(*[_type == "product" && defined(slug.current) && defined(price)].price)
     )
   }
 `);
 
-// Helper function to get the correct order clause based on sortBy parameter
-function getProductOrderClause(sortBy: string): string {
-  switch (sortBy) {
-    case 'priceAsc':
-      return 'price asc';
-    case 'priceDesc':
-      return 'price desc';
-    case 'oldest':
-      return '_createdAt asc';
-    case 'orderRank':
-      return 'orderRank asc';
-    case 'newest':
-    default:
-      return '_createdAt desc';
-  }
-}
-
-// Query for products listing (filtered and paginated)
-// Parameters:
-// - $category: category slug (optional) - empty string "" for all products
-// - $search: search term (optional) - empty string "" for no search
-// - $offset: pagination offset (e.g., 0, 12, 24)
-// - $limit: pagination limit (e.g., 12)
-// - sortBy: sort order (newest, oldest, priceAsc, priceDesc, orderRank) - default: newest
-//   Note: sortBy is NOT a query parameter but used to build the query dynamically
-// - $brands: array of brand names/slugs (optional) - empty array [] for all brands
-//   Note: Brand filtering now checks both brand name and slug (without /marki/ prefix)
-// - $minPrice: minimum price (optional) - 0 for no minimum
-// - $maxPrice: maximum price (optional) - 999999999 for no maximum
-// - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
-//   Format: [{filterName: "Długość kabla", value: "2m"}, ...]
-//   Note: ALL custom filters must match (AND logic)
-export function getProductsListingQuery(sortBy: string = 'newest') {
-  const orderClause = getProductOrderClause(sortBy);
-
-  return defineQuery(`
-    {
-      "products": *[
-        _type == "product" 
-        && defined(slug.current)
-        && ($category == "" || $category in categories[]->slug.current)
-        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
-        && (count($brands) == 0 || brand->name in $brands || brand->slug.current in $brands)
-        && ($minPrice == 0 || price >= $minPrice)
-        && ($maxPrice == 999999999 || price <= $maxPrice)
-        && (
-          count($customFilters) == 0 ||
-          !defined(customFilterValues) ||
-          count($customFilters) <= count(customFilterValues[
-            select(
-              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-              false
-            )
-          ])
-        )
-      ] | order(${orderClause}) [$offset...$limit] {
-        _id,
-        _createdAt,
+// Reusable fragment for products listing logic
+// This avoids code duplication across different sort queries
+const productsListingFragment = (orderClause: string) => /* groq */ `
+  {
+    "products": *[
+      _type == "product" 
+      && defined(slug.current)
+      && ($category == "" || $category in categories[]->slug.current)
+      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+      && ($minPrice == 0 || price >= $minPrice)
+      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        count($customFilters) == 0 ||
+        !defined(customFilterValues) ||
+        count($customFilters) <= count(customFilterValues[
+          select(
+            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+            false
+          )
+        ])
+      )
+    ] | order(${orderClause}) [$offset...$limit] {
+      _id,
+      _createdAt,
+      name,
+      subtitle,
+      "slug": slug.current,
+      price,
+      isArchived,
+      brand->{
         name,
-        subtitle,
         "slug": slug.current,
-        price,
-        isArchived,
-        ${imageFragment('imageGallery[0]')},
-        brand->{
-          _id,
-          name,
-          ${imageFragment('logo')}
-        },
-        categories[]->{
-          _id,
-          name,
-          "slug": slug.current
-        },
-        awards[]->{
-          _id,
-          name,
-          ${imageFragment('logo')}
-        }
+        ${imageFragment('logo')}
       },
+      "mainImage": ${imageFragment('imageGallery[0]')},
+      ${portableTextFragment('shortDescription')}
+    },
     "totalCount": count(*[
       _type == "product" 
       && defined(slug.current)
       && ($category == "" || $category in categories[]->slug.current)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
-      && (count($brands) == 0 || brand->name in $brands || brand->slug.current in $brands)
+      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
       && ($minPrice == 0 || price >= $minPrice)
       && ($maxPrice == 999999999 || price <= $maxPrice)
       && (
@@ -1004,12 +976,60 @@ export function getProductsListingQuery(sortBy: string = 'newest') {
         ])
       )
     ])
-    }
-  `);
+  }
+`;
+
+// Query for products listing (filtered and paginated)
+// Parameters:
+// - $category: category slug (optional) - empty string "" for all products
+// - $search: search term (optional) - empty string "" for no search
+// - $offset: pagination offset (e.g., 0, 12, 24)
+// - $limit: pagination limit (e.g., 12)
+// - $brands: array of brand names/slugs (optional) - empty array [] for all brands
+//   Note: Brand filtering checks both brand name and slug (without /marki/ prefix)
+// - $minPrice: minimum price (optional) - 0 for no minimum
+// - $maxPrice: maximum price (optional) - 999999999 for no maximum
+// - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
+//   Format: [{filterName: "Długość kabla", value: "2m"}, ...]
+//   Note: ALL custom filters must match (AND logic)
+
+// Static queries for each sort type (required for typegen)
+export const queryProductsListingNewest = defineQuery(
+  productsListingFragment('_createdAt desc')
+);
+
+export const queryProductsListingOldest = defineQuery(
+  productsListingFragment('_createdAt asc')
+);
+
+export const queryProductsListingPriceAsc = defineQuery(
+  productsListingFragment('price asc')
+);
+
+export const queryProductsListingPriceDesc = defineQuery(
+  productsListingFragment('price desc')
+);
+
+export const queryProductsListingOrderRank = defineQuery(
+  productsListingFragment('orderRank asc')
+);
+
+// Helper function to get the correct query based on sortBy parameter
+export function getProductsListingQuery(sortBy: string = 'newest') {
+  switch (sortBy) {
+    case 'oldest':
+      return queryProductsListingOldest;
+    case 'priceAsc':
+      return queryProductsListingPriceAsc;
+    case 'priceDesc':
+      return queryProductsListingPriceDesc;
+    case 'orderRank':
+      return queryProductsListingOrderRank;
+    case 'newest':
+    default:
+      return queryProductsListingNewest;
+  }
 }
 
 // Default export for backward compatibility (newest first)
-export const queryProductsListing = getProductsListingQuery('newest');
-
-// TODO: Category filters query will be added later when implementing category pages
-// export const queryCategoryFilters = defineQuery(...);
+export const queryProductsListing = queryProductsListingNewest;

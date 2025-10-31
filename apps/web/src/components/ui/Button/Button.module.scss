@@ -186,6 +186,35 @@
     }
   }
 
+  &[data-icon='clearFilters'],
+  &[data-icon='applyFilters'] {
+    .iconContainer {
+      svg {
+        transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+
+    &:hover {
+      .iconContainer {
+        svg {
+          &:nth-child(1) {
+            transform: translateX(2px);
+          }
+        }
+      }
+    }
+
+    &:focus-visible {
+      .iconContainer {
+        svg {
+          &:nth-child(1) {
+            transform: translateX(0);
+          }
+        }
+      }
+    }
+  }
+
   @keyframes phoneRing {
     0%,
     100% {

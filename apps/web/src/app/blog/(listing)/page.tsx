@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+import BlogListing from '@/src/components/blog/BlogListing';
+import BlogListingSkeleton from '@/src/components/blog/BlogListing/BlogListingSkeleton';
+import styles from '@/src/components/blog/BlogListing/styles.module.scss';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import BlogAside from '@/src/components/ui/BlogAside';
-import BlogListing from '@/src/components/ui/BlogListing';
-import BlogListingSkeleton from '@/src/components/ui/BlogListing/BlogListingSkeleton';
-import styles from '@/src/components/ui/BlogListing/styles.module.scss';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
@@ -92,6 +92,7 @@ export default async function BlogPage(props: BlogPageProps) {
           basePath="/blog/"
           currentCategory={null}
         />
+
         <Suspense
           key={`page-${currentPage}-search-${searchTerm}`}
           fallback={<BlogListingSkeleton />}

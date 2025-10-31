@@ -641,6 +641,162 @@ Filter params use `filterId` from category's customFilters as the param key.
 
 ---
 
+## ✅ Step 3 COMPLETE Summary
+
+**What was implemented:**
+
+1. **Layout & Structure**
+   - ✅ Restructured products listing layout to match Figma design
+   - ✅ CSS Grid layout with aside on left, content on right
+   - ✅ Grid areas: `productsAside`, `sortDropdown`, `pagination-first`, `productsGrid`, `pagination-last`
+   - ✅ Responsive breakpoints for tablet and mobile
+   - ✅ Sticky aside with scrollable content
+
+2. **ProductsAside Component**
+   - ✅ Search input (manual mode with Searchbar component)
+   - ✅ Categories list grouped by parent category
+   - ✅ Expandable/collapsible parent categories with ChevronIcon
+   - ✅ Active category highlighted and non-focusable
+   - ✅ Brand filtering system:
+     - Uses brand slugs (e.g., "aurender") instead of IDs
+     - Initially shows 8 brands, dynamically expands if more are active
+     - "Wczytaj wszystkie" button with count display
+     - Active brands (from URL) sorted to top of list
+     - Modern checkbox design with Apple-like aesthetic
+     - SVG checkmark with subtle styling
+   - ✅ PriceRange component integration
+   - ✅ Filter and Clear Filter buttons (sticky at bottom)
+   - ✅ Receives searchParams as props (no internal useSearchParams)
+   - ✅ Clear Filters button only visible when filters applied in URL
+
+3. **PriceRange Component** (NEW)
+   - ✅ Dual range slider with two overlapping inputs
+   - ✅ Clean visual design matching Figma
+   - ✅ Editable min/max inputs with full validation:
+     - No negative values
+     - No decimals (integers only)
+     - Min can't exceed max
+     - Max can't go below min
+     - Max must be at least 1
+   - ✅ Dynamic maxPrice from Sanity query (not hardcoded)
+   - ✅ Visual indicator showing max available price
+   - ✅ Proper state synchronization with useEffect
+   - ✅ Edge case handling for invalid URL params
+
+4. **SortDropdown Component** (NEW)
+   - ✅ Modern, Apple-like minimalistic design
+   - ✅ Clean white dropdown with subtle shadows
+   - ✅ Trigger shows current sorting value
+   - ✅ Dropdown closes on focus out
+   - ✅ Active option non-focusable and visually distinct
+   - ✅ "Relevance" sorting only visible when search query present
+   - ✅ Smooth animations with spring-like easing
+   - ✅ Fixed text alignment (no jumping on hover)
+   - ✅ Neutral gray active state (no red color)
+
+5. **ProductsListing Component**
+   - ✅ Server-side data fetching
+   - ✅ Grid layout for product cards
+   - ✅ Pagination at top and bottom
+   - ✅ Empty state for no results
+   - ✅ Suspense with skeleton loader
+   - ✅ Proper URL params construction for pagination
+
+6. **ProductCard Component** (NEW)
+   - ✅ Product image with brand logo overlay
+   - ✅ Product name and subtitle
+   - ✅ Price display
+   - ✅ Category badges
+   - ✅ Award logos
+   - ✅ Hover effects
+   - ✅ Link to product detail page
+   - ✅ Fade-in animation on load
+
+7. **Pagination Component Updates**
+   - ✅ Created reusable PaginationSkeleton component
+   - ✅ Fixed URL params corruption issue
+   - ✅ Proper URLSearchParams cloning
+   - ✅ Preserves all filters when changing pages
+
+8. **Button Component Updates**
+   - ✅ Added `clearFilters` icon (filter with X)
+   - ✅ Added `applyFilters` icon (filter with plus)
+   - ✅ Single icon rendering (no duplicates)
+   - ✅ Smooth translateX animations on hover/focus
+   - ✅ Dynamic color with `currentColor`
+
+9. **Utility Functions**
+   - ✅ `parsePrice()` - Robust price validation with edge cases
+   - ✅ `parseBrands()` - Updated to return clean slugs
+   - ✅ All validation handles invalid inputs gracefully
+
+10. **GROQ Query Updates**
+    - ✅ `queryProductsPageData` now fetches `maxPrice`
+    - ✅ Brand slug matching uses clean slugs (without `/marki/` prefix)
+    - ✅ Proper filtering by brand slugs in GROQ
+
+**Key Features Implemented:**
+
+- ✅ **Smart Filtering**
+  - All filters (search, brands, price, sort) work together
+  - URL params properly encoded and decoded
+  - Filters persist across pagination
+  - Clear all filters functionality
+
+- ✅ **Responsive Design**
+  - Desktop: Aside + grid layout
+  - Tablet: Adjusted grid columns
+  - Mobile: Stacked layout
+  - All components adapt to screen size
+
+- ✅ **Accessibility**
+  - Keyboard navigation supported
+  - Active items non-focusable
+  - ARIA labels on interactive elements
+  - Screen reader friendly
+
+- ✅ **Edge Case Handling**
+  - Invalid price inputs ignored
+  - Min > max price handled
+  - Empty search results
+  - No products in category
+  - Malformed URL params
+
+- ✅ **Performance**
+  - Suspense boundaries
+  - Skeleton loading states
+  - Efficient re-renders
+  - Optimized animations
+
+**Design System Updates:**
+
+- ✅ Modern, minimalistic Apple-like aesthetic
+- ✅ Consistent spacing and typography
+- ✅ Subtle shadows and borders
+- ✅ Smooth animations with spring-like easing
+- ✅ Neutral color palette with black/white/gray
+- ✅ Clean, readable UI elements
+
+**Testing & Validation:**
+
+- ✅ All URL param combinations work
+- ✅ Pagination preserves filters
+- ✅ Search + filters + pagination work together
+- ✅ Price range validates correctly
+- ✅ Brand filtering by slugs works
+- ✅ Sort dropdown properly filters "relevance"
+- ✅ No linter errors
+
+**Next Steps:**
+
+- Product detail pages
+- Advanced filtering (if needed)
+- Performance optimizations
+- SEO improvements
+- Analytics integration
+
+---
+
 ## Additional Considerations
 
 ### Sanity Studio Considerations
@@ -723,18 +879,27 @@ Filter params use `filterId` from category's customFilters as the param key.
 - ~~`apps/web/src/global/sanity/query-products.ts`~~ (Merged into `query.ts`)
 - [x] `apps/web/src/app/produkty/page.tsx`
 - [x] `apps/web/src/app/produkty/kategoria/[category]/page.tsx`
-- [ ] `apps/web/src/components/ui/ProductsAside/index.tsx`
-- [ ] `apps/web/src/components/ui/ProductsAside/styles.module.scss`
-- [ ] `apps/web/src/components/ui/ProductsListing/index.tsx`
-- [ ] `apps/web/src/components/ui/ProductsListing/styles.module.scss`
-- [ ] `apps/web/src/components/ui/ProductsListing/ProductsListingSkeleton.tsx`
-- [ ] `apps/web/src/components/ui/ProductCard/index.tsx`
-- [ ] `apps/web/src/components/ui/ProductCard/styles.module.scss`
+- [x] `apps/web/src/components/ui/ProductsAside/index.tsx`
+- [x] `apps/web/src/components/ui/ProductsAside/styles.module.scss`
+- [x] `apps/web/src/components/ui/ProductsListing/index.tsx`
+- [x] `apps/web/src/components/ui/ProductsListing/styles.module.scss`
+- [x] `apps/web/src/components/ui/ProductsListing/ProductsListingSkeleton.tsx`
+- [x] `apps/web/src/components/ui/ProductCard/index.tsx`
+- [x] `apps/web/src/components/ui/ProductCard/styles.module.scss`
+- [x] `apps/web/src/components/ui/PriceRange/index.tsx`
+- [x] `apps/web/src/components/ui/PriceRange/styles.module.scss`
+- [x] `apps/web/src/components/ui/SortDropdown/index.tsx`
+- [x] `apps/web/src/components/ui/SortDropdown/styles.module.scss`
+- [x] `apps/web/src/components/ui/Pagination/PaginationSkeleton.tsx`
 
 ### Web Files to Modify
 
 - [x] `apps/web/src/global/constants.ts` (add PRODUCTS_ITEMS_PER_PAGE)
-- [ ] Update any routing/navigation components if needed
+- [x] `apps/web/src/global/utils.ts` (add parsePrice, update parseBrands)
+- [x] `apps/web/src/global/sanity/query.ts` (add maxPrice queries, brand slug matching)
+- [x] `apps/web/src/components/ui/Button/Button.tsx` (add clearFilters and applyFilters icons)
+- [x] `apps/web/src/components/ui/Button/Button.module.scss` (add filter icon animations)
+- [x] `apps/web/src/components/ui/Pagination/index.tsx` (fix URL params handling)
 
 ---
 

@@ -11,6 +11,10 @@ type SearchbarProps = {
   name?: string;
   debounceMs?: number;
   onSearch?: (searchTerm: string) => void;
+  mode?: 'auto' | 'manual';
+  value?: string;
+  onChange?: (value: string) => void;
+  onSubmit?: () => void;
 };
 
 export default function Searchbar({
@@ -19,26 +23,35 @@ export default function Searchbar({
   name = 'search',
   debounceMs = 500,
   onSearch,
+  mode = 'auto',
+  value: controlledValue,
+  onChange: controlledOnChange,
+  onSubmit,
 }: SearchbarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
 
-  // Get initial value from URL params
-  const urlSearchValue = searchParams.get(name) || '';
+  // Get initial value from URL params (only for auto mode)
+  const urlSearchValue = mode === 'auto' ? searchParams.get(name) || '' : '';
 
-  // Controlled input state
-  const [inputValue, setInputValue] = useState(urlSearchValue);
+  // Controlled input state (only used in auto mode)
+  const [internalValue, setInternalValue] = useState(urlSearchValue);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Sync input with URL params when they change externally
-  useEffect(() => {
-    const urlValue = searchParams.get(name) || '';
-    setInputValue(urlValue);
-  }, [searchParams, name]);
+  // Use controlled value if in manual mode, otherwise use internal state
+  const inputValue = mode === 'manual' ? controlledValue || '' : internalValue;
 
-  // Update URL params
+  // Sync input with URL params when they change externally (only for auto mode)
+  useEffect(() => {
+    if (mode === 'auto') {
+      const urlValue = searchParams.get(name) || '';
+      setInternalValue(urlValue);
+    }
+  }, [searchParams, name, mode]);
+
+  // Update URL params (only used in auto mode)
   const updateURLParams = useCallback(
     (value: string) => {
       // If custom handler provided, use it
@@ -66,27 +79,43 @@ export default function Searchbar({
         });
       }
     },
-    [basePath, name, onSearch, router, searchParams]
+    [basePath, name, onSearch, router, searchParams, startTransition]
   );
 
-  // Debounced input change handler
+  // Input change handler
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    setInputValue(newValue);
 
-    // Clear existing timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // For 1-4 characters OR empty: instant search (no debounce)
-    if (newValue.length <= 4) {
-      updateURLParams(newValue);
+    if (mode === 'manual') {
+      // Manual mode: just call the onChange callback
+      if (controlledOnChange) {
+        controlledOnChange(newValue);
+      }
     } else {
-      // For 5+ characters: debounced search
-      debounceTimerRef.current = setTimeout(() => {
+      // Auto mode: update internal state and trigger debounced search
+      setInternalValue(newValue);
+
+      // Clear existing timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      // For 1-4 characters OR empty: instant search (no debounce)
+      if (newValue.length <= 4) {
         updateURLParams(newValue);
-      }, debounceMs);
+      } else {
+        // For 5+ characters: debounced search
+        debounceTimerRef.current = setTimeout(() => {
+          updateURLParams(newValue);
+        }, debounceMs);
+      }
+    }
+  };
+
+  // Handle Enter key press (for manual mode)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && mode === 'manual' && onSubmit) {
+      onSubmit();
     }
   };
 
@@ -134,6 +163,7 @@ export default function Searchbar({
         className={styles.input}
         autoComplete="off"
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
       />
     </div>
   );

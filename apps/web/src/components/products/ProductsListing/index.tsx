@@ -3,11 +3,12 @@ import { notFound } from 'next/navigation';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
 import { getProductsListingQuery } from '@/src/global/sanity/query';
-import type { QueryProductsListingResult } from '@/src/global/sanity/sanity.types';
+import type { QueryProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
 import { slugifyFilterName } from '@/src/global/utils';
 
-import Pagination from '../Pagination';
-import EmptyState from './EmptyState';
+import EmptyState from '../../ui/EmptyState';
+import Pagination from '../../ui/Pagination';
+import ProductCard from '../../ui/ProductCard';
 import styles from './styles.module.scss';
 
 type ProductsListingProps = {
@@ -41,7 +42,7 @@ export default async function ProductsListing({
   // Get the appropriate query based on sortBy parameter
   const query = getProductsListingQuery(sortBy);
 
-  const productsData = await sanityFetch<QueryProductsListingResult>({
+  const productsData = await sanityFetch<QueryProductsListingNewestResult>({
     query,
     params: {
       category: category || '',
@@ -68,7 +69,8 @@ export default async function ProductsListing({
   if (searchTerm) urlSearchParams.set('search', searchTerm);
   if (sortBy && sortBy !== 'newest') urlSearchParams.set('sortBy', sortBy);
   if (brands.length > 0) {
-    brands.forEach((brand) => urlSearchParams.append('brands', brand));
+    // Set brands as a comma-separated string
+    urlSearchParams.set('brands', brands.join(','));
   }
   if (minPrice > 0) urlSearchParams.set('minPrice', minPrice.toString());
   if (maxPrice < 999999999)
@@ -81,12 +83,56 @@ export default async function ProductsListing({
     });
   }
 
+  const ITEMS_PER_ROW = 3;
+  const ROW_DELAY = 80; // delay between rows in ms
+
   return (
     <>
       {!hasProducts ? (
-        <EmptyState searchTerm={searchTerm} category={category} />
+        <EmptyState
+          searchTerm={searchTerm}
+          category={category}
+          type="products"
+        />
       ) : (
-        <div className={styles.productsGrid}>Products</div>
+        <>
+          <Pagination
+            totalItems={productsData.totalCount || 0}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            basePath={basePath}
+            searchParams={urlSearchParams}
+          />
+          <ul className={styles.productsGrid}>
+            {productsData.products!.map((product, index) => {
+              const row = Math.floor(index / ITEMS_PER_ROW);
+              const delay = row * ROW_DELAY;
+
+              return (
+                <li
+                  key={product._id}
+                  className={styles.productItem}
+                  style={{ animationDelay: `${delay}ms` }}
+                >
+                  <ProductCard
+                    product={product}
+                    imageSizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    priority={index < 3}
+                    isClient={false}
+                    loading={index < 3 ? 'eager' : 'lazy'}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+          <Pagination
+            totalItems={productsData.totalCount || 0}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            basePath={basePath}
+            searchParams={urlSearchParams}
+          />
+        </>
       )}
     </>
   );

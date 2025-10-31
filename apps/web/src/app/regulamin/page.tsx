@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { LegalBody } from '@/src/components/shared/LegalBody';
+import { LegalBody } from '@/src/components/legal/LegalBody';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';

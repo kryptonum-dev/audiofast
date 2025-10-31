@@ -3,20 +3,28 @@ import styles from './styles.module.scss';
 type EmptyStateProps = {
   searchTerm?: string;
   category?: string;
+  type: 'blog' | 'products';
 };
 
-export default function EmptyState({ searchTerm, category }: EmptyStateProps) {
+export default function EmptyState({
+  searchTerm,
+  category,
+  type,
+}: EmptyStateProps) {
+  const contentType = type === 'blog' ? 'artykułów' : 'produktów';
+  const contentTypeSingular = type === 'blog' ? 'publikacji' : 'produktów';
+
   const getTitle = () => {
-    if (searchTerm && category) return 'Nie znaleziono produktów';
+    if (searchTerm && category) return `Nie znaleziono ${contentType}`;
     if (searchTerm) return 'Brak wyników wyszukiwania';
-    return 'Brak produktów';
+    return `Brak ${contentType}`;
   };
 
   const getDescription = () => {
     if (searchTerm && category) {
       return (
         <>
-          Nie znaleziono produktów dla{' '}
+          Nie znaleziono {contentType} dla{' '}
           <strong>&bdquo;{searchTerm}&rdquo;</strong> w tej kategorii
         </>
       );
@@ -24,12 +32,12 @@ export default function EmptyState({ searchTerm, category }: EmptyStateProps) {
     if (searchTerm) {
       return (
         <>
-          Nie znaleziono produktów dla{' '}
+          Nie znaleziono {contentType} dla{' '}
           <strong>&bdquo;{searchTerm}&rdquo;</strong>
         </>
       );
     }
-    return 'Ta kategoria nie zawiera jeszcze żadnych produktów';
+    return `Ta kategoria nie zawiera jeszcze żadnych ${contentTypeSingular}`;
   };
 
   const getHint = () => {
@@ -39,11 +47,11 @@ export default function EmptyState({ searchTerm, category }: EmptyStateProps) {
     if (searchTerm) {
       return 'Spróbuj użyć innych słów kluczowych';
     }
-    return 'Wróć do wszystkich produktów lub wybierz inną kategorię';
+    return `Wróć do wszystkich ${contentTypeSingular} lub wybierz inną kategorię`;
   };
 
   return (
-    <div className={styles.emptyState}>
+    <div className={styles.emptyState} data-empty-state>
       <div className={styles.emptyIcon}>
         <AlertIcon />
       </div>
@@ -72,4 +80,3 @@ const AlertIcon = () => (
     </defs>
   </svg>
 );
-

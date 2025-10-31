@@ -486,12 +486,12 @@ export function extractCustomFilters(
 
 /**
  * Parse brands from search params
- * Converts URL param to array of brand slugs with proper formatting
+ * Converts URL param to array of clean brand slugs (without /marki/ prefix)
  * Handles both single brand and comma-separated multiple brands
- * Adds /marki/ prefix if not present to match Sanity brand slug format
+ * Returns clean slugs for easier handling - GROQ query handles Sanity format matching
  *
  * @param brandsParam - Brand parameter from URL (string or string array)
- * @returns Array of brand slugs/names
+ * @returns Array of clean brand slugs (e.g., ["aurender", "dcs"])
  */
 export function parseBrands(
   brandsParam: string | string[] | undefined
@@ -503,20 +503,54 @@ export function parseBrands(
     ? brandsParam
     : brandsParam.split(',').filter(Boolean);
 
-  // For each brand, add /marki/ prefix if it doesn't have it
-  // This allows matching against brand slugs in Sanity
+  // Return clean brand slugs without /marki/ prefix
+  // The query will handle matching against Sanity's slug format
   return brandsArray.flatMap((brand) => {
     const trimmed = brand.trim();
     if (!trimmed) return [];
 
-    // Return both the original value and the slug with prefix
-    // This allows matching against both brand.name and brand.slug
-    const withPrefix = trimmed.startsWith('/marki/')
-      ? trimmed
-      : `/marki/${trimmed}/`;
+    // Remove /marki/ prefix and trailing slashes if present
+    const cleanSlug = trimmed.replace('/marki/', '').replace(/\//g, '');
 
-    return [withPrefix];
+    return [cleanSlug];
   });
+}
+
+/**
+ * Parse and validate price from search params
+ * Only accepts positive integers (no decimals, no negatives)
+ * Returns null if invalid or falls back to default value
+ *
+ * @param priceParam - Price parameter from URL
+ * @param defaultValue - Default value to use if invalid (0 for min, maxPrice for max)
+ * @param maxPrice - Maximum allowed price (for capping max values)
+ * @returns Validated price or default value
+ */
+export function parsePrice(
+  priceParam: string | undefined,
+  defaultValue: number,
+  maxPrice?: number
+): number {
+  if (!priceParam) return defaultValue;
+
+  // Check if the string contains a decimal point
+  if (priceParam.includes('.') || priceParam.includes(',')) {
+    return defaultValue;
+  }
+
+  const parsed = Number(priceParam);
+
+  // Check if it's a valid number and not negative
+  if (isNaN(parsed) || parsed < 0 || !Number.isInteger(parsed)) {
+    return defaultValue;
+  }
+
+  // Cap at maxPrice if provided and value exceeds it
+  if (maxPrice !== undefined && parsed > maxPrice) {
+    return maxPrice;
+  }
+
+  return parsed;
 }
 
 /**

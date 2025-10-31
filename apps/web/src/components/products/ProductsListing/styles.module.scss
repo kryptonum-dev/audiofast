@@ -1,0 +1,195 @@
+.productsListing {
+  display: grid;
+  grid-template-columns: 17.625rem 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  column-gap: 2rem;
+  padding: 2rem 0 clamp(3rem, calc(3.5vw / 0.48), 4rem);
+  grid-template-areas:
+    'productsAside sortDropdown pagination-first'
+    'productsAside productsGrid productsGrid'
+    'pagination-last pagination-last pagination-last';
+
+  > nav:first-of-type {
+    grid-area: pagination-first;
+    justify-self: end;
+  }
+  > nav:last-of-type {
+    grid-area: pagination-last;
+    justify-self: end;
+  }
+
+  [data-empty-state] {
+    grid-area: productsGrid;
+    justify-content: flex-start;
+  }
+}
+
+// Products Grid Layout
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(4, auto);
+  gap: clamp(1rem, calc(2vw / 0.48), 2.5rem) 2rem;
+  width: 100%;
+  align-items: stretch;
+  margin: 1.5rem 0;
+  grid-area: productsGrid;
+
+  > li {
+    max-height: 42rem;
+
+    article {
+      width: 100%;
+      height: 100%;
+
+      a {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Pagination Skeleton Grid Areas
+.topPaginationSkeleton {
+  grid-area: pagination-first;
+  justify-self: end;
+}
+
+.bottomPaginationSkeleton {
+  grid-area: pagination-last;
+  justify-self: end;
+}
+
+// Skeleton Loading States - matching ProductCard structure
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--neutral-400, #e7e7e7);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: 100%;
+  background: var(--neutral-white, #ffffff);
+
+  .skeletonImgBox {
+    width: 100%;
+    aspect-ratio: 401/384;
+    background: linear-gradient(
+      90deg,
+      var(--neutral-200, #f8f8f8) 25%,
+      var(--neutral-300, #f0f0f0) 50%,
+      var(--neutral-200, #f8f8f8) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    position: relative;
+
+    .skeletonBrandLogo {
+      position: absolute;
+      left: 0.75rem;
+      top: 0.75rem;
+      width: 90px;
+      height: 23px;
+      background: var(--neutral-300, #e7e7e7);
+      border-radius: 4px;
+      z-index: 2;
+    }
+  }
+
+  .skeletonContainer {
+    margin: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--neutral-400, #e7e7e7);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+
+    .skeletonTitle {
+      width: 85%;
+      height: 20px;
+      background: linear-gradient(
+        90deg,
+        var(--neutral-200, #f8f8f8) 25%,
+        var(--neutral-300, #f0f0f0) 50%,
+        var(--neutral-200, #f8f8f8) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      margin-bottom: 0.25rem;
+    }
+
+    .skeletonSubtitle {
+      width: 70%;
+      height: 16px;
+      background: linear-gradient(
+        90deg,
+        var(--neutral-200, #f8f8f8) 25%,
+        var(--neutral-300, #f0f0f0) 50%,
+        var(--neutral-200, #f8f8f8) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+
+    .skeletonPriceContainer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: auto;
+      gap: 0.5rem;
+
+      .skeletonPrice {
+        width: 30%;
+        height: 22px;
+        background: linear-gradient(
+          90deg,
+          var(--neutral-200, #f8f8f8) 25%,
+          var(--neutral-300, #f0f0f0) 50%,
+          var(--neutral-200, #f8f8f8) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+      }
+
+      .skeletonButton {
+        width: 55%;
+        height: 36px;
+        background: linear-gradient(
+          90deg,
+          var(--neutral-200, #f8f8f8) 25%,
+          var(--neutral-300, #f0f0f0) 50%,
+          var(--neutral-200, #f8f8f8) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+      }
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
