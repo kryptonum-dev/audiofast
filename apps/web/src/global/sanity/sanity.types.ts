@@ -47,7 +47,7 @@ export type StepList = {
     _type: 'block';
     _key: string;
   }>;
-  steps?: Array<{
+  steps: Array<{
     heading?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -87,7 +87,7 @@ export type StepList = {
 
 export type PhoneImageCta = {
   _type: 'phoneImageCta';
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -131,7 +131,7 @@ export type PhoneImageCta = {
     _type: 'block';
     _key: string;
   }>;
-  ctaButton?: ButtonWithNoVariant;
+  ctaButton: ButtonWithNoVariant;
   secondaryHeading?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -164,7 +164,7 @@ export type PhoneImageCta = {
     _type: 'block';
     _key: string;
   }>;
-  phoneNumber?: string;
+  phoneNumber: string;
 };
 
 export type TeamSection = {
@@ -201,7 +201,7 @@ export type TeamSection = {
     _type: 'block';
     _key: string;
   }>;
-  secondaryHeading?: Array<{
+  secondaryHeading: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -215,7 +215,7 @@ export type TeamSection = {
     _type: 'block';
     _key: string;
   }>;
-  secondaryDescription?: Array<{
+  secondaryDescription: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -233,8 +233,8 @@ export type TeamSection = {
     _type: 'block';
     _key: string;
   }>;
-  ctaButton?: ButtonWithNoVariant;
-  teamMembers?: Array<{
+  ctaButton: ButtonWithNoVariant;
+  teamMembers: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -277,7 +277,7 @@ export type GallerySection = {
     _type: 'block';
     _key: string;
   }>;
-  images?: Array<{
+  images: Array<{
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -326,7 +326,7 @@ export type BlurLinesTextImage = {
     _type: 'block';
     _key: string;
   }>;
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -356,7 +356,7 @@ export type ImageWithTextBoxes = {
     _type: 'block';
     _key: string;
   }>;
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -368,8 +368,8 @@ export type ImageWithTextBoxes = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  boxes?: Array<{
-    icon?: {
+  boxes: Array<{
+    icon: {
       asset?: {
         _ref: string;
         _type: 'reference';
@@ -442,7 +442,7 @@ export type ImageWithTextBoxes = {
 
 export type ImageWithVideo = {
   _type: 'imageWithVideo';
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -455,7 +455,7 @@ export type ImageWithVideo = {
     _type: 'image';
   };
   youtubeId?: string;
-  heading?: Array<{
+  heading: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -469,7 +469,7 @@ export type ImageWithVideo = {
     _type: 'block';
     _key: string;
   }>;
-  description?: Array<{
+  description: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -487,7 +487,7 @@ export type ImageWithVideo = {
     _type: 'block';
     _key: string;
   }>;
-  button?: ButtonWithNoVariant;
+  button: ButtonWithNoVariant;
 };
 
 export type ContactMap = {
@@ -546,7 +546,7 @@ export type ContactForm = {
     _type: 'block';
     _key: string;
   }>;
-  contactPeople?: {
+  contactPeople: {
     heading?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -561,13 +561,13 @@ export type ContactForm = {
       _type: 'block';
       _key: string;
     }>;
-    contactPersons?: Array<
+    contactPersons: Array<
       {
         _key: string;
       } & ContactPerson
     >;
   };
-  accountList?: Array<{
+  accountList: Array<{
     heading?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -582,12 +582,12 @@ export type ContactForm = {
       _type: 'block';
       _key: string;
     }>;
-    accountDetails?: Array<string>;
+    accountDetails: Array<string>;
     _type: 'account';
     _key: string;
   }>;
-  formState?: {
-    success?: {
+  formState: {
+    success: {
       withIcon?: boolean;
       heading?: Array<{
         children?: Array<{
@@ -621,10 +621,10 @@ export type ContactForm = {
         _type: 'block';
         _key: string;
       }>;
-      refreshButton?: boolean;
+      refreshButton: boolean;
       refreshButtonText?: string;
     };
-    error?: {
+    error: {
       withIcon?: boolean;
       heading?: Array<{
         children?: Array<{
@@ -658,7 +658,7 @@ export type ContactForm = {
         _type: 'block';
         _key: string;
       }>;
-      refreshButton?: boolean;
+      refreshButton: boolean;
       refreshButtonText?: string;
     };
   };
@@ -698,7 +698,7 @@ export type FaqSection = {
     _type: 'block';
     _key: string;
   }>;
-  displayMode?: 'both' | 'faqOnly' | 'contactOnly';
+  displayMode: 'both' | 'faqOnly' | 'contactOnly';
   faqList?: Array<{
     _ref: string;
     _type: 'reference';
@@ -744,7 +744,7 @@ export type FaqSection = {
     }>;
     buttonText?: string;
     formState?: {
-      success?: {
+      success: {
         withIcon?: boolean;
         heading?: Array<{
           children?: Array<{
@@ -778,10 +778,10 @@ export type FaqSection = {
           _type: 'block';
           _key: string;
         }>;
-        refreshButton?: boolean;
+        refreshButton: boolean;
         refreshButtonText?: string;
       };
-      error?: {
+      error: {
         withIcon?: boolean;
         heading?: Array<{
           children?: Array<{
@@ -815,7 +815,7 @@ export type FaqSection = {
           _type: 'block';
           _key: string;
         }>;
-        refreshButton?: boolean;
+        refreshButton: boolean;
         refreshButtonText?: string;
       };
     };
@@ -878,7 +878,7 @@ export type BrandsList = {
 
 export type BrandsMarquee = {
   _type: 'brandsMarquee';
-  heading?: Array<{
+  heading: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -892,7 +892,7 @@ export type BrandsMarquee = {
     _type: 'block';
     _key: string;
   }>;
-  description?: Array<{
+  description: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -910,8 +910,8 @@ export type BrandsMarquee = {
     _type: 'block';
     _key: string;
   }>;
-  button?: ButtonWithNoVariant;
-  backgroundImage?: {
+  button: ButtonWithNoVariant;
+  backgroundImage: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -923,14 +923,14 @@ export type BrandsMarquee = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  topBrands?: Array<{
+  topBrands: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     _key: string;
     [internalGroqTypeReferenceTo]?: 'brand';
   }>;
-  bottomBrands?: Array<{
+  bottomBrands: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -973,15 +973,15 @@ export type FeaturedProducts = {
     _type: 'block';
     _key: string;
   }>;
-  button?: Button;
-  newProducts?: Array<{
+  button: Button;
+  newProducts: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     _key: string;
     [internalGroqTypeReferenceTo]?: 'product';
   }>;
-  bestsellers?: Array<{
+  bestsellers: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -1006,8 +1006,8 @@ export type FeaturedPublications = {
     _type: 'block';
     _key: string;
   }>;
-  button?: Button;
-  publications?: Array<
+  button: Button;
+  publications: Array<
     | {
         _ref: string;
         _type: 'reference';
@@ -1025,7 +1025,7 @@ export type FeaturedPublications = {
 
 export type ImageTextColumns = {
   _type: 'imageTextColumns';
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -1069,7 +1069,7 @@ export type ImageTextColumns = {
     _type: 'block';
     _key: string;
   }>;
-  button?: ButtonWithNoVariant;
+  button: ButtonWithNoVariant;
 };
 
 export type LatestPublication = {
@@ -1088,7 +1088,7 @@ export type LatestPublication = {
     _type: 'block';
     _key: string;
   }>;
-  publication?:
+  publication:
     | {
         _ref: string;
         _type: 'reference';
@@ -1105,7 +1105,7 @@ export type LatestPublication = {
 
 export type HeroStatic = {
   _type: 'heroStatic';
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -1152,7 +1152,7 @@ export type HeroStatic = {
   showBlocks?: boolean;
   blocksHeading?: string;
   blocks?: Array<{
-    icon?: {
+    icon: {
       asset?: {
         _ref: string;
         _type: 'reference';
@@ -1203,7 +1203,7 @@ export type HeroStatic = {
 
 export type HeroCarousel = {
   _type: 'heroCarousel';
-  slides?: Array<{
+  slides: Array<{
     title?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -1236,7 +1236,7 @@ export type HeroCarousel = {
       _type: 'block';
       _key: string;
     }>;
-    image?: {
+    image: {
       asset?: {
         _ref: string;
         _type: 'reference';
@@ -1248,11 +1248,11 @@ export type HeroCarousel = {
       crop?: SanityImageCrop;
       _type: 'image';
     };
-    button?: Button;
+    button: Button;
     _type: 'heroSlide';
     _key: string;
   }>;
-  brands?: Array<{
+  brands: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -1263,12 +1263,12 @@ export type HeroCarousel = {
 
 export type PtButton = {
   _type: 'ptButton';
-  button?: Button;
+  button: Button;
 };
 
 export type PtQuote = {
   _type: 'ptQuote';
-  quote?: Array<{
+  quote: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -1286,7 +1286,7 @@ export type PtQuote = {
 
 export type PtFeaturedProducts = {
   _type: 'ptFeaturedProducts';
-  products?: Array<{
+  products: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -1297,8 +1297,8 @@ export type PtFeaturedProducts = {
 
 export type PtTwoColumnTable = {
   _type: 'ptTwoColumnTable';
-  rows?: Array<{
-    column1?: string;
+  rows: Array<{
+    column1: string;
     column2?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -1323,8 +1323,8 @@ export type PtTwoColumnTable = {
 
 export type PtCtaSection = {
   _type: 'ptCtaSection';
-  heading?: string;
-  button?: ButtonWithNoVariant;
+  heading: string;
+  button: ButtonWithNoVariant;
   showProducts?: boolean;
   products?: Array<{
     _ref: string;
@@ -1337,7 +1337,7 @@ export type PtCtaSection = {
 
 export type PtCircleNumberedList = {
   _type: 'ptCircleNumberedList';
-  items?: Array<{
+  items: Array<{
     content?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -1362,7 +1362,7 @@ export type PtCircleNumberedList = {
 
 export type PtArrowList = {
   _type: 'ptArrowList';
-  items?: Array<{
+  items: Array<{
     content?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -1387,7 +1387,7 @@ export type PtArrowList = {
 
 export type PtImage = {
   _type: 'ptImage';
-  layout?: 'single' | 'double';
+  layout: 'single' | 'double';
   image?: {
     asset?: {
       _ref: string;
@@ -1446,7 +1446,7 @@ export type PtImage = {
 
 export type ContactPerson = {
   _type: 'contactPerson';
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -1458,8 +1458,8 @@ export type ContactPerson = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  name?: string;
-  phoneNumber?: string;
+  name: string;
+  phoneNumber: string;
 };
 
 export type PageBuilder = Array<
@@ -1525,12 +1525,12 @@ export type Brands = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  slug?: Slug;
+  name: string;
+  slug: Slug;
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   openGraph?: {
     title?: string;
@@ -1556,9 +1556,9 @@ export type Products = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  slug?: Slug;
-  title?: Array<{
+  name: string;
+  slug: Slug;
+  title: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -1572,7 +1572,7 @@ export type Products = {
     _type: 'block';
     _key: string;
   }>;
-  description?: Array<{
+  description: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -1586,7 +1586,7 @@ export type Products = {
     _type: 'block';
     _key: string;
   }>;
-  heroImage?: {
+  heroImage: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -1599,9 +1599,9 @@ export type Products = {
     _type: 'image';
   };
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   openGraph?: {
     title?: string;
@@ -1627,9 +1627,9 @@ export type Blog = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  slug?: Slug;
-  title?: Array<{
+  name: string;
+  slug: Slug;
+  title: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -1657,7 +1657,7 @@ export type Blog = {
     _type: 'block';
     _key: string;
   }>;
-  heroImage?: {
+  heroImage: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -1670,9 +1670,9 @@ export type Blog = {
     _type: 'image';
   };
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   openGraph?: {
     title?: string;
@@ -1698,8 +1698,8 @@ export type NotFound = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  backgroundImage?: {
+  name: string;
+  backgroundImage: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -1743,14 +1743,14 @@ export type NotFound = {
     _type: 'block';
     _key: string;
   }>;
-  buttons?: Array<
+  buttons: Array<
     {
       _key: string;
     } & Button
   >;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   openGraph?: {
     title?: string;
@@ -1776,8 +1776,8 @@ export type TermsAndConditions = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  slug?: Slug;
+  name: string;
+  slug: Slug;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -1814,9 +1814,9 @@ export type TermsAndConditions = {
     _type: 'block';
     _key: string;
   }>;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   openGraph?: {
     title?: string;
@@ -1842,8 +1842,8 @@ export type PrivacyPolicy = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  slug?: Slug;
+  name: string;
+  slug: Slug;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -1880,9 +1880,9 @@ export type PrivacyPolicy = {
     _type: 'block';
     _key: string;
   }>;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   openGraph?: {
     title?: string;
@@ -1924,7 +1924,7 @@ export type Navbar = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  buttons?: Array<
+  buttons: Array<
     {
       _key: string;
     } & ButtonWithNoVariant
@@ -1937,28 +1937,28 @@ export type Footer = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  highlightedSocialMedia?: Array<{
+  highlightedSocialMedia: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     _key: string;
     [internalGroqTypeReferenceTo]?: 'socialMedia';
   }>;
-  links?: Array<
+  links: Array<
     {
       _key: string;
     } & ButtonWithNoVariant
   >;
   newsletter?: {
-    label?: string;
-    buttonLabel?: string;
-    formState?: FormState;
+    label: string;
+    buttonLabel: string;
+    formState: FormState;
   };
 };
 
 export type FormState = {
   _type: 'formState';
-  success?: {
+  success: {
     withIcon?: boolean;
     heading?: Array<{
       children?: Array<{
@@ -1992,10 +1992,10 @@ export type FormState = {
       _type: 'block';
       _key: string;
     }>;
-    refreshButton?: boolean;
+    refreshButton: boolean;
     refreshButtonText?: string;
   };
-  error?: {
+  error: {
     withIcon?: boolean;
     heading?: Array<{
       children?: Array<{
@@ -2029,7 +2029,7 @@ export type FormState = {
       _type: 'block';
       _key: string;
     }>;
-    refreshButton?: boolean;
+    refreshButton: boolean;
     refreshButtonText?: string;
   };
 };
@@ -2040,21 +2040,21 @@ export type Settings = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  email?: string;
-  tel?: string;
-  address?: {
-    streetAddress?: string;
-    postalCode?: string;
-    city?: string;
-    country?: string;
+  email: string;
+  tel: string;
+  address: {
+    streetAddress: string;
+    postalCode: string;
+    city: string;
+    country: string;
   };
   analytics?: {
     gtm_id?: string;
     ga4_id?: string;
     googleAds_id?: string;
   };
-  seo?: {
-    img?: {
+  seo: {
+    img: {
       asset?: {
         _ref: string;
         _type: 'reference';
@@ -2067,10 +2067,10 @@ export type Settings = {
       _type: 'image';
     };
   };
-  structuredData?: {
-    companyName?: string;
-    companyDescription?: string;
-    logo?: {
+  structuredData: {
+    companyName: string;
+    companyDescription: string;
+    logo: {
       asset?: {
         _ref: string;
         _type: 'reference';
@@ -2086,7 +2086,7 @@ export type Settings = {
       latitude?: number;
       longitude?: number;
     };
-    priceRange?: '$' | '$$' | '$$$' | '$$$$';
+    priceRange: '$' | '$$' | '$$$' | '$$$$';
   };
 };
 
@@ -2096,12 +2096,12 @@ export type HomePage = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  slug?: Slug;
+  name: string;
+  slug: Slug;
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   openGraph?: {
     title?: string;
@@ -2127,7 +2127,7 @@ export type Award = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
   logo?: {
     asset?: {
       _ref: string;
@@ -2149,11 +2149,11 @@ export type Store = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name?: string;
-  slug?: Slug;
-  seo?: {
-    title?: string;
-    description?: string;
+  name: string;
+  slug: Slug;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -2182,14 +2182,14 @@ export type ProductCategorySub = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  parentCategory?: {
+  parentCategory: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'productCategoryParent';
   };
-  name?: string;
-  slug?: Slug;
+  name: string;
+  slug: Slug;
   title?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -2232,9 +2232,9 @@ export type ProductCategorySub = {
   };
   customFilters?: Array<string>;
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -2272,9 +2272,9 @@ export type Product = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  subtitle?: string;
-  name?: string;
-  slug?: Slug;
+  subtitle: string;
+  name: string;
+  slug: Slug;
   price?: number;
   imageGallery?: Array<{
     asset?: {
@@ -2308,13 +2308,13 @@ export type Product = {
     _key: string;
   }>;
   isArchived?: boolean;
-  brand?: {
+  brand: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'brand';
   };
-  categories?: Array<{
+  categories: Array<{
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -2322,8 +2322,8 @@ export type Product = {
     [internalGroqTypeReferenceTo]?: 'productCategorySub';
   }>;
   customFilterValues?: Array<{
-    filterName?: string;
-    value?: string;
+    filterName: string;
+    value: string;
     _type: 'filterValue';
     _key: string;
   }>;
@@ -2334,7 +2334,7 @@ export type Product = {
     _key: string;
     [internalGroqTypeReferenceTo]?: 'award';
   }>;
-  details?: {
+  details: {
     heading?: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -2370,8 +2370,8 @@ export type Product = {
   };
   duplicateGalleryInDetails?: boolean;
   technicalData?: Array<{
-    title?: string;
-    value?: string;
+    title: string;
+    value: string;
     _type: 'technicalDataItem';
     _key: string;
   }>;
@@ -2397,9 +2397,9 @@ export type Product = {
     [internalGroqTypeReferenceTo]?: 'product';
   }>;
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -2428,9 +2428,9 @@ export type Brand = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name?: string;
-  slug?: Slug;
-  logo?: {
+  name: string;
+  slug: Slug;
+  logo: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -2442,7 +2442,7 @@ export type Brand = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  description?: Array<{
+  description: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -2460,9 +2460,9 @@ export type Brand = {
     _type: 'block';
     _key: string;
   }>;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -2491,16 +2491,16 @@ export type Review = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  author?: {
+  author: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'reviewAuthor';
   };
-  destinationType?: 'page' | 'pdf' | 'external';
-  name?: string;
-  slug?: Slug;
-  title?: Array<{
+  destinationType: 'page' | 'pdf' | 'external';
+  name: string;
+  slug: Slug;
+  title: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -2536,7 +2536,7 @@ export type Review = {
     _type: 'block';
     _key: string;
   }>;
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -2618,9 +2618,9 @@ export type Review = {
   };
   externalUrl?: string;
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -2649,7 +2649,7 @@ export type ReviewAuthor = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name?: string;
+  name: string;
   websiteUrl?: string;
 };
 
@@ -2660,9 +2660,9 @@ export type BlogArticle = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name?: string;
-  slug?: Slug;
-  title?: Array<{
+  name: string;
+  slug: Slug;
+  title: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -2698,13 +2698,13 @@ export type BlogArticle = {
     _type: 'block';
     _key: string;
   }>;
-  category?: {
+  category: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'blog-category';
   };
-  image?: {
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -2761,16 +2761,16 @@ export type BlogArticle = {
       } & PtButton)
   >;
   pageBuilder?: PageBuilder;
-  author?: {
+  author: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: 'teamMember';
   };
   keywords?: Array<string>;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -2799,9 +2799,9 @@ export type TeamMember = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name?: string;
-  position?: string;
-  image?: {
+  name: string;
+  position: string;
+  image: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -2813,8 +2813,8 @@ export type TeamMember = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  phoneNumber?: string;
-  description?: Array<{
+  phoneNumber: string;
+  description: Array<{
     children?: Array<{
       marks?: Array<string>;
       text?: string;
@@ -2837,8 +2837,8 @@ export type BlogCategory = {
   _updatedAt: string;
   _rev: string;
   orderRank?: string;
-  name?: string;
-  slug?: Slug;
+  name: string;
+  slug: Slug;
   title?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -2867,9 +2867,9 @@ export type BlogCategory = {
     _type: 'block';
     _key: string;
   }>;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   hideFromList?: boolean;
@@ -2897,9 +2897,9 @@ export type SocialMedia = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
+  name: string;
   link?: string;
-  icon?: {
+  icon: {
     asset?: {
       _ref: string;
       _type: 'reference';
@@ -2911,7 +2911,7 @@ export type SocialMedia = {
     crop?: SanityImageCrop;
     _type: 'image';
   };
-  iconString?: string;
+  iconString: string;
 };
 
 export type Faq = {
@@ -2947,12 +2947,12 @@ export type Page = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  name?: string;
-  slug?: Slug;
+  name: string;
+  slug: Slug;
   pageBuilder?: PageBuilder;
-  seo?: {
-    title?: string;
-    description?: string;
+  seo: {
+    title: string;
+    description: string;
   };
   doNotIndex?: boolean;
   openGraph?: {
@@ -2975,20 +2975,20 @@ export type Page = {
 
 export type ButtonWithNoVariant = {
   _type: 'buttonWithNoVariant';
-  text?: string;
+  text: string;
   url?: CustomUrl;
 };
 
 export type Button = {
   _type: 'button';
   variant?: 'primary' | 'secondary';
-  text?: string;
+  text: string;
   url?: CustomUrl;
 };
 
 export type CustomUrl = {
   _type: 'customUrl';
-  type?: 'internal' | 'external';
+  type: 'internal' | 'external';
   openInNewTab?: boolean;
   external?: string;
   href?: string;
@@ -3056,7 +3056,7 @@ export type SanityAssistOutputField = {
 
 export type SanityAssistInstructionContext = {
   _type: 'sanity.assist.instruction.context';
-  reference?: {
+  reference: {
     _ref: string;
     _type: 'reference';
     _weak?: boolean;
@@ -3089,7 +3089,7 @@ export type AssistInstructionContext = {
 
 export type SanityAssistInstructionUserInput = {
   _type: 'sanity.assist.instruction.userInput';
-  message?: string;
+  message: string;
   description?: string;
 };
 
@@ -3258,7 +3258,7 @@ export type Geopoint = {
 
 export type Slug = {
   _type: 'slug';
-  current?: string;
+  current: string;
   source?: string;
 };
 
@@ -3363,61 +3363,61 @@ export type QueryDefaultOGImageResult = {
 // Query: *[_type == "settings"][0]{  address {    streetAddress,    postalCode,    city,    country  },  email,  tel,  analytics {    gtm_id,    ga4_id,    googleAds_id  },  structuredData {    companyName,    companyDescription,    "logo": logo.asset->url,    geo {      latitude,      longitude    },    priceRange,  },  "socialMedia": *[_type == "socialMedia" && defined(link)].link,}
 export type QuerySettingsResult = {
   address: {
-    streetAddress: string | null;
-    postalCode: string | null;
-    city: string | null;
-    country: string | null;
-  } | null;
-  email: string | null;
-  tel: string | null;
+    streetAddress: string;
+    postalCode: string;
+    city: string;
+    country: string;
+  };
+  email: string;
+  tel: string;
   analytics: {
     gtm_id: string | null;
     ga4_id: string | null;
     googleAds_id: string | null;
   } | null;
   structuredData: {
-    companyName: string | null;
-    companyDescription: string | null;
+    companyName: string;
+    companyDescription: string;
     logo: string | null;
     geo: {
       latitude: number | null;
       longitude: number | null;
     } | null;
-    priceRange: '$' | '$$' | '$$$' | '$$$$' | null;
-  } | null;
+    priceRange: '$' | '$$' | '$$$' | '$$$$';
+  };
   socialMedia: Array<string | null>;
 } | null;
 // Variable: queryNavbar
 // Query: *[_type == "navbar"][0]{  buttons[]{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),}}
 export type QueryNavbarResult = {
   buttons: Array<{
-    text: string | null;
+    text: string;
     variant: null;
     _key: string;
     _type: 'buttonWithNoVariant';
     openInNewTab: boolean | null;
     href: string | null;
-  }> | null;
+  }>;
 } | null;
 // Variable: queryFooter
 // Query: *[_type == "footer"][0]{  highlightedSocialMedia[]->{    name,    link,    iconString,  },  links[]{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  newsletter{    label,    buttonLabel,      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  }}
 export type QueryFooterResult = {
   highlightedSocialMedia: Array<{
-    name: string | null;
+    name: string;
     link: string | null;
-    iconString: string | null;
-  }> | null;
+    iconString: string;
+  }>;
   links: Array<{
-    text: string | null;
+    text: string;
     variant: null;
     _key: string;
     _type: 'buttonWithNoVariant';
     openInNewTab: boolean | null;
     href: string | null;
-  }> | null;
+  }>;
   newsletter: {
-    label: string | null;
-    buttonLabel: string | null;
+    label: string;
+    buttonLabel: string;
     formState: {
       success: {
         withIcon: boolean | null;
@@ -3446,7 +3446,7 @@ export type QueryFooterResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -3459,9 +3459,9 @@ export type QueryFooterResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        refreshButton: boolean | null;
+        refreshButton: boolean;
         refreshButtonText: string | null;
-      } | null;
+      };
       error: {
         withIcon: boolean | null;
         heading: Array<{
@@ -3489,7 +3489,7 @@ export type QueryFooterResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -3502,10 +3502,10 @@ export type QueryFooterResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        refreshButton: boolean | null;
+        refreshButton: boolean;
         refreshButtonText: string | null;
-      } | null;
-    } | null;
+      };
+    };
   } | null;
 } | null;
 // Variable: queryHomePage
@@ -3513,12 +3513,12 @@ export type QueryFooterResult = {
 export type QueryHomePageResult = {
   _id: string;
   _type: 'homePage';
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -3573,7 +3573,7 @@ export type QueryHomePageResult = {
           listItem?: 'bullet';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -3604,7 +3604,7 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -3634,7 +3634,7 @@ export type QueryHomePageResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -3658,7 +3658,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -3674,8 +3674,8 @@ export type QueryHomePageResult = {
         brands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -3687,7 +3687,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -3699,7 +3699,7 @@ export type QueryHomePageResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -3718,7 +3718,7 @@ export type QueryHomePageResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
         }>;
       }
     | {
@@ -3737,7 +3737,7 @@ export type QueryHomePageResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -3749,7 +3749,7 @@ export type QueryHomePageResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -3761,15 +3761,15 @@ export type QueryHomePageResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         backgroundImage: {
           id: string | null;
           preview: string | null;
@@ -3788,12 +3788,12 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         topBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -3805,7 +3805,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -3817,7 +3817,7 @@ export type QueryHomePageResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -3836,13 +3836,13 @@ export type QueryHomePageResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
         bottomBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -3854,7 +3854,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -3866,7 +3866,7 @@ export type QueryHomePageResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -3885,8 +3885,8 @@ export type QueryHomePageResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -3916,7 +3916,7 @@ export type QueryHomePageResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -3963,11 +3963,11 @@ export type QueryHomePageResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
-          }> | null;
-        } | null;
+            };
+            name: string;
+            phoneNumber: string;
+          }>;
+        };
         accountList: Array<{
           heading: Array<{
             children?: Array<{
@@ -3983,8 +3983,8 @@ export type QueryHomePageResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          accountDetails: Array<string> | null;
-        }> | null;
+          accountDetails: Array<string>;
+        }>;
         formState: {
           success: {
             withIcon: boolean | null;
@@ -4013,7 +4013,7 @@ export type QueryHomePageResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -4026,9 +4026,9 @@ export type QueryHomePageResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
+          };
           error: {
             withIcon: boolean | null;
             heading: Array<{
@@ -4056,7 +4056,7 @@ export type QueryHomePageResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -4069,10 +4069,10 @@ export type QueryHomePageResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
-        } | null;
+          };
+        };
       }
     | {
         _key: string;
@@ -4124,7 +4124,7 @@ export type QueryHomePageResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -4137,7 +4137,7 @@ export type QueryHomePageResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        displayMode: 'both' | 'contactOnly' | 'faqOnly' | null;
+        displayMode: 'both' | 'contactOnly' | 'faqOnly';
         faqList: Array<{
           _id: string;
           _createdAt: string;
@@ -4153,7 +4153,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -4201,9 +4201,9 @@ export type QueryHomePageResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
+            };
+            name: string;
+            phoneNumber: string;
           }> | null;
         } | null;
         contactForm: {
@@ -4250,7 +4250,7 @@ export type QueryHomePageResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -4263,9 +4263,9 @@ export type QueryHomePageResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
             error: {
               withIcon: boolean | null;
               heading: Array<{
@@ -4293,7 +4293,7 @@ export type QueryHomePageResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -4306,9 +4306,9 @@ export type QueryHomePageResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
           } | null;
         } | null;
       }
@@ -4340,7 +4340,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -4354,24 +4354,24 @@ export type QueryHomePageResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         newProducts: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -4390,8 +4390,8 @@ export type QueryHomePageResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -4422,7 +4422,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -4435,18 +4435,18 @@ export type QueryHomePageResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         bestsellers: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -4465,8 +4465,8 @@ export type QueryHomePageResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -4497,7 +4497,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -4510,7 +4510,7 @@ export type QueryHomePageResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -4530,19 +4530,19 @@ export type QueryHomePageResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         publications: Array<
           | {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -4554,7 +4554,7 @@ export type QueryHomePageResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -4566,7 +4566,7 @@ export type QueryHomePageResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -4578,7 +4578,7 @@ export type QueryHomePageResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -4609,17 +4609,17 @@ export type QueryHomePageResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -4631,7 +4631,7 @@ export type QueryHomePageResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -4643,7 +4643,7 @@ export type QueryHomePageResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -4655,7 +4655,7 @@ export type QueryHomePageResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -4686,13 +4686,13 @@ export type QueryHomePageResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
             }
-        > | null;
+        >;
       }
     | {
         _key: string;
@@ -4722,7 +4722,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -4753,7 +4753,7 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -4777,15 +4777,15 @@ export type QueryHomePageResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           title: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -4811,7 +4811,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -4824,10 +4824,10 @@ export type QueryHomePageResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         brands: Array<{
-          name: string | null;
-          slug: string | null;
+          name: string;
+          slug: string;
           logo: {
             id: string | null;
             preview: string | null;
@@ -4846,8 +4846,8 @@ export type QueryHomePageResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -4870,7 +4870,7 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -4896,7 +4896,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -4939,7 +4939,7 @@ export type QueryHomePageResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -4976,7 +4976,7 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -5002,7 +5002,7 @@ export type QueryHomePageResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5016,13 +5016,13 @@ export type QueryHomePageResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -5059,7 +5059,7 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         boxes: Array<{
           _key: string;
           iconUrl: string | null;
@@ -5088,7 +5088,7 @@ export type QueryHomePageResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -5101,7 +5101,7 @@ export type QueryHomePageResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         cta: {
           showCta: boolean | null;
           ctaParagraph: Array<{
@@ -5115,7 +5115,7 @@ export type QueryHomePageResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -5129,7 +5129,7 @@ export type QueryHomePageResult = {
             _key: string;
           }> | null;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
@@ -5159,7 +5159,7 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         youtubeId: string | null;
         heading: Array<{
           children?: Array<{
@@ -5174,7 +5174,7 @@ export type QueryHomePageResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -5186,7 +5186,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5198,15 +5198,15 @@ export type QueryHomePageResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -5230,7 +5230,7 @@ export type QueryHomePageResult = {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -5242,7 +5242,7 @@ export type QueryHomePageResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -5254,7 +5254,7 @@ export type QueryHomePageResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -5266,7 +5266,7 @@ export type QueryHomePageResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -5297,17 +5297,17 @@ export type QueryHomePageResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -5319,7 +5319,7 @@ export type QueryHomePageResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -5331,7 +5331,7 @@ export type QueryHomePageResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -5343,7 +5343,7 @@ export type QueryHomePageResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -5374,13 +5374,12 @@ export type QueryHomePageResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
-            }
-          | null;
+            };
       }
     | {
         _key: string;
@@ -5403,7 +5402,7 @@ export type QueryHomePageResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         primaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -5429,7 +5428,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5443,13 +5442,13 @@ export type QueryHomePageResult = {
           _key: string;
         }> | null;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         secondaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -5475,7 +5474,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5488,7 +5487,7 @@ export type QueryHomePageResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        phoneNumber: string | null;
+        phoneNumber: string;
       }
     | {
         _key: string;
@@ -5518,7 +5517,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5558,7 +5557,7 @@ export type QueryHomePageResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -5571,7 +5570,7 @@ export type QueryHomePageResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -5601,7 +5600,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5627,7 +5626,7 @@ export type QueryHomePageResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         secondaryDescription: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -5639,7 +5638,7 @@ export type QueryHomePageResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5651,20 +5650,20 @@ export type QueryHomePageResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         teamMembers: Array<{
           _id: string;
-          name: string | null;
-          position: string | null;
-          phoneNumber: string | null;
+          name: string;
+          position: string;
+          phoneNumber: string;
           image: {
             id: string | null;
             preview: string | null;
@@ -5683,7 +5682,7 @@ export type QueryHomePageResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -5697,8 +5696,8 @@ export type QueryHomePageResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
-        }> | null;
+          }>;
+        }>;
         variant: null;
       }
   > | null;
@@ -5706,19 +5705,19 @@ export type QueryHomePageResult = {
 // Variable: queryAllPageSlugs
 // Query: *[_type == "page"]{  "slug": slug.current}
 export type QueryAllPageSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 // Variable: queryPageBySlug
 // Query: *[_type == "page" && slug.current == $slug][0]{  _id,  _type,  "slug": slug.current,  name,  seo,  doNotIndex,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  },  "firstBlockType": pageBuilder[0]._type,    pageBuilder[]{    ...,    _type,        _type == "heroCarousel" => {    ...,    slides[]{        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    }  },        _type == "heroStatic" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    showBlocks,    blocksHeading,    blocks[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    }  },        _type == "latestPublication" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        publication-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "imageTextColumns" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "blurLinesTextImage" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },        _type == "imageWithVideo" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    youtubeId,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "imageWithTextBoxes" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    boxes[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    cta{      showCta,        ctaParagraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    }  },        _type == "featuredPublications" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      publications[]-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "featuredProducts" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      newProducts[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      bestsellers[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  },        _type == "brandsMarquee" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      backgroundImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      topBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },      bottomBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  },        _type == "brandsList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    "brands":   *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  }  },        _type == "faqSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    displayMode,      faqList[]-> {  _id,  _createdAt,  question,    answer[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      contactPeople{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        contactPersons[]{             _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }        }      },      contactForm{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        buttonText,          formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }      }  },        _type == "contactForm" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    contactPeople{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      contactPersons[]{            _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }      }    },    accountList[]{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      accountDetails,    },      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  },        _type == "contactMap" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    useCustomAddress,    customAddress,    customPhone,    customEmail,  },        _type == "teamSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    variant,      teamMembers[]-> {  _id,  name,  position,  phoneNumber,    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "gallerySection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      images[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  },        _type == "phoneImageCta" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      primaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      primaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    phoneNumber,  },        _type == "stepList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    steps[]{      _key,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    }  }  }}
 export type QueryPageBySlugResult = {
   _id: string;
   _type: 'page';
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   doNotIndex: boolean | null;
   openGraph: {
     title: string | null;
@@ -5774,7 +5773,7 @@ export type QueryPageBySlugResult = {
           listItem?: 'bullet';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5805,7 +5804,7 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -5835,7 +5834,7 @@ export type QueryPageBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5859,7 +5858,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5875,8 +5874,8 @@ export type QueryPageBySlugResult = {
         brands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -5888,7 +5887,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -5900,7 +5899,7 @@ export type QueryPageBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -5919,7 +5918,7 @@ export type QueryPageBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
         }>;
       }
     | {
@@ -5938,7 +5937,7 @@ export type QueryPageBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -5950,7 +5949,7 @@ export type QueryPageBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -5962,15 +5961,15 @@ export type QueryPageBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         backgroundImage: {
           id: string | null;
           preview: string | null;
@@ -5989,12 +5988,12 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         topBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -6006,7 +6005,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -6018,7 +6017,7 @@ export type QueryPageBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -6037,13 +6036,13 @@ export type QueryPageBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
         bottomBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -6055,7 +6054,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -6067,7 +6066,7 @@ export type QueryPageBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -6086,8 +6085,8 @@ export type QueryPageBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -6117,7 +6116,7 @@ export type QueryPageBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -6164,11 +6163,11 @@ export type QueryPageBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
-          }> | null;
-        } | null;
+            };
+            name: string;
+            phoneNumber: string;
+          }>;
+        };
         accountList: Array<{
           heading: Array<{
             children?: Array<{
@@ -6184,8 +6183,8 @@ export type QueryPageBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          accountDetails: Array<string> | null;
-        }> | null;
+          accountDetails: Array<string>;
+        }>;
         formState: {
           success: {
             withIcon: boolean | null;
@@ -6214,7 +6213,7 @@ export type QueryPageBySlugResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -6227,9 +6226,9 @@ export type QueryPageBySlugResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
+          };
           error: {
             withIcon: boolean | null;
             heading: Array<{
@@ -6257,7 +6256,7 @@ export type QueryPageBySlugResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -6270,10 +6269,10 @@ export type QueryPageBySlugResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
-        } | null;
+          };
+        };
       }
     | {
         _key: string;
@@ -6325,7 +6324,7 @@ export type QueryPageBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -6338,7 +6337,7 @@ export type QueryPageBySlugResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        displayMode: 'both' | 'contactOnly' | 'faqOnly' | null;
+        displayMode: 'both' | 'contactOnly' | 'faqOnly';
         faqList: Array<{
           _id: string;
           _createdAt: string;
@@ -6354,7 +6353,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -6402,9 +6401,9 @@ export type QueryPageBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
+            };
+            name: string;
+            phoneNumber: string;
           }> | null;
         } | null;
         contactForm: {
@@ -6451,7 +6450,7 @@ export type QueryPageBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -6464,9 +6463,9 @@ export type QueryPageBySlugResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
             error: {
               withIcon: boolean | null;
               heading: Array<{
@@ -6494,7 +6493,7 @@ export type QueryPageBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -6507,9 +6506,9 @@ export type QueryPageBySlugResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
           } | null;
         } | null;
       }
@@ -6541,7 +6540,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -6555,24 +6554,24 @@ export type QueryPageBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         newProducts: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -6591,8 +6590,8 @@ export type QueryPageBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -6623,7 +6622,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -6636,18 +6635,18 @@ export type QueryPageBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         bestsellers: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -6666,8 +6665,8 @@ export type QueryPageBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -6698,7 +6697,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -6711,7 +6710,7 @@ export type QueryPageBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -6731,19 +6730,19 @@ export type QueryPageBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         publications: Array<
           | {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -6755,7 +6754,7 @@ export type QueryPageBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -6767,7 +6766,7 @@ export type QueryPageBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -6779,7 +6778,7 @@ export type QueryPageBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -6810,17 +6809,17 @@ export type QueryPageBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -6832,7 +6831,7 @@ export type QueryPageBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -6844,7 +6843,7 @@ export type QueryPageBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -6856,7 +6855,7 @@ export type QueryPageBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -6887,13 +6886,13 @@ export type QueryPageBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
             }
-        > | null;
+        >;
       }
     | {
         _key: string;
@@ -6923,7 +6922,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -6954,7 +6953,7 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -6978,15 +6977,15 @@ export type QueryPageBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           title: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -7012,7 +7011,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -7025,10 +7024,10 @@ export type QueryPageBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         brands: Array<{
-          name: string | null;
-          slug: string | null;
+          name: string;
+          slug: string;
           logo: {
             id: string | null;
             preview: string | null;
@@ -7047,8 +7046,8 @@ export type QueryPageBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -7071,7 +7070,7 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -7097,7 +7096,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7140,7 +7139,7 @@ export type QueryPageBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -7177,7 +7176,7 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -7203,7 +7202,7 @@ export type QueryPageBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7217,13 +7216,13 @@ export type QueryPageBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -7260,7 +7259,7 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         boxes: Array<{
           _key: string;
           iconUrl: string | null;
@@ -7289,7 +7288,7 @@ export type QueryPageBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -7302,7 +7301,7 @@ export type QueryPageBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         cta: {
           showCta: boolean | null;
           ctaParagraph: Array<{
@@ -7316,7 +7315,7 @@ export type QueryPageBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -7330,7 +7329,7 @@ export type QueryPageBySlugResult = {
             _key: string;
           }> | null;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
@@ -7360,7 +7359,7 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         youtubeId: string | null;
         heading: Array<{
           children?: Array<{
@@ -7375,7 +7374,7 @@ export type QueryPageBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -7387,7 +7386,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7399,15 +7398,15 @@ export type QueryPageBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -7431,7 +7430,7 @@ export type QueryPageBySlugResult = {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -7443,7 +7442,7 @@ export type QueryPageBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -7455,7 +7454,7 @@ export type QueryPageBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -7467,7 +7466,7 @@ export type QueryPageBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -7498,17 +7497,17 @@ export type QueryPageBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -7520,7 +7519,7 @@ export type QueryPageBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -7532,7 +7531,7 @@ export type QueryPageBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -7544,7 +7543,7 @@ export type QueryPageBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -7575,13 +7574,12 @@ export type QueryPageBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
-            }
-          | null;
+            };
       }
     | {
         _key: string;
@@ -7604,7 +7602,7 @@ export type QueryPageBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         primaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -7630,7 +7628,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7644,13 +7642,13 @@ export type QueryPageBySlugResult = {
           _key: string;
         }> | null;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         secondaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -7676,7 +7674,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7689,7 +7687,7 @@ export type QueryPageBySlugResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        phoneNumber: string | null;
+        phoneNumber: string;
       }
     | {
         _key: string;
@@ -7719,7 +7717,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7759,7 +7757,7 @@ export type QueryPageBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -7772,7 +7770,7 @@ export type QueryPageBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -7802,7 +7800,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7828,7 +7826,7 @@ export type QueryPageBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         secondaryDescription: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -7840,7 +7838,7 @@ export type QueryPageBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -7852,20 +7850,20 @@ export type QueryPageBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         teamMembers: Array<{
           _id: string;
-          name: string | null;
-          position: string | null;
-          phoneNumber: string | null;
+          name: string;
+          position: string;
+          phoneNumber: string;
           image: {
             id: string | null;
             preview: string | null;
@@ -7884,7 +7882,7 @@ export type QueryPageBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -7898,8 +7896,8 @@ export type QueryPageBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
-        }> | null;
+          }>;
+        }>;
         variant: null;
       }
   > | null;
@@ -7910,11 +7908,11 @@ export type QueryNotFoundPageResult = {
   _id: string;
   _type: 'notFound';
   slug: null;
-  name: string | null;
+  name: string;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -7938,7 +7936,7 @@ export type QueryNotFoundPageResult = {
       right: number | null;
       top: number | null;
     } | null;
-  } | null;
+  };
   heading: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -7964,7 +7962,7 @@ export type QueryNotFoundPageResult = {
     listItem?: 'bullet' | 'number';
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -7978,21 +7976,21 @@ export type QueryNotFoundPageResult = {
     _key: string;
   }> | null;
   buttons: Array<{
-    text: string | null;
+    text: string;
     variant: 'primary' | 'secondary' | null;
     _key: string;
     _type: 'button';
     openInNewTab: boolean | null;
     href: string | null;
-  }> | null;
+  }>;
 } | null;
 // Variable: queryPrivacyPolicy
 // Query: *[_type == "privacyPolicy"][0]{  _id,  _type,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  "headings": content[length(style) == 2 && string::startsWith(style, "h")],  seo,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  }}
 export type QueryPrivacyPolicyResult = {
   _id: string;
   _type: 'privacyPolicy';
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   description: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -8004,7 +8002,7 @@ export type QueryPrivacyPolicyResult = {
     listItem?: never;
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -8028,7 +8026,7 @@ export type QueryPrivacyPolicyResult = {
     listItem?: 'bullet' | 'number';
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -8060,9 +8058,9 @@ export type QueryPrivacyPolicyResult = {
     _key: string;
   }> | null;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -8074,8 +8072,8 @@ export type QueryPrivacyPolicyResult = {
 export type QueryTermsAndConditionsResult = {
   _id: string;
   _type: 'termsAndConditions';
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   description: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -8087,7 +8085,7 @@ export type QueryTermsAndConditionsResult = {
     listItem?: never;
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -8111,7 +8109,7 @@ export type QueryTermsAndConditionsResult = {
     listItem?: 'bullet' | 'number';
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -8143,9 +8141,9 @@ export type QueryTermsAndConditionsResult = {
     _key: string;
   }> | null;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -8155,7 +8153,7 @@ export type QueryTermsAndConditionsResult = {
 // Variable: queryAllBlogPostSlugs
 // Query: *[_type == "blog-article" && defined(slug.current) && !(_id in path("drafts.**"))]{  "slug": slug.current}
 export type QueryAllBlogPostSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 // Variable: queryBlogPostBySlug
 // Query: *[_type == "blog-article" && slug.current == $slug][0]{  _id,  _type,  _createdAt,  _updatedAt,  "slug": slug.current,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "category": category->{    _id,    name,    "slug": slug.current,  },  "author": author->{    _id,    name,    position,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  keywords,    content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },    _type == "ptImage" => {      ...,        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        caption[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        image1 {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        image2 {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    },    _type == "ptArrowList" => {      ...,      items[]{        _key,          content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }      }    },    _type == "ptCircleNumberedList" => {      ...,      items[]{        _key,          content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }      }    },    _type == "ptCtaSection" => {      ...,      button{        text,        "href": select(          url.type == "internal" => url.internal->slug.current,          url.type == "external" => url.external,          url.href        ),        "openInNewTab": url.openInNewTab      },        products[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  }    },    _type == "ptTwoColumnTable" => {      ...,      rows[]{        _key,        column1,          column2[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }      }    },    _type == "ptFeaturedProducts" => {      ...,        products[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  }    },    _type == "ptQuote" => {      ...,        quote[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    _type == "ptButton" => {      ...,      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    },  },  "headings": content[length(style) == 2 && string::startsWith(style, "h")],    pageBuilder[]{    ...,    _type,        _type == "heroCarousel" => {    ...,    slides[]{        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    }  },        _type == "heroStatic" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    showBlocks,    blocksHeading,    blocks[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    }  },        _type == "latestPublication" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        publication-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "imageTextColumns" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "blurLinesTextImage" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },        _type == "imageWithVideo" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    youtubeId,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "imageWithTextBoxes" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    boxes[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    cta{      showCta,        ctaParagraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    }  },        _type == "featuredPublications" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      publications[]-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "featuredProducts" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      newProducts[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      bestsellers[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  },        _type == "brandsMarquee" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      backgroundImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      topBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },      bottomBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  },        _type == "brandsList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    "brands":   *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  }  },        _type == "faqSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    displayMode,      faqList[]-> {  _id,  _createdAt,  question,    answer[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      contactPeople{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        contactPersons[]{             _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }        }      },      contactForm{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        buttonText,          formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }      }  },        _type == "contactForm" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    contactPeople{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      contactPersons[]{            _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }      }    },    accountList[]{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      accountDetails,    },      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  },        _type == "contactMap" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    useCustomAddress,    customAddress,    customPhone,    customEmail,  },        _type == "teamSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    variant,      teamMembers[]-> {  _id,  name,  position,  phoneNumber,    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "gallerySection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      images[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  },        _type == "phoneImageCta" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      primaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      primaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    phoneNumber,  },        _type == "stepList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    steps[]{      _key,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    }  }  },  seo,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  }}
@@ -8164,8 +8162,8 @@ export type QueryBlogPostBySlugResult = {
   _type: 'blog-article';
   _createdAt: string;
   _updatedAt: string;
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   title: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -8177,7 +8175,7 @@ export type QueryBlogPostBySlugResult = {
     listItem?: never;
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -8189,7 +8187,7 @@ export type QueryBlogPostBySlugResult = {
     level?: number;
     _type: 'block';
     _key: string;
-  }> | null;
+  }>;
   description: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -8201,7 +8199,7 @@ export type QueryBlogPostBySlugResult = {
     listItem?: 'bullet' | 'number';
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -8232,16 +8230,16 @@ export type QueryBlogPostBySlugResult = {
       right: number | null;
       top: number | null;
     } | null;
-  } | null;
+  };
   category: {
     _id: string;
-    name: string | null;
-    slug: string | null;
-  } | null;
+    name: string;
+    slug: string;
+  };
   author: {
     _id: string;
-    name: string | null;
-    position: string | null;
+    name: string;
+    position: string;
     image: {
       id: string | null;
       preview: string | null;
@@ -8260,8 +8258,8 @@ export type QueryBlogPostBySlugResult = {
         right: number | null;
         top: number | null;
       } | null;
-    } | null;
-  } | null;
+    };
+  };
   keywords: Array<string> | null;
   content: Array<
     | {
@@ -8275,7 +8273,7 @@ export type QueryBlogPostBySlugResult = {
         listItem?: 'bullet' | 'number';
         markDefs: Array<{
           customLink: {
-            type: 'external' | 'internal' | null;
+            type: 'external' | 'internal';
             openInNewTab: boolean | null;
             external: string | null;
             href: string | '#' | null;
@@ -8304,7 +8302,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -8317,19 +8315,19 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptButton';
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -8347,7 +8345,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -8360,29 +8358,29 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptCtaSection';
-        heading?: string;
+        heading: string;
         button: {
-          text: string | null;
+          text: string;
           href: string | null;
           openInNewTab: boolean | null;
-        } | null;
+        };
         showProducts?: boolean;
         products: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -8401,8 +8399,8 @@ export type QueryBlogPostBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -8433,7 +8431,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -8454,14 +8452,14 @@ export type QueryBlogPostBySlugResult = {
         products: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -8480,8 +8478,8 @@ export type QueryBlogPostBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -8512,7 +8510,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -8525,12 +8523,12 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptImage';
-        layout?: 'double' | 'single';
+        layout: 'double' | 'single';
         image: {
           id: string | null;
           preview: string | null;
@@ -8599,7 +8597,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -8629,14 +8627,14 @@ export type QueryBlogPostBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptTwoColumnTable';
         rows: Array<{
           _key: string;
-          column1: string | null;
+          column1: string;
           column2: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -8648,7 +8646,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -8661,7 +8659,7 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
   > | null;
   headings: Array<{
@@ -8711,7 +8709,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: 'bullet';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -8742,7 +8740,7 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -8772,7 +8770,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -8796,7 +8794,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -8812,8 +8810,8 @@ export type QueryBlogPostBySlugResult = {
         brands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -8825,7 +8823,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -8837,7 +8835,7 @@ export type QueryBlogPostBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -8856,7 +8854,7 @@ export type QueryBlogPostBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
         }>;
       }
     | {
@@ -8875,7 +8873,7 @@ export type QueryBlogPostBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -8887,7 +8885,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -8899,15 +8897,15 @@ export type QueryBlogPostBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         backgroundImage: {
           id: string | null;
           preview: string | null;
@@ -8926,12 +8924,12 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         topBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -8943,7 +8941,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -8955,7 +8953,7 @@ export type QueryBlogPostBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -8974,13 +8972,13 @@ export type QueryBlogPostBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
         bottomBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -8992,7 +8990,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -9004,7 +9002,7 @@ export type QueryBlogPostBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -9023,8 +9021,8 @@ export type QueryBlogPostBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -9054,7 +9052,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -9101,11 +9099,11 @@ export type QueryBlogPostBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
-          }> | null;
-        } | null;
+            };
+            name: string;
+            phoneNumber: string;
+          }>;
+        };
         accountList: Array<{
           heading: Array<{
             children?: Array<{
@@ -9121,8 +9119,8 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          accountDetails: Array<string> | null;
-        }> | null;
+          accountDetails: Array<string>;
+        }>;
         formState: {
           success: {
             withIcon: boolean | null;
@@ -9151,7 +9149,7 @@ export type QueryBlogPostBySlugResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -9164,9 +9162,9 @@ export type QueryBlogPostBySlugResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
+          };
           error: {
             withIcon: boolean | null;
             heading: Array<{
@@ -9194,7 +9192,7 @@ export type QueryBlogPostBySlugResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -9207,10 +9205,10 @@ export type QueryBlogPostBySlugResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
-        } | null;
+          };
+        };
       }
     | {
         _key: string;
@@ -9262,7 +9260,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -9275,7 +9273,7 @@ export type QueryBlogPostBySlugResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        displayMode: 'both' | 'contactOnly' | 'faqOnly' | null;
+        displayMode: 'both' | 'contactOnly' | 'faqOnly';
         faqList: Array<{
           _id: string;
           _createdAt: string;
@@ -9291,7 +9289,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -9339,9 +9337,9 @@ export type QueryBlogPostBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
+            };
+            name: string;
+            phoneNumber: string;
           }> | null;
         } | null;
         contactForm: {
@@ -9388,7 +9386,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -9401,9 +9399,9 @@ export type QueryBlogPostBySlugResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
             error: {
               withIcon: boolean | null;
               heading: Array<{
@@ -9431,7 +9429,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -9444,9 +9442,9 @@ export type QueryBlogPostBySlugResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
           } | null;
         } | null;
       }
@@ -9478,7 +9476,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -9492,24 +9490,24 @@ export type QueryBlogPostBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         newProducts: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -9528,8 +9526,8 @@ export type QueryBlogPostBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -9560,7 +9558,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -9573,18 +9571,18 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         bestsellers: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -9603,8 +9601,8 @@ export type QueryBlogPostBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -9635,7 +9633,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -9648,7 +9646,7 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -9668,19 +9666,19 @@ export type QueryBlogPostBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         publications: Array<
           | {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -9692,7 +9690,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -9704,7 +9702,7 @@ export type QueryBlogPostBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -9716,7 +9714,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -9747,17 +9745,17 @@ export type QueryBlogPostBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -9769,7 +9767,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -9781,7 +9779,7 @@ export type QueryBlogPostBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -9793,7 +9791,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -9824,13 +9822,13 @@ export type QueryBlogPostBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
             }
-        > | null;
+        >;
       }
     | {
         _key: string;
@@ -9860,7 +9858,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -9891,7 +9889,7 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -9915,15 +9913,15 @@ export type QueryBlogPostBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           title: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -9949,7 +9947,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -9962,10 +9960,10 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         brands: Array<{
-          name: string | null;
-          slug: string | null;
+          name: string;
+          slug: string;
           logo: {
             id: string | null;
             preview: string | null;
@@ -9984,8 +9982,8 @@ export type QueryBlogPostBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -10008,7 +10006,7 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -10034,7 +10032,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10077,7 +10075,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -10114,7 +10112,7 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -10140,7 +10138,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10154,13 +10152,13 @@ export type QueryBlogPostBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -10197,7 +10195,7 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         boxes: Array<{
           _key: string;
           iconUrl: string | null;
@@ -10226,7 +10224,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -10239,7 +10237,7 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         cta: {
           showCta: boolean | null;
           ctaParagraph: Array<{
@@ -10253,7 +10251,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -10267,7 +10265,7 @@ export type QueryBlogPostBySlugResult = {
             _key: string;
           }> | null;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
@@ -10297,7 +10295,7 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         youtubeId: string | null;
         heading: Array<{
           children?: Array<{
@@ -10312,7 +10310,7 @@ export type QueryBlogPostBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -10324,7 +10322,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10336,15 +10334,15 @@ export type QueryBlogPostBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -10368,7 +10366,7 @@ export type QueryBlogPostBySlugResult = {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -10380,7 +10378,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -10392,7 +10390,7 @@ export type QueryBlogPostBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -10404,7 +10402,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -10435,17 +10433,17 @@ export type QueryBlogPostBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -10457,7 +10455,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -10469,7 +10467,7 @@ export type QueryBlogPostBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -10481,7 +10479,7 @@ export type QueryBlogPostBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -10512,13 +10510,12 @@ export type QueryBlogPostBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
-            }
-          | null;
+            };
       }
     | {
         _key: string;
@@ -10541,7 +10538,7 @@ export type QueryBlogPostBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         primaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -10567,7 +10564,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10581,13 +10578,13 @@ export type QueryBlogPostBySlugResult = {
           _key: string;
         }> | null;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         secondaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -10613,7 +10610,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10626,7 +10623,7 @@ export type QueryBlogPostBySlugResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        phoneNumber: string | null;
+        phoneNumber: string;
       }
     | {
         _key: string;
@@ -10656,7 +10653,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10696,7 +10693,7 @@ export type QueryBlogPostBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -10709,7 +10706,7 @@ export type QueryBlogPostBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -10739,7 +10736,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10765,7 +10762,7 @@ export type QueryBlogPostBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         secondaryDescription: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -10777,7 +10774,7 @@ export type QueryBlogPostBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -10789,20 +10786,20 @@ export type QueryBlogPostBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         teamMembers: Array<{
           _id: string;
-          name: string | null;
-          position: string | null;
-          phoneNumber: string | null;
+          name: string;
+          position: string;
+          phoneNumber: string;
           image: {
             id: string | null;
             preview: string | null;
@@ -10821,7 +10818,7 @@ export type QueryBlogPostBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -10835,15 +10832,15 @@ export type QueryBlogPostBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
-        }> | null;
+          }>;
+        }>;
         variant: null;
       }
   > | null;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -10853,7 +10850,7 @@ export type QueryBlogPostBySlugResult = {
 // Variable: queryAllReviewSlugs
 // Query: *[_type == "review" && destinationType == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{  "slug": slug.current}
 export type QueryAllReviewSlugsResult = Array<{
-  slug: string | null;
+  slug: string;
 }>;
 // Variable: queryReviewBySlug
 // Query: *[_type == "review" && destinationType == "page" && slug.current == $slug][0]{  _id,  _type,  _createdAt,  "slug": slug.current,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  overrideGallery,    imageGallery[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },    _type == "ptImage" => {      ...,        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        caption[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        image1 {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        image2 {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    },    _type == "ptArrowList" => {      ...,      items[]{        _key,          content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }      }    },    _type == "ptCircleNumberedList" => {      ...,      items[]{        _key,          content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }      }    },    _type == "ptCtaSection" => {      ...,      button{        text,        "href": select(          url.type == "internal" => url.internal->slug.current,          url.type == "external" => url.external,          url.href        ),        "openInNewTab": url.openInNewTab      },        products[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  }    },    _type == "ptTwoColumnTable" => {      ...,      rows[]{        _key,        column1,          column2[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }      }    },    _type == "ptFeaturedProducts" => {      ...,        products[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  }    },    _type == "ptQuote" => {      ...,        quote[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    _type == "ptButton" => {      ...,      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    },  },  "headings": content[length(style) == 2 && string::startsWith(style, "h")],  "product": *[_type == "product" && references(^._id)][0]{    _id,    _createdAt,    "slug": slug.current,    name,    subtitle,    price,    isArchived,    "brand": brand->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    },    "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      imageGallery[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  "gallery": select(    overrideGallery == true && count(imageGallery) >= 4 =>   imageGallery[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      *[_type == "product" && references(^._id)][0].imageGallery[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  ),    pageBuilder[]{    ...,    _type,        _type == "heroCarousel" => {    ...,    slides[]{        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    }  },        _type == "heroStatic" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    showBlocks,    blocksHeading,    blocks[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    }  },        _type == "latestPublication" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        publication-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "imageTextColumns" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "blurLinesTextImage" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },        _type == "imageWithVideo" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    youtubeId,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "imageWithTextBoxes" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    boxes[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    cta{      showCta,        ctaParagraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    }  },        _type == "featuredPublications" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      publications[]-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "featuredProducts" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      newProducts[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      bestsellers[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  },        _type == "brandsMarquee" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      backgroundImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      topBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },      bottomBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  },        _type == "brandsList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    "brands":   *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  }  },        _type == "faqSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    displayMode,      faqList[]-> {  _id,  _createdAt,  question,    answer[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      contactPeople{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        contactPersons[]{             _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }        }      },      contactForm{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        buttonText,          formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }      }  },        _type == "contactForm" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    contactPeople{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      contactPersons[]{            _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }      }    },    accountList[]{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      accountDetails,    },      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  },        _type == "contactMap" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    useCustomAddress,    customAddress,    customPhone,    customEmail,  },        _type == "teamSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    variant,      teamMembers[]-> {  _id,  name,  position,  phoneNumber,    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "gallerySection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      images[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  },        _type == "phoneImageCta" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      primaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      primaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    phoneNumber,  },        _type == "stepList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    steps[]{      _key,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    }  }  },  seo,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  }}
@@ -10861,8 +10858,8 @@ export type QueryReviewBySlugResult = {
   _id: string;
   _type: 'review';
   _createdAt: string;
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   title: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -10874,7 +10871,7 @@ export type QueryReviewBySlugResult = {
     listItem?: never;
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -10886,7 +10883,7 @@ export type QueryReviewBySlugResult = {
     level?: number;
     _type: 'block';
     _key: string;
-  }> | null;
+  }>;
   description: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -10898,7 +10895,7 @@ export type QueryReviewBySlugResult = {
     listItem?: 'bullet' | 'number';
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -10929,7 +10926,7 @@ export type QueryReviewBySlugResult = {
       right: number | null;
       top: number | null;
     } | null;
-  } | null;
+  };
   overrideGallery: boolean | null;
   imageGallery: Array<{
     id: string | null;
@@ -10962,7 +10959,7 @@ export type QueryReviewBySlugResult = {
         listItem?: 'bullet' | 'number';
         markDefs: Array<{
           customLink: {
-            type: 'external' | 'internal' | null;
+            type: 'external' | 'internal';
             openInNewTab: boolean | null;
             external: string | null;
             href: string | '#' | null;
@@ -10991,7 +10988,7 @@ export type QueryReviewBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11004,19 +11001,19 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptButton';
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -11034,7 +11031,7 @@ export type QueryReviewBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11047,29 +11044,29 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptCtaSection';
-        heading?: string;
+        heading: string;
         button: {
-          text: string | null;
+          text: string;
           href: string | null;
           openInNewTab: boolean | null;
-        } | null;
+        };
         showProducts?: boolean;
         products: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -11088,8 +11085,8 @@ export type QueryReviewBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -11120,7 +11117,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11141,14 +11138,14 @@ export type QueryReviewBySlugResult = {
         products: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -11167,8 +11164,8 @@ export type QueryReviewBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -11199,7 +11196,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11212,12 +11209,12 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptImage';
-        layout?: 'double' | 'single';
+        layout: 'double' | 'single';
         image: {
           id: string | null;
           preview: string | null;
@@ -11286,7 +11283,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -11316,14 +11313,14 @@ export type QueryReviewBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
         _type: 'ptTwoColumnTable';
         rows: Array<{
           _key: string;
-          column1: string | null;
+          column1: string;
           column2: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -11335,7 +11332,7 @@ export type QueryReviewBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11348,7 +11345,7 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
   > | null;
   headings: Array<{
@@ -11372,14 +11369,14 @@ export type QueryReviewBySlugResult = {
   product: {
     _id: string;
     _createdAt: string;
-    slug: string | null;
-    name: string | null;
-    subtitle: string | null;
+    slug: string;
+    name: string;
+    subtitle: string;
     price: number | null;
     isArchived: boolean | null;
     brand: {
-      name: string | null;
-      slug: string | null;
+      name: string;
+      slug: string;
       logo: {
         id: string | null;
         preview: string | null;
@@ -11398,8 +11395,8 @@ export type QueryReviewBySlugResult = {
           right: number | null;
           top: number | null;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
     mainImage: {
       id: string | null;
       preview: string | null;
@@ -11449,7 +11446,7 @@ export type QueryReviewBySlugResult = {
       listItem?: 'bullet' | 'number';
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -11511,7 +11508,7 @@ export type QueryReviewBySlugResult = {
           listItem?: 'bullet';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -11542,7 +11539,7 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -11572,7 +11569,7 @@ export type QueryReviewBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -11596,7 +11593,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -11612,8 +11609,8 @@ export type QueryReviewBySlugResult = {
         brands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -11625,7 +11622,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11637,7 +11634,7 @@ export type QueryReviewBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -11656,7 +11653,7 @@ export type QueryReviewBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
         }>;
       }
     | {
@@ -11675,7 +11672,7 @@ export type QueryReviewBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -11687,7 +11684,7 @@ export type QueryReviewBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -11699,15 +11696,15 @@ export type QueryReviewBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         backgroundImage: {
           id: string | null;
           preview: string | null;
@@ -11726,12 +11723,12 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         topBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -11743,7 +11740,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11755,7 +11752,7 @@ export type QueryReviewBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -11774,13 +11771,13 @@ export type QueryReviewBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
         bottomBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -11792,7 +11789,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -11804,7 +11801,7 @@ export type QueryReviewBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -11823,8 +11820,8 @@ export type QueryReviewBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -11854,7 +11851,7 @@ export type QueryReviewBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -11901,11 +11898,11 @@ export type QueryReviewBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
-          }> | null;
-        } | null;
+            };
+            name: string;
+            phoneNumber: string;
+          }>;
+        };
         accountList: Array<{
           heading: Array<{
             children?: Array<{
@@ -11921,8 +11918,8 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          accountDetails: Array<string> | null;
-        }> | null;
+          accountDetails: Array<string>;
+        }>;
         formState: {
           success: {
             withIcon: boolean | null;
@@ -11951,7 +11948,7 @@ export type QueryReviewBySlugResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -11964,9 +11961,9 @@ export type QueryReviewBySlugResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
+          };
           error: {
             withIcon: boolean | null;
             heading: Array<{
@@ -11994,7 +11991,7 @@ export type QueryReviewBySlugResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -12007,10 +12004,10 @@ export type QueryReviewBySlugResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
-        } | null;
+          };
+        };
       }
     | {
         _key: string;
@@ -12062,7 +12059,7 @@ export type QueryReviewBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -12075,7 +12072,7 @@ export type QueryReviewBySlugResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        displayMode: 'both' | 'contactOnly' | 'faqOnly' | null;
+        displayMode: 'both' | 'contactOnly' | 'faqOnly';
         faqList: Array<{
           _id: string;
           _createdAt: string;
@@ -12091,7 +12088,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -12139,9 +12136,9 @@ export type QueryReviewBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
+            };
+            name: string;
+            phoneNumber: string;
           }> | null;
         } | null;
         contactForm: {
@@ -12188,7 +12185,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -12201,9 +12198,9 @@ export type QueryReviewBySlugResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
             error: {
               withIcon: boolean | null;
               heading: Array<{
@@ -12231,7 +12228,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -12244,9 +12241,9 @@ export type QueryReviewBySlugResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
           } | null;
         } | null;
       }
@@ -12278,7 +12275,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -12292,24 +12289,24 @@ export type QueryReviewBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         newProducts: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -12328,8 +12325,8 @@ export type QueryReviewBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -12360,7 +12357,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -12373,18 +12370,18 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         bestsellers: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -12403,8 +12400,8 @@ export type QueryReviewBySlugResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -12435,7 +12432,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -12448,7 +12445,7 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -12468,19 +12465,19 @@ export type QueryReviewBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         publications: Array<
           | {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -12492,7 +12489,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -12504,7 +12501,7 @@ export type QueryReviewBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -12516,7 +12513,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -12547,17 +12544,17 @@ export type QueryReviewBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -12569,7 +12566,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -12581,7 +12578,7 @@ export type QueryReviewBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -12593,7 +12590,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -12624,13 +12621,13 @@ export type QueryReviewBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
             }
-        > | null;
+        >;
       }
     | {
         _key: string;
@@ -12660,7 +12657,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -12691,7 +12688,7 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -12715,15 +12712,15 @@ export type QueryReviewBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           title: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -12749,7 +12746,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -12762,10 +12759,10 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         brands: Array<{
-          name: string | null;
-          slug: string | null;
+          name: string;
+          slug: string;
           logo: {
             id: string | null;
             preview: string | null;
@@ -12784,8 +12781,8 @@ export type QueryReviewBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -12808,7 +12805,7 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -12834,7 +12831,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -12877,7 +12874,7 @@ export type QueryReviewBySlugResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -12914,7 +12911,7 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -12940,7 +12937,7 @@ export type QueryReviewBySlugResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -12954,13 +12951,13 @@ export type QueryReviewBySlugResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -12997,7 +12994,7 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         boxes: Array<{
           _key: string;
           iconUrl: string | null;
@@ -13026,7 +13023,7 @@ export type QueryReviewBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -13039,7 +13036,7 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         cta: {
           showCta: boolean | null;
           ctaParagraph: Array<{
@@ -13053,7 +13050,7 @@ export type QueryReviewBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -13067,7 +13064,7 @@ export type QueryReviewBySlugResult = {
             _key: string;
           }> | null;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
@@ -13097,7 +13094,7 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         youtubeId: string | null;
         heading: Array<{
           children?: Array<{
@@ -13112,7 +13109,7 @@ export type QueryReviewBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -13124,7 +13121,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13136,15 +13133,15 @@ export type QueryReviewBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -13168,7 +13165,7 @@ export type QueryReviewBySlugResult = {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -13180,7 +13177,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -13192,7 +13189,7 @@ export type QueryReviewBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -13204,7 +13201,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -13235,17 +13232,17 @@ export type QueryReviewBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -13257,7 +13254,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -13269,7 +13266,7 @@ export type QueryReviewBySlugResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -13281,7 +13278,7 @@ export type QueryReviewBySlugResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -13312,13 +13309,12 @@ export type QueryReviewBySlugResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
-            }
-          | null;
+            };
       }
     | {
         _key: string;
@@ -13341,7 +13337,7 @@ export type QueryReviewBySlugResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         primaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -13367,7 +13363,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13381,13 +13377,13 @@ export type QueryReviewBySlugResult = {
           _key: string;
         }> | null;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         secondaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -13413,7 +13409,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13426,7 +13422,7 @@ export type QueryReviewBySlugResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        phoneNumber: string | null;
+        phoneNumber: string;
       }
     | {
         _key: string;
@@ -13456,7 +13452,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13496,7 +13492,7 @@ export type QueryReviewBySlugResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -13509,7 +13505,7 @@ export type QueryReviewBySlugResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -13539,7 +13535,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13565,7 +13561,7 @@ export type QueryReviewBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         secondaryDescription: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -13577,7 +13573,7 @@ export type QueryReviewBySlugResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13589,20 +13585,20 @@ export type QueryReviewBySlugResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         teamMembers: Array<{
           _id: string;
-          name: string | null;
-          position: string | null;
-          phoneNumber: string | null;
+          name: string;
+          position: string;
+          phoneNumber: string;
           image: {
             id: string | null;
             preview: string | null;
@@ -13621,7 +13617,7 @@ export type QueryReviewBySlugResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -13635,15 +13631,15 @@ export type QueryReviewBySlugResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
-        }> | null;
+          }>;
+        }>;
         variant: null;
       }
   > | null;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -13654,7 +13650,7 @@ export type QueryReviewBySlugResult = {
 // Query: *[_type == "review" && destinationType == "pdf" && string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0] == $slug][0]{  _id,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  "pdfUrl": pdfFile.asset->url,  "pdfFilename": pdfFile.asset->originalFilename,  "pdfSize": pdfFile.asset->size,  "pdfMimeType": pdfFile.asset->mimeType}
 export type QueryPdfReviewBySlugResult = {
   _id: string;
-  name: string | null;
+  name: string;
   title: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -13666,7 +13662,7 @@ export type QueryPdfReviewBySlugResult = {
     listItem?: never;
     markDefs: Array<{
       customLink: {
-        type: 'external' | 'internal' | null;
+        type: 'external' | 'internal';
         openInNewTab: boolean | null;
         external: string | null;
         href: string | '#' | null;
@@ -13678,7 +13674,7 @@ export type QueryPdfReviewBySlugResult = {
     level?: number;
     _type: 'block';
     _key: string;
-  }> | null;
+  }>;
   pdfUrl: string | null;
   pdfFilename: string | null;
   pdfSize: number | null;
@@ -13689,8 +13685,8 @@ export type QueryPdfReviewBySlugResult = {
 export type QueryBlogPageDataResult = {
   _id: string;
   _type: 'blog';
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   title: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -13704,7 +13700,7 @@ export type QueryBlogPageDataResult = {
     level?: number;
     _type: 'block';
     _key: string;
-  }> | null;
+  }>;
   description: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -13737,7 +13733,7 @@ export type QueryBlogPageDataResult = {
       right: number | null;
       top: number | null;
     } | null;
-  } | null;
+  };
   pageBuilder: Array<
     | {
         _key: string;
@@ -13767,7 +13763,7 @@ export type QueryBlogPageDataResult = {
           listItem?: 'bullet';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13798,7 +13794,7 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -13828,7 +13824,7 @@ export type QueryBlogPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13852,7 +13848,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13868,8 +13864,8 @@ export type QueryBlogPageDataResult = {
         brands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -13881,7 +13877,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -13893,7 +13889,7 @@ export type QueryBlogPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -13912,7 +13908,7 @@ export type QueryBlogPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
         }>;
       }
     | {
@@ -13931,7 +13927,7 @@ export type QueryBlogPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -13943,7 +13939,7 @@ export type QueryBlogPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -13955,15 +13951,15 @@ export type QueryBlogPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         backgroundImage: {
           id: string | null;
           preview: string | null;
@@ -13982,12 +13978,12 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         topBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -13999,7 +13995,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -14011,7 +14007,7 @@ export type QueryBlogPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -14030,13 +14026,13 @@ export type QueryBlogPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
         bottomBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -14048,7 +14044,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -14060,7 +14056,7 @@ export type QueryBlogPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -14079,8 +14075,8 @@ export type QueryBlogPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -14110,7 +14106,7 @@ export type QueryBlogPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -14157,11 +14153,11 @@ export type QueryBlogPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
-          }> | null;
-        } | null;
+            };
+            name: string;
+            phoneNumber: string;
+          }>;
+        };
         accountList: Array<{
           heading: Array<{
             children?: Array<{
@@ -14177,8 +14173,8 @@ export type QueryBlogPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          accountDetails: Array<string> | null;
-        }> | null;
+          accountDetails: Array<string>;
+        }>;
         formState: {
           success: {
             withIcon: boolean | null;
@@ -14207,7 +14203,7 @@ export type QueryBlogPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -14220,9 +14216,9 @@ export type QueryBlogPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
+          };
           error: {
             withIcon: boolean | null;
             heading: Array<{
@@ -14250,7 +14246,7 @@ export type QueryBlogPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -14263,10 +14259,10 @@ export type QueryBlogPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
-        } | null;
+          };
+        };
       }
     | {
         _key: string;
@@ -14318,7 +14314,7 @@ export type QueryBlogPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -14331,7 +14327,7 @@ export type QueryBlogPageDataResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        displayMode: 'both' | 'contactOnly' | 'faqOnly' | null;
+        displayMode: 'both' | 'contactOnly' | 'faqOnly';
         faqList: Array<{
           _id: string;
           _createdAt: string;
@@ -14347,7 +14343,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -14395,9 +14391,9 @@ export type QueryBlogPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
+            };
+            name: string;
+            phoneNumber: string;
           }> | null;
         } | null;
         contactForm: {
@@ -14444,7 +14440,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -14457,9 +14453,9 @@ export type QueryBlogPageDataResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
             error: {
               withIcon: boolean | null;
               heading: Array<{
@@ -14487,7 +14483,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -14500,9 +14496,9 @@ export type QueryBlogPageDataResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
           } | null;
         } | null;
       }
@@ -14534,7 +14530,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -14548,24 +14544,24 @@ export type QueryBlogPageDataResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         newProducts: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -14584,8 +14580,8 @@ export type QueryBlogPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -14616,7 +14612,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -14629,18 +14625,18 @@ export type QueryBlogPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         bestsellers: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -14659,8 +14655,8 @@ export type QueryBlogPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -14691,7 +14687,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -14704,7 +14700,7 @@ export type QueryBlogPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -14724,19 +14720,19 @@ export type QueryBlogPageDataResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         publications: Array<
           | {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -14748,7 +14744,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -14760,7 +14756,7 @@ export type QueryBlogPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -14772,7 +14768,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -14803,17 +14799,17 @@ export type QueryBlogPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -14825,7 +14821,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -14837,7 +14833,7 @@ export type QueryBlogPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -14849,7 +14845,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -14880,13 +14876,13 @@ export type QueryBlogPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
             }
-        > | null;
+        >;
       }
     | {
         _key: string;
@@ -14916,7 +14912,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -14947,7 +14943,7 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -14971,15 +14967,15 @@ export type QueryBlogPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           title: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -15005,7 +15001,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -15018,10 +15014,10 @@ export type QueryBlogPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         brands: Array<{
-          name: string | null;
-          slug: string | null;
+          name: string;
+          slug: string;
           logo: {
             id: string | null;
             preview: string | null;
@@ -15040,8 +15036,8 @@ export type QueryBlogPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -15064,7 +15060,7 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -15090,7 +15086,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15133,7 +15129,7 @@ export type QueryBlogPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -15170,7 +15166,7 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -15196,7 +15192,7 @@ export type QueryBlogPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15210,13 +15206,13 @@ export type QueryBlogPageDataResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -15253,7 +15249,7 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         boxes: Array<{
           _key: string;
           iconUrl: string | null;
@@ -15282,7 +15278,7 @@ export type QueryBlogPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -15295,7 +15291,7 @@ export type QueryBlogPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         cta: {
           showCta: boolean | null;
           ctaParagraph: Array<{
@@ -15309,7 +15305,7 @@ export type QueryBlogPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -15323,7 +15319,7 @@ export type QueryBlogPageDataResult = {
             _key: string;
           }> | null;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
@@ -15353,7 +15349,7 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         youtubeId: string | null;
         heading: Array<{
           children?: Array<{
@@ -15368,7 +15364,7 @@ export type QueryBlogPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -15380,7 +15376,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15392,15 +15388,15 @@ export type QueryBlogPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -15424,7 +15420,7 @@ export type QueryBlogPageDataResult = {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -15436,7 +15432,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -15448,7 +15444,7 @@ export type QueryBlogPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -15460,7 +15456,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -15491,17 +15487,17 @@ export type QueryBlogPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -15513,7 +15509,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -15525,7 +15521,7 @@ export type QueryBlogPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -15537,7 +15533,7 @@ export type QueryBlogPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -15568,13 +15564,12 @@ export type QueryBlogPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
-            }
-          | null;
+            };
       }
     | {
         _key: string;
@@ -15597,7 +15592,7 @@ export type QueryBlogPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         primaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -15623,7 +15618,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15637,13 +15632,13 @@ export type QueryBlogPageDataResult = {
           _key: string;
         }> | null;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         secondaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -15669,7 +15664,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15682,7 +15677,7 @@ export type QueryBlogPageDataResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        phoneNumber: string | null;
+        phoneNumber: string;
       }
     | {
         _key: string;
@@ -15712,7 +15707,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15752,7 +15747,7 @@ export type QueryBlogPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -15765,7 +15760,7 @@ export type QueryBlogPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -15795,7 +15790,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15821,7 +15816,7 @@ export type QueryBlogPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         secondaryDescription: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -15833,7 +15828,7 @@ export type QueryBlogPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -15845,20 +15840,20 @@ export type QueryBlogPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         teamMembers: Array<{
           _id: string;
-          name: string | null;
-          position: string | null;
-          phoneNumber: string | null;
+          name: string;
+          position: string;
+          phoneNumber: string;
           image: {
             id: string | null;
             preview: string | null;
@@ -15877,7 +15872,7 @@ export type QueryBlogPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -15891,15 +15886,15 @@ export type QueryBlogPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
-        }> | null;
+          }>;
+        }>;
         variant: null;
       }
   > | null;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -15907,8 +15902,8 @@ export type QueryBlogPageDataResult = {
   } | null;
   selectedCategory: {
     _id: string;
-    name: string | null;
-    slug: string | null;
+    name: string;
+    slug: string;
     title: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -15938,9 +15933,9 @@ export type QueryBlogPageDataResult = {
       _key: string;
     }> | null;
     seo: {
-      title?: string;
-      description?: string;
-    } | null;
+      title: string;
+      description: string;
+    };
     openGraph: {
       title: string | null;
       description: string | null;
@@ -15949,8 +15944,8 @@ export type QueryBlogPageDataResult = {
   } | null;
   categories: Array<{
     _id: string;
-    name: string | null;
-    slug: string | null;
+    name: string;
+    slug: string;
     count: number;
   }>;
   totalCount: number;
@@ -15962,7 +15957,7 @@ export type QueryBlogArticlesResult = {
     _id: string;
     _type: 'blog-article';
     _createdAt: string;
-    name: string | null;
+    name: string;
     title: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -15974,7 +15969,7 @@ export type QueryBlogArticlesResult = {
       listItem?: never;
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -15986,7 +15981,7 @@ export type QueryBlogArticlesResult = {
       level?: number;
       _type: 'block';
       _key: string;
-    }> | null;
+    }>;
     description: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -15998,7 +15993,7 @@ export type QueryBlogArticlesResult = {
       listItem?: 'bullet' | 'number';
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -16029,21 +16024,21 @@ export type QueryBlogArticlesResult = {
         right: number | null;
         top: number | null;
       } | null;
-    } | null;
-    publicationType: string | null;
+    };
+    publicationType: string;
     destinationType: 'page';
-    slug: string | null;
+    slug: string;
     openInNewTab: false;
   }>;
   totalCount: number;
 };
 // Variable: queryProductsPageData
-// Query: *[_type == "products"][0] {    _id,    _type,    "slug": slug.current,    name,      title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      heroImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      pageBuilder[]{    ...,    _type,        _type == "heroCarousel" => {    ...,    slides[]{        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    }  },        _type == "heroStatic" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    showBlocks,    blocksHeading,    blocks[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    }  },        _type == "latestPublication" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        publication-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "imageTextColumns" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "blurLinesTextImage" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },        _type == "imageWithVideo" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    youtubeId,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "imageWithTextBoxes" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    boxes[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    cta{      showCta,        ctaParagraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    }  },        _type == "featuredPublications" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      publications[]-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "featuredProducts" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      newProducts[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      bestsellers[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  },        _type == "brandsMarquee" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      backgroundImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      topBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },      bottomBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  },        _type == "brandsList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    "brands":   *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  }  },        _type == "faqSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    displayMode,      faqList[]-> {  _id,  _createdAt,  question,    answer[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      contactPeople{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        contactPersons[]{             _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }        }      },      contactForm{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        buttonText,          formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }      }  },        _type == "contactForm" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    contactPeople{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      contactPersons[]{            _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }      }    },    accountList[]{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      accountDetails,    },      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  },        _type == "contactMap" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    useCustomAddress,    customAddress,    customPhone,    customEmail,  },        _type == "teamSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    variant,      teamMembers[]-> {  _id,  name,  position,  phoneNumber,    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "gallerySection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      images[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  },        _type == "phoneImageCta" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      primaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      primaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    phoneNumber,  },        _type == "stepList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    steps[]{      _key,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    }  }  },    seo,    openGraph{      title,      description,      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",    },    "selectedCategory": select(      $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{        _id,        name,        "slug": slug.current,          title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },          description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },          heroImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        customFilters,          pageBuilder[]{    ...,    _type,        _type == "heroCarousel" => {    ...,    slides[]{        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    }  },        _type == "heroStatic" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    showBlocks,    blocksHeading,    blocks[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    }  },        _type == "latestPublication" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        publication-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "imageTextColumns" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "blurLinesTextImage" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },        _type == "imageWithVideo" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    youtubeId,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "imageWithTextBoxes" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    boxes[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    cta{      showCta,        ctaParagraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    }  },        _type == "featuredPublications" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      publications[]-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "featuredProducts" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      newProducts[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      bestsellers[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  },        _type == "brandsMarquee" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      backgroundImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      topBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },      bottomBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  },        _type == "brandsList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    "brands":   *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  }  },        _type == "faqSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    displayMode,      faqList[]-> {  _id,  _createdAt,  question,    answer[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      contactPeople{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        contactPersons[]{             _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }        }      },      contactForm{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        buttonText,          formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }      }  },        _type == "contactForm" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    contactPeople{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      contactPersons[]{            _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }      }    },    accountList[]{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      accountDetails,    },      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  },        _type == "contactMap" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    useCustomAddress,    customAddress,    customPhone,    customEmail,  },        _type == "teamSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    variant,      teamMembers[]-> {  _id,  name,  position,  phoneNumber,    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "gallerySection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      images[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  },        _type == "phoneImageCta" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      primaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      primaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    phoneNumber,  },        _type == "stepList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    steps[]{      _key,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    }  }  },        seo,        openGraph{          title,          description,          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",        },        parentCategory->{          _id,          name,          "slug": slug.current        }      },      null    ),    "categories": *[_type == "productCategorySub" && defined(slug.current)] | order(orderRank){      _id,      name,      description,      "slug": slug.current,      parentCategory->{        _id,        name,        "slug": slug.current      },      "count": count(*[_type == "product" && references(^._id) && defined(slug.current)])    },    "brands": *[_type == "brand" && defined(slug.current)] | order(orderRank){      _id,      name,      "slug": slug.current    },    "totalCount": select(      $category != "" => count(*[        _type == "product"         && defined(slug.current)        && $category in categories[]->slug.current      ]),      count(*[_type == "product" && defined(slug.current)])    ),    "maxPrice": select(      $category != "" => math::max(*[        _type == "product"         && defined(slug.current)        && $category in categories[]->slug.current        && defined(price)      ].price),      math::max(*[_type == "product" && defined(slug.current) && defined(price)].price)    )  }
+// Query: *[_type == "products"][0] {    _id,    _type,    "slug": slug.current,    name,      title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      heroImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      pageBuilder[]{    ...,    _type,        _type == "heroCarousel" => {    ...,    slides[]{        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    }  },        _type == "heroStatic" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    showBlocks,    blocksHeading,    blocks[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    }  },        _type == "latestPublication" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        publication-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "imageTextColumns" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "blurLinesTextImage" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },        _type == "imageWithVideo" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    youtubeId,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "imageWithTextBoxes" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    boxes[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    cta{      showCta,        ctaParagraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    }  },        _type == "featuredPublications" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      publications[]-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "featuredProducts" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      newProducts[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      bestsellers[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  },        _type == "brandsMarquee" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      backgroundImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      topBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },      bottomBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  },        _type == "brandsList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    "brands":   *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  }  },        _type == "faqSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    displayMode,      faqList[]-> {  _id,  _createdAt,  question,    answer[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      contactPeople{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        contactPersons[]{             _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }        }      },      contactForm{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        buttonText,          formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }      }  },        _type == "contactForm" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    contactPeople{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      contactPersons[]{            _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }      }    },    accountList[]{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      accountDetails,    },      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  },        _type == "contactMap" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    useCustomAddress,    customAddress,    customPhone,    customEmail,  },        _type == "teamSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    variant,      teamMembers[]-> {  _id,  name,  position,  phoneNumber,    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "gallerySection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      images[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  },        _type == "phoneImageCta" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      primaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      primaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    phoneNumber,  },        _type == "stepList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    steps[]{      _key,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    }  }  },    seo,    openGraph{      title,      description,      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",    },    "selectedCategory": select(      $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{        _id,        name,        "slug": slug.current,          title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },          description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },          heroImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        customFilters,        "productsWithFilters": *[          _type == "product"           && defined(slug.current)          && count(categories) > 0          && $category in categories[]->slug.current          && defined(customFilterValues)          && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)          && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)          && ($minPrice == 0 || price >= $minPrice)          && ($maxPrice == 999999999 || price <= $maxPrice)        ]{          _id,          customFilterValues        },          pageBuilder[]{    ...,    _type,        _type == "heroCarousel" => {    ...,    slides[]{        image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},        title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    brands[]->{      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    }  },        _type == "heroStatic" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    showBlocks,    blocksHeading,    blocks[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    }  },        _type == "latestPublication" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        publication-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "imageTextColumns" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      content[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "blurLinesTextImage" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },        _type == "imageWithVideo" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    youtubeId,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "imageWithTextBoxes" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    boxes[]{      _key,      "iconUrl": icon.asset->url,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    },    cta{      showCta,        ctaParagraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},    }  },        _type == "featuredPublications" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      publications[]-> {    _id,  _type,  _createdAt,  name,    title[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  "publicationType": select(    _type == "review" => "Recenzja",    _type == "blog-article" => category->name,    "Artykuł"  ),  "destinationType": select(    _type == "review" => coalesce(destinationType, "page"),    "page"  ),  "slug": select(    _type == "review" && destinationType == "page" => slug.current,    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],    _type == "review" && destinationType == "external" => externalUrl,    _type == "blog-article" => slug.current,    slug.current  ),  "openInNewTab": select(    _type == "review" && destinationType == "external" => true,    _type == "review" && destinationType == "pdf" => true,    false  ),  }  },        _type == "featuredProducts" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      newProducts[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      bestsellers[]-> {  _id,  _createdAt,  "slug": slug.current,  name,  subtitle,  price,  isArchived,  brand->{    name,    "slug": slug.current,      logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },  },        _type == "brandsMarquee" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    button{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      backgroundImage {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      topBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },      bottomBrands[]-> {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  },  },        _type == "brandsList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      ctaText[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    "brands":   *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {  _id,  _createdAt,  "slug": slug.current,  name,    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },  }  },        _type == "faqSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    displayMode,      faqList[]-> {  _id,  _createdAt,  question,    answer[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      contactPeople{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        contactPersons[]{             _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }        }      },      contactForm{          heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        buttonText,          formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }      }  },        _type == "contactForm" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    contactPeople{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      contactPersons[]{            _type == "contactPerson" => {      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    name,    phoneNumber,  }      }    },    accountList[]{        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      accountDetails,    },      formState{    success{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },    error{      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText,    },  }  },        _type == "contactMap" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    useCustomAddress,    customAddress,    customPhone,    customEmail,  },        _type == "teamSection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    variant,      teamMembers[]-> {  _id,  name,  position,  phoneNumber,    image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },    description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },  },      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},  },        _type == "gallerySection" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      images[] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  },        _type == "phoneImageCta" => {    ...,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      primaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      primaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    ctaButton{  text,  variant,  _key,  _type,  "openInNewTab": url.openInNewTab,  "href": select(    url.type == "internal" => url.internal->slug.current,    url.type == "external" => url.external,    url.href  ),},      secondaryHeading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      secondaryDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    phoneNumber,  },        _type == "stepList" => {    ...,      heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    steps[]{      _key,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        description[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },    }  }  },        seo,        openGraph{          title,          description,          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",        },        parentCategory->{          _id,          name,          "slug": slug.current        }      },      null    ),    "categories": *[_type == "productCategorySub" && defined(slug.current)] {      _id,      name,      description,      "slug": slug.current,      parentCategory->{        _id,        name,        "slug": slug.current      },      "count": count(*[        _type == "product"         && defined(slug.current)        && count(categories) > 0        && references(^._id)        && ($category == "" || $category in categories[]->slug.current)        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)        && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)        && ($minPrice == 0 || price >= $minPrice)        && ($maxPrice == 999999999 || price <= $maxPrice)        && (          count($customFilters) == 0 ||          !defined(customFilterValues) ||          count($customFilters) <= count(customFilterValues[            select(              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,              false            )          ])        )      ])    } [count > 0] | order(orderRank),    "categoriesAll": *[_type == "productCategorySub" && defined(slug.current)] {      _id,      name,      description,      "slug": slug.current,      parentCategory->{        _id,        name,        "slug": slug.current      },      "count": count(*[        _type == "product"         && defined(slug.current)        && count(categories) > 0        && references(^._id)        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)        && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)        && ($minPrice == 0 || price >= $minPrice)        && ($maxPrice == 999999999 || price <= $maxPrice)      ])    } [count > 0] | order(orderRank),    "brands": *[_type == "brand" && defined(slug.current)] {      _id,      name,      "slug": slug.current,        logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },      "count": count(*[        _type == "product"         && defined(slug.current)        && count(categories) > 0        && brand._ref == ^._id        && ($category == "" || $category in categories[]->slug.current)        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)        && ($minPrice == 0 || price >= $minPrice)        && ($maxPrice == 999999999 || price <= $maxPrice)        && (          count($customFilters) == 0 ||          !defined(customFilterValues) ||          count($customFilters) <= count(customFilterValues[            select(              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,              false            )          ])        )      ])    } [count > 0] | order(orderRank),    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ]),    "totalCountAll": count(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)    ]),    "maxPrice": math::max(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && defined(price)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ].price),    "minPrice": math::min(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && defined(price)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ].price)  }
 export type QueryProductsPageDataResult = {
   _id: string;
   _type: 'products';
-  slug: string | null;
-  name: string | null;
+  slug: string;
+  name: string;
   title: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -16057,7 +16052,7 @@ export type QueryProductsPageDataResult = {
     level?: number;
     _type: 'block';
     _key: string;
-  }> | null;
+  }>;
   description: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -16071,7 +16066,7 @@ export type QueryProductsPageDataResult = {
     level?: number;
     _type: 'block';
     _key: string;
-  }> | null;
+  }>;
   heroImage: {
     id: string | null;
     preview: string | null;
@@ -16090,7 +16085,7 @@ export type QueryProductsPageDataResult = {
       right: number | null;
       top: number | null;
     } | null;
-  } | null;
+  };
   pageBuilder: Array<
     | {
         _key: string;
@@ -16120,7 +16115,7 @@ export type QueryProductsPageDataResult = {
           listItem?: 'bullet';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -16151,7 +16146,7 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -16181,7 +16176,7 @@ export type QueryProductsPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -16205,7 +16200,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -16221,8 +16216,8 @@ export type QueryProductsPageDataResult = {
         brands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -16234,7 +16229,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -16246,7 +16241,7 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -16265,7 +16260,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
         }>;
       }
     | {
@@ -16284,7 +16279,7 @@ export type QueryProductsPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -16296,7 +16291,7 @@ export type QueryProductsPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -16308,15 +16303,15 @@ export type QueryProductsPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         backgroundImage: {
           id: string | null;
           preview: string | null;
@@ -16335,12 +16330,12 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         topBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -16352,7 +16347,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -16364,7 +16359,7 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -16383,13 +16378,13 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
         bottomBrands: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
+          slug: string;
+          name: string;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -16401,7 +16396,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -16413,7 +16408,7 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           logo: {
             id: string | null;
             preview: string | null;
@@ -16432,8 +16427,8 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -16463,7 +16458,7 @@ export type QueryProductsPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -16510,11 +16505,11 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
-          }> | null;
-        } | null;
+            };
+            name: string;
+            phoneNumber: string;
+          }>;
+        };
         accountList: Array<{
           heading: Array<{
             children?: Array<{
@@ -16530,8 +16525,8 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          accountDetails: Array<string> | null;
-        }> | null;
+          accountDetails: Array<string>;
+        }>;
         formState: {
           success: {
             withIcon: boolean | null;
@@ -16560,7 +16555,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -16573,9 +16568,9 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
+          };
           error: {
             withIcon: boolean | null;
             heading: Array<{
@@ -16603,7 +16598,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -16616,10 +16611,10 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            refreshButton: boolean | null;
+            refreshButton: boolean;
             refreshButtonText: string | null;
-          } | null;
-        } | null;
+          };
+        };
       }
     | {
         _key: string;
@@ -16671,7 +16666,7 @@ export type QueryProductsPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -16684,7 +16679,7 @@ export type QueryProductsPageDataResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        displayMode: 'both' | 'contactOnly' | 'faqOnly' | null;
+        displayMode: 'both' | 'contactOnly' | 'faqOnly';
         faqList: Array<{
           _id: string;
           _createdAt: string;
@@ -16700,7 +16695,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -16748,9 +16743,9 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-            name: string | null;
-            phoneNumber: string | null;
+            };
+            name: string;
+            phoneNumber: string;
           }> | null;
         } | null;
         contactForm: {
@@ -16797,7 +16792,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -16810,9 +16805,9 @@ export type QueryProductsPageDataResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
             error: {
               withIcon: boolean | null;
               heading: Array<{
@@ -16840,7 +16835,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -16853,9 +16848,9 @@ export type QueryProductsPageDataResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
           } | null;
         } | null;
       }
@@ -16887,7 +16882,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -16901,24 +16896,24 @@ export type QueryProductsPageDataResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         newProducts: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -16937,8 +16932,8 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -16969,7 +16964,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -16982,18 +16977,18 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         bestsellers: Array<{
           _id: string;
           _createdAt: string;
-          slug: string | null;
-          name: string | null;
-          subtitle: string | null;
+          slug: string;
+          name: string;
+          subtitle: string;
           price: number | null;
           isArchived: boolean | null;
           brand: {
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -17012,8 +17007,8 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          } | null;
+            };
+          };
           mainImage: {
             id: string | null;
             preview: string | null;
@@ -17044,7 +17039,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -17057,7 +17052,7 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -17077,19 +17072,19 @@ export type QueryProductsPageDataResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: 'primary' | 'secondary' | null;
           _key: null;
           _type: 'button';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         publications: Array<
           | {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17101,7 +17096,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17113,7 +17108,7 @@ export type QueryProductsPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17125,7 +17120,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17156,17 +17151,17 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17178,7 +17173,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17190,7 +17185,7 @@ export type QueryProductsPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17202,7 +17197,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17233,13 +17228,13 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
             }
-        > | null;
+        >;
       }
     | {
         _key: string;
@@ -17269,7 +17264,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -17300,7 +17295,7 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -17324,15 +17319,15 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           title: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -17358,7 +17353,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -17371,10 +17366,10 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         brands: Array<{
-          name: string | null;
-          slug: string | null;
+          name: string;
+          slug: string;
           logo: {
             id: string | null;
             preview: string | null;
@@ -17393,8 +17388,8 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
-        }> | null;
+          };
+        }>;
       }
     | {
         _key: string;
@@ -17417,7 +17412,7 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -17443,7 +17438,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -17486,7 +17481,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -17523,7 +17518,7 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         heading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -17549,7 +17544,7 @@ export type QueryProductsPageDataResult = {
           listItem?: 'bullet' | 'number';
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -17563,13 +17558,13 @@ export type QueryProductsPageDataResult = {
           _key: string;
         }> | null;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -17606,7 +17601,7 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         boxes: Array<{
           _key: string;
           iconUrl: string | null;
@@ -17635,7 +17630,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -17648,7 +17643,7 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
         cta: {
           showCta: boolean | null;
           ctaParagraph: Array<{
@@ -17662,7 +17657,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -17676,7 +17671,7 @@ export type QueryProductsPageDataResult = {
             _key: string;
           }> | null;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
@@ -17706,7 +17701,7 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         youtubeId: string | null;
         heading: Array<{
           children?: Array<{
@@ -17721,7 +17716,7 @@ export type QueryProductsPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         description: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -17733,7 +17728,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -17745,15 +17740,15 @@ export type QueryProductsPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         button: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
       }
     | {
         _key: string;
@@ -17777,7 +17772,7 @@ export type QueryProductsPageDataResult = {
               _id: string;
               _type: 'blog-article';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17789,7 +17784,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17801,7 +17796,7 @@ export type QueryProductsPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17813,7 +17808,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17844,17 +17839,17 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              publicationType: string | null;
+              };
+              publicationType: string;
               destinationType: 'page';
-              slug: string | null;
+              slug: string;
               openInNewTab: false;
             }
           | {
               _id: string;
               _type: 'review';
               _createdAt: string;
-              name: string | null;
+              name: string;
               title: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17866,7 +17861,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: never;
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17878,7 +17873,7 @@ export type QueryProductsPageDataResult = {
                 level?: number;
                 _type: 'block';
                 _key: string;
-              }> | null;
+              }>;
               description: Array<{
                 children?: Array<{
                   marks?: Array<string>;
@@ -17890,7 +17885,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -17921,13 +17916,12 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
+              };
               publicationType: 'Recenzja';
               destinationType: 'external' | 'page' | 'pdf';
               slug: string | null;
               openInNewTab: false | true;
-            }
-          | null;
+            };
       }
     | {
         _key: string;
@@ -17950,7 +17944,7 @@ export type QueryProductsPageDataResult = {
             right: number | null;
             top: number | null;
           } | null;
-        } | null;
+        };
         primaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -17976,7 +17970,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -17990,13 +17984,13 @@ export type QueryProductsPageDataResult = {
           _key: string;
         }> | null;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         secondaryHeading: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -18022,7 +18016,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -18035,7 +18029,7 @@ export type QueryProductsPageDataResult = {
           _type: 'block';
           _key: string;
         }> | null;
-        phoneNumber: string | null;
+        phoneNumber: string;
       }
     | {
         _key: string;
@@ -18065,7 +18059,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -18105,7 +18099,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -18118,7 +18112,7 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-        }> | null;
+        }>;
       }
     | {
         _key: string;
@@ -18148,7 +18142,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -18174,7 +18168,7 @@ export type QueryProductsPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         secondaryDescription: Array<{
           children?: Array<{
             marks?: Array<string>;
@@ -18186,7 +18180,7 @@ export type QueryProductsPageDataResult = {
           listItem?: never;
           markDefs: Array<{
             customLink: {
-              type: 'external' | 'internal' | null;
+              type: 'external' | 'internal';
               openInNewTab: boolean | null;
               external: string | null;
               href: string | '#' | null;
@@ -18198,20 +18192,20 @@ export type QueryProductsPageDataResult = {
           level?: number;
           _type: 'block';
           _key: string;
-        }> | null;
+        }>;
         ctaButton: {
-          text: string | null;
+          text: string;
           variant: null;
           _key: null;
           _type: 'buttonWithNoVariant';
           openInNewTab: boolean | null;
           href: string | null;
-        } | null;
+        };
         teamMembers: Array<{
           _id: string;
-          name: string | null;
-          position: string | null;
-          phoneNumber: string | null;
+          name: string;
+          position: string;
+          phoneNumber: string;
           image: {
             id: string | null;
             preview: string | null;
@@ -18230,7 +18224,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -18244,15 +18238,15 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
-        }> | null;
+          }>;
+        }>;
         variant: null;
       }
   > | null;
   seo: {
-    title?: string;
-    description?: string;
-  } | null;
+    title: string;
+    description: string;
+  };
   openGraph: {
     title: string | null;
     description: string | null;
@@ -18260,8 +18254,8 @@ export type QueryProductsPageDataResult = {
   } | null;
   selectedCategory: {
     _id: string;
-    name: string | null;
-    slug: string | null;
+    name: string;
+    slug: string;
     title: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -18310,6 +18304,15 @@ export type QueryProductsPageDataResult = {
       } | null;
     } | null;
     customFilters: Array<string> | null;
+    productsWithFilters: Array<{
+      _id: string;
+      customFilterValues: Array<{
+        filterName: string;
+        value: string;
+        _type: 'filterValue';
+        _key: string;
+      }> | null;
+    }>;
     pageBuilder: Array<
       | {
           _key: string;
@@ -18339,7 +18342,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -18370,7 +18373,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
         }
       | {
           _key: string;
@@ -18400,7 +18403,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -18424,7 +18427,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -18440,8 +18443,8 @@ export type QueryProductsPageDataResult = {
           brands: Array<{
             _id: string;
             _createdAt: string;
-            slug: string | null;
-            name: string | null;
+            slug: string;
+            name: string;
             description: Array<{
               children?: Array<{
                 marks?: Array<string>;
@@ -18453,7 +18456,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -18465,7 +18468,7 @@ export type QueryProductsPageDataResult = {
               level?: number;
               _type: 'block';
               _key: string;
-            }> | null;
+            }>;
             logo: {
               id: string | null;
               preview: string | null;
@@ -18484,7 +18487,7 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
+            };
           }>;
         }
       | {
@@ -18503,7 +18506,7 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -18515,7 +18518,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -18527,15 +18530,15 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           button: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           backgroundImage: {
             id: string | null;
             preview: string | null;
@@ -18554,12 +18557,12 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           topBrands: Array<{
             _id: string;
             _createdAt: string;
-            slug: string | null;
-            name: string | null;
+            slug: string;
+            name: string;
             description: Array<{
               children?: Array<{
                 marks?: Array<string>;
@@ -18571,7 +18574,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -18583,7 +18586,7 @@ export type QueryProductsPageDataResult = {
               level?: number;
               _type: 'block';
               _key: string;
-            }> | null;
+            }>;
             logo: {
               id: string | null;
               preview: string | null;
@@ -18602,13 +18605,13 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          }> | null;
+            };
+          }>;
           bottomBrands: Array<{
             _id: string;
             _createdAt: string;
-            slug: string | null;
-            name: string | null;
+            slug: string;
+            name: string;
             description: Array<{
               children?: Array<{
                 marks?: Array<string>;
@@ -18620,7 +18623,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -18632,7 +18635,7 @@ export type QueryProductsPageDataResult = {
               level?: number;
               _type: 'block';
               _key: string;
-            }> | null;
+            }>;
             logo: {
               id: string | null;
               preview: string | null;
@@ -18651,8 +18654,8 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          }> | null;
+            };
+          }>;
         }
       | {
           _key: string;
@@ -18682,7 +18685,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -18729,11 +18732,11 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              name: string | null;
-              phoneNumber: string | null;
-            }> | null;
-          } | null;
+              };
+              name: string;
+              phoneNumber: string;
+            }>;
+          };
           accountList: Array<{
             heading: Array<{
               children?: Array<{
@@ -18749,8 +18752,8 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-            accountDetails: Array<string> | null;
-          }> | null;
+            accountDetails: Array<string>;
+          }>;
           formState: {
             success: {
               withIcon: boolean | null;
@@ -18779,7 +18782,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -18792,9 +18795,9 @@ export type QueryProductsPageDataResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
+            };
             error: {
               withIcon: boolean | null;
               heading: Array<{
@@ -18822,7 +18825,7 @@ export type QueryProductsPageDataResult = {
                 listItem?: 'bullet' | 'number';
                 markDefs: Array<{
                   customLink: {
-                    type: 'external' | 'internal' | null;
+                    type: 'external' | 'internal';
                     openInNewTab: boolean | null;
                     external: string | null;
                     href: string | '#' | null;
@@ -18835,10 +18838,10 @@ export type QueryProductsPageDataResult = {
                 _type: 'block';
                 _key: string;
               }> | null;
-              refreshButton: boolean | null;
+              refreshButton: boolean;
               refreshButtonText: string | null;
-            } | null;
-          } | null;
+            };
+          };
         }
       | {
           _key: string;
@@ -18890,7 +18893,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -18903,7 +18906,7 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          displayMode: 'both' | 'contactOnly' | 'faqOnly' | null;
+          displayMode: 'both' | 'contactOnly' | 'faqOnly';
           faqList: Array<{
             _id: string;
             _createdAt: string;
@@ -18919,7 +18922,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -18967,9 +18970,9 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-              name: string | null;
-              phoneNumber: string | null;
+              };
+              name: string;
+              phoneNumber: string;
             }> | null;
           } | null;
           contactForm: {
@@ -19016,7 +19019,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: 'bullet' | 'number';
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -19029,9 +19032,9 @@ export type QueryProductsPageDataResult = {
                   _type: 'block';
                   _key: string;
                 }> | null;
-                refreshButton: boolean | null;
+                refreshButton: boolean;
                 refreshButtonText: string | null;
-              } | null;
+              };
               error: {
                 withIcon: boolean | null;
                 heading: Array<{
@@ -19059,7 +19062,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: 'bullet' | 'number';
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -19072,9 +19075,9 @@ export type QueryProductsPageDataResult = {
                   _type: 'block';
                   _key: string;
                 }> | null;
-                refreshButton: boolean | null;
+                refreshButton: boolean;
                 refreshButtonText: string | null;
-              } | null;
+              };
             } | null;
           } | null;
         }
@@ -19106,7 +19109,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -19120,24 +19123,24 @@ export type QueryProductsPageDataResult = {
             _key: string;
           }> | null;
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           newProducts: Array<{
             _id: string;
             _createdAt: string;
-            slug: string | null;
-            name: string | null;
-            subtitle: string | null;
+            slug: string;
+            name: string;
+            subtitle: string;
             price: number | null;
             isArchived: boolean | null;
             brand: {
-              name: string | null;
-              slug: string | null;
+              name: string;
+              slug: string;
               logo: {
                 id: string | null;
                 preview: string | null;
@@ -19156,8 +19159,8 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-            } | null;
+              };
+            };
             mainImage: {
               id: string | null;
               preview: string | null;
@@ -19188,7 +19191,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -19201,18 +19204,18 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-          }> | null;
+          }>;
           bestsellers: Array<{
             _id: string;
             _createdAt: string;
-            slug: string | null;
-            name: string | null;
-            subtitle: string | null;
+            slug: string;
+            name: string;
+            subtitle: string;
             price: number | null;
             isArchived: boolean | null;
             brand: {
-              name: string | null;
-              slug: string | null;
+              name: string;
+              slug: string;
               logo: {
                 id: string | null;
                 preview: string | null;
@@ -19231,8 +19234,8 @@ export type QueryProductsPageDataResult = {
                   right: number | null;
                   top: number | null;
                 } | null;
-              } | null;
-            } | null;
+              };
+            };
             mainImage: {
               id: string | null;
               preview: string | null;
@@ -19263,7 +19266,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -19276,7 +19279,7 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-          }> | null;
+          }>;
         }
       | {
           _key: string;
@@ -19296,19 +19299,19 @@ export type QueryProductsPageDataResult = {
             _key: string;
           }> | null;
           button: {
-            text: string | null;
+            text: string;
             variant: 'primary' | 'secondary' | null;
             _key: null;
             _type: 'button';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           publications: Array<
             | {
                 _id: string;
                 _type: 'blog-article';
                 _createdAt: string;
-                name: string | null;
+                name: string;
                 title: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -19320,7 +19323,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: never;
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -19332,7 +19335,7 @@ export type QueryProductsPageDataResult = {
                   level?: number;
                   _type: 'block';
                   _key: string;
-                }> | null;
+                }>;
                 description: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -19344,7 +19347,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: 'bullet' | 'number';
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -19375,17 +19378,17 @@ export type QueryProductsPageDataResult = {
                     right: number | null;
                     top: number | null;
                   } | null;
-                } | null;
-                publicationType: string | null;
+                };
+                publicationType: string;
                 destinationType: 'page';
-                slug: string | null;
+                slug: string;
                 openInNewTab: false;
               }
             | {
                 _id: string;
                 _type: 'review';
                 _createdAt: string;
-                name: string | null;
+                name: string;
                 title: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -19397,7 +19400,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: never;
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -19409,7 +19412,7 @@ export type QueryProductsPageDataResult = {
                   level?: number;
                   _type: 'block';
                   _key: string;
-                }> | null;
+                }>;
                 description: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -19421,7 +19424,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: 'bullet' | 'number';
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -19452,13 +19455,13 @@ export type QueryProductsPageDataResult = {
                     right: number | null;
                     top: number | null;
                   } | null;
-                } | null;
+                };
                 publicationType: 'Recenzja';
                 destinationType: 'external' | 'page' | 'pdf';
                 slug: string | null;
                 openInNewTab: false | true;
               }
-          > | null;
+          >;
         }
       | {
           _key: string;
@@ -19488,7 +19491,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -19519,7 +19522,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          }> | null;
+          }>;
         }
       | {
           _key: string;
@@ -19543,15 +19546,15 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
+            };
             button: {
-              text: string | null;
+              text: string;
               variant: 'primary' | 'secondary' | null;
               _key: null;
               _type: 'button';
               openInNewTab: boolean | null;
               href: string | null;
-            } | null;
+            };
             title: Array<{
               children?: Array<{
                 marks?: Array<string>;
@@ -19577,7 +19580,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -19590,10 +19593,10 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-          }> | null;
+          }>;
           brands: Array<{
-            name: string | null;
-            slug: string | null;
+            name: string;
+            slug: string;
             logo: {
               id: string | null;
               preview: string | null;
@@ -19612,8 +19615,8 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
-          }> | null;
+            };
+          }>;
         }
       | {
           _key: string;
@@ -19636,7 +19639,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           heading: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -19662,7 +19665,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -19705,7 +19708,7 @@ export type QueryProductsPageDataResult = {
               listItem?: 'bullet' | 'number';
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -19742,7 +19745,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           heading: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -19768,7 +19771,7 @@ export type QueryProductsPageDataResult = {
             listItem?: 'bullet' | 'number';
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -19782,13 +19785,13 @@ export type QueryProductsPageDataResult = {
             _key: string;
           }> | null;
           button: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
         }
       | {
           _key: string;
@@ -19825,7 +19828,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           boxes: Array<{
             _key: string;
             iconUrl: string | null;
@@ -19854,7 +19857,7 @@ export type QueryProductsPageDataResult = {
               listItem?: never;
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -19867,7 +19870,7 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-          }> | null;
+          }>;
           cta: {
             showCta: boolean | null;
             ctaParagraph: Array<{
@@ -19881,7 +19884,7 @@ export type QueryProductsPageDataResult = {
               listItem?: never;
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -19895,7 +19898,7 @@ export type QueryProductsPageDataResult = {
               _key: string;
             }> | null;
             ctaButton: {
-              text: string | null;
+              text: string;
               variant: null;
               _key: null;
               _type: 'buttonWithNoVariant';
@@ -19925,7 +19928,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           youtubeId: string | null;
           heading: Array<{
             children?: Array<{
@@ -19940,7 +19943,7 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           description: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -19952,7 +19955,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -19964,15 +19967,15 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           button: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
         }
       | {
           _key: string;
@@ -19996,7 +19999,7 @@ export type QueryProductsPageDataResult = {
                 _id: string;
                 _type: 'blog-article';
                 _createdAt: string;
-                name: string | null;
+                name: string;
                 title: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -20008,7 +20011,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: never;
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -20020,7 +20023,7 @@ export type QueryProductsPageDataResult = {
                   level?: number;
                   _type: 'block';
                   _key: string;
-                }> | null;
+                }>;
                 description: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -20032,7 +20035,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: 'bullet' | 'number';
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -20063,17 +20066,17 @@ export type QueryProductsPageDataResult = {
                     right: number | null;
                     top: number | null;
                   } | null;
-                } | null;
-                publicationType: string | null;
+                };
+                publicationType: string;
                 destinationType: 'page';
-                slug: string | null;
+                slug: string;
                 openInNewTab: false;
               }
             | {
                 _id: string;
                 _type: 'review';
                 _createdAt: string;
-                name: string | null;
+                name: string;
                 title: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -20085,7 +20088,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: never;
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -20097,7 +20100,7 @@ export type QueryProductsPageDataResult = {
                   level?: number;
                   _type: 'block';
                   _key: string;
-                }> | null;
+                }>;
                 description: Array<{
                   children?: Array<{
                     marks?: Array<string>;
@@ -20109,7 +20112,7 @@ export type QueryProductsPageDataResult = {
                   listItem?: 'bullet' | 'number';
                   markDefs: Array<{
                     customLink: {
-                      type: 'external' | 'internal' | null;
+                      type: 'external' | 'internal';
                       openInNewTab: boolean | null;
                       external: string | null;
                       href: string | '#' | null;
@@ -20140,13 +20143,12 @@ export type QueryProductsPageDataResult = {
                     right: number | null;
                     top: number | null;
                   } | null;
-                } | null;
+                };
                 publicationType: 'Recenzja';
                 destinationType: 'external' | 'page' | 'pdf';
                 slug: string | null;
                 openInNewTab: false | true;
-              }
-            | null;
+              };
         }
       | {
           _key: string;
@@ -20169,7 +20171,7 @@ export type QueryProductsPageDataResult = {
               right: number | null;
               top: number | null;
             } | null;
-          } | null;
+          };
           primaryHeading: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -20195,7 +20197,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -20209,13 +20211,13 @@ export type QueryProductsPageDataResult = {
             _key: string;
           }> | null;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           secondaryHeading: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -20241,7 +20243,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -20254,7 +20256,7 @@ export type QueryProductsPageDataResult = {
             _type: 'block';
             _key: string;
           }> | null;
-          phoneNumber: string | null;
+          phoneNumber: string;
         }
       | {
           _key: string;
@@ -20284,7 +20286,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -20324,7 +20326,7 @@ export type QueryProductsPageDataResult = {
               listItem?: never;
               markDefs: Array<{
                 customLink: {
-                  type: 'external' | 'internal' | null;
+                  type: 'external' | 'internal';
                   openInNewTab: boolean | null;
                   external: string | null;
                   href: string | '#' | null;
@@ -20337,7 +20339,7 @@ export type QueryProductsPageDataResult = {
               _type: 'block';
               _key: string;
             }> | null;
-          }> | null;
+          }>;
         }
       | {
           _key: string;
@@ -20367,7 +20369,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -20393,7 +20395,7 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           secondaryDescription: Array<{
             children?: Array<{
               marks?: Array<string>;
@@ -20405,7 +20407,7 @@ export type QueryProductsPageDataResult = {
             listItem?: never;
             markDefs: Array<{
               customLink: {
-                type: 'external' | 'internal' | null;
+                type: 'external' | 'internal';
                 openInNewTab: boolean | null;
                 external: string | null;
                 href: string | '#' | null;
@@ -20417,20 +20419,20 @@ export type QueryProductsPageDataResult = {
             level?: number;
             _type: 'block';
             _key: string;
-          }> | null;
+          }>;
           ctaButton: {
-            text: string | null;
+            text: string;
             variant: null;
             _key: null;
             _type: 'buttonWithNoVariant';
             openInNewTab: boolean | null;
             href: string | null;
-          } | null;
+          };
           teamMembers: Array<{
             _id: string;
-            name: string | null;
-            position: string | null;
-            phoneNumber: string | null;
+            name: string;
+            position: string;
+            phoneNumber: string;
             image: {
               id: string | null;
               preview: string | null;
@@ -20449,7 +20451,7 @@ export type QueryProductsPageDataResult = {
                 right: number | null;
                 top: number | null;
               } | null;
-            } | null;
+            };
             description: Array<{
               children?: Array<{
                 marks?: Array<string>;
@@ -20463,15 +20465,15 @@ export type QueryProductsPageDataResult = {
               level?: number;
               _type: 'block';
               _key: string;
-            }> | null;
-          }> | null;
+            }>;
+          }>;
           variant: null;
         }
     > | null;
     seo: {
-      title?: string;
-      description?: string;
-    } | null;
+      title: string;
+      description: string;
+    };
     openGraph: {
       title: string | null;
       description: string | null;
@@ -20481,11 +20483,11 @@ export type QueryProductsPageDataResult = {
       _id: string;
       name: string | null;
       slug: null;
-    } | null;
+    };
   } | null;
   categories: Array<{
     _id: string;
-    name: string | null;
+    name: string;
     description: Array<{
       children?: Array<{
         marks?: Array<string>;
@@ -20500,36 +20502,83 @@ export type QueryProductsPageDataResult = {
       _type: 'block';
       _key: string;
     }> | null;
-    slug: string | null;
+    slug: string;
     parentCategory: {
       _id: string;
       name: string | null;
       slug: null;
-    } | null;
+    };
+    count: number;
+  }>;
+  categoriesAll: Array<{
+    _id: string;
+    name: string;
+    description: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: 'span';
+        _key: string;
+      }>;
+      style?: 'normal';
+      listItem?: never;
+      markDefs?: null;
+      level?: number;
+      _type: 'block';
+      _key: string;
+    }> | null;
+    slug: string;
+    parentCategory: {
+      _id: string;
+      name: string | null;
+      slug: null;
+    };
     count: number;
   }>;
   brands: Array<{
     _id: string;
-    name: string | null;
-    slug: string | null;
+    name: string;
+    slug: string;
+    logo: {
+      id: string | null;
+      preview: string | null;
+      alt: string | null;
+      naturalWidth: number | null;
+      naturalHeight: number | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+        width: number | null;
+        height: number | null;
+      } | null;
+      crop: {
+        bottom: number | null;
+        left: number | null;
+        right: number | null;
+        top: number | null;
+      } | null;
+    };
+    count: number;
   }>;
   totalCount: number;
+  totalCountAll: number;
   maxPrice: number | null;
+  minPrice: number | null;
 } | null;
 // Variable: queryProductsListingNewest
-// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(_createdAt desc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
+// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(_createdAt desc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
 export type QueryProductsListingNewestResult = {
   products: Array<{
     _id: string;
     _createdAt: string;
-    name: string | null;
-    subtitle: string | null;
-    slug: string | null;
+    name: string;
+    subtitle: string;
+    slug: string;
     price: number | null;
     isArchived: boolean | null;
     brand: {
-      name: string | null;
-      slug: string | null;
+      name: string;
+      slug: string;
       logo: {
         id: string | null;
         preview: string | null;
@@ -20548,8 +20597,8 @@ export type QueryProductsListingNewestResult = {
           right: number | null;
           top: number | null;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
     mainImage: {
       id: string | null;
       preview: string | null;
@@ -20580,7 +20629,7 @@ export type QueryProductsListingNewestResult = {
       listItem?: 'bullet' | 'number';
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -20597,19 +20646,19 @@ export type QueryProductsListingNewestResult = {
   totalCount: number;
 };
 // Variable: queryProductsListingOldest
-// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(_createdAt asc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
+// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(_createdAt asc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
 export type QueryProductsListingOldestResult = {
   products: Array<{
     _id: string;
     _createdAt: string;
-    name: string | null;
-    subtitle: string | null;
-    slug: string | null;
+    name: string;
+    subtitle: string;
+    slug: string;
     price: number | null;
     isArchived: boolean | null;
     brand: {
-      name: string | null;
-      slug: string | null;
+      name: string;
+      slug: string;
       logo: {
         id: string | null;
         preview: string | null;
@@ -20628,8 +20677,8 @@ export type QueryProductsListingOldestResult = {
           right: number | null;
           top: number | null;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
     mainImage: {
       id: string | null;
       preview: string | null;
@@ -20660,7 +20709,7 @@ export type QueryProductsListingOldestResult = {
       listItem?: 'bullet' | 'number';
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -20677,19 +20726,19 @@ export type QueryProductsListingOldestResult = {
   totalCount: number;
 };
 // Variable: queryProductsListingPriceAsc
-// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(price asc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
+// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(price asc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
 export type QueryProductsListingPriceAscResult = {
   products: Array<{
     _id: string;
     _createdAt: string;
-    name: string | null;
-    subtitle: string | null;
-    slug: string | null;
+    name: string;
+    subtitle: string;
+    slug: string;
     price: number | null;
     isArchived: boolean | null;
     brand: {
-      name: string | null;
-      slug: string | null;
+      name: string;
+      slug: string;
       logo: {
         id: string | null;
         preview: string | null;
@@ -20708,8 +20757,8 @@ export type QueryProductsListingPriceAscResult = {
           right: number | null;
           top: number | null;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
     mainImage: {
       id: string | null;
       preview: string | null;
@@ -20740,7 +20789,7 @@ export type QueryProductsListingPriceAscResult = {
       listItem?: 'bullet' | 'number';
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -20757,19 +20806,19 @@ export type QueryProductsListingPriceAscResult = {
   totalCount: number;
 };
 // Variable: queryProductsListingPriceDesc
-// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(price desc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
+// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(price desc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
 export type QueryProductsListingPriceDescResult = {
   products: Array<{
     _id: string;
     _createdAt: string;
-    name: string | null;
-    subtitle: string | null;
-    slug: string | null;
+    name: string;
+    subtitle: string;
+    slug: string;
     price: number | null;
     isArchived: boolean | null;
     brand: {
-      name: string | null;
-      slug: string | null;
+      name: string;
+      slug: string;
       logo: {
         id: string | null;
         preview: string | null;
@@ -20788,8 +20837,8 @@ export type QueryProductsListingPriceDescResult = {
           right: number | null;
           top: number | null;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
     mainImage: {
       id: string | null;
       preview: string | null;
@@ -20820,7 +20869,7 @@ export type QueryProductsListingPriceDescResult = {
       listItem?: 'bullet' | 'number';
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -20837,19 +20886,19 @@ export type QueryProductsListingPriceDescResult = {
   totalCount: number;
 };
 // Variable: queryProductsListingOrderRank
-// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(orderRank asc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
+// Query: {    "products": *[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ] | order(orderRank asc) [$offset...$limit] {      _id,      _createdAt,      name,      subtitle,      "slug": slug.current,      price,      isArchived,      brand->{        name,        "slug": slug.current,          logo {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }      },      "mainImage":   imageGallery[0] {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  },        shortDescription[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  }    },    "totalCount": count(*[      _type == "product"       && defined(slug.current)      && count(categories) > 0      && ($category == "" || $category in categories[]->slug.current)      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)      && ($minPrice == 0 || price >= $minPrice)      && ($maxPrice == 999999999 || price <= $maxPrice)      && (        count($customFilters) == 0 ||        !defined(customFilterValues) ||        count($customFilters) <= count(customFilterValues[          select(            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,            false          )        ])      )    ])  }
 export type QueryProductsListingOrderRankResult = {
   products: Array<{
     _id: string;
     _createdAt: string;
-    name: string | null;
-    subtitle: string | null;
-    slug: string | null;
+    name: string;
+    subtitle: string;
+    slug: string;
     price: number | null;
     isArchived: boolean | null;
     brand: {
-      name: string | null;
-      slug: string | null;
+      name: string;
+      slug: string;
       logo: {
         id: string | null;
         preview: string | null;
@@ -20868,8 +20917,8 @@ export type QueryProductsListingOrderRankResult = {
           right: number | null;
           top: number | null;
         } | null;
-      } | null;
-    } | null;
+      };
+    };
     mainImage: {
       id: string | null;
       preview: string | null;
@@ -20900,7 +20949,7 @@ export type QueryProductsListingOrderRankResult = {
       listItem?: 'bullet' | 'number';
       markDefs: Array<{
         customLink: {
-          type: 'external' | 'internal' | null;
+          type: 'external' | 'internal';
           openInNewTab: boolean | null;
           external: string | null;
           href: string | '#' | null;
@@ -20916,6 +20965,14 @@ export type QueryProductsListingOrderRankResult = {
   }>;
   totalCount: number;
 };
+// Variable: queryCategoryMetadata
+// Query: *[_type == "productCategorySub" && slug.current == $category][0]{    _id,    name,    "slug": slug.current,    customFilters  }
+export type QueryCategoryMetadataResult = {
+  _id: string;
+  name: string;
+  slug: string;
+  customFilters: Array<string> | null;
+} | null;
 
 // Query TypeMap
 import '@sanity/client';
@@ -20938,11 +20995,12 @@ declare module '@sanity/client' {
     '*[_type == "review" && destinationType == "pdf" && string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0] == $slug][0]{\n  _id,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  "pdfUrl": pdfFile.asset->url,\n  "pdfFilename": pdfFile.asset->originalFilename,\n  "pdfSize": pdfFile.asset->size,\n  "pdfMimeType": pdfFile.asset->mimeType\n}': QueryPdfReviewBySlugResult;
     '\n  *[_type == "blog"][0] {\n    _id,\n    _type,\n    "slug": slug.current,\n    name,\n    \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  heroImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n      \n  _type == "heroCarousel" => {\n    ...,\n    slides[]{\n      \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n      \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    brands[]->{\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    }\n  }\n,\n      \n  _type == "heroStatic" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    showBlocks,\n    blocksHeading,\n    blocks[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  }\n,\n      \n  _type == "latestPublication" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  publication-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "imageTextColumns" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "blurLinesTextImage" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n      \n  _type == "imageWithVideo" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    youtubeId,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "imageWithTextBoxes" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    boxes[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    cta{\n      showCta,\n      \n  ctaParagraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    }\n  }\n,\n      \n  _type == "featuredPublications" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  publications[]-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "featuredProducts" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  newProducts[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  bestsellers[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsMarquee" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  backgroundImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  topBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n    \n  bottomBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  ctaText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    "brands": \n  *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n\n  }\n,\n      \n  _type == "faqSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    displayMode,\n    \n  faqList[]-> {\n  _id,\n  _createdAt,\n  question,\n  \n  answer[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n      contactPeople{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        contactPersons[]{\n         \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n        }\n      },\n      contactForm{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        buttonText,\n        \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n      }\n  }\n,\n      \n  _type == "contactForm" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    contactPeople{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      contactPersons[]{\n        \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n      }\n    },\n    accountList[]{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      accountDetails,\n    },\n    \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n  }\n,\n      \n  _type == "contactMap" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    useCustomAddress,\n    customAddress,\n    customPhone,\n    customEmail,\n  }\n,\n      \n  _type == "teamSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    variant,\n    \n  teamMembers[]-> {\n  _id,\n  name,\n  position,\n  phoneNumber,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "gallerySection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  images[] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n  }\n,\n      \n  _type == "phoneImageCta" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  primaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  primaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    phoneNumber,\n  }\n,\n      \n  _type == "stepList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    steps[]{\n      _key,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    }\n  }\n\n  }\n,\n    seo,\n    openGraph{\n      title,\n      description,\n      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n    },\n    "selectedCategory": select(\n      $category != "" => *[_type == "blog-category" && slug.current == $category][0]{\n        _id,\n        name,\n        "slug": slug.current,\n        \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        seo,\n        openGraph{\n          title,\n          description,\n          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n        }\n      },\n      null\n    ),\n    "categories": *[_type == "blog-category" && defined(slug.current)] | order(orderRank){\n      _id,\n      name,\n      "slug": slug.current,\n      "count": count(*[_type == "blog-article" && category._ref == ^._id && !hideFromList])\n    },\n    "totalCount": count(*[_type == "blog-article" && defined(slug.current) && !hideFromList])\n  }\n': QueryBlogPageDataResult;
     '\n  {\n    "articles": *[\n      _type == "blog-article" \n      && defined(slug.current)\n      && !hideFromList\n      && ($category == "" || category->slug.current == $category)\n      && ($search == "" || [name, pt::text(title)] match $search)\n    ] | order(_createdAt desc) [$offset...$limit] {\n        \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n    },\n    "totalCount": count(*[\n      _type == "blog-article" \n      && defined(slug.current)\n      && !hideFromList\n      && ($category == "" || category->slug.current == $category)\n      && ($search == "" || [name, pt::text(title)] match $search)\n    ])\n  }\n': QueryBlogArticlesResult;
-    '\n  *[_type == "products"][0] {\n    _id,\n    _type,\n    "slug": slug.current,\n    name,\n    \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  heroImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n      \n  _type == "heroCarousel" => {\n    ...,\n    slides[]{\n      \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n      \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    brands[]->{\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    }\n  }\n,\n      \n  _type == "heroStatic" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    showBlocks,\n    blocksHeading,\n    blocks[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  }\n,\n      \n  _type == "latestPublication" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  publication-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "imageTextColumns" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "blurLinesTextImage" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n      \n  _type == "imageWithVideo" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    youtubeId,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "imageWithTextBoxes" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    boxes[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    cta{\n      showCta,\n      \n  ctaParagraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    }\n  }\n,\n      \n  _type == "featuredPublications" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  publications[]-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "featuredProducts" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  newProducts[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  bestsellers[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsMarquee" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  backgroundImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  topBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n    \n  bottomBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  ctaText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    "brands": \n  *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n\n  }\n,\n      \n  _type == "faqSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    displayMode,\n    \n  faqList[]-> {\n  _id,\n  _createdAt,\n  question,\n  \n  answer[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n      contactPeople{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        contactPersons[]{\n         \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n        }\n      },\n      contactForm{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        buttonText,\n        \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n      }\n  }\n,\n      \n  _type == "contactForm" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    contactPeople{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      contactPersons[]{\n        \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n      }\n    },\n    accountList[]{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      accountDetails,\n    },\n    \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n  }\n,\n      \n  _type == "contactMap" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    useCustomAddress,\n    customAddress,\n    customPhone,\n    customEmail,\n  }\n,\n      \n  _type == "teamSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    variant,\n    \n  teamMembers[]-> {\n  _id,\n  name,\n  position,\n  phoneNumber,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "gallerySection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  images[] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n  }\n,\n      \n  _type == "phoneImageCta" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  primaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  primaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    phoneNumber,\n  }\n,\n      \n  _type == "stepList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    steps[]{\n      _key,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    }\n  }\n\n  }\n,\n    seo,\n    openGraph{\n      title,\n      description,\n      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n    },\n    "selectedCategory": select(\n      $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{\n        _id,\n        name,\n        "slug": slug.current,\n        \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        \n  heroImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n        customFilters,\n        \n  pageBuilder[]{\n    ...,\n    _type,\n      \n  _type == "heroCarousel" => {\n    ...,\n    slides[]{\n      \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n      \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    brands[]->{\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    }\n  }\n,\n      \n  _type == "heroStatic" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    showBlocks,\n    blocksHeading,\n    blocks[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  }\n,\n      \n  _type == "latestPublication" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  publication-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "imageTextColumns" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "blurLinesTextImage" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n      \n  _type == "imageWithVideo" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    youtubeId,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "imageWithTextBoxes" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    boxes[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    cta{\n      showCta,\n      \n  ctaParagraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    }\n  }\n,\n      \n  _type == "featuredPublications" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  publications[]-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "featuredProducts" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  newProducts[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  bestsellers[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsMarquee" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  backgroundImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  topBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n    \n  bottomBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  ctaText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    "brands": \n  *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n\n  }\n,\n      \n  _type == "faqSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    displayMode,\n    \n  faqList[]-> {\n  _id,\n  _createdAt,\n  question,\n  \n  answer[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n      contactPeople{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        contactPersons[]{\n         \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n        }\n      },\n      contactForm{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        buttonText,\n        \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n      }\n  }\n,\n      \n  _type == "contactForm" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    contactPeople{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      contactPersons[]{\n        \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n      }\n    },\n    accountList[]{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      accountDetails,\n    },\n    \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n  }\n,\n      \n  _type == "contactMap" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    useCustomAddress,\n    customAddress,\n    customPhone,\n    customEmail,\n  }\n,\n      \n  _type == "teamSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    variant,\n    \n  teamMembers[]-> {\n  _id,\n  name,\n  position,\n  phoneNumber,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "gallerySection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  images[] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n  }\n,\n      \n  _type == "phoneImageCta" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  primaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  primaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    phoneNumber,\n  }\n,\n      \n  _type == "stepList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    steps[]{\n      _key,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    }\n  }\n\n  }\n,\n        seo,\n        openGraph{\n          title,\n          description,\n          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n        },\n        parentCategory->{\n          _id,\n          name,\n          "slug": slug.current\n        }\n      },\n      null\n    ),\n    "categories": *[_type == "productCategorySub" && defined(slug.current)] | order(orderRank){\n      _id,\n      name,\n      description,\n      "slug": slug.current,\n      parentCategory->{\n        _id,\n        name,\n        "slug": slug.current\n      },\n      "count": count(*[_type == "product" && references(^._id) && defined(slug.current)])\n    },\n    "brands": *[_type == "brand" && defined(slug.current)] | order(orderRank){\n      _id,\n      name,\n      "slug": slug.current\n    },\n    "totalCount": select(\n      $category != "" => count(*[\n        _type == "product" \n        && defined(slug.current)\n        && $category in categories[]->slug.current\n      ]),\n      count(*[_type == "product" && defined(slug.current)])\n    ),\n    "maxPrice": select(\n      $category != "" => math::max(*[\n        _type == "product" \n        && defined(slug.current)\n        && $category in categories[]->slug.current\n        && defined(price)\n      ].price),\n      math::max(*[_type == "product" && defined(slug.current) && defined(price)].price)\n    )\n  }\n': QueryProductsPageDataResult;
-    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(_createdAt desc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingNewestResult;
-    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(_createdAt asc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingOldestResult;
-    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(price asc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingPriceAscResult;
-    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(price desc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingPriceDescResult;
-    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(orderRank asc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingOrderRankResult;
+    '\n  *[_type == "products"][0] {\n    _id,\n    _type,\n    "slug": slug.current,\n    name,\n    \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  heroImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n      \n  _type == "heroCarousel" => {\n    ...,\n    slides[]{\n      \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n      \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    brands[]->{\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    }\n  }\n,\n      \n  _type == "heroStatic" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    showBlocks,\n    blocksHeading,\n    blocks[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  }\n,\n      \n  _type == "latestPublication" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  publication-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "imageTextColumns" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "blurLinesTextImage" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n      \n  _type == "imageWithVideo" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    youtubeId,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "imageWithTextBoxes" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    boxes[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    cta{\n      showCta,\n      \n  ctaParagraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    }\n  }\n,\n      \n  _type == "featuredPublications" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  publications[]-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "featuredProducts" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  newProducts[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  bestsellers[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsMarquee" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  backgroundImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  topBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n    \n  bottomBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  ctaText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    "brands": \n  *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n\n  }\n,\n      \n  _type == "faqSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    displayMode,\n    \n  faqList[]-> {\n  _id,\n  _createdAt,\n  question,\n  \n  answer[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n      contactPeople{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        contactPersons[]{\n         \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n        }\n      },\n      contactForm{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        buttonText,\n        \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n      }\n  }\n,\n      \n  _type == "contactForm" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    contactPeople{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      contactPersons[]{\n        \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n      }\n    },\n    accountList[]{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      accountDetails,\n    },\n    \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n  }\n,\n      \n  _type == "contactMap" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    useCustomAddress,\n    customAddress,\n    customPhone,\n    customEmail,\n  }\n,\n      \n  _type == "teamSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    variant,\n    \n  teamMembers[]-> {\n  _id,\n  name,\n  position,\n  phoneNumber,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "gallerySection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  images[] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n  }\n,\n      \n  _type == "phoneImageCta" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  primaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  primaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    phoneNumber,\n  }\n,\n      \n  _type == "stepList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    steps[]{\n      _key,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    }\n  }\n\n  }\n,\n    seo,\n    openGraph{\n      title,\n      description,\n      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n    },\n    "selectedCategory": select(\n      $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{\n        _id,\n        name,\n        "slug": slug.current,\n        \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        \n  heroImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n        customFilters,\n        "productsWithFilters": *[\n          _type == "product" \n          && defined(slug.current)\n          && count(categories) > 0\n          && $category in categories[]->slug.current\n          && defined(customFilterValues)\n          && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n          && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n          && ($minPrice == 0 || price >= $minPrice)\n          && ($maxPrice == 999999999 || price <= $maxPrice)\n        ]{\n          _id,\n          customFilterValues\n        },\n        \n  pageBuilder[]{\n    ...,\n    _type,\n      \n  _type == "heroCarousel" => {\n    ...,\n    slides[]{\n      \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n      \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    brands[]->{\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    }\n  }\n,\n      \n  _type == "heroStatic" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    showBlocks,\n    blocksHeading,\n    blocks[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  }\n,\n      \n  _type == "latestPublication" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  publication-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "imageTextColumns" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "blurLinesTextImage" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n      \n  _type == "imageWithVideo" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    youtubeId,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "imageWithTextBoxes" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    boxes[]{\n      _key,\n      "iconUrl": icon.asset->url,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    },\n    cta{\n      showCta,\n      \n  ctaParagraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    }\n  }\n,\n      \n  _type == "featuredPublications" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  publications[]-> {\n  \n  _id,\n  _type,\n  _createdAt,\n  name,\n  \n  title[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  "publicationType": select(\n    _type == "review" => "Recenzja",\n    _type == "blog-article" => category->name,\n    "Artyku\u0142"\n  ),\n  "destinationType": select(\n    _type == "review" => coalesce(destinationType, "page"),\n    "page"\n  ),\n  "slug": select(\n    _type == "review" && destinationType == "page" => slug.current,\n    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],\n    _type == "review" && destinationType == "external" => externalUrl,\n    _type == "blog-article" => slug.current,\n    slug.current\n  ),\n  "openInNewTab": select(\n    _type == "review" && destinationType == "external" => true,\n    _type == "review" && destinationType == "pdf" => true,\n    false\n  ),\n\n  }\n\n  }\n,\n      \n  _type == "featuredProducts" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  newProducts[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  bestsellers[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  subtitle,\n  price,\n  isArchived,\n  brand->{\n    name,\n    "slug": slug.current,\n    \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  },\n  "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsMarquee" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nbutton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  backgroundImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  topBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n    \n  bottomBrands[]-> {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n,\n  }\n,\n      \n  _type == "brandsList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  ctaText[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    "brands": \n  *[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {\n  _id,\n  _createdAt,\n  "slug": slug.current,\n  name,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  }\n\n  }\n,\n      \n  _type == "faqSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    displayMode,\n    \n  faqList[]-> {\n  _id,\n  _createdAt,\n  question,\n  \n  answer[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n      contactPeople{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        contactPersons[]{\n         \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n        }\n      },\n      contactForm{\n        \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n        buttonText,\n        \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n      }\n  }\n,\n      \n  _type == "contactForm" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    contactPeople{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      contactPersons[]{\n        \n    _type == "contactPerson" => {\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    name,\n    phoneNumber,\n  }\n\n\n      }\n    },\n    accountList[]{\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      accountDetails,\n    },\n    \n  formState{\n    success{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n    error{\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText,\n    },\n  }\n\n  }\n,\n      \n  _type == "contactMap" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    useCustomAddress,\n    customAddress,\n    customPhone,\n    customEmail,\n  }\n,\n      \n  _type == "teamSection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    variant,\n    \n  teamMembers[]-> {\n  _id,\n  name,\n  position,\n  phoneNumber,\n  \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n  \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n  }\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n  }\n,\n      \n  _type == "gallerySection" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  images[] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n  }\n,\n      \n  _type == "phoneImageCta" => {\n    ...,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    \n  primaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  primaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \nctaButton{\n  text,\n  variant,\n  _key,\n  _type,\n  "openInNewTab": url.openInNewTab,\n  "href": select(\n    url.type == "internal" => url.internal->slug.current,\n    url.type == "external" => url.external,\n    url.href\n  ),\n}\n,\n    \n  secondaryHeading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  secondaryDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    phoneNumber,\n  }\n,\n      \n  _type == "stepList" => {\n    ...,\n    \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    steps[]{\n      _key,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  description[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n    }\n  }\n\n  }\n,\n        seo,\n        openGraph{\n          title,\n          description,\n          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n        },\n        parentCategory->{\n          _id,\n          name,\n          "slug": slug.current\n        }\n      },\n      null\n    ),\n    "categories": *[_type == "productCategorySub" && defined(slug.current)] {\n      _id,\n      name,\n      description,\n      "slug": slug.current,\n      parentCategory->{\n        _id,\n        name,\n        "slug": slug.current\n      },\n      "count": count(*[\n        _type == "product" \n        && defined(slug.current)\n        && count(categories) > 0\n        && references(^._id)\n        && ($category == "" || $category in categories[]->slug.current)\n        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n        && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n        && ($minPrice == 0 || price >= $minPrice)\n        && ($maxPrice == 999999999 || price <= $maxPrice)\n        && (\n          count($customFilters) == 0 ||\n          !defined(customFilterValues) ||\n          count($customFilters) <= count(customFilterValues[\n            select(\n              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n              false\n            )\n          ])\n        )\n      ])\n    } [count > 0] | order(orderRank),\n    "categoriesAll": *[_type == "productCategorySub" && defined(slug.current)] {\n      _id,\n      name,\n      description,\n      "slug": slug.current,\n      parentCategory->{\n        _id,\n        name,\n        "slug": slug.current\n      },\n      "count": count(*[\n        _type == "product" \n        && defined(slug.current)\n        && count(categories) > 0\n        && references(^._id)\n        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n        && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n        && ($minPrice == 0 || price >= $minPrice)\n        && ($maxPrice == 999999999 || price <= $maxPrice)\n      ])\n    } [count > 0] | order(orderRank),\n    "brands": *[_type == "brand" && defined(slug.current)] {\n      _id,\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      "count": count(*[\n        _type == "product" \n        && defined(slug.current)\n        && count(categories) > 0\n        && brand._ref == ^._id\n        && ($category == "" || $category in categories[]->slug.current)\n        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n        && ($minPrice == 0 || price >= $minPrice)\n        && ($maxPrice == 999999999 || price <= $maxPrice)\n        && (\n          count($customFilters) == 0 ||\n          !defined(customFilterValues) ||\n          count($customFilters) <= count(customFilterValues[\n            select(\n              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n              false\n            )\n          ])\n        )\n      ])\n    } [count > 0] | order(orderRank),\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ]),\n    "totalCountAll": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n    ]),\n    "maxPrice": math::max(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && defined(price)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ].price),\n    "minPrice": math::min(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && defined(price)\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ].price)\n  }\n': QueryProductsPageDataResult;
+    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(_createdAt desc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingNewestResult;
+    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(_createdAt asc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingOldestResult;
+    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(price asc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingPriceAscResult;
+    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(price desc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingPriceDescResult;
+    '\n  {\n    "products": *[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ] | order(orderRank asc) [$offset...$limit] {\n      _id,\n      _createdAt,\n      name,\n      subtitle,\n      "slug": slug.current,\n      price,\n      isArchived,\n      brand->{\n        name,\n        "slug": slug.current,\n        \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n      },\n      "mainImage": \n  imageGallery[0] {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n      \n  shortDescription[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    },\n    "totalCount": count(*[\n      _type == "product" \n      && defined(slug.current)\n      && count(categories) > 0\n      && ($category == "" || $category in categories[]->slug.current)\n      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)\n      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)\n      && ($minPrice == 0 || price >= $minPrice)\n      && ($maxPrice == 999999999 || price <= $maxPrice)\n      && (\n        count($customFilters) == 0 ||\n        !defined(customFilterValues) ||\n        count($customFilters) <= count(customFilterValues[\n          select(\n            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,\n            false\n          )\n        ])\n      )\n    ])\n  }\n': QueryProductsListingOrderRankResult;
+    '\n  *[_type == "productCategorySub" && slug.current == $category][0]{\n    _id,\n    name,\n    "slug": slug.current,\n    customFilters\n  }\n': QueryCategoryMetadataResult;
   }
 }

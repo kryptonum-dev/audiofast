@@ -105,7 +105,7 @@ export const product = defineType({
         },
       ],
       validation: (Rule) =>
-        Rule.min(1).error(
+        Rule.required().error(
           'Produkt musi należeć do co najmniej jednej kategorii'
         ),
       group: GROUP.MAIN_CONTENT,

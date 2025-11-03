@@ -35,7 +35,14 @@ type ProductsPageProps = {
 export async function generateMetadata() {
   const productsData = await sanityFetch<QueryProductsPageDataResult>({
     query: queryProductsPageData,
-    params: { category: '' },
+    params: {
+      category: '',
+      search: '',
+      brands: [],
+      minPrice: 0,
+      maxPrice: 999999999,
+      customFilters: [],
+    },
     tags: ['products'],
   });
 
@@ -54,22 +61,7 @@ export async function generateMetadata() {
 export default async function ProductsPage(props: ProductsPageProps) {
   const searchParams = await props.searchParams;
 
-  // Fetch products data first to get the real maxPrice
-  const productsData = await sanityFetch<QueryProductsPageDataResult>({
-    query: queryProductsPageData,
-    params: { category: '' },
-    tags: ['products', 'productCategorySub', 'product'],
-  });
-
-  if (!productsData) {
-    logWarn('Products page data not found');
-    notFound();
-  }
-
-  // Get the actual maximum price from all products
-  const actualMaxPrice = productsData.maxPrice!;
-
-  // Parse search params with validation
+  // Parse search params first (before fetching data)
   const currentPage = Number(searchParams.page) || 1;
   const searchTerm = searchParams.search || '';
   const hasSearchQuery = Boolean(searchTerm);
@@ -78,26 +70,48 @@ export default async function ProductsPage(props: ProductsPageProps) {
   // Otherwise use provided sortBy or default to 'newest'
   const sortBy = hasSearchQuery ? 'orderRank' : searchParams.sortBy || 'newest';
 
-  // Parse and validate prices with edge case handling
-  let minPrice = parsePrice(searchParams.minPrice, 0);
-  let maxPrice = parsePrice(
-    searchParams.maxPrice,
-    actualMaxPrice,
-    actualMaxPrice
-  );
+  // Parse brands early (needed for query)
+  const brands = parseBrands(searchParams.brands);
 
-  // Edge case 1: If minPrice > maxPrice, reset both to defaults
-  if (minPrice > maxPrice) {
-    minPrice = 0;
+  // Parse prices with initial defaults (will be validated after fetch)
+  let minPrice = parsePrice(searchParams.minPrice, 0);
+  let maxPrice = parsePrice(searchParams.maxPrice, 999999999, 999999999);
+
+  // Fetch products data with filter parameters
+  // This returns filtered categories, brands, and price range based on active filters
+  const productsData = await sanityFetch<QueryProductsPageDataResult>({
+    query: queryProductsPageData,
+    params: {
+      category: '',
+      search: searchTerm,
+      brands,
+      minPrice,
+      maxPrice,
+      customFilters: [],
+    },
+    tags: ['products', 'productCategorySub', 'product', 'brand'],
+  });
+
+  if (!productsData) {
+    logWarn('Products page data not found');
+    notFound();
+  }
+
+  // Get the actual maximum price from filtered products
+  // If no products match filters, maxPrice will be null, so fallback to a default
+  const actualMaxPrice = productsData.maxPrice ?? 100000;
+  const actualMinPrice = productsData.minPrice ?? 0;
+
+  // Validate and adjust price range based on filtered results
+  if (minPrice > actualMaxPrice) {
+    minPrice = actualMinPrice;
+  }
+  if (maxPrice > actualMaxPrice) {
     maxPrice = actualMaxPrice;
   }
-
-  // Edge case 2: maxPrice must be at least 1
   if (maxPrice < 1) {
-    maxPrice = 1;
+    maxPrice = actualMaxPrice;
   }
-
-  const brands = parseBrands(searchParams.brands);
 
   const breadcrumbsData = [
     {

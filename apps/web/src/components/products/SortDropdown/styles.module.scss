@@ -5,6 +5,11 @@
   width: fit-content;
   grid-area: sortDropdown;
   min-height: 2.75rem;
+
+  @media (max-width: 56.1875rem) {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 .trigger {

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
+import { ArticleBody } from '@/src/components/blog/ArticleBody';
 import BlogPostSchema from '@/src/components/schema/BlogPostSchema';
-import { ArticleBody } from '@/src/components/shared/ArticleBody';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';

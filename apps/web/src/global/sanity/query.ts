@@ -839,9 +839,14 @@ export const queryBlogArticles = defineQuery(`
 // ----------------------------------------
 
 // Query for products page data (layout, categories, current category, SEO)
+// Now includes filter-aware counts for categories, brands, and price range
 // Parameters:
 // - $category: category slug (optional) - empty string "" for main products page
-//   Format: "/kategoria/wzmacniacze/" (full slug with prefix)
+// - $search: search term (optional) - empty string "" for no search
+// - $brands: array of brand slugs (optional) - empty array [] for all brands
+// - $minPrice: minimum price (optional) - 0 for no minimum
+// - $maxPrice: maximum price (optional) - 999999999 for no maximum
+// - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
 export const queryProductsPageData = defineQuery(`
   *[_type == "products"][0] {
     _id,
@@ -867,6 +872,20 @@ export const queryProductsPageData = defineQuery(`
         ${portableTextFragment('description')},
         ${imageFragment('heroImage')},
         customFilters,
+        "productsWithFilters": *[
+          _type == "product" 
+          && defined(slug.current)
+          && count(categories) > 0
+          && $category in categories[]->slug.current
+          && defined(customFilterValues)
+          && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+          && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+          && ($minPrice == 0 || price >= $minPrice)
+          && ($maxPrice == 999999999 || price <= $maxPrice)
+        ]{
+          _id,
+          customFilterValues
+        },
         ${pageBuilderFragment},
         seo,
         openGraph{
@@ -882,7 +901,7 @@ export const queryProductsPageData = defineQuery(`
       },
       null
     ),
-    "categories": *[_type == "productCategorySub" && defined(slug.current)] | order(orderRank){
+    "categories": *[_type == "productCategorySub" && defined(slug.current)] {
       _id,
       name,
       description,
@@ -892,30 +911,142 @@ export const queryProductsPageData = defineQuery(`
         name,
         "slug": slug.current
       },
-      "count": count(*[_type == "product" && references(^._id) && defined(slug.current)])
-    },
-    "brands": *[_type == "brand" && defined(slug.current)] | order(orderRank){
+      "count": count(*[
+        _type == "product" 
+        && defined(slug.current)
+        && count(categories) > 0
+        && references(^._id)
+        && ($category == "" || $category in categories[]->slug.current)
+        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+        && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+        && ($minPrice == 0 || price >= $minPrice)
+        && ($maxPrice == 999999999 || price <= $maxPrice)
+        && (
+          count($customFilters) == 0 ||
+          !defined(customFilterValues) ||
+          count($customFilters) <= count(customFilterValues[
+            select(
+              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+              false
+            )
+          ])
+        )
+      ])
+    } [count > 0] | order(orderRank),
+    "categoriesAll": *[_type == "productCategorySub" && defined(slug.current)] {
       _id,
       name,
-      "slug": slug.current
-    },
-    "totalCount": select(
-      $category != "" => count(*[
+      description,
+      "slug": slug.current,
+      parentCategory->{
+        _id,
+        name,
+        "slug": slug.current
+      },
+      "count": count(*[
         _type == "product" 
         && defined(slug.current)
-        && $category in categories[]->slug.current
-      ]),
-      count(*[_type == "product" && defined(slug.current)])
-    ),
-    "maxPrice": select(
-      $category != "" => math::max(*[
+        && count(categories) > 0
+        && references(^._id)
+        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+        && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+        && ($minPrice == 0 || price >= $minPrice)
+        && ($maxPrice == 999999999 || price <= $maxPrice)
+      ])
+    } [count > 0] | order(orderRank),
+    "brands": *[_type == "brand" && defined(slug.current)] {
+      _id,
+      name,
+      "slug": slug.current,
+      ${imageFragment('logo')},
+      "count": count(*[
         _type == "product" 
         && defined(slug.current)
-        && $category in categories[]->slug.current
-        && defined(price)
-      ].price),
-      math::max(*[_type == "product" && defined(slug.current) && defined(price)].price)
-    )
+        && count(categories) > 0
+        && brand._ref == ^._id
+        && ($category == "" || $category in categories[]->slug.current)
+        && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+        && ($minPrice == 0 || price >= $minPrice)
+        && ($maxPrice == 999999999 || price <= $maxPrice)
+        && (
+          count($customFilters) == 0 ||
+          !defined(customFilterValues) ||
+          count($customFilters) <= count(customFilterValues[
+            select(
+              count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+              false
+            )
+          ])
+        )
+      ])
+    } [count > 0] | order(orderRank),
+    "totalCount": count(*[
+      _type == "product" 
+      && defined(slug.current)
+      && count(categories) > 0
+      && ($category == "" || $category in categories[]->slug.current)
+      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+      && ($minPrice == 0 || price >= $minPrice)
+      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        count($customFilters) == 0 ||
+        !defined(customFilterValues) ||
+        count($customFilters) <= count(customFilterValues[
+          select(
+            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+            false
+          )
+        ])
+      )
+    ]),
+    "totalCountAll": count(*[
+      _type == "product" 
+      && defined(slug.current)
+      && count(categories) > 0
+      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+      && ($minPrice == 0 || price >= $minPrice)
+      && ($maxPrice == 999999999 || price <= $maxPrice)
+    ]),
+    "maxPrice": math::max(*[
+      _type == "product" 
+      && defined(slug.current)
+      && count(categories) > 0
+      && defined(price)
+      && ($category == "" || $category in categories[]->slug.current)
+      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+      && (
+        count($customFilters) == 0 ||
+        !defined(customFilterValues) ||
+        count($customFilters) <= count(customFilterValues[
+          select(
+            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+            false
+          )
+        ])
+      )
+    ].price),
+    "minPrice": math::min(*[
+      _type == "product" 
+      && defined(slug.current)
+      && count(categories) > 0
+      && defined(price)
+      && ($category == "" || $category in categories[]->slug.current)
+      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+      && (
+        count($customFilters) == 0 ||
+        !defined(customFilterValues) ||
+        count($customFilters) <= count(customFilterValues[
+          select(
+            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+            false
+          )
+        ])
+      )
+    ].price)
   }
 `);
 
@@ -926,6 +1057,7 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
     "products": *[
       _type == "product" 
       && defined(slug.current)
+      && count(categories) > 0
       && ($category == "" || $category in categories[]->slug.current)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
@@ -960,6 +1092,7 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
     "totalCount": count(*[
       _type == "product" 
       && defined(slug.current)
+      && count(categories) > 0
       && ($category == "" || $category in categories[]->slug.current)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
@@ -1033,3 +1166,14 @@ export function getProductsListingQuery(sortBy: string = 'newest') {
 
 // Default export for backward compatibility (newest first)
 export const queryProductsListing = queryProductsListingNewest;
+
+// Lightweight query for category metadata only
+// Used to validate custom filters before main query
+export const queryCategoryMetadata = defineQuery(`
+  *[_type == "productCategorySub" && slug.current == $category][0]{
+    _id,
+    name,
+    "slug": slug.current,
+    customFilters
+  }
+`);

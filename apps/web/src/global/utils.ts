@@ -587,3 +587,68 @@ export function matchSlugToFilterName(
     (filterName) => slugifyFilterName(filterName) === slugifiedName
   );
 }
+
+/**
+ * Extract raw custom filters from search params without validation
+ * This is used when we don't yet have the category's available filters
+ * Returns all non-standard params that could potentially be custom filters
+ *
+ * @param searchParams - Search params from URL
+ * @returns Array of slugified filter objects that need validation later
+ */
+export function extractRawCustomFilters(
+  searchParams: Record<string, string | string[] | undefined>
+): Array<{ slugifiedName: string; value: string }> {
+  const rawFilters: Array<{ slugifiedName: string; value: string }> = [];
+
+  for (const [key, value] of Object.entries(searchParams)) {
+    // Skip standard params and undefined/empty values
+    if (STANDARD_SEARCH_PARAMS.includes(key) || !value) {
+      continue;
+    }
+
+    // For custom filters, use the first value if it's an array
+    const filterValue = Array.isArray(value) ? value[0] : value;
+
+    // Only add if we have a valid string value
+    if (filterValue) {
+      rawFilters.push({
+        slugifiedName: key,
+        value: filterValue,
+      });
+    }
+  }
+
+  return rawFilters;
+}
+
+/**
+ * Validate raw custom filters against available filters from category
+ * Converts slugified names to original filter names
+ *
+ * @param rawFilters - Raw filters extracted from URL
+ * @param availableFilters - Available filter names from category
+ * @returns Validated array of filter objects with original names
+ */
+export function validateCustomFilters(
+  rawFilters: Array<{ slugifiedName: string; value: string }>,
+  availableFilters: string[]
+): Array<{ filterName: string; value: string }> {
+  const validatedFilters: Array<{ filterName: string; value: string }> = [];
+
+  for (const { slugifiedName, value } of rawFilters) {
+    const originalFilterName = matchSlugToFilterName(
+      slugifiedName,
+      availableFilters
+    );
+
+    if (originalFilterName) {
+      validatedFilters.push({
+        filterName: originalFilterName,
+        value,
+      });
+    }
+  }
+
+  return validatedFilters;
+}

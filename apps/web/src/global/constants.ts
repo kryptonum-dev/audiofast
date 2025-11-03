@@ -64,7 +64,7 @@ export const BLOG_ITEMS_PER_PAGE: number = 12;
  * @type {number}
  */
 
-export const PRODUCTS_ITEMS_PER_PAGE: number = 8;
+export const PRODUCTS_ITEMS_PER_PAGE: number = 4;
 
 /**
  * Sort options for product listings.

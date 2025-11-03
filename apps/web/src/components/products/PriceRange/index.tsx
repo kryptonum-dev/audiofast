@@ -37,6 +37,18 @@ export default function PriceRange({
     setMaxInputValue(maxValue.toString());
   }, [maxValue]);
 
+  // When maxLimit changes, clamp the max value if it exceeds the new limit
+  // This handles cases like: user sets 180,000 → filters by brand → new limit is 155,000
+  // But preserves user's choice if it's within the new limit (e.g., 60,000 → new limit 155,000)
+  useEffect(() => {
+    if (maxValue > maxLimit) {
+      const clampedMax = maxLimit;
+      setLocalMax(clampedMax);
+      setMaxInputValue(clampedMax.toString());
+      onMaxChange(clampedMax);
+    }
+  }, [maxLimit, maxValue, onMaxChange]);
+
   const handleMinRangeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = Number(e.target.value);

@@ -1,8 +1,15 @@
 'use client';
 
+import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from 'react';
 
 import type { BrandType, ProductCategoryType } from '@/src/global/types';
 
@@ -41,63 +48,204 @@ export default function ProductsAside({
   const router = useRouter();
   const [, startTransition] = useTransition();
 
-  // Local state for filters (not applied until "Filtruj" is clicked)
-  const [searchValue, setSearchValue] = useState(initialSearch);
-  // initialBrands now comes as clean slugs from parseBrands (e.g., "aurender", "dcs")
-  const [selectedBrands, setSelectedBrands] = useState<string[]>(initialBrands);
-  const [minPriceState, setMinPrice] = useState<number>(initialMinPrice);
-  const [maxPriceState, setMaxPrice] = useState<number>(effectiveMaxPrice);
-  const [expandedParents, setExpandedParents] = useState<Set<string>>(
-    new Set()
+  // Consolidated local state for all filters (not applied until "Filtruj" is clicked)
+  // Single state object = single state update = fewer re-renders
+  const [filters, setFilters] = useState({
+    search: initialSearch,
+    brands: initialBrands, // Clean slugs from parseBrands (e.g., "aurender", "dcs")
+    minPrice: initialMinPrice,
+    maxPrice: effectiveMaxPrice,
+  });
+
+  // Group categories by parent to determine initial expanded state
+  const groupedCategories = useMemo(() => {
+    return categories.reduce(
+      (acc, category) => {
+        const parentName =
+          category.parentCategory?.name || 'Pozostałe kategorie';
+        const parentSlug = category.parentCategory?.slug || 'inne';
+
+        if (!acc[parentName]) {
+          acc[parentName] = {
+            slug: parentSlug,
+            categories: [],
+          };
+        }
+        acc[parentName].categories.push(category);
+        return acc;
+      },
+      {} as Record<string, { slug: string; categories: ProductCategoryType[] }>
+    );
+  }, [categories]);
+
+  // Auto-expand parent categories that contain the active subcategory
+  const getInitialExpandedParents = useCallback((): Set<string> => {
+    const expanded = new Set<string>();
+
+    if (currentCategory) {
+      // Find parent that contains the active category
+      Object.entries(groupedCategories).forEach(
+        ([parentName, { categories: subCategories }]) => {
+          const hasActiveChild = subCategories.some((cat) => {
+            const cleanSlug =
+              cat.slug?.replace('/kategoria/', '').replace(/\//g, '') || '';
+            return cleanSlug === currentCategory;
+          });
+
+          if (hasActiveChild) {
+            expanded.add(parentName);
+          }
+        }
+      );
+    }
+
+    return expanded;
+  }, [currentCategory, groupedCategories]);
+
+  const [expandedParents, setExpandedParents] = useState<Set<string>>(() =>
+    getInitialExpandedParents()
   );
   const [showAllBrands, setShowAllBrands] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Sync local state with props when they change (e.g., when filters are cleared via URL)
+  // Single useEffect = single state update = single re-render (instead of 4)
+  useEffect(() => {
+    setFilters({
+      search: initialSearch,
+      brands: initialBrands,
+      minPrice: initialMinPrice,
+      maxPrice: initialMaxPrice ?? maxPrice,
+    });
+  }, [
+    initialSearch,
+    initialBrands,
+    initialMinPrice,
+    initialMaxPrice,
+    maxPrice,
+  ]);
+
+  // Update expanded parents when currentCategory changes
+  useEffect(() => {
+    setExpandedParents(getInitialExpandedParents());
+  }, [currentCategory, getInitialExpandedParents]);
+
+  // ESC key to close mobile menu
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen]);
 
   // Extract brand slug from full path like "/marki/aurender/" -> "aurender"
-  const getBrandSlug = (brand: BrandType): string => {
+  const getBrandSlug = useCallback((brand: BrandType): string => {
     if (!brand.slug) return brand._id;
     return brand.slug.replace('/marki/', '').replace(/\//g, '') || brand._id;
-  };
+  }, []);
 
-  // Sort brands: active brands from URL params first, then the rest
-  const sortedBrands = [...brands].sort((a, b) => {
-    const aSlug = getBrandSlug(a);
-    const bSlug = getBrandSlug(b);
-    const aActive = initialBrands.includes(aSlug);
-    const bActive = initialBrands.includes(bSlug);
+  // Build search params string to preserve filters when switching categories
+  // Keeps: search, brands, minPrice, maxPrice
+  // Excludes: custom category-specific filters (handled by URL structure)
+  const buildSearchParamsString = useMemo(() => {
+    const params = new URLSearchParams();
 
-    // If one is active (in URL) and the other isn't, active comes first
-    if (aActive && !bActive) return -1;
-    if (!aActive && bActive) return 1;
+    // Add search term if present
+    if (initialSearch.trim()) {
+      params.set('search', initialSearch.trim());
+    }
 
-    // If both active or both not active, maintain original order
-    return 0;
-  });
+    // Add selected brands
+    if (initialBrands.length > 0) {
+      params.set('brands', initialBrands.join(','));
+    }
+
+    // Add price range if not default
+    if (initialMinPrice > 0) {
+      params.set('minPrice', initialMinPrice.toString());
+    }
+    if (initialMaxPrice !== undefined && initialMaxPrice < maxPrice) {
+      params.set('maxPrice', initialMaxPrice.toString());
+    }
+
+    const queryString = params.toString();
+    return queryString ? `?${queryString}` : '';
+  }, [
+    initialSearch,
+    initialBrands,
+    initialMinPrice,
+    initialMaxPrice,
+    maxPrice,
+  ]);
+
+  // Merge brands from query with active brands from URL
+  // This ensures brands with 0 count still appear if they're checked
+  const allBrands = useMemo(() => {
+    const brandMap = new Map<string, BrandType>();
+
+    // Add all brands from query (with their actual counts)
+    brands.forEach((brand) => {
+      const slug = getBrandSlug(brand);
+      brandMap.set(slug, brand);
+    });
+
+    // Add active brands that aren't in query results (they have 0 count in current context)
+    initialBrands.forEach((activeSlug) => {
+      if (!brandMap.has(activeSlug)) {
+        // Brand is active but has 0 products with current filters
+        // Create a placeholder brand entry
+        brandMap.set(activeSlug, {
+          _id: activeSlug,
+          name: activeSlug.charAt(0).toUpperCase() + activeSlug.slice(1), // Capitalize slug as name
+          slug: `/marki/${activeSlug}/`,
+          logo: {
+            id: null,
+            preview: null,
+            alt: null,
+            naturalWidth: null,
+            naturalHeight: null,
+            hotspot: null,
+            crop: null,
+          }, // Placeholder brand without logo
+          count: 0,
+        });
+      }
+    });
+
+    return Array.from(brandMap.values());
+  }, [brands, initialBrands, getBrandSlug]);
+
+  // Sort brands: selected brands first, then by count (descending)
+  const sortedBrands = useMemo(() => {
+    return [...allBrands].sort((a, b) => {
+      const aSlug = getBrandSlug(a);
+      const bSlug = getBrandSlug(b);
+      const aActive = initialBrands.includes(aSlug);
+      const bActive = initialBrands.includes(bSlug);
+
+      // If one is active (in URL) and the other isn't, active comes first
+      if (aActive && !bActive) return -1;
+      if (!aActive && bActive) return 1;
+
+      // If both have same active state, sort by count (descending)
+      const aCount = a.count ?? 0;
+      const bCount = b.count ?? 0;
+      return bCount - aCount;
+    });
+  }, [allBrands, initialBrands, getBrandSlug]);
 
   // Calculate initial limit: at least 8, but show all active brands if more than 8 are active
   const BRANDS_INITIAL_LIMIT = 8;
   const activeBrandsCount = initialBrands.length;
   const initialLimit = Math.max(BRANDS_INITIAL_LIMIT, activeBrandsCount);
 
-  const visibleBrands = showAllBrands
-    ? sortedBrands
-    : sortedBrands.slice(0, initialLimit);
-
-  // Group categories by parent
-  const groupedCategories = categories.reduce(
-    (acc, category) => {
-      const parentName = category.parentCategory?.name || 'Pozostałe kategorie';
-      const parentSlug = category.parentCategory?.slug || 'inne';
-
-      if (!acc[parentName]) {
-        acc[parentName] = {
-          slug: parentSlug,
-          categories: [],
-        };
-      }
-      acc[parentName].categories.push(category);
-      return acc;
-    },
-    {} as Record<string, { slug: string; categories: ProductCategoryType[] }>
+  const visibleBrands = useMemo(
+    () => (showAllBrands ? sortedBrands : sortedBrands.slice(0, initialLimit)),
+    [showAllBrands, sortedBrands, initialLimit]
   );
 
   const toggleParent = (parentName: string) => {
@@ -113,33 +261,47 @@ export default function ProductsAside({
   };
 
   const toggleBrand = (brandSlug: string) => {
-    setSelectedBrands((prev) => {
-      if (prev.includes(brandSlug)) {
-        return prev.filter((slug) => slug !== brandSlug);
-      }
-      return [...prev, brandSlug];
-    });
+    setFilters((prev) => ({
+      ...prev,
+      brands: prev.brands.includes(brandSlug)
+        ? prev.brands.filter((slug) => slug !== brandSlug)
+        : [...prev.brands, brandSlug],
+    }));
   };
 
   const applyFilters = () => {
-    const params = new URLSearchParams();
+    // Start with current URL params to preserve custom filters
+    const params = new URLSearchParams(window.location.search);
 
-    // Add search term
-    if (searchValue.trim()) {
-      params.set('search', searchValue.trim());
+    // Remove page param to reset pagination
+    params.delete('page');
+
+    // Update sidebar-managed filters
+    // Search
+    if (filters.search.trim()) {
+      params.set('search', filters.search.trim());
+    } else {
+      params.delete('search');
     }
 
-    // Add selected brands
-    if (selectedBrands.length > 0) {
-      params.set('brands', selectedBrands.join(','));
+    // Brands
+    if (filters.brands.length > 0) {
+      params.set('brands', filters.brands.join(','));
+    } else {
+      params.delete('brands');
     }
 
-    // Add price range
-    if (minPriceState > 0) {
-      params.set('minPrice', minPriceState.toString());
+    // Price range
+    if (filters.minPrice > 0) {
+      params.set('minPrice', filters.minPrice.toString());
+    } else {
+      params.delete('minPrice');
     }
-    if (maxPriceState < maxPrice) {
-      params.set('maxPrice', maxPriceState.toString());
+
+    if (filters.maxPrice < maxPrice) {
+      params.set('maxPrice', filters.maxPrice.toString());
+    } else {
+      params.delete('maxPrice');
     }
 
     const queryString = params.toString();
@@ -148,16 +310,42 @@ export default function ProductsAside({
     startTransition(() => {
       router.push(newUrl);
     });
+
+    // Close mobile menu after applying filters
+    setIsOpen(false);
   };
 
   const clearFilters = () => {
-    setSearchValue('');
-    setSelectedBrands([]);
-    setMinPrice(0);
-    setMaxPrice(maxPrice);
-    startTransition(() => {
-      router.push(basePath);
+    // Start with current URL params to preserve custom filters
+    const params = new URLSearchParams(window.location.search);
+
+    // Remove only sidebar-managed filters
+    params.delete('search');
+    params.delete('brands');
+    params.delete('minPrice');
+    params.delete('maxPrice');
+    params.delete('page');
+
+    // Custom filters (category-specific) are preserved automatically
+    // because we only delete the sidebar params
+
+    // Reset local state for sidebar filters
+    setFilters({
+      search: '',
+      brands: [],
+      minPrice: 0,
+      maxPrice: maxPrice,
     });
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
+
+    startTransition(() => {
+      router.push(newUrl);
+    });
+
+    // Close mobile menu after clearing filters
+    setIsOpen(false);
   };
 
   // Check if filters are applied in URL params (not just local state)
@@ -171,152 +359,222 @@ export default function ProductsAside({
   const isAllProductsActive = !currentCategory || currentCategory === '';
 
   return (
-    <aside className={styles.sidebar}>
-      {/* Search Input */}
-      <Searchbar
-        mode="manual"
-        value={searchValue}
-        onChange={setSearchValue}
-        onSubmit={applyFilters}
-        placeholder="Szukaj"
+    <>
+      {/* Mobile Open Button */}
+      <button
+        type="button"
+        className={styles.mobileOpenButton}
+        onClick={() => setIsOpen(true)}
+        aria-expanded={isOpen}
+        aria-label="Otwórz filtry"
+      >
+        <MobileAsideIcon />
+        <span>Filtry</span>
+      </button>
+
+      {/* Overlay (backdrop) */}
+      <div
+        className={styles.overlay}
+        data-open={isOpen}
+        onClick={() => setIsOpen(false)}
+        aria-hidden="true"
       />
 
-      {/* Categories */}
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>Typ produktu</h3>
-        <nav className={styles.categories}>
-          {/* All Products Link */}
-          <Link
-            href="/produkty/"
-            className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
-            tabIndex={isAllProductsActive ? -1 : 0}
-          >
-            <span className={styles.categoryName}>Wszystkie produkty</span>
-            <span className={styles.categoryCount}>({totalCount})</span>
-          </Link>
+      {/* Aside */}
+      <aside
+        className={styles.sidebar}
+        data-open={isOpen}
+        role="dialog"
+        aria-modal={isOpen}
+      >
+        {/* Mobile Close Button */}
+        <button
+          type="button"
+          className={styles.mobileCloseButton}
+          onClick={() => setIsOpen(false)}
+          aria-label="Zamknij filtry"
+        >
+          <X size={24} strokeWidth={1.5} />
+        </button>
 
-          {/* Parent Categories with Sub Categories */}
-          {Object.entries(groupedCategories).map(
-            ([parentName, { categories: subCategories }]) => {
-              const isExpanded = expandedParents.has(parentName);
-              const hasActiveChild = subCategories.some(
-                (cat) => cat.slug === currentCategory
-              );
-
-              return (
-                <div key={parentName} className={styles.parentGroup}>
-                  <button
-                    type="button"
-                    className={`${styles.parentItem} ${hasActiveChild ? styles.hasActive : ''}`}
-                    onClick={() => toggleParent(parentName)}
-                  >
-                    <span className={styles.categoryName}>{parentName}</span>
-                    <ChevronIcon direction={isExpanded ? 'up' : 'down'} />
-                  </button>
-
-                  {isExpanded && (
-                    <div className={styles.subCategories}>
-                      {subCategories.map((category) => {
-                        const categorySlug = category.slug || '';
-                        const isActive = currentCategory === categorySlug;
-
-                        return (
-                          <Link
-                            key={category._id}
-                            href={`/produkty${categorySlug}`}
-                            className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
-                            tabIndex={isActive ? -1 : 0}
-                          >
-                            <span className={styles.categoryName}>
-                              {category.name}
-                            </span>
-                            <span className={styles.categoryCount}>
-                              ({category.count})
-                            </span>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            }
-          )}
-        </nav>
-      </div>
-
-      {/* Brands */}
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>Marki</h3>
-        <div className={styles.checkboxGroup}>
-          {visibleBrands.map((brand) => {
-            const brandSlug = getBrandSlug(brand);
-            return (
-              <label key={brand._id} className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  className={styles.checkbox}
-                  checked={selectedBrands.includes(brandSlug)}
-                  onChange={() => toggleBrand(brandSlug)}
-                />
-                <span className={styles.checkboxText}>{brand.name}</span>
-              </label>
-            );
-          })}
-        </div>
-        {brands.length > initialLimit && (
-          <button
-            type="button"
-            className={styles.loadAllButton}
-            onClick={() => setShowAllBrands(!showAllBrands)}
-          >
-            {showAllBrands ? (
-              <>
-                <ChevronIcon direction="up" />
-                Zwiń
-              </>
-            ) : (
-              <>
-                <ChevronIcon direction="down" />
-                Wczytaj wszystkie
-                <span className={styles.count}>
-                  ({initialLimit}/{brands.length})
-                </span>
-              </>
-            )}
-          </button>
-        )}
-      </div>
-
-      {/* Price Range */}
-      <PriceRange
-        minValue={minPriceState}
-        maxValue={maxPriceState}
-        onMinChange={setMinPrice}
-        onMaxChange={setMaxPrice}
-        maxLimit={maxPrice}
-      />
-
-      {/* Filter Button */}
-      <div className={styles.filterActions}>
-        <Button
-          text="Filtruj"
-          variant="primary"
-          onClick={applyFilters}
-          className={styles.filterButton}
-          iconUsed="applyFilters"
+        {/* Search Input */}
+        <Searchbar
+          mode="manual"
+          value={filters.search}
+          onChange={(value) =>
+            setFilters((prev) => ({ ...prev, search: value }))
+          }
+          onSubmit={applyFilters}
+          placeholder="Szukaj"
         />
-        {hasAppliedFilters && (
+
+        {/* Categories */}
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>Typ produktu</h3>
+          <nav className={styles.categories}>
+            {/* All Products Link */}
+            <Link
+              href={`/produkty/${buildSearchParamsString}`}
+              className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
+              tabIndex={isAllProductsActive ? -1 : 0}
+            >
+              <span className={styles.categoryName}>Wszystkie produkty</span>
+              <span className={styles.categoryCount}>({totalCount})</span>
+            </Link>
+
+            {/* Parent Categories with Sub Categories */}
+            {Object.entries(groupedCategories).map(
+              ([parentName, { categories: subCategories }]) => {
+                const isExpanded = expandedParents.has(parentName);
+
+                // Extract clean slug from category path for comparison
+                // e.g., "/kategoria/glosniki-podlogowe/" -> "glosniki-podlogowe"
+                const hasActiveChild = subCategories.some((cat) => {
+                  const cleanSlug =
+                    cat.slug?.replace('/kategoria/', '').replace(/\//g, '') ||
+                    '';
+                  return cleanSlug === currentCategory;
+                });
+
+                return (
+                  <div key={parentName} className={styles.parentGroup}>
+                    <button
+                      type="button"
+                      className={`${styles.parentItem} ${hasActiveChild ? styles.hasActive : ''}`}
+                      onClick={() => toggleParent(parentName)}
+                    >
+                      <span className={styles.categoryName}>{parentName}</span>
+                      <ChevronIcon direction={isExpanded ? 'up' : 'down'} />
+                    </button>
+
+                    {isExpanded && (
+                      <div
+                        className={styles.subCategories}
+                        data-has-active={hasActiveChild}
+                      >
+                        {subCategories.map((category) => {
+                          const categorySlug = category.slug || '';
+                          // Extract clean slug for comparison
+                          const cleanSlug = categorySlug
+                            .replace('/kategoria/', '')
+                            .replace(/\//g, '');
+                          const isActive = currentCategory === cleanSlug;
+
+                          return (
+                            <Link
+                              key={category._id}
+                              href={`/produkty${categorySlug}${buildSearchParamsString}`}
+                              className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
+                              tabIndex={isActive ? -1 : 0}
+                            >
+                              <span className={styles.categoryName}>
+                                {category.name}
+                              </span>
+                              <span className={styles.categoryCount}>
+                                ({category.count})
+                              </span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+            )}
+          </nav>
+        </div>
+
+        {/* Brands */}
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>Marki</h3>
+          <div className={styles.checkboxGroup}>
+            {visibleBrands.map((brand) => {
+              const brandSlug = getBrandSlug(brand);
+              const hasNoResults = (brand.count ?? 0) === 0;
+              return (
+                <label
+                  key={brand._id}
+                  className={styles.checkboxLabel}
+                  data-no-results={hasNoResults}
+                >
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={filters.brands.includes(brandSlug)}
+                    onChange={() => toggleBrand(brandSlug)}
+                  />
+                  <p className={styles.checkboxText}>
+                    {brand.name}
+                    {brand.count !== undefined && (
+                      <span className={styles.brandCount}>
+                        {' '}
+                        ({brand.count})
+                      </span>
+                    )}
+                  </p>
+                </label>
+              );
+            })}
+          </div>
+          {allBrands.length > initialLimit && (
+            <button
+              type="button"
+              className={styles.loadAllButton}
+              onClick={() => setShowAllBrands(!showAllBrands)}
+            >
+              {showAllBrands ? (
+                <>
+                  <ChevronIcon direction="up" />
+                  Zwiń
+                </>
+              ) : (
+                <>
+                  <ChevronIcon direction="down" />
+                  Wczytaj wszystkie
+                  <span className={styles.count}>
+                    ({initialLimit}/{allBrands.length})
+                  </span>
+                </>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Price Range */}
+        <PriceRange
+          minValue={filters.minPrice}
+          maxValue={filters.maxPrice}
+          onMinChange={(value) =>
+            setFilters((prev) => ({ ...prev, minPrice: value }))
+          }
+          onMaxChange={(value) =>
+            setFilters((prev) => ({ ...prev, maxPrice: value }))
+          }
+          maxLimit={maxPrice}
+        />
+
+        {/* Filter Button */}
+        <div className={styles.filterActions}>
           <Button
-            text="Wyczyść filtry"
-            variant="secondary"
-            onClick={clearFilters}
-            className={styles.clearButton}
-            iconUsed="clearFilters"
+            text="Filtruj"
+            variant="primary"
+            onClick={applyFilters}
+            className={styles.filterButton}
+            iconUsed="applyFilters"
           />
-        )}
-      </div>
-    </aside>
+          {hasAppliedFilters && (
+            <Button
+              text="Wyczyść filtry"
+              variant="secondary"
+              onClick={clearFilters}
+              className={styles.clearButton}
+              iconUsed="clearFilters"
+            />
+          )}
+        </div>
+      </aside>
+    </>
   );
 }
 
@@ -336,5 +594,24 @@ const ChevronIcon = ({ direction }: { direction: 'up' | 'down' }) => (
       strokeWidth={1.5}
       d="M6 9l6 6 6-6"
     />
+  </svg>
+);
+
+const MobileAsideIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#a)"
+    >
+      <path d="M4 8h4v4H4V8ZM6 4v4M6 12v8M10 14h4v4h-4v-4ZM12 4v10M12 18v2M16 5h4v4h-4V5ZM18 4v1M18 9v11" />
+    </g>
+    <defs>
+      <clipPath id="a">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
   </svg>
 );

@@ -5,11 +5,11 @@ import type {
 } from '@/src/global/sanity/sanity.types';
 
 import PortableText from '../../portableText';
+import Image from '../../shared/Image';
 import DateBox from '../../ui/DateBox';
 import ProductCard from '../../ui/ProductCard';
 import PublicationType from '../../ui/PublicationType';
 import TableOfContent from '../../ui/TableOfContent';
-import Image from '../Image';
 import styles from './styles.module.scss';
 
 type Props =
