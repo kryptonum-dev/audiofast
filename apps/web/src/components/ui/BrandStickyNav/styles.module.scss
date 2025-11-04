@@ -1,0 +1,95 @@
+.brandStickyNav {
+  position: sticky;
+  top: 4.75rem; // Header height (76px)
+  z-index: 100;
+  padding: 1rem 2rem 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(0.625rem);
+  transition: box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.scrolled {
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.05);
+  }
+
+  .container {
+    max-width: 80rem;
+    margin: 0 auto;
+
+    .pillsWrapper {
+      display: flex;
+      gap: 0.125rem;
+      padding: 0.125rem;
+      background: var(--neutral-200);
+      border-radius: 31.25rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .pill {
+        flex: 1;
+        min-width: max-content;
+        padding: 0.5rem 2rem;
+        background: transparent;
+        border: none;
+        border-radius: 31.25rem;
+        font-family: var(--font-family-poppins);
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: -0.02625rem;
+        color: var(--neutral-black);
+        text-align: center;
+        cursor: pointer;
+        transition:
+          background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+          color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.05);
+        }
+
+        &:focus-visible {
+          outline: 0.125rem solid var(--primary-red);
+          outline-offset: 0.125rem;
+        }
+
+        &.active {
+          background: var(--neutral-700);
+          color: var(--neutral-200);
+          border: 0.0625rem solid var(--primary-red);
+        }
+      }
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    top: 3.75rem; // Adjusted for mobile header
+    padding: 0.75rem 1rem 0;
+
+    .container {
+      .pillsWrapper {
+        gap: 0.5rem;
+        padding: 0;
+        background: transparent;
+
+        .pill {
+          flex: none;
+          padding: 0.5rem 1.5rem;
+          background: var(--neutral-200);
+          font-size: 0.8125rem;
+
+          &:hover {
+            background: var(--neutral-300);
+          }
+
+          &.active {
+            background: var(--neutral-700);
+          }
+        }
+      }
+    }
+  }
+}

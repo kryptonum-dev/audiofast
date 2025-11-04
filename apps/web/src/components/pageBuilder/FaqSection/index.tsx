@@ -26,17 +26,26 @@ export default function FaqSection({
   const showContactSection =
     displayMode === 'both' || displayMode === 'contactOnly';
 
+  const isContactOnly = displayMode === 'contactOnly';
+
   return (
-    <section className={`${styles.faqSection} max-width`}>
+    <section
+      className={`${styles.faqSection} max-width`}
+      data-display-mode={displayMode}
+    >
       {showFaqList && <FaqSchema faqList={faqList} />}
-      <header className={styles.header}>
-        <PortableText
-          value={heading}
-          className={styles.heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
-        />
-        <PortableText value={description} className={styles.description} />
-      </header>
+      {!isContactOnly && (
+        <header className={styles.header}>
+          <PortableText
+            value={heading}
+            className={styles.heading}
+            headingLevel={index === 0 ? 'h1' : 'h2'}
+          />
+          {description && (
+            <PortableText value={description} className={styles.description} />
+          )}
+        </header>
+      )}
       {showFaqList && <FaqList faqList={faqList} />}
       {showContactSection && (
         <>
@@ -44,7 +53,15 @@ export default function FaqSection({
             <PortableText
               value={contactPeople!.heading}
               className={styles.heading}
-              headingLevel={index === 0 ? 'h2' : 'h3'}
+              headingLevel={
+                isContactOnly
+                  ? index === 0
+                    ? 'h1'
+                    : 'h2'
+                  : index === 0
+                    ? 'h2'
+                    : 'h3'
+              }
             />
             <div className={styles.personList}>
               {contactPeople!.contactPersons!.map((person, idx) => (
@@ -60,7 +77,11 @@ export default function FaqSection({
           </div>
           <div className={styles.divider}>Lub</div>
           <div className={styles.formWrapper}>
-            <ContactForm contactForm={contactForm} index={index} />
+            <ContactForm
+              contactForm={contactForm}
+              index={index}
+              isContactOnly={isContactOnly}
+            />
           </div>
         </>
       )}

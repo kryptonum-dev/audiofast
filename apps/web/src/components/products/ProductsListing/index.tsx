@@ -18,6 +18,7 @@ type ProductsListingProps = {
   category?: string;
   sortBy?: string;
   brands?: string[];
+  brandSlug?: string; // Add brand context for brand pages
   minPrice?: number;
   maxPrice?: number;
   customFilters?: Array<{ filterName: string; value: string }>;
@@ -31,6 +32,7 @@ export default async function ProductsListing({
   category = '',
   sortBy = 'newest',
   brands = [],
+  brandSlug,
   minPrice = 0,
   maxPrice = 999999999,
   customFilters = [],
@@ -38,6 +40,10 @@ export default async function ProductsListing({
 }: ProductsListingProps) {
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
+
+  // If brandSlug is provided, use it for filtering (override brands array)
+  // Otherwise, use the brands array as normal
+  const effectiveBrands = brandSlug ? [brandSlug] : brands;
 
   // Get the appropriate query based on sortBy parameter
   const query = getProductsListingQuery(sortBy);
@@ -49,7 +55,7 @@ export default async function ProductsListing({
       search: searchTerm || '',
       offset,
       limit,
-      brands,
+      brands: effectiveBrands,
       minPrice,
       maxPrice,
       customFilters,
@@ -68,7 +74,8 @@ export default async function ProductsListing({
   const urlSearchParams = new URLSearchParams();
   if (searchTerm) urlSearchParams.set('search', searchTerm);
   if (sortBy && sortBy !== 'newest') urlSearchParams.set('sortBy', sortBy);
-  if (brands.length > 0) {
+  // Only add brands to URL params if not using brandSlug (brandSlug is handled via route)
+  if (!brandSlug && brands.length > 0) {
     // Set brands as a comma-separated string
     urlSearchParams.set('brands', brands.join(','));
   }

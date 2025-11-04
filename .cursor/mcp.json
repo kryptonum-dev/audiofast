@@ -10,6 +10,15 @@
         "MCP_USER_ROLE": "developer"
       }
     },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "sbp_cb0e15f2bbea4b224dcfca456b5729df85e46427"
+      ]
+    },
     "Figma": {
       "url": "http://127.0.0.1:3845/mcp",
       "headers": {}

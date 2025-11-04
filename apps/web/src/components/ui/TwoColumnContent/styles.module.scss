@@ -1,0 +1,126 @@
+.twoColumnContent {
+  padding: 0 2rem;
+
+  .container {
+    background: var(--neutral-200);
+    border-radius: 0.5rem;
+    padding: 2rem;
+    overflow: hidden;
+
+    .heading {
+      font-family: var(--font-family-switzer);
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1.16;
+      letter-spacing: -0.045rem;
+      color: var(--neutral-700);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .contentWrapper {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 2rem;
+      align-items: start;
+
+      .column {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+
+        .content {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+
+          :global(.portable-text) {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-family: var(--font-family-poppins);
+            font-size: 0.875rem;
+            font-weight: 300;
+            line-height: 1.5;
+            color: var(--neutral-600);
+
+            strong {
+              font-weight: 400;
+              color: var(--neutral-black);
+            }
+
+            a {
+              color: var(--neutral-600);
+              text-decoration: underline;
+              transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+              &:hover {
+                color: var(--primary-red);
+              }
+            }
+
+            :global(figure) {
+              width: 100%;
+              aspect-ratio: 605 / 340;
+              border-radius: 0.5rem;
+              overflow: hidden;
+              background: var(--neutral-200);
+              margin: 1.5rem 0;
+
+              img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+          }
+        }
+      }
+
+      .divider {
+        width: 0.0625rem;
+        height: 100%;
+        background: var(--neutral-400);
+        min-height: 1rem;
+      }
+    }
+
+    .galleryWrapper {
+      margin-top: 2rem;
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    padding: 0 1rem;
+
+    .container {
+      padding: 1.5rem 1rem;
+
+      .heading {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .contentWrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+
+        .column {
+          gap: 2rem;
+
+          .content {
+            gap: 1rem;
+          }
+        }
+
+        .divider {
+          display: none;
+        }
+      }
+
+      .galleryWrapper {
+        margin-top: 1.5rem;
+      }
+    }
+  }
+}

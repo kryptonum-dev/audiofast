@@ -55,6 +55,11 @@ export default async function Page({
 }) {
   const { slug } = await params;
   const pageData = await fetchPageData(slug);
+  const pagesSlugs = await sanityFetch<{ slug: string }[]>({
+    query: queryAllPageSlugs,
+    tags: ['pagesSlugs'],
+  });
+  console.log(pagesSlugs);
 
   if (!pageData) {
     notFound();

@@ -149,13 +149,13 @@ export default function Pagination({
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      router.push(getPageUrl(currentPage - 1));
+      router.push(getPageUrl(currentPage - 1), { scroll: false });
     }
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      router.push(getPageUrl(currentPage + 1));
+      router.push(getPageUrl(currentPage + 1), { scroll: false });
     }
   };
 
@@ -209,7 +209,7 @@ function PageNumber({
   }
 
   return (
-    <Link href={href} className={styles.pageNumber}>
+    <Link href={href} className={styles.pageNumber} scroll={false}>
       {pageNum}
     </Link>
   );

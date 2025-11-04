@@ -1,4 +1,5 @@
 import { blurLinesTextImage } from './blur-lines-text-image';
+import { brandsByCategoriesSection } from './brands-by-categories-section';
 import { brandsList } from './brands-list';
 import { brandsMarquee } from './brands-marquee';
 import { contactForm } from './contact-form';
@@ -26,6 +27,7 @@ export const pageBuilderBlocks = [
   featuredProducts,
   brandsMarquee,
   brandsList,
+  brandsByCategoriesSection,
   faqSection,
   contactForm,
   contactMap,

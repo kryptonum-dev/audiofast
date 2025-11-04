@@ -95,7 +95,7 @@ export default function SortDropdown({
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
     startTransition(() => {
-      router.push(newUrl);
+      router.push(newUrl, { scroll: false });
     });
     setIsOpen(false);
   };

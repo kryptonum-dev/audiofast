@@ -13,7 +13,6 @@ import socialMedia from './collections/social-media';
 import { store } from './collections/store';
 import { teamMember } from './collections/team-member';
 import { blog } from './singletons/blog';
-import { brands } from './singletons/brands';
 import { footer } from './singletons/footer';
 import { homePage } from './singletons/home-page';
 import { navbar } from './singletons/navbar';
@@ -35,7 +34,6 @@ export const singletons = [
   notFound,
   blog,
   products,
-  brands,
 ];
 
 export const collection = [

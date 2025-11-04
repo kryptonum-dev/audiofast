@@ -29,6 +29,8 @@ type ProductsAsideProps = {
   initialBrands?: string[];
   initialMinPrice?: number;
   initialMaxPrice?: number;
+  hideBrandFilter?: boolean; // Hide brand filter when on brand page
+  useCategorySearchParam?: boolean; // Use ?category=X instead of /kategoria/X path
 };
 
 export default function ProductsAside({
@@ -42,6 +44,8 @@ export default function ProductsAside({
   initialBrands = [],
   initialMinPrice = 0,
   initialMaxPrice,
+  hideBrandFilter = false,
+  useCategorySearchParam = false,
 }: ProductsAsideProps) {
   // Use actual max price from products if initialMaxPrice is not provided
   const effectiveMaxPrice = initialMaxPrice ?? maxPrice;
@@ -151,36 +155,72 @@ export default function ProductsAside({
   // Build search params string to preserve filters when switching categories
   // Keeps: search, brands, minPrice, maxPrice
   // Excludes: custom category-specific filters (handled by URL structure)
-  const buildSearchParamsString = useMemo(() => {
-    const params = new URLSearchParams();
+  // If useCategorySearchParam is true, also includes category in the params
+  const buildSearchParamsString = useCallback(
+    (categorySlug?: string) => {
+      const params = new URLSearchParams();
 
-    // Add search term if present
-    if (initialSearch.trim()) {
-      params.set('search', initialSearch.trim());
-    }
+      // Add category if using search param mode
+      if (useCategorySearchParam && categorySlug) {
+        params.set('category', categorySlug);
+      }
 
-    // Add selected brands
-    if (initialBrands.length > 0) {
-      params.set('brands', initialBrands.join(','));
-    }
+      // Add search term if present
+      if (initialSearch.trim()) {
+        params.set('search', initialSearch.trim());
+      }
 
-    // Add price range if not default
-    if (initialMinPrice > 0) {
-      params.set('minPrice', initialMinPrice.toString());
-    }
-    if (initialMaxPrice !== undefined && initialMaxPrice < maxPrice) {
-      params.set('maxPrice', initialMaxPrice.toString());
-    }
+      // Add selected brands
+      if (initialBrands.length > 0) {
+        params.set('brands', initialBrands.join(','));
+      }
 
-    const queryString = params.toString();
-    return queryString ? `?${queryString}` : '';
-  }, [
-    initialSearch,
-    initialBrands,
-    initialMinPrice,
-    initialMaxPrice,
-    maxPrice,
-  ]);
+      // Add price range if not default
+      if (initialMinPrice > 0) {
+        params.set('minPrice', initialMinPrice.toString());
+      }
+      if (initialMaxPrice !== undefined && initialMaxPrice < maxPrice) {
+        params.set('maxPrice', initialMaxPrice.toString());
+      }
+
+      const queryString = params.toString();
+      return queryString ? `?${queryString}` : '';
+    },
+    [
+      useCategorySearchParam,
+      initialSearch,
+      initialBrands,
+      initialMinPrice,
+      initialMaxPrice,
+      maxPrice,
+    ]
+  );
+
+  // Helper to build category URL
+  // If useCategorySearchParam is true: basePath?category=slug
+  // If useCategorySearchParam is false: basePath/kategoria/slug
+  const buildCategoryUrl = useCallback(
+    (categorySlug: string | null) => {
+      if (!categorySlug) {
+        // "All Products" link
+        return `${basePath}${buildSearchParamsString()}`;
+      }
+
+      // Clean slug (remove /kategoria/ prefix if present)
+      const cleanSlug = categorySlug
+        .replace('/kategoria/', '')
+        .replace(/\//g, '');
+
+      if (useCategorySearchParam) {
+        // Brand page mode: use search param
+        return `${basePath}${buildSearchParamsString(cleanSlug)}`;
+      } else {
+        // Products page mode: use path
+        return `${basePath}/kategoria/${cleanSlug}/${buildSearchParamsString()}`;
+      }
+    },
+    [basePath, buildSearchParamsString, useCategorySearchParam]
+  );
 
   // Merge brands from query with active brands from URL
   // This ensures brands with 0 count still appear if they're checked
@@ -276,6 +316,9 @@ export default function ProductsAside({
     // Remove page param to reset pagination
     params.delete('page');
 
+    // Keep category param if using search param mode
+    // (It's already in params from current URL)
+
     // Update sidebar-managed filters
     // Search
     if (filters.search.trim()) {
@@ -308,7 +351,7 @@ export default function ProductsAside({
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
     startTransition(() => {
-      router.push(newUrl);
+      router.push(newUrl, { scroll: false });
     });
 
     // Close mobile menu after applying filters
@@ -326,8 +369,14 @@ export default function ProductsAside({
     params.delete('maxPrice');
     params.delete('page');
 
+    // If using category search param mode (brand pages), also clear category
+    // This won't affect the category subpage because there category is in the path, not search params
+    if (useCategorySearchParam) {
+      params.delete('category');
+    }
+
     // Custom filters (category-specific) are preserved automatically
-    // because we only delete the sidebar params
+    // because we only delete the sidebar params and 'category' search param
 
     // Reset local state for sidebar filters
     setFilters({
@@ -341,7 +390,7 @@ export default function ProductsAside({
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
     startTransition(() => {
-      router.push(newUrl);
+      router.push(newUrl, { scroll: false });
     });
 
     // Close mobile menu after clearing filters
@@ -353,7 +402,10 @@ export default function ProductsAside({
     initialSearch.trim() !== '' ||
     initialBrands.length > 0 ||
     initialMinPrice > 0 ||
-    (initialMaxPrice !== undefined && initialMaxPrice < maxPrice);
+    (initialMaxPrice !== undefined && initialMaxPrice < maxPrice) ||
+    (useCategorySearchParam &&
+      currentCategory !== null &&
+      currentCategory !== '');
 
   // Check if we're on the main products page (no category selected)
   const isAllProductsActive = !currentCategory || currentCategory === '';
@@ -414,9 +466,10 @@ export default function ProductsAside({
           <nav className={styles.categories}>
             {/* All Products Link */}
             <Link
-              href={`/produkty/${buildSearchParamsString}`}
+              href={buildCategoryUrl(null)}
               className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
               tabIndex={isAllProductsActive ? -1 : 0}
+              scroll={false}
             >
               <span className={styles.categoryName}>Wszystkie produkty</span>
               <span className={styles.categoryCount}>({totalCount})</span>
@@ -463,9 +516,10 @@ export default function ProductsAside({
                           return (
                             <Link
                               key={category._id}
-                              href={`/produkty${categorySlug}${buildSearchParamsString}`}
+                              href={buildCategoryUrl(categorySlug)}
                               className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
                               tabIndex={isActive ? -1 : 0}
+                              scroll={false}
                             >
                               <span className={styles.categoryName}>
                                 {category.name}
@@ -486,60 +540,62 @@ export default function ProductsAside({
         </div>
 
         {/* Brands */}
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Marki</h3>
-          <div className={styles.checkboxGroup}>
-            {visibleBrands.map((brand) => {
-              const brandSlug = getBrandSlug(brand);
-              const hasNoResults = (brand.count ?? 0) === 0;
-              return (
-                <label
-                  key={brand._id}
-                  className={styles.checkboxLabel}
-                  data-no-results={hasNoResults}
-                >
-                  <input
-                    type="checkbox"
-                    className={styles.checkbox}
-                    checked={filters.brands.includes(brandSlug)}
-                    onChange={() => toggleBrand(brandSlug)}
-                  />
-                  <p className={styles.checkboxText}>
-                    {brand.name}
-                    {brand.count !== undefined && (
-                      <span className={styles.brandCount}>
-                        {' '}
-                        ({brand.count})
-                      </span>
-                    )}
-                  </p>
-                </label>
-              );
-            })}
+        {!hideBrandFilter && (
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Marki</h3>
+            <div className={styles.checkboxGroup}>
+              {visibleBrands.map((brand) => {
+                const brandSlug = getBrandSlug(brand);
+                const hasNoResults = (brand.count ?? 0) === 0;
+                return (
+                  <label
+                    key={brand._id}
+                    className={styles.checkboxLabel}
+                    data-no-results={hasNoResults}
+                  >
+                    <input
+                      type="checkbox"
+                      className={styles.checkbox}
+                      checked={filters.brands.includes(brandSlug)}
+                      onChange={() => toggleBrand(brandSlug)}
+                    />
+                    <p className={styles.checkboxText}>
+                      {brand.name}
+                      {brand.count !== undefined && (
+                        <span className={styles.brandCount}>
+                          {' '}
+                          ({brand.count})
+                        </span>
+                      )}
+                    </p>
+                  </label>
+                );
+              })}
+            </div>
+            {allBrands.length > initialLimit && (
+              <button
+                type="button"
+                className={styles.loadAllButton}
+                onClick={() => setShowAllBrands(!showAllBrands)}
+              >
+                {showAllBrands ? (
+                  <>
+                    <ChevronIcon direction="up" />
+                    Zwiń
+                  </>
+                ) : (
+                  <>
+                    <ChevronIcon direction="down" />
+                    Wczytaj wszystkie
+                    <span className={styles.count}>
+                      ({initialLimit}/{allBrands.length})
+                    </span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
-          {allBrands.length > initialLimit && (
-            <button
-              type="button"
-              className={styles.loadAllButton}
-              onClick={() => setShowAllBrands(!showAllBrands)}
-            >
-              {showAllBrands ? (
-                <>
-                  <ChevronIcon direction="up" />
-                  Zwiń
-                </>
-              ) : (
-                <>
-                  <ChevronIcon direction="down" />
-                  Wczytaj wszystkie
-                  <span className={styles.count}>
-                    ({initialLimit}/{allBrands.length})
-                  </span>
-                </>
-              )}
-            </button>
-          )}
-        </div>
+        )}
 
         {/* Price Range */}
         <PriceRange

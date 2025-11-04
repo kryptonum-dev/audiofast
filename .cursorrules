@@ -5,7 +5,7 @@
 ### Core Principles
 
 1. **Always nest child classes inside parent classes** - Maintain proper parent-child relationships throughout the SCSS file
-2. **Single media query at the end** - All responsive styles should be consolidated into ONE media query block at the bottom of the file
+2. **Nest media queries inside the main parent class** - All responsive styles should be nested inside the main class at the bottom, with the same child nesting structure
 3. **Maintain nesting structure in media queries** - Inside the media query, preserve the same parent-child nesting structure as desktop styles
 
 ### File Organization
@@ -26,24 +26,9 @@
   .anotherChild {
     // Styles
   }
-}
 
-// 2. Sibling classes (if any standalone classes exist)
-.siblingClass {
-  // Styles
-}
-
-// 3. Keyframe animations
-@keyframes animationName {
-  from {
-  }
-  to {
-  }
-}
-
-// 4. SINGLE media query at the end with same nesting structure
-@media (max-width: 56.1875rem) {
-  .parentClass {
+  // Media queries nested at the end of the parent class
+  @media (max-width: 56.1875rem) {
     // Mobile parent overrides
 
     .childClass {
@@ -58,9 +43,22 @@
       // Mobile overrides
     }
   }
+}
 
-  .siblingClass {
+// 2. Sibling classes (if any standalone classes exist)
+.siblingClass {
+  // Styles
+
+  @media (max-width: 56.1875rem) {
     // Mobile overrides
+  }
+}
+
+// 3. Keyframe animations (at file level, outside classes)
+@keyframes animationName {
+  from {
+  }
+  to {
   }
 }
 ```
@@ -71,7 +69,7 @@
 - **Nest pseudo-elements** inside their parent (e.g., `&::before`, `&::after`)
 - **Nest state classes** using `&` (e.g., `&.isOpen`, `&[data-state='active']`)
 - **Nest child elements** that are semantically related to the parent
-- **Nest media queries** only at the file level, not inside individual classes
+- **Nest media queries** inside the main parent class at the bottom, maintaining the same nesting structure
 
 ### Example: Properly Structured Component
 
@@ -107,10 +105,8 @@
   .label {
     font-weight: 500;
   }
-}
 
-@media (max-width: 56.1875rem) {
-  .button {
+  @media (max-width: 56.1875rem) {
     padding: 0.75rem;
     width: 100%;
 
@@ -151,9 +147,29 @@
 }
 ```
 
-### Single Media Query Rule
+### Media Query Nesting Rule
 
-✅ **CORRECT**: One media query at the end of the file
+✅ **CORRECT**: Media queries nested inside the main parent class
+
+```scss
+.sidebar {
+  // Desktop styles
+
+  .content {
+    // Desktop styles
+  }
+
+  @media (max-width: 56.1875rem) {
+    // Mobile parent overrides
+
+    .content {
+      // Mobile child overrides
+    }
+  }
+}
+```
+
+❌ **INCORRECT**: Media queries at file level requiring repeated class selectors
 
 ```scss
 .sidebar {
@@ -175,7 +191,7 @@
 }
 ```
 
-❌ **INCORRECT**: Multiple scattered media queries
+❌ **INCORRECT**: Scattered media queries breaking nesting structure
 
 ```scss
 .sidebar {
@@ -372,7 +388,7 @@ Always include focus states:
 ## Summary Checklist
 
 - [ ] All child classes nested inside parents
-- [ ] Single media query at the end of file
+- [ ] Media queries nested inside main parent class (not at file level)
 - [ ] Media query maintains same nesting structure
 - [ ] All units in rem (except letter-spacing in em)
 - [ ] Transitions specify properties (no `all`)
@@ -381,3 +397,4 @@ Always include focus states:
 - [ ] Focus states included for interactive elements
 - [ ] Comments separate major sections
 - [ ] Z-index values follow scale
+- [ ] Keyframe animations at file level (outside classes)

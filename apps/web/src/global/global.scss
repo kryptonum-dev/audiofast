@@ -511,3 +511,11 @@ h4 .link {
 .margin-bottom-sm {
   margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 2rem);
 }
+
+.margin-bottom-lg {
+  margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+}
+
+.br-md {
+  border-radius: 0.5rem;
+}

@@ -15,19 +15,6 @@ export const faqSection = defineType({
   description:
     'Sekcja z najczęściej zadawanymi pytaniami, opcją kontaktu z zespołem i formularzem kontaktowym',
   fields: [
-    customPortableText({
-      name: 'heading',
-      title: 'Nagłówek sekcji',
-      description:
-        'Główny tytuł sekcji FAQ, np. "Najczęściej zadawane pytania"',
-      type: 'heading',
-    }),
-    customPortableText({
-      name: 'description',
-      title: 'Opis sekcji',
-      description:
-        'Krótki opis wprowadzający do sekcji FAQ, wyjaśniający czego można się spodziewać',
-    }),
     defineField({
       name: 'displayMode',
       title: 'Co wyświetlić w sekcji',
@@ -45,6 +32,44 @@ export const faqSection = defineType({
       initialValue: 'both',
       validation: (Rule) =>
         Rule.required().error('Musisz wybrać tryb wyświetlania'),
+    }),
+    customPortableText({
+      name: 'heading',
+      title: 'Nagłówek sekcji',
+      description:
+        'Główny tytuł sekcji FAQ, np. "Najczęściej zadawane pytania"',
+      type: 'heading',
+      validation: (Rule) =>
+        Rule.custom((value, { parent }) => {
+          const displayMode = (parent as { displayMode?: string })?.displayMode;
+          const hiddenForContactOnly = displayMode === 'contactOnly';
+          if (hiddenForContactOnly) {
+            return true;
+          }
+          if (!value) {
+            return 'Nagłówek jest wymagany gdy sekcja FAQ jest włączona';
+          }
+          return true;
+        }),
+      hidden: ({ parent }) =>
+        (parent as { displayMode?: string })?.displayMode === 'contactOnly',
+    }),
+    customPortableText({
+      name: 'description',
+      title: 'Opis sekcji',
+      description:
+        'Krótki opis wprowadzający do sekcji FAQ, wyjaśniający czego można się spodziewać',
+      validation: (Rule) =>
+        Rule.custom((value, { parent }) => {
+          const displayMode = (parent as { displayMode?: string })?.displayMode;
+          const hiddenForContactOnly = displayMode === 'contactOnly';
+          if (hiddenForContactOnly) {
+            return true;
+          }
+          return true;
+        }),
+      hidden: ({ parent }) =>
+        (parent as { displayMode?: string })?.displayMode === 'contactOnly',
     }),
     defineField({
       name: 'faqList',

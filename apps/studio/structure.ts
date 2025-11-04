@@ -369,23 +369,13 @@ export const structure = (
         orderable: true,
         title: 'Salony',
       }),
-      S.listItem()
-        .title('Marki')
-        .icon(Award)
-        .child(
-          S.list()
-            .title('Marki')
-            .items([
-              createSingleTon({ S, type: 'brands' }),
-              createCollection({
-                S,
-                context,
-                type: 'brand',
-                orderable: true,
-                title: 'Lista marek',
-              }),
-            ])
-        ),
+      createCollection({
+        S,
+        context,
+        type: 'brand',
+        orderable: true,
+        title: 'Lista marek',
+      }),
       createCollection({
         S,
         context,

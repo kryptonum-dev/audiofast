@@ -27,9 +27,11 @@ type FormStep = 1 | 2;
 export default function ContactForm({
   contactForm,
   index,
+  isContactOnly = false,
 }: {
   contactForm: PagebuilderType<'faqSection'>['contactForm'];
   index: number;
+  isContactOnly?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState<FormStep>(1);
   const [formState, setFormState] = useState<FormState>('idle');
@@ -125,7 +127,7 @@ export default function ContactForm({
       <PortableText
         value={contactForm!.heading}
         className={styles.formHeading}
-        headingLevel={index === 0 ? 'h2' : 'h3'}
+        headingLevel={isContactOnly ? (index === 0 ? 'h1' : 'h2') : 'h3'}
       />
       <form
         ref={formRef}

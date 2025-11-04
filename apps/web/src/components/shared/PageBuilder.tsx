@@ -1,5 +1,6 @@
 import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
 import BlurLinesTextImage from '../pageBuilder/BlurLinesTextImage';
+import BrandsByCategoriesSection from '../pageBuilder/BrandsByCategoriesSection';
 import BrandsList from '../pageBuilder/BrandsList';
 import BrandsMarquee from '../pageBuilder/BrandsMarquee';
 import ContactForm from '../pageBuilder/ContactForm';
@@ -132,6 +133,14 @@ export function PageBuilder({
               <BrandsList
                 key={block._key}
                 {...(block as BlockByType<'brandsList'>)}
+                index={index}
+              />
+            );
+          case 'brandsByCategoriesSection':
+            return (
+              <BrandsByCategoriesSection
+                key={block._key}
+                {...(block as BlockByType<'brandsByCategoriesSection'>)}
                 index={index}
               />
             );

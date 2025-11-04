@@ -56,6 +56,7 @@ const ALL_CUSTOM_COMPONENTS = [
   { name: 'ptFeaturedProducts', type: 'ptFeaturedProducts' },
   { name: 'ptQuote', type: 'ptQuote' },
   { name: 'ptButton', type: 'ptButton' },
+  { name: 'ptHeading', type: 'ptHeading' },
 ] as const;
 
 export type PortableTextInclude = {

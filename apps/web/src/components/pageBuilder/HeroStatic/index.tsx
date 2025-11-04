@@ -72,14 +72,17 @@ export default async function HeroStatic({
       })()
     : undefined;
 
-  const blocksWithSvgs = await Promise.all(
-    blocks!.map(async (box) => {
-      const svgContent = box.iconUrl
-        ? await svgToInlineString(box.iconUrl)
-        : null;
-      return { ...box, svgContent };
-    })
-  );
+  const blocksWithSvgs =
+    showBlocks && blocks
+      ? await Promise.all(
+          blocks!.map(async (box) => {
+            const svgContent = box.iconUrl
+              ? await svgToInlineString(box.iconUrl)
+              : null;
+            return { ...box, svgContent };
+          })
+        )
+      : [];
 
   const Heading = index === 0 ? 'h2' : 'h3';
 

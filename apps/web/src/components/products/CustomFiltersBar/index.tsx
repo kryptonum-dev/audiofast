@@ -79,7 +79,7 @@ export default function CustomFiltersBar({
 
     setOpenDropdown(null);
     startTransition(() => {
-      router.push(newUrl);
+      router.push(newUrl, { scroll: false });
     });
   };
 
@@ -95,7 +95,7 @@ export default function CustomFiltersBar({
 
     setOpenDropdown(null);
     startTransition(() => {
-      router.push(newUrl);
+      router.push(newUrl, { scroll: false });
     });
   };
 
@@ -113,7 +113,7 @@ export default function CustomFiltersBar({
 
     setOpenDropdown(null);
     startTransition(() => {
-      router.push(newUrl);
+      router.push(newUrl, { scroll: false });
     });
   };
 

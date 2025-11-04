@@ -3,6 +3,7 @@ import { ptButton } from '../portableText/button';
 import { ptCircleNumberedList } from '../portableText/circle-numbered-list';
 import { ptCtaSection } from '../portableText/cta-section';
 import { ptFeaturedProducts } from '../portableText/featured-products';
+import { ptHeading } from '../portableText/heading';
 import { ptImage } from '../portableText/image';
 import { ptQuote } from '../portableText/quote';
 import { ptTwoColumnTable } from '../portableText/two-column-table';
@@ -27,4 +28,5 @@ export const definitions = [
   ptFeaturedProducts,
   ptQuote,
   ptButton,
+  ptHeading,
 ];

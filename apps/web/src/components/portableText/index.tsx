@@ -16,6 +16,7 @@ import { ButtonPortableTextComponent } from './Button';
 import { CircleNumberedListComponent } from './CircleNumberedList';
 import { CtaSectionComponent } from './CtaSection';
 import { FeaturedProductsComponent } from './FeaturedProducts';
+import { HeadingComponent } from './Heading';
 import { ImageComponent } from './Image';
 import { QuoteComponent } from './Quote';
 import { TwoColumnTableComponent } from './TwoColumnTable';
@@ -319,6 +320,7 @@ export function PortableTextRenderer({
         ptFeaturedProducts: FeaturedProductsComponent,
         ptQuote: QuoteComponent,
         ptButton: ButtonPortableTextComponent,
+        ptHeading: HeadingComponent,
       },
       ...customComponentTypes,
     },
