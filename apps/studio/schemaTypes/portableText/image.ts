@@ -1,8 +1,8 @@
 import { ImageIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 
-import { customPortableText } from './index';
 import { createRadioListLayout, toPlainText } from '../../utils/helper';
+import { customPortableText } from './index';
 
 export const ptImage = defineType({
   name: 'ptImage',

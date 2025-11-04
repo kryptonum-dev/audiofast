@@ -1,8 +1,8 @@
 import type { FaqSection } from '@/src/global/sanity/sanity.types';
 import type { PagebuilderType } from '@/src/global/types';
 
-import FaqSchema from '../../schema/FaqSchema';
 import PortableText from '../../portableText';
+import FaqSchema from '../../schema/FaqSchema';
 import ContactPerson from '../../ui/ContactPerson';
 import ContactForm from './ContactForm';
 import FaqList from './FaqList';

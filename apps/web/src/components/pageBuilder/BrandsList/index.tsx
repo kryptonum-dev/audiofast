@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 import type { PagebuilderType } from '@/src/global/types';
 
-import Image from '../../shared/Image';
 import PortableText from '../../portableText';
+import Image from '../../shared/Image';
 import styles from './styles.module.scss';
 
 type BrandsListProps = PagebuilderType<'brandsList'> & {

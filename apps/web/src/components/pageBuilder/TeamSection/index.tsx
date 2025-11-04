@@ -1,7 +1,7 @@
 import type { PagebuilderType } from '@/src/global/types';
 
-import type { AppImageProps } from '../../shared/Image';
 import PortableText from '../../portableText';
+import type { AppImageProps } from '../../shared/Image';
 import GrayImageCtaCard from '../../ui/GrayImageCtaCard';
 import TeamMemberCard from '../../ui/TeamMemberCard';
 import styles from './styles.module.scss';

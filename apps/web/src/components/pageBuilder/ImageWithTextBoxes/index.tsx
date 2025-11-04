@@ -1,8 +1,8 @@
 import type { PagebuilderType } from '@/src/global/types';
 import svgToInlineString from '@/src/global/utils';
 
-import Image from '../../shared/Image';
 import PortableText from '../../portableText';
+import Image from '../../shared/Image';
 import Button from '../../ui/Button';
 import styles from './styles.module.scss';
 
