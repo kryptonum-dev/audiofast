@@ -77,6 +77,10 @@ const portableTextFragmentExtended = (
       ${imageFragment('image1')},
       ${imageFragment('image2')},
     },
+    _type == "ptMinimalImage" => {
+      ...,
+      ${imageFragment('image')},
+    },
     _type == "ptArrowList" => {
       ...,
       items[]{
@@ -123,6 +127,12 @@ const portableTextFragmentExtended = (
     _type == "ptButton" => {
       ...,
       ${buttonFragment('button')},
+    },
+    _type == "ptHeading" => {
+      ...,
+      level,
+      "iconUrl": icon.asset->url,
+      ${portableTextFragment('text')},
     },
     
   }
@@ -1239,25 +1249,22 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
     ${portableTextFragmentExtended('description')},
     ${imageFragment('heroImage')},
     ${imageFragment('bannerImage')},
-    distributionStartYear,
+    distributionYear {
+      year,
+      ${imageFragment('backgroundImage')},
+    },
+    ${portableTextFragment('brandDescriptionHeading')},
     ${portableTextFragmentExtended('brandDescription')},
-    imageGallery[] {
-      _key,
-      ${imageFragment()}
-    },
-    featuredReviews[]->{
-      _id,
-      name,
-      "slug": slug.current,
-      ${portableTextFragmentExtended('title')},
-      ${portableTextFragmentExtended('description')},
-      ${imageFragment('image')},
-      author->{
-        _id,
-        name,
-        ${imageFragment('image')}
-      }
-    },
+    ${imageFragment('imageGallery[]')},
+    ${publicationFragment('featuredReviews[]->')},
+    "stores": array::unique(
+      *[
+        _type == "product" && 
+        !(_id in path("drafts.**")) && 
+        brand._ref == ^._id &&
+        defined(availableInStores)
+      ].availableInStores[]->{_id, name, "slug": slug.current, address{postalCode, city, street}, phone, website}
+    ),
     seo {
       title,
       description,

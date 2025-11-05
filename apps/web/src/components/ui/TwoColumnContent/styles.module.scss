@@ -1,125 +1,89 @@
 .twoColumnContent {
-  padding: 0 2rem;
+  padding: clamp(1rem, calc(2vw / 0.48), 2rem);
+  border-radius: 0.5rem;
+  background: var(--neutral-200, #f8f8f8);
 
-  .container {
-    background: var(--neutral-200);
+  .heading {
+    margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 2rem);
+  }
+
+  .contentWrapper {
+    position: relative;
+
+    .content {
+      column-count: 2;
+      column-gap: 4rem;
+      column-rule: 0.0625rem solid var(--neutral-400);
+      font-size: var(--typography-body-m, 0.875rem);
+
+      h3 {
+        margin-top: 2rem !important;
+        break-after: avoid;
+        break-inside: avoid;
+      }
+
+      p {
+        break-inside: avoid;
+      }
+
+      img {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  }
+
+  .distributionYearBadge {
+    position: relative;
+    text-align: center;
+    padding: clamp(1rem, calc(2vw / 0.48), 2rem);
     border-radius: 0.5rem;
-    padding: 2rem;
     overflow: hidden;
+    margin-top: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+    isolation: isolate;
 
-    .heading {
-      font-family: var(--font-family-switzer);
-      font-size: 1.5rem;
-      font-weight: 500;
-      line-height: 1.16;
-      letter-spacing: -0.045rem;
-      color: var(--neutral-700);
-      margin-bottom: 2rem;
-      text-align: center;
+    img {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      object-fit: cover;
+      z-index: -2;
     }
 
-    .contentWrapper {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 2rem;
-      align-items: start;
-
-      .column {
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-
-        .content {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-
-          :global(.portable-text) {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            font-family: var(--font-family-poppins);
-            font-size: 0.875rem;
-            font-weight: 300;
-            line-height: 1.5;
-            color: var(--neutral-600);
-
-            strong {
-              font-weight: 400;
-              color: var(--neutral-black);
-            }
-
-            a {
-              color: var(--neutral-600);
-              text-decoration: underline;
-              transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1);
-
-              &:hover {
-                color: var(--primary-red);
-              }
-            }
-
-            :global(figure) {
-              width: 100%;
-              aspect-ratio: 605 / 340;
-              border-radius: 0.5rem;
-              overflow: hidden;
-              background: var(--neutral-200);
-              margin: 1.5rem 0;
-
-              img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-              }
-            }
-          }
-        }
-      }
-
-      .divider {
-        width: 0.0625rem;
-        height: 100%;
-        background: var(--neutral-400);
-        min-height: 1rem;
-      }
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.95) 0%,
+        rgba(0, 0, 0, 0.3) 100%
+      );
+      z-index: -1;
     }
 
-    .galleryWrapper {
-      margin-top: 2rem;
+    h3 {
+      color: var(--neutral-white, #ffffff);
+    }
+  }
+
+  [data-product-gallery] {
+    margin-top: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+  }
+
+  @media (max-width: 33.6875rem) {
+    &.twoColumnContent {
+      width: 100%;
     }
   }
 
   @media (max-width: 56.1875rem) {
-    padding: 0 1rem;
-
-    .container {
-      padding: 1.5rem 1rem;
-
-      .heading {
-        font-size: 1.25rem;
-        margin-bottom: 1.5rem;
-      }
-
-      .contentWrapper {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-
-        .column {
-          gap: 2rem;
-
-          .content {
-            gap: 1rem;
-          }
-        }
-
-        .divider {
-          display: none;
-        }
-      }
-
-      .galleryWrapper {
-        margin-top: 1.5rem;
+    .contentWrapper {
+      .content {
+        column-count: 1;
+        column-gap: 0;
+        column-rule: none;
       }
     }
   }

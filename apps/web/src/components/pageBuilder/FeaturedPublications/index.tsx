@@ -7,6 +7,7 @@ import styles from './styles.module.scss';
 
 type FeaturedPublicationsProps = PagebuilderType<'featuredPublications'> & {
   index: number;
+  publicationLayout?: 'vertical' | 'horizontal';
 };
 
 export default function FeaturedPublications({
@@ -14,6 +15,7 @@ export default function FeaturedPublications({
   button,
   publications,
   index,
+  publicationLayout = 'horizontal',
 }: FeaturedPublicationsProps) {
   return (
     <section className={`${styles.featuredPublications} max-width-block`}>
@@ -25,7 +27,11 @@ export default function FeaturedPublications({
         />
         <Button {...button} />
       </header>
-      <PublicationsCarousel publications={publications!} index={index} />
+      <PublicationsCarousel
+        publications={publications!}
+        index={index}
+        publicationLayout={publicationLayout}
+      />
     </section>
   );
 }

@@ -5,6 +5,7 @@ import { ptCtaSection } from '../portableText/cta-section';
 import { ptFeaturedProducts } from '../portableText/featured-products';
 import { ptHeading } from '../portableText/heading';
 import { ptImage } from '../portableText/image';
+import { ptMinimalImage } from '../portableText/minimal-image';
 import { ptQuote } from '../portableText/quote';
 import { ptTwoColumnTable } from '../portableText/two-column-table';
 import { contactPersonField } from '../shared/contact-person';
@@ -21,6 +22,7 @@ export const definitions = [
   formState,
   contactPersonField,
   ptImage,
+  ptMinimalImage,
   ptArrowList,
   ptCircleNumberedList,
   ptCtaSection,

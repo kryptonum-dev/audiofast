@@ -1,32 +1,38 @@
-import { Heading2 } from 'lucide-react';
+import { TextIcon } from '@sanity/icons';
 import { defineField, defineType } from 'sanity';
 
-import { createRadioListLayout, toPlainText } from '../../utils/helper';
+import { toPlainText } from '../../utils/helper';
 import { customPortableText } from './index';
+
+const title = 'Nagłówek z ikoną';
 
 export const ptHeading = defineType({
   name: 'ptHeading',
   type: 'object',
-  title: 'Nagłówek z ikoną',
-  icon: Heading2,
+  title,
+  icon: TextIcon,
+  description: 'Nagłówek z ikoną SVG wyświetlany po lewej stronie tekstu',
   fields: [
     defineField({
       name: 'level',
       title: 'Poziom nagłówka',
       type: 'string',
-      description: 'Wybierz poziom nagłówka (H3 lub H4)',
+      description: 'Poziom nagłówka (zawsze H3)',
       initialValue: 'h3',
-      options: createRadioListLayout([
-        { title: 'H3', value: 'h3' },
-        { title: 'H4', value: 'h4' },
-      ]),
+      readOnly: true,
+      hidden: true,
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'icon',
-      title: 'Ikona',
-      type: 'iconPicker',
-      description: 'Opcjonalna ikona wyświetlana po lewej stronie nagłówka',
+      title: 'Ikona SVG',
+      type: 'image',
+      description:
+        'Ikona SVG wyświetlana po lewej stronie nagłówka (tylko pliki SVG)',
+      options: {
+        accept: '.svg',
+      },
+      validation: (Rule) => Rule.required().error('Ikona SVG jest wymagana'),
     }),
     customPortableText({
       name: 'text',
@@ -47,13 +53,10 @@ export const ptHeading = defineType({
       text: 'text',
       icon: 'icon',
     },
-    prepare: ({ level, text, icon }) => {
-      const headingText = toPlainText(text);
-      return {
-        title: `Nagłówek ${level?.toUpperCase() || 'H3'}`,
-        subtitle: headingText || 'Brak tekstu',
-        media: icon || Heading2,
-      };
-    },
+    prepare: ({ text, icon }) => ({
+      title: toPlainText(text),
+      subtitle: title,
+      media: icon || TextIcon,
+    }),
   },
 });

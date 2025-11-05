@@ -2,15 +2,17 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import ProductsAside from '@/src/components/products/ProductsAside';
 import ProductsListing from '@/src/components/products/ProductsListing';
 import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
 import styles from '@/src/components/products/ProductsListing/styles.module.scss';
 import SortDropdown from '@/src/components/products/SortDropdown';
+import type { SanityRawImage } from '@/src/components/shared/Image';
 import Image from '@/src/components/shared/Image';
-import BrandStickyNav from '@/src/components/ui/BrandStickyNav';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import {
   PRODUCT_SORT_OPTIONS,
@@ -27,6 +29,7 @@ import type {
   QueryBrandBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
+import type { PortableTextProps, PublicationType } from '@/src/global/types';
 import { parsePrice } from '@/src/global/utils';
 
 type BrandPageProps = {
@@ -147,23 +150,6 @@ export default async function BrandPage(props: BrandPageProps) {
     maxPrice = actualMaxPrice;
   }
 
-  // Determine which sections are visible
-  const sections = [
-    { id: 'produkty', label: 'Produkty', visible: true },
-    { id: 'o-marce', label: 'O marce', visible: !!brand.brandDescription },
-    {
-      id: 'galeria',
-      label: 'Galeria',
-      visible: !!brand.imageGallery && brand.imageGallery.length >= 4,
-    },
-    {
-      id: 'recenzje',
-      label: 'Recenzje',
-      visible: !!brand.featuredReviews && brand.featuredReviews.length > 0,
-    },
-    { id: 'gdzie-kupic', label: 'Gdzie kupić', visible: true },
-  ].filter((section) => section.visible);
-
   const breadcrumbsData = [
     {
       name: 'Marki',
@@ -200,7 +186,7 @@ export default async function BrandPage(props: BrandPageProps) {
         _type="heroStatic"
         button={null}
       />
-      <BrandStickyNav sections={sections} />
+      {/* <BrandStickyNav sections={sections} /> */}
       <section id="produkty" className={`${styles.productsListing} max-width`}>
         <ProductsAside
           categories={brand.categories || []}
@@ -239,57 +225,63 @@ export default async function BrandPage(props: BrandPageProps) {
           />
         </Suspense>
       </section>
-      {brand.bannerImage && brand.bannerImage.id && (
-        <section className="max-width br-md margin-bottom-lg">
+      {brand.bannerImage && (
+        <section className="max-width-block br-md margin-bottom-lg">
           <Image
             image={brand.bannerImage}
             alt={brand.name || ''}
             className="br-md"
-            sizes="(max-width: 56.1875rem) 96vw, 100vw"
+            sizes="(max-width: 37.4375rem) 98vw, (max-width: 85.375rem) 96vw, 1302px"
             loading="lazy"
           />
         </section>
       )}
-      {brand.brandDescription && brand.brandDescription.length > 0 && (
-        <div id="o-marce">
-          <TwoColumnContent
-            content={brand.brandDescription}
-            heading={`O ${brand.name}`}
-            distributionYear={brand.distributionStartYear}
-            distributionYearBackgroundImage={brand.bannerImage}
-            gallery={brand.imageGallery}
-          />
-        </div>
-      )}
-      {/* Reviews Section */}
-      {/* {brand.featuredReviews && brand.featuredReviews.length > 0 && (
-        <section id="recenzje">
-          <FeaturedPublications
-            heading={[
-              {
-                _type: 'block',
-                children: [{ _type: 'span', text: 'Recenzje' }],
-                style: 'normal',
-              },
-            ]}
-            publications={brand.featuredReviews}
-            button={{
-              text: 'Zobacz wszystkie recenzje',
-              href: '/recenzje',
-              variant: 'primary' as const,
-              iconUsed: 'arrowRight' as const,
-            }}
-            index={1}
-            _key=""
-            _type="featuredPublications"
-          />
-        </section>
-      )} */}
+      <TwoColumnContent
+        content={brand.brandDescription as PortableTextProps}
+        customId="o-marce"
+        headingContent={brand.brandDescriptionHeading}
+        distributionYear={brand.distributionYear}
+        gallery={brand.imageGallery as SanityRawImage[]}
+      />
 
-      {/* Store Locations Section */}
-      {/* <section id="gdzie-kupic" className="max-width margin-bottom-sm">
-        <StoreLocations />
-      </section> */}
+      {brand.featuredReviews && (
+        <FeaturedPublications
+          heading={[
+            {
+              _type: 'block',
+              children: [
+                {
+                  _type: 'span',
+                  text: 'Recenzje Marki',
+                  _key: 'recenzje-marki',
+                },
+              ],
+              style: 'normal',
+              _key: '',
+              markDefs: null,
+              listItem: undefined,
+              level: undefined,
+            },
+          ]}
+          publications={brand.featuredReviews as unknown as PublicationType[]}
+          button={{
+            text: 'Zobacz wszystkie recenzje',
+            href: '/recenzje',
+            variant: 'primary' as const,
+            _key: null,
+            _type: 'button',
+            openInNewTab: false,
+          }}
+          index={1}
+          _key=""
+          _type="featuredPublications"
+        />
+      )}
+      {brand.stores &&
+        Array.isArray(brand.stores) &&
+        brand.stores.length > 0 && (
+          <StoreLocations stores={brand.stores.filter((s) => s !== null)} />
+        )}
     </main>
   );
 }

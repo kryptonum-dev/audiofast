@@ -366,7 +366,7 @@ export const structure = (
         S,
         context,
         type: 'store',
-        orderable: true,
+        orderable: false,
         title: 'Salony',
       }),
       createCollection({

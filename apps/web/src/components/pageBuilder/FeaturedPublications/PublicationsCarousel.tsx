@@ -3,7 +3,7 @@
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from 'embla-carousel-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { PagebuilderType } from '@/src/global/types';
 
@@ -14,20 +14,35 @@ import styles from './styles.module.scss';
 interface PublicationsCarouselProps {
   publications: PagebuilderType<'featuredPublications'>['publications'];
   index: number;
+  publicationLayout?: 'vertical' | 'horizontal';
 }
 
 export default function PublicationsCarousel({
   publications,
   index,
+  publicationLayout = 'horizontal',
 }: PublicationsCarouselProps) {
+  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
+  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
+  const [canScroll, setCanScroll] = useState(false);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Duplicate items when there are 4 or 5 publications for smoother carousel
+  const displayPublications = (() => {
+    const count = publications?.length || 0;
+    if (count === 4 || count === 5) {
+      return [...publications!, ...publications!];
+    }
+    return publications!;
+  })();
+
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: 'start',
     skipSnaps: false,
+    watchDrag: canScroll,
   });
-
-  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
-  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -42,32 +57,70 @@ export default function PublicationsCarousel({
     setNextBtnDisabled(!api.canScrollNext());
   }, []);
 
+  // Check if content overflows container
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (viewportRef.current && containerRef.current) {
+        const viewportWidth = viewportRef.current.offsetWidth;
+        const containerWidth = containerRef.current.scrollWidth;
+        setCanScroll(containerWidth > viewportWidth);
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+    };
+  }, [displayPublications]);
+
   useEffect(() => {
     if (!emblaApi) return;
 
     onSelect(emblaApi);
     emblaApi.on('reInit', onSelect);
     emblaApi.on('select', onSelect);
+
+    return () => {
+      emblaApi.off('reInit', onSelect);
+      emblaApi.off('select', onSelect);
+    };
   }, [emblaApi, onSelect]);
 
+  // Reinitialize Embla when canScroll changes
+  useEffect(() => {
+    if (emblaApi && canScroll) {
+      emblaApi.reInit();
+    }
+  }, [canScroll, emblaApi]);
+
   return (
-    <div className={styles.carousel}>
-      <div className={styles.viewport} ref={emblaRef}>
-        <div className={styles.container}>
-          {publications!.map((publication, idx) => (
+    <div className={styles.carousel} data-carousel-enabled={canScroll}>
+      <div
+        className={styles.viewport}
+        ref={(node) => {
+          viewportRef.current = node;
+          if (canScroll) {
+            emblaRef(node);
+          }
+        }}
+      >
+        <div className={styles.container} ref={containerRef}>
+          {displayPublications.map((publication, idx) => (
             <PublicationCard
               imageSizes="(max-width: 72rem) 222px, 279px"
               priority={index === 0 && idx === 0}
               loading={index === 0 ? 'eager' : 'lazy'}
-              key={idx}
+              key={`${publication._id || idx}-${idx}`}
               publication={publication}
-              layout="horizontal"
+              layout={publicationLayout}
               headingLevel={index === 0 ? 'h2' : 'h3'}
             />
           ))}
         </div>
       </div>
-      {publications!.length > 4 && (
+      {canScroll && (
         <div className={styles.buttons}>
           <ArrowButton
             direction="prev"

@@ -18,6 +18,7 @@ import { CtaSectionComponent } from './CtaSection';
 import { FeaturedProductsComponent } from './FeaturedProducts';
 import { HeadingComponent } from './Heading';
 import { ImageComponent } from './Image';
+import { MinimalImageComponent } from './MinimalImage';
 import { QuoteComponent } from './Quote';
 import { TwoColumnTableComponent } from './TwoColumnTable';
 
@@ -313,6 +314,7 @@ export function PortableTextRenderer({
     types: {
       ...{
         ptImage: ImageComponent,
+        ptMinimalImage: MinimalImageComponent,
         ptArrowList: ArrowListComponent,
         ptCircleNumberedList: CircleNumberedListComponent,
         ptCtaSection: CtaSectionComponent,

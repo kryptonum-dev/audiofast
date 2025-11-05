@@ -11,11 +11,15 @@ import styles from './styles.module.scss';
 interface ProductGalleryProps {
   images: SanityRawImage[];
   className?: string;
+  customId?: string;
+  isSection?: boolean;
 }
 
 export default function ProductGallery({
   images,
   className,
+  customId,
+  isSection = true,
 }: ProductGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canScroll, setCanScroll] = useState(false);
@@ -94,8 +98,14 @@ export default function ProductGallery({
 
   if (!images || images.length === 0) return null;
 
+  const Element = isSection ? 'section' : 'div';
+
   return (
-    <section className={`${styles.gallery} ${className}`}>
+    <Element
+      className={`${styles.gallery} ${className}`}
+      id={customId}
+      data-product-gallery
+    >
       <div className={styles.mainContainer} data-animating={isAnimating}>
         <Image
           key={selectedIndex}
@@ -149,6 +159,6 @@ export default function ProductGallery({
           </div>
         </div>
       </div>
-    </section>
+    </Element>
   );
 }

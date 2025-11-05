@@ -1,5 +1,307 @@
 # Brand Detail Page Implementation Plan
 
+## Recent Progress (Completed)
+
+### Completed Tasks - TwoColumnContent & Portable Text Components
+
+**Date:** November 5, 2025
+
+#### 1. ✅ Updated `ptHeading` Portable Text Component
+
+- **File:** `apps/studio/schemaTypes/portableText/heading.ts`
+- Removed `iconPicker` field entirely
+- Added new `image` field (type: `image`) that accepts only SVG files (`.svg`)
+- Made the icon field required with validation
+- Updated title and description to reflect it's a "Heading with SVG icon"
+- **Component:** `apps/web/src/components/portableText/Heading/index.tsx`
+  - Converted from client component to **async server component**
+  - Removed `'use client'` directive, `useState`, and `useEffect`
+  - Implemented server-side SVG fetching using `svgToInlineString` utility
+  - Updated type definitions to match new icon structure
+  - Improved performance by eliminating client-side hydration for SVG icons
+
+#### 2. ✅ Enhanced Brand Schema with Portable Text Features
+
+- **File:** `apps/studio/schemaTypes/documents/collections/brand.ts`
+- Added `h3` and `h4` heading styles to `brandDescription` portable text
+- Created new `brandDescriptionHeading` field:
+  - Portable text field placed above `brandDescription`
+  - Supports only `strong` decorator (bold text)
+  - Acts as a heading/introduction for the two-column content
+- Updated `distributionStartYear` → `distributionYear` object structure:
+  - Changed from simple number field to object containing:
+    - `year` (number): The distribution start year
+    - `backgroundImage` (image): Background image for the year badge
+  - Implemented mutual validation:
+    - If `year` is set, `backgroundImage` must be set
+    - If `backgroundImage` is set, `year` must be set
+    - Both fields are optional together, but required when one is present
+  - Added descriptive Polish labels and descriptions
+
+#### 3. ✅ Created `ptMinimalImage` Portable Text Component
+
+- **Schema:** `apps/studio/schemaTypes/portableText/minimal-image.ts`
+  - New portable text component with single `image` field
+  - No caption or layout options (simpler alternative to `ptImage`)
+  - Required image field with validation
+  - Polish labels: "Minimalny obraz"
+- **Component:** `apps/web/src/components/portableText/MinimalImage/index.tsx`
+  - Server component that renders single image
+  - Uses shared `Image` component with proper sizing
+  - Responsive sizing with custom `sizes` prop
+  - Lazy loading enabled for performance
+- **Styles:** `apps/web/src/components/portableText/MinimalImage/styles.module.scss`
+  - Rounded corners (0.5rem border-radius)
+  - Responsive margin using `clamp()`
+  - Max-height constraint for better layout
+  - Full width responsive design
+- Registered in `ALL_CUSTOM_COMPONENTS` and schema exports
+- Added to `brandDescription` portable text in brand schema
+- Integrated into main PortableText renderer
+
+#### 4. ✅ Updated TwoColumnContent Component
+
+- **File:** `apps/web/src/components/ui/TwoColumnContent/index.tsx`
+- Removed separate `distributionYearBackgroundImage` prop
+- Updated `distributionYear` prop to accept full object with `year` and `backgroundImage`
+- Moved DistributionYearBadge JSX directly inline (no separate component file)
+- Simplified type definitions using `QueryBrandBySlugResult` type
+- Updated component to properly handle nullable `distributionYear` fields
+- **Styles:** `apps/web/src/components/ui/TwoColumnContent/styles.module.scss`
+  - Integrated distribution year badge styles directly into this file
+  - Added `.distributionYearBadge`, `.backgroundImage`, `.overlay`, `.badgeContent`, `.badgeText` classes
+  - Properly nested styles following repository SCSS guidelines
+  - Responsive styles for mobile (adjusted padding, font sizes)
+
+#### 5. ✅ Updated GROQ Queries and Types
+
+- **File:** `apps/web/src/global/sanity/query.ts`
+- Updated `portableTextFragmentExtended` to include `ptMinimalImage`
+- Updated `ptHeading` fragment to project:
+  - `level` (h3 or h4)
+  - `icon` (using `imageFragment` for proper asset projection)
+  - `text` (using `portableTextFragment`)
+- Added `brandDescriptionHeading` to `queryBrandBySlug`
+- Updated `distributionYear` query to fetch object with:
+  - `year` (number)
+  - `backgroundImage` (using `imageFragment`)
+- **Ran typegen** to update TypeScript types in `sanity.types.ts`
+
+#### 6. ✅ Updated Brand Page Implementation
+
+- **File:** `apps/web/src/app/marki/[slug]/page.tsx`
+- Simplified `TwoColumnContent` props passing
+- Removed complex conditional logic for `distributionYear` construction
+- Now passes `brand.distributionYear` object directly from query
+- Removed unnecessary type casting and null checks (handled at component level)
+- Cleaner, more maintainable code structure
+
+#### 7. ✅ Code Quality & Best Practices
+
+- Fixed all linter errors (import sorting, formatting)
+- Resolved TypeScript type errors with proper type definitions
+- Converted client component to server component for better performance
+- Followed repository SCSS guidelines (nesting, rem units, responsive design)
+- Implemented proper null handling and optional chaining
+- Used semantic HTML and accessible markup
+
+### Technical Improvements
+
+- **Performance**: SVG icons now render server-side (zero client JS for icons)
+- **Type Safety**: Stronger type definitions using generated types from queries
+- **Maintainability**: Simplified component structure and prop passing
+- **Validation**: Mutual field validation ensures data consistency in Sanity
+- **Flexibility**: New minimal image component provides simpler content option
+
+---
+
+### Completed Tasks - Featured Reviews & Carousel Optimization
+
+**Date:** November 5, 2025
+
+#### 8. ✅ CSS Media Query Fix for TwoColumnContent
+
+- **Issue:** Global media query from `global.scss` was overriding component-specific media query
+- **Root Cause:** Equal CSS specificity with global styles loading after component styles
+- **Solution:** Understood cascade order - global styles always override module styles when specificity is equal
+- **Learning:** Increased specificity within CSS modules using `&.className` pattern when needed
+
+#### 9. ✅ Created `stringToPortableText` Utility Function
+
+- **File:** `apps/web/src/global/utils.ts`
+- **Purpose:** Convert plain strings to PortableText block structure
+- **Function Signature:** `stringToPortableText(text: string, style?: string): PortableTextProps`
+- **Features:**
+  - Accepts plain text string and optional style parameter
+  - Returns properly formatted PortableText block array
+  - Includes all required PortableText properties (`_type`, `_key`, `children`, `style`, etc.)
+  - Default style: `'normal'`
+- **Usage:** Simplifies PortableText creation for headings and simple text blocks
+
+#### 10. ✅ Updated Brand Page with Utility Function
+
+- **File:** `apps/web/src/app/marki/[slug]/page.tsx`
+- **Changes:**
+  - Imported `stringToPortableText` utility
+  - Replaced manual PortableText array creation with utility function
+  - Applied to `HeroStatic` heading: `stringToPortableText(brand.name || '')`
+  - Applied to `FeaturedPublications` heading: `stringToPortableText('Recenzje Marki')`
+  - Added type assertions (`as any`) to resolve strict type compatibility issues
+  - Explicitly defined `button` properties for `FeaturedPublications` component
+- **Type Handling:** Used type assertions to bypass strict component prop types when needed
+
+#### 11. ✅ Enhanced Brand Schema - Featured Reviews Filtering
+
+- **File:** `apps/studio/schemaTypes/documents/collections/brand.ts`
+- **Feature:** Smart filtering for `featuredReviews` array field
+- **Implementation:**
+  - Added dynamic GROQ filter to show only reviews of products belonging to the current brand
+  - Filter query: `_id in *[_type == "product" && brand._ref == $brandId].reviews[]._ref`
+  - Handles draft document IDs properly (strips `drafts.` prefix)
+  - Returns empty results if brand ID is not available
+- **UX Improvement:** Content editors only see relevant reviews for their brand
+
+#### 12. ✅ Prevented Duplicate Review Selection
+
+- **File:** `apps/studio/schemaTypes/documents/collections/brand.ts`
+- **Feature:** Unique review selection in `featuredReviews` array
+- **Implementation:**
+  - Extract already selected review IDs from `featuredReviews` array
+  - Add `!(_id in $selectedIds)` condition to GROQ filter
+  - Pass `selectedIds` array as query parameter
+  - Combines with brand filter: must be from brand's products AND not already selected
+- **UX Improvement:** Selected reviews immediately disappear from dropdown, preventing duplicates
+
+#### 13. ✅ Created 10 Dummy Reviews for PrimaLuna Brand
+
+- **Tool:** Sanity MCP Server (`create_document`, `update_document`, `publish_document`)
+- **Process:**
+  1. Queried existing PrimaLuna products to link reviews properly
+  2. Created 10 review documents with:
+     - Product references to PrimaLuna products (unique distribution)
+     - Authors from existing author documents
+     - Images from existing review images
+     - Proper slugs (`primaluna-{product-name}-review`)
+     - SEO fields (title and description)
+  3. Generated detailed review content using AI-powered `update_document` tool
+  4. Published all 10 reviews to make them live
+- **Products Covered:** EVO 400 Power, Dialog Floor, ProLogue Classic, EVO 100 Tube, EVO 300, etc.
+- **Content Quality:** Each review includes detailed analysis, technical specifications, and user insights
+
+#### 14. ✅ Optimized FeaturedPublications Carousel
+
+- **File:** `apps/web/src/components/pageBuilder/FeaturedPublications/PublicationsCarousel.tsx`
+- **Problem:** Carousel was always active even when content fit within container
+- **Solution - Manual Overflow Detection:**
+  - Added `viewportRef` and `containerRef` to measure DOM elements
+  - Implemented `checkOverflow()` function comparing viewport width vs container scroll width
+  - Sets `canScroll` state based on actual overflow detection
+  - Passes `watchDrag: canScroll` directly to `useEmblaCarousel` options
+  - Conditionally assigns Embla ref only when carousel is needed
+- **Dynamic Viewport Handling:**
+  - Added resize event listener to recalculate overflow on viewport changes
+  - Carousel dynamically enables/disables as viewport size changes
+  - Smooth transition between desktop (no overflow) and mobile (overflow)
+- **Performance Fix:**
+  - Removed `api.reInit()` calls that caused infinite loop
+  - Separated overflow detection from carousel button state management
+  - Proper cleanup with `emblaApi.off()` event listeners
+
+#### 15. ✅ Fixed Carousel Wrapping Issue
+
+- **File:** `apps/web/src/components/pageBuilder/FeaturedPublications/styles.module.scss`
+- **Problem:** Publications were wrapping to next row instead of overflowing
+- **Root Cause:** `flex-wrap: wrap` in disabled carousel state
+- **Solution:** Removed `flex-wrap: wrap` from `&[data-carousel-enabled='false']` state
+- **Result:** Container now always stays in single row, allowing proper overflow detection
+
+#### 16. ✅ Smart Publication Duplication for Smooth Carousel
+
+- **File:** `apps/web/src/components/pageBuilder/FeaturedPublications/PublicationsCarousel.tsx`
+- **Feature:** Duplicate items when there are 4 or 5 publications for smoother looping
+- **Logic:**
+  ```typescript
+  const displayPublications = (() => {
+    const count = publications?.length || 0;
+    if (count === 4 || count === 5) {
+      return [...publications!, ...publications!];
+    }
+    return publications!;
+  })();
+  ```
+- **Behavior:**
+  - 3 or fewer publications: No duplication
+  - 4 or 5 publications: Duplicate array (8 or 10 items total)
+  - 6 or more publications: No duplication
+- **UX Improvement:** Smoother infinite loop experience with mid-range item counts
+
+#### 17. ✅ Added Layout Prop to PublicationsCarousel
+
+- **File:** `apps/web/src/components/pageBuilder/FeaturedPublications/PublicationsCarousel.tsx`
+- **Change:** Added optional `publicationLayout` prop
+- **Type:** `'vertical' | 'horizontal'` (defaults to `'horizontal'`)
+- **Purpose:** Allow flexible card layout for different page contexts
+- **Usage:** Props pass through to `PublicationCard` component's `layout` prop
+
+### Key Technical Decisions
+
+1. **Type Assertions vs Strict Types:**
+   - Used `as any` assertions for PortableText compatibility issues
+   - Acknowledged technical debt for future type definition improvements
+   - Prioritized functionality over perfect type safety in this iteration
+
+2. **Manual vs API-Based Overflow Detection:**
+   - Chose manual DOM measurement over Embla's `canScrollPrev/Next` API
+   - Prevents infinite reInit loops
+   - Follows ProductGallery component pattern (proven approach)
+   - More reliable viewport change detection
+
+3. **Component Duplication Strategy:**
+   - Only duplicate when count is 4 or 5 (sweet spot for loop smoothness)
+   - Avoids unnecessary duplication for small (≤3) or large (≥6) sets
+   - Uses spread operator for efficient array cloning
+   - Updates overflow detection dependency to track `displayPublications`
+
+4. **GROQ Query Optimization:**
+   - Combined multiple filters in single query for performance
+   - Used parameterized queries to prevent injection
+   - Proper reference resolution with `[]._ref` syntax
+   - Draft document ID normalization with `.replace('drafts.', '')`
+
+### Testing & Verification
+
+- ✅ CSS specificity issues resolved
+- ✅ PortableText utility function works correctly
+- ✅ Brand page renders with proper headings
+- ✅ Featured reviews filter shows only brand-specific reviews
+- ✅ Duplicate review selection prevented in Sanity Studio
+- ✅ 10 reviews created, enriched, and published successfully
+- ✅ Carousel disables when content fits container
+- ✅ Carousel enables when content overflows
+- ✅ Drag functionality properly disabled when carousel is inactive
+- ✅ Viewport resize dynamically updates carousel state
+- ✅ No layout shift or wrapping issues
+- ✅ Smooth carousel loop with 4-5 item duplication
+- ✅ No linter errors in modified files
+
+### Files Modified
+
+1. `apps/web/src/global/utils.ts` - Added `stringToPortableText` utility
+2. `apps/web/src/app/marki/[slug]/page.tsx` - Updated to use utility function
+3. `apps/studio/schemaTypes/documents/collections/brand.ts` - Enhanced review filtering
+4. `apps/web/src/components/pageBuilder/FeaturedPublications/PublicationsCarousel.tsx` - Carousel optimization
+5. `apps/web/src/components/pageBuilder/FeaturedPublications/styles.module.scss` - Removed flex-wrap
+
+### Sanity Content Changes
+
+- Created 10 new review documents for PrimaLuna brand
+- All reviews properly linked to products
+- Complete metadata (authors, images, slugs, SEO)
+- Generated detailed review content
+- Published and made live
+
+---
+
 ## Overview
 
 This document outlines the step-by-step implementation plan for creating a brand detail page (`/marki/[slug]`) with the following key sections:
@@ -93,38 +395,88 @@ This document outlines the step-by-step implementation plan for creating a brand
    });
    ```
 
-3. **Distribution Year Field**
+3. **Distribution Year Field** ✅ COMPLETED
 
    ```typescript
    defineField({
-     name: 'distributionStartYear',
-     title: 'Rok rozpoczęcia dystrybucji',
-     type: 'number',
+     name: 'distributionYear',
+     title: 'Rok rozpoczęcia dystrybucji (opcjonalny)',
+     type: 'object',
      description:
-       'Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)',
+       'Rok i obraz tła dla odznaki roku rozpoczęcia dystrybucji. Jeśli ustawisz rok, musisz również ustawić obraz tła i odwrotnie.',
      group: GROUP.MAIN_CONTENT,
+     fields: [
+       defineField({
+         name: 'year',
+         title: 'Rok',
+         type: 'number',
+         description:
+           'Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)',
+         validation: (Rule) =>
+           Rule.min(1900)
+             .max(new Date().getFullYear())
+             .error('Podaj prawidłowy rok'),
+       }),
+       defineField({
+         name: 'backgroundImage',
+         title: 'Obraz tła',
+         type: 'image',
+         description: 'Obraz tła wyświetlany za tekstem odznaki roku',
+         options: {
+           hotspot: true,
+         },
+       }),
+     ],
      validation: (Rule) =>
-       Rule.min(1900)
-         .max(new Date().getFullYear())
-         .error('Podaj prawidłowy rok'),
+       Rule.custom((value) => {
+         if (!value) return true; // Optional field
+         const hasYear = value.year !== undefined && value.year !== null;
+         const hasImage =
+           value.backgroundImage !== undefined &&
+           value.backgroundImage !== null;
+         if (hasYear && !hasImage) {
+           return 'Jeśli ustawisz rok, musisz również ustawić obraz tła';
+         }
+         if (hasImage && !hasYear) {
+           return 'Jeśli ustawisz obraz tła, musisz również ustawić rok';
+         }
+         return true;
+       }),
    });
    ```
 
-4. **Two-Column Content Field**
+4. **Two-Column Content Field** ✅ COMPLETED
 
    ```typescript
+   // Brand Description Heading (added above main content)
    customPortableText({
-     name: 'brandStory',
-     title: 'Historia marki',
+     name: 'brandDescriptionHeading',
+     title: 'Nagłówek opisu marki',
+     description:
+       'Nagłówek wyświetlany nad opisem marki w sekcji dwukolumnowej',
+     group: GROUP.MAIN_CONTENT,
+     include: {
+       styles: ['normal'],
+       decorators: ['strong'], // Only bold decorator
+       annotations: [],
+       lists: [],
+     },
+     components: [],
+   });
+
+   // Brand Description (main content)
+   customPortableText({
+     name: 'brandDescription',
+     title: 'Opis marki',
      description: 'Szczegółowy opis marki wyświetlany w sekcji dwukolumnowej',
      group: GROUP.MAIN_CONTENT,
      include: {
-       styles: ['normal', 'h2', 'h3'],
+       styles: ['normal', 'h3', 'h4'], // Added h3 and h4
        lists: ['bullet', 'number'],
        decorators: ['strong', 'em'],
        annotations: ['customLink'],
      },
-     components: ['ptImage', 'ptArrowList', 'ptCircleNumberedList'],
+     components: ['ptImage', 'ptMinimalImage', 'ptHeading'], // Added new components
    });
    ```
 
@@ -180,6 +532,258 @@ This document outlines the step-by-step implementation plan for creating a brand
 - Add all new fields after the logo field
 - Keep existing SEO fields
 - Update preview to use name as title
+
+---
+
+## Phase 1.5: Custom Portable Text Components ✅ COMPLETED
+
+### Step 1.5.1: Update ptHeading Component
+
+**Schema**: `apps/studio/schemaTypes/portableText/heading.ts`
+
+- Replaced `iconPicker` field with `image` field (accepts only SVG files)
+- Made icon required
+- Updated titles and descriptions
+
+**Component**: `apps/web/src/components/portableText/Heading/index.tsx`
+
+- Converted to async server component (removed 'use client')
+- Server-side SVG fetching using `svgToInlineString` utility
+- Improved performance by eliminating client-side hydration
+
+### Step 1.5.2: Create ptMinimalImage Component
+
+**Schema**: `apps/studio/schemaTypes/portableText/minimal-image.ts`
+
+- New portable text component
+- Single required `image` field
+- No caption or layout options (simpler than ptImage)
+
+**Component**: `apps/web/src/components/portableText/MinimalImage/index.tsx`
+
+- Server component rendering single image
+- Responsive sizing with lazy loading
+- Rounded corners and responsive margins
+
+**Styles**: `apps/web/src/components/portableText/MinimalImage/styles.module.scss`
+
+- Full width responsive design
+- Border radius: 0.5rem
+- Responsive margin using clamp()
+- Max-height: 700px
+
+---
+
+## Recent Progress - Store Locations Implementation (Completed)
+
+**Date:** November 5, 2025
+
+### 18. ✅ Installed Leaflet & React Leaflet
+
+- **Libraries:**
+  - `leaflet@1.9.4` - Core mapping library
+  - `react-leaflet@5.0.0` - React bindings
+  - `@types/leaflet@1.9.21` - TypeScript types
+- **Installation:** Used Bun package manager
+- **Choice:** Selected Leaflet + OpenStreetMap over Mapbox/Google Maps (free, no API keys, excellent Poland coverage)
+
+### 19. ✅ Updated Store Schema with Address Fields Only
+
+- **File:** `apps/studio/schemaTypes/documents/collections/store.ts`
+- **No geopoint field** - coordinates calculated automatically on client-side
+- Content editors only need to provide:
+  - Postal code (validated format: xx-xxx)
+  - City name (used for geocoding)
+  - Street and number
+- Grid layout for address fields:
+  - Row 1: Postal code (6 cols) + City (6 cols)
+  - Row 2: Street and number (12 cols)
+- **Advantage:** Zero manual coordinate setup, fully automatic
+
+### 20. ✅ Updated Brand Query to Fetch Stores
+
+- **File:** `apps/web/src/global/sanity/query.ts`
+- Query: `*[_type == "store" && _id in array::unique(*[_type == "product" && brand._ref == ^._id].availableInStores[]._ref)]`
+- Fetches unique stores from all products of the brand
+- Projects: name, address (postal code, city, street), phone, website
+- **No location field** - coordinates generated client-side from city name
+- Generated TypeScript types properly capture store array structure
+
+### 20a. ✅ Created Geocoding Utility
+
+- **File:** `apps/web/src/lib/geocoding.ts`
+- Uses **Nominatim (OpenStreetMap)** free geocoding API
+- **No API keys required** - completely free service
+- Features:
+  - `geocodeCity(city, country)` - Convert city name to coordinates
+  - `geocodeCities(cities)` - Batch geocode with rate limiting (1 req/sec)
+  - In-memory caching to prevent repeated API calls
+  - Nominatim rate limit compliance (1 request/second)
+  - Error handling with fallback to null
+- **User-Agent header** required by Nominatim (set to "Audiofast-Website/1.0")
+- **Poland-specific**: Uses `countrycodes=pl` parameter for accurate results
+- **Cache strategy**: Results stored in Map for session duration
+
+### 21. ✅ Created StoreLocations Component with Client-Side Geocoding
+
+- **Location:** `apps/web/src/components/ui/StoreLocations/`
+- **Features:**
+  - Two-column layout: Map (left) + Store list (right)
+  - **Automatic geocoding on mount** - converts city names to coordinates
+  - Interactive map with custom markers
+  - Click store in list → map centers on location
+  - Click map marker → store highlighted in list + scrolls into view
+  - Selected store visual feedback (red border, background tint)
+  - Responsive: Stack vertically on mobile
+- **Geocoding Flow:**
+  1. Component mounts → extracts city names from stores
+  2. Calls `geocodeCity()` for each unique city
+  3. Caches results in memory
+  4. Updates `storesWithLocations` state
+  5. Map renders with calculated coordinates
+- **Loading States:**
+  - `isGeocoding` state tracks geocoding progress
+  - Shows "Ładowanie lokalizacji..." placeholder during geocoding
+  - Shows "Nie znaleziono lokalizacji..." if all geocoding fails
+- **Map Implementation:**
+  - Dynamic import to avoid SSR issues
+  - OpenStreetMap tiles (free)
+  - Custom SVG markers (red for selected, gray for others)
+  - Popups with store details
+  - Auto-center based on geocoded locations
+  - Zoom level: 13 for single store, 7 for multiple
+- **Store List:**
+  - Store name, full address
+  - Phone (clickable tel: link)
+  - Website (opens in new tab)
+  - Keyboard accessible (Enter/Space to select)
+  - Click-through on contact links (stopPropagation)
+
+### 22. ✅ Created StoreMap Component
+
+- **File:** `apps/web/src/components/ui/StoreLocations/StoreMap.tsx`
+- **Client-side only** (Leaflet requires DOM)
+- **Features:**
+  - MapContainer with react-leaflet
+  - Custom markers using L.divIcon with inline SVG
+  - Marker color changes based on selection state
+  - Popups with formatted store information
+  - MapUpdater component for centering on selection
+  - Smooth animated transitions when selecting stores
+- **Styling:**
+  - Border radius: 0.5rem
+  - Scroll wheel zoom disabled (better UX)
+  - Attribution to OpenStreetMap
+
+### 23. ✅ Styled StoreLocations Component
+
+- **File:** `apps/web/src/components/ui/StoreLocations/styles.module.scss`
+- **Layout:**
+  - Gray background container (#F8F8F8)
+  - Two-column flex layout with 3rem gap
+  - Map: min-height 31.25rem (500px)
+  - Border radius: 0.5rem
+- **Store List:**
+  - Store cards with bottom borders
+  - Hover effect (light gray background)
+  - Active state (red border, tinted background)
+  - Padding: 1.25rem vertical, 1rem horizontal
+  - Focus-visible outline for accessibility
+- **Contact Items:**
+  - Icon with red tinted circular background
+  - Phone icon (clickable with tel: link)
+  - Globe icon (clickable to website)
+  - Hover transitions on links
+- **Mobile (≤899px):**
+  - Stack map above list
+  - Reduced min-height for map (18.75rem)
+  - Full-width store cards
+  - Contact items aligned left
+  - Smaller font sizes and spacing
+
+### 24. ✅ Integrated into Brand Page
+
+- **File:** `apps/web/src/app/marki/[slug]/page.tsx`
+- Added import: `StoreLocations`
+- Conditional rendering: Only shows if `brand.stores` exists and has items
+- Positioned after Featured Reviews section
+- Automatically fetches stores from products of the brand
+- Type-safe integration with generated types
+
+### 25. ✅ Added Leaflet CSS to Global Styles
+
+- **File:** `apps/web/src/global/global.scss`
+- Imported Leaflet CSS at top of file
+- Ensures map tiles and controls display correctly
+- Custom marker icons styled globally
+
+### Technical Decisions
+
+1. **Leaflet over Mapbox/Google Maps:**
+   - Free forever, no API keys or usage limits
+   - Excellent OpenStreetMap coverage for Poland
+   - Simple integration with React
+   - No privacy/tracking concerns
+
+2. **Dynamic Import for Map:**
+   - Prevents SSR hydration errors (Leaflet requires `window`)
+   - Shows loading placeholder during import
+   - Improves initial page load performance
+
+3. **Custom SVG Markers:**
+   - No need for external marker image files
+   - Inline SVG allows dynamic color changes
+   - Red for selected (#C54E47), gray for others
+   - Proper icon sizing (25x41) matching Leaflet defaults
+
+4. **Client-Side Geocoding Strategy:**
+   - No manual coordinate setup in Sanity
+   - Content editors only provide city names
+   - Coordinates calculated automatically on client-side
+   - Uses free Nominatim API (no API keys)
+   - In-memory caching prevents repeated requests
+   - Perfect for city-level accuracy (map is zoomed out anyway)
+
+5. **Store Query Strategy:**
+   - Query stores via products (brand relationship)
+   - `array::unique()` prevents duplicates
+   - Single query fetches all necessary data
+   - Type-safe with generated TypeScript definitions
+
+### Files Created
+
+1. `apps/web/src/components/ui/StoreLocations/index.tsx`
+2. `apps/web/src/components/ui/StoreLocations/StoreMap.tsx`
+3. `apps/web/src/components/ui/StoreLocations/styles.module.scss`
+4. `apps/web/src/lib/geocoding.ts` - Nominatim geocoding utility
+
+### Files Modified
+
+1. `apps/studio/schemaTypes/documents/collections/store.ts` - Added location geopoint
+2. `apps/web/src/global/sanity/query.ts` - Added stores query to brand
+3. `apps/web/src/app/marki/[slug]/page.tsx` - Integrated StoreLocations
+4. `apps/web/src/global/global.scss` - Imported Leaflet CSS
+5. `apps/web/src/global/sanity/sanity.types.ts` - Generated types (auto)
+
+### Testing Checklist
+
+- ✅ Store schema requires only city/address (no manual coordinates)
+- ✅ Brand query fetches unique stores from products
+- ✅ TypeScript types properly generated
+- ✅ Geocoding API converts city names to coordinates
+- ✅ In-memory cache prevents repeated API calls
+- ✅ Loading state shows "Ładowanie lokalizacji..." during geocoding
+- ✅ Map renders without SSR errors after geocoding completes
+- ✅ Custom markers display correctly at geocoded positions
+- ✅ Click store → map centers on location
+- ✅ Click marker → store highlighted and scrolled into view
+- ✅ Phone and website links work correctly
+- ✅ Keyboard navigation works (Tab, Enter, Space)
+- ✅ Mobile layout stacks vertically
+- ✅ Responsive font sizes and spacing
+- ✅ No linter errors
+- ✅ Proper error handling for failed geocoding
+- ✅ Nominatim rate limiting respected (1 req/sec)
 
 ---
 
@@ -272,11 +876,11 @@ export interface BrandStickyNavProps {
 
 ---
 
-### Step 2.2: Create BrandContent Component
+### Step 2.2: Create TwoColumnContent Component ✅ COMPLETED
 
-**Location**: `apps/web/src/components/ui/BrandContent/`
+**Location**: `apps/web/src/components/ui/TwoColumnContent/`
 
-**Purpose**: Two-column layout section displaying brand story and images
+**Purpose**: Two-column layout section displaying brand story with optional gallery and distribution year badge
 
 **Features**:
 
@@ -285,63 +889,69 @@ export interface BrandStickyNavProps {
 - Supports images within content
 - Gray background (#F8F8F8)
 - Vertical divider between columns on desktop
+- **Includes distribution year badge inline** (not a separate component)
+- **Includes product gallery** (if 4+ images provided)
 
-**TypeScript Interface**:
+**TypeScript Interface** (Actual Implementation):
 
 ```typescript
-export interface BrandContentProps {
-  content: PortableTextBlock[];
-  heading?: string;
+export interface TwoColumnContentProps {
+  content: PortableTextProps;
+  customId?: string;
+  headingContent?: PortableTextProps; // NEW: Heading above content
+  distributionYear?: NonNullable<QueryBrandBySlugResult>['distributionYear']; // Object with year & backgroundImage
+  gallery?: SanityRawImage[];
 }
 ```
 
 **SCSS Structure**:
 
 ```scss
-.brandContent {
+.twoColumnContent {
   // Gray background container
   // Padding and border-radius
 
-  .heading {
-    // Main heading styles
-  }
+  .container {
+    .heading {
+      // Main heading styles
+    }
 
-  .contentWrapper {
-    // Two-column grid layout
+    .contentWrapper {
+      // Two-column grid layout
 
-    .column {
-      // Individual column styles
+      .column {
+        // Individual column styles
 
-      .section {
-        // Section within column
-
-        .sectionTitle {
-          // Section title with icon
+        .content {
+          // Portable text content
         }
+      }
 
-        .text {
-          // Text content
-        }
-
-        .image {
-          // Image styling
-        }
+      .divider {
+        // Vertical divider between columns (desktop only)
       }
     }
 
-    .divider {
-      // Vertical divider between columns (desktop only)
+    .galleryWrapper {
+      // Gallery section (rendered if 4+ images)
+      // Includes scroll anchor #galeria
     }
   }
 
   @media (max-width: 56.1875rem) {
     // Mobile: Stack columns vertically
 
-    .contentWrapper {
-      // Single column layout
+    .container {
+      .contentWrapper {
+        // Single column layout
 
-      .divider {
-        // Hide divider on mobile
+        .divider {
+          // Hide divider on mobile
+        }
+      }
+
+      .galleryWrapper {
+        // Mobile gallery spacing
       }
     }
   }
@@ -356,29 +966,28 @@ export interface BrandContentProps {
 - Responsive: stack columns on mobile
 - Background: `var(--neutral-200)` (#F8F8F8)
 - Border radius: 8px
+- **DistributionYearBadge renders inside container** if `distributionYear` prop provided
+- **ProductGallery renders inside container** if `gallery` prop has 4+ images
+- Gallery section includes `id="galeria"` for sticky nav scroll targeting
 
 ---
 
-### Step 2.3: Create DistributionYearBadge Component
+### Step 2.3: Distribution Year Badge ✅ COMPLETED (Inline Implementation)
 
-**Location**: `apps/web/src/components/ui/DistributionYearBadge/`
+**Location**: Inline within `apps/web/src/components/ui/TwoColumnContent/index.tsx`
 
 **Purpose**: Display year AudioFast started distributing the brand
+
+**Note**: This is **NOT a separate component** - it's rendered inline within TwoColumnContent component.
+
+**Implementation**: JSX rendered directly in TwoColumnContent when `distributionYear` prop is provided with both `year` and `backgroundImage` fields.
 
 **Features**:
 
 - Background image with gradient overlay
 - Centered text with year
 - Responsive sizing
-
-**TypeScript Interface**:
-
-```typescript
-export interface DistributionYearBadgeProps {
-  year: number;
-  backgroundImage?: string;
-}
-```
+- Styles integrated into TwoColumnContent's SCSS file
 
 **SCSS Structure**:
 
@@ -420,7 +1029,8 @@ export interface DistributionYearBadgeProps {
 
 - Text: "Jesteśmy oficjalnym dystrybutorem tej marki od {year} roku."
 - Gradient: `linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%)`
-- Position within BrandContent section as a nested element
+- Rendered within TwoColumnContent component (after content columns, before gallery)
+- Margin top: 2rem on desktop, 1.5rem on mobile
 
 ---
 
@@ -661,7 +1271,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
   // Determine which sections are visible
   const sections = [
     { id: 'produkty', label: 'Produkty', visible: true },
-    { id: 'o-marce', label: 'O marce', visible: !!brand.brandStory },
+    { id: 'o-marce', label: 'O marce', visible: !!brand.brandDescription },
     {
       id: 'galeria',
       label: 'Galeria',
@@ -713,28 +1323,17 @@ export default async function BrandPage({ params }: BrandPageProps) {
         </section>
       )}
 
-      {/* Brand Story Section */}
-      {brand.brandStory && (
-        <section id="o-marce">
-          <BrandContent
-            content={brand.brandStory}
-            heading={`O ${brand.name}`}
+      {/* Brand Story Section with Distribution Year and Gallery */}
+      {brand.brandDescription && brand.brandDescription.length > 0 && (
+        <div id="o-marce">
+          <TwoColumnContent
+            content={brand.brandDescription}
+            customId="o-marce"
+            headingContent={brand.brandDescriptionHeading}
+            distributionYear={brand.distributionYear} // Object with year & backgroundImage
+            gallery={brand.imageGallery}
           />
-
-          {/* Distribution Year Badge (inside BrandContent) */}
-          {brand.distributionStartYear && (
-            <DistributionYearBadge
-              year={brand.distributionStartYear}
-            />
-          )}
-        </section>
-      )}
-
-      {/* Image Gallery Section */}
-      {brand.imageGallery && brand.imageGallery.length >= 4 && (
-        <section id="galeria">
-          <ProductGallery images={brand.imageGallery} />
-        </section>
+        </div>
       )}
 
       {/* Reviews Section */}
@@ -767,7 +1366,7 @@ export default async function BrandPage({ params }: BrandPageProps) {
 import { groq } from 'next-sanity';
 import { sanityFetch } from '@/sanity/lib/client';
 
-// Brand detail query
+// Brand detail query (UPDATED)
 const brandDetailQuery = groq`
   *[_type == "brand" && slug.current == $slug][0] {
     _id,
@@ -777,8 +1376,14 @@ const brandDetailQuery = groq`
     description,
     heroImage,
     bannerImage,
-    distributionStartYear,
-    brandStory,
+    brandDescriptionHeading, // NEW: Heading above content
+    brandDescription, // Main content with h3, h4, ptMinimalImage, ptHeading
+    distributionYear { // NEW: Object structure
+      year,
+      backgroundImage {
+        // imageFragment projection
+      }
+    },
     imageGallery[] {
       _key,
       asset->{
@@ -1108,9 +1713,11 @@ export async function getAllBrandSlugs() {
 
 ---
 
-### Step 6.3: DistributionYearBadge Styles
+### Step 6.3: DistributionYearBadge Styles ✅ COMPLETED
 
-**File**: `apps/web/src/components/ui/DistributionYearBadge/styles.module.scss`
+**File**: `apps/web/src/components/ui/TwoColumnContent/styles.module.scss` (integrated inline)
+
+**Note**: These styles are now part of TwoColumnContent's SCSS file, not a separate file.
 
 ```scss
 .distributionYearBadge {
@@ -1386,7 +1993,7 @@ export async function getAllBrandSlugs() {
 
 ---
 
-### Step 7.4: Test Brand Content Section
+### Step 7.4: Test TwoColumnContent Section (with Distribution Year and Gallery)
 
 **Verification**:
 
@@ -1394,34 +2001,31 @@ export async function getAllBrandSlugs() {
 - [ ] Vertical divider appears between columns
 - [ ] Portable text renders correctly
 - [ ] Images display with proper aspect ratio
-- [ ] Section titles with icons display correctly
 - [ ] Links are styled and functional
 - [ ] Mobile: Columns stack vertically
 
----
+**Distribution Year Badge (within TwoColumnContent)**:
 
-### Step 7.5: Test Distribution Year Badge
-
-**Verification**:
-
-- [ ] Badge displays within BrandContent section
-- [ ] Background image loads correctly
+- [ ] Badge displays when `distributionYear` prop is provided
+- [ ] Badge appears after content columns, before gallery
+- [ ] Background image loads correctly from `bannerImage`
 - [ ] Gradient overlay is visible
 - [ ] Year text is centered and readable
+- [ ] Text: "Jesteśmy oficjalnym dystrybutorem tej marki od {year} roku."
 - [ ] Mobile: Text adjusts size appropriately
+- [ ] Proper spacing: margin-top 2rem desktop, 1.5rem mobile
 
----
+**Image Gallery (within TwoColumnContent)**:
 
-### Step 7.6: Test Image Gallery
-
-**Verification**:
-
-- [ ] Gallery only shows when 4+ images are present
+- [ ] Gallery only shows when `gallery` prop has 4+ images
+- [ ] Gallery appears after distribution year badge
+- [ ] Gallery section has `id="galeria"` for sticky nav targeting
 - [ ] ProductGallery component renders correctly
-- [ ] Images are clickable and open in lightbox
+- [ ] Images are clickable with carousel navigation
 - [ ] Thumbnails display below main image
 - [ ] Navigation arrows work
 - [ ] Mobile: Gallery is responsive
+- [ ] Proper spacing: margin-top 2rem desktop, 1.5rem mobile
 
 ---
 
@@ -1490,12 +2094,13 @@ export async function getAllBrandSlugs() {
 **Scenarios to Test**:
 
 - [ ] Brand has no hero image → Show placeholder or color
-- [ ] Brand has no banner image → Hide banner section
-- [ ] Brand has no brand story → Hide "O marce" section
-- [ ] Brand has no image gallery → Hide gallery section
+- [ ] Brand has no banner image → Hide banner section (but year badge still shows if year provided)
+- [ ] Brand has no brand description → Hide entire TwoColumnContent section (including year badge and gallery)
+- [ ] Brand has no image gallery → Hide gallery within TwoColumnContent
 - [ ] Brand has no reviews → Hide reviews section
-- [ ] Brand has no distribution year → Hide year badge
-- [ ] Brand has < 4 gallery images → Don't show gallery
+- [ ] Brand has no distribution year → Hide year badge within TwoColumnContent
+- [ ] Brand has < 4 gallery images → Don't show gallery within TwoColumnContent
+- [ ] Brand has description but no year/gallery → Show only two-column content
 
 ### Step 9.2: Validate Sanity Data
 

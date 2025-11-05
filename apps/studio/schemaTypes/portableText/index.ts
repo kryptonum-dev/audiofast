@@ -49,6 +49,7 @@ const ALL_ANNOTATIONS = [
 // To add a new component: Add it here with name/type, export the schema from definitions/index.ts
 const ALL_CUSTOM_COMPONENTS = [
   { name: 'ptImage', type: 'ptImage' },
+  { name: 'ptMinimalImage', type: 'ptMinimalImage' },
   { name: 'ptArrowList', type: 'ptArrowList' },
   { name: 'ptCircleNumberedList', type: 'ptCircleNumberedList' },
   { name: 'ptCtaSection', type: 'ptCtaSection' },

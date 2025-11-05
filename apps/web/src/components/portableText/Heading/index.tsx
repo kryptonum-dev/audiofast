@@ -2,36 +2,33 @@ import type { PortableTextTypeComponentProps } from '@portabletext/react';
 
 import { PortableTextRenderer } from '@/src/components/portableText';
 import type { PortableTextProps } from '@/src/global/types';
+import svgToInlineString from '@/src/global/utils';
 
 import styles from './styles.module.scss';
 
 type HeadingValue = NonNullable<PortableTextProps>[number] & {
   _type: 'ptHeading';
-  level?: 'h3' | 'h4';
-  icon?: {
-    provider?: string;
-    name?: string;
-    svg?: string;
-  };
+  level?: 'h3';
+  iconUrl?: string;
+  text: PortableTextProps;
 };
 
-export function HeadingComponent({
+export async function HeadingComponent({
   value,
 }: PortableTextTypeComponentProps<HeadingValue>) {
-  const { level = 'h3', icon, text } = value;
-  const HeadingTag = level as 'h3' | 'h4';
+  const { iconUrl, text } = value;
+
+  const svgContent = await svgToInlineString(iconUrl);
 
   return (
     <div className={styles.headingWrapper}>
-      {icon?.svg && (
+      {svgContent && (
         <div
           className={styles.icon}
-          dangerouslySetInnerHTML={{ __html: icon.svg }}
+          dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       )}
-      <HeadingTag className={styles.heading}>
-        <PortableTextRenderer value={text} />
-      </HeadingTag>
+      <PortableTextRenderer value={text} headingLevel="h3" />
     </div>
   );
 }

@@ -68,17 +68,17 @@ export const brand = defineType({
         hotspot: true,
       },
     }),
-    defineField({
-      name: 'distributionStartYear',
-      title: 'Rok rozpoczęcia dystrybucji (opcjonalny)',
-      type: 'number',
+    customPortableText({
+      name: 'brandDescriptionHeading',
+      title: 'Nagłówek sekcji szczegółowego opisu',
       description:
-        'Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)',
+        'Nagłówek wyświetlany nad szczegółowym opisem marki w sekcji dwukolumnowej',
       group: GROUP.MAIN_CONTENT,
-      validation: (Rule) =>
-        Rule.min(1900)
-          .max(new Date().getFullYear())
-          .error('Podaj prawidłowy rok'),
+      include: {
+        styles: ['normal'],
+        decorators: ['strong'],
+        annotations: [],
+      },
     }),
     customPortableText({
       name: 'brandDescription',
@@ -87,12 +87,61 @@ export const brand = defineType({
         'Szczegółowy opis marki wyświetlany w sekcji dwukolumnowej na stronie marki',
       group: GROUP.MAIN_CONTENT,
       include: {
-        styles: ['normal'],
+        styles: ['normal', 'h3'],
         lists: ['bullet', 'number'],
         decorators: ['strong', 'em'],
         annotations: ['customLink'],
       },
-      components: ['ptImage', 'ptHeading'],
+      components: ['ptMinimalImage', 'ptHeading'],
+    }),
+    defineField({
+      name: 'distributionYear',
+      title: 'Rok rozpoczęcia dystrybucji (opcjonalny)',
+      type: 'object',
+      description:
+        'Rok i obraz tła dla odznaki roku rozpoczęcia dystrybucji. Jeśli ustawisz rok, musisz również ustawić obraz tła i odwrotnie.',
+      group: GROUP.MAIN_CONTENT,
+      fields: [
+        defineField({
+          name: 'year',
+          title: 'Rok',
+          type: 'number',
+          description:
+            'Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)',
+          validation: (Rule) =>
+            Rule.min(1900)
+              .max(new Date().getFullYear())
+              .error('Podaj prawidłowy rok'),
+        }),
+        defineField({
+          name: 'backgroundImage',
+          title: 'Obraz tła',
+          type: 'image',
+          description: 'Obraz tła wyświetlany za tekstem odznaki roku',
+          options: {
+            hotspot: true,
+          },
+        }),
+      ],
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value) return true; // Optional field
+
+          const hasYear = value.year !== undefined && value.year !== null;
+          const hasImage =
+            value.backgroundImage !== undefined &&
+            value.backgroundImage !== null;
+
+          if (hasYear && !hasImage) {
+            return 'Jeśli ustawisz rok, musisz również ustawić obraz tła';
+          }
+
+          if (hasImage && !hasYear) {
+            return 'Jeśli ustawisz obraz tła, musisz również ustawić rok';
+          }
+
+          return true;
+        }),
     }),
     defineField({
       name: 'imageGallery',
@@ -119,12 +168,23 @@ export const brand = defineType({
       name: 'featuredReviews',
       title: 'Wyróżnione recenzje',
       type: 'array',
-      description: 'Wybierz recenzje związane z tą marką (maksymalnie 10)',
+      description:
+        'Wybierz recenzje produktów należących do tej marki (maksymalnie 10). Tylko recenzje przypisane do produktów tej marki są dostępne do wyboru.',
       group: GROUP.MAIN_CONTENT,
       of: [
         {
           type: 'reference',
           to: [{ type: 'review' }],
+          options: {
+            filter: ({ document }) => {
+              const brandId = document._id?.replace('drafts.', '');
+              if (!brandId) return { filter: '_id == "none"' };
+              return {
+                filter: `_id in *[_type == "product" && brand._ref == $brandId].reviews[]._ref`,
+                params: { brandId },
+              };
+            },
+          },
         },
       ],
       validation: (Rule) => Rule.max(10).error('Maksymalnie 10 recenzji'),

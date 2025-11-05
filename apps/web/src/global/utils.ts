@@ -652,3 +652,32 @@ export function validateCustomFilters(
 
   return validatedFilters;
 }
+
+/**
+ * Converts a plain string into a PortableText block structure
+ * Useful for creating simple text blocks to pass to components that expect PortableText
+ *
+ * @param text - Plain text string to convert
+ * @param style - Block style (default: 'normal'). Can be 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'normal', etc.
+ * @returns PortableText block array with a single text block
+ *
+ * @example
+ * const heading = stringToPortableText('Recenzje Marki', 'h2');
+ * // Returns: [{ _type: 'block', children: [{ _type: 'span', text: 'Recenzje Marki' }], style: 'h2', _key: '', markDefs: null, listItem: undefined, level: undefined }]
+ */
+export function stringToPortableText(
+  text: string,
+  style: string = 'normal'
+): PortableTextProps {
+  return [
+    {
+      _type: 'block',
+      children: [{ _type: 'span', text, _key: '' }],
+      style,
+      _key: '',
+      markDefs: null,
+      listItem: undefined,
+      level: undefined,
+    },
+  ] as PortableTextProps;
+}

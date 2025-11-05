@@ -1,81 +1,68 @@
-import type {
-  SanityProjectedImage,
-  SanityRawImage,
-} from '@/components/shared/Image';
+import type { SanityRawImage } from '@/components/shared/Image';
+import Image from '@/components/shared/Image';
 import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/src/global/types';
 
 import PortableText from '../../portableText';
-import DistributionYearBadge from '../DistributionYearBadge';
 import ProductGallery from '../ProductGallery';
+// import ProductGallery from '../ProductGallery';
 import styles from './styles.module.scss';
 
-type BrandProps = NonNullable<QueryBrandBySlugResult>;
 export interface TwoColumnContentProps {
-  content: BrandProps['brandDescription'];
-  heading?: string;
-  distributionYear?: number | null;
-  distributionYearBackgroundImage?: BrandProps['bannerImage'];
-  gallery?: BrandProps['imageGallery'];
+  content: PortableTextProps;
+  customId?: string;
+  headingContent?: PortableTextProps;
+  distributionYear?: NonNullable<QueryBrandBySlugResult>['distributionYear'];
+  gallery?: SanityRawImage[];
 }
 
 export default function TwoColumnContent({
   content,
-  heading,
+  customId,
+  headingContent,
   distributionYear,
-  distributionYearBackgroundImage,
   gallery,
 }: TwoColumnContentProps) {
   if (!content || !Array.isArray(content) || content.length === 0) {
     return null;
   }
 
-  // Split content into two columns at the midpoint
-  const midpoint = Math.ceil(content.length / 2);
-  const leftColumn = content.slice(0, midpoint);
-  const rightColumn = content.slice(midpoint);
-
-  const showGallery = gallery && gallery.length >= 4;
+  console.log(gallery);
 
   return (
-    <section className={styles.twoColumnContent}>
-      <div className={styles.container}>
-        {heading && <h2 className={styles.heading}>{heading}</h2>}
-        <div className={styles.contentWrapper}>
-          <div className={styles.column}>
-            <PortableText
-              value={leftColumn as PortableTextProps}
-              enablePortableTextStyles
-              className={styles.content}
-            />
-          </div>
-          <div className={styles.divider} aria-hidden="true" />
-          <div className={styles.column}>
-            <PortableText
-              value={rightColumn as PortableTextProps}
-              enablePortableTextStyles
-              className={styles.content}
-            />
-          </div>
-        </div>
-
-        {/* Distribution Year Badge */}
-        {distributionYear && (
-          <DistributionYearBadge
-            year={distributionYear}
-            backgroundImage={
-              distributionYearBackgroundImage as SanityProjectedImage
-            }
-          />
-        )}
-
-        {/* Gallery Section */}
-        {showGallery && (
-          <div id="galeria" className={styles.galleryWrapper}>
-            <ProductGallery images={gallery as SanityRawImage[]} />
-          </div>
-        )}
+    <section
+      className={` max-width-block ${styles.twoColumnContent}`}
+      id={customId || undefined}
+    >
+      <PortableText
+        value={headingContent as PortableTextProps}
+        headingLevel="h2"
+        className={styles.heading}
+      />
+      <div className={styles.contentWrapper}>
+        <PortableText
+          value={content}
+          enablePortableTextStyles
+          className={styles.content}
+        />
       </div>
+      {distributionYear && (
+        <div className={styles.distributionYearBadge}>
+          <Image
+            image={distributionYear.backgroundImage}
+            sizes="(max-width: 37.4375rem) 96vw, (max-width: 85.375rem) 90vw, 1238px"
+            loading="lazy"
+            fill
+          />
+          <h3>
+            Jesteśmy oficjalnym dystrybutorem tej marki od{' '}
+            {distributionYear.year} roku.
+          </h3>
+        </div>
+      )}
+      {gallery && (
+        <ProductGallery images={gallery} customId="galeria" isSection={false} />
+      )}
     </section>
   );
 }
