@@ -28,6 +28,32 @@ export const award = defineType({
         accept: '.svg',
       },
     }),
+    defineField({
+      name: 'products',
+      title: 'Produkty z tą nagrodą',
+      type: 'array',
+      description:
+        'Wybierz produkty, które otrzymały tę nagrodę lub wyróżnienie.',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'product' }],
+          options: {
+            filter: ({ document }) => {
+              const selectedIds = Array.isArray(document?.products)
+                ? document.products
+                    .map((item: any) => item._ref)
+                    .filter(Boolean)
+                : [];
+              return {
+                filter: '!(_id in $selectedIds)',
+                params: { selectedIds },
+              };
+            },
+          },
+        },
+      ],
+    }),
   ],
   preview: {
     select: {

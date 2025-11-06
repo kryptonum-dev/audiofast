@@ -388,6 +388,16 @@ const featuredProductsBlock = /* groq */ `
   }
 `;
 
+const productsCarouselBlock = /* groq */ `
+  _type == "productsCarousel" => {
+    ...,
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('description')},
+    ${buttonFragment('button')},
+    ${productFragment('products[]->')}
+  }
+`;
+
 const brandsMarqueeBlock = /* groq */ `
   _type == "brandsMarquee" => {
     ...,
@@ -542,6 +552,7 @@ export const pageBuilderFragment = /* groq */ `
       ${imageWithTextBoxesBlock},
       ${featuredPublicationsBlock},
       ${featuredProductsBlock},
+      ${productsCarouselBlock},
       ${brandsMarqueeBlock},
       ${brandsListBlock},
       ${brandsByCategoriesSectionBlock},
@@ -1282,6 +1293,84 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
 // Get all brand slugs for static generation
 export const queryAllBrandSlugs = defineQuery(/* groq */ `
   *[_type == "brand" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current
+  }
+`);
+
+// ----------------------------------------
+// Product Detail Queries
+// ----------------------------------------
+
+// Product detail query
+export const queryProductBySlug = defineQuery(/* groq */ `
+  *[_type == "product" && slug.current == $slug][0] {
+    _id,
+    name,
+    subtitle,
+    "slug": slug.current,
+    price,
+    isArchived,
+    ${imageFragment('imageGallery[]')},
+    ${portableTextFragment('shortDescription')},
+    brand->{
+      _id,
+      name,
+      "slug": slug.current,
+      ${imageFragment('logo')}
+    },
+    "awards": *[_type == "award" && references(^._id)]{
+      _id,
+      name,
+      ${imageFragment('logo')}
+    },
+    details{
+      ${portableTextFragment('heading')},
+      ${portableTextFragmentExtended('content')}
+    },
+    technicalData[]{
+      title,
+      value
+    },
+    duplicateGalleryInDetails,
+    availableInStores[]->{
+      _id,
+      name,
+      "slug": slug.current,
+      address{
+        postalCode,
+        city,
+        street
+      },
+      phone,
+      website
+    },
+    reviews[]->{
+      ${publicationBlock}
+    },
+    ${productFragment('relatedProducts[]->')},
+    ${pageBuilderFragment},
+        seo {
+      title,
+      description
+    },
+    openGraph {
+      title,
+      description,
+      image{
+        ${imageFragment()}
+      },
+      "seoImage": select(
+        defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        defined(imageGallery[0]) => imageGallery[0].asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        null
+      )
+    }
+  }
+`);
+
+// Get all product slugs for static generation
+export const queryAllProductSlugs = defineQuery(/* groq */ `
+  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**"))] {
     "slug": slug.current
   }
 `);

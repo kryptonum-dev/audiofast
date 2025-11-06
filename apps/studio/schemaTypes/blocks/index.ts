@@ -15,6 +15,7 @@ import { imageWithTextBoxes } from './image-with-text-boxes';
 import { imageWithVideo } from './image-with-video';
 import { latestPublication } from './latest-publication';
 import { phoneImageCta } from './phone-image-cta';
+import { productsCarousel } from './products-carousel';
 import { stepList } from './step-list';
 import { teamSection } from './team-section';
 
@@ -38,4 +39,5 @@ export const pageBuilderBlocks = [
   teamSection,
   phoneImageCta,
   stepList,
+  productsCarousel,
 ];

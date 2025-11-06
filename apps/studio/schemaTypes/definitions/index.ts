@@ -8,6 +8,7 @@ import { ptImage } from '../portableText/image';
 import { ptMinimalImage } from '../portableText/minimal-image';
 import { ptQuote } from '../portableText/quote';
 import { ptTwoColumnTable } from '../portableText/two-column-table';
+import { ptYoutubeVideo } from '../portableText/youtube-video';
 import { contactPersonField } from '../shared/contact-person';
 import { button, buttonWithNoVariant } from './button';
 import { customUrl } from './custom-url';
@@ -31,4 +32,5 @@ export const definitions = [
   ptQuote,
   ptButton,
   ptHeading,
+  ptYoutubeVideo,
 ];

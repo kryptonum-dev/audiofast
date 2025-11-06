@@ -1,0 +1,285 @@
+.productHero {
+  padding: 0 2rem;
+  margin-bottom: 3rem;
+
+  .container {
+    display: flex;
+    gap: 3rem;
+    align-items: flex-start;
+
+    .gallerySection {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .galleryWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .mainImage {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        background: var(--neutral-200);
+        position: relative;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .placeholder {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          color: var(--neutral-600);
+          font-family: 'Poppins', sans-serif;
+          font-size: 0.875rem;
+          font-weight: 300;
+        }
+      }
+
+      .thumbnails {
+        display: flex;
+        gap: 0.75rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+          height: 0.25rem;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: var(--neutral-200);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: var(--neutral-400);
+          border-radius: 0.125rem;
+        }
+
+        .thumbnail {
+          width: 5rem;
+          height: 5rem;
+          flex-shrink: 0;
+          border-radius: 0.5rem;
+          overflow: hidden;
+          cursor: pointer;
+          border: 0.125rem solid transparent;
+          background: var(--neutral-200);
+          padding: 0;
+          transition: border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+          &:hover {
+            border-color: var(--neutral-400);
+          }
+
+          &.active {
+            border-color: var(--primary-red);
+          }
+
+          &:focus-visible {
+            outline: 0.125rem solid var(--primary-red);
+            outline-offset: 0.125rem;
+          }
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .thumbnailPlaceholder {
+            width: 100%;
+            height: 100%;
+            background: var(--neutral-300);
+          }
+        }
+      }
+    }
+
+    .infoSection {
+      flex: 1;
+      background: var(--neutral-200);
+      border-radius: 0.5rem;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .brandLogo {
+        width: 8rem;
+        height: auto;
+
+        img {
+          width: 100%;
+          height: auto;
+          object-fit: contain;
+        }
+      }
+
+      .productTitle {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .brandName {
+          font-family: 'Poppins', sans-serif;
+          font-size: 0.875rem;
+          font-weight: 400;
+          line-height: 1.5;
+          color: var(--neutral-600);
+          letter-spacing: -0.02625rem;
+        }
+
+        .productName {
+          font-family: 'Switzer Variable', sans-serif;
+          font-size: 2.5rem;
+          font-weight: 500;
+          line-height: 1.16;
+          color: var(--neutral-700);
+          letter-spacing: -0.075rem;
+          margin: 0;
+        }
+      }
+
+      .subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1rem;
+        font-weight: 300;
+        line-height: 1.5;
+        color: var(--neutral-600);
+        margin: 0;
+      }
+
+      .priceWrapper {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+
+        .price {
+          font-family: 'Switzer Variable', sans-serif;
+          font-size: 2rem;
+          font-weight: 500;
+          line-height: 1.16;
+          color: var(--neutral-black);
+          letter-spacing: -0.06rem;
+        }
+      }
+
+      .awardsWrapper {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+
+        .award {
+          width: 3rem;
+          height: 3rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+
+          .awardPlaceholder {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.625rem;
+            color: var(--neutral-600);
+            text-align: center;
+          }
+        }
+      }
+
+      .description {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.875rem;
+        font-weight: 300;
+        line-height: 1.5;
+        color: var(--neutral-600);
+      }
+
+      .buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: auto;
+
+        > :global(*) {
+          flex: 1;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    padding: 0 1rem;
+    margin-bottom: 2rem;
+
+    .container {
+      flex-direction: column;
+      gap: 2rem;
+
+      .gallerySection {
+        .mainImage {
+          aspect-ratio: 4 / 3;
+        }
+
+        .thumbnails {
+          .thumbnail {
+            width: 4rem;
+            height: 4rem;
+          }
+        }
+      }
+
+      .infoSection {
+        padding: 1.5rem;
+        gap: 1rem;
+
+        .brandLogo {
+          width: 6rem;
+        }
+
+        .productTitle {
+          .productName {
+            font-size: 1.75rem;
+            letter-spacing: -0.0525rem;
+          }
+        }
+
+        .subtitle {
+          font-size: 0.875rem;
+        }
+
+        .priceWrapper {
+          .price {
+            font-size: 1.5rem;
+            letter-spacing: -0.045rem;
+          }
+        }
+
+        .awardsWrapper {
+          .award {
+            width: 2.5rem;
+            height: 2.5rem;
+          }
+        }
+
+        .buttons {
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+      }
+    }
+  }
+}

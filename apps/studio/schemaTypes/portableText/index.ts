@@ -58,6 +58,7 @@ const ALL_CUSTOM_COMPONENTS = [
   { name: 'ptQuote', type: 'ptQuote' },
   { name: 'ptButton', type: 'ptButton' },
   { name: 'ptHeading', type: 'ptHeading' },
+  { name: 'ptYoutubeVideo', type: 'ptYoutubeVideo' },
 ] as const;
 
 export type PortableTextInclude = {

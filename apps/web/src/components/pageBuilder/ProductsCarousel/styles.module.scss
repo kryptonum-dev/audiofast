@@ -1,0 +1,90 @@
+.productsCarousel {
+  padding: clamp(0.75rem, calc(1.5vw / 0.48), 1.5rem);
+  background-color: var(--neutral-200, #f8f8f8);
+  margin: clamp(1.75rem, calc(2vw / 0.48), 2rem) auto
+    clamp(1rem, calc(1vw / 0.48), 2rem);
+  border-radius: 0.5rem;
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+
+    .heading {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .description {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .carousel {
+    position: relative;
+
+    .viewport {
+      overflow: hidden;
+
+      .container {
+        display: flex;
+        gap: clamp(1rem, calc(1vw / 0.48), 1.25rem);
+        padding-left: clamp(1rem, calc(2vw / 0.48), 1.5rem);
+
+        article {
+          flex: 0 0 auto;
+          min-width: 0;
+          width: calc((100% - clamp(2rem, calc(2vw / 0.48), 2.5rem)) / 4);
+        }
+      }
+    }
+
+    // When carousel is disabled (content fits without overflow)
+    &[data-carousel-enabled='false'] {
+      .viewport {
+        .container {
+          justify-content: flex-start;
+        }
+      }
+    }
+
+    .buttons {
+      margin-top: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+      justify-content: flex-end;
+      display: flex;
+      gap: 0.75rem;
+    }
+  }
+
+  @media (max-width: 68.6875rem) {
+    .carousel {
+      .viewport {
+        margin-right: calc(-1 * clamp(0.75rem, calc(1.5vw / 0.48), 1.5rem));
+        .container {
+          article {
+            width: 15rem;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 34.3125rem) {
+    width: 100%;
+  }
+
+  @media (max-width: 27.4375rem) {
+    .header a {
+      max-width: 100%;
+      width: 100%;
+    }
+    .carousel .buttons {
+      justify-content: center;
+    }
+  }
+}
+

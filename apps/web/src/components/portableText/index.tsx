@@ -6,7 +6,7 @@ import {
   type PortableTextMarkComponentProps,
 } from '@portabletext/react';
 import Link from 'next/link';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import type { PortableTextProps } from '@/global/types';
 import { convertToSlug, portableTextToPlainString } from '@/global/utils';
@@ -21,6 +21,8 @@ import { ImageComponent } from './Image';
 import { MinimalImageComponent } from './MinimalImage';
 import { QuoteComponent } from './Quote';
 import { TwoColumnTableComponent } from './TwoColumnTable';
+import { YoutubeVideoComponent } from './YouTubeVideo';
+import { YoutubeVideoSkeleton } from './YouTubeVideo/YoutubeVideoSkeleton';
 
 type Props = {
   value: PortableTextProps;
@@ -323,6 +325,11 @@ export function PortableTextRenderer({
         ptQuote: QuoteComponent,
         ptButton: ButtonPortableTextComponent,
         ptHeading: HeadingComponent,
+        ptYoutubeVideo: (props: PortableTextComponentProps<PortableTextProps>) => (
+          <Suspense fallback={<YoutubeVideoSkeleton />}>
+            <YoutubeVideoComponent {...props} />
+          </Suspense>
+        ),
       },
       ...customComponentTypes,
     },

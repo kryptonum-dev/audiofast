@@ -164,30 +164,6 @@ export const product = defineType({
     }),
 
     defineField({
-      name: 'awards',
-      title: 'Nagrody',
-      type: 'array',
-      description: 'Wybierz nagrody i wyróżnienia przyznane temu produktowi.',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'award' }],
-          options: {
-            filter: ({ document }) => {
-              const selectedIds = Array.isArray(document?.awards)
-                ? document.awards.map((item: any) => item._ref).filter(Boolean)
-                : [];
-              return {
-                filter: '!(_id in $selectedIds)',
-                params: { selectedIds },
-              };
-            },
-          },
-        },
-      ],
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
       name: 'details',
       title: 'Szczegóły produktu',
       type: 'object',
@@ -204,6 +180,13 @@ export const product = defineType({
           title: 'Treść szczegółów',
           description:
             'Szczegółowy opis produktu, specyfikacja i inne informacje.',
+          include: {
+            styles: ['normal', 'h3'],
+            lists: ['bullet', 'number'],
+            decorators: ['strong', 'em'],
+            annotations: ['customLink'],
+          },
+          components: ['ptMinimalImage', 'ptHeading', 'ptYoutubeVideo'],
         }),
       ],
       validation: (Rule) =>
@@ -220,7 +203,7 @@ export const product = defineType({
     }),
     defineField({
       name: 'technicalData',
-      title: 'Dane techniczne',
+      title: 'Dane techniczne (opcjonalne)',
       type: 'array',
       description: 'Specyfikacja techniczna produktu.',
       of: [

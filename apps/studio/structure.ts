@@ -1,6 +1,5 @@
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
-  Award,
   BookOpen,
   Calendar,
   File,

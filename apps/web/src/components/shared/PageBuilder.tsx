@@ -9,6 +9,7 @@ import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
 import GallerySection from '../pageBuilder/GallerySection';
+import ProductsCarousel from '../pageBuilder/ProductsCarousel';
 import HeroCarousel from '../pageBuilder/HeroCarousel';
 import HeroStatic from '../pageBuilder/HeroStatic';
 import ImageTextColumns from '../pageBuilder/ImageTextColumns';
@@ -117,6 +118,14 @@ export function PageBuilder({
               <FeaturedProducts
                 key={block._key}
                 {...(block as BlockByType<'featuredProducts'>)}
+                index={index}
+              />
+            );
+          case 'productsCarousel':
+            return (
+              <ProductsCarousel
+                key={block._key}
+                {...(block as BlockByType<'productsCarousel'>)}
                 index={index}
               />
             );
