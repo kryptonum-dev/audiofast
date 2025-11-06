@@ -8,9 +8,11 @@ import styles from './styles.module.scss';
 type FeaturedPublicationsProps = PagebuilderType<'featuredPublications'> & {
   index: number;
   publicationLayout?: 'vertical' | 'horizontal';
+  customId?: string;
 };
 
 export default function FeaturedPublications({
+  customId,
   heading,
   button,
   publications,
@@ -18,7 +20,10 @@ export default function FeaturedPublications({
   publicationLayout = 'horizontal',
 }: FeaturedPublicationsProps) {
   return (
-    <section className={`${styles.featuredPublications} max-width-block`}>
+    <section
+      id={customId}
+      className={`${styles.featuredPublications} max-width-block`}
+    >
       <header className={styles.header}>
         <PortableText
           value={heading}

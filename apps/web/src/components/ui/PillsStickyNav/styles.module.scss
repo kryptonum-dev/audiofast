@@ -1,0 +1,224 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 1100;
+}
+
+.compactIndicator {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--neutral-white);
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--neutral-black);
+  cursor: pointer;
+  z-index: 1200;
+  animation: fadeIn 200ms;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  svg {
+    transition: transform 200ms;
+  }
+
+  &:active {
+    transform: translateX(-50%) scale(0.95);
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: 34.3125rem) {
+    display: flex;
+  }
+}
+
+.pillsStickyNav {
+  position: sticky;
+  top: 4.75rem;
+  z-index: 100;
+  padding-top: 0.5rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.9) 40%,
+    rgba(255, 255, 255, 0) 40%,
+    transparent 100%
+  );
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+
+  .pillsWrapper {
+    position: relative;
+    display: flex;
+    padding: 0.375rem;
+    background: var(--neutral-200);
+    border-radius: 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    transition: box-shadow 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      top: 0.375rem;
+      left: 0;
+      height: calc(100% - 0.75rem);
+      background: var(--neutral-white);
+      border-radius: 1.125rem;
+      box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.02);
+      transition:
+        transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        width 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .pill {
+      position: relative;
+      flex: 1;
+      min-width: max-content;
+      padding: 0.625rem 1.5rem;
+      display: grid;
+      place-items: center;
+      border-radius: 1.125rem;
+      font-size: var(--typography-body-m, 0.875rem);
+      font-weight: 400;
+      line-height: 1.43;
+      text-align: center;
+      cursor: pointer;
+      transition: color 200ms;
+      z-index: 1;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 1.125rem;
+        background-color: var(--neutral-500);
+        transition: opacity 250ms;
+        z-index: -1;
+        opacity: 0;
+      }
+
+      &:hover {
+        color: var(--neutral-700);
+
+        &::before {
+          opacity: 0.2;
+        }
+      }
+
+      &:focus-visible {
+        outline-offset: 0;
+      }
+
+      &[aria-current='page'] {
+        color: var(--neutral-black);
+
+        &::before {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  &.scrolled {
+    .pillsWrapper {
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  @media (max-width: 34.3125rem) {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    background: transparent;
+    z-index: 1200;
+    pointer-events: none;
+
+    .pillsWrapper {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1.25rem;
+      background: var(--neutral-white);
+      border-radius: 1rem 1rem 0 0;
+      box-shadow: 0 -0.5rem 2.5rem rgba(0, 0, 0, 0.15);
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(100%);
+      pointer-events: auto;
+      transition:
+        max-height 350ms cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 250ms,
+        transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+
+      .slider {
+        top: 0;
+        left: 1.25rem;
+        width: calc(100% - 2.5rem);
+        height: 2.75rem;
+        background: var(--neutral-600);
+        background-color: rgba(0, 0, 0, 0.04);
+        border-radius: 0.75rem;
+        transition:
+          transform 250ms cubic-bezier(0.16, 1, 0.3, 1),
+          height 250ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .pill {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        justify-content: flex-start;
+
+        &::before {
+          display: none;
+        }
+
+        &:hover {
+          color: var(--neutral-black);
+        }
+      }
+    }
+
+    &.expanded {
+      .pillsWrapper {
+        max-height: 70vh;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    &.scrolled {
+      .pillsWrapper {
+        box-shadow: 0 -0.5rem 2.5rem rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+}

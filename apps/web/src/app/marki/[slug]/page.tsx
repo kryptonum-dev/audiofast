@@ -12,6 +12,7 @@ import SortDropdown from '@/src/components/products/SortDropdown';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import Image from '@/src/components/shared/Image';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import {
@@ -161,6 +162,26 @@ export default async function BrandPage(props: BrandPageProps) {
     },
   ];
 
+  // Determine which sections are visible for sticky navigation
+  const sections = [
+    { id: 'produkty', label: 'Produkty', visible: true },
+    {
+      id: 'o-marce',
+      label: 'O marce',
+      visible: !!brand.brandDescription,
+    },
+    {
+      id: 'recenzje',
+      label: 'Recenzje',
+      visible: !!brand.featuredReviews,
+    },
+    {
+      id: 'gdzie-kupic',
+      label: 'Gdzie kupić',
+      visible: !!brand.stores,
+    },
+  ].filter((section) => section.visible);
+
   return (
     <main id="main" className="page-transition">
       <Breadcrumbs data={breadcrumbsData} firstItemType="heroStatic" />
@@ -186,7 +207,7 @@ export default async function BrandPage(props: BrandPageProps) {
         _type="heroStatic"
         button={null}
       />
-      {/* <BrandStickyNav sections={sections} /> */}
+      {sections.length > 1 && <PillsStickyNav sections={sections} />}
       <section id="produkty" className={`${styles.productsListing} max-width`}>
         <ProductsAside
           categories={brand.categories || []}
@@ -275,12 +296,16 @@ export default async function BrandPage(props: BrandPageProps) {
           index={1}
           _key=""
           _type="featuredPublications"
+          customId="recenzje"
         />
       )}
       {brand.stores &&
         Array.isArray(brand.stores) &&
         brand.stores.length > 0 && (
-          <StoreLocations stores={brand.stores.filter((s) => s !== null)} />
+          <StoreLocations
+            customId="gdzie-kupic"
+            stores={brand.stores.filter((s) => s !== null)}
+          />
         )}
     </main>
   );

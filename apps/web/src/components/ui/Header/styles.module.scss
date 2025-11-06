@@ -33,6 +33,7 @@
   top: 0;
   background-color: var(--neutral-black, #000);
   z-index: 1001;
+  min-height: 4.75rem;
 
   // Halo/shadow effect using pseudo-element
   &::before {
