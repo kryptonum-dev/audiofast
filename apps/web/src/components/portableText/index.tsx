@@ -6,6 +6,7 @@ import {
   type PortableTextMarkComponentProps,
 } from '@portabletext/react';
 import Link from 'next/link';
+import type { PortableTextTypeComponentProps } from 'next-sanity';
 import React, { Suspense } from 'react';
 
 import type { PortableTextProps } from '@/global/types';
@@ -325,11 +326,16 @@ export function PortableTextRenderer({
         ptQuote: QuoteComponent,
         ptButton: ButtonPortableTextComponent,
         ptHeading: HeadingComponent,
-        ptYoutubeVideo: (props: PortableTextComponentProps<PortableTextProps>) => (
-          <Suspense fallback={<YoutubeVideoSkeleton />}>
-            <YoutubeVideoComponent {...props} />
-          </Suspense>
-        ),
+        ptYoutubeVideo: (
+          props: PortableTextTypeComponentProps<PortableTextProps>
+        ) => {
+          return (
+            <Suspense fallback={<YoutubeVideoSkeleton />}>
+              {/* @ts-expect-error - Async component in Suspense boundary */}
+              <YoutubeVideoComponent value={props.value} />
+            </Suspense>
+          );
+        },
       },
       ...customComponentTypes,
     },

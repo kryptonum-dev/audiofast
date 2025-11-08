@@ -9,7 +9,7 @@
     "format": "bun run prettier --write .",
     "start": "bun run sanity start",
     "lint": "bun run eslint .",
-    "build": "bun run sanity build",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' bun run sanity build",
     "deploy": "bun run sanity deploy",
     "type": "bun run sanity schema extract --enforce-required-fields && bun run sanity typegen generate",
     "check-types": "bun run tsc --noEmit"

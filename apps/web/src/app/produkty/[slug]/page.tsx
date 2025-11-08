@@ -21,7 +21,11 @@ import type {
   QueryProductBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
-import type { PagebuilderType, PortableTextProps } from '@/src/global/types';
+import type {
+  BrandType,
+  PagebuilderType,
+  PortableTextProps,
+} from '@/src/global/types';
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -116,7 +120,7 @@ export default async function ProductPage(props: ProductPageProps) {
       <ProductHero
         name={product.name || ''}
         subtitle={product.subtitle || ''}
-        brand={product.brand}
+        brand={product.brand as BrandType}
         price={product.price}
         imageGallery={(product.imageGallery || []) as SanityRawImage[]}
         shortDescription={product.shortDescription}
