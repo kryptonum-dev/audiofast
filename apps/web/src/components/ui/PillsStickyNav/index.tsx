@@ -10,9 +10,13 @@ export interface PillsStickyNavProps {
     label: string;
     visible: boolean;
   }[];
+  className?: string;
 }
 
-export default function PillsStickyNav({ sections }: PillsStickyNavProps) {
+export default function PillsStickyNav({
+  sections,
+  className,
+}: PillsStickyNavProps) {
   const [activeSection, setActiveSection] = useState<string>('');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileVisible, setIsMobileVisible] = useState(true);
@@ -184,7 +188,7 @@ export default function PillsStickyNav({ sections }: PillsStickyNavProps) {
 
       <nav
         ref={navRef}
-        className={`${styles.pillsStickyNav} ${
+        className={`${styles.pillsStickyNav} ${className} ${
           !isMobileBreakpoint ? 'max-width-block' : ''
         } ${isScrolled ? styles.scrolled : ''} ${isMobileExpanded ? styles.expanded : ''}`}
         aria-label="Nawigacja sekcji"

@@ -10,6 +10,7 @@
   border-radius: 0.5rem;
   background-color: var(--neutral-200, #f8f8f8);
   column-gap: 2rem;
+  isolation: isolate;
 
   .mapWrapper {
     width: 100%;

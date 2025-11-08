@@ -217,7 +217,10 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
     "slug": slug.current,
     ${imageFragment('logo')},
   },
-  "mainImage": ${imageFragment('imageGallery[0]')},
+  "mainImage": select(
+    defined(previewImage) => ${imageFragment('previewImage')},
+    ${imageFragment('imageGallery[0]')}
+  ),
   ${portableTextFragment('shortDescription')},
   }
 `;
@@ -392,8 +395,6 @@ const productsCarouselBlock = /* groq */ `
   _type == "productsCarousel" => {
     ...,
     ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${buttonFragment('button')},
     ${productFragment('products[]->')}
   }
 `;
@@ -777,7 +778,10 @@ export const queryReviewBySlug =
       "slug": slug.current,
       ${imageFragment('logo')},
     },
-    "mainImage": ${imageFragment('imageGallery[0]')},
+    "mainImage": select(
+      defined(previewImage) => ${imageFragment('previewImage')},
+      ${imageFragment('imageGallery[0]')}
+    ),
     ${imageFragment('imageGallery[]')},
     ${portableTextFragment('shortDescription')},
   },
@@ -1145,7 +1149,10 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
         "slug": slug.current,
         ${imageFragment('logo')}
       },
-      "mainImage": ${imageFragment('imageGallery[0]')},
+      "mainImage": select(
+        defined(previewImage) => ${imageFragment('previewImage')},
+        ${imageFragment('imageGallery[0]')}
+      ),
       ${portableTextFragment('shortDescription')}
     },
     "totalCount": count(*[
@@ -1329,9 +1336,8 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     },
     technicalData[]{
       title,
-      value
+      ${portableTextFragment('value')}
     },
-    duplicateGalleryInDetails,
     availableInStores[]->{
       _id,
       name,

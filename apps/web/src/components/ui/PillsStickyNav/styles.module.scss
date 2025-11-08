@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   background: transparent;
-  z-index: 1100;
+  z-index: 200;
 }
 
 .compactIndicator {
@@ -23,7 +23,7 @@
   font-weight: 500;
   color: var(--neutral-black);
   cursor: pointer;
-  z-index: 1200;
+  z-index: 300;
   animation: fadeIn 200ms;
 
   @keyframes fadeIn {
@@ -159,7 +159,7 @@
     max-width: 100%;
     padding: 0;
     background: transparent;
-    z-index: 1200;
+    z-index: 300;
     pointer-events: none;
 
     .pillsWrapper {

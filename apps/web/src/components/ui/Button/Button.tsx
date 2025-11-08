@@ -20,7 +20,8 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
       | 'submit'
       | 'phone'
       | 'clearFilters'
-      | 'applyFilters';
+      | 'applyFilters'
+      | 'information';
   };
 
 export default function Button({
@@ -63,6 +64,8 @@ export default function Button({
         return <ClearFiltersIcon />;
       case 'applyFilters':
         return <ApplyFiltersIcon />;
+      case 'information':
+        return <InformationIcon />;
       default:
         return <ArrowUp />;
     }
@@ -76,6 +79,7 @@ export default function Button({
         {iconUsed !== 'phone' &&
           iconUsed !== 'clearFilters' &&
           iconUsed !== 'applyFilters' &&
+          iconUsed !== 'information' &&
           icon}
       </div>
       <div className={styles.textContainer}>
@@ -194,6 +198,26 @@ const ApplyFiltersIcon = () => (
     </g>
     <defs>
       <clipPath id="apply-filters-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const InformationIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#information-clip)"
+    >
+      <path d="M3 12a9 9 0 1 0 18.001 0A9 9 0 0 0 3 12ZM12 9h.01" />
+      <path d="M11 12h1v4h1" />
+    </g>
+    <defs>
+      <clipPath id="information-clip">
         <path fill="#fff" d="M0 0h24v24H0z" />
       </clipPath>
     </defs>

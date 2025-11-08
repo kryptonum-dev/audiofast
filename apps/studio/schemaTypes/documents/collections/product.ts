@@ -45,11 +45,19 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: 'previewImage',
+      title: 'Zdjęcie podglądowe (opcjonalne)',
+      type: 'image',
+      description:
+        'Zdjęcie produktu na białym/czystym tle używane w kartach produktów i listingach. To zdjęcie NIE jest częścią galerii na stronie produktu. Jeśli nie ustawisz tego pola, pierwsze zdjęcie z galerii zostanie użyte.',
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: 'imageGallery',
       title: 'Galeria zdjęć',
       type: 'array',
       description:
-        'Zdjęcia produktu. Pierwsze zdjęcie będzie głównym zdjęciem produktu.',
+        'Zdjęcia produktu dla galerii na stronie produktu. Mogą zawierać różne tła, konteksty użycia, zbliżenia itp.',
       of: [{ type: 'image' }],
       validation: (Rule) =>
         Rule.min(1).error('Produkt musi mieć co najmniej jedno zdjęcie'),
@@ -194,14 +202,6 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: 'duplicateGalleryInDetails',
-      title: 'Duplikuj galerię w szczegółach',
-      type: 'boolean',
-      description: 'Czy wyświetlić galerię zdjęć ponownie w sekcji szczegółów?',
-      initialValue: false,
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
       name: 'technicalData',
       title: 'Dane techniczne (opcjonalne)',
       type: 'array',
@@ -216,13 +216,19 @@ export const product = defineType({
               name: 'title',
               title: 'Nazwa parametru',
               type: 'string',
+              description: 'Zawartość pierwszej kolumny',
               validation: (Rule) => Rule.required(),
             }),
-            defineField({
+            customPortableText({
               name: 'value',
               title: 'Wartość',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
+              description: 'Zawartość drugiej kolumny (z formatowaniem)',
+              include: {
+                styles: ['normal'],
+                lists: [],
+                decorators: ['strong', 'em'],
+                annotations: ['customLink'],
+              },
             }),
           ],
           preview: {
@@ -230,11 +236,15 @@ export const product = defineType({
               title: 'title',
               value: 'value',
             },
-            prepare: ({ title, value }) => ({
-              title: title || 'Parametr',
-              subtitle: value || 'Brak wartości',
-              media: Settings,
-            }),
+            prepare: ({ title, value }) => {
+              const valueText =
+                value?.[0]?.children?.[0]?.text || 'Brak wartości';
+              return {
+                title: title || 'Parametr',
+                subtitle: valueText,
+                media: Settings,
+              };
+            },
           },
         },
       ],
@@ -275,7 +285,7 @@ export const product = defineType({
       title: 'Recenzje',
       type: 'array',
       description:
-        'Wybierz recenzje tego produktu (maksymalnie 4, opcjonalne).',
+        'Wybierz recenzje tego produktu (maksymalnie 10, opcjonalne).',
       of: [
         {
           type: 'reference',
@@ -294,7 +304,7 @@ export const product = defineType({
         },
       ],
       validation: (Rule) =>
-        Rule.max(4).error('Produkt może mieć maksymalnie 4 recenzje'),
+        Rule.max(10).error('Produkt może mieć maksymalnie 10 recenzji'),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({

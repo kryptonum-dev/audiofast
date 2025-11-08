@@ -1,49 +1,34 @@
-import Button from '../../ui/Button';
+import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';
+
+import PortableText from '../../portableText';
 import styles from './styles.module.scss';
 
-export interface TechnicalDataItem {
-  title: string;
-  value: string;
-}
-
-export interface TechnicalDataProps {
-  data?: TechnicalDataItem[];
+interface TechnicalDataProps {
+  data?: NonNullable<NonNullable<QueryProductBySlugResult>['technicalData']>;
   customId?: string;
-  button?: {
-    text: string;
-    href: string;
-  };
 }
 
-export default function TechnicalData({
-  data,
-  customId,
-  button,
-}: TechnicalDataProps) {
+export default function TechnicalData({ data, customId }: TechnicalDataProps) {
   if (!data || data.length === 0) return null;
 
   return (
-    <section className={`${styles.technicalData} max-width`} id={customId}>
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
-          <h2 className={styles.heading}>Dane techniczne</h2>
-
-          <div className={styles.table}>
-            {data.map((item, index) => (
-              <div key={index} className={styles.row}>
-                <div className={styles.label}>{item.title}</div>
-                <div className={styles.value}>{item.value}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {button && (
-          <div className={styles.buttonWrapper}>
-            <Button text={button.text} variant="primary" href={button.href} />
-          </div>
-        )}
-      </div>
+    <section
+      className={`${styles.technicalData} max-width-block`}
+      id={customId}
+    >
+      <h2 className={styles.heading}>Dane techniczne</h2>
+      <table className={styles.table}>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={index} className={styles.row}>
+              <td className={styles.cell}>{item.title}</td>
+              <td className={styles.cell}>
+                <PortableText value={item.value} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }

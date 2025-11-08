@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
+import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
 import TechnicalData from '@/src/components/products/TechnicalData';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
@@ -19,7 +21,7 @@ import type {
   QueryProductBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
-import type { PortableTextProps } from '@/src/global/types';
+import type { PagebuilderType, PortableTextProps } from '@/src/global/types';
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -110,7 +112,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
   return (
     <main id="main" className="page-transition">
-      {/* <Breadcrumbs data={breadcrumbsData} />
+      <Breadcrumbs data={breadcrumbsData} />
       <ProductHero
         name={product.name || ''}
         subtitle={product.subtitle || ''}
@@ -119,17 +121,14 @@ export default async function ProductPage(props: ProductPageProps) {
         imageGallery={(product.imageGallery || []) as SanityRawImage[]}
         shortDescription={product.shortDescription}
         awards={product.awards || undefined}
-      /> */}
+      />
       {sections.length > 1 && <PillsStickyNav sections={sections} />}
       <TwoColumnContent
-        content={product.details.content as PortableTextProps}
+        content={product.details!.content as PortableTextProps}
         customId="szczegoly"
-        headingContent={product.details.heading}
-        gallery={
-          product.duplicateGalleryInDetails
-            ? (product.imageGallery as SanityRawImage[])
-            : undefined
-        }
+        headingContent={product.details!.heading}
+        gallery={product.imageGallery as SanityRawImage[]}
+        className="margin-top-xms"
       />
       {product.technicalData && (
         <TechnicalData
@@ -143,9 +142,7 @@ export default async function ProductPage(props: ProductPageProps) {
           stores={product.availableInStores.filter((s) => s !== null)}
         />
       )}
-
-      {/* Reviews Section */}
-      {/* {product.reviews && product.reviews.length > 0 && (
+      {product.reviews && (
         <FeaturedPublications
           heading={[
             {
@@ -164,7 +161,7 @@ export default async function ProductPage(props: ProductPageProps) {
               level: undefined,
             },
           ]}
-          publications={product.reviews as unknown as PublicationType[]}
+          publications={product.reviews}
           button={{
             text: 'Zobacz wszystkie recenzje',
             href: '/recenzje',
@@ -179,50 +176,33 @@ export default async function ProductPage(props: ProductPageProps) {
           customId="recenzje"
           publicationLayout="horizontal"
         />
-      )} */}
-
-      {/* Related Products Carousel */}
-      {/* {product.relatedProducts && product.relatedProducts.length >= 4 && (
+      )}
+      {product.relatedProducts && (
         <ProductsCarousel
-          {...({
-            heading: [
-              {
-                _type: 'block',
-                children: [
-                  {
-                    _type: 'span',
-                    text: 'Powiązane produkty',
-                    _key: 'powiazane-produkty',
-                  },
-                ],
-                style: 'normal',
-                _key: '',
-                markDefs: null,
-                listItem: undefined,
-                level: undefined,
-              },
-            ],
-            description: null,
-            products: product.relatedProducts,
-            button: {
-              text: 'Zobacz wszystkie produkty',
-              href: '/produkty',
-              variant: 'primary' as const,
-              _key: null,
-              _type: 'button',
-              openInNewTab: false,
+          heading={[
+            {
+              _type: 'block',
+              children: [
+                {
+                  _type: 'span',
+                  text: 'Powiązane produkty',
+                  _key: 'powiazane-produkty',
+                },
+              ],
+              style: 'normal',
+              _key: '',
+              markDefs: null,
+              listItem: undefined,
+              level: undefined,
             },
-            index: 2,
-            _key: '',
-            _type: 'productsCarousel',
-            customId: 'powiazane-produkty',
-          } as PagebuilderType<'productsCarousel'> & {
-            index: number;
-            customId?: string;
-          })}
+          ]}
+          products={product.relatedProducts}
+          index={2}
+          _key=""
+          _type="productsCarousel"
+          customId="powiazane-produkty"
         />
-      )} */}
-
+      )}
       {product.pageBuilder && <PageBuilder pageBuilder={product.pageBuilder} />}
     </main>
   );

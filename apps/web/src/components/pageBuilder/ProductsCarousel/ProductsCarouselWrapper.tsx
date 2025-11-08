@@ -119,7 +119,7 @@ export default function ProductsCarouselWrapper({
         </div>
       </div>
       {canScroll && (
-        <div className={styles.buttons}>
+        <nav className={styles.buttons}>
           <ArrowButton
             direction="prev"
             onClick={scrollPrev}
@@ -134,9 +134,8 @@ export default function ProductsCarouselWrapper({
             variant="filled"
             size="md"
           />
-        </div>
+        </nav>
       )}
     </div>
   );
 }
-

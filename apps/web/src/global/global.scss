@@ -511,6 +511,14 @@ h4 .link {
 
 // Utils
 
+.margin-bottom-xms {
+  margin-bottom: 1rem;
+}
+
+.margin-top-xms {
+  margin-top: 1rem;
+}
+
 .margin-bottom-sm {
   margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 2rem);
 }

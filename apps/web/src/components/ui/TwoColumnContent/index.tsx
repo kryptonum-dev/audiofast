@@ -14,6 +14,7 @@ export interface TwoColumnContentProps {
   headingContent?: PortableTextProps;
   distributionYear?: NonNullable<QueryBrandBySlugResult>['distributionYear'];
   gallery?: SanityRawImage[];
+  className?: string;
 }
 
 export default function TwoColumnContent({
@@ -22,16 +23,15 @@ export default function TwoColumnContent({
   headingContent,
   distributionYear,
   gallery,
+  className,
 }: TwoColumnContentProps) {
   if (!content || !Array.isArray(content) || content.length === 0) {
     return null;
   }
 
-  console.log(gallery);
-
   return (
     <section
-      className={` max-width-block ${styles.twoColumnContent}`}
+      className={` max-width-block ${styles.twoColumnContent} ${className}`}
       id={customId || undefined}
     >
       <PortableText
