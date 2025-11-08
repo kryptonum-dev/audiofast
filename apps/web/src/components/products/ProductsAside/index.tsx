@@ -202,8 +202,9 @@ export default function ProductsAside({
   const buildCategoryUrl = useCallback(
     (categorySlug: string | null) => {
       if (!categorySlug) {
-        // "All Products" link
-        return `${basePath}${buildSearchParamsString()}`;
+        // "All Products" link - strip any /kategoria/* from basePath
+        const cleanBasePath = basePath.replace(/\/kategoria\/[^/]+\/?/, '');
+        return `${cleanBasePath}${buildSearchParamsString()}`;
       }
 
       // Clean slug (remove /kategoria/ prefix if present)
@@ -216,7 +217,9 @@ export default function ProductsAside({
         return `${basePath}${buildSearchParamsString(cleanSlug)}`;
       } else {
         // Products page mode: use path
-        return `${basePath}/kategoria/${cleanSlug}/${buildSearchParamsString()}`;
+        // Strip any existing /kategoria/* from basePath before appending new category
+        const cleanBasePath = basePath.replace(/\/kategoria\/[^/]+\/?/, '');
+        return `${cleanBasePath}/kategoria/${cleanSlug}/${buildSearchParamsString()}`;
       }
     },
     [basePath, buildSearchParamsString, useCategorySearchParam]
