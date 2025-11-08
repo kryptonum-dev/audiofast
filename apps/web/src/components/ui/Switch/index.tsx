@@ -1,12 +1,25 @@
-import type { HTMLAttributes, InputHTMLAttributes } from 'react';
+import type {
+  HTMLAttributes,
+  InputHTMLAttributes,
+  LabelHTMLAttributes,
+} from 'react';
 
 import styles from './styles.module.scss';
 
-type SwitchProps = {
+type BaseSwitchProps = {
   id?: string;
-  asLabel?: boolean;
   inputProps?: InputHTMLAttributes<HTMLInputElement>;
-} & Omit<HTMLAttributes<HTMLLabelElement>, 'onChange'>;
+};
+
+type SwitchAsLabelProps = BaseSwitchProps & {
+  asLabel: true;
+} & Omit<LabelHTMLAttributes<HTMLLabelElement>, 'onChange' | 'popover'>;
+
+type SwitchAsDivProps = BaseSwitchProps & {
+  asLabel?: false;
+} & Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'popover'>;
+
+type SwitchProps = SwitchAsLabelProps | SwitchAsDivProps;
 
 export default function Switch({
   id,
@@ -14,20 +27,36 @@ export default function Switch({
   inputProps,
   ...props
 }: SwitchProps) {
-  const Element = asLabel ? 'label' : 'div';
+  if (asLabel) {
+    return (
+      <label
+        className={styles.switch}
+        htmlFor={id}
+        {...(props as LabelHTMLAttributes<HTMLLabelElement>)}
+      >
+        <input
+          type="checkbox"
+          className={styles.checkbox}
+          id={id}
+          {...(inputProps as InputHTMLAttributes<HTMLInputElement>)}
+        />
+        <div className={styles.dot} />
+      </label>
+    );
+  }
+
   return (
-    <Element
+    <div
       className={styles.switch}
-      {...(asLabel && id ? { htmlFor: id } : {})}
-      {...(props as HTMLAttributes<HTMLLabelElement | HTMLDivElement>)}
+      {...(props as HTMLAttributes<HTMLDivElement>)}
     >
       <input
         type="checkbox"
         className={styles.checkbox}
         id={id}
-        {...inputProps}
+        {...(inputProps as InputHTMLAttributes<HTMLInputElement>)}
       />
       <div className={styles.dot} />
-    </Element>
+    </div>
   );
 }
