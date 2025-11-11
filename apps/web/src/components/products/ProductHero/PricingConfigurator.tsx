@@ -7,6 +7,7 @@ import type {
   PricingOptionGroupWithDetails,
   PricingSelection,
 } from '@/src/global/supabase/types';
+import { formatPrice } from '@/src/global/utils';
 
 import styles from './styles.module.scss';
 
@@ -23,12 +24,7 @@ interface NumericOptionProps {
   formatPrice: (priceCents: number) => string;
 }
 
-function NumericOption({
-  group,
-  currentValue,
-  onChange,
-  formatPrice,
-}: NumericOptionProps) {
+function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
   // Local state for text input (allows free typing like "1.7")
   const [inputValue, setInputValue] = useState(String(currentValue));
 
@@ -349,17 +345,6 @@ export default function PricingConfigurator({
     }
   }, [selectedVariant, selection.selectedOptions]);
 
-  // Format price for display
-  const formatPrice = (priceCents: number) => {
-    const priceInPLN = priceCents / 100;
-    return new Intl.NumberFormat('pl-PL', {
-      style: 'currency',
-      currency: 'PLN',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(priceInPLN);
-  };
-
   // Handler for model selection
   const handleModelChange = (variantId: string) => {
     setSelection({
@@ -430,35 +415,37 @@ export default function PricingConfigurator({
             aria-label={`${label}: ${displayValue}`}
           >
             <span className={styles.selectedValue}>{displayValue}</span>
-            {selectedOption?.priceText ? (
-              <span className={styles.priceTag}>
-                {selectedOption.priceText}
-              </span>
-            ) : (
-              !!selectedOption?.price &&
-              selectedOption.price > 0 && (
+            <div className={styles.priceTagContainer}>
+              {selectedOption?.priceText ? (
                 <span className={styles.priceTag}>
-                  +{formatPrice(selectedOption.price)}
+                  {selectedOption.priceText}
                 </span>
-              )
-            )}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              className={styles.chevron}
-              style={{
-                transform: isOpen ? 'rotate(180deg)' : 'none',
-              }}
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M6 9l6 6 6-6"
-              />
-            </svg>
+              ) : (
+                !!selectedOption?.price &&
+                selectedOption.price > 0 && (
+                  <span className={styles.priceTag}>
+                    +{formatPrice(selectedOption.price)}
+                  </span>
+                )
+              )}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                className={styles.chevron}
+                style={{
+                  transform: isOpen ? 'rotate(180deg)' : 'none',
+                }}
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M6 9l6 6 6-6"
+                />
+              </svg>
+            </div>
           </button>
 
           {isOpen && (

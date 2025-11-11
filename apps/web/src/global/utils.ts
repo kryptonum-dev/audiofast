@@ -701,3 +701,19 @@ export function stringToPortableText(
     },
   ] as PortableTextProps;
 }
+
+/**
+ * Format price from cents to PLN
+ * @param priceCents - Price in cents
+ * @returns Price in PLN
+ * @example formatPrice(15000) → "150 PLN"
+ */
+export function formatPrice(priceCents: number) {
+  const priceInPLN = priceCents / 100;
+  return new Intl.NumberFormat('pl-PL', {
+    style: 'currency',
+    currency: 'PLN',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(priceInPLN);
+}
