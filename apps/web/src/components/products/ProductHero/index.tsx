@@ -1,9 +1,11 @@
 import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
+import type { CompletePricingData } from '@/src/global/supabase/types';
 import type { BrandType, PortableTextProps } from '@/src/global/types';
 
-import Button from '../Button';
-import AddToComparison from './addToComparison';
+import Button from '../../ui/Button';
+import AddToComparison from './AddToComparison';
+import PricingConfigurator from './PricingConfigurator';
 import ProductDescription from './ProductDescription';
 import ProductHeroGallery from './ProductHeroGallery';
 import styles from './styles.module.scss';
@@ -18,7 +20,7 @@ export interface ProductHeroProps {
   name: string;
   subtitle: string;
   brand?: BrandType;
-  basePriceCents?: number | null;
+  pricingData?: CompletePricingData | null;
   imageGallery: SanityRawImage[];
   shortDescription?: PortableTextProps;
   awards?: AwardType[];
@@ -29,23 +31,13 @@ export default function ProductHero({
   name,
   subtitle,
   brand,
-  basePriceCents,
+  pricingData,
   imageGallery,
   shortDescription,
   awards,
   customId,
 }: ProductHeroProps) {
   // Format price for display (converting cents to PLN)
-  const formatPrice = (priceCents: number | null | undefined) => {
-    if (!priceCents || priceCents === 0) return 'Brak ceny';
-    const priceInPLN = priceCents / 100;
-    return new Intl.NumberFormat('pl-PL', {
-      style: 'currency',
-      currency: 'PLN',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(priceInPLN);
-  };
 
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
@@ -80,7 +72,12 @@ export default function ProductHero({
       </header>
       <ProductDescription shortDescription={shortDescription!} />
       <div className={styles.priceWrapper}>
-        <span className={styles.price}>{formatPrice(basePriceCents)}</span>
+        {pricingData ? (
+          <PricingConfigurator pricingData={pricingData} />
+        ) : (
+          <span className={styles.price}>Brak ceny</span>
+        )}
+
         <Button
           text="Zapytaj o produkt"
           variant="primary"

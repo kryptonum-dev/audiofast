@@ -3,12 +3,12 @@ import { notFound } from 'next/navigation';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
+import ProductHero from '@/src/components/products/ProductHero';
 import TechnicalData from '@/src/components/products/TechnicalData';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
-import ProductHero from '@/src/components/ui/ProductHero';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import { sanityFetch } from '@/src/global/sanity/client';
@@ -21,23 +21,25 @@ import type {
   QueryProductBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
-import type {
-  BrandType,
-  PagebuilderType,
-  PortableTextProps,
-} from '@/src/global/types';
+import { fetchProductPricing } from '@/src/global/supabase/queries';
+import type { BrandType, PortableTextProps } from '@/src/global/types';
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Fetch product data
-function fetchProductData(slug: string) {
-  return sanityFetch<QueryProductBySlugResult>({
-    query: queryProductBySlug,
-    params: { slug: `/produkty/${slug}/` },
-    tags: ['product', slug],
-  });
+// Fetch product data from Sanity and Supabase
+async function fetchProductData(slug: string) {
+  const [sanityData, pricingData] = await Promise.all([
+    sanityFetch<QueryProductBySlugResult>({
+      query: queryProductBySlug,
+      params: { slug: `/produkty/${slug}/` },
+      tags: ['product', slug],
+    }),
+    fetchProductPricing(slug), // Fetch pricing from Supabase
+  ]);
+
+  return { sanityData, pricingData };
 }
 
 export async function generateStaticParams() {
@@ -57,7 +59,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = await fetchProductData(slug);
+  const { sanityData: product } = await fetchProductData(slug);
 
   if (!product) return getSEOMetadata();
 
@@ -70,7 +72,7 @@ export async function generateMetadata({
 
 export default async function ProductPage(props: ProductPageProps) {
   const { slug } = await props.params;
-  const product = await fetchProductData(slug);
+  const { sanityData: product, pricingData } = await fetchProductData(slug);
 
   if (!product) {
     console.error(`Product not found: ${slug}`);
@@ -121,7 +123,7 @@ export default async function ProductPage(props: ProductPageProps) {
         name={product.name || ''}
         subtitle={product.subtitle || ''}
         brand={product.brand as BrandType}
-        price={product.price}
+        pricingData={pricingData}
         imageGallery={(product.imageGallery || []) as SanityRawImage[]}
         shortDescription={product.shortDescription}
         awards={product.awards || undefined}

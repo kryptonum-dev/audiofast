@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
 
-import ArrowButton from '../ArrowButton';
+import ArrowButton from '../../ui/ArrowButton';
 import styles from './styles.module.scss';
 
 interface ProductHeroGalleryProps {
