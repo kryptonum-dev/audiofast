@@ -1,6 +1,6 @@
-## Audiofast Pricing Pipeline — Excel → Supabase → Next.js
+## Audiofast Pricing Pipeline — Excel → Supabase → Sanity → Next.js
 
-This document recreates the entire working pipeline we built: macOS Excel button → VBA macro builds JSON → AppleScript `curl` POST → Supabase Edge Function → Postgres tables → Next.js reads. It includes full, copy‑pasteable code for the AppleScript, the Excel macro (ASCII‑only, Unicode‑safe), and the Edge Function (replace mode, ordering, updated_at), plus setup, testing, and troubleshooting.
+This document recreates the entire working pipeline we built: macOS Excel button → VBA macro builds JSON → AppleScript `curl` POST → Supabase Edge Function → Postgres tables + Sanity CMS sync → Next.js reads. It includes full, copy‑pasteable code for the AppleScript, the Excel macro (ASCII‑only, Unicode‑safe), and the Edge Functions (replace mode, ordering, updated_at, automatic Sanity sync), plus setup, testing, and troubleshooting.
 
 ### Project metadata
 
@@ -20,10 +20,47 @@ flowchart LR
   runs curl]
   ASTask --> Edge[Supabase Edge Function
   POST /pricing-ingest]
-  Edge --> DB[(Supabase Postgres)]
-  DB --> Web[Next.js website (SSR)
-  Supabase client]
+  Edge --> DB[(Supabase Postgres
+  comprehensive pricing)]
+  Edge --> Sanity[Sanity Sync Function
+  base prices only]
+  Sanity --> SanityCMS[(Sanity CMS
+  base_price_cents)]
+  DB --> Web[Next.js Product Details
+  comprehensive pricing]
+  SanityCMS --> WebListing[Next.js Product Listings
+  filtering & sorting]
 ```
+
+**Key Architecture Decision: Server-Side Chaining**
+
+The `pricing-ingest` Edge Function automatically chains to the `sync-prices-to-sanity` function after successfully ingesting to Supabase. This means:
+
+- **Single API call from Excel**: The VBA macro only calls `pricing-ingest` once
+- **Atomic dual-storage**: Both Supabase (comprehensive) and Sanity (base price) are updated in one transaction flow
+- **Automatic synchronization**: No need for separate Excel calls or manual syncing
+- **Error handling**: If Sanity sync fails, it's logged but doesn't block the Supabase ingest success
+
+**Dual Pricing Strategy:**
+
+- **Supabase**: Stores comprehensive pricing with all options, deltas, and numeric rules (queried on individual product pages)
+  - Multiple model variants are stored as separate rows (e.g., Atmosphere SX IC has 4 rows: Excite RCA, Excite XLR, Euphoria RCA, Euphoria XLR)
+  - Each variant identified by unique combination of `(price_key, model)`
+- **Sanity**: Stores only `basePriceCents` + `lastPricingSync` timestamp (used for product listing filters/sorting)
+  - For products with multiple model variants, automatically stores the **lowest** base price
+  - One price per product for efficient filtering/sorting
+
+**Key Implementation Details:**
+
+1. **UTF-8 Encoding**: Polish characters (ą, ć, ę, ł, ń, ó, ś, ź, ż) are handled correctly by:
+   - Passing JSON directly as AppleScript parameter (not via file)
+   - Including `charset=utf-8` in `curl` Content-Type headers
+2. **Multi-Variant Support**: Products can have multiple models with different prices
+   - Supabase stores all variants separately
+   - Sanity receives the lowest price for search/filter
+3. **Server-Side Chaining**: Single Excel button press updates both systems automatically
+   - No manual coordination needed
+   - Atomic operation with error tolerance
 
 ---
 
@@ -77,6 +114,24 @@ Identity keys for diff/replace:
 - Variant: `(price_key, model|null)`
 - Group: `name` (+ parent context via `parent_value_id`)
 - Value: `name` within a group
+
+**Critical Implementation Note:**
+
+The Postgres RPC function `ingest_pricing_json` (called by the Edge Function) **must check both `price_key` AND `model`** when finding/upserting variants. A previous bug where only `price_key` was checked caused multiple model variants of the same product to overwrite each other. The fix ensures:
+
+```sql
+-- Correct: Match by BOTH price_key AND model
+select id from pricing_variants
+where price_key = v->>'price_key'
+  and (
+    (model is null and (v->>'model' is null or v->>'model' = ''))
+    or
+    (model = nullif(v->>'model',''))
+  )
+limit 1;
+```
+
+This allows products like "Atmosphere SX IC" to have 4 separate variants (Excite RCA, Excite XLR, Euphoria RCA, Euphoria XLR) stored correctly in Supabase.
 
 ---
 
@@ -626,6 +681,91 @@ Testing:
 
 ---
 
+## Edge Function: `sync-prices-to-sanity` (Automatic Sanity CMS Sync)
+
+**Purpose:** This function is automatically called by `pricing-ingest` after successful Supabase ingest. It syncs base prices from the pricing payload to Sanity CMS for frontend filtering and sorting.
+
+**Architecture:** Server-side chaining (called internally by `pricing-ingest`, not directly from Excel)
+
+**Key Features:**
+
+- **Automatic invocation**: Triggered by `pricing-ingest` after successful Supabase RPC
+- **Base price sync**: Updates `basePriceCents` and `lastPricingSync` fields in Sanity product documents
+- **Lowest price selection**: For products with multiple model variants, automatically selects the lowest base price (e.g., if a product has 4 models with prices 14100, 16110, 25190, 29710, Sanity will store 14100)
+- **Product matching**: Extracts product name from `price_key` (format: `brand/product-name`) and matches to Sanity slug (`/produkty/product-name/`)
+- **Bulk updates**: Uses Sanity's transaction API for efficient batch updates
+- **Error tolerance**: Logs errors but doesn't block the main pricing ingest
+
+**Environment Variables:**
+
+- `SANITY_PROJECT_ID`: Sanity project ID
+- `SANITY_DATASET`: Sanity dataset name (e.g., "production")
+- `SANITY_API_TOKEN`: Sanity API token with write permissions
+- `EXCEL_PUBLISH_TOKEN`: Same token as `pricing-ingest` for authentication
+
+**Response Format:**
+
+```json
+{
+  "ok": true,
+  "updated": 3,
+  "skipped": 0,
+  "errors": []
+}
+```
+
+**Sanity Schema Changes:**
+
+Two new fields added to the `product` document type:
+
+```typescript
+{
+  name: 'basePriceCents',
+  title: 'Cena bazowa (grosze)',
+  type: 'number',
+  readOnly: true,
+  hidden: ({ document }) => !document?.basePriceCents,
+}
+
+{
+  name: 'lastPricingSync',
+  title: 'Ostatnia synchronizacja cen',
+  type: 'datetime',
+  readOnly: true,
+  hidden: ({ document }) => !document?.lastPricingSync,
+}
+```
+
+**Updated `pricing-ingest` Response:**
+
+After the chaining implementation, the response from `pricing-ingest` now includes both Supabase and Sanity results:
+
+```json
+{
+  "ok": true,
+  "supabase": {
+    "counts": {
+      "variants_upserted": 5,
+      "groups_upserted": 12,
+      "values_upserted": 24,
+      "numeric_rules_upserted": 0,
+      "deleted_variants": 0,
+      "deleted_groups": 0,
+      "deleted_values": 0,
+      "deleted_rules": 0
+    }
+  },
+  "sanity": {
+    "ok": true,
+    "updated": 5,
+    "skipped": 0,
+    "errors": []
+  }
+}
+```
+
+---
+
 ## AppleScript (Excel sandbox): `SupabasePublish.scpt`
 
 Save to: `~/Library/Application Scripts/com.microsoft.Excel/SupabasePublish.scpt`
@@ -982,10 +1122,35 @@ Assign a button in Excel:
 
 ## Troubleshooting (macOS Excel)
 
-- “Duplicate declaration” / “Next without For”: ensure only one clean module, avoid one‑liners; use the provided multi‑line helpers.
+### VBA Errors
+
+- "Duplicate declaration" / "Next without For": ensure only one clean module, avoid one‑liners; use the provided multi‑line helpers.
 - Diacritics become `?`: do not type Polish letters in code; macro normalizes at runtime; display strings use `ChrW$`.
-- “Invalid procedure call”: avoid Collection `Remove/Add` at fixed indices; this build uses `Count` for positions.
+- "Invalid procedure call": avoid Collection `Remove/Add` at fixed indices; this build uses `Count` for positions.
 - 401 from function: check `EXCEL_PUBLISH_TOKEN` and header `X-Excel-Token`.
+
+### Character Encoding Issues
+
+- **Polish characters corrupted (e.g., "Długość" becomes "D_ugo\_\_")**: Fixed by passing JSON directly as AppleScript parameter instead of writing to file, and including `charset=utf-8` in `curl` headers. The current implementation handles this correctly.
+
+### AppleScript Errors
+
+- **`curl` output parsing error (`(*ok*true)200`)**: Fixed by redirecting `curl` response body to `/tmp/file.body` using `-o` flag, ensuring only HTTP status code is returned.
+
+### Supabase Data Issues
+
+- **Multiple model variants overwriting each other**: The Postgres RPC function `ingest_pricing_json` must check BOTH `price_key` AND `model` when finding variants. This was fixed in migration `fix_variant_upsert_with_model`. Verify by checking that products with multiple models (e.g., Atmosphere SX IC with Excite RCA/XLR, Euphoria RCA/XLR) appear as separate rows in `pricing_variants`.
+
+### Sanity Sync Issues
+
+- **Wrong base price in Sanity**: The sync function now automatically selects the LOWEST price among all model variants for a product. This is correct for filtering/sorting on product listing pages.
+- **Sanity not updating**: Check Supabase Edge Function logs for the `sync-prices-to-sanity` function. Ensure `SANITY_PROJECT_ID`, `SANITY_DATASET`, and `SANITY_WRITE_TOKEN` environment variables are set correctly.
+
+### Logs and Debugging
+
+- **Excel publish logs**: Check `/tmp/audiofast_ingest_YYYYMMDD_HHMMSS_*.log` for detailed error messages
+- **Supabase Edge Function logs**: View in Supabase dashboard under Functions → Select function → Logs
+- **Test manually**: Use `curl` commands to test Edge Functions directly (examples provided in Setup section)
 
 ---
 
@@ -1174,3 +1339,66 @@ End Sub
 - Removed Storage buckets and chunked imports (not needed for this flow).
 - Retired old Edge Functions (`pricing-import-start/commit/status/worker`).
 - Only `pricing-ingest-verify` and `pricing-ingest` are required now.
+
+---
+
+## Changelog
+
+### January 2025 - Multi-Variant & Sanity Sync Implementation
+
+**Major Features Added:**
+
+1. **Sanity CMS Integration**
+   - Added `basePriceCents` and `lastPricingSync` fields to Sanity product schema
+   - Created `sync-prices-to-sanity` Edge Function
+   - Implemented server-side chaining for automatic Sanity updates
+   - Lowest price selection for products with multiple model variants
+
+2. **Multi-Variant Support**
+   - Fixed Postgres RPC function to properly handle multiple models per product
+   - Migration: `fix_variant_upsert_with_model` and `fix_variant_upsert_jsonb_cast`
+   - Variants now correctly identified by `(price_key, model)` tuple
+
+**Critical Bug Fixes:**
+
+1. **Character Encoding (Polish)**
+   - Issue: Polish characters (Długość, etc.) were corrupted to "D_ugo\_\_"
+   - Fix: Pass JSON directly as AppleScript parameter + `charset=utf-8` in headers
+   - Files: `AudiofastPublisher.vba`, `SupabasePublish.applescript`
+
+2. **AppleScript curl Parsing**
+   - Issue: `curl` returning `(*ok*true)200` instead of just `200`
+   - Fix: Redirect response body to file using `-o /tmp/file.body`
+   - File: `SupabasePublish.applescript` (`sendJsonDirectAsync` handler)
+
+3. **Variant Overwriting**
+   - Issue: Multiple models with same `price_key` overwriting each other
+   - Fix: Updated RPC function to check BOTH `price_key` AND `model`
+   - Database: Migration `fix_variant_upsert_with_model`
+
+4. **Sanity Price Selection**
+   - Issue: Last variant's price was stored (unpredictable)
+   - Fix: Group variants by product, select lowest price
+   - File: `supabase/functions/sync-prices-to-sanity/index.ts` (v4)
+
+**Architecture Changes:**
+
+- Moved from dual Excel calls to server-side chaining
+- Excel → `pricing-ingest` (Supabase) → `sync-prices-to-sanity` (Sanity)
+- Single button press updates both systems atomically
+
+**Files Modified:**
+
+- `supabase/functions/pricing-ingest/index.ts` (v12) - Added Sanity chaining
+- `supabase/functions/sync-prices-to-sanity/index.ts` (v4) - Lowest price logic
+- `AudiofastPublisher.vba` - Direct JSON passing
+- `SupabasePublish.applescript` - UTF-8 encoding, curl fixes
+- `apps/studio/schemaTypes/documents/collections/product.ts` - Added price fields
+- Database: 2 migrations applied
+
+**Testing Status:** ✅ All systems operational
+
+- Supabase: Multiple variants stored correctly
+- Sanity: Lowest prices synced
+- Character encoding: Polish characters working
+- Server-side chaining: Both systems update automatically

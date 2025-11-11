@@ -210,7 +210,7 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   "slug": slug.current,
   name,
   subtitle,
-  price,
+  basePriceCents,
   isArchived,
   brand->{
     name,
@@ -771,7 +771,7 @@ export const queryReviewBySlug =
     "slug": slug.current,
     name,
     subtitle,
-    price,
+    basePriceCents,
     isArchived,
     "brand": brand->{
       name,
@@ -916,8 +916,10 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && ($category == "" || $category in categories[]->slug.current)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-      && ($minPrice == 0 || price >= $minPrice)
-      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        ($minPrice == 0 && $maxPrice == 999999999) ||
+        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+      )
       && (
         count($customFilters) == 0 ||
         !defined(customFilterValues) ||
@@ -947,8 +949,10 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && references(^._id)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-      && ($minPrice == 0 || price >= $minPrice)
-      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        ($minPrice == 0 && $maxPrice == 999999999) ||
+        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+      )
     ])
   } [count > 0] | order(orderRank),
   "brands": *[_type == "brand" && defined(slug.current)] {
@@ -963,8 +967,10 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && brand._ref == ^._id
       && ($category == "" || $category in categories[]->slug.current)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
-      && ($minPrice == 0 || price >= $minPrice)
-      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        ($minPrice == 0 && $maxPrice == 999999999) ||
+        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+      )
       && (
         count($customFilters) == 0 ||
         !defined(customFilterValues) ||
@@ -984,8 +990,10 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && ($category == "" || $category in categories[]->slug.current)
     && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-    && ($minPrice == 0 || price >= $minPrice)
-    && ($maxPrice == 999999999 || price <= $maxPrice)
+    && (
+      ($minPrice == 0 && $maxPrice == 999999999) ||
+      (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+    )
     && (
       count($customFilters) == 0 ||
       !defined(customFilterValues) ||
@@ -1003,14 +1011,16 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && count(categories) > 0
     && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-    && ($minPrice == 0 || price >= $minPrice)
-    && ($maxPrice == 999999999 || price <= $maxPrice)
+    && (
+      ($minPrice == 0 && $maxPrice == 999999999) ||
+      (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+    )
   ]),
   "maxPrice": math::max(*[
     _type == "product" 
     && defined(slug.current)
     && count(categories) > 0
-    && defined(price)
+    && defined(basePriceCents)
     && ($category == "" || $category in categories[]->slug.current)
     && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
@@ -1024,12 +1034,12 @@ const productsFilterMetadataFragment = () => /* groq */ `
         )
       ])
     )
-  ].price),
+  ].basePriceCents),
   "minPrice": math::min(*[
     _type == "product" 
     && defined(slug.current)
     && count(categories) > 0
-    && defined(price)
+    && defined(basePriceCents)
     && ($category == "" || $category in categories[]->slug.current)
     && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
@@ -1043,7 +1053,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
         )
       ])
     )
-  ].price)
+  ].basePriceCents)
 `;
 
 // Query for products page data (layout, categories, current category, SEO)
@@ -1088,8 +1098,10 @@ export const queryProductsPageData = defineQuery(`
           && defined(customFilterValues)
           && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
           && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-          && ($minPrice == 0 || price >= $minPrice)
-          && ($maxPrice == 999999999 || price <= $maxPrice)
+          && (
+            ($minPrice == 0 && $maxPrice == 999999999) ||
+            (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+          )
         ]{
           _id,
           customFilterValues
@@ -1124,8 +1136,10 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
       && ($category == "" || $category in categories[]->slug.current)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-      && ($minPrice == 0 || price >= $minPrice)
-      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        ($minPrice == 0 && $maxPrice == 999999999) ||
+        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+      )
       && (
         count($customFilters) == 0 ||
         !defined(customFilterValues) ||
@@ -1142,7 +1156,7 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
       name,
       subtitle,
       "slug": slug.current,
-      price,
+      basePriceCents,
       isArchived,
       brand->{
         name,
@@ -1162,8 +1176,10 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
       && ($category == "" || $category in categories[]->slug.current)
       && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-      && ($minPrice == 0 || price >= $minPrice)
-      && ($maxPrice == 999999999 || price <= $maxPrice)
+      && (
+        ($minPrice == 0 && $maxPrice == 999999999) ||
+        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+      )
       && (
         count($customFilters) == 0 ||
         !defined(customFilterValues) ||
@@ -1202,11 +1218,11 @@ export const queryProductsListingOldest = defineQuery(
 );
 
 export const queryProductsListingPriceAsc = defineQuery(
-  productsListingFragment('price asc')
+  productsListingFragment('coalesce(basePriceCents, 999999999) asc')
 );
 
 export const queryProductsListingPriceDesc = defineQuery(
-  productsListingFragment('price desc')
+  productsListingFragment('coalesce(basePriceCents, -1) desc')
 );
 
 export const queryProductsListingOrderRank = defineQuery(
@@ -1315,7 +1331,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     name,
     subtitle,
     "slug": slug.current,
-    price,
+    basePriceCents,
     isArchived,
     ${imageFragment('imageGallery[]')},
     ${portableTextFragment('shortDescription')},

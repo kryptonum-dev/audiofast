@@ -9,4 +9,7 @@ export default defineCliConfig({
     dataset: dataset,
   },
   studioHost: 'audiofast',
+  deployment: {
+    appId: 'dlwt2zhgkk7rjx6dj8rdyjfz',
+  },
 });

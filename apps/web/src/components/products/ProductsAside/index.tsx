@@ -12,6 +12,7 @@ import {
 } from 'react';
 
 import type { BrandType, ProductCategoryType } from '@/src/global/types';
+import { centsToPLN, plnToCents } from '@/src/global/utils';
 
 import Button from '../../ui/Button';
 import Searchbar from '../../ui/Searchbar';
@@ -54,11 +55,12 @@ export default function ProductsAside({
 
   // Consolidated local state for all filters (not applied until "Filtruj" is clicked)
   // Single state object = single state update = fewer re-renders
+  // Prices are stored in PLN for display, converted to cents when applying to URL
   const [filters, setFilters] = useState({
     search: initialSearch,
     brands: initialBrands, // Clean slugs from parseBrands (e.g., "aurender", "dcs")
-    minPrice: initialMinPrice,
-    maxPrice: effectiveMaxPrice,
+    minPrice: centsToPLN(initialMinPrice),
+    maxPrice: centsToPLN(effectiveMaxPrice),
   });
 
   // Group categories by parent to determine initial expanded state
@@ -118,8 +120,8 @@ export default function ProductsAside({
     setFilters({
       search: initialSearch,
       brands: initialBrands,
-      minPrice: initialMinPrice,
-      maxPrice: initialMaxPrice ?? maxPrice,
+      minPrice: centsToPLN(initialMinPrice),
+      maxPrice: centsToPLN(initialMaxPrice ?? maxPrice),
     });
   }, [
     initialSearch,
@@ -337,15 +339,18 @@ export default function ProductsAside({
       params.delete('brands');
     }
 
-    // Price range
-    if (filters.minPrice > 0) {
-      params.set('minPrice', filters.minPrice.toString());
+    // Price range (convert PLN back to cents for URL)
+    const minPriceCents = plnToCents(filters.minPrice);
+    const maxPriceCents = plnToCents(filters.maxPrice);
+
+    if (minPriceCents > 0) {
+      params.set('minPrice', minPriceCents.toString());
     } else {
       params.delete('minPrice');
     }
 
-    if (filters.maxPrice < maxPrice) {
-      params.set('maxPrice', filters.maxPrice.toString());
+    if (maxPriceCents < maxPrice) {
+      params.set('maxPrice', maxPriceCents.toString());
     } else {
       params.delete('maxPrice');
     }
@@ -381,12 +386,12 @@ export default function ProductsAside({
     // Custom filters (category-specific) are preserved automatically
     // because we only delete the sidebar params and 'category' search param
 
-    // Reset local state for sidebar filters
+    // Reset local state for sidebar filters (convert cents to PLN)
     setFilters({
       search: '',
       brands: [],
       minPrice: 0,
-      maxPrice: maxPrice,
+      maxPrice: centsToPLN(maxPrice),
     });
 
     const queryString = params.toString();
@@ -610,7 +615,7 @@ export default function ProductsAside({
           onMaxChange={(value) =>
             setFilters((prev) => ({ ...prev, maxPrice: value }))
           }
-          maxLimit={maxPrice}
+          maxLimit={centsToPLN(maxPrice)}
         />
 
         {/* Filter Button */}

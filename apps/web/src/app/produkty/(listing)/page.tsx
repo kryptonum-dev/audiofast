@@ -102,14 +102,15 @@ export default async function ProductsPage(props: ProductsPageProps) {
   const actualMaxPrice = productsData.maxPrice ?? 100000;
   const actualMinPrice = productsData.minPrice ?? 0;
 
-  // Validate and adjust price range based on filtered results
-  if (minPrice > actualMaxPrice) {
+  // Only adjust prices if user applied filters, otherwise keep defaults
+  // This ensures products without prices are shown when no filter is active
+  if (Boolean(searchParams.minPrice) && minPrice > actualMaxPrice) {
     minPrice = actualMinPrice;
   }
-  if (maxPrice > actualMaxPrice) {
+  if (Boolean(searchParams.maxPrice) && maxPrice > actualMaxPrice) {
     maxPrice = actualMaxPrice;
   }
-  if (maxPrice < 1) {
+  if (Boolean(searchParams.maxPrice) && maxPrice < 1) {
     maxPrice = actualMaxPrice;
   }
 

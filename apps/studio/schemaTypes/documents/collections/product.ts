@@ -37,11 +37,24 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: 'price',
-      title: 'Cena',
+      name: 'basePriceCents',
+      title: 'Cena bazowa (grosze)',
       type: 'number',
-      description: 'Cena produktu.',
-      initialValue: 0,
+      description:
+        'Automatycznie synchronizowana z danych cenowych z Excela. To pole jest tylko do odczytu i jest aktualizowane przez pipeline cenowy. 1 PLN = 100 groszy.',
+      readOnly: false,
+      validation: (Rule) => Rule.integer().min(0),
+      // hidden: ({ document }) => !document?.basePriceCents,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: 'lastPricingSync',
+      title: 'Ostatnia synchronizacja cen',
+      type: 'datetime',
+      description:
+        'Znacznik czasu ostatniej aktualizacji ceny z Excela. Aktualizowany automatycznie.',
+      readOnly: false,
+      // hidden: ({ document }) => !document?.lastPricingSync,
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({

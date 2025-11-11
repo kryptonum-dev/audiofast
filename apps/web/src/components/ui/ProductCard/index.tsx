@@ -25,19 +25,20 @@ export default function ProductCard({
   priority = false,
   loading = 'lazy',
 }: ProductCardProps) {
-  const { slug, name, subtitle, price, brand, mainImage } = product;
+  const { slug, name, subtitle, basePriceCents, brand, mainImage } = product;
 
   const Heading = headingLevel;
 
-  // Format price for display
-  const formatPrice = (price: number | null) => {
-    if (!price) return 'Cena na zapytanie';
+  // Format price for display (converting cents to PLN)
+  const formatPrice = (priceCents: number | null | undefined) => {
+    if (!priceCents || priceCents === 0) return 'Brak ceny';
+    const priceInPLN = priceCents / 100;
     return new Intl.NumberFormat('pl-PL', {
       style: 'currency',
       currency: 'PLN',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(price);
+    }).format(priceInPLN);
   };
 
   return (
@@ -74,7 +75,7 @@ export default function ProductCard({
           </Heading>
           <p className={styles.subtitle}>{subtitle}</p>
           <div className={styles.priceContainer} data-layout={layout}>
-            <span className={styles.price}>{formatPrice(price)}</span>
+            <span className={styles.price}>{formatPrice(basePriceCents)}</span>
             {showButton && (
               <Button
                 tabIndex={-1}

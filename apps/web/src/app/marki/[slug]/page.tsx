@@ -117,6 +117,7 @@ export default async function BrandPage(props: BrandPageProps) {
 
   const hasSearchQuery = Boolean(searchTerm);
   const sortBy = hasSearchQuery ? 'orderRank' : searchParams.sortBy || 'newest';
+
   let minPrice = parsePrice(searchParams.minPrice, 0);
   let maxPrice = parsePrice(searchParams.maxPrice, 999999999, 999999999);
 
@@ -140,14 +141,15 @@ export default async function BrandPage(props: BrandPageProps) {
   const actualMaxPrice = brand.maxPrice ?? 100000;
   const actualMinPrice = brand.minPrice ?? 0;
 
-  // Validate and adjust price range
-  if (minPrice > actualMaxPrice) {
+  // Only adjust prices if user applied filters, otherwise keep defaults
+  // This ensures products without prices are shown when no filter is active
+  if (Boolean(searchParams.minPrice) && minPrice > actualMaxPrice) {
     minPrice = actualMinPrice;
   }
-  if (maxPrice > actualMaxPrice) {
+  if (Boolean(searchParams.maxPrice) && maxPrice > actualMaxPrice) {
     maxPrice = actualMaxPrice;
   }
-  if (maxPrice < 1) {
+  if (Boolean(searchParams.maxPrice) && maxPrice < 1) {
     maxPrice = actualMaxPrice;
   }
 

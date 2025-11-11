@@ -18,7 +18,7 @@ export interface ProductHeroProps {
   name: string;
   subtitle: string;
   brand?: BrandType;
-  price?: number | null;
+  basePriceCents?: number | null;
   imageGallery: SanityRawImage[];
   shortDescription?: PortableTextProps;
   awards?: AwardType[];
@@ -29,21 +29,22 @@ export default function ProductHero({
   name,
   subtitle,
   brand,
-  price,
+  basePriceCents,
   imageGallery,
   shortDescription,
   awards,
   customId,
 }: ProductHeroProps) {
-  // Format price for display
-  const formatPrice = (price: number | null | undefined) => {
-    if (!price) return 'Cena na zapytanie';
+  // Format price for display (converting cents to PLN)
+  const formatPrice = (priceCents: number | null | undefined) => {
+    if (!priceCents || priceCents === 0) return 'Brak ceny';
+    const priceInPLN = priceCents / 100;
     return new Intl.NumberFormat('pl-PL', {
       style: 'currency',
       currency: 'PLN',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }).format(price);
+    }).format(priceInPLN);
   };
 
   // Prepare awards for display
@@ -79,7 +80,7 @@ export default function ProductHero({
       </header>
       <ProductDescription shortDescription={shortDescription!} />
       <div className={styles.priceWrapper}>
-        <span className={styles.price}>{formatPrice(price)}</span>
+        <span className={styles.price}>{formatPrice(basePriceCents)}</span>
         <Button
           text="Zapytaj o produkt"
           variant="primary"

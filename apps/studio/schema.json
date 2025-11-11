@@ -16350,10 +16350,17 @@
         },
         "optional": false
       },
-      "price": {
+      "basePriceCents": {
         "type": "objectAttribute",
         "value": {
           "type": "number"
+        },
+        "optional": true
+      },
+      "lastPricingSync": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },

@@ -440,6 +440,26 @@ export const STANDARD_SEARCH_PARAMS = [
 ];
 
 /**
+ * Convert price from cents to PLN (rounded to nearest integer)
+ * @param cents - Price in cents
+ * @returns Price in PLN
+ * @example centsToPLN(15000) → 150
+ */
+export function centsToPLN(cents: number): number {
+  return Math.round(cents / 100);
+}
+
+/**
+ * Convert price from PLN to cents
+ * @param pln - Price in PLN
+ * @returns Price in cents
+ * @example plnToCents(150) → 15000
+ */
+export function plnToCents(pln: number): number {
+  return pln * 100;
+}
+
+/**
  * Extract custom filter params from search params and convert to GROQ array format
  * Matches slugified filter names from URL back to original filter names
  *
