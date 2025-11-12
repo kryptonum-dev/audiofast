@@ -44,3 +44,15 @@ export type ProductCategoryType = NonNullable<
 export type BrandType = NonNullable<
   NonNullable<QueryProductsPageDataResult>['brands']
 >[number];
+
+// Embeddings API types
+export type EmbeddingResult = {
+  score: number;
+  value: {
+    documentId: string;
+    type: string;
+  };
+};
+
+export type EmbeddingsResponse = EmbeddingResult[];
+export type SearchType = 'products' | 'blog';

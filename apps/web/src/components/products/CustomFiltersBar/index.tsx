@@ -7,7 +7,7 @@ import { slugifyFilterName } from '@/src/global/utils';
 
 import styles from './styles.module.scss';
 
-type CustomFilter = {
+export type CustomFilter = {
   name: string;
   values: string[];
 };
@@ -148,10 +148,20 @@ export default function CustomFiltersBar({
             >
               <span className={styles.filterName}>{filter.name}</span>
               {activeValue && (
-                <button
-                  type="button"
+                <span
                   className={styles.activeValue}
                   onClick={(e) => handleClearFilter(filter.name, e)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleClearFilter(
+                        filter.name,
+                        e as unknown as React.MouseEvent<HTMLButtonElement>
+                      );
+                    }
+                  }}
                   aria-label={`Usuń filtr: ${activeValue}`}
                 >
                   {activeValue}
@@ -169,7 +179,7 @@ export default function CustomFiltersBar({
                       d="M18 6L6 18M6 6l12 12"
                     />
                   </svg>
-                </button>
+                </span>
               )}
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
-import CustomFiltersBar from '@/src/components/products/CustomFiltersBar';
+import CustomFiltersBar, {
+  type CustomFilter,
+} from '@/src/components/products/CustomFiltersBar';
 import ProductsAside from '@/src/components/products/ProductsAside';
 import ProductsListing from '@/src/components/products/ProductsListing';
 import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
@@ -14,6 +17,7 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import {
   PRODUCT_SORT_OPTIONS,
   PRODUCTS_ITEMS_PER_PAGE,
+  RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
@@ -58,6 +62,7 @@ export async function generateStaticParams() {
       minPrice: 0,
       maxPrice: 999999999,
       customFilters: [],
+      embeddingResults: [],
     },
     tags: ['productCategorySub'],
   });
@@ -85,6 +90,7 @@ export async function generateMetadata(props: CategoryPageProps) {
       minPrice: 0,
       maxPrice: 999999999,
       customFilters: [],
+      embeddingResults: [],
     },
     tags: ['products', 'productCategorySub', categorySlug],
   });
@@ -124,9 +130,17 @@ export default async function CategoryPage(props: CategoryPageProps) {
   const searchTerm = searchParams.search || '';
   const hasSearchQuery = Boolean(searchTerm);
 
-  // Determine sortBy: if search query exists, always use 'orderRank' (relevance)
+  // Fetch embeddings if search query exists (for semantic search)
+  // Always return an array (empty if no search) to satisfy GROQ parameter requirements
+  const embeddingResults = hasSearchQuery
+    ? (await fetchEmbeddings(searchTerm, 'products')) || []
+    : [];
+
+  // Determine sortBy: if search exists and no explicit sortBy, default to 'relevance'
   // Otherwise use provided sortBy or default to 'newest'
-  const sortBy = hasSearchQuery ? 'orderRank' : searchParams.sortBy || 'newest';
+  const sortBy = hasSearchQuery
+    ? searchParams.sortBy || 'relevance'
+    : searchParams.sortBy || 'newest';
 
   // Parse brands early (needed for query)
   const brands = parseBrands(searchParams.brands);
@@ -169,6 +183,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
       minPrice,
       maxPrice,
       customFilters,
+      embeddingResults, // Pass embeddings for filtering
     },
     tags: ['products', 'productCategorySub', 'product', 'brand', categorySlug],
   });
@@ -324,15 +339,19 @@ export default async function CategoryPage(props: CategoryPageProps) {
           initialMaxPrice={maxPrice}
         />
         <CustomFiltersBar
-          customFilters={processedFilterValues}
+          customFilters={processedFilterValues as CustomFilter[]}
           activeFilters={customFilters}
           basePath={`/produkty/kategoria/${categorySlug}/`}
           currentSearchParams={currentSearchParams}
         />
         <SortDropdown
-          options={PRODUCT_SORT_OPTIONS}
+          options={
+            hasSearchQuery
+              ? [RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]
+              : PRODUCT_SORT_OPTIONS
+          }
           basePath={`/produkty/kategoria/${categorySlug}/`}
-          defaultValue={hasSearchQuery ? 'orderRank' : 'newest'}
+          defaultValue={hasSearchQuery ? 'relevance' : 'newest'}
           hasSearchQuery={hasSearchQuery}
         />
         <Suspense
@@ -350,6 +369,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
             maxPrice={maxPrice}
             customFilters={customFilters}
             basePath={`/produkty/kategoria/${categorySlug}/`}
+            embeddingResults={embeddingResults}
           />
         </Suspense>
       </section>

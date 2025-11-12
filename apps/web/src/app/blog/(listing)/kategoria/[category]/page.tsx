@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import BlogListing from '@/src/components/blog/BlogListing';
 import BlogListingSkeleton from '@/src/components/blog/BlogListing/BlogListingSkeleton';
 import styles from '@/src/components/blog/BlogListing/styles.module.scss';
@@ -81,11 +82,21 @@ export default async function CategoryPage(props: CategoryPageProps) {
   const searchParams = await props.searchParams;
   const currentPage = Number(searchParams.page) || 1;
   const searchTerm = searchParams.search || '';
+  const hasSearchQuery = Boolean(searchTerm);
   const categorySlug = params.category;
+
+  // Fetch embeddings if search query exists (for semantic search)
+  // Always return an array (empty if no search) to satisfy GROQ parameter requirements
+  const embeddingResults = hasSearchQuery
+    ? (await fetchEmbeddings(searchTerm, 'blog')) || []
+    : [];
+
+  // Sort by relevance if search is active, otherwise by newest
+  const sortBy = hasSearchQuery ? 'relevance' : 'newest';
 
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
-    params: { category: `/blog/${categorySlug}/` },
+    params: { category: `/blog/${categorySlug}/`, embeddingResults },
     tags: ['blog', 'blog-category', categorySlug],
   });
 
@@ -148,9 +159,10 @@ export default async function CategoryPage(props: CategoryPageProps) {
           totalCount={blogData.totalCount || 0}
           basePath={`/blog/kategoria/${categorySlug}/`}
           currentCategory={categorySlug}
+          initialSearch={searchTerm}
         />
         <Suspense
-          key={`category-${categorySlug}-page-${currentPage}-search-${searchTerm}`}
+          key={`category-${categorySlug}-page-${currentPage}-search-${searchTerm}-sort-${sortBy}`}
           fallback={<BlogListingSkeleton />}
         >
           <BlogListing
@@ -159,6 +171,8 @@ export default async function CategoryPage(props: CategoryPageProps) {
             searchTerm={searchTerm}
             category={`/blog/${categorySlug}/`}
             basePath={`/blog/kategoria/${categorySlug}/`}
+            embeddingResults={embeddingResults}
+            sortBy={sortBy}
           />
         </Suspense>
       </section>

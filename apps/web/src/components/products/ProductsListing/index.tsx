@@ -24,6 +24,10 @@ type ProductsListingProps = {
   customFilters?: Array<{ filterName: string; value: string }>;
   isCPO?: boolean; // Filter for CPO products only
   basePath: string;
+  embeddingResults?: Array<{
+    score: number;
+    value: { documentId: string; type: string };
+  }> | null; // Embeddings for semantic search
 };
 
 export default async function ProductsListing({
@@ -39,6 +43,7 @@ export default async function ProductsListing({
   customFilters = [],
   isCPO = false,
   basePath,
+  embeddingResults,
 }: ProductsListingProps) {
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
@@ -62,6 +67,7 @@ export default async function ProductsListing({
       maxPrice,
       customFilters,
       isCPO,
+      embeddingResults: embeddingResults || [], // Always pass array to GROQ
     },
     tags: ['product'],
   });

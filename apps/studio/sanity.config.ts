@@ -1,8 +1,8 @@
 import { assist } from '@sanity/assist';
+import { embeddingsIndexDashboard } from '@sanity/embeddings-index-ui';
 import { visionTool } from '@sanity/vision';
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
-import { iconPicker } from 'sanity-plugin-icon-picker';
 import { media } from 'sanity-plugin-media';
 
 import { Logo } from './components/logo';
@@ -27,8 +27,8 @@ export default defineConfig({
     structureTool({
       structure,
     }),
+    embeddingsIndexDashboard(),
     visionTool(),
-    iconPicker(),
     media(),
   ],
 

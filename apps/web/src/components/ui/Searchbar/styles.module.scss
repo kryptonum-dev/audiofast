@@ -48,6 +48,11 @@
   &:focus {
     outline: none;
   }
+
+  // Adjust padding when submit button is present
+  .searchbar:has(.submitButton) & {
+    padding-right: 2.5rem;
+  }
 }
 
 .searchIcon {
@@ -67,5 +72,60 @@
   svg {
     width: 1.125rem;
     height: 1.125rem;
+  }
+}
+
+.submitButton {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  flex-shrink: 0;
+  animation: slideInFromLeft 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  &:focus-visible {
+    outline: 0.125rem solid rgba(0, 0, 0, 0.2);
+    outline-offset: 0.125rem;
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.9);
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
   }
 }

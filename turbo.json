@@ -7,18 +7,14 @@
     "VERCEL_URL",
     "VERCEL_PROJECT_PRODUCTION_URL",
     "VERCEL_ENV",
-    "NODE_ENV"
+    "NODE_ENV",
+    "EMBEDDINGS_INDEX_BEARER_TOKEN"
   ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**",
-        ".sanity/**"
-      ]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".sanity/**"]
     },
     "lint": {
       "dependsOn": ["^lint"]

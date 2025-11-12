@@ -68,6 +68,7 @@ export const PRODUCTS_ITEMS_PER_PAGE: number = 8;
 
 /**
  * Sort options for product listings.
+ * Note: 'relevance' is added dynamically when search is active
  * @constant
  * @type {Array<{value: string, label: string}>}
  */
@@ -78,3 +79,13 @@ export const PRODUCT_SORT_OPTIONS = [
   { value: 'priceAsc', label: 'Cena: od najniższej' },
   { value: 'priceDesc', label: 'Cena: od najwyższej' },
 ];
+
+/**
+ * Relevance sort option (only shown when search is active)
+ * @constant
+ * @type {{value: string, label: string}}
+ */
+export const RELEVANCE_SORT_OPTION = {
+  value: 'relevance',
+  label: 'Trafność',
+};

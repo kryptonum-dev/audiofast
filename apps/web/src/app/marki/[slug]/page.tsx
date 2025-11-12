@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import ProductsAside from '@/src/components/products/ProductsAside';
@@ -18,6 +19,7 @@ import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import {
   PRODUCT_SORT_OPTIONS,
   PRODUCTS_ITEMS_PER_PAGE,
+  RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
@@ -56,6 +58,10 @@ function fetchBrandData(
     brands?: string[];
     minPrice?: number;
     maxPrice?: number;
+    embeddingResults?: Array<{
+      score: number;
+      value: { documentId: string; type: string };
+    }>;
   }
 ) {
   return sanityFetch<QueryBrandBySlugResult>({
@@ -68,6 +74,7 @@ function fetchBrandData(
       minPrice: filters?.minPrice || 0,
       maxPrice: filters?.maxPrice || 999999999,
       customFilters: [], // Brand pages don't have custom filters
+      embeddingResults: filters?.embeddingResults || [], // Embeddings for semantic search
     },
     tags: ['brand', slug, 'products', 'product'],
   });
@@ -116,7 +123,18 @@ export default async function BrandPage(props: BrandPageProps) {
   const normalizedCategory = categorySlug ? `/kategoria/${categorySlug}/` : '';
 
   const hasSearchQuery = Boolean(searchTerm);
-  const sortBy = hasSearchQuery ? 'orderRank' : searchParams.sortBy || 'newest';
+
+  // Fetch embeddings if search query exists (for semantic search)
+  // Always return an array (empty if no search) to satisfy GROQ parameter requirements
+  const embeddingResults = hasSearchQuery
+    ? (await fetchEmbeddings(searchTerm, 'products')) || []
+    : [];
+
+  // Determine sortBy: if search exists and no explicit sortBy, default to 'relevance'
+  // Otherwise use provided sortBy or default to 'newest'
+  const sortBy = hasSearchQuery
+    ? searchParams.sortBy || 'relevance'
+    : searchParams.sortBy || 'newest';
 
   let minPrice = parsePrice(searchParams.minPrice, 0);
   let maxPrice = parsePrice(searchParams.maxPrice, 999999999, 999999999);
@@ -130,6 +148,7 @@ export default async function BrandPage(props: BrandPageProps) {
     brands: [slug], // Filter products by current brand
     minPrice,
     maxPrice,
+    embeddingResults, // Pass embeddings for semantic search
   });
 
   if (!brand) {
@@ -226,9 +245,13 @@ export default async function BrandPage(props: BrandPageProps) {
           useCategorySearchParam={true}
         />
         <SortDropdown
-          options={PRODUCT_SORT_OPTIONS}
+          options={
+            hasSearchQuery
+              ? [RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]
+              : PRODUCT_SORT_OPTIONS
+          }
           basePath={`/marki/${slug}/`}
-          defaultValue={hasSearchQuery ? 'orderRank' : 'newest'}
+          defaultValue={hasSearchQuery ? 'relevance' : 'newest'}
           hasSearchQuery={hasSearchQuery}
         />
         <Suspense
@@ -245,6 +268,7 @@ export default async function BrandPage(props: BrandPageProps) {
             minPrice={minPrice}
             maxPrice={maxPrice}
             basePath={`/marki/${slug}/`}
+            embeddingResults={embeddingResults}
           />
         </Suspense>
       </section>

@@ -897,26 +897,83 @@ export const queryBlogPageData = defineQuery(`
 // - $search: search term (optional) - empty string "" for no search
 // - $offset: pagination offset (e.g., 0, 6, 12)
 // - $limit: pagination limit (e.g., 6)
-export const queryBlogArticles = defineQuery(`
+// - $embeddingResults: embeddings API results for semantic search (optional)
+// - $sortBy: sort order - 'relevance' for embeddings score, 'newest' for date (default: 'newest')
+
+// ----------------------------------------
+// Shared fragments for blog articles listing
+// ----------------------------------------
+
+// Shared filter conditions for blog articles (used in both query and count)
+const blogArticlesFilterConditions = /* groq */ `
+  _type == "blog-article" 
+  && defined(slug.current)
+  && !hideFromList
+  && ($category == "" || category->slug.current == $category)
+  && ($search == "" || count($embeddingResults) > 0 || [name, pt::text(title)] match $search)
+  && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
+`;
+
+// Shared projection fields for blog articles (the {...} block)
+const blogArticlesProjection = /* groq */ `
+  ${publicationBlock}
+  "_score": select(
+    count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
+    0
+  )
+`;
+
+// Shared inline score calculation for relevance sorting
+const blogArticlesRelevanceScore = /* groq */ `
+  select(
+    count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
+    0
+  )
+`;
+
+// Helper function to create blog articles query with different sort orders
+const blogArticlesFragment = (orderClause: string) => /* groq */ `
   {
-    "articles": *[
-      _type == "blog-article" 
-      && defined(slug.current)
-      && !hideFromList
-      && ($category == "" || category->slug.current == $category)
-      && ($search == "" || [name, pt::text(title)] match $search)
-    ] | order(_createdAt desc) [$offset...$limit] {
-        ${publicationBlock}
+    "articles": *[${blogArticlesFilterConditions}] | order(${orderClause}) [$offset...$limit] {
+      ${blogArticlesProjection}
     },
-    "totalCount": count(*[
-      _type == "blog-article" 
-      && defined(slug.current)
-      && !hideFromList
-      && ($category == "" || category->slug.current == $category)
-      && ($search == "" || [name, pt::text(title)] match $search)
-    ])
+    "totalCount": count(*[${blogArticlesFilterConditions}])
   }
-`);
+`;
+
+// Blog articles query sorted by date (newest first)
+export const queryBlogArticlesNewest = defineQuery(
+  blogArticlesFragment('_createdAt desc')
+);
+
+// Special query for blog relevance sorting that calculates score inline
+const blogArticlesRelevanceFragment = /* groq */ `
+  {
+    "articles": *[${blogArticlesFilterConditions}] | order(${blogArticlesRelevanceScore} desc) [$offset...$limit] {
+      ${blogArticlesProjection}
+    },
+    "totalCount": count(*[${blogArticlesFilterConditions}])
+  }
+`;
+
+// Blog articles query sorted by relevance score (for semantic search)
+export const queryBlogArticlesRelevance = defineQuery(
+  blogArticlesRelevanceFragment
+);
+
+// Helper function to get the correct blog query based on sortBy parameter
+export function getBlogArticlesQuery(sortBy: string = 'newest') {
+  switch (sortBy) {
+    case 'relevance':
+      return queryBlogArticlesRelevance;
+    case 'newest':
+    default:
+      return queryBlogArticlesNewest;
+  }
+}
+
+// Default export for backward compatibility (newest first)
+export const queryBlogArticles = queryBlogArticlesNewest;
 
 // ----------------------------------------
 // Products Queries
@@ -929,7 +986,6 @@ export const queryBlogArticles = defineQuery(`
 // Used in both products page and brand pages to avoid duplication
 // Parameters:
 // - $category: category slug filter
-// - $search: search term filter
 // - $brands: array of brand slugs filter
 // - $minPrice: minimum price filter
 // - $maxPrice: maximum price filter
@@ -951,7 +1007,6 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && count(categories) > 0
       && references(^._id)
       && ($category == "" || $category in categories[]->slug.current)
-      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
       && (
         ($minPrice == 0 && $maxPrice == 999999999) ||
@@ -959,7 +1014,6 @@ const productsFilterMetadataFragment = () => /* groq */ `
       )
       && (
         count($customFilters) == 0 ||
-        !defined(customFilterValues) ||
         count($customFilters) <= count(customFilterValues[
           select(
             count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
@@ -984,7 +1038,6 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && defined(slug.current)
       && count(categories) > 0
       && references(^._id)
-      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
       && (
         ($minPrice == 0 && $maxPrice == 999999999) ||
@@ -1003,14 +1056,12 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && count(categories) > 0
       && brand._ref == ^._id
       && ($category == "" || $category in categories[]->slug.current)
-      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
       && (
         ($minPrice == 0 && $maxPrice == 999999999) ||
         (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
       )
       && (
         count($customFilters) == 0 ||
-        !defined(customFilterValues) ||
         count($customFilters) <= count(customFilterValues[
           select(
             count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
@@ -1025,7 +1076,6 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && defined(slug.current)
     && count(categories) > 0
     && ($category == "" || $category in categories[]->slug.current)
-    && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
     && (
       ($minPrice == 0 && $maxPrice == 999999999) ||
@@ -1033,7 +1083,6 @@ const productsFilterMetadataFragment = () => /* groq */ `
     )
     && (
       count($customFilters) == 0 ||
-      !defined(customFilterValues) ||
       count($customFilters) <= count(customFilterValues[
         select(
           count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
@@ -1046,7 +1095,6 @@ const productsFilterMetadataFragment = () => /* groq */ `
     _type == "product" 
     && defined(slug.current)
     && count(categories) > 0
-    && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
     && (
       ($minPrice == 0 && $maxPrice == 999999999) ||
@@ -1059,11 +1107,9 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && count(categories) > 0
     && defined(basePriceCents)
     && ($category == "" || $category in categories[]->slug.current)
-    && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
     && (
       count($customFilters) == 0 ||
-      !defined(customFilterValues) ||
       count($customFilters) <= count(customFilterValues[
         select(
           count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
@@ -1078,11 +1124,9 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && count(categories) > 0
     && defined(basePriceCents)
     && ($category == "" || $category in categories[]->slug.current)
-    && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
     && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
     && (
       count($customFilters) == 0 ||
-      !defined(customFilterValues) ||
       count($customFilters) <= count(customFilterValues[
         select(
           count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
@@ -1133,7 +1177,6 @@ export const queryProductsPageData = defineQuery(`
           && count(categories) > 0
           && $category in categories[]->slug.current
           && defined(customFilterValues)
-          && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
           && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
           && (
             ($minPrice == 0 && $maxPrice == 999999999) ||
@@ -1162,74 +1205,77 @@ export const queryProductsPageData = defineQuery(`
   }
 `);
 
+// ----------------------------------------
+// Shared fragments for products listing
+// ----------------------------------------
+
+// Shared filter conditions for products (used in both query and count)
+const productsFilterConditions = /* groq */ `
+  _type == "product" 
+  && defined(slug.current)
+  && count(categories) > 0
+  && ($category == "" || $category in categories[]->slug.current)
+  && ($search == "" || count($embeddingResults) > 0 || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
+  && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+  && (
+    ($minPrice == 0 && $maxPrice == 999999999) ||
+    (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
+  )
+  && (
+    count($customFilters) == 0 ||
+    count($customFilters) <= count(customFilterValues[
+      select(
+        count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+        false
+      )
+    ])
+  )
+  && ($isCPO == false || isCPO == true)
+  && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
+`;
+
+// Shared projection fields for products (the {...} block)
+const productsProjection = /* groq */ `
+  _id,
+  _createdAt,
+  name,
+  subtitle,
+  "slug": slug.current,
+  basePriceCents,
+  isArchived,
+  brand->{
+    name,
+    "slug": slug.current,
+    ${imageFragment('logo')}
+  },
+  "mainImage": select(
+    defined(previewImage) => ${imageFragment('previewImage')},
+    ${imageFragment('imageGallery[0]')}
+  ),
+  ${portableTextFragment('shortDescription')},
+  "_score": select(
+    count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
+    0
+  )
+`;
+
+// Shared inline score calculation for relevance sorting
+const productsRelevanceScore = /* groq */ `
+  select(
+    count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
+    0
+  )
+`;
+
 // Reusable fragment for products listing logic
 // This avoids code duplication across different sort queries
+// NEW: Added support for embeddings-based semantic search via $embeddingResults parameter
 const productsListingFragment = (orderClause: string) => /* groq */ `
   {
-    "products": *[
-      _type == "product" 
-      && defined(slug.current)
-      && count(categories) > 0
-      && ($category == "" || $category in categories[]->slug.current)
-      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
-      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-      && (
-        ($minPrice == 0 && $maxPrice == 999999999) ||
-        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-      )
-      && (
-        count($customFilters) == 0 ||
-        !defined(customFilterValues) ||
-        count($customFilters) <= count(customFilterValues[
-          select(
-            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-            false
-          )
-        ])
-      )
-      && ($isCPO == false || isCPO == true)
-    ] | order(${orderClause}) [$offset...$limit] {
-      _id,
-      _createdAt,
-      name,
-      subtitle,
-      "slug": slug.current,
-      basePriceCents,
-      isArchived,
-      brand->{
-        name,
-        "slug": slug.current,
-        ${imageFragment('logo')}
-      },
-      "mainImage": select(
-        defined(previewImage) => ${imageFragment('previewImage')},
-        ${imageFragment('imageGallery[0]')}
-      ),
-      ${portableTextFragment('shortDescription')}
+    "products": *[${productsFilterConditions}] | order(${orderClause}) [$offset...$limit] {
+      ${productsProjection}
     },
-    "totalCount": count(*[
-      _type == "product" 
-      && defined(slug.current)
-      && count(categories) > 0
-      && ($category == "" || $category in categories[]->slug.current)
-      && ($search == "" || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
-      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
-      && (
-        ($minPrice == 0 && $maxPrice == 999999999) ||
-        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-      )
-      && (
-        count($customFilters) == 0 ||
-        !defined(customFilterValues) ||
-        count($customFilters) <= count(customFilterValues[
-          select(
-            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-            false
-          )
-        ])
-      )
-      && ($isCPO == false || isCPO == true)
-    ])
+    "totalCount": count(*[${productsFilterConditions}])
   }
 `;
 
@@ -1269,9 +1315,25 @@ export const queryProductsListingOrderRank = defineQuery(
   productsListingFragment('orderRank asc')
 );
 
+// Special query for relevance sorting that calculates score inline
+const productsListingRelevanceFragment = /* groq */ `
+  {
+    "products": *[${productsFilterConditions}] | order(${productsRelevanceScore} desc) [$offset...$limit] {
+      ${productsProjection}
+    },
+    "totalCount": count(*[${productsFilterConditions}])
+  }
+`;
+
+export const queryProductsListingRelevance = defineQuery(
+  productsListingRelevanceFragment
+);
+
 // Helper function to get the correct query based on sortBy parameter
 export function getProductsListingQuery(sortBy: string = 'newest') {
   switch (sortBy) {
+    case 'relevance':
+      return queryProductsListingRelevance;
     case 'oldest':
       return queryProductsListingOldest;
     case 'priceAsc':
@@ -1306,10 +1368,10 @@ export const queryCategoryMetadata = defineQuery(`
 
 // Brand detail query with products filter metadata
 // Fetches both brand data AND filter metadata in a single API call
+// NOTE: Metadata does NOT filter by search/embeddings - it shows ALL products
 // Parameters:
 // - $slug: brand slug (e.g., "/marki/yamaha/")
 // - $category: category slug filter (optional) - empty string "" for all categories
-// - $search: search term filter (optional) - empty string "" for no search
 // - $brands: array of brand slugs filter (optional) - empty array [] for all brands
 // - $minPrice: minimum price filter (optional) - 0 for no minimum
 // - $maxPrice: maximum price filter (optional) - 999999999 for no maximum

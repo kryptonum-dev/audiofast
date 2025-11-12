@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
-import { queryBlogArticles } from '@/src/global/sanity/query';
+import { getBlogArticlesQuery } from '@/src/global/sanity/query';
 import type { QueryBlogArticlesResult } from '@/src/global/sanity/sanity.types';
 
 import EmptyState from '../../ui/EmptyState';
@@ -16,6 +16,11 @@ type BlogListingProps = {
   searchTerm?: string;
   category?: string;
   basePath: string;
+  embeddingResults?: Array<{
+    score: number;
+    value: { documentId: string; type: string };
+  }> | null; // Embeddings for semantic search
+  sortBy?: string;
 };
 
 export default async function BlogListing({
@@ -24,17 +29,23 @@ export default async function BlogListing({
   searchTerm = '',
   category = '',
   basePath,
+  embeddingResults,
+  sortBy = 'newest',
 }: BlogListingProps) {
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
 
+  // Get the correct query based on sortBy parameter
+  const query = getBlogArticlesQuery(sortBy);
+
   const articlesData = await sanityFetch<QueryBlogArticlesResult>({
-    query: queryBlogArticles,
+    query,
     params: {
       category: category || '',
       search: searchTerm || '',
       offset,
       limit,
+      embeddingResults, // Pass embeddings for filtering
     },
     tags: ['blog-article'],
   });
