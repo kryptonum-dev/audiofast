@@ -22,6 +22,7 @@ type ProductsListingProps = {
   minPrice?: number;
   maxPrice?: number;
   customFilters?: Array<{ filterName: string; value: string }>;
+  isCPO?: boolean; // Filter for CPO products only
   basePath: string;
 };
 
@@ -36,6 +37,7 @@ export default async function ProductsListing({
   minPrice = 0,
   maxPrice = 999999999,
   customFilters = [],
+  isCPO = false,
   basePath,
 }: ProductsListingProps) {
   const offset = (currentPage - 1) * itemsPerPage;
@@ -59,6 +61,7 @@ export default async function ProductsListing({
       minPrice,
       maxPrice,
       customFilters,
+      isCPO,
     },
     tags: ['product'],
   });

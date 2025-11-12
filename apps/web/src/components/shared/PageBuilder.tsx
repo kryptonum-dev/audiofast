@@ -9,7 +9,6 @@ import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
 import GallerySection from '../pageBuilder/GallerySection';
-import ProductsCarousel from '../pageBuilder/ProductsCarousel';
 import HeroCarousel from '../pageBuilder/HeroCarousel';
 import HeroStatic from '../pageBuilder/HeroStatic';
 import ImageTextColumns from '../pageBuilder/ImageTextColumns';
@@ -17,6 +16,8 @@ import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
 import LatestPublication from '../pageBuilder/LatestPublication';
 import PhoneImageCta from '../pageBuilder/PhoneImageCta';
+import ProductsCarousel from '../pageBuilder/ProductsCarousel';
+import ProductsListing from '../pageBuilder/ProductsListing';
 import StepList from '../pageBuilder/StepList';
 import TeamSection from '../pageBuilder/TeamSection';
 
@@ -28,6 +29,12 @@ export type PageBuilderBlock = NonNullable<
 
 export interface PageBuilderProps {
   readonly pageBuilder?: PageBuilderBlock[];
+  readonly searchParams?: {
+    page?: string;
+    category?: string;
+    sortBy?: string;
+  };
+  readonly basePath?: string; // Current page path for ProductsListing block
 }
 
 type BlockType = PageBuilderBlock['_type'];
@@ -38,6 +45,8 @@ type BlockByType<T extends BlockType> = Extract<PageBuilderBlock, { _type: T }>;
  */
 export function PageBuilder({
   pageBuilder: initialBlocks = [],
+  searchParams,
+  basePath,
 }: PageBuilderProps) {
   const blocks = initialBlocks;
 
@@ -127,6 +136,16 @@ export function PageBuilder({
                 key={block._key}
                 {...(block as BlockByType<'productsCarousel'>)}
                 index={index}
+              />
+            );
+          case 'productsListing':
+            return (
+              <ProductsListing
+                key={block._key}
+                {...(block as BlockByType<'productsListing'>)}
+                index={index}
+                searchParams={searchParams}
+                basePath={basePath}
               />
             );
           case 'brandsMarquee':

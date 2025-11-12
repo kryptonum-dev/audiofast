@@ -298,6 +298,18 @@ export const structure = (
                       ),
                     ]);
                 }),
+              // CPO Products list
+              S.listItem()
+                .title('CPO')
+                .icon(Speaker)
+                .child(
+                  S.documentList()
+                    .title('Produkty CPO (Certyfikowany sprzęt używany)')
+                    .filter('_type == "product" && isCPO == true')
+                    .defaultOrdering([
+                      { field: 'orderRank', direction: 'asc' },
+                    ])
+                ),
               createCollection({
                 S,
                 context,

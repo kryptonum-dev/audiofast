@@ -11,13 +11,22 @@ import {
   useTransition,
 } from 'react';
 
+import type { PortableTextProps } from '@/global/types';
 import type { BrandType, ProductCategoryType } from '@/src/global/types';
 import { centsToPLN, plnToCents } from '@/src/global/utils';
 
+import PortableText from '../../portableText';
 import Button from '../../ui/Button';
 import Searchbar from '../../ui/Searchbar';
 import PriceRange from '../PriceRange';
 import styles from './styles.module.scss';
+
+type VisibleFilters = {
+  search?: boolean;
+  categories?: boolean;
+  brands?: boolean;
+  priceRange?: boolean;
+};
 
 type ProductsAsideProps = {
   categories: ProductCategoryType[];
@@ -30,7 +39,8 @@ type ProductsAsideProps = {
   initialBrands?: string[];
   initialMinPrice?: number;
   initialMaxPrice?: number;
-  hideBrandFilter?: boolean; // Hide brand filter when on brand page
+  heading?: PortableTextProps; // Optional heading for the aside
+  visibleFilters?: VisibleFilters; // Control which filters to show
   useCategorySearchParam?: boolean; // Use ?category=X instead of /kategoria/X path
 };
 
@@ -45,9 +55,22 @@ export default function ProductsAside({
   initialBrands = [],
   initialMinPrice = 0,
   initialMaxPrice,
-  hideBrandFilter = false,
+  heading,
+  visibleFilters = {
+    search: true,
+    categories: true,
+    brands: true,
+    priceRange: true,
+  },
   useCategorySearchParam = false,
 }: ProductsAsideProps) {
+  // Merge with defaults to ensure all keys exist
+  const filters = {
+    search: visibleFilters.search ?? true,
+    categories: visibleFilters.categories ?? true,
+    brands: visibleFilters.brands ?? true,
+    priceRange: visibleFilters.priceRange ?? true,
+  };
   // Use actual max price from products if initialMaxPrice is not provided
   const effectiveMaxPrice = initialMaxPrice ?? maxPrice;
   const router = useRouter();
@@ -56,12 +79,18 @@ export default function ProductsAside({
   // Consolidated local state for all filters (not applied until "Filtruj" is clicked)
   // Single state object = single state update = fewer re-renders
   // Prices are stored in PLN for display, converted to cents when applying to URL
-  const [filters, setFilters] = useState({
+  const [localFilters, setLocalFilters] = useState({
     search: initialSearch,
     brands: initialBrands, // Clean slugs from parseBrands (e.g., "aurender", "dcs")
     minPrice: centsToPLN(initialMinPrice),
     maxPrice: centsToPLN(effectiveMaxPrice),
   });
+
+  // Check if we need the filter/clear buttons
+  // Buttons are only needed if we have filters that require explicit "Apply" action
+  // Categories work on click, so they don't need the buttons
+  const needsFilterButtons =
+    filters.search || filters.brands || filters.priceRange;
 
   // Group categories by parent to determine initial expanded state
   const groupedCategories = useMemo(() => {
@@ -117,7 +146,7 @@ export default function ProductsAside({
   // Sync local state with props when they change (e.g., when filters are cleared via URL)
   // Single useEffect = single state update = single re-render (instead of 4)
   useEffect(() => {
-    setFilters({
+    setLocalFilters({
       search: initialSearch,
       brands: initialBrands,
       minPrice: centsToPLN(initialMinPrice),
@@ -306,7 +335,7 @@ export default function ProductsAside({
   };
 
   const toggleBrand = (brandSlug: string) => {
-    setFilters((prev) => ({
+    setLocalFilters((prev) => ({
       ...prev,
       brands: prev.brands.includes(brandSlug)
         ? prev.brands.filter((slug) => slug !== brandSlug)
@@ -326,22 +355,22 @@ export default function ProductsAside({
 
     // Update sidebar-managed filters
     // Search
-    if (filters.search.trim()) {
-      params.set('search', filters.search.trim());
+    if (localFilters.search.trim()) {
+      params.set('search', localFilters.search.trim());
     } else {
       params.delete('search');
     }
 
     // Brands
-    if (filters.brands.length > 0) {
-      params.set('brands', filters.brands.join(','));
+    if (localFilters.brands.length > 0) {
+      params.set('brands', localFilters.brands.join(','));
     } else {
       params.delete('brands');
     }
 
     // Price range (convert PLN back to cents for URL)
-    const minPriceCents = plnToCents(filters.minPrice);
-    const maxPriceCents = plnToCents(filters.maxPrice);
+    const minPriceCents = plnToCents(localFilters.minPrice);
+    const maxPriceCents = plnToCents(localFilters.maxPrice);
 
     if (minPriceCents > 0) {
       params.set('minPrice', minPriceCents.toString());
@@ -387,7 +416,7 @@ export default function ProductsAside({
     // because we only delete the sidebar params and 'category' search param
 
     // Reset local state for sidebar filters (convert cents to PLN)
-    setFilters({
+    setLocalFilters({
       search: '',
       brands: [],
       minPrice: 0,
@@ -457,98 +486,113 @@ export default function ProductsAside({
           <X size={24} strokeWidth={1.5} />
         </button>
 
+        {/* Optional Heading */}
+        {heading && (
+          <PortableText
+            value={heading}
+            headingLevel="h2"
+            className={styles.heading}
+          />
+        )}
+
         {/* Search Input */}
-        <Searchbar
-          mode="manual"
-          value={filters.search}
-          onChange={(value) =>
-            setFilters((prev) => ({ ...prev, search: value }))
-          }
-          onSubmit={applyFilters}
-          placeholder="Szukaj"
-        />
+        {filters.search && (
+          <Searchbar
+            mode="manual"
+            value={localFilters.search}
+            onChange={(value) =>
+              setLocalFilters((prev) => ({ ...prev, search: value }))
+            }
+            onSubmit={applyFilters}
+            placeholder="Szukaj"
+          />
+        )}
 
         {/* Categories */}
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>Typ produktu</h3>
-          <nav className={styles.categories}>
-            {/* All Products Link */}
-            <Link
-              href={buildCategoryUrl(null)}
-              className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
-              tabIndex={isAllProductsActive ? -1 : 0}
-              scroll={false}
-            >
-              <span className={styles.categoryName}>Wszystkie produkty</span>
-              <span className={styles.categoryCount}>({totalCount})</span>
-            </Link>
+        {filters.categories && (
+          <div className={styles.section}>
+            <h3 className={styles.sectionTitle}>Typ produktu</h3>
+            <nav className={styles.categories}>
+              {/* All Products Link */}
+              <Link
+                href={buildCategoryUrl(null)}
+                className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
+                tabIndex={isAllProductsActive ? -1 : 0}
+                scroll={false}
+              >
+                <span className={styles.categoryName}>Wszystkie produkty</span>
+                <span className={styles.categoryCount}>({totalCount})</span>
+              </Link>
 
-            {/* Parent Categories with Sub Categories */}
-            {Object.entries(groupedCategories).map(
-              ([parentName, { categories: subCategories }]) => {
-                const isExpanded = expandedParents.has(parentName);
+              {/* Parent Categories with Sub Categories */}
+              {Object.entries(groupedCategories).map(
+                ([parentName, { categories: subCategories }]) => {
+                  const isExpanded = expandedParents.has(parentName);
 
-                // Extract clean slug from category path for comparison
-                // e.g., "/kategoria/glosniki-podlogowe/" -> "glosniki-podlogowe"
-                const hasActiveChild = subCategories.some((cat) => {
-                  const cleanSlug =
-                    cat.slug?.replace('/kategoria/', '').replace(/\//g, '') ||
-                    '';
-                  return cleanSlug === currentCategory;
-                });
+                  // Extract clean slug from category path for comparison
+                  // e.g., "/kategoria/glosniki-podlogowe/" -> "glosniki-podlogowe"
+                  const hasActiveChild = subCategories.some((cat) => {
+                    const cleanSlug =
+                      cat.slug?.replace('/kategoria/', '').replace(/\//g, '') ||
+                      '';
+                    return cleanSlug === currentCategory;
+                  });
 
-                return (
-                  <div key={parentName} className={styles.parentGroup}>
-                    <button
-                      type="button"
-                      className={`${styles.parentItem} ${hasActiveChild ? styles.hasActive : ''}`}
-                      onClick={() => toggleParent(parentName)}
-                    >
-                      <span className={styles.categoryName}>{parentName}</span>
-                      <ChevronIcon direction={isExpanded ? 'up' : 'down'} />
-                    </button>
-
-                    {isExpanded && (
-                      <div
-                        className={styles.subCategories}
-                        data-has-active={hasActiveChild}
+                  return (
+                    <div key={parentName} className={styles.parentGroup}>
+                      <button
+                        type="button"
+                        className={`${styles.parentItem} ${hasActiveChild ? styles.hasActive : ''}`}
+                        onClick={() => toggleParent(parentName)}
                       >
-                        {subCategories.map((category) => {
-                          const categorySlug = category.slug || '';
-                          // Extract clean slug for comparison
-                          const cleanSlug = categorySlug
-                            .replace('/kategoria/', '')
-                            .replace(/\//g, '');
-                          const isActive = currentCategory === cleanSlug;
+                        <span className={styles.categoryName}>
+                          {parentName}
+                        </span>
+                        <ChevronIcon direction={isExpanded ? 'up' : 'down'} />
+                      </button>
 
-                          return (
-                            <Link
-                              key={category._id}
-                              href={buildCategoryUrl(categorySlug)}
-                              className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
-                              tabIndex={isActive ? -1 : 0}
-                              scroll={false}
-                            >
-                              <span className={styles.categoryName}>
-                                {category.name}
-                              </span>
-                              <span className={styles.categoryCount}>
-                                ({category.count})
-                              </span>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-            )}
-          </nav>
-        </div>
+                      {isExpanded && (
+                        <div
+                          className={styles.subCategories}
+                          data-has-active={hasActiveChild}
+                        >
+                          {subCategories.map((category) => {
+                            const categorySlug = category.slug || '';
+                            // Extract clean slug for comparison
+                            const cleanSlug = categorySlug
+                              .replace('/kategoria/', '')
+                              .replace(/\//g, '');
+                            const isActive = currentCategory === cleanSlug;
+
+                            return (
+                              <Link
+                                key={category._id}
+                                href={buildCategoryUrl(categorySlug)}
+                                className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
+                                tabIndex={isActive ? -1 : 0}
+                                scroll={false}
+                              >
+                                <span className={styles.categoryName}>
+                                  {category.name}
+                                </span>
+                                <span className={styles.categoryCount}>
+                                  ({category.count})
+                                </span>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+              )}
+            </nav>
+          </div>
+        )}
 
         {/* Brands */}
-        {!hideBrandFilter && (
+        {filters.brands && (
           <div className={styles.section}>
             <h3 className={styles.sectionTitle}>Marki</h3>
             <div className={styles.checkboxGroup}>
@@ -564,7 +608,7 @@ export default function ProductsAside({
                     <input
                       type="checkbox"
                       className={styles.checkbox}
-                      checked={filters.brands.includes(brandSlug)}
+                      checked={localFilters.brands.includes(brandSlug)}
                       onChange={() => toggleBrand(brandSlug)}
                     />
                     <p className={styles.checkboxText}>
@@ -606,37 +650,41 @@ export default function ProductsAside({
         )}
 
         {/* Price Range */}
-        <PriceRange
-          minValue={filters.minPrice}
-          maxValue={filters.maxPrice}
-          onMinChange={(value) =>
-            setFilters((prev) => ({ ...prev, minPrice: value }))
-          }
-          onMaxChange={(value) =>
-            setFilters((prev) => ({ ...prev, maxPrice: value }))
-          }
-          maxLimit={centsToPLN(maxPrice)}
-        />
-
-        {/* Filter Button */}
-        <div className={styles.filterActions}>
-          <Button
-            text="Filtruj"
-            variant="primary"
-            onClick={applyFilters}
-            className={styles.filterButton}
-            iconUsed="applyFilters"
+        {filters.priceRange && (
+          <PriceRange
+            minValue={localFilters.minPrice}
+            maxValue={localFilters.maxPrice}
+            onMinChange={(value) =>
+              setLocalFilters((prev) => ({ ...prev, minPrice: value }))
+            }
+            onMaxChange={(value) =>
+              setLocalFilters((prev) => ({ ...prev, maxPrice: value }))
+            }
+            maxLimit={centsToPLN(maxPrice)}
           />
-          {hasAppliedFilters && (
+        )}
+
+        {/* Filter Button - Only show if we have filters that need explicit apply */}
+        {needsFilterButtons && (
+          <div className={styles.filterActions}>
             <Button
-              text="Wyczyść filtry"
-              variant="secondary"
-              onClick={clearFilters}
-              className={styles.clearButton}
-              iconUsed="clearFilters"
+              text="Filtruj"
+              variant="primary"
+              onClick={applyFilters}
+              className={styles.filterButton}
+              iconUsed="applyFilters"
             />
-          )}
-        </div>
+            {hasAppliedFilters && (
+              <Button
+                text="Wyczyść filtry"
+                variant="secondary"
+                onClick={clearFilters}
+                className={styles.clearButton}
+                iconUsed="clearFilters"
+              />
+            )}
+          </div>
+        )}
       </aside>
     </>
   );

@@ -8,6 +8,11 @@
   padding-bottom: 1rem;
   grid-area: productsAside;
 
+  .heading {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
   .section {
     display: flex;
     flex-direction: column;

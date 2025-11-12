@@ -50,10 +50,13 @@ export async function generateMetadata({
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
+  const searchParamsResult = await searchParams;
   const pageData = await fetchPageData(slug);
   const pagesSlugs = await sanityFetch<{ slug: string }[]>({
     query: queryAllPageSlugs,
@@ -79,7 +82,13 @@ export default async function Page({
         data={breadcrumbsData}
         firstItemType={pageData.firstBlockType || undefined}
       />
-      <PageBuilder pageBuilder={pageData.pageBuilder || []} />
+      <PageBuilder
+        basePath={pageData.slug || '/'}
+        pageBuilder={pageData.pageBuilder || []}
+        searchParams={
+          searchParamsResult as { [key: string]: string | string[] | undefined }
+        }
+      />
     </main>
   );
 }

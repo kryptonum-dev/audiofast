@@ -92,6 +92,14 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: 'isCPO',
+      title: 'Certyfikowany sprzęt używany (CPO)',
+      type: 'boolean',
+      description: 'Oznacz, jeśli produkt jest objęty w programie CPO.',
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: 'brand',
       title: 'Marka',
       type: 'reference',

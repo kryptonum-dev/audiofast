@@ -417,7 +417,43 @@ const brandsListBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${portableTextFragment('ctaText')},
-    "brands": ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')}
+    "brands": select(
+      brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')},
+      brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
+      brandsDisplayMode == "manual" => ${brandFragment('selectedBrands[]->  | order(orderRank)')},
+      ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')}
+    )
+  }
+`;
+
+const productsListingBlock = /* groq */ `
+  _type == "productsListing" => {
+    ...,
+    ${portableTextFragment('heading')},
+    "categories": *[_type == "productCategorySub" && defined(slug.current)] {
+      _id,
+      name,
+      description,
+      "slug": slug.current,
+      parentCategory->{
+        _id,
+        name,
+        "slug": slug.current
+      },
+      "count": count(*[
+        _type == "product" 
+        && defined(slug.current)
+        && (^.cpoOnly == false || isCPO == true)
+        && count(categories) > 0
+        && references(^._id)
+      ])
+    } [count > 0] | order(orderRank),
+    "totalCount": count(*[
+      _type == "product" 
+      && defined(slug.current)
+      && (^.cpoOnly == false || isCPO == true)
+      && count(categories) > 0
+    ])
   }
 `;
 
@@ -556,6 +592,7 @@ export const pageBuilderFragment = /* groq */ `
       ${productsCarouselBlock},
       ${brandsMarqueeBlock},
       ${brandsListBlock},
+      ${productsListingBlock},
       ${brandsByCategoriesSectionBlock},
       ${faqSectionBlock},
       ${contactFormBlock},
@@ -1150,6 +1187,7 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
           )
         ])
       )
+      && ($isCPO == false || isCPO == true)
     ] | order(${orderClause}) [$offset...$limit] {
       _id,
       _createdAt,
@@ -1190,6 +1228,7 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
           )
         ])
       )
+      && ($isCPO == false || isCPO == true)
     ])
   }
 `;
@@ -1207,6 +1246,7 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
 // - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
 //   Format: [{filterName: "Długość kabla", value: "2m"}, ...]
 //   Note: ALL custom filters must match (AND logic)
+// - $isCPO: boolean to filter CPO products only (optional) - false for all products
 
 // Static queries for each sort type (required for typegen)
 export const queryProductsListingNewest = defineQuery(
