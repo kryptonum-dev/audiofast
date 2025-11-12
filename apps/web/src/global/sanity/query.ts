@@ -477,15 +477,6 @@ const brandsByCategoriesSectionBlock = /* groq */ `
   }
 `;
 
-const contactPersonBlock = /* groq */ `
-    _type == "contactPerson" => {
-    ${imageFragment('image')},
-    name,
-    phoneNumber,
-  }
-
-`;
-
 const faqSectionBlock = /* groq */ `
   _type == "faqSection" => {
     ...,
@@ -495,9 +486,7 @@ const faqSectionBlock = /* groq */ `
     ${faqFragment('faqList[]->')},
       contactPeople{
         ${portableTextFragment('heading')},
-        contactPersons[]{
-         ${contactPersonBlock}
-        }
+        ${teamMemberFragment('contactPersons[]->')}
       },
       contactForm{
         ${portableTextFragment('heading')},
@@ -514,9 +503,7 @@ const contactFormBlock = /* groq */ `
     ${portableTextFragment('description')},
     contactPeople{
       ${portableTextFragment('heading')},
-      contactPersons[]{
-        ${contactPersonBlock}
-      }
+      ${teamMemberFragment('contactPersons[]->')}
     },
     accountList[]{
       ${portableTextFragment('heading')},
@@ -1136,6 +1123,26 @@ const productsFilterMetadataFragment = () => /* groq */ `
     )
   ].basePriceCents)
 `;
+
+// Query for brands page data (layout, SEO)
+export const queryBrandsPageData = defineQuery(`
+  *[_type == "brands"][0] {
+    _id,
+    _type,
+    "slug": slug.current,
+    name,
+    ${pageBuilderFragment},
+    seo,
+    openGraph{
+      title,
+      description,
+      "seoImage": select(
+        defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        null
+      ),
+    }
+  }
+`);
 
 // Query for products page data (layout, categories, current category, SEO)
 // Now includes filter-aware counts for categories, brands, and price range

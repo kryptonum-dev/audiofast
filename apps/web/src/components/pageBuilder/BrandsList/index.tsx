@@ -32,7 +32,7 @@ export default function BrandsList({
         />
       </header>
       <nav className={styles.brands}>
-        {brands.map((brand, idx) => (
+        {brands?.map((brand, idx) => (
           <Link
             key={brand._id}
             href={brand.slug!}

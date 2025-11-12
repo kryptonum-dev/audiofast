@@ -4,7 +4,9 @@ import StoreMapWrapper from './StoreMapWrapper';
 import styles from './styles.module.scss';
 
 export type Store = NonNullable<
-  NonNullable<NonNullable<QueryBrandBySlugResult>['stores']>[number]
+  NonNullable<
+    NonNullable<NonNullable<QueryBrandBySlugResult>['stores']>[number]
+  >
 >;
 
 export interface StoreWithLocation extends Store {
@@ -145,10 +147,12 @@ export default async function StoreLocations({
           >
             <div className={styles.storeInfo}>
               <p className={styles.storeName}>{store.name}</p>
-              <p className={styles.storeAddress}>
-                {store.address.postalCode} {store.address.city},{' '}
-                {store.address.street}
-              </p>
+              {store.address && (
+                <p className={styles.storeAddress}>
+                  {store.address.postalCode} {store.address.city},{' '}
+                  {store.address.street}
+                </p>
+              )}
             </div>
             <div className={styles.storeContact}>
               <a href={`tel:${store.phone}`} className={styles.contactItem}>
@@ -156,7 +160,7 @@ export default async function StoreLocations({
                   <PhoneIcon />
                 </span>
                 <span className={styles.contactText}>
-                  {store.phone.replace('+48', '')}
+                  {store.phone?.replace('+48', '')}
                 </span>
               </a>
               {store.website && (

@@ -26,4 +26,5 @@ export const pageBuilderField = defineField({
     'Zbuduj swoją stronę, dodając różne sekcje, takie jak tekst, obrazy i inne bloki treści',
 });
 
-export { contactPersonField } from './contact-person';
+export { contactPeopleField } from './contact-people';
+

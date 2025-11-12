@@ -1,7 +1,11 @@
+import type { PostgrestError } from '@supabase/supabase-js';
+
 import { createClient as createServerClient } from './server';
 import type {
   CompletePricingData,
+  PricingOptionGroup,
   PricingOptionGroupWithDetails,
+  PricingVariant,
   PricingVariantWithOptions,
 } from './types';
 
@@ -20,15 +24,19 @@ export async function fetchProductPricing(
 ): Promise<CompletePricingData | null> {
   try {
     // Create server client for this request
-    const supabase = await createServerClient();
+    const supabase = createServerClient();
 
     // Step 1: Find all variants for this product
     // Match by price_key ending with the product slug
-    const { data: variants, error: variantsError } = await supabase
-      .from('pricing_variants')
-      .select('*')
-      .ilike('price_key', `%${productSlug}`)
-      .order('base_price_cents', { ascending: true }); // Lowest price first
+    const {
+      data: variants,
+      error: variantsError,
+    }: { data: PricingVariant[] | null; error: PostgrestError | null } =
+      await supabase
+        .from('pricing_variants')
+        .select('*')
+        .ilike('price_key', `%${productSlug}`)
+        .order('base_price_cents', { ascending: true }); // Lowest price first
 
     if (variantsError) {
       console.error('Error fetching pricing variants:', variantsError);
@@ -42,7 +50,7 @@ export async function fetchProductPricing(
 
     // Step 2: For each variant, fetch option groups, values, and rules
     const variantsWithOptions: PricingVariantWithOptions[] = await Promise.all(
-      variants.map(async (variant) => {
+      variants.map(async (variant: PricingVariant) => {
         // Fetch option groups for this variant
         const { data: groups, error: groupsError } = await supabase
           .from('pricing_option_groups')
@@ -58,7 +66,7 @@ export async function fetchProductPricing(
         // For each group, fetch values and numeric rules
         const groupsWithDetails: PricingOptionGroupWithDetails[] =
           await Promise.all(
-            (groups || []).map(async (group) => {
+            (groups || []).map(async (group: PricingOptionGroup) => {
               // Fetch values if it's a select group
               if (group.input_type === 'select') {
                 const { data: values, error: valuesError } = await supabase
@@ -117,7 +125,7 @@ export async function fetchProductPricing(
     return {
       variants: variantsWithOptions,
       hasMultipleModels: variants.length > 1,
-      lowestPrice: variants[0].base_price_cents,
+      lowestPrice: variants[0]?.base_price_cents || 0,
     };
   } catch (error) {
     console.error('Unexpected error in fetchProductPricing:', error);

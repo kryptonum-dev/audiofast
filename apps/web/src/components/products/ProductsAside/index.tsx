@@ -42,6 +42,7 @@ type ProductsAsideProps = {
   heading?: PortableTextProps; // Optional heading for the aside
   visibleFilters?: VisibleFilters; // Control which filters to show
   useCategorySearchParam?: boolean; // Use ?category=X instead of /kategoria/X path
+  hideBrandFilter?: boolean; // Hide brand filter section (useful for brand-specific pages)
 };
 
 export default function ProductsAside({
@@ -63,12 +64,13 @@ export default function ProductsAside({
     priceRange: true,
   },
   useCategorySearchParam = false,
+  hideBrandFilter = false,
 }: ProductsAsideProps) {
   // Merge with defaults to ensure all keys exist
   const filters = {
     search: visibleFilters.search ?? true,
     categories: visibleFilters.categories ?? true,
-    brands: visibleFilters.brands ?? true,
+    brands: hideBrandFilter ? false : (visibleFilters.brands ?? true),
     priceRange: visibleFilters.priceRange ?? true,
   };
   // Use actual max price from products if initialMaxPrice is not provided

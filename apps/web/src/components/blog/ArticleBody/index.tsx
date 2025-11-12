@@ -35,12 +35,12 @@ export function ArticleBody({
       className={`${styles.container} content`}
       data-is-review={_type == 'review'}
     >
-      {_type == 'review' && 'product' in props ? (
+      {_type == 'review' && 'product' in props && props.product ? (
         <div className={styles.reviewHeader}>
           <TableOfContent
             headings={headings as unknown as PortableTextProps[]}
           />
-          <ProductCard product={props.product!} isClient={false} />
+          <ProductCard product={props.product} isClient={false} />
         </div>
       ) : (
         <TableOfContent headings={headings as unknown as PortableTextProps[]} />

@@ -241,8 +241,13 @@ export default async function BrandPage(props: BrandPageProps) {
           initialBrands={[]}
           initialMinPrice={minPrice}
           initialMaxPrice={maxPrice}
-          hideBrandFilter={true}
           useCategorySearchParam={true}
+          visibleFilters={{
+            search: true,
+            categories: true,
+            brands: false,
+            priceRange: false,
+          }}
         />
         <SortDropdown
           options={

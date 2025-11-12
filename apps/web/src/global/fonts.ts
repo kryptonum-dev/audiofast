@@ -4,7 +4,7 @@ import localFont from 'next/font/local';
 // Google Fonts - Poppins (300, 400)
 export const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['300', '400'],
+  weight: ['300', '400', '500', '600'],
   display: 'optional', // Changed from 'swap' to 'optional' for better performance
   variable: '--font-poppins',
   preload: true,

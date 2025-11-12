@@ -1,36 +1,22 @@
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from './database.types';
 
 /**
  * Create a Supabase client for server-side operations (Server Components, Route Handlers, Server Actions)
- * This client handles cookie-based sessions properly for Next.js App Router
+ * This is a simple client for public data access only - no authentication/session management needed
+ * Perfect for static generation as it doesn't depend on cookies or request-time data
  *
  * @returns Supabase client configured for server-side rendering
  */
-export async function createClient() {
-  const cookieStore = await cookies();
-
-  return createServerClient<Database>(
+export function createClient() {
+  return createSupabaseClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing user sessions.
-            // For our use case (public pricing data), this is not a concern.
-          }
-        },
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
       },
     }
   );

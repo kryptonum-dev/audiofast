@@ -5,13 +5,24 @@ import { createPortal } from 'react-dom';
 
 import styles from './styles.module.scss';
 
-interface VideoModalProps {
+interface YouTubeModalProps {
   youtubeId: string;
+  children?: (openModal: () => void) => React.ReactNode;
+  playButtonSize?: 'small' | 'medium' | 'large';
+  playButtonClassName?: string;
+  closeButtonLabel?: string;
 }
 
-export default function VideoModal({ youtubeId }: VideoModalProps) {
+export default function YouTubeModal({
+  youtubeId,
+  children,
+  playButtonSize = 'medium',
+  playButtonClassName,
+  closeButtonLabel = 'Zamknij wideo',
+}: YouTubeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   // Auto-focus close button when modal opens
   useEffect(() => {
@@ -20,12 +31,31 @@ export default function VideoModal({ youtubeId }: VideoModalProps) {
     }
   }, [isOpen]);
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  // Close modal on ESC key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   const handleOpen = () => {
+    triggerRef.current = document.activeElement as HTMLElement;
     setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    // Restore focus to trigger element after a brief delay
+    setTimeout(() => {
+      triggerRef.current?.focus();
+    }, 0);
   };
 
   const modal = (
@@ -41,7 +71,7 @@ export default function VideoModal({ youtubeId }: VideoModalProps) {
         type="button"
         className={styles.closeButton}
         onClick={handleClose}
-        aria-label="Zamknij wideo"
+        aria-label={closeButtonLabel}
       >
         <svg
           width="24"
@@ -73,11 +103,25 @@ export default function VideoModal({ youtubeId }: VideoModalProps) {
     </div>
   );
 
+  // If custom children provided, use render prop pattern
+  if (children) {
+    return (
+      <>
+        {children(handleOpen)}
+        {isOpen && createPortal(modal, document.body)}
+      </>
+    );
+  }
+
+  // Default: render styled play button
+  const sizeClass = styles[playButtonSize];
+  const buttonClass = `${styles.playButton} ${sizeClass} ${playButtonClassName || ''}`;
+
   return (
     <>
       <button
         type="button"
-        className={styles.playButton}
+        className={buttonClass}
         onClick={handleOpen}
         aria-label="Odtwórz wideo"
       >

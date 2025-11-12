@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
 import { getBlogArticlesQuery } from '@/src/global/sanity/query';
-import type { QueryBlogArticlesResult } from '@/src/global/sanity/sanity.types';
+import type { QueryBlogArticlesNewestResult } from '@/src/global/sanity/sanity.types';
 
 import EmptyState from '../../ui/EmptyState';
 import Pagination from '../../ui/Pagination';
@@ -38,7 +38,7 @@ export default async function BlogListing({
   // Get the correct query based on sortBy parameter
   const query = getBlogArticlesQuery(sortBy);
 
-  const articlesData = await sanityFetch<QueryBlogArticlesResult>({
+  const articlesData = await sanityFetch<QueryBlogArticlesNewestResult>({
     query,
     params: {
       category: category || '',

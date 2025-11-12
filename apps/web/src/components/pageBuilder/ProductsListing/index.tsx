@@ -41,8 +41,6 @@ export default async function ProductsListing(props: ProductsListingProps) {
   const categoryParam = params.category || '';
   const sortBy = params.sortBy || 'newest';
 
-  console.log(params);
-
   // Convert category param to Sanity format if provided
   const categorySlug = categoryParam ? `/kategoria/${categoryParam}/` : '';
 

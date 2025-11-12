@@ -64,11 +64,11 @@ export default function FaqSection({
               }
             />
             <div className={styles.personList}>
-              {contactPeople!.contactPersons!.map((person, idx) => (
+              {contactPeople!.contactPersons!.map((person) => (
                 <ContactPerson
                   person={person}
-                  id={idx.toString()}
-                  key={idx}
+                  id={person._id}
+                  key={person._id}
                   className={styles.faqPerson}
                   index={index}
                 />

@@ -3,7 +3,9 @@ import { notFound } from 'next/navigation';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
-import ProductHero from '@/src/components/products/ProductHero';
+import ProductHero, {
+  type AwardType,
+} from '@/src/components/products/ProductHero';
 import TechnicalData from '@/src/components/products/TechnicalData';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
@@ -126,7 +128,7 @@ export default async function ProductPage(props: ProductPageProps) {
         pricingData={pricingData}
         imageGallery={(product.imageGallery || []) as SanityRawImage[]}
         shortDescription={product.shortDescription}
-        awards={product.awards || undefined}
+        awards={product.awards as AwardType[]}
       />
       {sections.length > 1 && <PillsStickyNav sections={sections} />}
       <TwoColumnContent

@@ -3,8 +3,8 @@ import type { PagebuilderType } from '@/src/global/types';
 import PortableText from '../../portableText';
 import Image from '../../shared/Image';
 import Button from '../../ui/Button';
+import YouTubeModal from '../../ui/YouTubeModal';
 import styles from './styles.module.scss';
-import VideoModal from './VideoModal';
 
 type ImageWithVideoProps = PagebuilderType<'imageWithVideo'> & {
   index: number;
@@ -27,7 +27,13 @@ export default function ImageWithVideo({
           priority={index === 0}
           loading={index === 0 ? 'eager' : 'lazy'}
         />
-        {youtubeId && <VideoModal youtubeId={youtubeId} />}
+        {youtubeId && (
+          <YouTubeModal
+            youtubeId={youtubeId}
+            playButtonSize="large"
+            closeButtonLabel="Zamknij wideo"
+          />
+        )}
       </div>
       <header className={styles.header}>
         <PortableText

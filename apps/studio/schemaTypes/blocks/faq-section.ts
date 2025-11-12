@@ -4,6 +4,7 @@ import { defineField, defineType } from 'sanity';
 import { toPlainText } from '../../utils/helper';
 import { formState } from '../definitions/form-state';
 import { customPortableText } from '../portableText';
+import { contactPeopleField } from '../shared';
 
 const title = 'Sekcja FAQ';
 
@@ -119,64 +120,12 @@ export const faqSection = defineType({
         return displayMode === 'contactOnly';
       },
     }),
-    defineField({
-      name: 'contactPeople',
-      title: 'Osoby kontaktowe',
-      type: 'object',
-      description: 'Sekcja z osobami, z którymi można się skontaktować',
-      fields: [
-        customPortableText({
-          name: 'heading',
-          title: 'Nagłówek sekcji osób kontaktowych',
-          description:
-            'Tytuł dla sekcji z osobami kontaktowymi, np. "Jesteśmy do Twojej dyspozycji!"',
-          type: 'heading',
-          initialValue: 'Jesteśmy do Twojej dyspozycji!',
-        }),
-        defineField({
-          name: 'contactPersons',
-          title: 'Lista osób kontaktowych',
-          type: 'array',
-          description: 'Dodaj osoby kontaktowe (minimum 1, maksimum 2)',
-          of: [{ type: 'contactPerson' }],
-          validation: (Rule) =>
-            Rule.custom((value, context) => {
-              const document = context.document as any;
-              const displayMode = document?.displayMode;
-              const showContactSection =
-                displayMode === 'both' || displayMode === 'contactOnly';
-
-              if (!showContactSection) {
-                return true;
-              }
-
-              if (!value || value.length < 1) {
-                return 'Musisz dodać co najmniej jedną osobę kontaktową';
-              }
-              if (value.length > 2) {
-                return 'Możesz dodać maksymalnie 2 osoby kontaktowe';
-              }
-              return true;
-            }),
-        }),
-      ],
-      validation: (Rule) =>
-        Rule.custom((value, { parent }) => {
-          const displayMode = (parent as { displayMode?: string })?.displayMode;
-          const showContactSection =
-            displayMode === 'both' || displayMode === 'contactOnly';
-          if (showContactSection && !value) {
-            return 'Sekcja osób kontaktowych jest wymagana gdy sekcja kontaktowa jest włączona';
-          }
-          return true;
-        }),
+    contactPeopleField({
+      conditionalValidation: true,
+      headingInitialValue: 'Jesteśmy do Twojej dyspozycji!',
       hidden: ({ parent }) => {
         const displayMode = (parent as { displayMode?: string })?.displayMode;
         return displayMode === 'faqOnly';
-      },
-      options: {
-        collapsible: true,
-        collapsed: false,
       },
     }),
     defineField({

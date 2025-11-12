@@ -8,6 +8,7 @@ import {
   FolderOpen,
   type LucideIcon,
   MessageSquareText,
+  Podcast,
   Settings2,
   Speaker,
   UserPen,
@@ -306,9 +307,7 @@ export const structure = (
                   S.documentList()
                     .title('Produkty CPO (Certyfikowany sprzęt używany)')
                     .filter('_type == "product" && isCPO == true')
-                    .defaultOrdering([
-                      { field: 'orderRank', direction: 'asc' },
-                    ])
+                    .defaultOrdering([{ field: 'orderRank', direction: 'asc' }])
                 ),
               createCollection({
                 S,
@@ -380,13 +379,23 @@ export const structure = (
         orderable: false,
         title: 'Salony',
       }),
-      createCollection({
-        S,
-        context,
-        type: 'brand',
-        orderable: true,
-        title: 'Lista marek',
-      }),
+      S.listItem()
+        .title('Marki')
+        .icon(Podcast)
+        .child(
+          S.list()
+            .title('Marki')
+            .items([
+              createSingleTon({ S, type: 'brands' }),
+              createCollection({
+                S,
+                context,
+                type: 'brand',
+                orderable: true,
+                title: 'Lista marek',
+              }),
+            ])
+        ),
       createCollection({
         S,
         context,

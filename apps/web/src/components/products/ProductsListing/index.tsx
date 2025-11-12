@@ -4,6 +4,7 @@ import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/client';
 import { getProductsListingQuery } from '@/src/global/sanity/query';
 import type { QueryProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
+import type { ProductType } from '@/src/global/types';
 import { slugifyFilterName } from '@/src/global/utils';
 
 import EmptyState from '../../ui/EmptyState';
@@ -120,7 +121,7 @@ export default async function ProductsListing({
             searchParams={urlSearchParams}
           />
           <ul className={styles.productsGrid}>
-            {productsData.products!.map((product, index) => {
+            {productsData.products!.map((product: ProductType, index) => {
               const row = Math.floor(index / ITEMS_PER_ROW);
               const delay = row * ROW_DELAY;
 

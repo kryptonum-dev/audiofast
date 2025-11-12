@@ -38,11 +38,11 @@ export default function ContactForm({
           headingLevel={index === 0 ? 'h2' : 'h3'}
         />
         <ul className={styles.personList}>
-          {contactPeople!.contactPersons!.map((person, idx: number) => (
-            <li key={idx}>
+          {contactPeople!.contactPersons!.map((person) => (
+            <li key={person._id}>
               <ContactPerson
                 person={person}
-                id={idx.toString()}
+                id={person._id}
                 startPos="left"
                 index={index}
               />

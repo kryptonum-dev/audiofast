@@ -4,6 +4,7 @@ import { defineField, defineType } from 'sanity';
 import { toPlainText } from '../../utils/helper';
 import { formState } from '../definitions/form-state';
 import { customPortableText } from '../portableText';
+import { contactPeopleField } from '../shared';
 
 const title = 'Formularz Kontaktowy';
 
@@ -28,40 +29,8 @@ export const contactForm = defineType({
       description:
         'Krótki opis wprowadzający do sekcji, wyjaśniający jak można się skontaktować',
     }),
-    defineField({
-      name: 'contactPeople',
-      title: 'Osoby kontaktowe',
-      type: 'object',
-      description: 'Sekcja z osobami, z którymi można się skontaktować',
-      fields: [
-        customPortableText({
-          name: 'heading',
-          title: 'Nagłówek sekcji osób kontaktowych',
-          description:
-            'Tytuł dla sekcji z osobami kontaktowymi, np. "Jesteśmy do Twojej dyspozycji!"',
-          type: 'heading',
-        }),
-        defineField({
-          name: 'contactPersons',
-          title: 'Lista osób kontaktowych',
-          type: 'array',
-          description: 'Dodaj osoby kontaktowe (minimum 1, maksimum 2)',
-          of: [{ type: 'contactPerson' }],
-          validation: (Rule) => [
-            Rule.min(1).error(
-              'Musisz dodać co najmniej jedną osobę kontaktową'
-            ),
-            Rule.max(2).error('Możesz dodać maksymalnie 2 osoby kontaktowe'),
-            Rule.required().error('Lista osób kontaktowych jest wymagana'),
-          ],
-        }),
-      ],
-      validation: (Rule) =>
-        Rule.required().error('Sekcja osób kontaktowych jest wymagana'),
-      options: {
-        collapsible: true,
-        collapsed: false,
-      },
+    contactPeopleField({
+      conditionalValidation: false,
     }),
     defineField({
       name: 'accountList',

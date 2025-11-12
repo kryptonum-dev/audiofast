@@ -25,6 +25,10 @@ export const page = defineType({
             if (slug?.current?.startsWith('/blog')) {
               return 'Strony nie mogą używać prefiksu "/blog" - jest zarezerwowany dla treści bloga';
             }
+            // Check that pages don't use marki prefixes
+            if (slug?.current?.startsWith('/marki')) {
+              return 'Strony nie mogą używać prefiksu "/marki" - jest zarezerwowany dla strony marek';
+            }
             return true;
           }),
     }),
