@@ -1,4 +1,4 @@
-import type { PortableTextProps } from '@/global/types';
+import type { PortableTextProps, ProductType } from '@/global/types';
 import type {
   QueryBlogPostBySlugResult,
   QueryReviewBySlugResult,
@@ -40,7 +40,7 @@ export function ArticleBody({
           <TableOfContent
             headings={headings as unknown as PortableTextProps[]}
           />
-          <ProductCard product={props.product} isClient={false} />
+          <ProductCard product={props.product as unknown as ProductType} />
         </div>
       ) : (
         <TableOfContent headings={headings as unknown as PortableTextProps[]} />

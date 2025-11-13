@@ -1,11 +1,13 @@
 import '../global/global.scss';
 
 import { preconnect, prefetchDNS } from 'react-dom';
+import { Toaster } from 'sonner';
 
 import { poppins, switzer } from '@/global/fonts';
 import { fetchWithLogging } from '@/global/sanity/client';
 import { querySettings } from '@/global/sanity/query';
 import type { QuerySettingsResult } from '@/global/sanity/sanity.types';
+import FloatingComparisonBox from '@/src/components/comparison/FloatingCompatisonBox';
 import OrganizationSchema from '@/src/components/schema/OrganizationSchema';
 import Analytics from '@/src/components/shared/Analytics';
 import CookieConsent from '@/src/components/shared/CookieConsent';
@@ -55,6 +57,8 @@ export default async function RootLayout({
             googleAdsId={settings.analytics.googleAds_id ?? undefined}
           />
         )}
+        <FloatingComparisonBox />
+        <Toaster position="bottom-center" richColors />
       </body>
     </html>
   );

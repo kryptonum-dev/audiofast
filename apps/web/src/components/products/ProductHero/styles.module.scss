@@ -326,8 +326,8 @@
           transform: translateX(0.125rem);
         }
 
-        svg {
-          transform: scale(1.1) rotate(90deg);
+        .iconWrapper .plusIcon {
+          transform: rotate(90deg);
         }
       }
 
@@ -341,22 +341,30 @@
         border-color: var(--primary-red);
       }
 
+      .iconWrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        svg {
+          width: 1.125rem;
+          height: 1.125rem;
+          color: var(--neutral-700, #303030);
+          transition:
+            transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+            opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+          animation: iconFadeIn 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+      }
+
       .addToComparisonText {
-        font-size: 0.8125rem;
-        font-weight: 500;
+        font-size: var(--typography-body-m, 0.875rem);
+        font-weight: 400;
         color: var(--neutral-700, #303030);
         letter-spacing: -0.02em;
         line-height: 1;
         transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      svg {
-        width: 1.125rem;
-        height: 1.125rem;
-        color: var(--neutral-700, #303030);
-        transition:
-          transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
-          color 250ms cubic-bezier(0.4, 0, 0.2, 1);
       }
     }
   }

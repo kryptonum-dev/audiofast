@@ -135,7 +135,6 @@ export default async function ProductsListing({
                     product={product}
                     imageSizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     priority={index < 3}
-                    isClient={false}
                     loading={index < 3 ? 'eager' : 'lazy'}
                   />
                 </li>

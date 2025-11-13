@@ -110,6 +110,31 @@
             background: rgba(231, 231, 231, 0.45);
           }
         }
+
+        &[data-current-state='added'] {
+          span {
+            background-color: rgba(0, 145, 22, 0.1);
+            color: var(--primary-success, #009116);
+          }
+          &:hover {
+            span {
+              background-color: rgba(0, 145, 22, 0.15);
+            }
+          }
+        }
+
+        &[data-current-state='in-comparison'] {
+          span {
+            background-color: rgba(254, 1, 64, 0.1);
+            color: var(--primary-red, #fe0140);
+          }
+
+          &:hover {
+            span {
+              background-color: rgba(254, 1, 64, 0.15);
+            }
+          }
+        }
       }
     }
     .container {
@@ -142,6 +167,7 @@
         padding-right: 0.5rem;
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;

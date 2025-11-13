@@ -18,7 +18,6 @@ export function FeaturedProductsComponent({
       {products!.map((product) => (
         <ProductCard
           product={product}
-          isClient={false}
           layout="vertical"
           headingLevel="h3"
           key={product._id}

@@ -2,6 +2,7 @@ import type { ProductType } from '@/src/global/types';
 
 import Image from '../../shared/Image';
 import Button from '../Button';
+import AddToComparisonButton from './AddToComparisonButton';
 import styles from './styles.module.scss';
 
 interface ProductCardProps {
@@ -10,7 +11,6 @@ interface ProductCardProps {
   imageSizes?: string;
   showButton?: boolean;
   layout?: 'horizontal' | 'vertical';
-  isClient?: boolean;
   priority?: boolean;
   loading?: 'eager' | 'lazy';
 }
@@ -18,15 +18,23 @@ interface ProductCardProps {
 export default function ProductCard({
   product,
   layout = 'horizontal',
-  isClient = true,
   imageSizes = '400px',
   headingLevel = 'h3',
   showButton = true,
   priority = false,
   loading = 'lazy',
 }: ProductCardProps) {
-  const { slug, name, subtitle, basePriceCents, brand, mainImage } = product;
-
+  const {
+    slug,
+    name,
+    subtitle,
+    basePriceCents,
+    brand,
+    mainImage,
+    _id,
+    categories,
+  } = product;
+  console.log(product);
   const Heading = headingLevel;
 
   // Format price for display (converting cents to PLN)
@@ -40,6 +48,8 @@ export default function ProductCard({
       maximumFractionDigits: 0,
     }).format(priceInPLN);
   };
+
+  console.log(categories);
 
   return (
     <article className={styles.productCard}>
@@ -55,18 +65,12 @@ export default function ProductCard({
           {brand?.logo && (
             <Image image={brand.logo} sizes="90px" loading={loading} />
           )}
-          {isClient && (
-            <button
-              className={styles.addToComparison}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-            >
-              <span>Dodaj do porównania</span>
-              <PlusIcon />
-            </button>
-          )}
+          <AddToComparisonButton
+            productId={_id}
+            productName={name ?? ''}
+            categorySlug={categories?.[0]?.slug ?? ''}
+            productData={product}
+          />
         </div>
         <div className={styles.container}>
           <Heading className={styles.title}>
@@ -89,22 +93,3 @@ export default function ProductCard({
     </article>
   );
 }
-
-const PlusIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={24} height={25} fill="none">
-    <g
-      stroke="#FE0140"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={1.875}
-      clipPath="url(#a)"
-    >
-      <path d="M9 12.5h6M12 9.5v6M12 3.5c7.2 0 9 1.8 9 9s-1.8 9-9 9-9-1.8-9-9 1.8-9 9-9Z" />
-    </g>
-    <defs>
-      <clipPath id="a">
-        <path fill="#fff" d="M0 .5h24v24H0z" />
-      </clipPath>
-    </defs>
-  </svg>
-);

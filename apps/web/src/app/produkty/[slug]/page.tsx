@@ -129,6 +129,8 @@ export default async function ProductPage(props: ProductPageProps) {
         imageGallery={(product.imageGallery || []) as SanityRawImage[]}
         shortDescription={product.shortDescription}
         awards={product.awards as AwardType[]}
+        productId={product._id}
+        categorySlug={product.categories?.[0]?.slug ?? ''}
       />
       {sections.length > 1 && <PillsStickyNav sections={sections} />}
       <TwoColumnContent

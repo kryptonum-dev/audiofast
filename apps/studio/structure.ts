@@ -1,5 +1,6 @@
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
+  BadgeCheck,
   BookOpen,
   Calendar,
   File,
@@ -299,10 +300,57 @@ export const structure = (
                       ),
                     ]);
                 }),
+              // Products grouped by category
+              S.listItem()
+                .title('Produkty według kategorii')
+                .icon(Folder)
+                .child(async () => {
+                  // Fetch all sub-categories that have products
+                  const categories = await context
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<
+                      Array<{ _id: string; name: string }>
+                    >(`*[_type == "productCategorySub" && count(*[_type == "product" && references(^._id)]) > 0] | order(orderRank) {_id, name}`);
+
+                  return S.list()
+                    .title('Produkty według kategorii')
+                    .items([
+                      // "All Products" option as first item
+                      S.listItem()
+                        .title('Wszystkie produkty')
+                        .icon(Speaker)
+                        .child(
+                          S.documentList()
+                            .title('Wszystkie produkty')
+                            .filter('_type == "product"')
+                            .defaultOrdering([
+                              { field: 'orderRank', direction: 'asc' },
+                            ])
+                        ),
+                      S.divider(),
+                      // Dynamic list items for each category (only those with products)
+                      ...categories.map((category) =>
+                        S.listItem()
+                          .title(category.name || 'Bez nazwy')
+                          .icon(FolderOpen)
+                          .child(
+                            S.documentList()
+                              .title(`${category.name} - Produkty`)
+                              .filter(
+                                '_type == "product" && references($categoryId)'
+                              )
+                              .params({ categoryId: category._id })
+                              .defaultOrdering([
+                                { field: 'orderRank', direction: 'asc' },
+                              ])
+                          )
+                      ),
+                    ]);
+                }),
               // CPO Products list
               S.listItem()
                 .title('CPO')
-                .icon(Speaker)
+                .icon(BadgeCheck)
                 .child(
                   S.documentList()
                     .title('Produkty CPO (Certyfikowany sprzęt używany)')

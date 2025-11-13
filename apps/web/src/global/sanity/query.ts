@@ -212,6 +212,11 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   subtitle,
   basePriceCents,
   isArchived,
+  categories[]->{
+    _id,
+    "slug": slug.current,
+    name,
+  },
   brand->{
     name,
     "slug": slug.current,
@@ -1250,6 +1255,11 @@ const productsProjection = /* groq */ `
   "slug": slug.current,
   basePriceCents,
   isArchived,
+  "categories": categories[]->{
+    _id,
+    name,
+    "slug": slug.current
+  },
   brand->{
     name,
     "slug": slug.current,
@@ -1475,6 +1485,11 @@ export const queryProductBySlug = defineQuery(/* groq */ `
       phone,
       website
     },
+    "categories": categories[]->{
+      _id,
+      name,
+      "slug": slug.current
+    },
     reviews[]->{
       ${publicationBlock}
     },
@@ -1503,5 +1518,63 @@ export const queryProductBySlug = defineQuery(/* groq */ `
 export const queryAllProductSlugs = defineQuery(/* groq */ `
   *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**"))] {
     "slug": slug.current
+  }
+`);
+
+// ----------------------------------------
+// Comparison Queries
+// ----------------------------------------
+
+// Query 1: Get Products for Comparison (Minimal Data)
+// Used for FloatingComparisonBox - minimal data for fast loading
+// Parameters:
+// - $productIds: array of product IDs to fetch
+export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
+  *[_type == "product" && _id in $productIds] {
+    _id,
+    name,
+    "slug": slug.current,
+    subtitle,
+    basePriceCents,
+    "mainImage": select(
+      defined(previewImage) => ${imageFragment('previewImage')},
+      ${imageFragment('imageGallery[0]')}
+    ),
+    brand->{
+      name,
+      ${imageFragment('logo')}
+    },
+    "categories": categories[]->{
+      "slug": slug.current
+    }
+  }
+`);
+
+// Query 2: Get Full Product Details for Comparison Page
+// Used for Comparison Page - includes full technical data
+// Parameters:
+// - $productIds: array of product IDs to fetch
+export const queryComparisonProductsFull = defineQuery(/* groq */ `
+  *[_type == "product" && _id in $productIds] {
+    _id,
+    name,
+    "slug": slug.current,
+    subtitle,
+    basePriceCents,
+    "mainImage": select(
+      defined(previewImage) => ${imageFragment('previewImage')},
+      ${imageFragment('imageGallery[0]')}
+    ),
+    brand->{
+      name,
+      ${imageFragment('logo')}
+    },
+    technicalData[] {
+      title,
+      ${portableTextFragment('value')}
+    },
+    "categories": categories[]->{
+      "slug": slug.current
+    }
   }
 `);

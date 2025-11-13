@@ -1,0 +1,359 @@
+// Floating Comparison Box
+.floatingBox {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: 1rem;
+  z-index: 100;
+  background: var(--neutral-white);
+  border: 0.0625rem solid var(--neutral-400);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+  animation: fadeInFromRight 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  contain: layout style paint;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition:
+    box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    width 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  &.collapsed {
+    width: 14rem;
+    cursor: pointer;
+  }
+
+  &.expanded {
+    width: 22rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+  }
+
+  &:has(.collapsedButton:focus-visible) {
+    outline: 2px solid var(--primary-red);
+    outline-offset: -2px;
+    background-color: var(--neutral-200);
+  }
+
+  .collapsedButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    color: var(--neutral-700);
+    font-weight: 500;
+    animation: fadeInContent 300ms cubic-bezier(0.16, 1, 0.3, 1) 50ms backwards;
+    transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    &::before {
+      position: absolute;
+      inset: -1rem;
+      content: '';
+      z-index: 1;
+    }
+
+    &:hover {
+      .collapsedText {
+        transform: translateX(0.125rem);
+        color: var(--neutral-600);
+      }
+      svg {
+        transform: scale(1.1);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    .collapsedText {
+      flex: 1;
+      text-align: left;
+      font-size: var(--typography-body-m);
+      transition:
+        transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+        color 200ms;
+    }
+
+    svg {
+      flex-shrink: 0;
+      color: var(--primary-red);
+      transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: 1px;
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: clamp(0.5rem, calc(0.75vw / 0.48), 0.75rem);
+    color: var(--neutral-700);
+    font-size: var(--typography-body-l);
+    font-weight: 500;
+    animation: fadeInContent 300ms cubic-bezier(0.16, 1, 0.3, 1) 50ms backwards;
+
+    .title {
+      margin: 0;
+      font-weight: 500;
+      color: var(--neutral-700);
+    }
+
+    .closeButton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--neutral-600);
+      border-radius: 0.25rem;
+      transition:
+        color 250ms,
+        background-color 200ms;
+
+      svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      &:hover {
+        color: var(--primary-error);
+        background-color: var(--neutral-200);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--primary-red);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  .productList {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.375rem, calc(0.5vw / 0.48), 0.5rem);
+    margin-bottom: clamp(0.5rem, calc(0.75vw / 0.48), 0.75rem);
+    animation: fadeInContent 350ms cubic-bezier(0.16, 1, 0.3, 1) 100ms backwards;
+
+    .productItem {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.5rem, calc(0.75vw / 0.48), 0.75rem);
+      background: var(--neutral-200);
+      border-radius: 0.375rem;
+      position: relative;
+      transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:hover {
+        background: var(--neutral-300);
+
+        .productLink {
+          .productName {
+            color: var(--primary-red);
+          }
+        }
+      }
+
+      .productLink {
+        display: flex;
+        align-items: center;
+        gap: clamp(0.5rem, calc(0.75vw / 0.48), 0.75rem);
+        padding: clamp(0.375rem, calc(0.5vw / 0.48), 0.5rem);
+        flex: 1;
+        min-width: 0;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:focus-visible {
+          outline: 2px solid var(--primary-red);
+          outline-offset: 2px;
+          border-radius: 0.375rem;
+        }
+
+        img {
+          position: relative;
+          width: 48px;
+          height: 48px;
+          border-radius: 0.25rem;
+          overflow: hidden;
+          flex-shrink: 0;
+          background: var(--neutral-300);
+        }
+
+        .productInfo {
+          flex: 1;
+          min-width: 0;
+          font-size: var(--typography-body-m);
+          color: var(--neutral-600);
+          font-weight: 400;
+          line-height: 1.4;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      }
+
+      .removeButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: clamp(0.375rem, calc(0.5vw / 0.48), 0.5rem);
+        padding: 0.25rem;
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: var(--primary-error);
+        flex-shrink: 0;
+        z-index: 1;
+        transition:
+          color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+          transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+          color: var(--primary-red);
+          transform: scale(1.2);
+        }
+
+        &:active {
+          transform: scale(0.9);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--primary-red);
+          outline-offset: 2px;
+          border-radius: 0.25rem;
+        }
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: clamp(0.375rem, calc(0.5vw / 0.48), 0.5rem);
+    animation: fadeInContent 350ms cubic-bezier(0.16, 1, 0.3, 1) 100ms backwards;
+
+    .compareButton,
+    .clearButton {
+      flex: 1;
+      padding: clamp(0.375rem, calc(0.5vw / 0.48), 0.5rem)
+        clamp(0.5rem, calc(0.75vw / 0.48), 1rem);
+      font-size: var(--typography-body-m);
+      border-radius: 0.25rem;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition:
+        background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+        color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+      &:focus-visible {
+        outline: 2px solid var(--neutral-700);
+        outline-offset: 2px;
+      }
+    }
+
+    .compareButton {
+      background: var(--primary-red);
+      color: var(--neutral-white);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+
+      &:hover {
+        background: color-mix(in srgb, var(--primary-red) 90%, black);
+      }
+    }
+
+    .clearButton {
+      background: var(--neutral-300);
+      color: var(--neutral-700);
+
+      &:hover {
+        background: var(--neutral-400);
+      }
+    }
+  }
+
+  @media (max-width: 34.3125rem) {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0.75rem 0.75rem 0 0;
+    box-shadow: 0 -0.5rem 2rem rgba(0, 0, 0, 0.15);
+    z-index: 250;
+
+    &.collapsed {
+      width: 100%;
+
+      .collapsedButton {
+        justify-content: center;
+        gap: 0;
+
+        .collapsedText {
+          text-align: center;
+          margin-left: 1.125rem;
+        }
+      }
+    }
+
+    &.expanded {
+      z-index: 500;
+      max-height: 50vh;
+      width: 100%;
+
+      .header,
+      .actions,
+      .productList {
+        animation-delay: 0ms;
+      }
+
+      .productList {
+        max-height: calc(50vh - 10rem);
+        overflow-y: auto;
+      }
+    }
+
+    .title {
+      font-size: var(--typography-body-m);
+    }
+
+    .productList .productItem .productLink {
+      .productInfo {
+        font-size: var(--typography-body-s);
+      }
+    }
+  }
+}
+
+@keyframes fadeInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

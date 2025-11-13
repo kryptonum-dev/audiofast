@@ -25,6 +25,8 @@ export interface ProductHeroProps {
   shortDescription?: PortableTextProps;
   awards?: AwardType[];
   customId?: string;
+  productId?: string;
+  categorySlug?: string;
 }
 
 export default function ProductHero({
@@ -36,6 +38,8 @@ export default function ProductHero({
   shortDescription,
   awards,
   customId,
+  productId,
+  categorySlug,
 }: ProductHeroProps) {
   // Format price for display (converting cents to PLN)
 
@@ -84,7 +88,17 @@ export default function ProductHero({
           href="/kontakt/"
           iconUsed="information"
         />
-        <AddToComparison Icon={<PlusIcon />} />
+        <AddToComparison
+          productId={productId}
+          categorySlug={categorySlug}
+          productName={name}
+          productData={{
+            _id: productId,
+            name,
+            brand,
+            mainImage: imageGallery[0],
+          }}
+        />
       </div>
       {displayAwards && displayAwards?.length > 0 && (
         <div
@@ -125,22 +139,3 @@ export default function ProductHero({
     </section>
   );
 }
-
-const PlusIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-    <g
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={1.5}
-      clipPath="url(#a)"
-    >
-      <path d="M12 5v14M5 12h14" />
-    </g>
-    <defs>
-      <clipPath id="a">
-        <path fill="#fff" d="M0 0h24v24H0z" />
-      </clipPath>
-    </defs>
-  </svg>
-);
