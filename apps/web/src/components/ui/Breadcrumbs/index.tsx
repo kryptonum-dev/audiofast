@@ -22,7 +22,8 @@ export default function Breadcrumbs({ data = [], firstItemType }: Props) {
   ];
 
   const maxWidthClass =
-    firstItemType && ['contactForm', 'imageWithVideo'].includes(firstItemType)
+    firstItemType &&
+    ['contactForm', 'imageWithVideo', 'comparison'].includes(firstItemType)
       ? 'max-width-block'
       : 'max-width';
 

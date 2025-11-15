@@ -235,6 +235,26 @@
     }
   }
 
+  &[data-icon='trash'] {
+    .iconContainer {
+      svg {
+        transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+
+    &:hover,
+    &:focus-visible {
+      .iconContainer {
+        svg {
+          &:nth-child(1) {
+            animation: trashShake 600ms cubic-bezier(0.36, 0.07, 0.19, 0.97)
+              infinite;
+          }
+        }
+      }
+    }
+  }
+
   @keyframes informationPulse {
     0%,
     100% {
@@ -242,6 +262,22 @@
     }
     50% {
       transform: scale(1.05);
+    }
+  }
+
+  @keyframes trashShake {
+    0%,
+    100% {
+      transform: translateX(0) rotate(0deg);
+    }
+    25% {
+      transform: translateX(-2px) rotate(-3deg);
+    }
+    50% {
+      transform: translateX(0) rotate(0deg);
+    }
+    75% {
+      transform: translateX(2px) rotate(3deg);
     }
   }
 

@@ -64,6 +64,12 @@
     animation: fadeInUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 250ms forwards;
     opacity: 0;
   }
+
+  a {
+    margin-top: clamp(1.25rem, calc(1.5vw / 0.48), 1.5rem);
+    animation: fadeInUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 300ms forwards;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeInUp {
@@ -74,6 +80,23 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// Respect reduced motion preferences
+@media (prefers-reduced-motion: reduce) {
+  .emptyState {
+    animation: none;
+    opacity: 1;
+
+    .emptyIcon,
+    .emptyTitle,
+    .emptyDescription,
+    .emptyHint,
+    .emptyButton {
+      animation: none;
+      opacity: 1;
+    }
   }
 }
 

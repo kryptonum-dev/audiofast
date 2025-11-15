@@ -13,6 +13,8 @@ export type ComparisonCookie = {
 
 /**
  * Product data structure for comparison
+ * Used for both products in comparison AND available products in selector
+ * All products have full data (including technical specs) for instant add/remove
  */
 export type ComparisonProduct = {
   _id: string;
@@ -21,10 +23,13 @@ export type ComparisonProduct = {
   subtitle: string;
   basePriceCents: number | null;
   brand: {
+    _id: string;
     name: string;
+    slug: string;
     logo: SanityProjectedImage | null;
   };
   mainImage: SanityProjectedImage | null;
+  imageSource: 'preview' | 'gallery';
   technicalData: Array<{
     title: string;
     value: PortableTextBlock[];

@@ -21,7 +21,8 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
       | 'phone'
       | 'clearFilters'
       | 'applyFilters'
-      | 'information';
+      | 'information'
+      | 'trash';
   };
 
 export default function Button({
@@ -66,6 +67,8 @@ export default function Button({
         return <ApplyFiltersIcon />;
       case 'information':
         return <InformationIcon />;
+      case 'trash':
+        return <TrashIcon />;
       default:
         return <ArrowUp />;
     }
@@ -80,6 +83,7 @@ export default function Button({
           iconUsed !== 'clearFilters' &&
           iconUsed !== 'applyFilters' &&
           iconUsed !== 'information' &&
+          iconUsed !== 'trash' &&
           icon}
       </div>
       <div className={styles.textContainer}>
@@ -218,6 +222,25 @@ const InformationIcon = () => (
     </g>
     <defs>
       <clipPath id="information-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#trash-clip)"
+    >
+      <path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
+    </g>
+    <defs>
+      <clipPath id="trash-clip">
         <path fill="#fff" d="M0 0h24v24H0z" />
       </clipPath>
     </defs>

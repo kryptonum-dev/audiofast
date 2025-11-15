@@ -1541,7 +1541,9 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
       ${imageFragment('imageGallery[0]')}
     ),
     brand->{
+      _id,
       name,
+      "slug": slug.current,
       ${imageFragment('logo')}
     },
     "categories": categories[]->{
@@ -1565,8 +1567,50 @@ export const queryComparisonProductsFull = defineQuery(/* groq */ `
       defined(previewImage) => ${imageFragment('previewImage')},
       ${imageFragment('imageGallery[0]')}
     ),
+    "imageSource": select(
+      defined(previewImage) => "preview",
+      "gallery"
+    ),
     brand->{
+      _id,
       name,
+      "slug": slug.current,
+      ${imageFragment('logo')}
+    },
+    technicalData[] {
+      title,
+      ${portableTextFragment('value')}
+    },
+    "categories": categories[]->{
+      "slug": slug.current
+    }
+  }
+`);
+
+// Query 3: Get ALL Products from Category for Comparison (FULL DATA)
+// Used for comparison page - fetches ALL products with FULL technical data
+// This enables instant add/remove with zero loading time
+// Parameters:
+// - $categorySlug: category slug to filter by
+export const queryAllCategoryProductsForComparison = defineQuery(/* groq */ `
+  *[_type == "product" && !(_id in path("drafts.**")) && $categorySlug in categories[]->slug.current] | order(name asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    subtitle,
+    basePriceCents,
+    "mainImage": select(
+      defined(previewImage) => ${imageFragment('previewImage')},
+      ${imageFragment('imageGallery[0]')}
+    ),
+    "imageSource": select(
+      defined(previewImage) => "preview",
+      "gallery"
+    ),
+    brand->{
+      _id,
+      name,
+      "slug": slug.current,
       ${imageFragment('logo')}
     },
     technicalData[] {

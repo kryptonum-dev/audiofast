@@ -1,63 +1,102 @@
+import Button from '@/src/components/ui/Button';
+
 import styles from './styles.module.scss';
 
 type EmptyStateProps = {
   searchTerm?: string;
   category?: string;
-  type: 'blog' | 'products';
+  type: 'blog' | 'products' | 'comparator-noCookies' | 'comparator-noProduct';
+  button?: {
+    name: string;
+    href: string;
+  };
+};
+
+type EmptyStateConfig = {
+  title: string;
+  description: string | React.ReactNode;
+  hint?: string | null;
 };
 
 export default function EmptyState({
   searchTerm,
   category,
   type,
+  button,
 }: EmptyStateProps) {
   const contentType = type === 'blog' ? 'artykułów' : 'produktów';
   const contentTypeSingular = type === 'blog' ? 'publikacji' : 'produktów';
 
-  const getTitle = () => {
-    if (searchTerm && category) return `Nie znaleziono ${contentType}`;
-    if (searchTerm) return 'Brak wyników wyszukiwania';
-    return `Brak ${contentType}`;
+  // Configuration object for each type
+  const getConfig = (): EmptyStateConfig => {
+    // Comparator variants
+    if (type === 'comparator-noCookies') {
+      return {
+        title: 'Brak produktów do porównania',
+        description:
+          'Dodaj produkty do porównania, aby zobaczyć ich specyfikacje obok siebie',
+        hint: null,
+      };
+    }
+
+    if (type === 'comparator-noProduct') {
+      return {
+        title: 'Nie znaleziono produktów do porównania',
+        description:
+          'Niektóre produkty mogły zostać usunięte. Dodaj nowe produkty do porównania.',
+        hint: null,
+      };
+    }
+
+    // Blog/Products variants with search/category logic
+    if (searchTerm && category) {
+      return {
+        title: `Nie znaleziono ${contentType}`,
+        description: (
+          <>
+            Nie znaleziono {contentType} dla{' '}
+            <strong>&bdquo;{searchTerm}&rdquo;</strong> w tej kategorii
+          </>
+        ),
+        hint: 'Spróbuj wyszukać we wszystkich kategoriach lub użyć innych słów kluczowych',
+      };
+    }
+
+    if (searchTerm) {
+      return {
+        title: 'Brak wyników wyszukiwania',
+        description: (
+          <>
+            Nie znaleziono {contentType} dla{' '}
+            <strong>&bdquo;{searchTerm}&rdquo;</strong>
+          </>
+        ),
+        hint: 'Spróbuj użyć innych słów kluczowych',
+      };
+    }
+
+    return {
+      title: `Brak ${contentType}`,
+      description: `Ta kategoria nie zawiera jeszcze żadnych ${contentTypeSingular}`,
+      hint: `Wróć do wszystkich ${contentTypeSingular} lub wybierz inną kategorię`,
+    };
   };
 
-  const getDescription = () => {
-    if (searchTerm && category) {
-      return (
-        <>
-          Nie znaleziono {contentType} dla{' '}
-          <strong>&bdquo;{searchTerm}&rdquo;</strong> w tej kategorii
-        </>
-      );
-    }
-    if (searchTerm) {
-      return (
-        <>
-          Nie znaleziono {contentType} dla{' '}
-          <strong>&bdquo;{searchTerm}&rdquo;</strong>
-        </>
-      );
-    }
-    return `Ta kategoria nie zawiera jeszcze żadnych ${contentTypeSingular}`;
-  };
-
-  const getHint = () => {
-    if (searchTerm && category) {
-      return 'Spróbuj wyszukać we wszystkich kategoriach lub użyć innych słów kluczowych';
-    }
-    if (searchTerm) {
-      return 'Spróbuj użyć innych słów kluczowych';
-    }
-    return `Wróć do wszystkich ${contentTypeSingular} lub wybierz inną kategorię`;
-  };
+  const config = getConfig();
 
   return (
     <div className={styles.emptyState} data-empty-state>
       <div className={styles.emptyIcon}>
         <AlertIcon />
       </div>
-      <h3 className={styles.emptyTitle}>{getTitle()}</h3>
-      <p className={styles.emptyDescription}>{getDescription()}</p>
-      <p className={styles.emptyHint}>{getHint()}</p>
+      <h3 className={styles.emptyTitle}>{config.title}</h3>
+      <p className={styles.emptyDescription}>{config.description}</p>
+      {config.hint && <p className={styles.emptyHint}>{config.hint}</p>}
+      {button && (
+        <div className={styles.emptyButton}>
+          <Button href={button.href} text={button.name} />
+        </div>
+      )}
     </div>
   );
 }

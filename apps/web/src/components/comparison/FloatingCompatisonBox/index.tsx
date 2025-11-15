@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { startTransition, useEffect, useOptimistic, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -16,6 +17,7 @@ import type { ProductType } from '@/src/global/types';
 import styles from './styles.module.scss';
 
 export default function FloatingComparisonBox() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [products, setProducts] = useState<ProductType[]>([]);
   const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
@@ -55,6 +57,12 @@ export default function FloatingComparisonBox() {
 
   // Set body attribute when comparator is visible (for sticky nav positioning)
   useEffect(() => {
+    // Don't set attribute if we're on the comparison page
+    if (pathname === '/porownaj') {
+      document.body.removeAttribute('data-comparison-visible');
+      return;
+    }
+
     if (hasInitiallyLoaded && optimisticProducts.length > 0) {
       document.body.setAttribute('data-comparison-visible', 'true');
     } else {
@@ -64,7 +72,7 @@ export default function FloatingComparisonBox() {
     return () => {
       document.body.removeAttribute('data-comparison-visible');
     };
-  }, [hasInitiallyLoaded, optimisticProducts.length]);
+  }, [hasInitiallyLoaded, optimisticProducts.length, pathname]);
 
   // Load products on mount and when cookie changes
   useEffect(() => {
@@ -165,6 +173,11 @@ export default function FloatingComparisonBox() {
 
   // Don't render until initial load is complete
   if (!hasInitiallyLoaded) {
+    return null;
+  }
+
+  // Don't render on the comparison page
+  if (pathname === '/porownaj/' || pathname === '/porownaj') {
     return null;
   }
 
