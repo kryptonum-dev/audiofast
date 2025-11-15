@@ -156,6 +156,9 @@
   @media (max-width: 49.9375rem) {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    margin-right: calc(-1 * var(--pageMargin));
+    width: 100%;
+    padding-right: calc(var(--pageMargin) * 2);
 
     &::-webkit-scrollbar {
       height: 0.5rem;
@@ -277,6 +280,9 @@
     .stickyContainer {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      padding-right: calc(var(--pageMargin) * 2);
+      margin-right: calc(-1 * var(--pageMargin));
+      width: 100%;
 
       &::-webkit-scrollbar {
         height: 0.375rem;
