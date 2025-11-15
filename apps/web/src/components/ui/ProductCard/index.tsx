@@ -34,7 +34,6 @@ export default function ProductCard({
     _id,
     categories,
   } = product;
-  console.log(product);
   const Heading = headingLevel;
 
   // Format price for display (converting cents to PLN)
@@ -48,8 +47,6 @@ export default function ProductCard({
       maximumFractionDigits: 0,
     }).format(priceInPLN);
   };
-
-  console.log(categories);
 
   return (
     <article className={styles.productCard}>

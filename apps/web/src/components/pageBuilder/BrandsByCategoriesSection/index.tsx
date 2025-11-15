@@ -18,33 +18,35 @@ export default function BrandsByCategoriesSection({
   index,
 }: BrandsByCategoriesSectionProps) {
   // Deduplicate brands within each category
-  const categoriesWithUniqueBrands = categoriesWithBrands?.map((category) => {
-    const seenBrandIds = new Set<string>();
-    const uniqueBrands: BrandType[] = [];
+  const categoriesWithUniqueBrands = categoriesWithBrands
+    ?.filter((category) => category != null)
+    .map((category) => {
+      const seenBrandIds = new Set<string>();
+      const uniqueBrands: BrandType[] = [];
 
-    category.brands?.forEach((brand) => {
-      if (
-        brand &&
-        typeof brand === 'object' &&
-        '_id' in brand &&
-        'slug' in brand &&
-        'name' in brand &&
-        brand._id &&
-        brand.slug &&
-        brand.name &&
-        !seenBrandIds.has(brand._id)
-      ) {
-        seenBrandIds.add(brand._id);
-        uniqueBrands.push(brand as BrandType);
-      }
+      category.brands?.forEach((brand) => {
+        if (
+          brand &&
+          typeof brand === 'object' &&
+          '_id' in brand &&
+          'slug' in brand &&
+          'name' in brand &&
+          brand._id &&
+          brand.slug &&
+          brand.name &&
+          !seenBrandIds.has(brand._id)
+        ) {
+          seenBrandIds.add(brand._id);
+          uniqueBrands.push(brand as BrandType);
+        }
+      });
+
+      return {
+        _id: category._id || '',
+        name: category.name || '',
+        brands: uniqueBrands,
+      };
     });
-
-    return {
-      _id: category._id || '',
-      name: category.name || '',
-      brands: uniqueBrands,
-    };
-  });
 
   return (
     <section className={`${styles.brandsByCategoriesSection} max-width-block`}>

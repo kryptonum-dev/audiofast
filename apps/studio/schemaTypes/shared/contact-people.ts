@@ -59,8 +59,6 @@ export const contactPeopleField = (
       return Rule.custom((value: any, { parent }: any) => {
         // parent is the immediate parent (faqSection object) which contains displayMode
         const displayMode = (parent as { displayMode?: string })?.displayMode;
-        console.log(parent);
-        console.log(value);
 
         // If displayMode is not found, allow (field might be hidden or not yet set)
         if (!displayMode) {
