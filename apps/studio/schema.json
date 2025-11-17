@@ -15403,6 +15403,20 @@
                 "type": "string"
               },
               "optional": true
+            },
+            "metaPixelId": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "metaConversionToken": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
             }
           }
         },

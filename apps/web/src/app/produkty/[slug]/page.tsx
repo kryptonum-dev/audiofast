@@ -7,6 +7,7 @@ import ProductHero, {
   type AwardType,
 } from '@/src/components/products/ProductHero';
 import TechnicalData from '@/src/components/products/TechnicalData';
+import ProductViewTracker from '@/src/components/shared/analytics/ProductViewTracker';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
@@ -81,6 +82,12 @@ export default async function ProductPage(props: ProductPageProps) {
     notFound();
   }
 
+  const priceCents = pricingData?.lowestPrice ?? product.basePriceCents ?? null;
+  const pricePLN =
+    typeof priceCents === 'number' ? Math.round(priceCents) / 100 : null;
+  const categorySlugs =
+    product.categories?.map((category) => category?.slug).filter(Boolean) ?? [];
+
   // Breadcrumbs data
   const breadcrumbsData = [
     {
@@ -120,6 +127,16 @@ export default async function ProductPage(props: ProductPageProps) {
 
   return (
     <main id="main" className="page-transition">
+      <ProductViewTracker
+        productId={product._id}
+        productName={product.name ?? ''}
+        pricePLN={pricePLN}
+        brand={{
+          id: product.brand?._id ?? undefined,
+          name: (product.brand as BrandType | undefined)?.name ?? undefined,
+        }}
+        categories={categorySlugs.filter(Boolean) as string[]}
+      />
       <Breadcrumbs data={breadcrumbsData} />
       <ProductHero
         name={product.name || ''}

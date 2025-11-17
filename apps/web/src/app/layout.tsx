@@ -49,13 +49,11 @@ export default async function RootLayout({
         {children}
         <Footer />
         {settings && <OrganizationSchema settings={settings} />}
-        {IS_PRODUCTION_DEPLOYMENT && <CookieConsent />}
-        {IS_PRODUCTION_DEPLOYMENT && settings?.analytics && (
-          <Analytics
-            gtmId={settings.analytics.gtm_id ?? undefined}
-            ga4Id={settings.analytics.ga4_id ?? undefined}
-            googleAdsId={settings.analytics.googleAds_id ?? undefined}
-          />
+        {IS_PRODUCTION_DEPLOYMENT && (
+          <>
+            <CookieConsent />
+            <Analytics />
+          </>
         )}
         <FloatingComparisonBox />
         <Toaster position="bottom-center" richColors />

@@ -10,6 +10,8 @@ import Checkbox from '@/src/components/ui/Checkbox';
 import type { FormStateData as FormStateDataProps } from '@/src/components/ui/FormStates';
 import FormStates, { type FormState } from '@/src/components/ui/FormStates';
 import Input from '@/src/components/ui/Input';
+import { saveAnalyticsUser } from '@/src/global/analytics/analytics-user-storage';
+import { trackEvent } from '@/src/global/analytics/track-event';
 import { REGEX } from '@/src/global/constants';
 import type { PagebuilderType } from '@/src/global/types';
 
@@ -65,10 +67,47 @@ export default function ContactForm({
     setCurrentStep(1);
   };
 
-  const onSubmit = async () => {
+  const trackLead = (data: ContactFormData) => {
+    const [firstName, ...rest] = data.name.trim().split(/\s+/);
+    const lastName = rest.length ? rest.join(' ') : undefined;
+
+    saveAnalyticsUser({
+      email: data.email,
+      name: data.name,
+      first_name: firstName || undefined,
+      last_name: lastName,
+    });
+
+    trackEvent({
+      user: {
+        email: data.email,
+        name: data.name,
+        first_name: firstName || undefined,
+        last_name: lastName,
+      },
+      meta: {
+        eventName: 'Lead',
+        params: {
+          content_name: 'faq_contact_form',
+          form_location: isContactOnly ? 'contact_page' : 'faq_section',
+        },
+      },
+      ga4: {
+        eventName: 'generate_lead',
+        params: {
+          form_name: 'faq_contact_form',
+          form_location: isContactOnly ? 'contact_page' : 'faq_section',
+        },
+      },
+    });
+  };
+
+  const onSubmit = async (data: ContactFormData) => {
     setFormState('loading');
 
     try {
+      trackLead(data);
+
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 

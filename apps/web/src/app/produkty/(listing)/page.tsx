@@ -9,6 +9,7 @@ import ProductsListingSkeleton from '@/src/components/products/ProductsListing/P
 import styles from '@/src/components/products/ProductsListing/styles.module.scss';
 import SortDropdown from '@/src/components/products/SortDropdown';
 import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
+import CategoryViewTracker from '@/src/components/shared/analytics/CategoryViewTracker';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import {
@@ -134,6 +135,11 @@ export default async function ProductsPage(props: ProductsPageProps) {
 
   return (
     <>
+      <CategoryViewTracker
+        categoryId={productsData.slug ?? '/produkty/'}
+        categoryName={productsData.name || 'Produkty'}
+        totalItems={productsData.totalCount}
+      />
       <CollectionPageSchema
         name={productsData.name || 'Produkty'}
         url="/produkty/"

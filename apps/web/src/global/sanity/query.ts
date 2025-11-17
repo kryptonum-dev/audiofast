@@ -616,7 +616,8 @@ export const querySettings = defineQuery(`*[_type == "settings"][0]{
   analytics {
     gtm_id,
     ga4_id,
-    googleAds_id
+    googleAds_id,
+    metaPixelId
   },
   structuredData {
     companyName,

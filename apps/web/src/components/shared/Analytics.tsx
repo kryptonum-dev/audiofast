@@ -1,134 +1,79 @@
 'use client';
 
-import Script from 'next/script';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import {
-  getCookieConsent,
-  hasValidConsent,
-  initializeGoogleConsent,
-} from '@/src/lib/cookie-utils';
+import { trackEvent } from '@/global/analytics/track-event';
 
-interface AnalyticsProps {
-  gtmId?: string;
-  ga4Id?: string;
-  googleAdsId?: string;
-}
-
-export default function Analytics({
-  gtmId,
-  ga4Id,
-  googleAdsId,
-}: AnalyticsProps) {
-  const [consentState, setConsentState] = useState<{
-    analytics: boolean;
-    marketing: boolean;
-  } | null>(null);
-
+export default function Analytics() {
   useEffect(() => {
-    // Initialize Google Consent Mode before any scripts load
-    initializeGoogleConsent();
+    const sendPageView = () => {
+      const { location, document } = window;
+      const pathname = location?.pathname ?? '';
+      const search = location?.search ?? '';
+      const url = location?.href ?? `${pathname}${search}`;
+      const title = document?.title ?? undefined;
 
-    // Check initial consent state
-    const checkConsent = () => {
-      if (hasValidConsent()) {
-        const consent = getCookieConsent();
-        if (consent) {
-          setConsentState({
-            analytics: consent.analytics,
-            marketing: consent.marketing,
-          });
-        }
-      }
+      trackEvent({
+        meta: {
+          eventName: 'PageView',
+          params: {
+            page_path: `${pathname}${search}` || undefined,
+          },
+        },
+        ga4: {
+          eventName: 'page_view',
+          params: {
+            page_location: url,
+            page_path: pathname,
+            ...(title ? { page_title: title } : {}),
+          },
+        },
+      });
     };
 
-    checkConsent();
+    if (!window.__pageViewTracked) {
+      sendPageView();
+      window.__pageViewTracked = true;
+    }
 
-    // Listen for consent updates
-    const handleConsentChange = () => {
-      checkConsent();
+    const handleContactClick = (event: MouseEvent) => {
+      const target = event.target as Element | null;
+      if (!target) return;
+
+      const link = target.closest(
+        'a[href^="mailto:"], a[href^="tel:"]'
+      ) as HTMLAnchorElement | null;
+      if (!link) return;
+
+      const href = link.getAttribute('href') ?? '';
+      const contactType = href.startsWith('mailto:') ? 'email' : 'phone';
+
+      trackEvent({
+        meta: {
+          eventName: 'Contact',
+          params: {
+            contact_type: contactType,
+            contact_value: href,
+          },
+        },
+        ga4: {
+          eventName: 'contact',
+          params: {
+            contact_type: contactType,
+            contact_value: href,
+          },
+        },
+      });
     };
 
-    window.addEventListener('consentUpdated', handleConsentChange);
-    window.addEventListener('storage', handleConsentChange);
+    document.addEventListener('click', handleContactClick, { capture: true });
 
     return () => {
-      window.removeEventListener('consentUpdated', handleConsentChange);
-      window.removeEventListener('storage', handleConsentChange);
+      document.removeEventListener('click', handleContactClick, {
+        capture: true,
+      });
     };
   }, []);
 
-  // Don't render anything if no IDs are provided
-  if (!gtmId && !ga4Id && !googleAdsId) return null;
-
-  return (
-    <>
-      {/* Google Tag Manager */}
-      {gtmId && (
-        <>
-          <Script
-            id="gtm-script"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','${gtmId}');
-              `,
-            }}
-          />
-          <noscript>
-            <iframe
-              src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
-              height="0"
-              width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
-            />
-          </noscript>
-        </>
-      )}
-
-      {/* Google Analytics 4 */}
-      {ga4Id && consentState?.analytics && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}
-            strategy="afterInteractive"
-          />
-          <Script
-            id="ga4-init"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${ga4Id}', {
-  page_path: window.location.pathname,
-  send_page_view: true
-});
-              `,
-            }}
-          />
-        </>
-      )}
-
-      {/* Google Ads */}
-      {googleAdsId && consentState?.marketing && (
-        <Script
-          id="google-ads-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('config', '${googleAdsId}');
-            `,
-          }}
-        />
-      )}
-    </>
-  );
+  return null;
 }

@@ -108,6 +108,20 @@ export const settings = defineType({
               invert: false,
             }).error('Format: AW-XXXXXXXXXX'),
         }),
+        defineField({
+          name: 'metaPixelId',
+          type: 'string',
+          title: 'ID Meta (Facebook) Pixel',
+          description:
+            'Format: XXXXXXXXXX. Używane do śledzenia Meta Pixel i API konwersji.',
+        }),
+        defineField({
+          name: 'metaConversionToken',
+          type: 'string',
+          title: 'Meta Conversion API Token',
+          description:
+            'Tajny token dostępu do Meta Conversion API. Przechowuj go w bezpieczny sposób.',
+        }),
       ],
     }),
     defineField({
