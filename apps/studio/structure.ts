@@ -8,6 +8,7 @@ import {
   Folder,
   FolderOpen,
   type LucideIcon,
+  Mail,
   MessageSquareText,
   Podcast,
   Settings2,

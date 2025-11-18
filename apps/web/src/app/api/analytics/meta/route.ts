@@ -1,5 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { NextRequest, NextResponse } from 'next/server';
+
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import type { AnalyticsUser } from '@/global/analytics/types';
 import { client as sanityClient } from '@/global/sanity/client';
@@ -108,7 +110,8 @@ async function postWithRetry(url: string, body: unknown, maxRetries = 2) {
 export async function POST(request: NextRequest) {
   let config: MetaAnalyticsConfig;
   try {
-    config = await sanityClient.fetch<MetaAnalyticsConfig>(META_ANALYTICS_QUERY);
+    config =
+      await sanityClient.fetch<MetaAnalyticsConfig>(META_ANALYTICS_QUERY);
   } catch (error) {
     console.error(
       '[Meta CAPI] Failed to load analytics config from Sanity',
@@ -177,12 +180,18 @@ export async function POST(request: NextRequest) {
     ?.split(',')[0]
     ?.trim();
   const realIp = request.headers.get('x-real-ip') || undefined;
-  const ip = forwardedIp || realIp || request.ip;
+  const ip =
+    forwardedIp ||
+    realIp ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
 
   const ua = request.headers.get('user-agent') || undefined;
   const referer = request.headers.get('referer') || undefined;
   const fbp = getCookie(request.headers, '_fbp') || undefined;
-  const fbc = computeFbc(getCookie(request.headers, '_fbc'), body.url || referer);
+  const fbc = computeFbc(
+    getCookie(request.headers, '_fbc'),
+    body.url || referer
+  );
 
   const event_time =
     typeof body.event_time === 'number'
@@ -284,4 +293,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

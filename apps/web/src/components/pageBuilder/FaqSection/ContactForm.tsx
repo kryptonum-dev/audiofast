@@ -13,6 +13,7 @@ import Input from '@/src/components/ui/Input';
 import { saveAnalyticsUser } from '@/src/global/analytics/analytics-user-storage';
 import { trackEvent } from '@/src/global/analytics/track-event';
 import { REGEX } from '@/src/global/constants';
+import { sendContactForm } from '@/src/global/resend/send-contact';
 import type { PagebuilderType } from '@/src/global/types';
 
 import styles from './styles.module.scss';
@@ -108,13 +109,9 @@ export default function ContactForm({
     try {
       trackLead(data);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const result = await sendContactForm(data);
 
-      // For demo purposes
-      const success = false;
-
-      if (success) {
+      if (result.success) {
         setFormState('success');
         setCurrentStep(1);
         reset();

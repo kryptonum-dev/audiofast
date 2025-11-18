@@ -72,7 +72,7 @@ export const PRODUCTS_ITEMS_PER_PAGE: number = 8;
  * @constant
  * @type {Array<{value: string, label: string}>}
  */
-export const PRODUCT_SORT_OPTIONS = [
+export const PRODUCT_SORT_OPTIONS: { value: string; label: string }[] = [
   { value: 'orderRank', label: 'Od najważniejszych' },
   { value: 'newest', label: 'Od najnowszych' },
   { value: 'oldest', label: 'Od najstarszych' },
@@ -85,7 +85,30 @@ export const PRODUCT_SORT_OPTIONS = [
  * @constant
  * @type {{value: string, label: string}}
  */
-export const RELEVANCE_SORT_OPTION = {
+export const RELEVANCE_SORT_OPTION: { value: string; label: string } = {
   value: 'relevance',
   label: 'Trafność',
 };
+
+/**
+ * Fallback email address for form submissions when newsletter settings are not configured
+ * @constant
+ * @type {string}
+ */
+export const FALLBACK_SUPPORT_EMAIL: string =
+  process.env.RESEND_FROM_EMAIL || 'noreply@audiofast.pl';
+
+/**
+ * Fallback email subject for confirmation emails when newsletter settings are not configured
+ * @constant
+ * @type {string}
+ */
+export const FALLBACK_EMAIL_SUBJECT: string = 'Dziękujemy za kontakt';
+
+/**
+ * Fallback email body text for confirmation emails when newsletter settings are not configured
+ * @constant
+ * @type {string}
+ */
+export const FALLBACK_EMAIL_BODY: string =
+  '<p>Otrzymaliśmy Twoją wiadomość i skontaktujemy się z Tobą wkrótce.</p>';

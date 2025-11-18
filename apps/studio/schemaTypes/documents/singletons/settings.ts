@@ -1,7 +1,8 @@
 import { CogIcon } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
 import { GROUP, GROUPS } from '../../../utils/constant';
+import { customPortableText } from '../../portableText';
 
 export const settings = defineType({
   name: 'settings',
@@ -63,6 +64,63 @@ export const settings = defineType({
         }),
       ],
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'contactSettings',
+      type: 'object',
+      title: 'Ustawienia formularzy kontaktowych',
+      description:
+        'Konfiguracja automatycznego wysyłania e-maili z formularzy kontaktowych. Ustaw adresy odbiorców i szablon wiadomości potwierdzającej.',
+      group: GROUP.CONTACT,
+      fields: [
+        defineField({
+          name: 'supportEmails',
+          type: 'array',
+          title: 'Adresy e-mail wsparcia',
+          description:
+            'Lista adresów e-mail, które otrzymają powiadomienia o nowych zgłoszeniach z formularzy kontaktowych. Minimum jeden adres jest wymagany.',
+          of: [
+            defineArrayMember({
+              type: 'string',
+              validation: (Rule) => Rule.email().required(),
+            }),
+          ],
+          validation: (Rule) => [
+            Rule.min(1).error('Musisz dodać co najmniej jeden adres e-mail'),
+            Rule.required().error('Lista adresów e-mail jest wymagana'),
+          ],
+        }),
+        defineField({
+          name: 'confirmationEmail',
+          type: 'object',
+          title: 'Szablon e-maila potwierdzającego',
+          description:
+            'Szablon wiadomości e-mail wysyłanej do użytkowników po wypełnieniu formularza kontaktowego. Możesz użyć zmiennych: {{name}} - imię i nazwisko, {{email}} - adres e-mail, {{message}} - treść wiadomości.',
+          fields: [
+            defineField({
+              name: 'subject',
+              type: 'string',
+              title: 'Temat e-maila',
+              description:
+                'Temat wiadomości e-mail wysyłanej do użytkownika (np. "Dziękujemy za kontakt")',
+              validation: (Rule) =>
+                Rule.required().error('Temat e-maila jest wymagany'),
+            }),
+            customPortableText({
+              name: 'content',
+              title: 'Treść e-maila',
+              description:
+                'Treść wiadomości e-mail. Możesz użyć zmiennych: {{name}}, {{email}}, {{message}}. Zmienne zostaną automatycznie zastąpione danymi z formularza.',
+              validation: (Rule) =>
+                Rule.required().error('Treść e-maila jest wymagana'),
+            }),
+          ],
+          validation: (Rule) =>
+            Rule.required().error('Szablon e-maila potwierdzającego jest wymagany'),
+        }),
+      ],
+      validation: (Rule) =>
+        Rule.required().error('Ustawienia formularzy kontaktowych są wymagane'),
     }),
     defineField({
       name: 'analytics',

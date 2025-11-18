@@ -497,7 +497,14 @@ const faqSectionBlock = /* groq */ `
         ${portableTextFragment('heading')},
         buttonText,
         ${formStateFragment('formState')}
+      },
+    "newsletterSettings": *[_type == "newsletterSettings"][0] {
+      supportEmails,
+      confirmationEmail {
+        subject,
+        ${portableTextFragmentExtended('content')}
       }
+    }
   }
 `;
 
@@ -514,7 +521,14 @@ const contactFormBlock = /* groq */ `
       ${portableTextFragment('heading')},
       accountDetails,
     },
-    ${formStateFragment('formState')}
+    ${formStateFragment('formState')},
+    "newsletterSettings": *[_type == "newsletterSettings"][0] {
+      supportEmails,
+      confirmationEmail {
+        subject,
+        ${portableTextFragmentExtended('content')}
+      }
+    }
   }
 `;
 
@@ -1622,4 +1636,14 @@ export const queryAllCategoryProductsForComparison = defineQuery(/* groq */ `
       "slug": slug.current
     }
   }
+`);
+
+export const queryContactSettings = defineQuery(/* groq */ `
+  *[_type == "settings"][0].contactSettings {
+    supportEmails,
+    confirmationEmail {
+      subject,
+      ${portableTextFragment('content')}
+    }
+  } 
 `);
