@@ -39,7 +39,13 @@ export default function NewsletterForm({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<NewsletterFormData>({ mode: 'onTouched' });
+  } = useForm<NewsletterFormData>({
+    mode: 'onTouched',
+    defaultValues: {
+      email: '',
+      consent: false,
+    },
+  });
 
   const onSubmit = async (data: NewsletterFormData) => {
     setFormState('loading');
@@ -106,7 +112,11 @@ export default function NewsletterForm({
   const isDisabled = formState !== 'idle';
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.newsletterForm}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={styles.newsletterForm}
+      noValidate
+    >
       <Input
         label="Adres e-mail"
         mode="dark"

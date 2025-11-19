@@ -1,3 +1,5 @@
+'use client';
+
 import type { FieldErrors, UseFormRegisterReturn } from 'react-hook-form';
 
 import Error from '../Error';
@@ -7,7 +9,7 @@ export type InputTypes = {
   label?: string;
   mode?: 'light' | 'dark';
   register: UseFormRegisterReturn;
-  errors: FieldErrors;
+  errors: FieldErrors | string;
   textarea?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement> &
   React.TextareaHTMLAttributes<HTMLTextAreaElement>;
@@ -28,10 +30,15 @@ export default function Input({
       textarea.style.height = `${textarea.scrollHeight + 2}px`;
     });
   };
+
+  const errorMessage =
+    typeof errors === 'string'
+      ? errors
+      : (errors[register.name]?.message as string);
   return (
     <label
       className={styles.input}
-      aria-invalid={!!errors[register.name]}
+      aria-invalid={!!errorMessage}
       data-mode={mode}
     >
       {label && <span className={styles.label}>{label}</span>}
@@ -40,10 +47,8 @@ export default function Input({
       ) : (
         <input {...register} {...props} />
       )}
-      <Error
-        error={errors[register.name]?.message?.toString()}
-        withIcon={textarea}
-      />
+
+      <Error withIcon={textarea}>{errorMessage}</Error>
     </label>
   );
 }

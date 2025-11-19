@@ -114,7 +114,7 @@ export default function ContactFormComponent({
             message: 'Imię i nazwisko musi mieć co najmniej 2 znaki',
           },
         })}
-        errors={errors}
+        errors={errors.name?.message ?? ''}
       />
 
       <Input
@@ -129,7 +129,7 @@ export default function ContactFormComponent({
             message: 'Niepoprawny adres e-mail',
           },
         })}
-        errors={errors}
+        errors={errors.email?.message ?? ''}
       />
 
       <Input
@@ -147,7 +147,7 @@ export default function ContactFormComponent({
             message: 'Wiadomość musi mieć co najmniej 10 znaków',
           },
         })}
-        errors={errors}
+        errors={errors.message?.message ?? ''}
       />
 
       <Checkbox
@@ -171,7 +171,7 @@ export default function ContactFormComponent({
             message: 'Zgoda jest wymagana',
           },
         })}
-        errors={errors}
+        errors={errors.consent?.message ?? ''}
       />
 
       <Button

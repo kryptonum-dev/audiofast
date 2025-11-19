@@ -38,6 +38,7 @@ export default function ContactForm({
 }) {
   const [currentStep, setCurrentStep] = useState<FormStep>(1);
   const [formState, setFormState] = useState<FormState>('idle');
+  const [formKey, setFormKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const previousStepRef = useRef<FormStep>(1);
 
@@ -48,7 +49,10 @@ export default function ContactForm({
     trigger,
     setFocus,
     formState: { errors },
-  } = useForm<ContactFormData>({ mode: 'onTouched' });
+  } = useForm<ContactFormData>({
+    mode: 'onTouched',
+    defaultValues: { consent: false, email: '', name: '', message: '' },
+  });
 
   // Focus management when step changes
   useEffect(() => {
@@ -105,6 +109,7 @@ export default function ContactForm({
 
   const onSubmit = async (data: ContactFormData) => {
     setFormState('loading');
+    console.log(data);
 
     try {
       trackLead(data);
@@ -114,7 +119,6 @@ export default function ContactForm({
       if (result.success) {
         setFormState('success');
         setCurrentStep(1);
-        reset();
       } else {
         setFormState('error');
       }
@@ -130,6 +134,7 @@ export default function ContactForm({
     if (previousFormState === 'success') {
       // Go back to step 1 for new message
       setCurrentStep(1);
+      setFormKey((prev) => prev + 1);
       reset();
 
       // Focus textarea after refresh from success
@@ -166,10 +171,12 @@ export default function ContactForm({
         headingLevel={isContactOnly ? (index === 0 ? 'h1' : 'h2') : 'h3'}
       />
       <form
+        key={formKey}
         ref={formRef}
         onSubmit={handleSubmit(onSubmit)}
         className={styles.form}
         data-step={currentStep}
+        noValidate
       >
         {/* Step 1 - Message */}
         <Input
@@ -187,7 +194,7 @@ export default function ContactForm({
               message: 'Wiadomość musi mieć co najmniej 10 znaków',
             },
           })}
-          errors={errors}
+          errors={errors.message?.message ?? ''}
           className={styles.messageInput}
         />
 
@@ -204,7 +211,7 @@ export default function ContactForm({
               message: 'Niepoprawny adres e-mail',
             },
           })}
-          errors={errors}
+          errors={errors.email?.message ?? ''}
         />
 
         <Input
@@ -221,7 +228,7 @@ export default function ContactForm({
               message: 'Imię i nazwisko musi mieć co najmniej 2 znaki',
             },
           })}
-          errors={errors}
+          errors={errors.name?.message ?? ''}
         />
         <Checkbox
           disabled={isDisabled}
@@ -244,7 +251,7 @@ export default function ContactForm({
               message: 'Zgoda jest wymagana',
             },
           })}
-          errors={errors}
+          errors={errors.consent?.message ?? ''}
         />
         <Button
           type="button"

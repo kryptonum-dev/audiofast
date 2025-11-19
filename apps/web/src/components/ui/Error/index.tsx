@@ -1,21 +1,22 @@
+'use client';
+
 import styles from './styles.module.scss';
 
 export type ErrorTypes = {
-  error?: string;
+  children: React.ReactNode;
   withIcon?: boolean;
 };
 
-export default function Error({ error, withIcon }: ErrorTypes) {
+export default function Error({ children, withIcon }: ErrorTypes) {
+  if (!children) return null;
   return (
-    error && (
-      <span
-        className={styles.error}
-        aria-live="assertive"
-        role="alert"
-        data-icon={withIcon}
-      >
-        {error}
-      </span>
-    )
+    <span
+      className={styles.error}
+      aria-live="assertive"
+      role="alert"
+      data-icon={withIcon}
+    >
+      {children}
+    </span>
   );
 }

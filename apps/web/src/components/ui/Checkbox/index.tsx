@@ -1,3 +1,5 @@
+'use client';
+
 import type { FieldErrors } from 'react-hook-form';
 
 import Error from '../Error';
@@ -7,7 +9,7 @@ type Props = {
   register: {
     name: string;
   };
-  errors: FieldErrors;
+  errors: FieldErrors | string;
   label: React.ReactNode;
   mode?: 'light' | 'dark';
   disabled?: boolean;
@@ -29,6 +31,10 @@ export default function Checkbox({
       event.target.dispatchEvent(new Event('change', { bubbles: true }));
     }
   };
+  const errorMessage =
+    typeof errors === 'string'
+      ? errors
+      : (errors[register.name]?.message as string);
   return (
     <label className={styles.checkbox} {...props} data-mode={mode}>
       <div className={styles.checkmark}>
@@ -36,7 +42,7 @@ export default function Checkbox({
           type="checkbox"
           disabled={disabled}
           {...register}
-          aria-invalid={!!errors[register.name]}
+          aria-invalid={!!errorMessage}
           onKeyDown={handleKeyDown}
         />
         <div className={styles.icon}>
@@ -44,7 +50,7 @@ export default function Checkbox({
         </div>
       </div>
       <p>{label}</p>
-      <Error error={errors[register.name]?.message?.toString()} withIcon />
+      <Error withIcon>{errorMessage}</Error>
     </label>
   );
 }
