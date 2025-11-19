@@ -8,6 +8,8 @@ import Button from '@/src/components/ui/Button';
 import Checkbox from '@/src/components/ui/Checkbox';
 import FormStates, { type FormState } from '@/src/components/ui/FormStates';
 import Input from '@/src/components/ui/Input';
+import { saveAnalyticsUser } from '@/src/global/analytics/analytics-user-storage';
+import { trackEvent } from '@/src/global/analytics/track-event';
 import { REGEX } from '@/src/global/constants';
 import type { QueryFooterResult } from '@/src/global/sanity/sanity.types';
 
@@ -17,6 +19,11 @@ import styles from './styles.module.scss';
 type FormStateData = NonNullable<
   NonNullable<QueryFooterResult>['newsletter']
 >['formState'];
+
+type NewsletterFormData = {
+  email: string;
+  consent: boolean;
+};
 
 export default function NewsletterForm({
   buttonLabel = 'Zapisz się',
@@ -32,25 +39,61 @@ export default function NewsletterForm({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: 'onTouched' });
+  } = useForm<NewsletterFormData>({ mode: 'onTouched' });
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: NewsletterFormData) => {
     setFormState('loading');
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Track analytics before API call
+      saveAnalyticsUser({
+        email: data.email,
+      });
 
-      // For demo purposes
-      const success = true;
+      trackEvent({
+        user: {
+          email: data.email,
+        },
+        meta: {
+          eventName: 'Lead',
+          params: {
+            content_name: 'newsletter_signup',
+            form_location: 'footer',
+          },
+        },
+        ga4: {
+          eventName: 'generate_lead',
+          params: {
+            form_name: 'newsletter_signup',
+            form_location: 'footer',
+          },
+        },
+      });
 
-      if (success) {
+      // Call newsletter API
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          consent: data.consent,
+        }),
+      });
+
+      const result = await response.json();
+
+      console.log(result);
+
+      if (response.ok && result.success) {
         setFormState('success');
         reset();
       } else {
         setFormState('error');
       }
-    } catch {
+    } catch (error) {
+      console.error('[Newsletter Form] Submission error:', error);
       setFormState('error');
     }
   };

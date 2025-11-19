@@ -123,6 +123,16 @@ export const settings = defineType({
         Rule.required().error('Ustawienia formularzy kontaktowych są wymagane'),
     }),
     defineField({
+      name: 'mailchimpAudienceId',
+      type: 'string',
+      title: 'Mailchimp Audience ID',
+      description:
+        'ID listy subskrybentów w Mailchimp dla newslettera (np. "abc123def4"). Znajdź w Mailchimp: Audience → Settings → Audience name and defaults. Double opt-in jest zawsze włączony dla zgodności z GDPR.',
+      group: GROUP.CONTACT,
+      validation: (Rule) =>
+        Rule.required().error('Mailchimp Audience ID jest wymagane'),
+    }),
+    defineField({
       name: 'analytics',
       type: 'object',
       title: 'Analityka',

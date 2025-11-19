@@ -25,6 +25,7 @@
     ]
   },
   "dependencies": {
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@portabletext/to-html": "^4.0.1",
     "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^7.8.2",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.21",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.22",
     "@types/minimatch": "^6.0.0",
     "@types/node": "^24.10.0",
     "@types/react": "19.2.2",

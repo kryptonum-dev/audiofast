@@ -1647,3 +1647,7 @@ export const queryContactSettings = defineQuery(/* groq */ `
     }
   } 
 `);
+
+export const queryMailchimpSettings = defineQuery(/* groq */ `
+  *[_type == "settings"][0].mailchimpAudienceId
+`);
