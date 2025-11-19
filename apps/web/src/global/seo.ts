@@ -121,10 +121,6 @@ export async function getSEOMetadata(
       title: fullTitle,
     },
     applicationName: fullTitle,
-    icons: {
-      icon: `${BASE_URL}/favicon.ico`,
-    },
-    manifest: `${BASE_URL}/manifest.json`,
     keywords: allKeywords,
     robots: noNotIndex ? 'noindex, nofollow' : 'index, follow',
     twitter: {
