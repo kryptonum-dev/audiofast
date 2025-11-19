@@ -27,6 +27,8 @@
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@portabletext/to-html": "^4.0.1",
+    "@react-email/components": "^1.0.1",
+    "@react-email/render": "^2.0.0",
     "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^7.8.2",
     "@sanity/image-url": "^1.1.0",

@@ -1,6 +1,7 @@
 import { assist } from '@sanity/assist';
 import { embeddingsIndexDashboard } from '@sanity/embeddings-index-ui';
 import { visionTool } from '@sanity/vision';
+import { Mail } from 'lucide-react';
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { media } from 'sanity-plugin-media';
@@ -10,6 +11,7 @@ import type { SingletonType } from './schemaTypes';
 import { schemaTypes, singletonActions } from './schemaTypes';
 import { singletons } from './schemaTypes/documents';
 import { structure } from './structure';
+import NewsletterTool from './tools/newsletter';
 import { createPageTemplate } from './utils/helper';
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
@@ -30,6 +32,15 @@ export default defineConfig({
     embeddingsIndexDashboard(),
     visionTool(),
     media(),
+  ],
+  tools: (prev) => [
+    ...prev,
+    {
+      name: 'newsletter',
+      title: 'Newsletter',
+      icon: Mail,
+      component: NewsletterTool,
+    },
   ],
 
   document: {
