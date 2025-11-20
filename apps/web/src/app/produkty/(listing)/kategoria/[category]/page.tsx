@@ -21,7 +21,7 @@ import {
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryCategoryMetadata,
   queryProductsPageData,
@@ -93,7 +93,7 @@ export async function generateMetadata(props: CategoryPageProps) {
       customFilters: [],
       embeddingResults: [],
     },
-    tags: ['products', 'productCategorySub', categorySlug],
+    tags: ['products'],
   });
 
   if (!productsData || !productsData.selectedCategory) {
@@ -156,7 +156,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
     params: {
       category: `/kategoria/${categorySlug}/`,
     },
-    tags: ['productCategorySub', categorySlug],
+    tags: ['productCategorySub'],
   });
 
   if (!categoryMetadata) {
@@ -186,7 +186,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
       customFilters,
       embeddingResults, // Pass embeddings for filtering
     },
-    tags: ['products', 'productCategorySub', 'product', 'brand', categorySlug],
+    tags: ['products'],
   });
 
   if (!productsData || !productsData.selectedCategory) {

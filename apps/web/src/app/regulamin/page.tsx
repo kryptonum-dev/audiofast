@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { LegalBody } from '@/src/components/legal/LegalBody';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryTermsAndConditions } from '@/src/global/sanity/query';
 import type { QueryTermsAndConditionsResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';

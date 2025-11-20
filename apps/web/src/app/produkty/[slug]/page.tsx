@@ -14,7 +14,7 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductSlugs,
   queryProductBySlug,
@@ -37,7 +37,7 @@ async function fetchProductData(slug: string) {
     sanityFetch<QueryProductBySlugResult>({
       query: queryProductBySlug,
       params: { slug: `/produkty/${slug}/` },
-      tags: ['product', slug],
+      tags: ['product'],
     }),
     fetchProductPricing(slug), // Fetch pricing from Supabase
   ]);

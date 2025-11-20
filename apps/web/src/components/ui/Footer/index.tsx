@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import LogoLink from '@/src/components/ui/LogoLink';
-import { fetchWithLogging } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryFooter } from '@/src/global/sanity/query';
 import type { QueryFooterResult } from '@/src/global/sanity/sanity.types';
 
@@ -9,8 +9,8 @@ import NewsletterForm from './NewsletterForm';
 import styles from './styles.module.scss';
 
 export default async function Footer() {
-  const footerData = await fetchWithLogging<QueryFooterResult>({
-    label: 'Footer fetch failed',
+  'use cache';
+  const footerData = await sanityFetch<QueryFooterResult>({
     query: queryFooter,
     tags: ['footer'],
   });

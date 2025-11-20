@@ -1,4 +1,7 @@
+import 'server-only';
+
 import type { PostgrestError } from '@supabase/supabase-js';
+import { cacheLife, cacheTag } from 'next/cache';
 
 import { createClient as createServerClient } from './server';
 import type {
@@ -14,7 +17,7 @@ import type {
  * to the price_key in Supabase.
  *
  * This function is designed to be called from Server Components.
- * For Client Components, you'll need to create a separate function that uses the browser client.
+ * Uses Next.js 16 Cache Components for performance and static generation.
  *
  * @param productSlug - The product slug (e.g., "atmosphere-sx-ic")
  * @returns Complete pricing data with variants, groups, values, and rules
@@ -22,6 +25,15 @@ import type {
 export async function fetchProductPricing(
   productSlug: string
 ): Promise<CompletePricingData | null> {
+  'use cache';
+
+  cacheTag('product-pricing');
+
+  if (process.env.NODE_ENV === 'development') {
+    cacheLife('seconds');
+  } else {
+    cacheLife('hours');
+  }
   try {
     // Create server client for this request
     const supabase = createServerClient();

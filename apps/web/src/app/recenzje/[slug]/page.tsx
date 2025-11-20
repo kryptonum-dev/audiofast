@@ -5,7 +5,7 @@ import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import ProductGallery from '@/src/components/ui/ProductGallery';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllReviewSlugs,
   queryReviewBySlug,
@@ -24,7 +24,7 @@ async function fetchReviewData(slug: string) {
   return await sanityFetch<QueryReviewBySlugResult>({
     query: queryReviewBySlug,
     params: { slug: `/recenzje/${slug}/` },
-    tags: ['review', slug],
+    tags: ['review'],
   });
 }
 

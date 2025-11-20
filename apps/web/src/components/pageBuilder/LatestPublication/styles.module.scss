@@ -8,6 +8,7 @@
   .container {
     display: grid;
     grid-template-columns: auto 1fr;
+    align-items: center;
     gap: clamp(2rem, calc(2.5vw / 0.48), 3rem);
 
     img {

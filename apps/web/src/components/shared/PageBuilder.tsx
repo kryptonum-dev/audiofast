@@ -29,11 +29,11 @@ export type PageBuilderBlock = NonNullable<
 
 export interface PageBuilderProps {
   readonly pageBuilder?: PageBuilderBlock[];
-  readonly searchParams?: {
+  readonly searchParams?: Promise<{
     page?: string;
     category?: string;
-    sortBy?: string;
-  };
+    sortBy?: string | string[];
+  }>;
   readonly basePath?: string; // Current page path for ProductsListing block
 }
 

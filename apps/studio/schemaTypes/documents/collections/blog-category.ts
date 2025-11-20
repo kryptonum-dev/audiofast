@@ -28,6 +28,7 @@ export const blogCategory = defineType({
     customPortableText({
       name: 'title',
       title: 'Tytuł kategorii (opcjonalnie)',
+      optional: true,
       description:
         'Niestandardowy tytuł dla strony kategorii. Jeśli nie ustawiony, używany będzie domyślny tytuł z głównej strony bloga. Ustaw aby nadpisać domyślny tytuł.',
       group: GROUP.MAIN_CONTENT,
@@ -40,6 +41,7 @@ export const blogCategory = defineType({
     customPortableText({
       name: 'description',
       title: 'Opis kategorii (opcjonalnie)',
+      optional: true,
       description:
         'Niestandardowy opis dla strony kategorii. Jeśli nie ustawiony, używany będzie domyślny opis z głównej strony bloga. Ustaw aby nadpisać domyślny opis.',
       group: GROUP.MAIN_CONTENT,

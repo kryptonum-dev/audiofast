@@ -4,7 +4,7 @@ import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryBrandsPageData } from '@/src/global/sanity/query';
 import type { QueryBrandsPageDataResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';

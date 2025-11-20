@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { getBlogArticlesQuery } from '@/src/global/sanity/query';
 import type { QueryBlogArticlesNewestResult } from '@/src/global/sanity/sanity.types';
 

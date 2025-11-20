@@ -4,9 +4,6 @@ import { preconnect, prefetchDNS } from 'react-dom';
 import { Toaster } from 'sonner';
 
 import { poppins, switzer } from '@/global/fonts';
-import { fetchWithLogging } from '@/global/sanity/client';
-import { querySettings } from '@/global/sanity/query';
-import type { QuerySettingsResult } from '@/global/sanity/sanity.types';
 import FloatingComparisonBox from '@/src/components/comparison/FloatingCompatisonBox';
 import OrganizationSchema from '@/src/components/schema/OrganizationSchema';
 import Analytics from '@/src/components/shared/Analytics';
@@ -15,17 +12,20 @@ import Footer from '@/src/components/ui/Footer';
 import Header from '@/src/components/ui/Header';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
+import { sanityFetch } from '../global/sanity/fetch';
+import { querySettings } from '../global/sanity/query';
+import type { QuerySettingsResult } from '../global/sanity/sanity.types';
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  'use cache';
   preconnect('https://cdn.sanity.io');
   prefetchDNS('https://cdn.sanity.io');
 
-  const settings = await fetchWithLogging<QuerySettingsResult>({
-    label: 'Settings fetch failed',
+  const settings = await sanityFetch<QuerySettingsResult>({
     query: querySettings,
     tags: ['settings'],
   });

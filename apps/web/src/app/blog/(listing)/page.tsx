@@ -12,7 +12,7 @@ import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   getBlogArticlesQuery,
   queryBlogPageData,
@@ -64,7 +64,7 @@ export default async function BlogPage(props: BlogPageProps) {
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
     params: { category: '', embeddingResults },
-    tags: ['blog', 'blog-category'],
+    tags: ['blog'],
   });
 
   if (!blogData) {

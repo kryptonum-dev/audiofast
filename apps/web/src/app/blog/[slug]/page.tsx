@@ -5,7 +5,7 @@ import BlogPostSchema from '@/src/components/schema/BlogPostSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllBlogPostSlugs,
   queryBlogPostBySlug,
@@ -26,7 +26,7 @@ async function fetchBlogPostData(slug: string) {
   return await sanityFetch<QueryBlogPostBySlugResult>({
     query: queryBlogPostBySlug,
     params: { slug: `/blog/${slug}/` },
-    tags: ['blog-article', slug],
+    tags: ['blog-article'],
   });
 }
 

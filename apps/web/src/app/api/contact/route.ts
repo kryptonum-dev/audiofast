@@ -7,7 +7,7 @@ import {
   FALLBACK_EMAIL_SUBJECT,
   FALLBACK_SUPPORT_EMAIL,
 } from '@/global/constants';
-import { sanityFetch } from '@/global/sanity/client';
+import { sanityFetch } from '@/global/sanity/fetch';
 import { queryContactSettings } from '@/global/sanity/query';
 import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/global/types';
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
   try {
     contactSettings = await sanityFetch<QueryContactSettingsResult>({
       query: queryContactSettings,
-      tags: ['contact-settings'],
+      tags: ['settings'],
     });
   } catch (error) {
     console.error('[Contact API] Failed to fetch contact settings', error);

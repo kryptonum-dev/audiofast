@@ -14,15 +14,13 @@ type ProductsListingBlockType = Extract<
   { _type: 'productsListing' }
 >;
 
-interface SearchParams {
-  page?: string;
-  category?: string;
-  sortBy?: string;
-}
-
 type ProductsListingProps = ProductsListingBlockType & {
   index: number;
-  searchParams?: SearchParams;
+  searchParams?: Promise<{
+    page?: string;
+    category?: string;
+    sortBy?: string | string[];
+  }>;
   basePath?: string; // Current page path for URL construction
 };
 
@@ -36,10 +34,10 @@ export default async function ProductsListing(props: ProductsListingProps) {
     basePath = '/',
   } = props;
 
-  const params = (searchParams || {}) as SearchParams;
-  const currentPage = Number(params.page) || 1;
-  const categoryParam = params.category || '';
-  const sortBy = params.sortBy || 'newest';
+  const searchParamsResult = (await searchParams) || {};
+  const currentPage = Number(searchParamsResult.page) || 1;
+  const categoryParam = searchParamsResult.category || '';
+  const sortBy = searchParamsResult.sortBy || 'newest';
 
   // Convert category param to Sanity format if provided
   const categorySlug = categoryParam ? `/kategoria/${categoryParam}/` : '';
@@ -84,7 +82,7 @@ export default async function ProductsListing(props: ProductsListingProps) {
           itemsPerPage={itemsPerPage}
           searchTerm=""
           category={categorySlug}
-          sortBy={sortBy}
+          sortBy={sortBy as string}
           brands={[]}
           minPrice={0}
           maxPrice={999999999}

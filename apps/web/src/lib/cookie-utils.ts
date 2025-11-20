@@ -150,6 +150,6 @@ export function initializeGoogleConsent() {
 declare global {
   interface Window {
     dataLayer: unknown[];
-    gtag: (...args: unknown[]) => void;
+    gtag: (coomand: string, ...args: unknown[]) => void;
   }
 }

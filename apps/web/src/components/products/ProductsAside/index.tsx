@@ -8,7 +8,6 @@ import {
   useEffect,
   useMemo,
   useState,
-  useTransition,
 } from 'react';
 
 import type { PortableTextProps } from '@/global/types';
@@ -76,7 +75,6 @@ export default function ProductsAside({
   // Use actual max price from products if initialMaxPrice is not provided
   const effectiveMaxPrice = initialMaxPrice ?? maxPrice;
   const router = useRouter();
-  const [, startTransition] = useTransition();
 
   // Consolidated local state for all filters (not applied until "Filtruj" is clicked)
   // Single state object = single state update = fewer re-renders
@@ -389,9 +387,7 @@ export default function ProductsAside({
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
-    startTransition(() => {
-      router.push(newUrl, { scroll: false });
-    });
+    router.push(newUrl, { scroll: false });
 
     // Close mobile menu after applying filters
     setIsOpen(false);
@@ -428,9 +424,7 @@ export default function ProductsAside({
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
-    startTransition(() => {
-      router.push(newUrl, { scroll: false });
-    });
+    router.push(newUrl, { scroll: false });
 
     // Close mobile menu after clearing filters
     setIsOpen(false);

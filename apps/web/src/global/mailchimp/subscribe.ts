@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import { sanityFetch } from '@/global/sanity/client';
+import { sanityFetch } from '@/global/sanity/fetch';
 import { queryMailchimpSettings } from '@/global/sanity/query';
 
 import { mailchimpClient } from './client';

@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryAllPageSlugs, queryPageBySlug } from '@/src/global/sanity/query';
 import type { QueryPageBySlugResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -10,7 +10,7 @@ import { getSEOMetadata } from '@/src/global/seo';
 export async function generateStaticParams() {
   const pages = await sanityFetch<{ slug: string }[]>({
     query: queryAllPageSlugs,
-    tags: ['pagesSlugs'],
+    tags: ['page'],
   });
 
   return pages
@@ -26,7 +26,7 @@ async function fetchPageData(slug: string) {
   return await sanityFetch<NonNullable<QueryPageBySlugResult>>({
     query: queryPageBySlug,
     params: { slug: sanitySlug },
-    tags: [sanitySlug],
+    tags: ['page'],
   });
 }
 
@@ -81,7 +81,11 @@ export default async function Page({
         basePath={pageData.slug || '/'}
         pageBuilder={pageData.pageBuilder || []}
         searchParams={
-          searchParamsResult as { [key: string]: string | string[] | undefined }
+          searchParamsResult as unknown as Promise<{
+            page?: string;
+            category?: string;
+            sortBy?: string | string[];
+          }>
         }
       />
     </main>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { fetchWithLogging } from '@/global/sanity/client';
+import { sanityFetch } from '@/global/sanity/fetch';
 import { queryNavbar } from '@/global/sanity/query';
 import type { QueryNavbarResult } from '@/global/sanity/sanity.types';
 import LogoLink from '@/src/components/ui/LogoLink';
@@ -9,8 +9,8 @@ import MobileNavToggle from './MobileNavToggle';
 import styles from './styles.module.scss';
 
 export default async function Header() {
-  const navbarData = await fetchWithLogging<QueryNavbarResult>({
-    label: 'Navbar fetch failed',
+  'use cache';
+  const navbarData = await sanityFetch<QueryNavbarResult>({
     query: queryNavbar,
     tags: ['navbar'],
   });

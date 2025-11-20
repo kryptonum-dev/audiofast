@@ -1,9 +1,8 @@
 import createImageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
-import { createClient, type QueryParams } from 'next-sanity';
+import { createClient } from 'next-sanity';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../constants';
-import { withErrorLogging } from '../logger';
 
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {
@@ -57,54 +56,3 @@ const imageBuilder = createImageUrlBuilder({ projectId, dataset });
 
 export const urlFor = (source: SanityImageSource) =>
   imageBuilder.image(source).auto('format').fit('max').format('webp');
-
-/**
- * Enhanced fetch function with correct Next.js caching strategy
- * - Development & Preview: always fresh (no-store)
- * - Production: force-cache with tags for ISR; otherwise no-store
- */
-export async function sanityFetch<QueryResponse>({
-  query,
-  params = {},
-  tags,
-}: {
-  query: string;
-  params?: QueryParams;
-  tags?: string[];
-}): Promise<QueryResponse> {
-  const isProd = IS_PRODUCTION_DEPLOYMENT;
-  const hasTags = Array.isArray(tags) && tags.length > 0;
-
-  return await client.fetch<QueryResponse>(
-    query,
-    params,
-    isProd
-      ? hasTags
-        ? { cache: 'force-cache', next: { tags } }
-        : { cache: 'no-store' }
-      : { cache: 'no-store' }
-  );
-}
-
-/**
- * Wrapper around sanityFetch that adds standardized error logging and returns null on failure.
- */
-export async function fetchWithLogging<QueryResponse>({
-  label,
-  query,
-  params = {},
-  tags,
-  context,
-}: {
-  label: string;
-  query: string;
-  params?: QueryParams;
-  tags?: string[];
-  context?: Record<string, unknown>;
-}): Promise<QueryResponse | null> {
-  return withErrorLogging<QueryResponse>(
-    label,
-    () => sanityFetch<QueryResponse>({ query, params, tags }),
-    { ...(context || {}), params, tags }
-  );
-}

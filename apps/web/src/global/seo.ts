@@ -3,8 +3,9 @@ import type { Metadata } from 'next';
 import { capitalize } from '@/global/utils';
 
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
-import { client } from './sanity/client';
+import { sanityFetch } from './sanity/fetch';
 import { queryDefaultOGImage, queryNotFoundPage } from './sanity/query';
+import type { QueryNotFoundPageResult } from './sanity/sanity.types';
 
 // Site-wide configuration interface
 interface SiteConfig {
@@ -70,7 +71,10 @@ export async function getSEOMetadata(
 
   // If no SEO data is provided and 404 fallback is enabled, fetch 404 page data
   if (!page.seo || Object.keys(page).length === 0) {
-    const notFoundData = await client.fetch(queryNotFoundPage);
+    const notFoundData = await sanityFetch<QueryNotFoundPageResult>({
+      query: queryNotFoundPage,
+      tags: ['notFound'],
+    });
     if (notFoundData) {
       effectivePage = {
         seo: notFoundData.seo,
@@ -91,8 +95,12 @@ export async function getSEOMetadata(
 
   const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug: slug || '' });
 
-  const data: { defaultOGImage: string | null } | null =
-    await client.fetch(queryDefaultOGImage);
+  const data = await sanityFetch<{
+    defaultOGImage: string | null;
+  }>({
+    query: queryDefaultOGImage,
+    tags: ['settings'],
+  });
 
   const ogImage = openGraph?.seoImage || data?.defaultOGImage;
 
@@ -105,22 +113,17 @@ export async function getSEOMetadata(
   const defaultDescription = seo?.description || siteConfig.description;
   const allKeywords = [...siteConfig.keywords, ...pageKeywords];
 
-  const fullTitle =
-    defaultTitle === siteConfig.title
-      ? defaultTitle
-      : `${defaultTitle} | ${siteConfig.title}`;
-
   // Build default metadata object
   const defaultMetadata: Metadata = {
-    title: fullTitle,
+    title: defaultTitle,
     description: defaultDescription,
     metadataBase: new URL(BASE_URL),
     creator: siteConfig.title,
     authors: [{ name: siteConfig.title }],
     appleWebApp: {
-      title: fullTitle,
+      title: defaultTitle,
     },
-    applicationName: fullTitle,
+    applicationName: defaultTitle,
     keywords: allKeywords,
     robots: noNotIndex ? 'noindex, nofollow' : 'index, follow',
     twitter: {

@@ -22,7 +22,7 @@ import {
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllBrandSlugs,
   queryBrandBySlug,
@@ -76,7 +76,7 @@ function fetchBrandData(
       customFilters: [], // Brand pages don't have custom filters
       embeddingResults: filters?.embeddingResults || [], // Embeddings for semantic search
     },
-    tags: ['brand', slug, 'products', 'product'],
+    tags: ['brand'],
   });
 }
 

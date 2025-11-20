@@ -139,12 +139,8 @@ export default async function StoreLocations({
       </div>
       <h2 className={styles.heading}>Gdzie kupić</h2>
       <ul className={styles.storesList}>
-        {[...storesWithLocations].map((store) => (
-          <li
-            key={store._id + Math.random()}
-            id={store._id}
-            className={styles.store}
-          >
+        {[...storesWithLocations].map((store, index) => (
+          <li key={store._id + index} id={store._id} className={styles.store}>
             <div className={styles.storeInfo}>
               <p className={styles.storeName}>{store.name}</p>
               {store.address && (

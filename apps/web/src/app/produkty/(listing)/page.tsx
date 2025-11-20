@@ -18,7 +18,7 @@ import {
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryProductsPageData } from '@/src/global/sanity/query';
 import type { QueryProductsPageDataResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -101,7 +101,7 @@ export default async function ProductsPage(props: ProductsPageProps) {
       customFilters: [],
       embeddingResults, // Pass embeddings for filtering
     },
-    tags: ['products', 'productCategorySub', 'product', 'brand'],
+    tags: ['products'],
   });
 
   if (!productsData) {

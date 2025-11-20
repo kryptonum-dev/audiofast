@@ -2,12 +2,9 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { logError, logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryPdfReviewBySlug } from '@/src/global/sanity/query';
 import type { QueryPdfReviewBySlugResult } from '@/src/global/sanity/sanity.types';
-
-// Force dynamic rendering - don't prerender PDF routes
-export const dynamic = 'force-dynamic';
 
 type RouteParams = {
   params: Promise<{ slug: string }>;
@@ -22,7 +19,7 @@ export async function GET(request: NextRequest, props: RouteParams) {
     const pdfReview = await sanityFetch<QueryPdfReviewBySlugResult>({
       query: queryPdfReviewBySlug,
       params: { slug: slug.toLowerCase() },
-      tags: ['review', slug],
+      tags: ['review'],
     });
 
     if (!pdfReview || !pdfReview.pdfUrl) {

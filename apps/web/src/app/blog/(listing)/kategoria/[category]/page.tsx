@@ -12,7 +12,7 @@ import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryBlogPageData } from '@/src/global/sanity/query';
 import type { QueryBlogPageDataResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -50,7 +50,7 @@ export async function generateMetadata(props: CategoryPageProps) {
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
     params: { category: `/blog/${categorySlug}/` },
-    tags: ['blog', 'blog-category', categorySlug],
+    tags: ['blog-category'],
   });
 
   if (!blogData || !blogData.selectedCategory) {
@@ -97,7 +97,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
     params: { category: `/blog/${categorySlug}/`, embeddingResults },
-    tags: ['blog', 'blog-category', categorySlug],
+    tags: ['blog-category'],
   });
 
   if (!blogData || !blogData.selectedCategory) {

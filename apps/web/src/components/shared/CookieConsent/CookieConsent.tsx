@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { client } from '@/global/sanity/client';
+import { sanityFetch } from '@/global/sanity/fetch';
+import { querySettings } from '@/src/global/sanity/query';
 
 import CookieConsentClient from './CookieConsentClient';
 
@@ -14,16 +15,12 @@ type AnalyticsConfig = {
 };
 
 async function getAnalyticsConfig() {
-  const data = await client.fetch<AnalyticsConfig>(`*[_type == "settings"][0]{
-    analytics {
-      gtm_id,
-      ga4_id,
-      googleAds_id,
-      metaPixelId
-    }
-  }`);
+  const data = await sanityFetch<AnalyticsConfig>({
+    query: querySettings,
+    tags: ['settings'],
+  });
 
-  return data.analytics ?? null;
+  return data?.analytics ?? null;
 }
 
 export default async function CookieConsent() {

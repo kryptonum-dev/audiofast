@@ -1,7 +1,7 @@
 'use server';
 
 import type { ComparisonProduct } from '@/src/global/comparison/types';
-import { sanityFetch } from '@/src/global/sanity/client';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllCategoryProductsForComparison,
   queryComparisonProductsFull,
@@ -22,7 +22,7 @@ export async function fetchComparisonProducts(
     const result = await sanityFetch<ProductType[]>({
       query: queryComparisonProductsMinimal,
       params: { productIds },
-      tags: ['comparison'],
+      tags: ['product'],
     });
     return result;
   } catch (error) {
@@ -44,7 +44,7 @@ export async function fetchComparisonProductsFull(
     const result = await sanityFetch<ComparisonProduct[]>({
       query: queryComparisonProductsFull,
       params: { productIds },
-      tags: ['comparison'],
+      tags: ['product'],
     });
     return result;
   } catch (error) {
@@ -66,7 +66,7 @@ export async function fetchAllCategoryProducts(
     const result = await sanityFetch<ComparisonProduct[]>({
       query: queryAllCategoryProductsForComparison,
       params: { categorySlug },
-      tags: ['comparison', 'products'],
+      tags: ['product'],
     });
     return result || [];
   } catch (error) {
