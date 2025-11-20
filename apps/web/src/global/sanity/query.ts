@@ -751,6 +751,21 @@ export const queryTermsAndConditions =
   }
 }`);
 
+export const queryCpoPage = defineQuery(`*[_type == "cpoPage"][0]{
+  _id,
+  _type,
+  "slug": slug.current,
+  name,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  },
+  "firstBlockType": pageBuilder[0]._type,
+  ${pageBuilderFragment}
+}`);
+
 export const queryAllBlogPostSlugs =
   defineQuery(`*[_type == "blog-article" && defined(slug.current) && !(_id in path("drafts.**"))]{
   "slug": slug.current

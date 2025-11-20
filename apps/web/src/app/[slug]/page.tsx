@@ -16,7 +16,8 @@ export async function generateStaticParams() {
   return pages
     .filter((page) => page.slug)
     .map((page) => ({
-      slug: page.slug.replace(/^\//, ''),
+      // Remove both leading and trailing slashes for the route param
+      slug: page.slug.replace(/^\//, '').replace(/\/$/, ''),
     }));
 }
 
@@ -50,13 +51,10 @@ export async function generateMetadata({
 
 export default async function Page({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
-  const searchParamsResult = await searchParams;
   const pageData = await fetchPageData(slug);
 
   if (!pageData) {
@@ -80,13 +78,6 @@ export default async function Page({
       <PageBuilder
         basePath={pageData.slug || '/'}
         pageBuilder={pageData.pageBuilder || []}
-        searchParams={
-          searchParamsResult as unknown as Promise<{
-            page?: string;
-            category?: string;
-            sortBy?: string | string[];
-          }>
-        }
       />
     </main>
   );

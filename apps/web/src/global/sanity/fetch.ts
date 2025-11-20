@@ -28,7 +28,7 @@ export async function sanityFetch<QueryResponse>({
   if (process.env.NODE_ENV === 'development') {
     cacheLife('seconds');
   } else {
-    cacheLife('max');
+    cacheLife('weeks');
   }
 
   return await client.fetch<QueryResponse>(query, params);

@@ -26,5 +26,13 @@ export const pageBuilderField = defineField({
     'Zbuduj swoją stronę, dodając różne sekcje, takie jak tekst, obrazy i inne bloki treści',
 });
 
+export const cpoPageBuilderField = defineField({
+  name: 'pageBuilder',
+  group: GROUP.MAIN_CONTENT,
+  type: 'cpoPageBuilder',
+  description:
+    'Zbuduj swoją stronę CPO, dodając różne sekcje, w tym listę produktów CPO',
+});
+
 export { contactPeopleField } from './contact-people';
 

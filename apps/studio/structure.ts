@@ -8,7 +8,6 @@ import {
   Folder,
   FolderOpen,
   type LucideIcon,
-  Mail,
   MessageSquareText,
   Podcast,
   Settings2,
@@ -348,16 +347,6 @@ export const structure = (
                       ),
                     ]);
                 }),
-              // CPO Products list
-              S.listItem()
-                .title('CPO')
-                .icon(BadgeCheck)
-                .child(
-                  S.documentList()
-                    .title('Produkty CPO (Certyfikowany sprzęt używany)')
-                    .filter('_type == "product" && isCPO == true')
-                    .defaultOrdering([{ field: 'orderRank', direction: 'asc' }])
-                ),
               createCollection({
                 S,
                 context,
@@ -419,6 +408,25 @@ export const structure = (
                       ),
                     ]);
                 }),
+            ])
+        ),
+      S.listItem()
+        .title('CPO')
+        .icon(BadgeCheck)
+        .child(
+          S.list()
+            .title('CPO - Certyfikowany sprzęt używany')
+            .items([
+              createSingleTon({ S, type: 'cpoPage' }),
+              S.listItem()
+                .title('Produkty CPO')
+                .icon(Folder)
+                .child(
+                  S.documentList()
+                    .title('Produkty CPO')
+                    .filter('_type == "product" && isCPO == true')
+                    .defaultOrdering([{ field: 'orderRank', direction: 'asc' }])
+                ),
             ])
         ),
       createCollection({

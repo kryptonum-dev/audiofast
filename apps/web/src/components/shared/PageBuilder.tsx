@@ -1,4 +1,7 @@
-import type { QueryHomePageResult } from '../../global/sanity/sanity.types';
+import type {
+  QueryCpoPageResult,
+  QueryHomePageResult,
+} from '../../global/sanity/sanity.types';
 import BlurLinesTextImage from '../pageBuilder/BlurLinesTextImage';
 import BrandsByCategoriesSection from '../pageBuilder/BrandsByCategoriesSection';
 import BrandsList from '../pageBuilder/BrandsList';
@@ -21,19 +24,28 @@ import ProductsListing from '../pageBuilder/ProductsListing';
 import StepList from '../pageBuilder/StepList';
 import TeamSection from '../pageBuilder/TeamSection';
 
-// More specific and descriptive type aliases
-// Shared block union derived from the shared pageBuilder fragment result
-export type PageBuilderBlock = NonNullable<
+// Standard pageBuilder blocks (without productsListing)
+type StandardPageBuilderBlock = NonNullable<
   NonNullable<QueryHomePageResult>['pageBuilder']
 >[number];
 
+// CPO pageBuilder blocks (with productsListing)
+type CpoPageBuilderBlock = NonNullable<
+  NonNullable<QueryCpoPageResult>['pageBuilder']
+>[number];
+
+// Union of both types to support all blocks
+export type PageBuilderBlock = StandardPageBuilderBlock | CpoPageBuilderBlock;
+
+interface SearchParams {
+  page?: string;
+  category?: string;
+  sortBy?: string | string[];
+}
+
 export interface PageBuilderProps {
   readonly pageBuilder?: PageBuilderBlock[];
-  readonly searchParams?: Promise<{
-    page?: string;
-    category?: string;
-    sortBy?: string | string[];
-  }>;
+  readonly searchParams?: SearchParams;
   readonly basePath?: string; // Current page path for ProductsListing block
 }
 

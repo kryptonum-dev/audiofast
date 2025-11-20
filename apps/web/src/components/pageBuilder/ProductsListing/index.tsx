@@ -16,11 +16,11 @@ type ProductsListingBlockType = Extract<
 
 type ProductsListingProps = ProductsListingBlockType & {
   index: number;
-  searchParams?: Promise<{
+  searchParams?: {
     page?: string;
     category?: string;
     sortBy?: string | string[];
-  }>;
+  };
   basePath?: string; // Current page path for URL construction
 };
 
@@ -34,7 +34,7 @@ export default async function ProductsListing(props: ProductsListingProps) {
     basePath = '/',
   } = props;
 
-  const searchParamsResult = (await searchParams) || {};
+  const searchParamsResult = searchParams || {};
   const currentPage = Number(searchParamsResult.page) || 1;
   const categoryParam = searchParamsResult.category || '';
   const sortBy = searchParamsResult.sortBy || 'newest';

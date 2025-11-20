@@ -14,6 +14,7 @@ import { store } from './collections/store';
 import { teamMember } from './collections/team-member';
 import { blog } from './singletons/blog';
 import { brands } from './singletons/brands';
+import { cpoPage } from './singletons/cpo-page';
 import { footer } from './singletons/footer';
 import { homePage } from './singletons/home-page';
 import { navbar } from './singletons/navbar';
@@ -36,6 +37,7 @@ export const singletons = [
   blog,
   products,
   brands,
+  cpoPage,
 ];
 
 export const collection = [
