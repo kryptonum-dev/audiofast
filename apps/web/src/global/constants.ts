@@ -35,7 +35,6 @@ export const SITE_DESCRIPTION: string =
  * @type {boolean}
  */
 export const IS_PRODUCTION_DEPLOYMENT: boolean =
-  process.env.NODE_ENV === 'production' ||
   process.env.VERCEL_ENV === 'production';
 
 /**

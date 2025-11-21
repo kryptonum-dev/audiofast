@@ -24,6 +24,7 @@ import { QuoteComponent } from './Quote';
 import { TwoColumnTableComponent } from './TwoColumnTable';
 import { YoutubeVideoComponent } from './YouTubeVideo';
 import { YoutubeVideoSkeleton } from './YouTubeVideo/YoutubeVideoSkeleton';
+import portableTextStyles from './styles.module.scss';
 
 type Props = {
   value: PortableTextProps;
@@ -343,7 +344,7 @@ export function PortableTextRenderer({
 
   // Apply wrapper only when enablePortableTextStyles is true or multiple blocks need grouping
   if (enablePortableTextStyles) {
-    const wrapperClasses = ['portable-text', className]
+    const wrapperClasses = [portableTextStyles.portableText, className]
       .filter(Boolean)
       .join(' ');
     return (
