@@ -1,3 +1,5 @@
+'use cache';
+
 import { notFound } from 'next/navigation';
 
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
@@ -16,7 +18,6 @@ export async function generateStaticParams() {
   return pages
     .filter((page) => page.slug)
     .map((page) => ({
-      // Remove both leading and trailing slashes for the route param
       slug: page.slug.replace(/^\//, '').replace(/\/$/, ''),
     }));
 }
@@ -54,6 +55,7 @@ export default async function Page({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  'use cache';
   const { slug } = await params;
   const pageData = await fetchPageData(slug);
 

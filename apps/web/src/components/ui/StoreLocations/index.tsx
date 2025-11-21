@@ -38,9 +38,9 @@ async function geocodeCity(
       `https://nominatim.openstreetmap.org/search?${params.toString()}`,
       {
         headers: {
+          revalidate: '86400', // 24 hours
           'User-Agent': 'Audiofast-Website/1.0',
         },
-        next: { revalidate: 86400 }, // Cache for 24 hours
       }
     );
 

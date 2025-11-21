@@ -37,24 +37,24 @@ export default async function RootLayout({
     >
       <head>
         {/* Preconnect to Google Tag Manager for faster loading */}
-        {settings?.analytics?.gtm_id && (
+        {/* {settings?.analytics?.gtm_id && (
           <>
             <link rel="preconnect" href="https://www.googletagmanager.com" />
             <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
           </>
-        )}
+        )} */}
       </head>
       <body>
         <Header />
         {children}
         <Footer />
         {settings && <OrganizationSchema settings={settings} />}
-        {IS_PRODUCTION_DEPLOYMENT && (
+        {/* {IS_PRODUCTION_DEPLOYMENT && (
           <>
             <CookieConsent />
             <Analytics />
           </>
-        )}
+        )} */}
         <FloatingComparisonBox />
         <Toaster position="bottom-center" richColors />
       </body>

@@ -17,6 +17,7 @@ const allLinkableTypes = [
   { type: 'brands' },
   { type: 'termsAndConditions' },
   { type: 'privacyPolicy' },
+  { type: 'cpoPage' },
 ];
 
 export const customUrl = defineType({

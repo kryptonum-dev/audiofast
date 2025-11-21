@@ -20,7 +20,6 @@ async function fetchYouTubeTitle(youtubeId: string): Promise<string | null> {
     const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${youtubeId}&format=json`;
 
     const response = await fetch(oEmbedUrl, {
-      next: { revalidate: 86400 }, // Cache for 24 hours
       headers: {
         'User-Agent': 'Audiofast-Website/1.0',
       },
@@ -65,7 +64,6 @@ async function getYouTubeThumbnailUrl(
       // Use HEAD request to check if image exists without downloading it
       const response = await fetch(url, {
         method: 'HEAD',
-        next: { revalidate: 86400 }, // Cache for 24 hours
         headers: {
           'User-Agent': 'Audiofast-Website/1.0',
         },

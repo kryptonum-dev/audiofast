@@ -261,7 +261,12 @@ export default function CookieConsentClient({
   }
 
   return (
-    <aside className={styles.overlay} role="dialog" aria-modal="true">
+    <aside
+      className={styles.overlay}
+      aria-label="Ustawienia cookie"
+      role="dialog"
+      aria-modal="true"
+    >
       <section className={styles.modal}>
         <header className={styles.header}>
           <h2 className={styles.heading}>
