@@ -41,7 +41,7 @@ export default async function BlogListing({
   const articlesData = await sanityFetch<QueryBlogArticlesNewestResult>({
     query,
     params: {
-      category: category || '',
+      category: category,
       search: searchTerm || '',
       offset,
       limit,

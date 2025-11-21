@@ -32,7 +32,7 @@ export async function fetchProductPricing(
   if (process.env.NODE_ENV === 'development') {
     cacheLife('seconds');
   } else {
-    cacheLife('hours');
+    cacheLife('weeks');
   }
   try {
     // Create server client for this request

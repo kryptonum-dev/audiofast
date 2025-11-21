@@ -1,5 +1,6 @@
 'use cache';
 
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
@@ -56,6 +57,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   'use cache';
+  cacheLife('max');
   const { slug } = await params;
   const pageData = await fetchPageData(slug);
 

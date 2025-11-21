@@ -39,7 +39,8 @@ export async function generateStaticParams() {
     blogData?.categories
       ?.filter((cat) => cat.count > 0)
       .map((cat) => ({
-        category: cat.slug?.replace('/blog/', '').replace('/', '') || '',
+        category:
+          cat.slug?.replace('/blog/kategoria/', '').replace('/', '') || '',
       })) || []
   );
 }
@@ -50,7 +51,7 @@ export async function generateMetadata(props: CategoryPageProps) {
 
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
-    params: { category: `/blog/${categorySlug}/` },
+    params: { category: `/blog/kategoria/${categorySlug}/` },
     tags: ['blog-category'],
   });
 
@@ -61,7 +62,9 @@ export async function generateMetadata(props: CategoryPageProps) {
 
   // Check if category has any articles
   const categoryInfo = blogData.categories?.find(
-    (cat) => cat.slug?.replace('/blog/', '').replace('/', '') === categorySlug
+    (cat) =>
+      cat.slug?.replace('/blog/kategoria/', '').replace('/', '') ===
+      categorySlug
   );
 
   if (!categoryInfo || categoryInfo.count === 0) {
@@ -97,7 +100,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
 
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
-    params: { category: `/blog/${categorySlug}/`, embeddingResults },
+    params: { category: `/blog/kategoria/${categorySlug}/`, embeddingResults },
     tags: ['blog-category'],
   });
 
@@ -110,7 +113,9 @@ export default async function CategoryPage(props: CategoryPageProps) {
 
   // Check if category has any articles
   const categoryInfo = blogData.categories?.find(
-    (cat) => cat.slug?.replace('/blog/', '').replace('/', '') === categorySlug
+    (cat) =>
+      cat.slug?.replace('/blog/kategoria/', '').replace('/', '') ===
+      categorySlug
   );
 
   if (!categoryInfo || categoryInfo.count === 0) {
@@ -173,7 +178,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
             currentPage={currentPage}
             itemsPerPage={BLOG_ITEMS_PER_PAGE}
             searchTerm={searchTerm}
-            category={`/blog/${categorySlug}/`}
+            category={`/blog/kategoria/${categorySlug}/`}
             basePath={`/blog/kategoria/${categorySlug}/`}
             embeddingResults={embeddingResults}
             sortBy={sortBy}
