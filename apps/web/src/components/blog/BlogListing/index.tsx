@@ -82,6 +82,7 @@ export default async function BlogListing({
                   style={{ animationDelay: `${delay}ms` }}
                 >
                   <PublicationCard
+                    headingLevel="h2"
                     publication={article}
                     layout="vertical"
                     imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"

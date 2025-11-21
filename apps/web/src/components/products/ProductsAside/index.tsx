@@ -3,12 +3,7 @@
 import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { PortableTextProps } from '@/global/types';
 import type { BrandType, ProductCategoryType } from '@/src/global/types';
@@ -470,6 +465,7 @@ export default function ProductsAside({
         className={styles.sidebar}
         data-open={isOpen}
         role="dialog"
+        aria-label="Filtry produktów"
         aria-modal={isOpen}
       >
         {/* Mobile Close Button */}
