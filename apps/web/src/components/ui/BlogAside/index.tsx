@@ -69,7 +69,7 @@ export default function BlogAside({
         />
         {categories.map((category) => {
           const categorySlug = category.slug
-            ?.replace('/blog/', '')
+            ?.replace('/blog/kategoria/', '')
             .replace('/', '');
 
           // Check if this category is active

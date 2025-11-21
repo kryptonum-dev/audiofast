@@ -22,7 +22,7 @@ export const blogCategory = defineType({
   fields: [
     orderRankField({ type: 'blog-category' }),
     ...defineSlugForDocument({
-      prefix: '/blog/',
+      prefix: '/blog/kategoria/',
       group: GROUP.MAIN_CONTENT,
     }),
     customPortableText({

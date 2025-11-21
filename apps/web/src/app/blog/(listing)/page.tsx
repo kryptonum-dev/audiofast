@@ -13,10 +13,7 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
-import {
-  getBlogArticlesQuery,
-  queryBlogPageData,
-} from '@/src/global/sanity/query';
+import { queryBlogPageData } from '@/src/global/sanity/query';
 import type { QueryBlogPageDataResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 

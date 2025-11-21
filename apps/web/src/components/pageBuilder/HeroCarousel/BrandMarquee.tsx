@@ -39,7 +39,7 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                   image={brand.logo}
                   alt={brand.name || 'Logo marki'}
                   sizes="(max-width: 56.1875rem) 72px, 93px"
-                  quality={80}
+                  quality={90}
                   className={styles.brandLogo}
                   priority={!isDuplicate && idx < 6}
                 />

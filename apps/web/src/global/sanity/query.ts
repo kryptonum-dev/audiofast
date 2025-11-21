@@ -1666,3 +1666,56 @@ export const queryContactSettings = defineQuery(/* groq */ `
 export const queryMailchimpSettings = defineQuery(/* groq */ `
   *[_type == "settings"][0].mailchimpAudienceId
 `);
+
+// ----------------------------------------
+// Sitemap Queries
+// ----------------------------------------
+
+export const queryAllPageSlugsForSitemap = defineQuery(`
+  *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllBlogPostSlugsForSitemap = defineQuery(`
+  *[_type == "blog-article" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllBrandSlugsForSitemap = defineQuery(`
+  *[_type == "brand" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllProductSlugsForSitemap = defineQuery(`
+  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllReviewSlugsForSitemap = defineQuery(`
+  *[_type == "review" && destinationType == "page" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllBlogCategorySlugsForSitemap = defineQuery(`
+  *[_type == "blog-category" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllProductCategorySlugsForSitemap = defineQuery(`
+  *[_type == "productCategorySub" && defined(slug.current) && !(_id in path("drafts.**"))] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
