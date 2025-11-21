@@ -38,8 +38,8 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                 <AppImage
                   image={brand.logo}
                   alt={brand.name || 'Logo marki'}
-                  sizes="193px"
-                  quality={90}
+                  sizes="(max-width: 56.1875rem) 72px, 93px"
+                  quality={80}
                   className={styles.brandLogo}
                   priority={!isDuplicate && idx < 6}
                 />

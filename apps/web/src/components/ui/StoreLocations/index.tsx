@@ -1,3 +1,5 @@
+import { cacheLife, cacheTag } from 'next/cache';
+
 import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 
 import StoreMapWrapper from './StoreMapWrapper';
@@ -25,6 +27,10 @@ export interface StoreLocationsProps {
 async function geocodeCity(
   city: string
 ): Promise<{ lat: number; lng: number } | null> {
+  'use cache';
+  cacheLife('weeks');
+  cacheTag('store-locations');
+
   try {
     const params = new URLSearchParams({
       q: `${city}, Poland`,
@@ -38,8 +44,11 @@ async function geocodeCity(
       `https://nominatim.openstreetmap.org/search?${params.toString()}`,
       {
         headers: {
-          revalidate: '86400', // 24 hours
           'User-Agent': 'Audiofast-Website/1.0',
+        },
+        // Cache the upstream response for a day to limit API usage
+        next: {
+          revalidate: 60 * 60 * 24,
         },
       }
     );
@@ -68,6 +77,8 @@ export default async function StoreLocations({
   stores,
   customId = 'gdzie-kupic',
 }: StoreLocationsProps) {
+  'use cache';
+
   // Deduplicate stores by _id
   const uniqueStoresMap = new Map<string, Store>();
   stores.forEach((store) => {
@@ -85,8 +96,7 @@ export default async function StoreLocations({
   // Geocode all stores on the server with delays between requests
   const storesWithLocations: StoreWithLocation[] = [];
 
-  for (let i = 0; i < uniqueStores.length; i++) {
-    const store = uniqueStores[i];
+  for (const store of uniqueStores) {
     if (!store || !store.address?.city) {
       continue;
     }
@@ -97,11 +107,6 @@ export default async function StoreLocations({
         ...store,
         location,
       });
-    }
-
-    // Add delay between requests (except for the last one) to respect rate limits
-    if (i < uniqueStores.length - 1) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
   }
 

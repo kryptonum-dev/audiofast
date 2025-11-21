@@ -6,12 +6,12 @@ import { Toaster } from 'sonner';
 import { poppins, switzer } from '@/global/fonts';
 import FloatingComparisonBox from '@/src/components/comparison/FloatingCompatisonBox';
 import OrganizationSchema from '@/src/components/schema/OrganizationSchema';
-import Analytics from '@/src/components/shared/Analytics';
-import CookieConsent from '@/src/components/shared/CookieConsent';
+// import Analytics from '@/src/components/shared/Analytics';
+// import CookieConsent from '@/src/components/shared/CookieConsent';
 import Footer from '@/src/components/ui/Footer';
 import Header from '@/src/components/ui/Header';
 
-import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
+// import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
 import { sanityFetch } from '../global/sanity/fetch';
 import { querySettings } from '../global/sanity/query';
 import type { QuerySettingsResult } from '../global/sanity/sanity.types';
@@ -24,6 +24,8 @@ export default async function RootLayout({
   'use cache';
   preconnect('https://cdn.sanity.io');
   prefetchDNS('https://cdn.sanity.io');
+  preconnect('https://vercel.live');
+  prefetchDNS('https://vercel.live');
 
   const settings = await sanityFetch<QuerySettingsResult>({
     query: querySettings,

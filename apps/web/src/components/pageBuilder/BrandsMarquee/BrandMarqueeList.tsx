@@ -66,8 +66,8 @@ export default function BrandMarqueeList({
                 <AppImage
                   image={brand.logo}
                   alt={brand.name || 'Logo marki'}
-                  sizes="121px"
-                  quality={90}
+                  sizes="(max-width: 62.4375rem) 96px, 121px"
+                  quality={80}
                   className={styles.brandLogo}
                   priority={index === 0 && !isDuplicate && idx < 6}
                   loading={

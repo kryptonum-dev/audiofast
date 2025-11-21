@@ -10,6 +10,7 @@ interface TeamMemberCardProps {
   headingLevel?: 'h2' | 'h3' | 'h4';
   imageSizes?: string;
   index: number;
+  isListItem?: boolean;
 }
 
 export default function TeamMemberCard({
@@ -17,13 +18,16 @@ export default function TeamMemberCard({
   imageSizes = '400px',
   headingLevel = 'h3',
   index,
+  isListItem = false,
 }: TeamMemberCardProps) {
   const { name, position, phoneNumber, image, description } = member;
 
   const Heading = headingLevel;
 
+  const Wrapper = isListItem ? 'li' : 'div';
+
   return (
-    <div className={styles.teamMemberCard}>
+    <Wrapper className={styles.teamMemberCard}>
       <Image
         image={image}
         sizes={imageSizes}
@@ -37,6 +41,6 @@ export default function TeamMemberCard({
         enablePortableTextStyles
         className={styles.description}
       />
-    </div>
+    </Wrapper>
   );
 }

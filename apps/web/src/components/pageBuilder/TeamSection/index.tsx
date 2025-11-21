@@ -47,6 +47,7 @@ export default function TeamSection({
         <ul className={styles.teamMembers}>
           {teamMembers.slice(1).map((member) => (
             <TeamMemberCard
+              isListItem
               key={member._id}
               member={member}
               headingLevel={index === 0 ? 'h2' : 'h3'}
