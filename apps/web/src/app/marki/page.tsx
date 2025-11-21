@@ -50,10 +50,10 @@ export default async function BrandsPage() {
   ];
 
   return (
-    <>
+    <main id="main" className="page-transition">
       <CollectionPageSchema name={brandsData.name || 'Marki'} url="/marki/" />
       <Breadcrumbs data={breadcrumbsData} firstItemType="heroStatic" />
       <PageBuilder pageBuilder={brandsData.pageBuilder || []} />
-    </>
+    </main>
   );
 }
