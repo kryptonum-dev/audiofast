@@ -49,6 +49,18 @@
       font-size: var(--typography-header-m, 1.5rem);
     }
 
+    .author {
+      grid-area: description;
+      font-size: var(--typography-body-m, 0.875rem);
+      color: var(--neutral-600, #737373);
+      margin-bottom: 0.75rem;
+
+      strong {
+        color: var(--neutral-900, #171717);
+        font-weight: 500;
+      }
+    }
+
     .description {
       font-size: var(--typography-body-l, 1rem);
       grid-area: description;

@@ -85,19 +85,6 @@ export const review = defineType({
       validation: (Rule) =>
         Rule.required().error('Tytuł recenzji jest wymagany'),
     }),
-    customPortableText({
-      name: 'description',
-      title: 'Opis recenzji',
-      description:
-        'Krótki opis recenzji wyświetlany w sekcji najnowszej publikacji',
-      group: GROUP.MAIN_CONTENT,
-      include: {
-        styles: ['normal'],
-        lists: ['bullet', 'number'],
-        decorators: ['strong', 'em'],
-        annotations: ['customLink'],
-      },
-    }),
     defineField({
       name: 'image',
       title: 'Obraz główny',
@@ -239,16 +226,16 @@ export const review = defineType({
   preview: {
     select: {
       name: 'name',
-      description: 'description',
+      content: 'content',
       image: 'image',
       authorName: 'author.name',
     },
-    prepare: ({ name, description, image, authorName }) => ({
+    prepare: ({ name, content, image, authorName }) => ({
       title: name || 'Recenzja',
       media: image || MessageSquareText,
       subtitle: authorName
-        ? `${authorName} • ${parsePortableTextToString(description) || 'Recenzja produktu'}`
-        : parsePortableTextToString(description) || 'Recenzja produktu',
+        ? `${authorName} • ${parsePortableTextToString(content) || 'Recenzja produktu'}`
+        : parsePortableTextToString(content) || 'Recenzja produktu',
     }),
   },
 });

@@ -18,6 +18,7 @@ export default function LatestPublication({
 }: LatestPublicationProps) {
   const {
     _createdAt,
+    _type,
     publishDate,
     slug,
     title,
@@ -49,6 +50,7 @@ export default function LatestPublication({
             headingLevel={index === 0 ? 'h2' : 'h3'}
             className={styles.title}
           />
+
           <PortableText
             value={description}
             enablePortableTextStyles

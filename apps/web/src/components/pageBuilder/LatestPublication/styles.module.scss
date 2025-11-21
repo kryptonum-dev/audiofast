@@ -44,11 +44,12 @@
         line-height: 1.16;
       }
 
+
       .description {
         grid-area: description;
         margin-bottom: clamp(1.5rem, calc(1.75vw / 0.48), 2rem);
         font-size: var(--typography-body-m, 0.875rem);
-        max-width: 36.625rem;
+        max-width: 38.625rem;
         display: -webkit-box;
         line-clamp: 8;
         -webkit-line-clamp: 8;
@@ -56,6 +57,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
         line-height: 1.5;
+        -webkit-line-clamp: 4;
+
+
       }
       > a {
         grid-area: button;

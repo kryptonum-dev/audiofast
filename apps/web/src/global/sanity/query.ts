@@ -163,7 +163,10 @@ const publicationBlock = /* groq */ `
   ),
   name,
   ${portableTextFragment('title')},
-  ${portableTextFragment('description')},
+  "description": select(
+    _type == "review" => content[_type == "block"][0...3],
+    ${portableTextFragment('description')}
+  ),
   ${imageFragment('image')},
   "publicationType": select(
     _type == "review" => "Recenzja",
@@ -185,6 +188,13 @@ const publicationBlock = /* groq */ `
     _type == "review" && destinationType == "external" => true,
     _type == "review" && destinationType == "pdf" => true,
     false
+  ),
+  "author": select(
+    _type == "review" => author->{
+      name,
+      ${imageFragment('image')}
+    },
+    null
   ),
 `;
 
@@ -824,12 +834,15 @@ export const queryReviewBySlug =
   "slug": slug.current,
   name,
   ${portableTextFragment('title')},
-  ${portableTextFragment('description')},
   ${imageFragment('image')},
   overrideGallery,
   ${imageFragment('imageGallery[]')},
   ${portableTextFragmentExtended('content')},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
+  author->{
+    name,
+    ${imageFragment('image')}
+  },
   "product": *[_type == "product" && references(^._id)][0]{
     _id,
     _createdAt,

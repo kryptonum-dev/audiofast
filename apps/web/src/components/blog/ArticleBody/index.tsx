@@ -19,7 +19,6 @@ type Props =
 export function ArticleBody({
   headings,
   title,
-  description,
   content,
   image,
   _createdAt,
@@ -36,6 +35,15 @@ export function ArticleBody({
     _type === 'blog-article' && 'publishDate' in props
       ? props.publishDate || _createdAt
       : _createdAt;
+
+  // Get author for reviews
+  const author = _type === 'review' && 'author' in props ? props.author : null;
+
+  // Get description for blog articles only
+  const description =
+    _type === 'blog-article' && 'description' in props
+      ? props.description
+      : null;
 
   return (
     <article
@@ -60,7 +68,14 @@ export function ArticleBody({
           className={styles.heading}
           headingLevel="h1"
         />
-        <PortableText value={description} className={styles.description} />
+        {author && (
+          <p className={styles.author}>
+            Autor: <strong>{author.name}</strong>
+          </p>
+        )}
+        {description && (
+          <PortableText value={description} className={styles.description} />
+        )}
         <Image
           image={image}
           priority
