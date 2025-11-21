@@ -117,7 +117,9 @@ export async function getSEOMetadata(
   const defaultMetadata: Metadata = {
     title: defaultTitle,
     description: defaultDescription,
-    metadataBase: new URL(BASE_URL),
+    // Next.js metadata must be serializable when sent to the client;
+    // cast plain string to URL type to avoid runtime errors with URL instances.
+    metadataBase: BASE_URL as unknown as URL,
     creator: siteConfig.title,
     authors: [{ name: siteConfig.title }],
     appleWebApp: {

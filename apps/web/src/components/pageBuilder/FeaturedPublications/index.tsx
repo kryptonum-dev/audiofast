@@ -9,6 +9,7 @@ type FeaturedPublicationsProps = PagebuilderType<'featuredPublications'> & {
   index: number;
   publicationLayout?: 'vertical' | 'horizontal';
   customId?: string;
+  isButtonVisible?: boolean;
 };
 
 export default function FeaturedPublications({
@@ -18,6 +19,7 @@ export default function FeaturedPublications({
   publications,
   index,
   publicationLayout = 'horizontal',
+  isButtonVisible = true,
 }: FeaturedPublicationsProps) {
   return (
     <section
@@ -30,7 +32,7 @@ export default function FeaturedPublications({
           headingLevel={index === 0 ? 'h1' : 'h2'}
           className={styles.heading}
         />
-        <Button {...button} />
+        {isButtonVisible && <Button {...button} />}
       </header>
       <PublicationsCarousel
         publications={publications!}

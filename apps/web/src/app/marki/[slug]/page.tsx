@@ -315,15 +315,16 @@ export default async function BrandPage(props: BrandPageProps) {
               level: undefined,
             },
           ]}
-          publications={brand.featuredReviews as unknown as PublicationType[]}
+          isButtonVisible={false}
           button={{
             text: 'Zobacz wszystkie recenzje',
-            href: '/recenzje',
+            href: '/blog/',
             variant: 'primary' as const,
             _key: null,
             _type: 'button',
             openInNewTab: false,
           }}
+          publications={brand.featuredReviews as unknown as PublicationType[]}
           index={1}
           _key=""
           _type="featuredPublications"

@@ -26,7 +26,6 @@ export const featuredPublications = defineType({
       title: 'Przycisk CTA',
       type: 'button',
       description: 'Główny przycisk wezwania do działania sekcji',
-      validation: (Rule) => Rule.required().error('Przycisk CTA jest wymagany'),
     }),
     defineField({
       name: 'publications',
