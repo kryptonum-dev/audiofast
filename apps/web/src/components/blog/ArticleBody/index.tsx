@@ -30,6 +30,13 @@ export function ArticleBody({
     _type === 'blog-article' && 'category' in props
       ? props.category?.name
       : 'Recenzja';
+
+  // Use publishDate for blog articles, _createdAt for reviews
+  const displayDate =
+    _type === 'blog-article' && 'publishDate' in props
+      ? props.publishDate || _createdAt
+      : _createdAt;
+
   return (
     <article
       className={`${styles.container} content`}
@@ -47,7 +54,7 @@ export function ArticleBody({
       )}
       <header className={styles.header}>
         <PublicationType publicationType={publicationType!} />
-        <DateBox _createdAt={_createdAt} />
+        <DateBox date={displayDate} />
         <PortableText
           value={title}
           className={styles.heading}

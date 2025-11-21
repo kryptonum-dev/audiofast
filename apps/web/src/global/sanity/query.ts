@@ -157,6 +157,10 @@ const publicationBlock = /* groq */ `
   _id,
   _type,
   _createdAt,
+  "publishDate": select(
+    _type == "blog-article" => coalesce(publishedDate, _createdAt),
+    _createdAt
+  ),
   name,
   ${portableTextFragment('title')},
   ${portableTextFragment('description')},
@@ -777,6 +781,8 @@ export const queryBlogPostBySlug =
   _type,
   _createdAt,
   _updatedAt,
+  publishedDate,
+  "publishDate": coalesce(publishedDate, _createdAt),
   "slug": slug.current,
   name,
   ${portableTextFragment('title')},
@@ -909,7 +915,15 @@ export const queryBlogPageData = defineQuery(`
       "slug": slug.current,
       "count": count(*[_type == "blog-article" && category._ref == ^._id && !hideFromList])
     },
-    "totalCount": count(*[_type == "blog-article" && defined(slug.current) && !hideFromList])
+    "totalCount": count(*[_type == "blog-article" && defined(slug.current) && !hideFromList]),
+    "articlesByYear": *[_type == "blog-article" && defined(slug.current) && !hideFromList && ($category == "" || category->slug.current == $category)] | order(coalesce(publishedDate, _createdAt) desc) {
+      _id,
+      name,
+      "slug": slug.current,
+      _createdAt,
+      "publishDate": coalesce(publishedDate, _createdAt),
+      "year": string::split(coalesce(publishedDate, _createdAt), "-")[0]
+    }
   }
 `);
 
@@ -965,7 +979,7 @@ const blogArticlesFragment = (orderClause: string) => /* groq */ `
 
 // Blog articles query sorted by date (newest first)
 export const queryBlogArticlesNewest = defineQuery(
-  blogArticlesFragment('_createdAt desc')
+  blogArticlesFragment('coalesce(publishedDate, _createdAt) desc')
 );
 
 // Special query for blog relevance sorting that calculates score inline

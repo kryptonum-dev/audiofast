@@ -8,6 +8,7 @@ import styles from '@/src/components/blog/BlogListing/styles.module.scss';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
+import type { ArticleByYearItem } from '@/src/components/ui/BlogAside';
 import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
@@ -103,6 +104,9 @@ export default async function BlogPage(props: BlogPageProps) {
           basePath="/blog/"
           currentCategory={null}
           initialSearch={searchTerm}
+          articlesByYear={
+            (blogData.articlesByYear as ArticleByYearItem[]) || []
+          }
         />
 
         <Suspense

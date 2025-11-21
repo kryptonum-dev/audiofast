@@ -75,6 +75,18 @@ export const blogArticle = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: 'publishedDate',
+      title: 'Nadpisz datę publikacji',
+      type: 'datetime',
+      description:
+        'Niestandardowa data publikacji artykułu. Opcjonalne - jeśli nie jest ustawiona, używana jest domyślna data utworzenia dokumentu. Przydatne przy migracji artykułów z innych systemów.',
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+        timeFormat: 'HH:mm',
+      },
+    }),
+    defineField({
       name: 'image',
       title: 'Obraz główny',
       type: 'image',

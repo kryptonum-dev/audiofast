@@ -18,6 +18,7 @@ export default function LatestPublication({
 }: LatestPublicationProps) {
   const {
     _createdAt,
+    publishDate,
     slug,
     title,
     description,
@@ -41,7 +42,7 @@ export default function LatestPublication({
           sizes="(max-width: 37.4375rem) 94vw, (max-width: 56.1875rem) 83vw, 502px"
         />
         <header className={styles.header}>
-          <DateBox _createdAt={_createdAt} />
+          <DateBox date={publishDate || _createdAt} />
           <PublicationType publicationType={publicationType!} />
           <PortableText
             value={title}

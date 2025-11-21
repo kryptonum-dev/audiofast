@@ -1,11 +1,13 @@
 import styles from './styles.module.scss';
 
 type Props = {
-  _createdAt: string;
+  _createdAt?: string;
+  date?: string;
 };
 
-export default function DateBox({ _createdAt }: Props) {
-  const formattedDate = new Date(_createdAt).toLocaleDateString('pl-PL', {
+export default function DateBox({ _createdAt, date }: Props) {
+  const dateToUse = date || _createdAt || '';
+  const formattedDate = new Date(dateToUse).toLocaleDateString('pl-PL', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -14,7 +16,7 @@ export default function DateBox({ _createdAt }: Props) {
   return (
     <span className={styles.dateBox}>
       <CalendarIcon />
-      <time dateTime={_createdAt}>{formattedDate}</time>
+      <time dateTime={dateToUse}>{formattedDate}</time>
     </span>
   );
 }

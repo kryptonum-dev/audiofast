@@ -33,12 +33,16 @@ export default function BlogPostSchema({ blogPost, settings }: Props) {
     slug,
     _createdAt,
     _updatedAt,
+    publishDate,
     image,
     category,
     author,
     keywords,
     content,
   } = blogPost;
+
+  // Use publishDate if available, otherwise fall back to _createdAt
+  const datePublished = publishDate || _createdAt;
 
   // Build canonical URL
   const articleUrl = `${BASE_URL}${slug}`;
@@ -106,8 +110,8 @@ export default function BlogPostSchema({ blogPost, settings }: Props) {
         ...(image?.naturalHeight && { height: image.naturalHeight }),
       },
     }),
-    datePublished: _createdAt,
-    dateModified: _updatedAt || _createdAt,
+    datePublished: datePublished,
+    dateModified: _updatedAt || datePublished,
     author: authorSchema,
     publisher: publisherSchema,
     ...(category?.name && {

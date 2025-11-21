@@ -24,8 +24,15 @@ export default function PublicationCard({
   priority = false,
   loading = 'lazy',
 }: PublicationCardProps) {
-  const { _createdAt, slug, title, image, publicationType, openInNewTab } =
-    publication;
+  const {
+    _createdAt,
+    publishDate,
+    slug,
+    title,
+    image,
+    publicationType,
+    openInNewTab,
+  } = publication;
 
   const Heading = headingLevel;
 
@@ -44,7 +51,7 @@ export default function PublicationCard({
         />
         <div className={styles.content}>
           <PublicationType publicationType={publicationType!} />
-          <DateBox _createdAt={_createdAt} />
+          <DateBox date={publishDate || _createdAt} />
           <Heading className={styles.title}>
             {portableTextToPlainString(title)}
           </Heading>

@@ -123,18 +123,20 @@ export const structure = (
                 .title('Wpisy na blogu')
                 .icon(BookOpen)
                 .child(async () => {
-                  // Fetch all blog articles with their creation dates
+                  // Fetch all blog articles with their publish dates (custom or creation date)
                   const articles = await context
                     .getClient({ apiVersion: '2024-01-01' })
                     .fetch<
-                      Array<{ _createdAt: string }>
-                    >(`*[_type == "blog-article"] {_createdAt}`);
+                      Array<{ publishDate: string }>
+                    >(
+                      `*[_type == "blog-article"] {"publishDate": coalesce(publishedDate, _createdAt)}`
+                    );
 
                   // Extract unique years and sort them in descending order
                   const years = [
                     ...new Set(
                       articles.map((article) =>
-                        new Date(article._createdAt).getFullYear()
+                        new Date(article.publishDate).getFullYear()
                       )
                     ),
                   ].sort((a, b) => b - a);
@@ -151,6 +153,10 @@ export const structure = (
                             .title('Wszystkie wpisy')
                             .filter('_type == "blog-article"')
                             .defaultOrdering([
+                              {
+                                field: 'publishedDate',
+                                direction: 'desc',
+                              },
                               { field: '_createdAt', direction: 'desc' },
                             ])
                         ),
@@ -164,9 +170,13 @@ export const structure = (
                             S.documentList()
                               .title(`Wpisy z ${year}`)
                               .filter(
-                                `_type == "blog-article" && dateTime(_createdAt) >= dateTime("${year}-01-01T00:00:00Z") && dateTime(_createdAt) < dateTime("${year + 1}-01-01T00:00:00Z")`
+                                `_type == "blog-article" && dateTime(coalesce(publishedDate, _createdAt)) >= dateTime("${year}-01-01T00:00:00Z") && dateTime(coalesce(publishedDate, _createdAt)) < dateTime("${year + 1}-01-01T00:00:00Z")`
                               )
                               .defaultOrdering([
+                                {
+                                  field: 'publishedDate',
+                                  direction: 'desc',
+                                },
                                 { field: '_createdAt', direction: 'desc' },
                               ])
                           )
