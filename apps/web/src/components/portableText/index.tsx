@@ -21,10 +21,10 @@ import { HeadingComponent } from './Heading';
 import { ImageComponent } from './Image';
 import { MinimalImageComponent } from './MinimalImage';
 import { QuoteComponent } from './Quote';
+import portableTextStyles from './styles.module.scss';
 import { TwoColumnTableComponent } from './TwoColumnTable';
 import { YoutubeVideoComponent } from './YouTubeVideo';
 import { YoutubeVideoSkeleton } from './YouTubeVideo/YoutubeVideoSkeleton';
-import portableTextStyles from './styles.module.scss';
 
 type Props = {
   value: PortableTextProps;
