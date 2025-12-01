@@ -43,12 +43,14 @@ export default function PublicationCard({
         className={styles.link}
         {...(openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}
       >
-        <Image
-          image={image}
-          sizes={imageSizes}
-          priority={priority}
-          loading={loading}
-        />
+        <div className={styles.imageBox}>
+          <Image
+            image={image}
+            sizes={imageSizes}
+            priority={priority}
+            loading={loading}
+          />
+        </div>
         <div className={styles.content}>
           <PublicationType publicationType={publicationType!} />
           <DateBox date={publishDate || _createdAt} />

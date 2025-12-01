@@ -4,7 +4,7 @@ import { preconnect, prefetchDNS } from 'react-dom';
 import { Toaster } from 'sonner';
 
 import { poppins, switzer } from '@/global/fonts';
-import FloatingComparisonBox from '@/src/components/comparison/FloatingCompatisonBox';
+import FloatingComparisonBox from '@/src/components/comparison/FloatingComparisonBox';
 import OrganizationSchema from '@/src/components/schema/OrganizationSchema';
 import Analytics from '@/src/components/shared/Analytics';
 import CookieConsent from '@/src/components/shared/CookieConsent';

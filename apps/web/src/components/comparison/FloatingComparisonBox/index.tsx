@@ -274,7 +274,9 @@ export default function FloatingComparisonBox() {
           type="button"
         >
           <span className={styles.collapsedText}>Porównaj ({count})</span>
-          <CompareIcon />
+          <span className={styles.compareIconContainer}>
+            <CompareIcon />
+          </span>
         </button>
       )}
     </div>
