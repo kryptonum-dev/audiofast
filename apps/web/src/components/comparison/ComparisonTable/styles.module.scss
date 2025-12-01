@@ -1,171 +1,94 @@
+// Column widths
+// Single-model products are wider than variant columns
 .comparisonWrapper {
+  --variant-column-width: 10rem;
+  --single-column-width: 20rem;
+  --column-gap: 0.5rem;
+
   display: flex;
   flex-direction: column;
   padding-bottom: clamp(3rem, calc(4vw / 0.48), 4.5rem);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    height: 0.5rem;
+
+    
+
+    @media (pointer: coarse) {
+      display: none;
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--neutral-200);
+    border-radius: 0.25rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--neutral-400);
+    border-radius: 0.25rem;
+
+    &:hover {
+      background: var(--neutral-500);
+    }
+  }
+
+  // Heading row with custom scrollbar
+  .headingRow {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+    position: sticky;
+    left: 0;
+    width: 100%;
+    max-width: 100vw;
+
+    h1{
+      margin: 0;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 49.9375rem) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+  }
 
   .heading {
+    margin: 0;
+    flex-shrink: 0;
     margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+
+
+   
   }
 
-  .productCards {
-    display: grid;
-    grid-template-columns: clamp(10rem, calc(15vw / 0.48), 15rem) repeat(3, 1fr);
-    gap: clamp(0.75rem, calc(1vw / 0.48), 1.5rem);
-    width: 100%;
-    margin-bottom: clamp(1.5rem, calc(2.5vw / 0.48), 3rem);
-
-    &::before {
-      content: '';
-      display: block;
-    }
-  }
-
-  .comparisonTable {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    background: var(--neutral-200);
-    table-layout: fixed;
-
-    .tableHeader {
-      .headerCell {
-        padding: clamp(0.75rem, calc(1vw / 0.48), 1rem);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-        text-align: left;
-        vertical-align: top;
-        font-size: clamp(0.875rem, calc(1vw / 0.48), 1rem);
-        font-weight: 400;
-        color: var(--neutral-700);
-        background: var(--neutral-200);
-        -webkit-text-stroke-width: 0.25px;
-        -webkit-text-stroke-color: var(--neutral-700);
-
-        &:first-child {
-          width: clamp(10rem, calc(15vw / 0.48), 15rem);
-        }
-      }
-    }
-
-    .dataRow {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      &:nth-child(even) {
-        background: var(--neutral-white);
-      }
-
-      &:nth-child(odd) {
-        background: var(--neutral-200);
-      }
-
-      .headingCell {
-        padding: clamp(0.75rem, calc(1vw / 0.48), 1rem);
-        text-align: left;
-        vertical-align: top;
-        font-weight: 400;
-        color: var(--neutral-700);
-        font-size: clamp(0.875rem, calc(1vw / 0.48), 1rem);
-        width: clamp(10rem, calc(15vw / 0.48), 15rem);
-        -webkit-text-stroke-width: 0.25px;
-        -webkit-text-stroke-color: var(--neutral-700);
-      }
-
-      .dataCell {
-        padding: clamp(0.75rem, calc(1vw / 0.48), 1rem);
-        text-align: left;
-        vertical-align: top;
-        font-size: clamp(0.875rem, calc(1vw / 0.48), 1rem);
-        color: var(--neutral-black);
-        line-height: 1.5;
-
-        .emptyValue {
-          color: var(--neutral-500);
-          font-style: italic;
-        }
-      }
-    }
-  }
-
-  @media (max-width: 63.9375rem) {
-    .productCards {
-      grid-template-columns: repeat(3, 1fr);
-
-      &::before {
-        display: none;
-      }
-    }
-    .comparisonTable {
-      display: block;
-      table-layout: auto;
-
-      thead {
-        display: none;
-      }
-
-      tbody {
-        display: block;
-      }
-
-      .dataRow {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-
-        &:last-child {
-          border-bottom: none;
-        }
-
-        &:nth-child(even) {
-          background: var(--neutral-white);
-
-          .headingCell {
-            background: var(--neutral-white);
-          }
-        }
-
-        &:nth-child(odd) {
-          background: var(--neutral-200);
-
-          .headingCell {
-            background: var(--neutral-200);
-          }
-        }
-
-        .headingCell {
-          width: 100%;
-          grid-column: 1 / -1;
-          padding: 1rem;
-          padding-bottom: 0.75rem;
-          border-bottom: none;
-        }
-
-        .dataCell {
-          width: 100%;
-          padding: 0.75rem 1rem 1rem;
-          border: none;
-        }
-      }
-    }
-  }
-
-  @media (max-width: 49.9375rem) {
+  // Custom scrollbar
+  .customScrollbar {
+    flex: 1;
+    max-width: 20rem;
+    height: 0.5rem;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-right: calc(-1 * var(--pageMargin));
-    width: 100%;
-    padding-right: calc(var(--pageMargin) * 2);
+    overflow-y: hidden;
+    border-radius: 0.25rem;
+    background: var(--neutral-200);
+
+    // Hide on touch devices (they have native scrolling)
+    @media (pointer: coarse) {
+      display: none;
+    }
+
+    // Hide on mobile
+    @media (max-width: 49.9375rem) {
+      display: none;
+    }
 
     &::-webkit-scrollbar {
       height: 0.5rem;
-
-      @media (pointer: coarse) {
-        display: none;
-      }
     }
 
     &::-webkit-scrollbar-track {
@@ -174,58 +97,202 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: var(--neutral-400);
+      background: var(--neutral-500);
       border-radius: 0.25rem;
+      cursor: grab;
 
       &:hover {
-        background: var(--neutral-500);
+        background: var(--neutral-600);
       }
-    }
 
-    .heading {
-      position: sticky;
-      left: 0;
-      z-index: 10;
-    }
-
-    .productCards {
-      min-width: 35rem;
-      grid-template-columns: repeat(3, minmax(10.5rem, 1fr));
-    }
-
-    .comparisonTable {
-      min-width: 35rem;
-      overflow: visible;
-
-      .dataRow {
-        position: relative;
-        .headingCell {
-          max-width: fit-content;
-          position: sticky;
-          left: 0;
-          z-index: 10;
-        }
-
-        &:nth-child(even) {
-          .headingCell {
-            background: var(--neutral-white);
-          }
-        }
-
-        &:nth-child(odd) {
-          .headingCell {
-            background: var(--neutral-200);
-          }
-        }
+      &:active {
+        cursor: grabbing;
+        background: var(--neutral-700);
       }
     }
   }
 
-  @media (max-width: 30.5625rem) {
+  // Inner content that creates the scrollable width
+  .scrollbarContent {
+    // This will be dynamically sized to match main content
+    width: 200%;
+    height: 1px;
+  }
+
+  // Product cards row - no left offset
+  .productCards {
+    display: flex;
+    align-items: stretch; // Make all cards same height
+    gap: var(--column-gap);
+    // width: max-content;
+    min-width: 100%;
+    margin-bottom: clamp(0.75rem, calc(1vw / 0.48), 1rem);
+  }
+
+  // Variant names row
+  .variantRow {
+    display: flex;
+    gap: var(--column-gap);
+    margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+    width: max-content;
+    min-width: 100%;
+
+    .variantCell {
+      padding: 0.5rem 0.75rem;
+      font-size: var(--typography-body-m);
+      font-weight: 500;
+      color: var(--neutral-600);
+      text-align: center;
+      background: var(--neutral-200);
+      border-radius: 0.375rem;
+      letter-spacing: 0.02em;
+
+      // Variant column (narrower)
+      &[data-is-variant='true'] {
+        min-width: var(--variant-column-width);
+        flex: 1 1 var(--variant-column-width);
+      }
+
+      // Single-model column (wider)
+      &[data-is-variant='false'] {
+        min-width: var(--single-column-width);
+        flex: 1 1 var(--single-column-width);
+      }
+
+      // Placeholder variant cell
+      &[data-is-placeholder='true'] {
+        background: transparent;
+      }
+    }
+  }
+
+  // Parameters grid - contains all parameter blocks
+  .parametersGrid {
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.75rem;
+    // width: max-content;
+    min-width: 100%;
+    min-height: 100rem;
+    position: relative;
+  }
+
+  // Single parameter block (name row + values row)
+  .parameterBlock {
+    min-width: fit-content;
+
+    // Alternating colors for entire block
+    &:nth-child(even) {
+      background: var(--neutral-white);
+
+      .parameterName {
+        background: var(--neutral-white);
+      }
+    }
+
+    &:nth-child(odd) {
+      background: var(--neutral-200);
+
+      .parameterName {
+        background: var(--neutral-200);
+      }
+    }
+
+    &:first-child {
+      border-radius: .75rem 0.75rem 0 0;
+
+      .parameterName {
+        border-radius: .75rem 0.75rem 0 0;
+      }
+    }
+    &:last-child {
+      border-radius: 0 0 .75rem .75rem;
+
+
+    }
+  }
+
+  // Parameter name - sticky to left on horizontal scroll
+  .parameterName {
+    padding: 0.75rem 1rem;
+    padding-bottom: 1.5rem;
+    font-weight: 500;
+    font-size: var(--typography-body-m);
+    color: var(--neutral-700);
+    -webkit-text-stroke-width: 0.25px;
+    -webkit-text-stroke-color: var(--neutral-700);
+   
+    z-index: 5;
+    width: fit-content;
+    position: sticky;
+    left: 0;
+
+
+  }
+
+  // Values row - flex container for value cells
+  .valuesRow {
+    display: flex;
+    gap: var(--column-gap);
+    // width: max-content;
+    min-width: 100%;
+    padding-bottom: 1rem;
+  }
+
+  // Individual value cell
+  .valueCell {
+    text-align: center;
+    font-size: var(--typography-body-m);
+    color: var(--neutral-black);
+    line-height: 1.5;
+    padding: 0 1rem;
+
+    // Variant column (narrower)
+    &[data-is-variant='true'] {
+      min-width: var(--variant-column-width);
+      flex: 1 1 var(--variant-column-width);
+    }
+
+    // Single-model column (wider)
+    &[data-is-variant='false'] {
+      min-width: var(--single-column-width);
+      flex: 1 1 var(--single-column-width);
+    }
+
+    .emptyValue {
+      color: var(--neutral-500);
+      font-style: italic;
+    }
+  }
+
+  .noData {
+    padding: 2rem;
+    text-align: center;
+    color: var(--neutral-600);
+    background: var(--neutral-200);
+    border-radius: 0.75rem;
+  }
+
+  @media (max-width: 49.9375rem) {
+    --variant-column-width: 8rem;
+    --single-column-width: 16rem;
+
+    margin-right: calc(-1 * var(--pageMargin));
+    width: 100%;
+    margin-left: 1rem;
+    width: calc(100% - 2rem);
+    padding-right: 2rem;
+
+
   }
 }
 
+// Sticky header
 .stickyHeader {
+  --variant-column-width: 10rem;
+  --single-column-width: 18rem;
+  --column-gap: 0.5rem;
+
   position: fixed;
   top: 4.6875rem;
   left: 0;
@@ -241,90 +308,79 @@
     width: calc(100% - 4rem);
     margin: 0 auto;
     padding: 0.375rem 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 
-    @media (max-width: 37.4375rem) {
-      width: calc(100% - var(--pageMargin) * 2);
-    }
-  }
+    &::-webkit-scrollbar {
+      height: 0.375rem;
 
-  .stickyProductCards {
-    display: grid;
-    grid-template-columns: clamp(9.25rem, calc(14vw / 0.48), 13.5rem) repeat(
-        3,
-        1fr
-      );
-    gap: clamp(0.5rem, calc(0.75vw / 0.48), 1rem);
-    width: 100%;
-    list-style: none;
-
-    &::before {
-      content: '';
-      display: block;
-    }
-
-    @media (max-width: 63.9375rem) {
-      grid-template-columns: repeat(3, 1fr);
-
-      &::before {
+      @media (pointer: coarse) {
         display: none;
       }
     }
 
-    @media (max-width: 49.9375rem) {
-      min-width: 35rem;
-      grid-template-columns: repeat(3, minmax(10.5rem, 1fr));
+    &::-webkit-scrollbar-track {
+      background: var(--neutral-200);
     }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--neutral-400);
+      border-radius: 0.1875rem;
+
+      &:hover {
+        background: var(--neutral-500);
+      }
+    }
+
+    // @media (max-width: 37.4375rem) {
+    //   width: calc(100% - var(--pageMargin) * 2);
+    // }
+  }
+
+  .stickyProductCards {
+    display: flex;
+    gap: var(--column-gap);
+    width: max-content;
+    min-width: 100%;
   }
 
   @media (max-width: 49.9375rem) {
+    --variant-column-width: 7rem;
+    --single-column-width: 12rem;
+
     .stickyContainer {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-right: calc(var(--pageMargin) * 2);
+      padding-right: 2rem;
+      margin-left: 1rem;
       margin-right: calc(-1 * var(--pageMargin));
       width: 100%;
-
-      &::-webkit-scrollbar {
-        height: 0.375rem;
-
-        @media (pointer: coarse) {
-          display: none;
-        }
-      }
-
-      &::-webkit-scrollbar-track {
-        background: var(--neutral-200);
-      }
-
-      &::-webkit-scrollbar-thumb {
-        background: var(--neutral-400);
-        border-radius: 0.1875rem;
-
-        &:hover {
-          background: var(--neutral-500);
-        }
-      }
     }
   }
 }
 
+// Placeholder card for adding products
 .placeholderCard {
+  --single-column-width: 20rem;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, calc(2vw / 0.48), 3rem);
-  height: 100%;
   background: var(--neutral-200);
   border: 0.125rem dashed var(--neutral-400);
   border-radius: 0.5rem;
-  min-height: 20rem;
   text-align: center;
-  width: 100%;
+  min-width: var(--single-column-width);
+  flex: 1 1 var(--single-column-width); // Same as single-model products
+  cursor: pointer;
   transition:
     background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
     border-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
     transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (max-width: 49.9375rem) {
+    --single-column-width: 16rem;
+  }
 
   .placeholderIcon {
     display: flex;
@@ -381,17 +437,17 @@
 
   &[data-compact='true'] {
     padding: 0.5rem;
-    height: 100%;
-    min-height: 6.25rem;
+    min-height: 4rem;
 
     .placeholderIcon {
-      width: 2.5rem;
-      height: 2.5rem;
-      margin-bottom: 0rem;
+      width: 2rem;
+      height: 2rem;
+      margin-bottom: 0;
     }
   }
 }
 
+// Empty state
 .emptyState {
   display: grid;
   place-items: center;

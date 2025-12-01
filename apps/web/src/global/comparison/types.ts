@@ -12,6 +12,40 @@ export type ComparisonCookie = {
 };
 
 /**
+ * Technical data value (cell content)
+ */
+export type TechnicalDataValue = {
+  _key: string;
+  content: PortableTextBlock[];
+};
+
+/**
+ * Technical data row (parameter with values for each variant)
+ */
+export type TechnicalDataRow = {
+  _key: string;
+  title: string;
+  values: TechnicalDataValue[];
+};
+
+/**
+ * Technical data group (section with optional title)
+ */
+export type TechnicalDataGroup = {
+  _key: string;
+  title: string | null;
+  rows: TechnicalDataRow[];
+};
+
+/**
+ * Complete technical data structure
+ */
+export type TechnicalData = {
+  variants: string[] | null;
+  groups: TechnicalDataGroup[] | null;
+};
+
+/**
  * Product data structure for comparison
  * Used for both products in comparison AND available products in selector
  * All products have full data (including technical specs) for instant add/remove
@@ -30,13 +64,37 @@ export type ComparisonProduct = {
   };
   mainImage: SanityProjectedImage | null;
   imageSource: 'preview' | 'gallery';
-  technicalData: Array<{
-    title: string;
-    value: PortableTextBlock[];
-  }>;
+  technicalData: TechnicalData | null;
   categories: Array<{
     slug: string;
   }>;
+};
+
+/**
+ * A single column in the comparison table
+ * Each variant of a product becomes its own column
+ */
+export type ComparisonColumn = {
+  productId: string;
+  productIndex: number;
+  variantName: string | null; // null for single-model products
+  variantIndex: number; // 0 for single-model products
+};
+
+/**
+ * Enabled parameter from comparator config
+ */
+export type EnabledParameter = {
+  name: string;
+  displayName?: string;
+};
+
+/**
+ * Comparator configuration for a category
+ */
+export type ComparatorCategoryConfig = {
+  categoryId: string;
+  enabledParameters: EnabledParameter[];
 };
 
 /**
@@ -44,9 +102,10 @@ export type ComparisonProduct = {
  */
 export type ComparisonTableData = {
   products: ComparisonProduct[];
-  allHeadings: string[];
+  columns: ComparisonColumn[];
   comparisonRows: Array<{
     heading: string;
+    displayHeading: string; // Can be overridden by displayName from config
     values: Array<PortableTextBlock[] | null>;
   }>;
 };

@@ -5,11 +5,21 @@ import { ptCtaSection } from '../portableText/cta-section';
 import { ptFeaturedProducts } from '../portableText/featured-products';
 import { ptHeading } from '../portableText/heading';
 import { ptImage } from '../portableText/image';
+import { ptImageSlider } from '../portableText/image-slider';
+import { ptInlineImage } from '../portableText/inline-image';
 import { ptMinimalImage } from '../portableText/minimal-image';
+import { ptPageBreak } from '../portableText/page-break';
 import { ptQuote } from '../portableText/quote';
 import { ptTwoColumnTable } from '../portableText/two-column-table';
+import { ptVimeoVideo } from '../portableText/vimeo-video';
 import { ptYoutubeVideo } from '../portableText/youtube-video';
 import { button, buttonWithNoVariant } from './button';
+import {
+  contentBlockHorizontalLine,
+  contentBlockText,
+  contentBlockVimeo,
+  contentBlockYoutube,
+} from './content-blocks';
 import { customUrl } from './custom-url';
 import { formState } from './form-state';
 import { cpoPageBuilder, pageBuilder } from './pagebuilder';
@@ -23,6 +33,8 @@ export const definitions = [
   formState,
   ptImage,
   ptMinimalImage,
+  ptInlineImage,
+  ptImageSlider,
   ptArrowList,
   ptCircleNumberedList,
   ptCtaSection,
@@ -32,4 +44,10 @@ export const definitions = [
   ptButton,
   ptHeading,
   ptYoutubeVideo,
+  ptVimeoVideo,
+  ptPageBreak,
+  contentBlockText,
+  contentBlockYoutube,
+  contentBlockVimeo,
+  contentBlockHorizontalLine,
 ];

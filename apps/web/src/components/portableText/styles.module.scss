@@ -75,6 +75,36 @@
   > :last-child {
     margin-bottom: 0;
   }
+
+  // Blockquote styling - Apple-inspired minimal design
+  blockquote {
+    margin-top: 1rem;
+    padding: 0;
+    padding-left: clamp(1.25rem, calc(1.5vw / 0.48), 1.75rem);
+    border-left: 2px solid var(--neutral-400, #e7e7e7);
+    color: var(--neutral-700, #5b5a5a);
+    font-family: var(--font-family-switzer);
+    font-weight: 500;
+    font-size: var(--typography-body-m, 1rem);
+    line-height: 1.7;
+    max-width: 90%;
+    position: relative;
+
+    p {
+      margin-top: 0;
+      font-style: italic;
+
+      &:not(:first-child) {
+        margin-top: 0.5rem;
+      }
+    }
+
+    strong {
+      font-style: normal;
+      font-weight: 500;
+      color: var(--neutral-700, #303030);
+    }
+  }
 }
 
 

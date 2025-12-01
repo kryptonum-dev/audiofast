@@ -79,6 +79,7 @@ export default function TableOfContent({
         className={styles.wrapper}
         data-expanded={isExpanded ? 'true' : 'false'}
       >
+        {groupedHeadings.length === 0 && <p className={styles.empty}>Brak treści</p>}
         {groupedHeadings && (
           <ul className={styles.list}>
             {groupedHeadings.map(({ heading, subHeadings }, idx) => {

@@ -9,12 +9,13 @@ import styles from './styles.module.scss';
 type ImageValue = NonNullable<PortableTextProps>[number] & {
   _type: 'ptImage';
   layout?: 'single' | 'double';
+  autoWidth?: boolean;
 };
 
 export function ImageComponent({
   value,
 }: PortableTextTypeComponentProps<ImageValue>) {
-  const { caption, image, layout, image1, image2 } = value;
+  const { caption, image, layout, image1, image2, autoWidth } = value;
   const isDouble = layout === 'double';
 
   const singleImageSizes =
@@ -57,11 +58,13 @@ export function ImageComponent({
   }
 
   // Single image layout
+  const imageClassName = `${styles.image} ${styles.singleImage}${autoWidth ? ` ${styles.autoWidth}` : ''}`;
+
   if (!caption) {
     return (
       <Image
         image={image}
-        className={styles.image}
+        className={imageClassName}
         sizes={singleImageSizes}
         loading="lazy"
         data-no-wrapper
@@ -73,7 +76,7 @@ export function ImageComponent({
     <figure className={styles.wrapper}>
       <Image
         image={image}
-        className={styles.image}
+        className={imageClassName}
         sizes={singleImageSizes}
         loading="lazy"
       />

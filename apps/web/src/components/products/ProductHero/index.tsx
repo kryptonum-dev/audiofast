@@ -7,7 +7,6 @@ import Button from '../../ui/Button';
 import AddToComparison from './AddToComparison';
 import PricingConfigurator from './PricingConfigurator';
 import ProductDescription from './ProductDescription';
-import ProductHeroGallery from './ProductHeroGallery';
 import styles from './styles.module.scss';
 
 export type AwardType = {
@@ -21,7 +20,7 @@ export interface ProductHeroProps {
   subtitle: string;
   brand?: BrandType;
   pricingData?: CompletePricingData | null;
-  imageGallery: SanityRawImage[];
+  previewImage: SanityRawImage;
   shortDescription?: PortableTextProps;
   awards?: AwardType[];
   customId?: string;
@@ -34,15 +33,13 @@ export default function ProductHero({
   subtitle,
   brand,
   pricingData,
-  imageGallery,
+  previewImage,
   shortDescription,
   awards,
   customId,
   productId,
   categorySlug,
 }: ProductHeroProps) {
-  // Format price for display (converting cents to PLN)
-
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
   const displayAwards = shouldUseMarquee ? [...awards, ...awards] : awards;
@@ -59,7 +56,12 @@ export default function ProductHero({
 
   return (
     <section className={`${styles.productHero} max-width`} id={customId}>
-      <ProductHeroGallery images={imageGallery} />
+      <Image
+        image={previewImage}
+        sizes="(max-width: 56.1875rem) 96vw, (max-width: 85.375rem) 48vw, 651px"
+        priority
+        className={styles.previewImage}
+      />
       <header className={styles.header}>
         <div className={styles.brandLogo}>
           <Image
@@ -96,7 +98,7 @@ export default function ProductHero({
             _id: productId,
             name,
             brand,
-            mainImage: imageGallery[0],
+            mainImage: previewImage,
           }}
         />
       </div>

@@ -14,6 +14,7 @@ import { store } from './collections/store';
 import { teamMember } from './collections/team-member';
 import { blog } from './singletons/blog';
 import { brands } from './singletons/brands';
+import { comparatorConfig } from './singletons/comparator-config';
 import { cpoPage } from './singletons/cpo-page';
 import { footer } from './singletons/footer';
 import { homePage } from './singletons/home-page';
@@ -38,6 +39,7 @@ export const singletons = [
   products,
   brands,
   cpoPage,
+  comparatorConfig,
 ];
 
 export const collection = [

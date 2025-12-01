@@ -16,7 +16,7 @@
       column-rule: 0.0625rem solid var(--neutral-400);
       font-size: var(--typography-body-m, 0.875rem);
 
-      h3 {
+      h3:not(:first-child) {
         margin-top: 2rem !important;
         break-after: avoid;
         break-inside: avoid;
@@ -78,7 +78,7 @@
     }
   }
 
-  @media (max-width: 56.1875rem) {
+  @media (max-width: 43.6875rem) {
     .contentWrapper {
       .content {
         column-count: 1;

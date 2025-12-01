@@ -19,10 +19,14 @@ import { CtaSectionComponent } from './CtaSection';
 import { FeaturedProductsComponent } from './FeaturedProducts';
 import { HeadingComponent } from './Heading';
 import { ImageComponent } from './Image';
+import { ImageSliderComponent } from './ImageSlider';
+import { InlineImageComponent } from './InlineImage';
 import { MinimalImageComponent } from './MinimalImage';
+import { PageBreakComponent } from './PageBreak';
 import { QuoteComponent } from './Quote';
 import portableTextStyles from './styles.module.scss';
 import { TwoColumnTableComponent } from './TwoColumnTable';
+import { VimeoVideoComponent } from './VimeoVideo';
 import { YoutubeVideoComponent } from './YouTubeVideo';
 import { YoutubeVideoSkeleton } from './YouTubeVideo/YoutubeVideoSkeleton';
 
@@ -238,6 +242,12 @@ export function PortableTextRenderer({
           </Tag>
         );
       },
+      // Handle blockquotes
+      blockquote: ({
+        children,
+      }: PortableTextComponentProps<PortableTextProps>) => (
+        <blockquote>{children}</blockquote>
+      ),
     },
     list: {
       // Handle bullet lists
@@ -271,7 +281,7 @@ export function PortableTextRenderer({
       ),
     },
     marks: {
-      // Handle links
+      // Handle customLink (used in most portable text fields)
       customLink: ({ children, value }: PortableTextMarkComponentProps) => {
         const linkData = value?.customLink || {};
         const href = linkData?.href || '#';
@@ -281,6 +291,39 @@ export function PortableTextRenderer({
         // Determine if it's an external link
         const isExternal =
           linkType === 'external' ||
+          openInNewTab ||
+          href.startsWith('http') ||
+          href.startsWith('mailto:') ||
+          href.startsWith('tel:');
+
+        // For external links, use regular <a> tag
+        if (isExternal) {
+          return (
+            <a
+              href={href}
+              className="link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {children}
+            </a>
+          );
+        }
+
+        // For internal links, use Next.js Link
+        return (
+          <Link href={href} className="link">
+            {children}
+          </Link>
+        );
+      },
+      // Handle link (used in technical data cells)
+      link: ({ children, value }: PortableTextMarkComponentProps) => {
+        const href = value?.href || '#';
+        const openInNewTab = value?.blank;
+
+        // Determine if it's an external link
+        const isExternal =
           openInNewTab ||
           href.startsWith('http') ||
           href.startsWith('mailto:') ||
@@ -319,6 +362,8 @@ export function PortableTextRenderer({
       ...{
         ptImage: ImageComponent,
         ptMinimalImage: MinimalImageComponent,
+        ptInlineImage: InlineImageComponent,
+        ptImageSlider: ImageSliderComponent,
         ptArrowList: ArrowListComponent,
         ptCircleNumberedList: CircleNumberedListComponent,
         ptCtaSection: CtaSectionComponent,
@@ -336,6 +381,19 @@ export function PortableTextRenderer({
               <YoutubeVideoComponent value={props.value} />
             </Suspense>
           );
+        },
+        ptVimeoVideo: (
+          props: PortableTextTypeComponentProps<PortableTextProps>
+        ) => {
+          return (
+            <Suspense fallback={<YoutubeVideoSkeleton />}>
+              {/* @ts-expect-error - Async component in Suspense boundary */}
+              <VimeoVideoComponent value={props.value} />
+            </Suspense>
+          );
+        },
+        ptPageBreak: () => {
+          return <PageBreakComponent />;
         },
       },
       ...customComponentTypes,

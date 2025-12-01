@@ -13,6 +13,7 @@ import SortDropdown from '@/src/components/products/SortDropdown';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import Image from '@/src/components/shared/Image';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
@@ -32,7 +33,7 @@ import type {
   QueryBrandBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
-import type { PortableTextProps, PublicationType } from '@/src/global/types';
+import type { PublicationType } from '@/src/global/types';
 import { parsePrice } from '@/src/global/utils';
 
 type BrandPageProps = {
@@ -189,7 +190,8 @@ export default async function BrandPage(props: BrandPageProps) {
     {
       id: 'o-marce',
       label: 'O marce',
-      visible: !!brand.brandDescription,
+      visible:
+        !!brand.brandContentBlocks && brand.brandContentBlocks.length > 0,
     },
     {
       id: 'recenzje',
@@ -282,16 +284,15 @@ export default async function BrandPage(props: BrandPageProps) {
           <Image
             image={brand.bannerImage}
             alt={brand.name || ''}
-            className="br-md"
+            className="br-md full-width"
             sizes="(max-width: 37.4375rem) 98vw, (max-width: 85.375rem) 96vw, 1302px"
             loading="lazy"
           />
         </section>
       )}
       <TwoColumnContent
-        content={brand.brandDescription as PortableTextProps}
+        contentBlocks={brand.brandContentBlocks as ContentBlock[]}
         customId="o-marce"
-        headingContent={brand.brandDescriptionHeading}
         distributionYear={brand.distributionYear}
         gallery={brand.imageGallery as SanityRawImage[]}
       />

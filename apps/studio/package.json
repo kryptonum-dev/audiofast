@@ -18,10 +18,14 @@
     "sanity"
   ],
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@sanity/assist": "^5.0.2",
     "@sanity/embeddings-index-ui": "^3.0.0",
     "@sanity/icons": "^3.7.4",
     "@sanity/orderable-document-list": "^1.4.0",
+    "@sanity/portable-text-editor": "^3.48.1",
     "@sanity/ui": "^3.1.11",
     "@sanity/vision": "^4.13.0",
     "lucide-react": "^0.539.0",

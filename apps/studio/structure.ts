@@ -1,3 +1,4 @@
+import { BlockContentIcon,EditIcon } from '@sanity/icons';
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
   BadgeCheck,
@@ -15,10 +16,12 @@ import {
   UserPen,
 } from 'lucide-react';
 import type {
+  DefaultDocumentNodeResolver,
   StructureBuilder,
   StructureResolverContext,
 } from 'sanity/structure';
 
+import { TechnicalDataView } from './components/technical-data-table/technical-data-view';
 import type { SchemaType, SingletonType } from './schemaTypes';
 import { schemaTypes } from './schemaTypes';
 import { getTitleCase } from './utils/helper';
@@ -164,6 +167,7 @@ export const structure = (
                       // Dynamic list items for each year
                       ...years.map((year) =>
                         S.listItem()
+                          .id(`year-${year}`)
                           .title(`${year}`)
                           .icon(Calendar)
                           .child(
@@ -230,6 +234,7 @@ export const structure = (
                       // Dynamic list items for each author
                       ...authors.map((author) =>
                         S.listItem()
+                          .id(author._id)
                           .title(author.name || 'Bez nazwy')
                           .icon(UserPen)
                           .child(
@@ -294,6 +299,7 @@ export const structure = (
                       // Dynamic list items for each brand
                       ...brands.map((brand) =>
                         S.listItem()
+                          .id(brand._id)
                           .title(brand.name || 'Bez nazwy')
                           .icon(Folder)
                           .child(
@@ -341,6 +347,7 @@ export const structure = (
                       // Dynamic list items for each category (only those with products)
                       ...categories.map((category) =>
                         S.listItem()
+                          .id(category._id)
                           .title(category.name || 'Bez nazwy')
                           .icon(FolderOpen)
                           .child(
@@ -402,6 +409,7 @@ export const structure = (
                       // Dynamic list items for each parent category
                       ...parentCategories.map((parent) =>
                         S.listItem()
+                          .id(parent._id)
                           .title(parent.name || 'Bez nazwy')
                           .icon(FolderOpen)
                           .child(
@@ -489,4 +497,29 @@ export const structure = (
             ])
         ),
     ]);
+};
+
+/**
+ * Custom document node resolver
+ * Adds custom views to specific document types
+ */
+export const defaultDocumentNode: DefaultDocumentNodeResolver = (
+  S,
+  { schemaType }
+) => {
+  // Add Technical Data view for product documents
+  if (schemaType === 'product') {
+    return S.document().views([
+      // Default form view
+      S.view.form().title('Zawartość').icon(EditIcon),
+      // Technical Data table view
+      S.view
+        .component(TechnicalDataView)
+        .title('Dane techniczne')
+        .icon(BlockContentIcon),
+    ]);
+  }
+
+  // Return default for other document types
+  return S.document();
 };

@@ -81,6 +81,10 @@ const portableTextFragmentExtended = (
       ...,
       ${imageFragment('image')},
     },
+    _type == "ptInlineImage" => {
+      ...,
+      ${imageFragment('image')},
+    },
     _type == "ptArrowList" => {
       ...,
       items[]{
@@ -134,7 +138,25 @@ const portableTextFragmentExtended = (
       "iconUrl": icon.asset->url,
       ${portableTextFragment('text')},
     },
-    
+    _type == "ptYoutubeVideo" => {
+      ...,
+      youtubeId,
+      title,
+      ${imageFragment('thumbnail')},
+    },
+    _type == "ptVimeoVideo" => {
+      ...,
+      vimeoId,
+      title,
+      ${imageFragment('thumbnail')},
+    },
+    _type == "ptPageBreak" => {
+      ...,
+    },
+    _type == "ptImageSlider" => {
+      ...,
+      ${imageFragment('images[]')}
+    },
   }
 `;
 
@@ -153,17 +175,49 @@ ${name}{
 }
 `;
 
+// Content blocks fragment for brand detail pages
+// Projects an array of content blocks (text, youtube, horizontal line)
+const brandContentBlocksFragment = (
+  name: string = 'brandContentBlocks'
+) => /* groq */ `
+  ${name}[]{
+    _type,
+    _key,
+    _type == "contentBlockText" => {
+      ${portableTextFragmentExtended('content')}
+    },
+    _type == "contentBlockYoutube" => {
+      youtubeId,
+      title,
+      ${imageFragment('thumbnail')}
+    },
+    _type == "contentBlockVimeo" => {
+      vimeoId,
+      title,
+      ${imageFragment('thumbnail')}
+    },
+    _type == "contentBlockHorizontalLine" => {
+      // No additional fields needed - just pass through
+    }
+  }
+`;
+
 const publicationBlock = /* groq */ `
   _id,
   _type,
   _createdAt,
   "publishDate": select(
+    _type == "review" => coalesce(publishedDate, _createdAt),
     _type == "blog-article" => coalesce(publishedDate, _createdAt),
     _createdAt
   ),
-  name,
+  "name": select(
+    _type == "review" => pt::text(title),
+    name
+  ),
   ${portableTextFragment('title')},
   "description": select(
+    _type == "review" && count(description) > 0 => description,
     _type == "review" => content[_type == "block"][0...3],
     ${portableTextFragment('description')}
   ),
@@ -236,10 +290,7 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
     "slug": slug.current,
     ${imageFragment('logo')},
   },
-  "mainImage": select(
-    defined(previewImage) => ${imageFragment('previewImage')},
-    ${imageFragment('imageGallery[0]')}
-  ),
+  ${imageFragment('"mainImage": previewImage')},
   ${portableTextFragment('shortDescription')},
   }
 `;
@@ -831,8 +882,9 @@ export const queryReviewBySlug =
   _id,
   _type,
   _createdAt,
+  "publishDate": coalesce(publishedDate, _createdAt),
   "slug": slug.current,
-  name,
+  "name": pt::text(title),
   ${portableTextFragment('title')},
   ${imageFragment('image')},
   overrideGallery,
@@ -856,10 +908,7 @@ export const queryReviewBySlug =
       "slug": slug.current,
       ${imageFragment('logo')},
     },
-    "mainImage": select(
-      defined(previewImage) => ${imageFragment('previewImage')},
-      ${imageFragment('imageGallery[0]')}
-    ),
+    ${imageFragment('"mainImage": previewImage')},
     ${imageFragment('imageGallery[]')},
     ${portableTextFragment('shortDescription')},
   },
@@ -879,7 +928,7 @@ export const queryReviewBySlug =
 export const queryPdfReviewBySlug =
   defineQuery(`*[_type == "review" && destinationType == "pdf" && string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0] == $slug][0]{
   _id,
-  name,
+  "name": pt::text(title),
   ${portableTextFragment('title')},
   "pdfUrl": pdfFile.asset->url,
   "pdfFilename": pdfFile.asset->originalFilename,
@@ -957,7 +1006,7 @@ export const queryBlogPageData = defineQuery(`
 const blogArticlesFilterConditions = /* groq */ `
   _type == "blog-article" 
   && defined(slug.current)
-  && !hideFromList
+  && hideFromList == false
   && ($category == "" || category->slug.current == $category)
   && ($search == "" || count($embeddingResults) > 0 || [name, pt::text(title)] match $search)
   && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
@@ -1322,10 +1371,7 @@ const productsProjection = /* groq */ `
     "slug": slug.current,
     ${imageFragment('logo')}
   },
-  "mainImage": select(
-    defined(previewImage) => ${imageFragment('previewImage')},
-    ${imageFragment('imageGallery[0]')}
-  ),
+  ${imageFragment('"mainImage": previewImage')},
   ${portableTextFragment('shortDescription')},
   "_score": select(
     count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
@@ -1463,8 +1509,7 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
       year,
       ${imageFragment('backgroundImage')},
     },
-    ${portableTextFragment('brandDescriptionHeading')},
-    ${portableTextFragmentExtended('brandDescription')},
+    ${brandContentBlocksFragment('brandContentBlocks')},
     ${imageFragment('imageGallery[]')},
     ${publicationFragment('featuredReviews[]->')},
     "stores": array::unique(
@@ -1509,6 +1554,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     "slug": slug.current,
     basePriceCents,
     isArchived,
+    ${imageFragment('previewImage')},
     ${imageFragment('imageGallery[]')},
     ${portableTextFragment('shortDescription')},
     brand->{
@@ -1526,9 +1572,20 @@ export const queryProductBySlug = defineQuery(/* groq */ `
       ${portableTextFragment('heading')},
       ${portableTextFragmentExtended('content')}
     },
-    technicalData[]{
-      title,
-      ${portableTextFragment('value')}
+    technicalData {
+      variants,
+      groups[] {
+        _key,
+        title,
+        rows[] {
+          _key,
+          title,
+          values[] {
+            _key,
+            ${portableTextFragment('content')}
+          }
+        }
+      }
     },
     availableInStores[]->{
       _id,
@@ -1564,7 +1621,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
       },
       "seoImage": select(
         defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-        defined(imageGallery[0]) => imageGallery[0].asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        defined(previewImage) => previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
         null
       )
     }
@@ -1593,10 +1650,7 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
     "slug": slug.current,
     subtitle,
     basePriceCents,
-    "mainImage": select(
-      defined(previewImage) => ${imageFragment('previewImage')},
-      ${imageFragment('imageGallery[0]')}
-    ),
+    ${imageFragment('"mainImage": previewImage')},
     brand->{
       _id,
       name,
@@ -1609,76 +1663,48 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
   }
 `);
 
-// Query 2: Get Full Product Details for Comparison Page
-// Used for Comparison Page - includes full technical data
-// Parameters:
-// - $productIds: array of product IDs to fetch
-export const queryComparisonProductsFull = defineQuery(/* groq */ `
-  *[_type == "product" && _id in $productIds] {
-    _id,
-    name,
-    "slug": slug.current,
-    subtitle,
-    basePriceCents,
-    "mainImage": select(
-      defined(previewImage) => ${imageFragment('previewImage')},
-      ${imageFragment('imageGallery[0]')}
-    ),
-    "imageSource": select(
-      defined(previewImage) => "preview",
-      "gallery"
-    ),
-    brand->{
-      _id,
-      name,
-      "slug": slug.current,
-      ${imageFragment('logo')}
-    },
-    technicalData[] {
-      title,
-      ${portableTextFragment('value')}
-    },
-    "categories": categories[]->{
-      "slug": slug.current
-    }
-  }
-`);
-
-// Query 3: Get ALL Products from Category for Comparison (FULL DATA)
-// Used for comparison page - fetches ALL products with FULL technical data
-// This enables instant add/remove with zero loading time
+// Query 2: Get ALL Products AND Comparator Config for a Category (COMBINED)
+// Single query that fetches both products and comparator config
 // Parameters:
 // - $categorySlug: category slug to filter by
-export const queryAllCategoryProductsForComparison = defineQuery(/* groq */ `
-  *[_type == "product" && !(_id in path("drafts.**")) && $categorySlug in categories[]->slug.current] | order(name asc) {
+export const queryComparisonPageData = defineQuery(/* groq */ `{
+  "products": *[_type == "product" && !(_id in path("drafts.**")) && $categorySlug in categories[]->slug.current] | order(name asc) {
     _id,
     name,
     "slug": slug.current,
     subtitle,
     basePriceCents,
-    "mainImage": select(
-      defined(previewImage) => ${imageFragment('previewImage')},
-      ${imageFragment('imageGallery[0]')}
-    ),
-    "imageSource": select(
-      defined(previewImage) => "preview",
-      "gallery"
-    ),
+    ${imageFragment('"mainImage": previewImage')},
     brand->{
       _id,
       name,
       "slug": slug.current,
       ${imageFragment('logo')}
     },
-    technicalData[] {
-      title,
-      ${portableTextFragment('value')}
+    technicalData {
+      variants,
+      groups[] {
+        _key,
+        title,
+        rows[] {
+          _key,
+          title,
+          values[] {
+            _key,
+            ${portableTextFragment('content')}
+          }
+        }
+      }
     },
     "categories": categories[]->{
       "slug": slug.current
     }
+  },
+  "enabledParameters": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current == $categorySlug][0].enabledParameters[] {
+    name,
+    displayName
   }
-`);
+}`);
 
 export const queryContactSettings = defineQuery(/* groq */ `
   *[_type == "settings"][0].contactSettings {

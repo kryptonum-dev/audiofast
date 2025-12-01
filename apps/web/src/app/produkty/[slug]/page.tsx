@@ -112,7 +112,10 @@ export default async function ProductPage(props: ProductPageProps) {
     {
       id: 'dane-techniczne',
       label: 'Dane techniczne',
-      visible: !!product.technicalData && product.technicalData.length > 0,
+      visible:
+        !!product.technicalData &&
+        product.technicalData.rows &&
+        product.technicalData.rows.length > 0,
     },
     {
       id: 'gdzie-kupic',
@@ -145,17 +148,22 @@ export default async function ProductPage(props: ProductPageProps) {
         subtitle={product.subtitle || ''}
         brand={product.brand as BrandType}
         pricingData={pricingData}
-        imageGallery={(product.imageGallery || []) as SanityRawImage[]}
+        previewImage={product.previewImage as SanityRawImage}
         shortDescription={product.shortDescription}
         awards={product.awards as AwardType[]}
         productId={product._id}
         categorySlug={product.categories?.[0]?.slug ?? ''}
       />
-      {sections.length > 1 && <PillsStickyNav sections={sections} />}
+      {sections.length > 1 && (
+        <PillsStickyNav
+          sections={
+            sections as { id: string; label: string; visible: boolean }[]
+          }
+        />
+      )}
       <TwoColumnContent
         content={product.details!.content as PortableTextProps}
         customId="szczegoly"
-        headingContent={product.details!.heading}
         gallery={product.imageGallery as SanityRawImage[]}
         className="margin-top-xms"
       />

@@ -53,23 +53,70 @@ export const review = defineType({
       validation: (Rule) => Rule.required().error('Typ recenzji jest wymagany'),
     }),
     defineField({
-      name: 'name',
-      title: 'Nazwa recenzji',
-      type: 'string',
+      name: 'publishedDate',
+      title: 'Nadpisz datę publikacji',
+      type: 'datetime',
       description:
-        'Krótka nazwa recenzji używana w breadcrumbs i do generowania URL (np. "Soundbar Sony HT-A7000")',
+        'Niestandardowa data publikacji recenzji. Jeśli nie jest ustawiona, używana jest data utworzenia dokumentu. Przydatne przy migracji treści z innych systemów.',
       group: GROUP.MAIN_CONTENT,
-      validation: (Rule) =>
-        Rule.required().error('Nazwa recenzji jest wymagana'),
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+        timeFormat: 'HH:mm',
+      },
     }),
     ...(defineSlugForDocument({
       prefix: '/recenzje/',
       source: 'name',
       group: GROUP.MAIN_CONTENT,
-    }).map((field) => ({
-      ...field,
-      hidden: ({ document }: any) => document?.destinationType !== 'page',
-    })) as FieldDefinition[]),
+    }).map((field) => {
+      if (field.name === 'slug') {
+        return {
+          ...field,
+          hidden: ({ document }: any) => document?.destinationType !== 'page',
+          // Override validation to make slug optional for pdf/external types
+          validation: (Rule: any) =>
+            Rule.custom(async (value: any, context: any) => {
+              const destinationType = context.document?.destinationType;
+
+              // Slug is only required for 'page' type reviews
+              if (destinationType !== 'page') {
+                return true; // Not required for pdf/external
+              }
+
+              // For 'page' type, slug is required
+              if (!value?.current) {
+                return 'Slug jest wymagany dla recenzji typu "Strona z treścią"';
+              }
+
+              const prefix = '/recenzje/';
+
+              // Check prefix
+              if (!value.current.startsWith(prefix)) {
+                return `Slug powinien zaczynać się od ${prefix}`;
+              }
+
+              // Check content after prefix
+              const contentAfterPrefix = value.current
+                .replace(prefix, '')
+                .trim();
+              if (!contentAfterPrefix || contentAfterPrefix === '/') {
+                return `Slug musi zawierać treść po ${prefix}. Sam ukośnik nie wystarczy.`;
+              }
+
+              // Check trailing slash
+              if (value.current !== '/' && !value.current.endsWith('/')) {
+                return 'Slug musi kończyć się ukośnikiem (/)';
+              }
+
+              return true;
+            }),
+        };
+      }
+      return {
+        ...field,
+        hidden: ({ document }: any) => document?.destinationType !== 'page',
+      };
+    }) as FieldDefinition[]),
     customPortableText({
       name: 'title',
       title: 'Tytuł recenzji',
@@ -84,6 +131,30 @@ export const review = defineType({
       },
       validation: (Rule) =>
         Rule.required().error('Tytuł recenzji jest wymagany'),
+    }),
+    customPortableText({
+      name: 'description',
+      title: 'Opis recenzji',
+      description:
+        'Krótki opis recenzji wyświetlany w sekcji najnowszej publikacji oraz innych listingach.',
+      group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ['normal'],
+        lists: ['bullet', 'number'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
+      },
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const destinationType = (context.document as any)?.destinationType;
+          if (destinationType === 'page') {
+            return true;
+          }
+          if (!value || !Array.isArray(value) || value.length === 0) {
+            return 'Opis recenzji jest wymagany dla recenzji typu „Dokument PDF” oraz „Link zewnętrzny”';
+          }
+          return true;
+        }),
     }),
     defineField({
       name: 'image',
@@ -225,17 +296,22 @@ export const review = defineType({
   ],
   preview: {
     select: {
-      name: 'name',
+      titlePortable: 'title',
       content: 'content',
+      description: 'description',
       image: 'image',
       authorName: 'author.name',
     },
-    prepare: ({ name, content, image, authorName }) => ({
-      title: name || 'Recenzja',
-      media: image || MessageSquareText,
-      subtitle: authorName
-        ? `${authorName} • ${parsePortableTextToString(content) || 'Recenzja produktu'}`
-        : parsePortableTextToString(content) || 'Recenzja produktu',
-    }),
+    prepare: ({ titlePortable, content, description, image, authorName }) => {
+      const titleText = parsePortableTextToString(titlePortable) || 'Recenzja';
+      const contentText =
+        parsePortableTextToString(description || content) || 'Recenzja produktu';
+
+      return {
+        title: titleText,
+        media: image || MessageSquareText,
+        subtitle: authorName ? `${authorName} • ${contentText}` : contentText,
+      };
+    },
   },
 });

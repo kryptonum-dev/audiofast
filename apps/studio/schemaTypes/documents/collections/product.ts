@@ -2,8 +2,8 @@ import {
   orderRankField,
   orderRankOrdering,
 } from '@sanity/orderable-document-list';
-import { BookAudio, Package, Settings } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { BookAudio, Package, Settings, Table } from 'lucide-react';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
 import { CustomFilterValueInput } from '../../../components/custom-filter-value-input';
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
@@ -59,21 +59,21 @@ export const product = defineType({
     }),
     defineField({
       name: 'previewImage',
-      title: 'Zdjęcie podglądowe (opcjonalne)',
+      title: 'Zdjęcie główne produktu',
       type: 'image',
       description:
-        'Zdjęcie produktu na białym/czystym tle używane w kartach produktów i listingach. To zdjęcie NIE jest częścią galerii na stronie produktu. Jeśli nie ustawisz tego pola, pierwsze zdjęcie z galerii zostanie użyte.',
+        'Główne zdjęcie produktu używane w kartach produktów, listingach i sekcji hero na stronie produktu. Zalecane: zdjęcie na białym/czystym tle.',
       group: GROUP.MAIN_CONTENT,
+      validation: (Rule) =>
+        Rule.required().error('Zdjęcie główne produktu jest wymagane'),
     }),
     defineField({
       name: 'imageGallery',
-      title: 'Galeria zdjęć',
+      title: 'Galeria zdjęć (opcjonalna)',
       type: 'array',
       description:
-        'Zdjęcia produktu dla galerii na stronie produktu. Mogą zawierać różne tła, konteksty użycia, zbliżenia itp.',
+        'Dodatkowe zdjęcia produktu wyświetlane w sekcji galerii na stronie produktu. Mogą zawierać różne tła, konteksty użycia, zbliżenia itp.',
       of: [{ type: 'image' }],
-      validation: (Rule) =>
-        Rule.min(1).error('Produkt musi mieć co najmniej jedno zdjęcie'),
       group: GROUP.MAIN_CONTENT,
     }),
     customPortableText({
@@ -224,52 +224,173 @@ export const product = defineType({
     }),
     defineField({
       name: 'technicalData',
-      title: 'Dane techniczne (opcjonalne)',
+      title: 'Dane techniczne',
+      type: 'object',
+      description:
+        '⚠️ Edytuj dane techniczne w zakładce "Dane techniczne" powyżej. Ta sekcja obsługuje zarówno produkty z jednym modelem, jak i produkty z wieloma wariantami.',
+      icon: Table,
+      group: GROUP.MAIN_CONTENT,
+      // Technical data is edited in a dedicated view tab (not in main form)
+      // The field is kept in schema for data structure but hidden from main form
+      hidden: true,
+      fields: [
+        // Variants array (for multi-model products)
+        defineField({
+          name: 'variants',
+          title: 'Warianty produktu',
+          type: 'array',
+          of: [{ type: 'string' }],
+          description:
+            'Nazwy wariantów produktu (np. "Alive", "Excite", "Euphoria"). Pozostaw puste dla produktów bez wariantów.',
+        }),
+
+        // Technical data groups (sections with optional titles)
+        defineField({
+          name: 'groups',
+          title: 'Sekcje danych technicznych',
+          type: 'array',
+          description: 'Sekcje z parametrami technicznymi (np. "Specyfikacja techniczna", "Specyfikacja audio")',
+          of: [
+            defineArrayMember({
+              type: 'object',
+              name: 'technicalDataGroup',
+              title: 'Sekcja',
+              fields: [
+                defineField({
+                  name: 'title',
+                  title: 'Nazwa sekcji',
+                  type: 'string',
+                  description: 'Opcjonalnie - np. "Specyfikacja techniczna". Zostaw puste dla produktów bez sekcji.',
+                }),
+                defineField({
+                  name: 'rows',
+                  title: 'Parametry',
       type: 'array',
-      description: 'Specyfikacja techniczna produktu.',
       of: [
-        {
+                    defineArrayMember({
           type: 'object',
-          name: 'technicalDataItem',
+                      name: 'technicalDataRow',
           title: 'Parametr techniczny',
           fields: [
             defineField({
               name: 'title',
               title: 'Nazwa parametru',
               type: 'string',
-              description: 'Zawartość pierwszej kolumny',
+                          description: 'Nazwa specyfikacji (np. "Wzmocnienie", "Impedancja")',
               validation: (Rule) => Rule.required(),
             }),
-            customPortableText({
-              name: 'value',
-              title: 'Wartość',
-              description: 'Zawartość drugiej kolumny (z formatowaniem)',
-              include: {
-                styles: ['normal'],
-                lists: [],
-                decorators: ['strong', 'em'],
-                annotations: ['customLink'],
+                        defineField({
+                          name: 'values',
+                          title: 'Wartości',
+                          type: 'array',
+                          description:
+                            'Wartości dla każdego wariantu (lub jedna wartość dla produktów bez wariantów)',
+                          of: [
+                            defineArrayMember({
+                              type: 'object',
+                              name: 'cellValue',
+                              title: 'Wartość komórki',
+                              fields: [
+                                defineField({
+                                  name: 'content',
+                                  title: 'Zawartość',
+                                  type: 'array',
+                                  of: [
+                                    defineArrayMember({
+                                      type: 'block',
+                                      styles: [{ title: 'Normalny', value: 'normal' }],
+                                      lists: [
+                                        { title: 'Wypunktowana', value: 'bullet' },
+                                        { title: 'Numerowana', value: 'number' },
+                                      ],
+                                      marks: {
+                                        decorators: [
+                                          { title: 'Pogrubienie', value: 'strong' },
+                                          { title: 'Kursywa', value: 'em' },
+                                        ],
+                                        annotations: [
+                                          {
+                                            name: 'link',
+                                            type: 'object',
+                                            title: 'Link',
+                                            fields: [
+                                              defineField({
+                                                name: 'href',
+                                                type: 'url',
+                                                title: 'URL',
+                                                validation: (Rule) =>
+                                                  Rule.uri({
+                                                    scheme: ['http', 'https', 'mailto', 'tel'],
+                                                  }),
+                                              }),
+                                              defineField({
+                                                name: 'blank',
+                                                type: 'boolean',
+                                                title: 'Otwórz w nowej karcie',
+                                                initialValue: true,
+                                              }),
+                                            ],
               },
+                                        ],
+                                      },
+                                    }),
+                                  ],
+                                }),
+                              ],
+                              preview: {
+                                select: {
+                                  content: 'content',
+                                },
+                                prepare: ({ content }) => {
+                                  const text =
+                                    content?.[0]?.children?.[0]?.text || 'Pusta komórka';
+                                  return {
+                                    title: text.length > 50 ? text.slice(0, 50) + '...' : text,
+                                  };
+                                },
+                              },
+                            }),
+                          ],
             }),
           ],
           preview: {
             select: {
               title: 'title',
-              value: 'value',
+                          values: 'values',
             },
-            prepare: ({ title, value }) => {
-              const valueText =
-                value?.[0]?.children?.[0]?.text || 'Brak wartości';
+                        prepare: ({ title, values }) => {
+                          const valueCount = values?.length || 0;
+                          const firstValue =
+                            values?.[0]?.content?.[0]?.children?.[0]?.text || '';
               return {
                 title: title || 'Parametr',
-                subtitle: valueText,
+                            subtitle:
+                              valueCount > 1
+                                ? `${valueCount} wariantów`
+                                : firstValue || 'Brak wartości',
                 media: Settings,
               };
             },
           },
-        },
+                    }),
+                  ],
+                }),
       ],
-      group: GROUP.MAIN_CONTENT,
+              preview: {
+                select: {
+                  title: 'title',
+                  rows: 'rows',
+                },
+                prepare: ({ title, rows }) => ({
+                  title: title || 'Parametry (bez sekcji)',
+                  subtitle: `${rows?.length || 0} parametrów`,
+                  media: Table,
+                }),
+              },
+            }),
+          ],
+        }),
+      ],
     }),
     defineField({
       name: 'availableInStores',
@@ -379,7 +500,7 @@ export const product = defineType({
       brandName: 'brand.name',
       subtitle: 'subtitle',
       isArchived: 'isArchived',
-      image: 'imageGallery.[0]',
+      image: 'previewImage',
     },
     prepare: ({ name, brandName, subtitle, isArchived, image }) => ({
       title: brandName && name ? `${brandName} ${name}` : name || 'Produkt',

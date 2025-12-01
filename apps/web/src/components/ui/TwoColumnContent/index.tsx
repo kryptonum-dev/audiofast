@@ -4,48 +4,65 @@ import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/src/global/types';
 
 import PortableText from '../../portableText';
+import ContentBlocks, { type ContentBlock } from '../ContentBlocks';
 import ProductGallery from '../ProductGallery';
-// import ProductGallery from '../ProductGallery';
 import styles from './styles.module.scss';
 
 export interface TwoColumnContentProps {
-  content: PortableTextProps;
+  // New content blocks format (for brand pages)
+  contentBlocks?: ContentBlock[] | null;
+  // Legacy portable text format (for backward compatibility)
+  content?: PortableTextProps;
   customId?: string;
-  headingContent?: PortableTextProps;
   distributionYear?: NonNullable<QueryBrandBySlugResult>['distributionYear'];
   gallery?: SanityRawImage[];
   className?: string;
 }
 
 export default function TwoColumnContent({
+  contentBlocks,
   content,
   customId,
-  headingContent,
   distributionYear,
   gallery,
   className,
 }: TwoColumnContentProps) {
-  if (!content || !Array.isArray(content) || content.length === 0) {
+  // Check if we have content to render
+  const hasContentBlocks =
+    contentBlocks && Array.isArray(contentBlocks) && contentBlocks.length > 0;
+  const hasLegacyContent =
+    content && Array.isArray(content) && content.length > 0;
+
+  if (!hasContentBlocks && !hasLegacyContent) {
     return null;
   }
 
   return (
     <section
-      className={` max-width-block ${styles.twoColumnContent} ${className}`}
+      className={`max-width-block ${styles.twoColumnContent} ${className || ''}`}
       id={customId || undefined}
     >
-      <PortableText
-        value={headingContent as PortableTextProps}
-        headingLevel="h2"
-        className={styles.heading}
-      />
-      <div className={styles.contentWrapper}>
-        <PortableText
-          value={content}
-          enablePortableTextStyles
-          className={styles.content}
+      <h2 className={styles.heading}>O marce</h2>
+
+      {/* New content blocks format */}
+      {hasContentBlocks && (
+        <ContentBlocks
+          blocks={contentBlocks}
+          className={styles.contentWrapper}
         />
-      </div>
+      )}
+
+      {/* Legacy portable text format (fallback) */}
+      {!hasContentBlocks && hasLegacyContent && (
+        <div className={styles.contentWrapper}>
+          <PortableText
+            value={content}
+            enablePortableTextStyles
+            className={styles.content}
+          />
+        </div>
+      )}
+
       {distributionYear && (
         <div className={styles.distributionYearBadge}>
           <Image

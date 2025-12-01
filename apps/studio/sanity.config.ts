@@ -1,7 +1,7 @@
 import { assist } from '@sanity/assist';
 import { embeddingsIndexDashboard } from '@sanity/embeddings-index-ui';
 import { visionTool } from '@sanity/vision';
-import { Mail } from 'lucide-react';
+import { GitCompareArrows, Mail } from 'lucide-react';
 import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { media } from 'sanity-plugin-media';
@@ -10,7 +10,8 @@ import { Logo } from './components/logo';
 import type { SingletonType } from './schemaTypes';
 import { schemaTypes, singletonActions } from './schemaTypes';
 import { singletons } from './schemaTypes/documents';
-import { structure } from './structure';
+import { defaultDocumentNode, structure } from './structure';
+import ComparatorTool from './tools/comparator';
 import NewsletterTool from './tools/newsletter';
 import { createPageTemplate } from './utils/helper';
 
@@ -28,6 +29,7 @@ export default defineConfig({
     assist(),
     structureTool({
       structure,
+      defaultDocumentNode,
     }),
     embeddingsIndexDashboard(),
     visionTool(),
@@ -40,6 +42,12 @@ export default defineConfig({
       title: 'Newsletter',
       icon: Mail,
       component: NewsletterTool,
+    },
+    {
+      name: 'comparator',
+      title: 'Porównywarka',
+      icon: GitCompareArrows,
+      component: ComparatorTool,
     },
   ],
 

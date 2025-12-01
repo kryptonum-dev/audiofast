@@ -13,7 +13,14 @@ export const reviewAuthor = defineType({
   type: 'document',
   icon: UserPen,
   groups: GROUPS,
-  orderings: [orderRankOrdering],
+  orderings: [
+    {
+      name: 'nameAsc',
+      title: 'Name (asc)',
+      by: [{ field: 'name', direction: 'asc' }],
+    },
+    orderRankOrdering,
+  ],
   description:
     'Autor recenzji produktów audio. Może to być wewnętrzny recenzent lub zewnętrzny portal/strona internetowa.',
   fields: [

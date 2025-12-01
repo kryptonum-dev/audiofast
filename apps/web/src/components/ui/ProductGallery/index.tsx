@@ -107,11 +107,23 @@ export default function ProductGallery({
       data-product-gallery
     >
       <div className={styles.mainContainer} data-animating={isAnimating}>
+        {/* Blurred background image for visual fill */}
+        <div className={styles.blurredBackground}>
+          <Image
+            key={`bg-${selectedIndex}`}
+            image={images[selectedIndex]}
+            sizes="400px"
+            loading="lazy"
+            aria-hidden="true"
+          />
+        </div>
+        {/* Main product image */}
         <Image
           key={selectedIndex}
           image={images[selectedIndex]}
           sizes="(max-width: 37.4375rem) 96vw, (max-width: 56.1875rem) 84vw, (max-width: 85.375rem) 96vw, 1302px"
           loading="lazy"
+          className={styles.mainImage}
         />
         <div className={styles.mainControls}>
           <ArrowButton

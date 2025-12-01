@@ -6,6 +6,9 @@ import { toast } from 'sonner';
 import PortableTextRenderer from '@/src/components/portableText';
 import {
   type ComparisonProduct,
+  type EnabledParameter,
+  getProductColumnCount,
+  getProductVariants,
   processComparisonData,
 } from '@/src/global/comparison';
 import {
@@ -23,11 +26,13 @@ import styles from './styles.module.scss';
 type ComparisonTableProps = {
   products: ComparisonProduct[];
   availableProducts: ComparisonProduct[];
+  enabledParameters?: EnabledParameter[];
 };
 
 export default function ComparisonTable({
   products,
   availableProducts,
+  enabledParameters,
 }: ComparisonTableProps) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -36,9 +41,11 @@ export default function ComparisonTable({
     name: string;
   } | null>(null);
   const [isStickyVisible, setIsStickyVisible] = useState(false);
-  const productCardsRef = useRef<HTMLUListElement>(null);
+  const [isScrollable, setIsScrollable] = useState(false);
+  const productCardsRef = useRef<HTMLDivElement>(null);
   const stickyHeaderRef = useRef<HTMLDivElement>(null);
   const comparisonWrapperRef = useRef<HTMLElement>(null);
+  const customScrollbarRef = useRef<HTMLDivElement>(null);
 
   const allProducts = useMemo(
     () => [...products, ...availableProducts],
@@ -64,8 +71,15 @@ export default function ComparisonTable({
     allProducts[0]?.categories[0]?.slug ||
     '';
 
+  // Process comparison data with new structure
   const comparisonData = useMemo(
-    () => processComparisonData(currentProducts),
+    () => processComparisonData(currentProducts, enabledParameters),
+    [currentProducts, enabledParameters]
+  );
+
+  // Check if any product has variants
+  const hasAnyVariants = useMemo(
+    () => currentProducts.some((p) => getProductVariants(p) !== null),
     [currentProducts]
   );
 
@@ -120,30 +134,28 @@ export default function ComparisonTable({
     }
   };
 
-  // IntersectionObserver for sticky header
+  // Check vertical scroll position for sticky header (ignore horizontal scroll)
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (entry) {
-          setIsStickyVisible(!entry.isIntersecting);
-        }
-      },
-      {
-        threshold: 0,
-        rootMargin: '-75px 0px 0px 0px',
-      }
-    );
+    const checkStickyVisibility = () => {
+      const productCards = productCardsRef.current;
+      if (!productCards) return;
 
-    const currentRef = productCardsRef.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
+      // Get the vertical position of product cards relative to viewport
+      const rect = productCards.getBoundingClientRect();
+      // Show sticky header when product cards are scrolled above the viewport
+      // Account for header height (~75px)
+      const shouldBeSticky = rect.bottom < 75;
+      setIsStickyVisible(shouldBeSticky);
+    };
+
+    // Check on scroll (vertical page scroll)
+    window.addEventListener('scroll', checkStickyVisibility, { passive: true });
+
+    // Initial check
+    checkStickyVisibility();
 
     return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
+      window.removeEventListener('scroll', checkStickyVisibility);
     };
   }, []);
 
@@ -191,38 +203,172 @@ export default function ComparisonTable({
     };
   }, [isStickyVisible]);
 
+  // Check if content is scrollable
+  useEffect(() => {
+    const wrapper = comparisonWrapperRef.current;
+    if (!wrapper) return;
+
+    const checkScrollable = () => {
+      setIsScrollable(wrapper.scrollWidth > wrapper.clientWidth);
+    };
+
+    checkScrollable();
+
+    // Update on resize
+    const resizeObserver = new ResizeObserver(checkScrollable);
+    resizeObserver.observe(wrapper);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [currentProducts]);
+
+  // Sync custom scrollbar with main wrapper and match content width
+  useEffect(() => {
+    if (!isScrollable) return;
+
+    const wrapper = comparisonWrapperRef.current;
+    const scrollbar = customScrollbarRef.current;
+
+    if (!wrapper || !scrollbar) return;
+
+    // Get the scrollbar content element
+    const scrollbarContent = scrollbar.querySelector(
+      `.${styles.scrollbarContent}`
+    ) as HTMLElement;
+
+    // Update scrollbar content width
+    const updateScrollbarWidth = () => {
+      if (!scrollbarContent) return;
+      const ratio = wrapper.scrollWidth / wrapper.clientWidth;
+      scrollbarContent.style.width = `${ratio * 100}%`;
+    };
+
+    updateScrollbarWidth();
+
+    let isScrollingScrollbar = false;
+    let isScrollingWrapper = false;
+
+    const handleScrollbarScroll = () => {
+      if (isScrollingWrapper) return;
+      isScrollingScrollbar = true;
+      // Calculate proportional scroll position
+      const ratio = wrapper.scrollWidth / scrollbar.scrollWidth;
+      wrapper.scrollLeft = scrollbar.scrollLeft * ratio;
+      requestAnimationFrame(() => {
+        isScrollingScrollbar = false;
+      });
+    };
+
+    const handleWrapperScroll = () => {
+      if (isScrollingScrollbar) return;
+      isScrollingWrapper = true;
+      // Calculate proportional scroll position
+      const ratio = scrollbar.scrollWidth / wrapper.scrollWidth;
+      scrollbar.scrollLeft = wrapper.scrollLeft * ratio;
+      requestAnimationFrame(() => {
+        isScrollingWrapper = false;
+      });
+    };
+
+    scrollbar.addEventListener('scroll', handleScrollbarScroll, {
+      passive: true,
+    });
+    wrapper.addEventListener('scroll', handleWrapperScroll, { passive: true });
+
+    // Update on resize
+    const resizeObserver = new ResizeObserver(updateScrollbarWidth);
+    resizeObserver.observe(wrapper);
+
+    return () => {
+      scrollbar.removeEventListener('scroll', handleScrollbarScroll);
+      wrapper.removeEventListener('scroll', handleWrapperScroll);
+      resizeObserver.disconnect();
+    };
+  }, [isScrollable, currentProducts]);
+
+  // Calculate placeholder count (always show 3 cards total)
+  const placeholderCount = Math.max(0, 3 - currentProducts.length);
+
+  // Render product cards
   const renderProductCards = (isSticky = false) => (
     <>
-      {currentProducts.map((product, index) => (
-        <ComparisonProductCard
-          key={product._id}
-          product={product}
-          onRemove={handleRemove}
-          index={index}
-          isCompact={isSticky}
-        />
+      {currentProducts.map((product, index) => {
+        const columnCount = getProductColumnCount(product);
+        return (
+          <ComparisonProductCard
+            key={product._id}
+            product={product}
+            onRemove={handleRemove}
+            index={index}
+            isCompact={isSticky}
+            columnSpan={columnCount}
+          />
+        );
+      })}
+      {/* Render placeholder cards to always have 3 total */}
+      {Array.from({ length: placeholderCount }).map((_, index) => (
+        <div
+          key={`placeholder-card-${index}`}
+          className={styles.placeholderCard}
+          data-compact={isSticky}
+          onClick={handleOpenSelector}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && handleOpenSelector()}
+          aria-label="Dodaj produkt do porównania"
+        >
+          <div className={styles.placeholderIcon}>
+            <PlusIcon />
+          </div>
+          {!isSticky && (
+            <p className={styles.placeholderText}>Wybierz produkt</p>
+          )}
+        </div>
       ))}
-      {currentProducts.length < 3 &&
-        Array.from({ length: 3 - currentProducts.length }).map((_, index) => (
-          <li key={`placeholder-${index}`}>
-            <button
-              className={styles.placeholderCard}
-              data-compact={isSticky}
-              onClick={handleOpenSelector}
-              type="button"
-              aria-label="Dodaj produkt do porównania"
-            >
-              <div className={styles.placeholderIcon}>
-                <PlusIcon />
-              </div>
-              {!isSticky && (
-                <p className={styles.placeholderText}>Wybierz produkt</p>
-              )}
-            </button>
-          </li>
-        ))}
     </>
   );
+
+  // Render variant names row (only if any product has variants)
+  const renderVariantRow = () => {
+    if (!hasAnyVariants) return null;
+
+    return (
+      <div className={styles.variantRow}>
+        {currentProducts.map((product) => {
+          const variants = getProductVariants(product);
+          if (variants) {
+            return variants.map((variantName, idx) => (
+              <div
+                key={`${product._id}-variant-${idx}`}
+                className={styles.variantCell}
+                data-is-variant="true"
+              >
+                {variantName}
+              </div>
+            ));
+          }
+          // Single-model product - empty cell (wider)
+          return (
+            <div
+              key={`${product._id}-single`}
+              className={styles.variantCell}
+              data-is-variant="false"
+            />
+          );
+        })}
+        {/* Placeholder cells */}
+        {Array.from({ length: placeholderCount }).map((_, index) => (
+          <div
+            key={`placeholder-variant-${index}`}
+            className={styles.variantCell}
+            data-is-variant="false"
+            data-is-placeholder="true"
+          />
+        ))}
+      </div>
+    );
+  };
 
   if (currentProducts.length === 0) {
     return (
@@ -247,9 +393,9 @@ export default function ComparisonTable({
           aria-label="Porównywane produkty"
         >
           <div className={styles.stickyContainer} ref={stickyHeaderRef}>
-            <ul className={styles.stickyProductCards}>
+            <div className={styles.stickyProductCards}>
               {renderProductCards(true)}
-            </ul>
+            </div>
           </div>
         </div>
       )}
@@ -258,13 +404,30 @@ export default function ComparisonTable({
         ref={comparisonWrapperRef}
         className={`${styles.comparisonWrapper} max-width-block`}
       >
-        <h1 className={styles.heading}>
-          Porównujesz {currentProducts.length}{' '}
-          {currentProducts.length === 1 ? 'produkt' : 'produkty'}
-        </h1>
-        <ul className={styles.productCards} ref={productCardsRef}>
+        <div className={styles.headingRow}>
+          <h1>
+            Porównujesz {currentProducts.length}{' '}
+            {currentProducts.length === 1 ? 'produkt' : 'produkty'}
+          </h1>
+          {/* Custom scrollbar - only show if content overflows */}
+          {isScrollable && (
+            <div
+              ref={customScrollbarRef}
+              className={styles.customScrollbar}
+              aria-hidden="true"
+            >
+              <div className={styles.scrollbarContent} />
+            </div>
+          )}
+        </div>
+
+        {/* Product cards header */}
+        <div className={styles.productCards} ref={productCardsRef}>
           {renderProductCards()}
-        </ul>
+        </div>
+
+        {/* Variant names row (if any product has variants) */}
+        {renderVariantRow()}
 
         {comparisonData.comparisonRows.length === 0 ? (
           <div className={styles.noData}>
@@ -273,47 +436,55 @@ export default function ComparisonTable({
         ) : (
           <>
             <h2 className={styles.heading}>Szczegóły produktu</h2>
-            <table className={styles.comparisonTable} role="table">
-              <tbody>
-                {comparisonData.comparisonRows.map((row, rowIndex) => (
-                  <tr
-                    key={row.heading}
-                    className={styles.dataRow}
-                    data-row-index={rowIndex}
-                  >
-                    <td className={`${styles.headingCell} ${styles.heading}`}>
-                      <span>{row.heading}</span>
-                    </td>
-                    {row.values.map((value, productIndex) => (
-                      <td
-                        key={`${currentProducts[productIndex]?._id}-${row.heading}`}
-                        className={`${styles.dataCell} ${styles.value}`}
-                      >
-                        {value ? (
-                          <PortableTextRenderer
-                            value={value as PortableTextProps}
-                            enablePortableTextStyles={false}
-                          />
-                        ) : (
-                          <span className={styles.emptyValue}>---</span>
-                        )}
-                      </td>
-                    ))}
-                    {currentProducts.length < 3 &&
-                      Array.from({ length: 3 - currentProducts.length }).map(
-                        (_, index) => (
-                          <td
-                            key={`placeholder-${index}-${row.heading}`}
-                            className={`${styles.dataCell} ${styles.value}`}
-                          >
+            <div className={styles.parametersGrid}>
+              {comparisonData.comparisonRows.map((row, rowIndex) => (
+                <div
+                  key={row.heading}
+                  className={styles.parameterBlock}
+                  data-row-index={rowIndex}
+                >
+                  {/* Parameter name row */}
+                  <div className={styles.parameterName}>
+                    {row.displayHeading}
+                  </div>
+                  {/* Values row */}
+                  <div className={styles.valuesRow}>
+                    {row.values.map((value, columnIndex) => {
+                      const column = comparisonData.columns[columnIndex];
+                      return (
+                        <div
+                          key={`${column?.productId}-${column?.variantIndex}-${row.heading}`}
+                          className={styles.valueCell}
+                          data-is-variant={column?.variantName !== null}
+                        >
+                          {value ? (
+                            <PortableTextRenderer
+                              value={value as PortableTextProps}
+                              enablePortableTextStyles={false}
+                            />
+                          ) : (
                             <span className={styles.emptyValue}>---</span>
-                          </td>
-                        )
-                      )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {/* Placeholder cells */}
+                    {Array.from({ length: placeholderCount }).map(
+                      (_, index) => (
+                        <div
+                          key={`placeholder-value-${row.heading}-${index}`}
+                          className={styles.valueCell}
+                          data-is-variant="false"
+                          data-is-placeholder="true"
+                        >
+                          <span className={styles.emptyValue}>---</span>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </>
         )}
         <ProductSelector

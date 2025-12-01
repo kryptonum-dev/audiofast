@@ -39,6 +39,15 @@ export const ptImage = defineType({
         }),
     }),
     defineField({
+      name: 'autoWidth',
+      title: 'Automatyczna szerokość',
+      type: 'boolean',
+      description:
+        'Gdy włączone, obraz zachowa swoją naturalną szerokość zamiast rozciągać się na 100%',
+      initialValue: false,
+      hidden: ({ parent }: any) => parent?.layout === 'double',
+    }),
+    defineField({
       name: 'image1',
       title: 'Pierwsze zdjęcie',
       type: 'image',

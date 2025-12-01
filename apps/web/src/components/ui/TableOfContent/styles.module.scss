@@ -37,6 +37,14 @@
     padding: 0 0.75rem;
   }
 
+  .empty {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--neutral-500, #737373);
+    margin-bottom: 0.75rem;
+    padding: 0 0.75rem;
+  }
+
   .list {
     display: flex;
     flex-direction: column;

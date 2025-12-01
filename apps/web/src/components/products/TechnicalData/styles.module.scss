@@ -2,23 +2,60 @@
   background-color: var(--neutral-200, #f8f8f8);
   border-radius: 0.5rem;
   margin: clamp(1.5rem, calc(2vw / 0.48), 2.5rem) auto;
-  gap: clamp(1.5rem, calc(2vw / 0.48), 3rem);
-  display: grid;
-  grid-template-columns: auto 1fr;
+
   position: relative;
   padding: clamp(1rem, calc(2vw / 0.48), 2rem);
 
   .heading {
-    position: sticky;
-    top: 9.75rem;
     align-self: start;
     z-index: 10;
+    margin-bottom: clamp(1rem, calc(1.5vw / 0.48), 2rem);
+  }
+
+  .groupHeading {
+    font-size: var(--typography-body-l, 1rem);
+    font-weight: 600;
+    color: var(--neutral-800, #1a1a1a);
+    margin-top: clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
+    margin-bottom: 0.75rem;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+
+  .tableWrapper {
+    width: 100%;
+    border-radius: 0.75rem;
+    overflow: hidden;
   }
 
   .table {
     width: 100%;
-    overflow: hidden;
-    border-radius: 0.75rem;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    .thead {
+      .headerRow {
+        background-color: var(--neutral-white, #ffffff);
+        border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+
+        .parameterHeader {
+          padding: 1rem;
+          width: 12rem;
+        }
+
+        .variantHeader {
+          padding: 1rem;
+          font-size: var(--typography-body-m, 0.875rem);
+          font-weight: 600;
+          color: var(--neutral-700, #303030);
+          text-align: center;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
+      }
+    }
 
     tbody {
       width: 100%;
@@ -34,42 +71,396 @@
           background-color: var(--neutral-white, #ffffff);
         }
 
-        .cell {
+        .parameterCell {
           padding: 1rem;
           font-size: var(--typography-body-m, 0.875rem);
           line-height: 1.5;
+          font-weight: 400;
+          color: var(--neutral-700, #303030);
+          -webkit-text-stroke-width: 0.25px;
+          -webkit-text-stroke-color: var(--neutral-700, #303030);
+          text-align: left;
+          vertical-align: top;
+          width: 12rem;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+        }
 
-          &:first-child {
-            font-weight: 400;
-            color: var(--neutral-700, #303030);
-            -webkit-text-stroke-width: 0.25px;
-            -webkit-text-stroke-color: var(--neutral-700, #303030);
-            text-align: left;
-            vertical-align: top;
-            width: 9.875rem;
-          }
-
-          &:last-child {
-            width: 70%;
-            color: var(--neutral-black, #000000);
-          }
+        .valueCell {
+          padding: 1rem;
+          font-size: var(--typography-body-m, 0.875rem);
+          line-height: 1.5;
+          color: var(--neutral-black, #000000);
+          vertical-align: top;
+          word-wrap: break-word;
+          overflow-wrap: break-word;
 
           > p {
             margin: 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+          }
+
+          strong {
+            font-weight: 500;
+            color: var(--neutral-black, #000000);
+          }
+
+          em {
+            font-style: italic;
+          }
+
+          ul,
+          ol {
+            margin: 0;
+            margin-top: 0.25rem;
+          }
+
+          ol {
+            list-style-type: decimal;
+            padding-left: 1rem;
+          }
+
+          li {
+            margin-top: 0.25rem;
+
+            &:first-child {
+              margin-top: 0;
+            }
+          }
+
+          ul li {
+            padding-left: 1rem;
+            position: relative;
+            list-style: none;
+
+            &::before {
+              content: '';
+              position: absolute;
+              top: 0.5rem;
+              left: 0.25rem;
+              width: 0.25rem;
+              height: 0.25rem;
+              background-color: var(--neutral-600, #5b5a5a);
+              border-radius: 50%;
+            }
+          }
+
+          :global(.link) {
+            word-break: break-all;
+          }
+        }
+
+        .emptyValue {
+          color: var(--neutral-500, #808080);
+        }
+      }
+    }
+
+    // Multi-variant table styling
+    &.multiVariant {
+      .thead {
+        .headerRow {
+          .parameterHeader {
+            width: 14rem;
+          }
+        }
+      }
+
+      tbody {
+        .row {
+          .parameterCell {
+            width: 14rem;
+          }
+
+          .valueCell {
+            text-align: center;
+
+            > p {
+              text-align: center;
+            }
+
+            ul,
+            ol {
+              text-align: left;
+              display: inline-block;
+            }
           }
         }
       }
     }
   }
 
-  @media (max-width: 56.1875rem) {
-    grid-template-columns: 1fr;
+  // Mobile multi-variant layout - hidden by default
+  .mobileMultiVariant {
+    display: none;
+  }
 
-    .heading {
-      position: static;
+  // Tablet breakpoint
+  @media (max-width: 56.1875rem) {
+    .groupHeading {
+      font-size: 0.9375rem;
+      margin-top: clamp(1.25rem, calc(1.5vw / 0.48), 2rem);
+      margin-bottom: 0.5rem;
+    }
+
+
+
+    .table {
+      min-width: max-content;
+
+      tbody {
+        .row {
+          position: relative;
+
+          .parameterCell {
+            padding: 0.75rem;
+            width: 8rem;
+            font-size: 0.8125rem;
+            position: sticky;
+            left: 0;
+            background-color: inherit;
+            z-index: 1;
+          }
+
+          &:nth-child(odd) .parameterCell {
+            background-color: var(--neutral-200, #f8f8f8);
+          }
+
+          &:nth-child(even) .parameterCell {
+            background-color: var(--neutral-white, #ffffff);
+          }
+
+          .valueCell {
+            padding: 0.75rem;
+            font-size: 0.8125rem;
+            min-width: 7rem;
+          }
+        }
+      }
+
+      &.multiVariant {
+        .thead {
+          .headerRow {
+            .parameterHeader {
+              width: 10rem;
+              position: sticky;
+              left: 0;
+              background-color: var(--neutral-white, #ffffff);
+              z-index: 1;
+            }
+
+            .variantHeader {
+              padding: 0.75rem;
+              font-size: 0.8125rem;
+              min-width: 7rem;
+            }
+          }
+        }
+
+        tbody {
+          .row {
+            .parameterCell {
+              width: 10rem;
+            }
+
+            .valueCell {
+              min-width: 7rem;
+            }
+          }
+        }
+      }
     }
   }
+
+  // Small mobile padding
   @media (max-width: 33.6875rem) {
     width: 100%;
+    padding: clamp(0.75rem, calc(1vw / 0.48), 1rem);
+  }
+
+  // Mobile layout (below 600px)
+  @media (max-width: 37.4375rem) {
+    // Single-variant: card layout
+    .tableWrapper:has(.table:not(.multiVariant)) {
+      overflow-x: visible;
+    }
+
+    .table:not(.multiVariant) {
+      display: block;
+      min-width: unset;
+
+      .thead {
+        display: none;
+      }
+
+      tbody {
+        display: flex;
+        flex-direction: column;
+
+        .row {
+          display: flex;
+          flex-direction: column;
+          gap: 0.375rem;
+          padding: 1rem 1.25rem;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          &:nth-child(odd) {
+            background-color: var(--neutral-white, #ffffff);
+          }
+
+          &:nth-child(even) {
+            background-color: var(--neutral-100, #fafafa);
+          }
+
+          .parameterCell {
+            display: block;
+            width: 100%;
+            padding: 0;
+            font-size: var(--typography-body-s, 0.8125rem);
+            font-weight: 500;
+            color: var(--neutral-600, #5b5a5a);
+            line-height: 1.3;
+            position: static;
+            background-color: transparent !important;
+          }
+
+          &:nth-child(odd) .parameterCell,
+          &:nth-child(even) .parameterCell {
+            background-color: transparent;
+          }
+
+          .valueCell {
+            display: block;
+            padding: 0;
+            font-size: var(--typography-body-m, 0.875rem);
+            min-width: unset;
+          }
+        }
+      }
+    }
+
+    // Hide standard table for multi-variant (rendered via JS)
+    .tableWrapper:has(.multiVariant) {
+      display: none;
+    }
+
+    // Show mobile multi-variant layout
+    .mobileMultiVariant {
+      display: block;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background-color: var(--neutral-white, #ffffff);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .mobileHeader {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background-color: var(--neutral-300, #e8e8e8);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .mobileVariantName {
+      flex: 0 0 auto;
+      width: 7.5rem;
+      padding: 0.625rem 0.5rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--neutral-700, #303030);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .mobileRow {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.odd {
+        background-color: var(--neutral-white, #ffffff);
+      }
+
+      &.even {
+        background-color: var(--neutral-100, #fafafa);
+      }
+    }
+
+    .mobileParamName {
+      padding: 0.625rem 0.75rem;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--neutral-700, #303030);
+      line-height: 1.4;
+      background-color: rgba(0, 0, 0, 0.02);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    .mobileValues {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .mobileValueCell {
+      flex: 0 0 auto;
+      width: 7.5rem;
+      padding: 0.625rem 0.5rem;
+      font-size: 0.8125rem;
+      text-align: center;
+      color: var(--neutral-black, #000000);
+      line-height: 1.5;
+
+      > p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      strong {
+        font-weight: 500;
+      }
+
+      ul,
+      ol {
+        margin: 0;
+        padding-left: 1rem;
+        text-align: left;
+        font-size: 0.75rem;
+      }
+
+      li {
+        margin-top: 0.125rem;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .emptyValue {
+      color: var(--neutral-400, #a0a0a0);
+    }
   }
 }

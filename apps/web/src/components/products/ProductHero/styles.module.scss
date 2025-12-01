@@ -4,158 +4,23 @@
   grid-template-columns: clamp(380px, calc(380vw / 7.68), 651px) 1fr;
   grid-template-rows: auto auto auto 1fr;
   grid-template-areas:
-    'gallery header'
-    'gallery description'
-    'gallery pricing'
-    'gallery awards';
+    'image header'
+    'image description'
+    'image pricing'
+    'image awards';
   column-gap: clamp(1rem, calc(1.5vw / 0.48), 3rem);
 
-  .gallery {
-    display: flex;
-    grid-area: gallery;
-    flex-direction: column;
-    align-self: start;
-    .mainImage {
+
+
+    .previewImage {
       width: 100%;
-      aspect-ratio: 1;
+      height: 100%;
+      object-fit: contain;   
+       border-radius: 0.5rem;   
+        grid-area: image;
 
-      // flex: 1;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      position: relative;
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      &[data-animating='true'] {
-        img {
-          animation: imageScaleIn 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      }
-
-      .mainControls {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        transform: translateY(-50%);
-        display: flex;
-        justify-content: space-between;
-        padding: 0 1rem;
-        pointer-events: none;
-
-        button {
-          pointer-events: all;
-          background: linear-gradient(
-            135deg,
-            rgba(0, 0, 0, 0.3),
-            rgba(0, 0, 0, 0.2)
-          ) !important;
-          border: 0.0625rem solid rgba(255, 255, 255, 0.25) !important;
-          backdrop-filter: blur(16px);
-          box-shadow:
-            0 0.25rem 1.5rem rgba(0, 0, 0, 0.3),
-            0 0.125rem 0.5rem rgba(0, 0, 0, 0.2),
-            inset 0 0.0625rem 0 rgba(255, 255, 255, 0.15) !important;
-
-          svg {
-            color: var(--neutral-white, #ffffff) !important;
-            filter: drop-shadow(0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.4));
-          }
-
-          &:hover {
-            background: linear-gradient(
-              135deg,
-              rgba(0, 0, 0, 0.4),
-              rgba(0, 0, 0, 0.3)
-            ) !important;
-            border-color: rgba(255, 255, 255, 0.35) !important;
-            box-shadow:
-              0 0.375rem 1.75rem rgba(0, 0, 0, 0.35),
-              0 0.1875rem 0.625rem rgba(0, 0, 0, 0.25),
-              inset 0 0.0625rem 0 rgba(255, 255, 255, 0.2) !important;
-          }
-
-          &:active {
-            background: linear-gradient(
-              135deg,
-              rgba(0, 0, 0, 0.35),
-              rgba(0, 0, 0, 0.25)
-            ) !important;
-            box-shadow:
-              0 0.125rem 0.75rem rgba(0, 0, 0, 0.3),
-              inset 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.2) !important;
-          }
-        }
-      }
-    }
-
-    .thumbsContainer {
-      width: 100%;
-      margin-top: 0.5rem;
-
-      &[data-can-scroll='false'] {
-        .thumbsViewport {
-          .thumbsSlides {
-            justify-content: center;
-          }
-        }
-      }
-
-      .thumbsViewport {
-        overflow: hidden;
-        width: 100%;
-
-        .thumbsSlides {
-          display: flex;
-          gap: 0.5rem;
-
-          .thumb {
-            flex: 0 0 auto;
-            width: 136px;
-            aspect-ratio: 1;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            border: 0.125rem solid transparent;
-            transition: border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-
-            img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-              transition: transform 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            }
-
-            &:hover {
-              border-color: var(--neutral-400);
-
-              img {
-                transform: scale(1.05);
-              }
-            }
-
-            &:active {
-              img {
-                transform: scale(1);
-              }
-            }
-
-            &[data-active='true'] {
-              border-color: var(--primary-red, #fe0140);
-            }
-
-            &:focus-visible {
-              outline: 0.125rem solid var(--primary-red);
-              outline-offset: 0.125rem;
-            }
-          }
-        }
-      }
-    }
+    
   }
 
   .header {
@@ -779,18 +644,15 @@
 
   @media (max-width: 69.3125rem) {
     grid-template-areas:
-      'gallery header'
-      'gallery description'
-      'gallery pricing'
+      'image header'
+      'image description'
+      'image pricing'
       'awards awards';
 
-    .gallery {
+    .previewImageWrapper {
       align-self: stretch;
       max-height: 50rem;
-      .mainImage {
-        aspect-ratio: auto;
-        height: 100%;
-      }
+      aspect-ratio: auto;
     }
 
     .awardsMarquee {
@@ -803,13 +665,11 @@
     display: flex;
     flex-direction: column;
 
-    .gallery {
+    .previewImageWrapper {
       margin-bottom: clamp(2rem, calc(2.5vw / 0.48), 3rem);
-
-      .mainImage {
-        aspect-ratio: 1;
-      }
+      aspect-ratio: 1;
     }
+
     .header {
       .prefix {
         max-width: none;
@@ -834,19 +694,6 @@
       0,
       0
     );
-  }
-}
-
-@keyframes imageScaleIn {
-  0% {
-    opacity: 1;
-    transform: scale(1.02);
-    filter: blur(2px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0px);
   }
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
-import { fetchAllCategoryProducts } from '@/src/app/actions/comparison';
+import { fetchComparisonPageData } from '@/src/app/actions/comparison';
 import ComparisonTable from '@/src/components/comparison/ComparisonTable';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import EmptyState from '@/src/components/ui/EmptyState';
@@ -65,11 +65,12 @@ export default async function ComparisonPage() {
     );
   }
 
-  // Fetch ALL products from the category with FULL data (single query)
   const categorySlug = comparisonCookie.categorySlug;
-  const allCategoryProducts = categorySlug
-    ? await fetchAllCategoryProducts(categorySlug)
-    : [];
+
+  // Fetch products and comparator config in a single query
+  const { products: allCategoryProducts, enabledParameters } = categorySlug
+    ? await fetchComparisonPageData(categorySlug)
+    : { products: [], enabledParameters: [] };
 
   // Split products: ones in comparison vs ones available to add
   const comparisonProductIds = new Set(comparisonCookie.productIds);
@@ -103,6 +104,7 @@ export default async function ComparisonPage() {
       <ComparisonTable
         products={comparisonProducts}
         availableProducts={availableProducts}
+        enabledParameters={enabledParameters}
       />
     </main>
   );

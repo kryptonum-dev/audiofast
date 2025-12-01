@@ -1,4 +1,9 @@
 .productCard {
+  --column-span: 1;
+  --variant-column-width: 10rem;
+  --single-column-width: 20rem;
+  --column-gap: 0.5rem;
+
   display: flex;
   flex-direction: column;
   position: relative;
@@ -6,9 +11,20 @@
   border: 0.0625rem solid var(--neutral-400);
   border-radius: 0.5rem;
   overflow: hidden;
+  // Default: multi-variant min-width = (variant-width * span) + (gap * (span - 1))
+  min-width: calc(
+    (var(--variant-column-width) * var(--column-span)) +
+      (var(--column-gap) * (var(--column-span) - 1))
+  );
+  flex: var(--column-span); // Grow proportionally based on column span
   transition:
     border-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  @media (max-width: 49.9375rem) {
+    --variant-column-width: 8rem;
+    --single-column-width: 16rem;
+  }
 
   &:hover {
     border-color: var(--neutral-500);
@@ -18,6 +34,12 @@
   &:has(.productLink:focus-visible) {
     outline: 2px solid var(--neutral-700);
     outline-offset: 2px;
+  }
+
+  // Single-model products are wider and grow equally
+  &[data-column-span='1'] {
+    min-width: var(--single-column-width);
+    flex: 1 1 var(--single-column-width); // Start at single-column-width, grow/shrink equally
   }
 
   &[data-compact='true'] {
@@ -43,6 +65,7 @@
         width: clamp(48px, calc(58vw / 7.68), 68px);
         height: clamp(48px, calc(58vw / 7.68), 68px);
         flex-shrink: 0;
+        
       }
 
       .info {
@@ -138,6 +161,7 @@
       border-radius: 0.5rem;
       overflow: hidden;
       margin-bottom: clamp(0.5rem, calc(0.75vw / 0.48), 1rem);
+      max-height: 300px;
 
       .productImage {
         object-fit: cover;

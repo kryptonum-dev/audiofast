@@ -13,6 +13,7 @@ type ComparisonProductCardProps = {
   onRemove: (productId: string, productName: string) => void;
   index: number;
   isCompact?: boolean;
+  columnSpan?: number;
 };
 
 export default function ComparisonProductCard({
@@ -20,6 +21,7 @@ export default function ComparisonProductCard({
   onRemove,
   index,
   isCompact = false,
+  columnSpan = 1,
 }: ComparisonProductCardProps) {
   const productSlug =
     typeof product.slug === 'string'
@@ -38,7 +40,12 @@ export default function ComparisonProductCard({
     : '(max-width: 38.75rem) 160px, (max-width: 50rem) 24vw, (max-width: 75rem) 240px, 280px';
 
   return (
-    <li className={styles.productCard} data-compact={isCompact}>
+    <div
+      className={styles.productCard}
+      data-compact={isCompact}
+      data-column-span={columnSpan}
+      style={{ '--column-span': columnSpan } as React.CSSProperties}
+    >
       <button
         className={styles.removeButton}
         onClick={handleRemove}
@@ -82,7 +89,7 @@ export default function ComparisonProductCard({
             )}
         </div>
       </Link>
-    </li>
+    </div>
   );
 }
 

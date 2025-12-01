@@ -68,31 +68,26 @@ export const brand = defineType({
         hotspot: true,
       },
     }),
-    customPortableText({
-      name: 'brandDescriptionHeading',
-      title: 'Nagłówek sekcji szczegółowego opisu',
-      description:
-        'Nagłówek wyświetlany nad szczegółowym opisem marki w sekcji dwukolumnowej',
-      group: GROUP.MAIN_CONTENT,
-      include: {
-        styles: ['normal'],
-        decorators: ['strong'],
-        annotations: [],
-      },
-    }),
-    customPortableText({
-      name: 'brandDescription',
+    defineField({
+      name: 'brandContentBlocks',
       title: 'Szczegółowy opis',
+      type: 'array',
       description:
-        'Szczegółowy opis marki wyświetlany w sekcji dwukolumnowej na stronie marki',
+        'Szczegółowy opis marki wyświetlany na stronie marki. Dodaj bloki tekstowe, filmy YouTube lub linie poziome.',
       group: GROUP.MAIN_CONTENT,
-      include: {
-        styles: ['normal', 'h3'],
-        lists: ['bullet', 'number'],
-        decorators: ['strong', 'em'],
-        annotations: ['customLink'],
+      of: [
+        { type: 'contentBlockText' },
+        { type: 'contentBlockYoutube' },
+        { type: 'contentBlockVimeo' },
+        { type: 'contentBlockHorizontalLine' },
+      ],
+      options: {
+        insertMenu: {
+          filter: true,
+          showIcons: true,
+          views: [{ name: 'list' }],
+        },
       },
-      components: ['ptMinimalImage', 'ptHeading'],
     }),
     defineField({
       name: 'distributionYear',
@@ -148,7 +143,7 @@ export const brand = defineType({
       title: 'Galeria zdjęć marki',
       type: 'array',
       description:
-        'Dodaj zdjęcia do galerii marki (opcjonalne, minimum 4 zdjęcia jeśli dodajesz)',
+        'Dodaj zdjęcia do galerii marki (opcjonalne, minimum 2 zdjęcia jeśli dodajesz)',
       group: GROUP.MAIN_CONTENT,
       of: [{ type: 'image' }],
       validation: (Rule) =>
@@ -157,9 +152,9 @@ export const brand = defineType({
             value &&
             Array.isArray(value) &&
             value.length > 0 &&
-            value.length < 4
+            value.length < 2
           ) {
-            return 'Galeria musi zawierać minimum 4 zdjęcia';
+            return 'Galeria musi zawierać minimum 2 zdjęcia';
           }
           return true;
         }),

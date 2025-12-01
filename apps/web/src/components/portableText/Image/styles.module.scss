@@ -22,8 +22,18 @@
   margin-bottom: 0.5rem;
   width: 100%;
   max-height: 700px;
+
   &[data-no-wrapper] {
     margin: clamp(2rem, calc(2.5vw / 0.48), 3rem) 0;
+  }
+
+  &.singleImage {
+    margin-top: clamp(1rem, calc(1.5vw / 0.48), 2rem);
+  }
+
+  &.autoWidth {
+    width: auto;
+    max-width: 100%;
   }
 }
 

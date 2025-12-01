@@ -59,13 +59,20 @@ export const store = defineType({
       description: 'Numer telefonu zaczynający się od +48',
       validation: (Rule) =>
         Rule.required()
-          .regex(/^\+48\d{9}$/, {
+          .regex(/^\+48\d{7,11}$/, {
             name: 'phone',
             invert: false,
           })
           .error(
-            'Numer telefonu musi zaczynać się od +48 i zawierać 9 kolejnych cyfr (np. +48123456789)'
+            'Numer telefonu musi zaczynać się od +48 i zawierać 7-11 cyfr'
           ),
+    }),
+    defineField({
+      name: 'email',
+      title: 'Adres e-mail',
+      type: 'string',
+      description: 'Adres e-mail salonu (opcjonalne)',
+      validation: (Rule) => Rule.email().error('Podaj prawidłowy adres e-mail'),
     }),
     defineField({
       name: 'website',
