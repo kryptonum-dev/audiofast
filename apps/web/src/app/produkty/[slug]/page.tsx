@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import FeaturedPublications from "@/src/components/pageBuilder/FeaturedPublications";
-// import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
+import ProductsCarousel from "@/src/components/pageBuilder/ProductsCarousel";
 import ProductHero, {
   type AwardType,
 } from "@/src/components/products/ProductHero";
@@ -227,20 +227,20 @@ export default async function ProductPage(props: ProductPageProps) {
           publicationLayout="horizontal"
         />
       )}
-      {/* {product.relatedProducts && (
+      {product.relatedProducts && product.relatedProducts.length > 0 && (
         <ProductsCarousel
           heading={[
             {
-              _type: 'block',
+              _type: "block",
               children: [
                 {
-                  _type: 'span',
-                  text: 'Powiązane produkty',
-                  _key: 'powiazane-produkty',
+                  _type: "span",
+                  text: "Powiązane produkty",
+                  _key: "powiazane-produkty",
                 },
               ],
-              style: 'normal',
-              _key: '',
+              style: "normal",
+              _key: "",
               markDefs: null,
               listItem: undefined,
               level: undefined,
@@ -252,7 +252,7 @@ export default async function ProductPage(props: ProductPageProps) {
           _type="productsCarousel"
           customId="powiazane-produkty"
         />
-      )} */}
+      )}
       {product.pageBuilder && <PageBuilder pageBuilder={product.pageBuilder} />}
     </main>
   );

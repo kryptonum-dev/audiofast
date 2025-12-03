@@ -37,12 +37,12 @@
   }
 
   // Single-model products are wider and grow equally
-  &[data-column-span="1"] {
+  &[data-column-span='1'] {
     min-width: var(--single-column-width);
     flex: 1 1 var(--single-column-width); // Start at single-column-width, grow/shrink equally
   }
 
-  &[data-compact="true"] {
+  &[data-compact='true'] {
     .removeButton {
       top: 0.5rem;
       right: 0.5rem;

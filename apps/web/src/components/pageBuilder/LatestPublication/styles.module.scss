@@ -12,9 +12,9 @@
     gap: clamp(2rem, calc(2.5vw / 0.48), 3rem);
 
     img {
-      width: 502px;
+      // width: 502px;
       width: clamp(320px, calc(320vw / 7.68), 502px);
-      aspect-ratio: 502 / 405;
+      // aspect-ratio: 502 / 405;
       border-radius: 0.25rem;
     }
 
@@ -23,10 +23,10 @@
       grid-template-columns: auto 1fr;
       grid-template-rows: repeat(3, auto) 1fr;
       grid-template-areas:
-        "date publicationType"
-        "title title"
-        "description description"
-        "button button";
+        'date publicationType'
+        'title title'
+        'description description'
+        'button button';
 
       span:nth-of-type(2) {
         margin-left: 1.5rem;

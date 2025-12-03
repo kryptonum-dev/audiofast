@@ -1,11 +1,13 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 export default function MobileNavToggle() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMenu = useCallback(() => {
     setIsMenuOpen((prev) => !prev);
@@ -13,7 +15,7 @@ export default function MobileNavToggle() {
 
   // Initial setup for keyboard navigation on mobile
   useEffect(() => {
-    const navLinks = document.querySelectorAll("#main-navigation a");
+    const navLinks = document.querySelectorAll('#main-navigation a');
     const isMobile = window.innerWidth <= 699; // 43.6875rem = ~699px
 
     // On mobile: initially remove links from tab order (menu starts closed)
@@ -27,19 +29,19 @@ export default function MobileNavToggle() {
   // Handle ESC key, body scroll lock, and keyboard navigation
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && isMenuOpen) {
+      if (event.key === 'Escape' && isMenuOpen) {
         setIsMenuOpen(false);
       }
     };
 
     // Get navigation links for tabIndex management
-    const navLinks = document.querySelectorAll("#main-navigation a");
+    const navLinks = document.querySelectorAll('#main-navigation a');
     const isMobile = window.innerWidth <= 699; // 43.6875rem = ~699px
 
     if (isMenuOpen) {
-      document.addEventListener("keydown", handleEscape);
+      document.addEventListener('keydown', handleEscape);
       // Add class to trigger mobile nav styles
-      document.documentElement.classList.add("mobile-nav-open");
+      document.documentElement.classList.add('mobile-nav-open');
 
       // On mobile: make links focusable when menu is open
       if (isMobile) {
@@ -48,8 +50,8 @@ export default function MobileNavToggle() {
         });
       }
     } else {
-      document.body.style.overflow = "";
-      document.documentElement.classList.remove("mobile-nav-open");
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('mobile-nav-open');
 
       // On mobile: remove links from tab order when menu is closed
       if (isMobile) {
@@ -60,18 +62,23 @@ export default function MobileNavToggle() {
     }
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
-      document.documentElement.classList.remove("mobile-nav-open");
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('mobile-nav-open');
 
       // Cleanup: restore normal tabbing on component unmount
       if (isMobile) {
         navLinks.forEach((link) => {
-          (link as HTMLElement).removeAttribute("tabindex");
+          (link as HTMLElement).removeAttribute('tabindex');
         });
       }
     };
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    // Ensure mobile menu closes automatically after navigation
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   return (
     <>
@@ -82,7 +89,7 @@ export default function MobileNavToggle() {
         onClick={toggleMenu}
         aria-expanded={isMenuOpen}
         aria-controls="main-navigation"
-        aria-label={isMenuOpen ? "Zamknij menu" : "Otwórz menu nawigacji"}
+        aria-label={isMenuOpen ? 'Zamknij menu' : 'Otwórz menu nawigacji'}
       >
         <span className={styles.menuButtonText}>
           <span className={styles.menuText}>Menu</span>

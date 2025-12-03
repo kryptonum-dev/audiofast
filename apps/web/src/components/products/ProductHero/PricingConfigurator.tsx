@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 
 import type {
   CompletePricingData,
   PricingOptionGroupWithDetails,
   PricingSelection,
-} from "@/src/global/supabase/types";
-import { formatPrice } from "@/src/global/utils";
+} from '@/src/global/supabase/types';
+import { formatPrice } from '@/src/global/utils';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 interface PricingConfiguratorProps {
   pricingData: CompletePricingData;
@@ -17,7 +17,7 @@ interface PricingConfiguratorProps {
 
 interface NumericOptionProps {
   group: PricingOptionGroupWithDetails & {
-    numeric_rule: NonNullable<PricingOptionGroupWithDetails["numeric_rule"]>;
+    numeric_rule: NonNullable<PricingOptionGroupWithDetails['numeric_rule']>;
   };
   currentValue: number;
   onChange: (groupId: string, value: string) => void;
@@ -60,10 +60,10 @@ function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Allow free typing, including partial values like "1."
-    const value = e.target.value.replace(",", ".");
+    const value = e.target.value.replace(',', '.');
 
     // Allow empty, numbers, and single decimal point
-    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
       setInputValue(value);
 
       // If the typed value is a valid number and a valid increment, update immediately
@@ -79,7 +79,7 @@ function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
   const handleInputBlur = () => {
     const numValue = parseFloat(inputValue);
 
-    if (isNaN(numValue) || inputValue === "") {
+    if (isNaN(numValue) || inputValue === '') {
       // Reset to current value if invalid
       setInputValue(String(currentValue));
       return;
@@ -103,7 +103,7 @@ function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.currentTarget.blur(); // Trigger blur on Enter
     }
   };
@@ -145,7 +145,7 @@ function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
           onKeyDown={handleKeyDown}
           aria-label={`${group.name} wartość`}
         />
-        <span className={styles.numericUnit}>{group.unit || "m"}</span>
+        <span className={styles.numericUnit}>{group.unit || 'm'}</span>
       </label>
     </div>
   );
@@ -210,11 +210,11 @@ export default function PricingConfigurator({
     };
 
     if (openDropdown) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("focusout", handleFocusOut);
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('focusout', handleFocusOut);
       return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-        document.removeEventListener("focusout", handleFocusOut);
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('focusout', handleFocusOut);
       };
     }
   }, [openDropdown]);
@@ -240,13 +240,13 @@ export default function PricingConfigurator({
       const selectedValue = selection.selectedOptions[group.id];
       if (!selectedValue) return;
 
-      if (group.input_type === "select") {
+      if (group.input_type === 'select') {
         // Find the value and add its price delta
         const value = group.values.find((v) => v.id === selectedValue);
         if (value) {
           totalPrice += value.price_delta_cents;
         }
-      } else if (group.input_type === "numeric_step" && group.numeric_rule) {
+      } else if (group.input_type === 'numeric_step' && group.numeric_rule) {
         // Calculate price based on numeric value
         const numericValue = parseFloat(selectedValue);
         if (!isNaN(numericValue)) {
@@ -299,11 +299,11 @@ export default function PricingConfigurator({
 
         // If parent IS selected and child has no selection, auto-select first option
         if (parentSelected && !selection.selectedOptions[group.id]) {
-          if (group.input_type === "select" && group.values.length > 0) {
+          if (group.input_type === 'select' && group.values.length > 0) {
             updates[group.id] = group.values[0]!.id;
             hasChanges = true;
           } else if (
-            group.input_type === "numeric_step" &&
+            group.input_type === 'numeric_step' &&
             group.numeric_rule
           ) {
             updates[group.id] = String(group.numeric_rule.min_value);
@@ -313,14 +313,14 @@ export default function PricingConfigurator({
       } else {
         // Top-level group without parent
         if (
-          group.input_type === "select" &&
+          group.input_type === 'select' &&
           group.values.length > 0 &&
           !selection.selectedOptions[group.id]
         ) {
           updates[group.id] = group.values[0]!.id;
           hasChanges = true;
         } else if (
-          group.input_type === "numeric_step" &&
+          group.input_type === 'numeric_step' &&
           group.numeric_rule &&
           !selection.selectedOptions[group.id]
         ) {
@@ -409,7 +409,7 @@ export default function PricingConfigurator({
         <div className={styles.dropdown}>
           <button
             type="button"
-            className={`${styles.trigger} ${value ? styles.active : ""}`}
+            className={`${styles.trigger} ${value ? styles.active : ''}`}
             onClick={() => setOpenDropdown(isOpen ? null : id)}
             aria-expanded={isOpen}
             aria-label={`${label}: ${displayValue}`}
@@ -434,7 +434,7 @@ export default function PricingConfigurator({
                 fill="none"
                 className={styles.chevron}
                 style={{
-                  transform: isOpen ? "rotate(180deg)" : "none",
+                  transform: isOpen ? 'rotate(180deg)' : 'none',
                 }}
               >
                 <path
@@ -456,7 +456,7 @@ export default function PricingConfigurator({
                   <button
                     key={option.id}
                     type="button"
-                    className={`${styles.item} ${isSelected ? styles.selected : ""}`}
+                    className={`${styles.item} ${isSelected ? styles.selected : ''}`}
                     onClick={() => {
                       onChange(option.id);
                       setOpenDropdown(null);
@@ -471,7 +471,7 @@ export default function PricingConfigurator({
                       ) : (
                         option.price !== undefined && (
                           <span className={styles.itemPrice}>
-                            {option.price > 0 ? "+" : ""}
+                            {option.price > 0 ? '+' : ''}
                             {formatPrice(option.price)}
                           </span>
                         )
@@ -520,14 +520,14 @@ export default function PricingConfigurator({
         const childNumericGroup = selectedVariant.groups.find(
           (g) =>
             g.parent_value_id === value.id &&
-            g.input_type === "numeric_step" &&
+            g.input_type === 'numeric_step' &&
             g.numeric_rule,
         );
 
         if (childNumericGroup?.numeric_rule) {
           const rule = childNumericGroup.numeric_rule;
           // Format as "+price/step unit" instead of total
-          priceText = `+${formatPrice(rule.price_per_step_cents)}/${rule.step_value} ${childNumericGroup.unit || "m"}`;
+          priceText = `+${formatPrice(rule.price_per_step_cents)}/${rule.step_value} ${childNumericGroup.unit || 'm'}`;
         }
       }
 
@@ -544,7 +544,7 @@ export default function PricingConfigurator({
         {renderCustomDropdown(
           `option-${group.id}`,
           group.name,
-          selectedValue || "",
+          selectedValue || '',
           options,
           (value) => handleOptionChange(group.id, value),
         )}
@@ -552,9 +552,9 @@ export default function PricingConfigurator({
         {/* Render child groups if a value is selected */}
         {selectedValue &&
           childGroups.map((childGroup) => {
-            if (childGroup.input_type === "select") {
+            if (childGroup.input_type === 'select') {
               return renderSelectOption(childGroup);
-            } else if (childGroup.input_type === "numeric_step") {
+            } else if (childGroup.input_type === 'numeric_step') {
               return renderNumericOption(childGroup);
             }
             return null;
@@ -580,7 +580,7 @@ export default function PricingConfigurator({
         group={
           group as PricingOptionGroupWithDetails & {
             numeric_rule: NonNullable<
-              PricingOptionGroupWithDetails["numeric_rule"]
+              PricingOptionGroupWithDetails['numeric_rule']
             >;
           }
         }
@@ -595,9 +595,9 @@ export default function PricingConfigurator({
     <div className={styles.configurator}>
       {pricingData.hasMultipleModels &&
         renderCustomDropdown(
-          "model-select",
-          "Model",
-          selection.variantId || "",
+          'model-select',
+          'Model',
+          selection.variantId || '',
           pricingData.variants.map((variant) => ({
             id: variant.id,
             name: `${variant.model || variant.product} (od ${formatPrice(variant.base_price_cents)})`,
@@ -606,9 +606,9 @@ export default function PricingConfigurator({
         )}
       {selectedVariant &&
         topLevelGroups.map((group) => {
-          if (group.input_type === "select") {
+          if (group.input_type === 'select') {
             return renderSelectOption(group);
-          } else if (group.input_type === "numeric_step") {
+          } else if (group.input_type === 'numeric_step') {
             return renderNumericOption(group);
           }
           return null;

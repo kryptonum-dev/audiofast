@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { QueryProductBySlugResult } from "@/src/global/sanity/sanity.types";
-import type { PortableTextProps } from "@/src/global/types";
+import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';
+import type { PortableTextProps } from '@/src/global/types';
 
-import PortableText from "../../portableText";
-import styles from "./styles.module.scss";
+import PortableText from '../../portableText';
+import styles from './styles.module.scss';
 
 type TechnicalDataType = NonNullable<
-  NonNullable<QueryProductBySlugResult>["technicalData"]
+  NonNullable<QueryProductBySlugResult>['technicalData']
 >;
 
 interface TechnicalDataProps {
@@ -19,9 +19,14 @@ interface TechnicalDataProps {
 
 // Mobile breakpoint in pixels (37.4375rem = 599px)
 const MOBILE_BREAKPOINT = 599;
+// Tablet breakpoint for 4+ variants (56.1875rem = 899px)
+const TABLET_BREAKPOINT = 899;
+// Threshold for "many variants" mode
+const MANY_VARIANTS_THRESHOLD = 4;
 
 export default function TechnicalData({ data, customId }: TechnicalDataProps) {
   const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
   const scrollContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
   const isScrolling = useRef(false);
 
@@ -36,20 +41,23 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
 
   const hasVariants = data.variants && data.variants.length > 0;
   const variants = data.variants || [];
+  const hasManyVariants = variants.length >= MANY_VARIANTS_THRESHOLD;
 
   // Check if we have multiple groups (for showing section headings)
   const hasMultipleGroups = validGroups.length > 1;
 
-  // Detect mobile viewport
+  // Detect mobile and tablet viewport
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= MOBILE_BREAKPOINT);
+    const checkBreakpoints = () => {
+      const width = window.innerWidth;
+      setIsMobile(width <= MOBILE_BREAKPOINT);
+      setIsTablet(width <= TABLET_BREAKPOINT && width > MOBILE_BREAKPOINT);
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    checkBreakpoints();
+    window.addEventListener('resize', checkBreakpoints);
+    return () => window.removeEventListener('resize', checkBreakpoints);
   }, []);
 
   // Sync scroll across all containers
@@ -82,7 +90,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
   const renderTable = (group: (typeof validGroups)[0], groupIndex: number) => (
     <div className={styles.tableWrapper}>
       <table
-        className={`${styles.table} ${hasVariants ? styles.multiVariant : ""}`}
+        className={`${styles.table} ${hasVariants ? styles.multiVariant : ''}`}
       >
         {hasVariants && (
           <thead className={styles.thead}>
@@ -192,10 +200,17 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
     );
   };
 
+  // Determine if we should show the scrollable layout
+  // Show on mobile for all multi-variant tables, or on tablet for 4+ variants
+  const shouldShowScrollableLayout =
+    hasVariants && (isMobile || (isTablet && hasManyVariants));
+
   return (
     <section
       className={`${styles.technicalData} max-width-block`}
       id={customId}
+      data-variants-count={variants.length}
+      data-many-variants={hasManyVariants || undefined}
     >
       <h2 className={styles.heading}>Dane techniczne</h2>
 
@@ -205,8 +220,8 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
             <h3 className={styles.groupHeading}>{group.title}</h3>
           )}
 
-          {/* Render mobile multi-variant or standard table */}
-          {isMobile && hasVariants
+          {/* Render scrollable multi-variant or standard table */}
+          {shouldShowScrollableLayout
             ? renderMobileMultiVariant(group, groupIndex)
             : renderTable(group, groupIndex)}
         </React.Fragment>

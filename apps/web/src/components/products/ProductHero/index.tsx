@@ -1,13 +1,13 @@
-import type { SanityRawImage } from "@/components/shared/Image";
-import Image from "@/components/shared/Image";
-import type { CompletePricingData } from "@/src/global/supabase/types";
-import type { BrandType, PortableTextProps } from "@/src/global/types";
+import type { SanityRawImage } from '@/components/shared/Image';
+import Image from '@/components/shared/Image';
+import type { CompletePricingData } from '@/src/global/supabase/types';
+import type { BrandType, PortableTextProps } from '@/src/global/types';
 
-import Button from "../../ui/Button";
-import AddToComparison from "./AddToComparison";
-import PricingConfigurator from "./PricingConfigurator";
-import ProductDescription from "./ProductDescription";
-import styles from "./styles.module.scss";
+import Button from '../../ui/Button';
+import AddToComparison from './AddToComparison';
+import PricingConfigurator from './PricingConfigurator';
+import ProductDescription from './ProductDescription';
+import styles from './styles.module.scss';
 
 export type AwardType = {
   _id: string;
@@ -55,7 +55,12 @@ export default function ProductHero({
   const animationDuration = getAnimationDuration();
 
   return (
-    <section className={`${styles.productHero} max-width`} id={customId}>
+    <section
+      className={`${styles.productHero} max-width`}
+      id={customId}
+      data-has-description={!!shortDescription}
+      data-has-awards={!!awards && awards.length > 0}
+    >
       <Image
         image={previewImage}
         sizes="(max-width: 56.1875rem) 96vw, (max-width: 85.375rem) 48vw, 951px"
@@ -112,7 +117,7 @@ export default function ProductHero({
           style={
             shouldUseMarquee
               ? ({
-                  "--animation-duration": `${animationDuration}s`,
+                  '--animation-duration': `${animationDuration}s`,
                 } as React.CSSProperties)
               : undefined
           }
@@ -126,7 +131,7 @@ export default function ProductHero({
                 return (
                   <Image
                     image={award.logo}
-                    alt={award.name || "Nagroda produktu"}
+                    alt={award.name || 'Nagroda produktu'}
                     sizes="80px"
                     quality={90}
                     className={styles.awardLogo}

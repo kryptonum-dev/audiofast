@@ -56,6 +56,18 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: 'publishedDate',
+      title: 'Nadpisz datę publikacji',
+      type: 'datetime',
+      description:
+        'Niestandardowa data publikacji produktu. Jeśli nie jest ustawiona, używana jest data utworzenia dokumentu. Przydatne przy migracji treści z innych systemów.',
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+        timeFormat: 'HH:mm',
+      },
+    }),
+    defineField({
       name: 'previewImage',
       title: 'Zdjęcie główne produktu',
       type: 'image',
@@ -480,6 +492,34 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: 'relatedProducts',
+      title: 'Powiązane produkty (opcjonalne)',
+      type: 'array',
+      description:
+        'Wybierz powiązane produkty, które będą wyświetlane na stronie tego produktu. To pole jest automatycznie synchronizowane z pipeline cenowego Excel, ale można je również edytować ręcznie.',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'product' }],
+          options: {
+            filter: ({ document }) => {
+              const currentId = document?._id;
+              const selectedIds = Array.isArray(document?.relatedProducts)
+                ? document.relatedProducts
+                    .map((item: any) => item._ref)
+                    .filter(Boolean)
+                : [];
+              return {
+                filter: '_id != $currentId && !(_id in $selectedIds)',
+                params: { currentId, selectedIds },
+              };
+            },
+          },
+        },
+      ],
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: 'pageBuilder',
       title: 'Niestandardowe sekcje',
       type: 'pageBuilder',
@@ -487,7 +527,7 @@ export const product = defineType({
         'Dodaj niestandardowe sekcje na końcu strony produktu (opcjonalne).',
       group: GROUP.MAIN_CONTENT,
     }),
-    ...getSEOFields(),
+    ...getSEOFields({ exclude: ['hideFromList'] }),
   ],
   preview: {
     select: {

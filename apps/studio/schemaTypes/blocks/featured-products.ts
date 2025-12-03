@@ -68,7 +68,8 @@ export const featuredProducts = defineType({
               const allSelected = [...selectedIds, ...bestsellerIds];
 
               return {
-                filter: '!(_id in $selectedIds) && !(_id in path("drafts.**"))',
+                filter:
+                  '!(_id in $selectedIds) && !(_id in path("drafts.**")) && isArchived != true',
                 params: { selectedIds: allSelected },
               };
             },
@@ -113,7 +114,8 @@ export const featuredProducts = defineType({
               const allSelected = [...selectedIds, ...newProductIds];
 
               return {
-                filter: '!(_id in $selectedIds) && !(_id in path("drafts.**"))',
+                filter:
+                  '!(_id in $selectedIds) && !(_id in path("drafts.**")) && isArchived != true',
                 params: { selectedIds: allSelected },
               };
             },

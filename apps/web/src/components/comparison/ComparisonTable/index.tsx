@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
-import PortableTextRenderer from "@/src/components/portableText";
+import PortableTextRenderer from '@/src/components/portableText';
 import {
   type ComparisonProduct,
   type EnabledParameter,
   getProductColumnCount,
   getProductVariants,
   processComparisonData,
-} from "@/src/global/comparison";
+} from '@/src/global/comparison';
 import {
   addProductToComparison,
   removeProductFromComparison,
-} from "@/src/global/comparison/cookie-manager";
-import type { PortableTextProps } from "@/src/global/types";
+} from '@/src/global/comparison/cookie-manager';
+import type { PortableTextProps } from '@/src/global/types';
 
-import ConfirmationModal from "../../ui/ConfirmationModal";
-import EmptyState from "../../ui/EmptyState";
-import ComparisonProductCard from "../ComparisonProductCard";
-import ProductSelector from "../ProductSelector";
-import styles from "./styles.module.scss";
+import ConfirmationModal from '../../ui/ConfirmationModal';
+import EmptyState from '../../ui/EmptyState';
+import ComparisonProductCard from '../ComparisonProductCard';
+import ProductSelector from '../ProductSelector';
+import styles from './styles.module.scss';
 
 type ComparisonTableProps = {
   products: ComparisonProduct[];
@@ -69,7 +69,7 @@ export default function ComparisonTable({
   const categorySlug =
     currentProducts[0]?.categories[0]?.slug ||
     allProducts[0]?.categories[0]?.slug ||
-    "";
+    '';
 
   // Process comparison data with new structure
   const comparisonData = useMemo(
@@ -118,7 +118,7 @@ export default function ComparisonTable({
 
   const handleOpenSelector = () => {
     if (!categorySlug) {
-      toast.error("Nie można dodać produktu bez kategorii");
+      toast.error('Nie można dodać produktu bez kategorii');
       return;
     }
     setIsSelectorOpen(true);
@@ -128,9 +128,9 @@ export default function ComparisonTable({
     const result = addProductToComparison(productId, categorySlug);
     if (result.success) {
       setComparisonIds((prev) => new Set([...prev, productId]));
-      toast.success("Produkt dodany do porównania");
+      toast.success('Produkt dodany do porównania');
     } else {
-      toast.error(result.error || "Nie można dodać produktu");
+      toast.error(result.error || 'Nie można dodać produktu');
     }
   };
 
@@ -149,13 +149,13 @@ export default function ComparisonTable({
     };
 
     // Check on scroll (vertical page scroll)
-    window.addEventListener("scroll", checkStickyVisibility, { passive: true });
+    window.addEventListener('scroll', checkStickyVisibility, { passive: true });
 
     // Initial check
     checkStickyVisibility();
 
     return () => {
-      window.removeEventListener("scroll", checkStickyVisibility);
+      window.removeEventListener('scroll', checkStickyVisibility);
     };
   }, []);
 
@@ -189,17 +189,17 @@ export default function ComparisonTable({
       });
     };
 
-    stickyHeader.addEventListener("scroll", handleStickyScroll, {
+    stickyHeader.addEventListener('scroll', handleStickyScroll, {
       passive: true,
     });
-    wrapper.addEventListener("scroll", handleWrapperScroll, { passive: true });
+    wrapper.addEventListener('scroll', handleWrapperScroll, { passive: true });
 
     // Sync initial scroll position
     stickyHeader.scrollLeft = wrapper.scrollLeft;
 
     return () => {
-      stickyHeader.removeEventListener("scroll", handleStickyScroll);
-      wrapper.removeEventListener("scroll", handleWrapperScroll);
+      stickyHeader.removeEventListener('scroll', handleStickyScroll);
+      wrapper.removeEventListener('scroll', handleWrapperScroll);
     };
   }, [isStickyVisible]);
 
@@ -271,18 +271,18 @@ export default function ComparisonTable({
       });
     };
 
-    scrollbar.addEventListener("scroll", handleScrollbarScroll, {
+    scrollbar.addEventListener('scroll', handleScrollbarScroll, {
       passive: true,
     });
-    wrapper.addEventListener("scroll", handleWrapperScroll, { passive: true });
+    wrapper.addEventListener('scroll', handleWrapperScroll, { passive: true });
 
     // Update on resize
     const resizeObserver = new ResizeObserver(updateScrollbarWidth);
     resizeObserver.observe(wrapper);
 
     return () => {
-      scrollbar.removeEventListener("scroll", handleScrollbarScroll);
-      wrapper.removeEventListener("scroll", handleWrapperScroll);
+      scrollbar.removeEventListener('scroll', handleScrollbarScroll);
+      wrapper.removeEventListener('scroll', handleWrapperScroll);
       resizeObserver.disconnect();
     };
   }, [isScrollable, currentProducts]);
@@ -315,7 +315,7 @@ export default function ComparisonTable({
           onClick={handleOpenSelector}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && handleOpenSelector()}
+          onKeyDown={(e) => e.key === 'Enter' && handleOpenSelector()}
           aria-label="Dodaj produkt do porównania"
         >
           <div className={styles.placeholderIcon}>
@@ -376,8 +376,8 @@ export default function ComparisonTable({
         <EmptyState
           type="comparator-noProduct"
           button={{
-            name: "Przeglądaj produkty",
-            href: "/produkty/",
+            name: 'Przeglądaj produkty',
+            href: '/produkty/',
           }}
         />
       </section>
@@ -406,8 +406,8 @@ export default function ComparisonTable({
       >
         <div className={styles.headingRow}>
           <h1>
-            Porównujesz {currentProducts.length}{" "}
-            {currentProducts.length === 1 ? "produkt" : "produkty"}
+            Porównujesz {currentProducts.length}{' '}
+            {currentProducts.length === 1 ? 'produkt' : 'produkty'}
           </h1>
           {/* Custom scrollbar - only show if content overflows */}
           {isScrollable && (

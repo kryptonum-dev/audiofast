@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { BrandType } from "@/src/global/types";
 
@@ -22,10 +22,41 @@ export default function CategoryAccordion({
 }: CategoryAccordionProps) {
   const [isOpen, setIsOpen] = useState(true);
   const detailsRef = useRef<HTMLDetailsElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showGradient, setShowGradient] = useState(false);
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const checkScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isScrollable = scrollHeight > clientHeight;
+      const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
+
+      // Show gradient only if content is scrollable AND not at the bottom
+      setShowGradient(isScrollable && !isAtBottom);
+    };
+
+    // Check initially
+    checkScroll();
+
+    // Check on scroll
+    container.addEventListener("scroll", checkScroll);
+
+    // Check on resize (in case content changes)
+    const resizeObserver = new ResizeObserver(checkScroll);
+    resizeObserver.observe(container);
+
+    return () => {
+      container.removeEventListener("scroll", checkScroll);
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   return (
     <details
@@ -66,8 +97,11 @@ export default function CategoryAccordion({
           />
         </svg>
       </summary>
-      <div className={styles.brandsWrapper}>
-        <div className={styles.inner}>
+      <div
+        className={styles.brandsWrapper}
+        data-show-gradient={showGradient}
+      >
+        <div ref={scrollContainerRef} className={styles.inner}>
           <div className={styles.brandsGrid}>
             {category.brands?.map((brand) => (
               <Link

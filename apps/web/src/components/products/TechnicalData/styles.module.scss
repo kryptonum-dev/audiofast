@@ -191,9 +191,123 @@
     }
   }
 
-  // Mobile multi-variant layout - hidden by default
+  // Scrollable multi-variant layout - hidden by default
+  // Used on mobile for all multi-variant, and on tablet for 4+ variants
   .mobileMultiVariant {
     display: none;
+  }
+
+  // Show scrollable layout on tablet for 4+ variants (rendered via JS)
+  &[data-many-variants] {
+    .mobileMultiVariant {
+      display: block;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background-color: var(--neutral-white, #ffffff);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .mobileHeader {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      background-color: var(--neutral-300, #e8e8e8);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .mobileVariantName {
+      flex: 0 0 auto;
+      width: 9rem;
+      padding: 0.875rem 0.75rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--neutral-700, #303030);
+      letter-spacing: 0.01em;
+    }
+
+    .mobileRow {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.odd {
+        background-color: var(--neutral-white, #ffffff);
+      }
+
+      &.even {
+        background-color: var(--neutral-100, #fafafa);
+      }
+    }
+
+    .mobileParamName {
+      padding: 0.75rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--neutral-700, #303030);
+      line-height: 1.4;
+      background-color: rgba(0, 0, 0, 0.02);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .mobileValues {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .mobileValueCell {
+      flex: 0 0 auto;
+      width: 9rem;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      text-align: center;
+      color: var(--neutral-black, #000000);
+      line-height: 1.5;
+
+      > p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      strong {
+        font-weight: 500;
+      }
+
+      ul,
+      ol {
+        margin: 0;
+        padding-left: 1rem;
+        text-align: left;
+        font-size: 0.8125rem;
+      }
+
+      li {
+        margin-top: 0.125rem;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .emptyValue {
+      color: var(--neutral-400, #a0a0a0);
+    }
   }
 
   // Tablet breakpoint
@@ -267,6 +381,31 @@
             }
           }
         }
+      }
+    }
+
+    // For 4+ variants on tablet, adjust scrollable layout sizing
+    &[data-many-variants] {
+      .mobileVariantName {
+        width: 8.5rem;
+        padding: 0.75rem 0.625rem;
+        font-size: 0.75rem;
+      }
+
+      .mobileValueCell {
+        width: 8.5rem;
+        padding: 0.625rem 0.5rem;
+        font-size: 0.8125rem;
+
+        ul,
+        ol {
+          font-size: 0.75rem;
+        }
+      }
+
+      .mobileParamName {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.75rem;
       }
     }
   }

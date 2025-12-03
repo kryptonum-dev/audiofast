@@ -45,7 +45,8 @@ export const productsCarousel = defineType({
                 : selectedIds;
 
               return {
-                filter: '!(_id in $excludedIds) && !(_id in path("drafts.**"))',
+                filter:
+                  '!(_id in $excludedIds) && !(_id in path("drafts.**")) && isArchived != true',
                 params: { excludedIds },
               };
             },

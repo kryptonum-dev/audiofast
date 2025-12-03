@@ -31,6 +31,8 @@ type ContentItem = {
   destinationType?: 'page' | 'pdf' | 'external' | null; // review types
   openInNewTab?: boolean; // for external/pdf reviews
   _createdAt: string;
+  publishedDate?: string; // override date (if set)
+  publishDate: string; // computed: coalesce(publishedDate, _createdAt)
 };
 
 type GroupedContent = {
@@ -64,10 +66,11 @@ export default function NewsletterTool() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   // 1. Fetch Content
+  // Uses publishedDate (override) if available, otherwise falls back to _createdAt
   const fetchContent = async () => {
     setIsLoading(true);
     try {
-      const query = `*[_type in ["blog-article", "review", "product"] && !(_id in path("drafts.**")) && _createdAt >= $startDate && _createdAt <= $endDate + "T23:59:59Z"] | order(_createdAt desc) {
+      const query = `*[_type in ["blog-article", "review", "product"] && !(_id in path("drafts.**")) && coalesce(publishedDate, _createdAt) >= $startDate && coalesce(publishedDate, _createdAt) <= $endDate + "T23:59:59Z"] | order(coalesce(publishedDate, _createdAt) desc) {
         _id,
         _type,
         "title": pt::text(title),
@@ -99,7 +102,9 @@ export default function NewsletterTool() {
           _type == "review" && destinationType == "pdf" => true,
           false
         ),
-        _createdAt
+        _createdAt,
+        publishedDate,
+        "publishDate": coalesce(publishedDate, _createdAt)
       }`;
 
       const result = await client.fetch<ContentItem[]>(query, {
@@ -377,7 +382,7 @@ function ContentGroup({
                 {item.title || item.name}
               </Text>
               <Text size={1} muted textOverflow="ellipsis">
-                {new Date(item._createdAt).toLocaleDateString('pl-PL')} •{' '}
+                {new Date(item.publishDate).toLocaleDateString('pl-PL')} •{' '}
                 {item.shortDescription ||
                   item.description?.substring(0, 60) ||
                   'Brak opisu'}

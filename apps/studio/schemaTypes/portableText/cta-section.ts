@@ -46,7 +46,8 @@ export const ptCtaSection = defineType({
                     .filter(Boolean)
                 : [];
               return {
-                filter: '!(_id in path("drafts.**")) && !(_id in $selectedIds)',
+                filter:
+                  '!(_id in path("drafts.**")) && !(_id in $selectedIds) && isArchived != true',
                 params: { selectedIds },
               };
             },

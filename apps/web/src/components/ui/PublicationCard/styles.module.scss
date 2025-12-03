@@ -1,5 +1,6 @@
 .publicationCard {
   align-self: stretch;
+  height: 100%;
   .link {
     display: flex;
     flex-direction: column;
@@ -15,7 +16,7 @@
 
     // Subtle background glow effect
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
@@ -35,7 +36,7 @@
 
       img {
         width: 100%;
-        aspect-ratio: 1;
+        max-height: 280px;
         object-fit: cover;
         transition: transform 340ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
       }
@@ -48,9 +49,9 @@
       grid-template-rows: repeat(2, auto) 1fr;
       gap: 0.5rem;
       grid-template-areas:
-        "date publicationType"
-        "title title"
-        "button button";
+        'date publicationType'
+        'title title'
+        'button button';
       position: relative;
       z-index: 2; // Above the glow effect
       transition: transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -92,16 +93,16 @@
     }
   }
 
-  &[data-layout="vertical"] {
+  &[data-layout='vertical'] {
     .link {
       .content {
         grid-template-columns: auto 1fr;
         align-items: center;
         column-gap: 0.5rem;
         grid-template-areas:
-          "publicationType date"
-          "title title"
-          "button button";
+          'publicationType date'
+          'title title'
+          'button button';
 
         > span:nth-of-type(2) {
           justify-self: end;
@@ -123,16 +124,16 @@
     }
   }
 
-  &[data-layout="horizontal"] {
+  &[data-layout='horizontal'] {
     .link {
       .content {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(2, auto) 1fr;
         gap: 0.75rem;
         grid-template-areas:
-          "publicationType"
-          "title"
-          "date";
+          'publicationType'
+          'title'
+          'date';
 
         > span:first-of-type {
           justify-self: start;

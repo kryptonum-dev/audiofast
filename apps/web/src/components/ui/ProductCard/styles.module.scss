@@ -18,7 +18,7 @@
       position: relative;
 
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         left: 0.25rem;
         top: 0.75rem;
@@ -34,6 +34,9 @@
         &:first-of-type {
           object-fit: contain;
           transition: transform 340ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          max-width: 90%;
+          max-height: 80%;
+          margin: auto;
         }
 
         &:last-of-type {
@@ -111,7 +114,7 @@
           }
         }
 
-        &[data-current-state="added"] {
+        &[data-current-state='added'] {
           span {
             background-color: rgba(0, 145, 22, 0.1);
             color: var(--primary-success, #009116);
@@ -123,7 +126,7 @@
           }
         }
 
-        &[data-current-state="in-comparison"] {
+        &[data-current-state='in-comparison'] {
           span {
             background-color: rgba(254, 1, 64, 0.1);
             color: var(--primary-red, #fe0140);
@@ -200,7 +203,7 @@
           grid-area: button;
         }
 
-        &[data-layout="vertical"] {
+        &[data-layout='vertical'] {
           flex-direction: column;
 
           .price,
