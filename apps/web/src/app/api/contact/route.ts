@@ -1,17 +1,17 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
 
 import {
   FALLBACK_EMAIL_BODY,
   FALLBACK_EMAIL_SUBJECT,
   FALLBACK_SUPPORT_EMAIL,
-} from '@/global/constants';
-import { sanityFetch } from '@/global/sanity/fetch';
-import { queryContactSettings } from '@/global/sanity/query';
-import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
-import type { PortableTextProps } from '@/global/types';
-import { portableTextToHtml } from '@/global/utils';
+} from "@/global/constants";
+import { sanityFetch } from "@/global/sanity/fetch";
+import { queryContactSettings } from "@/global/sanity/query";
+import type { QueryContactSettingsResult } from "@/global/sanity/sanity.types";
+import type { PortableTextProps } from "@/global/types";
+import { portableTextToHtml } from "@/global/utils";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const RESEND_FROM_EMAIL =
@@ -35,7 +35,7 @@ type ContactSettingsType = {
 
 // Get contact settings with fallbacks
 function getContactConfig(
-  contactSettings: NonNullable<QueryContactSettingsResult>
+  contactSettings: NonNullable<QueryContactSettingsResult>,
 ): ContactSettingsType {
   // Use fallback if contact settings are not available
 
@@ -47,7 +47,7 @@ function getContactConfig(
     contactSettings.confirmationEmail?.subject || FALLBACK_EMAIL_SUBJECT;
   const content =
     portableTextToHtml(
-      contactSettings.confirmationEmail?.content as PortableTextProps
+      contactSettings.confirmationEmail?.content as PortableTextProps,
     ) || FALLBACK_EMAIL_BODY;
 
   return {
@@ -62,11 +62,11 @@ function getContactConfig(
 // Escape HTML to prevent injection
 function escapeHtml(text: string): string {
   const htmlEscapeMap: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
   };
   return text.replace(/[&<>"']/g, (char) => htmlEscapeMap[char] || char);
 }
@@ -74,12 +74,12 @@ function escapeHtml(text: string): string {
 // Replace placeholders in text
 function replacePlaceholders(
   text: string,
-  variables: { name?: string; email?: string; message?: string }
+  variables: { name?: string; email?: string; message?: string },
 ): string {
   return text
-    .replace(/\{\{name\}\}/g, escapeHtml(variables.name || ''))
-    .replace(/\{\{email\}\}/g, escapeHtml(variables.email || ''))
-    .replace(/\{\{message\}\}/g, escapeHtml(variables.message || ''));
+    .replace(/\{\{name\}\}/g, escapeHtml(variables.name || ""))
+    .replace(/\{\{email\}\}/g, escapeHtml(variables.email || ""))
+    .replace(/\{\{message\}\}/g, escapeHtml(variables.message || ""));
 }
 
 // Create email HTML wrapper
@@ -101,10 +101,10 @@ function createEmailHTML(body: string): string {
 export async function POST(request: NextRequest) {
   // Validate Resend is configured
   if (!RESEND_API_KEY) {
-    console.error('[Contact API] RESEND_API_KEY not configured');
+    console.error("[Contact API] RESEND_API_KEY not configured");
     return NextResponse.json(
-      { success: false, message: 'Email service not configured' },
-      { status: 500 }
+      { success: false, message: "Email service not configured" },
+      { status: 500 },
     );
   }
 
@@ -114,16 +114,16 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, message: 'Invalid JSON' },
-      { status: 400 }
+      { success: false, message: "Invalid JSON" },
+      { status: 400 },
     );
   }
 
   // Validate required fields
   if (!body.email || !body.consent) {
     return NextResponse.json(
-      { success: false, message: 'Email and consent are required' },
-      { status: 400 }
+      { success: false, message: "Email and consent are required" },
+      { status: 400 },
     );
   }
 
@@ -132,10 +132,10 @@ export async function POST(request: NextRequest) {
   try {
     contactSettings = await sanityFetch<QueryContactSettingsResult>({
       query: queryContactSettings,
-      tags: ['settings'],
+      tags: ["settings"],
     });
   } catch (error) {
-    console.error('[Contact API] Failed to fetch contact settings', error);
+    console.error("[Contact API] Failed to fetch contact settings", error);
   }
 
   const emailConfig = getContactConfig(contactSettings!);
@@ -145,28 +145,28 @@ export async function POST(request: NextRequest) {
 
   // Prepare variables for template replacement
   const variables = {
-    name: body.name || '',
+    name: body.name || "",
     email: body.email,
-    message: body.message || '',
+    message: body.message || "",
   };
 
   // Render confirmation email content
   const confirmationSubject = replacePlaceholders(
     emailConfig.confirmationEmail.subject,
-    variables
+    variables,
   );
   const confirmationBody = replacePlaceholders(
     emailConfig.confirmationEmail.content,
-    variables
+    variables,
   );
 
   // Build internal notification email
   const internalSubject = `Nowe zgłoszenie z formularza kontaktowego`;
   const internalBody = `
     <h2>Nowe zgłoszenie z formularza</h2>
-    ${body.name ? `<p><strong>Imię i nazwisko:</strong> ${escapeHtml(body.name)}</p>` : ''}
+    ${body.name ? `<p><strong>Imię i nazwisko:</strong> ${escapeHtml(body.name)}</p>` : ""}
     <p><strong>E-mail:</strong> ${escapeHtml(body.email)}</p>
-    ${body.message ? `<p><strong>Wiadomość:</strong><br>${escapeHtml(body.message).replace(/\n/g, '<br>')}</p>` : ''}
+    ${body.message ? `<p><strong>Wiadomość:</strong><br>${escapeHtml(body.message).replace(/\n/g, "<br>")}</p>` : ""}
 
   `;
 
@@ -192,31 +192,31 @@ export async function POST(request: NextRequest) {
     ]);
 
     // // Check if internal email succeeded (required)
-    if (internalResult.status === 'rejected') {
+    if (internalResult.status === "rejected") {
       console.error(
-        '[Contact API] Internal email failed',
-        internalResult.reason
+        "[Contact API] Internal email failed",
+        internalResult.reason,
       );
       return NextResponse.json(
-        { success: false, message: 'Failed to send notification email' },
-        { status: 500 }
+        { success: false, message: "Failed to send notification email" },
+        { status: 500 },
       );
     }
 
     // Log confirmation email result (optional, don't fail if it fails)
-    if (confirmationResult.status === 'rejected') {
+    if (confirmationResult.status === "rejected") {
       console.error(
-        '[Contact API] Confirmation email failed',
-        confirmationResult.reason
+        "[Contact API] Confirmation email failed",
+        confirmationResult.reason,
       );
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error('[Contact API] Email sending failed', error);
+    console.error("[Contact API] Email sending failed", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to send emails' },
-      { status: 500 }
+      { success: false, message: "Failed to send emails" },
+      { status: 500 },
     );
   }
 }

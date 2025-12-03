@@ -1,6 +1,6 @@
-import type { PortableTextBlock } from '@portabletext/react';
+import type { PortableTextBlock } from "@portabletext/react";
 
-import type { SanityProjectedImage } from '@/src/components/shared/Image';
+import type { SanityProjectedImage } from "@/src/components/shared/Image";
 
 /**
  * Cookie structure for storing comparison data
@@ -63,7 +63,7 @@ export type ComparisonProduct = {
     logo: SanityProjectedImage | null;
   };
   mainImage: SanityProjectedImage | null;
-  imageSource: 'preview' | 'gallery';
+  imageSource: "preview" | "gallery";
   technicalData: TechnicalData | null;
   categories: Array<{
     slug: string;

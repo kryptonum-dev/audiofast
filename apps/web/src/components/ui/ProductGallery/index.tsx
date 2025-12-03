@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import useEmblaCarousel from 'embla-carousel-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import useEmblaCarousel from "embla-carousel-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { SanityRawImage } from '../../shared/Image';
-import Image from '../../shared/Image';
-import ArrowButton from '../ArrowButton';
-import styles from './styles.module.scss';
+import type { SanityRawImage } from "../../shared/Image";
+import Image from "../../shared/Image";
+import ArrowButton from "../ArrowButton";
+import styles from "./styles.module.scss";
 
 interface ProductGalleryProps {
   images: SanityRawImage[];
@@ -30,7 +30,7 @@ export default function ProductGallery({
 
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
     loop: true,
-    align: 'start',
+    align: "start",
     skipSnaps: false,
     watchDrag: canScroll,
   });
@@ -52,7 +52,7 @@ export default function ProductGallery({
         triggerAnimation();
       }
     },
-    [selectedIndex, triggerAnimation]
+    [selectedIndex, triggerAnimation],
   );
 
   const scrollPrev = useCallback(() => {
@@ -76,8 +76,8 @@ export default function ProductGallery({
     };
 
     checkOverflow();
-    window.addEventListener('resize', checkOverflow);
-    return () => window.removeEventListener('resize', checkOverflow);
+    window.addEventListener("resize", checkOverflow);
+    return () => window.removeEventListener("resize", checkOverflow);
   }, [images]);
 
   // Sync thumbnail carousel with selected index (only if scrollable)
@@ -98,7 +98,7 @@ export default function ProductGallery({
 
   if (!images || images.length === 0) return null;
 
-  const Element = isSection ? 'section' : 'div';
+  const Element = isSection ? "section" : "div";
 
   return (
     <Element

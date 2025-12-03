@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Button from '../Button';
-import styles from './styles.module.scss';
+import Button from "../Button";
+import styles from "./styles.module.scss";
 
 type ConfirmationModalProps = {
   isOpen: boolean;
@@ -21,18 +21,18 @@ export default function ConfirmationModal({
   onConfirm,
   title,
   message,
-  confirmText = 'Potwierdź',
-  cancelText = 'Anuluj',
+  confirmText = "Potwierdź",
+  cancelText = "Anuluj",
 }: ConfirmationModalProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === "Escape" && isOpen) {
         onClose();
       }
     };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;

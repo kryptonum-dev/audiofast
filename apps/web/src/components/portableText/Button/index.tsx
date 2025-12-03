@@ -1,12 +1,12 @@
-import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import type { PortableTextTypeComponentProps } from "@portabletext/react";
 
-import type { PortableTextProps } from '@/src/global/types';
+import type { PortableTextProps } from "@/src/global/types";
 
-import ButtonComponent from '../../ui/Button';
-import styles from './styles.module.scss';
+import ButtonComponent from "../../ui/Button";
+import styles from "./styles.module.scss";
 
 type ButtonValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptButton';
+  _type: "ptButton";
 };
 
 export function ButtonPortableTextComponent({

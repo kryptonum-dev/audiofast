@@ -1,7 +1,7 @@
-import type { MetadataRoute } from 'next';
+import type { MetadataRoute } from "next";
 
-import { BASE_URL } from '@/global/constants';
-import { sanityFetch } from '@/global/sanity/fetch';
+import { BASE_URL } from "@/global/constants";
+import { sanityFetch } from "@/global/sanity/fetch";
 import {
   queryAllBlogCategorySlugsForSitemap,
   queryAllBlogPostSlugsForSitemap,
@@ -10,7 +10,7 @@ import {
   queryAllProductCategorySlugsForSitemap,
   queryAllProductSlugsForSitemap,
   queryAllReviewSlugsForSitemap,
-} from '@/global/sanity/query';
+} from "@/global/sanity/query";
 
 type SitemapEntry = {
   slug: string;
@@ -29,44 +29,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ] = await Promise.all([
     sanityFetch<SitemapEntry[]>({
       query: queryAllPageSlugsForSitemap,
-      tags: ['page'],
+      tags: ["page"],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllBlogPostSlugsForSitemap,
-      tags: ['blog-article'],
+      tags: ["blog-article"],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllBrandSlugsForSitemap,
-      tags: ['brand'],
+      tags: ["brand"],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllProductSlugsForSitemap,
-      tags: ['product'],
+      tags: ["product"],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllReviewSlugsForSitemap,
-      tags: ['review'],
+      tags: ["review"],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllBlogCategorySlugsForSitemap,
-      tags: ['blog-category'],
+      tags: ["blog-category"],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllProductCategorySlugsForSitemap,
-      tags: ['productCategorySub'],
+      tags: ["productCategorySub"],
     }),
   ]);
 
   // Static routes that are always present
   const staticRoutes = [
-    '/',
-    '/blog/',
-    '/certyfikowany-sprzet-uzywany/',
-    '/marki/',
-    '/polityka-prywatnosci/',
-    '/porownaj/',
-    '/produkty/',
-    '/regulamin/',
+    "/",
+    "/blog/",
+    "/certyfikowany-sprzet-uzywany/",
+    "/marki/",
+    "/polityka-prywatnosci/",
+    "/porownaj/",
+    "/produkty/",
+    "/regulamin/",
   ].map((route) => ({
     url: `${BASE_URL}${route}`,
     lastModified: new Date().toISOString(),
@@ -74,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const dynamicRoutes: MetadataRoute.Sitemap = [
     ...pages.map((entry) => ({
-      url: `${BASE_URL}/${entry.slug.replace(/^\//, '')}`,
+      url: `${BASE_URL}/${entry.slug.replace(/^\//, "")}`,
       lastModified: entry._updatedAt,
     })),
     ...blogPosts.map((entry) => ({

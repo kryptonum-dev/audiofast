@@ -29,7 +29,7 @@
       isolation: isolate;
 
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
@@ -74,7 +74,7 @@
 
         &::before,
         &::after {
-          content: '';
+          content: "";
           background-color: var(--neutral-white, #ffffff);
           height: 100%;
           width: calc(50% - 2px);
@@ -89,7 +89,7 @@
         }
       }
 
-      &[data-active-tab='bestsellers'] {
+      &[data-active-tab="bestsellers"] {
         &::before {
           transform: translateX(calc(100% + 2px));
           border-radius: 0 999rem 999rem 0;

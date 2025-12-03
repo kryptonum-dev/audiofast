@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import type { FieldErrors } from 'react-hook-form';
+import type { FieldErrors } from "react-hook-form";
 
-import Error from '../Error';
-import styles from './styles.module.scss';
+import Error from "../Error";
+import styles from "./styles.module.scss";
 
 type Props = {
   register: {
@@ -11,7 +11,7 @@ type Props = {
   };
   errors: FieldErrors | string;
   label: React.ReactNode;
-  mode?: 'light' | 'dark';
+  mode?: "light" | "dark";
   disabled?: boolean;
 } & React.LabelHTMLAttributes<HTMLLabelElement>;
 
@@ -19,20 +19,20 @@ export default function Checkbox({
   register,
   errors,
   label,
-  mode = 'light',
+  mode = "light",
   disabled = false,
   ...props
 }: Props) {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       const target = event.target as HTMLInputElement;
       target.checked = !target.checked;
-      event.target.dispatchEvent(new Event('change', { bubbles: true }));
+      event.target.dispatchEvent(new Event("change", { bubbles: true }));
     }
   };
   const errorMessage =
-    typeof errors === 'string'
+    typeof errors === "string"
       ? errors
       : (errors[register.name]?.message as string);
   return (

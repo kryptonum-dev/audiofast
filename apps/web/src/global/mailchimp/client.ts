@@ -1,11 +1,11 @@
-import mailchimp from '@mailchimp/mailchimp_marketing';
+import mailchimp from "@mailchimp/mailchimp_marketing";
 
 const MAILCHIMP_API_KEY = process.env.MAILCHIMP_API_KEY;
 const MAILCHIMP_SERVER_PREFIX = process.env.MAILCHIMP_SERVER_PREFIX;
 
 if (!MAILCHIMP_API_KEY || !MAILCHIMP_SERVER_PREFIX) {
   console.warn(
-    '[Mailchimp] Missing API credentials. Newsletter signup will be disabled.'
+    "[Mailchimp] Missing API credentials. Newsletter signup will be disabled.",
   );
 }
 

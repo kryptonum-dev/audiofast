@@ -5,11 +5,11 @@
  * @type {string}
  */
 export const BASE_URL: string =
-  process.env.VERCEL_ENV === 'production'
+  process.env.VERCEL_ENV === "production"
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : process.env.VERCEL_ENV === 'preview'
+    : process.env.VERCEL_ENV === "preview"
       ? `https://${process.env.VERCEL_URL}`
-      : 'http://localhost:3000';
+      : "http://localhost:3000";
 
 /**
  * Global declaration of the site title for the application.
@@ -17,7 +17,7 @@ export const BASE_URL: string =
  * @constant
  * @type {string}
  */
-export const SITE_TITLE: string = 'Audiofast';
+export const SITE_TITLE: string = "Audiofast";
 
 /**
  * Global declaration of the site description for the application.
@@ -26,7 +26,7 @@ export const SITE_TITLE: string = 'Audiofast';
  * @type {string}
  */
 export const SITE_DESCRIPTION: string =
-  'Jesteśmy dystrybutorem sprzętu audio klasy premium. Oferujemy wyłącznie starannie wyselekcjonowane marki, które łączą technologiczną precyzję z zapewnieniem doskonałego dźwięku.';
+  "Jesteśmy dystrybutorem sprzętu audio klasy premium. Oferujemy wyłącznie starannie wyselekcjonowane marki, które łączą technologiczną precyzję z zapewnieniem doskonałego dźwięku.";
 
 /**
  * Global environment detection for production deployment.
@@ -35,7 +35,7 @@ export const SITE_DESCRIPTION: string =
  * @type {boolean}
  */
 export const IS_PRODUCTION_DEPLOYMENT: boolean =
-  process.env.VERCEL_ENV === 'production';
+  process.env.VERCEL_ENV === "production";
 
 /**
  * Global declaration of regex.
@@ -72,11 +72,11 @@ export const PRODUCTS_ITEMS_PER_PAGE: number = 8;
  * @type {Array<{value: string, label: string}>}
  */
 export const PRODUCT_SORT_OPTIONS: { value: string; label: string }[] = [
-  { value: 'orderRank', label: 'Od najważniejszych' },
-  { value: 'newest', label: 'Od najnowszych' },
-  { value: 'oldest', label: 'Od najstarszych' },
-  { value: 'priceAsc', label: 'Cena: od najniższej' },
-  { value: 'priceDesc', label: 'Cena: od najwyższej' },
+  { value: "orderRank", label: "Od najważniejszych" },
+  { value: "newest", label: "Od najnowszych" },
+  { value: "oldest", label: "Od najstarszych" },
+  { value: "priceAsc", label: "Cena: od najniższej" },
+  { value: "priceDesc", label: "Cena: od najwyższej" },
 ];
 
 /**
@@ -85,8 +85,8 @@ export const PRODUCT_SORT_OPTIONS: { value: string; label: string }[] = [
  * @type {{value: string, label: string}}
  */
 export const RELEVANCE_SORT_OPTION: { value: string; label: string } = {
-  value: 'relevance',
-  label: 'Trafność',
+  value: "relevance",
+  label: "Trafność",
 };
 
 /**
@@ -95,14 +95,14 @@ export const RELEVANCE_SORT_OPTION: { value: string; label: string } = {
  * @type {string}
  */
 export const FALLBACK_SUPPORT_EMAIL: string =
-  process.env.RESEND_FROM_EMAIL || 'noreply@audiofast.pl';
+  process.env.RESEND_FROM_EMAIL || "noreply@audiofast.pl";
 
 /**
  * Fallback email subject for confirmation emails when newsletter settings are not configured
  * @constant
  * @type {string}
  */
-export const FALLBACK_EMAIL_SUBJECT: string = 'Dziękujemy za kontakt';
+export const FALLBACK_EMAIL_SUBJECT: string = "Dziękujemy za kontakt";
 
 /**
  * Fallback email body text for confirmation emails when newsletter settings are not configured
@@ -110,4 +110,4 @@ export const FALLBACK_EMAIL_SUBJECT: string = 'Dziękujemy za kontakt';
  * @type {string}
  */
 export const FALLBACK_EMAIL_BODY: string =
-  '<p>Otrzymaliśmy Twoją wiadomość i skontaktujemy się z Tobą wkrótce.</p>';
+  "<p>Otrzymaliśmy Twoją wiadomość i skontaktujemy się z Tobą wkrótce.</p>";

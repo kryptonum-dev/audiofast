@@ -1,24 +1,24 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import PortableText from '@/src/components/portableText';
-import Button from '@/src/components/ui/Button';
-import type { QueryFooterResult } from '@/src/global/sanity/sanity.types';
-import type { PortableTextProps } from '@/src/global/types';
+import PortableText from "@/src/components/portableText";
+import Button from "@/src/components/ui/Button";
+import type { QueryFooterResult } from "@/src/global/sanity/sanity.types";
+import type { PortableTextProps } from "@/src/global/types";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
-type FormState = 'idle' | 'loading' | 'success' | 'error';
+type FormState = "idle" | "loading" | "success" | "error";
 
 // Extract the formState type to handle the deeply nested nullable structure
 export type FormStateData = NonNullable<
-  NonNullable<QueryFooterResult>['newsletter']
->['formState'];
+  NonNullable<QueryFooterResult>["newsletter"]
+>["formState"];
 
 interface FormStatesProps {
   formState: FormState;
   formStateData?: FormStateData;
   onRefresh?: () => void;
-  mode?: 'light' | 'dark';
+  mode?: "light" | "dark";
   className?: string;
 }
 
@@ -29,11 +29,11 @@ interface StateContentProps {
   refreshButton?: boolean;
   refreshButtonText?: string;
   onRefresh?: () => void;
-  mode?: 'light' | 'dark';
+  mode?: "light" | "dark";
 }
 
 // Loading Component
-const LoadingState = ({ mode = 'light' }: { mode?: 'light' | 'dark' }) => (
+const LoadingState = ({ mode = "light" }: { mode?: "light" | "dark" }) => (
   <div className={styles.loading} data-mode={mode}>
     <div className={styles.loadingSpinner}>
       <div className={styles.spinner}>
@@ -58,7 +58,7 @@ const SuccessState = ({
   refreshButton = false,
   refreshButtonText,
   onRefresh,
-  mode = 'light',
+  mode = "light",
 }: StateContentProps) => (
   <div className={styles.success} data-mode={mode}>
     <div className={styles.wrapper}>
@@ -86,9 +86,9 @@ const ErrorState = ({
   heading,
   paragraph,
   refreshButton = true,
-  refreshButtonText = 'Try again',
+  refreshButtonText = "Try again",
   onRefresh,
-  mode = 'light',
+  mode = "light",
 }: StateContentProps) => (
   <div className={styles.error} data-mode={mode}>
     <div className={styles.wrapper}>
@@ -114,15 +114,15 @@ export default function FormStates({
   formState,
   formStateData,
   onRefresh,
-  mode = 'light',
+  mode = "light",
   className,
 }: FormStatesProps) {
   const currentStateContent = useMemo(() => {
     switch (formState) {
-      case 'loading':
+      case "loading":
         return <LoadingState mode={mode} />;
 
-      case 'success':
+      case "success":
         return (
           <SuccessState
             {...(formStateData!.success as StateContentProps)}
@@ -131,7 +131,7 @@ export default function FormStates({
           />
         );
 
-      case 'error':
+      case "error":
         return (
           <ErrorState
             {...(formStateData!.error as StateContentProps)}
@@ -145,13 +145,13 @@ export default function FormStates({
     }
   }, [formState, formStateData, onRefresh, mode]);
 
-  if (formState === 'idle' || !currentStateContent) {
+  if (formState === "idle" || !currentStateContent) {
     return null;
   }
 
   return (
     <div
-      className={`${styles.formStatesWrapper} ${className || ''}`}
+      className={`${styles.formStatesWrapper} ${className || ""}`}
       data-mode={mode}
     >
       {currentStateContent}

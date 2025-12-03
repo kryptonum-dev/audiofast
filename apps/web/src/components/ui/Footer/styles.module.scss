@@ -15,8 +15,8 @@
   justify-content: space-between;
   overflow: hidden;
   grid-template-areas:
-    'logo links-1 links-2 newsletter'
-    'logo additionals cookies newsletter';
+    "logo links-1 links-2 newsletter"
+    "logo additionals cookies newsletter";
 
   .logoContainer {
     grid-area: logo;
@@ -34,7 +34,7 @@
         position: relative;
 
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           min-width: 2.75rem;
           aspect-ratio: 1/1;
@@ -94,7 +94,7 @@
 
       // Subtle background glow (mirrors header effect)
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         right: 0;
@@ -112,7 +112,7 @@
 
       // Fluid underline that grows from left to right
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         left: 0.5rem;
         right: 0.5rem;
@@ -209,7 +209,7 @@
       margin-bottom: 0.5rem;
     }
 
-    button[type='submit'] {
+    button[type="submit"] {
       margin-top: 1rem;
     }
 
@@ -243,9 +243,9 @@
     grid-template-columns: repeat(3, auto);
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
-      'logo logo logo'
-      'links-1 links-2 newsletter'
-      'additionals cookies newsletter';
+      "logo logo logo"
+      "links-1 links-2 newsletter"
+      "additionals cookies newsletter";
 
     .logoContainer {
       flex-direction: row;
@@ -261,9 +261,9 @@
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: auto auto 1fr;
     grid-template-areas:
-      'logo logo newsletter newsletter newsletter newsletter'
-      'links-1 links-1 links-1 links-2 links-2 links-2'
-      'additionals additionals additionals cookies cookies cookies';
+      "logo logo newsletter newsletter newsletter newsletter"
+      "links-1 links-1 links-1 links-2 links-2 links-2"
+      "additionals additionals additionals cookies cookies cookies";
 
     .logoContainer {
       flex-direction: column;
@@ -289,10 +289,10 @@
     grid-template-columns: repeat(2, auto);
     grid-template-rows: repeat(3, auto) 1fr;
     grid-template-areas:
-      'logo logo'
-      'newsletter newsletter'
-      'links-1 links-2'
-      'additionals cookies';
+      "logo logo"
+      "newsletter newsletter"
+      "links-1 links-2"
+      "additionals cookies";
 
     .logoContainer {
       flex-direction: row;
@@ -325,19 +325,19 @@
     grid-template-rows: repeat(5, auto) 1fr;
     gap: 0;
     grid-template-areas:
-      'logo'
-      'newsletter'
-      'links-1'
-      'links-2'
-      'additionals'
-      'cookies';
+      "logo"
+      "newsletter"
+      "links-1"
+      "links-2"
+      "additionals"
+      "cookies";
 
     .logoContainer,
     .newsletter {
       margin-bottom: 2rem;
     }
 
-    .newsletter .newsletterForm button[type='submit'] {
+    .newsletter .newsletterForm button[type="submit"] {
       max-width: 20rem;
       width: 100%;
     }

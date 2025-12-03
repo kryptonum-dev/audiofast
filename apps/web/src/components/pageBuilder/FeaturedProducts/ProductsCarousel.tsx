@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import type { EmblaCarouselType } from 'embla-carousel';
-import useEmblaCarousel from 'embla-carousel-react';
-import { useEffect } from 'react';
+import type { EmblaCarouselType } from "embla-carousel";
+import useEmblaCarousel from "embla-carousel-react";
+import { useEffect } from "react";
 
-import type { ProductType } from '@/src/global/types';
+import type { ProductType } from "@/src/global/types";
 
-import ProductCard from '../../ui/ProductCard';
-import styles from './styles.module.scss';
+import ProductCard from "../../ui/ProductCard";
+import styles from "./styles.module.scss";
 
 interface ProductsCarouselProps {
   products: ProductType[];
-  sectionType: 'newProducts' | 'bestsellers';
+  sectionType: "newProducts" | "bestsellers";
   onApiChange?: (api: EmblaCarouselType) => void;
   index: number;
 }
@@ -23,7 +23,7 @@ export default function ProductsCarousel({
 }: ProductsCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: 'start',
+    align: "start",
     skipSnaps: false,
   });
 
@@ -41,10 +41,10 @@ export default function ProductsCarousel({
             imageSizes="(max-width: 27.4375rem) 286px, (max-width: 43.6875rem) 334px, (max-width: 56.1875rem) 41vw, (max-width: 69.9375rem) 300px, 405px"
             key={product._id}
             product={product}
-            headingLevel={index === 0 ? 'h2' : 'h3'}
+            headingLevel={index === 0 ? "h2" : "h3"}
             showButton={false}
             priority={index === 0 && idx === 0}
-            loading={index === 0 ? 'eager' : 'lazy'}
+            loading={index === 0 ? "eager" : "lazy"}
           />
         ))}
       </div>

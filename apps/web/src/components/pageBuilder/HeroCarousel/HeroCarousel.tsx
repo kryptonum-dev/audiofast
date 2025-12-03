@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import { getImageProps } from 'next/image';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getImageProps } from "next/image";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { type SanityRawImage } from '@/components/shared/Image';
-import ArrowButton from '@/components/ui/ArrowButton';
-import Button from '@/components/ui/Button';
-import PaginationDots from '@/components/ui/PaginationDots';
-import { urlFor } from '@/global/sanity/client';
-import type { PagebuilderType } from '@/global/types';
-import PortableText from '@/src/components/portableText';
+import { type SanityRawImage } from "@/components/shared/Image";
+import ArrowButton from "@/components/ui/ArrowButton";
+import Button from "@/components/ui/Button";
+import PaginationDots from "@/components/ui/PaginationDots";
+import { urlFor } from "@/global/sanity/client";
+import type { PagebuilderType } from "@/global/types";
+import PortableText from "@/src/components/portableText";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 export type HeroCarouselProps = Pick<
-  PagebuilderType<'heroCarousel'>,
-  'slides'
+  PagebuilderType<"heroCarousel">,
+  "slides"
 > & {
   index: number;
 };
@@ -30,9 +30,9 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const reducedMotion = useMemo(() => {
     return (
-      typeof window !== 'undefined' &&
+      typeof window !== "undefined" &&
       window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
     );
   }, []);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -50,10 +50,10 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
       clearTransitionTimer();
       transitionTimerRef.current = setTimeout(
         () => setIsTransitioning(false),
-        ms
+        ms,
       );
     },
-    [clearTransitionTimer]
+    [clearTransitionTimer],
   );
 
   const beginTransition = useCallback(() => {
@@ -87,7 +87,7 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
         beginTransition();
       }
     },
-    [count, activeIndex, isTransitioning, beginTransition, restartTransition]
+    [count, activeIndex, isTransitioning, beginTransition, restartTransition],
   );
 
   const next = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
@@ -135,8 +135,8 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
         startTimer();
       }
     };
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => document.removeEventListener('visibilitychange', onVisibility);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [startTimer, clearTimer]);
 
   // Cleanup transition timer on unmount
@@ -149,17 +149,17 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
   const onKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (!count) return;
-      if (e.key === 'ArrowLeft') {
+      if (e.key === "ArrowLeft") {
         e.preventDefault();
         clearTimer();
         prev();
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === "ArrowRight") {
         e.preventDefault();
         clearTimer();
         next();
       }
     },
-    [clearTimer, count, next, prev]
+    [clearTimer, count, next, prev],
   );
 
   const current = count ? slides![activeIndex] : undefined;
@@ -183,33 +183,33 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
     const desktopSrc = urlFor(sanitySource)
       .width(2120)
       .height(823)
-      .fit('crop')
-      .auto('format')
+      .fit("crop")
+      .auto("format")
       .url();
 
     // Mobile: 3:4 aspect ratio (e.g., 600x800)
     const mobileSrc = urlFor(sanitySource)
       .width(600)
       .height(800)
-      .fit('crop')
-      .auto('format')
+      .fit("crop")
+      .auto("format")
       .url();
 
     const mobile = getImageProps({
-      alt: '',
+      alt: "",
       src: mobileSrc,
       width: 600,
       height: 800,
-      sizes: '(min-width: 85.375rem) 1366px, 100vw',
+      sizes: "(min-width: 85.375rem) 1366px, 100vw",
       priority: index === 0,
     }).props;
 
     const desktop = getImageProps({
-      alt: '',
+      alt: "",
       src: desktopSrc,
       width: 1302,
       height: 556,
-      sizes: '(min-width: 85.375rem) 1366px, 100vw',
+      sizes: "(min-width: 85.375rem) 1366px, 100vw",
       priority: index === 0,
     }).props;
 
@@ -233,32 +233,32 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
     const desktopSrc = urlFor(sanitySource)
       .width(2120)
       .height(823)
-      .fit('crop')
-      .auto('format')
+      .fit("crop")
+      .auto("format")
       .url();
 
     // Mobile: 3:4 aspect ratio (e.g., 600x800)
     const mobileSrc = urlFor(sanitySource)
       .width(600)
       .height(800)
-      .fit('crop')
-      .auto('format')
+      .fit("crop")
+      .auto("format")
       .url();
 
     const mobile = getImageProps({
-      alt: '',
+      alt: "",
       src: mobileSrc,
       width: 600,
       height: 800,
-      sizes: '(min-width: 85.375rem) 1366px, 100vw',
+      sizes: "(min-width: 85.375rem) 1366px, 100vw",
     }).props;
 
     const desktop = getImageProps({
-      alt: '',
+      alt: "",
       src: desktopSrc,
       width: 1302,
       height: 556,
-      sizes: '(min-width: 85.375rem) 1366px, 100vw',
+      sizes: "(min-width: 85.375rem) 1366px, 100vw",
     }).props;
 
     return { mobile, desktop };
@@ -296,7 +296,7 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
                   fetchPriority="high"
                   loading="eager"
                   decoding="async"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               }
             </picture>
@@ -320,7 +320,7 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
                   fetchPriority="high"
                   loading="eager"
                   decoding="async"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               }
             </picture>
@@ -354,11 +354,11 @@ export default function HeroCarousel({ slides, index }: HeroCarouselProps) {
                   headingLevel={
                     index === 0
                       ? i === 0
-                        ? 'h1'
-                        : 'h2'
+                        ? "h1"
+                        : "h2"
                       : i === 0
-                        ? 'h2'
-                        : 'h3'
+                        ? "h2"
+                        : "h3"
                   }
                 />
                 <PortableText

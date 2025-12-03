@@ -1,18 +1,18 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { sanityFetch } from '@/global/sanity/fetch';
-import { queryNavbar } from '@/global/sanity/query';
-import type { QueryNavbarResult } from '@/global/sanity/sanity.types';
-import LogoLink from '@/src/components/ui/LogoLink';
+import { sanityFetch } from "@/global/sanity/fetch";
+import { queryNavbar } from "@/global/sanity/query";
+import type { QueryNavbarResult } from "@/global/sanity/sanity.types";
+import LogoLink from "@/src/components/ui/LogoLink";
 
-import MobileNavToggle from './MobileNavToggle';
-import styles from './styles.module.scss';
+import MobileNavToggle from "./MobileNavToggle";
+import styles from "./styles.module.scss";
 
 export default async function Header() {
-  'use cache';
+  "use cache";
   const navbarData = await sanityFetch<QueryNavbarResult>({
     query: queryNavbar,
-    tags: ['navbar'],
+    tags: ["navbar"],
   });
 
   return (
@@ -38,8 +38,8 @@ export default async function Header() {
                 href={button.href!}
                 className={styles.navLink}
                 {...(button.openInNewTab && {
-                  target: '_blank',
-                  rel: 'noreferrer',
+                  target: "_blank",
+                  rel: "noreferrer",
                 })}
               >
                 {button.text}

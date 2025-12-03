@@ -1,24 +1,24 @@
-'use cache';
+"use cache";
 
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-import { ArticleBody } from '@/src/components/blog/ArticleBody';
-import BlogPostSchema from '@/src/components/schema/BlogPostSchema';
-import { PageBuilder } from '@/src/components/shared/PageBuilder';
-import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { ArticleBody } from "@/src/components/blog/ArticleBody";
+import BlogPostSchema from "@/src/components/schema/BlogPostSchema";
+import { PageBuilder } from "@/src/components/shared/PageBuilder";
+import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import { logWarn } from "@/src/global/logger";
+import { sanityFetch } from "@/src/global/sanity/fetch";
 import {
   queryAllBlogPostSlugs,
   queryBlogPostBySlug,
   querySettings,
-} from '@/src/global/sanity/query';
+} from "@/src/global/sanity/query";
 import type {
   QueryAllBlogPostSlugsResult,
   QueryBlogPostBySlugResult,
   QuerySettingsResult,
-} from '@/src/global/sanity/sanity.types';
-import { getSEOMetadata } from '@/src/global/seo';
+} from "@/src/global/sanity/sanity.types";
+import { getSEOMetadata } from "@/src/global/seo";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -28,18 +28,18 @@ async function fetchBlogPostData(slug: string) {
   return await sanityFetch<QueryBlogPostBySlugResult>({
     query: queryBlogPostBySlug,
     params: { slug: `/blog/${slug}/` },
-    tags: ['blog-article'],
+    tags: ["blog-article"],
   });
 }
 
 export async function generateStaticParams() {
   const posts = await sanityFetch<QueryAllBlogPostSlugsResult>({
     query: queryAllBlogPostSlugs,
-    tags: ['blog-article'],
+    tags: ["blog-article"],
   });
 
   return posts.map((post) => ({
-    slug: post.slug!.replace('/blog/', '').replace(/\/$/, ''),
+    slug: post.slug!.replace("/blog/", "").replace(/\/$/, ""),
   }));
 }
 
@@ -72,13 +72,13 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
   // Fetch settings for structured data publisher info
   const settings = await sanityFetch<QuerySettingsResult>({
     query: querySettings,
-    tags: ['settings'],
+    tags: ["settings"],
   });
 
   const breadcrumbsData = [
     {
-      name: 'Blog',
-      path: '/blog',
+      name: "Blog",
+      path: "/blog",
     },
     {
       name: pageData.name!,

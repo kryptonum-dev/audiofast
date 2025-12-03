@@ -1,6 +1,6 @@
-import { BASE_URL } from '@/src/global/constants';
-import type { PortableTextProps } from '@/src/global/types';
-import { portableTextToPlainString } from '@/src/global/utils';
+import { BASE_URL } from "@/src/global/constants";
+import type { PortableTextProps } from "@/src/global/types";
+import { portableTextToPlainString } from "@/src/global/utils";
 
 type Props = {
   name: string;
@@ -31,13 +31,13 @@ export default function CollectionPageSchema({
     : undefined;
 
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    '@id': `${fullUrl}#collectionpage`,
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${fullUrl}#collectionpage`,
     url: fullUrl,
     name,
     ...(plainDescription && { description: plainDescription }),
-    inLanguage: 'pl-PL',
+    inLanguage: "pl-PL",
   };
 
   return (

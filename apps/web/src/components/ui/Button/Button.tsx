@@ -1,73 +1,73 @@
-import Link from 'next/link';
-import { useMemo } from 'react';
+import Link from "next/link";
+import { useMemo } from "react";
 
-import styles from './Button.module.scss';
+import styles from "./Button.module.scss";
 
 export type Props = React.HTMLAttributes<HTMLAnchorElement> &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string | React.ReactNode;
     children?: React.ReactNode;
-    variant?: 'primary' | 'secondary' | null;
+    variant?: "primary" | "secondary" | null;
     openInNewTab?: boolean | null;
     className?: string;
     href?: string | null;
     iconUsed?:
-      | 'arrowUp'
-      | 'arrowDown'
-      | 'arrowLeft'
-      | 'arrowRight'
-      | 'refresh'
-      | 'submit'
-      | 'phone'
-      | 'clearFilters'
-      | 'applyFilters'
-      | 'information'
-      | 'trash';
+      | "arrowUp"
+      | "arrowDown"
+      | "arrowLeft"
+      | "arrowRight"
+      | "refresh"
+      | "submit"
+      | "phone"
+      | "clearFilters"
+      | "applyFilters"
+      | "information"
+      | "trash";
   };
 
 export default function Button({
   children,
   text,
-  variant = 'primary',
+  variant = "primary",
   openInNewTab = false,
   className,
   href,
-  iconUsed = 'arrowUp',
+  iconUsed = "arrowUp",
   ...props
 }: Props) {
-  const Element = href ? Link : 'button';
+  const Element = href ? Link : "button";
   const renderedProps = {
     ...(href && { href }),
-    ...(openInNewTab && { target: '_blank', rel: 'noreferrer' }),
-    'data-variant': variant,
-    'data-icon': iconUsed,
-    className: `${styles.Button}${className ? ` ${className}` : ''}`,
+    ...(openInNewTab && { target: "_blank", rel: "noreferrer" }),
+    "data-variant": variant,
+    "data-icon": iconUsed,
+    className: `${styles.Button}${className ? ` ${className}` : ""}`,
     ...props,
   };
 
   const icon = useMemo(() => {
     switch (iconUsed) {
-      case 'arrowUp':
+      case "arrowUp":
         return <ArrowUp />;
-      case 'arrowDown':
+      case "arrowDown":
         return <ArrowUp />;
-      case 'arrowLeft':
+      case "arrowLeft":
         return <ArrowUp />;
-      case 'arrowRight':
+      case "arrowRight":
         return <ArrowUp />;
-      case 'refresh':
+      case "refresh":
         return <RefreshIcon />;
-      case 'submit':
+      case "submit":
         return <SubmitIcon />;
-      case 'phone':
+      case "phone":
         return <PhoneIcon />;
-      case 'clearFilters':
+      case "clearFilters":
         return <ClearFiltersIcon />;
-      case 'applyFilters':
+      case "applyFilters":
         return <ApplyFiltersIcon />;
-      case 'information':
+      case "information":
         return <InformationIcon />;
-      case 'trash':
+      case "trash":
         return <TrashIcon />;
       default:
         return <ArrowUp />;
@@ -79,11 +79,11 @@ export default function Button({
     <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
         {icon}
-        {iconUsed !== 'phone' &&
-          iconUsed !== 'clearFilters' &&
-          iconUsed !== 'applyFilters' &&
-          iconUsed !== 'information' &&
-          iconUsed !== 'trash' &&
+        {iconUsed !== "phone" &&
+          iconUsed !== "clearFilters" &&
+          iconUsed !== "applyFilters" &&
+          iconUsed !== "information" &&
+          iconUsed !== "trash" &&
           icon}
       </div>
       <div className={styles.textContainer}>

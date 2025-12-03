@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 export type ErrorTypes = {
   children: React.ReactNode;

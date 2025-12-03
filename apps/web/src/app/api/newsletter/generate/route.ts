@@ -1,16 +1,16 @@
-import { render } from '@react-email/render';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { render } from "@react-email/render";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-import type { NewsletterContent } from '@/src/emails/newsletter-template';
-import NewsletterTemplate from '@/src/emails/newsletter-template';
-import { mailchimpClient } from '@/src/global/mailchimp/client';
-import { client } from '@/src/global/sanity/client';
-import { queryMailchimpSettings } from '@/src/global/sanity/query';
+import type { NewsletterContent } from "@/src/emails/newsletter-template";
+import NewsletterTemplate from "@/src/emails/newsletter-template";
+import { mailchimpClient } from "@/src/global/mailchimp/client";
+import { client } from "@/src/global/sanity/client";
+import { queryMailchimpSettings } from "@/src/global/sanity/query";
 
 // Define the expected payload structure
 interface GeneratePayload {
-  action: 'download-html' | 'create-mailchimp-draft';
+  action: "download-html" | "create-mailchimp-draft";
   startDate?: string;
   endDate?: string;
   content: NewsletterContent;
@@ -27,9 +27,9 @@ interface MailchimpCampaignResponse {
 
 // CORS headers for Sanity Studio
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
 };
 
 // Handle OPTIONS request for CORS preflight
@@ -47,8 +47,8 @@ export async function POST(req: NextRequest) {
 
     if (!content) {
       return NextResponse.json(
-        { error: 'Missing content data' },
-        { status: 400, headers: corsHeaders }
+        { error: "Missing content data" },
+        { status: 400, headers: corsHeaders },
       );
     }
 
@@ -61,21 +61,21 @@ export async function POST(req: NextRequest) {
       NewsletterTemplate({
         content,
         dateRange: dateRangeDisplay,
-      })
+      }),
     );
 
     // -------------------------------------------------------------------------
     // ACTION: Download HTML File
     // -------------------------------------------------------------------------
-    if (action === 'download-html') {
+    if (action === "download-html") {
       // Return the HTML file as a downloadable attachment
-      const filename = `newsletter-audiofast-${new Date().toISOString().split('T')[0]}.html`;
+      const filename = `newsletter-audiofast-${new Date().toISOString().split("T")[0]}.html`;
 
       return new NextResponse(emailHtml, {
         headers: {
           ...corsHeaders,
-          'Content-Type': 'text/html',
-          'Content-Disposition': `attachment; filename="${filename}"`,
+          "Content-Type": "text/html",
+          "Content-Disposition": `attachment; filename="${filename}"`,
         },
       });
     }
@@ -83,11 +83,11 @@ export async function POST(req: NextRequest) {
     // -------------------------------------------------------------------------
     // ACTION: Create Mailchimp Draft
     // -------------------------------------------------------------------------
-    if (action === 'create-mailchimp-draft') {
+    if (action === "create-mailchimp-draft") {
       if (!process.env.MAILCHIMP_API_KEY) {
         return NextResponse.json(
-          { error: 'Mailchimp API key not configured' },
-          { status: 500, headers: corsHeaders }
+          { error: "Mailchimp API key not configured" },
+          { status: 500, headers: corsHeaders },
         );
       }
 
@@ -98,23 +98,23 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
           {
             error:
-              'Mailchimp Audience ID not found in Sanity Settings. Please configure it in global settings.',
+              "Mailchimp Audience ID not found in Sanity Settings. Please configure it in global settings.",
           },
-          { status: 400, headers: corsHeaders }
+          { status: 400, headers: corsHeaders },
         );
       }
 
       // 1. Determine Campaign Defaults
       const campaignSubject =
         subject ||
-        `Nowości Audiofast: ${new Date().toLocaleDateString('pl-PL')}`;
-      const fromName = 'Audiofast';
-      const replyTo = 'info@audiofast.pl'; // Should be configured in env or passed in
+        `Nowości Audiofast: ${new Date().toLocaleDateString("pl-PL")}`;
+      const fromName = "Audiofast";
+      const replyTo = "info@audiofast.pl"; // Should be configured in env or passed in
 
       // 2. Create the Campaign
       // Note: 'type: regular' is a standard email campaign
       const campaign = (await mailchimpClient.campaigns.create({
-        type: 'regular',
+        type: "regular",
         recipients: {
           list_id: mailchimpAudienceId,
         },
@@ -122,12 +122,12 @@ export async function POST(req: NextRequest) {
           subject_line: campaignSubject,
           from_name: fromName,
           reply_to: replyTo,
-          title: `Audiofast Digest ${new Date().toISOString().split('T')[0]}`, // Internal title
+          title: `Audiofast Digest ${new Date().toISOString().split("T")[0]}`, // Internal title
         },
       })) as unknown as MailchimpCampaignResponse;
 
       if (!campaign.id) {
-        throw new Error('Failed to create Mailchimp campaign');
+        throw new Error("Failed to create Mailchimp campaign");
       }
 
       // 3. Set the Campaign Content (HTML)
@@ -140,25 +140,25 @@ export async function POST(req: NextRequest) {
           success: true,
           campaignId: campaign.id,
           webUrl: campaign.web_id,
-          message: 'Draft campaign created successfully',
+          message: "Draft campaign created successfully",
         },
-        { headers: corsHeaders }
+        { headers: corsHeaders },
       );
     }
 
     return NextResponse.json(
-      { error: 'Invalid action' },
-      { status: 400, headers: corsHeaders }
+      { error: "Invalid action" },
+      { status: 400, headers: corsHeaders },
     );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    console.error('[Newsletter API] Error:', error);
+    console.error("[Newsletter API] Error:", error);
     return NextResponse.json(
       {
-        error: error.message || 'Internal Server Error',
+        error: error.message || "Internal Server Error",
         details: error.response?.body || undefined,
       },
-      { status: 500, headers: corsHeaders }
+      { status: 500, headers: corsHeaders },
     );
   }
 }

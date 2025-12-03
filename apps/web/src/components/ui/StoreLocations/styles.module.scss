@@ -5,8 +5,8 @@
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    'map heading'
-    'map list';
+    "map heading"
+    "map list";
   border-radius: 0.5rem;
   background-color: var(--neutral-200, #f8f8f8);
   column-gap: 2rem;
@@ -65,7 +65,7 @@
       }
 
       p {
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
         font-size: 0.875rem;
         color: var(--neutral-600);
         margin: 0;
@@ -186,13 +186,13 @@
           }
 
           // Phone-specific animation
-          &[href^='tel:']:hover .icon {
+          &[href^="tel:"]:hover .icon {
             animation: phoneRing 1000ms ease-in-out infinite;
           }
 
           // Website-specific animation
-          &[href^='http']:hover .icon,
-          &[target='_blank']:hover .icon {
+          &[href^="http"]:hover .icon,
+          &[target="_blank"]:hover .icon {
             svg {
               animation: computerPulse 1500ms ease-in-out infinite;
             }

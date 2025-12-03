@@ -1,14 +1,14 @@
-import type { PortableTextTypeComponentProps } from 'next-sanity';
+import type { PortableTextTypeComponentProps } from "next-sanity";
 
-import type { PortableTextProps } from '@/src/global/types';
+import type { PortableTextProps } from "@/src/global/types";
 
-import Image from '../../shared/Image';
-import PortableText from '../index';
-import styles from './styles.module.scss';
+import Image from "../../shared/Image";
+import PortableText from "../index";
+import styles from "./styles.module.scss";
 
 type ImageValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptImage';
-  layout?: 'single' | 'double';
+  _type: "ptImage";
+  layout?: "single" | "double";
   autoWidth?: boolean;
 };
 
@@ -16,12 +16,12 @@ export function ImageComponent({
   value,
 }: PortableTextTypeComponentProps<ImageValue>) {
   const { caption, image, layout, image1, image2, autoWidth } = value;
-  const isDouble = layout === 'double';
+  const isDouble = layout === "double";
 
   const singleImageSizes =
-    '(max-width: 37.4375rem) 96vw, (max-width: 56.125rem) 83vw, (max-width: 69.3125rem) 768px, 704px';
+    "(max-width: 37.4375rem) 96vw, (max-width: 56.125rem) 83vw, (max-width: 69.3125rem) 768px, 704px";
   const doubleImageSizes =
-    '(max-width: 37.4375rem) 96vw, (max-width: 56.125rem) 42vw, (max-width: 69.3125rem) 384px, 352px';
+    "(max-width: 37.4375rem) 96vw, (max-width: 56.125rem) 42vw, (max-width: 69.3125rem) 384px, 352px";
 
   // Double image layout
   if (isDouble) {
@@ -58,7 +58,7 @@ export function ImageComponent({
   }
 
   // Single image layout
-  const imageClassName = `${styles.image} ${styles.singleImage}${autoWidth ? ` ${styles.autoWidth}` : ''}`;
+  const imageClassName = `${styles.image} ${styles.singleImage}${autoWidth ? ` ${styles.autoWidth}` : ""}`;
 
   if (!caption) {
     return (

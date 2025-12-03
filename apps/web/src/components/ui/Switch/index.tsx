@@ -2,9 +2,9 @@ import type {
   HTMLAttributes,
   InputHTMLAttributes,
   LabelHTMLAttributes,
-} from 'react';
+} from "react";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type BaseSwitchProps = {
   id?: string;
@@ -13,11 +13,11 @@ type BaseSwitchProps = {
 
 type SwitchAsLabelProps = BaseSwitchProps & {
   asLabel: true;
-} & Omit<LabelHTMLAttributes<HTMLLabelElement>, 'onChange' | 'popover'>;
+} & Omit<LabelHTMLAttributes<HTMLLabelElement>, "onChange" | "popover">;
 
 type SwitchAsDivProps = BaseSwitchProps & {
   asLabel?: false;
-} & Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'popover'>;
+} & Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "popover">;
 
 type SwitchProps = SwitchAsLabelProps | SwitchAsDivProps;
 

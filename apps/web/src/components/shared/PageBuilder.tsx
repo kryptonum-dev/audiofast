@@ -1,37 +1,37 @@
 import type {
   QueryCpoPageResult,
   QueryHomePageResult,
-} from '../../global/sanity/sanity.types';
-import BlurLinesTextImage from '../pageBuilder/BlurLinesTextImage';
-import BrandsByCategoriesSection from '../pageBuilder/BrandsByCategoriesSection';
-import BrandsList from '../pageBuilder/BrandsList';
-import BrandsMarquee from '../pageBuilder/BrandsMarquee';
-import ContactForm from '../pageBuilder/ContactForm';
-import ContactMap from '../pageBuilder/ContactMap';
-import FaqSection from '../pageBuilder/FaqSection';
-import FeaturedProducts from '../pageBuilder/FeaturedProducts';
-import FeaturedPublications from '../pageBuilder/FeaturedPublications';
-import GallerySection from '../pageBuilder/GallerySection';
-import HeroCarousel from '../pageBuilder/HeroCarousel';
-import HeroStatic from '../pageBuilder/HeroStatic';
-import ImageTextColumns from '../pageBuilder/ImageTextColumns';
-import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
-import ImageWithVideo from '../pageBuilder/ImageWithVideo';
-import LatestPublication from '../pageBuilder/LatestPublication';
-import PhoneImageCta from '../pageBuilder/PhoneImageCta';
-import ProductsCarousel from '../pageBuilder/ProductsCarousel';
-import ProductsListing from '../pageBuilder/ProductsListing';
-import StepList from '../pageBuilder/StepList';
-import TeamSection from '../pageBuilder/TeamSection';
+} from "../../global/sanity/sanity.types";
+import BlurLinesTextImage from "../pageBuilder/BlurLinesTextImage";
+import BrandsByCategoriesSection from "../pageBuilder/BrandsByCategoriesSection";
+import BrandsList from "../pageBuilder/BrandsList";
+import BrandsMarquee from "../pageBuilder/BrandsMarquee";
+import ContactForm from "../pageBuilder/ContactForm";
+import ContactMap from "../pageBuilder/ContactMap";
+import FaqSection from "../pageBuilder/FaqSection";
+import FeaturedProducts from "../pageBuilder/FeaturedProducts";
+import FeaturedPublications from "../pageBuilder/FeaturedPublications";
+import GallerySection from "../pageBuilder/GallerySection";
+import HeroCarousel from "../pageBuilder/HeroCarousel";
+import HeroStatic from "../pageBuilder/HeroStatic";
+import ImageTextColumns from "../pageBuilder/ImageTextColumns";
+import ImageWithTextBoxes from "../pageBuilder/ImageWithTextBoxes";
+import ImageWithVideo from "../pageBuilder/ImageWithVideo";
+import LatestPublication from "../pageBuilder/LatestPublication";
+import PhoneImageCta from "../pageBuilder/PhoneImageCta";
+import ProductsCarousel from "../pageBuilder/ProductsCarousel";
+import ProductsListing from "../pageBuilder/ProductsListing";
+import StepList from "../pageBuilder/StepList";
+import TeamSection from "../pageBuilder/TeamSection";
 
 // Standard pageBuilder blocks (without productsListing)
 type StandardPageBuilderBlock = NonNullable<
-  NonNullable<QueryHomePageResult>['pageBuilder']
+  NonNullable<QueryHomePageResult>["pageBuilder"]
 >[number];
 
 // CPO pageBuilder blocks (with productsListing)
 type CpoPageBuilderBlock = NonNullable<
-  NonNullable<QueryCpoPageResult>['pageBuilder']
+  NonNullable<QueryCpoPageResult>["pageBuilder"]
 >[number];
 
 // Union of both types to support all blocks
@@ -49,7 +49,7 @@ export interface PageBuilderProps {
   readonly basePath?: string; // Current page path for ProductsListing block
 }
 
-type BlockType = PageBuilderBlock['_type'];
+type BlockType = PageBuilderBlock["_type"];
 type BlockByType<T extends BlockType> = Extract<PageBuilderBlock, { _type: T }>;
 
 /**
@@ -70,173 +70,173 @@ export function PageBuilder({
     <>
       {blocks.map((block, index) => {
         switch (block._type as BlockType) {
-          case 'heroCarousel':
+          case "heroCarousel":
             return (
               <HeroCarousel
                 key={block._key}
-                {...(block as BlockByType<'heroCarousel'>)}
+                {...(block as BlockByType<"heroCarousel">)}
                 index={index}
               />
             );
-          case 'heroStatic':
+          case "heroStatic":
             return (
               <HeroStatic
                 key={block._key}
-                {...(block as BlockByType<'heroStatic'>)}
+                {...(block as BlockByType<"heroStatic">)}
                 index={index}
               />
             );
-          case 'latestPublication':
+          case "latestPublication":
             return (
               <LatestPublication
                 key={block._key}
-                {...(block as BlockByType<'latestPublication'>)}
+                {...(block as BlockByType<"latestPublication">)}
                 index={index}
               />
             );
-          case 'imageTextColumns':
+          case "imageTextColumns":
             return (
               <ImageTextColumns
                 key={block._key}
-                {...(block as BlockByType<'imageTextColumns'>)}
+                {...(block as BlockByType<"imageTextColumns">)}
                 index={index}
               />
             );
-          case 'blurLinesTextImage':
+          case "blurLinesTextImage":
             return (
               <BlurLinesTextImage
                 key={block._key}
-                {...(block as BlockByType<'blurLinesTextImage'>)}
+                {...(block as BlockByType<"blurLinesTextImage">)}
                 index={index}
               />
             );
-          case 'imageWithVideo':
+          case "imageWithVideo":
             return (
               <ImageWithVideo
                 key={block._key}
-                {...(block as BlockByType<'imageWithVideo'>)}
+                {...(block as BlockByType<"imageWithVideo">)}
                 index={index}
               />
             );
-          case 'imageWithTextBoxes':
+          case "imageWithTextBoxes":
             return (
               <ImageWithTextBoxes
                 key={block._key}
-                {...(block as BlockByType<'imageWithTextBoxes'>)}
+                {...(block as BlockByType<"imageWithTextBoxes">)}
                 index={index}
               />
             );
-          case 'featuredPublications':
+          case "featuredPublications":
             return (
               <FeaturedPublications
                 key={block._key}
-                {...(block as BlockByType<'featuredPublications'>)}
+                {...(block as BlockByType<"featuredPublications">)}
                 index={index}
               />
             );
-          case 'featuredProducts':
+          case "featuredProducts":
             return (
               <FeaturedProducts
                 key={block._key}
-                {...(block as BlockByType<'featuredProducts'>)}
+                {...(block as BlockByType<"featuredProducts">)}
                 index={index}
               />
             );
-          case 'productsCarousel':
+          case "productsCarousel":
             return (
               <ProductsCarousel
                 key={block._key}
-                {...(block as BlockByType<'productsCarousel'>)}
+                {...(block as BlockByType<"productsCarousel">)}
                 index={index}
               />
             );
-          case 'productsListing':
+          case "productsListing":
             return (
               <ProductsListing
                 key={block._key}
-                {...(block as BlockByType<'productsListing'>)}
+                {...(block as BlockByType<"productsListing">)}
                 index={index}
                 searchParams={searchParams}
                 basePath={basePath}
               />
             );
-          case 'brandsMarquee':
+          case "brandsMarquee":
             return (
               <BrandsMarquee
                 key={block._key}
-                {...(block as BlockByType<'brandsMarquee'>)}
+                {...(block as BlockByType<"brandsMarquee">)}
                 index={index}
               />
             );
-          case 'brandsList':
+          case "brandsList":
             return (
               <BrandsList
                 key={block._key}
-                {...(block as BlockByType<'brandsList'>)}
+                {...(block as BlockByType<"brandsList">)}
                 index={index}
               />
             );
-          case 'brandsByCategoriesSection':
+          case "brandsByCategoriesSection":
             return (
               <BrandsByCategoriesSection
                 key={block._key}
-                {...(block as BlockByType<'brandsByCategoriesSection'>)}
+                {...(block as BlockByType<"brandsByCategoriesSection">)}
                 index={index}
               />
             );
-          case 'faqSection':
+          case "faqSection":
             return (
               <FaqSection
                 key={block._key}
-                {...(block as BlockByType<'faqSection'>)}
+                {...(block as BlockByType<"faqSection">)}
                 index={index}
               />
             );
-          case 'contactForm':
+          case "contactForm":
             return (
               <ContactForm
                 key={block._key}
-                {...(block as BlockByType<'contactForm'>)}
+                {...(block as BlockByType<"contactForm">)}
                 index={index}
               />
             );
-          case 'contactMap':
+          case "contactMap":
             return (
               <ContactMap
                 key={block._key}
-                {...(block as BlockByType<'contactMap'>)}
+                {...(block as BlockByType<"contactMap">)}
                 index={index}
               />
             );
-          case 'teamSection':
+          case "teamSection":
             return (
               <TeamSection
                 key={block._key}
-                {...(block as BlockByType<'teamSection'>)}
+                {...(block as BlockByType<"teamSection">)}
                 index={index}
               />
             );
-          case 'gallerySection':
+          case "gallerySection":
             return (
               <GallerySection
                 key={block._key}
-                {...(block as BlockByType<'gallerySection'>)}
+                {...(block as BlockByType<"gallerySection">)}
                 index={index}
               />
             );
-          case 'phoneImageCta':
+          case "phoneImageCta":
             return (
               <PhoneImageCta
                 key={block._key}
-                {...(block as BlockByType<'phoneImageCta'>)}
+                {...(block as BlockByType<"phoneImageCta">)}
                 index={index}
               />
             );
-          case 'stepList':
+          case "stepList":
             return (
               <StepList
                 key={block._key}
-                {...(block as BlockByType<'stepList'>)}
+                {...(block as BlockByType<"stepList">)}
                 index={index}
               />
             );

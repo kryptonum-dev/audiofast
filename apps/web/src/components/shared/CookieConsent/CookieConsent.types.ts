@@ -1,10 +1,10 @@
 export type ConsentGroupId =
-  | 'necessary'
-  | 'analytics'
-  | 'preferences'
-  | 'marketing';
+  | "necessary"
+  | "analytics"
+  | "preferences"
+  | "marketing";
 
-export type ConsentSubGroupId = 'conversion_api' | 'advanced_matching';
+export type ConsentSubGroupId = "conversion_api" | "advanced_matching";
 
 export type ConsentSelections = {
   necessary: boolean;
@@ -16,15 +16,15 @@ export type ConsentSelections = {
 };
 
 export type ConsentModeState = {
-  functionality_storage: 'granted' | 'denied';
-  security_storage: 'granted' | 'denied';
-  ad_storage: 'granted' | 'denied';
-  ad_user_data: 'granted' | 'denied';
-  ad_personalization: 'granted' | 'denied';
-  analytics_storage: 'granted' | 'denied';
-  personalization_storage: 'granted' | 'denied';
-  conversion_api: 'granted' | 'denied';
-  advanced_matching: 'granted' | 'denied';
+  functionality_storage: "granted" | "denied";
+  security_storage: "granted" | "denied";
+  ad_storage: "granted" | "denied";
+  ad_user_data: "granted" | "denied";
+  ad_personalization: "granted" | "denied";
+  analytics_storage: "granted" | "denied";
+  personalization_storage: "granted" | "denied";
+  conversion_api: "granted" | "denied";
+  advanced_matching: "granted" | "denied";
 };
 
 export type ConsentSubGroup = {

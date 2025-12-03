@@ -22,13 +22,13 @@ type ContactFormResponse = {
  * @returns Promise with success status and optional error message
  */
 export async function sendContactForm(
-  data: ContactFormData
+  data: ContactFormData,
 ): Promise<ContactFormResponse> {
   try {
-    const response = await fetch('/api/contact', {
-      method: 'POST',
+    const response = await fetch("/api/contact", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name: data.name,
@@ -45,10 +45,10 @@ export async function sendContactForm(
       message: result.message,
     };
   } catch (error) {
-    console.error('[Resend] Contact form submission failed', error);
+    console.error("[Resend] Contact form submission failed", error);
     return {
       success: false,
-      message: 'Failed to send message',
+      message: "Failed to send message",
     };
   }
 }

@@ -1,13 +1,13 @@
-import { getImageProps } from 'next/image';
+import { getImageProps } from "next/image";
 
-import { urlFor } from '@/global/sanity/client';
-import type { PagebuilderType } from '@/src/global/types';
-import svgToInlineString from '@/src/global/utils';
+import { urlFor } from "@/global/sanity/client";
+import type { PagebuilderType } from "@/src/global/types";
+import svgToInlineString from "@/src/global/utils";
 
-import PortableText from '../../portableText';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import styles from "./styles.module.scss";
 
-type HeroStaticProps = PagebuilderType<'heroStatic'> & {
+type HeroStaticProps = PagebuilderType<"heroStatic"> & {
   index: number;
 };
 
@@ -38,33 +38,33 @@ export default async function HeroStatic({
         const desktopSrc = urlFor(sanitySource)
           .width(2120)
           .height(823)
-          .fit('crop')
-          .auto('format')
+          .fit("crop")
+          .auto("format")
           .url();
 
         // Mobile: 3:4 aspect ratio (e.g., 768x1024)
         const mobileSrc = urlFor(sanitySource)
           .width(600)
           .height(600)
-          .fit('crop')
-          .auto('format')
+          .fit("crop")
+          .auto("format")
           .url();
 
         const mobile = getImageProps({
-          alt: '',
+          alt: "",
           src: mobileSrc,
           width: 600,
           height: 600,
-          sizes: '(min-width: 85.375rem) 1366px, 100vw',
+          sizes: "(min-width: 85.375rem) 1366px, 100vw",
           priority: index === 0,
         }).props;
 
         const desktop = getImageProps({
-          alt: '',
+          alt: "",
           src: desktopSrc,
           width: 1302,
           height: 556,
-          sizes: '(min-width: 85.375rem) 1366px, 100vw',
+          sizes: "(min-width: 85.375rem) 1366px, 100vw",
           priority: index === 0,
         }).props;
 
@@ -80,11 +80,11 @@ export default async function HeroStatic({
               ? await svgToInlineString(box.iconUrl)
               : null;
             return { ...box, svgContent };
-          })
+          }),
         )
       : [];
 
-  const Heading = index === 0 ? 'h2' : 'h3';
+  const Heading = index === 0 ? "h2" : "h3";
 
   return (
     <section className={styles.heroStatic}>
@@ -92,7 +92,7 @@ export default async function HeroStatic({
         <PortableText
           value={heading}
           className={styles.heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
         />
         <PortableText
           value={description}
@@ -113,7 +113,7 @@ export default async function HeroStatic({
               fetchPriority="high"
               loading="eager"
               decoding="async"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           }
         </picture>
@@ -130,7 +130,7 @@ export default async function HeroStatic({
                 />
                 <PortableText
                   value={block.heading}
-                  headingLevel={index === 0 ? 'h3' : 'h4'}
+                  headingLevel={index === 0 ? "h3" : "h4"}
                   className={styles.heading}
                 />
                 <PortableText

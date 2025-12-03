@@ -34,7 +34,7 @@
     }
 
     // When carousel is disabled (content fits without overflow)
-    &[data-carousel-enabled='false'] {
+    &[data-carousel-enabled="false"] {
       .viewport {
         .container {
           justify-content: flex-start;

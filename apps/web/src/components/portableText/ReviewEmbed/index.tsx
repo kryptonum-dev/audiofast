@@ -1,16 +1,16 @@
-import type { PortableTextTypeComponentProps } from 'next-sanity';
+import type { PortableTextTypeComponentProps } from "next-sanity";
 
-import type { PortableTextProps } from '@/src/global/types';
-import { portableTextToPlainString } from '@/src/global/utils';
+import type { PortableTextProps } from "@/src/global/types";
+import { portableTextToPlainString } from "@/src/global/utils";
 
-import PortableText from '../../portableText';
-import type { SanityRawImage } from '../../shared/Image';
-import Image from '../../shared/Image';
-import Button from '../../ui/Button';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import type { SanityRawImage } from "../../shared/Image";
+import Image from "../../shared/Image";
+import Button from "../../ui/Button";
+import styles from "./styles.module.scss";
 
 type ReviewEmbedValue = {
-  _type: 'ptReviewEmbed';
+  _type: "ptReviewEmbed";
   review: {
     _id?: string;
     title?: PortableTextProps;
@@ -25,9 +25,9 @@ export function ReviewEmbedComponent({
 }: PortableTextTypeComponentProps<ReviewEmbedValue>) {
   const { review } = value;
 
-  const title = review.title ? portableTextToPlainString(review.title) : '';
+  const title = review.title ? portableTextToPlainString(review.title) : "";
 
-  const reviewUrl = review.slug || '#';
+  const reviewUrl = review.slug || "#";
 
   return (
     <aside className={styles.reviewEmbed}>

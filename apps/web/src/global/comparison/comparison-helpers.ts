@@ -1,4 +1,4 @@
-import type { PortableTextBlock } from '@portabletext/react';
+import type { PortableTextBlock } from "@portabletext/react";
 
 import type {
   ComparisonColumn,
@@ -6,7 +6,7 @@ import type {
   ComparisonProduct,
   ComparisonTableData,
   EnabledParameter,
-} from './types';
+} from "./types";
 
 /**
  * Validate if product can be added to comparison
@@ -14,13 +14,13 @@ import type {
 export function validateProductAddition(
   productId: string,
   categorySlug: string,
-  currentComparison: ComparisonCookie | null
+  currentComparison: ComparisonCookie | null,
 ): { valid: boolean; error?: string } {
   // Check if already in comparison
   if (currentComparison?.productIds.includes(productId)) {
     return {
       valid: false,
-      error: 'Ten produkt jest już w porównaniu',
+      error: "Ten produkt jest już w porównaniu",
     };
   }
 
@@ -28,7 +28,7 @@ export function validateProductAddition(
   if (currentComparison && currentComparison.productIds.length >= 3) {
     return {
       valid: false,
-      error: 'Możesz porównywać maksymalnie 3 produkty',
+      error: "Możesz porównywać maksymalnie 3 produkty",
     };
   }
 
@@ -36,7 +36,7 @@ export function validateProductAddition(
   if (currentComparison && currentComparison.categorySlug !== categorySlug) {
     return {
       valid: false,
-      error: 'Możesz porównywać tylko produkty z tej samej kategorii',
+      error: "Możesz porównywać tylko produkty z tej samej kategorii",
     };
   }
 
@@ -47,7 +47,7 @@ export function validateProductAddition(
  * Get variants for a product (returns null if no variants/single model)
  */
 export function getProductVariants(
-  product: ComparisonProduct
+  product: ComparisonProduct,
 ): string[] | null {
   const variants = product.technicalData?.variants;
   if (!variants || variants.length === 0) {
@@ -69,7 +69,7 @@ export function getProductColumnCount(product: ComparisonProduct): number {
  * Each variant of a product becomes its own column
  */
 export function createComparisonColumns(
-  products: ComparisonProduct[]
+  products: ComparisonProduct[],
 ): ComparisonColumn[] {
   const columns: ComparisonColumn[] = [];
 
@@ -131,7 +131,7 @@ export function extractAllHeadings(products: ComparisonProduct[]): string[] {
 function findParameterValue(
   product: ComparisonProduct,
   parameterName: string,
-  variantIndex: number
+  variantIndex: number,
 ): PortableTextBlock[] | null {
   const groups = product.technicalData?.groups;
   if (!groups) return null;
@@ -159,8 +159,8 @@ export function createComparisonRows(
   products: ComparisonProduct[],
   columns: ComparisonColumn[],
   headings: string[],
-  enabledParameters?: EnabledParameter[]
-): ComparisonTableData['comparisonRows'] {
+  enabledParameters?: EnabledParameter[],
+): ComparisonTableData["comparisonRows"] {
   // If enabledParameters is provided and not empty, use its order
   // Otherwise, use all headings
   const orderedHeadings =
@@ -203,7 +203,7 @@ export function createComparisonRows(
  */
 export function processComparisonData(
   products: ComparisonProduct[],
-  enabledParameters?: EnabledParameter[]
+  enabledParameters?: EnabledParameter[],
 ): ComparisonTableData {
   const columns = createComparisonColumns(products);
   const allHeadings = extractAllHeadings(products);
@@ -211,7 +211,7 @@ export function processComparisonData(
     products,
     columns,
     allHeadings,
-    enabledParameters
+    enabledParameters,
   );
 
   return {

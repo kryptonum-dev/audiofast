@@ -1,15 +1,15 @@
-'use server';
+"use server";
 
 import type {
   ComparisonProduct,
   EnabledParameter,
-} from '@/src/global/comparison/types';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+} from "@/src/global/comparison/types";
+import { sanityFetch } from "@/src/global/sanity/fetch";
 import {
   queryComparisonPageData,
   queryComparisonProductsMinimal,
-} from '@/src/global/sanity/query';
-import type { ProductType } from '@/src/global/types';
+} from "@/src/global/sanity/query";
+import type { ProductType } from "@/src/global/types";
 
 /**
  * Combined response type for comparison page data
@@ -26,17 +26,17 @@ export type ComparisonPageData = {
  * @returns Array of products or null if error
  */
 export async function fetchComparisonProducts(
-  productIds: string[]
+  productIds: string[],
 ): Promise<ProductType[] | null> {
   try {
     const result = await sanityFetch<ProductType[]>({
       query: queryComparisonProductsMinimal,
       params: { productIds },
-      tags: ['product'],
+      tags: ["product"],
     });
     return result;
   } catch (error) {
-    console.error('Error fetching comparison products:', error);
+    console.error("Error fetching comparison products:", error);
     return null;
   }
 }
@@ -48,7 +48,7 @@ export async function fetchComparisonProducts(
  * @returns Object with products array and enabledParameters array
  */
 export async function fetchComparisonPageData(
-  categorySlug: string
+  categorySlug: string,
 ): Promise<ComparisonPageData> {
   try {
     const result = await sanityFetch<{
@@ -57,7 +57,7 @@ export async function fetchComparisonPageData(
     }>({
       query: queryComparisonPageData,
       params: { categorySlug },
-      tags: ['product', 'comparatorConfig'],
+      tags: ["product", "comparatorConfig"],
     });
 
     return {
@@ -65,7 +65,7 @@ export async function fetchComparisonPageData(
       enabledParameters: result?.enabledParameters || [],
     };
   } catch (error) {
-    console.error('Error fetching comparison page data:', error);
+    console.error("Error fetching comparison page data:", error);
     return {
       products: [],
       enabledParameters: [],

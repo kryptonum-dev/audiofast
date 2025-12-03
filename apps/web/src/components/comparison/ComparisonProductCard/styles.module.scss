@@ -37,12 +37,12 @@
   }
 
   // Single-model products are wider and grow equally
-  &[data-column-span='1'] {
+  &[data-column-span="1"] {
     min-width: var(--single-column-width);
     flex: 1 1 var(--single-column-width); // Start at single-column-width, grow/shrink equally
   }
 
-  &[data-compact='true'] {
+  &[data-compact="true"] {
     .removeButton {
       top: 0.5rem;
       right: 0.5rem;
@@ -65,7 +65,6 @@
         width: clamp(48px, calc(58vw / 7.68), 68px);
         height: clamp(48px, calc(58vw / 7.68), 68px);
         flex-shrink: 0;
-        
       }
 
       .info {
@@ -163,10 +162,9 @@
       margin-bottom: clamp(0.5rem, calc(0.75vw / 0.48), 1rem);
       max-height: 300px;
 
-img {
-  object-fit: contain;
-}
-   
+      img {
+        object-fit: contain;
+      }
 
       .imagePlaceholder {
         width: 100%;

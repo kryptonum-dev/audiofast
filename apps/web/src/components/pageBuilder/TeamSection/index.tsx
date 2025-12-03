@@ -1,12 +1,12 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import type { AppImageProps } from '../../shared/Image';
-import GrayImageCtaCard from '../../ui/GrayImageCtaCard';
-import TeamMemberCard from '../../ui/TeamMemberCard';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import type { AppImageProps } from "../../shared/Image";
+import GrayImageCtaCard from "../../ui/GrayImageCtaCard";
+import TeamMemberCard from "../../ui/TeamMemberCard";
+import styles from "./styles.module.scss";
 
-type TeamSectionProps = PagebuilderType<'teamSection'> & {
+type TeamSectionProps = PagebuilderType<"teamSection"> & {
   index: number;
 };
 
@@ -24,7 +24,7 @@ export default function TeamSection({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
           className={styles.heading}
         />
         <PortableText
@@ -50,7 +50,7 @@ export default function TeamSection({
               isListItem
               key={member._id}
               member={member}
-              headingLevel={index === 0 ? 'h2' : 'h3'}
+              headingLevel={index === 0 ? "h2" : "h3"}
               imageSizes="400px"
               index={index}
             />

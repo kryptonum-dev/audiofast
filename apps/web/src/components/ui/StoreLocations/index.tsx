@@ -1,13 +1,13 @@
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from "next/cache";
 
-import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
+import type { QueryBrandBySlugResult } from "@/src/global/sanity/sanity.types";
 
-import StoreMapWrapper from './StoreMapWrapper';
-import styles from './styles.module.scss';
+import StoreMapWrapper from "./StoreMapWrapper";
+import styles from "./styles.module.scss";
 
 export type Store = NonNullable<
   NonNullable<
-    NonNullable<NonNullable<QueryBrandBySlugResult>['stores']>[number]
+    NonNullable<NonNullable<QueryBrandBySlugResult>["stores"]>[number]
   >
 >;
 
@@ -25,32 +25,32 @@ export interface StoreLocationsProps {
 
 // Server-side geocoding function
 async function geocodeCity(
-  city: string
+  city: string,
 ): Promise<{ lat: number; lng: number } | null> {
-  'use cache';
-  cacheLife('weeks');
-  cacheTag('store-locations');
+  "use cache";
+  cacheLife("weeks");
+  cacheTag("store-locations");
 
   try {
     const params = new URLSearchParams({
       q: `${city}, Poland`,
-      format: 'json',
-      limit: '1',
-      'accept-language': 'pl',
-      countrycodes: 'pl',
+      format: "json",
+      limit: "1",
+      "accept-language": "pl",
+      countrycodes: "pl",
     });
 
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?${params.toString()}`,
       {
         headers: {
-          'User-Agent': 'Audiofast-Website/1.0',
+          "User-Agent": "Audiofast-Website/1.0",
         },
         // Cache the upstream response for a day to limit API usage
         next: {
           revalidate: 60 * 60 * 24,
         },
-      }
+      },
     );
 
     if (!response.ok) {
@@ -75,9 +75,9 @@ async function geocodeCity(
 
 export default async function StoreLocations({
   stores,
-  customId = 'gdzie-kupic',
+  customId = "gdzie-kupic",
 }: StoreLocationsProps) {
-  'use cache';
+  "use cache";
 
   // Deduplicate stores by _id
   const uniqueStoresMap = new Map<string, Store>();
@@ -150,7 +150,7 @@ export default async function StoreLocations({
               <p className={styles.storeName}>{store.name}</p>
               {store.address && (
                 <p className={styles.storeAddress}>
-                  {store.address.postalCode} {store.address.city},{' '}
+                  {store.address.postalCode} {store.address.city},{" "}
                   {store.address.street}
                 </p>
               )}
@@ -161,7 +161,7 @@ export default async function StoreLocations({
                   <PhoneIcon />
                 </span>
                 <span className={styles.contactText}>
-                  {store.phone?.replace('+48', '')}
+                  {store.phone?.replace("+48", "")}
                 </span>
               </a>
               {store.website && (
@@ -176,10 +176,10 @@ export default async function StoreLocations({
                   </span>
                   <span className={styles.contactText}>
                     {store.website
-                      .replace('https://', '')
-                      .replace('http://', '')
-                      .replace('www.', '')
-                      .replace(/\/$/, '')}
+                      .replace("https://", "")
+                      .replace("http://", "")
+                      .replace("www.", "")
+                      .replace(/\/$/, "")}
                   </span>
                 </a>
               )}

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 interface YouTubeModalProps {
   youtubeId: string;
   children?: (openModal: () => void) => React.ReactNode;
-  playButtonSize?: 'small' | 'medium' | 'large';
+  playButtonSize?: "small" | "medium" | "large";
   playButtonClassName?: string;
   closeButtonLabel?: string;
 }
@@ -16,9 +16,9 @@ interface YouTubeModalProps {
 export default function YouTubeModal({
   youtubeId,
   children,
-  playButtonSize = 'medium',
+  playButtonSize = "medium",
   playButtonClassName,
-  closeButtonLabel = 'Zamknij wideo',
+  closeButtonLabel = "Zamknij wideo",
 }: YouTubeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -36,13 +36,13 @@ export default function YouTubeModal({
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         handleClose();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   const handleOpen = () => {
@@ -115,7 +115,7 @@ export default function YouTubeModal({
 
   // Default: render styled play button
   const sizeClass = styles[playButtonSize];
-  const buttonClass = `${styles.playButton} ${sizeClass} ${playButtonClassName || ''}`;
+  const buttonClass = `${styles.playButton} ${sizeClass} ${playButtonClassName || ""}`;
 
   return (
     <>

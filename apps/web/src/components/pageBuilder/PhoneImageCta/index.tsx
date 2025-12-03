@@ -1,10 +1,10 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import type { AppImageProps } from '../../shared/Image';
-import GrayImageCtaCard from '../../ui/GrayImageCtaCard';
-import styles from './styles.module.scss';
+import type { AppImageProps } from "../../shared/Image";
+import GrayImageCtaCard from "../../ui/GrayImageCtaCard";
+import styles from "./styles.module.scss";
 
-type PhoneImageCtaProps = PagebuilderType<'phoneImageCta'> & {
+type PhoneImageCtaProps = PagebuilderType<"phoneImageCta"> & {
   index: number;
 };
 

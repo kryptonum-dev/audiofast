@@ -1,10 +1,10 @@
-import Link from 'next/link';
-import { Fragment } from 'react';
+import Link from "next/link";
+import { Fragment } from "react";
 
-import type { BreadcrumbItem } from '@/src/components/schema/BreadcrumbsSchema';
-import BreadcrumbsSchema from '@/src/components/schema/BreadcrumbsSchema';
+import type { BreadcrumbItem } from "@/src/components/schema/BreadcrumbsSchema";
+import BreadcrumbsSchema from "@/src/components/schema/BreadcrumbsSchema";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type Props = {
   data: BreadcrumbItem[];
@@ -14,8 +14,8 @@ type Props = {
 export default function Breadcrumbs({ data = [], firstItemType }: Props) {
   const breadcrumbsData = [
     {
-      name: 'Strona główna',
-      path: '/',
+      name: "Strona główna",
+      path: "/",
     },
 
     ...data,
@@ -23,11 +23,11 @@ export default function Breadcrumbs({ data = [], firstItemType }: Props) {
 
   const maxWidthClass =
     firstItemType &&
-    ['contactForm', 'imageWithVideo', 'comparison'].includes(firstItemType)
-      ? 'max-width-block'
-      : 'max-width';
+    ["contactForm", "imageWithVideo", "comparison"].includes(firstItemType)
+      ? "max-width-block"
+      : "max-width";
 
-  const theme = firstItemType === 'heroStatic' ? 'dark' : 'light';
+  const theme = firstItemType === "heroStatic" ? "dark" : "light";
 
   return (
     <>
@@ -40,7 +40,7 @@ export default function Breadcrumbs({ data = [], firstItemType }: Props) {
         {breadcrumbsData.map(({ name, path }, i) => {
           const isLastItem = i === breadcrumbsData.length - 1;
           const truncatedName =
-            name.length > 40 ? name.slice(0, 40) + '...' : name;
+            name.length > 40 ? name.slice(0, 40) + "..." : name;
           return (
             <Fragment key={i}>
               {!isLastItem ? (

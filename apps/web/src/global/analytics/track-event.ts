@@ -3,40 +3,40 @@ import {
   loadAnalyticsUtm,
   saveAnalyticsUser,
   saveAnalyticsUtm,
-} from './analytics-user-storage';
-import type { AnalyticsUser, AnalyticsUtm, MetaPixelFunction } from './types';
+} from "./analytics-user-storage";
+import type { AnalyticsUser, AnalyticsUtm, MetaPixelFunction } from "./types";
 
 export type TrackEventUser = AnalyticsUser;
 
 type MetaEventName =
-  | 'PageView'
-  | 'ViewContent'
-  | 'ViewCategory'
-  | 'Search'
-  | 'AddToCart'
-  | 'RemoveFromCart'
-  | 'InitiateCheckout'
-  | 'AddPaymentInfo'
-  | 'Purchase'
-  | 'Lead'
-  | 'Contact'
-  | 'ViewCart'
-  | 'CompleteRegistration';
+  | "PageView"
+  | "ViewContent"
+  | "ViewCategory"
+  | "Search"
+  | "AddToCart"
+  | "RemoveFromCart"
+  | "InitiateCheckout"
+  | "AddPaymentInfo"
+  | "Purchase"
+  | "Lead"
+  | "Contact"
+  | "ViewCart"
+  | "CompleteRegistration";
 
 type Ga4EventName =
-  | 'page_view'
-  | 'view_item_list'
-  | 'view_item'
-  | 'search'
-  | 'add_to_cart'
-  | 'remove_from_cart'
-  | 'begin_checkout'
-  | 'add_payment_info'
-  | 'purchase'
-  | 'generate_lead'
-  | 'contact'
-  | 'view_cart'
-  | 'sign_up';
+  | "page_view"
+  | "view_item_list"
+  | "view_item"
+  | "search"
+  | "add_to_cart"
+  | "remove_from_cart"
+  | "begin_checkout"
+  | "add_payment_info"
+  | "purchase"
+  | "generate_lead"
+  | "contact"
+  | "view_cart"
+  | "sign_up";
 
 type MetaEventParams = {
   value?: number;
@@ -77,11 +77,11 @@ export type TrackEventParams<
 };
 
 const UTM_PARAM_KEYS = [
-  'utm_source',
-  'utm_medium',
-  'utm_campaign',
-  'utm_term',
-  'utm_content',
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
 ] as const;
 type UtmKey = (typeof UTM_PARAM_KEYS)[number];
 
@@ -97,14 +97,14 @@ type MetaRequestBodyPayload = {
 };
 
 function extractUtmFromUrl(
-  url?: string | null
+  url?: string | null,
 ): Partial<Record<UtmKey, string>> | undefined {
   if (!url) return undefined;
   try {
     const base =
-      typeof window !== 'undefined' && window.location?.origin
+      typeof window !== "undefined" && window.location?.origin
         ? window.location.origin
-        : 'https://placeholder.local';
+        : "https://placeholder.local";
     const parsed = new URL(url, base);
     const params: Partial<Record<UtmKey, string>> = {};
     for (const key of UTM_PARAM_KEYS) {
@@ -118,13 +118,13 @@ function extractUtmFromUrl(
 }
 
 function resolveUtmPayload(
-  utm?: AnalyticsUtm | null
+  utm?: AnalyticsUtm | null,
 ): Partial<Record<UtmKey, string>> | undefined {
   if (!utm) return undefined;
   const { capturedAt: _capturedAt, ...rest } = utm;
   void _capturedAt;
   const entries = Object.entries(rest).filter(
-    ([, value]) => value !== undefined && value !== null && value !== ''
+    ([, value]) => value !== undefined && value !== null && value !== "",
   );
   return entries.length
     ? (Object.fromEntries(entries) as Partial<Record<UtmKey, string>>)
@@ -134,7 +134,7 @@ function resolveUtmPayload(
 type PendingEvent<
   TMeta extends MetaEventName = MetaEventName,
   TGa4 extends Ga4EventName = Ga4EventName,
-> = Required<Pick<TrackEventParams<TMeta, TGa4>, 'eventId'>> & {
+> = Required<Pick<TrackEventParams<TMeta, TGa4>, "eventId">> & {
   url: string;
   eventTime: number;
   user?: TrackEventUser;
@@ -147,7 +147,7 @@ type PendingEvent<
   capiDispatched?: boolean;
 };
 
-const COOKIE_NAME = 'cookie-consent';
+const COOKIE_NAME = "cookie-consent";
 const pendingEvents: PendingEvent[] = [];
 let waitingForConsent = false;
 let waitingForReadiness = false;
@@ -155,31 +155,31 @@ const MAX_META_RETRIES = 3;
 const MAX_GA4_RETRIES = 3;
 
 const META_STANDARD_EVENTS = new Set<MetaEventName>([
-  'PageView',
-  'ViewContent',
-  'Search',
-  'AddToCart',
-  'InitiateCheckout',
-  'AddPaymentInfo',
-  'Purchase',
-  'CompleteRegistration',
+  "PageView",
+  "ViewContent",
+  "Search",
+  "AddToCart",
+  "InitiateCheckout",
+  "AddPaymentInfo",
+  "Purchase",
+  "CompleteRegistration",
 ]);
 
 type ConsentMode = {
-  ad_storage?: 'granted' | 'denied';
-  analytics_storage?: 'granted' | 'denied';
-  ad_user_data?: 'granted' | 'denied';
-  ad_personalization?: 'granted' | 'denied';
-  conversion_api?: 'granted' | 'denied';
-  advanced_matching?: 'granted' | 'denied';
+  ad_storage?: "granted" | "denied";
+  analytics_storage?: "granted" | "denied";
+  ad_user_data?: "granted" | "denied";
+  ad_personalization?: "granted" | "denied";
+  conversion_api?: "granted" | "denied";
+  advanced_matching?: "granted" | "denied";
 };
 
 function normalizeUser(
-  user?: TrackEventUser | null
+  user?: TrackEventUser | null,
 ): TrackEventUser | undefined {
   if (!user) return undefined;
   const entries = Object.entries(user).filter(
-    ([, value]) => value !== undefined && value !== null && value !== ''
+    ([, value]) => value !== undefined && value !== null && value !== "",
   );
   if (!entries.length) return undefined;
   return Object.fromEntries(entries) as TrackEventUser;
@@ -187,7 +187,7 @@ function normalizeUser(
 
 function mergeUserData(
   user?: TrackEventUser,
-  options: { persist?: boolean } = {}
+  options: { persist?: boolean } = {},
 ): TrackEventUser | undefined {
   const stored = normalizeUser(loadAnalyticsUser());
   const provided = normalizeUser(user);
@@ -197,7 +197,7 @@ function mergeUserData(
     ...(provided ?? {}),
   };
 
-  if (options.persist && typeof window !== 'undefined' && provided) {
+  if (options.persist && typeof window !== "undefined" && provided) {
     if (!stored || hasUserDifference(stored, merged)) {
       saveAnalyticsUser(merged);
     }
@@ -208,7 +208,7 @@ function mergeUserData(
 
 function hasUserDifference(
   previous: TrackEventUser | undefined,
-  next: TrackEventUser | undefined
+  next: TrackEventUser | undefined,
 ): boolean {
   if (!previous && next) return true;
   if (previous && !next) return true;
@@ -225,10 +225,10 @@ function hasUserDifference(
 }
 
 function getCookie(name: string) {
-  if (typeof document === 'undefined') return null;
+  if (typeof document === "undefined") return null;
   const parts = `; ${document.cookie}`.split(`; ${name}=`);
   if (parts.length === 2)
-    return decodeURIComponent(parts.pop()!.split(';').shift()!);
+    return decodeURIComponent(parts.pop()!.split(";").shift()!);
   return null;
 }
 
@@ -243,7 +243,7 @@ function parseConsent(): ConsentMode {
 }
 
 function isAnalyticsReady() {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
   return window.__analyticsReady === true;
 }
 
@@ -253,31 +253,31 @@ function hasConsentDecision() {
 
 function enqueue(
   event: PendingEvent,
-  options: { waitForConsent?: boolean; waitForReadiness?: boolean } = {}
+  options: { waitForConsent?: boolean; waitForReadiness?: boolean } = {},
 ) {
   pendingEvents.push(event);
 
   if (options.waitForConsent && !waitingForConsent) {
     waitingForConsent = true;
     document.addEventListener(
-      'cookie_consent_updated',
+      "cookie_consent_updated",
       () => {
         waitingForConsent = false;
         flushQueue();
       },
-      { once: true }
+      { once: true },
     );
   }
 
   if (options.waitForReadiness && !waitingForReadiness) {
     waitingForReadiness = true;
     document.addEventListener(
-      'analytics_ready',
+      "analytics_ready",
       () => {
         waitingForReadiness = false;
         flushQueue();
       },
-      { once: true }
+      { once: true },
     );
   }
 }
@@ -290,9 +290,9 @@ function flushQueue() {
 }
 
 function flushFbqQueue(fbqFn: MetaPixelFunction) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   const queue = window._fbq?.queue;
-  if (!Array.isArray(queue) || typeof fbqFn.callMethod !== 'function') {
+  if (!Array.isArray(queue) || typeof fbqFn.callMethod !== "function") {
     return;
   }
 
@@ -302,7 +302,7 @@ function flushFbqQueue(fbqFn: MetaPixelFunction) {
     try {
       fbqFn.callMethod(...args);
     } catch (err) {
-      console.error('[Meta] fbq manual flush failed', err);
+      console.error("[Meta] fbq manual flush failed", err);
     }
   }
 }
@@ -327,9 +327,9 @@ function sendEvent(event: PendingEvent) {
 
   const consent = parseConsent();
   const marketingGranted =
-    consent.ad_storage === 'granted' || consent.ad_user_data === 'granted';
-  const conversionApiGranted = consent.conversion_api === 'granted';
-  const analyticsGranted = consent.analytics_storage === 'granted';
+    consent.ad_storage === "granted" || consent.ad_user_data === "granted";
+  const conversionApiGranted = consent.conversion_api === "granted";
+  const analyticsGranted = consent.analytics_storage === "granted";
 
   const canSendMetaPixel = Boolean(meta && marketingGranted);
   const canSendMetaCapi = Boolean(meta && conversionApiGranted);
@@ -359,39 +359,39 @@ function sendEvent(event: PendingEvent) {
 
       let dispatchedViaBeacon = false;
       if (
-        typeof navigator !== 'undefined' &&
-        typeof navigator.sendBeacon === 'function'
+        typeof navigator !== "undefined" &&
+        typeof navigator.sendBeacon === "function"
       ) {
         try {
           const beaconPayload = JSON.stringify(metaBody);
           const beaconResult = navigator.sendBeacon(
-            '/api/analytics/meta',
-            new Blob([beaconPayload], { type: 'application/json' })
+            "/api/analytics/meta",
+            new Blob([beaconPayload], { type: "application/json" }),
           );
           if (beaconResult) {
             processedEvent.capiDispatched = true;
             dispatchedViaBeacon = true;
           }
         } catch (err) {
-          console.error('[Meta] sendBeacon failed', err);
+          console.error("[Meta] sendBeacon failed", err);
         }
       }
 
       if (!dispatchedViaBeacon) {
         try {
-          void fetch('/api/analytics/meta', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
+          void fetch("/api/analytics/meta", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
             keepalive: true,
             body: JSON.stringify(metaBody),
           }).then(async (res) => {
             if (!res.ok) {
-              console.error('[Meta] trackEvent failed', await res.text());
+              console.error("[Meta] trackEvent failed", await res.text());
             }
           });
           processedEvent.capiDispatched = true;
         } catch (err) {
-          console.error('[Meta] trackEvent fetch error', err);
+          console.error("[Meta] trackEvent fetch error", err);
         }
       }
     }
@@ -405,11 +405,11 @@ function sendEvent(event: PendingEvent) {
       }
 
       const fbqFn = window.fbq;
-      if (typeof fbqFn === 'function') {
+      if (typeof fbqFn === "function") {
         try {
           const method = META_STANDARD_EVENTS.has(meta.eventName)
-            ? 'track'
-            : 'trackCustom';
+            ? "track"
+            : "trackCustom";
           const args: unknown[] = [
             method,
             meta.eventName,
@@ -419,7 +419,7 @@ function sendEvent(event: PendingEvent) {
             },
           ];
 
-          if (typeof fbqFn.callMethod === 'function') {
+          if (typeof fbqFn.callMethod === "function") {
             flushFbqQueue(fbqFn);
             fbqFn.callMethod(...args);
             flushFbqQueue(fbqFn);
@@ -430,7 +430,7 @@ function sendEvent(event: PendingEvent) {
             }, 250);
           }
         } catch (err) {
-          console.error('[Meta] fbq tracking failed', err);
+          console.error("[Meta] fbq tracking failed", err);
         }
       } else if (attempt < MAX_META_RETRIES) {
         setTimeout(() => {
@@ -447,14 +447,14 @@ function sendEvent(event: PendingEvent) {
 
   const canSendGa4 = Boolean(ga4 && analyticsGranted);
   if (canSendGa4 && ga4) {
-    if (typeof window.gtag === 'function') {
+    if (typeof window.gtag === "function") {
       if (!processedEvent.gaDispatched) {
         try {
           const params = {
             ...(ga4.params ?? {}),
             event_id: processedEvent.eventId,
           };
-          window.gtag('event', ga4.eventName, params);
+          window.gtag("event", ga4.eventName, params);
           processedEvent.gaDispatched = true;
         } catch (err) {
           console.error(`[GA4] trackEvent error for ${ga4.eventName}`, err);
@@ -477,10 +477,10 @@ export function trackEvent<
   TMeta extends MetaEventName = MetaEventName,
   TGa4 extends Ga4EventName = Ga4EventName,
 >(params: TrackEventParams<TMeta, TGa4>): string {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return (
       params.eventId ||
-      (typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      (typeof crypto !== "undefined" && "randomUUID" in crypto
         ? crypto.randomUUID()
         : Math.random().toString(36).slice(2))
     );
@@ -489,7 +489,7 @@ export function trackEvent<
   const now = Date.now();
   const eventId =
     params.eventId ||
-    (typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    (typeof crypto !== "undefined" && "randomUUID" in crypto
       ? crypto.randomUUID()
       : Math.random().toString(36).slice(2));
 
@@ -531,7 +531,7 @@ export function trackEvent<
   return eventId;
 }
 
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.trackEvent = trackEvent;
 }
 
@@ -562,25 +562,25 @@ function buildAdvancedMatchingPayload(user?: TrackEventUser | null) {
   return Object.keys(payload).length ? payload : null;
 }
 
-function phoneToE164(raw: string | number, defaultCountry = '+48') {
-  const stringified = typeof raw === 'number' ? String(raw) : raw;
-  const normalized = stringified.replace(/[^ 0-9+]/g, '');
+function phoneToE164(raw: string | number, defaultCountry = "+48") {
+  const stringified = typeof raw === "number" ? String(raw) : raw;
+  const normalized = stringified.replace(/[^ 0-9+]/g, "");
   if (!normalized) return undefined;
-  if (normalized.startsWith('+')) return normalized;
-  if (normalized.startsWith('00')) return `+${normalized.slice(2)}`;
+  if (normalized.startsWith("+")) return normalized;
+  if (normalized.startsWith("00")) return `+${normalized.slice(2)}`;
   return `${defaultCountry}${normalized}`;
 }
 
 function applyMetaPixelUserData(
   pixelId: string | null | undefined,
-  payload: Record<string, string>
+  payload: Record<string, string>,
 ) {
   if (!pixelId) return;
 
   const pixelInstance = window.fbq?.instance?.pixelsByID?.[pixelId];
 
   if (!pixelInstance) {
-    console.warn('[Meta] userData skipped – pixel instance not ready', {
+    console.warn("[Meta] userData skipped – pixel instance not ready", {
       pixelId,
       hasInstance: Boolean(window.fbq?.instance),
     });

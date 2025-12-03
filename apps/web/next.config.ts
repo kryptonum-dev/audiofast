@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -15,17 +15,17 @@ const nextConfig: NextConfig = {
     qualities: [50, 75, 90, 100],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'cdn.sanity.io',
+        protocol: "https",
+        hostname: "cdn.sanity.io",
         pathname: `/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/**`,
       },
       {
-        protocol: 'https',
-        hostname: 'img.youtube.com',
+        protocol: "https",
+        hostname: "img.youtube.com",
       },
       {
-        protocol: 'https',
-        hostname: 'i.vimeocdn.com',
+        protocol: "https",
+        hostname: "i.vimeocdn.com",
       },
     ],
   },

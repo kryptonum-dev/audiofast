@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import Accordion from '../../ui/Accordion';
-import styles from './styles.module.scss';
+import Accordion from "../../ui/Accordion";
+import styles from "./styles.module.scss";
 
-type FaqListProps = NonNullable<PagebuilderType<'faqSection'>['faqList']>;
+type FaqListProps = NonNullable<PagebuilderType<"faqSection">["faqList"]>;
 
 export default function FaqList({ faqList }: { faqList: FaqListProps }) {
   const [openAccordionId, setOpenAccordionId] = useState<string | null>(
-    faqList?.[0]?._id || null
+    faqList?.[0]?._id || null,
   );
 
   if (!faqList || faqList.length === 0) {

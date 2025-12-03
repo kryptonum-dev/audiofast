@@ -1,18 +1,18 @@
-import type { ContactPersonType } from '@/src/global/types';
+import type { ContactPersonType } from "@/src/global/types";
 
-import Image from '../../shared/Image';
-import styles from './styles.module.scss';
+import Image from "../../shared/Image";
+import styles from "./styles.module.scss";
 
 export default function ContactPerson({
   person,
   id,
-  startPos = 'right',
-  className = '',
+  startPos = "right",
+  className = "",
   index,
 }: {
   person: ContactPersonType;
   id: string;
-  startPos?: 'left' | 'right';
+  startPos?: "left" | "right";
   className?: string;
   index: number;
 }) {
@@ -32,7 +32,7 @@ export default function ContactPerson({
         <Image
           image={person.image}
           sizes="55px"
-          loading={index === 0 ? 'eager' : 'lazy'}
+          loading={index === 0 ? "eager" : "lazy"}
         />
       </div>
     </a>

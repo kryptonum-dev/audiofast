@@ -1,18 +1,18 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-import NotFoundComponent from '@/src/components/pageBuilder/NotFound';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { queryNotFoundPage } from '@/src/global/sanity/query';
-import type { QueryNotFoundPageResult } from '@/src/global/sanity/sanity.types';
-import { getSEOMetadata } from '@/src/global/seo';
+import NotFoundComponent from "@/src/components/pageBuilder/NotFound";
+import { sanityFetch } from "@/src/global/sanity/fetch";
+import { queryNotFoundPage } from "@/src/global/sanity/query";
+import type { QueryNotFoundPageResult } from "@/src/global/sanity/sanity.types";
+import { getSEOMetadata } from "@/src/global/seo";
 
-import Breadcrumbs from '../components/ui/Breadcrumbs';
+import Breadcrumbs from "../components/ui/Breadcrumbs";
 
 async function fetchNotFoundPageData() {
   return await sanityFetch<QueryNotFoundPageResult>({
     query: queryNotFoundPage,
-    tags: ['notFound'],
+    tags: ["notFound"],
   });
 }
 
@@ -22,9 +22,9 @@ export async function generateMetadata(): Promise<Metadata> {
     notFoundData
       ? {
           seo: notFoundData.seo!,
-          slug: '/404',
+          slug: "/404",
         }
-      : {}
+      : {},
   );
 }
 
@@ -37,8 +37,8 @@ export default async function NotFound() {
 
   const breadcrumbsData = [
     {
-      name: 'Nie znaleziono strony',
-      path: '/404',
+      name: "Nie znaleziono strony",
+      path: "/404",
     },
   ];
 

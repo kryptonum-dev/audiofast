@@ -1,12 +1,12 @@
-import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import type { PortableTextTypeComponentProps } from "@portabletext/react";
 
-import type { PortableTextProps } from '@/src/global/types';
+import type { PortableTextProps } from "@/src/global/types";
 
-import PortableText from '../index';
-import styles from './styles.module.scss';
+import PortableText from "../index";
+import styles from "./styles.module.scss";
 
 type CircleNumberedListValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptCircleNumberedList';
+  _type: "ptCircleNumberedList";
 };
 
 export function CircleNumberedListComponent({

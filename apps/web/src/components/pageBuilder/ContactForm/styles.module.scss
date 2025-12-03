@@ -10,13 +10,13 @@
   position: relative;
   isolation: isolate;
   grid-template-areas:
-    'header contactForm'
-    'contactPeople contactForm'
-    'accountList contactForm';
+    "header contactForm"
+    "contactPeople contactForm"
+    "accountList contactForm";
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -128,7 +128,7 @@
       min-height: 6rem;
     }
 
-    [aria-invalid='true'] {
+    [aria-invalid="true"] {
       margin-bottom: -1.25rem;
     }
   }
@@ -138,10 +138,10 @@
     justify-content: center;
     grid-template-rows: repeat(3, auto) 1fr;
     grid-template-areas:
-      'header'
-      'contactForm'
-      'contactPeople'
-      'accountList';
+      "header"
+      "contactForm"
+      "contactPeople"
+      "accountList";
 
     &::after,
     &::before {

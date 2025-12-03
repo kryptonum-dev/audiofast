@@ -1,13 +1,13 @@
-import { IS_PRODUCTION_DEPLOYMENT } from './constants';
+import { IS_PRODUCTION_DEPLOYMENT } from "./constants";
 
 type LogContext = Record<string, unknown> | undefined;
 
 function formatContext(context?: LogContext) {
-  if (!context) return '';
+  if (!context) return "";
   try {
     return `\ncontext: ${JSON.stringify(context, null, 2)}`;
   } catch {
-    return '';
+    return "";
   }
 }
 
@@ -24,16 +24,16 @@ export function logWarn(message: string, context?: LogContext) {
 export function logError(
   message: string,
   error?: unknown,
-  context?: LogContext
+  context?: LogContext,
 ) {
   const normalized =
     error instanceof Error
       ? { message: error.message, stack: error.stack }
       : error;
   console.error(
-    `🚨 ${message}${normalized ? `\nerror: ${JSON.stringify(normalized, null, 2)}` : ''}${formatContext(
-      context
-    )}`
+    `🚨 ${message}${normalized ? `\nerror: ${JSON.stringify(normalized, null, 2)}` : ""}${formatContext(
+      context,
+    )}`,
   );
 }
 
@@ -41,7 +41,7 @@ export function logError(
 export async function withErrorLogging<T>(
   label: string,
   operation: () => Promise<T>,
-  context?: LogContext
+  context?: LogContext,
 ): Promise<T | null> {
   try {
     return await operation();

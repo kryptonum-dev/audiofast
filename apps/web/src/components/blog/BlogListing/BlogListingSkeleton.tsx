@@ -1,4 +1,4 @@
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 export default function BlogListingSkeleton() {
   const ITEMS_PER_ROW = 2;
@@ -23,7 +23,7 @@ export default function BlogListingSkeleton() {
               <div className={styles.skeletonDescription}>
                 <div className={styles.skeletonLine} />
                 <div className={styles.skeletonLine} />
-                <div className={styles.skeletonLine} style={{ width: '70%' }} />
+                <div className={styles.skeletonLine} style={{ width: "70%" }} />
               </div>
               <div className={styles.skeletonButton} />
             </div>

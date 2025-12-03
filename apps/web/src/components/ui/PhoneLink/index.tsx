@@ -1,9 +1,9 @@
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 export default function PhoneLink({ phoneNumber }: { phoneNumber: string }) {
   return (
     <a
-      href={`tel:${phoneNumber.replace(/\s/g, '')}`}
+      href={`tel:${phoneNumber.replace(/\s/g, "")}`}
       className={styles.phoneLink}
     >
       <div>

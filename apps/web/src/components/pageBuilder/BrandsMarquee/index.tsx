@@ -1,12 +1,12 @@
-import { getImageProps } from 'next/image';
+import { getImageProps } from "next/image";
 
-import { urlFor } from '@/global/sanity/client';
-import type { PagebuilderType } from '@/src/global/types';
+import { urlFor } from "@/global/sanity/client";
+import type { PagebuilderType } from "@/src/global/types";
 
-import BrandSelector from './BrandSelector';
-import styles from './styles.module.scss';
+import BrandSelector from "./BrandSelector";
+import styles from "./styles.module.scss";
 
-type BrandsMarqueeProps = PagebuilderType<'brandsMarquee'> & {
+type BrandsMarqueeProps = PagebuilderType<"brandsMarquee"> & {
   index: number;
 };
 
@@ -34,32 +34,32 @@ export default function BrandsMarquee(props: BrandsMarqueeProps) {
         const desktopSrc = urlFor(sanitySource)
           .width(2120)
           .height(823)
-          .fit('crop')
-          .auto('format')
+          .fit("crop")
+          .auto("format")
           .url();
 
         // Mobile: 3:4 aspect ratio (e.g., 600x800)
         const mobileSrc = urlFor(sanitySource)
           .width(600)
           .height(800)
-          .fit('crop')
-          .auto('format')
+          .fit("crop")
+          .auto("format")
           .url();
 
         const mobile = getImageProps({
-          alt: '',
+          alt: "",
           src: mobileSrc,
           width: 600,
           height: 800,
-          sizes: '(min-width: 85.375rem) 1366px, 100vw',
+          sizes: "(min-width: 85.375rem) 1366px, 100vw",
         }).props;
 
         const desktop = getImageProps({
-          alt: '',
+          alt: "",
           src: desktopSrc,
           width: 1302,
           height: 556,
-          sizes: '(min-width: 85.375rem) 1366px, 100vw',
+          sizes: "(min-width: 85.375rem) 1366px, 100vw",
         }).props;
 
         return { mobile, desktop };
@@ -81,7 +81,7 @@ export default function BrandsMarquee(props: BrandsMarqueeProps) {
             alt=""
             loading="lazy"
             decoding="async"
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         }
       </picture>

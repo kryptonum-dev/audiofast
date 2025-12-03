@@ -1,15 +1,15 @@
-import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
+import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 
-import type { ComparisonCookie } from './types';
+import type { ComparisonCookie } from "./types";
 
-const COOKIE_NAME = 'audiofast_comparison';
+const COOKIE_NAME = "audiofast_comparison";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 const MAX_PRODUCTS = 3;
 
 /**
  * Custom event name for comparison cookie changes
  */
-const COMPARISON_CHANGE_EVENT = 'audiofast:comparison-changed';
+const COMPARISON_CHANGE_EVENT = "audiofast:comparison-changed";
 
 /**
  * Dispatch a custom event when comparison cookie changes
@@ -17,11 +17,11 @@ const COMPARISON_CHANGE_EVENT = 'audiofast:comparison-changed';
  * @param productData - Optional product data to include in the event for optimistic updates
  */
 function dispatchComparisonChangeEvent(productData?: unknown): void {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.dispatchEvent(
       new CustomEvent(COMPARISON_CHANGE_EVENT, {
         detail: productData ? { productData } : undefined,
-      })
+      }),
     );
   }
 }
@@ -31,17 +31,17 @@ function dispatchComparisonChangeEvent(productData?: unknown): void {
  * Use this in Client Components, useEffect, and event handlers
  */
 export function getComparisonCookie(): ComparisonCookie | null {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Should never be called on server - throw helpful error
     throw new Error(
-      'getComparisonCookie() is client-only. Use getComparisonCookieServer() in Server Components.'
+      "getComparisonCookie() is client-only. Use getComparisonCookieServer() in Server Components.",
     );
   }
 
   const cookieValue = document.cookie
-    .split('; ')
+    .split("; ")
     .find((row) => row.startsWith(`${COOKIE_NAME}=`))
-    ?.split('=')[1];
+    ?.split("=")[1];
 
   if (!cookieValue) return null;
 
@@ -58,7 +58,7 @@ export function getComparisonCookie(): ComparisonCookie | null {
  * Pass the result of: await cookies()
  */
 export async function getComparisonCookieServer(
-  cookieStore: ReadonlyRequestCookies
+  cookieStore: ReadonlyRequestCookies,
 ): Promise<ComparisonCookie | null> {
   const cookie = cookieStore.get(COOKIE_NAME);
   if (!cookie?.value) return null;
@@ -74,14 +74,14 @@ export async function getComparisonCookieServer(
  * Set comparison cookie (CLIENT-SIDE ONLY)
  */
 export function setComparisonCookie(data: ComparisonCookie): void {
-  if (typeof window === 'undefined') {
-    throw new Error('setComparisonCookie can only be called on the client');
+  if (typeof window === "undefined") {
+    throw new Error("setComparisonCookie can only be called on the client");
   }
 
   const cookieValue = encodeURIComponent(JSON.stringify(data));
-  const secure = window.location.protocol === 'https:';
+  const secure = window.location.protocol === "https:";
 
-  document.cookie = `${COOKIE_NAME}=${cookieValue}; max-age=${COOKIE_MAX_AGE}; path=/; samesite=lax${secure ? '; secure' : ''}`;
+  document.cookie = `${COOKIE_NAME}=${cookieValue}; max-age=${COOKIE_MAX_AGE}; path=/; samesite=lax${secure ? "; secure" : ""}`;
 }
 
 /**
@@ -91,20 +91,20 @@ export function setComparisonCookie(data: ComparisonCookie): void {
 export function addProductToComparison(
   productId: string,
   categorySlug: string,
-  productData?: unknown
+  productData?: unknown,
 ): { success: boolean; error?: string } {
   const current = getComparisonCookie();
 
   // Check if already in comparison
   if (current?.productIds.includes(productId)) {
-    return { success: false, error: 'Ten produkt jest już w porównaniu' };
+    return { success: false, error: "Ten produkt jest już w porównaniu" };
   }
 
   // Check max products
   if (current && current.productIds.length >= MAX_PRODUCTS) {
     return {
       success: false,
-      error: 'Możesz porównywać maksymalnie 3 produkty',
+      error: "Możesz porównywać maksymalnie 3 produkty",
     };
   }
 
@@ -112,7 +112,7 @@ export function addProductToComparison(
   if (current && current.categorySlug !== categorySlug) {
     return {
       success: false,
-      error: 'Możesz porównywać tylko produkty z tej samej kategorii',
+      error: "Możesz porównywać tylko produkty z tej samej kategorii",
     };
   }
 
@@ -153,8 +153,8 @@ export function removeProductFromComparison(productId: string): void {
  * Clear all products from comparison
  */
 export function clearComparison(): void {
-  if (typeof window === 'undefined') {
-    throw new Error('clearComparison can only be called on the client');
+  if (typeof window === "undefined") {
+    throw new Error("clearComparison can only be called on the client");
   }
 
   document.cookie = `${COOKIE_NAME}=; max-age=0; path=/`;

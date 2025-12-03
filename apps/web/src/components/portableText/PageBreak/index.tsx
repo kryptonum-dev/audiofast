@@ -1,4 +1,4 @@
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 /**
  * PageBreak component for portable text
@@ -6,6 +6,7 @@ import styles from './styles.module.scss';
  * In two-column layouts, this creates a column break
  */
 export function PageBreakComponent() {
-  return <div className={styles.pageBreak} role="separator" aria-hidden="true" />;
+  return (
+    <div className={styles.pageBreak} role="separator" aria-hidden="true" />
+  );
 }
-

@@ -1,10 +1,10 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import Image from '../../shared/Image';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Image from "../../shared/Image";
+import styles from "./styles.module.scss";
 
-type BlurLinesTextImageProps = PagebuilderType<'blurLinesTextImage'> & {
+type BlurLinesTextImageProps = PagebuilderType<"blurLinesTextImage"> & {
   index: number;
 };
 
@@ -19,7 +19,7 @@ export default function BlurLinesTextImage({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
           className={styles.heading}
         />
         <PortableText

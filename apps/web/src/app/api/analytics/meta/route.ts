@@ -1,10 +1,10 @@
-import { createHash, randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from "node:crypto";
 
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-import type { AnalyticsUser } from '@/global/analytics/types';
-import { client as sanityClient } from '@/global/sanity/client';
+import type { AnalyticsUser } from "@/global/analytics/types";
+import { client as sanityClient } from "@/global/sanity/client";
 
 type MetaRequestBody = {
   event_name: string;
@@ -35,13 +35,13 @@ type MetaAnalyticsConfig = {
   metaConversionToken: string | null;
 };
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 function getCookie(headers: Headers, name: string): string | null {
-  const cookieHeader = headers.get('cookie');
+  const cookieHeader = headers.get("cookie");
   if (!cookieHeader) return null;
 
-  const cookies = cookieHeader.split(';').map((c) => c.trim());
+  const cookies = cookieHeader.split(";").map((c) => c.trim());
   for (const cookie of cookies) {
     if (cookie.startsWith(`${name}=`)) {
       return decodeURIComponent(cookie.slice(name.length + 1));
@@ -52,15 +52,15 @@ function getCookie(headers: Headers, name: string): string | null {
 
 function sha256(value?: string | null) {
   if (!value) return undefined;
-  return createHash('sha256').update(value).digest('hex');
+  return createHash("sha256").update(value).digest("hex");
 }
 
-function phoneToE164(raw?: string, defaultCountry = '+48'): string | undefined {
+function phoneToE164(raw?: string, defaultCountry = "+48"): string | undefined {
   if (!raw) return undefined;
-  let v = raw.replace(/\s+/g, '').trim();
+  let v = raw.replace(/\s+/g, "").trim();
   if (!v) return undefined;
-  if (!v.startsWith('+')) {
-    if (v.startsWith('0')) v = v.replace(/^0+/, '');
+  if (!v.startsWith("+")) {
+    if (v.startsWith("0")) v = v.replace(/^0+/, "");
     v = `${defaultCountry}${v}`;
   }
   return v;
@@ -68,7 +68,7 @@ function phoneToE164(raw?: string, defaultCountry = '+48'): string | undefined {
 
 function computeFbc(fbcCookie?: string | null, urlOrRef?: string) {
   if (fbcCookie) return fbcCookie || undefined;
-  const src = urlOrRef || '';
+  const src = urlOrRef || "";
   const match = src.match(/[?&]fbclid=([^&#]+)/);
   if (!match?.[1]) return undefined;
   const ts = Math.floor(Date.now() / 1000);
@@ -82,8 +82,8 @@ async function postWithRetry(url: string, body: unknown, maxRetries = 2) {
   while (attempt <= maxRetries) {
     try {
       const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        method: "POST",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
       });
 
@@ -104,7 +104,7 @@ async function postWithRetry(url: string, body: unknown, maxRetries = 2) {
       await new Promise((resolve) => setTimeout(resolve, wait));
     }
   }
-  throw lastErr instanceof Error ? lastErr : new Error('request failed');
+  throw lastErr instanceof Error ? lastErr : new Error("request failed");
 }
 
 export async function POST(request: NextRequest) {
@@ -114,12 +114,12 @@ export async function POST(request: NextRequest) {
       await sanityClient.fetch<MetaAnalyticsConfig>(META_ANALYTICS_QUERY);
   } catch (error) {
     console.error(
-      '[Meta CAPI] Failed to load analytics config from Sanity',
-      error
+      "[Meta CAPI] Failed to load analytics config from Sanity",
+      error,
     );
     return NextResponse.json(
-      { success: false, message: 'Meta not configured' },
-      { status: 500 }
+      { success: false, message: "Meta not configured" },
+      { status: 500 },
     );
   }
 
@@ -127,10 +127,10 @@ export async function POST(request: NextRequest) {
   const accessToken = config.metaConversionToken;
 
   if (!pixelId || !accessToken) {
-    console.error('[Meta CAPI] Missing Meta Pixel configuration in Sanity');
+    console.error("[Meta CAPI] Missing Meta Pixel configuration in Sanity");
     return NextResponse.json(
-      { success: false, message: 'Meta not configured' },
-      { status: 400 }
+      { success: false, message: "Meta not configured" },
+      { status: 400 },
     );
   }
 
@@ -139,21 +139,21 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, message: 'Invalid JSON' },
-      { status: 400 }
+      { success: false, message: "Invalid JSON" },
+      { status: 400 },
     );
   }
 
   if (!body?.event_name) {
     return NextResponse.json(
-      { success: false, message: 'event_name is required' },
-      { status: 400 }
+      { success: false, message: "event_name is required" },
+      { status: 400 },
     );
   }
 
-  const consentRaw = getCookie(request.headers, 'cookie-consent');
-  let conversion_api = 'denied';
-  let advanced_matching = 'denied';
+  const consentRaw = getCookie(request.headers, "cookie-consent");
+  let conversion_api = "denied";
+  let advanced_matching = "denied";
 
   if (consentRaw) {
     try {
@@ -161,40 +161,40 @@ export async function POST(request: NextRequest) {
         conversion_api?: string;
         advanced_matching?: string;
       };
-      conversion_api = parsed.conversion_api ?? 'denied';
-      advanced_matching = parsed.advanced_matching ?? 'denied';
+      conversion_api = parsed.conversion_api ?? "denied";
+      advanced_matching = parsed.advanced_matching ?? "denied";
     } catch (error) {
-      console.warn('[Meta CAPI] Unable to parse consent cookie', error);
+      console.warn("[Meta CAPI] Unable to parse consent cookie", error);
     }
   }
 
-  if (conversion_api !== 'granted') {
+  if (conversion_api !== "granted") {
     return NextResponse.json(
-      { success: false, message: 'Conversion API not permitted by user' },
-      { status: 403 }
+      { success: false, message: "Conversion API not permitted by user" },
+      { status: 403 },
     );
   }
 
   const forwardedIp = request.headers
-    .get('x-forwarded-for')
-    ?.split(',')[0]
+    .get("x-forwarded-for")
+    ?.split(",")[0]
     ?.trim();
-  const realIp = request.headers.get('x-real-ip') || undefined;
+  const realIp = request.headers.get("x-real-ip") || undefined;
   const ip =
     forwardedIp ||
     realIp ||
-    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
 
-  const ua = request.headers.get('user-agent') || undefined;
-  const referer = request.headers.get('referer') || undefined;
-  const fbp = getCookie(request.headers, '_fbp') || undefined;
+  const ua = request.headers.get("user-agent") || undefined;
+  const referer = request.headers.get("referer") || undefined;
+  const fbp = getCookie(request.headers, "_fbp") || undefined;
   const fbc = computeFbc(
-    getCookie(request.headers, '_fbc'),
-    body.url || referer
+    getCookie(request.headers, "_fbc"),
+    body.url || referer,
   );
 
   const event_time =
-    typeof body.event_time === 'number'
+    typeof body.event_time === "number"
       ? body.event_time
       : Math.floor(Date.now() / 1000);
   const event_id = body.event_id || randomUUID();
@@ -204,7 +204,7 @@ export async function POST(request: NextRequest) {
   if (ip) user_data.client_ip_address = ip;
   if (ua) user_data.client_user_agent = ua;
 
-  if (advanced_matching === 'granted') {
+  if (advanced_matching === "granted") {
     const em = body.user?.email?.trim().toLowerCase();
     const ph = phoneToE164(body.user?.phone);
     const fn = body.user?.first_name?.trim().toLowerCase();
@@ -246,14 +246,14 @@ export async function POST(request: NextRequest) {
     event_name: body.event_name,
     event_time,
     event_id,
-    action_source: 'website' as const,
+    action_source: "website" as const,
     user_data,
     ...(event_source_url && { event_source_url }),
     ...(body.content_name && { content_name: body.content_name }),
     ...(body.custom_event_params && { custom_data: body.custom_event_params }),
   };
 
-  console.info('[Meta CAPI] Event dispatched', {
+  console.info("[Meta CAPI] Event dispatched", {
     event_name: data.event_name,
     event_id: data.event_id,
     event_source_url: data.event_source_url,
@@ -266,30 +266,30 @@ export async function POST(request: NextRequest) {
   });
 
   const url = `https://graph.facebook.com/v23.0/${encodeURIComponent(
-    pixelId
+    pixelId,
   )}/events?access_token=${encodeURIComponent(accessToken)}`;
 
   try {
     const res = await postWithRetry(url, {
       data: [data],
-      ...(IS_DEVELOPMENT && { test_event_code: 'TEST12345' }),
+      ...(IS_DEVELOPMENT && { test_event_code: "TEST12345" }),
     });
     const json = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      console.error('[Meta CAPI] Error response', json);
+      console.error("[Meta CAPI] Error response", json);
       return NextResponse.json(
-        { success: false, message: 'Meta API error' },
-        { status: res.status }
+        { success: false, message: "Meta API error" },
+        { status: res.status },
       );
     }
 
     return NextResponse.json({ success: true, event_id }, { status: 200 });
   } catch (error) {
-    console.error('[Meta CAPI] Request failed', error);
+    console.error("[Meta CAPI] Request failed", error);
     return NextResponse.json(
-      { success: false, message: 'Request failed' },
-      { status: 500 }
+      { success: false, message: "Request failed" },
+      { status: 500 },
     );
   }
 }

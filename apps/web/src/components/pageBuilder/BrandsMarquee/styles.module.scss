@@ -100,7 +100,7 @@
         top: 0%;
       }
 
-      &[data-direction='reverse'] {
+      &[data-direction="reverse"] {
         .marqueeTrack {
           bottom: 0%;
           top: unset;
@@ -117,7 +117,7 @@
           transform: translateY(-1rem);
         }
 
-        &[data-direction='reverse'] .marqueeList {
+        &[data-direction="reverse"] .marqueeList {
           transform: translateY(1rem);
         }
       }
@@ -261,7 +261,7 @@
           }
         }
 
-        &[data-direction='reverse'] {
+        &[data-direction="reverse"] {
           .marqueeTrack {
             transform: translateX(-100%);
             animation-name: scrollHorizontalReverse;
@@ -273,7 +273,7 @@
             transform: translateX(-1rem);
           }
 
-          &[data-direction='reverse'] .marqueeList {
+          &[data-direction="reverse"] .marqueeList {
             transform: translateX(1rem);
           }
         }

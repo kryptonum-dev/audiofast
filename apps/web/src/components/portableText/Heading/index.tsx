@@ -1,14 +1,14 @@
-import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import type { PortableTextTypeComponentProps } from "@portabletext/react";
 
-import { PortableTextRenderer } from '@/src/components/portableText';
-import type { PortableTextProps } from '@/src/global/types';
-import svgToInlineString from '@/src/global/utils';
+import { PortableTextRenderer } from "@/src/components/portableText";
+import type { PortableTextProps } from "@/src/global/types";
+import svgToInlineString from "@/src/global/utils";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type HeadingValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptHeading';
-  level?: 'h3';
+  _type: "ptHeading";
+  level?: "h3";
   iconUrl?: string;
   text: PortableTextProps;
 };

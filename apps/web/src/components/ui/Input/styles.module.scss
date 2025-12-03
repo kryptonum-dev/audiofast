@@ -62,7 +62,7 @@
       box-shadow: 0 0 0 3px rgba(254, 1, 64, 0.1);
     }
   }
-  &[aria-invalid='true'] {
+  &[aria-invalid="true"] {
     input,
     textarea {
       border-color: var(--primary-error, #ff6a00);
@@ -86,7 +86,7 @@
     }
   }
 
-  &[data-mode='dark'] {
+  &[data-mode="dark"] {
     .label {
       color: var(--neutral-white, #ffffff);
       transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -134,7 +134,7 @@
         }
       }
     }
-    &[aria-invalid='true'] {
+    &[aria-invalid="true"] {
       input {
         border-color: var(--primary-error, #ff6a00);
         background:

@@ -1,14 +1,14 @@
-import NextImage from 'next/image';
-import type { PortableTextTypeComponentProps } from 'next-sanity';
+import NextImage from "next/image";
+import type { PortableTextTypeComponentProps } from "next-sanity";
 
-import type { PortableTextProps } from '@/src/global/types';
+import type { PortableTextProps } from "@/src/global/types";
 
-import Image from '../../shared/Image';
-import styles from './styles.module.scss';
-import { YoutubeVideoClient } from './YoutubeVideoClient';
+import Image from "../../shared/Image";
+import styles from "./styles.module.scss";
+import { YoutubeVideoClient } from "./YoutubeVideoClient";
 
 type YoutubeVideoValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptYoutubeVideo';
+  _type: "ptYoutubeVideo";
 };
 
 /**
@@ -21,7 +21,7 @@ async function fetchYouTubeTitle(youtubeId: string): Promise<string | null> {
 
     const response = await fetch(oEmbedUrl, {
       headers: {
-        'User-Agent': 'Audiofast-Website/1.0',
+        "User-Agent": "Audiofast-Website/1.0",
       },
     });
 
@@ -34,7 +34,7 @@ async function fetchYouTubeTitle(youtubeId: string): Promise<string | null> {
   } catch (error) {
     console.error(
       `Error fetching YouTube title for video ${youtubeId}:`,
-      error
+      error,
     );
     return null;
   }
@@ -44,11 +44,11 @@ async function fetchYouTubeTitle(youtubeId: string): Promise<string | null> {
  * List of YouTube thumbnail resolutions to try, in order of preference
  */
 const YOUTUBE_THUMBNAIL_RESOLUTIONS = [
-  'maxresdefault.jpg', // Highest quality (1280x720)
-  'sddefault.jpg', // Standard definition (640x480)
-  'hqdefault.jpg', // High quality (480x360)
-  'mqdefault.jpg', // Medium quality (320x180)
-  'default.jpg', // Default quality (120x90)
+  "maxresdefault.jpg", // Highest quality (1280x720)
+  "sddefault.jpg", // Standard definition (640x480)
+  "hqdefault.jpg", // High quality (480x360)
+  "mqdefault.jpg", // Medium quality (320x180)
+  "default.jpg", // Default quality (120x90)
 ];
 
 /**
@@ -56,16 +56,16 @@ const YOUTUBE_THUMBNAIL_RESOLUTIONS = [
  * Returns undefined if no thumbnail is available
  */
 async function getYouTubeThumbnailUrl(
-  youtubeId: string
+  youtubeId: string,
 ): Promise<string | undefined> {
   for (const resolution of YOUTUBE_THUMBNAIL_RESOLUTIONS) {
     const url = `https://img.youtube.com/vi/${youtubeId}/${resolution}`;
     try {
       // Use HEAD request to check if image exists without downloading it
       const response = await fetch(url, {
-        method: 'HEAD',
+        method: "HEAD",
         headers: {
-          'User-Agent': 'Audiofast-Website/1.0',
+          "User-Agent": "Audiofast-Website/1.0",
         },
       });
 
@@ -101,7 +101,7 @@ export async function YoutubeVideoComponent({
   }
 
   const imageSizes =
-    '(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 43vw, 587px';
+    "(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 43vw, 587px";
 
   return (
     <div className={styles.youtubeVideo}>
@@ -112,7 +112,7 @@ export async function YoutubeVideoComponent({
           sizes={imageSizes}
           loading="lazy"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
       ) : thumbnailUrl ? (
         <NextImage
@@ -121,7 +121,7 @@ export async function YoutubeVideoComponent({
           className={styles.thumbnail}
           loading="lazy"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
       ) : (
         <div className={styles.placeholder}>

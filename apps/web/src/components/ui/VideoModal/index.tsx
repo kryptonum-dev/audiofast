@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
-type VideoType = 'youtube' | 'vimeo';
+type VideoType = "youtube" | "vimeo";
 
 interface VideoModalProps {
   videoId: string;
   videoType: VideoType;
   children?: (openModal: () => void) => React.ReactNode;
-  playButtonSize?: 'small' | 'medium' | 'large';
+  playButtonSize?: "small" | "medium" | "large";
   playButtonClassName?: string;
   closeButtonLabel?: string;
 }
 
 function getEmbedUrl(videoType: VideoType, videoId: string): string {
   switch (videoType) {
-    case 'youtube':
+    case "youtube":
       return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-    case 'vimeo':
+    case "vimeo":
       return `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
     default:
-      return '';
+      return "";
   }
 }
 
@@ -31,9 +31,9 @@ export default function VideoModal({
   videoId,
   videoType,
   children,
-  playButtonSize = 'medium',
+  playButtonSize = "medium",
   playButtonClassName,
-  closeButtonLabel = 'Zamknij wideo',
+  closeButtonLabel = "Zamknij wideo",
 }: VideoModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -51,13 +51,13 @@ export default function VideoModal({
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         handleClose();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen]);
 
   const handleOpen = () => {
@@ -75,7 +75,7 @@ export default function VideoModal({
 
   const embedUrl = getEmbedUrl(videoType, videoId);
   const playerTitle =
-    videoType === 'youtube' ? 'YouTube video player' : 'Vimeo video player';
+    videoType === "youtube" ? "YouTube video player" : "Vimeo video player";
 
   const modal = (
     <div
@@ -134,7 +134,7 @@ export default function VideoModal({
 
   // Default: render styled play button
   const sizeClass = styles[playButtonSize];
-  const buttonClass = `${styles.playButton} ${sizeClass} ${playButtonClassName || ''}`;
+  const buttonClass = `${styles.playButton} ${sizeClass} ${playButtonClassName || ""}`;
 
   return (
     <>

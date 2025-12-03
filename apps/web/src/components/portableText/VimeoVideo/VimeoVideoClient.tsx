@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-import VideoModal from '../../ui/VideoModal';
-import styles from '../YouTubeVideo/styles.module.scss';
+import VideoModal from "../../ui/VideoModal";
+import styles from "../YouTubeVideo/styles.module.scss";
 
 interface VimeoVideoClientProps {
   vimeoId: string;
@@ -32,10 +32,10 @@ export function VimeoVideoClient({ vimeoId }: VimeoVideoClientProps) {
       }
     };
 
-    container.addEventListener('click', handleContainerClick);
+    container.addEventListener("click", handleContainerClick);
 
     return () => {
-      container.removeEventListener('click', handleContainerClick);
+      container.removeEventListener("click", handleContainerClick);
     };
   }, []);
 
@@ -80,4 +80,3 @@ export function VimeoVideoClient({ vimeoId }: VimeoVideoClientProps) {
     </VideoModal>
   );
 }
-

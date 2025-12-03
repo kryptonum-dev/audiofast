@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import useEmblaCarousel from 'embla-carousel-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import useEmblaCarousel from "embla-carousel-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-import type { SanityRawImage } from '../../shared/Image';
-import Image from '../../shared/Image';
-import ArrowButton from '../../ui/ArrowButton';
-import styles from './styles.module.scss';
+import type { SanityRawImage } from "../../shared/Image";
+import Image from "../../shared/Image";
+import ArrowButton from "../../ui/ArrowButton";
+import styles from "./styles.module.scss";
 
 type Props = {
   images: SanityRawImage[];
@@ -36,9 +36,9 @@ export function Slider({ images }: Props) {
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: shouldLoop,
-    align: 'start',
+    align: "start",
     skipSnaps: false,
-    containScroll: shouldLoop ? undefined : 'trimSnaps',
+    containScroll: shouldLoop ? undefined : "trimSnaps",
     slidesToScroll: 1,
   });
 
@@ -59,7 +59,7 @@ export function Slider({ images }: Props) {
       setModalIndex(originalIndex);
       setIsModalOpen(true);
     },
-    [images.length]
+    [images.length],
   );
 
   const closeModal = useCallback(() => {
@@ -79,7 +79,7 @@ export function Slider({ images }: Props) {
         setIsImageTransitioning(false);
       }, 150);
     },
-    [isImageTransitioning]
+    [isImageTransitioning],
   );
 
   const modalPrev = useCallback(() => {
@@ -104,22 +104,22 @@ export function Slider({ images }: Props) {
     if (!isModalOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         closeModal();
-      } else if (e.key === 'ArrowLeft') {
+      } else if (e.key === "ArrowLeft") {
         modalPrev();
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === "ArrowRight") {
         modalNext();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen, closeModal, modalPrev, modalNext]);
 
   // Responsive sizes for square images in grid
   const slideSizes =
-    '(max-width: 35.9375rem) 45vw, (max-width: 56.125rem) 30vw, 200px';
+    "(max-width: 35.9375rem) 45vw, (max-width: 56.125rem) 30vw, 200px";
 
   const modal = (
     <div

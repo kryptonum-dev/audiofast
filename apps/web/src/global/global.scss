@@ -231,7 +231,7 @@ h2,
   position: relative;
   transition: color 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  &[target='_blank'] {
+  &[target="_blank"] {
     &::after,
     &::before {
       content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cg stroke='%23303030'%3E%3Cpath d='M11 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-5M10 14 20 4M15 4h5v5'/%3E%3C/g%3E%3C/svg%3E");
@@ -254,7 +254,7 @@ h2,
   &[data-dark] {
     color: var(--neutral-300, #f7f3f3);
 
-    &[target='_blank'] {
+    &[target="_blank"] {
       &::after {
         content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cg stroke='%23f7f3f3'%3E%3Cpath d='M11 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-5M10 14 20 4M15 4h5v5'/%3E%3C/g%3E%3C/svg%3E");
       }
@@ -269,7 +269,7 @@ h2,
   &:hover {
     color: var(--primary-red, #fe0140);
 
-    &[target='_blank'] {
+    &[target="_blank"] {
       &::after {
         opacity: 0;
       }
@@ -304,7 +304,7 @@ h4 .link {
   position: relative;
 
   &::before {
-    content: '';
+    content: "";
     position: fixed;
     inset: 0;
     top: 75px;
@@ -450,4 +450,4 @@ h4 .link {
 
 .full-width {
   width: 100%;
-} 
+}

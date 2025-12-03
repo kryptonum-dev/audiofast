@@ -55,14 +55,14 @@
     padding: 0 1rem 0.75rem;
   }
 
-  &[data-expanded='true'] {
+  &[data-expanded="true"] {
     .content {
       grid-template-rows: 1fr;
     }
   }
 
   &:has(.summary:hover),
-  &[data-expanded='true'] {
+  &[data-expanded="true"] {
     background-color: var(--neutral-200, #f8f8f8);
   }
 

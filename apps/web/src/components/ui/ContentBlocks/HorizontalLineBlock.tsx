@@ -1,4 +1,4 @@
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 /**
  * HorizontalLineBlock component
@@ -7,4 +7,3 @@ import styles from './styles.module.scss';
 export function HorizontalLineBlock() {
   return <hr className={styles.horizontalLine} />;
 }
-

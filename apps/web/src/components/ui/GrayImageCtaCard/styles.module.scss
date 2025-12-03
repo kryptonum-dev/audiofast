@@ -7,12 +7,12 @@
   grid-template-rows: auto auto 1fr auto 1fr auto;
   column-gap: 2rem;
   grid-template-areas:
-    'image primaryHeading'
-    'image primaryDescription'
-    'image button'
-    'image secondaryHeading'
-    'image secondaryDescription'
-    'image phone';
+    "image primaryHeading"
+    "image primaryDescription"
+    "image button"
+    "image secondaryHeading"
+    "image secondaryDescription"
+    "image phone";
   img {
     border-radius: 0.5rem;
     width: clamp(350px, calc(360vw / 7.68), 627px);
@@ -73,13 +73,13 @@
     margin: 0 auto;
     padding: 1rem;
     grid-template-areas:
-      'primaryHeading'
-      'primaryDescription'
-      'button'
-      'image'
-      'secondaryHeading'
-      'secondaryDescription'
-      'phone';
+      "primaryHeading"
+      "primaryDescription"
+      "button"
+      "image"
+      "secondaryHeading"
+      "secondaryDescription"
+      "phone";
 
     .primaryHeading {
       margin-top: 0;

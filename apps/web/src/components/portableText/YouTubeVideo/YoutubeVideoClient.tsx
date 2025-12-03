@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-import YouTubeModal from '../../ui/YouTubeModal';
-import styles from './styles.module.scss';
+import YouTubeModal from "../../ui/YouTubeModal";
+import styles from "./styles.module.scss";
 
 interface YoutubeVideoClientProps {
   youtubeId: string;
@@ -32,10 +32,10 @@ export function YoutubeVideoClient({ youtubeId }: YoutubeVideoClientProps) {
       }
     };
 
-    container.addEventListener('click', handleContainerClick);
+    container.addEventListener("click", handleContainerClick);
 
     return () => {
-      container.removeEventListener('click', handleContainerClick);
+      container.removeEventListener("click", handleContainerClick);
     };
   }, []);
 

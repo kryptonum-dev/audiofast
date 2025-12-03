@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type PillProps = {
   label: string;
@@ -24,7 +24,7 @@ export default function Pill({
     </>
   );
 
-  const className = `${styles.pill} ${isActive ? styles.active : ''}`;
+  const className = `${styles.pill} ${isActive ? styles.active : ""}`;
 
   if (href) {
     return (

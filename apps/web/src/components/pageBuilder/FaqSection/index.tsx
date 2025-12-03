@@ -1,14 +1,14 @@
-import type { FaqSection } from '@/src/global/sanity/sanity.types';
-import type { PagebuilderType } from '@/src/global/types';
+import type { FaqSection } from "@/src/global/sanity/sanity.types";
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import FaqSchema from '../../schema/FaqSchema';
-import ContactPerson from '../../ui/ContactPerson';
-import ContactForm from './ContactForm';
-import FaqList from './FaqList';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import FaqSchema from "../../schema/FaqSchema";
+import ContactPerson from "../../ui/ContactPerson";
+import ContactForm from "./ContactForm";
+import FaqList from "./FaqList";
+import styles from "./styles.module.scss";
 
-type FaqSectionProps = PagebuilderType<'faqSection'> & {
+type FaqSectionProps = PagebuilderType<"faqSection"> & {
   index: number;
 };
 
@@ -22,11 +22,11 @@ export default function FaqSection({
   index,
 }: FaqSectionProps) {
   const showFaqList =
-    (displayMode === 'both' || displayMode === 'faqOnly') && faqList;
+    (displayMode === "both" || displayMode === "faqOnly") && faqList;
   const showContactSection =
-    displayMode === 'both' || displayMode === 'contactOnly';
+    displayMode === "both" || displayMode === "contactOnly";
 
-  const isContactOnly = displayMode === 'contactOnly';
+  const isContactOnly = displayMode === "contactOnly";
 
   return (
     <section
@@ -39,7 +39,7 @@ export default function FaqSection({
           <PortableText
             value={heading}
             className={styles.heading}
-            headingLevel={index === 0 ? 'h1' : 'h2'}
+            headingLevel={index === 0 ? "h1" : "h2"}
           />
           {description && (
             <PortableText value={description} className={styles.description} />
@@ -56,11 +56,11 @@ export default function FaqSection({
               headingLevel={
                 isContactOnly
                   ? index === 0
-                    ? 'h1'
-                    : 'h2'
+                    ? "h1"
+                    : "h2"
                   : index === 0
-                    ? 'h2'
-                    : 'h3'
+                    ? "h2"
+                    : "h3"
               }
             />
             <div className={styles.personList}>

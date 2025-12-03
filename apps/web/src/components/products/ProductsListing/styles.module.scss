@@ -5,17 +5,17 @@
   column-gap: clamp(1.25rem, calc(1.25vw / 0.48), 2rem);
   padding: 2rem 0 clamp(3rem, calc(3.5vw / 0.48), 4rem);
   grid-template-areas:
-    'productsAside sortDropdown pagination-first'
-    'productsAside productsGrid productsGrid'
-    'pagination-last pagination-last pagination-last';
+    "productsAside sortDropdown pagination-first"
+    "productsAside productsGrid productsGrid"
+    "pagination-last pagination-last pagination-last";
 
-  &[data-has-filters='true'] {
+  &[data-has-filters="true"] {
     grid-template-rows: auto auto 1fr auto;
     grid-template-areas:
-      'productsAside customFiltersBar customFiltersBar'
-      'productsAside sortDropdown pagination-first'
-      'productsAside productsGrid productsGrid'
-      'pagination-last pagination-last pagination-last';
+      "productsAside customFiltersBar customFiltersBar"
+      "productsAside sortDropdown pagination-first"
+      "productsAside productsGrid productsGrid"
+      "pagination-last pagination-last pagination-last";
   }
 
   .productsHeader {
@@ -43,18 +43,18 @@
   @media (max-width: 56.1875rem) {
     grid-template-columns: auto 1fr;
     grid-template-areas:
-      'productsAside productsAside'
-      'sortDropdown pagination-first'
-      'productsGrid productsGrid'
-      'pagination-last pagination-last';
+      "productsAside productsAside"
+      "sortDropdown pagination-first"
+      "productsGrid productsGrid"
+      "pagination-last pagination-last";
 
-    &[data-has-filters='true'] {
+    &[data-has-filters="true"] {
       grid-template-areas:
-        'productsAside productsAside'
-        'customFiltersBar customFiltersBar'
-        'sortDropdown pagination-first'
-        'productsGrid productsGrid'
-        'pagination-last pagination-last';
+        "productsAside productsAside"
+        "customFiltersBar customFiltersBar"
+        "sortDropdown pagination-first"
+        "productsGrid productsGrid"
+        "pagination-last pagination-last";
     }
 
     > nav:last-of-type {
@@ -70,7 +70,7 @@
       margin-bottom: 1rem;
     }
 
-    &[data-has-filters='true'] {
+    &[data-has-filters="true"] {
       > div:nth-of-type(3) {
         margin-bottom: 1rem;
       }

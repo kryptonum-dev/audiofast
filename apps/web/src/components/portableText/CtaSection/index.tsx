@@ -1,13 +1,13 @@
-import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import type { PortableTextTypeComponentProps } from "@portabletext/react";
 
-import ProductCard from '@/src/components/ui/ProductCard';
-import type { PortableTextProps } from '@/src/global/types';
+import ProductCard from "@/src/components/ui/ProductCard";
+import type { PortableTextProps } from "@/src/global/types";
 
-import Button from '../../ui/Button';
-import styles from './styles.module.scss';
+import Button from "../../ui/Button";
+import styles from "./styles.module.scss";
 
 type CtaSectionValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptCtaSection';
+  _type: "ptCtaSection";
   showProducts?: boolean;
 };
 

@@ -1,10 +1,10 @@
-import type { PortableTextBlock } from 'next-sanity';
-import slugify from 'slugify';
+import type { PortableTextBlock } from "next-sanity";
+import slugify from "slugify";
 
-import type { PortableTextProps } from './types';
+import type { PortableTextProps } from "./types";
 
 export const isRelativeUrl = (url: string) =>
-  url.startsWith('/') || url.startsWith('#') || url.startsWith('?');
+  url.startsWith("/") || url.startsWith("#") || url.startsWith("?");
 
 export const isValidUrl = (url: string) => {
   try {
@@ -19,14 +19,14 @@ export const capitalize = (str: string) =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
 export const getTitleCase = (name: string) => {
-  const titleTemp = name.replace(/([A-Z])/g, ' $1');
+  const titleTemp = name.replace(/([A-Z])/g, " $1");
   return titleTemp.charAt(0).toUpperCase() + titleTemp.slice(1);
 };
 
 type Response<T> = [T, undefined] | [undefined, string];
 
 export async function handleErrors<T>(
-  promise: Promise<T>
+  promise: Promise<T>,
 ): Promise<Response<T>> {
   try {
     const data = await promise;
@@ -41,7 +41,7 @@ export async function handleErrors<T>(
 
 export function convertToSlug(
   text?: string,
-  { fallback }: { fallback?: string } = { fallback: 'top-level' }
+  { fallback }: { fallback?: string } = { fallback: "top-level" },
 ) {
   if (!text) return fallback;
   return slugify(text.trim(), {
@@ -50,9 +50,9 @@ export function convertToSlug(
   });
 }
 
-export function parseChildrenToSlug(children: PortableTextBlock['children']) {
-  if (!children) return '';
-  return convertToSlug(children.map((child) => child.text).join(''));
+export function parseChildrenToSlug(children: PortableTextBlock["children"]) {
+  if (!children) return "";
+  return convertToSlug(children.map((child) => child.text).join(""));
 }
 
 /**
@@ -63,8 +63,8 @@ export async function imageToInlineSvg(url: string) {
   if (!url) return null;
   try {
     const response = await fetch(url);
-    const contentType = response.headers.get('content-type');
-    if (contentType !== 'image/svg+xml') return null;
+    const contentType = response.headers.get("content-type");
+    if (contentType !== "image/svg+xml") return null;
     const svgContent = await response.text();
     return svgContent;
   } catch (error) {
@@ -79,23 +79,23 @@ export async function imageToInlineSvg(url: string) {
  * @returns Plain text string with formatting removed
  */
 export function portableTextToPlainString(
-  portableText: PortableTextBlock[] | PortableTextProps
+  portableText: PortableTextBlock[] | PortableTextProps,
 ): string {
   if (!Array.isArray(portableText) || portableText.length === 0) {
-    return '';
+    return "";
   }
 
   return portableText
     .map((block) => {
       // Handle standard block types (normal text, headings, etc.)
-      if (block._type === 'block') {
+      if (block._type === "block") {
         // Extract text from children
         const blockText = (block.children || [])
-          .map((child: PortableTextBlock['children'][number]) => {
+          .map((child: PortableTextBlock["children"][number]) => {
             // Extract plain text, ignoring all marks (strong, italic, links, etc.)
-            return child.text || '';
+            return child.text || "";
           })
-          .join('');
+          .join("");
 
         return blockText.trim();
       }
@@ -104,102 +104,102 @@ export function portableTextToPlainString(
       const blockAny = block as Record<string, unknown>;
 
       // ptImage - Extract caption text and alt text
-      if (block._type === 'ptImage') {
+      if (block._type === "ptImage") {
         const caption = blockAny.caption;
         const imageAlt = (blockAny.image as Record<string, unknown>)
           ?.alt as string;
         const captionText = caption
           ? portableTextToPlainString(caption as PortableTextProps)
-          : '';
-        return [captionText, imageAlt].filter(Boolean).join(' ');
+          : "";
+        return [captionText, imageAlt].filter(Boolean).join(" ");
       }
 
       // ptQuote - Extract quote text
-      if (block._type === 'ptQuote') {
+      if (block._type === "ptQuote") {
         const quote = blockAny.quote;
         return quote
           ? portableTextToPlainString(quote as PortableTextProps)
-          : '';
+          : "";
       }
 
       // ptTwoColumnTable - Extract all table cell text
-      if (block._type === 'ptTwoColumnTable') {
+      if (block._type === "ptTwoColumnTable") {
         const rows = blockAny.rows as Array<{
           column1?: string;
           column2?: PortableTextProps;
           _key: string;
         }>;
-        if (!rows) return '';
+        if (!rows) return "";
         return rows
           .map((row) => {
-            const col1 = row.column1 || '';
+            const col1 = row.column1 || "";
             const col2 = row.column2
               ? portableTextToPlainString(row.column2)
-              : '';
-            return [col1, col2].filter(Boolean).join(' ');
+              : "";
+            return [col1, col2].filter(Boolean).join(" ");
           })
           .filter(Boolean)
-          .join(' ');
+          .join(" ");
       }
 
       // ptArrowList - Extract all list items
-      if (block._type === 'ptArrowList') {
+      if (block._type === "ptArrowList") {
         const items = blockAny.items as Array<{
           content?: PortableTextProps;
           _key: string;
         }>;
-        if (!items) return '';
+        if (!items) return "";
         return items
           .map((item) =>
-            item.content ? portableTextToPlainString(item.content) : ''
+            item.content ? portableTextToPlainString(item.content) : "",
           )
           .filter(Boolean)
-          .join(' ');
+          .join(" ");
       }
 
       // ptCircleNumberedList - Extract all list items
-      if (block._type === 'ptCircleNumberedList') {
+      if (block._type === "ptCircleNumberedList") {
         const items = blockAny.items as Array<{
           content?: PortableTextProps;
           _key: string;
         }>;
-        if (!items) return '';
+        if (!items) return "";
         return items
           .map((item) =>
-            item.content ? portableTextToPlainString(item.content) : ''
+            item.content ? portableTextToPlainString(item.content) : "",
           )
           .filter(Boolean)
-          .join(' ');
+          .join(" ");
       }
 
       // ptButton - Extract button text
-      if (block._type === 'ptButton') {
+      if (block._type === "ptButton") {
         const button = blockAny.button as { text?: string };
-        return button?.text || '';
+        return button?.text || "";
       }
 
       // ptCtaSection - Extract heading and button text
-      if (block._type === 'ptCtaSection') {
+      if (block._type === "ptCtaSection") {
         const heading = blockAny.heading as string;
         const button = blockAny.button as { text?: string };
-        return [heading, button?.text].filter(Boolean).join(' ');
+        return [heading, button?.text].filter(Boolean).join(" ");
       }
 
       // ptFeaturedProducts - Extract product names
-      if (block._type === 'ptFeaturedProducts') {
+      if (block._type === "ptFeaturedProducts") {
         const products = blockAny.products as Array<{ name?: string }>;
-        if (!products) return '';
+        if (!products) return "";
         return products
-          .map((product) => product.name || '')
+          .map((product) => product.name || "")
           .filter(Boolean)
-          .join(' ');
+          .join(" ");
       }
 
       // Unknown block type - return empty string
-      return '';
+      return "";
     })
     .filter(Boolean) // Remove empty strings
-    .join(' ') // Join blocks with spaces
+    .join(" ") // Join blocks with spaces
     .trim(); // Remove leading/trailing whitespace
 }
 
@@ -214,10 +214,10 @@ type PortableTextMarkDef = {
   _type: string;
   _key: string;
   customLink?: {
-    type?: 'external' | 'internal' | null;
+    type?: "external" | "internal" | null;
     openInNewTab?: boolean | null;
     external?: string | null;
-    href?: string | '#' | null;
+    href?: string | "#" | null;
     internalSlug?: string | null;
   } | null;
 };
@@ -227,7 +227,7 @@ type PortableTextBlockWithDetails = {
   _key: string;
   children?: PortableTextChild[];
   style?: string;
-  listItem?: 'bullet' | 'number';
+  listItem?: "bullet" | "number";
   markDefs?: PortableTextMarkDef[] | null;
   level?: number;
 };
@@ -237,11 +237,11 @@ type PortableTextBlockWithDetails = {
  */
 function escapeHtml(text: string): string {
   const htmlEscapeMap: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
   };
   return text.replace(/[&<>"']/g, (char) => htmlEscapeMap[char] || char);
 }
@@ -257,27 +257,27 @@ function escapeHtml(text: string): string {
  * // Returns: "<p>Hello <strong>world</strong>!</p>"
  */
 export function portableTextToHtml(
-  portableText: PortableTextProps | PortableTextBlockWithDetails[]
+  portableText: PortableTextProps | PortableTextBlockWithDetails[],
 ): string {
-  if (!portableText) return '';
+  if (!portableText) return "";
 
   const blocks = Array.isArray(portableText) ? portableText : [portableText];
 
-  if (blocks.length === 0) return '';
+  if (blocks.length === 0) return "";
 
   // Group blocks by list items
   const processedBlocks: string[] = [];
   type ListGroup = {
-    type: 'bullet' | 'number';
+    type: "bullet" | "number";
     items: string[];
   };
   let currentList: ListGroup | null = null;
 
   const processChild = (
     child: PortableTextChild,
-    markDefs: PortableTextMarkDef[] = []
+    markDefs: PortableTextMarkDef[] = [],
   ): string => {
-    let text = escapeHtml(child.text || '');
+    let text = escapeHtml(child.text || "");
 
     if (!child.marks || child.marks.length === 0) {
       return text;
@@ -285,24 +285,24 @@ export function portableTextToHtml(
 
     // Apply marks in order
     child.marks.forEach((mark) => {
-      if (mark === 'strong') {
+      if (mark === "strong") {
         text = `<strong>${text}</strong>`;
-      } else if (mark === 'em') {
+      } else if (mark === "em") {
         text = `<em>${text}</em>`;
-      } else if (mark === 'code') {
+      } else if (mark === "code") {
         text = `<code>${text}</code>`;
       } else {
         // Check if it's a custom mark (like customLink)
         const markDef = markDefs.find((def) => def._key === mark);
-        if (markDef && markDef._type === 'customLink') {
+        if (markDef && markDef._type === "customLink") {
           const linkData = markDef.customLink;
-          const href = linkData?.href || '#';
+          const href = linkData?.href || "#";
           const isExternal =
-            linkData?.type === 'external' ||
+            linkData?.type === "external" ||
             linkData?.openInNewTab ||
-            href.startsWith('http') ||
-            href.startsWith('mailto:') ||
-            href.startsWith('tel:');
+            href.startsWith("http") ||
+            href.startsWith("mailto:") ||
+            href.startsWith("tel:");
 
           if (isExternal) {
             text = `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${text}</a>`;
@@ -317,12 +317,12 @@ export function portableTextToHtml(
   };
 
   const processBlock = (block: PortableTextBlockWithDetails): string => {
-    if (block._type !== 'block') return '';
+    if (block._type !== "block") return "";
 
     const children = block.children || [];
     const content = children
       .map((child) => processChild(child, block.markDefs || []))
-      .join('');
+      .join("");
 
     // Handle list items
     if (block.listItem) {
@@ -330,24 +330,24 @@ export function portableTextToHtml(
     }
 
     // Handle different block styles
-    const style = block.style || 'normal';
+    const style = block.style || "normal";
 
     switch (style) {
-      case 'h1':
+      case "h1":
         return `<h1>${content}</h1>`;
-      case 'h2':
+      case "h2":
         return `<h2>${content}</h2>`;
-      case 'h3':
+      case "h3":
         return `<h3>${content}</h3>`;
-      case 'h4':
+      case "h4":
         return `<h4>${content}</h4>`;
-      case 'h5':
+      case "h5":
         return `<h5>${content}</h5>`;
-      case 'h6':
+      case "h6":
         return `<h6>${content}</h6>`;
-      case 'blockquote':
+      case "blockquote":
         return `<blockquote>${content}</blockquote>`;
-      case 'normal':
+      case "normal":
       default:
         return `<p>${content}</p>`;
     }
@@ -361,9 +361,9 @@ export function portableTextToHtml(
       if (!currentList || currentList.type !== typedBlock.listItem) {
         // Close previous list if exists
         if (currentList) {
-          const listTag = currentList.type === 'bullet' ? 'ul' : 'ol';
+          const listTag = currentList.type === "bullet" ? "ul" : "ol";
           processedBlocks.push(
-            `<${listTag}>${currentList.items.join('')}</${listTag}>`
+            `<${listTag}>${currentList.items.join("")}</${listTag}>`,
           );
         }
         // Start new list
@@ -378,9 +378,9 @@ export function portableTextToHtml(
     } else {
       // Not a list item - close any open list first
       if (currentList) {
-        const listTag = currentList.type === 'bullet' ? 'ul' : 'ol';
+        const listTag = currentList.type === "bullet" ? "ul" : "ol";
         processedBlocks.push(
-          `<${listTag}>${currentList.items.join('')}</${listTag}>`
+          `<${listTag}>${currentList.items.join("")}</${listTag}>`,
         );
         currentList = null;
       }
@@ -391,29 +391,29 @@ export function portableTextToHtml(
 
   // Close any remaining open list
   if (currentList !== null) {
-    const listTag = (currentList as ListGroup).type === 'bullet' ? 'ul' : 'ol';
+    const listTag = (currentList as ListGroup).type === "bullet" ? "ul" : "ol";
     processedBlocks.push(
-      `<${listTag}>${(currentList as ListGroup).items.join('')}</${listTag}>`
+      `<${listTag}>${(currentList as ListGroup).items.join("")}</${listTag}>`,
     );
   }
 
-  return processedBlocks.join('');
+  return processedBlocks.join("");
 }
 
 export default async function svgToInlineString(
-  url: string
+  url: string,
 ): Promise<string | null> {
   if (!url) return null;
 
   try {
     const response = await fetch(url);
-    const contentType = response.headers.get('content-type');
+    const contentType = response.headers.get("content-type");
 
     if (
-      !contentType?.includes('image/svg+xml') &&
-      !contentType?.includes('svg')
+      !contentType?.includes("image/svg+xml") &&
+      !contentType?.includes("svg")
     ) {
-      console.error('URL does not point to an SVG file');
+      console.error("URL does not point to an SVG file");
       return null;
     }
 
@@ -431,12 +431,12 @@ export default async function svgToInlineString(
 
 // Known search param keys that are NOT custom filters
 export const STANDARD_SEARCH_PARAMS = [
-  'page',
-  'search',
-  'sortBy',
-  'brands',
-  'minPrice',
-  'maxPrice',
+  "page",
+  "search",
+  "sortBy",
+  "brands",
+  "minPrice",
+  "maxPrice",
 ];
 
 /**
@@ -473,7 +473,7 @@ export function plnToCents(pln: number): number {
  */
 export function extractCustomFilters(
   searchParams: Record<string, string | string[] | undefined>,
-  availableFilters: string[] = []
+  availableFilters: string[] = [],
 ): Array<{ filterName: string; value: string }> {
   const customFilters: Array<{ filterName: string; value: string }> = [];
 
@@ -514,14 +514,14 @@ export function extractCustomFilters(
  * @returns Array of clean brand slugs (e.g., ["aurender", "dcs"])
  */
 export function parseBrands(
-  brandsParam: string | string[] | undefined
+  brandsParam: string | string[] | undefined,
 ): string[] {
   if (!brandsParam) return [];
 
   // Convert to array if string (handle comma-separated)
   const brandsArray = Array.isArray(brandsParam)
     ? brandsParam
-    : brandsParam.split(',').filter(Boolean);
+    : brandsParam.split(",").filter(Boolean);
 
   // Return clean brand slugs without /marki/ prefix
   // The query will handle matching against Sanity's slug format
@@ -530,7 +530,7 @@ export function parseBrands(
     if (!trimmed) return [];
 
     // Remove /marki/ prefix and trailing slashes if present
-    const cleanSlug = trimmed.replace('/marki/', '').replace(/\//g, '');
+    const cleanSlug = trimmed.replace("/marki/", "").replace(/\//g, "");
 
     return [cleanSlug];
   });
@@ -549,12 +549,12 @@ export function parseBrands(
 export function parsePrice(
   priceParam: string | undefined,
   defaultValue: number,
-  maxPrice?: number
+  maxPrice?: number,
 ): number {
   if (!priceParam) return defaultValue;
 
   // Check if the string contains a decimal point
-  if (priceParam.includes('.') || priceParam.includes(',')) {
+  if (priceParam.includes(".") || priceParam.includes(",")) {
     return defaultValue;
   }
 
@@ -583,11 +583,11 @@ export function parsePrice(
 export function slugifyFilterName(filterName: string): string {
   return filterName
     .toLowerCase()
-    .normalize('NFD') // Decompose characters with diacritics
-    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-    .replace(/[^\w\s-]/g, '') // Remove special characters except spaces and hyphens
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .normalize("NFD") // Decompose characters with diacritics
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[^\w\s-]/g, "") // Remove special characters except spaces and hyphens
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Replace multiple hyphens with single
     .trim();
 }
 
@@ -601,10 +601,10 @@ export function slugifyFilterName(filterName: string): string {
  */
 export function matchSlugToFilterName(
   slugifiedName: string,
-  availableFilters: string[]
+  availableFilters: string[],
 ): string | undefined {
   return availableFilters.find(
-    (filterName) => slugifyFilterName(filterName) === slugifiedName
+    (filterName) => slugifyFilterName(filterName) === slugifiedName,
   );
 }
 
@@ -617,7 +617,7 @@ export function matchSlugToFilterName(
  * @returns Array of slugified filter objects that need validation later
  */
 export function extractRawCustomFilters(
-  searchParams: Record<string, string | string[] | undefined>
+  searchParams: Record<string, string | string[] | undefined>,
 ): Array<{ slugifiedName: string; value: string }> {
   const rawFilters: Array<{ slugifiedName: string; value: string }> = [];
 
@@ -652,14 +652,14 @@ export function extractRawCustomFilters(
  */
 export function validateCustomFilters(
   rawFilters: Array<{ slugifiedName: string; value: string }>,
-  availableFilters: string[]
+  availableFilters: string[],
 ): Array<{ filterName: string; value: string }> {
   const validatedFilters: Array<{ filterName: string; value: string }> = [];
 
   for (const { slugifiedName, value } of rawFilters) {
     const originalFilterName = matchSlugToFilterName(
       slugifiedName,
-      availableFilters
+      availableFilters,
     );
 
     if (originalFilterName) {
@@ -687,14 +687,14 @@ export function validateCustomFilters(
  */
 export function stringToPortableText(
   text: string,
-  style: string = 'normal'
+  style: string = "normal",
 ): PortableTextProps {
   return [
     {
-      _type: 'block',
-      children: [{ _type: 'span', text, _key: '' }],
+      _type: "block",
+      children: [{ _type: "span", text, _key: "" }],
       style,
-      _key: '',
+      _key: "",
       markDefs: null,
       listItem: undefined,
       level: undefined,
@@ -710,9 +710,9 @@ export function stringToPortableText(
  */
 export function formatPrice(priceCents: number) {
   const priceInPLN = priceCents / 100;
-  return new Intl.NumberFormat('pl-PL', {
-    style: 'currency',
-    currency: 'PLN',
+  return new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(priceInPLN);

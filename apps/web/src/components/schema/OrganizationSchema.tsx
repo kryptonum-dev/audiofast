@@ -1,5 +1,5 @@
-import { BASE_URL } from '@/src/global/constants';
-import type { QuerySettingsResult } from '@/src/global/sanity/sanity.types';
+import { BASE_URL } from "@/src/global/constants";
+import type { QuerySettingsResult } from "@/src/global/sanity/sanity.types";
 
 type Props = {
   settings: QuerySettingsResult;
@@ -34,11 +34,11 @@ export default function OrganizationSchema({ settings }: Props) {
   // Build the postal address object
   const postalAddress = address
     ? {
-        '@type': 'PostalAddress',
+        "@type": "PostalAddress",
         streetAddress: address.streetAddress,
         addressLocality: address.city,
         postalCode: address.postalCode,
-        addressCountry: 'PL', // ISO 3166-1 alpha-2 country code for Poland
+        addressCountry: "PL", // ISO 3166-1 alpha-2 country code for Poland
       }
     : undefined;
 
@@ -46,7 +46,7 @@ export default function OrganizationSchema({ settings }: Props) {
   const geoCoordinates =
     geo?.latitude && geo?.longitude
       ? {
-          '@type': 'GeoCoordinates',
+          "@type": "GeoCoordinates",
           latitude: geo.latitude,
           longitude: geo.longitude,
         }
@@ -54,9 +54,9 @@ export default function OrganizationSchema({ settings }: Props) {
 
   // Build the organization schema combining Organization and LocalBusiness
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': ['Organization', 'LocalBusiness', 'Store'],
-    '@id': `${BASE_URL}#organization`,
+    "@context": "https://schema.org",
+    "@type": ["Organization", "LocalBusiness", "Store"],
+    "@id": `${BASE_URL}#organization`,
     name: companyName,
     description: companyDescription,
     url: BASE_URL,
@@ -77,11 +77,11 @@ export default function OrganizationSchema({ settings }: Props) {
     ...(email &&
       tel && {
         contactPoint: {
-          '@type': 'ContactPoint',
+          "@type": "ContactPoint",
           telephone: tel,
           email: email,
-          contactType: 'customer service',
-          availableLanguage: ['pl', 'en'],
+          contactType: "customer service",
+          availableLanguage: ["pl", "en"],
         },
       }),
   };

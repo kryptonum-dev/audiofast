@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import styles from "./styles.module.scss";
 
 type StepsProps = {
-  steps: NonNullable<PagebuilderType<'stepList'>['steps']>;
+  steps: NonNullable<PagebuilderType<"stepList">["steps"]>;
 };
 
 export default function Steps({ steps }: StepsProps) {
@@ -21,7 +21,7 @@ export default function Steps({ steps }: StepsProps) {
     if (!stepsList || !line) return;
 
     const stepItems = Array.from(
-      stepsList.querySelectorAll<HTMLLIElement>(`.${styles.step}`)
+      stepsList.querySelectorAll<HTMLLIElement>(`.${styles.step}`),
     );
 
     if (stepItems.length === 0) return;
@@ -51,34 +51,34 @@ export default function Steps({ steps }: StepsProps) {
       rafId = requestAnimationFrame(updateLineScale);
 
       // Ensure first item stays active
-      if (firstItem && firstItem.getAttribute('data-active') !== 'true') {
-        firstItem.setAttribute('data-active', 'true');
+      if (firstItem && firstItem.getAttribute("data-active") !== "true") {
+        firstItem.setAttribute("data-active", "true");
       }
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     // IntersectionObserver for active steps (only observe items after the first)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           entry.target.setAttribute(
-            'data-active',
-            entry.isIntersecting.toString()
+            "data-active",
+            entry.isIntersecting.toString(),
           );
         });
       },
       {
         threshold: 0,
         rootMargin: `0px 0px -40% 0px`,
-      }
+      },
     );
 
     // Only observe items from index 1 onwards (skip first item)
     stepItems.slice(1).forEach((item) => observer.observe(item));
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener("scroll", onScroll);
       observer.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
     };
@@ -90,7 +90,7 @@ export default function Steps({ steps }: StepsProps) {
           <li
             key={step._key}
             className={styles.step}
-            data-active={index === 0 ? 'true' : undefined}
+            data-active={index === 0 ? "true" : undefined}
           >
             <div className={styles.content}>
               <PortableText value={step.heading} className={styles.heading} />

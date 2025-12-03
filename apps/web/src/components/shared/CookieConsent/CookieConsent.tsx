@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { sanityFetch } from '@/global/sanity/fetch';
-import { querySettings } from '@/src/global/sanity/query';
+import { sanityFetch } from "@/global/sanity/fetch";
+import { querySettings } from "@/src/global/sanity/query";
 
-import CookieConsentClient from './CookieConsentClient';
+import CookieConsentClient from "./CookieConsentClient";
 
 type AnalyticsConfig = {
   analytics?: {
@@ -17,7 +17,7 @@ type AnalyticsConfig = {
 async function getAnalyticsConfig() {
   const data = await sanityFetch<AnalyticsConfig>({
     query: querySettings,
-    tags: ['settings'],
+    tags: ["settings"],
   });
 
   return data?.analytics ?? null;
@@ -90,7 +90,7 @@ export default async function CookieConsent() {
             alt=""
             height="1"
             width="1"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             src={`https://www.facebook.com/tr?id=${analytics.metaPixelId}&ev=PageView&noscript=1`}
           />
         </noscript>

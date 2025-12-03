@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { trackEvent } from '@/global/analytics/track-event';
+import { trackEvent } from "@/global/analytics/track-event";
 
 type ProductViewTrackerProps = {
   productId: string;
@@ -25,25 +25,25 @@ export default function ProductViewTracker({
   useEffect(() => {
     trackEvent({
       meta: {
-        eventName: 'ViewContent',
+        eventName: "ViewContent",
         params: {
           content_name: productName,
-          content_type: 'product',
+          content_type: "product",
           content_ids: [productId],
           ...(brand?.name ? { brand: brand.name } : {}),
           ...(categories.length
-            ? { content_category: categories.join(',') }
+            ? { content_category: categories.join(",") }
             : {}),
-          ...(typeof pricePLN === 'number'
-            ? { value: pricePLN, currency: 'PLN' }
+          ...(typeof pricePLN === "number"
+            ? { value: pricePLN, currency: "PLN" }
             : {}),
         },
       },
       ga4: {
-        eventName: 'view_item',
+        eventName: "view_item",
         params: {
-          currency: 'PLN',
-          value: typeof pricePLN === 'number' ? pricePLN : undefined,
+          currency: "PLN",
+          value: typeof pricePLN === "number" ? pricePLN : undefined,
           items: [
             {
               item_id: productId,

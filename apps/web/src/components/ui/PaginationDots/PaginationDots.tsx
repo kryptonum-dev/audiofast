@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useRef } from 'react';
+import { useRef } from "react";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type Props = {
   count: number;
@@ -12,17 +12,17 @@ type Props = {
     base: string;
     goTo: string;
   };
-  outline?: 'light' | 'dark';
+  outline?: "light" | "dark";
 };
 
 export default function PaginationDots({
   count,
   activeIndex,
-  outline = 'dark',
+  outline = "dark",
   onSelect,
   ariaLabel = {
-    base: 'Paginacja',
-    goTo: 'Przejdź do',
+    base: "Paginacja",
+    goTo: "Przejdź do",
   },
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,8 +40,8 @@ export default function PaginationDots({
       data-count={count}
       style={
         {
-          '--active-index': activeIndex.toString(),
-          '--total-count': count.toString(),
+          "--active-index": activeIndex.toString(),
+          "--total-count": count.toString(),
         } as React.CSSProperties
       }
     >

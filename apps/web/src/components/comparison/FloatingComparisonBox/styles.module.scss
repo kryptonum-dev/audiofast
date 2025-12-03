@@ -51,7 +51,7 @@
     &::before {
       position: absolute;
       inset: -1rem;
-      content: '';
+      content: "";
       z-index: 1;
     }
 
@@ -77,16 +77,17 @@
         transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
         color 200ms;
     }
-.compareIconContainer {
-  background-color: var(--primary-red);
-  padding: 4px;
-  border-radius: 0.25rem;
-    svg {
-      flex-shrink: 0;
-      color: var(--neutral-white);
-      transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
-      margin-bottom: 1px;
-    }}
+    .compareIconContainer {
+      background-color: var(--primary-red);
+      padding: 4px;
+      border-radius: 0.25rem;
+      svg {
+        flex-shrink: 0;
+        color: var(--neutral-white);
+        transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 1px;
+      }
+    }
   }
 
   .header {

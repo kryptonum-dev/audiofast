@@ -41,7 +41,7 @@
 
   // Halo/shadow effect using pseudo-element
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -3.125rem;
     left: 50%;
@@ -93,7 +93,7 @@
 
     // Subtle background glow effect that scales
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 50%;
       left: 50%;
@@ -265,7 +265,7 @@
     outline-offset: 0.125rem;
   }
 
-  &[aria-expanded='true'] {
+  &[aria-expanded="true"] {
     color: var(--neutral-white);
   }
 }

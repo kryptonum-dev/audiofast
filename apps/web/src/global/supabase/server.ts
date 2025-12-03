@@ -1,6 +1,6 @@
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-import type { Database } from './database.types';
+import type { Database } from "./database.types";
 
 /**
  * Create a Supabase client for server-side operations (Server Components, Route Handlers, Server Actions)
@@ -18,6 +18,6 @@ export function createClient() {
         persistSession: false,
         autoRefreshToken: false,
       },
-    }
+    },
   );
 }

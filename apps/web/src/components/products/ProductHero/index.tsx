@@ -1,13 +1,13 @@
-import type { SanityRawImage } from '@/components/shared/Image';
-import Image from '@/components/shared/Image';
-import type { CompletePricingData } from '@/src/global/supabase/types';
-import type { BrandType, PortableTextProps } from '@/src/global/types';
+import type { SanityRawImage } from "@/components/shared/Image";
+import Image from "@/components/shared/Image";
+import type { CompletePricingData } from "@/src/global/supabase/types";
+import type { BrandType, PortableTextProps } from "@/src/global/types";
 
-import Button from '../../ui/Button';
-import AddToComparison from './AddToComparison';
-import PricingConfigurator from './PricingConfigurator';
-import ProductDescription from './ProductDescription';
-import styles from './styles.module.scss';
+import Button from "../../ui/Button";
+import AddToComparison from "./AddToComparison";
+import PricingConfigurator from "./PricingConfigurator";
+import ProductDescription from "./ProductDescription";
+import styles from "./styles.module.scss";
 
 export type AwardType = {
   _id: string;
@@ -38,7 +38,7 @@ export default function ProductHero({
   awards,
   customId,
   productId,
-  categorySlug
+  categorySlug,
 }: ProductHeroProps) {
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
@@ -58,7 +58,7 @@ export default function ProductHero({
     <section className={`${styles.productHero} max-width`} id={customId}>
       <Image
         image={previewImage}
-        sizes='(max-width: 56.1875rem) 96vw, (max-width: 85.375rem) 48vw, 951px'
+        sizes="(max-width: 56.1875rem) 96vw, (max-width: 85.375rem) 48vw, 951px"
         priority
         className={styles.previewImage}
       />
@@ -66,8 +66,8 @@ export default function ProductHero({
         <div className={styles.brandLogo}>
           <Image
             image={brand!.logo}
-            sizes='(max-width: 56.1875rem) 96px, 128px'
-            loading='lazy'
+            sizes="(max-width: 56.1875rem) 96px, 128px"
+            loading="lazy"
           />
         </div>
         {subtitle && <span className={styles.prefix}>{subtitle}</span>}
@@ -87,10 +87,10 @@ export default function ProductHero({
         )}
 
         <Button
-          text='Zapytaj o produkt'
-          variant='primary'
-          href='/kontakt/'
-          iconUsed='information'
+          text="Zapytaj o produkt"
+          variant="primary"
+          href="/kontakt/"
+          iconUsed="information"
         />
         <AddToComparison
           productId={productId}
@@ -100,19 +100,19 @@ export default function ProductHero({
             _id: productId,
             name,
             brand,
-            mainImage: previewImage
+            mainImage: previewImage,
           }}
         />
       </div>
       {displayAwards && displayAwards?.length > 0 && (
         <div
           className={styles.awardsMarquee}
-          aria-label='Nagrody produktu'
+          aria-label="Nagrody produktu"
           data-use-marquee={shouldUseMarquee}
           style={
             shouldUseMarquee
               ? ({
-                  '--animation-duration': `${animationDuration}s`
+                  "--animation-duration": `${animationDuration}s`,
                 } as React.CSSProperties)
               : undefined
           }
@@ -126,11 +126,11 @@ export default function ProductHero({
                 return (
                   <Image
                     image={award.logo}
-                    alt={award.name || 'Nagroda produktu'}
-                    sizes='80px'
+                    alt={award.name || "Nagroda produktu"}
+                    sizes="80px"
                     quality={90}
                     className={styles.awardLogo}
-                    loading='lazy'
+                    loading="lazy"
                     key={key}
                     aria-hidden={isDuplicate}
                   />

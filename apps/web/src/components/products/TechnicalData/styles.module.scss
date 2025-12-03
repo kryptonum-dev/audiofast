@@ -135,7 +135,7 @@
             list-style: none;
 
             &::before {
-              content: '';
+              content: "";
               position: absolute;
               top: 0.5rem;
               left: 0.25rem;
@@ -203,8 +203,6 @@
       margin-top: clamp(1.25rem, calc(1.5vw / 0.48), 2rem);
       margin-bottom: 0.5rem;
     }
-
-
 
     .table {
       min-width: max-content;

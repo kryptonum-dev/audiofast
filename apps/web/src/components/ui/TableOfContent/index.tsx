@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import type { PortableTextProps } from '@/src/global/types';
-import { convertToSlug, portableTextToPlainString } from '@/src/global/utils';
+import type { PortableTextProps } from "@/src/global/types";
+import { convertToSlug, portableTextToPlainString } from "@/src/global/utils";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type HeadingGroup = {
   heading: { text: string; slug: string };
@@ -18,11 +18,11 @@ type Props = {
 };
 
 export default function TableOfContent({
-  title = 'Spis treści',
+  title = "Spis treści",
   headings,
 }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeId, setActiveId] = useState<string>('');
+  const [activeId, setActiveId] = useState<string>("");
 
   // Handle link clicks to maintain focus after navigation
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -36,16 +36,16 @@ export default function TableOfContent({
   // Group headings by H2 and their H3 children
   const groupedHeadings =
     headings?.reduce<HeadingGroup[]>((acc, heading) => {
-      if (!heading || typeof heading !== 'object') return acc;
+      if (!heading || typeof heading !== "object") return acc;
 
       const style = (heading as { style?: string }).style as string;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const text = portableTextToPlainString([heading as any]);
-      const slug = convertToSlug(text) || '';
+      const slug = convertToSlug(text) || "";
 
-      if (style === 'h2') {
+      if (style === "h2") {
         acc.push({ heading: { text, slug }, subHeadings: [] });
-      } else if (style === 'h3' && acc.length > 0) {
+      } else if (style === "h3" && acc.length > 0) {
         const lastGroup = acc[acc.length - 1];
         if (lastGroup) {
           lastGroup.subHeadings.push({ text, slug });
@@ -63,10 +63,10 @@ export default function TableOfContent({
           }
         });
       },
-      { rootMargin: '-100px 0px -80% 0px' }
+      { rootMargin: "-100px 0px -80% 0px" },
     );
 
-    const headingElements = document.querySelectorAll('h2[id], h3[id]');
+    const headingElements = document.querySelectorAll("h2[id], h3[id]");
     headingElements.forEach((elem) => observer.observe(elem));
 
     return () => observer.disconnect();
@@ -77,23 +77,25 @@ export default function TableOfContent({
       <p>{title}</p>
       <div
         className={styles.wrapper}
-        data-expanded={isExpanded ? 'true' : 'false'}
+        data-expanded={isExpanded ? "true" : "false"}
       >
-        {groupedHeadings.length === 0 && <p className={styles.empty}>Brak treści</p>}
+        {groupedHeadings.length === 0 && (
+          <p className={styles.empty}>Brak treści</p>
+        )}
         {groupedHeadings && (
           <ul className={styles.list}>
             {groupedHeadings.map(({ heading, subHeadings }, idx) => {
               const isHeadingActive = activeId === heading.slug;
               const hasActiveChild = subHeadings.some(
-                (sub) => activeId === sub.slug
+                (sub) => activeId === sub.slug,
               );
               const shouldExpand = isHeadingActive || hasActiveChild;
 
               return (
-                <li key={idx} data-expanded={shouldExpand ? 'true' : 'false'}>
+                <li key={idx} data-expanded={shouldExpand ? "true" : "false"}>
                   <a
                     href={`#${heading.slug}`}
-                    className={activeId === heading.slug ? styles.active : ''}
+                    className={activeId === heading.slug ? styles.active : ""}
                     onClick={handleLinkClick}
                   >
                     {heading.text}
@@ -106,7 +108,7 @@ export default function TableOfContent({
                           <a
                             href={`#${sub.slug}`}
                             className={
-                              activeId === sub.slug ? styles.active : ''
+                              activeId === sub.slug ? styles.active : ""
                             }
                             onClick={handleLinkClick}
                           >
@@ -126,7 +128,7 @@ export default function TableOfContent({
             className={styles.showMore}
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            <span>{isExpanded ? 'Pokaż mniej' : 'Pokaż więcej'}</span>
+            <span>{isExpanded ? "Pokaż mniej" : "Pokaż więcej"}</span>
             <ChevronDownIcon />
           </button>
         )}

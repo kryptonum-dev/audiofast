@@ -1,28 +1,28 @@
-import type { PublicationType as PublicationTypeProps } from '@/src/global/types';
-import { portableTextToPlainString } from '@/src/global/utils';
+import type { PublicationType as PublicationTypeProps } from "@/src/global/types";
+import { portableTextToPlainString } from "@/src/global/utils";
 
-import Image from '../../shared/Image';
-import Button from '../Button';
-import DateBox from '../DateBox';
-import PublicationType from '../PublicationType';
-import styles from './styles.module.scss';
+import Image from "../../shared/Image";
+import Button from "../Button";
+import DateBox from "../DateBox";
+import PublicationType from "../PublicationType";
+import styles from "./styles.module.scss";
 
 type PublicationCardProps = {
   publication: PublicationTypeProps;
-  layout?: 'vertical' | 'horizontal';
-  headingLevel?: 'h2' | 'h3';
+  layout?: "vertical" | "horizontal";
+  headingLevel?: "h2" | "h3";
   imageSizes?: string;
   priority?: boolean;
-  loading?: 'eager' | 'lazy';
+  loading?: "eager" | "lazy";
 };
 
 export default function PublicationCard({
   publication,
-  layout = 'vertical',
-  imageSizes = '400px',
-  headingLevel = 'h3',
+  layout = "vertical",
+  imageSizes = "400px",
+  headingLevel = "h3",
   priority = false,
-  loading = 'lazy',
+  loading = "lazy",
 }: PublicationCardProps) {
   const {
     _createdAt,
@@ -41,7 +41,7 @@ export default function PublicationCard({
       <a
         href={slug!}
         className={styles.link}
-        {...(openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}
+        {...(openInNewTab && { target: "_blank", rel: "noopener noreferrer" })}
       >
         <div className={styles.imageBox}>
           <Image
@@ -57,7 +57,7 @@ export default function PublicationCard({
           <Heading className={styles.title}>
             {portableTextToPlainString(title)}
           </Heading>
-          {layout === 'vertical' && (
+          {layout === "vertical" && (
             <Button tabIndex={-1} text="Czytaj artykuł" variant="primary" />
           )}
         </div>

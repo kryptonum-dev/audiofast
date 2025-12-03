@@ -1,16 +1,16 @@
-import type { PortableTextProps, ProductType } from '@/global/types';
+import type { PortableTextProps, ProductType } from "@/global/types";
 import type {
   QueryBlogPostBySlugResult,
   QueryReviewBySlugResult,
-} from '@/src/global/sanity/sanity.types';
+} from "@/src/global/sanity/sanity.types";
 
-import PortableText from '../../portableText';
-import Image from '../../shared/Image';
-import DateBox from '../../ui/DateBox';
-import ProductCard from '../../ui/ProductCard';
-import PublicationType from '../../ui/PublicationType';
-import TableOfContent from '../../ui/TableOfContent';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Image from "../../shared/Image";
+import DateBox from "../../ui/DateBox";
+import ProductCard from "../../ui/ProductCard";
+import PublicationType from "../../ui/PublicationType";
+import TableOfContent from "../../ui/TableOfContent";
+import styles from "./styles.module.scss";
 
 type Props =
   | NonNullable<QueryBlogPostBySlugResult>
@@ -26,31 +26,31 @@ export function ArticleBody({
   ...props
 }: Props) {
   const publicationType =
-    _type === 'blog-article' && 'category' in props
+    _type === "blog-article" && "category" in props
       ? props.category?.name
-      : 'Recenzja';
+      : "Recenzja";
 
   // Use publishDate for blog articles, _createdAt for reviews
   const displayDate =
-    _type === 'blog-article' && 'publishDate' in props
+    _type === "blog-article" && "publishDate" in props
       ? props.publishDate || _createdAt
       : _createdAt;
 
   // Get author for reviews
-  const author = _type === 'review' && 'author' in props ? props.author : null;
+  const author = _type === "review" && "author" in props ? props.author : null;
 
   // Get description for blog articles only
   const description =
-    _type === 'blog-article' && 'description' in props
+    _type === "blog-article" && "description" in props
       ? props.description
       : null;
 
   return (
     <article
       className={`${styles.container} content`}
-      data-is-review={_type == 'review'}
+      data-is-review={_type == "review"}
     >
-      {_type == 'review' && 'product' in props && props.product ? (
+      {_type == "review" && "product" in props && props.product ? (
         <div className={styles.reviewHeader}>
           <TableOfContent
             headings={headings as unknown as PortableTextProps[]}

@@ -1,12 +1,12 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import Image from '../../shared/Image';
-import Button from '../../ui/Button';
-import YouTubeModal from '../../ui/YouTubeModal';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Image from "../../shared/Image";
+import Button from "../../ui/Button";
+import YouTubeModal from "../../ui/YouTubeModal";
+import styles from "./styles.module.scss";
 
-type ImageWithVideoProps = PagebuilderType<'imageWithVideo'> & {
+type ImageWithVideoProps = PagebuilderType<"imageWithVideo"> & {
   index: number;
 };
 
@@ -25,7 +25,7 @@ export default function ImageWithVideo({
           sizes="(max-width: 37.4375rem) 100vw, (max-width: 85.3125rem) 96vw, 1302px"
           image={image}
           priority={index === 0}
-          loading={index === 0 ? 'eager' : 'lazy'}
+          loading={index === 0 ? "eager" : "lazy"}
         />
         {youtubeId && (
           <YouTubeModal
@@ -38,7 +38,7 @@ export default function ImageWithVideo({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
           className={styles.heading}
         />
         <PortableText

@@ -1,4 +1,4 @@
-import { BASE_URL } from '@/src/global/constants';
+import { BASE_URL } from "@/src/global/constants";
 
 export type BreadcrumbItem = {
   name: string;
@@ -11,13 +11,13 @@ type Props = {
 
 export default function BreadcrumbsSchema({ data }: Props) {
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    '@id': `${BASE_URL}#breadcrumb`,
-    itemListOrder: 'ItemListOrderAscending',
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${BASE_URL}#breadcrumb`,
+    itemListOrder: "ItemListOrderAscending",
     numberOfItems: data.length,
     itemListElement: data.map(({ name, path }, i) => ({
-      '@type': 'ListItem',
+      "@type": "ListItem",
       position: i + 1,
       name: name,
       item: `${BASE_URL}${path}`,

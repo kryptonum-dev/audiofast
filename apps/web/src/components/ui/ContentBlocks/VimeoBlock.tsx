@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import NextImage from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import NextImage from "next/image";
+import { useEffect, useRef, useState } from "react";
 
-import Image from '../../shared/Image';
-import VideoModal from '../VideoModal';
-import styles from './styles.module.scss';
+import Image from "../../shared/Image";
+import VideoModal from "../VideoModal";
+import styles from "./styles.module.scss";
 
 interface VimeoBlockProps {
   vimeoId: string;
@@ -35,7 +35,7 @@ export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
   const playButtonRef = useRef<HTMLButtonElement>(null);
   const [videoTitle, setVideoTitle] = useState<string | null>(title || null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Fetch title and thumbnail from Vimeo if not provided
@@ -53,7 +53,7 @@ export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
             // Get higher resolution thumbnail
             const highResThumbnail = data.thumbnail_url.replace(
               /_\d+x\d+/,
-              '_1280x720'
+              "_1280x720",
             );
             setThumbnailUrl(highResThumbnail);
           }
@@ -83,15 +83,15 @@ export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
       }
     };
 
-    container.addEventListener('click', handleContainerClick);
+    container.addEventListener("click", handleContainerClick);
 
     return () => {
-      container.removeEventListener('click', handleContainerClick);
+      container.removeEventListener("click", handleContainerClick);
     };
   }, []);
 
   const imageSizes =
-    '(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 90vw, 1238px';
+    "(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 90vw, 1238px";
 
   return (
     <div className={styles.youtubeBlock}>
@@ -102,7 +102,7 @@ export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
           sizes={imageSizes}
           loading="lazy"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
       ) : thumbnailUrl ? (
         <NextImage
@@ -111,7 +111,7 @@ export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
           className={styles.thumbnail}
           loading="lazy"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
       ) : (
         <div className={styles.placeholder}>
@@ -179,4 +179,3 @@ export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
     </div>
   );
 }
-

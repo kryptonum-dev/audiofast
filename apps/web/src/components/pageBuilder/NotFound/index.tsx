@@ -1,9 +1,9 @@
-import { urlFor } from '@/global/sanity/client';
+import { urlFor } from "@/global/sanity/client";
 
-import type { QueryNotFoundPageResult } from '../../../global/sanity/sanity.types';
-import PortableText from '../../portableText';
-import Button from '../../ui/Button';
-import styles from './styles.module.scss';
+import type { QueryNotFoundPageResult } from "../../../global/sanity/sanity.types";
+import PortableText from "../../portableText";
+import Button from "../../ui/Button";
+import styles from "./styles.module.scss";
 
 type NotFoundProps = NonNullable<QueryNotFoundPageResult>;
 
@@ -20,8 +20,8 @@ export default async function NotFound({
   })
     .width(500)
     .height(282)
-    .fit('crop')
-    .auto('format')
+    .fit("crop")
+    .auto("format")
     .quality(80)
     .url();
 
@@ -32,12 +32,12 @@ export default async function NotFound({
         style={{
           ...(bgImageUrl && {
             backgroundImage: `url(${bgImageUrl})`,
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            color: 'transparent',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            color: "transparent",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }),
         }}
       >

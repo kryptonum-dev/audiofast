@@ -7,7 +7,7 @@ export {
   getProductVariants,
   processComparisonData,
   validateProductAddition,
-} from './comparison-helpers';
+} from "./comparison-helpers";
 export type {
   ComparatorCategoryConfig,
   ComparisonColumn,
@@ -19,4 +19,4 @@ export type {
   TechnicalDataGroup,
   TechnicalDataRow,
   TechnicalDataValue,
-} from './types';
+} from "./types";

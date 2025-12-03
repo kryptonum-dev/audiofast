@@ -1,11 +1,11 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import AppImage from '@/components/shared/Image';
-import type { PagebuilderType } from '@/global/types';
+import AppImage from "@/components/shared/Image";
+import type { PagebuilderType } from "@/global/types";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
-export type BrandMarqueeProps = Pick<PagebuilderType<'heroCarousel'>, 'brands'>;
+export type BrandMarqueeProps = Pick<PagebuilderType<"heroCarousel">, "brands">;
 
 export default function BrandMarquee({ brands }: BrandMarqueeProps) {
   if (!brands || brands.length === 0) {
@@ -19,7 +19,7 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
       <div className={styles.track}>
         <nav className={styles.brandList}>
           {duplicatedBrands.map((brand, idx) => {
-            const key = `${brand?.slug || 'brand'}-${idx}`;
+            const key = `${brand?.slug || "brand"}-${idx}`;
             const isDuplicate = idx >= brands.length;
 
             if (!brand?.logo) {
@@ -37,7 +37,7 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
               >
                 <AppImage
                   image={brand.logo}
-                  alt={brand.name || 'Logo marki'}
+                  alt={brand.name || "Logo marki"}
                   sizes="(max-width: 56.1875rem) 72px, 93px"
                   quality={90}
                   className={styles.brandLogo}

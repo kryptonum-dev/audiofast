@@ -1,18 +1,18 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import LogoLink from '@/src/components/ui/LogoLink';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { queryFooter } from '@/src/global/sanity/query';
-import type { QueryFooterResult } from '@/src/global/sanity/sanity.types';
+import LogoLink from "@/src/components/ui/LogoLink";
+import { sanityFetch } from "@/src/global/sanity/fetch";
+import { queryFooter } from "@/src/global/sanity/query";
+import type { QueryFooterResult } from "@/src/global/sanity/sanity.types";
 
-import NewsletterForm from './NewsletterForm';
-import styles from './styles.module.scss';
+import NewsletterForm from "./NewsletterForm";
+import styles from "./styles.module.scss";
 
 export default async function Footer() {
-  'use cache';
+  "use cache";
   const footerData = await sanityFetch<QueryFooterResult>({
     query: queryFooter,
-    tags: ['footer'],
+    tags: ["footer"],
   });
 
   return (
@@ -49,7 +49,7 @@ export default async function Footer() {
       <div className={styles.additionalLinks}>
         <span className={styles.copyright}>© 2025 Audiofast</span>
         <span className={styles.createdBy}>
-          Stworzone przez{' '}
+          Stworzone przez{" "}
           <Link href="https://kryptonum.eu/pl" target="_blank" className="logo">
             Kryptonum
           </Link>

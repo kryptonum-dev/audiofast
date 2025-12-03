@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
-import Image from '@/src/components/shared/Image';
-import type { ComparisonProduct } from '@/src/global/comparison/types';
-import { formatPrice } from '@/src/global/utils';
+import Image from "@/src/components/shared/Image";
+import type { ComparisonProduct } from "@/src/global/comparison/types";
+import { formatPrice } from "@/src/global/utils";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type ComparisonProductCardProps = {
   product: ComparisonProduct;
@@ -24,7 +24,7 @@ export default function ComparisonProductCard({
   columnSpan = 1,
 }: ComparisonProductCardProps) {
   const productSlug =
-    typeof product.slug === 'string'
+    typeof product.slug === "string"
       ? product.slug
       : (product.slug as unknown as { current?: string })?.current ||
         product._id;
@@ -36,15 +36,15 @@ export default function ComparisonProductCard({
   };
 
   const sizes = isCompact
-    ? '(max-width: 37.5rem) 48px, 68px'
-    : '(max-width: 38.75rem) 160px, (max-width: 50rem) 24vw, (max-width: 75rem) 240px, 280px';
+    ? "(max-width: 37.5rem) 48px, 68px"
+    : "(max-width: 38.75rem) 160px, (max-width: 50rem) 24vw, (max-width: 75rem) 240px, 280px";
 
   return (
     <div
       className={styles.productCard}
       data-compact={isCompact}
       data-column-span={columnSpan}
-      style={{ '--column-span': columnSpan } as React.CSSProperties}
+      style={{ "--column-span": columnSpan } as React.CSSProperties}
     >
       <button
         className={styles.removeButton}
@@ -62,12 +62,12 @@ export default function ComparisonProductCard({
               sizes={sizes}
               fill
               className={
-                product.imageSource === 'preview'
+                product.imageSource === "preview"
                   ? styles.productImageContain
                   : styles.productImageCover
               }
-              loading={isCompact ? 'lazy' : 'eager'}
-              fetchPriority={!isCompact && index === 0 ? 'high' : 'auto'}
+              loading={isCompact ? "lazy" : "eager"}
+              fetchPriority={!isCompact && index === 0 ? "high" : "auto"}
             />
           ) : (
             <div className={styles.imagePlaceholder} />

@@ -1,7 +1,7 @@
-import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
+import { PRODUCTS_ITEMS_PER_PAGE } from "@/src/global/constants";
 
-import PaginationSkeleton from '../../ui/Pagination/PaginationSkeleton';
-import styles from './styles.module.scss';
+import PaginationSkeleton from "../../ui/Pagination/PaginationSkeleton";
+import styles from "./styles.module.scss";
 
 export default function ProductsListingSkeleton() {
   return (

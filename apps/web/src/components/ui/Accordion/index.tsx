@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useRef } from 'react';
+import { useRef } from "react";
 
-import type { QueryHomePageResult } from '../../../global/sanity/sanity.types';
-import PortableText from '../../portableText';
-import styles from './styles.module.scss';
+import type { QueryHomePageResult } from "../../../global/sanity/sanity.types";
+import PortableText from "../../portableText";
+import styles from "./styles.module.scss";
 
 // Extract the FAQ type from the resolved QueryHomePageResult
 type ResolvedFaqSection = Extract<
-  NonNullable<NonNullable<QueryHomePageResult>['pageBuilder']>[number],
-  { _type: 'faqSection' }
+  NonNullable<NonNullable<QueryHomePageResult>["pageBuilder"]>[number],
+  { _type: "faqSection" }
 >;
 
-export type FaqType = NonNullable<ResolvedFaqSection['faqList']>[number];
+export type FaqType = NonNullable<ResolvedFaqSection["faqList"]>[number];
 
 interface AccordionProps {
   faq: FaqType;
@@ -44,7 +44,7 @@ export default function Accordion({
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             onToggle();
           }
@@ -91,9 +91,9 @@ const PlusMinusIcon = ({ isOpen }: { isOpen: boolean }) => (
       strokeWidth={1.5}
       d="M10 4v12"
       style={{
-        transform: isOpen ? 'scaleY(0)' : 'scaleY(1)',
-        transformOrigin: 'center',
-        transition: 'transform 350ms cubic-bezier(0.4, 0.0, 0.2, 1)',
+        transform: isOpen ? "scaleY(0)" : "scaleY(1)",
+        transformOrigin: "center",
+        transition: "transform 350ms cubic-bezier(0.4, 0.0, 0.2, 1)",
       }}
     />
   </svg>

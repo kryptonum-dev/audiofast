@@ -1,10 +1,10 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import BrandMarquee from './BrandMarquee';
-import HeroCarouselClient from './HeroCarousel';
-import styles from './styles.module.scss';
+import BrandMarquee from "./BrandMarquee";
+import HeroCarouselClient from "./HeroCarousel";
+import styles from "./styles.module.scss";
 
-export type HeroCarouselProps = PagebuilderType<'heroCarousel'> & {
+export type HeroCarouselProps = PagebuilderType<"heroCarousel"> & {
   index: number;
 };
 

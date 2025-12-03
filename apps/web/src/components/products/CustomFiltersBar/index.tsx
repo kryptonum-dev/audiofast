@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
 
-import { slugifyFilterName } from '@/src/global/utils';
+import { slugifyFilterName } from "@/src/global/utils";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 export type CustomFilter = {
   name: string;
@@ -40,7 +40,7 @@ export default function CustomFiltersBar({
     const handleClickOutside = (event: MouseEvent) => {
       const allDropdowns = Array.from(dropdownRefs.current.values());
       const clickedInside = allDropdowns.some((dropdown) =>
-        dropdown.contains(event.target as Node)
+        dropdown.contains(event.target as Node),
       );
 
       if (!clickedInside) {
@@ -49,9 +49,9 @@ export default function CustomFiltersBar({
     };
 
     if (openDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
       return () =>
-        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [openDropdown]);
 
@@ -72,7 +72,7 @@ export default function CustomFiltersBar({
       params.set(slugifiedName, value);
     }
 
-    params.delete('page');
+    params.delete("page");
 
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
@@ -88,7 +88,7 @@ export default function CustomFiltersBar({
     const params = new URLSearchParams(currentSearchParams);
     const slugifiedName = slugifyFilterName(filterName);
     params.delete(slugifiedName);
-    params.delete('page');
+    params.delete("page");
 
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
@@ -106,7 +106,7 @@ export default function CustomFiltersBar({
       const slugifiedName = slugifyFilterName(filter.name);
       params.delete(slugifiedName);
     });
-    params.delete('page');
+    params.delete("page");
 
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
@@ -142,7 +142,7 @@ export default function CustomFiltersBar({
           >
             <button
               type="button"
-              className={`${styles.trigger} ${activeValue ? styles.active : ''}`}
+              className={`${styles.trigger} ${activeValue ? styles.active : ""}`}
               onClick={() => setOpenDropdown(isOpen ? null : filter.name)}
               aria-expanded={isOpen}
             >
@@ -154,11 +154,11 @@ export default function CustomFiltersBar({
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
                       handleClearFilter(
                         filter.name,
-                        e as unknown as React.MouseEvent<HTMLButtonElement>
+                        e as unknown as React.MouseEvent<HTMLButtonElement>,
                       );
                     }
                   }}
@@ -187,7 +187,7 @@ export default function CustomFiltersBar({
                 fill="none"
                 className={styles.chevron}
                 style={{
-                  transform: isOpen ? 'rotate(180deg)' : 'none',
+                  transform: isOpen ? "rotate(180deg)" : "none",
                 }}
               >
                 <path
@@ -208,7 +208,7 @@ export default function CustomFiltersBar({
                     <button
                       key={value}
                       type="button"
-                      className={`${styles.item} ${isActive ? styles.selected : ''}`}
+                      className={`${styles.item} ${isActive ? styles.selected : ""}`}
                       onClick={() => handleFilterSelect(filter.name, value)}
                     >
                       <span>{value}</span>

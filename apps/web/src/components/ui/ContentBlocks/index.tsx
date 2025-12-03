@@ -1,20 +1,20 @@
-import type { PortableTextProps } from '@/src/global/types';
+import type { PortableTextProps } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import { HorizontalLineBlock } from './HorizontalLineBlock';
-import styles from './styles.module.scss';
-import { VimeoBlock } from './VimeoBlock';
-import { YoutubeBlock } from './YoutubeBlock';
+import PortableText from "../../portableText";
+import { HorizontalLineBlock } from "./HorizontalLineBlock";
+import styles from "./styles.module.scss";
+import { VimeoBlock } from "./VimeoBlock";
+import { YoutubeBlock } from "./YoutubeBlock";
 
 // Type definitions for content blocks
 export type ContentBlockText = {
-  _type: 'contentBlockText';
+  _type: "contentBlockText";
   _key: string;
   content: PortableTextProps;
 };
 
 export type ContentBlockYoutube = {
-  _type: 'contentBlockYoutube';
+  _type: "contentBlockYoutube";
   _key: string;
   youtubeId: string;
   title?: string;
@@ -40,7 +40,7 @@ export type ContentBlockYoutube = {
 };
 
 export type ContentBlockVimeo = {
-  _type: 'contentBlockVimeo';
+  _type: "contentBlockVimeo";
   _key: string;
   vimeoId: string;
   title?: string;
@@ -66,7 +66,7 @@ export type ContentBlockVimeo = {
 };
 
 export type ContentBlockHorizontalLine = {
-  _type: 'contentBlockHorizontalLine';
+  _type: "contentBlockHorizontalLine";
   _key: string;
 };
 
@@ -92,9 +92,9 @@ function findPageBreakIndex(content: PortableTextProps): number {
   return content.findIndex(
     (item) =>
       item &&
-      typeof item === 'object' &&
-      '_type' in item &&
-      (item as { _type: string })._type === 'ptPageBreak'
+      typeof item === "object" &&
+      "_type" in item &&
+      (item as { _type: string })._type === "ptPageBreak",
   );
 }
 
@@ -103,7 +103,7 @@ function findPageBreakIndex(content: PortableTextProps): number {
  * Returns null if no page break, otherwise returns [leftContent, rightContent]
  */
 function splitContentAtPageBreak(
-  content: PortableTextProps
+  content: PortableTextProps,
 ): [PortableTextProps, PortableTextProps] | null {
   const pageBreakIndex = findPageBreakIndex(content);
   if (pageBreakIndex === -1 || !content) return null;
@@ -172,15 +172,15 @@ export default function ContentBlocks({
   }
 
   return (
-    <div className={`${styles.contentBlocks} ${className || ''}`}>
+    <div className={`${styles.contentBlocks} ${className || ""}`}>
       {blocks.map((block) => {
         switch (block._type) {
-          case 'contentBlockText':
+          case "contentBlockText":
             return (
               <TextBlockRenderer key={block._key} content={block.content} />
             );
 
-          case 'contentBlockYoutube':
+          case "contentBlockYoutube":
             return (
               <YoutubeBlock
                 key={block._key}
@@ -190,7 +190,7 @@ export default function ContentBlocks({
               />
             );
 
-          case 'contentBlockVimeo':
+          case "contentBlockVimeo":
             return (
               <VimeoBlock
                 key={block._key}
@@ -200,7 +200,7 @@ export default function ContentBlocks({
               />
             );
 
-          case 'contentBlockHorizontalLine':
+          case "contentBlockHorizontalLine":
             return <HorizontalLineBlock key={block._key} />;
 
           default:

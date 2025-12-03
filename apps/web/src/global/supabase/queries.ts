@@ -1,16 +1,16 @@
-import 'server-only';
+import "server-only";
 
-import type { PostgrestError } from '@supabase/supabase-js';
-import { cacheLife, cacheTag } from 'next/cache';
+import type { PostgrestError } from "@supabase/supabase-js";
+import { cacheLife, cacheTag } from "next/cache";
 
-import { createClient as createServerClient } from './server';
+import { createClient as createServerClient } from "./server";
 import type {
   CompletePricingData,
   PricingOptionGroup,
   PricingOptionGroupWithDetails,
   PricingVariant,
   PricingVariantWithOptions,
-} from './types';
+} from "./types";
 
 /**
  * Fetches all pricing data for a product by matching the product slug
@@ -23,16 +23,16 @@ import type {
  * @returns Complete pricing data with variants, groups, values, and rules
  */
 export async function fetchProductPricing(
-  productSlug: string
+  productSlug: string,
 ): Promise<CompletePricingData | null> {
-  'use cache';
+  "use cache";
 
-  cacheTag('product-pricing');
+  cacheTag("product-pricing");
 
-  if (process.env.NODE_ENV === 'development') {
-    cacheLife('seconds');
+  if (process.env.NODE_ENV === "development") {
+    cacheLife("seconds");
   } else {
-    cacheLife('weeks');
+    cacheLife("weeks");
   }
   try {
     // Create server client for this request
@@ -45,13 +45,13 @@ export async function fetchProductPricing(
       error: variantsError,
     }: { data: PricingVariant[] | null; error: PostgrestError | null } =
       await supabase
-        .from('pricing_variants')
-        .select('*')
-        .ilike('price_key', `%${productSlug}`)
-        .order('base_price_cents', { ascending: true }); // Lowest price first
+        .from("pricing_variants")
+        .select("*")
+        .ilike("price_key", `%${productSlug}`)
+        .order("base_price_cents", { ascending: true }); // Lowest price first
 
     if (variantsError) {
-      console.error('Error fetching pricing variants:', variantsError);
+      console.error("Error fetching pricing variants:", variantsError);
       return null;
     }
 
@@ -65,13 +65,13 @@ export async function fetchProductPricing(
       variants.map(async (variant: PricingVariant) => {
         // Fetch option groups for this variant
         const { data: groups, error: groupsError } = await supabase
-          .from('pricing_option_groups')
-          .select('*')
-          .eq('variant_id', variant.id)
-          .order('position', { ascending: true });
+          .from("pricing_option_groups")
+          .select("*")
+          .eq("variant_id", variant.id)
+          .order("position", { ascending: true });
 
         if (groupsError) {
-          console.error('Error fetching option groups:', groupsError);
+          console.error("Error fetching option groups:", groupsError);
           return { ...variant, groups: [] };
         }
 
@@ -80,15 +80,15 @@ export async function fetchProductPricing(
           await Promise.all(
             (groups || []).map(async (group: PricingOptionGroup) => {
               // Fetch values if it's a select group
-              if (group.input_type === 'select') {
+              if (group.input_type === "select") {
                 const { data: values, error: valuesError } = await supabase
-                  .from('pricing_option_values')
-                  .select('*')
-                  .eq('group_id', group.id)
-                  .order('position', { ascending: true });
+                  .from("pricing_option_values")
+                  .select("*")
+                  .eq("group_id", group.id)
+                  .order("position", { ascending: true });
 
                 if (valuesError) {
-                  console.error('Error fetching option values:', valuesError);
+                  console.error("Error fetching option values:", valuesError);
                 }
 
                 return {
@@ -99,17 +99,17 @@ export async function fetchProductPricing(
               }
 
               // Fetch numeric rule if it's a numeric_step group
-              if (group.input_type === 'numeric_step') {
+              if (group.input_type === "numeric_step") {
                 const { data: rule, error: ruleError } = await supabase
-                  .from('pricing_numeric_rules')
-                  .select('*')
-                  .eq('group_id', group.id)
+                  .from("pricing_numeric_rules")
+                  .select("*")
+                  .eq("group_id", group.id)
                   .limit(1)
                   .single();
 
-                if (ruleError && ruleError.code !== 'PGRST116') {
+                if (ruleError && ruleError.code !== "PGRST116") {
                   // PGRST116 = not found, which is ok
-                  console.error('Error fetching numeric rule:', ruleError);
+                  console.error("Error fetching numeric rule:", ruleError);
                 }
 
                 return {
@@ -124,14 +124,14 @@ export async function fetchProductPricing(
                 values: [],
                 numeric_rule: null,
               };
-            })
+            }),
           );
 
         return {
           ...variant,
           groups: groupsWithDetails,
         };
-      })
+      }),
     );
 
     return {
@@ -140,7 +140,7 @@ export async function fetchProductPricing(
       lowestPrice: variants[0]?.base_price_cents || 0,
     };
   } catch (error) {
-    console.error('Unexpected error in fetchProductPricing:', error);
+    console.error("Unexpected error in fetchProductPricing:", error);
     return null;
   }
 }

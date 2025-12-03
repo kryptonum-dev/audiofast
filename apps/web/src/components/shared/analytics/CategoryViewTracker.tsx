@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { trackEvent } from '@/global/analytics/track-event';
+import { trackEvent } from "@/global/analytics/track-event";
 
 type CategoryViewTrackerProps = {
   categoryId?: string | null;
@@ -18,20 +18,20 @@ export default function CategoryViewTracker({
   useEffect(() => {
     trackEvent({
       meta: {
-        eventName: 'ViewCategory',
+        eventName: "ViewCategory",
         params: {
           content_name: categoryName,
-          content_type: 'category',
+          content_type: "category",
           ...(categoryId ? { content_ids: [categoryId] } : {}),
-          ...(typeof totalItems === 'number' ? { num_items: totalItems } : {}),
+          ...(typeof totalItems === "number" ? { num_items: totalItems } : {}),
         },
       },
       ga4: {
-        eventName: 'view_item_list',
+        eventName: "view_item_list",
         params: {
           item_list_name: categoryName,
           ...(categoryId ? { item_list_id: categoryId } : {}),
-          ...(typeof totalItems === 'number'
+          ...(typeof totalItems === "number"
             ? { items_total: totalItems }
             : {}),
         },

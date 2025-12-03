@@ -11,8 +11,8 @@
     margin-bottom: 2rem;
     gap: 1rem 2rem;
     grid-template-areas:
-      'heading button'
-      'description button';
+      "heading button"
+      "description button";
 
     .description {
       max-width: 32.75rem;
@@ -195,7 +195,7 @@
           outline-offset: 2px;
         }
 
-        &:not([data-expanded='true']) {
+        &:not([data-expanded="true"]) {
           .categoryHeader {
             .chevron {
               transform: rotate(180deg);

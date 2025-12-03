@@ -1,12 +1,12 @@
-import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import type { PortableTextTypeComponentProps } from "@portabletext/react";
 
-import { PortableTextRenderer } from '@/src/components/portableText';
-import type { PortableTextProps } from '@/src/global/types';
+import { PortableTextRenderer } from "@/src/components/portableText";
+import type { PortableTextProps } from "@/src/global/types";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type TwoColumnTableValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptTwoColumnTable';
+  _type: "ptTwoColumnTable";
 };
 
 export function TwoColumnTableComponent({

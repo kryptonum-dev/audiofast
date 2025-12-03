@@ -1,10 +1,10 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import ProductsCarouselWrapper from './ProductsCarouselWrapper';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import ProductsCarouselWrapper from "./ProductsCarouselWrapper";
+import styles from "./styles.module.scss";
 
-type ProductsCarouselProps = PagebuilderType<'productsCarousel'> & {
+type ProductsCarouselProps = PagebuilderType<"productsCarousel"> & {
   index: number;
   customId?: string;
 };
@@ -22,7 +22,7 @@ export default function ProductsCarousel({
     >
       <PortableText
         value={heading}
-        headingLevel={index === 0 ? 'h1' : 'h2'}
+        headingLevel={index === 0 ? "h1" : "h2"}
         className={styles.heading}
       />
       <ProductsCarouselWrapper products={products} index={index} />

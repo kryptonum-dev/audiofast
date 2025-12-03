@@ -5,10 +5,10 @@
   column-gap: 0.5rem;
   justify-items: center;
   grid-template-areas:
-    'header header'
-    'image boxes'
-    'ctaParagraph ctaParagraph'
-    'ctaButton ctaButton';
+    "header header"
+    "image boxes"
+    "ctaParagraph ctaParagraph"
+    "ctaButton ctaButton";
 
   .header {
     margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 3rem);
@@ -42,8 +42,8 @@
       border-radius: 0.5rem;
       background-color: var(--neutral-white, #ffffff);
       grid-template-areas:
-        'icon heading'
-        'description description';
+        "icon heading"
+        "description description";
 
       .icon {
         grid-area: icon;
@@ -88,11 +88,11 @@
     max-width: 38rem;
     grid-template-rows: repeat(4, auto) 1fr;
     grid-template-areas:
-      'header'
-      'image'
-      'boxes'
-      'ctaParagraph'
-      'ctaButton';
+      "header"
+      "image"
+      "boxes"
+      "ctaParagraph"
+      "ctaButton";
 
     img {
       width: 100%;
@@ -111,9 +111,9 @@
       grid-template-rows: repeat(2, auto) 1fr;
       padding: 1rem 0.5rem;
       grid-template-areas:
-        'icon'
-        'heading'
-        'description';
+        "icon"
+        "heading"
+        "description";
     }
 
     a {

@@ -1,15 +1,15 @@
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-import { PageBuilder } from '../components/shared/PageBuilder';
-import { sanityFetch } from '../global/sanity/fetch';
-import { queryHomePage } from '../global/sanity/query';
-import type { QueryHomePageResult } from '../global/sanity/sanity.types';
-import { getSEOMetadata } from '../global/seo';
+import { PageBuilder } from "../components/shared/PageBuilder";
+import { sanityFetch } from "../global/sanity/fetch";
+import { queryHomePage } from "../global/sanity/query";
+import type { QueryHomePageResult } from "../global/sanity/sanity.types";
+import { getSEOMetadata } from "../global/seo";
 
 async function fetchHomePageData() {
   return await sanityFetch<QueryHomePageResult>({
     query: queryHomePage,
-    tags: ['homePage'],
+    tags: ["homePage"],
   });
 }
 

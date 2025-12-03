@@ -1,67 +1,67 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
-import { setCookie } from '@/global/analytics/set-cookie';
+import { setCookie } from "@/global/analytics/set-cookie";
 
-import Button from '../../ui/Button';
-import Switch from '../../ui/Switch';
+import Button from "../../ui/Button";
+import Switch from "../../ui/Switch";
 import type {
   ConsentGroup,
   ConsentModeState,
   ConsentSelections,
   CookieConsentClientProps,
-} from './CookieConsent.types';
-import styles from './styles.module.scss';
+} from "./CookieConsent.types";
+import styles from "./styles.module.scss";
 
-const COOKIE_NAME = 'cookie-consent';
+const COOKIE_NAME = "cookie-consent";
 const CONSENT_ACCEPT_TTL_DAYS = 365;
 const CONSENT_DENY_TTL_DAYS = 30 / (24 * 60); // 30 minutes
 
 const PREFERENCES: ConsentGroup[] = [
   {
-    id: 'necessary',
-    key: 'necessary',
-    title: 'Niezbędne',
+    id: "necessary",
+    key: "necessary",
+    title: "Niezbędne",
     description:
-      'Te pliki cookie są wymagane do podstawowego działania strony i nie można ich wyłączyć.',
+      "Te pliki cookie są wymagane do podstawowego działania strony i nie można ich wyłączyć.",
     disabled: true,
   },
   {
-    id: 'analytics',
-    key: 'analytics',
-    title: 'Analityczne',
+    id: "analytics",
+    key: "analytics",
+    title: "Analityczne",
     description:
-      'Pomagają nam zrozumieć, jak odwiedzający korzystają z naszej strony internetowej (Google Analytics).',
+      "Pomagają nam zrozumieć, jak odwiedzający korzystają z naszej strony internetowej (Google Analytics).",
   },
   {
-    id: 'preferences',
-    key: 'preferences',
-    title: 'Preferencje',
+    id: "preferences",
+    key: "preferences",
+    title: "Preferencje",
     description:
-      'Umożliwiają zapamiętanie wyborów użytkownika, takich jak język czy region.',
+      "Umożliwiają zapamiętanie wyborów użytkownika, takich jak język czy region.",
   },
   {
-    id: 'marketing',
-    key: 'marketing',
-    title: 'Marketingowe',
+    id: "marketing",
+    key: "marketing",
+    title: "Marketingowe",
     description:
-      'Używane do śledzenia odwiedzających w różnych witrynach w celu wyświetlania reklam (Google Ads, Meta).',
+      "Używane do śledzenia odwiedzających w różnych witrynach w celu wyświetlania reklam (Google Ads, Meta).",
     subGroups: [
       {
-        id: 'conversion_api',
-        key: 'conversion_api',
-        title: 'Conversion API',
+        id: "conversion_api",
+        key: "conversion_api",
+        title: "Conversion API",
         description:
-          'Pozwala na przesyłanie danych o konwersjach bezpośrednio do platform reklamowych.',
+          "Pozwala na przesyłanie danych o konwersjach bezpośrednio do platform reklamowych.",
       },
       {
-        id: 'advanced_matching',
-        key: 'advanced_matching',
-        title: 'Zaawansowane dopasowanie',
+        id: "advanced_matching",
+        key: "advanced_matching",
+        title: "Zaawansowane dopasowanie",
         description:
-          'Wykorzystuje dodatkowe informacje o użytkowniku do lepszego dopasowania reklam i mierzenia ich skuteczności.',
+          "Wykorzystuje dodatkowe informacje o użytkowniku do lepszego dopasowania reklam i mierzenia ich skuteczności.",
       },
     ],
   },
@@ -89,12 +89,12 @@ export default function CookieConsentClient({
       marketing: false,
       conversion_api: false,
       advanced_matching: false,
-    }
+    },
   );
 
   const initializeTracking = useCallback(
     async (selections: ConsentSelections) => {
-      if (!hasVendors || typeof window === 'undefined') {
+      if (!hasVendors || typeof window === "undefined") {
         setAnalyticsReady(true);
         return;
       }
@@ -104,9 +104,9 @@ export default function CookieConsentClient({
       try {
         if (metaPixelId && selections.marketing) {
           await ensureMetaPixel(metaPixelId, selections);
-          window.fbq?.('consent', 'grant');
+          window.fbq?.("consent", "grant");
         } else if (window.fbq) {
-          window.fbq('consent', 'revoke');
+          window.fbq("consent", "revoke");
         }
 
         const requiresGtag =
@@ -119,16 +119,16 @@ export default function CookieConsentClient({
             await ensureGtagScript(primaryGtagId);
 
             if (ga4Id && selections.analytics) {
-              window.gtag?.('config', ga4Id, { send_page_view: false });
+              window.gtag?.("config", ga4Id, { send_page_view: false });
             }
 
             if (googleAdsId && selections.marketing) {
-              window.gtag?.('config', googleAdsId);
+              window.gtag?.("config", googleAdsId);
             }
           } catch (error) {
             console.error(
-              '[CookieConsent] Nie udało się załadować gtag',
-              error
+              "[CookieConsent] Nie udało się załadować gtag",
+              error,
             );
           }
         }
@@ -137,14 +137,14 @@ export default function CookieConsentClient({
           try {
             await ensureGtmScript(gtmId);
           } catch (error) {
-            console.error('[CookieConsent] Nie udało się załadować GTM', error);
+            console.error("[CookieConsent] Nie udało się załadować GTM", error);
           }
         }
       } finally {
         setAnalyticsReady(true);
       }
     },
-    [ga4Id, googleAdsId, gtmId, hasVendors, metaPixelId]
+    [ga4Id, googleAdsId, gtmId, hasVendors, metaPixelId],
   );
 
   useEffect(() => {
@@ -163,20 +163,20 @@ export default function CookieConsentClient({
 
   useEffect(() => {
     if (isVisible) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
 
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [isVisible]);
 
   const handleConsentApply = useCallback(
     async (selection: ConsentSelections) => {
       const consentMode = toConsentMode(selection);
-      window.gtag?.('consent', 'update', consentMode);
+      window.gtag?.("consent", "update", consentMode);
 
       const ttl =
         selection.analytics || selection.marketing || selection.preferences
@@ -191,10 +191,10 @@ export default function CookieConsentClient({
       await initializeTracking(selection);
 
       document.dispatchEvent(
-        new CustomEvent('cookie_consent_updated', { detail: consentMode })
+        new CustomEvent("cookie_consent_updated", { detail: consentMode }),
       );
     },
-    [initializeTracking]
+    [initializeTracking],
   );
 
   const handleAcceptAll = useCallback(() => {
@@ -227,12 +227,12 @@ export default function CookieConsentClient({
   }, [consentSelections, handleConsentApply]);
 
   const togglePreference = useCallback((key: keyof ConsentSelections) => {
-    if (key === 'necessary') return;
+    if (key === "necessary") return;
 
     setConsentSelections((prev) => {
       const nextValue = !prev[key];
 
-      if (key === 'marketing') {
+      if (key === "marketing") {
         return {
           ...prev,
           marketing: nextValue,
@@ -241,7 +241,7 @@ export default function CookieConsentClient({
         };
       }
 
-      if (key === 'conversion_api' || key === 'advanced_matching') {
+      if (key === "conversion_api" || key === "advanced_matching") {
         return {
           ...prev,
           [key]: nextValue,
@@ -271,14 +271,14 @@ export default function CookieConsentClient({
         <header className={styles.header}>
           <h2 className={styles.heading}>
             {isPreferencesOpen
-              ? 'Ustawienia cookie'
-              : 'Korzystając ze strony zgadzasz się na użycie ciasteczek'}
+              ? "Ustawienia cookie"
+              : "Korzystając ze strony zgadzasz się na użycie ciasteczek"}
           </h2>
           <p className={styles.description}>
             {!isPreferencesOpen ? (
               <>
                 Korzystamy z cookie i podobnych technologii, aby analizować
-                ruch, dopasować treści i wyświetlać trafniejsze reklamy.{' '}
+                ruch, dopasować treści i wyświetlać trafniejsze reklamy.{" "}
                 <Link
                   href={privacyPolicyUrl}
                   target="_blank"
@@ -291,7 +291,7 @@ export default function CookieConsentClient({
             ) : (
               <>
                 Zarządzaj ustawieniami prywatności i zdecyduj, jakie kategorie
-                cookie mają być aktywne.{' '}
+                cookie mają być aktywne.{" "}
                 <Link
                   href={privacyPolicyUrl}
                   target="_blank"
@@ -315,12 +315,12 @@ export default function CookieConsentClient({
                     asLabel={false}
                     inputProps={{
                       checked:
-                        preference.key === 'necessary'
+                        preference.key === "necessary"
                           ? true
                           : consentSelections[preference.key],
                       disabled: preference.disabled,
                       onChange:
-                        preference.key === 'necessary'
+                        preference.key === "necessary"
                           ? undefined
                           : () => togglePreference(preference.key),
                     }}
@@ -366,7 +366,7 @@ export default function CookieConsentClient({
             }
             className="link"
           >
-            {isPreferencesOpen ? 'Zapisz wybrane' : 'Ustaw preferencje'}
+            {isPreferencesOpen ? "Zapisz wybrane" : "Ustaw preferencje"}
           </button>
           <button type="button" onClick={handleRejectAll} className="link">
             Odmowa
@@ -378,11 +378,11 @@ export default function CookieConsentClient({
 }
 
 function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null;
+  if (typeof document === "undefined") return null;
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) {
-    return decodeURIComponent(parts.pop()?.split(';').shift() ?? '');
+    return decodeURIComponent(parts.pop()?.split(";").shift() ?? "");
   }
   return null;
 }
@@ -398,44 +398,44 @@ function parseConsentCookie(raw: string | null): ConsentModeState | null {
 
 function selectionFromConsent(consent: ConsentModeState): ConsentSelections {
   return {
-    necessary: consent.functionality_storage === 'granted',
-    analytics: consent.analytics_storage === 'granted',
-    preferences: consent.personalization_storage === 'granted',
-    marketing: consent.ad_storage === 'granted',
-    conversion_api: consent.conversion_api === 'granted',
-    advanced_matching: consent.advanced_matching === 'granted',
+    necessary: consent.functionality_storage === "granted",
+    analytics: consent.analytics_storage === "granted",
+    preferences: consent.personalization_storage === "granted",
+    marketing: consent.ad_storage === "granted",
+    conversion_api: consent.conversion_api === "granted",
+    advanced_matching: consent.advanced_matching === "granted",
   };
 }
 
 function toConsentMode(selection: ConsentSelections): ConsentModeState {
   return {
-    functionality_storage: 'granted',
-    security_storage: 'granted',
-    analytics_storage: selection.analytics ? 'granted' : 'denied',
-    personalization_storage: selection.preferences ? 'granted' : 'denied',
-    ad_storage: selection.marketing ? 'granted' : 'denied',
-    ad_user_data: selection.marketing ? 'granted' : 'denied',
-    ad_personalization: selection.marketing ? 'granted' : 'denied',
-    conversion_api: selection.conversion_api ? 'granted' : 'denied',
-    advanced_matching: selection.advanced_matching ? 'granted' : 'denied',
+    functionality_storage: "granted",
+    security_storage: "granted",
+    analytics_storage: selection.analytics ? "granted" : "denied",
+    personalization_storage: selection.preferences ? "granted" : "denied",
+    ad_storage: selection.marketing ? "granted" : "denied",
+    ad_user_data: selection.marketing ? "granted" : "denied",
+    ad_personalization: selection.marketing ? "granted" : "denied",
+    conversion_api: selection.conversion_api ? "granted" : "denied",
+    advanced_matching: selection.advanced_matching ? "granted" : "denied",
   };
 }
 
 function setAnalyticsReady(ready: boolean) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   window.__analyticsReady = ready;
   if (ready) {
-    document.dispatchEvent(new Event('analytics_ready'));
+    document.dispatchEvent(new Event("analytics_ready"));
   }
 }
 
 async function ensureGtagScript(primaryId: string) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   if (isGtagLoaded) return;
   if (gtagScriptPromise) return gtagScriptPromise;
 
   const existingScript = document.querySelector<HTMLScriptElement>(
-    'script[data-gtag-loaded="true"]'
+    'script[data-gtag-loaded="true"]',
   );
   if (existingScript) {
     isGtagLoaded = true;
@@ -448,10 +448,10 @@ async function ensureGtagScript(primaryId: string) {
       window.dataLayer.push(args);
     };
 
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.src = `https://www.googletagmanager.com/gtag/js?id=${primaryId}`;
     script.async = true;
-    script.setAttribute('data-gtag-loaded', 'true');
+    script.setAttribute("data-gtag-loaded", "true");
     script.onload = () => {
       isGtagLoaded = true;
       resolve();
@@ -459,7 +459,7 @@ async function ensureGtagScript(primaryId: string) {
     script.onerror = () => {
       gtagScriptPromise = null;
       script.remove();
-      reject(new Error('Failed to load gtag'));
+      reject(new Error("Failed to load gtag"));
     };
     document.head.appendChild(script);
   });
@@ -468,16 +468,16 @@ async function ensureGtagScript(primaryId: string) {
 }
 
 async function ensureGtmScript(gtmId: string) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   if (document.getElementById(`gtm-${gtmId}`)) {
     return;
   }
 
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+  window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
 
   await new Promise<void>((resolve, reject) => {
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.id = `gtm-${gtmId}`;
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtm.js?id=${gtmId}`;
@@ -492,16 +492,16 @@ async function ensureGtmScript(gtmId: string) {
 
 async function ensureMetaPixel(
   metaPixelId: string,
-  selections: ConsentSelections
+  selections: ConsentSelections,
 ) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   window.__metaPixelId = metaPixelId;
   window.__metaPixelAdvancedMatching = selections.advanced_matching;
 
   if (!loadedMetaPixels.has(metaPixelId)) {
     if (!window.fbq) {
-      const script = document.createElement('script');
+      const script = document.createElement("script");
       script.innerHTML = `
         !(function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -513,6 +513,6 @@ async function ensureMetaPixel(
     }
 
     loadedMetaPixels.add(metaPixelId);
-    window.fbq?.('init', metaPixelId);
+    window.fbq?.("init", metaPixelId);
   }
 }

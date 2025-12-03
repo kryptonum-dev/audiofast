@@ -1,16 +1,16 @@
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { getProductsListingQuery } from '@/src/global/sanity/query';
-import type { QueryProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
-import type { ProductType } from '@/src/global/types';
-import { slugifyFilterName } from '@/src/global/utils';
+import { logWarn } from "@/src/global/logger";
+import { sanityFetch } from "@/src/global/sanity/fetch";
+import { getProductsListingQuery } from "@/src/global/sanity/query";
+import type { QueryProductsListingNewestResult } from "@/src/global/sanity/sanity.types";
+import type { ProductType } from "@/src/global/types";
+import { slugifyFilterName } from "@/src/global/utils";
 
-import EmptyState from '../../ui/EmptyState';
-import Pagination from '../../ui/Pagination';
-import ProductCard from '../../ui/ProductCard';
-import styles from './styles.module.scss';
+import EmptyState from "../../ui/EmptyState";
+import Pagination from "../../ui/Pagination";
+import ProductCard from "../../ui/ProductCard";
+import styles from "./styles.module.scss";
 
 type ProductsListingProps = {
   currentPage: number;
@@ -34,9 +34,9 @@ type ProductsListingProps = {
 export default async function ProductsListing({
   currentPage,
   itemsPerPage,
-  searchTerm = '',
-  category = '',
-  sortBy = 'newest',
+  searchTerm = "",
+  category = "",
+  sortBy = "newest",
   brands = [],
   brandSlug,
   minPrice = 0,
@@ -59,8 +59,8 @@ export default async function ProductsListing({
   const productsData = await sanityFetch<QueryProductsListingNewestResult>({
     query,
     params: {
-      category: category || '',
-      search: searchTerm || '',
+      category: category || "",
+      search: searchTerm || "",
       offset,
       limit,
       brands: effectiveBrands,
@@ -70,11 +70,11 @@ export default async function ProductsListing({
       isCPO,
       embeddingResults: embeddingResults || [], // Always pass array to GROQ
     },
-    tags: ['product'],
+    tags: ["product"],
   });
 
   if (!productsData) {
-    logWarn('Products data not found');
+    logWarn("Products data not found");
     notFound();
   }
 
@@ -82,16 +82,16 @@ export default async function ProductsListing({
 
   // Create URLSearchParams for Pagination
   const urlSearchParams = new URLSearchParams();
-  if (searchTerm) urlSearchParams.set('search', searchTerm);
-  if (sortBy && sortBy !== 'newest') urlSearchParams.set('sortBy', sortBy);
+  if (searchTerm) urlSearchParams.set("search", searchTerm);
+  if (sortBy && sortBy !== "newest") urlSearchParams.set("sortBy", sortBy);
   // Only add brands to URL params if not using brandSlug (brandSlug is handled via route)
   if (!brandSlug && brands.length > 0) {
     // Set brands as a comma-separated string
-    urlSearchParams.set('brands', brands.join(','));
+    urlSearchParams.set("brands", brands.join(","));
   }
-  if (minPrice > 0) urlSearchParams.set('minPrice', minPrice.toString());
+  if (minPrice > 0) urlSearchParams.set("minPrice", minPrice.toString());
   if (maxPrice < 999999999)
-    urlSearchParams.set('maxPrice', maxPrice.toString());
+    urlSearchParams.set("maxPrice", maxPrice.toString());
   // Add custom filters to pagination params (slugified)
   if (customFilters.length > 0) {
     customFilters.forEach(({ filterName, value }) => {
@@ -135,7 +135,7 @@ export default async function ProductsListing({
                     product={product}
                     imageSizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     priority={index < 3}
-                    loading={index < 3 ? 'eager' : 'lazy'}
+                    loading={index < 3 ? "eager" : "lazy"}
                   />
                 </li>
               );

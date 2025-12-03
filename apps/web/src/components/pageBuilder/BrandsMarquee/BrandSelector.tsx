@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import type { PagebuilderType, PortableTextProps } from '@/global/types';
+import type { PagebuilderType, PortableTextProps } from "@/global/types";
 
-import PortableText from '../../portableText';
-import Button from '../../ui/Button';
-import BrandMarqueeList from './BrandMarqueeList';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Button from "../../ui/Button";
+import BrandMarqueeList from "./BrandMarqueeList";
+import styles from "./styles.module.scss";
 
-type BrandSelectorProps = PagebuilderType<'brandsMarquee'> & {
+type BrandSelectorProps = PagebuilderType<"brandsMarquee"> & {
   headingLevelOffset: number;
   index: number;
 };
 
-type BrandType = NonNullable<BrandSelectorProps['topBrands']>[number];
+type BrandType = NonNullable<BrandSelectorProps["topBrands"]>[number];
 
 type HeaderState = {
   heading: PortableTextProps;
@@ -37,7 +37,7 @@ export default function BrandSelector({
   const [currentHeader, setCurrentHeader] = useState<HeaderState>({
     heading: heading!,
     description: description!,
-    buttonText: button?.text || '',
+    buttonText: button?.text || "",
     buttonHref: button?.href,
   });
 
@@ -51,10 +51,10 @@ export default function BrandSelector({
     () => ({
       heading: heading!,
       description: description!,
-      buttonText: button?.text || '',
+      buttonText: button?.text || "",
       buttonHref: button?.href,
     }),
-    [heading, description, button?.text, button?.href]
+    [heading, description, button?.text, button?.href],
   );
 
   const clearHoverTimeout = useCallback(() => {
@@ -106,14 +106,14 @@ export default function BrandSelector({
       const brandHeader: HeaderState = {
         heading: [
           {
-            _type: 'block',
-            _key: 'brand-heading',
-            style: 'normal',
+            _type: "block",
+            _key: "brand-heading",
+            style: "normal",
             markDefs: [],
             children: [
               {
-                _type: 'span',
-                _key: 'brand-span',
+                _type: "span",
+                _key: "brand-span",
                 text: brand.name,
                 marks: [],
               },
@@ -121,7 +121,7 @@ export default function BrandSelector({
           },
         ],
         description: brand.description,
-        buttonText: 'Sprawdź markę',
+        buttonText: "Sprawdź markę",
         buttonHref: brand.slug,
       };
 
@@ -144,7 +144,7 @@ export default function BrandSelector({
         }
       }, HOVER_TIMEOUT_MS);
     },
-    [clearHoverTimeout, resetToDefault]
+    [clearHoverTimeout, resetToDefault],
   );
 
   const handleBrandLeave = useCallback(() => {
@@ -170,7 +170,7 @@ export default function BrandSelector({
         <PortableText
           value={currentHeader.heading}
           className={styles.heading}
-          headingLevel={headingLevelOffset === 0 ? 'h1' : 'h2'}
+          headingLevel={headingLevelOffset === 0 ? "h1" : "h2"}
         />
         <PortableText
           value={currentHeader.description}

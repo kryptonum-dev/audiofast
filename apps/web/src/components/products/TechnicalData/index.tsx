@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';
-import type { PortableTextProps } from '@/src/global/types';
+import type { QueryProductBySlugResult } from "@/src/global/sanity/sanity.types";
+import type { PortableTextProps } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import styles from "./styles.module.scss";
 
 type TechnicalDataType = NonNullable<
-  NonNullable<QueryProductBySlugResult>['technicalData']
+  NonNullable<QueryProductBySlugResult>["technicalData"]
 >;
 
 interface TechnicalDataProps {
@@ -30,7 +30,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
 
   // Filter out empty groups
   const validGroups = data.groups.filter(
-    (group) => group.rows && group.rows.length > 0
+    (group) => group.rows && group.rows.length > 0,
   );
   if (validGroups.length === 0) return null;
 
@@ -48,8 +48,8 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Sync scroll across all containers
@@ -70,7 +70,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
         isScrolling.current = false;
       });
     },
-    []
+    [],
   );
 
   // Set ref for scroll containers
@@ -79,13 +79,10 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
   };
 
   // Desktop/Tablet: Standard table layout
-  const renderTable = (
-    group: (typeof validGroups)[0],
-    groupIndex: number
-  ) => (
+  const renderTable = (group: (typeof validGroups)[0], groupIndex: number) => (
     <div className={styles.tableWrapper}>
       <table
-        className={`${styles.table} ${hasVariants ? styles.multiVariant : ''}`}
+        className={`${styles.table} ${hasVariants ? styles.multiVariant : ""}`}
       >
         {hasVariants && (
           <thead className={styles.thead}>
@@ -128,13 +125,12 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
   // Mobile: Multi-variant layout with synced scroll
   const renderMobileMultiVariant = (
     group: (typeof validGroups)[0],
-    groupIndex: number
+    groupIndex: number,
   ) => {
     // Calculate base index for scroll refs (header + rows)
-    const baseRefIndex =
-      validGroups
-        .slice(0, groupIndex)
-        .reduce((acc, g) => acc + (g.rows?.length || 0) + 1, 0);
+    const baseRefIndex = validGroups
+      .slice(0, groupIndex)
+      .reduce((acc, g) => acc + (g.rows?.length || 0) + 1, 0);
 
     return (
       <div className={styles.mobileMultiVariant}>

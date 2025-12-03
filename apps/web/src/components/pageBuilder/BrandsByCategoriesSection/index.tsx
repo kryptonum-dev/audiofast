@@ -1,12 +1,12 @@
-import type { BrandType, PagebuilderType } from '@/src/global/types';
+import type { BrandType, PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import Button from '../../ui/Button';
-import CategoryAccordion from './CategoryAccordion';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Button from "../../ui/Button";
+import CategoryAccordion from "./CategoryAccordion";
+import styles from "./styles.module.scss";
 
 type BrandsByCategoriesSectionProps =
-  PagebuilderType<'brandsByCategoriesSection'> & {
+  PagebuilderType<"brandsByCategoriesSection"> & {
     index: number;
   };
 
@@ -27,10 +27,10 @@ export default function BrandsByCategoriesSection({
       category.brands?.forEach((brand) => {
         if (
           brand &&
-          typeof brand === 'object' &&
-          '_id' in brand &&
-          'slug' in brand &&
-          'name' in brand &&
+          typeof brand === "object" &&
+          "_id" in brand &&
+          "slug" in brand &&
+          "name" in brand &&
           brand._id &&
           brand.slug &&
           brand.name &&
@@ -42,8 +42,8 @@ export default function BrandsByCategoriesSection({
       });
 
       return {
-        _id: category._id || '',
-        name: category.name || '',
+        _id: category._id || "",
+        name: category.name || "",
         brands: uniqueBrands,
       };
     });
@@ -53,7 +53,7 @@ export default function BrandsByCategoriesSection({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
           className={styles.heading}
         />
         <PortableText

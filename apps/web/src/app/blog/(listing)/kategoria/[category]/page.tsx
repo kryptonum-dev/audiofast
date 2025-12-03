@@ -1,22 +1,22 @@
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import { fetchEmbeddings } from '@/src/app/actions/embeddings';
-import BlogListing from '@/src/components/blog/BlogListing';
-import BlogListingSkeleton from '@/src/components/blog/BlogListing/BlogListingSkeleton';
-import styles from '@/src/components/blog/BlogListing/styles.module.scss';
-import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
-import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
-import { PageBuilder } from '@/src/components/shared/PageBuilder';
-import type { ArticleByYearItem } from '@/src/components/ui/BlogAside';
-import BlogAside from '@/src/components/ui/BlogAside';
-import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
-import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { queryBlogPageData } from '@/src/global/sanity/query';
-import type { QueryBlogPageDataResult } from '@/src/global/sanity/sanity.types';
-import { getSEOMetadata } from '@/src/global/seo';
+import { fetchEmbeddings } from "@/src/app/actions/embeddings";
+import BlogListing from "@/src/components/blog/BlogListing";
+import BlogListingSkeleton from "@/src/components/blog/BlogListing/BlogListingSkeleton";
+import styles from "@/src/components/blog/BlogListing/styles.module.scss";
+import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
+import CollectionPageSchema from "@/src/components/schema/CollectionPageSchema";
+import { PageBuilder } from "@/src/components/shared/PageBuilder";
+import type { ArticleByYearItem } from "@/src/components/ui/BlogAside";
+import BlogAside from "@/src/components/ui/BlogAside";
+import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import { BLOG_ITEMS_PER_PAGE } from "@/src/global/constants";
+import { logWarn } from "@/src/global/logger";
+import { sanityFetch } from "@/src/global/sanity/fetch";
+import { queryBlogPageData } from "@/src/global/sanity/query";
+import type { QueryBlogPageDataResult } from "@/src/global/sanity/sanity.types";
+import { getSEOMetadata } from "@/src/global/seo";
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
@@ -30,8 +30,8 @@ export async function generateStaticParams() {
   // Fetch all categories for static generation
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
-    params: { category: '' },
-    tags: ['blog-category'],
+    params: { category: "" },
+    tags: ["blog-category"],
   });
 
   // Only generate static pages for categories that have articles
@@ -40,7 +40,7 @@ export async function generateStaticParams() {
       ?.filter((cat) => cat.count > 0)
       .map((cat) => ({
         category:
-          cat.slug?.replace('/blog/kategoria/', '').replace('/', '') || '',
+          cat.slug?.replace("/blog/kategoria/", "").replace("/", "") || "",
       })) || []
   );
 }
@@ -52,7 +52,7 @@ export async function generateMetadata(props: CategoryPageProps) {
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
     params: { category: `/blog/kategoria/${categorySlug}/` },
-    tags: ['blog-category'],
+    tags: ["blog-category"],
   });
 
   if (!blogData || !blogData.selectedCategory) {
@@ -63,8 +63,8 @@ export async function generateMetadata(props: CategoryPageProps) {
   // Check if category has any articles
   const categoryInfo = blogData.categories?.find(
     (cat) =>
-      cat.slug?.replace('/blog/kategoria/', '').replace('/', '') ===
-      categorySlug
+      cat.slug?.replace("/blog/kategoria/", "").replace("/", "") ===
+      categorySlug,
   );
 
   if (!categoryInfo || categoryInfo.count === 0) {
@@ -85,23 +85,23 @@ export default async function CategoryPage(props: CategoryPageProps) {
   const params = await props.params;
   const searchParams = await props.searchParams;
   const currentPage = Number(searchParams.page) || 1;
-  const searchTerm = searchParams.search || '';
+  const searchTerm = searchParams.search || "";
   const hasSearchQuery = Boolean(searchTerm);
   const categorySlug = params.category;
 
   // Fetch embeddings if search query exists (for semantic search)
   // Always return an array (empty if no search) to satisfy GROQ parameter requirements
   const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, 'blog')) || []
+    ? (await fetchEmbeddings(searchTerm, "blog")) || []
     : [];
 
   // Sort by relevance if search is active, otherwise by newest
-  const sortBy = hasSearchQuery ? 'relevance' : 'newest';
+  const sortBy = hasSearchQuery ? "relevance" : "newest";
 
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
     params: { category: `/blog/kategoria/${categorySlug}/`, embeddingResults },
-    tags: ['blog-category'],
+    tags: ["blog-category"],
   });
 
   if (!blogData || !blogData.selectedCategory) {
@@ -114,8 +114,8 @@ export default async function CategoryPage(props: CategoryPageProps) {
   // Check if category has any articles
   const categoryInfo = blogData.categories?.find(
     (cat) =>
-      cat.slug?.replace('/blog/kategoria/', '').replace('/', '') ===
-      categorySlug
+      cat.slug?.replace("/blog/kategoria/", "").replace("/", "") ===
+      categorySlug,
   );
 
   if (!categoryInfo || categoryInfo.count === 0) {
@@ -125,8 +125,8 @@ export default async function CategoryPage(props: CategoryPageProps) {
 
   const breadcrumbsData = [
     {
-      name: blogData.name || 'Blog',
-      path: '/blog/',
+      name: blogData.name || "Blog",
+      path: "/blog/",
     },
     {
       name: category.name || categorySlug,
@@ -155,8 +155,8 @@ export default async function CategoryPage(props: CategoryPageProps) {
         blocksHeading={null}
         blocks={[]}
         index={0}
-        _key={''}
-        _type={'heroStatic'}
+        _key={""}
+        _type={"heroStatic"}
         button={null}
       />
       <section className={`${styles.blogListing} max-width`}>

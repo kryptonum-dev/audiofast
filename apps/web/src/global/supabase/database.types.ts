@@ -52,7 +52,7 @@ export interface Database {
           id: string;
           variant_id: string;
           name: string;
-          input_type: 'select' | 'numeric_step';
+          input_type: "select" | "numeric_step";
           unit: string | null;
           required: boolean;
           position: number;
@@ -64,7 +64,7 @@ export interface Database {
           id?: string;
           variant_id: string;
           name: string;
-          input_type: 'select' | 'numeric_step';
+          input_type: "select" | "numeric_step";
           unit?: string | null;
           required?: boolean;
           position?: number;
@@ -76,7 +76,7 @@ export interface Database {
           id?: string;
           variant_id?: string;
           name?: string;
-          input_type?: 'select' | 'numeric_step';
+          input_type?: "select" | "numeric_step";
           unit?: string | null;
           required?: boolean;
           position?: number;

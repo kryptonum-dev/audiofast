@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
-} from 'embla-carousel-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+} from "embla-carousel-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import ArrowButton from '../../ui/ArrowButton';
-import ProductCard from '../../ui/ProductCard';
-import styles from './styles.module.scss';
+import ArrowButton from "../../ui/ArrowButton";
+import ProductCard from "../../ui/ProductCard";
+import styles from "./styles.module.scss";
 
 interface ProductsCarouselWrapperProps {
-  products: PagebuilderType<'productsCarousel'>['products'];
+  products: PagebuilderType<"productsCarousel">["products"];
   index: number;
 }
 
@@ -37,7 +37,7 @@ export default function ProductsCarouselWrapper({
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: 'start',
+    align: "start",
     skipSnaps: false,
     watchDrag: canScroll,
   });
@@ -66,10 +66,10 @@ export default function ProductsCarouselWrapper({
     };
 
     checkOverflow();
-    window.addEventListener('resize', checkOverflow);
+    window.addEventListener("resize", checkOverflow);
 
     return () => {
-      window.removeEventListener('resize', checkOverflow);
+      window.removeEventListener("resize", checkOverflow);
     };
   }, [displayProducts]);
 
@@ -77,12 +77,12 @@ export default function ProductsCarouselWrapper({
     if (!emblaApi) return;
 
     onSelect(emblaApi);
-    emblaApi.on('reInit', onSelect);
-    emblaApi.on('select', onSelect);
+    emblaApi.on("reInit", onSelect);
+    emblaApi.on("select", onSelect);
 
     return () => {
-      emblaApi.off('reInit', onSelect);
-      emblaApi.off('select', onSelect);
+      emblaApi.off("reInit", onSelect);
+      emblaApi.off("select", onSelect);
     };
   }, [emblaApi, onSelect]);
 
@@ -109,11 +109,11 @@ export default function ProductsCarouselWrapper({
             <ProductCard
               imageSizes="(max-width: 72rem) 222px, 279px"
               priority={index === 0 && idx === 0}
-              loading={index === 0 ? 'eager' : 'lazy'}
+              loading={index === 0 ? "eager" : "lazy"}
               key={`${product._id || idx}-${idx}`}
               product={product}
               layout="vertical"
-              headingLevel={index === 0 ? 'h2' : 'h3'}
+              headingLevel={index === 0 ? "h2" : "h3"}
             />
           ))}
         </div>

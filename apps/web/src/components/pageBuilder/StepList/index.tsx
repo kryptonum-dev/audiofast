@@ -1,10 +1,10 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import Steps from './Steps';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Steps from "./Steps";
+import styles from "./styles.module.scss";
 
-type StepListProps = PagebuilderType<'stepList'> & { index: number };
+type StepListProps = PagebuilderType<"stepList"> & { index: number };
 
 export default function StepList({
   heading,
@@ -17,7 +17,7 @@ export default function StepList({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
           className={styles.heading}
         />
         <PortableText

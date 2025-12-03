@@ -4,8 +4,8 @@
   gap: 2rem clamp(3rem, calc(3vw / 0.48), 4rem);
   padding: clamp(2rem, calc(3vw / 0.48), 3rem) 0;
   grid-template-areas:
-    'sidebar articlesGrid'
-    'sidebar pagination';
+    "sidebar articlesGrid"
+    "sidebar pagination";
 
   .articlesGrid {
     display: grid;
@@ -16,12 +16,12 @@
     padding: clamp(0.5rem, calc(1vw / 0.48), 1.5rem);
     grid-area: articlesGrid;
 
-    &[data-loading='true'] {
+    &[data-loading="true"] {
       min-height: 50rem;
     }
   }
 
-  > :is(.articlesGrid, div[class*='articlesGrid']) {
+  > :is(.articlesGrid, div[class*="articlesGrid"]) {
     grid-area: articlesGrid;
   }
 
@@ -126,9 +126,9 @@
     max-width: 48rem;
     grid-template-columns: 1fr;
     grid-template-areas:
-      'sidebar'
-      'articlesGrid'
-      'pagination';
+      "sidebar"
+      "articlesGrid"
+      "pagination";
 
     // .articlesGrid {
     //   grid-template-columns: 1fr;

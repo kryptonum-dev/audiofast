@@ -9,8 +9,8 @@
   column-gap: clamp(1.5rem, calc(3.5vw / 0.48), 8rem);
   align-items: start;
   grid-template-areas:
-    'tableOfContent header'
-    'tableOfContent body';
+    "tableOfContent header"
+    "tableOfContent body";
 
   .header {
     grid-area: header;
@@ -44,9 +44,9 @@
     grid-template-columns: 1fr;
     max-width: 48rem;
     grid-template-areas:
-      'tableOfContent'
-      'header'
-      'body';
+      "tableOfContent"
+      "header"
+      "body";
 
     > nav {
       margin-bottom: 2rem;

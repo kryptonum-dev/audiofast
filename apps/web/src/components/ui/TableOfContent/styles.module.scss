@@ -61,7 +61,7 @@
         flex-direction: column;
       }
 
-      &[data-expanded='true'] {
+      &[data-expanded="true"] {
         ul.subheadings {
           display: flex;
         }
@@ -162,7 +162,7 @@
     max-height: none;
 
     .wrapper {
-      &[data-expanded='false'] {
+      &[data-expanded="false"] {
         .list > li {
           &:not(:nth-child(1), :nth-child(2), :nth-child(3), :nth-child(4)) {
             display: none;
@@ -170,7 +170,7 @@
         }
       }
 
-      &[data-expanded='true'] {
+      &[data-expanded="true"] {
         .showMore {
           svg {
             transform: rotate(180deg);

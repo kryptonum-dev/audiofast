@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import type { EmbeddingsResponse } from '@/src/global/types';
+import type { EmbeddingsResponse } from "@/src/global/types";
 
 /**
  * Server Action to fetch embedding results from the Sanity Embeddings Index API
@@ -14,7 +14,7 @@ import type { EmbeddingsResponse } from '@/src/global/types';
  */
 export async function fetchEmbeddings(
   searchQuery: string,
-  type: 'products' | 'blog'
+  type: "products" | "blog",
 ): Promise<EmbeddingsResponse | null> {
   if (!searchQuery || !searchQuery.trim()) {
     return null;
@@ -22,24 +22,24 @@ export async function fetchEmbeddings(
 
   try {
     const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-    const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+    const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
     const bearerToken = process.env.EMBEDDINGS_INDEX_BEARER_TOKEN;
 
     if (!projectId || !bearerToken) {
-      console.error('Missing required environment variables for embeddings');
+      console.error("Missing required environment variables for embeddings");
       return null;
     }
 
-    const indexName = type === 'products' ? 'products' : 'blog';
-    const typeFilter = type === 'products' ? 'product' : 'blog-article';
+    const indexName = type === "products" ? "products" : "blog";
+    const typeFilter = type === "products" ? "product" : "blog-article";
 
     const embeddingsUrl = `https://${projectId}.api.sanity.io/vX/embeddings-index/query/${dataset}/${indexName}`;
 
     const response = await fetch(embeddingsUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: `Bearer ${bearerToken}`,
       },
       body: JSON.stringify({
@@ -60,7 +60,7 @@ export async function fetchEmbeddings(
     const data: EmbeddingsResponse = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching embeddings:', error);
+    console.error("Error fetching embeddings:", error);
     return null;
   }
 }

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type SearchbarProps = {
   placeholder?: string;
@@ -11,19 +11,19 @@ type SearchbarProps = {
   name?: string;
   debounceMs?: number;
   onSearch?: (searchTerm: string) => void;
-  mode?: 'auto' | 'manual';
+  mode?: "auto" | "manual";
   value?: string;
   onChange?: (value: string) => void;
   onSubmit?: () => void;
 };
 
 export default function Searchbar({
-  placeholder = 'Szukaj',
+  placeholder = "Szukaj",
   basePath,
-  name = 'search',
+  name = "search",
   debounceMs = 500,
   onSearch,
-  mode = 'auto',
+  mode = "auto",
   value: controlledValue,
   onChange: controlledOnChange,
   onSubmit,
@@ -33,7 +33,7 @@ export default function Searchbar({
   const [, startTransition] = useTransition();
 
   // Get initial value from URL params (only for auto mode)
-  const urlSearchValue = mode === 'auto' ? searchParams.get(name) || '' : '';
+  const urlSearchValue = mode === "auto" ? searchParams.get(name) || "" : "";
 
   // Controlled input state (only used in auto mode)
   const [internalValue, setInternalValue] = useState(urlSearchValue);
@@ -41,12 +41,12 @@ export default function Searchbar({
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Use controlled value if in manual mode, otherwise use internal state
-  const inputValue = mode === 'manual' ? controlledValue || '' : internalValue;
+  const inputValue = mode === "manual" ? controlledValue || "" : internalValue;
 
   // Sync input with URL params when they change externally (only for auto mode)
   useEffect(() => {
-    if (mode === 'auto') {
-      const urlValue = searchParams.get(name) || '';
+    if (mode === "auto") {
+      const urlValue = searchParams.get(name) || "";
       setInternalValue(urlValue);
     }
   }, [searchParams, name, mode]);
@@ -69,7 +69,7 @@ export default function Searchbar({
         } else {
           params.delete(name);
         }
-        params.delete('page'); // Reset to page 1 when searching
+        params.delete("page"); // Reset to page 1 when searching
 
         const queryString = params.toString();
         const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
@@ -79,14 +79,14 @@ export default function Searchbar({
         });
       }
     },
-    [basePath, name, onSearch, router, searchParams, startTransition]
+    [basePath, name, onSearch, router, searchParams, startTransition],
   );
 
   // Input change handler
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
 
-    if (mode === 'manual') {
+    if (mode === "manual") {
       // Manual mode: just call the onChange callback
       if (controlledOnChange) {
         controlledOnChange(newValue);
@@ -114,7 +114,7 @@ export default function Searchbar({
 
   // Handle Enter key press (for manual mode)
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && mode === 'manual' && onSubmit) {
+    if (e.key === "Enter" && mode === "manual" && onSubmit) {
       onSubmit();
     }
   };
@@ -165,7 +165,7 @@ export default function Searchbar({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
       />
-      {mode === 'manual' && onSubmit && inputValue.trim() && (
+      {mode === "manual" && onSubmit && inputValue.trim() && (
         <button
           type="button"
           onClick={() => onSubmit()}

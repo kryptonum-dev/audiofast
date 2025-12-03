@@ -1,11 +1,11 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import ContactPerson from '../../ui/ContactPerson';
-import ContactFormComponent from './ContactForm';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import ContactPerson from "../../ui/ContactPerson";
+import ContactFormComponent from "./ContactForm";
+import styles from "./styles.module.scss";
 
-export type ContactFormProps = PagebuilderType<'contactForm'> & {
+export type ContactFormProps = PagebuilderType<"contactForm"> & {
   index: number;
 };
 
@@ -23,7 +23,7 @@ export default function ContactForm({
         <PortableText
           value={heading}
           className={styles.heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
         />
         <PortableText
           value={description}
@@ -35,7 +35,7 @@ export default function ContactForm({
         <PortableText
           value={contactPeople!.heading}
           className={styles.heading}
-          headingLevel={index === 0 ? 'h2' : 'h3'}
+          headingLevel={index === 0 ? "h2" : "h3"}
         />
         <ul className={styles.personList}>
           {contactPeople!.contactPersons!.map((person) => (
@@ -56,7 +56,7 @@ export default function ContactForm({
             <PortableText
               value={account.heading}
               className={styles.heading}
-              headingLevel={index === 0 ? 'h3' : 'h4'}
+              headingLevel={index === 0 ? "h3" : "h4"}
             />
             <div className={styles.accountDetails}>
               {account.accountDetails!.map((detail, idx: number) => (

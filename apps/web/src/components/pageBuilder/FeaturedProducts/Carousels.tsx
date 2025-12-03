@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import type { EmblaCarouselType } from 'embla-carousel';
-import type { ReactNode } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import type { EmblaCarouselType } from "embla-carousel";
+import type { ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import type { ProductType } from '@/src/global/types';
+import type { ProductType } from "@/src/global/types";
 
-import ArrowButton from '../../ui/ArrowButton';
-import ProductsCarousel from './ProductsCarousel';
-import styles from './styles.module.scss';
+import ArrowButton from "../../ui/ArrowButton";
+import ProductsCarousel from "./ProductsCarousel";
+import styles from "./styles.module.scss";
 
 type Props = {
   children: ReactNode;
@@ -17,7 +17,7 @@ type Props = {
   index: number;
 };
 
-type TabType = 'newProducts' | 'bestsellers';
+type TabType = "newProducts" | "bestsellers";
 
 export default function Carousels({
   children,
@@ -25,7 +25,7 @@ export default function Carousels({
   bestsellers,
   index,
 }: Props) {
-  const [activeTab, setActiveTab] = useState<TabType>('newProducts');
+  const [activeTab, setActiveTab] = useState<TabType>("newProducts");
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
 
@@ -34,7 +34,7 @@ export default function Carousels({
 
   // Get the currently active carousel API
   const getActiveApi = useCallback(() => {
-    return activeTab === 'newProducts'
+    return activeTab === "newProducts"
       ? newProductsApiRef.current
       : bestsellersApiRef.current;
   }, [activeTab]);
@@ -60,25 +60,25 @@ export default function Carousels({
   const handleNewProductsApi = useCallback(
     (api: EmblaCarouselType) => {
       newProductsApiRef.current = api;
-      if (activeTab === 'newProducts') {
+      if (activeTab === "newProducts") {
         onSelect(api);
-        api.on('reInit', onSelect);
-        api.on('select', onSelect);
+        api.on("reInit", onSelect);
+        api.on("select", onSelect);
       }
     },
-    [activeTab, onSelect]
+    [activeTab, onSelect],
   );
 
   const handleBestsellersApi = useCallback(
     (api: EmblaCarouselType) => {
       bestsellersApiRef.current = api;
-      if (activeTab === 'bestsellers') {
+      if (activeTab === "bestsellers") {
         onSelect(api);
-        api.on('reInit', onSelect);
-        api.on('select', onSelect);
+        api.on("reInit", onSelect);
+        api.on("select", onSelect);
       }
     },
-    [activeTab, onSelect]
+    [activeTab, onSelect],
   );
 
   // Update button states when switching tabs
@@ -90,10 +90,10 @@ export default function Carousels({
   }, [activeTab, getActiveApi, onSelect]);
 
   const tabs = [
-    { key: 'newProducts' as const, label: 'Nowości', products: newProducts },
+    { key: "newProducts" as const, label: "Nowości", products: newProducts },
     {
-      key: 'bestsellers' as const,
-      label: 'Bestsellery',
+      key: "bestsellers" as const,
+      label: "Bestsellery",
       products: bestsellers,
     },
   ];
@@ -106,7 +106,7 @@ export default function Carousels({
             <button
               key={tab.key}
               className={`${styles.tabButton} ${
-                activeTab === tab.key ? 'data-active' : ''
+                activeTab === tab.key ? "data-active" : ""
               }`}
               onClick={() => setActiveTab(tab.key)}
               type="button"
@@ -121,7 +121,7 @@ export default function Carousels({
 
       {/* Carousels */}
       <div className={styles.carousel}>
-        {activeTab === 'newProducts' && (
+        {activeTab === "newProducts" && (
           <ProductsCarousel
             products={newProducts}
             sectionType="newProducts"
@@ -129,7 +129,7 @@ export default function Carousels({
             index={index}
           />
         )}
-        {activeTab === 'bestsellers' && (
+        {activeTab === "bestsellers" && (
           <ProductsCarousel
             products={bestsellers}
             sectionType="bestsellers"
@@ -137,8 +137,8 @@ export default function Carousels({
             index={index}
           />
         )}
-        {((activeTab === 'newProducts' && newProducts.length > 3) ||
-          (activeTab === 'bestsellers' && bestsellers.length > 3)) && (
+        {((activeTab === "newProducts" && newProducts.length > 3) ||
+          (activeTab === "bestsellers" && bestsellers.length > 3)) && (
           <div className={styles.buttons}>
             <ArrowButton
               direction="prev"

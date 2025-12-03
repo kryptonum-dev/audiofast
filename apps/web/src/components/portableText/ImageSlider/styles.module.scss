@@ -114,11 +114,7 @@
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.6),
-      rgba(0, 0, 0, 0.4)
-    );
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     display: grid;
@@ -241,7 +237,7 @@
         opacity 150ms cubic-bezier(0.4, 0, 0.2, 1),
         transform 100ms cubic-bezier(0.4, 0, 0.2, 1);
 
-      &[data-transitioning='true'] {
+      &[data-transitioning="true"] {
         opacity: 0;
         transform: scale(0.99);
       }

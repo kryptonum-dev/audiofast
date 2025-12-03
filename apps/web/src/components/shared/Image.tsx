@@ -1,10 +1,10 @@
-import type { SanityImageSource } from '@sanity/asset-utils';
-import Image from 'next/image';
+import type { SanityImageSource } from "@sanity/asset-utils";
+import Image from "next/image";
 
-import { urlFor } from '@/global/sanity/client';
+import { urlFor } from "@/global/sanity/client";
 
 const DEFAULT_BLUR_DATA_URL =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mMUltCqBwABcQDWMIsO5gAAAABJRU5ErkJggg==';
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mMUltCqBwABcQDWMIsO5gAAAABJRU5ErkJggg==";
 
 type SanityHotspot = {
   readonly x: number;
@@ -55,11 +55,11 @@ export type SanityRawImage = {
 type BaseProps = {
   readonly sizes: string;
   readonly priority?: boolean;
-  readonly fetchPriority?: 'auto' | 'high' | 'low';
+  readonly fetchPriority?: "auto" | "high" | "low";
   readonly quality?: number;
   readonly className?: string;
   readonly style?: React.CSSProperties;
-  readonly loading?: 'eager' | 'lazy';
+  readonly loading?: "eager" | "lazy";
 };
 
 export type SanityOnlyImageProps = BaseProps & {
@@ -93,7 +93,7 @@ export default function AppImage(props: AppImageProps) {
   } = props;
 
   // Normalize raw image into a strict SanityImageSource-compatible input
-  if (!image || !('id' in image) || !image.id) {
+  if (!image || !("id" in image) || !image.id) {
     return null;
   }
 
@@ -109,10 +109,10 @@ export default function AppImage(props: AppImageProps) {
 
   const normalizedHotspot =
     rawHotspot &&
-    typeof rawHotspot.width === 'number' &&
-    typeof rawHotspot.height === 'number' &&
-    typeof rawHotspot.x === 'number' &&
-    typeof rawHotspot.y === 'number'
+    typeof rawHotspot.width === "number" &&
+    typeof rawHotspot.height === "number" &&
+    typeof rawHotspot.x === "number" &&
+    typeof rawHotspot.y === "number"
       ? {
           x: rawHotspot.x,
           y: rawHotspot.y,
@@ -133,10 +133,10 @@ export default function AppImage(props: AppImageProps) {
 
   const normalizedCrop =
     rawCrop &&
-    typeof rawCrop.top === 'number' &&
-    typeof rawCrop.bottom === 'number' &&
-    typeof rawCrop.left === 'number' &&
-    typeof rawCrop.right === 'number'
+    typeof rawCrop.top === "number" &&
+    typeof rawCrop.bottom === "number" &&
+    typeof rawCrop.left === "number" &&
+    typeof rawCrop.right === "number"
       ? {
           top: rawCrop.top,
           bottom: rawCrop.bottom,
@@ -151,25 +151,25 @@ export default function AppImage(props: AppImageProps) {
     ...(normalizedHotspot ? { hotspot: normalizedHotspot } : {}),
   };
 
-  let builder = urlFor(sanitySource).fit('crop').auto('format');
+  let builder = urlFor(sanitySource).fit("crop").auto("format");
   const fallbackW = (image as SanityRawImage).naturalWidth ?? undefined;
   const fallbackH = (image as SanityRawImage).naturalHeight ?? undefined;
-  const targetW = typeof width === 'number' ? width : fallbackW;
-  const targetH = typeof height === 'number' ? height : fallbackH;
-  if (typeof targetW === 'number') builder = builder.width(targetW);
-  if (typeof targetH === 'number') builder = builder.height(targetH);
+  const targetW = typeof width === "number" ? width : fallbackW;
+  const targetH = typeof height === "number" ? height : fallbackH;
+  if (typeof targetW === "number") builder = builder.width(targetW);
+  if (typeof targetH === "number") builder = builder.height(targetH);
   const finalSrc = builder.url();
 
   const blurDataURL =
     (image as SanityRawImage).preview || DEFAULT_BLUR_DATA_URL;
   const placeholder = (image as SanityRawImage).preview
-    ? 'blur'
-    : ('empty' as const);
+    ? "blur"
+    : ("empty" as const);
 
   return (
     <Image
       src={finalSrc}
-      alt={alt ?? (image as SanityRawImage).alt ?? ''}
+      alt={alt ?? (image as SanityRawImage).alt ?? ""}
       sizes={sizes}
       priority={priority}
       fetchPriority={fetchPriority}
@@ -183,7 +183,7 @@ export default function AppImage(props: AppImageProps) {
             width: targetW,
             height: targetH,
           })}
-      {...(placeholder === 'blur' && { placeholder, blurDataURL })}
+      {...(placeholder === "blur" && { placeholder, blurDataURL })}
     />
   );
 }

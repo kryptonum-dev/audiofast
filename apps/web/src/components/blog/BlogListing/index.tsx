@@ -1,14 +1,14 @@
-import { notFound } from 'next/navigation';
+import { notFound } from "next/navigation";
 
-import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { getBlogArticlesQuery } from '@/src/global/sanity/query';
-import type { QueryBlogArticlesNewestResult } from '@/src/global/sanity/sanity.types';
+import { logWarn } from "@/src/global/logger";
+import { sanityFetch } from "@/src/global/sanity/fetch";
+import { getBlogArticlesQuery } from "@/src/global/sanity/query";
+import type { QueryBlogArticlesNewestResult } from "@/src/global/sanity/sanity.types";
 
-import EmptyState from '../../ui/EmptyState';
-import Pagination from '../../ui/Pagination';
-import PublicationCard from '../../ui/PublicationCard';
-import styles from './styles.module.scss';
+import EmptyState from "../../ui/EmptyState";
+import Pagination from "../../ui/Pagination";
+import PublicationCard from "../../ui/PublicationCard";
+import styles from "./styles.module.scss";
 
 type BlogListingProps = {
   currentPage: number;
@@ -26,11 +26,11 @@ type BlogListingProps = {
 export default async function BlogListing({
   currentPage,
   itemsPerPage,
-  searchTerm = '',
-  category = '',
+  searchTerm = "",
+  category = "",
   basePath,
   embeddingResults,
-  sortBy = 'newest',
+  sortBy = "newest",
 }: BlogListingProps) {
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
@@ -42,16 +42,16 @@ export default async function BlogListing({
     query,
     params: {
       category: category,
-      search: searchTerm || '',
+      search: searchTerm || "",
       offset,
       limit,
       embeddingResults, // Pass embeddings for filtering
     },
-    tags: ['blog-article'],
+    tags: ["blog-article"],
   });
 
   if (!articlesData) {
-    logWarn('Blog articles data not found');
+    logWarn("Blog articles data not found");
     notFound();
   }
 
@@ -59,7 +59,7 @@ export default async function BlogListing({
 
   // Create URLSearchParams for Pagination
   const urlSearchParams = new URLSearchParams();
-  if (searchTerm) urlSearchParams.set('search', searchTerm);
+  if (searchTerm) urlSearchParams.set("search", searchTerm);
 
   const ITEMS_PER_ROW = 2;
   const ROW_DELAY = 80; // delay between rows in ms
@@ -87,7 +87,7 @@ export default async function BlogListing({
                     layout="vertical"
                     imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"
                     priority={index === 0}
-                    loading={index === 0 ? 'eager' : 'lazy'}
+                    loading={index === 0 ? "eager" : "lazy"}
                   />
                 </div>
               );

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type Props = {
-  direction: 'prev' | 'next';
+  direction: "prev" | "next";
   onClick: () => void;
   ariaLabel?: string;
-  size?: 'sm' | 'md';
-  variant?: 'ghost' | 'filled' | 'gray';
+  size?: "sm" | "md";
+  variant?: "ghost" | "filled" | "gray";
   disabled?: boolean;
-  outline?: 'light' | 'dark';
+  outline?: "light" | "dark";
 };
 
 export default function ArrowButton({
@@ -17,16 +17,16 @@ export default function ArrowButton({
   onClick,
   ariaLabel,
   disabled,
-  variant = 'filled',
-  size = 'md',
-  outline = 'dark',
+  variant = "filled",
+  size = "md",
+  outline = "dark",
 }: Props) {
-  const isPrev = direction === 'prev';
+  const isPrev = direction === "prev";
   return (
     <button
       type="button"
       aria-label={
-        ariaLabel || (direction === 'prev' ? 'Poprzedni' : 'Następny')
+        ariaLabel || (direction === "prev" ? "Poprzedni" : "Następny")
       }
       onClick={onClick}
       data-variant={variant}

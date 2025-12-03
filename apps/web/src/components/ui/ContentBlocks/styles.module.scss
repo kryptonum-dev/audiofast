@@ -13,16 +13,11 @@
     }
   }
 
-
-
   // Two column text block (has page break)
   .textBlockTwoColumn {
     display: grid;
-grid-template-columns: 1fr 1fr;
-column-gap: 2rem;
-   
-
-
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
 
     .columnContent {
       // Content naturally sizes based on its length
@@ -178,4 +173,3 @@ column-gap: 2rem;
     }
   }
 }
-

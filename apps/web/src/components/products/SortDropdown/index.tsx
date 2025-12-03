@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type SortOption = {
   value: string;
@@ -21,8 +21,8 @@ type SortDropdownProps = {
 export default function SortDropdown({
   options,
   basePath,
-  defaultValue = 'newest',
-  label = 'Sortuj:',
+  defaultValue = "newest",
+  label = "Sortuj:",
   hasSearchQuery = false,
 }: SortDropdownProps) {
   const router = useRouter();
@@ -34,14 +34,14 @@ export default function SortDropdown({
   // Filter out 'orderRank' (relevance) option if there's no search query
   const availableOptions = hasSearchQuery
     ? options
-    : options.filter((opt) => opt.value !== 'orderRank');
+    : options.filter((opt) => opt.value !== "orderRank");
 
   // Determine current value based on search query presence
-  const currentValue = searchParams.get('sortBy') || defaultValue;
+  const currentValue = searchParams.get("sortBy") || defaultValue;
   const currentLabel =
     availableOptions.find((opt) => opt.value === currentValue)?.label ||
     availableOptions[0]?.label ||
-    'Sortuj';
+    "Sortuj";
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -54,8 +54,8 @@ export default function SortDropdown({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Close dropdown when focus leaves the dropdown container
@@ -72,10 +72,10 @@ export default function SortDropdown({
     };
 
     const dropdownElement = dropdownRef.current;
-    dropdownElement?.addEventListener('focusout', handleFocusOut);
+    dropdownElement?.addEventListener("focusout", handleFocusOut);
 
     return () => {
-      dropdownElement?.removeEventListener('focusout', handleFocusOut);
+      dropdownElement?.removeEventListener("focusout", handleFocusOut);
     };
   }, [isOpen]);
 
@@ -83,13 +83,13 @@ export default function SortDropdown({
     const params = new URLSearchParams(searchParams.toString());
 
     if (value === defaultValue) {
-      params.delete('sortBy');
+      params.delete("sortBy");
     } else {
-      params.set('sortBy', value);
+      params.set("sortBy", value);
     }
 
     // Reset to page 1 when sorting changes
-    params.delete('page');
+    params.delete("page");
 
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
@@ -129,7 +129,7 @@ export default function SortDropdown({
                 type="button"
                 role="option"
                 aria-selected={isActive}
-                className={`${styles.option} ${isActive ? styles.active : ''}`}
+                className={`${styles.option} ${isActive ? styles.active : ""}`}
                 onClick={() => handleOptionClick(option.value)}
                 tabIndex={isActive ? -1 : 0}
               >

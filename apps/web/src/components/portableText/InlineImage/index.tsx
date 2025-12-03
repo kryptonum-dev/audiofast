@@ -1,13 +1,13 @@
-import type { PortableTextTypeComponentProps } from 'next-sanity';
+import type { PortableTextTypeComponentProps } from "next-sanity";
 
-import type { PortableTextProps } from '@/src/global/types';
+import type { PortableTextProps } from "@/src/global/types";
 
-import Image from '../../shared/Image';
-import styles from './styles.module.scss';
+import Image from "../../shared/Image";
+import styles from "./styles.module.scss";
 
 type InlineImageValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptInlineImage';
-  float?: 'left' | 'right';
+  _type: "ptInlineImage";
+  float?: "left" | "right";
   alt?: string;
   width?: number;
 };
@@ -15,14 +15,16 @@ type InlineImageValue = NonNullable<PortableTextProps>[number] & {
 export function InlineImageComponent({
   value,
 }: PortableTextTypeComponentProps<InlineImageValue>) {
-  const { image, float = 'left', alt, width } = value;
+  const { image, float = "left", alt, width } = value;
 
   if (!image) {
     return null;
   }
 
   // Use fixed width if provided, otherwise responsive
-  const imageSizes = width ? `${width}px` : '(max-width: 56.1875rem) 40vw, 300px';
+  const imageSizes = width
+    ? `${width}px`
+    : "(max-width: 56.1875rem) 40vw, 300px";
 
   // Create inline style for fixed width
   const inlineStyle = width
@@ -32,7 +34,7 @@ export function InlineImageComponent({
   return (
     <Image
       image={image}
-      className={`${styles.inlineImage} ${float === 'right' ? styles.floatRight : styles.floatLeft}`}
+      className={`${styles.inlineImage} ${float === "right" ? styles.floatRight : styles.floatLeft}`}
       style={inlineStyle}
       sizes={imageSizes}
       loading="lazy"

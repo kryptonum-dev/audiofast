@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 export interface PillsStickyNavProps {
   sections: {
@@ -17,7 +17,7 @@ export default function PillsStickyNav({
   sections,
   className,
 }: PillsStickyNavProps) {
-  const [activeSection, setActiveSection] = useState<string>('');
+  const [activeSection, setActiveSection] = useState<string>("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileVisible, setIsMobileVisible] = useState(true);
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
@@ -26,7 +26,7 @@ export default function PillsStickyNav({
     width: number;
     height?: number;
     transform: string;
-  }>({ width: 0, transform: 'translateX(0)' });
+  }>({ width: 0, transform: "translateX(0)" });
   const navRef = useRef<HTMLElement>(null);
   const pillsWrapperRef = useRef<HTMLDivElement>(null);
   const pillRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
@@ -68,11 +68,11 @@ export default function PillsStickyNav({
     handleScroll();
     lastScrollY.current = window.scrollY;
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
   }, []);
 
@@ -116,10 +116,10 @@ export default function PillsStickyNav({
     }, 0);
 
     // Update on resize
-    window.addEventListener('resize', updateSliderPosition, { passive: true });
+    window.addEventListener("resize", updateSliderPosition, { passive: true });
     return () => {
       clearTimeout(timeoutId);
-      window.removeEventListener('resize', updateSliderPosition);
+      window.removeEventListener("resize", updateSliderPosition);
     };
   }, [activeSection, sections]);
 
@@ -136,8 +136,8 @@ export default function PillsStickyNav({
         });
       },
       {
-        rootMargin: '-100px 0px -80% 0px',
-      }
+        rootMargin: "-100px 0px -80% 0px",
+      },
     );
 
     sections.forEach((section) => {
@@ -189,8 +189,8 @@ export default function PillsStickyNav({
       <nav
         ref={navRef}
         className={`${styles.pillsStickyNav} ${className} ${
-          !isMobileBreakpoint ? 'max-width-block' : ''
-        } ${isScrolled ? styles.scrolled : ''} ${isMobileExpanded ? styles.expanded : ''}`}
+          !isMobileBreakpoint ? "max-width-block" : ""
+        } ${isScrolled ? styles.scrolled : ""} ${isMobileExpanded ? styles.expanded : ""}`}
         aria-label="Nawigacja sekcji"
       >
         <div ref={pillsWrapperRef} className={styles.pillsWrapper}>
@@ -217,7 +217,7 @@ export default function PillsStickyNav({
               tabIndex={activeSection === section.id ? -1 : 0}
               href={`#${section.id}`}
               className={styles.pill}
-              aria-current={activeSection === section.id ? 'page' : undefined}
+              aria-current={activeSection === section.id ? "page" : undefined}
               onClick={() => {
                 if (isMobileBreakpoint) {
                   setIsMobileExpanded(false);

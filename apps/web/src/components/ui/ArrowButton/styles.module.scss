@@ -18,7 +18,7 @@
 
   // Premium glow effect (for ghost variant)
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: -1px;
     border-radius: inherit;
@@ -48,11 +48,11 @@
     box-shadow 300ms ease,
     border 200ms ease;
 
-  &[data-variant='ghost'] {
+  &[data-variant="ghost"] {
     background: rgba(255, 255, 255, 0.08);
   }
 
-  &[data-variant='filled'] {
+  &[data-variant="filled"] {
     background: var(--neutral-white, #ffffff);
     border: 1px solid var(--neutral-400, #e7e7e7);
     box-shadow: none;
@@ -67,7 +67,7 @@
     }
   }
 
-  &[data-variant='gray'] {
+  &[data-variant="gray"] {
     background: var(--neutral-200, #f8f8f8);
     border: none;
     box-shadow: none;
@@ -82,7 +82,7 @@
     }
   }
 
-  &[data-size='sm'] {
+  &[data-size="sm"] {
     width: 2.75rem; // Still 44px for accessibility
     height: 2.75rem;
 
@@ -92,7 +92,7 @@
     }
   }
 
-  &[data-size='md'] {
+  &[data-size="md"] {
     width: 2.75rem;
     height: 2.75rem;
 
@@ -102,7 +102,7 @@
     }
   }
 
-  &[data-outline='light'] {
+  &[data-outline="light"] {
     outline-color: var(--neutral-white, #ffffff);
   }
 
@@ -124,11 +124,11 @@
       transform: scale(1.1);
     }
 
-    &[data-variant='ghost'] {
+    &[data-variant="ghost"] {
       background: rgba(255, 255, 255, 0.12);
     }
 
-    &[data-variant='filled'] {
+    &[data-variant="filled"] {
       border-color: var(--neutral-500, #c5c5c5);
       box-shadow: none;
 
@@ -138,7 +138,7 @@
       }
     }
 
-    &[data-variant='gray'] {
+    &[data-variant="gray"] {
       background: var(--neutral-200, #f8f8f8);
       box-shadow: none;
       transform: scale(1.05);
@@ -162,12 +162,12 @@
       transform: scale(0.9);
     }
 
-    &[data-variant='filled'] {
+    &[data-variant="filled"] {
       background: var(--neutral-400, #e7e7e7);
       box-shadow: none;
     }
 
-    &[data-variant='gray'] {
+    &[data-variant="gray"] {
       background: var(--neutral-400, #e7e7e7);
       box-shadow: none;
     }
@@ -178,8 +178,8 @@
     outline: 2px solid var(--neutral-white, #ffffff);
     outline-offset: 2px;
 
-    &[data-variant='filled'],
-    &[data-variant='gray'] {
+    &[data-variant="filled"],
+    &[data-variant="gray"] {
       outline: 2px solid var(--neutral-700, #303030);
       outline-offset: 2px;
     }
@@ -200,7 +200,7 @@
       }
     }
 
-    &[data-variant='filled'] {
+    &[data-variant="filled"] {
       svg {
         color: var(--neutral-500, #c5c5c5);
       }
@@ -211,7 +211,7 @@
       }
     }
 
-    &[data-variant='gray'] {
+    &[data-variant="gray"] {
       svg {
         color: var(--neutral-500, #c5c5c5);
       }

@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { startTransition, useEffect, useOptimistic, useState } from 'react';
-import { toast } from 'sonner';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { startTransition, useEffect, useOptimistic, useState } from "react";
+import { toast } from "sonner";
 
-import { fetchComparisonProducts } from '@/src/app/actions/comparison';
-import Image from '@/src/components/shared/Image';
+import { fetchComparisonProducts } from "@/src/app/actions/comparison";
+import Image from "@/src/components/shared/Image";
 import {
   clearComparison,
   getComparisonCookie,
   removeProductFromComparison,
-} from '@/src/global/comparison/cookie-manager';
-import type { ProductType } from '@/src/global/types';
+} from "@/src/global/comparison/cookie-manager";
+import type { ProductType } from "@/src/global/types";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 export default function FloatingComparisonBox() {
   const pathname = usePathname();
@@ -27,7 +27,7 @@ export default function FloatingComparisonBox() {
     ProductType[],
     string
   >(products, (state, productIdToRemove) =>
-    state.filter((product) => product._id !== productIdToRemove)
+    state.filter((product) => product._id !== productIdToRemove),
   );
 
   // Load products from cookie and fetch data
@@ -48,7 +48,7 @@ export default function FloatingComparisonBox() {
         setProducts([]);
       }
     } catch (error) {
-      console.error('Error loading comparison products:', error);
+      console.error("Error loading comparison products:", error);
       setProducts([]);
     } finally {
       setHasInitiallyLoaded(true);
@@ -58,19 +58,19 @@ export default function FloatingComparisonBox() {
   // Set body attribute when comparator is visible (for sticky nav positioning)
   useEffect(() => {
     // Don't set attribute if we're on the comparison page
-    if (pathname === '/porownaj') {
-      document.body.removeAttribute('data-comparison-visible');
+    if (pathname === "/porownaj") {
+      document.body.removeAttribute("data-comparison-visible");
       return;
     }
 
     if (hasInitiallyLoaded && optimisticProducts.length > 0) {
-      document.body.setAttribute('data-comparison-visible', 'true');
+      document.body.setAttribute("data-comparison-visible", "true");
     } else {
-      document.body.removeAttribute('data-comparison-visible');
+      document.body.removeAttribute("data-comparison-visible");
     }
 
     return () => {
-      document.body.removeAttribute('data-comparison-visible');
+      document.body.removeAttribute("data-comparison-visible");
     };
   }, [hasInitiallyLoaded, optimisticProducts.length, pathname]);
 
@@ -108,8 +108,8 @@ export default function FloatingComparisonBox() {
     };
 
     window.addEventListener(
-      'audiofast:comparison-changed',
-      handleComparisonChange
+      "audiofast:comparison-changed",
+      handleComparisonChange,
     );
 
     // Also listen for storage events (cookie changes from other tabs/windows)
@@ -117,14 +117,14 @@ export default function FloatingComparisonBox() {
       loadProducts();
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
       window.removeEventListener(
-        'audiofast:comparison-changed',
-        handleComparisonChange
+        "audiofast:comparison-changed",
+        handleComparisonChange,
       );
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
@@ -154,7 +154,7 @@ export default function FloatingComparisonBox() {
         setProducts([]);
       }
     } catch (error) {
-      console.error('Error loading comparison products:', error);
+      console.error("Error loading comparison products:", error);
       setProducts([]);
     }
   };
@@ -162,7 +162,7 @@ export default function FloatingComparisonBox() {
   const handleClear = async () => {
     // Clear immediately (no optimistic state needed as we're closing the box)
     clearComparison();
-    toast.info('Porównanie wyczyszczone');
+    toast.info("Porównanie wyczyszczone");
     setIsOpen(false);
     await loadProducts();
   };
@@ -177,7 +177,7 @@ export default function FloatingComparisonBox() {
   }
 
   // Don't render on the comparison page
-  if (pathname === '/porownaj/' || pathname === '/porownaj') {
+  if (pathname === "/porownaj/" || pathname === "/porownaj") {
     return null;
   }
 
@@ -210,7 +210,7 @@ export default function FloatingComparisonBox() {
           <ul className={styles.productList}>
             {optimisticProducts.map((product) => {
               const productSlug =
-                typeof product.slug === 'string'
+                typeof product.slug === "string"
                   ? product.slug
                   : (product.slug as unknown as { current?: string })
                       ?.current || product._id;
@@ -238,7 +238,7 @@ export default function FloatingComparisonBox() {
                     className={styles.removeButton}
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleRemove(product._id, product.name ?? '');
+                      handleRemove(product._id, product.name ?? "");
                     }}
                     aria-label={`Usuń ${product.name} z porównania`}
                     type="button"

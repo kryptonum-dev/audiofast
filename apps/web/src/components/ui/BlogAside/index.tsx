@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 
-import Pill from '../Pill';
-import Searchbar from '../Searchbar';
-import styles from './styles.module.scss';
+import Pill from "../Pill";
+import Searchbar from "../Searchbar";
+import styles from "./styles.module.scss";
 
 export type ArticleByYearItem = {
   _id: string;
@@ -32,9 +32,9 @@ type BlogAsideProps = {
 export default function BlogAside({
   categories,
   totalCount,
-  basePath = '/blog/',
+  basePath = "/blog/",
   currentCategory = null,
-  initialSearch = '',
+  initialSearch = "",
   articlesByYear = [],
 }: BlogAsideProps) {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function BlogAside({
   const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
 
   // Check if we're on the main blog page (no category selected)
-  const isAllPostsActive = !currentCategory || currentCategory === '';
+  const isAllPostsActive = !currentCategory || currentCategory === "";
 
   // Group articles by year
   const groupedArticles = articlesByYear.reduce(
@@ -55,12 +55,12 @@ export default function BlogAside({
       acc[year].push(article);
       return acc;
     },
-    {} as Record<string, ArticleByYearItem[]>
+    {} as Record<string, ArticleByYearItem[]>,
   );
 
   // Sort years in descending order
   const sortedYears = Object.keys(groupedArticles).sort(
-    (a, b) => parseInt(b) - parseInt(a)
+    (a, b) => parseInt(b) - parseInt(a),
   );
 
   const toggleYear = (year: string) => {
@@ -79,7 +79,7 @@ export default function BlogAside({
     // Remove page param to reset pagination
     // Add search term if present
     if (localSearch.trim()) {
-      params.set('search', localSearch.trim());
+      params.set("search", localSearch.trim());
     }
 
     const queryString = params.toString();
@@ -108,8 +108,8 @@ export default function BlogAside({
         />
         {categories.map((category) => {
           const categorySlug = category.slug
-            ?.replace('/blog/kategoria/', '')
-            .replace('/', '');
+            ?.replace("/blog/kategoria/", "")
+            .replace("/", "");
 
           // Check if this category is active
           const isActive = currentCategory === categorySlug;
@@ -143,7 +143,7 @@ export default function BlogAside({
                     ({groupedArticles[year]?.length || 0})
                   </span>
                   <svg
-                    className={`${styles.yearIcon} ${expandedYears.has(year) ? styles.yearIconExpanded : ''}`}
+                    className={`${styles.yearIcon} ${expandedYears.has(year) ? styles.yearIconExpanded : ""}`}
                     width="14"
                     height="14"
                     viewBox="0 0 16 16"

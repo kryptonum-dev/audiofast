@@ -51,7 +51,7 @@
     }
   }
 
-  &[data-mode='dark'] {
+  &[data-mode="dark"] {
     color: var(--neutral-300, #f7f3f3);
 
     .checkmark {
@@ -70,14 +70,14 @@
       outline-offset: 2px;
     }
 
-    &[data-mode='dark'] {
+    &[data-mode="dark"] {
       .checkmark {
         outline-color: var(--neutral-white, #ffffff);
       }
     }
   }
 
-  &:has(input[aria-invalid='true']) {
+  &:has(input[aria-invalid="true"]) {
     .checkmark {
       border-color: var(--primary-error, #ff6a00);
     }
@@ -99,7 +99,7 @@
     }
   }
 
-  span[role='alert'] {
+  span[role="alert"] {
     grid-column: 1/3;
     grid-row: 2/3;
     margin-top: 0.25rem;

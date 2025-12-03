@@ -1,12 +1,12 @@
-import type { QuerySettingsResult } from '@/src/global/sanity/sanity.types';
-import type { PagebuilderType } from '@/src/global/types';
+import type { QuerySettingsResult } from "@/src/global/sanity/sanity.types";
+import type { PagebuilderType } from "@/src/global/types";
 
-import { sanityFetch } from '../../../global/sanity/fetch';
-import { querySettings } from '../../../global/sanity/query';
-import PortableText from '../../portableText';
-import styles from './styles.module.scss';
+import { sanityFetch } from "../../../global/sanity/fetch";
+import { querySettings } from "../../../global/sanity/query";
+import PortableText from "../../portableText";
+import styles from "./styles.module.scss";
 
-type ContactMapProps = PagebuilderType<'contactMap'> & {
+type ContactMapProps = PagebuilderType<"contactMap"> & {
   index: number;
 };
 
@@ -22,7 +22,7 @@ export default async function ContactMap({
     ? null
     : await sanityFetch<QuerySettingsResult>({
         query: querySettings,
-        tags: ['settings'],
+        tags: ["settings"],
       });
 
   // Format structured address into display string
@@ -35,32 +35,32 @@ export default async function ContactMap({
           country: string | null;
         }
       | null
-      | undefined
+      | undefined,
   ) => {
-    if (!addr) return '';
+    if (!addr) return "";
     const parts = [addr.postalCode, addr.city, addr.streetAddress].filter(
-      Boolean
+      Boolean,
     );
-    return parts.join(', ');
+    return parts.join(", ");
   };
 
   const displayAddress = useCustomAddress
     ? customAddress
     : settings?.address
       ? formatAddress(settings.address)
-      : '';
+      : "";
   const displayPhone = useCustomAddress ? customPhone : settings?.tel;
   const displayEmail = useCustomAddress ? customEmail : settings?.email;
 
   const mapEmbedUrl =
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2283.2174136792655!2d19.321189992147254!3d51.806389516969325!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471bb4c103ae231b%3A0xe875c89c1b5fb082!2sAUDIOFAST%20Sp.%20z%20o.o.!5e1!3m2!1spl!2spl!4v1759732361294!5m2!1spl!2spl';
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2283.2174136792655!2d19.321189992147254!3d51.806389516969325!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471bb4c103ae231b%3A0xe875c89c1b5fb082!2sAUDIOFAST%20Sp.%20z%20o.o.!5e1!3m2!1spl!2spl!4v1759732361294!5m2!1spl!2spl";
 
   return (
     <section className={styles.contactMap}>
       <header className={styles.content}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
           className={styles.heading}
         />
         <div className={`${styles.contactItem} ${styles.addressItem}`}>
@@ -71,7 +71,7 @@ export default async function ContactMap({
         </div>
         {displayPhone && (
           <a
-            href={`tel:${displayPhone.replace(/\s/g, '')}`}
+            href={`tel:${displayPhone.replace(/\s/g, "")}`}
             className={`${styles.contactItem} ${styles.phoneItem}`}
           >
             <div className={styles.iconContainer}>
@@ -99,7 +99,7 @@ export default async function ContactMap({
           height="100%"
           style={{ border: 0 }}
           allowFullScreen
-          loading={index === 0 ? 'eager' : 'lazy'}
+          loading={index === 0 ? "eager" : "lazy"}
           referrerPolicy="no-referrer-when-downgrade"
           title="Lokalizacja na mapie"
         />

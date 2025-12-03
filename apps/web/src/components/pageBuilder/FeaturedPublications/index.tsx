@@ -1,13 +1,13 @@
-import type { PagebuilderType } from '@/src/global/types';
+import type { PagebuilderType } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import Button from '../../ui/Button';
-import PublicationsCarousel from './PublicationsCarousel';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Button from "../../ui/Button";
+import PublicationsCarousel from "./PublicationsCarousel";
+import styles from "./styles.module.scss";
 
-type FeaturedPublicationsProps = PagebuilderType<'featuredPublications'> & {
+type FeaturedPublicationsProps = PagebuilderType<"featuredPublications"> & {
   index: number;
-  publicationLayout?: 'vertical' | 'horizontal';
+  publicationLayout?: "vertical" | "horizontal";
   customId?: string;
   isButtonVisible?: boolean;
 };
@@ -18,7 +18,7 @@ export default function FeaturedPublications({
   button,
   publications,
   index,
-  publicationLayout = 'horizontal',
+  publicationLayout = "horizontal",
   isButtonVisible = true,
 }: FeaturedPublicationsProps) {
   return (
@@ -29,7 +29,7 @@ export default function FeaturedPublications({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
           className={styles.heading}
         />
         {isButtonVisible && <Button {...button} />}

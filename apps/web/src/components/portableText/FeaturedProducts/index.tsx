@@ -1,12 +1,12 @@
-import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import type { PortableTextTypeComponentProps } from "@portabletext/react";
 
-import ProductCard from '@/src/components/ui/ProductCard';
-import type { PortableTextProps } from '@/src/global/types';
+import ProductCard from "@/src/components/ui/ProductCard";
+import type { PortableTextProps } from "@/src/global/types";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type FeaturedProductsValue = NonNullable<PortableTextProps>[number] & {
-  _type: 'ptFeaturedProducts';
+  _type: "ptFeaturedProducts";
 };
 
 export function FeaturedProductsComponent({

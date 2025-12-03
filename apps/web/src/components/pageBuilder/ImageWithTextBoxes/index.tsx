@@ -1,12 +1,12 @@
-import type { PagebuilderType } from '@/src/global/types';
-import svgToInlineString from '@/src/global/utils';
+import type { PagebuilderType } from "@/src/global/types";
+import svgToInlineString from "@/src/global/utils";
 
-import PortableText from '../../portableText';
-import Image from '../../shared/Image';
-import Button from '../../ui/Button';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import Image from "../../shared/Image";
+import Button from "../../ui/Button";
+import styles from "./styles.module.scss";
 
-type ImageWithTextBoxesProps = PagebuilderType<'imageWithTextBoxes'> & {
+type ImageWithTextBoxesProps = PagebuilderType<"imageWithTextBoxes"> & {
   index: number;
 };
 
@@ -24,7 +24,7 @@ export default async function ImageWithTextBoxes({
         ? await svgToInlineString(box.iconUrl)
         : null;
       return { ...box, svgContent };
-    })
+    }),
   );
 
   return (
@@ -32,14 +32,14 @@ export default async function ImageWithTextBoxes({
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? 'h1' : 'h2'}
+          headingLevel={index === 0 ? "h1" : "h2"}
         />
       </header>
       <Image
         image={image}
         sizes="(max-width: 37.4375rem) 96vw, (max-width: 48.0625rem) 80vw, (max-width: 56.1875rem) 38rem, 29.5625rem"
         priority={index === 0}
-        loading={index === 0 ? 'eager' : 'lazy'}
+        loading={index === 0 ? "eager" : "lazy"}
       />
       <ul className={styles.boxes}>
         {boxesWithSvgs.map((box) => (
@@ -52,7 +52,7 @@ export default async function ImageWithTextBoxes({
             )}
             <PortableText
               value={box.heading}
-              headingLevel={index === 0 ? 'h2' : 'h3'}
+              headingLevel={index === 0 ? "h2" : "h3"}
               className={styles.heading}
             />
             <PortableText

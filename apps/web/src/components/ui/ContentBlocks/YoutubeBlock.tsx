@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import NextImage from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import NextImage from "next/image";
+import { useEffect, useRef, useState } from "react";
 
-import Image from '../../shared/Image';
-import VideoModal from '../VideoModal';
-import styles from './styles.module.scss';
+import Image from "../../shared/Image";
+import VideoModal from "../VideoModal";
+import styles from "./styles.module.scss";
 
 interface YoutubeBlockProps {
   youtubeId: string;
@@ -35,11 +35,11 @@ interface YoutubeBlockProps {
  * List of YouTube thumbnail resolutions to try, in order of preference
  */
 const YOUTUBE_THUMBNAIL_RESOLUTIONS = [
-  'maxresdefault.jpg',
-  'sddefault.jpg',
-  'hqdefault.jpg',
-  'mqdefault.jpg',
-  'default.jpg',
+  "maxresdefault.jpg",
+  "sddefault.jpg",
+  "hqdefault.jpg",
+  "mqdefault.jpg",
+  "default.jpg",
 ];
 
 export function YoutubeBlock({
@@ -50,7 +50,7 @@ export function YoutubeBlock({
   const playButtonRef = useRef<HTMLButtonElement>(null);
   const [videoTitle, setVideoTitle] = useState<string | null>(title || null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(
-    undefined
+    undefined,
   );
 
   // Fetch title and thumbnail from YouTube if not provided
@@ -75,7 +75,7 @@ export function YoutubeBlock({
         for (const resolution of YOUTUBE_THUMBNAIL_RESOLUTIONS) {
           const url = `https://img.youtube.com/vi/${youtubeId}/${resolution}`;
           try {
-            const response = await fetch(url, { method: 'HEAD' });
+            const response = await fetch(url, { method: "HEAD" });
             if (response.ok) {
               setThumbnailUrl(url);
               break;
@@ -107,15 +107,15 @@ export function YoutubeBlock({
       }
     };
 
-    container.addEventListener('click', handleContainerClick);
+    container.addEventListener("click", handleContainerClick);
 
     return () => {
-      container.removeEventListener('click', handleContainerClick);
+      container.removeEventListener("click", handleContainerClick);
     };
   }, []);
 
   const imageSizes =
-    '(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 90vw, 1238px';
+    "(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 90vw, 1238px";
 
   return (
     <div className={styles.youtubeBlock}>
@@ -126,7 +126,7 @@ export function YoutubeBlock({
           sizes={imageSizes}
           loading="lazy"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
       ) : thumbnailUrl ? (
         <NextImage
@@ -135,7 +135,7 @@ export function YoutubeBlock({
           className={styles.thumbnail}
           loading="lazy"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
       ) : (
         <div className={styles.placeholder}>

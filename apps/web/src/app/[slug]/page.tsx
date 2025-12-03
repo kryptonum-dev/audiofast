@@ -1,35 +1,35 @@
-'use cache';
+"use cache";
 
-import { cacheLife } from 'next/cache';
-import { notFound } from 'next/navigation';
+import { cacheLife } from "next/cache";
+import { notFound } from "next/navigation";
 
-import { PageBuilder } from '@/src/components/shared/PageBuilder';
-import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { queryAllPageSlugs, queryPageBySlug } from '@/src/global/sanity/query';
-import type { QueryPageBySlugResult } from '@/src/global/sanity/sanity.types';
-import { getSEOMetadata } from '@/src/global/seo';
+import { PageBuilder } from "@/src/components/shared/PageBuilder";
+import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import { sanityFetch } from "@/src/global/sanity/fetch";
+import { queryAllPageSlugs, queryPageBySlug } from "@/src/global/sanity/query";
+import type { QueryPageBySlugResult } from "@/src/global/sanity/sanity.types";
+import { getSEOMetadata } from "@/src/global/seo";
 
 export async function generateStaticParams() {
   const pages = await sanityFetch<{ slug: string }[]>({
     query: queryAllPageSlugs,
-    tags: ['page'],
+    tags: ["page"],
   });
 
   return pages
     .filter((page) => page.slug)
     .map((page) => ({
-      slug: page.slug.replace(/^\//, '').replace(/\/$/, ''),
+      slug: page.slug.replace(/^\//, "").replace(/\/$/, ""),
     }));
 }
 
 async function fetchPageData(slug: string) {
-  const sanitySlug = `/${slug.replace(/^\/+/, '').replace(/\/+$/, '')}/`;
+  const sanitySlug = `/${slug.replace(/^\/+/, "").replace(/\/+$/, "")}/`;
 
   return await sanityFetch<NonNullable<QueryPageBySlugResult>>({
     query: queryPageBySlug,
     params: { slug: sanitySlug },
-    tags: ['page'],
+    tags: ["page"],
   });
 }
 
@@ -56,8 +56,8 @@ export default async function Page({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  'use cache';
-  cacheLife('max');
+  "use cache";
+  cacheLife("max");
   const { slug } = await params;
   const pageData = await fetchPageData(slug);
 
@@ -68,7 +68,7 @@ export default async function Page({
   // Build breadcrumbs data from page data
   const breadcrumbsData = [
     {
-      name: pageData.name || 'Strona',
+      name: pageData.name || "Strona",
       path: pageData.slug || `/${slug}`,
     },
   ];
@@ -80,7 +80,7 @@ export default async function Page({
         firstItemType={pageData.firstBlockType || undefined}
       />
       <PageBuilder
-        basePath={pageData.slug || '/'}
+        basePath={pageData.slug || "/"}
         pageBuilder={pageData.pageBuilder || []}
       />
     </main>

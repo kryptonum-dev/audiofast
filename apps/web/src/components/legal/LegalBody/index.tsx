@@ -1,8 +1,8 @@
-import type { PortableTextProps } from '@/global/types';
+import type { PortableTextProps } from "@/global/types";
 
-import PortableText from '../../portableText';
-import TableOfContent from '../../ui/TableOfContent';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import TableOfContent from "../../ui/TableOfContent";
+import styles from "./styles.module.scss";
 type Props = {
   headings: PortableTextProps[];
   name: string;
@@ -12,7 +12,7 @@ type Props = {
 
 export function LegalBody({ headings, name, description, content }: Props) {
   return (
-    <article className={styles.container + ' content'}>
+    <article className={styles.container + " content"}>
       <TableOfContent headings={headings} />
       <header className={styles.header}>
         <h1 className={styles.heading}>{name}</h1>
