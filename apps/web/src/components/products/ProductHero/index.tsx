@@ -17,7 +17,7 @@ export type AwardType = {
 
 export interface ProductHeroProps {
   name: string;
-  subtitle: string;
+  subtitle?: string;
   brand?: BrandType;
   pricingData?: CompletePricingData | null;
   previewImage: SanityRawImage;
@@ -38,7 +38,7 @@ export default function ProductHero({
   awards,
   customId,
   productId,
-  categorySlug,
+  categorySlug
 }: ProductHeroProps) {
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
@@ -48,8 +48,8 @@ export default function ProductHero({
   // Base: 2s per item, min 15s, max 45s
   const getAnimationDuration = () => {
     if (!shouldUseMarquee || !awards) return 30;
-    const duration = awards.length * 2;
-    return Math.max(15, Math.min(45, duration));
+    const duration = awards.length * 3;
+    return Math.max(20, Math.min(60, duration));
   };
 
   const animationDuration = getAnimationDuration();
@@ -58,7 +58,7 @@ export default function ProductHero({
     <section className={`${styles.productHero} max-width`} id={customId}>
       <Image
         image={previewImage}
-        sizes="(max-width: 56.1875rem) 96vw, (max-width: 85.375rem) 48vw, 651px"
+        sizes='(max-width: 56.1875rem) 96vw, (max-width: 85.375rem) 48vw, 951px'
         priority
         className={styles.previewImage}
       />
@@ -66,17 +66,19 @@ export default function ProductHero({
         <div className={styles.brandLogo}>
           <Image
             image={brand!.logo}
-            sizes="(max-width: 56.1875rem) 96px, 128px"
-            loading="lazy"
+            sizes='(max-width: 56.1875rem) 96px, 128px'
+            loading='lazy'
           />
         </div>
-        <span className={styles.prefix}>{subtitle}</span>
+        {subtitle && <span className={styles.prefix}>{subtitle}</span>}
         <h1 className={styles.heading}>
           <span className={styles.brandName}>{brand!.name}</span>
           <span className={styles.productName}>{name}</span>
         </h1>
       </header>
-      <ProductDescription shortDescription={shortDescription!} />
+      {shortDescription && shortDescription.length > 0 && (
+        <ProductDescription shortDescription={shortDescription} />
+      )}
       <div className={styles.priceWrapper}>
         {pricingData ? (
           <PricingConfigurator pricingData={pricingData} />
@@ -85,10 +87,10 @@ export default function ProductHero({
         )}
 
         <Button
-          text="Zapytaj o produkt"
-          variant="primary"
-          href="/kontakt/"
-          iconUsed="information"
+          text='Zapytaj o produkt'
+          variant='primary'
+          href='/kontakt/'
+          iconUsed='information'
         />
         <AddToComparison
           productId={productId}
@@ -98,19 +100,19 @@ export default function ProductHero({
             _id: productId,
             name,
             brand,
-            mainImage: previewImage,
+            mainImage: previewImage
           }}
         />
       </div>
       {displayAwards && displayAwards?.length > 0 && (
         <div
           className={styles.awardsMarquee}
-          aria-label="Nagrody produktu"
+          aria-label='Nagrody produktu'
           data-use-marquee={shouldUseMarquee}
           style={
             shouldUseMarquee
               ? ({
-                  '--animation-duration': `${animationDuration}s`,
+                  '--animation-duration': `${animationDuration}s`
                 } as React.CSSProperties)
               : undefined
           }
@@ -125,10 +127,10 @@ export default function ProductHero({
                   <Image
                     image={award.logo}
                     alt={award.name || 'Nagroda produktu'}
-                    sizes="48px"
+                    sizes='80px'
                     quality={90}
                     className={styles.awardLogo}
-                    loading="lazy"
+                    loading='lazy'
                     key={key}
                     aria-hidden={isDuplicate}
                   />

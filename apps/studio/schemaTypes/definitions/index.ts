@@ -4,12 +4,14 @@ import { ptCircleNumberedList } from '../portableText/circle-numbered-list';
 import { ptCtaSection } from '../portableText/cta-section';
 import { ptFeaturedProducts } from '../portableText/featured-products';
 import { ptHeading } from '../portableText/heading';
+import { ptHorizontalLine } from '../portableText/horizontal-line';
 import { ptImage } from '../portableText/image';
 import { ptImageSlider } from '../portableText/image-slider';
 import { ptInlineImage } from '../portableText/inline-image';
 import { ptMinimalImage } from '../portableText/minimal-image';
 import { ptPageBreak } from '../portableText/page-break';
 import { ptQuote } from '../portableText/quote';
+import { ptReviewEmbed } from '../portableText/review-embed';
 import { ptTwoColumnTable } from '../portableText/two-column-table';
 import { ptVimeoVideo } from '../portableText/vimeo-video';
 import { ptYoutubeVideo } from '../portableText/youtube-video';
@@ -46,6 +48,8 @@ export const definitions = [
   ptYoutubeVideo,
   ptVimeoVideo,
   ptPageBreak,
+  ptHorizontalLine,
+  ptReviewEmbed,
   contentBlockText,
   contentBlockYoutube,
   contentBlockVimeo,

@@ -22,7 +22,7 @@ export const contentBlockText = defineType({
       description:
         'Tekst z formatowaniem i elementami multimedialnymi. Możesz dodać maksymalnie jeden podział kolumn.',
       include: {
-        styles: ['normal', 'h3', 'blockquote'],
+        styles: ['normal', 'h3'],
         lists: ['bullet', 'number'],
         decorators: ['strong', 'em'],
         annotations: ['customLink'],
@@ -34,6 +34,8 @@ export const contentBlockText = defineType({
         'ptYoutubeVideo',
         'ptVimeoVideo',
         'ptPageBreak',
+        'ptHorizontalLine',
+        'ptReviewEmbed',
       ],
       validation: (Rule) =>
         Rule.required()
@@ -60,8 +62,7 @@ export const contentBlockText = defineType({
     },
     prepare: ({ content }) => {
       const text = toPlainText(content);
-      const truncated =
-        text.length > 80 ? `${text.substring(0, 80)}...` : text;
+      const truncated = text.length > 80 ? `${text.substring(0, 80)}...` : text;
       return {
         title: 'Blok tekstowy',
         subtitle: truncated || 'Brak treści',
@@ -199,4 +200,3 @@ export const contentBlockHorizontalLine = defineType({
     }),
   },
 });
-

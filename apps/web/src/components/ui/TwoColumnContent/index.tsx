@@ -13,6 +13,8 @@ export interface TwoColumnContentProps {
   contentBlocks?: ContentBlock[] | null;
   // Legacy portable text format (for backward compatibility)
   content?: PortableTextProps;
+  // Custom heading - can be PortableText or string. Defaults to "O marce" if not provided.
+  heading?: PortableTextProps | string;
   customId?: string;
   distributionYear?: NonNullable<QueryBrandBySlugResult>['distributionYear'];
   gallery?: SanityRawImage[];
@@ -22,6 +24,7 @@ export interface TwoColumnContentProps {
 export default function TwoColumnContent({
   contentBlocks,
   content,
+  heading = 'O marce',
   customId,
   distributionYear,
   gallery,
@@ -37,12 +40,26 @@ export default function TwoColumnContent({
     return null;
   }
 
+  console.log('contentBlocks', contentBlocks);
+
+  // Render heading - either as PortableText or plain string
+  const renderHeading = () => {
+    if (typeof heading === 'string') {
+      return heading;
+    }
+    // PortableText heading
+    if (Array.isArray(heading) && heading.length > 0) {
+      return <PortableText value={heading} />;
+    }
+    return 'O marce';
+  };
+
   return (
     <section
       className={`max-width-block ${styles.twoColumnContent} ${className || ''}`}
       id={customId || undefined}
     >
-      <h2 className={styles.heading}>O marce</h2>
+      <h2 className={styles.heading}>{renderHeading()}</h2>
 
       {/* New content blocks format */}
       {hasContentBlocks && (

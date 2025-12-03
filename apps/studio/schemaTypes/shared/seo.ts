@@ -6,10 +6,12 @@ type ExcludableFields = 'hideFromList' | 'doNotIndex' | 'openGraph';
 
 interface GetSEOFieldsOptions {
   exclude?: ExcludableFields[];
+  /** If true, meta description is required. Default: false (optional, falls back to home page description) */
+  descriptionRequired?: boolean;
 }
 
 export function getSEOFields(options?: GetSEOFieldsOptions) {
-  const { exclude = [] } = options || {};
+  const { exclude = [], descriptionRequired = false } = options || {};
 
   const fields = [];
 
@@ -36,15 +38,21 @@ export function getSEOFields(options?: GetSEOFieldsOptions) {
         defineField({
           name: 'description',
           title: 'Meta opis SEO',
-          description:
-            'To nadpisze meta opis. Jeśli pozostanie puste, odziedziczy opis ze strony.',
+          description: descriptionRequired
+            ? 'Meta opis strony wyświetlany w wynikach wyszukiwania.'
+            : 'Meta opis strony. Jeśli pozostanie puste, zostanie użyty opis ze strony głównej.',
           type: 'text',
           rows: 2,
-          validation: (rule) => [
-            rule.required().error('Opis SEO jest wymagany'),
-            rule.min(110).warning('Nie mniej niż 110 znaków'),
-            rule.max(160).warning('Nie więcej niż 160 znaków'),
-          ],
+          validation: (rule) => {
+            const rules = [
+              rule.min(110).warning('Nie mniej niż 110 znaków'),
+              rule.max(160).warning('Nie więcej niż 160 znaków'),
+            ];
+            if (descriptionRequired) {
+              rules.unshift(rule.required().error('Opis SEO jest wymagany'));
+            }
+            return rules;
+          },
         }),
       ],
     })

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type PriceRangeProps = {
   minValue: number;
@@ -58,7 +58,7 @@ export default function PriceRange({
       setMinInputValue(newMin.toString());
       onMinChange(newMin);
     },
-    [localMax, onMinChange]
+    [localMax, onMinChange],
   );
 
   const handleMaxRangeChange = useCallback(
@@ -70,7 +70,7 @@ export default function PriceRange({
       setMaxInputValue(newMax.toString());
       onMaxChange(newMax);
     },
-    [localMin, onMaxChange]
+    [localMin, onMaxChange],
   );
 
   const handleMinInputChange = useCallback(
@@ -78,8 +78,8 @@ export default function PriceRange({
       const value = e.target.value;
 
       // Allow empty string for easier editing
-      if (value === '') {
-        setMinInputValue('');
+      if (value === "") {
+        setMinInputValue("");
         return;
       }
 
@@ -96,7 +96,7 @@ export default function PriceRange({
 
       setMinInputValue(value);
     },
-    [localMax]
+    [localMax],
   );
 
   const handleMaxInputChange = useCallback(
@@ -104,8 +104,8 @@ export default function PriceRange({
       const value = e.target.value;
 
       // Allow empty string for easier editing
-      if (value === '') {
-        setMaxInputValue('');
+      if (value === "") {
+        setMaxInputValue("");
         return;
       }
 
@@ -127,13 +127,13 @@ export default function PriceRange({
 
       setMaxInputValue(value);
     },
-    [localMin, maxLimit]
+    [localMin, maxLimit],
   );
 
   const handleMinInputBlur = useCallback(() => {
     const numValue = parseInt(minInputValue, 10);
 
-    if (isNaN(numValue) || minInputValue === '') {
+    if (isNaN(numValue) || minInputValue === "") {
       // Reset to current localMin if invalid
       setMinInputValue(localMin.toString());
       return;
@@ -149,7 +149,7 @@ export default function PriceRange({
   const handleMaxInputBlur = useCallback(() => {
     const numValue = parseInt(maxInputValue, 10);
 
-    if (isNaN(numValue) || maxInputValue === '') {
+    if (isNaN(numValue) || maxInputValue === "") {
       // Reset to current localMax if invalid
       setMaxInputValue(localMax.toString());
       return;
@@ -168,7 +168,7 @@ export default function PriceRange({
 
   // Format price with spaces for readability (Polish format)
   const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   };
 
   return (

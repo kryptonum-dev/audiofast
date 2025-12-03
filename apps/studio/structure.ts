@@ -213,7 +213,7 @@ export const structure = (
                     .getClient({ apiVersion: '2024-01-01' })
                     .fetch<
                       Array<{ _id: string; name: string }>
-                    >(`*[_type == "reviewAuthor"] | order(orderRank) {_id, name}`);
+                    >(`*[_type == "reviewAuthor" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name}`);
 
                   return S.list()
                     .title('Recenzje według autorów')
@@ -278,7 +278,7 @@ export const structure = (
                     .getClient({ apiVersion: '2024-01-01' })
                     .fetch<
                       Array<{ _id: string; name: string; logo?: any }>
-                    >(`*[_type == "brand"] | order(orderRank) {_id, name, logo}`);
+                    >(`*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name, logo}`);
 
                   return S.list()
                     .title('Produkty według marek')
@@ -326,7 +326,7 @@ export const structure = (
                     .getClient({ apiVersion: '2024-01-01' })
                     .fetch<
                       Array<{ _id: string; name: string }>
-                    >(`*[_type == "productCategorySub" && count(*[_type == "product" && references(^._id)]) > 0] | order(orderRank) {_id, name}`);
+                    >(`*[_type == "productCategorySub" && !(_id in path("drafts.**")) && count(*[_type == "product" && references(^._id)]) > 0] | order(orderRank) {_id, name}`);
 
                   return S.list()
                     .title('Produkty według kategorii')
@@ -388,7 +388,7 @@ export const structure = (
                     .getClient({ apiVersion: '2024-01-01' })
                     .fetch<
                       Array<{ _id: string; name: string }>
-                    >(`*[_type == "productCategoryParent"] | order(orderRank) {_id, name}`);
+                    >(`*[_type == "productCategoryParent" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name}`);
 
                   return S.list()
                     .title('Kategorie podrzędne')

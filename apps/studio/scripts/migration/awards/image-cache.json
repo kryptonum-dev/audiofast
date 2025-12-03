@@ -1,0 +1,1880 @@
+{
+  "https://audiofast.pl/assets/awards/TAS-EDS-CHOICE-2016.png": {
+    "assetId": "image-e5718fbba1e8dfb85e0e4df71e85e77ff531f86d-800x800-webp",
+    "originalSize": 678912,
+    "optimizedSize": 69872,
+    "uploadedAt": "2025-12-03T06:00:42.564Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-POY-2015.png": {
+    "assetId": "image-a8a44c426eb46d169274df1f0b9ac051f6b79b37-798x800-webp",
+    "originalSize": 1658945,
+    "optimizedSize": 44674,
+    "uploadedAt": "2025-12-03T06:02:31.481Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-EDS-CHOICE-2015.png": {
+    "assetId": "image-3d862f4a0268465cedabd84f494e1db22109c9ba-792x800-webp",
+    "originalSize": 1414538,
+    "optimizedSize": 74678,
+    "uploadedAt": "2025-12-03T06:02:34.014Z"
+  },
+  "https://audiofast.pl/assets/awards/Best-Product-2016-High-Fidelity.png": {
+    "assetId": "image-a807ebb12e9899f8a552f33b5d261a9c002170d2-200x200-webp",
+    "originalSize": 12438,
+    "optimizedSize": 4774,
+    "uploadedAt": "2025-12-03T06:02:36.454Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-Awards-2016-DiscPlayer.png": {
+    "assetId": "image-a86f0e4938e0e0271c0be4a9e3b267b8c6da2a85-464x464-webp",
+    "originalSize": 138546,
+    "optimizedSize": 47804,
+    "uploadedAt": "2025-12-03T06:02:38.987Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-finalist-2014-v2.png": {
+    "assetId": "image-aa0cadbd830edffb7471680d25362e7191bf31da-200x200-webp",
+    "originalSize": 64384,
+    "optimizedSize": 11370,
+    "uploadedAt": "2025-12-03T06:02:41.521Z"
+  },
+  "https://audiofast.pl/assets/awards/2013stereophile-recommended-v2.png": {
+    "assetId": "image-aaf84ad23e67ec688f2974efae0fcd0aea21618b-280x280-webp",
+    "originalSize": 82642,
+    "optimizedSize": 13950,
+    "uploadedAt": "2025-12-03T06:02:43.890Z"
+  },
+  "https://audiofast.pl/assets/awards/absolute-sound-editors-choice-2012.png": {
+    "assetId": "image-d8fd8020c57d0014ea04d4653c32d70b3ff8e42a-260x260-webp",
+    "originalSize": 75287,
+    "optimizedSize": 14614,
+    "uploadedAt": "2025-12-03T06:02:46.349Z"
+  },
+  "https://audiofast.pl/assets/awards/The-absolute-sound.png": {
+    "assetId": "image-016456b5f589a0b7d6a9f9b67d2246a12d48486d-672x671-webp",
+    "originalSize": 517773,
+    "optimizedSize": 64338,
+    "uploadedAt": "2025-12-03T06:02:48.586Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-Awards-142-2106-noshadow.png": {
+    "assetId": "image-af67576852a6bbb3cf0c41e545d8ed010b39821a-591x591-webp",
+    "originalSize": 274977,
+    "optimizedSize": 34798,
+    "uploadedAt": "2025-12-03T06:02:50.723Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereoph-poty16-v2.png": {
+    "assetId": "image-21621711d7bccc66a6985a4ef6f335af240ca611-200x200-webp",
+    "originalSize": 53881,
+    "optimizedSize": 10136,
+    "uploadedAt": "2025-12-03T06:02:52.734Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-2014-poty-v2.png": {
+    "assetId": "image-bc0de648709a697db648b0d44ff0ae59f16d91da-200x200-webp",
+    "originalSize": 31624,
+    "optimizedSize": 8120,
+    "uploadedAt": "2025-12-03T06:04:37.824Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-POY-2013-LOGO-FINAL.png": {
+    "assetId": "image-0da8b65e762ba6d44df69806cbd7829276e485d1-300x299-webp",
+    "originalSize": 77373,
+    "optimizedSize": 16106,
+    "uploadedAt": "2025-12-03T06:04:40.078Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-POTY-15-v2.png": {
+    "assetId": "image-eae270628cbe87b866078986ae27d9b62fd54de8-200x200-webp",
+    "originalSize": 53682,
+    "optimizedSize": 9630,
+    "uploadedAt": "2025-12-03T06:04:42.288Z"
+  },
+  "https://audiofast.pl/assets/awards/goldenEar-TAS-2015-mini.png": {
+    "assetId": "image-ef1bbec95907e21506cc0aed83cc8a37162dabaf-300x300-webp",
+    "originalSize": 142606,
+    "optimizedSize": 22496,
+    "uploadedAt": "2025-12-03T06:04:44.203Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-POTY-2016.png": {
+    "assetId": "image-8ae812d6bb9b95d0e6dc65125cddb9abf51fa46b-300x299-webp",
+    "originalSize": 127558,
+    "optimizedSize": 13858,
+    "uploadedAt": "2025-12-03T06:04:46.337Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-POTY-14-mini.png": {
+    "assetId": "image-299eae465479e1c3123c2a2a8984e167ef692e47-190x190-webp",
+    "originalSize": 50493,
+    "optimizedSize": 9180,
+    "uploadedAt": "2025-12-03T06:04:48.611Z"
+  },
+  "https://audiofast.pl/assets/awards/High-BOTB-16-v2.png": {
+    "assetId": "image-984c59a8c3132eb767693b15e9c49d23cdc85a4e-276x276-webp",
+    "originalSize": 9108,
+    "optimizedSize": 5658,
+    "uploadedAt": "2025-12-03T06:04:50.888Z"
+  },
+  "https://audiofast.pl/assets/awards/Best-Sound-AVS20162-v2.png": {
+    "assetId": "image-3faa29b88fe25d6409e6ca9a52f1e03d51beb863-200x200-webp",
+    "originalSize": 11731,
+    "optimizedSize": 5148,
+    "uploadedAt": "2025-12-03T06:04:52.986Z"
+  },
+  "https://audiofast.pl/assets/awards/High-Fidelity-Best-Product-2014-v2.png": {
+    "assetId": "image-97088a09fc62667b49dd0abe0007cba67ba77590-200x200-webp",
+    "originalSize": 14635,
+    "optimizedSize": 4692,
+    "uploadedAt": "2025-12-03T06:04:55.035Z"
+  },
+  "https://audiofast.pl/assets/awards/High-Fidelity-Best-Product2015.png": {
+    "assetId": "image-b7853e3f4c0b15fbe4c2901bc0de32caca260502-300x300-webp",
+    "originalSize": 31094,
+    "optimizedSize": 10270,
+    "uploadedAt": "2025-12-03T06:04:57.144Z"
+  },
+  "https://audiofast.pl/assets/awards/HFM-Nagroda2016.png": {
+    "assetId": "image-8a70afdd071b6a905ae12c35e85772a78ed95099-307x292-webp",
+    "originalSize": 89579,
+    "optimizedSize": 12250,
+    "uploadedAt": "2025-12-03T06:04:59.611Z"
+  },
+  "https://audiofast.pl/assets/awards/HFM-Nagroda2015.png": {
+    "assetId": "image-0a1a62999b7539d809e7d442a6639927b4847e99-307x292-webp",
+    "originalSize": 90001,
+    "optimizedSize": 12382,
+    "uploadedAt": "2025-12-03T06:05:02.001Z"
+  },
+  "https://audiofast.pl/assets/awards/HFM-Nagroda2014.png": {
+    "assetId": "image-bb56ca76cb0326d7c5a9f5e53f19797f27c2731a-307x292-webp",
+    "originalSize": 93800,
+    "optimizedSize": 12162,
+    "uploadedAt": "2025-12-03T06:05:04.002Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-Golden-Ear-2016.png": {
+    "assetId": "image-6ad995a1642f016161b6718dae17c8a628b804ed-438x438-webp",
+    "originalSize": 276084,
+    "optimizedSize": 39182,
+    "uploadedAt": "2025-12-03T06:05:06.353Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-Golden-Ear-2014.png": {
+    "assetId": "image-781f6cf7fe24a0332233285e6b17e1fb65436876-215x215-webp",
+    "originalSize": 83656,
+    "optimizedSize": 14726,
+    "uploadedAt": "2025-12-03T06:05:08.986Z"
+  },
+  "https://audiofast.pl/assets/awards/AV-Wybor-redakcji2.png": {
+    "assetId": "image-9cadd7c29c16acd8f6b70bf9da3ebbc2e968936f-275x276-webp",
+    "originalSize": 31430,
+    "optimizedSize": 17458,
+    "uploadedAt": "2025-12-03T06:05:11.610Z"
+  },
+  "https://audiofast.pl/assets/awards/AV_REKOMENDACJA.png": {
+    "assetId": "image-5553cc7c269bc54ebd5dac91ff462ade2335216c-300x300-webp",
+    "originalSize": 30977,
+    "optimizedSize": 15758,
+    "uploadedAt": "2025-12-03T06:05:14.024Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie2014.png": {
+    "assetId": "image-ee098f149b2351f1e678e5c2d301442d0d04a972-301x286-webp",
+    "originalSize": 19310,
+    "optimizedSize": 13122,
+    "uploadedAt": "2025-12-03T06:05:16.213Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie2015.png": {
+    "assetId": "image-d11903365307d0c01a56ac8c20422086aab3baa0-301x286-webp",
+    "originalSize": 20000,
+    "optimizedSize": 13416,
+    "uploadedAt": "2025-12-03T06:05:18.207Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie2016.png": {
+    "assetId": "image-1c98585487971580c76ed0037fdf6c5a90f827aa-301x286-webp",
+    "originalSize": 20153,
+    "optimizedSize": 13424,
+    "uploadedAt": "2025-12-03T06:05:20.462Z"
+  },
+  "https://audiofast.pl/assets/awards/11.-WZM-MOCY-H-E.png": {
+    "assetId": "image-b7a08d87410f4ba0e6e8def5e4c8767865fe2466-300x304-webp",
+    "originalSize": 98187,
+    "optimizedSize": 31556,
+    "uploadedAt": "2025-12-03T06:05:22.782Z"
+  },
+  "https://audiofast.pl/assets/awards/15.-KOLUMNY-GLOS-POW-30000.png": {
+    "assetId": "image-fe14b43869cf33f0843df28bbea09536e8190962-300x304-webp",
+    "originalSize": 100094,
+    "optimizedSize": 32334,
+    "uploadedAt": "2025-12-03T06:05:24.737Z"
+  },
+  "https://audiofast.pl/assets/awards/Nagroda2017.png": {
+    "assetId": "image-f26704441f693a86c34ce0841f6b35b86df92482-228x216-webp",
+    "originalSize": 53021,
+    "optimizedSize": 8434,
+    "uploadedAt": "2025-12-03T06:05:26.594Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-editors-choice-2017.png": {
+    "assetId": "image-9dd7c0645e3079946be1d32cbfbf3b6bbbe9d2e6-800x799-webp",
+    "originalSize": 406778,
+    "optimizedSize": 69612,
+    "uploadedAt": "2025-12-03T06:05:29.285Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-POTY2013-v3.png": {
+    "assetId": "image-b3cf7190e2b453b90580b27acdf9de382642074c-180x180-webp",
+    "originalSize": 34313,
+    "optimizedSize": 8170,
+    "uploadedAt": "2025-12-03T06:05:31.602Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie2012.png": {
+    "assetId": "image-71ae86bf9ffe86a91ef0ffab7a21d47b08b61099-175x167-webp",
+    "originalSize": 10202,
+    "optimizedSize": 7666,
+    "uploadedAt": "2025-12-03T06:05:33.595Z"
+  },
+  "https://audiofast.pl/assets/awards/OUTSTANDING-PRODUCT.png": {
+    "assetId": "image-8a53e4b0dffb617fd58ae781557445ae0153e21d-800x611-webp",
+    "originalSize": 156994,
+    "optimizedSize": 28996,
+    "uploadedAt": "2025-12-03T06:05:35.678Z"
+  },
+  "https://audiofast.pl/assets/awards/Hi-Fi-Pig-Recommended-v2.png": {
+    "assetId": "image-a89ebf09c6d50417c804499e7a58600687d9343b-240x240-webp",
+    "originalSize": 11235,
+    "optimizedSize": 4552,
+    "uploadedAt": "2025-12-03T06:05:37.529Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-Class-A.png": {
+    "assetId": "image-1f88036f701cac0672b2975bfbf92d29fecd2b22-170x170-webp",
+    "originalSize": 34314,
+    "optimizedSize": 5692,
+    "uploadedAt": "2025-12-03T06:05:39.991Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-AWARD.png": {
+    "assetId": "image-a4e49d9655088b236bcbe969052e7d295d09c690-121x120-webp",
+    "originalSize": 18906,
+    "optimizedSize": 6704,
+    "uploadedAt": "2025-12-03T06:05:42.411Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophilerecommended.png": {
+    "assetId": "image-b908cf14b9a1c7e5a3fa8a24176efc2c4b523bc2-200x200-webp",
+    "originalSize": 19296,
+    "optimizedSize": 6132,
+    "uploadedAt": "2025-12-03T06:05:44.789Z"
+  },
+  "https://audiofast.pl/assets/awards/Tone-Audio.png": {
+    "assetId": "image-8da1da4677769be10def76f20223c05a66d9b77b-124x124-webp",
+    "originalSize": 38084,
+    "optimizedSize": 5822,
+    "uploadedAt": "2025-12-03T06:05:46.716Z"
+  },
+  "https://audiofast.pl/assets/awards/2013-bestof-ces.png": {
+    "assetId": "image-d6b10c9535e311cfc7030c2c20b21913923bea5e-150x150-webp",
+    "originalSize": 9529,
+    "optimizedSize": 7272,
+    "uploadedAt": "2025-12-03T06:05:49.119Z"
+  },
+  "https://audiofast.pl/assets/awards/SoundStage-ReviewerChoice.png": {
+    "assetId": "image-e16df4b271be73040df61992c46194b2efdf46db-300x300-webp",
+    "originalSize": 105706,
+    "optimizedSize": 17454,
+    "uploadedAt": "2025-12-03T06:05:51.434Z"
+  },
+  "https://audiofast.pl/assets/awards/fAudioStream-avorites.png": {
+    "assetId": "image-bcf291948c7b4cd9e93a9c8958a4db11610c9dbc-200x201-webp",
+    "originalSize": 55180,
+    "optimizedSize": 9210,
+    "uploadedAt": "2025-12-03T06:05:53.664Z"
+  },
+  "https://audiofast.pl/assets/awards/Best-Sound-2014.png": {
+    "assetId": "image-437ff3f9458770268648337d9010c51d102eeecd-200x200-webp",
+    "originalSize": 31594,
+    "optimizedSize": 8396,
+    "uploadedAt": "2025-12-03T06:05:55.861Z"
+  },
+  "https://audiofast.pl/assets/awards/SoundStage-2015-Product-of-the-Year-large.png": {
+    "assetId": "image-752e23f680b5518edb401ff5e522e45179c2ff67-480x417-webp",
+    "originalSize": 58672,
+    "optimizedSize": 30184,
+    "uploadedAt": "2025-12-03T06:05:58.285Z"
+  },
+  "https://audiofast.pl/assets/awards/1112toppicks2.promo-2.png": {
+    "assetId": "image-d63a0b063d8682600aa2a48607153653fbf1d10f-400x400-webp",
+    "originalSize": 150310,
+    "optimizedSize": 30272,
+    "uploadedAt": "2025-12-03T06:06:00.673Z"
+  },
+  "https://audiofast.pl/assets/awards/BOA-2106-badge.png": {
+    "assetId": "image-2b14bf3615d3fbedfbd573911301730b46d06443-200x200-webp",
+    "originalSize": 19311,
+    "optimizedSize": 7382,
+    "uploadedAt": "2025-12-03T06:06:02.773Z"
+  },
+  "https://audiofast.pl/assets/awards/absolute-sound-poty-2011.png": {
+    "assetId": "image-afa77033b45946af7980c0ce34219a13142aea23-200x200-webp",
+    "originalSize": 50949,
+    "optimizedSize": 11774,
+    "uploadedAt": "2025-12-03T06:06:04.862Z"
+  },
+  "https://audiofast.pl/assets/awards/ht-top-picks-of-year-logo-small.png": {
+    "assetId": "image-3f9f7f7498550dd1747c698eeff1c499d9c9a890-200x200-webp",
+    "originalSize": 41451,
+    "optimizedSize": 6758,
+    "uploadedAt": "2025-12-03T06:06:08.057Z"
+  },
+  "https://audiofast.pl/assets/awards/SV-Top-Pick-of-the-Year2.png": {
+    "assetId": "image-f8300ca8d39b73211dbda417eab2418b8bdb8ab3-788x800-webp",
+    "originalSize": 380473,
+    "optimizedSize": 57642,
+    "uploadedAt": "2025-12-03T06:06:10.957Z"
+  },
+  "https://audiofast.pl/assets/awards/2013-CEPro-BEST-winner-T7.png": {
+    "assetId": "image-ee6fe4974e2e5beb63e47e7c109fc6852af1ef1a-200x200-webp",
+    "originalSize": 33746,
+    "optimizedSize": 7450,
+    "uploadedAt": "2025-12-03T06:06:12.965Z"
+  },
+  "https://audiofast.pl/assets/awards/resi-awards-11-winner.png": {
+    "assetId": "image-63fd274ff9c7bfea475122c5f30121e100fa4e41-200x200-webp",
+    "originalSize": 46640,
+    "optimizedSize": 12026,
+    "uploadedAt": "2025-12-03T06:06:15.425Z"
+  },
+  "https://audiofast.pl/assets/awards/best5-200px.png": {
+    "assetId": "image-fd41865097a4b64a1879f8aadff65180e8a98887-200x186-webp",
+    "originalSize": 47879,
+    "optimizedSize": 12770,
+    "uploadedAt": "2025-12-03T06:06:17.524Z"
+  },
+  "https://audiofast.pl/assets/awards/hcc-best-buy-small.png": {
+    "assetId": "image-143495ae4736ff60e60b2e072795e4f34851c25d-210x210-webp",
+    "originalSize": 49756,
+    "optimizedSize": 8372,
+    "uploadedAt": "2025-12-03T06:06:19.434Z"
+  },
+  "https://audiofast.pl/assets/awards/ces-205-2k11-boi.png": {
+    "assetId": "image-6b64996cc67bbf2bfd89da8b5d6b845c514aabc3-200x200-webp",
+    "originalSize": 25557,
+    "optimizedSize": 8000,
+    "uploadedAt": "2025-12-03T06:06:21.761Z"
+  },
+  "https://audiofast.pl/assets/awards/CEPro-BEST2011-Winner.png": {
+    "assetId": "image-0dc1e1a3f403519d0e390ae90798517ace11885b-200x200-webp",
+    "originalSize": 32318,
+    "optimizedSize": 7046,
+    "uploadedAt": "2025-12-03T06:06:23.749Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-Writers-Choice-Award-goldenear-supersubxxl.png": {
+    "assetId": "image-18a39933fd69cd8b454d2abe8c35fcc3879a9d2e-200x200-webp",
+    "originalSize": 43130,
+    "optimizedSize": 11228,
+    "uploadedAt": "2025-12-03T06:06:25.884Z"
+  },
+  "https://audiofast.pl/assets/awards/CES-InnovationAwards-2016-Honoree.png": {
+    "assetId": "image-1221238ce8ba6facc0fa03fd3bbeb4fbe8868071-200x200-webp",
+    "originalSize": 28426,
+    "optimizedSize": 6592,
+    "uploadedAt": "2025-12-03T06:06:27.799Z"
+  },
+  "https://audiofast.pl/assets/awards/CEPro-2016-BEST-winner.png": {
+    "assetId": "image-67e1de7ccc6a650c1b650bfadc64e4b239f0aef4-200x200-webp",
+    "originalSize": 40875,
+    "optimizedSize": 8812,
+    "uploadedAt": "2025-12-03T06:06:29.885Z"
+  },
+  "https://audiofast.pl/assets/awards/goldenear-supersub-x-low.png": {
+    "assetId": "image-19fa9d58a198e28af0e1023dc359deccac0a3c31-264x264-webp",
+    "originalSize": 67475,
+    "optimizedSize": 12522,
+    "uploadedAt": "2025-12-03T06:06:31.901Z"
+  },
+  "https://audiofast.pl/assets/awards/201506-bestofhighend2015.png": {
+    "assetId": "image-9ab98b4d0b582cef9e5f5e4a3bce04b0f584760f-466x466-webp",
+    "originalSize": 95988,
+    "optimizedSize": 29750,
+    "uploadedAt": "2025-12-03T06:06:34.126Z"
+  },
+  "https://audiofast.pl/assets/awards/91712gb.png": {
+    "assetId": "image-36380cb13ff4fbfd427230b786223f7a0f260beb-308x331-webp",
+    "originalSize": 31178,
+    "optimizedSize": 11740,
+    "uploadedAt": "2025-12-03T06:06:36.171Z"
+  },
+  "https://audiofast.pl/assets/awards/Best-Sound-2017.png": {
+    "assetId": "image-f474129314ae4df71e1a4d0e0024ab909c433125-200x200-webp",
+    "originalSize": 30505,
+    "optimizedSize": 8512,
+    "uploadedAt": "2025-12-03T06:06:38.379Z"
+  },
+  "https://audiofast.pl/assets/awards/2009-Toneaudio.png": {
+    "assetId": "image-d0d9ca9d67bcb02e5693ca7ed273fef45d8efb06-140x140-webp",
+    "originalSize": 24117,
+    "optimizedSize": 4164,
+    "uploadedAt": "2025-12-03T06:06:40.557Z"
+  },
+  "https://audiofast.pl/assets/awards/2012-TAS-Product-of-the-Year.png": {
+    "assetId": "image-d555d4f5d5cebddad5a077b8679575671e21b986-200x200-webp",
+    "originalSize": 41603,
+    "optimizedSize": 10376,
+    "uploadedAt": "2025-12-03T06:06:42.637Z"
+  },
+  "https://audiofast.pl/assets/awards/hi-fi-plus-awards-2016.png": {
+    "assetId": "image-b34e885d8491a2f1b9c6dec0853d57fe716b1b40-260x260-webp",
+    "originalSize": 78155,
+    "optimizedSize": 17638,
+    "uploadedAt": "2025-12-03T06:06:45.198Z"
+  },
+  "https://audiofast.pl/assets/awards/AbsoluteEditorsChoice2013.png": {
+    "assetId": "image-ef35002acfae5af99356e9f9ce355aadb83a4ad6-561x604-webp",
+    "originalSize": 288403,
+    "optimizedSize": 46630,
+    "uploadedAt": "2025-12-03T06:06:47.964Z"
+  },
+  "https://audiofast.pl/assets/awards/positive-feedback-mig.png": {
+    "assetId": "image-61f80fb4f34c76b38a1391fff5a513d94a4aa0f0-160x160-webp",
+    "originalSize": 33622,
+    "optimizedSize": 6376,
+    "uploadedAt": "2025-12-03T06:06:51.234Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFiPig-Highly-Recommended-v2.png": {
+    "assetId": "image-41ebe2d0b642870df87c58d6358f5f529652c68d-240x240-webp",
+    "originalSize": 12248,
+    "optimizedSize": 5402,
+    "uploadedAt": "2025-12-03T06:06:53.856Z"
+  },
+  "https://audiofast.pl/assets/awards/product-of-the-year-14.png": {
+    "assetId": "image-5a06676a46d9fb4d17c506654320545e5e090680-230x230-webp",
+    "originalSize": 39103,
+    "optimizedSize": 6858,
+    "uploadedAt": "2025-12-03T06:06:55.772Z"
+  },
+  "https://audiofast.pl/assets/awards/AudioStream2016.png": {
+    "assetId": "image-b79fd0fc6b2ac5d7fa1482418ae316bcd47a3e67-600x600-webp",
+    "originalSize": 186355,
+    "optimizedSize": 29106,
+    "uploadedAt": "2025-12-03T06:06:58.073Z"
+  },
+  "https://audiofast.pl/assets/awards/edit-choice-awards-2012-flat.png": {
+    "assetId": "image-01a7efe54eca63e26528f61951410a31e7bd53e7-200x200-webp",
+    "originalSize": 36896,
+    "optimizedSize": 9358,
+    "uploadedAt": "2025-12-03T06:07:00.283Z"
+  },
+  "https://audiofast.pl/assets/awards/HTR-BOA-2015-web-3DA-XL-T5.png": {
+    "assetId": "image-d0d59cb99bddd8f0726e66d686db9dc71d18fb4a-200x200-webp",
+    "originalSize": 48028,
+    "optimizedSize": 7250,
+    "uploadedAt": "2025-12-03T06:07:02.447Z"
+  },
+  "https://audiofast.pl/assets/awards/Secrets-T7-and-3DA-XL.png": {
+    "assetId": "image-95042a528ed764c385cad03d619f60927405f120-210x210-webp",
+    "originalSize": 71652,
+    "optimizedSize": 12258,
+    "uploadedAt": "2025-12-03T06:07:04.712Z"
+  },
+  "https://audiofast.pl/assets/awards/HTR-Best-of-2013-awards-small.png": {
+    "assetId": "image-37010883f1c2b117c3cfdf1c47833e3373eb5092-240x240-webp",
+    "originalSize": 37154,
+    "optimizedSize": 8254,
+    "uploadedAt": "2025-12-03T06:07:06.965Z"
+  },
+  "https://audiofast.pl/assets/awards/Resi-Awards-13-3DA.png": {
+    "assetId": "image-5d770a266d84d1393e75a6efd88ae6a902b02eda-200x200-webp",
+    "originalSize": 55770,
+    "optimizedSize": 11564,
+    "uploadedAt": "2025-12-03T06:07:09.180Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-Recommended-17.png": {
+    "assetId": "image-5da2fac5994421b91a413dbe198271df9eda5969-200x200-webp",
+    "originalSize": 51786,
+    "optimizedSize": 9958,
+    "uploadedAt": "2025-12-03T06:07:11.849Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-Golden-Ear-2017.png": {
+    "assetId": "image-b3634918cbc4c894323850daea46bcb0e9c4b07a-186x186-webp",
+    "originalSize": 53134,
+    "optimizedSize": 9816,
+    "uploadedAt": "2025-12-03T06:07:14.003Z"
+  },
+  "https://audiofast.pl/assets/awards/audiostream-poty2015.png": {
+    "assetId": "image-bf12400ca7637f88fec2ded7593e1b435c1a62e7-210x210-webp",
+    "originalSize": 50474,
+    "optimizedSize": 8880,
+    "uploadedAt": "2025-12-03T06:07:16.307Z"
+  },
+  "https://audiofast.pl/assets/awards/Stellar-Sound-Award-copy.png": {
+    "assetId": "image-8d502ff2383b98cbb03a79867ff6a3d6790c900f-200x200-webp",
+    "originalSize": 79381,
+    "optimizedSize": 16024,
+    "uploadedAt": "2025-12-03T06:07:18.256Z"
+  },
+  "https://audiofast.pl/assets/awards/2017-EANProduct-OF-Year-Logo-Main-small.png": {
+    "assetId": "image-872a60a6a0404bc7fba25f747f41cc758772e11c-130x130-webp",
+    "originalSize": 28753,
+    "optimizedSize": 6432,
+    "uploadedAt": "2025-12-03T06:07:21.123Z"
+  },
+  "https://audiofast.pl/assets/awards/Nagroda2018.png": {
+    "assetId": "image-9e154e689d5c4d0ffe4083f38690789c72190563-150x143-webp",
+    "originalSize": 28145,
+    "optimizedSize": 5372,
+    "uploadedAt": "2025-12-03T06:07:24.225Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie2018.png": {
+    "assetId": "image-ba5c160fb16fed3c3b285a2eb23c3e8d2ed37205-150x143-webp",
+    "originalSize": 8867,
+    "optimizedSize": 6398,
+    "uploadedAt": "2025-12-03T06:07:26.534Z"
+  },
+  "https://audiofast.pl/assets/awards/2017_TAS_POY.png": {
+    "assetId": "image-55730d0f2ff3b337f6707540f26a3e93128f84ca-200x197-webp",
+    "originalSize": 51172,
+    "optimizedSize": 8772,
+    "uploadedAt": "2025-12-03T06:07:28.603Z"
+  },
+  "https://audiofast.pl/assets/awards/Hi-Fi-Choice-2009-Award.jpg": {
+    "assetId": "image-a5f47ba7e60d2f0beccf91a8e739a8f6a79763a8-100x173-webp",
+    "originalSize": 27739,
+    "optimizedSize": 5486,
+    "uploadedAt": "2025-12-03T06:07:31.144Z"
+  },
+  "https://audiofast.pl/assets/awards/2017-StereoTimesMostWante-PNG.png": {
+    "assetId": "image-d403a2c8a8a24205e6c4b2414662420a49ea7fad-500x477-webp",
+    "originalSize": 202234,
+    "optimizedSize": 39038,
+    "uploadedAt": "2025-12-03T06:07:33.580Z"
+  },
+  "https://audiofast.pl/assets/awards/201801-2017poty.png": {
+    "assetId": "image-05b726f0c7b1ea8a4fa371cf23be6c86f113e25a-765x510-webp",
+    "originalSize": 57533,
+    "optimizedSize": 34112,
+    "uploadedAt": "2025-12-03T06:07:36.007Z"
+  },
+  "https://audiofast.pl/assets/awards/Audio-Bacon-best-of-2017-501.png": {
+    "assetId": "image-60044e06cc83a4db8f5a08835a1273231c9a4145-500x500-webp",
+    "originalSize": 217920,
+    "optimizedSize": 34928,
+    "uploadedAt": "2025-12-03T06:07:38.202Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-FIDELITY-Award-Logo.png": {
+    "assetId": "image-c153f28f7df4bfc3639c51d8a4f939be7b09603d-200x200-webp",
+    "originalSize": 47690,
+    "optimizedSize": 12806,
+    "uploadedAt": "2025-12-03T06:07:40.160Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi+-Awards-.png": {
+    "assetId": "image-753945ce3f0832416133fec7549cbffab401422d-591x591-webp",
+    "originalSize": 289810,
+    "optimizedSize": 38100,
+    "uploadedAt": "2025-12-03T06:07:42.406Z"
+  },
+  "https://audiofast.pl/assets/awards/top-high-end.png": {
+    "assetId": "image-e8827705a660bfec4666fbee97cce56778c307aa-200x200-webp",
+    "originalSize": 36095,
+    "optimizedSize": 11128,
+    "uploadedAt": "2025-12-03T06:07:45.092Z"
+  },
+  "https://audiofast.pl/assets/awards/2017Brutusawards-2gallieointer.png": {
+    "assetId": "image-4bf9729f2bcedea54f29bc4f8e25fdbc5dfc4b78-200x200-webp",
+    "originalSize": 48416,
+    "optimizedSize": 10406,
+    "uploadedAt": "2025-12-03T06:07:47.125Z"
+  },
+  "https://audiofast.pl/assets/awards/2017Brutusawards-3galileoUEFpower.png": {
+    "assetId": "image-cbbc3e5dadbe259b41a82ece246143011023a58e-200x200-webp",
+    "originalSize": 48333,
+    "optimizedSize": 10170,
+    "uploadedAt": "2025-12-03T06:07:49.699Z"
+  },
+  "https://audiofast.pl/assets/awards/2017Brutusawards-4galileoSpeaker.png": {
+    "assetId": "image-9bb9e68724c9cc9adcd67da7206feafcbee138a1-200x200-webp",
+    "originalSize": 47625,
+    "optimizedSize": 10292,
+    "uploadedAt": "2025-12-03T06:07:51.753Z"
+  },
+  "https://audiofast.pl/assets/awards/2017Brutusawards-6active-ground.png": {
+    "assetId": "image-b8ca0cd330621d8f225a8144ab4ad905ad2ae066-200x200-webp",
+    "originalSize": 48173,
+    "optimizedSize": 10088,
+    "uploadedAt": "2025-12-03T06:07:53.770Z"
+  },
+  "https://audiofast.pl/assets/awards/2017Brutusawards-7-hft.png": {
+    "assetId": "image-f09755e344315585f019ec1acae8138fab7c0e02-200x200-webp",
+    "originalSize": 48325,
+    "optimizedSize": 10372,
+    "uploadedAt": "2025-12-03T06:07:55.742Z"
+  },
+  "https://audiofast.pl/assets/awards/2017Brutusawards-6powercell12.png": {
+    "assetId": "image-6a7bca10df06336dac85466749a6788413023401-200x200-webp",
+    "originalSize": 48228,
+    "optimizedSize": 10370,
+    "uploadedAt": "2025-12-03T06:07:57.737Z"
+  },
+  "https://audiofast.pl/assets/awards/2017-stereophile-product-of-the-year.jpg": {
+    "assetId": "image-3e056bf3400453455d5e3037af9df736880f8974-238x212-webp",
+    "originalSize": 25027,
+    "optimizedSize": 9932,
+    "uploadedAt": "2025-12-03T06:08:00.404Z"
+  },
+  "https://audiofast.pl/assets/awards/ma-stereophile-award-2017-v2.400x400.png": {
+    "assetId": "image-c11c81a8005e444451f1a2859591e25147915f5c-200x200-webp",
+    "originalSize": 77564,
+    "optimizedSize": 14530,
+    "uploadedAt": "2025-12-03T06:08:05.967Z"
+  },
+  "https://audiofast.pl/assets/awards/stereophile-2018-reccomp1.png": {
+    "assetId": "image-fe8db4fba4019c9743c4493cabc0471b11c68068-220x220-webp",
+    "originalSize": 68200,
+    "optimizedSize": 15244,
+    "uploadedAt": "2025-12-03T06:08:08.425Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-editors-choice-2009-v2.gif": {
+    "assetId": "image-71bd9d4eafecb5aad48757e3f6429a98a6af622b-200x200-webp",
+    "originalSize": 10450,
+    "optimizedSize": 9120,
+    "uploadedAt": "2025-12-03T06:08:10.937Z"
+  },
+  "https://audiofast.pl/assets/awards/2008-the-absolute-sound-editors-choice-award_FitMaxWzkzMCwzMzZd.png": {
+    "assetId": "image-615fa45e5f28d1e69db536ad41dc95e95a940258-200x200-webp",
+    "originalSize": 64279,
+    "optimizedSize": 11410,
+    "uploadedAt": "2025-12-03T06:08:13.320Z"
+  },
+  "https://audiofast.pl/assets/awards/2011-tas-Editors-choice.jpg": {
+    "assetId": "image-8feff65ed92c3077fd224f84092b4dc5b55f3358-800x656-webp",
+    "originalSize": 378935,
+    "optimizedSize": 26040,
+    "uploadedAt": "2025-12-03T06:08:15.230Z"
+  },
+  "https://audiofast.pl/assets/awards/2007-TAS-EDS-CHOICE.png": {
+    "assetId": "image-0611b41a97429141e56b68b64e964e279e2374c2-200x200-webp",
+    "originalSize": 30811,
+    "optimizedSize": 6182,
+    "uploadedAt": "2025-12-03T06:08:17.056Z"
+  },
+  "https://audiofast.pl/assets/awards/2010-tas-editor-choice.png": {
+    "assetId": "image-b9e8a35ce52f25415268963a4fed9c1db63619a8-200x200-webp",
+    "originalSize": 55298,
+    "optimizedSize": 10972,
+    "uploadedAt": "2025-12-03T06:08:19.474Z"
+  },
+  "https://audiofast.pl/assets/awards/PNG-editors-choice.png": {
+    "assetId": "image-e74c0d5deda89d385d56b70a0964bd0f362158e0-450x450-webp",
+    "originalSize": 114239,
+    "optimizedSize": 29344,
+    "uploadedAt": "2025-12-03T06:08:22.118Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-TAS-GEA-ok.png": {
+    "assetId": "image-75e8b6b45ed1f37c3d8546f8aeea1e7ec1ef688b-800x800-webp",
+    "originalSize": 729655,
+    "optimizedSize": 56354,
+    "uploadedAt": "2025-12-03T06:08:24.630Z"
+  },
+  "https://audiofast.pl/assets/awards/2016-Enjoy-the-music-award.png": {
+    "assetId": "image-545bd55096a798b1abeb3ac91946f92a4d3b369b-116x115-webp",
+    "originalSize": 20655,
+    "optimizedSize": 5150,
+    "uploadedAt": "2025-12-03T06:08:26.699Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-ClassA-Logo.png": {
+    "assetId": "image-7954feeee0b87cac438b4df84b7d3bdb182f69d2-200x200-webp",
+    "originalSize": 49718,
+    "optimizedSize": 13902,
+    "uploadedAt": "2025-12-03T06:08:28.711Z"
+  },
+  "https://audiofast.pl/assets/awards/Finest-cuts.png": {
+    "assetId": "image-d9dc40b5a02ef21e939416ba28c3477bd7cb1c1a-200x200-webp",
+    "originalSize": 62442,
+    "optimizedSize": 12856,
+    "uploadedAt": "2025-12-03T06:08:31.108Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-Enjoy-the-music-png.png": {
+    "assetId": "image-27c922f116f8054a113128f7d2cc6186cb4f5b35-800x800-webp",
+    "originalSize": 450176,
+    "optimizedSize": 60036,
+    "uploadedAt": "2025-12-03T06:08:33.424Z"
+  },
+  "https://audiofast.pl/assets/awards/Best-Of-2017-Blue-Note-Award-sm.png": {
+    "assetId": "image-f91c880ae893ef6d9497418ba59018b0197be2ab-150x148-webp",
+    "originalSize": 30236,
+    "optimizedSize": 7066,
+    "uploadedAt": "2025-12-03T06:08:35.593Z"
+  },
+  "https://audiofast.pl/assets/awards/High-Fidelity-Best-Sound-2018-png-v2.png": {
+    "assetId": "image-2619e9ed01e6fa90c171d5f0948bd27566cc6cbc-200x200-webp",
+    "originalSize": 11350,
+    "optimizedSize": 4496,
+    "uploadedAt": "2025-12-03T06:08:37.855Z"
+  },
+  "https://audiofast.pl/assets/awards/High-Fidelity-Special-Award-2018-v2.png": {
+    "assetId": "image-dac6a875901d7f6a9fd61398004a7f2b33384a7f-200x200-webp",
+    "originalSize": 11789,
+    "optimizedSize": 4590,
+    "uploadedAt": "2025-12-03T06:08:39.810Z"
+  },
+  "https://audiofast.pl/assets/awards/best-speakers-badge-150x150-kopia.png": {
+    "assetId": "image-f4412fad1ac51a778f442a2d63f45ce9c3012d17-165x165-webp",
+    "originalSize": 7712,
+    "optimizedSize": 3986,
+    "uploadedAt": "2025-12-03T06:08:42.103Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-TAS-Editors-PNG.png": {
+    "assetId": "image-2524322c6e5c58ddd32ab0c1c2c06ca4cb72c09c-800x800-webp",
+    "originalSize": 1315876,
+    "optimizedSize": 55606,
+    "uploadedAt": "2025-12-03T06:08:44.365Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-High-fidelity-Best-Sound-AVS-v2.png": {
+    "assetId": "image-1b5280be4b11f0663a83af1472c5112a74e33016-200x200-webp",
+    "originalSize": 11854,
+    "optimizedSize": 5046,
+    "uploadedAt": "2025-12-03T06:08:46.846Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-Stereophile-best-product.png": {
+    "assetId": "image-d487861c9dde292574ab43555766ddbcd53269fa-488x488-webp",
+    "originalSize": 244137,
+    "optimizedSize": 33940,
+    "uploadedAt": "2025-12-03T06:08:48.694Z"
+  },
+  "https://audiofast.pl/assets/awards/2017-SoundStage-POY.png": {
+    "assetId": "image-b38f07d79f1f20b83ba972eb1b2d41bb97eb0734-765x510-webp",
+    "originalSize": 214329,
+    "optimizedSize": 36022,
+    "uploadedAt": "2025-12-03T06:08:51.084Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-High-fidelity-Best-Sound-AVS2-v2.png": {
+    "assetId": "image-1b5280be4b11f0663a83af1472c5112a74e33016-200x200-webp",
+    "originalSize": 11854,
+    "optimizedSize": 5046,
+    "uploadedAt": "2025-12-03T06:08:53.285Z"
+  },
+  "https://audiofast.pl/assets/awards/best-of-2018-badge.png": {
+    "assetId": "image-514a8aed2502a9a1a86d1cb4e53a81faeb1c2f61-692x800-webp",
+    "originalSize": 258190,
+    "optimizedSize": 59994,
+    "uploadedAt": "2025-12-03T06:08:55.774Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-TAS-POY-web.png": {
+    "assetId": "image-9751eb91b6a1cabccc6f16185473bdbe6edafa4a-500x500-webp",
+    "originalSize": 85974,
+    "optimizedSize": 21012,
+    "uploadedAt": "2025-12-03T06:08:57.650Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-2018-Brutus-Galileo-SX-Cable.png": {
+    "assetId": "image-079a56855b6513792634c91003accd6bc8ebfe4a-200x200-webp",
+    "originalSize": 45026,
+    "optimizedSize": 11010,
+    "uploadedAt": "2025-12-03T06:08:59.692Z"
+  },
+  "https://audiofast.pl/assets/awards/award-2018-hifiplus-poty.png": {
+    "assetId": "image-0e71f001e7aa404be1b0d146017d2141c8df70c3-166x172-webp",
+    "originalSize": 44756,
+    "optimizedSize": 8632,
+    "uploadedAt": "2025-12-03T06:09:02.053Z"
+  },
+  "https://audiofast.pl/assets/awards/stereo-sound-grand-prix-2017.png": {
+    "assetId": "image-ffd1486bc09283c59adc7e105cc04626fd7aceef-233x200-webp",
+    "originalSize": 34911,
+    "optimizedSize": 9934,
+    "uploadedAt": "2025-12-03T06:09:04.523Z"
+  },
+  "https://audiofast.pl/assets/awards/editor-choice-kopia.png": {
+    "assetId": "image-ac4bb877a3b3686aa17df019249ac4e8fbfacdd7-210x210-webp",
+    "originalSize": 57572,
+    "optimizedSize": 11606,
+    "uploadedAt": "2025-12-03T06:09:06.737Z"
+  },
+  "https://audiofast.pl/assets/awards/MonoStereo-Strongly-recomended.png": {
+    "assetId": "image-b593d440bf0e4280553edfe4a976e384e3ba94bf-282x287-webp",
+    "originalSize": 65409,
+    "optimizedSize": 9988,
+    "uploadedAt": "2025-12-03T06:09:08.538Z"
+  },
+  "https://audiofast.pl/assets/awards/Echelon-Award-Virtuoso-M-2020.png": {
+    "assetId": "image-1800d06706079fe7f29b5bea2de9b7c775cff83c-368x368-webp",
+    "originalSize": 186089,
+    "optimizedSize": 22726,
+    "uploadedAt": "2025-12-03T06:09:10.798Z"
+  },
+  "https://audiofast.pl/assets/awards/HomeTheaterReview-Bestof2017-T-Ref-web.png": {
+    "assetId": "image-37d526dd955035ae6014e59030031ebd3c53c829-200x200-webp",
+    "originalSize": 27615,
+    "optimizedSize": 7082,
+    "uploadedAt": "2025-12-03T06:09:12.768Z"
+  },
+  "https://audiofast.pl/assets/awards/Speakers-Shack-Editors-Choice.png": {
+    "assetId": "image-63c6b1b00badd16168939a4fee4e1b9d19f8ba07-225x225-webp",
+    "originalSize": 70516,
+    "optimizedSize": 15420,
+    "uploadedAt": "2025-12-03T06:09:14.704Z"
+  },
+  "https://audiofast.pl/assets/awards/highlly-recommended-product.png": {
+    "assetId": "image-1fbc0d7677d42d35ff4ea76f2d8b97d052e8836b-100x103-webp",
+    "originalSize": 23974,
+    "optimizedSize": 6174,
+    "uploadedAt": "2025-12-03T06:09:17.287Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-Golden-Analog-.png": {
+    "assetId": "image-8cc13d222353f3c5e5c076c030a3ea07295d1d5e-360x283-webp",
+    "originalSize": 84365,
+    "optimizedSize": 15624,
+    "uploadedAt": "2025-12-03T06:09:19.998Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-Golden-Analog-nagroda-glowna.png": {
+    "assetId": "image-241d7ba2599c19c588bc27bd624b3989810b9d6f-346x279-webp",
+    "originalSize": 75818,
+    "optimizedSize": 13310,
+    "uploadedAt": "2025-12-03T06:09:22.668Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-Soundstage-australia-Poy.png": {
+    "assetId": "image-82c6e475be57c170765c8013aea7674c833a6e3e-674x640-webp",
+    "originalSize": 275622,
+    "optimizedSize": 56378,
+    "uploadedAt": "2025-12-03T06:09:25.124Z"
+  },
+  "https://audiofast.pl/assets/awards/AudioSream-Recommend-Components-2018.png": {
+    "assetId": "image-04cb237bdde354a87dfa492c565427ef6a001c5a-334x331-webp",
+    "originalSize": 72838,
+    "optimizedSize": 17162,
+    "uploadedAt": "2025-12-03T06:09:27.247Z"
+  },
+  "https://audiofast.pl/assets/awards/best-of-2018-big.png": {
+    "assetId": "image-622a55872670397df51bf086971e74faaa33048b-665x542-webp",
+    "originalSize": 86550,
+    "optimizedSize": 48698,
+    "uploadedAt": "2025-12-03T06:09:29.054Z"
+  },
+  "https://audiofast.pl/assets/awards/best-of-2015-sm.png": {
+    "assetId": "image-7fbeb953cbde31c8a6c9281e43639cf30b4b6e6b-150x150-webp",
+    "originalSize": 26391,
+    "optimizedSize": 6520,
+    "uploadedAt": "2025-12-03T06:09:31.025Z"
+  },
+  "https://audiofast.pl/assets/awards/prod-award-SoundVisionTopPickNew.png": {
+    "assetId": "image-414a1dbe13c4c3aad0de160085028ff814a9e868-259x256-webp",
+    "originalSize": 50910,
+    "optimizedSize": 13332,
+    "uploadedAt": "2025-12-03T06:09:32.902Z"
+  },
+  "https://audiofast.pl/assets/awards/2019-hfm-NAGRODA.png": {
+    "assetId": "image-88f3fed5211dce06334ed93000a45a3e070ab202-200x178-webp",
+    "originalSize": 52108,
+    "optimizedSize": 8908,
+    "uploadedAt": "2025-12-03T06:09:34.983Z"
+  },
+  "https://audiofast.pl/assets/awards/hifiimuzyka-wyroznienie2019.png": {
+    "assetId": "image-af7284df6f5c53414dcc04da67373dc401041f1a-454x397-webp",
+    "originalSize": 44598,
+    "optimizedSize": 18496,
+    "uploadedAt": "2025-12-03T06:09:37.022Z"
+  },
+  "https://audiofast.pl/assets/awards/2017-TAS-Top-Pick.png": {
+    "assetId": "image-8621e0c1dcaf966109e094bb686f3c87578a60fd-111x113-webp",
+    "originalSize": 22567,
+    "optimizedSize": 5782,
+    "uploadedAt": "2025-12-03T06:09:39.107Z"
+  },
+  "https://audiofast.pl/assets/awards/HIFI+2017-award-small.png": {
+    "assetId": "image-671ee3886480ca0d3ffe01413c89e2220f5bc2d5-268x270-webp",
+    "originalSize": 93131,
+    "optimizedSize": 14048,
+    "uploadedAt": "2025-12-03T06:09:41.002Z"
+  },
+  "https://audiofast.pl/assets/awards/Haute-Fidelity-Reference.png": {
+    "assetId": "image-ea00b84ad3fe508b31860e51bfa412ef6eb9e9ed-234x215-webp",
+    "originalSize": 50915,
+    "optimizedSize": 10134,
+    "uploadedAt": "2025-12-03T06:09:43.447Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-Enjoy-the-music-png2.png": {
+    "assetId": "image-27c922f116f8054a113128f7d2cc6186cb4f5b35-800x800-webp",
+    "originalSize": 450176,
+    "optimizedSize": 60036,
+    "uploadedAt": "2025-12-03T06:09:45.388Z"
+  },
+  "https://audiofast.pl/assets/awards/2018-StereoSound-grand-prix-award.png": {
+    "assetId": "image-f73d82abadd1d7d7c31f1190a27e888a016ba9ea-404x384-webp",
+    "originalSize": 10511,
+    "optimizedSize": 13772,
+    "uploadedAt": "2025-12-03T06:09:47.019Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-292-EDS-CHOICE-LOGO-1.png": {
+    "assetId": "image-516bf241e3dbb779b2903dc349452c785174e0da-800x717-webp",
+    "originalSize": 1428209,
+    "optimizedSize": 56724,
+    "uploadedAt": "2025-12-03T06:09:49.634Z"
+  },
+  "https://audiofast.pl/assets/awards/patrtime-editorschoice.png": {
+    "assetId": "image-1e080e9421a0eb43513be6c78a8e50113aabec1a-389x384-webp",
+    "originalSize": 116794,
+    "optimizedSize": 27576,
+    "uploadedAt": "2025-12-03T06:09:51.927Z"
+  },
+  "https://audiofast.pl/assets/awards/2019-Stereophile-recommended.png": {
+    "assetId": "image-198f85bde85fbfd9ed86ddf2634f949eee2a3cab-600x660-webp",
+    "originalSize": 223527,
+    "optimizedSize": 39564,
+    "uploadedAt": "2025-12-03T06:09:54.246Z"
+  },
+  "https://audiofast.pl/assets/awards/2019-reccom-comp-Win-Stereophile.png": {
+    "assetId": "image-6e30bb799b5760dd0fd9c106c823c5c9e237170e-459x489-webp",
+    "originalSize": 50891,
+    "optimizedSize": 23448,
+    "uploadedAt": "2025-12-03T06:09:56.824Z"
+  },
+  "https://audiofast.pl/assets/awards/the-ear-stars-v2.png": {
+    "assetId": "image-5ec44fdc0d90ebbd84fd849d032d86b96754ff34-240x240-webp",
+    "originalSize": 43566,
+    "optimizedSize": 7412,
+    "uploadedAt": "2025-12-03T06:09:59.220Z"
+  },
+  "https://audiofast.pl/assets/awards/2019-bestofhighend-Soundstage.png": {
+    "assetId": "image-fb63ab776142c4b9ff42bdea484b393fefead8d5-585x510-webp",
+    "originalSize": 121183,
+    "optimizedSize": 36126,
+    "uploadedAt": "2025-12-03T06:10:01.897Z"
+  },
+  "https://audiofast.pl/assets/awards/2019-enjoythemusic-best-of-Munich.png": {
+    "assetId": "image-528a2c2ab78a2c26b2a8bb7b71214168ea4f1516-800x787-webp",
+    "originalSize": 522051,
+    "optimizedSize": 57124,
+    "uploadedAt": "2025-12-03T06:10:04.101Z"
+  },
+  "https://audiofast.pl/assets/awards/Audiostream-reviewerschoice.jpg": {
+    "assetId": "image-96b5024766eb4eeb77574bd7c92324a36b175365-600x600-webp",
+    "originalSize": 25914,
+    "optimizedSize": 14682,
+    "uploadedAt": "2025-12-03T06:10:07.081Z"
+  },
+  "https://audiofast.pl/assets/awards/hi-fi-choice-editors-choice-800x800.png": {
+    "assetId": "image-6b4ceafa23d14d6189d47e1ffa3b36b6a5678a36-800x800-webp",
+    "originalSize": 92251,
+    "optimizedSize": 108894,
+    "uploadedAt": "2025-12-03T06:10:09.198Z"
+  },
+  "https://audiofast.pl/assets/awards/hifi-choice-recommended.png": {
+    "assetId": "image-43ae9b5ee1cb2ee073221f54c539cf83b2585d8f-600x600-webp",
+    "originalSize": 99099,
+    "optimizedSize": 33928,
+    "uploadedAt": "2025-12-03T06:10:11.122Z"
+  },
+  "https://audiofast.pl/assets/awards/2014-Enjoy-the-music.png": {
+    "assetId": "image-82ed579b36c42705f3177b7bf8273f023decab58-150x148-webp",
+    "originalSize": 30885,
+    "optimizedSize": 6816,
+    "uploadedAt": "2025-12-03T06:10:13.370Z"
+  },
+  "https://audiofast.pl/assets/awards/Sound-Image-www-v2.png": {
+    "assetId": "image-640d827a2aea75b22a290e6ec4467b024fd0d885-200x200-webp",
+    "originalSize": 23770,
+    "optimizedSize": 5268,
+    "uploadedAt": "2025-12-03T06:10:15.488Z"
+  },
+  "https://audiofast.pl/assets/awards/AVSforum-top-choice2019.png": {
+    "assetId": "image-9e219c43a879e10ecf227c635c2a0dafbd9085cb-237x249-webp",
+    "originalSize": 63453,
+    "optimizedSize": 8626,
+    "uploadedAt": "2025-12-03T06:10:17.550Z"
+  },
+  "https://audiofast.pl/assets/awards/High_Fidelity_Best_Product2019-v4.png": {
+    "assetId": "image-cc5da44beac2225969a29432214b428797ac0a18-210x210-webp",
+    "originalSize": 16292,
+    "optimizedSize": 6420,
+    "uploadedAt": "2025-12-03T06:10:19.937Z"
+  },
+  "https://audiofast.pl/assets/awards/BestSoundAVSHiFidelity2019-v2.png": {
+    "assetId": "image-fa4e9d9f33590d64c890cda5bf5b3dcf482ec374-200x200-webp",
+    "originalSize": 25926,
+    "optimizedSize": 7124,
+    "uploadedAt": "2025-12-03T06:10:22.371Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-POY-2019.png": {
+    "assetId": "image-ad0e40c6e8be569fb1787236c923043aa7d8cf05-220x220-webp",
+    "originalSize": 41417,
+    "optimizedSize": 9466,
+    "uploadedAt": "2025-12-03T06:10:24.581Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi+-Awards_Winner_2109.png": {
+    "assetId": "image-154d7852c0c802e7cdd4e68425d27803fbda1c6b-220x220-webp",
+    "originalSize": 123886,
+    "optimizedSize": 10810,
+    "uploadedAt": "2025-12-03T06:10:26.812Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereo-Sound-Grand-Prix-2019.png": {
+    "assetId": "image-fc190390bd2bacd0f7d31cd4b2eac9a284e2544b-527x488-webp",
+    "originalSize": 37018,
+    "optimizedSize": 21652,
+    "uploadedAt": "2025-12-03T06:10:29.129Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-Brutus-Award-2019-SR-Atosphere-XL-Infinity-v2.png": {
+    "assetId": "image-894b8cab584d9caaa9e9a9d177b4b4532ad08de7-200x200-webp",
+    "originalSize": 42669,
+    "optimizedSize": 10574,
+    "uploadedAt": "2025-12-03T06:10:31.417Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-Brutus-Award-2019-SR-Galileo-SX-IC-v2.png": {
+    "assetId": "image-f85bb26f9e2050023667e800e962df4ee1082602-200x200-webp",
+    "originalSize": 44247,
+    "optimizedSize": 10492,
+    "uploadedAt": "2025-12-03T06:10:33.494Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-Brutus-Award-2019-SR-Tranquility-Base-v2.png": {
+    "assetId": "image-691b04fb4f916b6d65d71b8dae5210c4746dc5b6-200x200-webp",
+    "originalSize": 42965,
+    "optimizedSize": 10076,
+    "uploadedAt": "2025-12-03T06:10:35.488Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-Brutus-Award-2019-SR-Synergistic-Orange-Fuses-v2.png": {
+    "assetId": "image-197f870bc92ea6db3ed8a1ff366b1129330027de-200x200-webp",
+    "originalSize": 43300,
+    "optimizedSize": 10102,
+    "uploadedAt": "2025-12-03T06:10:37.616Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-Brutus-Award-SR-2019-Galileo-SX-AC-v2.png": {
+    "assetId": "image-c253d9502fc9b5ca1671e0ce6235b16939c2db84-200x200-webp",
+    "originalSize": 41390,
+    "optimizedSize": 9836,
+    "uploadedAt": "2025-12-03T06:10:39.632Z"
+  },
+  "https://audiofast.pl/assets/awards/2019-HiFi-review-best-of-the-year-v2.png": {
+    "assetId": "image-5e55d7bc788a9f9af7ecaafc9f5d6060433e8eeb-432x345-webp",
+    "originalSize": 45738,
+    "optimizedSize": 14466,
+    "uploadedAt": "2025-12-03T06:10:41.829Z"
+  },
+  "https://audiofast.pl/assets/awards/2019-TAS-Golden-Ear.png": {
+    "assetId": "image-272a9df5fe1f4451aa2318c66bae8ca46e17e2ea-356x350-webp",
+    "originalSize": 152150,
+    "optimizedSize": 19926,
+    "uploadedAt": "2025-12-03T06:10:44.494Z"
+  },
+  "https://audiofast.pl/assets/awards/2019_pf_award_antileon-v2.png": {
+    "assetId": "image-3dd21420db8eab692ab6a0b5fc1471c25cd58d14-200x200-webp",
+    "originalSize": 44615,
+    "optimizedSize": 10934,
+    "uploadedAt": "2025-12-03T06:10:46.733Z"
+  },
+  "https://audiofast.pl/assets/awards/Bartok-award.png": {
+    "assetId": "image-23aae0dc9811d0a031bfb697279399cfb263dfae-200x200-webp",
+    "originalSize": 18554,
+    "optimizedSize": 7994,
+    "uploadedAt": "2025-12-03T06:10:48.891Z"
+  },
+  "https://audiofast.pl/assets/awards/keces-p8.png": {
+    "assetId": "image-cd3e96cafc1579755e541586d1fcc2505f4dc4c5-200x200-webp",
+    "originalSize": 19485,
+    "optimizedSize": 8294,
+    "uploadedAt": "2025-12-03T06:10:51.981Z"
+  },
+  "https://audiofast.pl/assets/awards/Gold_fingerprint.png": {
+    "assetId": "image-ec5800e1c38be966d77c1eeddf4b3bd85a02074c-200x200-webp",
+    "originalSize": 32068,
+    "optimizedSize": 8220,
+    "uploadedAt": "2025-12-03T06:10:54.321Z"
+  },
+  "https://audiofast.pl/assets/awards/hifipluseditorschoice2020.png": {
+    "assetId": "image-0a3f9cc891e5105575657d51ac546c28feb6e8d5-215x215-webp",
+    "originalSize": 70553,
+    "optimizedSize": 12350,
+    "uploadedAt": "2025-12-03T06:10:56.734Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-Editors-Choice-2020-logo-v2.png": {
+    "assetId": "image-1b29801155bba5a39ba6c8292645a55d30fbe2e9-220x220-webp",
+    "originalSize": 77438,
+    "optimizedSize": 15100,
+    "uploadedAt": "2025-12-03T06:10:58.793Z"
+  },
+  "https://audiofast.pl/assets/awards/the_ear_editor_s_choice_award.png": {
+    "assetId": "image-137dafb35966240048d271cfde25c580789de5c7-200x200-webp",
+    "originalSize": 26399,
+    "optimizedSize": 6932,
+    "uploadedAt": "2025-12-03T06:11:00.743Z"
+  },
+  "https://audiofast.pl/assets/awards/STATEMENT-IN-HIGH-FIDELITY-white.png": {
+    "assetId": "image-4c1cb3dad0f15de0f799d6745cf842977f9684da-200x201-webp",
+    "originalSize": 25101,
+    "optimizedSize": 6180,
+    "uploadedAt": "2025-12-03T06:11:03.497Z"
+  },
+  "https://audiofast.pl/assets/awards/taseditorschoice05.png": {
+    "assetId": "image-aaec9b0323bff2b103721eb5bfebf4ffb70a1e1b-125x125-webp",
+    "originalSize": 23202,
+    "optimizedSize": 6104,
+    "uploadedAt": "2025-12-03T06:11:05.833Z"
+  },
+  "https://audiofast.pl/assets/awards/2012StereophileRecComp-v2.png": {
+    "assetId": "image-607e79e59fc4445c479e41bb2a912ccd89caf0de-200x200-webp",
+    "originalSize": 53405,
+    "optimizedSize": 9844,
+    "uploadedAt": "2025-12-03T06:11:07.821Z"
+  },
+  "https://audiofast.pl/assets/awards/HFM-Nagroda2012.png": {
+    "assetId": "image-6b8dee860a4b7b06d81750bd649e4e6652d9b6a9-200x190-webp",
+    "originalSize": 57414,
+    "optimizedSize": 8686,
+    "uploadedAt": "2025-12-03T06:11:09.906Z"
+  },
+  "https://audiofast.pl/assets/awards/2010-hfm-Nagrodaroku.png": {
+    "assetId": "image-26db6c475eeedcc4ddca9ad01dde181e29a06286-200x190-webp",
+    "originalSize": 56262,
+    "optimizedSize": 8770,
+    "uploadedAt": "2025-12-03T06:11:12.434Z"
+  },
+  "https://audiofast.pl/assets/awards/2010-hfm-wyroznienie.png": {
+    "assetId": "image-7245753905805e9490d8a42f8c4e56da8f26ed35-200x191-webp",
+    "originalSize": 24591,
+    "optimizedSize": 8080,
+    "uploadedAt": "2025-12-03T06:11:14.536Z"
+  },
+  "https://audiofast.pl/assets/awards/2007-tas-poty.png": {
+    "assetId": "image-901dc1577c956a22b7de4e52ce8026cfc1e625be-200x199-webp",
+    "originalSize": 59885,
+    "optimizedSize": 12096,
+    "uploadedAt": "2025-12-03T06:11:16.354Z"
+  },
+  "https://audiofast.pl/assets/awards/golden_ear.gif": {
+    "assetId": "image-338b1843848f5219aeded71ae5f43c1ac1dfa2db-220x200-webp",
+    "originalSize": 7530,
+    "optimizedSize": 12244,
+    "uploadedAt": "2025-12-03T06:11:18.185Z"
+  },
+  "https://audiofast.pl/assets/awards/hifi-coice-wybor-redakcji.png": {
+    "assetId": "image-89f8ed5e5a2672ffbf457898f2fda1db98b1f0b8-200x200-webp",
+    "originalSize": 18792,
+    "optimizedSize": 5408,
+    "uploadedAt": "2025-12-03T06:11:19.992Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFiChoiceNajlepszyZakup.png": {
+    "assetId": "image-cc8dd1a793133e905d4b9fcbdc8fd5337cb0e8ef-200x200-webp",
+    "originalSize": 19576,
+    "optimizedSize": 6184,
+    "uploadedAt": "2025-12-03T06:11:22.522Z"
+  },
+  "https://audiofast.pl/assets/awards/whathifi-5star.png": {
+    "assetId": "image-088e2ad0a61e27111d27a981b5bab0d721a50733-200x200-webp",
+    "originalSize": 24497,
+    "optimizedSize": 4778,
+    "uploadedAt": "2025-12-03T06:11:24.813Z"
+  },
+  "https://audiofast.pl/assets/awards/taiko_award-6moons.png": {
+    "assetId": "image-cf17112716a3fa8c6c1adb6c2099f85b2e2018d2-720x720-webp",
+    "originalSize": 182833,
+    "optimizedSize": 25336,
+    "uploadedAt": "2025-12-03T06:11:27.098Z"
+  },
+  "https://audiofast.pl/assets/awards/MSBESTOF2019.jpg": {
+    "assetId": "image-b8a2a9a8233589123326bc195a35d49e5d95ca59-400x400-webp",
+    "originalSize": 82855,
+    "optimizedSize": 52682,
+    "uploadedAt": "2025-12-03T06:11:29.440Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-GoldenEar-2020.png": {
+    "assetId": "image-b56401032c33bd5c0489dfbc03fc231f6f6b7169-445x440-webp",
+    "originalSize": 216169,
+    "optimizedSize": 24282,
+    "uploadedAt": "2025-12-03T06:11:31.960Z"
+  },
+  "https://audiofast.pl/assets/awards/bluemoonaward2020.png": {
+    "assetId": "image-3de995c4755a65a1c78a977a99cd70915362322e-250x244-webp",
+    "originalSize": 68086,
+    "optimizedSize": 13496,
+    "uploadedAt": "2025-12-03T06:11:34.683Z"
+  },
+  "https://audiofast.pl/assets/awards/red-fingerprint..png": {
+    "assetId": "image-c51a6c230676eb70c05c82bf5100cc8267999798-362x362-webp",
+    "originalSize": 83533,
+    "optimizedSize": 36106,
+    "uploadedAt": "2025-12-03T06:11:36.413Z"
+  },
+  "https://audiofast.pl/assets/awards/hificritic-highly-recommended.png": {
+    "assetId": "image-2845959d3399dbb68ca71f634f04dd8a3eba8188-266x265-webp",
+    "originalSize": 18883,
+    "optimizedSize": 2942,
+    "uploadedAt": "2025-12-03T06:11:38.592Z"
+  },
+  "https://audiofast.pl/assets/awards/25enjoythemusic.png": {
+    "assetId": "image-d1b9611153e675b72ca8d30e92bf6ed341dbaad2-410x410-webp",
+    "originalSize": 138184,
+    "optimizedSize": 25542,
+    "uploadedAt": "2025-12-03T06:11:40.617Z"
+  },
+  "https://audiofast.pl/assets/awards/stereophile-rc2020.png": {
+    "assetId": "image-613eb2f5d8fefe7197e0b9ed1ab1e502ecee0323-591x569-webp",
+    "originalSize": 252642,
+    "optimizedSize": 42720,
+    "uploadedAt": "2025-12-03T06:11:42.929Z"
+  },
+  "https://audiofast.pl/assets/awards/High_Fidelity_Best_Product2020.png": {
+    "assetId": "image-60e98b421a33922966d94f08b670a9cfa0470b54-570x570-webp",
+    "originalSize": 29992,
+    "optimizedSize": 15674,
+    "uploadedAt": "2025-12-03T06:11:44.982Z"
+  },
+  "https://audiofast.pl/assets/awards/HFW_20-Award-Primaluna-EVO-400-kopia.png": {
+    "assetId": "image-4f5dd026b8be894923bf820c0d297a756e6956d9-400x400-webp",
+    "originalSize": 163364,
+    "optimizedSize": 17630,
+    "uploadedAt": "2025-12-03T06:11:46.832Z"
+  },
+  "https://audiofast.pl/assets/awards/202012_poty.png": {
+    "assetId": "image-0a49c276fdf57972c7b14bb7b8f41fcb96e36d19-520x520-webp",
+    "originalSize": 95939,
+    "optimizedSize": 31222,
+    "uploadedAt": "2025-12-03T06:11:49.096Z"
+  },
+  "https://audiofast.pl/assets/awards/hifi_awards_winner_2020.png": {
+    "assetId": "image-1bbc680b2ad9d2d62cac303fa6aba3ca79f9f05a-550x550-webp",
+    "originalSize": 223823,
+    "optimizedSize": 30690,
+    "uploadedAt": "2025-12-03T06:11:51.813Z"
+  },
+  "https://audiofast.pl/assets/awards/2020-TAS-POY-550px.png": {
+    "assetId": "image-34b23428a12a80aec3ff92361364a2ba75fd3556-550x550-webp",
+    "originalSize": 102733,
+    "optimizedSize": 26786,
+    "uploadedAt": "2025-12-03T06:11:54.330Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereonet-POTY-Awards-2020.png": {
+    "assetId": "image-0677add7a3b012b3391c1665bf23161c2d9b10f3-280x280-webp",
+    "originalSize": 45982,
+    "optimizedSize": 12886,
+    "uploadedAt": "2025-12-03T06:11:56.522Z"
+  },
+  "https://audiofast.pl/assets/awards/StereoNET_Applause_Award-2019.png": {
+    "assetId": "image-6212fcdb0abec749e1e267f420530ae5cdfe27e4-410x410-webp",
+    "originalSize": 94005,
+    "optimizedSize": 23760,
+    "uploadedAt": "2025-12-03T06:11:58.647Z"
+  },
+  "https://audiofast.pl/assets/awards/nagroda2021.png": {
+    "assetId": "image-a1b050f339204f6dab71ea35534cddfef735c567-400x400-webp",
+    "originalSize": 151973,
+    "optimizedSize": 21046,
+    "uploadedAt": "2025-12-03T06:12:00.750Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-audiovideo-awardbp1200-kopia.png": {
+    "assetId": "image-67d2e9ddcb1008586debd5769fb4e443eabab7d6-800x785-webp",
+    "originalSize": 139101,
+    "optimizedSize": 34922,
+    "uploadedAt": "2025-12-03T06:12:03.402Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-audiovideoBRX-kopia.png": {
+    "assetId": "image-c981c1a6d5885a32e2130b77d91998ef9233b007-800x800-webp",
+    "originalSize": 83359,
+    "optimizedSize": 40308,
+    "uploadedAt": "2025-12-03T06:12:05.383Z"
+  },
+  "https://audiofast.pl/assets/awards/POYHIFIHKPLEvo400.png": {
+    "assetId": "image-eb343f116104ccd9c946615cb3f46cbe9b5af531-636x636-webp",
+    "originalSize": 59411,
+    "optimizedSize": 16384,
+    "uploadedAt": "2025-12-03T06:12:07.982Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereonet-Applause-award.png": {
+    "assetId": "image-39d3122de3cb201784b9fffa23225780650ca39c-224x224-webp",
+    "originalSize": 45885,
+    "optimizedSize": 9158,
+    "uploadedAt": "2025-12-03T06:12:10.526Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-TAS-edchoice400.png": {
+    "assetId": "image-a4ba75238d2660aade52673f7a24b8c223546bb0-400x400-webp",
+    "originalSize": 173945,
+    "optimizedSize": 23836,
+    "uploadedAt": "2025-12-03T06:12:12.666Z"
+  },
+  "https://audiofast.pl/assets/awards/stereophile-rc2021.png": {
+    "assetId": "image-f7b6dcd70c06f848288faeb2b9ff9752254625e6-600x600-webp",
+    "originalSize": 225308,
+    "optimizedSize": 36132,
+    "uploadedAt": "2025-12-03T06:12:14.624Z"
+  },
+  "https://audiofast.pl/assets/awards/hifireview_poty_2020.png": {
+    "assetId": "image-076a52dbc962315034ee9dec0fc0e029902947f4-680x680-webp",
+    "originalSize": 141488,
+    "optimizedSize": 24324,
+    "uploadedAt": "2025-12-03T06:12:16.508Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-TAS-GoldenEar.png": {
+    "assetId": "image-7ab147acb5a20fbf3e95b7e16de53e59c7bc0e09-250x250-webp",
+    "originalSize": 96102,
+    "optimizedSize": 13128,
+    "uploadedAt": "2025-12-03T06:12:18.668Z"
+  },
+  "https://audiofast.pl/assets/awards/EISA-Award-Wilson-Audio-SabrinaX-kopia-v2.png": {
+    "assetId": "image-27f0bad16f77ec6eb384872a2b1b125dd752351f-300x300-webp",
+    "originalSize": 23712,
+    "optimizedSize": 11882,
+    "uploadedAt": "2025-12-03T06:12:20.934Z"
+  },
+  "https://audiofast.pl/assets/awards/High_Fidelity_Best_Product2021.png": {
+    "assetId": "image-4712eb4b20a35c01e5aeabdcba78b27723fa8614-400x400-webp",
+    "originalSize": 29467,
+    "optimizedSize": 10498,
+    "uploadedAt": "2025-12-03T06:12:22.766Z"
+  },
+  "https://audiofast.pl/assets/awards/2021fallrc-stereophile.png": {
+    "assetId": "image-f30ba983ffa298168427c8a7b087d03241ae9265-630x630-webp",
+    "originalSize": 91366,
+    "optimizedSize": 45444,
+    "uploadedAt": "2025-12-03T06:12:25.015Z"
+  },
+  "https://audiofast.pl/assets/awards/bluemoonlarge.png": {
+    "assetId": "image-474573e0923646c8722d4695425e6c4916b45347-500x494-webp",
+    "originalSize": 24353,
+    "optimizedSize": 25146,
+    "uploadedAt": "2025-12-03T06:12:27.442Z"
+  },
+  "https://audiofast.pl/assets/awards/stereotimes-mostwanted-stealth.png": {
+    "assetId": "image-80e46d4ca24db0a41b9df0ceaba20146fbe1aac2-600x600-webp",
+    "originalSize": 62983,
+    "optimizedSize": 21150,
+    "uploadedAt": "2025-12-03T06:12:30.095Z"
+  },
+  "https://audiofast.pl/assets/awards/PF-2007-stealth-award.png": {
+    "assetId": "image-5841e6e93665862fedbc7534aebdba954c993a22-300x300-webp",
+    "originalSize": 37832,
+    "optimizedSize": 19374,
+    "uploadedAt": "2025-12-03T06:12:32.154Z"
+  },
+  "https://audiofast.pl/assets/awards/StereoNET_Applause_Award_2021.png": {
+    "assetId": "image-d344888332507bd071e05e894f5a57b8595ea2fc-800x773-webp",
+    "originalSize": 172337,
+    "optimizedSize": 44562,
+    "uploadedAt": "2025-12-03T06:12:34.479Z"
+  },
+  "https://audiofast.pl/assets/awards/SVIP_TopPick-150x150.png": {
+    "assetId": "image-ee657d26b27243ad3d5ef4a625d5edfa3b86fd40-150x150-webp",
+    "originalSize": 11400,
+    "optimizedSize": 7864,
+    "uploadedAt": "2025-12-03T06:12:36.742Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-hificluce.award.png": {
+    "assetId": "image-803d09be489837b452255a6600f3c3780a6eb11b-800x800-webp",
+    "originalSize": 271323,
+    "optimizedSize": 74624,
+    "uploadedAt": "2025-12-03T06:12:39.580Z"
+  },
+  "https://audiofast.pl/assets/awards/2020-best-valve-amplifier.png": {
+    "assetId": "image-957d903e9b499fd60f0d72c3123053516b15190a-130x130-webp",
+    "originalSize": 7410,
+    "optimizedSize": 5132,
+    "uploadedAt": "2025-12-03T06:12:41.952Z"
+  },
+  "https://audiofast.pl/assets/awards/fedelta-logo.png": {
+    "assetId": "image-4f3f63ac765dd3ca12f71f6c7389a7e522a6f491-160x160-webp",
+    "originalSize": 13760,
+    "optimizedSize": 4288,
+    "uploadedAt": "2025-12-03T06:12:44.407Z"
+  },
+  "https://audiofast.pl/assets/awards/toneaudio-award-evo100int.jpg": {
+    "assetId": "image-3ee4470614a6a33985a819a955641258ff3e907c-76x80-webp",
+    "originalSize": 4221,
+    "optimizedSize": 2542,
+    "uploadedAt": "2025-12-03T06:12:46.266Z"
+  },
+  "https://audiofast.pl/assets/awards/product-of-the-year-evo-100-dac-norway.png": {
+    "assetId": "image-f241b1ddca887f0ed302e857faed44aaf7f11422-150x150-webp",
+    "originalSize": 40590,
+    "optimizedSize": 9308,
+    "uploadedAt": "2025-12-03T06:12:48.052Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-Poty.jpg": {
+    "assetId": "image-0a94eed2c078001253934597b15f77f8c10cb72b-600x600-webp",
+    "originalSize": 210949,
+    "optimizedSize": 46504,
+    "uploadedAt": "2025-12-03T06:12:50.174Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-TAS-POTY.png": {
+    "assetId": "image-a89f85cc54c8fc8326ab6bfa9b94fb59697b013b-700x700-webp",
+    "originalSize": 97200,
+    "optimizedSize": 39914,
+    "uploadedAt": "2025-12-03T06:12:52.196Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-hifiplus-award-v2.png": {
+    "assetId": "image-ee4eb13d992d790523ec998788399381a2836802-620x620-webp",
+    "originalSize": 262381,
+    "optimizedSize": 41866,
+    "uploadedAt": "2025-12-03T06:12:54.277Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-HFM-NAGRODAROKU.png": {
+    "assetId": "image-ea6dc615ecc7477f187848edd3bffcd709747115-800x761-webp",
+    "originalSize": 450763,
+    "optimizedSize": 45940,
+    "uploadedAt": "2025-12-03T06:12:56.351Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-AV-LS1a.png": {
+    "assetId": "image-8e40c0d7b9b3b0840aecb754098292d17ad1a6b1-800x800-webp",
+    "originalSize": 87755,
+    "optimizedSize": 32916,
+    "uploadedAt": "2025-12-03T06:12:58.716Z"
+  },
+  "https://audiofast.pl/assets/awards/2021-HiFi-reviewpotyPL300Hybrid.png": {
+    "assetId": "image-15cdd6843e7995f560afe5918eb40bcd191f3321-800x800-webp",
+    "originalSize": 145803,
+    "optimizedSize": 26200,
+    "uploadedAt": "2025-12-03T06:13:01.127Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-TAS-ED-CHOICE.png": {
+    "assetId": "image-c585b283c458e95b1c194957e6454ca101ceeb1a-513x513-webp",
+    "originalSize": 153601,
+    "optimizedSize": 29380,
+    "uploadedAt": "2025-12-03T06:13:03.386Z"
+  },
+  "https://audiofast.pl/assets/awards/FLOYD_08A.png": {
+    "assetId": "image-b5157fd9da9281defbec07f79ed673ee7bba0717-330x330-webp",
+    "originalSize": 45571,
+    "optimizedSize": 10118,
+    "uploadedAt": "2025-12-03T06:13:05.771Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-Stereophile-RC.png": {
+    "assetId": "image-ea4c5d8daa87452734f239ecf2b9e395f40da5bc-600x600-webp",
+    "originalSize": 261674,
+    "optimizedSize": 44602,
+    "uploadedAt": "2025-12-03T06:13:08.768Z"
+  },
+  "https://audiofast.pl/assets/awards/EVO400-3ProductOfTheYearNorwayAward-800.png": {
+    "assetId": "image-5ac1a427d57ec07959a6c5fff8bfe0f68e9b5b1f-800x800-webp",
+    "originalSize": 249090,
+    "optimizedSize": 51376,
+    "uploadedAt": "2025-12-03T06:13:11.464Z"
+  },
+  "https://audiofast.pl/assets/awards/audiograde_editors_pick.png": {
+    "assetId": "image-551395f9108ccdfce05645037517c5c6e6b57f39-800x800-webp",
+    "originalSize": 66142,
+    "optimizedSize": 22316,
+    "uploadedAt": "2025-12-03T06:13:14.040Z"
+  },
+  "https://audiofast.pl/assets/awards/TAS-GE-2022.png": {
+    "assetId": "image-374c99e46f720b01c1b04f652dc566a561294a1c-740x740-webp",
+    "originalSize": 600813,
+    "optimizedSize": 59034,
+    "uploadedAt": "2025-12-03T06:13:16.120Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-Best_Sound_High_Fidelity.png": {
+    "assetId": "image-7f7833740edefc02a17ba98610847349469f6b4f-730x730-webp",
+    "originalSize": 94092,
+    "optimizedSize": 31052,
+    "uploadedAt": "2025-12-03T06:13:18.038Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-stereophile-poty.jpg": {
+    "assetId": "image-058dc0d260f00ca1ca3d355818cc628e36c55a1e-756x756-webp",
+    "originalSize": 134406,
+    "optimizedSize": 49394,
+    "uploadedAt": "2025-12-03T06:13:20.288Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-stereophile-rc-v2.png": {
+    "assetId": "image-b46a18cfe3082bc0aa32910bcc1be64653767282-800x800-webp",
+    "originalSize": 306125,
+    "optimizedSize": 44098,
+    "uploadedAt": "2025-12-03T06:13:22.789Z"
+  },
+  "https://audiofast.pl/assets/awards/hifinews-Outstanding-Product-small.png": {
+    "assetId": "image-43d1ba21ff55a6ce3d39fc4d4be8322e7c7f326a-400x400-webp",
+    "originalSize": 113781,
+    "optimizedSize": 24444,
+    "uploadedAt": "2025-12-03T06:13:25.280Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-EnjoyTheMusic-BestOf.png": {
+    "assetId": "image-a2db47bbbaea16f4588d5c92e185fdddbc544b12-526x526-webp",
+    "originalSize": 144186,
+    "optimizedSize": 30842,
+    "uploadedAt": "2025-12-03T06:13:27.812Z"
+  },
+  "https://audiofast.pl/assets/awards/202212_poty_400.png": {
+    "assetId": "image-5bf19a8ab68da4ccbae71a5dc5d8a6226b8428fe-400x400-webp",
+    "originalSize": 74955,
+    "optimizedSize": 24018,
+    "uploadedAt": "2025-12-03T06:13:30.015Z"
+  },
+  "https://audiofast.pl/assets/awards/2022_TAS_POTY.png": {
+    "assetId": "image-3867a107011ad969b52aa82e9f48b7510f3c6272-400x403-webp",
+    "originalSize": 148590,
+    "optimizedSize": 14606,
+    "uploadedAt": "2025-12-03T06:13:32.285Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-class-rekomendacja-v3.png": {
+    "assetId": "image-d779eef8d03fdbc49be8aac85b5e5d34091e582d-400x400-webp",
+    "originalSize": 46813,
+    "optimizedSize": 11010,
+    "uploadedAt": "2025-12-03T06:13:34.551Z"
+  },
+  "https://audiofast.pl/assets/awards/The-Ear-Best-of-2022.png": {
+    "assetId": "image-20bf998516a03874f70979d8ebadcb5f3463c24a-400x400-webp",
+    "originalSize": 41577,
+    "optimizedSize": 13510,
+    "uploadedAt": "2025-12-03T06:13:36.389Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-Pig-Magazine.png": {
+    "assetId": "image-e4468d1a8d6f2339c14341efdc866e7e96faba86-400x400-webp",
+    "originalSize": 95594,
+    "optimizedSize": 11384,
+    "uploadedAt": "2025-12-03T06:13:38.918Z"
+  },
+  "https://audiofast.pl/assets/awards/2022-POTY-part-time-audiophile.png": {
+    "assetId": "image-1323420a6536a04a9498a8fa38d75d8076605e90-509x509-webp",
+    "originalSize": 129435,
+    "optimizedSize": 18808,
+    "uploadedAt": "2025-12-03T06:13:40.921Z"
+  },
+  "https://audiofast.pl/assets/awards/Hifi-plus-winner-2022_S.png": {
+    "assetId": "image-6f58a5f5519c6d4194f0ec4ca24fa80f7cd0a01e-600x600-webp",
+    "originalSize": 178392,
+    "optimizedSize": 44326,
+    "uploadedAt": "2025-12-03T06:13:43.037Z"
+  },
+  "https://audiofast.pl/assets/awards/Hifi-plus-recomended-2022_S.png": {
+    "assetId": "image-1b689df0026a13c9d2e51413063123941df8c41e-600x600-webp",
+    "originalSize": 176630,
+    "optimizedSize": 40176,
+    "uploadedAt": "2025-12-03T06:13:45.928Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-Choice-Recommended-2022_S.png": {
+    "assetId": "image-16accf5a791e1021f33a2096a4c397bcd82f2844-600x600-webp",
+    "originalSize": 57077,
+    "optimizedSize": 31776,
+    "uploadedAt": "2025-12-03T06:13:47.993Z"
+  },
+  "https://audiofast.pl/assets/awards/Hifi-plus-POTY-2022_S.png": {
+    "assetId": "image-3365be152ef1a70f267a7ed3dac93ee933f039d1-600x600-webp",
+    "originalSize": 102180,
+    "optimizedSize": 44612,
+    "uploadedAt": "2025-12-03T06:13:50.263Z"
+  },
+  "https://audiofast.pl/assets/awards/AV_nagroda-22_23.png": {
+    "assetId": "image-4011125e1a2328636d509069d0b727e07d6eb2d5-800x800-webp",
+    "originalSize": 43026,
+    "optimizedSize": 29682,
+    "uploadedAt": "2025-12-03T06:13:52.745Z"
+  },
+  "https://audiofast.pl/assets/awards/2023_TAS_ED_CH_s.png": {
+    "assetId": "image-f6232e08e5d24a6a4c45bb974cb26754cf0ce72b-600x600-webp",
+    "originalSize": 300305,
+    "optimizedSize": 36914,
+    "uploadedAt": "2025-12-03T06:13:55.104Z"
+  },
+  "https://audiofast.pl/assets/awards/hificriticAE_400.png": {
+    "assetId": "image-20704529ee563847d251b65d45fa2b2c7fa66aec-400x400-webp",
+    "originalSize": 15338,
+    "optimizedSize": 6334,
+    "uploadedAt": "2025-12-03T06:13:57.304Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-Nagroda-2023.png": {
+    "assetId": "image-2fee512ca62c6958fc064658cba68522573ed78a-386x386-webp",
+    "originalSize": 171987,
+    "optimizedSize": 22364,
+    "uploadedAt": "2025-12-03T06:13:59.559Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereo_Times_Publishers-choice-2022.png": {
+    "assetId": "image-86b0d3fc863af7ad3011b0e415b9ba68dea5ab41-650x650-webp",
+    "originalSize": 431113,
+    "optimizedSize": 74474,
+    "uploadedAt": "2025-12-03T06:14:01.714Z"
+  },
+  "https://audiofast.pl/assets/awards/LB-Tech-Outstanding-v2.png": {
+    "assetId": "image-510955b1dab6783a85c950474b23a5fda6b641f0-300x300-webp",
+    "originalSize": 35902,
+    "optimizedSize": 9244,
+    "uploadedAt": "2025-12-03T06:14:04.356Z"
+  },
+  "https://audiofast.pl/assets/awards/Audiophile-Style.png": {
+    "assetId": "image-baa89fff85e8f0f5c6eaf4f0b978955e7e962199-400x400-webp",
+    "originalSize": 112333,
+    "optimizedSize": 18930,
+    "uploadedAt": "2025-12-03T06:14:06.618Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie2023hfm.png": {
+    "assetId": "image-26ac1ac22fd2aa977f4856eaa863d9d426a94554-271x265-webp",
+    "originalSize": 12796,
+    "optimizedSize": 11268,
+    "uploadedAt": "2025-12-03T06:14:08.659Z"
+  },
+  "https://audiofast.pl/assets/awards/2023-stereophile-RC_ico.png": {
+    "assetId": "image-d7de7cefd077a634be318459c1ea9b03fff0554a-400x400-webp",
+    "originalSize": 121380,
+    "optimizedSize": 22376,
+    "uploadedAt": "2025-12-03T06:14:11.188Z"
+  },
+  "https://audiofast.pl/assets/awards/hifiNL.png": {
+    "assetId": "image-dfbde455a355036fcc7ceb78318cbf2db52c35c6-400x400-webp",
+    "originalSize": 78638,
+    "optimizedSize": 6680,
+    "uploadedAt": "2025-12-03T06:14:13.046Z"
+  },
+  "https://audiofast.pl/assets/awards/Sound+Image-2022-winner-v2.png": {
+    "assetId": "image-63c4d820bc6874cfb58ad6dbb44421a00728e1cd-400x400-webp",
+    "originalSize": 77212,
+    "optimizedSize": 16624,
+    "uploadedAt": "2025-12-03T06:14:15.649Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-Class-redakcja-BIG.png": {
+    "assetId": "image-1a52bf18cae13d13334bd365e66f3dab4bf053f8-400x400-webp",
+    "originalSize": 17003,
+    "optimizedSize": 8284,
+    "uploadedAt": "2025-12-03T06:14:18.118Z"
+  },
+  "https://audiofast.pl/assets/awards/STATEMENT-in-High-Fidelity-German-Edition-9429-v2.png": {
+    "assetId": "image-46505e461eb34fa2bb0d49840afe31143c8a8676-800x800-webp",
+    "originalSize": 76790,
+    "optimizedSize": 48172,
+    "uploadedAt": "2025-12-03T06:14:20.576Z"
+  },
+  "https://audiofast.pl/assets/awards/Special-Performer-Award-Website-600-600.png": {
+    "assetId": "image-3d32f4594f06cccbb65a361cc99e0b2fa6045c78-600x600-webp",
+    "originalSize": 255679,
+    "optimizedSize": 44240,
+    "uploadedAt": "2025-12-03T06:14:22.812Z"
+  },
+  "https://audiofast.pl/assets/awards/Special-Performer-Award-Website.png": {
+    "assetId": "image-e15e6b559d90c8005aa3cd77b3d710a5a2f667eb-426x426-webp",
+    "originalSize": 161770,
+    "optimizedSize": 22706,
+    "uploadedAt": "2025-12-03T06:14:25.187Z"
+  },
+  "https://audiofast.pl/assets/awards/HiFi-Class-zakupS-v2.png": {
+    "assetId": "image-0f63fae77cf932aea2b7ab3b48f92f694e73c9bc-600x600-webp",
+    "originalSize": 40047,
+    "optimizedSize": 15294,
+    "uploadedAt": "2025-12-03T06:14:27.554Z"
+  },
+  "https://audiofast.pl/assets/awards/tm-favorite-digital.png": {
+    "assetId": "image-4e4950d183186c59f6c88d14661b6fc3e8ad5e36-378x378-webp",
+    "originalSize": 106410,
+    "optimizedSize": 19504,
+    "uploadedAt": "2025-12-03T06:14:30.038Z"
+  },
+  "https://audiofast.pl/assets/awards/2023_TAS_GoldenEar.png": {
+    "assetId": "image-1b4076e730e0e286b5000cd213d5384b37d97d79-400x400-webp",
+    "originalSize": 192483,
+    "optimizedSize": 27964,
+    "uploadedAt": "2025-12-03T06:14:32.468Z"
+  },
+  "https://audiofast.pl/assets/awards/EISA-Award-dCS-Lina-System.png": {
+    "assetId": "image-4d8ae38c5b844b5ed912837344da5db60c71090d-300x300-webp",
+    "originalSize": 25244,
+    "optimizedSize": 11366,
+    "uploadedAt": "2025-12-03T06:14:34.501Z"
+  },
+  "https://audiofast.pl/assets/awards/EISA-Award-dCS-Lina-System-v2.png": {
+    "assetId": "image-75e2c71b3b2f7c36d4cd033d0f0e9a8a42aacf88-600x600-webp",
+    "originalSize": 338927,
+    "optimizedSize": 71604,
+    "uploadedAt": "2025-12-03T06:14:36.931Z"
+  },
+  "https://audiofast.pl/assets/awards/Headphonics_Lina.png": {
+    "assetId": "image-eaa6cb948f44f86e9f39d5477d20bf275ec81533-600x600-webp",
+    "originalSize": 72369,
+    "optimizedSize": 22060,
+    "uploadedAt": "2025-12-03T06:14:38.915Z"
+  },
+  "https://audiofast.pl/assets/awards/Best_Of_2023_Blue_Note_Award.png": {
+    "assetId": "image-3cd1e490d8b33094fb73cf68cb952b27b375a908-553x553-webp",
+    "originalSize": 212338,
+    "optimizedSize": 35960,
+    "uploadedAt": "2025-12-03T06:14:40.966Z"
+  },
+  "https://audiofast.pl/assets/awards/EISA-Award-Wilson-Audio-Alexia-V.png": {
+    "assetId": "image-b480be9f25f4767e151a75d49404fccb97eedec8-300x300-webp",
+    "originalSize": 26745,
+    "optimizedSize": 11826,
+    "uploadedAt": "2025-12-03T06:14:43.169Z"
+  },
+  "https://audiofast.pl/assets/awards/stereo_i_kolorowo_nagroda.png": {
+    "assetId": "image-332ad8288285b0108e4b7d98bc7e96ae325d0bbc-800x800-webp",
+    "originalSize": 130925,
+    "optimizedSize": 41466,
+    "uploadedAt": "2025-12-03T06:14:45.846Z"
+  },
+  "https://audiofast.pl/assets/awards/Best_Sound_AVS2023.png": {
+    "assetId": "image-0bc5b8db90547eb362284731f8923576d340afa4-600x600-webp",
+    "originalSize": 59073,
+    "optimizedSize": 16356,
+    "uploadedAt": "2025-12-03T06:14:47.869Z"
+  },
+  "https://audiofast.pl/assets/awards/2023-stereophile-poty.png": {
+    "assetId": "image-2a29e74554d01e21499bdb8972a0323eced0fb1d-600x599-webp",
+    "originalSize": 245698,
+    "optimizedSize": 41868,
+    "uploadedAt": "2025-12-03T06:14:49.890Z"
+  },
+  "https://audiofast.pl/assets/awards/best_buy_award_.png": {
+    "assetId": "image-0ab4e82999ecd0ea1104cf9a9b3330753cce65a3-410x411-webp",
+    "originalSize": 191782,
+    "optimizedSize": 20170,
+    "uploadedAt": "2025-12-03T06:14:51.899Z"
+  },
+  "https://audiofast.pl/assets/awards/MonoStereoroundal.png": {
+    "assetId": "image-41b5b447ab05d6022d5ebc3aa9c8222b483f14dc-412x409-webp",
+    "originalSize": 190790,
+    "optimizedSize": 22828,
+    "uploadedAt": "2025-12-03T06:14:54.110Z"
+  },
+  "https://audiofast.pl/assets/awards/tm-favorite-amplifiers-v2.png": {
+    "assetId": "image-10706d0671510f9b194d92f6542ada0c9f653f8f-800x800-webp",
+    "originalSize": 370343,
+    "optimizedSize": 45896,
+    "uploadedAt": "2025-12-03T06:14:56.436Z"
+  },
+  "https://audiofast.pl/assets/awards/nagroda2024-v2.png": {
+    "assetId": "image-66ead67d4ff3633dd0942cb3bd6d4f8ffa449c32-600x600-webp",
+    "originalSize": 393895,
+    "optimizedSize": 35662,
+    "uploadedAt": "2025-12-03T06:14:59.252Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie2024.png": {
+    "assetId": "image-e4b07cec1decb29f16fa99935e3303e9797adb9a-600x600-webp",
+    "originalSize": 96316,
+    "optimizedSize": 28654,
+    "uploadedAt": "2025-12-03T06:15:01.447Z"
+  },
+  "https://audiofast.pl/assets/awards/2024-TAS-EditorsS.png": {
+    "assetId": "image-3b28d64817069d2be137976a37bdc1d440260949-300x300-webp",
+    "originalSize": 106326,
+    "optimizedSize": 17232,
+    "uploadedAt": "2025-12-03T06:15:04.119Z"
+  },
+  "https://audiofast.pl/assets/awards/PTA_reviewers-choice.png": {
+    "assetId": "image-481fbc271e5d89c6b5d7294a98e212f1bbad7388-600x600-webp",
+    "originalSize": 62307,
+    "optimizedSize": 21980,
+    "uploadedAt": "2025-12-03T06:15:06.339Z"
+  },
+  "https://audiofast.pl/assets/awards/Aurender-2024_.png": {
+    "assetId": "image-06cbab1ebef655fbe8f4d959db2615f9e409acf7-600x600-webp",
+    "originalSize": 64248,
+    "optimizedSize": 22180,
+    "uploadedAt": "2025-12-03T06:15:09.335Z"
+  },
+  "https://audiofast.pl/assets/awards/AMFrecommendation.png": {
+    "assetId": "image-c987ee5dcbdd823d0983fec9f9a9e783a5bd0ed0-600x600-webp",
+    "originalSize": 87681,
+    "optimizedSize": 9974,
+    "uploadedAt": "2025-12-03T06:15:13.485Z"
+  },
+  "https://audiofast.pl/assets/awards/tm-favorite-speakers.png": {
+    "assetId": "image-ced798062e3550064a9fd147f5f012a8211069a4-378x378-webp",
+    "originalSize": 114033,
+    "optimizedSize": 20958,
+    "uploadedAt": "2025-12-03T06:15:15.825Z"
+  },
+  "https://audiofast.pl/assets/awards/fidelity-award-lizenzen-2024-39-731x1024.png": {
+    "assetId": "image-984bb9aeb1c5c50d9fd9270d9d907173e00ed268-611x611-webp",
+    "originalSize": 172500,
+    "optimizedSize": 23152,
+    "uploadedAt": "2025-12-03T06:15:18.080Z"
+  },
+  "https://audiofast.pl/assets/awards/20-na-XX.png": {
+    "assetId": "image-5e27b1b61f9eda3ebfdc82977a4808b1dad9faed-600x600-webp",
+    "originalSize": 152510,
+    "optimizedSize": 41954,
+    "uploadedAt": "2025-12-03T06:15:20.393Z"
+  },
+  "https://audiofast.pl/assets/awards/hifiNL-4-5.png": {
+    "assetId": "image-8f1573dd0752b95eebf0a1640e7bcfe80db55e60-400x400-webp",
+    "originalSize": 76742,
+    "optimizedSize": 6298,
+    "uploadedAt": "2025-12-03T06:15:22.925Z"
+  },
+  "https://audiofast.pl/assets/awards/avforums-HR-v2.png": {
+    "assetId": "image-edc433d6133a8c9e72c3731da4f3e964f8ba7f51-199x199-webp",
+    "originalSize": 11794,
+    "optimizedSize": 6338,
+    "uploadedAt": "2025-12-03T06:15:24.674Z"
+  },
+  "https://audiofast.pl/assets/awards/2024-eisa.png": {
+    "assetId": "image-433794093f21b5407e0c913e90142dc835c62284-300x300-webp",
+    "originalSize": 16422,
+    "optimizedSize": 12810,
+    "uploadedAt": "2025-12-03T06:15:27.049Z"
+  },
+  "https://audiofast.pl/assets/awards/2024-GEC-LOGO-s.png": {
+    "assetId": "image-2f02ccd9fb39f280cc8fce8fefdd07b359c21dbd-600x600-webp",
+    "originalSize": 382666,
+    "optimizedSize": 47132,
+    "uploadedAt": "2025-12-03T06:15:29.544Z"
+  },
+  "https://audiofast.pl/assets/awards/SoundStage_large_reference.png": {
+    "assetId": "image-1cb434aabe26bb5e0790fd57e52612c615da9103-350x350-webp",
+    "originalSize": 119340,
+    "optimizedSize": 23608,
+    "uploadedAt": "2025-12-03T06:15:32.328Z"
+  },
+  "https://audiofast.pl/assets/awards/Stereophile-Recommended-Components-2024.png": {
+    "assetId": "image-dc0eb4da83b1007d50ef0f3c08ae8471e7290280-200x200-webp",
+    "originalSize": 41545,
+    "optimizedSize": 9872,
+    "uploadedAt": "2025-12-03T06:15:34.157Z"
+  },
+  "https://audiofast.pl/assets/awards/High_Fidelity_Best_Product2024.png": {
+    "assetId": "image-a7ec73b1ee86f344dab72cccd697cf79873220db-600x600-webp",
+    "originalSize": 95687,
+    "optimizedSize": 16928,
+    "uploadedAt": "2025-12-03T06:15:36.764Z"
+  },
+  "https://audiofast.pl/assets/awards/tas-poty-2025.png": {
+    "assetId": "image-1e7bac532b017b82363124b59fddcdfa68dbff44-355x355-webp",
+    "originalSize": 97834,
+    "optimizedSize": 15472,
+    "uploadedAt": "2025-12-03T06:15:39.430Z"
+  },
+  "https://audiofast.pl/assets/awards/2024-Headphone.png": {
+    "assetId": "image-bbb5c9df88ad6dbfb91b303a421971fe5db35180-800x800-webp",
+    "originalSize": 794947,
+    "optimizedSize": 79812,
+    "uploadedAt": "2025-12-03T06:15:41.578Z"
+  },
+  "https://audiofast.pl/assets/awards/Special-Performer-Award-nagroda.png": {
+    "assetId": "image-e1c0517c2ed3517d6798d1eeff7f5066d75d7fa0-600x600-webp",
+    "originalSize": 292668,
+    "optimizedSize": 41992,
+    "uploadedAt": "2025-12-03T06:15:43.896Z"
+  },
+  "https://audiofast.pl/assets/awards/stereonet-25.png": {
+    "assetId": "image-396a7cde8f7f95b94781d47614d7fa533fcbd43d-497x497-webp",
+    "originalSize": 41492,
+    "optimizedSize": 21796,
+    "uploadedAt": "2025-12-03T06:15:46.369Z"
+  },
+  "https://audiofast.pl/assets/awards/BEST-OF-2024-820.png": {
+    "assetId": "image-116b614f2ced9a23e2b3eb032b04e49ae7602333-800x800-webp",
+    "originalSize": 94875,
+    "optimizedSize": 27000,
+    "uploadedAt": "2025-12-03T06:15:49.211Z"
+  },
+  "https://audiofast.pl/assets/awards/2024-GEC-LOGO-s-v2.png": {
+    "assetId": "image-2f02ccd9fb39f280cc8fce8fefdd07b359c21dbd-600x600-webp",
+    "originalSize": 382666,
+    "optimizedSize": 47132,
+    "uploadedAt": "2025-12-03T06:15:51.546Z"
+  },
+  "https://audiofast.pl/assets/awards/editores_choice_2025s.png": {
+    "assetId": "image-dfc0cb24552323884906a009422f350b0c742658-300x300-webp",
+    "originalSize": 46914,
+    "optimizedSize": 15338,
+    "uploadedAt": "2025-12-03T06:15:53.844Z"
+  },
+  "https://audiofast.pl/assets/awards/wyroznienie-2024.png": {
+    "assetId": "image-db9f0ebb7e93d2da7cd5dfc2d0bc050cce67ea32-433x433-webp",
+    "originalSize": 146941,
+    "optimizedSize": 20542,
+    "uploadedAt": "2025-12-03T06:15:56.268Z"
+  },
+  "https://audiofast.pl/assets/awards/red-dot-2024-winner.png": {
+    "assetId": "image-ab428ee17cdb1612feb25ad141389319a99a2e4f-800x800-webp",
+    "originalSize": 223367,
+    "optimizedSize": 25780,
+    "uploadedAt": "2025-12-03T06:15:58.288Z"
+  },
+  "https://audiofast.pl/assets/awards/Sound+Image-2025-winner.png": {
+    "assetId": "image-245c59283be2e7088d6f44244b2bdbbeba6260a4-800x800-webp",
+    "originalSize": 502182,
+    "optimizedSize": 58778,
+    "uploadedAt": "2025-12-03T06:16:01.249Z"
+  },
+  "https://audiofast.pl/assets/awards/alpha-audio-aproved.png": {
+    "assetId": "image-9a02a53945913dffe01f7b8b61470a8d5e248e99-300x300-webp",
+    "originalSize": 58501,
+    "optimizedSize": 5650,
+    "uploadedAt": "2025-12-03T06:16:03.562Z"
+  },
+  "https://audiofast.pl/assets/awards/audiokey_review.png": {
+    "assetId": "image-b7bb000c929c8a79d7fa3dfd7c664f55febdc908-300x300-webp",
+    "originalSize": 115428,
+    "optimizedSize": 19348,
+    "uploadedAt": "2025-12-03T06:16:05.545Z"
+  },
+  "https://audiofast.pl/assets/awards/Rob-Report-2025.png": {
+    "assetId": "image-86d40120599796945af2770a75a8f73c219b4670-232x230-webp",
+    "originalSize": 65893,
+    "optimizedSize": 8932,
+    "uploadedAt": "2025-12-03T06:16:07.402Z"
+  }
+}

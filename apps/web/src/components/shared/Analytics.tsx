@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { trackEvent } from '@/global/analytics/track-event';
+import { trackEvent } from "@/global/analytics/track-event";
 
 export default function Analytics() {
   useEffect(() => {
     const sendPageView = () => {
       const { location, document } = window;
-      const pathname = location?.pathname ?? '';
-      const search = location?.search ?? '';
+      const pathname = location?.pathname ?? "";
+      const search = location?.search ?? "";
       const url = location?.href ?? `${pathname}${search}`;
       const title = document?.title ?? undefined;
 
       trackEvent({
         meta: {
-          eventName: 'PageView',
+          eventName: "PageView",
           params: {
             page_path: `${pathname}${search}` || undefined,
           },
         },
         ga4: {
-          eventName: 'page_view',
+          eventName: "page_view",
           params: {
             page_location: url,
             page_path: pathname,
@@ -41,23 +41,23 @@ export default function Analytics() {
       if (!target) return;
 
       const link = target.closest(
-        'a[href^="mailto:"], a[href^="tel:"]'
+        'a[href^="mailto:"], a[href^="tel:"]',
       ) as HTMLAnchorElement | null;
       if (!link) return;
 
-      const href = link.getAttribute('href') ?? '';
-      const contactType = href.startsWith('mailto:') ? 'email' : 'phone';
+      const href = link.getAttribute("href") ?? "";
+      const contactType = href.startsWith("mailto:") ? "email" : "phone";
 
       trackEvent({
         meta: {
-          eventName: 'Contact',
+          eventName: "Contact",
           params: {
             contact_type: contactType,
             contact_value: href,
           },
         },
         ga4: {
-          eventName: 'contact',
+          eventName: "contact",
           params: {
             contact_type: contactType,
             contact_value: href,
@@ -66,10 +66,10 @@ export default function Analytics() {
       });
     };
 
-    document.addEventListener('click', handleContactClick, { capture: true });
+    document.addEventListener("click", handleContactClick, { capture: true });
 
     return () => {
-      document.removeEventListener('click', handleContactClick, {
+      document.removeEventListener("click", handleContactClick, {
         capture: true,
       });
     };

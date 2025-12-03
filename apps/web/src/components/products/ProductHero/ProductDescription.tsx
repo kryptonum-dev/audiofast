@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-import type { PortableTextProps } from '@/src/global/types';
+import type { PortableTextProps } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import styles from "./styles.module.scss";
 
 interface ProductDescriptionProps {
   shortDescription: PortableTextProps;
@@ -34,14 +34,14 @@ export default function ProductDescription({
     checkScroll();
 
     // Check on scroll
-    container.addEventListener('scroll', checkScroll);
+    container.addEventListener("scroll", checkScroll);
 
     // Check on resize (in case content changes)
     const resizeObserver = new ResizeObserver(checkScroll);
     resizeObserver.observe(container);
 
     return () => {
-      container.removeEventListener('scroll', checkScroll);
+      container.removeEventListener("scroll", checkScroll);
       resizeObserver.disconnect();
     };
   }, []);

@@ -22,14 +22,12 @@ export const product = defineType({
     'Produkt audio, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis i specyfikację, aby utworzyć nowy produkt.',
   fields: [
     orderRankField({ type: 'products' }),
-
     defineField({
       name: 'subtitle',
-      title: 'Podtytuł',
+      title: 'Podtytuł (opcjonalny)',
       type: 'string',
       description:
-        'Krótki opis kategorii produktu (np. "Trójdrożny głośnik wolnostojący").',
-      validation: (Rule) => Rule.required().error('Podtytuł jest wymagany'),
+        'Opcjonalny krótki opis kategorii produktu (np. "Trójdrożny głośnik wolnostojący"). Jeśli nie zostanie wypełniony, sekcja nie będzie wyświetlana.',
       group: GROUP.MAIN_CONTENT,
     }),
     ...defineSlugForDocument({
@@ -78,8 +76,10 @@ export const product = defineType({
     }),
     customPortableText({
       name: 'shortDescription',
-      title: 'Krótki opis',
-      description: 'Krótki opis produktu wyświetlany na górze strony.',
+      title: 'Krótki opis (opcjonalny)',
+      optional: true,
+      description:
+        'Opcjonalny krótki opis produktu wyświetlany na górze strony. Jeśli nie zostanie wypełniony, sekcja opisu nie będzie wyświetlana.',
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
@@ -200,22 +200,31 @@ export const product = defineType({
       fields: [
         customPortableText({
           name: 'heading',
-          title: 'Nagłówek szczegółów',
-          description: 'Nagłówek sekcji szczegółów produktu.',
+          title: 'Nagłówek szczegółów (opcjonalny)',
+          description:
+            'Opcjonalny nagłówek sekcji szczegółów produktu. Jeśli puste, zostanie użyte "O produkcie".',
           type: 'heading',
+          optional: true,
         }),
-        customPortableText({
+        defineField({
           name: 'content',
           title: 'Treść szczegółów',
+          type: 'array',
           description:
-            'Szczegółowy opis produktu, specyfikacja i inne informacje.',
-          include: {
-            styles: ['normal', 'h3'],
-            lists: ['bullet', 'number'],
-            decorators: ['strong', 'em'],
-            annotations: ['customLink'],
+            'Szczegółowy opis produktu, specyfikacja i inne informacje. Dodaj bloki tekstowe, filmy YouTube/Vimeo lub linie poziome.',
+          of: [
+            { type: 'contentBlockText' },
+            { type: 'contentBlockYoutube' },
+            { type: 'contentBlockVimeo' },
+            { type: 'contentBlockHorizontalLine' },
+          ],
+          options: {
+            insertMenu: {
+              filter: true,
+              showIcons: true,
+              views: [{ name: 'list' }],
+            },
           },
-          components: ['ptMinimalImage', 'ptHeading', 'ptYoutubeVideo'],
         }),
       ],
       validation: (Rule) =>
@@ -249,7 +258,8 @@ export const product = defineType({
           name: 'groups',
           title: 'Sekcje danych technicznych',
           type: 'array',
-          description: 'Sekcje z parametrami technicznymi (np. "Specyfikacja techniczna", "Specyfikacja audio")',
+          description:
+            'Sekcje z parametrami technicznymi (np. "Specyfikacja techniczna", "Specyfikacja audio")',
           of: [
             defineArrayMember({
               type: 'object',
@@ -260,25 +270,27 @@ export const product = defineType({
                   name: 'title',
                   title: 'Nazwa sekcji',
                   type: 'string',
-                  description: 'Opcjonalnie - np. "Specyfikacja techniczna". Zostaw puste dla produktów bez sekcji.',
+                  description:
+                    'Opcjonalnie - np. "Specyfikacja techniczna". Zostaw puste dla produktów bez sekcji.',
                 }),
                 defineField({
                   name: 'rows',
                   title: 'Parametry',
-      type: 'array',
-      of: [
+                  type: 'array',
+                  of: [
                     defineArrayMember({
-          type: 'object',
+                      type: 'object',
                       name: 'technicalDataRow',
-          title: 'Parametr techniczny',
-          fields: [
-            defineField({
-              name: 'title',
-              title: 'Nazwa parametru',
-              type: 'string',
-                          description: 'Nazwa specyfikacji (np. "Wzmocnienie", "Impedancja")',
-              validation: (Rule) => Rule.required(),
-            }),
+                      title: 'Parametr techniczny',
+                      fields: [
+                        defineField({
+                          name: 'title',
+                          title: 'Nazwa parametru',
+                          type: 'string',
+                          description:
+                            'Nazwa specyfikacji (np. "Wzmocnienie", "Impedancja")',
+                          validation: (Rule) => Rule.required(),
+                        }),
                         defineField({
                           name: 'values',
                           title: 'Wartości',
@@ -298,14 +310,25 @@ export const product = defineType({
                                   of: [
                                     defineArrayMember({
                                       type: 'block',
-                                      styles: [{ title: 'Normalny', value: 'normal' }],
+                                      styles: [
+                                        { title: 'Normalny', value: 'normal' },
+                                      ],
                                       lists: [
-                                        { title: 'Wypunktowana', value: 'bullet' },
-                                        { title: 'Numerowana', value: 'number' },
+                                        {
+                                          title: 'Wypunktowana',
+                                          value: 'bullet',
+                                        },
+                                        {
+                                          title: 'Numerowana',
+                                          value: 'number',
+                                        },
                                       ],
                                       marks: {
                                         decorators: [
-                                          { title: 'Pogrubienie', value: 'strong' },
+                                          {
+                                            title: 'Pogrubienie',
+                                            value: 'strong',
+                                          },
                                           { title: 'Kursywa', value: 'em' },
                                         ],
                                         annotations: [
@@ -320,7 +343,12 @@ export const product = defineType({
                                                 title: 'URL',
                                                 validation: (Rule) =>
                                                   Rule.uri({
-                                                    scheme: ['http', 'https', 'mailto', 'tel'],
+                                                    scheme: [
+                                                      'http',
+                                                      'https',
+                                                      'mailto',
+                                                      'tel',
+                                                    ],
                                                   }),
                                               }),
                                               defineField({
@@ -330,7 +358,7 @@ export const product = defineType({
                                                 initialValue: true,
                                               }),
                                             ],
-              },
+                                          },
                                         ],
                                       },
                                     }),
@@ -343,39 +371,44 @@ export const product = defineType({
                                 },
                                 prepare: ({ content }) => {
                                   const text =
-                                    content?.[0]?.children?.[0]?.text || 'Pusta komórka';
+                                    content?.[0]?.children?.[0]?.text ||
+                                    'Pusta komórka';
                                   return {
-                                    title: text.length > 50 ? text.slice(0, 50) + '...' : text,
+                                    title:
+                                      text.length > 50
+                                        ? text.slice(0, 50) + '...'
+                                        : text,
                                   };
                                 },
                               },
                             }),
                           ],
-            }),
-          ],
-          preview: {
-            select: {
-              title: 'title',
+                        }),
+                      ],
+                      preview: {
+                        select: {
+                          title: 'title',
                           values: 'values',
-            },
+                        },
                         prepare: ({ title, values }) => {
                           const valueCount = values?.length || 0;
                           const firstValue =
-                            values?.[0]?.content?.[0]?.children?.[0]?.text || '';
-              return {
-                title: title || 'Parametr',
+                            values?.[0]?.content?.[0]?.children?.[0]?.text ||
+                            '';
+                          return {
+                            title: title || 'Parametr',
                             subtitle:
                               valueCount > 1
                                 ? `${valueCount} wariantów`
                                 : firstValue || 'Brak wartości',
-                media: Settings,
-              };
-            },
-          },
+                            media: Settings,
+                          };
+                        },
+                      },
                     }),
                   ],
                 }),
-      ],
+              ],
               preview: {
                 select: {
                   title: 'title',
@@ -394,9 +427,10 @@ export const product = defineType({
     }),
     defineField({
       name: 'availableInStores',
-      title: 'Dostępny w salonach',
+      title: 'Dostępny w salonach (opcjonalny)',
       type: 'array',
-      description: 'Wybierz salony, w których dostępny jest ten produkt.',
+      description:
+        'Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, na stronie produktu wyświetlone zostaną salony przypisane do marki.',
       of: [
         {
           type: 'reference',
@@ -416,10 +450,6 @@ export const product = defineType({
           },
         },
       ],
-      validation: (Rule) =>
-        Rule.min(1).error(
-          'Produkt musi być dostępny w co najmniej jednym salonie'
-        ),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
@@ -449,41 +479,6 @@ export const product = defineType({
         Rule.max(10).error('Produkt może mieć maksymalnie 10 recenzji'),
       group: GROUP.MAIN_CONTENT,
     }),
-    defineField({
-      name: 'relatedProducts',
-      title: 'Powiązane produkty',
-      type: 'array',
-      description: 'Wybierz powiązane produkty (minimum 4, maksimum 10).',
-      of: [
-        {
-          type: 'reference',
-          to: [{ type: 'product' }],
-          options: {
-            filter: ({ document }) => {
-              const selectedIds = Array.isArray(document?.relatedProducts)
-                ? document.relatedProducts
-                    .map((item: any) => item._ref)
-                    .filter(Boolean)
-                : [];
-              const currentProductId = document?._id?.replace(/^drafts\./, '');
-              const excludedIds = currentProductId
-                ? [...selectedIds, currentProductId]
-                : selectedIds;
-              return {
-                filter: '!(_id in $excludedIds)',
-                params: { excludedIds },
-              };
-            },
-          },
-        },
-      ],
-      validation: (Rule) =>
-        Rule.min(4)
-          .max(10)
-          .error('Musi być między 4 a 10 powiązanych produktów'),
-      group: GROUP.MAIN_CONTENT,
-    }),
-
     defineField({
       name: 'pageBuilder',
       title: 'Niestandardowe sekcje',

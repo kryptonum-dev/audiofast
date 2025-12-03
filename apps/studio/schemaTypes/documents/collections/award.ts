@@ -23,10 +23,7 @@ export const award = defineType({
       name: 'logo',
       title: 'Logo nagrody',
       type: 'image',
-      description: 'Logo nagrody w formacie SVG.',
-      options: {
-        accept: '.svg',
-      },
+      description: 'Logo nagrody (PNG, JPG, SVG lub WebP).',
     }),
     defineField({
       name: 'products',

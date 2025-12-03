@@ -24,6 +24,7 @@ import { InlineImageComponent } from './InlineImage';
 import { MinimalImageComponent } from './MinimalImage';
 import { PageBreakComponent } from './PageBreak';
 import { QuoteComponent } from './Quote';
+import { ReviewEmbedComponent } from './ReviewEmbed';
 import portableTextStyles from './styles.module.scss';
 import { TwoColumnTableComponent } from './TwoColumnTable';
 import { VimeoVideoComponent } from './VimeoVideo';
@@ -395,6 +396,10 @@ export function PortableTextRenderer({
         ptPageBreak: () => {
           return <PageBreakComponent />;
         },
+        ptHorizontalLine: () => {
+          return <hr className={portableTextStyles.horizontalLine} />;
+        },
+        ptReviewEmbed: ReviewEmbedComponent,
       },
       ...customComponentTypes,
     },

@@ -20,7 +20,7 @@ export const homePage = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     pageBuilderField,
-    ...getSEOFields({ exclude: ['doNotIndex', 'hideFromList'] }),
+    ...getSEOFields({ exclude: ['doNotIndex', 'hideFromList'], descriptionRequired: true }),
   ],
   preview: {
     select: {

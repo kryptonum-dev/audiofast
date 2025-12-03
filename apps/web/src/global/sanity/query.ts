@@ -1,10 +1,10 @@
-import { defineQuery } from 'next-sanity';
+import { defineQuery } from "next-sanity";
 
 // ----------------------------------------
 // Fragments
 // ----------------------------------------
 
-export const imageFragment = (name: string = 'image') => /* groq */ `
+export const imageFragment = (name: string = "image") => /* groq */ `
   ${name} {
     "id": asset._ref,
     "preview": asset->metadata.lqip,
@@ -26,7 +26,7 @@ export const imageFragment = (name: string = 'image') => /* groq */ `
   }
 `;
 
-const markDefsFragment = (name: string = 'markDefs[]') => /* groq */ `
+const markDefsFragment = (name: string = "markDefs[]") => /* groq */ `
   ${name}{
     ...,
     _type == "customLink" => {
@@ -48,7 +48,7 @@ const markDefsFragment = (name: string = 'markDefs[]') => /* groq */ `
 
 // Simple portable text fragment - only basic blocks, no custom components
 // Used to prevent circular references (e.g., in product shortDescription)
-const portableTextFragment = (name: string = 'portableText') => /* groq */ `
+const portableTextFragment = (name: string = "portableText") => /* groq */ `
   ${name}[]{
     ...,
     _type == "block" => {
@@ -62,7 +62,7 @@ const portableTextFragment = (name: string = 'portableText') => /* groq */ `
 // The Studio schema controls which components are available per field
 // This fragment fetches everything that might exist, frontend renders what it knows
 const portableTextFragmentExtended = (
-  name: string = 'portableText'
+  name: string = "portableText",
 ) => /* groq */ `
   ${name}[]{
     ...,
@@ -72,31 +72,32 @@ const portableTextFragmentExtended = (
     },
     _type == "ptImage" => {
       ...,
-      ${imageFragment('image')},
-      ${portableTextFragment('caption')},
-      ${imageFragment('image1')},
-      ${imageFragment('image2')},
+      ${imageFragment("image")},
+      ${portableTextFragment("caption")},
+      ${imageFragment("image1")},
+      ${imageFragment("image2")},
     },
     _type == "ptMinimalImage" => {
       ...,
-      ${imageFragment('image')},
+      ${imageFragment("image")},
     },
     _type == "ptInlineImage" => {
       ...,
-      ${imageFragment('image')},
+      ${imageFragment("image")},
+      width,
     },
     _type == "ptArrowList" => {
       ...,
       items[]{
         _key,
-        ${portableTextFragment('content')}
+        ${portableTextFragment("content")}
       }
     },
     _type == "ptCircleNumberedList" => {
       ...,
       items[]{
         _key,
-        ${portableTextFragment('content')}
+        ${portableTextFragment("content")}
       }
     },
     _type == "ptCtaSection" => {
@@ -110,57 +111,67 @@ const portableTextFragmentExtended = (
         ),
         "openInNewTab": url.openInNewTab
       },
-      ${productFragment('products[]->')}
+      ${productFragment("products[]->")}
     },
     _type == "ptTwoColumnTable" => {
       ...,
       rows[]{
         _key,
         column1,
-        ${portableTextFragment('column2')}
+        ${portableTextFragment("column2")}
       }
     },
     _type == "ptFeaturedProducts" => {
       ...,
-      ${productFragment('products[]->')}
+      ${productFragment("products[]->")}
     },
     _type == "ptQuote" => {
       ...,
-      ${portableTextFragment('quote')},
+      ${portableTextFragment("quote")},
     },
     _type == "ptButton" => {
       ...,
-      ${buttonFragment('button')},
+      ${buttonFragment("button")},
     },
     _type == "ptHeading" => {
       ...,
       level,
       "iconUrl": icon.asset->url,
-      ${portableTextFragment('text')},
+      ${portableTextFragment("text")},
     },
     _type == "ptYoutubeVideo" => {
       ...,
       youtubeId,
       title,
-      ${imageFragment('thumbnail')},
+      ${imageFragment("thumbnail")},
     },
     _type == "ptVimeoVideo" => {
       ...,
       vimeoId,
       title,
-      ${imageFragment('thumbnail')},
+      ${imageFragment("thumbnail")},
     },
     _type == "ptPageBreak" => {
       ...,
     },
     _type == "ptImageSlider" => {
       ...,
-      ${imageFragment('images[]')}
+      ${imageFragment("images[]")}
+    },
+    _type == "ptReviewEmbed" => {
+      ...,
+      review->{
+        _id,
+        ${portableTextFragment("title")},
+        "slug": slug.current,
+        ${imageFragment("image")},
+        ${portableTextFragment("description")}
+      }
     },
   }
 `;
 
-const buttonFragment = (name: string = 'button') => /* groq */ `
+const buttonFragment = (name: string = "button") => /* groq */ `
 ${name}{
   text,
   variant,
@@ -178,27 +189,37 @@ ${name}{
 // Content blocks fragment for brand detail pages
 // Projects an array of content blocks (text, youtube, horizontal line)
 const brandContentBlocksFragment = (
-  name: string = 'brandContentBlocks'
+  name: string = "brandContentBlocks",
 ) => /* groq */ `
   ${name}[]{
     _type,
     _key,
     _type == "contentBlockText" => {
-      ${portableTextFragmentExtended('content')}
+      ${portableTextFragmentExtended("content")}
     },
     _type == "contentBlockYoutube" => {
       youtubeId,
       title,
-      ${imageFragment('thumbnail')}
+      ${imageFragment("thumbnail")}
     },
     _type == "contentBlockVimeo" => {
       vimeoId,
       title,
-      ${imageFragment('thumbnail')}
+      ${imageFragment("thumbnail")}
     },
     _type == "contentBlockHorizontalLine" => {
       // No additional fields needed - just pass through
-    }
+    },
+    _type == "ptReviewEmbed" => {
+      ...,
+      review->{
+        _id,
+        ${portableTextFragment("title")},
+        "slug": slug.current,
+        ${imageFragment("image")},
+        ${portableTextFragment("description")},
+      }
+    },
   }
 `;
 
@@ -215,13 +236,13 @@ const publicationBlock = /* groq */ `
     _type == "review" => pt::text(title),
     name
   ),
-  ${portableTextFragment('title')},
+  ${portableTextFragment("title")},
   "description": select(
     _type == "review" && count(description) > 0 => description,
     _type == "review" => content[_type == "block"][0...3],
-    ${portableTextFragment('description')}
+    ${portableTextFragment("description")}
   ),
-  ${imageFragment('image')},
+  ${imageFragment("image")},
   "publicationType": select(
     _type == "review" => "Recenzja",
     _type == "blog-article" => category->name,
@@ -246,32 +267,32 @@ const publicationBlock = /* groq */ `
   "author": select(
     _type == "review" => author->{
       name,
-      ${imageFragment('image')}
+      ${imageFragment("image")}
     },
     null
   ),
 `;
 
 // Reusable publication fragment for both reviews and blog articles
-const publicationFragment = (name: string = 'publication') => /* groq */ `
+const publicationFragment = (name: string = "publication") => /* groq */ `
   ${name} {
   ${publicationBlock}
   }
 `;
 
 // Reusable brand fragment for brand listings
-const brandFragment = (name: string = 'brand') => /* groq */ `
+const brandFragment = (name: string = "brand") => /* groq */ `
   ${name} {
   _id,
   _createdAt,
   "slug": slug.current,
   name,
-  ${portableTextFragment('description')},
-  ${imageFragment('logo')},
+  ${portableTextFragment("description")},
+  ${imageFragment("logo")},
   }
 `;
 // Reusable product fragment for product listings
-const productFragment = (name: string = 'product'): string => /* groq */ `
+const productFragment = (name: string = "product"): string => /* groq */ `
   ${name} {
   _id,
   _createdAt,
@@ -288,48 +309,48 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   brand->{
     name,
     "slug": slug.current,
-    ${imageFragment('logo')},
+    ${imageFragment("logo")},
   },
   ${imageFragment('"mainImage": previewImage')},
-  ${portableTextFragment('shortDescription')},
+  ${portableTextFragment("shortDescription")},
   }
 `;
 
 // Reusable FAQ fragment for FAQ documents
-const faqFragment = (name: string = 'faq') => /* groq */ `
+const faqFragment = (name: string = "faq") => /* groq */ `
   ${name} {
   _id,
   _createdAt,
   question,
-  ${portableTextFragment('answer')},
+  ${portableTextFragment("answer")},
   }
 `;
 
 // Reusable team member fragment for team listings
-const teamMemberFragment = (name: string = 'teamMember') => /* groq */ `
+const teamMemberFragment = (name: string = "teamMember") => /* groq */ `
   ${name} {
   _id,
   name,
   position,
   phoneNumber,
-  ${imageFragment('image')},
-  ${portableTextFragment('description')},
+  ${imageFragment("image")},
+  ${portableTextFragment("description")},
   }
 `;
 
-const formStateFragment = (name: string = 'formState') => /* groq */ `
+const formStateFragment = (name: string = "formState") => /* groq */ `
   ${name}{
     success{
       withIcon,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('paragraph')},
+      ${portableTextFragment("heading")},
+      ${portableTextFragment("paragraph")},
       refreshButton,
       refreshButtonText,
     },
     error{
       withIcon,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('paragraph')},
+      ${portableTextFragment("heading")},
+      ${portableTextFragment("paragraph")},
       refreshButton,
       refreshButtonText,
     },
@@ -344,15 +365,15 @@ const heroCarouselBlock = /* groq */ `
   _type == "heroCarousel" => {
     ...,
     slides[]{
-      ${imageFragment('image')},
-      ${buttonFragment('button')},
-      ${portableTextFragment('title')},
-      ${portableTextFragment('description')},
+      ${imageFragment("image")},
+      ${buttonFragment("button")},
+      ${portableTextFragment("title")},
+      ${portableTextFragment("description")},
     },
     brands[]->{
       name,
       "slug": slug.current,
-      ${imageFragment('logo')},
+      ${imageFragment("logo")},
     }
   }
 `;
@@ -360,17 +381,17 @@ const heroCarouselBlock = /* groq */ `
 const heroStaticBlock = /* groq */ `
   _type == "heroStatic" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${imageFragment('image')},
-    ${buttonFragment('button')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${imageFragment("image")},
+    ${buttonFragment("button")},
     showBlocks,
     blocksHeading,
     blocks[]{
       _key,
       "iconUrl": icon.asset->url,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('description')}
+      ${portableTextFragment("heading")},
+      ${portableTextFragment("description")}
     }
   }
 `;
@@ -378,54 +399,54 @@ const heroStaticBlock = /* groq */ `
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ...,
-    ${portableTextFragment('heading')},
-      ${publicationFragment('publication->')}
+    ${portableTextFragment("heading")},
+      ${publicationFragment("publication->")}
   }
 `;
 
 const imageTextColumnsBlock = /* groq */ `
   _type == "imageTextColumns" => {
     ...,
-    ${imageFragment('image')},
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('content')},
-    ${buttonFragment('button')},
+    ${imageFragment("image")},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("content")},
+    ${buttonFragment("button")},
   }
 `;
 
 const blurLinesTextImageBlock = /* groq */ `
   _type == "blurLinesTextImage" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${imageFragment('image')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${imageFragment("image")},
   }
 `;
 
 const gallerySectionBlock = /* groq */ `
   _type == "gallerySection" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${imageFragment('images[]')}
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${imageFragment("images[]")}
   }
 `;
 
 const imageWithTextBoxesBlock = /* groq */ `
   _type == "imageWithTextBoxes" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${imageFragment('image')},
+    ${portableTextFragment("heading")},
+    ${imageFragment("image")},
     boxes[]{
       _key,
       "iconUrl": icon.asset->url,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('description')},
+      ${portableTextFragment("heading")},
+      ${portableTextFragment("description")},
     },
     cta{
       showCta,
-      ${portableTextFragment('ctaParagraph')},
-      ${buttonFragment('ctaButton')},
+      ${portableTextFragment("ctaParagraph")},
+      ${buttonFragment("ctaButton")},
     }
   }
 `;
@@ -433,64 +454,64 @@ const imageWithTextBoxesBlock = /* groq */ `
 const imageWithVideoBlock = /* groq */ `
   _type == "imageWithVideo" => {
     ...,
-    ${imageFragment('image')},
+    ${imageFragment("image")},
     youtubeId,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${buttonFragment('button')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${buttonFragment("button")},
   }
 `;
 
 const featuredPublicationsBlock = /* groq */ `
   _type == "featuredPublications" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${buttonFragment('button')},
-    ${publicationFragment('publications[]->')}
+    ${portableTextFragment("heading")},
+    ${buttonFragment("button")},
+    ${publicationFragment("publications[]->")}
   }
 `;
 
 const featuredProductsBlock = /* groq */ `
   _type == "featuredProducts" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${buttonFragment('button')},
-    ${productFragment('newProducts[]->')},
-    ${productFragment('bestsellers[]->')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${buttonFragment("button")},
+    ${productFragment("newProducts[]->")},
+    ${productFragment("bestsellers[]->")},
   }
 `;
 
 const productsCarouselBlock = /* groq */ `
   _type == "productsCarousel" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${productFragment('products[]->')}
+    ${portableTextFragment("heading")},
+    ${productFragment("products[]->")}
   }
 `;
 
 const brandsMarqueeBlock = /* groq */ `
   _type == "brandsMarquee" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${buttonFragment('button')},
-    ${imageFragment('backgroundImage')},
-    ${brandFragment('topBrands[]->')},
-    ${brandFragment('bottomBrands[]->')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${buttonFragment("button")},
+    ${imageFragment("backgroundImage")},
+    ${brandFragment("topBrands[]->")},
+    ${brandFragment("bottomBrands[]->")},
   }
 `;
 
 const brandsListBlock = /* groq */ `
   _type == "brandsList" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${portableTextFragment('ctaText')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${portableTextFragment("ctaText")},
     "brands": select(
       brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')},
       brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
-      brandsDisplayMode == "manual" => ${brandFragment('selectedBrands[]->  | order(orderRank)')},
+      brandsDisplayMode == "manual" => ${brandFragment("selectedBrands[]->  | order(orderRank)")},
       ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')}
     )
   }
@@ -499,7 +520,7 @@ const brandsListBlock = /* groq */ `
 const productsListingBlock = /* groq */ `
   _type == "productsListing" => {
     ...,
-    ${portableTextFragment('heading')},
+    ${portableTextFragment("heading")},
     "categories": *[_type == "productCategorySub" && defined(slug.current)] {
       _id,
       name,
@@ -530,9 +551,9 @@ const productsListingBlock = /* groq */ `
 const brandsByCategoriesSectionBlock = /* groq */ `
   _type == "brandsByCategoriesSection" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${buttonFragment('button')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${buttonFragment("button")},
     "categoriesWithBrands": *[_type == "productCategoryParent" && !(_id in path("drafts.**"))] | order(orderRank) {
       _id,
       name,
@@ -550,24 +571,24 @@ const brandsByCategoriesSectionBlock = /* groq */ `
 const faqSectionBlock = /* groq */ `
   _type == "faqSection" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
     displayMode,
-    ${faqFragment('faqList[]->')},
+    ${faqFragment("faqList[]->")},
       contactPeople{
-        ${portableTextFragment('heading')},
-        ${teamMemberFragment('contactPersons[]->')}
+        ${portableTextFragment("heading")},
+        ${teamMemberFragment("contactPersons[]->")}
       },
       contactForm{
-        ${portableTextFragment('heading')},
+        ${portableTextFragment("heading")},
         buttonText,
-        ${formStateFragment('formState')}
+        ${formStateFragment("formState")}
       },
     "newsletterSettings": *[_type == "newsletterSettings"][0] {
       supportEmails,
       confirmationEmail {
         subject,
-        ${portableTextFragmentExtended('content')}
+        ${portableTextFragmentExtended("content")}
       }
     }
   }
@@ -576,22 +597,22 @@ const faqSectionBlock = /* groq */ `
 const contactFormBlock = /* groq */ `
   _type == "contactForm" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
     contactPeople{
-      ${portableTextFragment('heading')},
-      ${teamMemberFragment('contactPersons[]->')}
+      ${portableTextFragment("heading")},
+      ${teamMemberFragment("contactPersons[]->")}
     },
     accountList[]{
-      ${portableTextFragment('heading')},
+      ${portableTextFragment("heading")},
       accountDetails,
     },
-    ${formStateFragment('formState')},
+    ${formStateFragment("formState")},
     "newsletterSettings": *[_type == "newsletterSettings"][0] {
       supportEmails,
       confirmationEmail {
         subject,
-        ${portableTextFragmentExtended('content')}
+        ${portableTextFragmentExtended("content")}
       }
     }
   }
@@ -600,7 +621,7 @@ const contactFormBlock = /* groq */ `
 const contactMapBlock = /* groq */ `
   _type == "contactMap" => {
     ...,
-    ${portableTextFragment('heading')},
+    ${portableTextFragment("heading")},
     useCustomAddress,
     customAddress,
     customPhone,
@@ -611,25 +632,25 @@ const contactMapBlock = /* groq */ `
 const teamSectionBlock = /* groq */ `
   _type == "teamSection" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
     variant,
-    ${teamMemberFragment('teamMembers[]->')},
-    ${portableTextFragment('secondaryHeading')},
-    ${portableTextFragment('secondaryDescription')},
-    ${buttonFragment('ctaButton')},
+    ${teamMemberFragment("teamMembers[]->")},
+    ${portableTextFragment("secondaryHeading")},
+    ${portableTextFragment("secondaryDescription")},
+    ${buttonFragment("ctaButton")},
   }
 `;
 
 const phoneImageCtaBlock = /* groq */ `
   _type == "phoneImageCta" => {
     ...,
-    ${imageFragment('image')},
-    ${portableTextFragment('primaryHeading')},
-    ${portableTextFragment('primaryDescription')},
-    ${buttonFragment('ctaButton')},
-    ${portableTextFragment('secondaryHeading')},
-    ${portableTextFragment('secondaryDescription')},
+    ${imageFragment("image")},
+    ${portableTextFragment("primaryHeading")},
+    ${portableTextFragment("primaryDescription")},
+    ${buttonFragment("ctaButton")},
+    ${portableTextFragment("secondaryHeading")},
+    ${portableTextFragment("secondaryDescription")},
     phoneNumber,
   }
 `;
@@ -637,12 +658,12 @@ const phoneImageCtaBlock = /* groq */ `
 const stepListBlock = /* groq */ `
   _type == "stepList" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('paragraph')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("paragraph")},
     steps[]{
       _key,
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('description')},
+      ${portableTextFragment("heading")},
+      ${portableTextFragment("description")},
     }
   }
 `;
@@ -683,6 +704,12 @@ export const queryDefaultOGImage = defineQuery(`*[_type == "settings"][0]{
   "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
 }`);
 
+// Query for home page SEO description (used as fallback for pages without meta description)
+export const queryHomePageSeoDescription =
+  defineQuery(`*[_type == "homePage" && _id == "homePage"][0]{
+  "description": seo.description
+}`);
+
 export const querySettings = defineQuery(`*[_type == "settings"][0]{
   address {
     streetAddress,
@@ -712,7 +739,7 @@ export const querySettings = defineQuery(`*[_type == "settings"][0]{
 }`);
 
 export const queryNavbar = defineQuery(`*[_type == "navbar"][0]{
-  ${buttonFragment('buttons[]')}
+  ${buttonFragment("buttons[]")}
 }`);
 
 export const queryFooter = defineQuery(`*[_type == "footer"][0]{
@@ -721,11 +748,11 @@ export const queryFooter = defineQuery(`*[_type == "footer"][0]{
     link,
     iconString,
   },
-  ${buttonFragment('links[]')},
+  ${buttonFragment("links[]")},
   newsletter{
     label,
     buttonLabel,
-    ${formStateFragment('formState')}
+    ${formStateFragment("formState")}
   }
 }`);
 
@@ -777,10 +804,10 @@ export const queryNotFoundPage = defineQuery(`*[_type == "notFound"][0]{
     description,
     "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
   },
-  ${imageFragment('backgroundImage')},
-  ${portableTextFragment('heading')},
-  ${portableTextFragment('description')},
-  ${buttonFragment('buttons[]')}
+  ${imageFragment("backgroundImage")},
+  ${portableTextFragment("heading")},
+  ${portableTextFragment("description")},
+  ${buttonFragment("buttons[]")}
 }`);
 
 export const queryPrivacyPolicy = defineQuery(`*[_type == "privacyPolicy"][0]{
@@ -788,8 +815,8 @@ export const queryPrivacyPolicy = defineQuery(`*[_type == "privacyPolicy"][0]{
   _type,
   "slug": slug.current,
   name,
-  ${portableTextFragment('description')},
-  ${portableTextFragment('content')},
+  ${portableTextFragment("description")},
+  ${portableTextFragment("content")},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
   seo,
   openGraph{
@@ -805,8 +832,8 @@ export const queryTermsAndConditions =
   _type,
   "slug": slug.current,
   name,
-  ${portableTextFragment('description')},
-  ${portableTextFragment('content')},
+  ${portableTextFragment("description")},
+  ${portableTextFragment("content")},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
   seo,
   openGraph{
@@ -846,9 +873,9 @@ export const queryBlogPostBySlug =
   "publishDate": coalesce(publishedDate, _createdAt),
   "slug": slug.current,
   name,
-  ${portableTextFragment('title')},
-  ${portableTextFragment('description')},
-  ${imageFragment('image')},
+  ${portableTextFragment("title")},
+  ${portableTextFragment("description")},
+  ${imageFragment("image")},
   "category": category->{
     _id,
     name,
@@ -858,10 +885,10 @@ export const queryBlogPostBySlug =
     _id,
     name,
     position,
-    ${imageFragment('image')},
+    ${imageFragment("image")},
   },
   keywords,
-  ${portableTextFragmentExtended('content')},
+  ${portableTextFragmentExtended("content")},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
   ${pageBuilderFragment},
   seo,
@@ -885,15 +912,15 @@ export const queryReviewBySlug =
   "publishDate": coalesce(publishedDate, _createdAt),
   "slug": slug.current,
   "name": pt::text(title),
-  ${portableTextFragment('title')},
-  ${imageFragment('image')},
+  ${portableTextFragment("title")},
+  ${imageFragment("image")},
   overrideGallery,
-  ${imageFragment('imageGallery[]')},
-  ${portableTextFragmentExtended('content')},
+  ${imageFragment("imageGallery[]")},
+  ${portableTextFragmentExtended("content")},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
   author->{
     name,
-    ${imageFragment('image')}
+    ${imageFragment("image")}
   },
   "product": *[_type == "product" && references(^._id)][0]{
     _id,
@@ -906,14 +933,14 @@ export const queryReviewBySlug =
     "brand": brand->{
       name,
       "slug": slug.current,
-      ${imageFragment('logo')},
+      ${imageFragment("logo")},
     },
     ${imageFragment('"mainImage": previewImage')},
-    ${imageFragment('imageGallery[]')},
-    ${portableTextFragment('shortDescription')},
+    ${imageFragment("imageGallery[]")},
+    ${portableTextFragment("shortDescription")},
   },
   "gallery": select(
-    overrideGallery == true && count(imageGallery) >= 4 => ${imageFragment('imageGallery[]')},
+    overrideGallery == true && count(imageGallery) >= 4 => ${imageFragment("imageGallery[]")},
     ${imageFragment('*[_type == "product" && references(^._id)][0].imageGallery[]')}
   ),
   ${pageBuilderFragment},
@@ -929,7 +956,7 @@ export const queryPdfReviewBySlug =
   defineQuery(`*[_type == "review" && destinationType == "pdf" && string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0] == $slug][0]{
   _id,
   "name": pt::text(title),
-  ${portableTextFragment('title')},
+  ${portableTextFragment("title")},
   "pdfUrl": pdfFile.asset->url,
   "pdfFilename": pdfFile.asset->originalFilename,
   "pdfSize": pdfFile.asset->size,
@@ -945,9 +972,9 @@ export const queryBlogPageData = defineQuery(`
     _type,
     "slug": slug.current,
     name,
-    ${portableTextFragment('title')},
-    ${portableTextFragment('description')},
-    ${imageFragment('heroImage')},
+    ${portableTextFragment("title")},
+    ${portableTextFragment("description")},
+    ${imageFragment("heroImage")},
     ${pageBuilderFragment},
     seo,
     openGraph{
@@ -960,8 +987,8 @@ export const queryBlogPageData = defineQuery(`
         _id,
         name,
         "slug": slug.current,
-        ${portableTextFragment('title')},
-        ${portableTextFragment('description')},
+        ${portableTextFragment("title")},
+        ${portableTextFragment("description")},
         seo,
         openGraph{
           title,
@@ -1041,7 +1068,7 @@ const blogArticlesFragment = (orderClause: string) => /* groq */ `
 
 // Blog articles query sorted by date (newest first)
 export const queryBlogArticlesNewest = defineQuery(
-  blogArticlesFragment('coalesce(publishedDate, _createdAt) desc')
+  blogArticlesFragment("coalesce(publishedDate, _createdAt) desc"),
 );
 
 // Special query for blog relevance sorting that calculates score inline
@@ -1056,15 +1083,15 @@ const blogArticlesRelevanceFragment = /* groq */ `
 
 // Blog articles query sorted by relevance score (for semantic search)
 export const queryBlogArticlesRelevance = defineQuery(
-  blogArticlesRelevanceFragment
+  blogArticlesRelevanceFragment,
 );
 
 // Helper function to get the correct blog query based on sortBy parameter
-export function getBlogArticlesQuery(sortBy: string = 'newest') {
+export function getBlogArticlesQuery(sortBy: string = "newest") {
   switch (sortBy) {
-    case 'relevance':
+    case "relevance":
       return queryBlogArticlesRelevance;
-    case 'newest':
+    case "newest":
     default:
       return queryBlogArticlesNewest;
   }
@@ -1147,7 +1174,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
     _id,
     name,
     "slug": slug.current,
-    ${imageFragment('logo')},
+    ${imageFragment("logo")},
     "count": count(*[
       _type == "product" 
       && defined(slug.current)
@@ -1270,9 +1297,9 @@ export const queryProductsPageData = defineQuery(`
     _type,
     "slug": slug.current,
     name,
-    ${portableTextFragment('title')},
-    ${portableTextFragment('description')},
-    ${imageFragment('heroImage')},
+    ${portableTextFragment("title")},
+    ${portableTextFragment("description")},
+    ${imageFragment("heroImage")},
     ${pageBuilderFragment},
     seo,
     openGraph{
@@ -1285,9 +1312,9 @@ export const queryProductsPageData = defineQuery(`
         _id,
         name,
         "slug": slug.current,
-        ${portableTextFragment('title')},
-        ${portableTextFragment('description')},
-        ${imageFragment('heroImage')},
+        ${portableTextFragment("title")},
+        ${portableTextFragment("description")},
+        ${imageFragment("heroImage")},
         customFilters,
         "productsWithFilters": *[
           _type == "product" 
@@ -1369,10 +1396,10 @@ const productsProjection = /* groq */ `
   brand->{
     name,
     "slug": slug.current,
-    ${imageFragment('logo')}
+    ${imageFragment("logo")}
   },
   ${imageFragment('"mainImage": previewImage')},
-  ${portableTextFragment('shortDescription')},
+  ${portableTextFragment("shortDescription")},
   "_score": select(
     count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
     0
@@ -1416,23 +1443,23 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
 
 // Static queries for each sort type (required for typegen)
 export const queryProductsListingNewest = defineQuery(
-  productsListingFragment('_createdAt desc')
+  productsListingFragment("_createdAt desc"),
 );
 
 export const queryProductsListingOldest = defineQuery(
-  productsListingFragment('_createdAt asc')
+  productsListingFragment("_createdAt asc"),
 );
 
 export const queryProductsListingPriceAsc = defineQuery(
-  productsListingFragment('coalesce(basePriceCents, 999999999) asc')
+  productsListingFragment("coalesce(basePriceCents, 999999999) asc"),
 );
 
 export const queryProductsListingPriceDesc = defineQuery(
-  productsListingFragment('coalesce(basePriceCents, -1) desc')
+  productsListingFragment("coalesce(basePriceCents, -1) desc"),
 );
 
 export const queryProductsListingOrderRank = defineQuery(
-  productsListingFragment('orderRank asc')
+  productsListingFragment("orderRank asc"),
 );
 
 // Special query for relevance sorting that calculates score inline
@@ -1446,23 +1473,23 @@ const productsListingRelevanceFragment = /* groq */ `
 `;
 
 export const queryProductsListingRelevance = defineQuery(
-  productsListingRelevanceFragment
+  productsListingRelevanceFragment,
 );
 
 // Helper function to get the correct query based on sortBy parameter
-export function getProductsListingQuery(sortBy: string = 'newest') {
+export function getProductsListingQuery(sortBy: string = "newest") {
   switch (sortBy) {
-    case 'relevance':
+    case "relevance":
       return queryProductsListingRelevance;
-    case 'oldest':
+    case "oldest":
       return queryProductsListingOldest;
-    case 'priceAsc':
+    case "priceAsc":
       return queryProductsListingPriceAsc;
-    case 'priceDesc':
+    case "priceDesc":
       return queryProductsListingPriceDesc;
-    case 'orderRank':
+    case "orderRank":
       return queryProductsListingOrderRank;
-    case 'newest':
+    case "newest":
     default:
       return queryProductsListingNewest;
   }
@@ -1501,29 +1528,29 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
     _id,
     name,
     "slug": slug.current,
-    ${imageFragment('logo')},
-    ${portableTextFragmentExtended('description')},
-    ${imageFragment('heroImage')},
-    ${imageFragment('bannerImage')},
+    ${imageFragment("logo")},
+    ${portableTextFragmentExtended("description")},
+    ${imageFragment("heroImage")},
+    ${imageFragment("bannerImage")},
     distributionYear {
       year,
-      ${imageFragment('backgroundImage')},
+      ${imageFragment("backgroundImage")},
     },
-    ${brandContentBlocksFragment('brandContentBlocks')},
-    ${imageFragment('imageGallery[]')},
-    ${publicationFragment('featuredReviews[]->')},
-    "stores": array::unique(
-      *[
-        _type == "product" && 
-        !(_id in path("drafts.**")) && 
-        brand._ref == ^._id &&
-        defined(availableInStores)
-      ].availableInStores[]->{_id, name, "slug": slug.current, address{postalCode, city, street}, phone, website}
-    ),
+    ${brandContentBlocksFragment("brandContentBlocks")},
+    ${imageFragment("imageGallery[]")},
+    ${publicationFragment("featuredReviews[]->")},
+    stores[]->{
+      _id,
+      name,
+      "slug": slug.current,
+      address { postalCode, city, street },
+      phone,
+      website
+    },
     seo {
       title,
       description,
-      ${imageFragment('ogImage')}
+      ${imageFragment("ogImage")}
     },
     openGraph {
       title,
@@ -1554,23 +1581,31 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     "slug": slug.current,
     basePriceCents,
     isArchived,
-    ${imageFragment('previewImage')},
-    ${imageFragment('imageGallery[]')},
-    ${portableTextFragment('shortDescription')},
+    ${imageFragment("previewImage")},
+    ${imageFragment("imageGallery[]")},
+    ${portableTextFragment("shortDescription")},
     brand->{
       _id,
       name,
       "slug": slug.current,
-      ${imageFragment('logo')}
+      ${imageFragment("logo")},
+      stores[]->{
+        _id,
+        name,
+        "slug": slug.current,
+        address { postalCode, city, street },
+        phone,
+        website
+      }
     },
     "awards": *[_type == "award" && references(^._id)]{
       _id,
       name,
-      ${imageFragment('logo')}
+      ${imageFragment("logo")}
     },
     details{
-      ${portableTextFragment('heading')},
-      ${portableTextFragmentExtended('content')}
+      ${portableTextFragment("heading")},
+      ${brandContentBlocksFragment("content")}
     },
     technicalData {
       variants,
@@ -1582,7 +1617,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
           title,
           values[] {
             _key,
-            ${portableTextFragment('content')}
+            ${portableTextFragment("content")}
           }
         }
       }
@@ -1607,7 +1642,6 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     reviews[]->{
       ${publicationBlock}
     },
-    ${productFragment('relatedProducts[]->')},
     ${pageBuilderFragment},
         seo {
       title,
@@ -1655,7 +1689,7 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
       _id,
       name,
       "slug": slug.current,
-      ${imageFragment('logo')}
+      ${imageFragment("logo")}
     },
     "categories": categories[]->{
       "slug": slug.current
@@ -1679,7 +1713,7 @@ export const queryComparisonPageData = defineQuery(/* groq */ `{
       _id,
       name,
       "slug": slug.current,
-      ${imageFragment('logo')}
+      ${imageFragment("logo")}
     },
     technicalData {
       variants,
@@ -1691,7 +1725,7 @@ export const queryComparisonPageData = defineQuery(/* groq */ `{
           title,
           values[] {
             _key,
-            ${portableTextFragment('content')}
+            ${portableTextFragment("content")}
           }
         }
       }
@@ -1711,7 +1745,7 @@ export const queryContactSettings = defineQuery(/* groq */ `
     supportEmails,
     confirmationEmail {
       subject,
-      ${portableTextFragment('content')}
+      ${portableTextFragment("content")}
     }
   } 
 `);

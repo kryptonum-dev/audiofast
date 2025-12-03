@@ -47,15 +47,14 @@ export const brand = defineType({
     }),
     defineField({
       name: 'heroImage',
-      title: 'Obraz tła strony marki',
+      title: 'Obraz tła strony marki (opcjonalny)',
       type: 'image',
-      description: 'Obraz wyświetlany w tle sekcji hero na stronie marki',
+      description:
+        'Obraz wyświetlany w tle sekcji hero na stronie marki. Jeśli obraz nie zostanie ustawiony, wyswietlony zostanie obraz z podstrony /marki/.',
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,
       },
-      validation: (Rule) =>
-        Rule.required().error('Obraz tła sekcji hero jest wymagany'),
     }),
     defineField({
       name: 'bannerImage',
@@ -160,11 +159,36 @@ export const brand = defineType({
         }),
     }),
     defineField({
+      name: 'stores',
+      title: 'Salony dystrybucji',
+      type: 'array',
+      description:
+        'Wybierz salony, w których dostępne są produkty tej marki. Produkty bez własnych salonów odziedziczą te salony.',
+      group: GROUP.MAIN_CONTENT,
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'store' }],
+          options: {
+            filter: ({ document }) => {
+              const selectedIds = Array.isArray(document?.stores)
+                ? document.stores.map((item: any) => item._ref).filter(Boolean)
+                : [];
+              return {
+                filter: '!(_id in $selectedIds)',
+                params: { selectedIds },
+              };
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
       name: 'featuredReviews',
       title: 'Wyróżnione recenzje',
       type: 'array',
       description:
-        'Wybierz recenzje produktów należących do tej marki (maksymalnie 10). Tylko recenzje przypisane do produktów tej marki są dostępne do wyboru.',
+        'Wybierz recenzje produktów należących do tej marki. Tylko recenzje przypisane do produktów tej marki są dostępne do wyboru.',
       group: GROUP.MAIN_CONTENT,
       of: [
         {
@@ -182,7 +206,6 @@ export const brand = defineType({
           },
         },
       ],
-      validation: (Rule) => Rule.max(10).error('Maksymalnie 10 recenzji'),
     }),
     ...getSEOFields(),
   ],

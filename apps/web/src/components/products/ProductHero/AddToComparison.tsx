@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import {
   addProductToComparison,
   isProductInComparison,
   removeProductFromComparison,
-} from '@/src/global/comparison/cookie-manager';
+} from "@/src/global/comparison/cookie-manager";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type AddToComparisonProps = {
   productId?: string;
@@ -37,19 +37,19 @@ export default function AddToComparison({
     checkComparison();
 
     // Listen for comparison changes from other components
-    window.addEventListener('audiofast:comparison-changed', checkComparison);
+    window.addEventListener("audiofast:comparison-changed", checkComparison);
 
     return () => {
       window.removeEventListener(
-        'audiofast:comparison-changed',
-        checkComparison
+        "audiofast:comparison-changed",
+        checkComparison,
       );
     };
   }, [productId]);
 
   const handleClick = () => {
     if (!productId || !categorySlug) {
-      toast.error('Nie można dodać produktu bez kategorii');
+      toast.error("Nie można dodać produktu bez kategorii");
       return;
     }
 
@@ -57,7 +57,7 @@ export default function AddToComparison({
     if (isInComparison) {
       removeProductFromComparison(productId);
       setIsInComparison(false);
-      toast.info('Produkt usunięty z porównania');
+      toast.info("Produkt usunięty z porównania");
       return;
     }
 
@@ -66,7 +66,7 @@ export default function AddToComparison({
 
     if (result.success) {
       setIsInComparison(true);
-      toast.success('Produkt dodany do porównania');
+      toast.success("Produkt dodany do porównania");
     } else {
       toast.error(result.error);
     }
@@ -80,8 +80,8 @@ export default function AddToComparison({
       type="button"
       aria-label={
         isInComparison
-          ? `Usuń ${productName || 'produkt'} z porównania`
-          : `Dodaj ${productName || 'produkt'} do porównania`
+          ? `Usuń ${productName || "produkt"} z porównania`
+          : `Dodaj ${productName || "produkt"} do porównania`
       }
     >
       <span className={styles.iconWrapper}>
@@ -92,7 +92,7 @@ export default function AddToComparison({
         )}
       </span>
       <span className={styles.addToComparisonText}>
-        {isInComparison ? 'Usuń z porównania' : 'Dodaj do porównania'}
+        {isInComparison ? "Usuń z porównania" : "Dodaj do porównania"}
       </span>
     </button>
   );

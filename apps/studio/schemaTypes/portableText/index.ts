@@ -61,8 +61,10 @@ const ALL_CUSTOM_COMPONENTS = [
   { name: 'ptYoutubeVideo', type: 'ptYoutubeVideo' },
   { name: 'ptVimeoVideo', type: 'ptVimeoVideo' },
   { name: 'ptPageBreak', type: 'ptPageBreak' },
+  { name: 'ptHorizontalLine', type: 'ptHorizontalLine' },
   { name: 'ptInlineImage', type: 'ptInlineImage' },
   { name: 'ptImageSlider', type: 'ptImageSlider' },
+  { name: 'ptReviewEmbed', type: 'ptReviewEmbed' },
 ] as const;
 
 export type PortableTextInclude = {

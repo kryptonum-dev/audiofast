@@ -4,8 +4,15 @@ import { capitalize } from '@/global/utils';
 
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
 import { sanityFetch } from './sanity/fetch';
-import { queryDefaultOGImage, queryNotFoundPage } from './sanity/query';
-import type { QueryNotFoundPageResult } from './sanity/sanity.types';
+import {
+  queryDefaultOGImage,
+  queryHomePageSeoDescription,
+  queryNotFoundPage,
+} from './sanity/query';
+import type {
+  QueryHomePageSeoDescriptionResult,
+  QueryNotFoundPageResult,
+} from './sanity/sanity.types';
 
 // Site-wide configuration interface
 interface SiteConfig {
@@ -95,14 +102,22 @@ export async function getSEOMetadata(
 
   const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug: slug || '' });
 
-  const data = await sanityFetch<{
-    defaultOGImage: string | null;
-  }>({
-    query: queryDefaultOGImage,
-    tags: ['settings'],
-  });
+  // Fetch default OG image and home page description in parallel
+  const [ogImageData, homePageSeoData] = await Promise.all([
+    sanityFetch<{ defaultOGImage: string | null }>({
+      query: queryDefaultOGImage,
+      tags: ['settings'],
+    }),
+    // Fetch home page description for fallback (only if current page has no description)
+    !seo?.description
+      ? sanityFetch<QueryHomePageSeoDescriptionResult>({
+          query: queryHomePageSeoDescription,
+          tags: ['homePage'],
+        })
+      : Promise.resolve(null),
+  ]);
 
-  const ogImage = openGraph?.seoImage || data?.defaultOGImage;
+  const ogImage = openGraph?.seoImage || ogImageData?.defaultOGImage;
 
   // Build default metadata values
   const defaultTitle = extractTitle({
@@ -110,7 +125,9 @@ export async function getSEOMetadata(
     slug: slug || '',
     siteTitle: siteConfig.title,
   });
-  const defaultDescription = seo?.description || siteConfig.description;
+  // Use page description, fallback to home page description, then site description
+  const defaultDescription =
+    seo?.description || homePageSeoData?.description || siteConfig.description;
   const allKeywords = [...siteConfig.keywords, ...pageKeywords];
 
   // Build default metadata object
