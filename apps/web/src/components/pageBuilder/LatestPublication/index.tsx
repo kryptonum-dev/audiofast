@@ -1,13 +1,13 @@
-import type { PagebuilderType } from "@/src/global/types";
+import type { PagebuilderType, PortableTextProps } from '@/src/global/types';
 
-import PortableText from "../../portableText";
-import Image from "../../shared/Image";
-import Button from "../../ui/Button";
-import DateBox from "../../ui/DateBox";
-import PublicationType from "../../ui/PublicationType";
-import styles from "./styles.module.scss";
+import PortableText from '../../portableText';
+import Image from '../../shared/Image';
+import Button from '../../ui/Button';
+import DateBox from '../../ui/DateBox';
+import PublicationType from '../../ui/PublicationType';
+import styles from './styles.module.scss';
 
-type LatestPublicationProps = PagebuilderType<"latestPublication"> & {
+type LatestPublicationProps = PagebuilderType<'latestPublication'> & {
   index: number;
 };
 
@@ -18,7 +18,6 @@ export default function LatestPublication({
 }: LatestPublicationProps) {
   const {
     _createdAt,
-    _type,
     publishDate,
     slug,
     title,
@@ -32,14 +31,14 @@ export default function LatestPublication({
     <section className={`${styles.latestPublication} max-width`}>
       <PortableText
         value={heading}
-        headingLevel={index === 0 ? "h1" : "h2"}
+        headingLevel={index === 0 ? 'h1' : 'h2'}
         className={styles.heading}
       />
       <article className={styles.container}>
         <Image
           image={image}
           priority={index === 0}
-          loading={index === 0 ? "eager" : "lazy"}
+          loading={index === 0 ? 'eager' : 'lazy'}
           sizes="(max-width: 37.4375rem) 94vw, (max-width: 56.1875rem) 83vw, 502px"
         />
         <header className={styles.header}>
@@ -47,12 +46,12 @@ export default function LatestPublication({
           <PublicationType publicationType={publicationType!} />
           <PortableText
             value={title}
-            headingLevel={index === 0 ? "h2" : "h3"}
+            headingLevel={index === 0 ? 'h2' : 'h3'}
             className={styles.title}
           />
 
           <PortableText
-            value={description}
+            value={description as unknown as PortableTextProps}
             enablePortableTextStyles
             className={styles.description}
           />
