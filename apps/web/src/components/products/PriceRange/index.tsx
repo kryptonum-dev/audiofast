@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 type PriceRangeProps = {
   minValue: number;
@@ -26,16 +26,26 @@ export default function PriceRange({
   const minRangeRef = useRef<HTMLInputElement>(null);
   const maxRangeRef = useRef<HTMLInputElement>(null);
 
+  // Format price with spaces for readability (Polish format)
+  const formatPrice = useCallback((price: number) => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }, []);
+
+  // Parse formatted price string back to number
+  const parsePrice = useCallback((value: string) => {
+    return parseInt(value.replace(/\s/g, ''), 10);
+  }, []);
+
   // Sync internal state with props when they change (e.g., when filters are cleared)
   useEffect(() => {
     setLocalMin(minValue);
-    setMinInputValue(minValue.toString());
-  }, [minValue]);
+    setMinInputValue(formatPrice(minValue));
+  }, [minValue, formatPrice]);
 
   useEffect(() => {
     setLocalMax(maxValue);
-    setMaxInputValue(maxValue.toString());
-  }, [maxValue]);
+    setMaxInputValue(formatPrice(maxValue));
+  }, [maxValue, formatPrice]);
 
   // When maxLimit changes, clamp the max value if it exceeds the new limit
   // This handles cases like: user sets 180,000 → filters by brand → new limit is 155,000
@@ -44,10 +54,10 @@ export default function PriceRange({
     if (maxValue > maxLimit) {
       const clampedMax = maxLimit;
       setLocalMax(clampedMax);
-      setMaxInputValue(clampedMax.toString());
+      setMaxInputValue(formatPrice(clampedMax));
       onMaxChange(clampedMax);
     }
-  }, [maxLimit, maxValue, onMaxChange]);
+  }, [maxLimit, maxValue, onMaxChange, formatPrice]);
 
   const handleMinRangeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,10 +65,10 @@ export default function PriceRange({
       // Don't let min exceed max
       const newMin = Math.min(value, localMax);
       setLocalMin(newMin);
-      setMinInputValue(newMin.toString());
+      setMinInputValue(formatPrice(newMin));
       onMinChange(newMin);
     },
-    [localMax, onMinChange],
+    [localMax, onMinChange, formatPrice],
   );
 
   const handleMaxRangeChange = useCallback(
@@ -67,10 +77,10 @@ export default function PriceRange({
       // Don't let max go below min, and ensure it's at least 1
       const newMax = Math.max(value, localMin, 1);
       setLocalMax(newMax);
-      setMaxInputValue(newMax.toString());
+      setMaxInputValue(formatPrice(newMax));
       onMaxChange(newMax);
     },
-    [localMin, onMaxChange],
+    [localMin, onMaxChange, formatPrice],
   );
 
   const handleMinInputChange = useCallback(
@@ -78,13 +88,20 @@ export default function PriceRange({
       const value = e.target.value;
 
       // Allow empty string for easier editing
-      if (value === "") {
-        setMinInputValue("");
+      if (value === '') {
+        setMinInputValue('');
         return;
       }
 
-      // Only allow positive integers
-      const numValue = parseInt(value, 10);
+      // Strip spaces and non-numeric characters for parsing
+      const strippedValue = value.replace(/\s/g, '');
+
+      // Only allow digits
+      if (!/^\d*$/.test(strippedValue)) {
+        return;
+      }
+
+      const numValue = parseInt(strippedValue, 10);
       if (isNaN(numValue) || numValue < 0) {
         return;
       }
@@ -94,9 +111,10 @@ export default function PriceRange({
         return;
       }
 
-      setMinInputValue(value);
+      // Format and set the value
+      setMinInputValue(formatPrice(numValue));
     },
-    [localMax],
+    [localMax, formatPrice],
   );
 
   const handleMaxInputChange = useCallback(
@@ -104,13 +122,20 @@ export default function PriceRange({
       const value = e.target.value;
 
       // Allow empty string for easier editing
-      if (value === "") {
-        setMaxInputValue("");
+      if (value === '') {
+        setMaxInputValue('');
         return;
       }
 
-      // Only allow positive integers
-      const numValue = parseInt(value, 10);
+      // Strip spaces and non-numeric characters for parsing
+      const strippedValue = value.replace(/\s/g, '');
+
+      // Only allow digits
+      if (!/^\d*$/.test(strippedValue)) {
+        return;
+      }
+
+      const numValue = parseInt(strippedValue, 10);
       if (isNaN(numValue) || numValue < 1) {
         return;
       }
@@ -125,51 +150,55 @@ export default function PriceRange({
         return;
       }
 
-      setMaxInputValue(value);
+      // Format and set the value
+      setMaxInputValue(formatPrice(numValue));
     },
-    [localMin, maxLimit],
+    [localMin, maxLimit, formatPrice],
   );
 
   const handleMinInputBlur = useCallback(() => {
-    const numValue = parseInt(minInputValue, 10);
+    const numValue = parsePrice(minInputValue);
 
-    if (isNaN(numValue) || minInputValue === "") {
+    if (isNaN(numValue) || minInputValue === '') {
       // Reset to current localMin if invalid
-      setMinInputValue(localMin.toString());
+      setMinInputValue(formatPrice(localMin));
       return;
     }
 
     // Clamp between 0 and localMax
     const clampedValue = Math.max(0, Math.min(numValue, localMax));
     setLocalMin(clampedValue);
-    setMinInputValue(clampedValue.toString());
+    setMinInputValue(formatPrice(clampedValue));
     onMinChange(clampedValue);
-  }, [minInputValue, localMin, localMax, onMinChange]);
+  }, [minInputValue, localMin, localMax, onMinChange, formatPrice, parsePrice]);
 
   const handleMaxInputBlur = useCallback(() => {
-    const numValue = parseInt(maxInputValue, 10);
+    const numValue = parsePrice(maxInputValue);
 
-    if (isNaN(numValue) || maxInputValue === "") {
+    if (isNaN(numValue) || maxInputValue === '') {
       // Reset to current localMax if invalid
-      setMaxInputValue(localMax.toString());
+      setMaxInputValue(formatPrice(localMax));
       return;
     }
 
     // Clamp between localMin and maxLimit, ensuring minimum of 1
     const clampedValue = Math.max(localMin, 1, Math.min(numValue, maxLimit));
     setLocalMax(clampedValue);
-    setMaxInputValue(clampedValue.toString());
+    setMaxInputValue(formatPrice(clampedValue));
     onMaxChange(clampedValue);
-  }, [maxInputValue, localMin, localMax, maxLimit, onMaxChange]);
+  }, [
+    maxInputValue,
+    localMin,
+    localMax,
+    maxLimit,
+    onMaxChange,
+    formatPrice,
+    parsePrice,
+  ]);
 
   // Calculate percentage positions for styling
   const minPercent = (localMin / maxLimit) * 100;
   const maxPercent = (localMax / maxLimit) * 100;
-
-  // Format price with spaces for readability (Polish format)
-  const formatPrice = (price: number) => {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-  };
 
   return (
     <div className={styles.priceRange}>

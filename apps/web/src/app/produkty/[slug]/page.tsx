@@ -1,6 +1,4 @@
-'use cache';
-
-import type { Metadata } from 'next';
+bimport type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
