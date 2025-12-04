@@ -6,15 +6,21 @@ import { MessageSquareText } from 'lucide-react';
 import type { FieldDefinition } from 'sanity';
 import { defineField, defineType } from 'sanity';
 
-import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { PathnameFieldComponent } from '../../../components/slug-field-component';
 import { GROUP, GROUPS } from '../../../utils/constant';
 import {
   createRadioListLayout,
+  isUniqueSlug,
   parsePortableTextToString,
+  slugify,
 } from '../../../utils/helper';
 import { customPortableText } from '../../portableText';
 import { pageBuilderField } from '../../shared';
 import { getSEOFields } from '../../shared/seo';
+
+// Slug prefixes
+const PAGE_SLUG_PREFIX = '/recenzje/';
+const PDF_SLUG_PREFIX = '/recenzje/pdf/';
 
 export const review = defineType({
   name: 'review',
@@ -64,64 +70,12 @@ export const review = defineType({
         timeFormat: 'HH:mm',
       },
     }),
-    ...(defineSlugForDocument({
-      prefix: '/recenzje/',
-      source: 'name',
-      group: GROUP.MAIN_CONTENT,
-    }).map((field) => {
-      if (field.name === 'slug') {
-        return {
-          ...field,
-          hidden: ({ document }: any) => document?.destinationType !== 'page',
-          // Override validation to make slug optional for pdf/external types
-          validation: (Rule: any) =>
-            Rule.custom(async (value: any, context: any) => {
-              const destinationType = context.document?.destinationType;
-
-              // Slug is only required for 'page' type reviews
-              if (destinationType !== 'page') {
-                return true; // Not required for pdf/external
-              }
-
-              // For 'page' type, slug is required
-              if (!value?.current) {
-                return 'Slug jest wymagany dla recenzji typu "Strona z treścią"';
-              }
-
-              const prefix = '/recenzje/';
-
-              // Check prefix
-              if (!value.current.startsWith(prefix)) {
-                return `Slug powinien zaczynać się od ${prefix}`;
-              }
-
-              // Check content after prefix
-              const contentAfterPrefix = value.current
-                .replace(prefix, '')
-                .trim();
-              if (!contentAfterPrefix || contentAfterPrefix === '/') {
-                return `Slug musi zawierać treść po ${prefix}. Sam ukośnik nie wystarczy.`;
-              }
-
-              // Check trailing slash
-              if (value.current !== '/' && !value.current.endsWith('/')) {
-                return 'Slug musi kończyć się ukośnikiem (/)';
-              }
-
-              return true;
-            }),
-        };
-      }
-      return {
-        ...field,
-        hidden: ({ document }: any) => document?.destinationType !== 'page',
-      };
-    }) as FieldDefinition[]),
+    // Title field - placed before slug so it can be used as source
     customPortableText({
       name: 'title',
       title: 'Tytuł recenzji',
       description:
-        'Główny tytuł recenzji wyświetlany jako nagłówek (może zawierać formatowanie)',
+        'Główny tytuł recenzji wyświetlany jako nagłówek (może zawierać formatowanie). Używany również do generowania slugu.',
       group: GROUP.MAIN_CONTENT,
       include: {
         styles: ['normal'],
@@ -131,6 +85,141 @@ export const review = defineType({
       },
       validation: (Rule) =>
         Rule.required().error('Tytuł recenzji jest wymagany'),
+    }),
+    // Slug field for PAGE type reviews
+    defineField({
+      name: 'slug',
+      type: 'slug',
+      title: 'Slug',
+      group: GROUP.MAIN_CONTENT,
+      hidden: ({ document }) => document?.destinationType !== 'page',
+      components: {
+        field: (props) => (
+          <PathnameFieldComponent
+            {...props}
+            prefix={PAGE_SLUG_PREFIX}
+            sourceField="title"
+            sourceFieldType="portableText"
+          />
+        ),
+      },
+      description: (
+        <span style={{ color: 'var(--card-fg-color)' }}>
+          Slug to unikalny identyfikator dokumentu, używany do SEO i linków.
+          Generowany automatycznie z tytułu recenzji.
+        </span>
+      ),
+      options: {
+        source: (doc: any) => {
+          const titleText = parsePortableTextToString(doc.title);
+          return titleText === 'No Content' ? '' : titleText;
+        },
+        slugify: (input: string) => {
+          const slugified = `${PAGE_SLUG_PREFIX}${slugify(input)}`;
+          return slugified.endsWith('/') ? slugified : `${slugified}/`;
+        },
+        isUnique: isUniqueSlug,
+      },
+      validation: (Rule) =>
+        Rule.custom(async (value, context) => {
+          const destinationType = (context.document as any)?.destinationType;
+          if (destinationType !== 'page') return true;
+
+          if (!value?.current) {
+            return 'Slug jest wymagany dla recenzji typu "Strona z treścią"';
+          }
+
+          if (!value.current.startsWith(PAGE_SLUG_PREFIX)) {
+            return `Slug powinien zaczynać się od ${PAGE_SLUG_PREFIX}`;
+          }
+
+          const contentAfterPrefix = value.current
+            .replace(PAGE_SLUG_PREFIX, '')
+            .trim();
+          if (!contentAfterPrefix || contentAfterPrefix === '/') {
+            return `Slug musi zawierać treść po ${PAGE_SLUG_PREFIX}`;
+          }
+
+          if (!value.current.endsWith('/')) {
+            return 'Slug musi kończyć się ukośnikiem (/)';
+          }
+
+          const slugPart = value.current
+            .replace(PAGE_SLUG_PREFIX, '')
+            .replace(/\/$/, '');
+          if (slugPart !== slugify(slugPart)) {
+            return 'W slugu jest literówka. Slug może zawierać tylko małe litery, cyfry i myślniki.';
+          }
+
+          return true;
+        }),
+    }),
+    // Slug field for PDF type reviews
+    defineField({
+      name: 'pdfSlug',
+      type: 'slug',
+      title: 'Slug PDF',
+      group: GROUP.MAIN_CONTENT,
+      hidden: ({ document }) => document?.destinationType !== 'pdf',
+      components: {
+        field: (props) => (
+          <PathnameFieldComponent
+            {...props}
+            prefix={PDF_SLUG_PREFIX}
+            sourceField="title"
+            sourceFieldType="portableText"
+          />
+        ),
+      },
+      description: (
+        <span style={{ color: 'var(--card-fg-color)' }}>
+          Slug dla recenzji PDF. Generowany automatycznie z tytułu recenzji.
+        </span>
+      ),
+      options: {
+        source: (doc: any) => {
+          const titleText = parsePortableTextToString(doc.title);
+          return titleText === 'No Content' ? '' : titleText;
+        },
+        slugify: (input: string) => {
+          const slugified = `${PDF_SLUG_PREFIX}${slugify(input)}`;
+          return slugified.endsWith('/') ? slugified : `${slugified}/`;
+        },
+        isUnique: isUniqueSlug,
+      },
+      validation: (Rule) =>
+        Rule.custom(async (value, context) => {
+          const destinationType = (context.document as any)?.destinationType;
+          if (destinationType !== 'pdf') return true;
+
+          if (!value?.current) {
+            return 'Slug jest wymagany dla recenzji typu "Dokument PDF"';
+          }
+
+          if (!value.current.startsWith(PDF_SLUG_PREFIX)) {
+            return `Slug powinien zaczynać się od ${PDF_SLUG_PREFIX}`;
+          }
+
+          const contentAfterPrefix = value.current
+            .replace(PDF_SLUG_PREFIX, '')
+            .trim();
+          if (!contentAfterPrefix || contentAfterPrefix === '/') {
+            return `Slug musi zawierać treść po ${PDF_SLUG_PREFIX}`;
+          }
+
+          if (!value.current.endsWith('/')) {
+            return 'Slug musi kończyć się ukośnikiem (/)';
+          }
+
+          const slugPart = value.current
+            .replace(PDF_SLUG_PREFIX, '')
+            .replace(/\/$/, '');
+          if (slugPart !== slugify(slugPart)) {
+            return 'W slugu jest literówka. Slug może zawierać tylko małe litery, cyfry i myślniki.';
+          }
+
+          return true;
+        }),
     }),
     customPortableText({
       name: 'description',
@@ -243,7 +332,7 @@ export const review = defineType({
       title: 'Plik PDF',
       type: 'file',
       description:
-        'Prześlij plik PDF z recenzją. Nazwa pliku będzie użyta w URL (np. test-produktu.pdf → /recenzje/pdf/test-produktu)',
+        'Prześlij plik PDF z recenzją. URL będzie generowany na podstawie slugu PDF powyżej.',
       group: GROUP.MAIN_CONTENT,
       options: {
         accept: '.pdf',

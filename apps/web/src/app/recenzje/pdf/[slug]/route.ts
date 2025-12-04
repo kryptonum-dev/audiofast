@@ -11,19 +11,21 @@ type RouteParams = {
 };
 
 export async function GET(request: NextRequest, props: RouteParams) {
-  const { slug } = await props.params;
+  const { slug: slugParam } = await props.params;
+
+  // Construct the full slug as stored in Sanity (e.g., "/recenzje/pdf/test-produktu/")
+  const fullSlug = `/recenzje/pdf/${slugParam.toLowerCase()}/`;
 
   try {
-    // Fetch PDF review data from Sanity
-    // The slug is just the filename without extension (e.g., "test-produktu")
+    // Fetch PDF review data from Sanity using the full slug
     const pdfReview = await sanityFetch<QueryPdfReviewBySlugResult>({
       query: queryPdfReviewBySlug,
-      params: { slug: slug.toLowerCase() },
+      params: { slug: fullSlug },
       tags: ["review"],
     });
 
     if (!pdfReview || !pdfReview.pdfUrl) {
-      logWarn(`PDF review not found for slug: ${slug}`);
+      logWarn(`PDF review not found for slug: ${fullSlug}`);
       return new NextResponse("PDF not found", { status: 404 });
     }
 
@@ -49,7 +51,7 @@ export async function GET(request: NextRequest, props: RouteParams) {
       },
     });
   } catch (error) {
-    logError(`Error serving PDF for slug ${slug}:`, error);
+    logError(`Error serving PDF for slug ${fullSlug}:`, error);
     return new NextResponse("Internal server error", { status: 500 });
   }
 }

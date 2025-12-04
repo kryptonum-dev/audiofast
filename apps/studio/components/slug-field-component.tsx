@@ -23,7 +23,7 @@ import {
 import { styled } from 'styled-components';
 
 import { WEB_BASE_URL } from '../utils/constant';
-import { slugify } from '../utils/helper';
+import { parsePortableTextToString, slugify } from '../utils/helper';
 
 const GenerateButton = styled(Button)`
   cursor: pointer;
@@ -50,6 +50,8 @@ const CopyButton = styled(Button)`
 
 interface PathnameFieldComponentProps extends ObjectFieldProps<SlugValue> {
   prefix?: string;
+  sourceField?: string;
+  sourceFieldType?: 'string' | 'portableText';
 }
 
 export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
@@ -58,7 +60,26 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     document?._id.replace(/^drafts\./, ''),
     document?._type
   );
-  const nameField = useFormValue(['name']) as string;
+  
+  // Get the source field name (default to 'name' for backwards compatibility)
+  const sourceFieldName = props.sourceField || 'name';
+  const sourceFieldType = props.sourceFieldType || 'string';
+  
+  // Get the source field value
+  const rawSourceValue = useFormValue([sourceFieldName]);
+  
+  // Extract text from source field (handle both string and Portable Text)
+  const sourceFieldValue = useMemo(() => {
+    if (!rawSourceValue) return '';
+    if (sourceFieldType === 'portableText') {
+      const text = parsePortableTextToString(rawSourceValue);
+      return text === 'No Content' ? '' : text;
+    }
+    return rawSourceValue as string;
+  }, [rawSourceValue, sourceFieldType]);
+  
+  // Keep nameField for backwards compatibility with other usages
+  const nameField = sourceFieldValue;
 
   const slugValidationError = useMemo(
     () =>
@@ -77,7 +98,13 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
 
   // Extract prefix and main content for display
   const { prefixPart, mainContent } = useMemo(() => {
-    if (!value?.current) return { prefixPart: '', mainContent: '' };
+    // If no value yet, show the configured prefix (without trailing slash for display)
+    if (!value?.current) {
+      return { 
+        prefixPart: prefix ? prefix.replace(/\/$/, '') : '', 
+        mainContent: '' 
+      };
+    }
 
     // Handle root path specially
     if (value.current === '/') {
@@ -100,7 +127,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
 
     // If no defined prefix, treat the whole path as main content (without leading/trailing slashes)
     return {
-      prefixPart: '',
+      prefixPart: prefix ? prefix.replace(/\/$/, '') : '',
       mainContent: value.current.replace(/^\/+|\/+$/g, ''), // Remove leading and trailing slashes
     };
   }, [value, prefix]);

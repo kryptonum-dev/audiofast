@@ -254,7 +254,7 @@ const publicationBlock = /* groq */ `
   ),
   "slug": select(
     _type == "review" && destinationType == "page" => slug.current,
-    _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],
+    _type == "review" && destinationType == "pdf" => pdfSlug.current,
     _type == "review" && destinationType == "external" => externalUrl,
     _type == "blog-article" => slug.current,
     slug.current
@@ -957,8 +957,9 @@ export const queryReviewBySlug =
 }`);
 
 export const queryPdfReviewBySlug =
-  defineQuery(`*[_type == "review" && destinationType == "pdf" && string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0] == $slug][0]{
+  defineQuery(`*[_type == "review" && destinationType == "pdf" && pdfSlug.current == $slug][0]{
   _id,
+  "slug": pdfSlug.current,
   "name": pt::text(title),
   ${portableTextFragment('title')},
   "pdfUrl": pdfFile.asset->url,
