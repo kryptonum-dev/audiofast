@@ -16,11 +16,11 @@ type YoutubeVideoValue = NonNullable<PortableTextProps>[number] & {
  * Falls back to null if fetch fails or title is not available
  */
 async function fetchYouTubeTitle(youtubeId: string): Promise<string | null> {
-  'use cache';
   try {
     const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${youtubeId}&format=json`;
 
     const response = await fetch(oEmbedUrl, {
+      cache: 'force-cache',
       headers: {
         'User-Agent': 'Audiofast-Website/1.0',
       },
@@ -59,13 +59,13 @@ const YOUTUBE_THUMBNAIL_RESOLUTIONS = [
 async function getYouTubeThumbnailUrl(
   youtubeId: string,
 ): Promise<string | undefined> {
-  'use cache';
   for (const resolution of YOUTUBE_THUMBNAIL_RESOLUTIONS) {
     const url = `https://img.youtube.com/vi/${youtubeId}/${resolution}`;
     try {
       // Use HEAD request to check if image exists without downloading it
       const response = await fetch(url, {
         method: 'HEAD',
+        cache: 'force-cache',
         headers: {
           'User-Agent': 'Audiofast-Website/1.0',
         },

@@ -20,8 +20,9 @@ async function fetchVimeoTitle(vimeoId: string): Promise<string | null> {
     const oEmbedUrl = `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`;
 
     const response = await fetch(oEmbedUrl, {
+      cache: 'force-cache',
       headers: {
-        "User-Agent": "Audiofast-Website/1.0",
+        'User-Agent': 'Audiofast-Website/1.0',
       },
     });
 
@@ -47,8 +48,9 @@ async function getVimeoThumbnailUrl(
     const oEmbedUrl = `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`;
 
     const response = await fetch(oEmbedUrl, {
+      cache: 'force-cache',
       headers: {
-        "User-Agent": "Audiofast-Website/1.0",
+        'User-Agent': 'Audiofast-Website/1.0',
       },
     });
 
