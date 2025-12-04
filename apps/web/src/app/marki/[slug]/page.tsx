@@ -27,10 +27,12 @@ import { sanityFetch } from "@/src/global/sanity/fetch";
 import {
   queryAllBrandSlugs,
   queryBrandBySlug,
+  queryBrandSeoBySlug,
 } from "@/src/global/sanity/query";
 import type {
   QueryAllBrandSlugsResult,
   QueryBrandBySlugResult,
+  QueryBrandSeoBySlugResult,
 } from "@/src/global/sanity/sanity.types";
 import { getSEOMetadata } from "@/src/global/seo";
 import type { PublicationType } from "@/src/global/types";
@@ -98,14 +100,19 @@ export async function generateMetadata({
   params,
 }: BrandPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const brand = await fetchBrandData(slug);
+  // Use lightweight SEO-only query to reduce deployment metadata size
+  const seoData = await sanityFetch<QueryBrandSeoBySlugResult>({
+    query: queryBrandSeoBySlug,
+    params: { slug: `/marki/${slug}/` },
+    tags: ["brand"],
+  });
 
-  if (!brand) return getSEOMetadata();
+  if (!seoData) return getSEOMetadata();
 
   return getSEOMetadata({
-    seo: brand.seo,
-    slug: brand.slug,
-    openGraph: brand.openGraph,
+    seo: seoData.seo,
+    slug: seoData.slug,
+    openGraph: seoData.openGraph,
   });
 }
 

@@ -1771,6 +1771,83 @@ export const queryMailchimpSettings = defineQuery(/* groq */ `
 `);
 
 // ----------------------------------------
+// Lightweight SEO-Only Queries (for generateMetadata)
+// These queries fetch ONLY the fields needed for SEO metadata
+// to reduce deployment metadata size on Vercel
+// ----------------------------------------
+
+// SEO-only query for reviews (used in generateMetadata)
+export const queryReviewSeoBySlug =
+  defineQuery(`*[_type == "review" && destinationType == "page" && slug.current == $slug][0]{
+  "slug": slug.current,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  }
+}`);
+
+// SEO-only query for products (used in generateMetadata)
+export const queryProductSeoBySlug =
+  defineQuery(`*[_type == "product" && slug.current == $slug][0]{
+  "slug": slug.current,
+  seo {
+    title,
+    description
+  },
+  openGraph {
+    title,
+    description,
+    "seoImage": select(
+      defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+      defined(previewImage) => previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+      null
+    )
+  }
+}`);
+
+// SEO-only query for brands (used in generateMetadata)
+export const queryBrandSeoBySlug =
+  defineQuery(`*[_type == "brand" && slug.current == $slug][0]{
+  "slug": slug.current,
+  seo {
+    title,
+    description
+  },
+  openGraph {
+    title,
+    description,
+    "seoImage": openGraph.ogImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
+  }
+}`);
+
+// SEO-only query for blog posts (used in generateMetadata)
+export const queryBlogPostSeoBySlug =
+  defineQuery(`*[_type == "blog-article" && slug.current == $slug][0]{
+  "slug": slug.current,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  }
+}`);
+
+// SEO-only query for generic pages (used in generateMetadata)
+export const queryPageSeoBySlug =
+  defineQuery(`*[_type == "page" && slug.current == $slug][0]{
+  "slug": slug.current,
+  doNotIndex,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  }
+}`);
+
+// ----------------------------------------
 // Sitemap Queries
 // ----------------------------------------
 

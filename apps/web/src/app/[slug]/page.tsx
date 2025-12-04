@@ -6,8 +6,15 @@ import { notFound } from "next/navigation";
 import { PageBuilder } from "@/src/components/shared/PageBuilder";
 import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
 import { sanityFetch } from "@/src/global/sanity/fetch";
-import { queryAllPageSlugs, queryPageBySlug } from "@/src/global/sanity/query";
-import type { QueryPageBySlugResult } from "@/src/global/sanity/sanity.types";
+import {
+  queryAllPageSlugs,
+  queryPageBySlug,
+  queryPageSeoBySlug,
+} from "@/src/global/sanity/query";
+import type {
+  QueryPageBySlugResult,
+  QueryPageSeoBySlugResult,
+} from "@/src/global/sanity/sanity.types";
 import { getSEOMetadata } from "@/src/global/seo";
 
 export async function generateStaticParams() {
@@ -39,15 +46,22 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const pageData = await fetchPageData(slug);
+  const sanitySlug = `/${slug.replace(/^\/+/, "").replace(/\/+$/, "")}/`;
 
-  if (!pageData) return getSEOMetadata();
+  // Use lightweight SEO-only query to reduce deployment metadata size
+  const seoData = await sanityFetch<QueryPageSeoBySlugResult>({
+    query: queryPageSeoBySlug,
+    params: { slug: sanitySlug },
+    tags: ["page"],
+  });
+
+  if (!seoData) return getSEOMetadata();
 
   return getSEOMetadata({
-    seo: pageData.seo,
-    slug: pageData.slug,
-    openGraph: pageData.openGraph,
-    noNotIndex: pageData.doNotIndex,
+    seo: seoData.seo,
+    slug: seoData.slug,
+    openGraph: seoData.openGraph,
+    noNotIndex: seoData.doNotIndex,
   });
 }
 

@@ -31104,6 +31104,77 @@ export type QueryContactSettingsResult = {
 // Variable: queryMailchimpSettings
 // Query: *[_type == "settings"][0].mailchimpAudienceId
 export type QueryMailchimpSettingsResult = string | null;
+// Variable: queryReviewSeoBySlug
+// Query: *[_type == "review" && destinationType == "page" && slug.current == $slug][0]{  "slug": slug.current,  seo,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  }}
+export type QueryReviewSeoBySlugResult = {
+  slug: string | null;
+  seo: {
+    title?: string;
+    description?: string;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    seoImage: string | null;
+  } | null;
+} | null;
+// Variable: queryProductSeoBySlug
+// Query: *[_type == "product" && slug.current == $slug][0]{  "slug": slug.current,  seo {    title,    description  },  openGraph {    title,    description,    "seoImage": select(      defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",      defined(previewImage) => previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",      null    )  }}
+export type QueryProductSeoBySlugResult = {
+  slug: string | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    seoImage: null;
+  } | null;
+} | null;
+// Variable: queryBrandSeoBySlug
+// Query: *[_type == "brand" && slug.current == $slug][0]{  "slug": slug.current,  seo {    title,    description  },  openGraph {    title,    description,    "seoImage": openGraph.ogImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"  }}
+export type QueryBrandSeoBySlugResult = {
+  slug: string | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    seoImage: null;
+  } | null;
+} | null;
+// Variable: queryBlogPostSeoBySlug
+// Query: *[_type == "blog-article" && slug.current == $slug][0]{  "slug": slug.current,  seo,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  }}
+export type QueryBlogPostSeoBySlugResult = {
+  slug: string | null;
+  seo: {
+    title?: string;
+    description?: string;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    seoImage: string | null;
+  } | null;
+} | null;
+// Variable: queryPageSeoBySlug
+// Query: *[_type == "page" && slug.current == $slug][0]{  "slug": slug.current,  doNotIndex,  seo,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  }}
+export type QueryPageSeoBySlugResult = {
+  slug: string | null;
+  doNotIndex: boolean | null;
+  seo: {
+    title?: string;
+    description?: string;
+  } | null;
+  openGraph: {
+    title: string | null;
+    description: string | null;
+    seoImage: string | null;
+  } | null;
+} | null;
 // Variable: queryAllPageSlugsForSitemap
 // Query: *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))] {    "slug": slug.current,    _updatedAt  }
 export type QueryAllPageSlugsForSitemapResult = Array<{
@@ -31123,7 +31194,7 @@ export type QueryAllBrandSlugsForSitemapResult = Array<{
   _updatedAt: string;
 }>;
 // Variable: queryAllProductSlugsForSitemap
-// Query: *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && isArchived != true] {    "slug": slug.current,    _updatedAt  }
+// Query: *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**"))] {    "slug": slug.current,    _updatedAt  }
 export type QueryAllProductSlugsForSitemapResult = Array<{
   slug: string | null;
   _updatedAt: string;
@@ -31188,10 +31259,15 @@ declare module "@sanity/client" {
     "{\n  \"products\": *[_type == \"product\" && !(_id in path(\"drafts.**\")) && isArchived != true && $categorySlug in categories[]->slug.current] | order(name asc) {\n    _id,\n    name,\n    \"slug\": slug.current,\n    subtitle,\n    basePriceCents,\n    \n  \"mainImage\": previewImage {\n    \"id\": asset._ref,\n    \"preview\": asset->metadata.lqip,\n    \"alt\": asset->altText,\n    \"naturalWidth\": asset->metadata.dimensions.width,\n    \"naturalHeight\": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    brand->{\n      _id,\n      name,\n      \"slug\": slug.current,\n      \n  logo {\n    \"id\": asset._ref,\n    \"preview\": asset->metadata.lqip,\n    \"alt\": asset->altText,\n    \"naturalWidth\": asset->metadata.dimensions.width,\n    \"naturalHeight\": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n    },\n    technicalData {\n      variants,\n      groups[] {\n        _key,\n        title,\n        rows[] {\n          _key,\n          title,\n          values[] {\n            _key,\n            \n  content[]{\n    ...,\n    _type == \"block\" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == \"customLink\" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      \"href\": select(\n        type == \"internal\" => internal->slug.current,\n        type == \"external\" => external,\n        \"#\"\n      ),\n      \"internalSlug\": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n          }\n        }\n      }\n    },\n    \"categories\": categories[]->{\n      \"slug\": slug.current\n    }\n  },\n  \"enabledParameters\": *[_type == \"comparatorConfig\"][0].categoryConfigs[category->slug.current == $categorySlug][0].enabledParameters[] {\n    name,\n    displayName\n  }\n}": QueryComparisonPageDataResult;
     "\n  *[_type == \"settings\"][0].contactSettings {\n    supportEmails,\n    confirmationEmail {\n      subject,\n      \n  content[]{\n    ...,\n    _type == \"block\" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == \"customLink\" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      \"href\": select(\n        type == \"internal\" => internal->slug.current,\n        type == \"external\" => external,\n        \"#\"\n      ),\n      \"internalSlug\": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  } \n": QueryContactSettingsResult;
     "\n  *[_type == \"settings\"][0].mailchimpAudienceId\n": QueryMailchimpSettingsResult;
+    "*[_type == \"review\" && destinationType == \"page\" && slug.current == $slug][0]{\n  \"slug\": slug.current,\n  seo,\n  openGraph{\n    title,\n    description,\n    \"seoImage\": image.asset->url + \"?w=1200&h=630&dpr=3&fit=max&q=100\",\n  }\n}": QueryReviewSeoBySlugResult;
+    "*[_type == \"product\" && slug.current == $slug][0]{\n  \"slug\": slug.current,\n  seo {\n    title,\n    description\n  },\n  openGraph {\n    title,\n    description,\n    \"seoImage\": select(\n      defined(openGraph.image) => openGraph.image.asset->url + \"?w=1200&h=630&dpr=3&fit=max&q=100\",\n      defined(previewImage) => previewImage.asset->url + \"?w=1200&h=630&dpr=3&fit=max&q=100\",\n      null\n    )\n  }\n}": QueryProductSeoBySlugResult;
+    "*[_type == \"brand\" && slug.current == $slug][0]{\n  \"slug\": slug.current,\n  seo {\n    title,\n    description\n  },\n  openGraph {\n    title,\n    description,\n    \"seoImage\": openGraph.ogImage.asset->url + \"?w=1200&h=630&dpr=3&fit=max&q=100\"\n  }\n}": QueryBrandSeoBySlugResult;
+    "*[_type == \"blog-article\" && slug.current == $slug][0]{\n  \"slug\": slug.current,\n  seo,\n  openGraph{\n    title,\n    description,\n    \"seoImage\": image.asset->url + \"?w=1200&h=630&dpr=3&fit=max&q=100\",\n  }\n}": QueryBlogPostSeoBySlugResult;
+    "*[_type == \"page\" && slug.current == $slug][0]{\n  \"slug\": slug.current,\n  doNotIndex,\n  seo,\n  openGraph{\n    title,\n    description,\n    \"seoImage\": image.asset->url + \"?w=1200&h=630&dpr=3&fit=max&q=100\",\n  }\n}": QueryPageSeoBySlugResult;
     "\n  *[_type == \"page\" && defined(slug.current) && !(_id in path(\"drafts.**\"))] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllPageSlugsForSitemapResult;
     "\n  *[_type == \"blog-article\" && defined(slug.current) && !(_id in path(\"drafts.**\"))] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllBlogPostSlugsForSitemapResult;
     "\n  *[_type == \"brand\" && defined(slug.current) && !(_id in path(\"drafts.**\"))] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllBrandSlugsForSitemapResult;
-    "\n  *[_type == \"product\" && defined(slug.current) && !(_id in path(\"drafts.**\")) && isArchived != true] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllProductSlugsForSitemapResult;
+    "\n  *[_type == \"product\" && defined(slug.current) && !(_id in path(\"drafts.**\"))] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllProductSlugsForSitemapResult;
     "\n  *[_type == \"review\" && destinationType == \"page\" && defined(slug.current) && !(_id in path(\"drafts.**\"))] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllReviewSlugsForSitemapResult;
     "\n  *[_type == \"blog-category\" && defined(slug.current) && !(_id in path(\"drafts.**\"))] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllBlogCategorySlugsForSitemapResult;
     "\n  *[_type == \"productCategorySub\" && defined(slug.current) && !(_id in path(\"drafts.**\"))] {\n    \"slug\": slug.current,\n    _updatedAt\n  }\n": QueryAllProductCategorySlugsForSitemapResult;

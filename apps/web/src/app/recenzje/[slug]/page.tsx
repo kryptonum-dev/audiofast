@@ -9,10 +9,12 @@ import { sanityFetch } from "@/src/global/sanity/fetch";
 import {
   queryAllReviewSlugs,
   queryReviewBySlug,
+  queryReviewSeoBySlug,
 } from "@/src/global/sanity/query";
 import type {
   QueryAllReviewSlugsResult,
   QueryReviewBySlugResult,
+  QueryReviewSeoBySlugResult,
 } from "@/src/global/sanity/sanity.types";
 import { getSEOMetadata } from "@/src/global/seo";
 
@@ -41,17 +43,22 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: ReviewPageProps) {
   const { slug } = await props.params;
-  const pageData = await fetchReviewData(slug);
+  // Use lightweight SEO-only query to reduce deployment metadata size
+  const seoData = await sanityFetch<QueryReviewSeoBySlugResult>({
+    query: queryReviewSeoBySlug,
+    params: { slug: `/recenzje/${slug}/` },
+    tags: ["review"],
+  });
 
-  if (!pageData) {
-    logWarn(`Review data not found for slug: ${slug}`);
+  if (!seoData) {
+    logWarn(`Review SEO data not found for slug: ${slug}`);
     return getSEOMetadata();
   }
 
   return getSEOMetadata({
-    seo: pageData.seo,
-    slug: pageData.slug,
-    openGraph: pageData.openGraph,
+    seo: seoData.seo,
+    slug: seoData.slug,
+    openGraph: seoData.openGraph,
   });
 }
 

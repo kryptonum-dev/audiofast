@@ -21,10 +21,12 @@ import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductSlugs,
   queryProductBySlug,
+  queryProductSeoBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllProductSlugsResult,
   QueryProductBySlugResult,
+  QueryProductSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import { fetchProductPricing } from '@/src/global/supabase/queries';
@@ -65,14 +67,19 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { sanityData: product } = await fetchProductData(slug);
+  // Use lightweight SEO-only query to reduce deployment metadata size
+  const seoData = await sanityFetch<QueryProductSeoBySlugResult>({
+    query: queryProductSeoBySlug,
+    params: { slug: `/produkty/${slug}/` },
+    tags: ['product'],
+  });
 
-  if (!product) return getSEOMetadata();
+  if (!seoData) return getSEOMetadata();
 
   return getSEOMetadata({
-    seo: product.seo,
-    slug: product.slug,
-    openGraph: product.openGraph,
+    seo: seoData.seo,
+    slug: seoData.slug,
+    openGraph: seoData.openGraph,
   });
 }
 

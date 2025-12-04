@@ -11,11 +11,13 @@ import { sanityFetch } from "@/src/global/sanity/fetch";
 import {
   queryAllBlogPostSlugs,
   queryBlogPostBySlug,
+  queryBlogPostSeoBySlug,
   querySettings,
 } from "@/src/global/sanity/query";
 import type {
   QueryAllBlogPostSlugsResult,
   QueryBlogPostBySlugResult,
+  QueryBlogPostSeoBySlugResult,
   QuerySettingsResult,
 } from "@/src/global/sanity/sanity.types";
 import { getSEOMetadata } from "@/src/global/seo";
@@ -45,17 +47,22 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: BlogPostPageProps) {
   const { slug } = await props.params;
-  const pageData = await fetchBlogPostData(slug);
+  // Use lightweight SEO-only query to reduce deployment metadata size
+  const seoData = await sanityFetch<QueryBlogPostSeoBySlugResult>({
+    query: queryBlogPostSeoBySlug,
+    params: { slug: `/blog/${slug}/` },
+    tags: ["blog-article"],
+  });
 
-  if (!pageData) {
-    logWarn(`Blog post data not found for slug: ${slug}`);
+  if (!seoData) {
+    logWarn(`Blog post SEO data not found for slug: ${slug}`);
     return getSEOMetadata();
   }
 
   return getSEOMetadata({
-    seo: pageData.seo,
-    slug: pageData.slug,
-    openGraph: pageData.openGraph,
+    seo: seoData.seo,
+    slug: seoData.slug,
+    openGraph: seoData.openGraph,
   });
 }
 
