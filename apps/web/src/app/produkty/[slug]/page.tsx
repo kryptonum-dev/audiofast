@@ -1,4 +1,4 @@
-bimport type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
