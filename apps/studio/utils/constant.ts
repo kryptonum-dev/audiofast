@@ -57,4 +57,4 @@ export const GROUPS: FieldGroupDefinition[] = [
  */
 export const WEB_BASE_URL: string = isProduction()
   ? 'https://www.audiofast.pl/'
-  : 'http://localhost:3000';
+  : 'https://audiofast-git-dev-kryptonum.vercel.app/';

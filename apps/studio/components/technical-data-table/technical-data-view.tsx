@@ -396,6 +396,14 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   // Track if initial load is complete (to avoid saving on mount)
   const isInitialized = useRef(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Track dirty state to prevent props overwriting local changes
+  const isDirty = useRef(false);
+  const savePromiseRef = useRef<Promise<void> | null>(null);
+  const latestDataRef = useRef<{ variants: string[]; groups: TechnicalDataGroup[] }>({
+    variants: [],
+    groups: [],
+  });
 
   // DnD sensors
   const sensors = useSensors(
@@ -405,20 +413,29 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
     })
   );
 
-  // Initialize state from document data
+  // Initialize state from document data (only when not dirty)
   useEffect(() => {
+    // Skip re-initialization if we have pending local changes
+    if (isDirty.current) {
+      return;
+    }
+    
     if (technicalData) {
-      setVariants(technicalData.variants || []);
-      // Handle groups structure
-      if (technicalData.groups && technicalData.groups.length > 0) {
-        setGroups(technicalData.groups);
-      } else {
-        // Create default empty group
-        setGroups([createEmptyGroup(1)]);
-      }
+      const newVariants = technicalData.variants || [];
+      const newGroups = technicalData.groups && technicalData.groups.length > 0
+        ? technicalData.groups
+        : [createEmptyGroup(1)];
+      
+      setVariants(newVariants);
+      setGroups(newGroups);
+      
+      // Keep ref in sync
+      latestDataRef.current = { variants: newVariants, groups: newGroups };
     } else {
+      const defaultGroups = [createEmptyGroup(1)];
       setVariants([]);
-      setGroups([createEmptyGroup(1)]);
+      setGroups(defaultGroups);
+      latestDataRef.current = { variants: [], groups: defaultGroups };
     }
     // Mark as initialized after a short delay
     setTimeout(() => {
@@ -426,15 +443,31 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
     }, 100);
   }, [technicalData]);
 
-  // Auto-save function
-  const saveChanges = useCallback(async () => {
+  // Keep latestDataRef in sync with state changes
+  useEffect(() => {
+    latestDataRef.current = { variants, groups };
+  }, [variants, groups]);
+
+  // Mark as dirty when state changes after initialization
+  useEffect(() => {
+    if (isInitialized.current) {
+      isDirty.current = true;
+    }
+  }, [variants, groups]);
+
+  // Auto-save function - uses latestDataRef to always get current data
+  const saveChanges = useCallback(async (): Promise<void> => {
     if (!isInitialized.current) return;
 
     setIsSaving(true);
     try {
+      // Use latestDataRef to ensure we're saving the most current data
+      const currentVariants = latestDataRef.current.variants;
+      const currentGroups = latestDataRef.current.groups;
+      
       const newTechnicalData: TechnicalDataValue = {
-        variants: variants.length > 0 ? variants : null,
-        groups: groups.map((group) => ({
+        variants: currentVariants.length > 0 ? currentVariants : null,
+        groups: currentGroups.map((group) => ({
           ...group,
           _key: group._key || generateKey(),
           rows: group.rows.map((row) => ({
@@ -475,6 +508,9 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       );
 
       await transaction.commit();
+      
+      // Clear dirty flag on successful save
+      isDirty.current = false;
     } catch (error) {
       console.error('Error saving technical data:', error);
       toast.push({
@@ -482,10 +518,44 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
         title: 'Błąd zapisu',
         description: 'Nie udało się zapisać danych technicznych.',
       });
+      throw error; // Re-throw so flushSave can handle it
     } finally {
       setIsSaving(false);
     }
-  }, [client, documentId, document.displayed, variants, groups, toast]);
+  }, [client, documentId, document.displayed, toast]);
+
+  // Flush any pending save immediately and wait for it to complete
+  const flushSave = useCallback(async (): Promise<void> => {
+    // Clear the debounce timeout
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+      saveTimeoutRef.current = null;
+    }
+    
+    // Yield to allow pending state updates and effects to complete
+    // This ensures latestDataRef is synced with the latest state
+    await new Promise(resolve => setTimeout(resolve, 0));
+    
+    // If there's an ongoing save, wait for it
+    if (savePromiseRef.current) {
+      try {
+        await savePromiseRef.current;
+      } catch {
+        // Ignore errors from previous save, we'll try again
+      }
+    }
+    
+    // If dirty, save immediately
+    if (isDirty.current) {
+      const savePromise = saveChanges();
+      savePromiseRef.current = savePromise;
+      try {
+        await savePromise;
+      } finally {
+        savePromiseRef.current = null;
+      }
+    }
+  }, [saveChanges]);
 
   // Auto-save with debounce when data changes
   useEffect(() => {
@@ -498,7 +568,11 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
 
     // Set new timeout for debounced save
     saveTimeoutRef.current = setTimeout(() => {
-      saveChanges();
+      const savePromise = saveChanges();
+      savePromiseRef.current = savePromise;
+      savePromise.finally(() => {
+        savePromiseRef.current = null;
+      });
     }, 500);
 
     return () => {
@@ -564,10 +638,22 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       setGroups((prevGroups) =>
         prevGroups.map((group) => ({
           ...group,
-          rows: group.rows.map((row) => ({
-            ...row,
-            values: row.values.filter((_, i) => i !== index),
-          })),
+          rows: group.rows.map((row) => {
+            // If removing the last variant (going back to "no variants" mode),
+            // preserve the data from the removed variant as the single value column
+            if (newVariants.length === 0) {
+              const keptValue = row.values[index];
+              return {
+                ...row,
+                values: keptValue ? [keptValue] : [createEmptyCellValue()],
+              };
+            }
+            // Otherwise, just filter out the removed variant's values
+            return {
+              ...row,
+              values: row.values.filter((_, i) => i !== index),
+            };
+          }),
         }))
       );
     },
@@ -765,16 +851,18 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
 
   // Cell editing
   const handleOpenCellEditor = useCallback(
-    (groupIndex: number, rowIndex: number, valueIndex: number) => {
+    async (groupIndex: number, rowIndex: number, valueIndex: number) => {
+      // Flush any pending saves before opening editor to ensure we have latest data
+      await flushSave();
       const content =
         groups[groupIndex]?.rows[rowIndex]?.values[valueIndex]?.content || [];
       setCellEditor({ isOpen: true, groupIndex, rowIndex, valueIndex, content });
     },
-    [groups]
+    [groups, flushSave]
   );
 
   const handleSaveCellContent = useCallback(
-    (content: PortableTextBlock[]) => {
+    async (content: PortableTextBlock[]) => {
       if (!cellEditor) return;
 
       setGroups((prev) =>
@@ -796,13 +884,15 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
         })
       );
 
+      // Flush save before closing dialog to ensure data is persisted
+      await flushSave();
       setCellEditor(null);
     },
-    [cellEditor]
+    [cellEditor, flushSave]
   );
 
   // Handle delete confirmation
-  const handleConfirmDelete = useCallback(() => {
+  const handleConfirmDelete = useCallback(async () => {
     if (!deleteConfirm) return;
 
     if (deleteConfirm.type === 'row' && deleteConfirm.groupIndex !== undefined) {
@@ -813,12 +903,15 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       handleConfirmRemoveGroup(deleteConfirm.index);
     }
 
+    // Flush save before closing dialog to ensure deletion is persisted
+    await flushSave();
     setDeleteConfirm(null);
   }, [
     deleteConfirm,
     handleConfirmRemoveRow,
     handleConfirmRemoveVariant,
     handleConfirmRemoveGroup,
+    flushSave,
   ]);
 
   return (
@@ -835,11 +928,13 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
               warianty, aby zmienić kolejność.
             </Text>
           </Stack>
-          {isSaving && (
-            <Text size={1} muted>
-              Zapisywanie...
-            </Text>
-          )}
+          <Flex align="center" gap={2}>
+            {isSaving && (
+              <Text size={1} muted>
+                Zapisywanie...
+              </Text>
+            )}
+          </Flex>
         </Flex>
 
         {/* Variants Section */}

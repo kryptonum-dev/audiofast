@@ -1,43 +1,43 @@
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { fetchEmbeddings } from "@/src/app/actions/embeddings";
-import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
+import { fetchEmbeddings } from '@/src/app/actions/embeddings';
+import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import CustomFiltersBar, {
   type CustomFilter,
-} from "@/src/components/products/CustomFiltersBar";
-import ProductsAside from "@/src/components/products/ProductsAside";
-import ProductsListing from "@/src/components/products/ProductsListing";
-import ProductsListingSkeleton from "@/src/components/products/ProductsListing/ProductsListingSkeleton";
-import styles from "@/src/components/products/ProductsListing/styles.module.scss";
-import SortDropdown from "@/src/components/products/SortDropdown";
-import CollectionPageSchema from "@/src/components/schema/CollectionPageSchema";
-import CategoryViewTracker from "@/src/components/shared/analytics/CategoryViewTracker";
-import { PageBuilder } from "@/src/components/shared/PageBuilder";
-import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+} from '@/src/components/products/CustomFiltersBar';
+import ProductsAside from '@/src/components/products/ProductsAside';
+import ProductsListing from '@/src/components/products/ProductsListing';
+import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
+import styles from '@/src/components/products/ProductsListing/styles.module.scss';
+import SortDropdown from '@/src/components/products/SortDropdown';
+import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
+import CategoryViewTracker from '@/src/components/shared/analytics/CategoryViewTracker';
+import { PageBuilder } from '@/src/components/shared/PageBuilder';
+import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import {
   PRODUCT_SORT_OPTIONS,
   PRODUCTS_ITEMS_PER_PAGE,
   RELEVANCE_SORT_OPTION,
-} from "@/src/global/constants";
-import { logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
+} from '@/src/global/constants';
+import { logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryCategoryMetadata,
   queryProductsPageData,
-} from "@/src/global/sanity/query";
+} from '@/src/global/sanity/query';
 import type {
   QueryCategoryMetadataResult,
   QueryProductsPageDataResult,
-} from "@/src/global/sanity/sanity.types";
-import { getSEOMetadata } from "@/src/global/seo";
+} from '@/src/global/sanity/sanity.types';
+import { getSEOMetadata } from '@/src/global/seo';
 import {
   extractRawCustomFilters,
   parseBrands,
   parsePrice,
   slugifyFilterName,
   validateCustomFilters,
-} from "@/src/global/utils";
+} from '@/src/global/utils';
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
@@ -57,15 +57,15 @@ export async function generateStaticParams() {
   const productsData = await sanityFetch<QueryProductsPageDataResult>({
     query: queryProductsPageData,
     params: {
-      category: "",
-      search: "",
+      category: '',
+      search: '',
       brands: [],
       minPrice: 0,
       maxPrice: 999999999,
       customFilters: [],
       embeddingResults: [],
     },
-    tags: ["productCategorySub"],
+    tags: ['productCategorySub'],
   });
 
   // Only generate static pages for categories that have products
@@ -73,7 +73,7 @@ export async function generateStaticParams() {
     productsData?.categories
       ?.filter((cat) => cat.count > 0)
       .map((cat) => ({
-        category: cat.slug?.replace("/kategoria/", "").replace("/", "") || "",
+        category: cat.slug?.replace('/kategoria/', '').replace('/', '') || '',
       })) || []
   );
 }
@@ -86,14 +86,14 @@ export async function generateMetadata(props: CategoryPageProps) {
     query: queryProductsPageData,
     params: {
       category: `/kategoria/${categorySlug}/`,
-      search: "",
+      search: '',
       brands: [],
       minPrice: 0,
       maxPrice: 999999999,
       customFilters: [],
       embeddingResults: [],
     },
-    tags: ["products"],
+    tags: ['products'],
   });
 
   if (!productsData || !productsData.selectedCategory) {
@@ -104,7 +104,7 @@ export async function generateMetadata(props: CategoryPageProps) {
   // Check if category has any products
   const categoryInfo = productsData.categories?.find(
     (cat) =>
-      cat.slug?.replace("/kategoria/", "").replace("/", "") === categorySlug,
+      cat.slug?.replace('/kategoria/', '').replace('/', '') === categorySlug,
   );
 
   if (!categoryInfo || categoryInfo.count === 0) {
@@ -128,20 +128,20 @@ export default async function CategoryPage(props: CategoryPageProps) {
 
   // Parse search params first (before fetching data)
   const currentPage = Number(searchParams.page) || 1;
-  const searchTerm = searchParams.search || "";
+  const searchTerm = searchParams.search || '';
   const hasSearchQuery = Boolean(searchTerm);
 
   // Fetch embeddings if search query exists (for semantic search)
   // Always return an array (empty if no search) to satisfy GROQ parameter requirements
   const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, "products")) || []
+    ? (await fetchEmbeddings(searchTerm, 'products')) || []
     : [];
 
   // Determine sortBy: if search exists and no explicit sortBy, default to 'relevance'
   // Otherwise use provided sortBy or default to 'newest'
   const sortBy = hasSearchQuery
-    ? searchParams.sortBy || "relevance"
-    : searchParams.sortBy || "newest";
+    ? searchParams.sortBy || 'relevance'
+    : searchParams.sortBy || 'newest';
 
   // Parse brands early (needed for query)
   const brands = parseBrands(searchParams.brands);
@@ -156,7 +156,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
     params: {
       category: `/kategoria/${categorySlug}/`,
     },
-    tags: ["productCategorySub"],
+    tags: ['productCategorySub'],
   });
 
   if (!categoryMetadata) {
@@ -186,7 +186,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
       customFilters,
       embeddingResults, // Pass embeddings for filtering
     },
-    tags: ["products"],
+    tags: ['products'],
   });
 
   if (!productsData || !productsData.selectedCategory) {
@@ -198,11 +198,11 @@ export default async function CategoryPage(props: CategoryPageProps) {
 
   // Build current search params for CustomFiltersBar (with validated filters)
   const currentSearchParams = new URLSearchParams();
-  if (searchTerm) currentSearchParams.set("search", searchTerm);
-  if (brands.length > 0) currentSearchParams.set("brands", brands.join(","));
-  if (minPrice > 0) currentSearchParams.set("minPrice", minPrice.toString());
+  if (searchTerm) currentSearchParams.set('search', searchTerm);
+  if (brands.length > 0) currentSearchParams.set('brands', brands.join(','));
+  if (minPrice > 0) currentSearchParams.set('minPrice', minPrice.toString());
   if (maxPrice < 999999999)
-    currentSearchParams.set("maxPrice", maxPrice.toString());
+    currentSearchParams.set('maxPrice', maxPrice.toString());
   customFilters.forEach((filter) => {
     const slugified = slugifyFilterName(filter.filterName);
     currentSearchParams.set(slugified, filter.value);
@@ -229,7 +229,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
   // We don't check count here - if filters result in 0 products, show empty state instead of 404
   const categoryExists = productsData.categoriesAll?.some(
     (cat) =>
-      cat.slug?.replace("/kategoria/", "").replace("/", "") === categorySlug,
+      cat.slug?.replace('/kategoria/', '').replace('/', '') === categorySlug,
   );
 
   if (!categoryExists) {
@@ -239,8 +239,8 @@ export default async function CategoryPage(props: CategoryPageProps) {
 
   const breadcrumbsData = [
     {
-      name: productsData.name || "Produkty",
-      path: "/produkty/",
+      name: productsData.name || 'Produkty',
+      path: '/produkty/',
     },
     {
       name: category.name || categorySlug,
@@ -323,8 +323,8 @@ export default async function CategoryPage(props: CategoryPageProps) {
         blocksHeading={null}
         blocks={[]}
         index={0}
-        _key={""}
-        _type={"heroStatic"}
+        _key={''}
+        _type={'heroStatic'}
         button={null}
       />
 
@@ -357,11 +357,11 @@ export default async function CategoryPage(props: CategoryPageProps) {
               : PRODUCT_SORT_OPTIONS
           }
           basePath={`/produkty/kategoria/${categorySlug}/`}
-          defaultValue={hasSearchQuery ? "relevance" : "newest"}
+          defaultValue={hasSearchQuery ? 'relevance' : 'newest'}
           hasSearchQuery={hasSearchQuery}
         />
         <Suspense
-          key={`category-${categorySlug}-page-${currentPage}-search-${searchTerm}-sort-${sortBy}-brands-${brands.join(",")}-price-${minPrice}-${maxPrice}-filters-${JSON.stringify(customFilters)}`}
+          key={`category-${categorySlug}-page-${currentPage}-search-${searchTerm}-sort-${sortBy}-brands-${brands.join(',')}-price-${minPrice}-${maxPrice}-filters-${JSON.stringify(customFilters)}`}
           fallback={<ProductsListingSkeleton />}
         >
           <ProductsListing
