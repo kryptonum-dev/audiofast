@@ -23,53 +23,138 @@ export interface StoreLocationsProps {
   customId?: string;
 }
 
-// Server-side geocoding function
-async function geocodeCity(
-  city: string,
-): Promise<{ lat: number; lng: number } | null> {
+// Clean street address for geocoding
+function cleanStreetForGeocoding(street: string): string {
+  return (
+    street
+      // Remove "ul." prefix
+      .replace(/^ul\.?\s*/i, "")
+      // Remove apartment/office numbers: "lok. 9", "lokal 5", etc.
+      .replace(/,?\s*(lok\.?|lokal)\s*\d+[a-zA-Z]?/gi, "")
+      // Remove "pasaż" and similar
+      .replace(/,?\s*pasaż\s*/gi, " ")
+      // Remove trailing letters after building numbers for cleaner search
+      // "55e" stays as is, but clean up any trailing punctuation
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+}
+
+// Server-side geocoding function using Nominatim structured search
+async function geocodeAddress(address: {
+  street: string;
+  city: string;
+  postalCode: string;
+}): Promise<{ lat: number; lng: number } | null> {
   "use cache";
   cacheLife("weeks");
   cacheTag("store-locations");
 
-  try {
-    const params = new URLSearchParams({
-      q: `${city}, Poland`,
+  const cleanStreet = cleanStreetForGeocoding(address.street);
+
+  // Helper to make Nominatim request
+  const fetchNominatim = async (
+    params: URLSearchParams,
+  ): Promise<{ lat: number; lng: number } | null> => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?${params.toString()}`,
+        {
+          headers: {
+            "User-Agent": "Audiofast-Website/1.0",
+          },
+          next: {
+            revalidate: 60 * 60 * 24,
+          },
+        },
+      );
+
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      if (data && data.length > 0) {
+        return {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon),
+        };
+      }
+    } catch {
+      return null;
+    }
+    return null;
+  };
+
+  // Strategy 1: Structured search with street, city, postalcode (most accurate)
+  const structuredParams = new URLSearchParams({
+    street: cleanStreet,
+    city: address.city,
+    postalcode: address.postalCode,
+    country: "Poland",
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
+  });
+
+  let result = await fetchNominatim(structuredParams);
+  if (result) return result;
+
+  // Strategy 2: Structured search without postal code (in case it's causing issues)
+  const noPostalParams = new URLSearchParams({
+    street: cleanStreet,
+    city: address.city,
+    country: "Poland",
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
+  });
+
+  result = await fetchNominatim(noPostalParams);
+  if (result) return result;
+
+  // Strategy 3: Free-form search with full address
+  const freeFormParams = new URLSearchParams({
+    q: `${cleanStreet}, ${address.city}, Poland`,
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
+    countrycodes: "pl",
+  });
+
+  result = await fetchNominatim(freeFormParams);
+  if (result) return result;
+
+  // Strategy 4: Search just the street name in the city (for streets with complex numbering)
+  const streetNameOnly = cleanStreet.replace(/\s*\d+[a-zA-Z]?$/, "").trim();
+  if (streetNameOnly !== cleanStreet) {
+    const streetOnlyParams = new URLSearchParams({
+      street: streetNameOnly,
+      city: address.city,
+      country: "Poland",
       format: "json",
       limit: "1",
       "accept-language": "pl",
-      countrycodes: "pl",
     });
 
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?${params.toString()}`,
-      {
-        headers: {
-          "User-Agent": "Audiofast-Website/1.0",
-        },
-        // Cache the upstream response for a day to limit API usage
-        next: {
-          revalidate: 60 * 60 * 24,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      console.error(`Geocoding API error: ${response.statusText}`);
-      return null;
-    }
-
-    const data = await response.json();
-
-    if (data && data.length > 0) {
-      return {
-        lat: parseFloat(data[0].lat),
-        lng: parseFloat(data[0].lon),
-      };
-    }
-  } catch (error) {
-    console.error(`Error geocoding city "${city}":`, error);
+    result = await fetchNominatim(streetOnlyParams);
+    if (result) return result;
   }
 
+  // Strategy 5: Fallback to postal code + city center
+  const postalFallbackParams = new URLSearchParams({
+    postalcode: address.postalCode,
+    city: address.city,
+    country: "Poland",
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
+  });
+
+  result = await fetchNominatim(postalFallbackParams);
+  if (result) return result;
+
+  console.error(
+    `Could not geocode address: ${cleanStreet}, ${address.postalCode} ${address.city}`,
+  );
   return null;
 }
 
@@ -97,11 +182,15 @@ export default async function StoreLocations({
   const storesWithLocations: StoreWithLocation[] = [];
 
   for (const store of uniqueStores) {
-    if (!store || !store.address?.city) {
+    if (!store || !store.address?.city || !store.address?.street || !store.address?.postalCode) {
       continue;
     }
 
-    const location = await geocodeCity(store.address.city);
+    const location = await geocodeAddress({
+      street: store.address.street,
+      city: store.address.city,
+      postalCode: store.address.postalCode,
+    });
     if (location) {
       storesWithLocations.push({
         ...store,
