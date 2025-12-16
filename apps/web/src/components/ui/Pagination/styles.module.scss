@@ -18,13 +18,13 @@
     border-radius: 50%;
     cursor: pointer;
     transition:
-      background-color 200ms ease,
-      transform 200ms ease;
+      background-color 250ms ease,
+      transform 250ms ease;
     color: var(--neutral-700, #303030);
     text-decoration: none;
 
     &:hover:not(.disabled) {
-      background-color: var(--neutral-300, #e0e0e0);
+      background-color: var(--neutral-400, #e7e7e7);
       transform: scale(1.05);
     }
 
@@ -51,7 +51,7 @@
     justify-content: center;
     width: 2.75rem;
     height: 2.75rem;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 0.875rem;
     font-weight: 300;
     line-height: 1.5;
@@ -59,13 +59,13 @@
     text-decoration: none;
     border-radius: 0.25rem;
     transition:
-      background-color 200ms,
-      color 200ms;
+      background-color 250ms,
+      color 250ms;
     cursor: pointer;
 
     &:hover:not(.active) {
-      background-color: var(--neutral-100, #fafafa);
-      color: var(--neutral-700, #303030);
+      background-color: var(--neutral-400, #e7e7e7);
+      color: var(--neutral-800, #141414);
     }
 
     &.active {
@@ -85,7 +85,7 @@
     justify-content: center;
     width: 2.75rem;
     height: 2.75rem;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 0.875rem;
     font-weight: 300;
     color: var(--neutral-600, #5b5a5a);
@@ -124,7 +124,7 @@
     justify-content: center;
     width: 2.75rem;
     height: 2.75rem;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 0.875rem;
     font-weight: 300;
     color: var(--neutral-400, #e7e7e7);

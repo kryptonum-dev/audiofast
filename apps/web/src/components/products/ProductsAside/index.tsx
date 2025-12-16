@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { X } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { X } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import type { PortableTextProps } from "@/global/types";
-import type { BrandType, ProductCategoryType } from "@/src/global/types";
-import { centsToPLN, plnToCents } from "@/src/global/utils";
+import type { PortableTextProps } from '@/global/types';
+import type { BrandType, ProductCategoryType } from '@/src/global/types';
+import { centsToPLN, plnToCents } from '@/src/global/utils';
 
-import PortableText from "../../portableText";
-import Button from "../../ui/Button";
-import Searchbar from "../../ui/Searchbar";
-import PriceRange from "../PriceRange";
-import styles from "./styles.module.scss";
+import PortableText from '../../portableText';
+import Button from '../../ui/Button';
+import Searchbar from '../../ui/Searchbar';
+import PriceRange from '../PriceRange';
+import styles from './styles.module.scss';
 
 type VisibleFilters = {
   search?: boolean;
@@ -37,6 +37,7 @@ type ProductsAsideProps = {
   visibleFilters?: VisibleFilters; // Control which filters to show
   useCategorySearchParam?: boolean; // Use ?category=X instead of /kategoria/X path
   hideBrandFilter?: boolean; // Hide brand filter section (useful for brand-specific pages)
+  headingLevel?: 'h2' | 'h3'; // Control heading level for section titles (h2 for standalone pages, h3 for nested in page builder)
 };
 
 export default function ProductsAside({
@@ -44,9 +45,9 @@ export default function ProductsAside({
   brands,
   totalCount,
   maxPrice,
-  basePath = "/produkty/",
+  basePath = '/produkty/',
   currentCategory = null,
-  initialSearch = "",
+  initialSearch = '',
   initialBrands = [],
   initialMinPrice = 0,
   initialMaxPrice,
@@ -59,7 +60,10 @@ export default function ProductsAside({
   },
   useCategorySearchParam = false,
   hideBrandFilter = false,
+  headingLevel = 'h3',
 }: ProductsAsideProps) {
+  // Dynamic heading component based on headingLevel prop
+  const SectionHeading = headingLevel;
   // Merge with defaults to ensure all keys exist
   const filters = {
     search: visibleFilters.search ?? true,
@@ -92,8 +96,8 @@ export default function ProductsAside({
     return categories.reduce(
       (acc, category) => {
         const parentName =
-          category.parentCategory?.name || "Pozostałe kategorie";
-        const parentSlug = category.parentCategory?.slug || "inne";
+          category.parentCategory?.name || 'Pozostałe kategorie';
+        const parentSlug = category.parentCategory?.slug || 'inne';
 
         if (!acc[parentName]) {
           acc[parentName] = {
@@ -118,7 +122,7 @@ export default function ProductsAside({
         ([parentName, { categories: subCategories }]) => {
           const hasActiveChild = subCategories.some((cat) => {
             const cleanSlug =
-              cat.slug?.replace("/kategoria/", "").replace(/\//g, "") || "";
+              cat.slug?.replace('/kategoria/', '').replace(/\//g, '') || '';
             return cleanSlug === currentCategory;
           });
 
@@ -163,19 +167,19 @@ export default function ProductsAside({
   // ESC key to close mobile menu
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
+      if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
       }
     };
 
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
   // Extract brand slug from full path like "/marki/aurender/" -> "aurender"
   const getBrandSlug = useCallback((brand: BrandType): string => {
     if (!brand.slug) return brand._id;
-    return brand.slug.replace("/marki/", "").replace(/\//g, "") || brand._id;
+    return brand.slug.replace('/marki/', '').replace(/\//g, '') || brand._id;
   }, []);
 
   // Build search params string to preserve filters when switching categories
@@ -188,29 +192,29 @@ export default function ProductsAside({
 
       // Add category if using search param mode
       if (useCategorySearchParam && categorySlug) {
-        params.set("category", categorySlug);
+        params.set('category', categorySlug);
       }
 
       // Add search term if present
       if (initialSearch.trim()) {
-        params.set("search", initialSearch.trim());
+        params.set('search', initialSearch.trim());
       }
 
       // Add selected brands
       if (initialBrands.length > 0) {
-        params.set("brands", initialBrands.join(","));
+        params.set('brands', initialBrands.join(','));
       }
 
       // Add price range if not default
       if (initialMinPrice > 0) {
-        params.set("minPrice", initialMinPrice.toString());
+        params.set('minPrice', initialMinPrice.toString());
       }
       if (initialMaxPrice !== undefined && initialMaxPrice < maxPrice) {
-        params.set("maxPrice", initialMaxPrice.toString());
+        params.set('maxPrice', initialMaxPrice.toString());
       }
 
       const queryString = params.toString();
-      return queryString ? `?${queryString}` : "";
+      return queryString ? `?${queryString}` : '';
     },
     [
       useCategorySearchParam,
@@ -229,14 +233,14 @@ export default function ProductsAside({
     (categorySlug: string | null) => {
       if (!categorySlug) {
         // "All Products" link - strip any /kategoria/* from basePath
-        const cleanBasePath = basePath.replace(/\/kategoria\/[^/]+\/?/, "");
+        const cleanBasePath = basePath.replace(/\/kategoria\/[^/]+\/?/, '');
         return `${cleanBasePath}${buildSearchParamsString()}`;
       }
 
       // Clean slug (remove /kategoria/ prefix if present)
       const cleanSlug = categorySlug
-        .replace("/kategoria/", "")
-        .replace(/\//g, "");
+        .replace('/kategoria/', '')
+        .replace(/\//g, '');
 
       if (useCategorySearchParam) {
         // Brand page mode: use search param
@@ -244,7 +248,7 @@ export default function ProductsAside({
       } else {
         // Products page mode: use path
         // Strip any existing /kategoria/* from basePath before appending new category
-        const cleanBasePath = basePath.replace(/\/kategoria\/[^/]+\/?/, "");
+        const cleanBasePath = basePath.replace(/\/kategoria\/[^/]+\/?/, '');
         return `${cleanBasePath}/kategoria/${cleanSlug}/${buildSearchParamsString()}`;
       }
     },
@@ -343,7 +347,7 @@ export default function ProductsAside({
     const params = new URLSearchParams(window.location.search);
 
     // Remove page param to reset pagination
-    params.delete("page");
+    params.delete('page');
 
     // Keep category param if using search param mode
     // (It's already in params from current URL)
@@ -351,16 +355,16 @@ export default function ProductsAside({
     // Update sidebar-managed filters
     // Search
     if (localFilters.search.trim()) {
-      params.set("search", localFilters.search.trim());
+      params.set('search', localFilters.search.trim());
     } else {
-      params.delete("search");
+      params.delete('search');
     }
 
     // Brands
     if (localFilters.brands.length > 0) {
-      params.set("brands", localFilters.brands.join(","));
+      params.set('brands', localFilters.brands.join(','));
     } else {
-      params.delete("brands");
+      params.delete('brands');
     }
 
     // Price range (convert PLN back to cents for URL)
@@ -368,15 +372,15 @@ export default function ProductsAside({
     const maxPriceCents = plnToCents(localFilters.maxPrice);
 
     if (minPriceCents > 0) {
-      params.set("minPrice", minPriceCents.toString());
+      params.set('minPrice', minPriceCents.toString());
     } else {
-      params.delete("minPrice");
+      params.delete('minPrice');
     }
 
     if (maxPriceCents < maxPrice) {
-      params.set("maxPrice", maxPriceCents.toString());
+      params.set('maxPrice', maxPriceCents.toString());
     } else {
-      params.delete("maxPrice");
+      params.delete('maxPrice');
     }
 
     const queryString = params.toString();
@@ -393,16 +397,16 @@ export default function ProductsAside({
     const params = new URLSearchParams(window.location.search);
 
     // Remove only sidebar-managed filters
-    params.delete("search");
-    params.delete("brands");
-    params.delete("minPrice");
-    params.delete("maxPrice");
-    params.delete("page");
+    params.delete('search');
+    params.delete('brands');
+    params.delete('minPrice');
+    params.delete('maxPrice');
+    params.delete('page');
 
     // If using category search param mode (brand pages), also clear category
     // This won't affect the category subpage because there category is in the path, not search params
     if (useCategorySearchParam) {
-      params.delete("category");
+      params.delete('category');
     }
 
     // Custom filters (category-specific) are preserved automatically
@@ -410,7 +414,7 @@ export default function ProductsAside({
 
     // Reset local state for sidebar filters (convert cents to PLN)
     setLocalFilters({
-      search: "",
+      search: '',
       brands: [],
       minPrice: 0,
       maxPrice: centsToPLN(maxPrice),
@@ -427,16 +431,16 @@ export default function ProductsAside({
 
   // Check if filters are applied in URL params (not just local state)
   const hasAppliedFilters =
-    initialSearch.trim() !== "" ||
+    initialSearch.trim() !== '' ||
     initialBrands.length > 0 ||
     initialMinPrice > 0 ||
     (initialMaxPrice !== undefined && initialMaxPrice < maxPrice) ||
     (useCategorySearchParam &&
       currentCategory !== null &&
-      currentCategory !== "");
+      currentCategory !== '');
 
   // Check if we're on the main products page (no category selected)
-  const isAllProductsActive = !currentCategory || currentCategory === "";
+  const isAllProductsActive = !currentCategory || currentCategory === '';
 
   return (
     <>
@@ -503,12 +507,14 @@ export default function ProductsAside({
         {/* Categories */}
         {filters.categories && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Typ produktu</h3>
+            <SectionHeading className={styles.sectionTitle}>
+              Typ produktu
+            </SectionHeading>
             <nav className={styles.categories}>
               {/* All Products Link */}
               <Link
                 href={buildCategoryUrl(null)}
-                className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ""}`}
+                className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
                 tabIndex={isAllProductsActive ? -1 : 0}
                 scroll={false}
               >
@@ -525,8 +531,8 @@ export default function ProductsAside({
                   // e.g., "/kategoria/glosniki-podlogowe/" -> "glosniki-podlogowe"
                   const hasActiveChild = subCategories.some((cat) => {
                     const cleanSlug =
-                      cat.slug?.replace("/kategoria/", "").replace(/\//g, "") ||
-                      "";
+                      cat.slug?.replace('/kategoria/', '').replace(/\//g, '') ||
+                      '';
                     return cleanSlug === currentCategory;
                   });
 
@@ -534,13 +540,13 @@ export default function ProductsAside({
                     <div key={parentName} className={styles.parentGroup}>
                       <button
                         type="button"
-                        className={`${styles.parentItem} ${hasActiveChild ? styles.hasActive : ""}`}
+                        className={`${styles.parentItem} ${hasActiveChild ? styles.hasActive : ''}`}
                         onClick={() => toggleParent(parentName)}
                       >
                         <span className={styles.categoryName}>
                           {parentName}
                         </span>
-                        <ChevronIcon direction={isExpanded ? "up" : "down"} />
+                        <ChevronIcon direction={isExpanded ? 'up' : 'down'} />
                       </button>
 
                       {isExpanded && (
@@ -549,18 +555,18 @@ export default function ProductsAside({
                           data-has-active={hasActiveChild}
                         >
                           {subCategories.map((category) => {
-                            const categorySlug = category.slug || "";
+                            const categorySlug = category.slug || '';
                             // Extract clean slug for comparison
                             const cleanSlug = categorySlug
-                              .replace("/kategoria/", "")
-                              .replace(/\//g, "");
+                              .replace('/kategoria/', '')
+                              .replace(/\//g, '');
                             const isActive = currentCategory === cleanSlug;
 
                             return (
                               <Link
                                 key={category._id}
                                 href={buildCategoryUrl(categorySlug)}
-                                className={`${styles.subCategoryItem} ${isActive ? styles.active : ""}`}
+                                className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
                                 tabIndex={isActive ? -1 : 0}
                                 scroll={false}
                               >
@@ -586,7 +592,9 @@ export default function ProductsAside({
         {/* Brands */}
         {filters.brands && (
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Marki</h3>
+            <SectionHeading className={styles.sectionTitle}>
+              Marki
+            </SectionHeading>
             <div className={styles.checkboxGroup}>
               {visibleBrands.map((brand) => {
                 const brandSlug = getBrandSlug(brand);
@@ -607,7 +615,7 @@ export default function ProductsAside({
                       {brand.name}
                       {brand.count !== undefined && (
                         <span className={styles.brandCount}>
-                          {" "}
+                          {' '}
                           ({brand.count})
                         </span>
                       )}
@@ -682,13 +690,13 @@ export default function ProductsAside({
   );
 }
 
-const ChevronIcon = ({ direction }: { direction: "up" | "down" }) => (
+const ChevronIcon = ({ direction }: { direction: 'up' | 'down' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
     style={{
-      transform: direction === "up" ? "rotate(180deg)" : "none",
+      transform: direction === 'up' ? 'rotate(180deg)' : 'none',
     }}
   >
     <path

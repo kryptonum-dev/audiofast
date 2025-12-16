@@ -58,15 +58,15 @@
         gap: 0.75rem;
         position: relative;
         transition:
-          background-color 250ms,
-          color 250ms;
+          background-color 300ms,
+          color 300ms;
         text-decoration: none;
         border: none;
         width: 100%;
         text-align: left;
 
         &::before {
-          content: "";
+          content: '';
           position: absolute;
           left: 0;
           top: 50%;
@@ -83,8 +83,8 @@
         }
 
         &:hover:not(.active) {
-          background-color: rgba(0, 0, 0, 0.05);
-          color: rgba(0, 0, 0, 0.85);
+          background-color: var(--neutral-400, #e7e7e7);
+          color: var(--neutral-black, #000);
         }
 
         &:active:not(.active) {
@@ -152,7 +152,7 @@
           padding-left: 1rem;
 
           // Only animate when manually expanded (not auto-expanded because of active child)
-          &:not([data-has-active="true"]) {
+          &:not([data-has-active='true']) {
             animation: slideDown 250ms cubic-bezier(0.4, 0, 0.2, 1);
           }
 
@@ -179,9 +179,9 @@
         line-height: 1.5;
         color: var(--neutral-700, #303030);
         transition:
-          color 150ms cubic-bezier(0.4, 0, 0.2, 1),
-          background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
-          opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+          color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+          background-color 200ms cubic-bezier(0.4, 0, 0.2, 1),
+          opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
         padding: 0.625rem 0.75rem;
         background-color: var(--neutral-100, #fafafa);
         border-radius: 0.5rem;
@@ -189,14 +189,14 @@
 
         &:hover {
           color: var(--neutral-black, #000);
-          background-color: var(--neutral-200, #f8f8f8);
+          background-color: var(--neutral-400, #e7e7e7);
 
           .checkbox {
             border-color: var(--primary-red, #fe0140);
           }
         }
 
-        &[data-no-results="true"] {
+        &[data-no-results='true'] {
           opacity: 0.55;
 
           .checkboxText {
@@ -222,11 +222,11 @@
           display: grid;
           place-items: center;
           transition:
-            background-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
-            border-color 180ms cubic-bezier(0.4, 0, 0.2, 1);
+            background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+            border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
           &::before {
-            content: "";
+            content: '';
             position: absolute;
             width: 1rem;
             height: 1rem;
@@ -282,7 +282,7 @@
       line-height: 1.5;
       color: var(--neutral-700, #303030);
       cursor: pointer;
-      transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
 
       svg {
         width: 0.875rem;
@@ -383,7 +383,7 @@
     will-change: transform;
     -webkit-overflow-scrolling: touch;
 
-    &[data-open="true"] {
+    &[data-open='true'] {
       transform: translateX(0);
     }
 
@@ -437,8 +437,8 @@
     }
 
     // Ensure search input maintains proper height on mobile
-    input[type="search"],
-    input[type="text"] {
+    input[type='search'],
+    input[type='text'] {
       min-height: 2.75rem;
       height: 2.75rem;
     }
@@ -502,7 +502,7 @@
       opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
       visibility 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
-    &[data-open="true"] {
+    &[data-open='true'] {
       opacity: 1;
       visibility: visible;
     }

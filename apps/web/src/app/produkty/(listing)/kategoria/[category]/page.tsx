@@ -343,6 +343,7 @@ export default async function CategoryPage(props: CategoryPageProps) {
           initialBrands={brands}
           initialMinPrice={minPrice}
           initialMaxPrice={maxPrice}
+          headingLevel="h2"
         />
         <CustomFiltersBar
           customFilters={processedFilterValues as CustomFilter[]}

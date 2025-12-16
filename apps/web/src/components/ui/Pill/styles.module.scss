@@ -14,11 +14,11 @@
   cursor: pointer;
   position: relative;
   transition:
-    background-color 250ms,
-    color 250ms;
+    background-color 300ms,
+    color 300ms;
 
   &::before {
-    content: "";
+    content: '';
     position: absolute;
     left: 0;
     top: 50%;
@@ -35,7 +35,7 @@
   }
 
   &:hover:not(.active) {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--neutral-400, #e7e7e7);
     color: rgba(0, 0, 0, 0.85);
   }
 

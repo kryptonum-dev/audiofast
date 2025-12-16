@@ -1,11 +1,11 @@
-import type { PagebuilderType } from "@/src/global/types";
+import type { PagebuilderType } from '@/src/global/types';
 
-import PortableText from "../../portableText";
-import Button from "../../ui/Button";
-import Carousels from "./Carousels";
-import styles from "./styles.module.scss";
+import PortableText from '../../portableText';
+import Button from '../../ui/Button';
+import Carousels from './Carousels';
+import styles from './styles.module.scss';
 
-type FeaturedProductsProps = PagebuilderType<"featuredProducts"> & {
+type FeaturedProductsProps = PagebuilderType<'featuredProducts'> & {
   index: number;
 };
 
@@ -27,7 +27,7 @@ export default function FeaturedProducts({
         <>
           <PortableText
             value={heading}
-            headingLevel={index === 0 ? "h1" : "h2"}
+            headingLevel={index === 0 ? 'h1' : 'h2'}
           />
           <PortableText value={description} enablePortableTextStyles />
           <Button {...button} />

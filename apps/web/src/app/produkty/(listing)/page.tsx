@@ -170,6 +170,7 @@ export default async function ProductsPage(props: ProductsPageProps) {
           initialBrands={brands}
           initialMinPrice={minPrice}
           initialMaxPrice={maxPrice}
+          headingLevel="h2"
         />
         <SortDropdown
           options={

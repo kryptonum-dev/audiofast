@@ -66,6 +66,7 @@ export default async function ProductsListing(props: ProductsListingProps) {
           priceRange: false,
         }}
         useCategorySearchParam={true}
+        headingLevel="h3"
       />
       <SortDropdown
         options={PRODUCT_SORT_OPTIONS}

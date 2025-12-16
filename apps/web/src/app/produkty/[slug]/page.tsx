@@ -217,14 +217,6 @@ export default async function ProductPage(props: ProductPageProps) {
             },
           ]}
           publications={product.reviews}
-          button={{
-            text: 'Zobacz wszystkie recenzje',
-            href: '/recenzje',
-            variant: 'primary' as const,
-            _key: null,
-            _type: 'button',
-            openInNewTab: false,
-          }}
           index={1}
           _key=""
           _type="featuredPublications"

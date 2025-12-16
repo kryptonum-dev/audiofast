@@ -467,7 +467,6 @@ const featuredPublicationsBlock = /* groq */ `
   _type == "featuredPublications" => {
     ...,
     ${portableTextFragment('heading')},
-    ${buttonFragment('button')},
     ${publicationFragment('publications[]->')}
   }
 `;

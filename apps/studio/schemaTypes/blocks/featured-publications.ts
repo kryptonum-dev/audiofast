@@ -22,12 +22,6 @@ export const featuredPublications = defineType({
       type: 'heading',
     }),
     defineField({
-      name: 'button',
-      title: 'Przycisk CTA',
-      type: 'button',
-      description: 'Główny przycisk wezwania do działania sekcji',
-    }),
-    defineField({
       name: 'publications',
       title: 'Wyróżnione publikacje',
       type: 'array',
