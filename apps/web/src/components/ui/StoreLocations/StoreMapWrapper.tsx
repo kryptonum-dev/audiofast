@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import dynamic from 'next/dynamic';
+import { useEffect, useRef, useState } from 'react';
 
-import type { StoreWithLocation } from "./index";
-import styles from "./styles.module.scss";
+import type { StoreWithLocation } from './index';
+import styles from './styles.module.scss';
 
 const MapSkeleton = () => (
   <div className={styles.mapSkeleton}>
@@ -27,7 +27,7 @@ const MapSkeleton = () => (
   </div>
 );
 
-const StoreMap = dynamic(() => import("./StoreMap"), {
+const StoreMap = dynamic(() => import('./StoreMap'), {
   ssr: false,
   loading: () => <MapSkeleton />,
 });
@@ -70,7 +70,7 @@ export default function StoreMapWrapper({
         });
       },
       {
-        rootMargin: "200px", // Start loading 200px before it comes into view
+        rootMargin: '200px', // Start loading 200px before it comes into view
         threshold: 0.01,
       },
     );
@@ -85,7 +85,7 @@ export default function StoreMapWrapper({
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
-      if (idleCallbackRef.current && typeof window !== "undefined") {
+      if (idleCallbackRef.current && typeof window !== 'undefined') {
         window.cancelIdleCallback?.(idleCallbackRef.current);
       }
       if (timeoutRef.current !== null) {
@@ -99,14 +99,14 @@ export default function StoreMapWrapper({
       return;
     }
 
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       setShouldLoadMap(true);
       return;
     }
 
     const activateMap = () => setShouldLoadMap(true);
 
-    if (typeof window.requestIdleCallback === "function") {
+    if (typeof window.requestIdleCallback === 'function') {
       idleCallbackRef.current = window.requestIdleCallback(activateMap, {
         timeout: 1200,
       });
@@ -115,7 +115,7 @@ export default function StoreMapWrapper({
     }
 
     return () => {
-      if (idleCallbackRef.current && typeof window !== "undefined") {
+      if (idleCallbackRef.current && typeof window !== 'undefined') {
         window.cancelIdleCallback?.(idleCallbackRef.current);
         idleCallbackRef.current = null;
       }

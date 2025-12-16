@@ -1,43 +1,50 @@
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
-import CustomFiltersBar, {
-  type CustomFilter,
-} from '@/src/components/products/CustomFiltersBar';
+import CustomFiltersBar from '@/src/components/products/CustomFiltersBar';
 import ProductsAside from '@/src/components/products/ProductsAside';
 import ProductsListing from '@/src/components/products/ProductsListing';
 import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
 import styles from '@/src/components/products/ProductsListing/styles.module.scss';
 import SortDropdown from '@/src/components/products/SortDropdown';
 import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
-import CategoryViewTracker from '@/src/components/shared/analytics/CategoryViewTracker';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import {
   PRODUCT_SORT_OPTIONS,
-  PRODUCTS_ITEMS_PER_PAGE,
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
-  queryCategoryMetadata,
-  queryProductsPageData,
+  queryAllProductsFilterMetadata,
+  queryProductsPageContent,
 } from '@/src/global/sanity/query';
 import type {
-  QueryCategoryMetadataResult,
-  QueryProductsPageDataResult,
+  QueryAllProductsFilterMetadataResult,
+  QueryProductsPageContentResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import {
   extractRawCustomFilters,
-  parseBrands,
-  parsePrice,
   slugifyFilterName,
   validateCustomFilters,
 } from '@/src/global/utils';
+
+// Type for category content (GROQ select() returns this or null)
+// Generated types incorrectly infer `null` - this extends the default content type
+type CategoryContentType = NonNullable<
+  QueryProductsPageContentResult['defaultContent']
+> & {
+  customFilters?: string[];
+  parentCategory?: {
+    _id: string;
+    name: string | null;
+    slug: string | null;
+  } | null;
+};
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
@@ -48,271 +55,196 @@ type CategoryPageProps = {
     brands?: string | string[];
     minPrice?: string;
     maxPrice?: string;
-    [key: string]: string | string[] | undefined; // Allow dynamic custom filter params
+    [key: string]: string | string[] | undefined;
   }>;
 };
 
-export async function generateStaticParams() {
-  // Fetch all categories for static generation (with default filter params)
-  const productsData = await sanityFetch<QueryProductsPageDataResult>({
-    query: queryProductsPageData,
-    params: {
-      category: '',
-      search: '',
-      brands: [],
-      minPrice: 0,
-      maxPrice: 999999999,
-      customFilters: [],
-      embeddingResults: [],
-    },
-    tags: ['productCategorySub'],
-  });
+// ----------------------------------------
+// Cached Static Data Fetchers
+// ----------------------------------------
 
-  // Only generate static pages for categories that have products
+// Shared filter metadata (same for all category pages)
+async function getStaticFilterMetadata() {
+  'use cache';
+  cacheLife('hours');
+
+  return sanityFetch<QueryAllProductsFilterMetadataResult>({
+    query: queryAllProductsFilterMetadata,
+    tags: ['products'],
+  });
+}
+
+// Page content (handles both default and category-specific content)
+async function getPageContent(categorySlug: string) {
+  'use cache';
+  cacheLife('hours');
+
+  return sanityFetch<QueryProductsPageContentResult>({
+    query: queryProductsPageContent,
+    params: { category: `/kategoria/${categorySlug}/` },
+    tags: ['products', 'productCategorySub'],
+  });
+}
+
+// ----------------------------------------
+// Static Params Generation
+// ----------------------------------------
+export async function generateStaticParams() {
+  const filterMetadata = await getStaticFilterMetadata();
+
   return (
-    productsData?.categories
-      ?.filter((cat) => cat.count > 0)
+    filterMetadata?.categories
+      ?.filter((cat) => cat.slug)
       .map((cat) => ({
-        category: cat.slug?.replace('/kategoria/', '').replace('/', '') || '',
+        category: cat.slug?.replace('/kategoria/', '').replace(/\/$/, '') || '',
       })) || []
   );
 }
 
-export async function generateMetadata(props: CategoryPageProps) {
-  const params = await props.params;
-  const categorySlug = params.category;
+// ----------------------------------------
+// Metadata Generation
+// ----------------------------------------
+export async function generateMetadata({ params }: CategoryPageProps) {
+  const { category: categorySlug } = await params;
+  const contentData = await getPageContent(categorySlug);
 
-  const productsData = await sanityFetch<QueryProductsPageDataResult>({
-    query: queryProductsPageData,
-    params: {
-      category: `/kategoria/${categorySlug}/`,
-      search: '',
-      brands: [],
-      minPrice: 0,
-      maxPrice: 999999999,
-      customFilters: [],
-      embeddingResults: [],
-    },
-    tags: ['products'],
-  });
+  const pageData = contentData?.categoryContent || contentData?.defaultContent;
 
-  if (!productsData || !productsData.selectedCategory) {
+  if (!pageData) {
     logWarn(`Category not found: ${categorySlug}`);
     return getSEOMetadata();
   }
 
-  // Check if category has any products
-  const categoryInfo = productsData.categories?.find(
-    (cat) =>
-      cat.slug?.replace('/kategoria/', '').replace('/', '') === categorySlug,
-  );
-
-  if (!categoryInfo || categoryInfo.count === 0) {
-    logWarn(`Category "${categorySlug}" has no products`);
-    return getSEOMetadata();
-  }
-
-  const category = productsData.selectedCategory;
-
   return getSEOMetadata({
-    seo: category.seo,
-    slug: category.slug,
-    openGraph: category.openGraph,
+    seo: pageData.seo,
+    slug: pageData.slug,
+    openGraph: pageData.openGraph,
   });
 }
 
-export default async function CategoryPage(props: CategoryPageProps) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-  const categorySlug = params.category;
+// ----------------------------------------
+// Page Component
+// ----------------------------------------
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: CategoryPageProps) {
+  const { category: categorySlug } = await params;
+  const searchParamsData = await searchParams;
 
-  // Parse search params first (before fetching data)
-  const currentPage = Number(searchParams.page) || 1;
-  const searchTerm = searchParams.search || '';
-  const hasSearchQuery = Boolean(searchTerm);
+  // Fetch all cached static data in parallel
+  const [contentData, filterMetadata] = await Promise.all([
+    getPageContent(categorySlug),
+    getStaticFilterMetadata(),
+  ]);
 
-  // Fetch embeddings if search query exists (for semantic search)
-  // Always return an array (empty if no search) to satisfy GROQ parameter requirements
-  const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, 'products')) || []
-    : [];
+  const defaultContent = contentData?.defaultContent;
+  // Cast categoryContent - GROQ select() type is incorrectly inferred as `null`
+  const categoryContent =
+    contentData?.categoryContent as CategoryContentType | null;
 
-  // Determine sortBy: if search exists and no explicit sortBy, default to 'relevance'
-  // Otherwise use provided sortBy or default to 'newest'
-  const sortBy = hasSearchQuery
-    ? searchParams.sortBy || 'relevance'
-    : searchParams.sortBy || 'newest';
-
-  // Parse brands early (needed for query)
-  const brands = parseBrands(searchParams.brands);
-
-  // Parse prices with initial defaults (will be validated after fetch)
-  let minPrice = parsePrice(searchParams.minPrice, 0);
-  let maxPrice = parsePrice(searchParams.maxPrice, 999999999, 999999999);
-
-  // STEP 1: Lightweight fetch - Get category metadata only
-  const categoryMetadata = await sanityFetch<QueryCategoryMetadataResult>({
-    query: queryCategoryMetadata,
-    params: {
-      category: `/kategoria/${categorySlug}/`,
-    },
-    tags: ['productCategorySub'],
-  });
-
-  if (!categoryMetadata) {
-    logWarn(`Category not found: ${categorySlug}, returning 404`);
+  if (!defaultContent || !filterMetadata) {
+    logWarn(`Category page data not found for: ${categorySlug}`);
     notFound();
   }
 
-  // Extract raw custom filters from URL
-  const rawCustomFilters = extractRawCustomFilters(searchParams);
-
-  // Validate custom filters against category's available filters
-  const availableFilters = categoryMetadata.customFilters || [];
-  const customFilters = validateCustomFilters(
-    rawCustomFilters,
-    availableFilters,
-  );
-
-  // STEP 2: Main fetch - Get all data with validated filters
-  const productsData = await sanityFetch<QueryProductsPageDataResult>({
-    query: queryProductsPageData,
-    params: {
-      category: `/kategoria/${categorySlug}/`,
-      search: searchTerm,
-      brands,
-      minPrice,
-      maxPrice,
-      customFilters,
-      embeddingResults, // Pass embeddings for filtering
-    },
-    tags: ['products'],
-  });
-
-  if (!productsData || !productsData.selectedCategory) {
-    logWarn(`Category page data not found for: ${categorySlug}, returning 404`);
-    notFound();
-  }
-
-  const category = productsData.selectedCategory;
-
-  // Build current search params for CustomFiltersBar (with validated filters)
-  const currentSearchParams = new URLSearchParams();
-  if (searchTerm) currentSearchParams.set('search', searchTerm);
-  if (brands.length > 0) currentSearchParams.set('brands', brands.join(','));
-  if (minPrice > 0) currentSearchParams.set('minPrice', minPrice.toString());
-  if (maxPrice < 999999999)
-    currentSearchParams.set('maxPrice', maxPrice.toString());
-  customFilters.forEach((filter) => {
-    const slugified = slugifyFilterName(filter.filterName);
-    currentSearchParams.set(slugified, filter.value);
-  });
-
-  // Get the actual maximum price from filtered products
-  // If no products match filters, maxPrice will be null, so fallback to a default
-  const actualMaxPrice = productsData.maxPrice ?? 100000;
-  const actualMinPrice = productsData.minPrice ?? 0;
-
-  // Only adjust prices if user applied filters, otherwise keep defaults
-  // This ensures products without prices are shown when no filter is active
-  if (Boolean(searchParams.minPrice) && minPrice > actualMaxPrice) {
-    minPrice = actualMinPrice;
-  }
-  if (Boolean(searchParams.maxPrice) && maxPrice > actualMaxPrice) {
-    maxPrice = actualMaxPrice;
-  }
-  if (Boolean(searchParams.maxPrice) && maxPrice < 1) {
-    maxPrice = actualMaxPrice;
-  }
-
-  // Check if category exists in the system (not just filtered results)
-  // We don't check count here - if filters result in 0 products, show empty state instead of 404
-  const categoryExists = productsData.categoriesAll?.some(
-    (cat) =>
-      cat.slug?.replace('/kategoria/', '').replace('/', '') === categorySlug,
+  // Check if category exists
+  const categoryExists = filterMetadata.categories?.some(
+    (cat) => cat.slug === `/kategoria/${categorySlug}/`,
   );
 
   if (!categoryExists) {
-    logWarn(`Category "${categorySlug}" does not exist, returning 404`);
+    logWarn(`Category "${categorySlug}" does not exist`);
     notFound();
   }
 
-  const breadcrumbsData = [
-    {
-      name: productsData.name || 'Produkty',
-      path: '/produkty/',
-    },
-    {
-      name: category.name || categorySlug,
-      path: category.slug || `/produkty/kategoria/${categorySlug}/`,
-    },
-  ];
+  // Use category content if available, otherwise fallback to default
+  const heroTitle = categoryContent?.title || defaultContent.title;
+  const heroDescription =
+    categoryContent?.description || defaultContent.description;
+  const heroImage = categoryContent?.heroImage || defaultContent.heroImage;
+  const pageBuilderSections =
+    categoryContent?.pageBuilder && categoryContent.pageBuilder.length > 0
+      ? categoryContent.pageBuilder
+      : defaultContent.pageBuilder || [];
 
-  // Use category's custom title/description/image if available, otherwise fall back to main products page
-  const heroTitle = category.title || productsData.title;
-  const heroDescription = category.description || productsData.description;
-  const heroImage = category.heroImage || productsData.heroImage;
+  // Available custom filters for this category
+  const availableCustomFilters = categoryContent?.customFilters || [];
 
-  // Use category's page builder if available, otherwise fallback to main products page
-  const pageBuilderSections = category.pageBuilder?.length
-    ? category.pageBuilder
-    : productsData.pageBuilder || [];
+  // Parse custom filters from URL for CustomFiltersBar
+  const rawCustomFilters = extractRawCustomFilters(searchParamsData);
+  const activeCustomFilters = validateCustomFilters(
+    rawCustomFilters,
+    availableCustomFilters,
+  );
 
-  // Process available filter values into grouped format
-  // For each filter, show only values that exist in products matching OTHER active filters
-  const processedFilterValues = availableFilters
-    .map((filterName) => {
-      // Get OTHER active custom filters (exclude the one we're calculating)
-      const otherActiveFilters = customFilters.filter(
-        (f) => f.filterName !== filterName,
-      );
+  // Build current search params for CustomFiltersBar
+  const currentSearchParams = new URLSearchParams();
+  if (searchParamsData.search)
+    currentSearchParams.set('search', String(searchParamsData.search));
+  if (searchParamsData.brands)
+    currentSearchParams.set(
+      'brands',
+      Array.isArray(searchParamsData.brands)
+        ? searchParamsData.brands.join(',')
+        : searchParamsData.brands,
+    );
+  if (searchParamsData.minPrice)
+    currentSearchParams.set('minPrice', String(searchParamsData.minPrice));
+  if (searchParamsData.maxPrice)
+    currentSearchParams.set('maxPrice', String(searchParamsData.maxPrice));
+  activeCustomFilters.forEach((filter) => {
+    currentSearchParams.set(slugifyFilterName(filter.filterName), filter.value);
+  });
 
-      // Filter products that match OTHER active custom filters
-      const matchingProducts =
-        category.productsWithFilters?.filter((product) => {
-          if (!product.customFilterValues) return false;
+  // Process available filter values from products metadata
+  const processedFilterValues = availableCustomFilters
+    .map((filterName: string) => {
+      // Get products in this category
+      const categoryProducts =
+        filterMetadata.products?.filter((p) =>
+          p.allCategorySlugs?.includes(`/kategoria/${categorySlug}/`),
+        ) || [];
 
-          // Check if this product has all OTHER active filters
-          return otherActiveFilters.every((activeFilter) => {
-            return product.customFilterValues?.some(
-              (pf) =>
-                pf.filterName === activeFilter.filterName &&
-                pf.value === activeFilter.value,
-            );
-          });
-        }) || [];
-
-      // Get unique values for the current filter from matching products
+      // Get unique values for this filter
       const values = Array.from(
         new Set(
-          matchingProducts.flatMap(
+          categoryProducts.flatMap(
             (product) =>
               product.customFilterValues
-                ?.filter((fv) => fv.filterName === filterName)
-                .map((fv) => fv.value)
+                ?.filter((fv) => fv?.filterName === filterName)
+                .map((fv) => fv?.value)
                 .filter(Boolean) || [],
           ),
         ),
-      ).sort();
+      ).sort() as string[];
 
       return {
         name: filterName,
         values,
       };
     })
-    .filter((filter) => filter.values.length > 0);
+    .filter(
+      (filter: { name: string; values: string[] }) => filter.values.length > 0,
+    );
+
+  const breadcrumbsData = [
+    {
+      name: defaultContent.name || 'Produkty',
+      path: '/produkty/',
+    },
+    {
+      name: categoryContent?.name || categorySlug,
+      path: categoryContent?.slug || `/produkty/kategoria/${categorySlug}/`,
+    },
+  ];
 
   return (
     <>
-      <CategoryViewTracker
-        categoryId={category.slug || `/produkty/kategoria/${categorySlug}/`}
-        categoryName={category.name || categorySlug}
-        totalItems={productsData.totalCount}
-      />
       <CollectionPageSchema
-        name={category.name || categorySlug}
+        name={categoryContent?.name || categorySlug}
         url={`/produkty/kategoria/${categorySlug}/`}
-        description={category.description || productsData.description}
+        description={categoryContent?.description || defaultContent.description}
       />
       <Breadcrumbs data={breadcrumbsData} firstItemType="heroStatic" />
       <HeroStatic
@@ -323,8 +255,8 @@ export default async function CategoryPage(props: CategoryPageProps) {
         blocksHeading={null}
         blocks={[]}
         index={0}
-        _key={''}
-        _type={'heroStatic'}
+        _key=""
+        _type="heroStatic"
         button={null}
       />
 
@@ -332,51 +264,41 @@ export default async function CategoryPage(props: CategoryPageProps) {
         className={`${styles.productsListing} max-width`}
         data-has-filters={processedFilterValues.length > 0}
       >
+        {/* Client-side computed sidebar */}
         <ProductsAside
-          categories={productsData.categoriesAll || []}
-          brands={productsData.brands || []}
-          totalCount={productsData.totalCountAll || 0}
-          maxPrice={actualMaxPrice}
+          allProductsMetadata={filterMetadata.products || []}
+          allCategories={filterMetadata.categories || []}
+          allBrands={filterMetadata.brands || []}
+          globalMaxPrice={filterMetadata.globalMaxPrice || 100000}
           basePath={`/produkty/kategoria/${categorySlug}/`}
-          currentCategory={categorySlug}
-          initialSearch={searchTerm}
-          initialBrands={brands}
-          initialMinPrice={minPrice}
-          initialMaxPrice={maxPrice}
+          currentCategory={`/kategoria/${categorySlug}/`}
           headingLevel="h2"
         />
-        <CustomFiltersBar
-          customFilters={processedFilterValues as CustomFilter[]}
-          activeFilters={customFilters}
-          basePath={`/produkty/kategoria/${categorySlug}/`}
-          currentSearchParams={currentSearchParams}
-        />
-        <SortDropdown
-          options={
-            hasSearchQuery
-              ? [RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]
-              : PRODUCT_SORT_OPTIONS
-          }
-          basePath={`/produkty/kategoria/${categorySlug}/`}
-          defaultValue={hasSearchQuery ? 'relevance' : 'newest'}
-          hasSearchQuery={hasSearchQuery}
-        />
-        <Suspense
-          key={`category-${categorySlug}-page-${currentPage}-search-${searchTerm}-sort-${sortBy}-brands-${brands.join(',')}-price-${minPrice}-${maxPrice}-filters-${JSON.stringify(customFilters)}`}
-          fallback={<ProductsListingSkeleton />}
-        >
-          <ProductsListing
-            currentPage={currentPage}
-            itemsPerPage={PRODUCTS_ITEMS_PER_PAGE}
-            searchTerm={searchTerm}
-            category={`/kategoria/${categorySlug}/`}
-            sortBy={sortBy}
-            brands={brands}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
-            customFilters={customFilters}
+
+        {/* Custom filters bar (for categories with custom filters) */}
+        {processedFilterValues.length > 0 && (
+          <CustomFiltersBar
+            customFilters={processedFilterValues}
+            activeFilters={activeCustomFilters}
             basePath={`/produkty/kategoria/${categorySlug}/`}
-            embeddingResults={embeddingResults}
+            currentSearchParams={currentSearchParams}
+          />
+        )}
+
+        <SortDropdown
+          options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
+          basePath={`/produkty/kategoria/${categorySlug}/`}
+          defaultValue="newest"
+        />
+
+        {/* Products listing in Suspense */}
+        <Suspense fallback={<ProductsListingSkeleton />}>
+          <ProductsListing
+            searchParams={searchParams}
+            basePath={`/produkty/kategoria/${categorySlug}/`}
+            category={`/kategoria/${categorySlug}/`}
+            availableCustomFilters={availableCustomFilters}
+            defaultSortBy="newest"
           />
         </Suspense>
       </section>

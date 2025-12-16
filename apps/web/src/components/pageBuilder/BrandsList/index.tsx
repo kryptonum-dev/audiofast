@@ -1,12 +1,12 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import type { PagebuilderType } from "@/src/global/types";
+import type { PagebuilderType } from '@/src/global/types';
 
-import PortableText from "../../portableText";
-import Image from "../../shared/Image";
-import styles from "./styles.module.scss";
+import PortableText from '../../portableText';
+import Image from '../../shared/Image';
+import styles from './styles.module.scss';
 
-type BrandsListProps = PagebuilderType<"brandsList"> & {
+type BrandsListProps = PagebuilderType<'brandsList'> & {
   index: number;
 };
 
@@ -17,12 +17,17 @@ export default function BrandsList({
   brands,
   index,
 }: BrandsListProps) {
+  // Don't render if no brands available
+  if (!brands || brands.length === 0) {
+    return null;
+  }
+
   return (
     <section className={`${styles.brandsList} max-width-block`}>
       <header className={styles.header}>
         <PortableText
           value={heading}
-          headingLevel={index === 0 ? "h1" : "h2"}
+          headingLevel={index === 0 ? 'h1' : 'h2'}
           className={styles.heading}
         />
         <PortableText
@@ -43,7 +48,7 @@ export default function BrandsList({
               image={brand.logo}
               alt={brand.name!}
               sizes="190px"
-              loading={index === 0 ? "eager" : "lazy"}
+              loading={index === 0 ? 'eager' : 'lazy'}
               priority={index === 0 && idx === 0}
               quality={90}
             />

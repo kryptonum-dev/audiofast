@@ -129,7 +129,9 @@ export default function ComparisonTable({
   };
 
   const handleProductSelect = (productId: string) => {
-    const selectedProduct = allProducts.find((product) => product._id === productId);
+    const selectedProduct = allProducts.find(
+      (product) => product._id === productId,
+    );
     const result = addProductToComparison(productId, categorySlug, {
       categoryName,
       productName: selectedProduct?.name,

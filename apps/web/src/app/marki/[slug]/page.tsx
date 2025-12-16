@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import ProductsAside from '@/src/components/products/ProductsAside';
@@ -20,24 +20,24 @@ import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import {
   PRODUCT_SORT_OPTIONS,
-  PRODUCTS_ITEMS_PER_PAGE,
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllBrandSlugs,
+  queryAllProductsFilterMetadata,
   queryBrandBySlug,
   queryBrandSeoBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllBrandSlugsResult,
+  QueryAllProductsFilterMetadataResult,
   QueryBrandBySlugResult,
   QueryBrandSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import type { PublicationType } from '@/src/global/types';
-import { parsePrice } from '@/src/global/utils';
 
 type BrandPageProps = {
   params: Promise<{ slug: string }>;
@@ -45,45 +45,52 @@ type BrandPageProps = {
     page?: string;
     search?: string;
     sortBy?: string;
-    category?: string; // Category filter via search param (e.g., ?category=glosniki-podlogowe)
+    category?: string;
     minPrice?: string;
     maxPrice?: string;
   }>;
 };
 
-// Fetch brand data with filter metadata
-// The query now includes products filter metadata (categories, brands, price ranges)
-// Pass filter params to get filtered counts
-function fetchBrandData(
-  slug: string,
-  filters?: {
-    category?: string;
-    search?: string;
-    brands?: string[];
-    minPrice?: number;
-    maxPrice?: number;
-    embeddingResults?: Array<{
-      score: number;
-      value: { documentId: string; type: string };
-    }>;
-  },
-) {
+// ----------------------------------------
+// Cached Static Data Fetchers
+// ----------------------------------------
+
+// Brand content (specific to each brand, but cacheable)
+async function getBrandContent(slug: string) {
+  'use cache';
+  cacheLife('weeks');
+
   return sanityFetch<QueryBrandBySlugResult>({
     query: queryBrandBySlug,
     params: {
       slug: `/marki/${slug}/`,
-      category: filters?.category || '', // Category filter via search param
-      search: filters?.search || '',
-      brands: filters?.brands || [],
-      minPrice: filters?.minPrice || 0,
-      maxPrice: filters?.maxPrice || 999999999,
-      customFilters: [], // Brand pages don't have custom filters
-      embeddingResults: filters?.embeddingResults || [], // Embeddings for semantic search
+      // Pass empty filters - we don't need filtered counts for PPR
+      category: '',
+      search: '',
+      brands: [],
+      minPrice: 0,
+      maxPrice: 999999999,
+      customFilters: [],
+      embeddingResults: [],
     },
     tags: ['brand'],
   });
 }
 
+// Global filter metadata (shared across all pages, heavily cached)
+async function getStaticFilterMetadata() {
+  'use cache';
+  cacheLife('weeks');
+
+  return sanityFetch<QueryAllProductsFilterMetadataResult>({
+    query: queryAllProductsFilterMetadata,
+    tags: ['products'],
+  });
+}
+
+// ----------------------------------------
+// Static Params Generation
+// ----------------------------------------
 export async function generateStaticParams() {
   const brands = await sanityFetch<QueryAllBrandSlugsResult>({
     query: queryAllBrandSlugs,
@@ -97,11 +104,13 @@ export async function generateStaticParams() {
     }));
 }
 
+// ----------------------------------------
+// Metadata Generation
+// ----------------------------------------
 export async function generateMetadata({
   params,
 }: BrandPageProps): Promise<Metadata> {
   const { slug } = await params;
-  // Use lightweight SEO-only query to reduce deployment metadata size
   const seoData = await sanityFetch<QueryBrandSeoBySlugResult>({
     query: queryBrandSeoBySlug,
     params: { slug: `/marki/${slug}/` },
@@ -117,69 +126,42 @@ export async function generateMetadata({
   });
 }
 
-export default async function BrandPage(props: BrandPageProps) {
-  const { slug } = await props.params;
-  const searchParams = await props.searchParams;
+// ----------------------------------------
+// Page Component
+// ----------------------------------------
+export default async function BrandPage({
+  params,
+  searchParams,
+}: BrandPageProps) {
+  const { slug } = await params;
 
-  // Parse search params
-  const currentPage = Number(searchParams.page) || 1;
-  const searchTerm = searchParams.search || '';
-  const categorySlug = searchParams.category || ''; // Category filter via search param (e.g., "glosniki-podstawkowe")
-
-  // Normalize category slug to match Sanity format: /kategoria/slug/
-  // Query expects: /kategoria/glosniki-podstawkowe/
-  // URL has: glosniki-podstawkowe
-  const normalizedCategory = categorySlug ? `/kategoria/${categorySlug}/` : '';
-
-  const hasSearchQuery = Boolean(searchTerm);
-
-  // Fetch embeddings if search query exists (for semantic search)
-  // Always return an array (empty if no search) to satisfy GROQ parameter requirements
-  const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, 'products')) || []
-    : [];
-
-  // Determine sortBy: if search exists and no explicit sortBy, default to 'relevance'
-  // Otherwise use provided sortBy or default to 'newest'
-  const sortBy = hasSearchQuery
-    ? searchParams.sortBy || 'relevance'
-    : searchParams.sortBy || 'newest';
-
-  let minPrice = parsePrice(searchParams.minPrice, 0);
-  let maxPrice = parsePrice(searchParams.maxPrice, 999999999, 999999999);
-
-  // Fetch brand data with filter metadata in a single API call
-  // NOTE: We don't pass category filter here to get ALL categories in sidebar
-  // The category filter is applied only in ProductsListing component
-  const brand = await fetchBrandData(slug, {
-    category: '', // Don't filter categories in sidebar - show all categories
-    search: searchTerm,
-    brands: [slug], // Filter products by current brand
-    minPrice,
-    maxPrice,
-    embeddingResults, // Pass embeddings for semantic search
-  });
+  // Fetch all cached static data in parallel
+  const [brand, filterMetadata] = await Promise.all([
+    getBrandContent(slug),
+    getStaticFilterMetadata(),
+  ]);
 
   if (!brand) {
     logWarn(`Brand not found for slug: ${slug}, returning 404`);
     notFound();
   }
 
-  // Get the actual maximum price from filtered products
-  const actualMaxPrice = brand.maxPrice ?? 100000;
-  const actualMinPrice = brand.minPrice ?? 0;
+  if (!filterMetadata) {
+    logWarn(`Filter metadata not found for brand page: ${slug}`);
+    notFound();
+  }
 
-  // Only adjust prices if user applied filters, otherwise keep defaults
-  // This ensures products without prices are shown when no filter is active
-  if (Boolean(searchParams.minPrice) && minPrice > actualMaxPrice) {
-    minPrice = actualMinPrice;
-  }
-  if (Boolean(searchParams.maxPrice) && maxPrice > actualMaxPrice) {
-    maxPrice = actualMaxPrice;
-  }
-  if (Boolean(searchParams.maxPrice) && maxPrice < 1) {
-    maxPrice = actualMaxPrice;
-  }
+  // Pre-filter products metadata to only this brand's products
+  // This ensures the sidebar shows categories/prices only for this brand
+  const brandProductsMetadata =
+    filterMetadata.products?.filter((p) => p.brandSlug === slug) || [];
+
+  // Calculate max price for this brand's products
+  const brandPrices = brandProductsMetadata
+    .map((p) => p.basePriceCents)
+    .filter((p): p is number => p !== null && p !== undefined);
+  const brandMaxPrice =
+    brandPrices.length > 0 ? Math.max(...brandPrices) : 100000;
 
   const breadcrumbsData = [
     {
@@ -240,55 +222,41 @@ export default async function BrandPage(props: BrandPageProps) {
         button={null}
       />
       {sections.length > 1 && <PillsStickyNav sections={sections} />}
+
       <section id="produkty" className={`${styles.productsListing} max-width`}>
+        {/* Client-side computed sidebar - filtered to this brand's products */}
         <ProductsAside
-          categories={brand.categories || []}
-          brands={brand.brands || []}
-          totalCount={brand.totalCount || 0}
-          maxPrice={actualMaxPrice}
+          allProductsMetadata={brandProductsMetadata}
+          allCategories={filterMetadata.categories || []}
+          allBrands={filterMetadata.brands || []}
+          globalMaxPrice={brandMaxPrice}
           basePath={`/marki/${slug}/`}
-          currentCategory={categorySlug || null}
-          initialSearch={searchTerm}
-          initialBrands={[]}
-          initialMinPrice={minPrice}
-          initialMaxPrice={maxPrice}
-          useCategorySearchParam={true}
           visibleFilters={{
             search: true,
             categories: true,
             brands: false,
-            priceRange: false,
+            priceRange: true,
           }}
           headingLevel="h2"
         />
+
         <SortDropdown
-          options={
-            hasSearchQuery
-              ? [RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]
-              : PRODUCT_SORT_OPTIONS
-          }
+          options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
           basePath={`/marki/${slug}/`}
-          defaultValue={hasSearchQuery ? 'relevance' : 'newest'}
-          hasSearchQuery={hasSearchQuery}
+          defaultValue="newest"
         />
-        <Suspense
-          key={`brand-${slug}-page-${currentPage}-search-${searchTerm}-category-${categorySlug}-sort-${sortBy}-price-${minPrice}-${maxPrice}`}
-          fallback={<ProductsListingSkeleton />}
-        >
+
+        {/* Products listing in Suspense - reads filters from URL */}
+        <Suspense fallback={<ProductsListingSkeleton />}>
           <ProductsListing
-            currentPage={currentPage}
-            itemsPerPage={PRODUCTS_ITEMS_PER_PAGE}
-            searchTerm={searchTerm}
-            category={normalizedCategory}
-            sortBy={sortBy}
-            brandSlug={slug}
-            minPrice={minPrice}
-            maxPrice={maxPrice}
+            searchParams={searchParams}
             basePath={`/marki/${slug}/`}
-            embeddingResults={embeddingResults}
+            brandSlug={slug}
+            defaultSortBy="newest"
           />
         </Suspense>
       </section>
+
       {brand.bannerImage && (
         <section className="max-width-block br-md margin-bottom-lg">
           <Image
@@ -300,6 +268,7 @@ export default async function BrandPage(props: BrandPageProps) {
           />
         </section>
       )}
+
       <TwoColumnContent
         contentBlocks={brand.brandContentBlocks as ContentBlock[]}
         customId="o-marce"
@@ -333,6 +302,7 @@ export default async function BrandPage(props: BrandPageProps) {
           customId="recenzje"
         />
       )}
+
       {brand.stores &&
         Array.isArray(brand.stores) &&
         brand.stores.length > 0 && (

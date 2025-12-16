@@ -1109,6 +1109,114 @@ export const queryBlogArticles = queryBlogArticlesNewest;
 // ----------------------------------------
 
 // ----------------------------------------
+// PPR Static Queries (for Partial Pre-rendering)
+// ----------------------------------------
+
+// Query for page content - handles both /produkty and /produkty/kategoria/[category]
+// Uses GROQ select() to conditionally fetch category-specific or default content
+// Parameters:
+// - $category: category slug (e.g., "/kategoria/streamery/") or empty string "" for main page
+// This query is designed to be cached with "use cache" for PPR static shell
+export const queryProductsPageContent = defineQuery(`
+  {
+    "defaultContent": *[_type == "products"][0] {
+      _id,
+      _type,
+      "slug": slug.current,
+      name,
+      ${portableTextFragment('title')},
+      ${portableTextFragment('description')},
+      ${imageFragment('heroImage')},
+      ${pageBuilderFragment},
+      seo,
+      openGraph{
+        title,
+        description,
+        "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+      }
+    },
+    "categoryContent": select(
+      $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{
+        _id,
+        name,
+        "slug": slug.current,
+        ${portableTextFragment('title')},
+        ${portableTextFragment('description')},
+        ${imageFragment('heroImage')},
+        customFilters,
+        ${pageBuilderFragment},
+        seo,
+        openGraph{
+          title,
+          description,
+          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        },
+        parentCategory->{
+          _id,
+          name,
+          "slug": slug.current
+        }
+      },
+      null
+    )
+  }
+`);
+
+// Query for all products filter metadata (lightweight)
+// Used for client-side filter computation in PPR architecture
+// ~150 bytes per product × 551 products = ~80KB total
+// Parameters: none (fetches all data)
+// This query is designed to be cached with "use cache" for PPR static shell
+export const queryAllProductsFilterMetadata = defineQuery(`
+  {
+    "products": *[
+      _type == "product" 
+      && defined(slug.current)
+      && isArchived != true
+      && count(categories) > 0
+    ] {
+      _id,
+      "brandSlug": string::split(brand->slug.current, "/")[2],
+      "brandName": brand->name,
+      "categorySlug": categories[0]->slug.current,
+      "parentCategorySlug": categories[0]->parentCategory->slug.current,
+      "allCategorySlugs": categories[]->slug.current,
+      basePriceCents,
+      isCPO,
+      customFilterValues
+    },
+    "categories": *[_type == "productCategorySub" && defined(slug.current)] | order(orderRank) {
+      _id,
+      name,
+      "slug": slug.current,
+      parentCategory->{
+        _id,
+        name,
+        "slug": slug.current
+      }
+    },
+    "brands": *[_type == "brand" && defined(slug.current)] | order(orderRank) {
+      _id,
+      name,
+      "slug": slug.current,
+      ${imageFragment('logo')}
+    },
+    "globalMaxPrice": math::max(*[
+      _type == "product" 
+      && defined(slug.current)
+      && isArchived != true
+      && defined(basePriceCents)
+    ].basePriceCents),
+    "globalMinPrice": math::min(*[
+      _type == "product" 
+      && defined(slug.current)
+      && isArchived != true
+      && defined(basePriceCents)
+    ].basePriceCents)
+  }
+`);
+
+// ----------------------------------------
 // Products Filter Metadata Fragment
 // ----------------------------------------
 // Reusable fragment for filter metadata (categories, brands, price ranges, counts)

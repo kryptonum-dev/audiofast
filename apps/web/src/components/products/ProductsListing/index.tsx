@@ -1,56 +1,105 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
-import { getProductsListingQuery } from "@/src/global/sanity/query";
-import type { QueryProductsListingNewestResult } from "@/src/global/sanity/sanity.types";
-import type { ProductType } from "@/src/global/types";
-import { slugifyFilterName } from "@/src/global/utils";
+import { fetchEmbeddings } from '@/src/app/actions/embeddings';
+import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
+import { logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
+import { getProductsListingQuery } from '@/src/global/sanity/query';
+import type { QueryProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
+import type { ProductType } from '@/src/global/types';
+import { parseBrands, parsePrice, slugifyFilterName } from '@/src/global/utils';
 
-import EmptyState from "../../ui/EmptyState";
-import Pagination from "../../ui/Pagination";
-import ProductCard from "../../ui/ProductCard";
-import styles from "./styles.module.scss";
+import EmptyState from '../../ui/EmptyState';
+import Pagination from '../../ui/Pagination';
+import ProductCard from '../../ui/ProductCard';
+import styles from './styles.module.scss';
+
+// Search params type
+type SearchParamsType = {
+  page?: string;
+  search?: string;
+  sortBy?: string;
+  brands?: string | string[];
+  minPrice?: string;
+  maxPrice?: string;
+  [key: string]: string | string[] | undefined;
+};
 
 type ProductsListingProps = {
-  currentPage: number;
-  itemsPerPage: number;
-  searchTerm?: string;
-  category?: string;
-  sortBy?: string;
-  brands?: string[];
-  brandSlug?: string; // Add brand context for brand pages
-  minPrice?: number;
-  maxPrice?: number;
-  customFilters?: Array<{ filterName: string; value: string }>;
-  isCPO?: boolean; // Filter for CPO products only
+  // Search params (awaited in component)
+  searchParams: Promise<SearchParamsType>;
+
+  // Page configuration
   basePath: string;
-  embeddingResults?: Array<{
-    score: number;
-    value: { documentId: string; type: string };
-  }> | null; // Embeddings for semantic search
+  category?: string;
+  brandSlug?: string; // For brand pages - filter by this brand
+  isCPO?: boolean; // Filter for CPO products only
+
+  // Custom filters configuration
+  availableCustomFilters?: string[]; // Custom filter names for parsing
+  defaultSortBy?: string; // Default sort order when no search
 };
 
 export default async function ProductsListing({
-  currentPage,
-  itemsPerPage,
-  searchTerm = "",
-  category = "",
-  sortBy = "newest",
-  brands = [],
-  brandSlug,
-  minPrice = 0,
-  maxPrice = 999999999,
-  customFilters = [],
-  isCPO = false,
+  searchParams,
   basePath,
-  embeddingResults,
+  category = '',
+  brandSlug,
+  isCPO = false,
+  availableCustomFilters = [],
+  defaultSortBy = 'orderRank',
 }: ProductsListingProps) {
+  // Await and parse searchParams
+  const params = await searchParams;
+
+  const currentPage = Number(params.page) || 1;
+  const itemsPerPage = PRODUCTS_ITEMS_PER_PAGE;
+  const searchTerm = params.search || '';
+  const hasSearchQuery = Boolean(searchTerm);
+
+  // Category can come from prop OR from URL search params (for brand pages)
+  // Normalize to full path format: /kategoria/slug/
+  const categoryFromUrl = params.category as string | undefined;
+  const effectiveCategory =
+    category ||
+    (categoryFromUrl
+      ? categoryFromUrl.startsWith('/kategoria/')
+        ? categoryFromUrl
+        : `/kategoria/${categoryFromUrl}/`
+      : '');
+
+  // Fetch embeddings if search exists
+  const embeddingResults = hasSearchQuery
+    ? (await fetchEmbeddings(searchTerm, 'products')) || []
+    : [];
+
+  // Determine sort order
+  const sortBy = hasSearchQuery
+    ? params.sortBy || 'relevance'
+    : params.sortBy || defaultSortBy;
+
+  // Parse filters from URL
+  const brands = parseBrands(params.brands);
+  const minPrice = parsePrice(params.minPrice, 0);
+  const maxPrice = parsePrice(params.maxPrice, 999999999, 999999999);
+
+  // Parse custom filters
+  const customFilters = availableCustomFilters
+    .map((filterName) => {
+      const slugified = slugifyFilterName(filterName);
+      const value = params[slugified];
+      if (typeof value === 'string' && value) {
+        return { filterName, value };
+      }
+      return null;
+    })
+    .filter((f): f is { filterName: string; value: string } => f !== null);
+
+  // Calculate offset/limit
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
 
   // If brandSlug is provided, use it for filtering (override brands array)
-  // Otherwise, use the brands array as normal
   const effectiveBrands = brandSlug ? [brandSlug] : brands;
 
   // Get the appropriate query based on sortBy parameter
@@ -59,8 +108,8 @@ export default async function ProductsListing({
   const productsData = await sanityFetch<QueryProductsListingNewestResult>({
     query,
     params: {
-      category: category || "",
-      search: searchTerm || "",
+      category: effectiveCategory,
+      search: searchTerm || '',
       offset,
       limit,
       brands: effectiveBrands,
@@ -68,13 +117,13 @@ export default async function ProductsListing({
       maxPrice,
       customFilters,
       isCPO,
-      embeddingResults: embeddingResults || [], // Always pass array to GROQ
+      embeddingResults: embeddingResults || [],
     },
-    tags: ["product"],
+    tags: ['product'],
   });
 
   if (!productsData) {
-    logWarn("Products data not found");
+    logWarn('Products data not found');
     notFound();
   }
 
@@ -82,17 +131,17 @@ export default async function ProductsListing({
 
   // Create URLSearchParams for Pagination
   const urlSearchParams = new URLSearchParams();
-  if (searchTerm) urlSearchParams.set("search", searchTerm);
-  if (sortBy && sortBy !== "newest") urlSearchParams.set("sortBy", sortBy);
-  // Only add brands to URL params if not using brandSlug (brandSlug is handled via route)
+  if (searchTerm) urlSearchParams.set('search', searchTerm);
+  if (sortBy && sortBy !== defaultSortBy) urlSearchParams.set('sortBy', sortBy);
   if (!brandSlug && brands.length > 0) {
-    // Set brands as a comma-separated string
-    urlSearchParams.set("brands", brands.join(","));
+    urlSearchParams.set('brands', brands.join(','));
   }
-  if (minPrice > 0) urlSearchParams.set("minPrice", minPrice.toString());
-  if (maxPrice < 999999999)
-    urlSearchParams.set("maxPrice", maxPrice.toString());
-  // Add custom filters to pagination params (slugified)
+  // Preserve category from URL params (for brand pages)
+  if (categoryFromUrl) urlSearchParams.set('category', categoryFromUrl);
+  if (minPrice > 0) urlSearchParams.set('minPrice', minPrice.toString());
+  if (maxPrice < 999999999) {
+    urlSearchParams.set('maxPrice', maxPrice.toString());
+  }
   if (customFilters.length > 0) {
     customFilters.forEach(({ filterName, value }) => {
       const slugifiedFilterName = slugifyFilterName(filterName);
@@ -101,14 +150,14 @@ export default async function ProductsListing({
   }
 
   const ITEMS_PER_ROW = 3;
-  const ROW_DELAY = 80; // delay between rows in ms
+  const ROW_DELAY = 80;
 
   return (
     <>
       {!hasProducts ? (
         <EmptyState
           searchTerm={searchTerm}
-          category={category}
+          category={effectiveCategory}
           type="products"
         />
       ) : (
@@ -135,7 +184,7 @@ export default async function ProductsListing({
                     product={product}
                     imageSizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     priority={index < 3}
-                    loading={index < 3 ? "eager" : "lazy"}
+                    loading={index < 3 ? 'eager' : 'lazy'}
                   />
                 </li>
               );
