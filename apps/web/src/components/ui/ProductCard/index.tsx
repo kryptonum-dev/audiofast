@@ -66,6 +66,7 @@ export default function ProductCard({
             productId={_id}
             productName={name ?? ""}
             categorySlug={categories?.[0]?.slug ?? ""}
+            categoryName={categories?.[0]?.name ?? categories?.[0]?.slug ?? ""}
             productData={product}
           />
         </div>

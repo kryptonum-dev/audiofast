@@ -51,7 +51,7 @@
     &::before {
       position: absolute;
       inset: -1rem;
-      content: "";
+      content: '';
       z-index: 1;
     }
 
@@ -137,6 +137,18 @@
         outline: 2px solid var(--primary-red);
         outline-offset: 2px;
       }
+    }
+  }
+
+  .categoryHint {
+    margin: 0 0 clamp(0.5rem, calc(0.75vw / 0.48), 0.75rem);
+    color: var(--neutral-300);
+    font-size: var(--typography-body-s);
+    line-height: 1.4;
+
+    strong {
+      color: var(--neutral-white);
+      font-weight: 500;
     }
   }
 

@@ -1,4 +1,4 @@
-import type { PortableTextBlock } from "@portabletext/react";
+import type { PortableTextBlock } from '@portabletext/react';
 
 import type {
   ComparisonColumn,
@@ -6,21 +6,29 @@ import type {
   ComparisonProduct,
   ComparisonTableData,
   EnabledParameter,
-} from "./types";
+} from './types';
 
 /**
  * Validate if product can be added to comparison
  */
+type ValidationOptions = {
+  categoryName?: string;
+  productName?: string;
+};
+
 export function validateProductAddition(
   productId: string,
   categorySlug: string,
   currentComparison: ComparisonCookie | null,
+  options?: ValidationOptions,
 ): { valid: boolean; error?: string } {
+  const categoryName = options?.categoryName;
+  const productName = options?.productName;
   // Check if already in comparison
   if (currentComparison?.productIds.includes(productId)) {
     return {
       valid: false,
-      error: "Ten produkt jest już w porównaniu",
+      error: 'Ten produkt jest już w porównaniu',
     };
   }
 
@@ -28,15 +36,26 @@ export function validateProductAddition(
   if (currentComparison && currentComparison.productIds.length >= 3) {
     return {
       valid: false,
-      error: "Możesz porównywać maksymalnie 3 produkty",
+      error: 'Możesz porównywać maksymalnie 3 produkty',
     };
   }
 
   // Check category match
   if (currentComparison && currentComparison.categorySlug !== categorySlug) {
+    const getCategoryLabel = (slug: string, name?: string) =>
+      name?.trim() || slug;
+    const currentLabel = getCategoryLabel(
+      currentComparison.categorySlug,
+      currentComparison.categoryName,
+    );
+    const incomingLabel = getCategoryLabel(categorySlug, categoryName);
+    const productLabel = productName
+      ? `Produkt "${productName}"`
+      : 'Ten produkt';
+
     return {
       valid: false,
-      error: "Możesz porównywać tylko produkty z tej samej kategorii",
+      error: `${productLabel} jest w kategorii "${incomingLabel}". Porównywarka zawiera już produkty z kategorii "${currentLabel}".`,
     };
   }
 
@@ -160,7 +179,7 @@ export function createComparisonRows(
   columns: ComparisonColumn[],
   headings: string[],
   enabledParameters?: EnabledParameter[],
-): ComparisonTableData["comparisonRows"] {
+): ComparisonTableData['comparisonRows'] {
   // If enabledParameters is provided and not empty, use its order
   // Otherwise, use all headings
   const orderedHeadings =

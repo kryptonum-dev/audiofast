@@ -95,6 +95,10 @@ export default async function ProductPage(props: ProductPageProps) {
     typeof priceCents === 'number' ? Math.round(priceCents) / 100 : null;
   const categorySlugs =
     product.categories?.map((category) => category?.slug).filter(Boolean) ?? [];
+  const primaryCategory = product.categories?.[0];
+  const primaryCategorySlug = primaryCategory?.slug ?? '';
+  const primaryCategoryName =
+    primaryCategory?.name || primaryCategory?.slug || '';
 
   // Determine which stores to display (product stores > brand stores > none)
   const effectiveStores =
@@ -165,7 +169,8 @@ export default async function ProductPage(props: ProductPageProps) {
         shortDescription={product.shortDescription}
         awards={product.awards as AwardType[]}
         productId={product._id}
-        categorySlug={product.categories?.[0]?.slug ?? ''}
+        categorySlug={primaryCategorySlug}
+        categoryName={primaryCategoryName}
       />
       {sections.length > 1 && (
         <PillsStickyNav

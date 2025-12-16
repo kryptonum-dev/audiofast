@@ -1708,7 +1708,8 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
       ${imageFragment('logo')}
     },
     "categories": categories[]->{
-      "slug": slug.current
+    "slug": slug.current,
+    name
     }
   }
 `);
@@ -1747,7 +1748,8 @@ export const queryComparisonPageData = defineQuery(/* groq */ `{
       }
     },
     "categories": categories[]->{
-      "slug": slug.current
+    "slug": slug.current,
+    name
     }
   },
   "enabledParameters": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current == $categorySlug][0].enabledParameters[] {

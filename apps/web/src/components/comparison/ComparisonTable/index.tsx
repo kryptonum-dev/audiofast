@@ -70,6 +70,10 @@ export default function ComparisonTable({
     currentProducts[0]?.categories[0]?.slug ||
     allProducts[0]?.categories[0]?.slug ||
     '';
+  const categoryName =
+    currentProducts[0]?.categories[0]?.name ||
+    allProducts[0]?.categories[0]?.name ||
+    '';
 
   // Process comparison data with new structure
   const comparisonData = useMemo(
@@ -125,7 +129,11 @@ export default function ComparisonTable({
   };
 
   const handleProductSelect = (productId: string) => {
-    const result = addProductToComparison(productId, categorySlug);
+    const selectedProduct = allProducts.find((product) => product._id === productId);
+    const result = addProductToComparison(productId, categorySlug, {
+      categoryName,
+      productName: selectedProduct?.name,
+    });
     if (result.success) {
       setComparisonIds((prev) => new Set([...prev, productId]));
       toast.success('Produkt dodany do porównania');

@@ -15,6 +15,7 @@ type AddToComparisonButtonProps = {
   productId: string;
   productName: string;
   categorySlug?: string;
+  categoryName?: string;
   productData?: unknown; // Full product data for optimistic updates
 };
 
@@ -22,6 +23,7 @@ export default function AddToComparisonButton({
   productId,
   productName,
   categorySlug,
+  categoryName,
   productData,
 }: AddToComparisonButtonProps) {
   const [isInComparison, setIsInComparison] = useState(false);
@@ -65,7 +67,11 @@ export default function AddToComparisonButton({
       return;
     }
 
-    const result = addProductToComparison(productId, categorySlug, productData);
+    const result = addProductToComparison(productId, categorySlug, {
+      categoryName,
+      productName,
+      productData,
+    });
 
     if (result.success) {
       setIsInComparison(true);

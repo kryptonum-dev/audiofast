@@ -26,6 +26,7 @@ export interface ProductHeroProps {
   customId?: string;
   productId?: string;
   categorySlug?: string;
+  categoryName?: string;
 }
 
 export default function ProductHero({
@@ -39,6 +40,7 @@ export default function ProductHero({
   customId,
   productId,
   categorySlug,
+  categoryName,
 }: ProductHeroProps) {
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
@@ -100,6 +102,7 @@ export default function ProductHero({
         <AddToComparison
           productId={productId}
           categorySlug={categorySlug}
+          categoryName={categoryName}
           productName={name}
           productData={{
             _id: productId,

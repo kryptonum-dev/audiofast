@@ -1,12 +1,17 @@
-import type { PortableTextBlock } from "@portabletext/react";
+import type { PortableTextBlock } from '@portabletext/react';
 
-import type { SanityProjectedImage } from "@/src/components/shared/Image";
+import type { SanityProjectedImage } from '@/src/components/shared/Image';
 
 /**
  * Cookie structure for storing comparison data
  */
 export type ComparisonCookie = {
   categorySlug: string;
+  /**
+   * Human-friendly category name captured when the first product is added.
+   * Optional to remain backward compatible with existing cookies.
+   */
+  categoryName?: string;
   productIds: string[];
   timestamp: number;
 };
@@ -63,10 +68,11 @@ export type ComparisonProduct = {
     logo: SanityProjectedImage | null;
   };
   mainImage: SanityProjectedImage | null;
-  imageSource: "preview" | "gallery";
+  imageSource: 'preview' | 'gallery';
   technicalData: TechnicalData | null;
   categories: Array<{
     slug: string;
+    name?: string;
   }>;
 };
 

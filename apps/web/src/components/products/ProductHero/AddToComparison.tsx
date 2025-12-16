@@ -14,6 +14,7 @@ import styles from "./styles.module.scss";
 type AddToComparisonProps = {
   productId?: string;
   categorySlug?: string;
+  categoryName?: string;
   productName?: string;
   productData?: unknown; // Partial or full product data for optimistic updates
 };
@@ -21,6 +22,7 @@ type AddToComparisonProps = {
 export default function AddToComparison({
   productId,
   categorySlug,
+  categoryName,
   productName,
   productData,
 }: AddToComparisonProps) {
@@ -62,7 +64,11 @@ export default function AddToComparison({
     }
 
     // Otherwise, add to comparison
-    const result = addProductToComparison(productId, categorySlug, productData);
+    const result = addProductToComparison(productId, categorySlug, {
+      categoryName,
+      productName,
+      productData,
+    });
 
     if (result.success) {
       setIsInComparison(true);
