@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { poppins, switzer } from "@/global/fonts";
 import FloatingComparisonBox from "@/src/components/comparison/FloatingComparisonBox";
 import OrganizationSchema from "@/src/components/schema/OrganizationSchema";
+import WebSiteSchema from "@/src/components/schema/WebSiteSchema";
 import Analytics from "@/src/components/shared/Analytics";
 import CookieConsent from "@/src/components/shared/CookieConsent";
 import Footer from "@/src/components/ui/Footer";
@@ -51,6 +52,7 @@ export default async function RootLayout({
         {children}
         <Footer />
         {settings && <OrganizationSchema settings={settings} />}
+        <WebSiteSchema />
         {IS_PRODUCTION_DEPLOYMENT && (
           <>
             <CookieConsent />

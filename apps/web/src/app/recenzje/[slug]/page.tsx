@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { ArticleBody } from "@/src/components/blog/ArticleBody";
+import ArticleSchema from "@/src/components/schema/ArticleSchema";
 import { PageBuilder } from "@/src/components/shared/PageBuilder";
 import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
 import ProductGallery from "@/src/components/ui/ProductGallery";
@@ -85,6 +86,7 @@ export default async function ReviewPage(props: ReviewPageProps) {
 
   return (
     <main id="main" className="page-transition">
+      <ArticleSchema review={pageData} />
       <Breadcrumbs data={breadcrumbsData} />
       <ArticleBody {...pageData} />
       {pageData.gallery && pageData.gallery.length >= 4 && (
