@@ -8,14 +8,14 @@
  * Add --dry-run to preview payloads without touching Sanity.
  */
 
-import { readFileSync } from 'node:fs';
-import * as https from 'node:https';
-import { resolve } from 'node:path';
-import { Readable } from 'node:stream';
+import { readFileSync } from "node:fs";
+import * as https from "node:https";
+import { resolve } from "node:path";
+import { Readable } from "node:stream";
 
-import { createClient, type SanityClient } from '@sanity/client';
-import { parse } from 'csv-parse/sync';
-import slugify from 'slugify';
+import { createClient, type SanityClient } from "@sanity/client";
+import { parse } from "csv-parse/sync";
+import slugify from "slugify";
 
 type CliOptions = {
   csvPath: string;
@@ -38,45 +38,45 @@ type ArticleRow = {
 };
 
 type PortableTextSpan = {
-  _type: 'span';
+  _type: "span";
   _key: string;
   text: string;
   marks?: string[];
 };
 
 type PortableTextBlock = {
-  _type: 'block';
+  _type: "block";
   _key: string;
-  style: 'normal' | 'h2' | 'h3';
+  style: "normal" | "h2" | "h3";
   markDefs: any[];
   children: PortableTextSpan[];
 };
 
 type BlogArticleDocument = {
   _id: string;
-  _type: 'blog-article';
+  _type: "blog-article";
   name: string;
-  slug: { _type: 'slug'; current: string };
+  slug: { _type: "slug"; current: string };
   title: PortableTextBlock[];
   description?: PortableTextBlock[];
   publishedDate?: string;
   image?: {
-    _type: 'image';
-    asset: { _type: 'reference'; _ref: string };
+    _type: "image";
+    asset: { _type: "reference"; _ref: string };
   };
   content: PortableTextBlock[];
-  category: { _type: 'reference'; _ref: string };
-  author: { _type: 'reference'; _ref: string };
+  category: { _type: "reference"; _ref: string };
+  author: { _type: "reference"; _ref: string };
   seo?: {
     title: string;
     description: string;
   };
 };
 
-const DEFAULT_CSV_PATH = '/Users/oliwiersellig/Desktop/articles.csv';
-const DEFAULT_PROJECT_ID = 'fsw3likv';
-const DEFAULT_DATASET = 'production';
-const LEGACY_ASSETS_BASE_URL = 'https://www.audiofast.pl/assets/';
+const DEFAULT_CSV_PATH = "/Users/oliwiersellig/Desktop/articles.csv";
+const DEFAULT_PROJECT_ID = "fsw3likv";
+const DEFAULT_DATASET = "production";
+const LEGACY_ASSETS_BASE_URL = "https://www.audiofast.pl/assets/";
 
 const insecureAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -84,22 +84,24 @@ const insecureAgent = new https.Agent({
 
 function parseArgs(): CliOptions {
   const args = process.argv.slice(2);
-  const csvArg = args.find((arg) => arg.startsWith('--csv='));
-  const limitArg = args.find((arg) => arg.startsWith('--limit='));
-  const skipArg = args.find((arg) => arg.startsWith('--skip='));
+  const csvArg = args.find((arg) => arg.startsWith("--csv="));
+  const limitArg = args.find((arg) => arg.startsWith("--limit="));
+  const skipArg = args.find((arg) => arg.startsWith("--skip="));
 
   return {
-    csvPath: csvArg ? csvArg.replace('--csv=', '') : DEFAULT_CSV_PATH,
-    dryRun: args.includes('--dry-run') || args.includes('-d'),
-    verbose: args.includes('--verbose') || args.includes('-v'),
-    limit: limitArg ? parseInt(limitArg.replace('--limit=', ''), 10) : undefined,
-    skip: skipArg ? parseInt(skipArg.replace('--skip=', ''), 10) : undefined,
+    csvPath: csvArg ? csvArg.replace("--csv=", "") : DEFAULT_CSV_PATH,
+    dryRun: args.includes("--dry-run") || args.includes("-d"),
+    verbose: args.includes("--verbose") || args.includes("-v"),
+    limit: limitArg
+      ? parseInt(limitArg.replace("--limit=", ""), 10)
+      : undefined,
+    skip: skipArg ? parseInt(skipArg.replace("--skip=", ""), 10) : undefined,
   };
 }
 
 function readCsvRows(csvPath: string): ArticleRow[] {
   const resolved = resolve(process.cwd(), csvPath);
-  const file = readFileSync(resolved, 'utf-8');
+  const file = readFileSync(resolved, "utf-8");
   return parse(file, {
     columns: true,
     skip_empty_lines: true,
@@ -109,29 +111,29 @@ function readCsvRows(csvPath: string): ArticleRow[] {
 
 function cleanString(value?: string | null): string {
   if (value === undefined || value === null) {
-    return '';
+    return "";
   }
-  const cleaned = value.replace(/\u00a0/g, ' ').trim();
-  if (!cleaned) return '';
-  if (cleaned.toLowerCase() === 'null') return '';
+  const cleaned = value.replace(/\u00a0/g, " ").trim();
+  if (!cleaned) return "";
+  if (cleaned.toLowerCase() === "null") return "";
   return cleaned;
 }
 
 function createPortableTextFromString(
   text: string,
-  options: { style?: 'normal' | 'h2' | 'h3' } = {}
+  options: { style?: "normal" | "h2" | "h3" } = {},
 ): PortableTextBlock[] {
   const clean = cleanString(text);
   if (!clean) return [];
   return [
     {
-      _type: 'block',
+      _type: "block",
       _key: `block-${Math.random().toString(36).slice(2, 8)}`,
-      style: options.style ?? 'normal',
+      style: options.style ?? "normal",
       markDefs: [],
       children: [
         {
-          _type: 'span',
+          _type: "span",
           _key: `span-${Math.random().toString(36).slice(2, 8)}`,
           text: clean,
         },
@@ -141,22 +143,22 @@ function createPortableTextFromString(
 }
 
 function stripHtml(html?: string | null): string {
-  if (!html) return '';
+  if (!html) return "";
   return html
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<\/p>/gi, '\n\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/\r/g, '')
+    .replace(/&nbsp;/gi, " ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\r/g, "")
     .trim();
 }
 
 async function uploadAsset(
   client: SanityClient,
-  type: 'image' | 'file',
+  type: "image" | "file",
   url: string,
   filename: string,
-  cache: Map<string, string>
+  cache: Map<string, string>,
 ): Promise<string | null> {
   const cacheKey = `${type}:${url}`;
   if (cache.has(cacheKey)) {
@@ -168,18 +170,26 @@ async function uploadAsset(
   try {
     // Use https.get with insecure agent to bypass SSL verification
     const buffer = await new Promise<Buffer>((resolve, reject) => {
-      const protocol = url.startsWith('https') ? https : require('http');
-      const request = protocol.get(url, { agent: insecureAgent }, (response: any) => {
-        if (response.statusCode !== 200) {
-          reject(new Error(`HTTP ${response.statusCode}: ${response.statusMessage}`));
-          return;
-        }
-        const chunks: Buffer[] = [];
-        response.on('data', (chunk: Buffer) => chunks.push(chunk));
-        response.on('end', () => resolve(Buffer.concat(chunks)));
-        response.on('error', reject);
-      });
-      request.on('error', reject);
+      const protocol = url.startsWith("https") ? https : require("http");
+      const request = protocol.get(
+        url,
+        { agent: insecureAgent },
+        (response: any) => {
+          if (response.statusCode !== 200) {
+            reject(
+              new Error(
+                `HTTP ${response.statusCode}: ${response.statusMessage}`,
+              ),
+            );
+            return;
+          }
+          const chunks: Buffer[] = [];
+          response.on("data", (chunk: Buffer) => chunks.push(chunk));
+          response.on("end", () => resolve(Buffer.concat(chunks)));
+          response.on("error", reject);
+        },
+      );
+      request.on("error", reject);
     });
 
     const stream = Readable.from(buffer);
@@ -192,12 +202,18 @@ async function uploadAsset(
     console.log(`   ✓ Uploaded: ${asset._id}`);
     return asset._id;
   } catch (err) {
-    console.error(`   ✗ Failed to upload asset ${filename}:`, err instanceof Error ? err.message : err);
+    console.error(
+      `   ✗ Failed to upload asset ${filename}:`,
+      err instanceof Error ? err.message : err,
+    );
     return null;
   }
 }
 
-function ensureBlogSlug(rawSlug: string | undefined, fallbackTitle: string): string | null {
+function ensureBlogSlug(
+  rawSlug: string | undefined,
+  fallbackTitle: string,
+): string | null {
   let slugSource = cleanString(rawSlug);
 
   if (!slugSource) {
@@ -207,44 +223,57 @@ function ensureBlogSlug(rawSlug: string | undefined, fallbackTitle: string): str
   }
 
   let slug = slugSource;
-  if (!slug.startsWith('/')) {
+  if (!slug.startsWith("/")) {
     slug = `/blog/${slug}`;
-  } else if (!slug.startsWith('/blog/')) {
+  } else if (!slug.startsWith("/blog/")) {
     slug = `/blog${slug}`;
   }
-  if (!slug.endsWith('/')) {
+  if (!slug.endsWith("/")) {
     slug = `${slug}/`;
   }
   return slug.toLowerCase();
 }
 
-async function fetchBlogCategories(client: SanityClient): Promise<Map<string, string>> {
+async function fetchBlogCategories(
+  client: SanityClient,
+): Promise<Map<string, string>> {
   const docs = await client.fetch<Array<{ _id: string; name: string }>>(
-    '*[_type == "blog-category"]{_id, name}'
+    '*[_type == "blog-category"]{_id, name}',
   );
   const map = new Map<string, string>();
   docs.forEach((doc) => {
     map.set(doc.name.toLowerCase(), doc._id);
   });
-  console.log(`   📚 Found ${docs.length} blog categories:`, docs.map((d) => d.name).join(', '));
+  console.log(
+    `   📚 Found ${docs.length} blog categories:`,
+    docs.map((d) => d.name).join(", "),
+  );
   return map;
 }
 
-async function fetchTeamMembers(client: SanityClient): Promise<Map<string, string>> {
+async function fetchTeamMembers(
+  client: SanityClient,
+): Promise<Map<string, string>> {
   const docs = await client.fetch<Array<{ _id: string; name: string }>>(
-    '*[_type == "teamMember"]{_id, name}'
+    '*[_type == "teamMember"]{_id, name}',
   );
   const map = new Map<string, string>();
   docs.forEach((doc) => {
     map.set(doc.name.toLowerCase(), doc._id);
   });
-  console.log(`   👥 Found ${docs.length} team members:`, docs.map((d) => d.name).join(', '));
+  console.log(
+    `   👥 Found ${docs.length} team members:`,
+    docs.map((d) => d.name).join(", "),
+  );
   return map;
 }
 
-async function ensureDefaultCategory(client: SanityClient | null, dryRun: boolean): Promise<string> {
-  const defaultCategoryId = 'blog-category-general';
-  const defaultCategoryName = 'Ogólne';
+async function ensureDefaultCategory(
+  client: SanityClient | null,
+  dryRun: boolean,
+): Promise<string> {
+  const defaultCategoryId = "blog-category-general";
+  const defaultCategoryName = "Ogólne";
 
   if (dryRun) {
     return defaultCategoryId;
@@ -257,11 +286,13 @@ async function ensureDefaultCategory(client: SanityClient | null, dryRun: boolea
   // Check if category exists
   const existing = await client.fetch<{ _id: string } | null>(
     `*[_type == "blog-category" && _id == $id][0]{_id}`,
-    { id: defaultCategoryId }
+    { id: defaultCategoryId },
   );
 
   if (existing) {
-    console.log(`   ✓ Default category "${defaultCategoryName}" already exists`);
+    console.log(
+      `   ✓ Default category "${defaultCategoryName}" already exists`,
+    );
     return defaultCategoryId;
   }
 
@@ -269,16 +300,19 @@ async function ensureDefaultCategory(client: SanityClient | null, dryRun: boolea
   console.log(`   📝 Creating default blog category: ${defaultCategoryName}`);
   await client.createOrReplace({
     _id: defaultCategoryId,
-    _type: 'blog-category',
+    _type: "blog-category",
     name: defaultCategoryName,
   });
 
   return defaultCategoryId;
 }
 
-async function ensureDefaultAuthor(client: SanityClient | null, dryRun: boolean): Promise<string> {
-  const defaultAuthorId = 'team-member-audiofast';
-  const defaultAuthorName = 'Audiofast';
+async function ensureDefaultAuthor(
+  client: SanityClient | null,
+  dryRun: boolean,
+): Promise<string> {
+  const defaultAuthorId = "team-member-audiofast";
+  const defaultAuthorName = "Audiofast";
 
   if (dryRun) {
     return defaultAuthorId;
@@ -291,7 +325,7 @@ async function ensureDefaultAuthor(client: SanityClient | null, dryRun: boolean)
   // Check if author exists
   const existing = await client.fetch<{ _id: string } | null>(
     `*[_type == "teamMember" && _id == $id][0]{_id}`,
-    { id: defaultAuthorId }
+    { id: defaultAuthorId },
   );
 
   if (existing) {
@@ -301,11 +335,13 @@ async function ensureDefaultAuthor(client: SanityClient | null, dryRun: boolean)
 
   // Check if any team member exists
   const anyMember = await client.fetch<{ _id: string; name: string } | null>(
-    `*[_type == "teamMember"][0]{_id, name}`
+    `*[_type == "teamMember"][0]{_id, name}`,
   );
 
   if (anyMember) {
-    console.log(`   ✓ Using existing team member as default author: ${anyMember.name}`);
+    console.log(
+      `   ✓ Using existing team member as default author: ${anyMember.name}`,
+    );
     return anyMember._id;
   }
 
@@ -313,9 +349,9 @@ async function ensureDefaultAuthor(client: SanityClient | null, dryRun: boolean)
   console.log(`   📝 Creating default team member: ${defaultAuthorName}`);
   await client.createOrReplace({
     _id: defaultAuthorId,
-    _type: 'teamMember',
+    _type: "teamMember",
     name: defaultAuthorName,
-    position: 'Zespół Audiofast',
+    position: "Zespół Audiofast",
   });
 
   return defaultAuthorId;
@@ -334,11 +370,11 @@ async function buildBlogArticleDocument(
   defaultCategoryId: string,
   defaultAuthorId: string,
   assetCache: Map<string, string>,
-  dryRun: boolean
+  dryRun: boolean,
 ): Promise<BlogArticleDocument | null> {
   const id = parseInt(row.BlogPageID, 10);
   if (!id) {
-    console.warn('   ⚠️  Skipping row without numeric ID:', row.BlogPageID);
+    console.warn("   ⚠️  Skipping row without numeric ID:", row.BlogPageID);
     return null;
   }
 
@@ -348,9 +384,13 @@ async function buildBlogArticleDocument(
     return null;
   }
 
-  const titleBlocks = createPortableTextFromString(titleSource, { style: 'normal' });
+  const titleBlocks = createPortableTextFromString(titleSource, {
+    style: "normal",
+  });
   if (titleBlocks.length === 0) {
-    console.warn(`   ⚠️  Article ${id} could not create title blocks, skipping`);
+    console.warn(
+      `   ⚠️  Article ${id} could not create title blocks, skipping`,
+    );
     return null;
   }
 
@@ -364,19 +404,25 @@ async function buildBlogArticleDocument(
   const descriptionText = cleanString(row.Description);
   const descriptionBlocks = descriptionText
     ? createPortableTextFromString(descriptionText)
-    : createPortableTextFromString('Brak opisu');
+    : createPortableTextFromString("Brak opisu");
 
   // Handle image
   let imageAssetId: string | null = null;
   const imageFilename = cleanString(row.ImageFilename);
   const imageId = cleanString(row.LeadingImageID);
 
-  if (imageFilename && imageId !== '0') {
+  if (imageFilename && imageId !== "0") {
     const imageUrl = `${LEGACY_ASSETS_BASE_URL}${imageFilename}`;
     if (dryRun) {
       imageAssetId = `image-dryrun-${slugify(imageFilename, { lower: true, strict: true })}`;
     } else if (client) {
-      imageAssetId = await uploadAsset(client, 'image', imageUrl, imageFilename, assetCache);
+      imageAssetId = await uploadAsset(
+        client,
+        "image",
+        imageUrl,
+        imageFilename,
+        assetCache,
+      );
     }
   }
 
@@ -386,8 +432,8 @@ async function buildBlogArticleDocument(
 
   // Create dummy content for now
   const contentBlocks = createPortableTextFromString(
-    'Treść artykułu w przygotowaniu.',
-    { style: 'normal' }
+    "Treść artykułu w przygotowaniu.",
+    { style: "normal" },
   );
 
   // SEO
@@ -396,15 +442,18 @@ async function buildBlogArticleDocument(
 
   const document: BlogArticleDocument = {
     _id: `blog-article-${id}`,
-    _type: 'blog-article',
+    _type: "blog-article",
     name: titleSource,
-    slug: { _type: 'slug', current: slug },
+    slug: { _type: "slug", current: slug },
     title: titleBlocks,
     description: descriptionBlocks,
-    publishedDate: parsedDate && !Number.isNaN(parsedDate.valueOf()) ? parsedDate.toISOString() : undefined,
+    publishedDate:
+      parsedDate && !Number.isNaN(parsedDate.valueOf())
+        ? parsedDate.toISOString()
+        : undefined,
     content: contentBlocks,
-    category: { _type: 'reference', _ref: defaultCategoryId },
-    author: { _type: 'reference', _ref: defaultAuthorId },
+    category: { _type: "reference", _ref: defaultCategoryId },
+    author: { _type: "reference", _ref: defaultAuthorId },
     seo: {
       title: seoTitle,
       description: seoDescription,
@@ -414,17 +463,20 @@ async function buildBlogArticleDocument(
   // Only add image if we have one
   if (imageAssetId) {
     document.image = {
-      _type: 'image',
-      asset: { _type: 'reference', _ref: imageAssetId },
+      _type: "image",
+      asset: { _type: "reference", _ref: imageAssetId },
     };
   }
 
   return document;
 }
 
-async function migrateBlogArticles(rows: ArticleRow[], options: CliOptions): Promise<void> {
+async function migrateBlogArticles(
+  rows: ArticleRow[],
+  options: CliOptions,
+): Promise<void> {
   if (rows.length === 0) {
-    console.log('ℹ️  No articles to migrate.');
+    console.log("ℹ️  No articles to migrate.");
     return;
   }
 
@@ -435,13 +487,13 @@ async function migrateBlogArticles(rows: ArticleRow[], options: CliOptions): Pro
     : createClient({
         projectId: process.env.SANITY_PROJECT_ID || DEFAULT_PROJECT_ID,
         dataset: process.env.SANITY_DATASET || DEFAULT_DATASET,
-        apiVersion: '2024-01-01',
+        apiVersion: "2024-01-01",
         token: process.env.SANITY_API_TOKEN,
         useCdn: false,
       });
 
   if (!options.dryRun && !process.env.SANITY_API_TOKEN) {
-    throw new Error('SANITY_API_TOKEN env var is required for live migration.');
+    throw new Error("SANITY_API_TOKEN env var is required for live migration.");
   }
 
   // Ensure default category and author exist
@@ -455,14 +507,16 @@ async function migrateBlogArticles(rows: ArticleRow[], options: CliOptions): Pro
   const preparedDocuments: BlogArticleDocument[] = [];
 
   for (const row of rows) {
-    console.log(`\n📝 Processing: ${cleanString(row.PageTitle) || row.BlogPageID}`);
+    console.log(
+      `\n📝 Processing: ${cleanString(row.PageTitle) || row.BlogPageID}`,
+    );
     const doc = await buildBlogArticleDocument(
       row,
       client,
       defaultCategoryId,
       defaultAuthorId,
       assetCache,
-      options.dryRun
+      options.dryRun,
     );
     if (doc) {
       preparedDocuments.push(doc);
@@ -471,12 +525,14 @@ async function migrateBlogArticles(rows: ArticleRow[], options: CliOptions): Pro
   }
 
   if (preparedDocuments.length === 0) {
-    console.log('\nℹ️  No valid blog article documents to migrate after validation.');
+    console.log(
+      "\nℹ️  No valid blog article documents to migrate after validation.",
+    );
     return;
   }
 
   if (options.dryRun) {
-    console.log('\n🧪 DRY RUN OUTPUT:');
+    console.log("\n🧪 DRY RUN OUTPUT:");
     preparedDocuments.forEach((doc) => {
       console.log(`\n${doc._id}:`);
       console.log(JSON.stringify(doc, null, 2));
@@ -484,7 +540,9 @@ async function migrateBlogArticles(rows: ArticleRow[], options: CliOptions): Pro
     return;
   }
 
-  console.log(`\n🚀 Migrating ${preparedDocuments.length} documents to Sanity in a single transaction...`);
+  console.log(
+    `\n🚀 Migrating ${preparedDocuments.length} documents to Sanity in a single transaction...`,
+  );
   const liveClient = client!;
 
   // Use transaction to batch all createOrReplace operations
@@ -495,11 +553,16 @@ async function migrateBlogArticles(rows: ArticleRow[], options: CliOptions): Pro
 
   try {
     const result = await transaction.commit();
-    console.log(`   ✓ Successfully migrated ${result.documentIds?.length ?? preparedDocuments.length} documents`);
+    console.log(
+      `   ✓ Successfully migrated ${result.documentIds?.length ?? preparedDocuments.length} documents`,
+    );
     preparedDocuments.forEach((doc) => console.log(`      - ${doc._id}`));
   } catch (error) {
-    console.error('   ❌ Transaction failed:', error instanceof Error ? error.message : error);
-    console.log('\n   Falling back to individual document migration...');
+    console.error(
+      "   ❌ Transaction failed:",
+      error instanceof Error ? error.message : error,
+    );
+    console.log("\n   Falling back to individual document migration...");
 
     // Fallback to individual calls if transaction fails
     for (const doc of preparedDocuments) {
@@ -507,28 +570,39 @@ async function migrateBlogArticles(rows: ArticleRow[], options: CliOptions): Pro
         await liveClient.createOrReplace(doc);
         console.log(`   ✓ ${doc._id}`);
       } catch (err) {
-        console.error(`   ❌ Failed to migrate ${doc._id}:`, err instanceof Error ? err.message : err);
+        console.error(
+          `   ❌ Failed to migrate ${doc._id}:`,
+          err instanceof Error ? err.message : err,
+        );
       }
     }
   }
 
-  console.log('\n✅ Blog article migration complete.');
+  console.log("\n✅ Blog article migration complete.");
 }
 
 async function main() {
   const options = parseArgs();
 
-  console.log('');
-  console.log('╔═══════════════════════════════════════════════════════════════╗');
-  console.log('║            AUDIOFAST DATA MIGRATION                           ║');
-  console.log('║            Blog Articles                                      ║');
-  console.log('╚═══════════════════════════════════════════════════════════════╝');
-  console.log('');
+  console.log("");
+  console.log(
+    "╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║            AUDIOFAST DATA MIGRATION                           ║",
+  );
+  console.log(
+    "║            Blog Articles                                      ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝",
+  );
+  console.log("");
   console.log(`CSV Path: ${resolve(process.cwd(), options.csvPath)}`);
-  console.log(`Mode: ${options.dryRun ? 'DRY RUN (no writes)' : 'LIVE'}`);
+  console.log(`Mode: ${options.dryRun ? "DRY RUN (no writes)" : "LIVE"}`);
   if (options.skip) console.log(`Skip: ${options.skip}`);
   if (options.limit) console.log(`Limit: ${options.limit}`);
-  console.log('');
+  console.log("");
 
   let rows = readCsvRows(options.csvPath);
   console.log(`Total CSV rows: ${rows.length}`);
@@ -547,7 +621,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('❌ Migration failed:', error);
+  console.error("❌ Migration failed:", error);
   process.exit(1);
 });
-

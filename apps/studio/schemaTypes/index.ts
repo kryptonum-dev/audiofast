@@ -1,6 +1,6 @@
-import { pageBuilderBlocks } from './blocks';
-import { definitions } from './definitions';
-import { documents, singletons } from './documents';
+import { pageBuilderBlocks } from "./blocks";
+import { definitions } from "./definitions";
+import { documents, singletons } from "./documents";
 
 // Creating a new constant 'schemaTypes' which is a copy of the 'documents' array
 export const schemaTypes = [...documents, ...definitions, ...pageBuilderBlocks];
@@ -19,9 +19,9 @@ export type SingletonType = (typeof singletonType)[number];
 
 // Defining a new constant 'singletonActions' which is a set of actions that are allowed for singleton types
 export const singletonActions = new Set([
-  'publish',
-  'discardChanges',
-  'restore',
+  "publish",
+  "discardChanges",
+  "restore",
 ]);
 
 // Exporting the 'schemaTypes' constant as the default export of this module

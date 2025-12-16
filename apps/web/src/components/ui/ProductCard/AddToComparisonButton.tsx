@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 import {
   addProductToComparison,
   isProductInComparison,
   removeProductFromComparison,
-} from '@/src/global/comparison/cookie-manager';
+} from "@/src/global/comparison/cookie-manager";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type AddToComparisonButtonProps = {
   productId: string;
@@ -38,11 +38,11 @@ export default function AddToComparisonButton({
     checkComparison();
 
     // Listen for comparison changes from other components
-    window.addEventListener('audiofast:comparison-changed', checkComparison);
+    window.addEventListener("audiofast:comparison-changed", checkComparison);
 
     return () => {
       window.removeEventListener(
-        'audiofast:comparison-changed',
+        "audiofast:comparison-changed",
         checkComparison,
       );
     };
@@ -57,13 +57,13 @@ export default function AddToComparisonButton({
       removeProductFromComparison(productId);
       setIsInComparison(false);
       setShowFeedback(false);
-      toast.info('Produkt usunięty z porównania');
+      toast.info("Produkt usunięty z porównania");
       return;
     }
 
     // Otherwise, add to comparison
     if (!categorySlug) {
-      toast.error('Nie można dodać produktu bez kategorii');
+      toast.error("Nie można dodać produktu bez kategorii");
       return;
     }
 
@@ -76,7 +76,7 @@ export default function AddToComparisonButton({
     if (result.success) {
       setIsInComparison(true);
       setShowFeedback(true);
-      toast.success('Produkt dodany do porównania');
+      toast.success("Produkt dodany do porównania");
 
       // Hide feedback after 2 seconds
       setTimeout(() => {
@@ -92,7 +92,7 @@ export default function AddToComparisonButton({
       className={styles.addToComparison}
       onClick={handleClick}
       data-current-state={
-        showFeedback ? 'added' : isInComparison ? 'in-comparison' : 'default'
+        showFeedback ? "added" : isInComparison ? "in-comparison" : "default"
       }
       aria-label={
         isInComparison
@@ -102,10 +102,10 @@ export default function AddToComparisonButton({
     >
       <span>
         {showFeedback
-          ? 'Dodano!'
+          ? "Dodano!"
           : isInComparison
-            ? 'Usuń z porównania'
-            : 'Dodaj do porównania'}
+            ? "Usuń z porównania"
+            : "Dodaj do porównania"}
       </span>
       {showFeedback ? (
         <CheckmarkIcon />

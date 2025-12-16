@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   closestCenter,
@@ -8,15 +8,15 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   AddIcon,
   CheckmarkIcon,
@@ -25,7 +25,7 @@ import {
   DragHandleIcon,
   SearchIcon,
   TrashIcon,
-} from '@sanity/icons';
+} from "@sanity/icons";
 import {
   Avatar,
   Badge,
@@ -41,7 +41,7 @@ import {
   TextInput,
   ToastProvider,
   useToast,
-} from '@sanity/ui';
+} from "@sanity/ui";
 import {
   ArrowDownWideNarrow,
   ArrowUpNarrowWide,
@@ -53,9 +53,9 @@ import {
   Package,
   RefreshCw,
   Sparkles,
-} from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useClient } from 'sanity';
+} from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useClient } from "sanity";
 
 // Types
 type Category = {
@@ -96,7 +96,7 @@ type CategoryConfig = {
 
 type ComparatorConfigDoc = {
   _id: string;
-  _type: 'comparatorConfig';
+  _type: "comparatorConfig";
   categoryConfigs?: CategoryConfig[];
 };
 
@@ -115,7 +115,7 @@ function SortableParameter({
   onDisplayNameChange: (displayName: string) => void;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  
+
   const {
     attributes,
     listeners,
@@ -141,14 +141,14 @@ function SortableParameter({
       padding={0}
       border
       radius={2}
-      tone={isDragging ? 'primary' : 'default'}
+      tone={isDragging ? "primary" : "default"}
     >
       <Box padding={3}>
         <Flex align="center" gap={3}>
           <Box
             {...attributes}
             {...listeners}
-            style={{ cursor: 'grab', flexShrink: 0 }}
+            style={{ cursor: "grab", flexShrink: 0 }}
           >
             <DragHandleIcon />
           </Box>
@@ -157,19 +157,29 @@ function SortableParameter({
               <Text size={1} weight="medium">
                 {param.name}
               </Text>
-              <Badge tone="positive" fontSize={0} padding={1} title="Produkty z parametrem">
+              <Badge
+                tone="positive"
+                fontSize={0}
+                padding={1}
+                title="Produkty z parametrem"
+              >
                 {products.length}
               </Badge>
               {missingProducts.length > 0 && (
-                <Badge tone="caution" fontSize={0} padding={1} title="Produkty bez parametru">
+                <Badge
+                  tone="caution"
+                  fontSize={0}
+                  padding={1}
+                  title="Produkty bez parametru"
+                >
                   +{missingProducts.length}
                 </Badge>
               )}
             </Flex>
           </Box>
-          <Box style={{ width: '180px' }}>
+          <Box style={{ width: "180px" }}>
             <TextInput
-              value={param.displayName || ''}
+              value={param.displayName || ""}
               onChange={(e) => onDisplayNameChange(e.currentTarget.value)}
               placeholder="Nazwa wyświetlana..."
               fontSize={1}
@@ -193,14 +203,14 @@ function SortableParameter({
           />
         </Flex>
       </Box>
-      
+
       {/* Products dropdown */}
       {isExpanded && hasAnyProducts && (
         <Box
           padding={3}
           style={{
-            borderTop: '1px solid var(--card-border-color)',
-            background: 'var(--card-bg2-color)',
+            borderTop: "1px solid var(--card-border-color)",
+            background: "var(--card-bg2-color)",
           }}
         >
           <Stack space={4}>
@@ -208,7 +218,9 @@ function SortableParameter({
             {products.length > 0 && (
               <Stack space={2}>
                 <Flex align="center" gap={2}>
-                  <Badge tone="positive" fontSize={0} padding={1}>✓</Badge>
+                  <Badge tone="positive" fontSize={0} padding={1}>
+                    ✓
+                  </Badge>
                   <Text size={0} muted weight="medium">
                     Produkty z parametrem ({products.length}):
                   </Text>
@@ -219,9 +231,11 @@ function SortableParameter({
                       <Avatar
                         src={product.imageUrl}
                         size={1}
-                        style={{ 
-                          borderRadius: '4px',
-                          background: product.imageUrl ? 'transparent' : 'var(--card-bg-color)',
+                        style={{
+                          borderRadius: "4px",
+                          background: product.imageUrl
+                            ? "transparent"
+                            : "var(--card-bg-color)",
                         }}
                       />
                       <Box flex={1}>
@@ -237,12 +251,14 @@ function SortableParameter({
                 </Stack>
               </Stack>
             )}
-            
+
             {/* Products MISSING the parameter */}
             {missingProducts.length > 0 && (
               <Stack space={2}>
                 <Flex align="center" gap={2}>
-                  <Badge tone="caution" fontSize={0} padding={1}>!</Badge>
+                  <Badge tone="caution" fontSize={0} padding={1}>
+                    !
+                  </Badge>
                   <Text size={0} muted weight="medium">
                     Produkty BEZ parametru ({missingProducts.length}):
                   </Text>
@@ -254,15 +270,17 @@ function SortableParameter({
                       padding={2}
                       radius={2}
                       tone="caution"
-                      style={{ background: 'var(--card-bg-color)' }}
+                      style={{ background: "var(--card-bg-color)" }}
                     >
                       <Flex align="center" gap={2}>
                         <Avatar
                           src={product.imageUrl}
                           size={1}
-                          style={{ 
-                            borderRadius: '4px',
-                            background: product.imageUrl ? 'transparent' : 'var(--card-border-color)',
+                          style={{
+                            borderRadius: "4px",
+                            background: product.imageUrl
+                              ? "transparent"
+                              : "var(--card-border-color)",
                           }}
                         />
                         <Box flex={1}>
@@ -275,9 +293,10 @@ function SortableParameter({
                         )}
                         <Button
                           as="a"
-                          href={product.brandId 
-                            ? `/structure/produkty;produktyWedlugMarek;${product.brandId};${product._id}%2Cview%3Ddane-techniczne`
-                            : `/intent/edit/id=${product._id};type=product`
+                          href={
+                            product.brandId
+                              ? `/structure/produkty;produktyWedlugMarek;${product.brandId};${product._id}%2Cview%3Ddane-techniczne`
+                              : `/intent/edit/id=${product._id};type=product`
                           }
                           target="_blank"
                           text="Edytuj"
@@ -301,26 +320,34 @@ function SortableParameter({
 
 // Main Comparator Tool Component
 export default function ComparatorTool() {
-  const client = useClient({ apiVersion: '2024-01-01' });
+  const client = useClient({ apiVersion: "2024-01-01" });
   const toast = useToast();
 
   // State
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
-  const [discoveredParams, setDiscoveredParams] = useState<DiscoveredParameter[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null,
+  );
+  const [discoveredParams, setDiscoveredParams] = useState<
+    DiscoveredParameter[]
+  >([]);
   const [enabledParams, setEnabledParams] = useState<EnabledParameter[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isLoadingParams, setIsLoadingParams] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [configDocId, setConfigDocId] = useState<string | null>(null);
-  
+
   // Collapsible state for parent categories
-  const [collapsedParents, setCollapsedParents] = useState<Set<string>>(new Set());
+  const [collapsedParents, setCollapsedParents] = useState<Set<string>>(
+    new Set(),
+  );
   // Expanded parameters in discovered list
-  const [expandedDiscoveredParams, setExpandedDiscoveredParams] = useState<Set<string>>(new Set());
+  const [expandedDiscoveredParams, setExpandedDiscoveredParams] = useState<
+    Set<string>
+  >(new Set());
   // Sorting and pagination for discovered parameters
-  const [sortOrder, setSortOrder] = useState<'most' | 'least'>('most');
+  const [sortOrder, setSortOrder] = useState<"most" | "least">("most");
   const [visibleCount, setVisibleCount] = useState(20);
   const PARAMS_PER_PAGE = 20;
 
@@ -333,7 +360,7 @@ export default function ComparatorTool() {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // Toggle parent category collapse
@@ -380,17 +407,17 @@ export default function ComparatorTool() {
 
         // Load config document
         const configDoc = await client.fetch<ComparatorConfigDoc | null>(
-          `*[_type == "comparatorConfig"][0]`
+          `*[_type == "comparatorConfig"][0]`,
         );
         if (configDoc) {
           setConfigDocId(configDoc._id);
         }
       } catch (err) {
-        console.error('Error fetching categories:', err);
+        console.error("Error fetching categories:", err);
         toast.push({
-          status: 'error',
-          title: 'Błąd',
-          description: 'Nie udało się pobrać kategorii.',
+          status: "error",
+          title: "Błąd",
+          description: "Nie udało się pobrać kategorii.",
         });
       } finally {
         setIsLoadingCategories(false);
@@ -401,16 +428,17 @@ export default function ComparatorTool() {
   }, [client, toast]);
 
   // Fetch parameters function - extracted so it can be called for refresh
-  const fetchParameters = useCallback(async (categoryId: string, skipConfigLoad = false) => {
-    setIsLoadingParams(true);
-    isInitializedRef.current = false;
-    if (!skipConfigLoad) {
-      setExpandedDiscoveredParams(new Set());
-    }
+  const fetchParameters = useCallback(
+    async (categoryId: string, skipConfigLoad = false) => {
+      setIsLoadingParams(true);
+      isInitializedRef.current = false;
+      if (!skipConfigLoad) {
+        setExpandedDiscoveredParams(new Set());
+      }
 
-    try {
-      // Fetch all products in this category with their technical data (exclude drafts)
-      const productsQuery = `*[_type == "product" && !(_id in path("drafts.**")) && references($categoryId)] {
+      try {
+        // Fetch all products in this category with their technical data (exclude drafts)
+        const productsQuery = `*[_type == "product" && !(_id in path("drafts.**")) && references($categoryId)] {
         _id,
         name,
         "brandName": brand->name,
@@ -429,158 +457,160 @@ export default function ComparatorTool() {
         }
       }`;
 
-      const products = await client.fetch<
-        Array<{
-          _id: string;
-          name: string;
-          brandName?: string;
-          brandId?: string;
-          imageUrl?: string;
-          technicalData?: {
-            groups?: Array<{
-              title?: string;
-              rows?: Array<{
-                title: string;
-                values?: Array<{ text: string }>;
+        const products = await client.fetch<
+          Array<{
+            _id: string;
+            name: string;
+            brandName?: string;
+            brandId?: string;
+            imageUrl?: string;
+            technicalData?: {
+              groups?: Array<{
+                title?: string;
+                rows?: Array<{
+                  title: string;
+                  values?: Array<{ text: string }>;
+                }>;
               }>;
-            }>;
-          };
-        }>
-      >(productsQuery, { categoryId });
+            };
+          }>
+        >(productsQuery, { categoryId });
 
-      // Build a map of all products for quick lookup
-      const allProductsMap = new Map<string, ProductInfo>();
-      for (const product of products) {
-        allProductsMap.set(product._id, {
-          _id: product._id,
-          name: product.name,
-          brandName: product.brandName,
-          brandId: product.brandId,
-          imageUrl: product.imageUrl,
-        });
-      }
-
-      // Discover all unique parameters with product info
-      const paramMap = new Map<
-        string,
-        { 
-          count: number; 
-          sampleValues: Set<string>;
-          products: Map<string, ProductInfo>;
+        // Build a map of all products for quick lookup
+        const allProductsMap = new Map<string, ProductInfo>();
+        for (const product of products) {
+          allProductsMap.set(product._id, {
+            _id: product._id,
+            name: product.name,
+            brandName: product.brandName,
+            brandId: product.brandId,
+            imageUrl: product.imageUrl,
+          });
         }
-      >();
 
-      for (const product of products) {
-        if (!product.technicalData?.groups) continue;
+        // Discover all unique parameters with product info
+        const paramMap = new Map<
+          string,
+          {
+            count: number;
+            sampleValues: Set<string>;
+            products: Map<string, ProductInfo>;
+          }
+        >();
 
-        for (const group of product.technicalData.groups) {
-          if (!group.rows) continue;
+        for (const product of products) {
+          if (!product.technicalData?.groups) continue;
 
-          for (const row of group.rows) {
-            if (!row.title) continue;
+          for (const group of product.technicalData.groups) {
+            if (!group.rows) continue;
 
-            const normalizedName = row.title.trim();
-            if (!paramMap.has(normalizedName)) {
-              paramMap.set(normalizedName, { 
-                count: 0, 
-                sampleValues: new Set(),
-                products: new Map(),
-              });
-            }
+            for (const row of group.rows) {
+              if (!row.title) continue;
 
-            const param = paramMap.get(normalizedName)!;
-            param.count++;
-            
-            // Add product info
-            if (!param.products.has(product._id)) {
-              param.products.set(product._id, {
-                _id: product._id,
-                name: product.name,
-                brandName: product.brandName,
-                brandId: product.brandId,
-                imageUrl: product.imageUrl,
-              });
-            }
+              const normalizedName = row.title.trim();
+              if (!paramMap.has(normalizedName)) {
+                paramMap.set(normalizedName, {
+                  count: 0,
+                  sampleValues: new Set(),
+                  products: new Map(),
+                });
+              }
 
-            // Collect sample values
-            if (row.values && row.values.length > 0) {
-              for (const val of row.values) {
-                if (val.text && param.sampleValues.size < 3) {
-                  param.sampleValues.add(
-                    val.text.length > 50
-                      ? val.text.substring(0, 50) + '...'
-                      : val.text
-                  );
+              const param = paramMap.get(normalizedName)!;
+              param.count++;
+
+              // Add product info
+              if (!param.products.has(product._id)) {
+                param.products.set(product._id, {
+                  _id: product._id,
+                  name: product.name,
+                  brandName: product.brandName,
+                  brandId: product.brandId,
+                  imageUrl: product.imageUrl,
+                });
+              }
+
+              // Collect sample values
+              if (row.values && row.values.length > 0) {
+                for (const val of row.values) {
+                  if (val.text && param.sampleValues.size < 3) {
+                    param.sampleValues.add(
+                      val.text.length > 50
+                        ? val.text.substring(0, 50) + "..."
+                        : val.text,
+                    );
+                  }
                 }
               }
             }
           }
         }
-      }
 
-      // Convert to array and sort by frequency, including missing products
-      const discovered: DiscoveredParameter[] = Array.from(paramMap.entries())
-        .map(([name, data]) => {
-          // Calculate which products are MISSING this parameter
-          const productsWithParam = data.products;
-          const missingProducts: ProductInfo[] = [];
-          
-          for (const [productId, productInfo] of allProductsMap) {
-            if (!productsWithParam.has(productId)) {
-              missingProducts.push(productInfo);
+        // Convert to array and sort by frequency, including missing products
+        const discovered: DiscoveredParameter[] = Array.from(paramMap.entries())
+          .map(([name, data]) => {
+            // Calculate which products are MISSING this parameter
+            const productsWithParam = data.products;
+            const missingProducts: ProductInfo[] = [];
+
+            for (const [productId, productInfo] of allProductsMap) {
+              if (!productsWithParam.has(productId)) {
+                missingProducts.push(productInfo);
+              }
             }
-          }
 
-          return {
-            name,
-            count: data.count,
-            sampleValues: Array.from(data.sampleValues),
-            products: Array.from(data.products.values()),
-            missingProducts,
-          };
-        })
-        .sort((a, b) => b.count - a.count);
+            return {
+              name,
+              count: data.count,
+              sampleValues: Array.from(data.sampleValues),
+              products: Array.from(data.products.values()),
+              missingProducts,
+            };
+          })
+          .sort((a, b) => b.count - a.count);
 
-      setDiscoveredParams(discovered);
+        setDiscoveredParams(discovered);
 
-      // Load enabled parameters for this category from config (unless skipping for refresh)
-      if (!skipConfigLoad) {
-        const configDoc = await client.fetch<ComparatorConfigDoc | null>(
-          `*[_type == "comparatorConfig"][0]`
-        );
-
-        if (configDoc?.categoryConfigs) {
-          const categoryConfig = configDoc.categoryConfigs.find(
-            (c) => c.category?._ref === categoryId
+        // Load enabled parameters for this category from config (unless skipping for refresh)
+        if (!skipConfigLoad) {
+          const configDoc = await client.fetch<ComparatorConfigDoc | null>(
+            `*[_type == "comparatorConfig"][0]`,
           );
-          if (categoryConfig?.enabledParameters) {
-            setEnabledParams(categoryConfig.enabledParameters);
+
+          if (configDoc?.categoryConfigs) {
+            const categoryConfig = configDoc.categoryConfigs.find(
+              (c) => c.category?._ref === categoryId,
+            );
+            if (categoryConfig?.enabledParameters) {
+              setEnabledParams(categoryConfig.enabledParameters);
+            } else {
+              setEnabledParams([]);
+            }
           } else {
             setEnabledParams([]);
           }
-        } else {
-          setEnabledParams([]);
         }
-      }
 
-      // Mark as initialized after short delay
-      setTimeout(() => {
-        isInitializedRef.current = true;
-      }, 100);
-      
-      return true;
-    } catch (err) {
-      console.error('Error fetching parameters:', err);
-      toast.push({
-        status: 'error',
-        title: 'Błąd',
-        description: 'Nie udało się pobrać parametrów.',
-      });
-      return false;
-    } finally {
-      setIsLoadingParams(false);
-    }
-  }, [client, toast]);
+        // Mark as initialized after short delay
+        setTimeout(() => {
+          isInitializedRef.current = true;
+        }, 100);
+
+        return true;
+      } catch (err) {
+        console.error("Error fetching parameters:", err);
+        toast.push({
+          status: "error",
+          title: "Błąd",
+          description: "Nie udało się pobrać parametrów.",
+        });
+        return false;
+      } finally {
+        setIsLoadingParams(false);
+      }
+    },
+    [client, toast],
+  );
 
   // Load parameters when category changes
   useEffect(() => {
@@ -596,13 +626,13 @@ export default function ComparatorTool() {
   // Refresh data (keeps current enabled params, just refreshes discovered params)
   const handleRefreshData = useCallback(async () => {
     if (!selectedCategoryId) return;
-    
+
     const success = await fetchParameters(selectedCategoryId, true);
     if (success) {
       toast.push({
-        status: 'success',
-        title: 'Odświeżono',
-        description: 'Dane parametrów zostały zaktualizowane.',
+        status: "success",
+        title: "Odświeżono",
+        description: "Dane parametrów zostały zaktualizowane.",
       });
     }
   }, [selectedCategoryId, fetchParameters, toast]);
@@ -618,7 +648,7 @@ export default function ComparatorTool() {
       if (!docId) {
         // Create the config document
         const newDoc = await client.create({
-          _type: 'comparatorConfig',
+          _type: "comparatorConfig",
           categoryConfigs: [],
         });
         docId = newDoc._id;
@@ -627,14 +657,14 @@ export default function ComparatorTool() {
 
       // Fetch current config
       const currentConfig = await client.fetch<ComparatorConfigDoc>(
-        `*[_type == "comparatorConfig"][0]`
+        `*[_type == "comparatorConfig"][0]`,
       );
 
       const currentConfigs = currentConfig?.categoryConfigs || [];
 
       // Find or create category config
       const existingIndex = currentConfigs.findIndex(
-        (c) => c.category?._ref === selectedCategoryId
+        (c) => c.category?._ref === selectedCategoryId,
       );
 
       const newCategoryConfig: CategoryConfig = {
@@ -659,11 +689,11 @@ export default function ComparatorTool() {
         .set({ categoryConfigs: updatedConfigs })
         .commit();
     } catch (err) {
-      console.error('Error saving config:', err);
+      console.error("Error saving config:", err);
       toast.push({
-        status: 'error',
-        title: 'Błąd zapisu',
-        description: 'Nie udało się zapisać konfiguracji.',
+        status: "error",
+        title: "Błąd zapisu",
+        description: "Nie udało się zapisać konfiguracji.",
       });
     } finally {
       setIsSaving(false);
@@ -698,7 +728,7 @@ export default function ComparatorTool() {
       if (enabledParams.some((p) => p.name === name)) return;
       setEnabledParams((prev) => [...prev, { _key: generateKey(), name }]);
     },
-    [enabledParams]
+    [enabledParams],
   );
 
   // Remove parameter from enabled list
@@ -711,11 +741,11 @@ export default function ComparatorTool() {
     (key: string, displayName: string) => {
       setEnabledParams((prev) =>
         prev.map((p) =>
-          p._key === key ? { ...p, displayName: displayName || undefined } : p
-        )
+          p._key === key ? { ...p, displayName: displayName || undefined } : p,
+        ),
       );
     },
-    []
+    [],
   );
 
   // Handle drag end for reordering
@@ -746,29 +776,35 @@ export default function ComparatorTool() {
     let filtered = discoveredParams;
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = discoveredParams.filter((p) => p.name.toLowerCase().includes(query));
+      filtered = discoveredParams.filter((p) =>
+        p.name.toLowerCase().includes(query),
+      );
     }
-    
+
     // Separate enabled and non-enabled parameters
     const enabledParamNames = new Set(enabledParams.map((p) => p.name));
-    const enabledFiltered = filtered.filter((p) => enabledParamNames.has(p.name));
-    const nonEnabledFiltered = filtered.filter((p) => !enabledParamNames.has(p.name));
-    
+    const enabledFiltered = filtered.filter((p) =>
+      enabledParamNames.has(p.name),
+    );
+    const nonEnabledFiltered = filtered.filter(
+      (p) => !enabledParamNames.has(p.name),
+    );
+
     // Sort each group separately
     const sortFn = (a: DiscoveredParameter, b: DiscoveredParameter) => {
-      if (sortOrder === 'most') {
+      if (sortOrder === "most") {
         return b.products.length - a.products.length;
       } else {
         return a.products.length - b.products.length;
       }
     };
-    
+
     enabledFiltered.sort(sortFn);
     nonEnabledFiltered.sort(sortFn);
-    
+
     // Combine: enabled first, then non-enabled
     const sorted = [...enabledFiltered, ...nonEnabledFiltered];
-    
+
     // Return paginated results and total count
     return {
       filteredDiscoveredParams: sorted.slice(0, visibleCount),
@@ -788,27 +824,34 @@ export default function ComparatorTool() {
 
   // Group categories by parent
   const groupedCategories = useMemo(() => {
-    const groups = new Map<string, { parentId: string; parent: string; categories: Category[] }>();
+    const groups = new Map<
+      string,
+      { parentId: string; parent: string; categories: Category[] }
+    >();
 
     for (const cat of categories) {
-      const parentKey = cat.parentId || 'no-parent';
-      const parentName = cat.parentName || 'Bez kategorii nadrzędnej';
+      const parentKey = cat.parentId || "no-parent";
+      const parentName = cat.parentName || "Bez kategorii nadrzędnej";
 
       if (!groups.has(parentKey)) {
-        groups.set(parentKey, { parentId: parentKey, parent: parentName, categories: [] });
+        groups.set(parentKey, {
+          parentId: parentKey,
+          parent: parentName,
+          categories: [],
+        });
       }
       groups.get(parentKey)!.categories.push(cat);
     }
 
     return Array.from(groups.values()).sort((a, b) =>
-      a.parent.localeCompare(b.parent)
+      a.parent.localeCompare(b.parent),
     );
   }, [categories]);
 
   // Selected category details
   const selectedCategory = useMemo(
     () => categories.find((c) => c._id === selectedCategoryId),
-    [categories, selectedCategoryId]
+    [categories, selectedCategoryId],
   );
 
   // Get products and missing products for an enabled parameter
@@ -820,35 +863,38 @@ export default function ComparatorTool() {
         missingProducts: discovered?.missingProducts || [],
       };
     },
-    [discoveredParams]
+    [discoveredParams],
   );
 
   return (
     <ToastProvider>
-      <Flex style={{ height: '100%', overflow: 'hidden' }}>
+      <Flex style={{ height: "100%", overflow: "hidden" }}>
         {/* Left Sidebar - Categories */}
         <Card
           style={{
-            width: '320px',
+            width: "320px",
             flexShrink: 0,
-            borderRight: '1px solid var(--card-border-color)',
-            display: 'flex',
-            flexDirection: 'column',
+            borderRight: "1px solid var(--card-border-color)",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           {/* Sidebar Header */}
-          <Box padding={4} style={{ borderBottom: '1px solid var(--card-border-color)' }}>
+          <Box
+            padding={4}
+            style={{ borderBottom: "1px solid var(--card-border-color)" }}
+          >
             <Flex align="center" gap={2}>
               <GitCompareArrows size={20} />
               <Heading size={1}>Porównywarka</Heading>
             </Flex>
-            <Text size={1} muted style={{ marginTop: '0.5rem' }}>
+            <Text size={1} muted style={{ marginTop: "0.5rem" }}>
               Wybierz kategorię, aby skonfigurować parametry porównania.
             </Text>
           </Box>
 
           {/* Category List */}
-          <Box padding={3} style={{ flex: 1, overflowY: 'auto' }}>
+          <Box padding={3} style={{ flex: 1, overflowY: "auto" }}>
             {isLoadingCategories ? (
               <Flex align="center" justify="center" padding={5}>
                 <Spinner muted />
@@ -866,8 +912,8 @@ export default function ComparatorTool() {
                         radius={2}
                         tone="primary"
                         style={{
-                          cursor: 'pointer',
-                          background: 'var(--card-bg2-color)',
+                          cursor: "pointer",
+                          background: "var(--card-bg2-color)",
                         }}
                         onClick={() => toggleParentCollapse(group.parentId)}
                       >
@@ -885,7 +931,12 @@ export default function ComparatorTool() {
                               {group.parent}
                             </Text>
                           </Box>
-                          <Badge tone="default" fontSize={0} padding={1} radius={2}>
+                          <Badge
+                            tone="default"
+                            fontSize={0}
+                            padding={1}
+                            radius={2}
+                          >
                             {group.categories.length}
                           </Badge>
                         </Flex>
@@ -903,17 +954,17 @@ export default function ComparatorTool() {
                                   key={cat._id}
                                   padding={3}
                                   radius={2}
-                                  tone={isSelected ? 'positive' : 'default'}
+                                  tone={isSelected ? "positive" : "default"}
                                   style={{
-                                    cursor: 'pointer',
-                                    marginLeft: '8px',
-                                    borderLeft: '2px solid',
+                                    cursor: "pointer",
+                                    marginLeft: "8px",
+                                    borderLeft: "2px solid",
                                     borderLeftColor: isSelected
-                                      ? 'var(--card-focus-ring-color)'
-                                      : 'var(--card-border-color)',
+                                      ? "var(--card-focus-ring-color)"
+                                      : "var(--card-border-color)",
                                     background: isSelected
-                                      ? 'var(--card-bg-color)'
-                                      : 'transparent',
+                                      ? "var(--card-bg-color)"
+                                      : "transparent",
                                   }}
                                   onClick={() => setSelectedCategoryId(cat._id)}
                                 >
@@ -922,13 +973,19 @@ export default function ComparatorTool() {
                                     <Box flex={1}>
                                       <Text
                                         size={1}
-                                        weight={isSelected ? 'semibold' : 'regular'}
+                                        weight={
+                                          isSelected ? "semibold" : "regular"
+                                        }
                                       >
                                         {cat.name}
                                       </Text>
                                     </Box>
                                     <Badge
-                                      tone={cat.productCount > 0 ? 'default' : 'caution'}
+                                      tone={
+                                        cat.productCount > 0
+                                          ? "default"
+                                          : "caution"
+                                      }
                                       fontSize={0}
                                       padding={1}
                                       radius={2}
@@ -955,9 +1012,9 @@ export default function ComparatorTool() {
         <Box
           style={{
             flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
           }}
         >
           {!selectedCategoryId ? (
@@ -971,14 +1028,14 @@ export default function ComparatorTool() {
             >
               <Box
                 style={{
-                  padding: '2rem',
-                  borderRadius: '50%',
-                  background: 'var(--card-bg2-color)',
+                  padding: "2rem",
+                  borderRadius: "50%",
+                  background: "var(--card-bg2-color)",
                 }}
               >
                 <GitCompareArrows size={48} strokeWidth={1.5} />
               </Box>
-              <Stack space={2} style={{ textAlign: 'center' }}>
+              <Stack space={2} style={{ textAlign: "center" }}>
                 <Text size={2} weight="semibold">
                   Wybierz kategorię
                 </Text>
@@ -990,11 +1047,11 @@ export default function ComparatorTool() {
             </Flex>
           ) : (
             /* Category Configuration */
-            <Flex direction="column" style={{ flex: 1, overflow: 'hidden' }}>
+            <Flex direction="column" style={{ flex: 1, overflow: "hidden" }}>
               {/* Header */}
               <Box
                 padding={4}
-                style={{ borderBottom: '1px solid var(--card-border-color)' }}
+                style={{ borderBottom: "1px solid var(--card-border-color)" }}
               >
                 <Flex align="center" justify="space-between">
                   <Stack space={2}>
@@ -1003,8 +1060,8 @@ export default function ComparatorTool() {
                       <Heading size={2}>{selectedCategory?.name}</Heading>
                     </Flex>
                     <Text size={1} muted>
-                      {selectedCategory?.productCount || 0} produktów •{' '}
-                      {discoveredParams.length} wykrytych parametrów •{' '}
+                      {selectedCategory?.productCount || 0} produktów •{" "}
+                      {discoveredParams.length} wykrytych parametrów •{" "}
                       {enabledParams.length} włączonych
                     </Text>
                   </Stack>
@@ -1032,7 +1089,7 @@ export default function ComparatorTool() {
               </Box>
 
               {/* Content */}
-              <Flex style={{ flex: 1, overflow: 'hidden' }}>
+              <Flex style={{ flex: 1, overflow: "hidden" }}>
                 {isLoadingParams ? (
                   <Flex align="center" justify="center" style={{ flex: 1 }}>
                     <Spinner muted />
@@ -1043,9 +1100,9 @@ export default function ComparatorTool() {
                     <Box
                       padding={4}
                       style={{
-                        width: '420px',
-                        borderRight: '1px solid var(--card-border-color)',
-                        overflowY: 'auto',
+                        width: "420px",
+                        borderRight: "1px solid var(--card-border-color)",
+                        overflowY: "auto",
                       }}
                     >
                       <Stack space={4}>
@@ -1054,20 +1111,32 @@ export default function ComparatorTool() {
                             <Label size={1}>Wykryte parametry</Label>
                             <Text size={0} muted>
                               {totalFilteredCount} parametrów
-                              {visibleCount < totalFilteredCount && ` (pokazano ${visibleCount})`}
+                              {visibleCount < totalFilteredCount &&
+                                ` (pokazano ${visibleCount})`}
                             </Text>
                           </Stack>
                           <Flex gap={2}>
                             <Button
-                              icon={sortOrder === 'most' ? ArrowDownWideNarrow : ArrowUpNarrowWide}
-                              text={sortOrder === 'most' ? 'Najwięcej' : 'Najmniej'}
+                              icon={
+                                sortOrder === "most"
+                                  ? ArrowDownWideNarrow
+                                  : ArrowUpNarrowWide
+                              }
+                              text={
+                                sortOrder === "most" ? "Najwięcej" : "Najmniej"
+                              }
                               mode="ghost"
                               fontSize={0}
                               padding={2}
-                              onClick={() => setSortOrder(sortOrder === 'most' ? 'least' : 'most')}
-                              title={sortOrder === 'most' 
-                                ? 'Sortuj od największej liczby produktów' 
-                                : 'Sortuj od najmniejszej liczby produktów'
+                              onClick={() =>
+                                setSortOrder(
+                                  sortOrder === "most" ? "least" : "most",
+                                )
+                              }
+                              title={
+                                sortOrder === "most"
+                                  ? "Sortuj od największej liczby produktów"
+                                  : "Sortuj od najmniejszej liczby produktów"
                               }
                             />
                             <Button
@@ -1081,7 +1150,7 @@ export default function ComparatorTool() {
                               disabled={
                                 filteredDiscoveredParams.length === 0 ||
                                 filteredDiscoveredParams.every((d) =>
-                                  enabledParams.some((e) => e.name === d.name)
+                                  enabledParams.some((e) => e.name === d.name),
                                 )
                               }
                             />
@@ -1091,28 +1160,39 @@ export default function ComparatorTool() {
                         <TextInput
                           icon={SearchIcon}
                           value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                          onChange={(e) =>
+                            setSearchQuery(e.currentTarget.value)
+                          }
                           placeholder="Szukaj parametrów..."
                           fontSize={1}
                         />
 
                         {filteredDiscoveredParams.length === 0 ? (
-                          <Card padding={4} border radius={2} tone="transparent">
+                          <Card
+                            padding={4}
+                            border
+                            radius={2}
+                            tone="transparent"
+                          >
                             <Text size={1} muted align="center">
                               {discoveredParams.length === 0
-                                ? 'Brak parametrów w produktach tej kategorii.'
-                                : 'Nie znaleziono parametrów.'}
+                                ? "Brak parametrów w produktach tej kategorii."
+                                : "Nie znaleziono parametrów."}
                             </Text>
                           </Card>
                         ) : (
                           <Stack space={2}>
                             {filteredDiscoveredParams.map((param) => {
                               const isEnabled = enabledParams.some(
-                                (e) => e.name === param.name
+                                (e) => e.name === param.name,
                               );
-                              const isExpanded = expandedDiscoveredParams.has(param.name);
+                              const isExpanded = expandedDiscoveredParams.has(
+                                param.name,
+                              );
 
-                              const hasAnyProducts = param.products.length > 0 || param.missingProducts.length > 0;
+                              const hasAnyProducts =
+                                param.products.length > 0 ||
+                                param.missingProducts.length > 0;
 
                               return (
                                 <Card
@@ -1120,7 +1200,7 @@ export default function ComparatorTool() {
                                   padding={0}
                                   border
                                   radius={2}
-                                  tone={isEnabled ? 'positive' : 'default'}
+                                  tone={isEnabled ? "positive" : "default"}
                                   style={{
                                     opacity: isEnabled ? 0.7 : 1,
                                   }}
@@ -1131,15 +1211,18 @@ export default function ComparatorTool() {
                                       padding={3}
                                       flex={1}
                                       style={{
-                                        cursor: isEnabled ? 'default' : 'pointer',
-                                        alignItems: 'center',
+                                        cursor: isEnabled
+                                          ? "default"
+                                          : "pointer",
+                                        alignItems: "center",
                                       }}
                                       onClick={() =>
-                                        !isEnabled && handleAddParameter(param.name)
+                                        !isEnabled &&
+                                        handleAddParameter(param.name)
                                       }
                                     >
                                       <Flex align="flex-start" gap={3}>
-                                        <Box style={{ marginTop: '2px' }}>
+                                        <Box style={{ marginTop: "2px" }}>
                                           {isEnabled ? (
                                             <CheckmarkIcon />
                                           ) : (
@@ -1159,7 +1242,8 @@ export default function ComparatorTool() {
                                             >
                                               {param.products.length}
                                             </Badge>
-                                            {param.missingProducts.length > 0 && (
+                                            {param.missingProducts.length >
+                                              0 && (
                                               <Badge
                                                 tone="caution"
                                                 fontSize={0}
@@ -1173,26 +1257,35 @@ export default function ComparatorTool() {
                                         </Box>
                                       </Flex>
                                     </Box>
-                                    
+
                                     {/* Expand button */}
                                     {hasAnyProducts && (
                                       <Button
-                                        icon={isExpanded ? ChevronDownIcon : ChevronRightIcon}
+                                        icon={
+                                          isExpanded
+                                            ? ChevronDownIcon
+                                            : ChevronRightIcon
+                                        }
                                         mode="bleed"
                                         padding={3}
-                                        onClick={() => toggleDiscoveredParamExpand(param.name)}
+                                        onClick={() =>
+                                          toggleDiscoveredParamExpand(
+                                            param.name,
+                                          )
+                                        }
                                         title="Pokaż produkty"
                                       />
                                     )}
                                   </Flex>
-                                  
+
                                   {/* Products list */}
                                   {isExpanded && hasAnyProducts && (
                                     <Box
                                       padding={3}
                                       style={{
-                                        borderTop: '1px solid var(--card-border-color)',
-                                        background: 'var(--card-bg2-color)',
+                                        borderTop:
+                                          "1px solid var(--card-border-color)",
+                                        background: "var(--card-bg2-color)",
                                       }}
                                     >
                                       <Stack space={3}>
@@ -1200,9 +1293,20 @@ export default function ComparatorTool() {
                                         {param.products.length > 0 && (
                                           <Stack space={2}>
                                             <Flex align="center" gap={2}>
-                                              <Badge tone="positive" fontSize={0} padding={1}>✓</Badge>
-                                              <Text size={0} muted weight="medium">
-                                                Z parametrem ({param.products.length}):
+                                              <Badge
+                                                tone="positive"
+                                                fontSize={0}
+                                                padding={1}
+                                              >
+                                                ✓
+                                              </Badge>
+                                              <Text
+                                                size={0}
+                                                muted
+                                                weight="medium"
+                                              >
+                                                Z parametrem (
+                                                {param.products.length}):
                                               </Text>
                                             </Flex>
                                             <Stack space={1}>
@@ -1217,14 +1321,17 @@ export default function ComparatorTool() {
                                                     src={product.imageUrl}
                                                     size={1}
                                                     style={{
-                                                      borderRadius: '4px',
-                                                      background: product.imageUrl
-                                                        ? 'transparent'
-                                                        : 'var(--card-bg-color)',
+                                                      borderRadius: "4px",
+                                                      background:
+                                                        product.imageUrl
+                                                          ? "transparent"
+                                                          : "var(--card-bg-color)",
                                                     }}
                                                   />
                                                   <Box flex={1}>
-                                                    <Text size={0}>{product.name}</Text>
+                                                    <Text size={0}>
+                                                      {product.name}
+                                                    </Text>
                                                   </Box>
                                                   {product.brandName && (
                                                     <Badge
@@ -1240,64 +1347,87 @@ export default function ComparatorTool() {
                                             </Stack>
                                           </Stack>
                                         )}
-                                        
+
                                         {/* Products MISSING the parameter */}
                                         {param.missingProducts.length > 0 && (
                                           <Stack space={2}>
                                             <Flex align="center" gap={2}>
-                                              <Badge tone="caution" fontSize={0} padding={1}>!</Badge>
-                                              <Text size={0} muted weight="medium">
-                                                Bez parametru ({param.missingProducts.length}):
+                                              <Badge
+                                                tone="caution"
+                                                fontSize={0}
+                                                padding={1}
+                                              >
+                                                !
+                                              </Badge>
+                                              <Text
+                                                size={0}
+                                                muted
+                                                weight="medium"
+                                              >
+                                                Bez parametru (
+                                                {param.missingProducts.length}):
                                               </Text>
                                             </Flex>
                                             <Stack space={1}>
-                                              {param.missingProducts.map((product) => (
-                                                <Card
-                                                  key={product._id}
-                                                  padding={2}
-                                                  radius={2}
-                                                  tone="caution"
-                                                  style={{ background: 'var(--card-bg-color)' }}
-                                                >
-                                                  <Flex align="center" gap={2}>
-                                                    <Avatar
-                                                      src={product.imageUrl}
-                                                      size={1}
-                                                      style={{
-                                                        borderRadius: '4px',
-                                                        background: product.imageUrl
-                                                          ? 'transparent'
-                                                          : 'var(--card-border-color)',
-                                                      }}
-                                                    />
-                                                    <Box flex={1}>
-                                                      <Text size={0}>{product.name}</Text>
-                                                    </Box>
-                                                    {product.brandName && (
-                                                      <Badge
+                                              {param.missingProducts.map(
+                                                (product) => (
+                                                  <Card
+                                                    key={product._id}
+                                                    padding={2}
+                                                    radius={2}
+                                                    tone="caution"
+                                                    style={{
+                                                      background:
+                                                        "var(--card-bg-color)",
+                                                    }}
+                                                  >
+                                                    <Flex
+                                                      align="center"
+                                                      gap={2}
+                                                    >
+                                                      <Avatar
+                                                        src={product.imageUrl}
+                                                        size={1}
+                                                        style={{
+                                                          borderRadius: "4px",
+                                                          background:
+                                                            product.imageUrl
+                                                              ? "transparent"
+                                                              : "var(--card-border-color)",
+                                                        }}
+                                                      />
+                                                      <Box flex={1}>
+                                                        <Text size={0}>
+                                                          {product.name}
+                                                        </Text>
+                                                      </Box>
+                                                      {product.brandName && (
+                                                        <Badge
+                                                          tone="primary"
+                                                          fontSize={0}
+                                                          padding={1}
+                                                        >
+                                                          {product.brandName}
+                                                        </Badge>
+                                                      )}
+                                                      <Button
+                                                        as="a"
+                                                        href={
+                                                          product.brandId
+                                                            ? `/structure/produkty;produktyWedlugMarek;${product.brandId};${product._id}%2Cview%3Ddane-techniczne`
+                                                            : `/intent/edit/id=${product._id};type=product`
+                                                        }
+                                                        target="_blank"
+                                                        text="Edytuj"
+                                                        mode="ghost"
                                                         tone="primary"
                                                         fontSize={0}
-                                                        padding={1}
-                                                      >
-                                                        {product.brandName}
-                                                      </Badge>
-                                                    )}
-                                                    <Button
-                                                      as="a"
-                                                      href={product.brandId 
-                                                        ? `/structure/produkty;produktyWedlugMarek;${product.brandId};${product._id}%2Cview%3Ddane-techniczne`
-                                                        : `/intent/edit/id=${product._id};type=product`
-                                                      }
-                                                      target="_blank"
-                                                      text="Edytuj"
-                                                      mode="ghost"
-                                                      tone="primary"
-                                                      fontSize={0}
-                                                      padding={2}
-                                                    />
-                                                  </Flex>
-                                                </Card>
-                                              ))}
+                                                        padding={2}
+                                                      />
+                                                    </Flex>
+                                                  </Card>
+                                                ),
+                                              )}
                                             </Stack>
                                           </Stack>
                                         )}
@@ -1307,14 +1437,14 @@ export default function ComparatorTool() {
                                 </Card>
                               );
                             })}
-                            
+
                             {/* Load more button */}
                             {visibleCount < totalFilteredCount && (
                               <Button
                                 text={`Pokaż więcej (${totalFilteredCount - visibleCount} pozostało)`}
                                 mode="ghost"
                                 onClick={handleLoadMore}
-                                style={{ width: '100%' }}
+                                style={{ width: "100%" }}
                               />
                             )}
                           </Stack>
@@ -1323,15 +1453,15 @@ export default function ComparatorTool() {
                     </Box>
 
                     {/* Enabled Parameters */}
-                    <Box padding={4} style={{ flex: 1, overflowY: 'auto' }}>
+                    <Box padding={4} style={{ flex: 1, overflowY: "auto" }}>
                       <Stack space={4}>
                         <Stack space={2}>
                           <Label size={1}>
                             Parametry do porównania ({enabledParams.length})
                           </Label>
                           <Text size={1} muted>
-                            Przeciągaj, aby zmienić kolejność. Kliknij strzałkę, aby
-                            zobaczyć produkty z danym parametrem.
+                            Przeciągaj, aby zmienić kolejność. Kliknij strzałkę,
+                            aby zobaczyć produkty z danym parametrem.
                           </Text>
                         </Stack>
 
@@ -1341,7 +1471,7 @@ export default function ComparatorTool() {
                             border
                             radius={2}
                             tone="transparent"
-                            style={{ textAlign: 'center' }}
+                            style={{ textAlign: "center" }}
                           >
                             <Stack space={3}>
                               <Text size={1} muted>
@@ -1371,10 +1501,17 @@ export default function ComparatorTool() {
                                       key={param._key}
                                       param={param}
                                       products={paramData.products}
-                                      missingProducts={paramData.missingProducts}
-                                      onRemove={() => handleRemoveParameter(param._key)}
+                                      missingProducts={
+                                        paramData.missingProducts
+                                      }
+                                      onRemove={() =>
+                                        handleRemoveParameter(param._key)
+                                      }
                                       onDisplayNameChange={(displayName) =>
-                                        handleDisplayNameChange(param._key, displayName)
+                                        handleDisplayNameChange(
+                                          param._key,
+                                          displayName,
+                                        )
                                       }
                                     />
                                   );

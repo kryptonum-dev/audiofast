@@ -9,6 +9,7 @@
 ### 1. Mailchimp Account Configuration
 
 **Before any coding:**
+
 - Create or access Mailchimp account at https://mailchimp.com
 - Create an **Audience** (List) for newsletter subscribers
   - Navigate to: Audience → All contacts → Settings
@@ -47,13 +48,15 @@ npm install @mailchimp/mailchimp_marketing
 **File**: `apps/web/src/global/mailchimp/client.ts`
 
 ```typescript
-import mailchimp from '@mailchimp/mailchimp_marketing';
+import mailchimp from "@mailchimp/mailchimp_marketing";
 
 const MAILCHIMP_API_KEY = process.env.MAILCHIMP_API_KEY;
 const MAILCHIMP_SERVER_PREFIX = process.env.MAILCHIMP_SERVER_PREFIX;
 
 if (!MAILCHIMP_API_KEY || !MAILCHIMP_SERVER_PREFIX) {
-  console.warn('[Mailchimp] Missing API credentials. Newsletter signup will be disabled.');
+  console.warn(
+    "[Mailchimp] Missing API credentials. Newsletter signup will be disabled.",
+  );
 }
 
 // Configure client once
@@ -64,7 +67,7 @@ mailchimp.setConfig({
 
 export const mailchimpClient = mailchimp;
 
-export const MAILCHIMP_AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID || '';
+export const MAILCHIMP_AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID || "";
 ```
 
 ### 2. Create Helper Functions
@@ -72,8 +75,8 @@ export const MAILCHIMP_AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID || '';
 **File**: `apps/web/src/global/mailchimp/subscribe.ts`
 
 ```typescript
-import crypto from 'crypto';
-import { mailchimpClient, MAILCHIMP_AUDIENCE_ID } from './client';
+import crypto from "crypto";
+import { mailchimpClient, MAILCHIMP_AUDIENCE_ID } from "./client";
 
 export type SubscribeResult = {
   success: boolean;
@@ -90,22 +93,22 @@ export async function subscribeToNewsletter(
   metadata?: {
     source?: string; // e.g., 'footer', 'popup', 'blog'
     tags?: string[]; // e.g., ['website', 'footer-signup']
-  }
+  },
 ): Promise<SubscribeResult> {
   if (!mailchimpClient || !MAILCHIMP_AUDIENCE_ID) {
-    console.error('[Mailchimp] Client not configured');
+    console.error("[Mailchimp] Client not configured");
     return {
       success: false,
-      message: 'Newsletter service not available',
+      message: "Newsletter service not available",
     };
   }
 
   try {
     // Generate subscriber hash for idempotent operations
     const subscriberHash = crypto
-      .createHash('md5')
+      .createHash("md5")
       .update(email.toLowerCase())
-      .digest('hex');
+      .digest("hex");
 
     // Use setListMember (PUT) instead of addListMember (POST)
     // This is idempotent and won't fail if email already exists
@@ -114,42 +117,42 @@ export async function subscribeToNewsletter(
       subscriberHash,
       {
         email_address: email,
-        status_if_new: 'pending', // 'pending' for double opt-in, 'subscribed' for single opt-in
+        status_if_new: "pending", // 'pending' for double opt-in, 'subscribed' for single opt-in
         merge_fields: {
-          SOURCE: metadata?.source || 'website',
+          SOURCE: metadata?.source || "website",
         },
-        tags: metadata?.tags || ['website'],
-      }
+        tags: metadata?.tags || ["website"],
+      },
     );
 
     // Check if user needs to confirm (double opt-in)
-    const needsConfirmation = response.status === 'pending';
+    const needsConfirmation = response.status === "pending";
 
     return {
       success: true,
       needsConfirmation,
       message: needsConfirmation
-        ? 'Please check your email to confirm subscription'
-        : 'Successfully subscribed to newsletter',
+        ? "Please check your email to confirm subscription"
+        : "Successfully subscribed to newsletter",
     };
   } catch (error: any) {
-    console.error('[Mailchimp] Subscribe error:', error);
+    console.error("[Mailchimp] Subscribe error:", error);
 
     // Handle specific Mailchimp errors
     if (error.status === 400) {
-      const errorDetail = error.response?.body?.title || '';
-      
-      if (errorDetail.includes('already a list member')) {
+      const errorDetail = error.response?.body?.title || "";
+
+      if (errorDetail.includes("already a list member")) {
         return {
           success: true,
-          message: 'You are already subscribed',
+          message: "You are already subscribed",
         };
       }
-      
-      if (errorDetail.includes('Invalid Resource')) {
+
+      if (errorDetail.includes("Invalid Resource")) {
         return {
           success: false,
-          message: 'Invalid email address',
+          message: "Invalid email address",
         };
       }
     }
@@ -157,13 +160,13 @@ export async function subscribeToNewsletter(
     if (error.status === 403) {
       return {
         success: false,
-        message: 'Newsletter signup is temporarily unavailable',
+        message: "Newsletter signup is temporarily unavailable",
       };
     }
 
     return {
       success: false,
-      message: 'Failed to subscribe. Please try again later.',
+      message: "Failed to subscribe. Please try again later.",
     };
   }
 }
@@ -178,9 +181,9 @@ export async function subscribeToNewsletter(
 **File**: `apps/web/src/app/api/newsletter/route.ts`
 
 ```typescript
-import { type NextRequest, NextResponse } from 'next/server';
-import { subscribeToNewsletter } from '@/global/mailchimp/subscribe';
-import { REGEX } from '@/global/constants';
+import { type NextRequest, NextResponse } from "next/server";
+import { subscribeToNewsletter } from "@/global/mailchimp/subscribe";
+import { REGEX } from "@/global/constants";
 
 type NewsletterSubmission = {
   email: string;
@@ -195,38 +198,38 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, message: 'Invalid request' },
-      { status: 400 }
+      { success: false, message: "Invalid request" },
+      { status: 400 },
     );
   }
 
   // Validate required fields
   if (!body.email || !body.consent) {
     return NextResponse.json(
-      { success: false, message: 'Email and consent are required' },
-      { status: 400 }
+      { success: false, message: "Email and consent are required" },
+      { status: 400 },
     );
   }
 
   // Validate email format
   if (!REGEX.email.test(body.email)) {
     return NextResponse.json(
-      { success: false, message: 'Invalid email address' },
-      { status: 400 }
+      { success: false, message: "Invalid email address" },
+      { status: 400 },
     );
   }
 
   // Subscribe to Mailchimp
   try {
     const result = await subscribeToNewsletter(body.email, {
-      source: body.source || 'footer',
-      tags: ['website', body.source || 'footer'],
+      source: body.source || "footer",
+      tags: ["website", body.source || "footer"],
     });
 
     if (!result.success) {
       return NextResponse.json(
         { success: false, message: result.message },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -236,13 +239,13 @@ export async function POST(request: NextRequest) {
         message: result.message,
         needsConfirmation: result.needsConfirmation,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
-    console.error('[Newsletter API] Unexpected error:', error);
+    console.error("[Newsletter API] Unexpected error:", error);
     return NextResponse.json(
-      { success: false, message: 'Failed to process subscription' },
-      { status: 500 }
+      { success: false, message: "Failed to process subscription" },
+      { status: 500 },
     );
   }
 }
@@ -257,6 +260,7 @@ export async function POST(request: NextRequest) {
 **File**: `apps/web/src/components/ui/Footer/NewsletterForm.tsx`
 
 **Changes:**
+
 - Replace mock `setTimeout` with actual API call to `/api/newsletter`
 - Add analytics tracking (similar to contact forms)
 - Handle double opt-in messaging
@@ -533,7 +537,7 @@ MAILCHIMP_AUDIENCE_ID=your_audience_id_here
 
 **File**: `apps/web/MAILCHIMP_SETUP.md`
 
-```markdown
+````markdown
 # Mailchimp Newsletter Setup
 
 ## Prerequisites
@@ -575,6 +579,7 @@ MAILCHIMP_API_KEY=your_full_api_key
 MAILCHIMP_SERVER_PREFIX=us6
 MAILCHIMP_AUDIENCE_ID=your_audience_id
 ```
+````
 
 ### 5. Deploy to Production
 
@@ -585,18 +590,22 @@ MAILCHIMP_AUDIENCE_ID=your_audience_id
 ## Troubleshooting
 
 ### "Newsletter service not available"
+
 - Check that all environment variables are set
 - Verify API key is correct and not expired
 
 ### "Invalid email address"
+
 - Check Mailchimp API response in server logs
 - Verify email format passes REGEX validation
 
 ### Subscribers not appearing in Mailchimp
+
 - Check spam folder for confirmation email (double opt-in)
 - Verify MAILCHIMP_AUDIENCE_ID is correct
 - Check Mailchimp dashboard for archived/unsubscribed contacts
-```
+
+````
 
 ### 3. Production Deployment
 
@@ -703,9 +712,8 @@ mailchimpClient.lists.addListMember(listId, {
   email_address: 'user@example.com',
   status: 'pending',
 });
-```
+````
 
 ---
 
 This plan provides a **minimal, production-ready** implementation that can be extended later with additional features as needed.
-

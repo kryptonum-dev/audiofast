@@ -1,7 +1,7 @@
-import type { FieldDefinition } from 'sanity';
-import { defineField } from 'sanity';
+import type { FieldDefinition } from "sanity";
+import { defineField } from "sanity";
 
-import { customPortableText } from '../portableText';
+import { customPortableText } from "../portableText";
 
 export interface ContactPeopleFieldOptions {
   /**
@@ -24,8 +24,8 @@ export interface ContactPeopleFieldOptions {
  * Used in both FAQ section and Contact Form blocks
  */
 export const contactPeopleField = (
-  options: ContactPeopleFieldOptions = {}
-): FieldDefinition<'object'> => {
+  options: ContactPeopleFieldOptions = {},
+): FieldDefinition<"object"> => {
   const {
     conditionalValidation = false,
     headingInitialValue,
@@ -36,18 +36,18 @@ export const contactPeopleField = (
   // Always validates min/max and duplicates when array exists
   const getContactPersonsValidation = (Rule: any) => {
     return [
-      Rule.min(1).error('Musisz wybrać co najmniej jedną osobę kontaktową'),
-      Rule.max(2).error('Możesz wybrać maksymalnie 2 osoby kontaktowe'),
+      Rule.min(1).error("Musisz wybrać co najmniej jedną osobę kontaktową"),
+      Rule.max(2).error("Możesz wybrać maksymalnie 2 osoby kontaktowe"),
       Rule.custom((value: any) => {
         // Check for duplicates
         const ids =
           value?.map((ref: unknown) => (ref as { _ref?: string })?._ref) || [];
         const hasDuplicates = ids.length !== new Set(ids).size;
         if (hasDuplicates) {
-          return 'Nie możesz wybrać tej samej osoby więcej niż raz';
+          return "Nie możesz wybrać tej samej osoby więcej niż raz";
         }
         return true;
-      }).error('Nie możesz wybrać tej samej osoby więcej niż raz'),
+      }).error("Nie możesz wybrać tej samej osoby więcej niż raz"),
     ];
   };
 
@@ -66,10 +66,10 @@ export const contactPeopleField = (
         }
 
         const showContactSection =
-          displayMode === 'both' || displayMode === 'contactOnly';
+          displayMode === "both" || displayMode === "contactOnly";
 
         if (showContactSection && (!value.heading || !value.contactPersons)) {
-          return 'Sekcja osób kontaktowych jest wymagana gdy sekcja kontaktowa jest włączona';
+          return "Sekcja osób kontaktowych jest wymagana gdy sekcja kontaktowa jest włączona";
         }
         return true;
       });
@@ -77,7 +77,7 @@ export const contactPeopleField = (
       // Contact Form: always required
       return Rule.custom((value: any) => {
         if (!value?.heading || !value?.contactPersons) {
-          return 'Sekcja osób kontaktowych jest wymagana';
+          return "Sekcja osób kontaktowych jest wymagana";
         }
         return true;
       });
@@ -85,29 +85,29 @@ export const contactPeopleField = (
   };
 
   return defineField({
-    name: 'contactPeople',
-    title: 'Osoby kontaktowe',
-    type: 'object',
-    description: 'Sekcja z osobami, z którymi można się skontaktować',
+    name: "contactPeople",
+    title: "Osoby kontaktowe",
+    type: "object",
+    description: "Sekcja z osobami, z którymi można się skontaktować",
     fields: [
       customPortableText({
-        name: 'heading',
-        title: 'Nagłówek sekcji osób kontaktowych',
+        name: "heading",
+        title: "Nagłówek sekcji osób kontaktowych",
         description:
           'Tytuł dla sekcji z osobami kontaktowymi, np. "Jesteśmy do Twojej dyspozycji!"',
-        type: 'heading',
+        type: "heading",
         ...(headingInitialValue && { initialValue: headingInitialValue }),
       }),
       defineField({
-        name: 'contactPersons',
-        title: 'Lista osób kontaktowych',
-        type: 'array',
+        name: "contactPersons",
+        title: "Lista osób kontaktowych",
+        type: "array",
         description:
-          'Wybierz członków zespołu jako osoby kontaktowe (minimum 1, maksimum 2)',
+          "Wybierz członków zespołu jako osoby kontaktowe (minimum 1, maksimum 2)",
         of: [
           {
-            type: 'reference',
-            to: [{ type: 'teamMember' }],
+            type: "reference",
+            to: [{ type: "teamMember" }],
             options: {
               disableNew: true,
               filter: ({ parent }) => {

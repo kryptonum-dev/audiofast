@@ -1,31 +1,31 @@
-import { assist } from '@sanity/assist';
-import { embeddingsIndexDashboard } from '@sanity/embeddings-index-ui';
-import { visionTool } from '@sanity/vision';
-import { GitCompareArrows, Mail } from 'lucide-react';
-import { defineConfig } from 'sanity';
-import { structureTool } from 'sanity/structure';
+import { assist } from "@sanity/assist";
+import { embeddingsIndexDashboard } from "@sanity/embeddings-index-ui";
+import { visionTool } from "@sanity/vision";
+import { GitCompareArrows, Mail } from "lucide-react";
+import { defineConfig } from "sanity";
+import { structureTool } from "sanity/structure";
 // import { bulkActionsTable } from 'sanity-plugin-bulk-actions-table';
-import { media } from 'sanity-plugin-media';
+import { media } from "sanity-plugin-media";
 
-import { Logo } from './components/logo';
-import type { SingletonType } from './schemaTypes';
-import { schemaTypes, singletonActions } from './schemaTypes';
-import { singletons } from './schemaTypes/documents';
-import { defaultDocumentNode, structure } from './structure';
-import ComparatorTool from './tools/comparator';
-import NewsletterTool from './tools/newsletter';
-import { createPageTemplate } from './utils/helper';
+import { Logo } from "./components/logo";
+import type { SingletonType } from "./schemaTypes";
+import { schemaTypes, singletonActions } from "./schemaTypes";
+import { singletons } from "./schemaTypes/documents";
+import { defaultDocumentNode, structure } from "./structure";
+import ComparatorTool from "./tools/comparator";
+import NewsletterTool from "./tools/newsletter";
+import { createPageTemplate } from "./utils/helper";
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "";
 const dataset = process.env.SANITY_STUDIO_DATASET;
 const title = process.env.SANITY_STUDIO_TITLE;
 
 export default defineConfig({
-  name: 'default',
-  title: title ?? 'Audiofast Studio',
+  name: "default",
+  title: title ?? "Audiofast Studio",
   projectId: projectId,
   icon: Logo,
-  dataset: dataset ?? 'production',
+  dataset: dataset ?? "production",
   plugins: [
     assist(),
     structureTool({
@@ -40,14 +40,14 @@ export default defineConfig({
   tools: (prev) => [
     ...prev,
     {
-      name: 'newsletter',
-      title: 'Newsletter',
+      name: "newsletter",
+      title: "Newsletter",
       icon: Mail,
       component: NewsletterTool,
     },
     {
-      name: 'comparator',
-      title: 'Porównywarka',
+      name: "comparator",
+      title: "Porównywarka",
       icon: GitCompareArrows,
       component: ComparatorTool,
     },
@@ -62,15 +62,15 @@ export default defineConfig({
           .includes(context.schemaType as SingletonType)
       ) {
         return input.filter(
-          ({ action }) => action && singletonActions.has(action)
+          ({ action }) => action && singletonActions.has(action),
         );
       }
 
       // For socialMedia - allow only viewing, deleting and custom actions
-      if (context.schemaType === 'socialMedia') {
+      if (context.schemaType === "socialMedia") {
         return input.filter(({ action }) => {
           if (!action) return true;
-          return action === 'publish' || action === 'discardChanges';
+          return action === "publish" || action === "discardChanges";
         });
       }
 
@@ -90,7 +90,7 @@ export default defineConfig({
       }
 
       // Prevent creation of socialMedia documents from structure
-      if (type === 'structure' && schemaType === 'socialMedia') {
+      if (type === "structure" && schemaType === "socialMedia") {
         return [];
       }
 

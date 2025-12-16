@@ -173,7 +173,7 @@ declare global {
       loaded?: boolean;
       callMethod?: (...args: unknown[]) => void;
     };
-    trackEvent?: typeof import('./track-event').trackEvent;
+    trackEvent?: typeof import("./track-event").trackEvent;
     __analyticsReady?: boolean;
     __pageViewTracked?: boolean;
     __metaPixelId?: string | null;
@@ -205,10 +205,10 @@ Create `apps/web/src/global/analytics/set-cookie.ts`:
  * Works only in browser environment
  */
 export function setCookie(name: string, value: string, ttlInDays?: number) {
-  if (typeof document === 'undefined') return;
+  if (typeof document === "undefined") return;
 
-  let expires = '';
-  if (typeof ttlInDays === 'number') {
+  let expires = "";
+  if (typeof ttlInDays === "number") {
     const date = new Date();
     date.setTime(date.getTime() + ttlInDays * 24 * 60 * 60 * 1000);
     expires = `; expires=${date.toUTCString()}`;
@@ -231,22 +231,22 @@ export function setCookie(name: string, value: string, ttlInDays?: number) {
 Create `apps/web/src/global/analytics/analytics-user-storage.ts`:
 
 ```typescript
-import type { AnalyticsUser, AnalyticsUtm } from './types';
+import type { AnalyticsUser, AnalyticsUtm } from "./types";
 
-const STORAGE_KEY = 'analytics-user';
-const UTM_STORAGE_KEY = 'analytics-utm';
+const STORAGE_KEY = "analytics-user";
+const UTM_STORAGE_KEY = "analytics-utm";
 
 function isBrowser() {
-  return typeof window !== 'undefined';
+  return typeof window !== "undefined";
 }
 
 // Remove null/undefined/empty values from user object
 function normalize(
-  user: AnalyticsUser | null | undefined
+  user: AnalyticsUser | null | undefined,
 ): AnalyticsUser | null {
   if (!user) return null;
   const entries = Object.entries(user).filter(
-    ([, value]) => value !== undefined && value !== null && value !== ''
+    ([, value]) => value !== undefined && value !== null && value !== "",
   );
   return entries.length ? (Object.fromEntries(entries) as AnalyticsUser) : null;
 }
@@ -260,14 +260,14 @@ export function loadAnalyticsUser(): AnalyticsUser | null {
     const parsed = JSON.parse(raw) as AnalyticsUser;
     return normalize(parsed);
   } catch (error) {
-    console.error('[AnalyticsUserStorage] Failed to load user data', error);
+    console.error("[AnalyticsUserStorage] Failed to load user data", error);
     return null;
   }
 }
 
 // Export normalized user data
 export function normalizeAnalyticsUser(
-  user: AnalyticsUser | null | undefined
+  user: AnalyticsUser | null | undefined,
 ): AnalyticsUser | null {
   return normalize(user);
 }
@@ -290,12 +290,12 @@ export function saveAnalyticsUser(user: AnalyticsUser): void {
 
     // Notify system of user data update
     document.dispatchEvent(
-      new CustomEvent('analytics_user_updated', {
+      new CustomEvent("analytics_user_updated", {
         detail: merged,
-      })
+      }),
     );
   } catch (error) {
-    console.error('[AnalyticsUserStorage] Failed to save user data', error);
+    console.error("[AnalyticsUserStorage] Failed to save user data", error);
   }
 }
 
@@ -305,17 +305,17 @@ export function clearAnalyticsUser(): void {
   try {
     window.localStorage.removeItem(STORAGE_KEY);
     document.dispatchEvent(
-      new CustomEvent('analytics_user_updated', {
+      new CustomEvent("analytics_user_updated", {
         detail: null,
-      })
+      }),
     );
   } catch (error) {
-    console.error('[AnalyticsUserStorage] Failed to clear user data', error);
+    console.error("[AnalyticsUserStorage] Failed to clear user data", error);
   }
 }
 
 // UTM handling with sessionStorage
-type StoredUtm = Partial<Omit<AnalyticsUtm, 'capturedAt'>> & {
+type StoredUtm = Partial<Omit<AnalyticsUtm, "capturedAt">> & {
   capturedAt?: number;
 };
 
@@ -323,13 +323,13 @@ function normalizeUtm(utm?: StoredUtm | null): AnalyticsUtm | null {
   if (!utm) return null;
   const { capturedAt, ...rest } = utm;
   const entries = Object.entries(rest).filter(
-    ([, value]) => value !== undefined && value !== null && value !== ''
+    ([, value]) => value !== undefined && value !== null && value !== "",
   );
   if (!entries.length) return null;
-  const base = Object.fromEntries(entries) as Omit<AnalyticsUtm, 'capturedAt'>;
+  const base = Object.fromEntries(entries) as Omit<AnalyticsUtm, "capturedAt">;
   return {
     ...base,
-    capturedAt: typeof capturedAt === 'number' ? capturedAt : Date.now(),
+    capturedAt: typeof capturedAt === "number" ? capturedAt : Date.now(),
   };
 }
 
@@ -342,7 +342,7 @@ export function loadAnalyticsUtm(): AnalyticsUtm | null {
     const parsed = JSON.parse(raw) as StoredUtm;
     return normalizeUtm(parsed);
   } catch (error) {
-    console.error('[AnalyticsUserStorage] Failed to load UTM data', error);
+    console.error("[AnalyticsUserStorage] Failed to load UTM data", error);
     return null;
   }
 }
@@ -355,13 +355,13 @@ export function saveAnalyticsUtm(values: StoredUtm): AnalyticsUtm | null {
   try {
     window.sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(normalized));
     document.dispatchEvent(
-      new CustomEvent('analytics_utm_updated', {
+      new CustomEvent("analytics_utm_updated", {
         detail: normalized,
-      })
+      }),
     );
     return normalized;
   } catch (error) {
-    console.error('[AnalyticsUserStorage] Failed to save UTM data', error);
+    console.error("[AnalyticsUserStorage] Failed to save UTM data", error);
     return null;
   }
 }
@@ -372,12 +372,12 @@ export function clearAnalyticsUtm(): void {
   try {
     window.sessionStorage.removeItem(UTM_STORAGE_KEY);
     document.dispatchEvent(
-      new CustomEvent('analytics_utm_updated', {
+      new CustomEvent("analytics_utm_updated", {
         detail: null,
-      })
+      }),
     );
   } catch (error) {
-    console.error('[AnalyticsUserStorage] Failed to clear UTM data', error);
+    console.error("[AnalyticsUserStorage] Failed to clear UTM data", error);
   }
 }
 ```
@@ -398,47 +398,47 @@ Create `apps/web/src/global/analytics/track-event.ts`:
 This is the **main tracking engine** (~750 lines). I'll provide the complete implementation:
 
 ```typescript
-import type { AnalyticsUser, AnalyticsUtm } from './types';
+import type { AnalyticsUser, AnalyticsUtm } from "./types";
 import {
   loadAnalyticsUser,
   loadAnalyticsUtm,
   saveAnalyticsUser,
   saveAnalyticsUtm,
-} from './analytics-user-storage';
+} from "./analytics-user-storage";
 
 export type TrackEventUser = AnalyticsUser;
 
 // Meta (Facebook) event types
 type MetaEventName =
-  | 'PageView'
-  | 'ViewContent'
-  | 'ViewCategory'
-  | 'Search'
-  | 'AddToCart'
-  | 'RemoveFromCart'
-  | 'InitiateCheckout'
-  | 'AddPaymentInfo'
-  | 'Purchase'
-  | 'Lead'
-  | 'Contact'
-  | 'ViewCart'
-  | 'CompleteRegistration';
+  | "PageView"
+  | "ViewContent"
+  | "ViewCategory"
+  | "Search"
+  | "AddToCart"
+  | "RemoveFromCart"
+  | "InitiateCheckout"
+  | "AddPaymentInfo"
+  | "Purchase"
+  | "Lead"
+  | "Contact"
+  | "ViewCart"
+  | "CompleteRegistration";
 
 // Google Analytics 4 event types
 type Ga4EventName =
-  | 'page_view'
-  | 'view_item_list'
-  | 'view_item'
-  | 'search'
-  | 'add_to_cart'
-  | 'remove_from_cart'
-  | 'begin_checkout'
-  | 'add_payment_info'
-  | 'purchase'
-  | 'generate_lead'
-  | 'contact'
-  | 'view_cart'
-  | 'sign_up';
+  | "page_view"
+  | "view_item_list"
+  | "view_item"
+  | "search"
+  | "add_to_cart"
+  | "remove_from_cart"
+  | "begin_checkout"
+  | "add_payment_info"
+  | "purchase"
+  | "generate_lead"
+  | "contact"
+  | "view_cart"
+  | "sign_up";
 
 // Event parameter types (add more as needed)
 type MetaEventParams = {
@@ -481,11 +481,11 @@ export type TrackEventParams<
 
 // UTM parameter keys
 const UTM_PARAM_KEYS = [
-  'utm_source',
-  'utm_medium',
-  'utm_campaign',
-  'utm_term',
-  'utm_content',
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
 ] as const;
 type UtmKey = (typeof UTM_PARAM_KEYS)[number];
 
@@ -503,14 +503,14 @@ type MetaRequestBodyPayload = {
 
 // Extract UTM from URL
 function extractUtmFromUrl(
-  url?: string | null
+  url?: string | null,
 ): Partial<Record<UtmKey, string>> | undefined {
   if (!url) return undefined;
   try {
     const base =
-      typeof window !== 'undefined' && window.location?.origin
+      typeof window !== "undefined" && window.location?.origin
         ? window.location.origin
-        : 'https://placeholder.local';
+        : "https://placeholder.local";
     const parsed = new URL(url, base);
     const params: Partial<Record<UtmKey, string>> = {};
     for (const key of UTM_PARAM_KEYS) {
@@ -525,12 +525,12 @@ function extractUtmFromUrl(
 
 // Convert AnalyticsUtm to plain object for sending
 function resolveUtmPayload(
-  utm?: AnalyticsUtm | null
+  utm?: AnalyticsUtm | null,
 ): Partial<Record<UtmKey, string>> | undefined {
   if (!utm) return undefined;
   const { capturedAt, ...rest } = utm;
   const entries = Object.entries(rest).filter(
-    ([, value]) => value !== undefined && value !== null && value !== ''
+    ([, value]) => value !== undefined && value !== null && value !== "",
   );
   return entries.length
     ? (Object.fromEntries(entries) as Partial<Record<UtmKey, string>>)
@@ -541,7 +541,7 @@ function resolveUtmPayload(
 type PendingEvent<
   TMeta extends MetaEventName = MetaEventName,
   TGa4 extends Ga4EventName = Ga4EventName,
-> = Required<Pick<TrackEventParams<TMeta, TGa4>, 'eventId'>> & {
+> = Required<Pick<TrackEventParams<TMeta, TGa4>, "eventId">> & {
   url: string;
   eventTime: number;
   user?: TrackEventUser;
@@ -555,7 +555,7 @@ type PendingEvent<
 };
 
 // Module-level state
-const COOKIE_NAME = 'cookie-consent';
+const COOKIE_NAME = "cookie-consent";
 const pendingEvents: PendingEvent[] = [];
 let waitingForConsent = false;
 let waitingForReadiness = false;
@@ -564,33 +564,33 @@ const MAX_GA4_RETRIES = 3;
 
 // Meta standard events (use 'track', others use 'trackCustom')
 const META_STANDARD_EVENTS = new Set<MetaEventName>([
-  'PageView',
-  'ViewContent',
-  'Search',
-  'AddToCart',
-  'InitiateCheckout',
-  'AddPaymentInfo',
-  'Purchase',
-  'CompleteRegistration',
+  "PageView",
+  "ViewContent",
+  "Search",
+  "AddToCart",
+  "InitiateCheckout",
+  "AddPaymentInfo",
+  "Purchase",
+  "CompleteRegistration",
 ]);
 
 // Consent mode structure
 type ConsentMode = {
-  ad_storage?: 'granted' | 'denied';
-  analytics_storage?: 'granted' | 'denied';
-  ad_user_data?: 'granted' | 'denied';
-  ad_personalization?: 'granted' | 'denied';
-  conversion_api?: 'granted' | 'denied';
-  advanced_matching?: 'granted' | 'denied';
+  ad_storage?: "granted" | "denied";
+  analytics_storage?: "granted" | "denied";
+  ad_user_data?: "granted" | "denied";
+  ad_personalization?: "granted" | "denied";
+  conversion_api?: "granted" | "denied";
+  advanced_matching?: "granted" | "denied";
 };
 
 // Normalize user data (remove empty values)
 function normalizeUser(
-  user?: TrackEventUser | null
+  user?: TrackEventUser | null,
 ): TrackEventUser | undefined {
   if (!user) return undefined;
   const entries = Object.entries(user).filter(
-    ([, value]) => value !== undefined && value !== null && value !== ''
+    ([, value]) => value !== undefined && value !== null && value !== "",
   );
   if (!entries.length) return undefined;
   return Object.fromEntries(entries) as TrackEventUser;
@@ -599,7 +599,7 @@ function normalizeUser(
 // Merge provided user data with stored data
 function mergeUserData(
   user?: TrackEventUser,
-  options: { persist?: boolean } = {}
+  options: { persist?: boolean } = {},
 ): TrackEventUser | undefined {
   const stored = normalizeUser(loadAnalyticsUser());
   const provided = normalizeUser(user);
@@ -610,7 +610,7 @@ function mergeUserData(
   };
 
   // Optionally persist merged data
-  if (options.persist && typeof window !== 'undefined' && provided) {
+  if (options.persist && typeof window !== "undefined" && provided) {
     if (!stored || hasUserDifference(stored, merged)) {
       saveAnalyticsUser(merged);
     }
@@ -622,7 +622,7 @@ function mergeUserData(
 // Check if user data has changed
 function hasUserDifference(
   previous: TrackEventUser | undefined,
-  next: TrackEventUser | undefined
+  next: TrackEventUser | undefined,
 ): boolean {
   if (!previous && next) return true;
   if (previous && !next) return true;
@@ -640,10 +640,10 @@ function hasUserDifference(
 
 // Get cookie value
 function getCookie(name: string) {
-  if (typeof document === 'undefined') return null;
+  if (typeof document === "undefined") return null;
   const parts = `; ${document.cookie}`.split(`; ${name}=`);
   if (parts.length === 2)
-    return decodeURIComponent(parts.pop()!.split(';').shift()!);
+    return decodeURIComponent(parts.pop()!.split(";").shift()!);
   return null;
 }
 
@@ -660,7 +660,7 @@ function parseConsent(): ConsentMode {
 
 // Check if analytics scripts are ready
 function isAnalyticsReady() {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
   return window.__analyticsReady === true;
 }
 
@@ -672,31 +672,31 @@ function hasConsentDecision() {
 // Enqueue event and set up listeners
 function enqueue(
   event: PendingEvent,
-  options: { waitForConsent?: boolean; waitForReadiness?: boolean } = {}
+  options: { waitForConsent?: boolean; waitForReadiness?: boolean } = {},
 ) {
   pendingEvents.push(event);
 
   if (options.waitForConsent && !waitingForConsent) {
     waitingForConsent = true;
     document.addEventListener(
-      'cookie_consent_updated',
+      "cookie_consent_updated",
       () => {
         waitingForConsent = false;
         flushQueue();
       },
-      { once: true }
+      { once: true },
     );
   }
 
   if (options.waitForReadiness && !waitingForReadiness) {
     waitingForReadiness = true;
     document.addEventListener(
-      'analytics_ready',
+      "analytics_ready",
       () => {
         waitingForReadiness = false;
         flushQueue();
       },
-      { once: true }
+      { once: true },
     );
   }
 }
@@ -711,9 +711,9 @@ function flushQueue() {
 
 // Flush Facebook Pixel's internal queue
 function flushFbqQueue(fbqFn: any) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   const queue = (window as any)._fbq?.queue;
-  if (!Array.isArray(queue) || typeof fbqFn.callMethod !== 'function') {
+  if (!Array.isArray(queue) || typeof fbqFn.callMethod !== "function") {
     return;
   }
 
@@ -723,7 +723,7 @@ function flushFbqQueue(fbqFn: any) {
     try {
       fbqFn.callMethod.apply(fbqFn, args as []);
     } catch (err) {
-      console.error('[Meta] fbq manual flush failed', err);
+      console.error("[Meta] fbq manual flush failed", err);
     }
   }
 }
@@ -751,9 +751,9 @@ function sendEvent(event: PendingEvent) {
   // Parse consent
   const consent = parseConsent();
   const marketingGranted =
-    consent.ad_storage === 'granted' || consent.ad_user_data === 'granted';
-  const conversionApiGranted = consent.conversion_api === 'granted';
-  const analyticsGranted = consent.analytics_storage === 'granted';
+    consent.ad_storage === "granted" || consent.ad_user_data === "granted";
+  const conversionApiGranted = consent.conversion_api === "granted";
+  const analyticsGranted = consent.analytics_storage === "granted";
 
   const canSendMetaPixel = Boolean(meta && marketingGranted);
   const canSendMetaCapi = Boolean(meta && conversionApiGranted);
@@ -786,40 +786,40 @@ function sendEvent(event: PendingEvent) {
       // Try sendBeacon first (more reliable for page unload)
       let dispatchedViaBeacon = false;
       if (
-        typeof navigator !== 'undefined' &&
-        typeof navigator.sendBeacon === 'function'
+        typeof navigator !== "undefined" &&
+        typeof navigator.sendBeacon === "function"
       ) {
         try {
           const beaconPayload = JSON.stringify(metaBody);
           const beaconResult = navigator.sendBeacon(
-            '/api/analytics/meta',
-            new Blob([beaconPayload], { type: 'application/json' })
+            "/api/analytics/meta",
+            new Blob([beaconPayload], { type: "application/json" }),
           );
           if (beaconResult) {
             processedEvent.capiDispatched = true;
             dispatchedViaBeacon = true;
           }
         } catch (err) {
-          console.error('[Meta] sendBeacon failed', err);
+          console.error("[Meta] sendBeacon failed", err);
         }
       }
 
       // Fallback to fetch with keepalive
       if (!dispatchedViaBeacon) {
         try {
-          void fetch('/api/analytics/meta', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
+          void fetch("/api/analytics/meta", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
             keepalive: true,
             body: JSON.stringify(metaBody),
           }).then(async (res) => {
             if (!res.ok) {
-              console.error('[Meta] trackEvent failed', await res.text());
+              console.error("[Meta] trackEvent failed", await res.text());
             }
           });
           processedEvent.capiDispatched = true;
         } catch (err) {
-          console.error('[Meta] trackEvent fetch error', err);
+          console.error("[Meta] trackEvent fetch error", err);
         }
       }
     }
@@ -836,11 +836,11 @@ function sendEvent(event: PendingEvent) {
         }
       }
 
-      if (typeof window.fbq === 'function') {
+      if (typeof window.fbq === "function") {
         try {
           const method = META_STANDARD_EVENTS.has(meta.eventName)
-            ? 'track'
-            : 'trackCustom';
+            ? "track"
+            : "trackCustom";
           const fbqFn = window.fbq as any;
           const args = [
             method,
@@ -851,7 +851,7 @@ function sendEvent(event: PendingEvent) {
             },
           ];
 
-          if (typeof fbqFn.callMethod === 'function') {
+          if (typeof fbqFn.callMethod === "function") {
             flushFbqQueue(fbqFn);
             fbqFn.callMethod.apply(fbqFn, args);
             flushFbqQueue(fbqFn);
@@ -862,7 +862,7 @@ function sendEvent(event: PendingEvent) {
             }, 250);
           }
         } catch (err) {
-          console.error('[Meta] fbq tracking failed', err);
+          console.error("[Meta] fbq tracking failed", err);
         }
       } else if (attempt < MAX_META_RETRIES) {
         // Retry if fbq not loaded yet
@@ -881,14 +881,14 @@ function sendEvent(event: PendingEvent) {
   // Send to Google Analytics 4
   const canSendGa4 = Boolean(ga4 && analyticsGranted);
   if (canSendGa4 && ga4) {
-    if (typeof window.gtag === 'function') {
+    if (typeof window.gtag === "function") {
       if (!processedEvent.gaDispatched) {
         try {
           const params = {
             ...(ga4.params ?? {}),
             event_id: processedEvent.eventId,
           };
-          window.gtag('event', ga4.eventName, params);
+          window.gtag("event", ga4.eventName, params);
           processedEvent.gaDispatched = true;
         } catch (err) {
           console.error(`[GA4] trackEvent error for ${ga4.eventName}`, err);
@@ -914,10 +914,10 @@ export function trackEvent<
   TGa4 extends Ga4EventName = Ga4EventName,
 >(params: TrackEventParams<TMeta, TGa4>): string {
   // SSR safety check
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return (
       params.eventId ||
-      (typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      (typeof crypto !== "undefined" && "randomUUID" in crypto
         ? crypto.randomUUID()
         : Math.random().toString(36).slice(2))
     );
@@ -926,7 +926,7 @@ export function trackEvent<
   const now = Date.now();
   const eventId =
     params.eventId ||
-    (typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    (typeof crypto !== "undefined" && "randomUUID" in crypto
       ? crypto.randomUUID()
       : Math.random().toString(36).slice(2));
 
@@ -970,7 +970,7 @@ export function trackEvent<
 }
 
 // Make trackEvent available globally
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.trackEvent = trackEvent;
 }
 
@@ -1003,19 +1003,19 @@ function buildAdvancedMatchingPayload(user?: TrackEventUser | null) {
 }
 
 // Helper: Convert phone to E.164 format
-function phoneToE164(raw: string | number, defaultCountry = '+48') {
-  const stringified = typeof raw === 'number' ? String(raw) : raw;
-  const normalized = stringified.replace(/[^ 0-9+]/g, '');
+function phoneToE164(raw: string | number, defaultCountry = "+48") {
+  const stringified = typeof raw === "number" ? String(raw) : raw;
+  const normalized = stringified.replace(/[^ 0-9+]/g, "");
   if (!normalized) return undefined;
-  if (normalized.startsWith('+')) return normalized;
-  if (normalized.startsWith('00')) return `+${normalized.slice(2)}`;
+  if (normalized.startsWith("+")) return normalized;
+  if (normalized.startsWith("00")) return `+${normalized.slice(2)}`;
   return `${defaultCountry}${normalized}`;
 }
 
 // Helper: Apply user data to Meta Pixel instance
 function applyMetaPixelUserData(
   pixelId: string | undefined,
-  payload: Record<string, string>
+  payload: Record<string, string>,
 ) {
   if (!pixelId) return;
 
@@ -1023,7 +1023,7 @@ function applyMetaPixelUserData(
   const pixelInstance = fbqGlobal?.instance?.pixelsByID?.[pixelId];
 
   if (!pixelInstance) {
-    console.warn('[Meta] userData skipped – pixel instance not ready', {
+    console.warn("[Meta] userData skipped – pixel instance not ready", {
       pixelId,
       hasInstance: Boolean(fbqGlobal?.instance),
     });
@@ -1060,10 +1060,10 @@ function applyMetaPixelUserData(
 Create `apps/web/src/app/api/analytics/meta/route.ts`:
 
 ```typescript
-import { createHash } from 'node:crypto';
-import { NextRequest, NextResponse } from 'next/server';
-import type { AnalyticsUser } from '@/global/analytics/types';
-import { getSanityClient } from '@/global/sanity/client';
+import { createHash } from "node:crypto";
+import { NextRequest, NextResponse } from "next/server";
+import type { AnalyticsUser } from "@/global/analytics/types";
+import { getSanityClient } from "@/global/sanity/client";
 
 // Request body structure
 type MetaRequestBody = {
@@ -1098,10 +1098,10 @@ type MetaAnalyticsConfig = {
 
 // Get cookie from request headers
 function getCookie(headers: Headers, name: string): string | null {
-  const cookieHeader = headers.get('cookie');
+  const cookieHeader = headers.get("cookie");
   if (!cookieHeader) return null;
 
-  const cookies = cookieHeader.split(';').map((c) => c.trim());
+  const cookies = cookieHeader.split(";").map((c) => c.trim());
   for (const cookie of cookies) {
     if (cookie.startsWith(`${name}=`)) {
       return decodeURIComponent(cookie.slice(name.length + 1));
@@ -1113,16 +1113,16 @@ function getCookie(headers: Headers, name: string): string | null {
 // SHA-256 hashing for PII
 function sha256(value?: string | null) {
   if (!value) return undefined;
-  return createHash('sha256').update(value).digest('hex');
+  return createHash("sha256").update(value).digest("hex");
 }
 
 // Convert phone to E.164 format
-function phoneToE164(raw?: string, defaultCountry = '+48'): string | undefined {
+function phoneToE164(raw?: string, defaultCountry = "+48"): string | undefined {
   if (!raw) return undefined;
-  let v = raw.replace(/\s+/g, '').trim();
+  let v = raw.replace(/\s+/g, "").trim();
   if (!v) return undefined;
-  if (!v.startsWith('+')) {
-    if (v.startsWith('0')) v = v.replace(/^0+/, '');
+  if (!v.startsWith("+")) {
+    if (v.startsWith("0")) v = v.replace(/^0+/, "");
     v = `${defaultCountry}${v}`;
   }
   return v;
@@ -1131,10 +1131,10 @@ function phoneToE164(raw?: string, defaultCountry = '+48'): string | undefined {
 // Compute Facebook Click ID cookie
 function computeFbc(
   fbcCookie?: string | null,
-  urlOrRef?: string
+  urlOrRef?: string,
 ): string | undefined {
   if (fbcCookie) return fbcCookie || undefined;
-  const src = urlOrRef || '';
+  const src = urlOrRef || "";
   const match = src.match(/[?&]fbclid=([^&#]+)/);
   if (!match?.[1]) return undefined;
   const ts = Math.floor(Date.now() / 1000);
@@ -1149,8 +1149,8 @@ async function postWithRetry(url: string, body: unknown, maxRetries = 2) {
   while (attempt <= maxRetries) {
     try {
       const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        method: "POST",
+        headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
       });
 
@@ -1171,7 +1171,7 @@ async function postWithRetry(url: string, body: unknown, maxRetries = 2) {
       await new Promise((resolve) => setTimeout(resolve, wait));
     }
   }
-  throw lastErr instanceof Error ? lastErr : new Error('request failed');
+  throw lastErr instanceof Error ? lastErr : new Error("request failed");
 }
 
 // Main POST handler
@@ -1183,12 +1183,12 @@ export async function POST(request: NextRequest) {
     config = await client.fetch<MetaAnalyticsConfig>(META_ANALYTICS_QUERY);
   } catch (error) {
     console.error(
-      '[Meta CAPI] Failed to load analytics config from Sanity',
-      error
+      "[Meta CAPI] Failed to load analytics config from Sanity",
+      error,
     );
     return NextResponse.json(
-      { success: false, message: 'Meta not configured' },
-      { status: 500 }
+      { success: false, message: "Meta not configured" },
+      { status: 500 },
     );
   }
 
@@ -1196,10 +1196,10 @@ export async function POST(request: NextRequest) {
   const accessToken = config.metaConversionToken;
 
   if (!pixelId || !accessToken) {
-    console.error('[Meta CAPI] Missing Meta Pixel configuration in Sanity');
+    console.error("[Meta CAPI] Missing Meta Pixel configuration in Sanity");
     return NextResponse.json(
-      { success: false, message: 'Meta not configured' },
-      { status: 400 }
+      { success: false, message: "Meta not configured" },
+      { status: 400 },
     );
   }
 
@@ -1209,22 +1209,22 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, message: 'Invalid JSON' },
-      { status: 400 }
+      { success: false, message: "Invalid JSON" },
+      { status: 400 },
     );
   }
 
   if (!body?.event_name) {
     return NextResponse.json(
-      { success: false, message: 'event_name is required' },
-      { status: 400 }
+      { success: false, message: "event_name is required" },
+      { status: 400 },
     );
   }
 
   // Check user consent
-  const consentRaw = getCookie(request.headers, 'cookie-consent');
-  let conversion_api = 'denied';
-  let advanced_matching = 'denied';
+  const consentRaw = getCookie(request.headers, "cookie-consent");
+  let conversion_api = "denied";
+  let advanced_matching = "denied";
 
   if (consentRaw) {
     try {
@@ -1232,38 +1232,38 @@ export async function POST(request: NextRequest) {
         conversion_api?: string;
         advanced_matching?: string;
       };
-      conversion_api = parsed.conversion_api ?? 'denied';
-      advanced_matching = parsed.advanced_matching ?? 'denied';
+      conversion_api = parsed.conversion_api ?? "denied";
+      advanced_matching = parsed.advanced_matching ?? "denied";
     } catch (error) {
-      console.warn('[Meta CAPI] Unable to parse consent cookie', error);
+      console.warn("[Meta CAPI] Unable to parse consent cookie", error);
     }
   }
 
-  if (conversion_api !== 'granted') {
+  if (conversion_api !== "granted") {
     return NextResponse.json(
-      { success: false, message: 'Conversion API not permitted by user' },
-      { status: 403 }
+      { success: false, message: "Conversion API not permitted by user" },
+      { status: 403 },
     );
   }
 
   // Extract request context
   const forwardedIp = request.headers
-    .get('x-forwarded-for')
-    ?.split(',')[0]
+    .get("x-forwarded-for")
+    ?.split(",")[0]
     ?.trim();
-  const realIp = request.headers.get('x-real-ip') || undefined;
+  const realIp = request.headers.get("x-real-ip") || undefined;
   const ip = forwardedIp || realIp || request.ip;
 
-  const ua = request.headers.get('user-agent') || undefined;
-  const referer = request.headers.get('referer') || undefined;
-  const fbp = getCookie(request.headers, '_fbp') || undefined;
+  const ua = request.headers.get("user-agent") || undefined;
+  const referer = request.headers.get("referer") || undefined;
+  const fbp = getCookie(request.headers, "_fbp") || undefined;
   const fbc = computeFbc(
-    getCookie(request.headers, '_fbc'),
-    body.url || referer
+    getCookie(request.headers, "_fbc"),
+    body.url || referer,
   );
 
   const event_time =
-    typeof body.event_time === 'number'
+    typeof body.event_time === "number"
       ? body.event_time
       : Math.floor(Date.now() / 1000);
   const event_id = body.event_id || crypto.randomUUID();
@@ -1275,7 +1275,7 @@ export async function POST(request: NextRequest) {
   if (ua) user_data.client_user_agent = ua;
 
   // Add hashed PII if advanced matching granted
-  if (advanced_matching === 'granted') {
+  if (advanced_matching === "granted") {
     const em = body.user?.email?.trim().toLowerCase();
     const ph = phoneToE164(body.user?.phone);
     const fn = body.user?.first_name?.trim().toLowerCase();
@@ -1318,7 +1318,7 @@ export async function POST(request: NextRequest) {
     event_name: body.event_name,
     event_time,
     event_id,
-    action_source: 'website' as const,
+    action_source: "website" as const,
     user_data,
     ...(event_source_url && { event_source_url }),
     ...(body.content_name && { content_name: body.content_name }),
@@ -1326,7 +1326,7 @@ export async function POST(request: NextRequest) {
   };
 
   // Log for debugging
-  console.info('[Meta CAPI] Event dispatched', {
+  console.info("[Meta CAPI] Event dispatched", {
     event_name: data.event_name,
     event_id: data.event_id,
     event_source_url: data.event_source_url,
@@ -1346,19 +1346,19 @@ export async function POST(request: NextRequest) {
     const json = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      console.error('[Meta CAPI] Error response', json);
+      console.error("[Meta CAPI] Error response", json);
       return NextResponse.json(
-        { success: false, message: 'Meta API error' },
-        { status: res.status }
+        { success: false, message: "Meta API error" },
+        { status: res.status },
       );
     }
 
     return NextResponse.json({ success: true, event_id }, { status: 200 });
   } catch (error) {
-    console.error('[Meta CAPI] Request failed', error);
+    console.error("[Meta CAPI] Request failed", error);
     return NextResponse.json(
-      { success: false, message: 'Request failed' },
-      { status: 500 }
+      { success: false, message: "Request failed" },
+      { status: 500 },
     );
   }
 }
@@ -1383,11 +1383,11 @@ Create `apps/web/src/components/shared/CookieConsent/CookieConsent.types.ts`:
 
 ```typescript
 export type ConsentGroupId =
-  | 'necessary'
-  | 'analytics'
-  | 'preferences'
-  | 'marketing';
-export type ConsentSubGroupId = 'conversion_api' | 'advanced_matching';
+  | "necessary"
+  | "analytics"
+  | "preferences"
+  | "marketing";
+export type ConsentSubGroupId = "conversion_api" | "advanced_matching";
 
 export type ConsentGroupCopy = {
   name: string;
@@ -1417,15 +1417,15 @@ export type ConsentSelections = {
 };
 
 export type ConsentModeState = {
-  functionality_storage: 'granted' | 'denied';
-  security_storage: 'granted' | 'denied';
-  ad_storage: 'granted' | 'denied';
-  ad_user_data: 'granted' | 'denied';
-  ad_personalization: 'granted' | 'denied';
-  analytics_storage: 'granted' | 'denied';
-  personalization_storage: 'granted' | 'denied';
-  conversion_api: 'granted' | 'denied';
-  advanced_matching: 'granted' | 'denied';
+  functionality_storage: "granted" | "denied";
+  security_storage: "granted" | "denied";
+  ad_storage: "granted" | "denied";
+  ad_user_data: "granted" | "denied";
+  ad_personalization: "granted" | "denied";
+  analytics_storage: "granted" | "denied";
+  personalization_storage: "granted" | "denied";
+  conversion_api: "granted" | "denied";
+  advanced_matching: "granted" | "denied";
 };
 
 export type CookieConsentClientProps = {
@@ -1764,30 +1764,30 @@ function getCookie(name: string): string | null {
 Create `apps/web/src/components/shared/Analytics.tsx`:
 
 ```typescript
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { trackEvent } from '@/global/analytics/track-event';
+import { useEffect } from "react";
+import { trackEvent } from "@/global/analytics/track-event";
 
 export default function Analytics() {
   useEffect(() => {
     // Track PageView on mount
     const sendPageView = () => {
       const { location, document } = window;
-      const pathname = location?.pathname ?? '';
-      const search = location?.search ?? '';
+      const pathname = location?.pathname ?? "";
+      const search = location?.search ?? "";
       const url = location?.href ?? `${pathname}${search}`;
       const title = document?.title ?? undefined;
 
       trackEvent({
         meta: {
-          eventName: 'PageView',
+          eventName: "PageView",
           params: {
             page_path: `${pathname}${search}` || undefined,
           },
         },
         ga4: {
-          eventName: 'page_view',
+          eventName: "page_view",
           params: {
             page_location: url,
             page_path: pathname,
@@ -1809,23 +1809,23 @@ export default function Analytics() {
       if (!target) return;
 
       const link = target.closest(
-        'a[href^="mailto:"], a[href^="tel:"]'
+        'a[href^="mailto:"], a[href^="tel:"]',
       ) as HTMLAnchorElement | null;
       if (!link) return;
 
-      const href = link.getAttribute('href') ?? '';
-      const contactType = href.startsWith('mailto:') ? 'email' : 'phone';
+      const href = link.getAttribute("href") ?? "";
+      const contactType = href.startsWith("mailto:") ? "email" : "phone";
 
       trackEvent({
         meta: {
-          eventName: 'Contact',
+          eventName: "Contact",
           params: {
             contact_type: contactType,
             contact_value: href,
           },
         },
         ga4: {
-          eventName: 'contact',
+          eventName: "contact",
           params: {
             contact_type: contactType,
             contact_value: href,
@@ -1834,10 +1834,10 @@ export default function Analytics() {
       });
     };
 
-    document.addEventListener('click', handleContactClick, { capture: true });
+    document.addEventListener("click", handleContactClick, { capture: true });
 
     return () => {
-      document.removeEventListener('click', handleContactClick, {
+      document.removeEventListener("click", handleContactClick, {
         capture: true,
       });
     };
@@ -1903,61 +1903,61 @@ export default function RootLayout({
 Update `apps/studio/schemaTypes/documents/singletons/settings.ts`:
 
 ```typescript
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField } from "sanity";
 
 export const settings = defineType({
-  name: 'settings',
-  title: 'Ustawienia globalne',
-  type: 'document',
+  name: "settings",
+  title: "Ustawienia globalne",
+  type: "document",
   fields: [
     // ... other fields
 
     defineField({
-      name: 'analytics',
-      title: 'Analytics',
-      type: 'object',
+      name: "analytics",
+      title: "Analytics",
+      type: "object",
       options: { collapsible: true, collapsed: false },
       description:
-        'Configure analytics tracking. Leave fields empty to disable tracking.',
+        "Configure analytics tracking. Leave fields empty to disable tracking.",
       fields: [
         defineField({
-          name: 'ga4Id',
-          type: 'string',
-          title: 'Google Analytics Measurement ID',
+          name: "ga4Id",
+          type: "string",
+          title: "Google Analytics Measurement ID",
           description:
-            'Format: G-XXXXXXXXXX. Used for Google Analytics tracking.',
-          validation: (Rule) => Rule.required().error('GA4 ID is required'),
+            "Format: G-XXXXXXXXXX. Used for Google Analytics tracking.",
+          validation: (Rule) => Rule.required().error("GA4 ID is required"),
         }),
         defineField({
-          name: 'googleAdsMeasurementId',
-          type: 'string',
-          title: 'Google Ads Conversion ID',
+          name: "googleAdsMeasurementId",
+          type: "string",
+          title: "Google Ads Conversion ID",
           description:
-            'Format: AW-XXXXXXXXX. Used for Google Ads conversion tracking.',
+            "Format: AW-XXXXXXXXX. Used for Google Ads conversion tracking.",
           validation: (Rule) =>
-            Rule.required().error('Google Ads ID is required'),
+            Rule.required().error("Google Ads ID is required"),
         }),
         defineField({
-          name: 'metaPixelId',
-          type: 'string',
-          title: 'Meta (Facebook) Pixel ID',
+          name: "metaPixelId",
+          type: "string",
+          title: "Meta (Facebook) Pixel ID",
           description:
-            'Format: XXXXXXXXXX (15 digits). Used for Meta Pixel and Conversion API.',
+            "Format: XXXXXXXXXX (15 digits). Used for Meta Pixel and Conversion API.",
           validation: (Rule) =>
             Rule.custom((value) => {
               if (!value) return true;
               if (!/^\d{15}$/.test(value)) {
-                return 'Invalid Meta Pixel ID format. Should be a 15-digit number.';
+                return "Invalid Meta Pixel ID format. Should be a 15-digit number.";
               }
               return true;
             }),
         }),
         defineField({
-          name: 'metaConversionToken',
-          type: 'string',
-          title: 'Meta Conversion API Token',
+          name: "metaConversionToken",
+          type: "string",
+          title: "Meta Conversion API Token",
           description:
-            'Secret access token for server-side Meta Conversion API tracking.',
+            "Secret access token for server-side Meta Conversion API tracking.",
         }),
       ],
     }),
@@ -2187,12 +2187,12 @@ Update your Meta API route to support test events:
 ```typescript
 // In apps/web/src/app/api/analytics/meta/route.ts
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 // When sending to Facebook:
 const res = await postWithRetry(url, {
   data: [data],
-  ...(IS_DEVELOPMENT && { test_event_code: 'TEST12345' }),
+  ...(IS_DEVELOPMENT && { test_event_code: "TEST12345" }),
 });
 ```
 
@@ -2205,7 +2205,7 @@ Get your test event code from Facebook Events Manager → Test Events.
 Add to your `track-event.ts`:
 
 ```typescript
-const DEBUG = process.env.NODE_ENV === 'development';
+const DEBUG = process.env.NODE_ENV === "development";
 
 function debugLog(message: string, data?: unknown) {
   if (DEBUG) {
@@ -2214,8 +2214,8 @@ function debugLog(message: string, data?: unknown) {
 }
 
 // Use throughout:
-debugLog('Event tracked', { eventId, meta, ga4 });
-debugLog('Queued event (waiting for consent)', event);
+debugLog("Event tracked", { eventId, meta, ga4 });
+debugLog("Queued event (waiting for consent)", event);
 ```
 
 ---
@@ -2226,15 +2226,15 @@ In browser console:
 
 ```javascript
 // Check analytics ready state
-console.log('Analytics ready:', window.__analyticsReady);
+console.log("Analytics ready:", window.__analyticsReady);
 
 // Check if consent was given
 document.cookie;
 
 // Manually trigger test event
 window.trackEvent({
-  meta: { eventName: 'Lead', params: {} },
-  ga4: { eventName: 'generate_lead', params: {} },
+  meta: { eventName: "Lead", params: {} },
+  ga4: { eventName: "generate_lead", params: {} },
 });
 
 // Check pending events
@@ -2269,11 +2269,11 @@ window.trackEvent({
 Create `hooks/useTrackEvent.ts`:
 
 ```typescript
-import { useCallback } from 'react';
+import { useCallback } from "react";
 import {
   trackEvent,
   type TrackEventParams,
-} from '@/global/analytics/track-event';
+} from "@/global/analytics/track-event";
 
 export function useTrackEvent() {
   return useCallback((params: TrackEventParams) => {
@@ -2289,8 +2289,8 @@ const track = useTrackEvent();
 
 const handleClick = () => {
   track({
-    meta: { eventName: 'ViewContent', params: {} },
-    ga4: { eventName: 'view_item', params: {} },
+    meta: { eventName: "ViewContent", params: {} },
+    ga4: { eventName: "view_item", params: {} },
   });
 };
 ```

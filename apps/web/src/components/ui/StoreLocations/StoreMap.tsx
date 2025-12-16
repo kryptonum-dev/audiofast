@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import 'leaflet/dist/leaflet.css';
+import "leaflet/dist/leaflet.css";
 
-import L from 'leaflet';
-import { useEffect, useRef, useState } from 'react';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import L from "leaflet";
+import { useEffect, useRef, useState } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
-import type { StoreWithLocation } from './index';
+import type { StoreWithLocation } from "./index";
 
 // Custom SVG marker icon
 const createCustomIcon = (isSelected: boolean) => {
-  const color = isSelected ? '#C54E47' : '#333333';
+  const color = isSelected ? "#C54E47" : "#333333";
   const svg = `
     <svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">
       <path d="M12.5 0C5.6 0 0 5.6 0 12.5C0 21.9 12.5 41 12.5 41C12.5 41 25 21.9 25 12.5C25 5.6 19.4 0 12.5 0Z" 
@@ -20,7 +20,7 @@ const createCustomIcon = (isSelected: boolean) => {
   `;
   return L.divIcon({
     html: svg,
-    className: 'custom-marker-icon',
+    className: "custom-marker-icon",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -73,8 +73,8 @@ export default function StoreMap({ stores, mapCenter }: StoreMapProps) {
     const storeElement = document.getElementById(storeId);
     if (storeElement) {
       storeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
+        behavior: "smooth",
+        block: "nearest",
       });
     }
   };
@@ -88,15 +88,15 @@ export default function StoreMap({ stores, mapCenter }: StoreMapProps) {
       }
     };
 
-    window.addEventListener('store-selected', handleStoreClick);
-    return () => window.removeEventListener('store-selected', handleStoreClick);
+    window.addEventListener("store-selected", handleStoreClick);
+    return () => window.removeEventListener("store-selected", handleStoreClick);
   }, []);
 
   return (
     <MapContainer
       center={mapCenter}
       zoom={stores.length === 1 ? 13 : 6}
-      style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
+      style={{ height: "100%", width: "100%", borderRadius: "0.5rem" }}
       scrollWheelZoom={false}
     >
       <TileLayer
@@ -119,16 +119,16 @@ export default function StoreMap({ stores, mapCenter }: StoreMapProps) {
             }}
           >
             <Popup>
-              <div style={{ minWidth: '200px' }}>
-                <strong style={{ fontSize: '1rem', marginBottom: '0.5rem' }}>
+              <div style={{ minWidth: "200px" }}>
+                <strong style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
                   {store.name}
                 </strong>
                 {store.address && (
                   <p
                     style={{
-                      fontSize: '0.875rem',
-                      margin: '0.5rem 0',
-                      color: '#666',
+                      fontSize: "0.875rem",
+                      margin: "0.5rem 0",
+                      color: "#666",
                     }}
                   >
                     {store.address.street}
@@ -137,22 +137,22 @@ export default function StoreMap({ stores, mapCenter }: StoreMapProps) {
                   </p>
                 )}
                 {store.phone && (
-                  <p style={{ fontSize: '0.875rem', margin: '0.25rem 0' }}>
+                  <p style={{ fontSize: "0.875rem", margin: "0.25rem 0" }}>
                     <a
                       href={`tel:${store.phone}`}
-                      style={{ color: '#C54E47', textDecoration: 'none' }}
+                      style={{ color: "#C54E47", textDecoration: "none" }}
                     >
                       {store.phone}
                     </a>
                   </p>
                 )}
                 {store.website && (
-                  <p style={{ fontSize: '0.875rem', margin: '0.25rem 0' }}>
+                  <p style={{ fontSize: "0.875rem", margin: "0.25rem 0" }}>
                     <a
                       href={store.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: '#C54E47', textDecoration: 'none' }}
+                      style={{ color: "#C54E47", textDecoration: "none" }}
                     >
                       Odwiedź stronę →
                     </a>

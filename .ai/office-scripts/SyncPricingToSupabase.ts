@@ -5,14 +5,15 @@
  */
 
 const CONFIG = {
-  SUPABASE_URL: 'https://xuwapsacaymdemmvblak.supabase.co',
-  ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1d2Fwc2FjYXltZGVtbXZibGFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4MTg3ODYsImV4cCI6MjA3MjM5NDc4Nn0.qMH2oXCcutbLFdg-IBgJkyfjhq2mQftEUBYfr8e8s2Y',
-  SHEET_USTAWIENIA: 'Ustawienia',
-  PASSWORD_CELL: 'B1',
-  SHEET_PRODUKTY: 'Produkty',
-  SHEET_OPCJE: 'Opcje',
-  SHEET_WARTOSCI: 'Wartości',
-  SHEET_LISTY: 'Listy',
+  SUPABASE_URL: "https://xuwapsacaymdemmvblak.supabase.co",
+  ANON_KEY:
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1d2Fwc2FjYXltZGVtbXZibGFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4MTg3ODYsImV4cCI6MjA3MjM5NDc4Nn0.qMH2oXCcutbLFdg-IBgJkyfjhq2mQftEUBYfr8e8s2Y",
+  SHEET_USTAWIENIA: "Ustawienia",
+  PASSWORD_CELL: "B1",
+  SHEET_PRODUKTY: "Produkty",
+  SHEET_OPCJE: "Opcje",
+  SHEET_WARTOSCI: "Wartości",
+  SHEET_LISTY: "Listy",
   DATA_START_ROW_PRODUKTY: 6,
   DATA_START_ROW_OPCJE: 3,
   DATA_START_ROW_WARTOSCI: 2,
@@ -35,7 +36,7 @@ interface OptionValue {
 
 interface OptionGroup {
   name: string;
-  input_type: 'select' | 'numeric_step';
+  input_type: "select" | "numeric_step";
   required: boolean;
   position: number;
   values?: OptionValue[];
@@ -55,15 +56,20 @@ interface Variant {
 }
 
 function parsePriceToCents(priceStr: string): number {
-  if (!priceStr || priceStr.trim() === '') return 0;
-  const cleaned = priceStr.replace(/zł/gi, '').replace(/PLN/gi, '').replace(/\s/g, '').replace(',', '.').trim();
+  if (!priceStr || priceStr.trim() === "") return 0;
+  const cleaned = priceStr
+    .replace(/zł/gi, "")
+    .replace(/PLN/gi, "")
+    .replace(/\s/g, "")
+    .replace(",", ".")
+    .trim();
   const value = parseFloat(cleaned);
   return isNaN(value) ? 0 : Math.round(value * 100);
 }
 
 function parsePolishDecimal(str: string): number {
-  if (!str || str.trim() === '') return 0;
-  const value = parseFloat(str.replace(',', '.').trim());
+  if (!str || str.trim() === "") return 0;
+  const value = parseFloat(str.replace(",", ".").trim());
   return isNaN(value) ? 0 : value;
 }
 
@@ -71,8 +77,18 @@ function isSuspiciousValue(value: string): boolean {
   const t = value.trim();
   if (!t) return true;
   if (/^\d+$/.test(t) || /^\d+[.,]\d+$/.test(t)) return true;
-  const errors = ['#REF!', '#VALUE!', '#NAME?', '#DIV/0!', '#N/A', '#NULL!', '#NUM!'];
-  for (const e of errors) { if (t.includes(e)) return true; }
+  const errors = [
+    "#REF!",
+    "#VALUE!",
+    "#NAME?",
+    "#DIV/0!",
+    "#N/A",
+    "#NULL!",
+    "#NUM!",
+  ];
+  for (const e of errors) {
+    if (t.includes(e)) return true;
+  }
   if (/^[£$€¥]\d/.test(t)) return true;
   if (t.length === 1 && !/[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/.test(t)) return true;
   return false;
@@ -84,7 +100,7 @@ function variantKey(product: string, model: string | null): string {
 
 function cellStr(row: (string | number | boolean)[], index: number): string {
   const val = row[index];
-  return val === null || val === undefined ? '' : String(val).trim();
+  return val === null || val === undefined ? "" : String(val).trim();
 }
 
 function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
@@ -106,27 +122,31 @@ function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
     const relatedProducts: string[] = [];
     for (let col = 26; col <= 35; col++) {
       const pVal = cellStr(row, col);
-      if (pVal && pVal.trim() !== '') relatedProducts.push(pVal);
+      if (pVal && pVal.trim() !== "") relatedProducts.push(pVal);
     }
 
     if (!brand || !product || !priceKey) continue;
-    if (priceKey.toLowerCase() === 'url' || product.toLowerCase() === 'produkt') continue;
-    if (!priceKey.includes('/')) continue;
+    if (priceKey.toLowerCase() === "url" || product.toLowerCase() === "produkt")
+      continue;
+    if (!priceKey.includes("/")) continue;
     variants.set(variantKey(product, model || null), {
       price_key: priceKey,
       brand,
       product,
       model: model || null,
       base_price_cents: parsePriceToCents(priceStr),
-      currency: 'PLN',
-      related_products: relatedProducts.length > 0 ? relatedProducts : undefined,
+      currency: "PLN",
+      related_products:
+        relatedProducts.length > 0 ? relatedProducts : undefined,
       groups: [],
     });
   }
   return variants;
 }
 
-function readWartosci(workbook: ExcelScript.Workbook): Map<string, NumericRule> {
+function readWartosci(
+  workbook: ExcelScript.Workbook,
+): Map<string, NumericRule> {
   const sheet = workbook.getWorksheet(CONFIG.SHEET_WARTOSCI);
   if (!sheet) return new Map();
   const usedRange = sheet.getUsedRange();
@@ -140,7 +160,8 @@ function readWartosci(workbook: ExcelScript.Workbook): Map<string, NumericRule> 
     const model = cellStr(row, 1);
     const opcja = cellStr(row, 2);
     if (!product || !opcja) continue;
-    if (product.toLowerCase() === 'produkt' || opcja.toLowerCase() === 'opcja') continue;
+    if (product.toLowerCase() === "produkt" || opcja.toLowerCase() === "opcja")
+      continue;
     if (isSuspiciousValue(opcja)) continue;
 
     const minVal = parsePolishDecimal(cellStr(row, 3));
@@ -173,7 +194,8 @@ function readListy(workbook: ExcelScript.Workbook): Map<string, OptionValue[]> {
     const opcja = cellStr(row, 2);
     const valueName = cellStr(row, 3);
     if (!product || !opcja || !valueName) continue;
-    if (product.toLowerCase() === 'produkt' || opcja.toLowerCase() === 'opcja') continue;
+    if (product.toLowerCase() === "produkt" || opcja.toLowerCase() === "opcja")
+      continue;
     if (isSuspiciousValue(opcja)) continue;
 
     const key = `${product}|||${model}|||${opcja}`;
@@ -192,7 +214,7 @@ function readOpcje(
   workbook: ExcelScript.Workbook,
   variants: Map<string, Variant>,
   wartosciRules: Map<string, NumericRule>,
-  listyValues: Map<string, OptionValue[]>
+  listyValues: Map<string, OptionValue[]>,
 ): void {
   const sheet = workbook.getWorksheet(CONFIG.SHEET_OPCJE);
   if (!sheet) return;
@@ -214,7 +236,11 @@ function readOpcje(
     const podOpcjaListy = cellStr(row, 6);
 
     if (!product || !opcjaName) continue;
-    if (product.toLowerCase() === 'produkt' || opcjaName.toLowerCase() === 'opcja') continue;
+    if (
+      product.toLowerCase() === "produkt" ||
+      opcjaName.toLowerCase() === "opcja"
+    )
+      continue;
 
     const vKey = variantKey(product, model || null);
     const variant = variants.get(vKey);
@@ -228,7 +254,7 @@ function readOpcje(
     if (!parentGroups.has(opcjaName)) {
       const newGroup: OptionGroup = {
         name: opcjaName,
-        input_type: 'select',
+        input_type: "select",
         required: false,
         position: parentGroups.size,
         values: [],
@@ -246,11 +272,13 @@ function readOpcje(
     });
 
     if (podOpcjaWartosci && !isSuspiciousValue(podOpcjaWartosci)) {
-      const rule = wartosciRules.get(`${product}|||${model}|||${podOpcjaWartosci}`);
+      const rule = wartosciRules.get(
+        `${product}|||${model}|||${podOpcjaWartosci}`,
+      );
       if (rule) {
         allGroups.push({
           name: podOpcjaWartosci,
-          input_type: 'numeric_step',
+          input_type: "numeric_step",
           required: false,
           position: allGroups.length,
           parent: { group_name: opcjaName, value_name: valueName || opcjaName },
@@ -260,11 +288,13 @@ function readOpcje(
     }
 
     if (podOpcjaListy && !isSuspiciousValue(podOpcjaListy)) {
-      const childValues = listyValues.get(`${product}|||${model}|||${podOpcjaListy}`);
+      const childValues = listyValues.get(
+        `${product}|||${model}|||${podOpcjaListy}`,
+      );
       if (childValues && childValues.length > 0) {
         allGroups.push({
           name: podOpcjaListy,
-          input_type: 'select',
+          input_type: "select",
           required: false,
           position: allGroups.length,
           parent: { group_name: opcjaName, value_name: valueName || opcjaName },
@@ -284,7 +314,7 @@ function readOpcje(
 }
 
 async function main(workbook: ExcelScript.Workbook): Promise<void> {
-  console.log('Rozpoczynam synchronizację...');
+  console.log("Rozpoczynam synchronizację...");
 
   try {
     // Odczyt hasła
@@ -293,17 +323,23 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
       console.log('BŁĄD: Brak arkusza "Ustawienia" z hasłem w komórce B1');
       return;
     }
-    
-    const password = String(settingsSheet.getRange(CONFIG.PASSWORD_CELL).getValue() || '').trim().replace(/[^\x20-\x7E]/g, '');
+
+    const password = String(
+      settingsSheet.getRange(CONFIG.PASSWORD_CELL).getValue() || "",
+    )
+      .trim()
+      .replace(/[^\x20-\x7E]/g, "");
     if (!password || password.length < 8) {
-      console.log('BŁĄD: Hasło musi mieć min. 8 znaków (komórka B1 w arkuszu Ustawienia)');
+      console.log(
+        "BŁĄD: Hasło musi mieć min. 8 znaków (komórka B1 w arkuszu Ustawienia)",
+      );
       return;
     }
 
     // Odczyt danych
     const variants = readProdukty(workbook);
     if (variants.size === 0) {
-      console.log('BŁĄD: Nie znaleziono produktów');
+      console.log("BŁĄD: Nie znaleziono produktów");
       return;
     }
     console.log(`Produkty: ${variants.size}`);
@@ -314,22 +350,25 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
 
     // Wysyłanie
     const variantsArray = Array.from(variants.values());
-    const payload = { mode: 'replace', variants: variantsArray };
-    
+    const payload = { mode: "replace", variants: variantsArray };
+
     console.log(`Wysyłam ${variantsArray.length} produktów...`);
 
-    const response = await fetch(CONFIG.SUPABASE_URL + '/functions/v1/pricing-ingest', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + CONFIG.ANON_KEY,
-        'X-Excel-Token': password,
-        'Content-Type': 'application/json; charset=utf-8',
+    const response = await fetch(
+      CONFIG.SUPABASE_URL + "/functions/v1/pricing-ingest",
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + CONFIG.ANON_KEY,
+          "X-Excel-Token": password,
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: JSON.stringify(payload),
       },
-      body: JSON.stringify(payload),
-    });
+    );
 
     const responseText = await response.text();
-    
+
     if (!response.ok) {
       console.log(`BŁĄD HTTP ${response.status}: ${responseText}`);
       return;
@@ -339,18 +378,26 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
       ok?: boolean;
       supabase?: { counts?: { variants?: number }; deleted_products?: number };
     };
-    
-    console.log('=== SYNCHRONIZACJA ZAKOŃCZONA ===');
-    console.log(`Status: ${result.ok ? 'SUKCES ✓' : 'BŁĄD'}`);
-    if (result.supabase?.counts) {
-      console.log(`Zaktualizowano: ${result.supabase.counts.variants} produktów`);
-    }
-    if (result.supabase?.deleted_products && result.supabase.deleted_products > 0) {
-      console.log(`Usunięto: ${result.supabase.deleted_products} produktów (brak URL)`);
-    }
-    console.log('Ceny w Sanity zostaną zaktualizowane w tle.');
 
+    console.log("=== SYNCHRONIZACJA ZAKOŃCZONA ===");
+    console.log(`Status: ${result.ok ? "SUKCES ✓" : "BŁĄD"}`);
+    if (result.supabase?.counts) {
+      console.log(
+        `Zaktualizowano: ${result.supabase.counts.variants} produktów`,
+      );
+    }
+    if (
+      result.supabase?.deleted_products &&
+      result.supabase.deleted_products > 0
+    ) {
+      console.log(
+        `Usunięto: ${result.supabase.deleted_products} produktów (brak URL)`,
+      );
+    }
+    console.log("Ceny w Sanity zostaną zaktualizowane w tle.");
   } catch (error) {
-    console.log(`BŁĄD: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+    console.log(
+      `BŁĄD: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+    );
   }
 }

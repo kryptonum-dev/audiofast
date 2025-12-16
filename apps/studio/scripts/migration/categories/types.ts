@@ -62,15 +62,15 @@ export interface ParentCategoryMapping {
  * Transformed subcategory for Sanity import
  */
 export interface SubCategory {
-  _type: 'productCategorySub';
+  _type: "productCategorySub";
   _id: string;
   name: string;
   slug: {
-    _type: 'slug';
+    _type: "slug";
     current: string;
   };
   parentCategory: {
-    _type: 'reference';
+    _type: "reference";
     _ref: string;
   };
   seo: {
@@ -104,4 +104,3 @@ export interface MigrationResult {
   }>;
   warnings: string[];
 }
-

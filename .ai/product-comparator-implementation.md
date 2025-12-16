@@ -52,16 +52,16 @@ export default function RootLayout({ children }) {
 Replace all `alert()` calls with toast notifications:
 
 ```typescript
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
 // Success
-toast.success('Produkt dodany do porównania');
+toast.success("Produkt dodany do porównania");
 
 // Error
-toast.error('Możesz porównywać maksymalnie 3 produkty');
+toast.error("Możesz porównywać maksymalnie 3 produkty");
 
 // Info
-toast.info('Produkt usunięty z porównania');
+toast.info("Produkt usunięty z porównania");
 ```
 
 ### 1.4 Toast Configuration
@@ -82,11 +82,11 @@ This implementation follows Next.js 16 official guidelines and leverages the lat
 
 ```typescript
 // ✅ CORRECT (Next.js 16)
-import { cookies } from 'next/headers';
+import { cookies } from "next/headers";
 
 export default async function Page() {
   const cookieStore = await cookies();
-  const value = cookieStore.get('name');
+  const value = cookieStore.get("name");
 }
 
 // ❌ INCORRECT (Legacy Next.js 14)
@@ -133,15 +133,15 @@ Following Next.js 16 best practices for component composition:
 ```typescript
 // ✅ Recommended for Sanity queries
 const products = await client.fetch(query, params, {
-  cache: 'force-cache', // Static data
+  cache: "force-cache", // Static data
   next: { revalidate: 3600 }, // Or time-based revalidation
 });
 
 // ✅ Revalidate in Server Actions
-('use server');
+("use server");
 export async function updateProduct() {
   // ... update logic
-  revalidatePath('/porownaj');
+  revalidatePath("/porownaj");
 }
 ```
 
@@ -345,7 +345,7 @@ export function getComparisonCookie(): ComparisonCookie | null;
 // Use in Server Components with async/await
 // Pass the cookieStore from: await cookies()
 export async function getComparisonCookieServer(
-  cookieStore: Awaited<ReturnType<typeof import('next/headers').cookies>>
+  cookieStore: Awaited<ReturnType<typeof import("next/headers").cookies>>,
 ): Promise<ComparisonCookie | null>;
 
 // Write comparison cookie (CLIENT-SIDE ONLY)
@@ -354,7 +354,7 @@ export function setComparisonCookie(data: ComparisonCookie): void;
 // Add product to comparison (CLIENT-SIDE ONLY)
 export function addProductToComparison(
   productId: string,
-  categorySlug: string
+  categorySlug: string,
 ): { success: boolean; error?: string };
 
 // Remove product from comparison (CLIENT-SIDE ONLY)
@@ -382,15 +382,15 @@ export function getComparisonCount(): number;
 
 ```typescript
 // ✅ Client Component Usage
-'use client';
+"use client";
 import {
   getComparisonCookie,
   addProductToComparison,
-} from '@/lib/comparison/cookie-manager';
+} from "@/lib/comparison/cookie-manager";
 
 function MyClientComponent() {
   const handleAdd = () => {
-    const result = addProductToComparison('product-123', 'speakers');
+    const result = addProductToComparison("product-123", "speakers");
     if (!result.success) {
       alert(result.error);
     }
@@ -401,8 +401,8 @@ function MyClientComponent() {
 }
 
 // ✅ Server Component Usage
-import { cookies } from 'next/headers';
-import { getComparisonCookieServer } from '@/lib/comparison/cookie-manager';
+import { cookies } from "next/headers";
+import { getComparisonCookieServer } from "@/lib/comparison/cookie-manager";
 
 async function MyServerComponent() {
   const cookieStore = await cookies(); // Next.js 16: async
@@ -426,12 +426,12 @@ async function MyServerComponent() {
 export function validateProductAddition(
   productId: string,
   categorySlug: string,
-  currentComparison: ComparisonCookie | null
+  currentComparison: ComparisonCookie | null,
 ): { valid: boolean; error?: string };
 
 // Process products into comparison table data
 export function processComparisonData(
-  products: ComparisonProduct[]
+  products: ComparisonProduct[],
 ): ComparisonTableData;
 
 // Extract all unique headings from products
@@ -440,8 +440,8 @@ export function extractAllHeadings(products: ComparisonProduct[]): string[];
 // Create comparison rows with aligned data
 export function createComparisonRows(
   products: ComparisonProduct[],
-  allHeadings: string[]
-): ComparisonTableData['comparisonRows'];
+  allHeadings: string[],
+): ComparisonTableData["comparisonRows"];
 ```
 
 **Validation Rules**:
@@ -480,12 +480,12 @@ export const queryComparisonProductsMinimal = defineQuery(`
     subtitle,
     basePriceCents,
     "mainImage": select(
-      defined(previewImage) => ${imageFragment('previewImage')},
-      ${imageFragment('imageGallery[0]')}
+      defined(previewImage) => ${imageFragment("previewImage")},
+      ${imageFragment("imageGallery[0]")}
     ),
     brand->{
       name,
-      ${imageFragment('logo')}
+      ${imageFragment("logo")}
     },
     "categories": categories[]->{
       "slug": slug.current
@@ -507,16 +507,16 @@ export const queryComparisonProductsFull = defineQuery(`
     subtitle,
     basePriceCents,
     "mainImage": select(
-      defined(previewImage) => ${imageFragment('previewImage')},
-      ${imageFragment('imageGallery[0]')}
+      defined(previewImage) => ${imageFragment("previewImage")},
+      ${imageFragment("imageGallery[0]")}
     ),
     brand->{
       name,
-      ${imageFragment('logo')}
+      ${imageFragment("logo")}
     },
     technicalData[] {
       title,
-      ${portableTextFragment('value')}
+      ${portableTextFragment("value")}
     },
     "categories": categories[]->{
       "slug": slug.current
@@ -620,8 +620,8 @@ const [isLoading, setIsLoading] = useState(true);
 
 ```typescript
 export const metadata: Metadata = {
-  title: 'Porównaj produkty | Audiofast',
-  description: 'Porównaj specyfikacje produktów audio wysokiej klasy',
+  title: "Porównaj produkty | Audiofast",
+  description: "Porównaj specyfikacje produktów audio wysokiej klasy",
 };
 ```
 
@@ -1403,11 +1403,11 @@ export default function FloatingComparisonBox() {
 
 ```typescript
 const cookieOptions = {
-  name: 'audiofast_comparison',
+  name: "audiofast_comparison",
   maxAge: 60 * 60 * 24 * 7, // 7 days
-  path: '/',
-  sameSite: 'lax' as const,
-  secure: process.env.NODE_ENV === 'production',
+  path: "/",
+  sameSite: "lax" as const,
+  secure: process.env.NODE_ENV === "production",
 };
 ```
 
@@ -1720,7 +1720,7 @@ const cookieOptions = {
   // Existing styles preserved
   // Add new state styles
 
-  &[data-in-comparison='true'] {
+  &[data-in-comparison="true"] {
     background-color: rgba(0, 145, 22, 0.1);
     border-color: var(--primary-success);
 
@@ -1834,9 +1834,9 @@ Below is a complete implementation example for the cookie manager utility follow
 
 ```typescript
 // apps/web/src/global/comparison/cookie-manager.ts
-import type { ComparisonCookie } from './types';
+import type { ComparisonCookie } from "./types";
 
-const COOKIE_NAME = 'audiofast_comparison';
+const COOKIE_NAME = "audiofast_comparison";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 const MAX_PRODUCTS = 3;
 
@@ -1845,17 +1845,17 @@ const MAX_PRODUCTS = 3;
  * Use this in Client Components, useEffect, and event handlers
  */
 export function getComparisonCookie(): ComparisonCookie | null {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     // Should never be called on server - throw helpful error
     throw new Error(
-      'getComparisonCookie() is client-only. Use getComparisonCookieServer() in Server Components.'
+      "getComparisonCookie() is client-only. Use getComparisonCookieServer() in Server Components.",
     );
   }
 
   const cookieValue = document.cookie
-    .split('; ')
+    .split("; ")
     .find((row) => row.startsWith(`${COOKIE_NAME}=`))
-    ?.split('=')[1];
+    ?.split("=")[1];
 
   if (!cookieValue) return null;
 
@@ -1872,7 +1872,7 @@ export function getComparisonCookie(): ComparisonCookie | null {
  * Import from 'next/headers' at call site
  */
 export async function getComparisonCookieServer(
-  cookieStore: Awaited<ReturnType<typeof import('next/headers').cookies>>
+  cookieStore: Awaited<ReturnType<typeof import("next/headers").cookies>>,
 ): Promise<ComparisonCookie | null> {
   const cookie = cookieStore.get(COOKIE_NAME);
   if (!cookie?.value) return null;
@@ -1888,14 +1888,14 @@ export async function getComparisonCookieServer(
  * Set comparison cookie (CLIENT-SIDE ONLY)
  */
 export function setComparisonCookie(data: ComparisonCookie): void {
-  if (typeof window === 'undefined') {
-    throw new Error('setComparisonCookie can only be called on the client');
+  if (typeof window === "undefined") {
+    throw new Error("setComparisonCookie can only be called on the client");
   }
 
   const cookieValue = encodeURIComponent(JSON.stringify(data));
-  const secure = window.location.protocol === 'https:';
+  const secure = window.location.protocol === "https:";
 
-  document.cookie = `${COOKIE_NAME}=${cookieValue}; max-age=${COOKIE_MAX_AGE}; path=/; samesite=lax${secure ? '; secure' : ''}`;
+  document.cookie = `${COOKIE_NAME}=${cookieValue}; max-age=${COOKIE_MAX_AGE}; path=/; samesite=lax${secure ? "; secure" : ""}`;
 }
 
 /**
@@ -1903,20 +1903,20 @@ export function setComparisonCookie(data: ComparisonCookie): void {
  */
 export function addProductToComparison(
   productId: string,
-  categorySlug: string
+  categorySlug: string,
 ): { success: boolean; error?: string } {
   const current = getComparisonCookie();
 
   // Check if already in comparison
   if (current?.productIds.includes(productId)) {
-    return { success: false, error: 'Ten produkt jest już w porównaniu' };
+    return { success: false, error: "Ten produkt jest już w porównaniu" };
   }
 
   // Check max products
   if (current && current.productIds.length >= MAX_PRODUCTS) {
     return {
       success: false,
-      error: 'Możesz porównywać maksymalnie 3 produkty',
+      error: "Możesz porównywać maksymalnie 3 produkty",
     };
   }
 
@@ -1924,7 +1924,7 @@ export function addProductToComparison(
   if (current && current.categorySlug !== categorySlug) {
     return {
       success: false,
-      error: 'Możesz porównywać tylko produkty z tej samej kategorii',
+      error: "Możesz porównywać tylko produkty z tej samej kategorii",
     };
   }
 
@@ -1963,8 +1963,8 @@ export function removeProductFromComparison(productId: string): void {
  * Clear all products from comparison
  */
 export function clearComparison(): void {
-  if (typeof window === 'undefined') {
-    throw new Error('clearComparison can only be called on the client');
+  if (typeof window === "undefined") {
+    throw new Error("clearComparison can only be called on the client");
   }
 
   document.cookie = `${COOKIE_NAME}=; max-age=0; path=/`;
@@ -2047,30 +2047,30 @@ export function getComparisonCount(): number {
 ### Success Toasts (Green)
 
 ```typescript
-toast.success('Produkt dodany do porównania');
-toast.success('Porównanie zaktualizowane');
+toast.success("Produkt dodany do porównania");
+toast.success("Porównanie zaktualizowane");
 ```
 
 ### Error Toasts (Red)
 
 ```typescript
-toast.error('Możesz porównywać maksymalnie 3 produkty');
-toast.error('Możesz porównywać tylko produkty z tej samej kategorii');
-toast.error('Nie można dodać produktu bez kategorii');
+toast.error("Możesz porównywać maksymalnie 3 produkty");
+toast.error("Możesz porównywać tylko produkty z tej samej kategorii");
+toast.error("Nie można dodać produktu bez kategorii");
 ```
 
 ### Info Toasts (Blue)
 
 ```typescript
-toast.info('Produkt usunięty z porównania');
-toast.info('Porównanie wyczyszczone');
-toast.info('Produkt jest już w porównaniu');
+toast.info("Produkt usunięty z porównania");
+toast.info("Porównanie wyczyszczone");
+toast.info("Produkt jest już w porównaniu");
 ```
 
 ### Warning Toasts (Orange)
 
 ```typescript
-toast.warning('Ta funkcja wymaga włączonych cookies');
+toast.warning("Ta funkcja wymaga włączonych cookies");
 ```
 
 ### Toast Best Practices
@@ -2088,8 +2088,8 @@ toast.warning('Ta funkcja wymaga włączonych cookies');
 Always import toast at the top of Client Components:
 
 ```typescript
-'use client';
-import { toast } from 'sonner';
+"use client";
+import { toast } from "sonner";
 ```
 
 ---

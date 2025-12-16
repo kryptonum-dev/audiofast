@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import Image from '@/src/components/shared/Image';
-import type { ComparisonProduct } from '@/src/global/comparison/types';
+import Image from "@/src/components/shared/Image";
+import type { ComparisonProduct } from "@/src/global/comparison/types";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type ProductSelectorProps = {
   isOpen: boolean;
@@ -18,8 +18,8 @@ type ProductSelectorProps = {
 const normalizeText = (text: string): string => {
   return text
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 };
 
 export default function ProductSelector({
@@ -28,7 +28,7 @@ export default function ProductSelector({
   availableProducts,
   onProductSelect,
 }: ProductSelectorProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const modalRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,7 +43,7 @@ export default function ProductSelector({
 
     return availableProducts.filter((product) => {
       const searchableText = normalizeText(
-        `${product.name} ${product.brand.name} ${product.subtitle || ''}`,
+        `${product.name} ${product.brand.name} ${product.subtitle || ""}`,
       );
 
       // Match if ALL query words are found in the searchable text
@@ -70,25 +70,25 @@ export default function ProductSelector({
     };
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscape);
 
       return () => {
-        document.removeEventListener('keydown', handleEscape);
-        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener("keydown", handleEscape);
+        document.removeEventListener("mousedown", handleClickOutside);
       };
     }
   }, [isOpen, onClose]);
 
   const handleProductClick = (productId: string) => {
     onProductSelect(productId);
-    setSearchQuery('');
+    setSearchQuery("");
     onClose();
   };
 
@@ -125,7 +125,7 @@ export default function ProductSelector({
           <ul className={styles.productList}>
             {filteredProducts.map((product) => {
               const imageClassName =
-                product.imageSource === 'preview'
+                product.imageSource === "preview"
                   ? styles.productImageContain
                   : styles.productImageCover;
 
@@ -165,8 +165,8 @@ export default function ProductSelector({
             </div>
             <p className={styles.emptyTitle}>
               {searchQuery
-                ? 'Nie znaleziono produktów'
-                : 'Brak dostępnych produktów'}
+                ? "Nie znaleziono produktów"
+                : "Brak dostępnych produktów"}
             </p>
           </div>
         )}

@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState, useTransition } from 'react';
 
+import { useProductsLoading } from '../ProductsLoadingContext';
 import styles from './styles.module.scss';
 
 type SortOption = {
@@ -25,8 +26,10 @@ export default function SortDropdown({
 }: SortDropdownProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { startLoading } = useProductsLoading();
   const [, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
+  const [pendingValue, setPendingValue] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Check if search query exists (read from URL, not props)
@@ -41,11 +44,19 @@ export default function SortDropdown({
       );
 
   // Determine current value based on URL params
-  const currentValue = searchParams.get('sortBy') || defaultValue;
+  const urlValue = searchParams.get('sortBy') || defaultValue;
+
+  // Use pending value for optimistic UI, fall back to URL value
+  const currentValue = pendingValue ?? urlValue;
   const currentLabel =
     availableOptions.find((opt) => opt.value === currentValue)?.label ||
     availableOptions[0]?.label ||
     'Sortuj';
+
+  // Clear pending value when URL params change (navigation complete)
+  useEffect(() => {
+    setPendingValue(null);
+  }, [urlValue]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -84,6 +95,9 @@ export default function SortDropdown({
   }, [isOpen]);
 
   const handleOptionClick = (value: string) => {
+    // Optimistic update - show new value immediately
+    setPendingValue(value);
+
     const params = new URLSearchParams(searchParams.toString());
 
     if (value === defaultValue) {
@@ -98,6 +112,7 @@ export default function SortDropdown({
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
+    startLoading('sort');
     startTransition(() => {
       router.push(newUrl, { scroll: false });
     });

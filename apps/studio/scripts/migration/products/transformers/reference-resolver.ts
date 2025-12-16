@@ -1,17 +1,17 @@
 /**
  * Reference Resolver for Product Migration
- * 
+ *
  * Resolves brand slugs, category slugs, and review slugs to their Sanity document IDs.
  * Caches lookups to minimize API calls.
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
-import type { SanityClient } from '@sanity/client';
-import { parse } from 'csv-parse/sync';
+import type { SanityClient } from "@sanity/client";
+import { parse } from "csv-parse/sync";
 
-import type { ReferenceMappings, SanityReference } from '../types';
+import type { ReferenceMappings, SanityReference } from "../types";
 
 // ============================================================================
 // Reference Cache
@@ -25,7 +25,7 @@ let legacyReviewIdMapping: Map<string, string> | null = null;
 // Set of review IDs that actually exist in Sanity (for validation)
 let existingReviewIds: Set<string> | null = null;
 
-const DEFAULT_PRODUCTS_REVIEWS_CSV_PATH = 'csv/products/products-reviews.csv';
+const DEFAULT_PRODUCTS_REVIEWS_CSV_PATH = "csv/products/products-reviews.csv";
 
 type ProductReviewRow = {
   ProductID: string;
@@ -38,71 +38,79 @@ type ProductReviewRow = {
 /**
  * Load all reference mappings from Sanity (brands, categories, reviews)
  */
-export async function loadReferenceMappings(client: SanityClient): Promise<ReferenceMappings> {
+export async function loadReferenceMappings(
+  client: SanityClient,
+): Promise<ReferenceMappings> {
   if (referenceMappings) {
     return referenceMappings;
   }
 
-  console.log('\n🔗 Loading reference mappings from Sanity...');
+  console.log("\n🔗 Loading reference mappings from Sanity...");
 
   // Load brands
-  const brands = await client.fetch<Array<{ _id: string; slug: { current: string } }>>(
-    `*[_type == "brand" && defined(slug.current)]{_id, slug}`
-  );
+  const brands = await client.fetch<
+    Array<{ _id: string; slug: { current: string } }>
+  >(`*[_type == "brand" && defined(slug.current)]{_id, slug}`);
   const brandMapping: Record<string, string> = {};
   for (const brand of brands) {
     // Extract slug from full path (e.g., "/marki/acoustic-signature/" → "acoustic-signature")
-    const slug = brand.slug.current.replace(/^\/marki\//, '').replace(/\/$/, '');
+    const slug = brand.slug.current
+      .replace(/^\/marki\//, "")
+      .replace(/\/$/, "");
     brandMapping[slug] = brand._id;
   }
   console.log(`   ✓ Loaded ${brands.length} brand mappings`);
 
   // Load categories (product categories/types)
-  const categories = await client.fetch<Array<{ _id: string; slug: { current: string } }>>(
-    `*[_type == "productCategorySub" && defined(slug.current)]{_id, slug}`
-  );
+  const categories = await client.fetch<
+    Array<{ _id: string; slug: { current: string } }>
+  >(`*[_type == "productCategorySub" && defined(slug.current)]{_id, slug}`);
   const categoryMapping: Record<string, string> = {};
   for (const category of categories) {
     // Extract slug from full path (e.g., "/produkty/kategoria/gramofony/" → "gramofony")
     const slug = category.slug.current
-      .replace(/^\/produkty\/kategoria\//, '')
-      .replace(/^\/kategoria\//, '')
-      .replace(/\/$/, '');
+      .replace(/^\/produkty\/kategoria\//, "")
+      .replace(/^\/kategoria\//, "")
+      .replace(/\/$/, "");
     categoryMapping[slug] = category._id;
   }
   console.log(`   ✓ Loaded ${categories.length} category mappings`);
 
   // Load ALL reviews (including PDF and external types that don't have slugs)
-  const reviews = await client.fetch<Array<{ _id: string; slug?: { current: string }; destinationType?: string }>>(
-    `*[_type == "review"]{_id, slug, destinationType}`
-  );
+  const reviews = await client.fetch<
+    Array<{ _id: string; slug?: { current: string }; destinationType?: string }>
+  >(`*[_type == "review"]{_id, slug, destinationType}`);
   const reviewMapping: Record<string, string> = {};
   existingReviewIds = new Set<string>();
   let pageReviews = 0;
   let otherReviews = 0;
-  
+
   for (const review of reviews) {
     // Track all existing review IDs for validation
     existingReviewIds.add(review._id);
-    
+
     // For page type reviews with slug, map by slug
     if (review.slug?.current) {
-    const slug = review.slug.current.replace(/^\/recenzje\//, '').replace(/\/$/, '');
-    reviewMapping[slug] = review._id;
+      const slug = review.slug.current
+        .replace(/^\/recenzje\//, "")
+        .replace(/\/$/, "");
+      reviewMapping[slug] = review._id;
       pageReviews++;
     } else {
       otherReviews++;
     }
-    
+
     // Also map by _id pattern for legacy ID lookups (e.g., "review-123" → extract "123")
     // This helps match PDF/external reviews that were migrated with ID pattern
-    if (review._id.startsWith('review-')) {
-      const legacyIdFromSanityId = review._id.replace('review-', '');
+    if (review._id.startsWith("review-")) {
+      const legacyIdFromSanityId = review._id.replace("review-", "");
       // Store with a special prefix to avoid collisions with slugs
       reviewMapping[`__id__${legacyIdFromSanityId}`] = review._id;
     }
   }
-  console.log(`   ✓ Loaded ${reviews.length} review mappings (${pageReviews} with slug, ${otherReviews} PDF/external)`);
+  console.log(
+    `   ✓ Loaded ${reviews.length} review mappings (${pageReviews} with slug, ${otherReviews} PDF/external)`,
+  );
 
   referenceMappings = {
     brands: brandMapping,
@@ -117,7 +125,7 @@ export async function loadReferenceMappings(client: SanityClient): Promise<Refer
  * Load legacy review ID to Sanity ID mappings
  * Uses products-reviews.csv to get legacy ID → slug mapping,
  * then uses Sanity reviews to get slug → Sanity ID mapping
- * 
+ *
  * Supports three matching strategies:
  * 1. By slug (for page-type reviews)
  * 2. By Sanity _id pattern "review-{legacyId}" (for all review types)
@@ -128,13 +136,13 @@ export function loadLegacyReviewIdMappings(): void {
     return;
   }
 
-  console.log('\n🔗 Loading legacy review ID mappings...');
-  
+  console.log("\n🔗 Loading legacy review ID mappings...");
+
   legacyReviewIdMapping = new Map();
-  
+
   try {
     const resolved = resolve(process.cwd(), DEFAULT_PRODUCTS_REVIEWS_CSV_PATH);
-    const file = readFileSync(resolved, 'utf-8');
+    const file = readFileSync(resolved, "utf-8");
     const rows = parse(file, {
       columns: true,
       skip_empty_lines: true,
@@ -142,47 +150,51 @@ export function loadLegacyReviewIdMappings(): void {
       relax_column_count: true,
       relax_quotes: true,
     }) as ProductReviewRow[];
-    
+
     let matchedBySlug = 0;
     let matchedById = 0;
     let unmatched = 0;
-    
+
     for (const row of rows) {
       const legacyId = row.ReviewID;
       const slug = row.ReviewSlug;
-      
+
       // Strategy 1: Try to find by slug (page-type reviews)
       let sanityId = referenceMappings.reviews[slug];
-      
+
       if (sanityId) {
         legacyReviewIdMapping.set(legacyId, sanityId);
         matchedBySlug++;
         continue;
       }
-      
+
       // Strategy 2: Try to find by Sanity _id pattern "review-{legacyId}"
       sanityId = referenceMappings.reviews[`__id__${legacyId}`];
-      
+
       if (sanityId) {
         legacyReviewIdMapping.set(legacyId, sanityId);
         matchedById++;
         continue;
       }
-      
+
       // Strategy 3: Assume the review exists with ID "review-{legacyId}"
       // This is a fallback that allows resolving references even if we didn't
       // load all reviews (e.g., if they were migrated separately)
       legacyReviewIdMapping.set(legacyId, `review-${legacyId}`);
-        unmatched++;
+      unmatched++;
     }
-    
+
     console.log(`   ✓ Matched ${matchedBySlug} legacy reviews by slug`);
     console.log(`   ✓ Matched ${matchedById} legacy reviews by ID pattern`);
     if (unmatched > 0) {
-      console.log(`   ⚠️  ${unmatched} reviews assumed with ID pattern "review-{legacyId}"`);
+      console.log(
+        `   ⚠️  ${unmatched} reviews assumed with ID pattern "review-{legacyId}"`,
+      );
     }
   } catch (err) {
-    console.warn(`   ⚠️  Could not load legacy review mappings: ${err instanceof Error ? err.message : err}`);
+    console.warn(
+      `   ⚠️  Could not load legacy review mappings: ${err instanceof Error ? err.message : err}`,
+    );
   }
 }
 
@@ -209,9 +221,13 @@ export function getReferenceMappings(): ReferenceMappings | null {
 /**
  * Resolve a brand slug to a Sanity reference
  */
-export function resolveBrandReference(brandSlug: string): SanityReference | null {
+export function resolveBrandReference(
+  brandSlug: string,
+): SanityReference | null {
   if (!referenceMappings) {
-    console.warn('⚠️  Reference mappings not loaded. Call loadReferenceMappings first.');
+    console.warn(
+      "⚠️  Reference mappings not loaded. Call loadReferenceMappings first.",
+    );
     return null;
   }
 
@@ -222,7 +238,7 @@ export function resolveBrandReference(brandSlug: string): SanityReference | null
   }
 
   return {
-    _type: 'reference',
+    _type: "reference",
     _ref: brandId,
   };
 }
@@ -230,9 +246,13 @@ export function resolveBrandReference(brandSlug: string): SanityReference | null
 /**
  * Resolve category slugs to Sanity references
  */
-export function resolveCategoryReferences(categorySlugs: string[]): SanityReference[] {
+export function resolveCategoryReferences(
+  categorySlugs: string[],
+): SanityReference[] {
   if (!referenceMappings) {
-    console.warn('⚠️  Reference mappings not loaded. Call loadReferenceMappings first.');
+    console.warn(
+      "⚠️  Reference mappings not loaded. Call loadReferenceMappings first.",
+    );
     return [];
   }
 
@@ -241,7 +261,7 @@ export function resolveCategoryReferences(categorySlugs: string[]): SanityRefere
     const categoryId = referenceMappings.categories[slug];
     if (categoryId) {
       references.push({
-        _type: 'reference',
+        _type: "reference",
         _key: generateKey(),
         _ref: categoryId,
       });
@@ -261,10 +281,12 @@ export function resolveCategoryReferences(categorySlugs: string[]): SanityRefere
  */
 export function resolveReviewReferences(
   reviewSlugs: string[],
-  options: { silent?: boolean } = {}
+  options: { silent?: boolean } = {},
 ): SanityReference[] {
   if (!referenceMappings) {
-    console.warn('⚠️  Reference mappings not loaded. Call loadReferenceMappings first.');
+    console.warn(
+      "⚠️  Reference mappings not loaded. Call loadReferenceMappings first.",
+    );
     return [];
   }
 
@@ -272,16 +294,16 @@ export function resolveReviewReferences(
   for (const slug of reviewSlugs) {
     // Try by slug first
     let reviewId = referenceMappings.reviews[slug];
-    
+
     // If not found by slug, this might be a legacy ID - try the __id__ pattern
     if (!reviewId && legacyReviewIdMapping) {
       // The slug might actually be a legacy ID in some cases
       reviewId = legacyReviewIdMapping.get(slug) || undefined;
     }
-    
+
     if (reviewId) {
       references.push({
-        _type: 'reference',
+        _type: "reference",
         _key: generateKey(),
         _ref: reviewId,
       });
@@ -309,17 +331,17 @@ export function reviewExistsInSanity(reviewId: string): boolean {
  */
 export function resolveReviewByLegacyId(
   legacyId: string,
-  options: { validateExists?: boolean } = {}
+  options: { validateExists?: boolean } = {},
 ): SanityReference | null {
   const { validateExists = true } = options;
-  
+
   if (!legacyReviewIdMapping) {
     // Try to load if not yet loaded
     loadLegacyReviewIdMappings();
   }
-  
+
   if (!legacyReviewIdMapping) {
-    console.warn('⚠️  Legacy review ID mappings not available');
+    console.warn("⚠️  Legacy review ID mappings not available");
     return null;
   }
 
@@ -331,12 +353,14 @@ export function resolveReviewByLegacyId(
 
   // Validate that the review actually exists in Sanity
   if (validateExists && !reviewExistsInSanity(sanityId)) {
-    console.warn(`   ⚠️  Review ${sanityId} (legacy ID ${legacyId}) does not exist in Sanity - skipping`);
+    console.warn(
+      `   ⚠️  Review ${sanityId} (legacy ID ${legacyId}) does not exist in Sanity - skipping`,
+    );
     return null;
   }
 
   return {
-    _type: 'reference',
+    _type: "reference",
     _ref: sanityId,
   };
 }
@@ -351,7 +375,7 @@ export function resolveReviewByLegacyId(
 export function createDryRunMappings(
   brandSlugs: string[],
   categorySlugs: string[],
-  reviewSlugs: string[]
+  reviewSlugs: string[],
 ): ReferenceMappings {
   const brands: Record<string, string> = {};
   for (const slug of brandSlugs) {
@@ -390,8 +414,11 @@ function generateKey(): string {
 export function validateReferences(
   brandSlug: string,
   categorySlugs: string[],
-  reviewSlugs: string[]
-): { valid: boolean; missing: { brands: string[]; categories: string[]; reviews: string[] } } {
+  reviewSlugs: string[],
+): {
+  valid: boolean;
+  missing: { brands: string[]; categories: string[]; reviews: string[] };
+} {
   const missing = {
     brands: [] as string[],
     categories: [] as string[],
@@ -434,13 +461,14 @@ export function validateReferences(
  */
 export function printReferenceStats(): void {
   if (!referenceMappings) {
-    console.log('   No reference mappings loaded');
+    console.log("   No reference mappings loaded");
     return;
   }
 
-  console.log('\n📊 Reference Statistics:');
+  console.log("\n📊 Reference Statistics:");
   console.log(`   Brands: ${Object.keys(referenceMappings.brands).length}`);
-  console.log(`   Categories: ${Object.keys(referenceMappings.categories).length}`);
+  console.log(
+    `   Categories: ${Object.keys(referenceMappings.categories).length}`,
+  );
   console.log(`   Reviews: ${Object.keys(referenceMappings.reviews).length}`);
 }
-

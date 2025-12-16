@@ -26,6 +26,7 @@ This folder contains Office Scripts for syncing pricing data from Excel Web to S
 ### Step 3: Verify Sheet Names
 
 The script expects these sheet names (adjust in CONFIG if different):
+
 - `Produkty` - Main products sheet
 - `Opcje` - Options sheet
 - `Wartości` - Numeric rules sheet
@@ -34,9 +35,11 @@ The script expects these sheet names (adjust in CONFIG if different):
 ### Step 4: Run the Script
 
 **Option A: Manual Run**
+
 1. Click **Automate** > **Script name** > **Run**
 
 **Option B: Add a Button (Recommended)**
+
 1. Go to **Insert** > **Shapes** > Select a rectangle
 2. Draw the button on your sheet
 3. Right-click the shape > **Assign Script**
@@ -46,51 +49,51 @@ The script expects these sheet names (adjust in CONFIG if different):
 
 ### Produkty Sheet (Columns)
 
-| Column | Name | Description |
-|--------|------|-------------|
-| A | Brand | Brand name |
-| B | PRODUKT | Product name |
-| C | MODEL | Model variant (optional) |
-| E | Cena WWW | Base price (e.g., "16 730 zł") |
-| G | URL | Price key / slug |
-| AA | P1 | Related product 1 URL |
-| AB | P2 | Related product 2 URL |
-| AC | P3 | Related product 3 URL |
-| AD | P4 | Related product 4 URL |
+| Column | Name     | Description                    |
+| ------ | -------- | ------------------------------ |
+| A      | Brand    | Brand name                     |
+| B      | PRODUKT  | Product name                   |
+| C      | MODEL    | Model variant (optional)       |
+| E      | Cena WWW | Base price (e.g., "16 730 zł") |
+| G      | URL      | Price key / slug               |
+| AA     | P1       | Related product 1 URL          |
+| AB     | P2       | Related product 2 URL          |
+| AC     | P3       | Related product 3 URL          |
+| AD     | P4       | Related product 4 URL          |
 
 ### Opcje Sheet (Columns)
 
-| Column | Name | Description |
-|--------|------|-------------|
-| A | Produkt | Product name |
-| B | Model | Model variant |
-| C | Opcja | Option group name |
-| D | Pozycja słownikowa | Option value name |
-| E | Cena | Price delta |
-| F | Pod-opcja wartości | Link to Wartości (numeric input) |
-| G | Pod-opcja listy | Link to Listy (nested select) |
+| Column | Name               | Description                      |
+| ------ | ------------------ | -------------------------------- |
+| A      | Produkt            | Product name                     |
+| B      | Model              | Model variant                    |
+| C      | Opcja              | Option group name                |
+| D      | Pozycja słownikowa | Option value name                |
+| E      | Cena               | Price delta                      |
+| F      | Pod-opcja wartości | Link to Wartości (numeric input) |
+| G      | Pod-opcja listy    | Link to Listy (nested select)    |
 
 ### Wartości Sheet (Columns)
 
-| Column | Name | Description |
-|--------|------|-------------|
-| A | Produkt | Product name |
-| B | Model | Model variant |
-| C | Opcja | Option name |
-| D | Min | Minimum value |
-| E | Max | Maximum value |
-| F | Skok | Step increment |
-| G | Dopłata | Price per step |
+| Column | Name    | Description    |
+| ------ | ------- | -------------- |
+| A      | Produkt | Product name   |
+| B      | Model   | Model variant  |
+| C      | Opcja   | Option name    |
+| D      | Min     | Minimum value  |
+| E      | Max     | Maximum value  |
+| F      | Skok    | Step increment |
+| G      | Dopłata | Price per step |
 
 ### Listy Sheet (Columns)
 
-| Column | Name | Description |
-|--------|------|-------------|
-| A | Produkt | Product name |
-| B | Model | Model variant |
-| C | Opcja | Option name |
-| D | Pozycja słownikowa | Nested value name |
-| E | Dopłata | Price delta |
+| Column | Name               | Description       |
+| ------ | ------------------ | ----------------- |
+| A      | Produkt            | Product name      |
+| B      | Model              | Model variant     |
+| C      | Opcja              | Option name       |
+| D      | Pozycja słownikowa | Nested value name |
+| E      | Dopłata            | Price delta       |
 
 ## Output
 
@@ -134,25 +137,29 @@ Sanity Related Products:
 ## Troubleshooting
 
 ### "Sheet not found" Error
+
 - Check that sheet names match exactly (including case and Polish characters)
 - Update the `CONFIG` section in the script if your sheets have different names
 
 ### "HTTP 401" Error
+
 - Check that `ANON_KEY` and `EXCEL_TOKEN` are correct
 - Tokens may have expired - contact developer for new tokens
 
 ### "Invalid JSON" Error
+
 - Check for special characters in product names that might break JSON
 - Ensure price formats follow Polish convention ("16 730 zł")
 
 ### Products Not Syncing to Sanity
+
 - Verify the URL/price_key matches product slugs in Sanity
 - Check the errors array in the response for specific issues
 
 ## Security Notes
 
 ⚠️ **The script contains API keys.** These are "publishable" keys safe for client-side use, but:
+
 - Don't share the script publicly
 - The `EXCEL_TOKEN` should be rotated periodically
 - Contact developer if you suspect keys are compromised
-

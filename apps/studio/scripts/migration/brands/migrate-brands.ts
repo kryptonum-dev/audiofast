@@ -11,13 +11,13 @@
  *   SANITY_API_TOKEN - Sanity API token with write access
  */
 
-import * as fs from 'fs';
-import pLimit from 'p-limit';
-import * as path from 'path';
+import * as fs from "fs";
+import pLimit from "p-limit";
+import * as path from "path";
 
-import { parseBrandsFromSQL } from './parser';
-import { createMigrationClient, transformBrandToSanity } from './transformer';
-import type { ExistingBrand, MigrationResult } from './types';
+import { parseBrandsFromSQL } from "./parser";
+import { createMigrationClient, transformBrandToSanity } from "./transformer";
+import type { ExistingBrand, MigrationResult } from "./types";
 
 // Concurrency limit for parallel operations
 const CONCURRENCY_LIMIT = 3;
@@ -25,7 +25,7 @@ const CONCURRENCY_LIMIT = 3;
 // SQL file path
 const SQL_FILE_PATH = path.resolve(
   __dirname,
-  '../../../../../20250528_audiofast.sql',
+  "../../../../../20250528_audiofast.sql",
 );
 
 /**
@@ -38,12 +38,12 @@ function parseArgs(): {
 } {
   const args = process.argv.slice(2);
   return {
-    dryRun: args.includes('--dry-run'),
+    dryRun: args.includes("--dry-run"),
     limit: (() => {
-      const limitArg = args.find((a) => a.startsWith('--limit='));
-      return limitArg ? parseInt(limitArg.split('=')[1], 10) : null;
+      const limitArg = args.find((a) => a.startsWith("--limit="));
+      return limitArg ? parseInt(limitArg.split("=")[1], 10) : null;
     })(),
-    verbose: args.includes('--verbose'),
+    verbose: args.includes("--verbose"),
   };
 }
 
@@ -97,15 +97,15 @@ function isBrandComplete(existing: ExistingBrand): boolean {
 async function migrateBrands(): Promise<void> {
   const { dryRun, limit, verbose } = parseArgs();
 
-  console.log('='.repeat(60));
-  console.log('BRAND MIGRATION');
-  console.log('='.repeat(60));
-  console.log(`Mode: ${dryRun ? 'DRY RUN' : 'LIVE'}`);
+  console.log("=".repeat(60));
+  console.log("BRAND MIGRATION");
+  console.log("=".repeat(60));
+  console.log(`Mode: ${dryRun ? "DRY RUN" : "LIVE"}`);
   if (limit) console.log(`Limit: ${limit} brands`);
-  console.log('');
+  console.log("");
 
   // Initialize Sanity client
-  console.log('Initializing Sanity client...');
+  console.log("Initializing Sanity client...");
   const client = createMigrationClient();
 
   // Read SQL file
@@ -113,11 +113,13 @@ async function migrateBrands(): Promise<void> {
   if (!fs.existsSync(SQL_FILE_PATH)) {
     throw new Error(`SQL file not found: ${SQL_FILE_PATH}`);
   }
-  const sqlContent = fs.readFileSync(SQL_FILE_PATH, 'utf-8');
-  console.log(`SQL file size: ${(sqlContent.length / 1024 / 1024).toFixed(2)} MB`);
+  const sqlContent = fs.readFileSync(SQL_FILE_PATH, "utf-8");
+  console.log(
+    `SQL file size: ${(sqlContent.length / 1024 / 1024).toFixed(2)} MB`,
+  );
 
   // Parse brands from SQL
-  console.log('\nParsing brands from SQL...');
+  console.log("\nParsing brands from SQL...");
   let sourceBrands = parseBrandsFromSQL(sqlContent);
   console.log(`Found ${sourceBrands.length} brands in SQL`);
 
@@ -128,7 +130,7 @@ async function migrateBrands(): Promise<void> {
   }
 
   // Fetch existing brands from Sanity
-  console.log('\nFetching existing brands from Sanity...');
+  console.log("\nFetching existing brands from Sanity...");
   const existingBrands = await fetchExistingBrands(client);
   console.log(`Found ${existingBrands.size} existing brands in Sanity`);
 
@@ -145,7 +147,7 @@ async function migrateBrands(): Promise<void> {
 
     if (existing) {
       if (isBrandComplete(existing)) {
-        toSkip.push({ name: source.name, reason: 'Already complete' });
+        toSkip.push({ name: source.name, reason: "Already complete" });
       } else {
         toUpdate.push({ source, existing });
       }
@@ -154,22 +156,24 @@ async function migrateBrands(): Promise<void> {
     }
   }
 
-  console.log('\nMigration Plan:');
+  console.log("\nMigration Plan:");
   console.log(`  - Create: ${toCreate.length} new brands`);
-  console.log(`  - Update: ${toUpdate.length} existing brands (missing fields)`);
+  console.log(
+    `  - Update: ${toUpdate.length} existing brands (missing fields)`,
+  );
   console.log(`  - Skip: ${toSkip.length} complete brands`);
 
   if (verbose) {
-    console.log('\nBrands to create:');
+    console.log("\nBrands to create:");
     toCreate.forEach((b) => console.log(`  - ${b.name}`));
-    console.log('\nBrands to update:');
+    console.log("\nBrands to update:");
     toUpdate.forEach(({ source }) => console.log(`  - ${source.name}`));
-    console.log('\nBrands to skip:');
+    console.log("\nBrands to skip:");
     toSkip.forEach(({ name, reason }) => console.log(`  - ${name}: ${reason}`));
   }
 
   if (dryRun) {
-    console.log('\n[DRY RUN] No changes will be made.');
+    console.log("\n[DRY RUN] No changes will be made.");
     return;
   }
 
@@ -188,7 +192,7 @@ async function migrateBrands(): Promise<void> {
   const limiter = pLimit(CONCURRENCY_LIMIT);
 
   // Transform and create new brands
-  console.log('\n--- Creating New Brands ---');
+  console.log("\n--- Creating New Brands ---");
   const createTasks = toCreate.map((source) =>
     limiter(async () => {
       try {
@@ -211,7 +215,7 @@ async function migrateBrands(): Promise<void> {
   await Promise.all(createTasks);
 
   // Update existing brands (only missing fields)
-  console.log('\n--- Updating Existing Brands ---');
+  console.log("\n--- Updating Existing Brands ---");
   const updateTasks = toUpdate.map(({ source, existing }) =>
     limiter(async () => {
       try {
@@ -233,10 +237,10 @@ async function migrateBrands(): Promise<void> {
             patch.brandDescription = brand.brandDescription;
           }
           if (!existing.hasSeoTitle && brand.seo?.title) {
-            patch['seo.title'] = brand.seo.title;
+            patch["seo.title"] = brand.seo.title;
           }
           if (!existing.hasSeoDescription && brand.seo?.description) {
-            patch['seo.description'] = brand.seo.description;
+            patch["seo.description"] = brand.seo.description;
           }
           // Don't override logo if it already exists
           if (!existing.hasLogo && brand.logo) {
@@ -263,32 +267,31 @@ async function migrateBrands(): Promise<void> {
   await Promise.all(updateTasks);
 
   // Summary
-  console.log('\n' + '='.repeat(60));
-  console.log('MIGRATION COMPLETE');
-  console.log('='.repeat(60));
+  console.log("\n" + "=".repeat(60));
+  console.log("MIGRATION COMPLETE");
+  console.log("=".repeat(60));
   console.log(`Created: ${results.created.length}`);
   console.log(`Updated: ${results.updated.length}`);
   console.log(`Skipped: ${results.skipped.length}`);
   console.log(`Errors: ${results.errors.length}`);
 
   if (results.errors.length > 0) {
-    console.log('\nErrors:');
+    console.log("\nErrors:");
     results.errors.forEach(({ brandName, error }) => {
       console.log(`  - ${brandName}: ${error}`);
     });
   }
 
   if (verbose) {
-    console.log('\nCreated brands:');
+    console.log("\nCreated brands:");
     results.created.forEach((name) => console.log(`  - ${name}`));
-    console.log('\nUpdated brands:');
+    console.log("\nUpdated brands:");
     results.updated.forEach((name) => console.log(`  - ${name}`));
   }
 }
 
 // Run migration
 migrateBrands().catch((error) => {
-  console.error('Migration failed:', error);
+  console.error("Migration failed:", error);
   process.exit(1);
 });
-

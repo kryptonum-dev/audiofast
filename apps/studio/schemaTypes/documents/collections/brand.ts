@@ -1,117 +1,117 @@
 import {
   orderRankField,
   orderRankOrdering,
-} from '@sanity/orderable-document-list';
-import { Tag } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+} from "@sanity/orderable-document-list";
+import { Tag } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
-import { defineSlugForDocument } from '../../../components/define-slug-for-document';
-import { GROUP, GROUPS } from '../../../utils/constant';
-import { toPlainText } from '../../../utils/helper';
-import { customPortableText } from '../../portableText';
-import { getSEOFields } from '../../shared/seo';
+import { defineSlugForDocument } from "../../../components/define-slug-for-document";
+import { GROUP, GROUPS } from "../../../utils/constant";
+import { toPlainText } from "../../../utils/helper";
+import { customPortableText } from "../../portableText";
+import { getSEOFields } from "../../shared/seo";
 
 export const brand = defineType({
-  name: 'brand',
-  title: 'Marka',
-  type: 'document',
+  name: "brand",
+  title: "Marka",
+  type: "document",
   icon: Tag,
   groups: GROUPS,
   orderings: [orderRankOrdering],
   description:
-    'Marka produktów audio. Dodaj nazwę marki, opis i informacje o producencie.',
+    "Marka produktów audio. Dodaj nazwę marki, opis i informacje o producencie.",
   fields: [
-    orderRankField({ type: 'brands' }),
+    orderRankField({ type: "brands" }),
     ...defineSlugForDocument({
-      prefix: '/marki/',
+      prefix: "/marki/",
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: 'logo',
-      title: 'Logo Marki',
-      type: 'image',
+      name: "logo",
+      title: "Logo Marki",
+      type: "image",
       validation: (Rule) => Rule.required(),
       group: GROUP.MAIN_CONTENT,
     }),
     customPortableText({
-      name: 'description',
-      title: 'Opis marki (Hero)',
+      name: "description",
+      title: "Opis marki (Hero)",
       description:
-        'Krótki opis wyświetlany pod nazwą marki w sekcji hero na stronie marki',
+        "Krótki opis wyświetlany pod nazwą marki w sekcji hero na stronie marki",
       group: GROUP.MAIN_CONTENT,
       include: {
-        styles: ['normal'],
-        decorators: ['strong', 'em'],
+        styles: ["normal"],
+        decorators: ["strong", "em"],
       },
-      validation: (Rule) => Rule.required().error('Opis marki jest wymagany'),
+      validation: (Rule) => Rule.required().error("Opis marki jest wymagany"),
     }),
     defineField({
-      name: 'heroImage',
-      title: 'Obraz tła strony marki (opcjonalny)',
-      type: 'image',
+      name: "heroImage",
+      title: "Obraz tła strony marki (opcjonalny)",
+      type: "image",
       description:
-        'Obraz wyświetlany w tle sekcji hero na stronie marki. Jeśli obraz nie zostanie ustawiony, wyswietlony zostanie obraz z podstrony /marki/.',
+        "Obraz wyświetlany w tle sekcji hero na stronie marki. Jeśli obraz nie zostanie ustawiony, wyswietlony zostanie obraz z podstrony /marki/.",
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,
       },
     }),
     defineField({
-      name: 'bannerImage',
-      title: 'Obraz banera (opcjonalny)',
-      type: 'image',
+      name: "bannerImage",
+      title: "Obraz banera (opcjonalny)",
+      type: "image",
       description:
-        'Duży obraz banera wyświetlany między listą produktów a sekcją o marce',
+        "Duży obraz banera wyświetlany między listą produktów a sekcją o marce",
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,
       },
     }),
     defineField({
-      name: 'brandContentBlocks',
-      title: 'Szczegółowy opis',
-      type: 'array',
+      name: "brandContentBlocks",
+      title: "Szczegółowy opis",
+      type: "array",
       description:
-        'Szczegółowy opis marki wyświetlany na stronie marki. Dodaj bloki tekstowe, filmy YouTube lub linie poziome.',
+        "Szczegółowy opis marki wyświetlany na stronie marki. Dodaj bloki tekstowe, filmy YouTube lub linie poziome.",
       group: GROUP.MAIN_CONTENT,
       of: [
-        { type: 'contentBlockText' },
-        { type: 'contentBlockYoutube' },
-        { type: 'contentBlockVimeo' },
-        { type: 'contentBlockHorizontalLine' },
+        { type: "contentBlockText" },
+        { type: "contentBlockYoutube" },
+        { type: "contentBlockVimeo" },
+        { type: "contentBlockHorizontalLine" },
       ],
       options: {
         insertMenu: {
           filter: true,
           showIcons: true,
-          views: [{ name: 'list' }],
+          views: [{ name: "list" }],
         },
       },
     }),
     defineField({
-      name: 'distributionYear',
-      title: 'Rok rozpoczęcia dystrybucji (opcjonalny)',
-      type: 'object',
+      name: "distributionYear",
+      title: "Rok rozpoczęcia dystrybucji (opcjonalny)",
+      type: "object",
       description:
-        'Rok i obraz tła dla odznaki roku rozpoczęcia dystrybucji. Jeśli ustawisz rok, musisz również ustawić obraz tła i odwrotnie.',
+        "Rok i obraz tła dla odznaki roku rozpoczęcia dystrybucji. Jeśli ustawisz rok, musisz również ustawić obraz tła i odwrotnie.",
       group: GROUP.MAIN_CONTENT,
       fields: [
         defineField({
-          name: 'year',
-          title: 'Rok',
-          type: 'number',
+          name: "year",
+          title: "Rok",
+          type: "number",
           description:
-            'Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)',
+            "Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)",
           validation: (Rule) =>
             Rule.min(1900)
               .max(new Date().getFullYear())
-              .error('Podaj prawidłowy rok'),
+              .error("Podaj prawidłowy rok"),
         }),
         defineField({
-          name: 'backgroundImage',
-          title: 'Obraz tła',
-          type: 'image',
-          description: 'Obraz tła wyświetlany za tekstem odznaki roku',
+          name: "backgroundImage",
+          title: "Obraz tła",
+          type: "image",
+          description: "Obraz tła wyświetlany za tekstem odznaki roku",
           options: {
             hotspot: true,
           },
@@ -127,24 +127,24 @@ export const brand = defineType({
             value.backgroundImage !== null;
 
           if (hasYear && !hasImage) {
-            return 'Jeśli ustawisz rok, musisz również ustawić obraz tła';
+            return "Jeśli ustawisz rok, musisz również ustawić obraz tła";
           }
 
           if (hasImage && !hasYear) {
-            return 'Jeśli ustawisz obraz tła, musisz również ustawić rok';
+            return "Jeśli ustawisz obraz tła, musisz również ustawić rok";
           }
 
           return true;
         }),
     }),
     defineField({
-      name: 'imageGallery',
-      title: 'Galeria zdjęć marki',
-      type: 'array',
+      name: "imageGallery",
+      title: "Galeria zdjęć marki",
+      type: "array",
       description:
-        'Dodaj zdjęcia do galerii marki (opcjonalne, minimum 2 zdjęcia jeśli dodajesz)',
+        "Dodaj zdjęcia do galerii marki (opcjonalne, minimum 2 zdjęcia jeśli dodajesz)",
       group: GROUP.MAIN_CONTENT,
-      of: [{ type: 'image' }],
+      of: [{ type: "image" }],
       validation: (Rule) =>
         Rule.custom((value) => {
           if (
@@ -153,29 +153,29 @@ export const brand = defineType({
             value.length > 0 &&
             value.length < 2
           ) {
-            return 'Galeria musi zawierać minimum 2 zdjęcia';
+            return "Galeria musi zawierać minimum 2 zdjęcia";
           }
           return true;
         }),
     }),
     defineField({
-      name: 'stores',
-      title: 'Salony dystrybucji',
-      type: 'array',
+      name: "stores",
+      title: "Salony dystrybucji",
+      type: "array",
       description:
-        'Wybierz salony, w których dostępne są produkty tej marki. Produkty bez własnych salonów odziedziczą te salony.',
+        "Wybierz salony, w których dostępne są produkty tej marki. Produkty bez własnych salonów odziedziczą te salony.",
       group: GROUP.MAIN_CONTENT,
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'store' }],
+          type: "reference",
+          to: [{ type: "store" }],
           options: {
             filter: ({ document }) => {
               const selectedIds = Array.isArray(document?.stores)
                 ? document.stores.map((item: any) => item._ref).filter(Boolean)
                 : [];
               return {
-                filter: '!(_id in $selectedIds)',
+                filter: "!(_id in $selectedIds)",
                 params: { selectedIds },
               };
             },
@@ -184,19 +184,19 @@ export const brand = defineType({
       ],
     }),
     defineField({
-      name: 'featuredReviews',
-      title: 'Wyróżnione recenzje',
-      type: 'array',
+      name: "featuredReviews",
+      title: "Wyróżnione recenzje",
+      type: "array",
       description:
-        'Wybierz recenzje produktów należących do tej marki. Tylko recenzje przypisane do produktów tej marki są dostępne do wyboru.',
+        "Wybierz recenzje produktów należących do tej marki. Tylko recenzje przypisane do produktów tej marki są dostępne do wyboru.",
       group: GROUP.MAIN_CONTENT,
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'review' }],
+          type: "reference",
+          to: [{ type: "review" }],
           options: {
             filter: ({ document }) => {
-              const brandId = document._id?.replace('drafts.', '');
+              const brandId = document._id?.replace("drafts.", "");
               if (!brandId) return { filter: '_id == "none"' };
               return {
                 filter: `_id in *[_type == "product" && brand._ref == $brandId].reviews[]._ref`,
@@ -211,13 +211,13 @@ export const brand = defineType({
   ],
   preview: {
     select: {
-      name: 'name',
-      logo: 'logo',
-      description: 'description',
+      name: "name",
+      logo: "logo",
+      description: "description",
     },
     prepare: ({ name, logo, description }) => ({
-      title: name || 'Marka',
-      subtitle: toPlainText(description) || 'Marka produktów audio',
+      title: name || "Marka",
+      subtitle: toPlainText(description) || "Marka produktów audio",
       media: logo || Tag,
     }),
   },

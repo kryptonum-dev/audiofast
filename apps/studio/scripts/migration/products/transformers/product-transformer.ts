@@ -9,7 +9,7 @@
  * - Reference resolution (brand, categories, reviews)
  */
 
-import type { SanityClient } from '@sanity/client';
+import type { SanityClient } from "@sanity/client";
 
 import {
   createHorizontalLine,
@@ -22,8 +22,8 @@ import {
   htmlToPortableText,
   type ImagePlaceholder,
   type ReviewEmbedPlaceholder,
-} from '../parser/html-to-portable-text';
-import { parseTechnicalData } from '../parser/technical-data-parser';
+} from "../parser/html-to-portable-text";
+import { parseTechnicalData } from "../parser/technical-data-parser";
 import type {
   ContentBlockText,
   DetailsContentBlock,
@@ -36,19 +36,19 @@ import type {
   SanityImageRef,
   SanityProduct,
   SanityReference,
-} from '../types';
+} from "../types";
 import {
   getLegacyAssetUrl,
   processAndUploadImage,
   processImageDryRun,
-} from '../utils/image-optimizer';
+} from "../utils/image-optimizer";
 import {
   loadLegacyReviewIdMappings,
   resolveBrandReference,
   resolveCategoryReferences,
   resolveReviewByLegacyId,
   resolveReviewReferences,
-} from './reference-resolver';
+} from "./reference-resolver";
 
 // ============================================================================
 // Helpers
@@ -66,7 +66,7 @@ async function transformMainImage(
   mainImageFilename: string | null,
   client: SanityClient | null,
   imageCache: ImageCache,
-  dryRun: boolean
+  dryRun: boolean,
 ): Promise<SanityImageRef | undefined> {
   if (!mainImageFilename) {
     return undefined;
@@ -77,9 +77,9 @@ async function transformMainImage(
   if (dryRun) {
     const result = processImageDryRun(imageUrl);
     return {
-      _type: 'image',
+      _type: "image",
       asset: {
-        _type: 'reference',
+        _type: "reference",
         _ref: result.assetId,
       },
     };
@@ -88,15 +88,15 @@ async function transformMainImage(
   if (!client) return undefined;
 
   const result = await processAndUploadImage(imageUrl, client, imageCache, {
-    imageType: 'preview',
+    imageType: "preview",
   });
 
   if (!result) return undefined;
 
   return {
-    _type: 'image',
+    _type: "image",
     asset: {
-      _type: 'reference',
+      _type: "reference",
       _ref: result.assetId,
     },
   };
@@ -110,7 +110,7 @@ async function transformGalleryImages(
   galleryRows: ProductGalleryRow[],
   client: SanityClient | null,
   imageCache: ImageCache,
-  dryRun: boolean
+  dryRun: boolean,
 ): Promise<SanityImageRef[]> {
   if (galleryRows.length === 0) {
     return [];
@@ -126,10 +126,10 @@ async function transformGalleryImages(
     if (dryRun) {
       const result = processImageDryRun(imageUrl);
       galleryImages.push({
-        _type: 'image',
+        _type: "image",
         _key: generateKey(),
         asset: {
-          _type: 'reference',
+          _type: "reference",
           _ref: result.assetId,
         },
       });
@@ -139,15 +139,15 @@ async function transformGalleryImages(
     if (!client) continue;
 
     const result = await processAndUploadImage(imageUrl, client, imageCache, {
-      imageType: 'gallery',
+      imageType: "gallery",
     });
 
     if (result) {
       galleryImages.push({
-        _type: 'image',
+        _type: "image",
         _key: generateKey(),
         asset: {
-          _type: 'reference',
+          _type: "reference",
           _ref: result.assetId,
         },
       });
@@ -165,10 +165,10 @@ async function transformGalleryImages(
  * Create a contentBlockText wrapper for portable text content
  */
 function createContentBlockText(
-  content: PortableTextContent[]
+  content: PortableTextContent[],
 ): ContentBlockText {
   return {
-    _type: 'contentBlockText',
+    _type: "contentBlockText",
     _key: generateKey(),
     content,
   };
@@ -178,7 +178,7 @@ async function transformContentBoxes(
   boxes: ProductBoxRow[],
   client: SanityClient | null,
   imageCache: ImageCache,
-  dryRun: boolean
+  dryRun: boolean,
 ): Promise<DetailsContentBlock[]> {
   const contentBlocks: DetailsContentBlock[] = [];
 
@@ -186,7 +186,7 @@ async function transformContentBoxes(
     const boxType = box.BoxType?.toLowerCase();
 
     switch (boxType) {
-      case 'text': {
+      case "text": {
         // Parse HTML content to Portable Text
         if (box.TextContent) {
           const parsed = htmlToPortableText(box.TextContent);
@@ -194,12 +194,12 @@ async function transformContentBoxes(
 
           // Process parsed content and handle placeholders (images, review embeds)
           for (const block of parsed) {
-            if (block._type === 'imagePlaceholder') {
+            if (block._type === "imagePlaceholder") {
               const placeholder = block as ImagePlaceholder;
 
               // Determine image type based on whether it's inline (floating)
               const isInlineImage = !!placeholder.float;
-              const imageType = isInlineImage ? 'inline' : 'content';
+              const imageType = isInlineImage ? "inline" : "content";
 
               if (dryRun) {
                 const result = processImageDryRun(placeholder.src);
@@ -207,21 +207,21 @@ async function transformContentBoxes(
                 if (placeholder.float) {
                   const widthStr = placeholder.width
                     ? ` w=${placeholder.width}px`
-                    : '';
+                    : "";
                   console.log(
-                    `   🖼️  Inline image (float: ${placeholder.float}${widthStr}): ${placeholder.src.split('/').pop()}`
+                    `   🖼️  Inline image (float: ${placeholder.float}${widthStr}): ${placeholder.src.split("/").pop()}`,
                   );
                   portableTextContent.push(
                     createInlineImageBlock(
                       result.assetId,
                       placeholder.float,
                       placeholder.alt,
-                      placeholder.width
-                    )
+                      placeholder.width,
+                    ),
                   );
                 } else {
                   portableTextContent.push(
-                    createMinimalImageBlock(result.assetId)
+                    createMinimalImageBlock(result.assetId),
                   );
                 }
               } else if (client) {
@@ -229,54 +229,54 @@ async function transformContentBoxes(
                   placeholder.src,
                   client,
                   imageCache,
-                  { imageType }
+                  { imageType },
                 );
                 if (result) {
                   // Check if image should be inline (floating) or regular block
                   if (placeholder.float) {
                     const widthStr = placeholder.width
                       ? ` w=${placeholder.width}px`
-                      : '';
+                      : "";
                     console.log(
-                      `   🖼️  Inline image (float: ${placeholder.float}${widthStr}): ${result.filename}`
+                      `   🖼️  Inline image (float: ${placeholder.float}${widthStr}): ${result.filename}`,
                     );
                     portableTextContent.push(
                       createInlineImageBlock(
                         result.assetId,
                         placeholder.float,
                         placeholder.alt,
-                        placeholder.width
-                      )
+                        placeholder.width,
+                      ),
                     );
                   } else {
                     portableTextContent.push(
-                      createMinimalImageBlock(result.assetId)
+                      createMinimalImageBlock(result.assetId),
                     );
                   }
                 }
               }
             } else if (
-              block._type === 'ptReviewEmbed' &&
-              'legacyReviewId' in block
+              block._type === "ptReviewEmbed" &&
+              "legacyReviewId" in block
             ) {
               // Resolve legacy review ID to Sanity reference
               const placeholder = block as unknown as ReviewEmbedPlaceholder;
               const reviewRef = resolveReviewByLegacyId(
-                placeholder.legacyReviewId
+                placeholder.legacyReviewId,
               );
 
               if (reviewRef) {
                 console.log(
-                  `   📰 Resolved review embed: legacy ID ${placeholder.legacyReviewId} → ${reviewRef._ref}`
+                  `   📰 Resolved review embed: legacy ID ${placeholder.legacyReviewId} → ${reviewRef._ref}`,
                 );
                 portableTextContent.push({
-                  _type: 'ptReviewEmbed',
+                  _type: "ptReviewEmbed",
                   _key: placeholder._key,
                   review: reviewRef,
                 } as PtReviewEmbed);
               } else {
                 console.warn(
-                  `   ⚠️  Could not resolve review embed: legacy ID ${placeholder.legacyReviewId}`
+                  `   ⚠️  Could not resolve review embed: legacy ID ${placeholder.legacyReviewId}`,
                 );
               }
             } else {
@@ -292,12 +292,12 @@ async function transformContentBoxes(
         break;
       }
 
-      case 'hr': {
+      case "hr": {
         contentBlocks.push(createHorizontalLine());
         break;
       }
 
-      case 'video': {
+      case "video": {
         if (box.VideoUrl) {
           // Try YouTube first
           const youtubeId = extractYouTubeId(box.VideoUrl);
@@ -342,7 +342,7 @@ export interface TransformOptions {
  */
 export async function transformProduct(
   source: ProductSourceData,
-  options: TransformOptions
+  options: TransformOptions,
 ): Promise<SanityProduct> {
   const { dryRun, client, imageCache, verbose } = options;
 
@@ -353,10 +353,10 @@ export async function transformProduct(
   // 1. Basic fields
   const product: SanityProduct = {
     _id: `product-${source.id}`,
-    _type: 'product',
+    _type: "product",
     name: source.name,
     slug: {
-      _type: 'slug',
+      _type: "slug",
       current: `/produkty/${source.slug.toLowerCase()}/`,
     },
     isArchived: source.isArchived,
@@ -371,18 +371,20 @@ export async function transformProduct(
   }
 
   // 3. Main preview image
-  if (verbose) console.log('   📷 Processing main image...');
+  if (verbose) console.log("   📷 Processing main image...");
   const previewImage = await transformMainImage(
     source.mainImageFilename,
     client,
     imageCache,
-    dryRun
+    dryRun,
   );
   if (previewImage) {
     product.previewImage = previewImage;
   } else if (source.mainImageFilename) {
     // Image filename exists but failed to process - warn about it
-    console.warn(`   ⚠️  MISSING PREVIEW IMAGE for [${source.id}] ${source.name}`);
+    console.warn(
+      `   ⚠️  MISSING PREVIEW IMAGE for [${source.id}] ${source.name}`,
+    );
     console.warn(`      Source: ${source.mainImageFilename}`);
   }
 
@@ -390,13 +392,13 @@ export async function transformProduct(
   if (source.galleryImages.length > 0) {
     if (verbose)
       console.log(
-        `   🖼️  Processing ${source.galleryImages.length} gallery images...`
+        `   🖼️  Processing ${source.galleryImages.length} gallery images...`,
       );
     const galleryImages = await transformGalleryImages(
       source.galleryImages,
       client,
       imageCache,
-      dryRun
+      dryRun,
     );
     if (galleryImages.length > 0) {
       product.imageGallery = galleryImages;
@@ -412,7 +414,7 @@ export async function transformProduct(
   // 6. Category references
   if (source.categorySlugsByProduct.length > 0) {
     const categoryRefs = resolveCategoryReferences(
-      source.categorySlugsByProduct
+      source.categorySlugsByProduct,
     );
     if (categoryRefs.length > 0) {
       product.categories = categoryRefs;
@@ -426,13 +428,13 @@ export async function transformProduct(
   if (source.contentBoxes.length > 0) {
     if (verbose)
       console.log(
-        `   📝 Processing ${source.contentBoxes.length} content boxes...`
+        `   📝 Processing ${source.contentBoxes.length} content boxes...`,
       );
     const detailsContent = await transformContentBoxes(
       source.contentBoxes,
       client,
       imageCache,
-      dryRun
+      dryRun,
     );
     if (detailsContent.length > 0) {
       product.details = {
@@ -445,7 +447,7 @@ export async function transformProduct(
   if (source.technicalDataRows.length > 0) {
     if (verbose)
       console.log(
-        `   📊 Processing ${source.technicalDataRows.length} technical data tabs...`
+        `   📊 Processing ${source.technicalDataRows.length} technical data tabs...`,
       );
     const technicalData = parseTechnicalData(source.technicalDataRows);
     if (
@@ -457,13 +459,13 @@ export async function transformProduct(
       if (verbose) {
         const totalRows = technicalData.groups.reduce(
           (sum, g) => sum + g.rows.length,
-          0
+          0,
         );
         console.log(
-          `   ✓ Technical data: ${technicalData.groups.length} groups, ${totalRows} rows`
+          `   ✓ Technical data: ${technicalData.groups.length} groups, ${totalRows} rows`,
         );
         if (technicalData.variants && technicalData.variants.length > 0) {
-          console.log(`   ✓ Variants: ${technicalData.variants.join(', ')}`);
+          console.log(`   ✓ Variants: ${technicalData.variants.join(", ")}`);
         }
       }
     }
@@ -491,7 +493,7 @@ export async function transformProduct(
           });
         } else {
           console.warn(
-            `   ⚠️  Review not found: ID=${row.ReviewID}, slug=${row.ReviewSlug}`
+            `   ⚠️  Review not found: ID=${row.ReviewID}, slug=${row.ReviewSlug}`,
           );
         }
       }
@@ -508,7 +510,7 @@ export async function transformProduct(
   // 12. SEO (title only, description empty)
   product.seo = {
     title: source.name,
-    description: '', // Intentionally empty per migration plan
+    description: "", // Intentionally empty per migration plan
   };
 
   return product;
@@ -527,21 +529,21 @@ export function validateProduct(product: SanityProduct): {
 
   // Required fields
   if (!product.name) {
-    errors.push('Missing required field: name');
+    errors.push("Missing required field: name");
   }
   if (!product.slug?.current) {
-    errors.push('Missing required field: slug');
+    errors.push("Missing required field: slug");
   }
 
   // Recommended fields
   if (!product.previewImage) {
-    warnings.push('No preview image set');
+    warnings.push("No preview image set");
   }
   if (!product.brand) {
-    warnings.push('No brand reference');
+    warnings.push("No brand reference");
   }
   if (!product.categories || product.categories.length === 0) {
-    warnings.push('No category references');
+    warnings.push("No category references");
   }
 
   return {
@@ -565,13 +567,13 @@ export function getProductSummary(product: SanityProduct): string {
     `ID: ${product._id}`,
     `Name: ${product.name}`,
     `Slug: ${product.slug.current}`,
-    `Preview: ${product.previewImage ? '✓' : '✗'}`,
+    `Preview: ${product.previewImage ? "✓" : "✗"}`,
     `Gallery: ${product.imageGallery?.length || 0}`,
-    `Brand: ${product.brand ? '✓' : '✗'}`,
+    `Brand: ${product.brand ? "✓" : "✗"}`,
     `Categories: ${product.categories?.length || 0}`,
     `Content blocks: ${product.details?.content?.length || 0}`,
-    `Tech data: ${techDataGroups}g/${techDataRows}r${techDataVariants > 0 ? `/${techDataVariants}v` : ''}`,
+    `Tech data: ${techDataGroups}g/${techDataRows}r${techDataVariants > 0 ? `/${techDataVariants}v` : ""}`,
     `Reviews: ${product.reviews?.length || 0}`,
   ];
-  return parts.join(' | ');
+  return parts.join(" | ");
 }

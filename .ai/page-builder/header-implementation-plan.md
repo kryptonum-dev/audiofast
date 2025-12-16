@@ -33,7 +33,7 @@
 
 ```ts
 export const queryNavbar = defineQuery(`*[_type == "navbar"][0]{
-  buttons[]{ ${/* reuse shared fragment to project text, variant, href, openInNewTab */ ''} ${buttonFragment('button')} }
+  buttons[]{ ${/* reuse shared fragment to project text, variant, href, openInNewTab */ ""} ${buttonFragment("button")} }
 }`);
 ```
 

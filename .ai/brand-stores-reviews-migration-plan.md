@@ -33,8 +33,8 @@ The current `queryBrandBySlug` fetches stores by **aggregating from all products
 ```groq
 "stores": array::unique(
   *[
-    _type == "product" && 
-    !(_id in path("drafts.**")) && 
+    _type == "product" &&
+    !(_id in path("drafts.**")) &&
     brand._ref == ^._id &&
     defined(availableInStores)
   ].availableInStores[]->{...}
@@ -55,12 +55,12 @@ availableInStores: {
 
 ### Legacy Database Tables
 
-| Table | Purpose | Key Fields |
-|-------|---------|------------|
-| `Dealer_ProducerPage` | Brand-Dealer relationships | `DealerID`, `ProducerPageID` |
-| `Dealer` | Store data | `ID` → already migrated to Sanity |
-| `ReviewProduct` | Product-Review relationships | `ProductID`, `ReviewID` |
-| `BoxReviews` | Reviews in product boxes | `ProductID`, `ReviewPageID`, `BoxID` |
+| Table                 | Purpose                      | Key Fields                           |
+| --------------------- | ---------------------------- | ------------------------------------ |
+| `Dealer_ProducerPage` | Brand-Dealer relationships   | `DealerID`, `ProducerPageID`         |
+| `Dealer`              | Store data                   | `ID` → already migrated to Sanity    |
+| `ReviewProduct`       | Product-Review relationships | `ProductID`, `ReviewID`              |
+| `BoxReviews`          | Reviews in product boxes     | `ProductID`, `ReviewPageID`, `BoxID` |
 
 ---
 
@@ -72,13 +72,13 @@ Add `stores` field - array of store references:
 
 ```typescript
 defineField({
-  name: 'stores',
-  title: 'Salony dystrybucji',
-  type: 'array',
-  description: 'Wybierz salony, w których dostępne są produkty tej marki.',
-  of: [{ type: 'reference', to: [{ type: 'store' }] }],
+  name: "stores",
+  title: "Salony dystrybucji",
+  type: "array",
+  description: "Wybierz salony, w których dostępne są produkty tej marki.",
+  of: [{ type: "reference", to: [{ type: "store" }] }],
   // Optional, unlimited
-})
+});
 ```
 
 ### 2. Product Schema (Updated)
@@ -87,13 +87,14 @@ Make `availableInStores` **optional** (remove min validation):
 
 ```typescript
 defineField({
-  name: 'availableInStores',
-  title: 'Dostępny w salonach (opcjonalny)',
-  type: 'array',
-  description: 'Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, używane są salony marki.',
-  of: [{ type: 'reference', to: [{ type: 'store' }] }],
+  name: "availableInStores",
+  title: "Dostępny w salonach (opcjonalny)",
+  type: "array",
+  description:
+    "Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, używane są salony marki.",
+  of: [{ type: "reference", to: [{ type: "store" }] }],
   // NO validation - fully optional
-})
+});
 ```
 
 ### 3. Store Inheritance Logic
@@ -120,6 +121,7 @@ Product Page Store Display Logic:
 **File:** `apps/studio/schemaTypes/documents/collections/brand.ts`
 
 **Changes:**
+
 1. Add `stores` field (array of store references, optional, unlimited)
 2. Keep `featuredReviews` field as-is (already has correct filter validation)
 
@@ -157,6 +159,7 @@ defineField({
 **File:** `apps/studio/schemaTypes/documents/collections/product.ts`
 
 **Changes:**
+
 1. Make `availableInStores` optional (remove min(1) validation)
 2. Update description to explain inheritance
 
@@ -198,6 +201,7 @@ defineField({
 **File:** `apps/web/src/global/sanity/query.ts`
 
 **Update `queryBrandBySlug`:**
+
 - Fetch `stores` directly from brand document
 - Remove dynamic aggregation from products
 
@@ -223,6 +227,7 @@ stores[]->{
 **File:** `apps/web/src/global/sanity/query.ts`
 
 **Update `queryProductBySlug`:**
+
 - Add brand stores to the query
 - Fetch both product stores and brand stores for fallback logic
 
@@ -255,12 +260,13 @@ availableInStores[]->{...},
 **File:** `apps/web/src/app/produkty/[slug]/page.tsx`
 
 **Changes:**
+
 1. Implement store inheritance logic
 2. Pass correct stores to `StoreLocations` component
 
 ```typescript
 // Determine which stores to display
-const effectiveStores = 
+const effectiveStores =
   (product.availableInStores && product.availableInStores.length > 0)
     ? product.availableInStores
     : (product.brand?.stores && product.brand.stores.length > 0)
@@ -292,17 +298,21 @@ const sections = [
 **File:** `apps/web/src/app/marki/[slug]/page.tsx`
 
 **Changes:**
+
 1. Update to use `brand.stores` directly (already rendering correctly)
 2. Ensure proper null checks
 
 The brand page already has:
+
 ```tsx
-{brand.stores && Array.isArray(brand.stores) && brand.stores.length > 0 && (
-  <StoreLocations
-    customId="gdzie-kupic"
-    stores={brand.stores.filter((s) => s !== null)}
-  />
-)}
+{
+  brand.stores && Array.isArray(brand.stores) && brand.stores.length > 0 && (
+    <StoreLocations
+      customId="gdzie-kupic"
+      stores={brand.stores.filter((s) => s !== null)}
+    />
+  );
+}
 ```
 
 This will work once we update the query to fetch `stores` directly from brand.
@@ -431,27 +441,31 @@ interface BrandMapping {
 
 async function migrateBrandStores() {
   // 1. Load CSV data
-  const relations = await parseCSV<BrandDealerRelation>('csv/brands/brands-dealers.csv');
-  
+  const relations = await parseCSV<BrandDealerRelation>(
+    "csv/brands/brands-dealers.csv",
+  );
+
   // 2. Query Sanity for all stores and brands
   const stores = await client.fetch(`*[_type == "store"]{_id, name}`);
-  const brands = await client.fetch(`*[_type == "brand"]{"id": _id, "slug": slug.current, name}`);
-  
+  const brands = await client.fetch(
+    `*[_type == "brand"]{"id": _id, "slug": slug.current, name}`,
+  );
+
   // 3. Build store mapping (using store migration pattern)
   // Stores were migrated with deterministic UUIDs from dealer IDs
   const storeMap = new Map<number, string>();
   // Map by matching names or using migration ID pattern
-  
+
   // 4. Build brand mapping
   const brandMap = new Map<string, string>(); // brandSlug → sanityBrandId
-  brands.forEach(b => {
-    const slug = b.slug?.replace('/marki/', '').replace(/\/$/, '');
+  brands.forEach((b) => {
+    const slug = b.slug?.replace("/marki/", "").replace(/\/$/, "");
     brandMap.set(slug, b.id);
   });
-  
+
   // 5. Group relations by brand
   const brandStores = new Map<string, string[]>(); // brandSlug → storeIds[]
-  relations.forEach(rel => {
+  relations.forEach((rel) => {
     const brandId = brandMap.get(rel.brandSlug);
     const storeId = storeMap.get(rel.dealerId);
     if (brandId && storeId) {
@@ -461,21 +475,19 @@ async function migrateBrandStores() {
       brandStores.get(rel.brandSlug)!.push(storeId);
     }
   });
-  
+
   // 6. Update each brand
   for (const [brandSlug, storeIds] of brandStores) {
     const brandId = brandMap.get(brandSlug);
     if (!brandId) continue;
-    
+
     const storeRefs = storeIds.map((id, idx) => ({
-      _type: 'reference',
+      _type: "reference",
       _ref: id,
       _key: `store-${idx}`,
     }));
-    
-    await client.patch(brandId)
-      .set({ stores: storeRefs })
-      .commit();
+
+    await client.patch(brandId).set({ stores: storeRefs }).commit();
   }
 }
 ```
@@ -521,16 +533,14 @@ async function cleanupProductStores() {
       "brandStores": brand->stores[]._ref
     }
   `);
-  
+
   for (const product of products) {
     const productStores = new Set(product.productStores || []);
     const brandStores = new Set(product.brandStores || []);
-    
+
     // If product stores exactly match brand stores, clear them
     if (setsEqual(productStores, brandStores) && brandStores.size > 0) {
-      await client.patch(product._id)
-        .unset(['availableInStores'])
-        .commit();
+      await client.patch(product._id).unset(["availableInStores"]).commit();
     }
   }
 }
@@ -573,6 +583,7 @@ count(*[_type == "brand" && count(stores) > 0])
 ### 6.2 Frontend Validation
 
 After all changes:
+
 1. [ ] Brand pages show stores in "Gdzie kupić" section
 2. [ ] Product pages with own stores show those stores
 3. [ ] Product pages without stores show brand stores
@@ -584,20 +595,24 @@ After all changes:
 ## Implementation Checklist
 
 ### Phase 1: Schema Changes
+
 - [ ] Add `stores` field to brand schema
 - [ ] Make `availableInStores` optional in product schema
 - [ ] Run `sanity typegen generate`
 
 ### Phase 2: Query Updates
+
 - [ ] Update `queryBrandBySlug` to fetch `stores` directly
 - [ ] Update `queryProductBySlug` to include `brand->stores`
 
 ### Phase 3: Frontend Updates
+
 - [ ] Update product page with store inheritance logic
 - [ ] Verify brand page works with direct stores
 - [ ] Update TypeScript types if needed
 
 ### Phase 4: Data Migration
+
 - [ ] Export `brands-dealers.csv` from legacy database
 - [ ] Create `update-brand-stores.ts` migration script
 - [ ] Run migration dry-run
@@ -605,10 +620,12 @@ After all changes:
 - [ ] Validate results
 
 ### Phase 5: Cleanup (Optional)
+
 - [ ] Run product store cleanup script
 - [ ] Verify inheritance works correctly
 
 ### Phase 6: Final Validation
+
 - [ ] Run GROQ validation queries
 - [ ] Test brand pages
 - [ ] Test product pages with various store configurations
@@ -619,11 +636,13 @@ After all changes:
 ## Success Criteria
 
 ### Quantitative
+
 - [ ] All brands have stores from legacy `Dealer_ProducerPage` relationships
 - [ ] 100% of valid brand-dealer relationships migrated
 - [ ] <1% broken store references
 
 ### Qualitative
+
 - [ ] Brand pages display stores correctly
 - [ ] Product pages inherit stores from brand when not specified
 - [ ] Product pages with specific stores override brand stores
@@ -635,11 +654,14 @@ After all changes:
 ## Rollback Strategy
 
 ### Schema Rollback
+
 Revert schema changes:
+
 - Remove `stores` field from brand
 - Re-add validation to product `availableInStores`
 
 ### Data Rollback
+
 ```groq
 // Clear all brand stores
 *[_type == "brand" && defined(stores)] | {
@@ -655,8 +677,8 @@ Revert schema changes:
 **Status**: Ready for Implementation
 
 ### Related Documents
+
 - `product-migration-plan.md` - Product migration details
 - `award-migration-plan.md` - Award migration details
 - `data-migration-strategy.md` - Overall migration strategy
 - `brand-migration-flow.md` - Original brand migration
-

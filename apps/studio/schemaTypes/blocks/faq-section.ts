@@ -1,87 +1,87 @@
-import { MessageCircleQuestion } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { MessageCircleQuestion } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
-import { toPlainText } from '../../utils/helper';
-import { formState } from '../definitions/form-state';
-import { customPortableText } from '../portableText';
-import { contactPeopleField } from '../shared';
+import { toPlainText } from "../../utils/helper";
+import { formState } from "../definitions/form-state";
+import { customPortableText } from "../portableText";
+import { contactPeopleField } from "../shared";
 
-const title = 'Sekcja FAQ';
+const title = "Sekcja FAQ";
 
 export const faqSection = defineType({
-  name: 'faqSection',
+  name: "faqSection",
   title,
   icon: MessageCircleQuestion,
-  type: 'object',
+  type: "object",
   description:
-    'Sekcja z najczęściej zadawanymi pytaniami, opcją kontaktu z zespołem i formularzem kontaktowym',
+    "Sekcja z najczęściej zadawanymi pytaniami, opcją kontaktu z zespołem i formularzem kontaktowym",
   fields: [
     defineField({
-      name: 'displayMode',
-      title: 'Co wyświetlić w sekcji',
-      type: 'string',
-      description: 'Wybierz, które elementy mają być widoczne w tej sekcji',
+      name: "displayMode",
+      title: "Co wyświetlić w sekcji",
+      type: "string",
+      description: "Wybierz, które elementy mają być widoczne w tej sekcji",
       options: {
         list: [
-          { title: 'FAQ i sekcja kontaktowa', value: 'both' },
-          { title: 'Tylko FAQ', value: 'faqOnly' },
-          { title: 'Tylko sekcja kontaktowa', value: 'contactOnly' },
+          { title: "FAQ i sekcja kontaktowa", value: "both" },
+          { title: "Tylko FAQ", value: "faqOnly" },
+          { title: "Tylko sekcja kontaktowa", value: "contactOnly" },
         ],
-        layout: 'radio',
-        direction: 'horizontal',
+        layout: "radio",
+        direction: "horizontal",
       },
-      initialValue: 'both',
+      initialValue: "both",
       validation: (Rule) =>
-        Rule.required().error('Musisz wybrać tryb wyświetlania'),
+        Rule.required().error("Musisz wybrać tryb wyświetlania"),
     }),
     customPortableText({
-      name: 'heading',
-      title: 'Nagłówek sekcji',
+      name: "heading",
+      title: "Nagłówek sekcji",
       description:
         'Główny tytuł sekcji FAQ, np. "Najczęściej zadawane pytania"',
-      type: 'heading',
+      type: "heading",
       validation: (Rule) =>
         Rule.custom((value, { parent }) => {
           const displayMode = (parent as { displayMode?: string })?.displayMode;
-          const hiddenForContactOnly = displayMode === 'contactOnly';
+          const hiddenForContactOnly = displayMode === "contactOnly";
           if (hiddenForContactOnly) {
             return true;
           }
           if (!value) {
-            return 'Nagłówek jest wymagany gdy sekcja FAQ jest włączona';
+            return "Nagłówek jest wymagany gdy sekcja FAQ jest włączona";
           }
           return true;
         }),
       hidden: ({ parent }) =>
-        (parent as { displayMode?: string })?.displayMode === 'contactOnly',
+        (parent as { displayMode?: string })?.displayMode === "contactOnly",
     }),
     customPortableText({
-      name: 'description',
-      title: 'Opis sekcji',
+      name: "description",
+      title: "Opis sekcji",
       description:
-        'Krótki opis wprowadzający do sekcji FAQ, wyjaśniający czego można się spodziewać',
+        "Krótki opis wprowadzający do sekcji FAQ, wyjaśniający czego można się spodziewać",
       validation: (Rule) =>
         Rule.custom((value, { parent }) => {
           const displayMode = (parent as { displayMode?: string })?.displayMode;
-          const hiddenForContactOnly = displayMode === 'contactOnly';
+          const hiddenForContactOnly = displayMode === "contactOnly";
           if (hiddenForContactOnly) {
             return true;
           }
           return true;
         }),
       hidden: ({ parent }) =>
-        (parent as { displayMode?: string })?.displayMode === 'contactOnly',
+        (parent as { displayMode?: string })?.displayMode === "contactOnly",
     }),
     defineField({
-      name: 'faqList',
-      title: 'Lista pytań FAQ',
-      type: 'array',
+      name: "faqList",
+      title: "Lista pytań FAQ",
+      type: "array",
       description:
-        'Wybierz pytania i odpowiedzi, które mają być wyświetlane w tej sekcji (minimum 4, maksimum 20)',
+        "Wybierz pytania i odpowiedzi, które mają być wyświetlane w tej sekcji (minimum 4, maksimum 20)",
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'faq' }],
+          type: "reference",
+          to: [{ type: "faq" }],
           options: {
             disableNew: true,
             filter: ({ parent }) => {
@@ -102,68 +102,68 @@ export const faqSection = defineType({
         Rule.custom((value, { parent }) => {
           const displayMode = (parent as { displayMode?: string })?.displayMode;
           const showFaqList =
-            displayMode === 'both' || displayMode === 'faqOnly';
+            displayMode === "both" || displayMode === "faqOnly";
           if (showFaqList && (!value || value.length < 4)) {
-            return 'Musisz wybrać co najmniej 4 pytania FAQ gdy lista FAQ jest włączona';
+            return "Musisz wybrać co najmniej 4 pytania FAQ gdy lista FAQ jest włączona";
           }
           if (value && value.length > 20) {
-            return 'Możesz wybrać maksymalnie 20 pytań FAQ';
+            return "Możesz wybrać maksymalnie 20 pytań FAQ";
           }
           return true;
         }),
         Rule.unique().error(
-          'Nie możesz wybrać tego samego pytania więcej niż raz'
+          "Nie możesz wybrać tego samego pytania więcej niż raz",
         ),
       ],
       hidden: ({ parent }) => {
         const displayMode = (parent as { displayMode?: string })?.displayMode;
-        return displayMode === 'contactOnly';
+        return displayMode === "contactOnly";
       },
     }),
     contactPeopleField({
       conditionalValidation: true,
-      headingInitialValue: 'Jesteśmy do Twojej dyspozycji!',
+      headingInitialValue: "Jesteśmy do Twojej dyspozycji!",
       hidden: ({ parent }) => {
         const displayMode = (parent as { displayMode?: string })?.displayMode;
-        return displayMode === 'faqOnly';
+        return displayMode === "faqOnly";
       },
     }),
     defineField({
-      name: 'contactForm',
-      title: 'Formularz kontaktowy',
-      type: 'object',
-      description: 'Formularz do wysyłania zapytań',
+      name: "contactForm",
+      title: "Formularz kontaktowy",
+      type: "object",
+      description: "Formularz do wysyłania zapytań",
       fields: [
         customPortableText({
-          name: 'heading',
-          title: 'Nagłówek formularza',
+          name: "heading",
+          title: "Nagłówek formularza",
           description:
             'Tytuł dla formularza kontaktowego, np. "Zadaj nam pytanie"',
-          type: 'heading',
-          initialValue: 'Zadaj nam pytanie',
+          type: "heading",
+          initialValue: "Zadaj nam pytanie",
         }),
         defineField({
-          name: 'buttonText',
-          title: 'Tekst przycisku',
-          type: 'string',
-          description: 'Tekst wyświetlany na przycisku wysyłania formularza',
+          name: "buttonText",
+          title: "Tekst przycisku",
+          type: "string",
+          description: "Tekst wyświetlany na przycisku wysyłania formularza",
           validation: (Rule) =>
             Rule.custom((value, context) => {
               const document = context.document as any;
               const displayMode = document?.displayMode;
               const showContactSection =
-                displayMode === 'both' || displayMode === 'contactOnly';
+                displayMode === "both" || displayMode === "contactOnly";
 
               if (!showContactSection) {
                 return true;
               }
 
               if (!value) {
-                return 'Tekst przycisku jest wymagany';
+                return "Tekst przycisku jest wymagany";
               }
               return true;
             }),
-          initialValue: 'Wyślij wiadomość',
+          initialValue: "Wyślij wiadomość",
         }),
         {
           ...formState,
@@ -172,14 +172,14 @@ export const faqSection = defineType({
               const document = context.document as any;
               const displayMode = document?.displayMode;
               const showContactSection =
-                displayMode === 'both' || displayMode === 'contactOnly';
+                displayMode === "both" || displayMode === "contactOnly";
 
               if (!showContactSection) {
                 return true;
               }
 
               if (!value) {
-                return 'Stan formularza jest wymagany';
+                return "Stan formularza jest wymagany";
               }
               return true;
             }),
@@ -189,15 +189,15 @@ export const faqSection = defineType({
         Rule.custom((value, { parent }) => {
           const displayMode = (parent as { displayMode?: string })?.displayMode;
           const showContactSection =
-            displayMode === 'both' || displayMode === 'contactOnly';
+            displayMode === "both" || displayMode === "contactOnly";
           if (showContactSection && !value) {
-            return 'Formularz kontaktowy jest wymagany gdy sekcja kontaktowa jest włączona';
+            return "Formularz kontaktowy jest wymagany gdy sekcja kontaktowa jest włączona";
           }
           return true;
         }),
       hidden: ({ parent }) => {
         const displayMode = (parent as { displayMode?: string })?.displayMode;
-        return displayMode === 'faqOnly';
+        return displayMode === "faqOnly";
       },
       options: {
         collapsible: true,
@@ -207,19 +207,19 @@ export const faqSection = defineType({
   ],
   preview: {
     select: {
-      heading: 'heading',
-      description: 'description',
-      displayMode: 'displayMode',
+      heading: "heading",
+      description: "description",
+      displayMode: "displayMode",
     },
     prepare: ({ heading, description, displayMode }) => {
       const displayModeText =
-        displayMode === 'both'
-          ? 'FAQ i kontakt'
-          : displayMode === 'faqOnly'
-            ? 'Tylko FAQ'
-            : displayMode === 'contactOnly'
-              ? 'Tylko kontakt'
-              : '';
+        displayMode === "both"
+          ? "FAQ i kontakt"
+          : displayMode === "faqOnly"
+            ? "Tylko FAQ"
+            : displayMode === "contactOnly"
+              ? "Tylko kontakt"
+              : "";
       return {
         title,
         subtitle:

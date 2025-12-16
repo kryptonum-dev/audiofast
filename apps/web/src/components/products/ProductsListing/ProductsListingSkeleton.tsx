@@ -1,15 +1,27 @@
-import { PRODUCTS_ITEMS_PER_PAGE } from "@/src/global/constants";
+import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
 
-import PaginationSkeleton from "../../ui/Pagination/PaginationSkeleton";
-import styles from "./styles.module.scss";
+import PaginationSkeleton from '../../ui/Pagination/PaginationSkeleton';
+import styles from './styles.module.scss';
 
-export default function ProductsListingSkeleton() {
+type ProductsListingSkeletonProps = {
+  /** Hide top pagination skeleton (for overlay mode where sort/pagination stay visible) */
+  hideTopPagination?: boolean;
+  /** Hide bottom pagination skeleton (for pagination/sort changes where bottom pagination stays visible) */
+  hideBottomPagination?: boolean;
+};
+
+export default function ProductsListingSkeleton({
+  hideTopPagination = false,
+  hideBottomPagination = false,
+}: ProductsListingSkeletonProps) {
   return (
     <>
-      {/* Top Pagination Skeleton */}
-      <div className={styles.topPaginationSkeleton}>
-        <PaginationSkeleton />
-      </div>
+      {/* Top Pagination Skeleton - hidden in overlay mode */}
+      {!hideTopPagination && (
+        <div className={styles.topPaginationSkeleton}>
+          <PaginationSkeleton />
+        </div>
+      )}
 
       {/* Products Grid with Skeleton Cards */}
       <div className={styles.productsGrid} data-loading="true">
@@ -30,10 +42,12 @@ export default function ProductsListingSkeleton() {
         ))}
       </div>
 
-      {/* Bottom Pagination Skeleton */}
-      <div className={styles.bottomPaginationSkeleton}>
-        <PaginationSkeleton />
-      </div>
+      {/* Bottom Pagination Skeleton - hidden for pagination/sort changes */}
+      {!hideBottomPagination && (
+        <div className={styles.bottomPaginationSkeleton}>
+          <PaginationSkeleton />
+        </div>
+      )}
     </>
   );
 }

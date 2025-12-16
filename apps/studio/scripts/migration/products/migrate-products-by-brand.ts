@@ -15,46 +15,46 @@
  *   SANITY_API_TOKEN   - Sanity API token (required for live migration)
  */
 
-import type { SanityClient } from '@sanity/client';
+import type { SanityClient } from "@sanity/client";
 
 import {
   getProductSummary,
   transformProduct,
   validateProduct,
-} from './transformers/product-transformer';
+} from "./transformers/product-transformer";
 import {
   clearReferenceMappings,
   createDryRunMappings,
   loadLegacyReviewIdMappings,
   loadReferenceMappings,
   printReferenceStats,
-} from './transformers/reference-resolver';
+} from "./transformers/reference-resolver";
 import type {
   ImageCache,
   MigrationResult,
   ProductMainRow,
   ProductSourceData,
   SanityProduct,
-} from './types';
+} from "./types";
 import {
   buildProductSourceData,
   indexDataByProductId,
   type IndexedProductData,
   loadAllCsvData,
   type LoadedCsvData,
-} from './utils/csv-parser';
+} from "./utils/csv-parser";
 import {
   getAlternativeUrls,
   getLegacyAssetUrl,
   loadImageCache,
   saveImageCache,
-} from './utils/image-optimizer';
+} from "./utils/image-optimizer";
 import {
   createDryRunClient,
   createMigrationClient,
   getClientConfig,
-} from './utils/sanity-client';
-import sharp from 'sharp';
+} from "./utils/sanity-client";
+import sharp from "sharp";
 
 // ============================================================================
 // CLI Options
@@ -72,20 +72,20 @@ interface BrandMigrationOptions {
 function parseArgs(): BrandMigrationOptions {
   const args = process.argv.slice(2);
 
-  const brandArg = args.find((arg) => arg.startsWith('--brand='));
-  const brandSlugArg = args.find((arg) => arg.startsWith('--brand-slug='));
-  const batchSizeArg = args.find((arg) => arg.startsWith('--batch-size='));
+  const brandArg = args.find((arg) => arg.startsWith("--brand="));
+  const brandSlugArg = args.find((arg) => arg.startsWith("--brand-slug="));
+  const batchSizeArg = args.find((arg) => arg.startsWith("--batch-size="));
 
   return {
-    brand: brandArg ? brandArg.replace('--brand=', '') : undefined,
+    brand: brandArg ? brandArg.replace("--brand=", "") : undefined,
     brandSlug: brandSlugArg
-      ? brandSlugArg.replace('--brand-slug=', '')
+      ? brandSlugArg.replace("--brand-slug=", "")
       : undefined,
-    dryRun: args.includes('--dry-run') || args.includes('-d'),
-    verbose: args.includes('--verbose') || args.includes('-v'),
-    skipExisting: args.includes('--skip-existing'),
+    dryRun: args.includes("--dry-run") || args.includes("-d"),
+    verbose: args.includes("--verbose") || args.includes("-v"),
+    skipExisting: args.includes("--skip-existing"),
     batchSize: batchSizeArg
-      ? parseInt(batchSizeArg.replace('--batch-size=', ''), 10)
+      ? parseInt(batchSizeArg.replace("--batch-size=", ""), 10)
       : 10,
   };
 }
@@ -123,7 +123,7 @@ Examples:
  * Normalize a string for comparison (lowercase, remove spaces and special chars)
  */
 function normalizeForComparison(str: string): string {
-  return str.toLowerCase().replace(/[\s-_]/g, '');
+  return str.toLowerCase().replace(/[\s-_]/g, "");
 }
 
 /**
@@ -131,7 +131,7 @@ function normalizeForComparison(str: string): string {
  */
 function filterProductsByBrand(
   products: ProductMainRow[],
-  options: BrandMigrationOptions
+  options: BrandMigrationOptions,
 ): {
   products: ProductMainRow[];
   matchedBrand: { name: string; slug: string } | null;
@@ -181,7 +181,7 @@ function filterProductsByBrand(
 
   // Filter products by the matched brand
   const filteredProducts = products.filter(
-    (p) => p.BrandSlug === matchedBrand!.slug
+    (p) => p.BrandSlug === matchedBrand!.slug,
   );
 
   return { products: filteredProducts, matchedBrand };
@@ -202,9 +202,9 @@ function listAvailableBrands(products: ProductMainRow[]): void {
     }
   }
 
-  console.log('\n📋 Available brands:');
+  console.log("\n📋 Available brands:");
   const sortedBrands = Array.from(brands.entries()).sort((a, b) =>
-    a[1].name.localeCompare(b[1].name)
+    a[1].name.localeCompare(b[1].name),
   );
 
   for (const [slug, { name, count }] of sortedBrands) {
@@ -217,12 +217,12 @@ function listAvailableBrands(products: ProductMainRow[]): void {
 // ============================================================================
 
 async function getExistingProductIds(
-  client: SanityClient
+  client: SanityClient,
 ): Promise<Set<string>> {
-  console.log('🔍 Checking for existing products in Sanity...');
+  console.log("🔍 Checking for existing products in Sanity...");
 
   const existingProducts = await client.fetch<Array<{ _id: string }>>(
-    `*[_type == "product" && _id match "product-*"]{_id}`
+    `*[_type == "product" && _id match "product-*"]{_id}`,
   );
 
   const ids = new Set(existingProducts.map((p) => p._id));
@@ -242,22 +242,24 @@ interface ProductWithMissingImage {
 async function fixMissingImagesForBrand(
   client: SanityClient,
   brandSlug: string,
-  csvData: LoadedCsvData
+  csvData: LoadedCsvData,
 ): Promise<{ fixed: number; failed: number }> {
   // Disable SSL verification for legacy server
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
   // Query for products in this brand that don't have preview images
   const productsMissingImages = await client.fetch<ProductWithMissingImage[]>(
     `*[_type == "product" && brand->slug.current == $brandSlug && !defined(previewImage)]{_id, name}`,
-    { brandSlug }
+    { brandSlug },
   );
 
   if (productsMissingImages.length === 0) {
     return { fixed: 0, failed: 0 };
   }
 
-  console.log(`\n🔧 Fixing ${productsMissingImages.length} products with missing images...`);
+  console.log(
+    `\n🔧 Fixing ${productsMissingImages.length} products with missing images...`,
+  );
 
   // Build a map of product IDs to their CSV image paths
   const imagePathMap = new Map<string, string>();
@@ -273,7 +275,9 @@ async function fixMissingImagesForBrand(
   for (const product of productsMissingImages) {
     const csvImagePath = imagePathMap.get(product._id);
     if (!csvImagePath) {
-      console.log(`   ⚠️  [${product._id}] ${product.name} - No CSV image path`);
+      console.log(
+        `   ⚠️  [${product._id}] ${product.name} - No CSV image path`,
+      );
       failed++;
       continue;
     }
@@ -287,14 +291,17 @@ async function fixMissingImagesForBrand(
       try {
         const response = await fetch(url, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+            "User-Agent":
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
           },
         });
         if (response.ok) {
           const arrayBuffer = await response.arrayBuffer();
           downloadedBuffer = Buffer.from(arrayBuffer);
           if (downloadedBuffer.length > 0) {
-            console.log(`   📍 [${product._id}] Found at: ${url.split('/').pop()}`);
+            console.log(
+              `   📍 [${product._id}] Found at: ${url.split("/").pop()}`,
+            );
             break;
           }
         }
@@ -323,17 +330,22 @@ async function fixMissingImagesForBrand(
       .toBuffer();
 
     // Upload to Sanity
-    const filename = (csvImagePath.split('/').pop() || 'image').replace(/\.[^.]+$/, '.webp');
-    const asset = await client.assets.upload('image', optimizedBuffer, { filename });
+    const filename = (csvImagePath.split("/").pop() || "image").replace(
+      /\.[^.]+$/,
+      ".webp",
+    );
+    const asset = await client.assets.upload("image", optimizedBuffer, {
+      filename,
+    });
 
     // Update product
     await client
       .patch(product._id)
       .set({
         previewImage: {
-          _type: 'image',
+          _type: "image",
           asset: {
-            _type: 'reference',
+            _type: "reference",
             _ref: asset._id,
           },
         },
@@ -356,7 +368,7 @@ async function processBatch(
   client: SanityClient | null,
   imageCache: ImageCache,
   options: BrandMigrationOptions,
-  result: MigrationResult
+  result: MigrationResult,
 ): Promise<void> {
   for (const source of products) {
     const productLogPrefix = `[${source.id}] ${source.name}`;
@@ -374,7 +386,7 @@ async function processBatch(
       const validation = validateProduct(product);
       if (!validation.valid) {
         console.log(
-          `   ⚠️  ${productLogPrefix} - Validation errors: ${validation.errors.join(', ')}`
+          `   ⚠️  ${productLogPrefix} - Validation errors: ${validation.errors.join(", ")}`,
         );
       }
 
@@ -409,7 +421,7 @@ async function processBatch(
 // ============================================================================
 
 async function runBrandMigration(
-  options: BrandMigrationOptions
+  options: BrandMigrationOptions,
 ): Promise<MigrationResult> {
   const result: MigrationResult = {
     created: [],
@@ -425,7 +437,7 @@ async function runBrandMigration(
   // Filter by brand
   const { products: productsToMigrate, matchedBrand } = filterProductsByBrand(
     csvData.mainProducts,
-    options
+    options,
   );
 
   if (!matchedBrand) {
@@ -439,12 +451,12 @@ async function runBrandMigration(
   console.log(`📦 Products to migrate: ${productsToMigrate.length}`);
 
   if (productsToMigrate.length === 0) {
-    console.log('\n✅ No products to migrate for this brand.');
+    console.log("\n✅ No products to migrate for this brand.");
     return result;
   }
 
   // List products that will be migrated
-  console.log('\n📋 Products:');
+  console.log("\n📋 Products:");
   for (const product of productsToMigrate) {
     console.log(`   [${product.ProductID}] ${product.ProductName}`);
   }
@@ -469,7 +481,7 @@ async function runBrandMigration(
   }
 
   // Load reference mappings
-  console.log('\n');
+  console.log("\n");
   if (options.dryRun) {
     const allBrandSlugs = [
       ...new Set(csvData.mainProducts.map((p) => p.BrandSlug)),
@@ -481,7 +493,7 @@ async function runBrandMigration(
       ...new Set(csvData.reviews.map((r) => r.ReviewSlug)),
     ];
     createDryRunMappings(allBrandSlugs, allCategorySlugs, allReviewSlugs);
-    console.log('✓ Created mock reference mappings for dry run');
+    console.log("✓ Created mock reference mappings for dry run");
   } else {
     await loadReferenceMappings(client!);
   }
@@ -493,7 +505,7 @@ async function runBrandMigration(
   // Load image cache
   const imageCache: ImageCache = options.dryRun ? {} : loadImageCache();
   console.log(
-    `\n✓ Image cache loaded (${Object.keys(imageCache).length} cached images)`
+    `\n✓ Image cache loaded (${Object.keys(imageCache).length} cached images)`,
   );
 
   // Build source data and filter
@@ -522,14 +534,14 @@ async function runBrandMigration(
     const batch = sourcesToMigrate.slice(i, i + options.batchSize);
 
     console.log(
-      `\n📦 Batch ${batchNum}/${batchCount} (${batch.length} products)`
+      `\n📦 Batch ${batchNum}/${batchCount} (${batch.length} products)`,
     );
     await processBatch(
       batch,
       options.dryRun ? null : client,
       imageCache,
       options,
-      result
+      result,
     );
 
     // Save image cache after each batch
@@ -548,34 +560,34 @@ async function runBrandMigration(
 async function main(): Promise<void> {
   const options = parseArgs();
 
-  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+  if (process.argv.includes("--help") || process.argv.includes("-h")) {
     printUsage();
     process.exit(0);
   }
 
   // Check if brand is provided
   if (!options.brand && !options.brandSlug) {
-    console.error('\n❌ Error: --brand or --brand-slug is required');
+    console.error("\n❌ Error: --brand or --brand-slug is required");
     printUsage();
     process.exit(1);
   }
 
-  console.log('\n');
+  console.log("\n");
   console.log(
-    '╔═══════════════════════════════════════════════════════════════╗'
+    "╔═══════════════════════════════════════════════════════════════╗",
   );
   console.log(
-    '║          AUDIOFAST PRODUCT MIGRATION (By Brand)               ║'
+    "║          AUDIOFAST PRODUCT MIGRATION (By Brand)               ║",
   );
   console.log(
-    '╚═══════════════════════════════════════════════════════════════╝'
+    "╚═══════════════════════════════════════════════════════════════╝",
   );
-  console.log('');
+  console.log("");
   console.log(`Brand Filter: ${options.brandSlug || options.brand}`);
-  console.log(`Mode: ${options.dryRun ? '🧪 DRY RUN (no writes)' : '🚀 LIVE'}`);
-  console.log(`Skip Existing: ${options.skipExisting ? 'Yes' : 'No'}`);
+  console.log(`Mode: ${options.dryRun ? "🧪 DRY RUN (no writes)" : "🚀 LIVE"}`);
+  console.log(`Skip Existing: ${options.skipExisting ? "Yes" : "No"}`);
   console.log(`Batch Size: ${options.batchSize}`);
-  console.log(`Verbose: ${options.verbose ? 'Yes' : 'No'}`);
+  console.log(`Verbose: ${options.verbose ? "Yes" : "No"}`);
 
   const clientConfig = getClientConfig();
   console.log(`Project: ${clientConfig.projectId} / ${clientConfig.dataset}`);
@@ -592,38 +604,51 @@ async function main(): Promise<void> {
     if (!options.dryRun && result.created.length > 0) {
       const client = createMigrationClient();
       const csvData = loadAllCsvData();
-      
+
       // Find the brand slug from the CSV data
       const searchTerm = options.brandSlug || options.brand;
-      const normalizedSearch = searchTerm?.toLowerCase().replace(/[\s-_]/g, '');
-      
+      const normalizedSearch = searchTerm?.toLowerCase().replace(/[\s-_]/g, "");
+
       let brandSlug = options.brandSlug;
       if (!brandSlug && searchTerm) {
         for (const product of csvData.mainProducts) {
-          const normalizedName = product.BrandName.toLowerCase().replace(/[\s-_]/g, '');
-          const normalizedSlug = product.BrandSlug.toLowerCase().replace(/[\s-_]/g, '');
-          if (normalizedName === normalizedSearch || normalizedSlug === normalizedSearch) {
+          const normalizedName = product.BrandName.toLowerCase().replace(
+            /[\s-_]/g,
+            "",
+          );
+          const normalizedSlug = product.BrandSlug.toLowerCase().replace(
+            /[\s-_]/g,
+            "",
+          );
+          if (
+            normalizedName === normalizedSearch ||
+            normalizedSlug === normalizedSearch
+          ) {
             brandSlug = product.BrandSlug;
             break;
           }
         }
       }
-      
+
       if (brandSlug) {
-        imageFixResult = await fixMissingImagesForBrand(client, brandSlug, csvData);
+        imageFixResult = await fixMissingImagesForBrand(
+          client,
+          brandSlug,
+          csvData,
+        );
       }
     }
 
     // Print summary
-    console.log('\n');
+    console.log("\n");
     console.log(
-      '═══════════════════════════════════════════════════════════════'
+      "═══════════════════════════════════════════════════════════════",
     );
     console.log(
-      '                      MIGRATION SUMMARY                         '
+      "                      MIGRATION SUMMARY                         ",
     );
     console.log(
-      '═══════════════════════════════════════════════════════════════'
+      "═══════════════════════════════════════════════════════════════",
     );
     console.log(`   Brand: ${options.brandSlug || options.brand}`);
     console.log(`   Duration: ${duration}s`);
@@ -631,7 +656,7 @@ async function main(): Promise<void> {
     console.log(`   Updated: ${result.updated.length}`);
     console.log(`   Skipped: ${result.skipped.length}`);
     console.log(`   Errors: ${result.errors.length}`);
-    
+
     if (imageFixResult.fixed > 0 || imageFixResult.failed > 0) {
       console.log(`\n📷 Image Fix:`);
       console.log(`   Fixed: ${imageFixResult.fixed}`);
@@ -639,21 +664,21 @@ async function main(): Promise<void> {
     }
 
     if (result.errors.length > 0) {
-      console.log('\n❌ Errors:');
+      console.log("\n❌ Errors:");
       for (const err of result.errors) {
         console.log(`   [${err.productId}] ${err.productName}: ${err.error}`);
       }
     }
 
-    console.log('\n');
+    console.log("\n");
     if (options.dryRun) {
-      console.log('✅ Dry run complete. No changes were made to Sanity.');
+      console.log("✅ Dry run complete. No changes were made to Sanity.");
     } else {
-      console.log('✅ Migration complete.');
+      console.log("✅ Migration complete.");
     }
-    console.log('');
+    console.log("");
   } catch (error) {
-    console.error('\n❌ Migration failed:', error);
+    console.error("\n❌ Migration failed:", error);
     process.exit(1);
   } finally {
     clearReferenceMappings();
@@ -661,6 +686,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  console.error('❌ Migration failed:', error);
+  console.error("❌ Migration failed:", error);
   process.exit(1);
 });

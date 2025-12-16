@@ -1,6 +1,6 @@
-import { defineField } from 'sanity';
+import { defineField } from "sanity";
 
-import { stringToPathname } from '../../utils/helper';
+import { stringToPathname } from "../../utils/helper";
 
 type Props = {
   _key: string;
@@ -9,32 +9,32 @@ type Props = {
 
 export default [
   defineField({
-    name: 'sectionId',
-    type: 'string',
-    title: 'ID sekcji (opcjonalnie)',
+    name: "sectionId",
+    type: "string",
+    title: "ID sekcji (opcjonalnie)",
     description:
-      'ID sekcji to unikalny identyfikator używany do linkowania do określonych sekcji strony.',
+      "ID sekcji to unikalny identyfikator używany do linkowania do określonych sekcji strony.",
     validation: (Rule) => [
       Rule.custom((value, context) => {
         if (!value) return true;
-        if (value?.startsWith('#'))
+        if (value?.startsWith("#"))
           return 'ID sekcji nie może zaczynać się od symbolu "#". Musi być tylko ciągiem znaków.';
         const components = (context.document?.components || []) as Props[];
         const currentComponent = context.parent as Props;
         const isDuplicate = components.some(
           (component) =>
             component._key !== currentComponent._key &&
-            component.sectionId === value
+            component.sectionId === value,
         );
         if (isDuplicate)
-          return 'Ten ID sekcji jest już używany w innym komponencie. ID sekcji muszą być unikalne.';
+          return "Ten ID sekcji jest już używany w innym komponencie. ID sekcji muszą być unikalne.";
         return true;
       }),
       Rule.custom((value) => {
         if (!value) return true;
         const pathname = stringToPathname(value);
         if (pathname !== value) {
-          return 'ID sekcji może zawierać tylko małe litery, cyfry i myślniki (bez specjalnych znaków). Nie może zaczynać ani kończyć się myślnikiem.';
+          return "ID sekcji może zawierać tylko małe litery, cyfry i myślniki (bez specjalnych znaków). Nie może zaczynać ani kończyć się myślnikiem.";
         }
         return true;
       }),

@@ -2,12 +2,12 @@
  * Sanity client configuration for award migration
  */
 
-import { createClient, type SanityClient } from '@sanity/client';
+import { createClient, type SanityClient } from "@sanity/client";
 
 // Default configuration
-const DEFAULT_PROJECT_ID = 'fsw3likv';
-const DEFAULT_DATASET = 'production';
-const API_VERSION = '2024-01-01';
+const DEFAULT_PROJECT_ID = "fsw3likv";
+const DEFAULT_DATASET = "production";
+const API_VERSION = "2024-01-01";
 
 /**
  * Create a Sanity client for migration operations
@@ -24,7 +24,7 @@ export function createMigrationClient(options?: {
   const token = options?.token || process.env.SANITY_API_TOKEN;
 
   if (!token) {
-    throw new Error('SANITY_API_TOKEN environment variable is required');
+    throw new Error("SANITY_API_TOKEN environment variable is required");
   }
 
   return createClient({
@@ -67,4 +67,3 @@ export function getClientConfig(): { projectId: string; dataset: string } {
 }
 
 export { type SanityClient };
-

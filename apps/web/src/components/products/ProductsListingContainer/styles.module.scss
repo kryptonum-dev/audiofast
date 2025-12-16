@@ -1,0 +1,72 @@
+.container {
+  display: contents;
+
+  > nav:first-of-type {
+    grid-area: pagination-first;
+    justify-self: end;
+  }
+  > nav:last-of-type {
+    grid-area: pagination-last;
+    justify-self: end;
+  }
+}
+
+// Separate overlay just for top pagination area (filter changes only)
+// This covers only the pagination-first grid area, keeping sort dropdown visible
+.paginationOverlay {
+  grid-area: pagination-first;
+  z-index: 10;
+  background: var(--color-background, #fff);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  // Mobile (flex layout): hide separate pagination overlay
+  @media (max-width: 46.8125rem) {
+    display: none;
+  }
+}
+
+// Main overlay for products grid
+// For pagination/sort: covers only productsGrid (bottom pagination stays visible)
+// For filter changes: covers productsGrid AND pagination-last
+.overlay {
+  grid-row: productsGrid;
+  grid-column: 2 / -1;
+  z-index: 10;
+  background: var(--color-background, #fff);
+
+  // Filter changes: extend to cover bottom pagination too
+  &[data-filter-change='true'] {
+    grid-row: productsGrid-start / -1;
+  }
+
+  // Tablet (2-column grid): span full width
+  @media (max-width: 56.1875rem) {
+    grid-column: 1 / -1;
+  }
+
+  // Mobile (flex layout): absolute positioning to cover content
+  // Parent (.productsListing) has position: relative on mobile
+  @media (max-width: 46.8125rem) {
+    position: absolute;
+    // Default: skip filter button (~4rem) + sort/pagination row (~3rem)
+    // This only covers the products grid, keeping sort + pagination visible
+    top: 12.5rem;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // Reset grid properties
+    grid-row: unset;
+    grid-column: unset;
+    // Layout for skeleton content
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    // Filter changes: cover more area (sort dropdown and pagination too)
+    &[data-filter-change='true'] {
+      top: 5rem;
+    }
+  }
+}

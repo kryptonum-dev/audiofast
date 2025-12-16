@@ -5,9 +5,11 @@ This document outlines the implementation strategy for high-performance caching 
 ## 1. Configuration Changes
 
 ### Enable Cache Components
+
 To use the new caching directives, we enabled the `cacheComponents` flag in `apps/web/next.config.ts`. This enables the new Cache API behavior and Partial Prerendering (PPR).
 
 ✅ **Implemented** in `apps/web/next.config.ts`:
+
 ```typescript
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -24,6 +26,7 @@ const nextConfig: NextConfig = {
 ### Architecture: Server-Side Data Fetching with Cache Components
 
 We use function-level `"use cache"` directive in `sanityFetch` to cache Sanity query results. This provides:
+
 - ✅ Automatic caching per unique query + params combination
 - ✅ Tag-based revalidation via Sanity webhooks
 - ✅ Environment-specific cache lifetimes (seconds in dev, weeks in prod)
@@ -31,16 +34,18 @@ We use function-level `"use cache"` directive in `sanityFetch` to cache Sanity q
 ### File Structure
 
 **`apps/web/src/global/sanity/client.ts`**: Client-safe utilities
+
 - `client` - Sanity client instance
 - `urlFor` - Image URL builder
 - `projectId`, `dataset`, etc.
 
 **`apps/web/src/global/sanity/fetch.ts`**: Server-only data fetching (✅ Implemented)
+
 ```typescript
-import 'server-only';
-import { cacheLife, cacheTag } from 'next/cache';
-import { type QueryParams } from 'next-sanity';
-import { client } from './client';
+import "server-only";
+import { cacheLife, cacheTag } from "next/cache";
+import { type QueryParams } from "next-sanity";
+import { client } from "./client";
 
 export async function sanityFetch<QueryResponse>({
   query,
@@ -51,29 +56,30 @@ export async function sanityFetch<QueryResponse>({
   params?: QueryParams;
   tags?: string[];
 }): Promise<QueryResponse> {
-  'use cache';
+  "use cache";
 
   if (tags.length > 0) {
     cacheTag(...tags);
   }
 
-  cacheLife(process.env.NODE_ENV === 'development' ? 'seconds' : 'weeks');
+  cacheLife(process.env.NODE_ENV === "development" ? "seconds" : "weeks");
 
   return await client.fetch<QueryResponse>(query, params);
 }
 ```
 
 **`apps/web/src/global/sanity/settings.ts`**: Cached settings fetch for Root Layout (✅ Implemented)
+
 ```typescript
-import 'server-only';
-import { sanityFetch } from './fetch';
-import { querySettings } from './query';
-import type { QuerySettingsResult } from './sanity.types';
+import "server-only";
+import { sanityFetch } from "./fetch";
+import { querySettings } from "./query";
+import type { QuerySettingsResult } from "./sanity.types";
 
 export async function getSettings() {
   return await sanityFetch<QuerySettingsResult>({
     query: querySettings,
-    tags: ['settings'],
+    tags: ["settings"],
   });
 }
 ```
@@ -85,6 +91,7 @@ export async function getSettings() {
 Both `/produkty/` and `/produkty/kategoria/[category]/` follow this pattern:
 
 **✅ Fully Dynamic Pages** (read `searchParams` at page level)
+
 - Page is rendered per request based on filter params
 - Data is cached via `sanityFetch` (per unique filter combination)
 - Single fetch gets all data (aside + products metadata)
@@ -106,6 +113,7 @@ Both `/produkty/` and `/produkty/kategoria/[category]/` follow this pattern:
    - Revalidated via webhook when Sanity data changes
 
 **Example Flow:**
+
 ```
 User visits /produkty/?brands=aurender&maxPrice=10000
   ↓
@@ -137,6 +145,7 @@ New filtered products rendered
 ### Webhook Configuration (Sanity Dashboard)
 
 **Payload Projection:**
+
 ```groq
 {
   "_type": _type,
@@ -150,9 +159,9 @@ New filtered products rendered
 ✅ **Implemented** in `apps/web/src/app/api/revalidate/route.ts`:
 
 ```typescript
-import { revalidateTag } from 'next/cache';
-import { type NextRequest, NextResponse } from 'next/server';
-import { parseBody } from 'next-sanity/webhook';
+import { revalidateTag } from "next/cache";
+import { type NextRequest, NextResponse } from "next/server";
+import { parseBody } from "next-sanity/webhook";
 
 type WebhookPayload = {
   _type: string;
@@ -164,15 +173,15 @@ export async function POST(req: NextRequest) {
   try {
     const { isValidSignature, body } = await parseBody<WebhookPayload>(
       req,
-      process.env.SANITY_WEBHOOK_SECRET
+      process.env.SANITY_WEBHOOK_SECRET,
     );
 
     if (!isValidSignature) {
-      return new NextResponse('Invalid Signature', { status: 401 });
+      return new NextResponse("Invalid Signature", { status: 401 });
     }
 
     if (!body?._type) {
-      return new NextResponse('Bad Request', { status: 400 });
+      return new NextResponse("Bad Request", { status: 400 });
     }
 
     const tags = new Set<string>();
@@ -211,6 +220,7 @@ export async function POST(req: NextRequest) {
 ## 5. Environment Variables
 
 Required in `.env.local`:
+
 ```bash
 SANITY_WEBHOOK_SECRET=your_webhook_secret_here
 ```
@@ -249,135 +259,135 @@ Below is a comprehensive audit of all `sanityFetch` calls across the application
 
 #### **Global Settings & Layout**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/layout.tsx` | `querySettings` | `['settings']` | `['settings']` | ✅ Correct - invalidate when settings change |
-| `components/shared/CookieConsent` | `querySettings` | `['settings']` | `['settings']` | ✅ Correct |
-| `components/ui/Header` | `queryNavbar` | `['navbar']` | `['navbar']` | ✅ Correct - invalidate when navbar changes |
-| `components/ui/Footer` | `queryFooter` | `['footer']` | `['footer']` | ✅ Correct - invalidate when footer changes |
+| Location                          | Query           | Current Tags   | Recommended Tags | Rationale                                    |
+| --------------------------------- | --------------- | -------------- | ---------------- | -------------------------------------------- |
+| `app/layout.tsx`                  | `querySettings` | `['settings']` | `['settings']`   | ✅ Correct - invalidate when settings change |
+| `components/shared/CookieConsent` | `querySettings` | `['settings']` | `['settings']`   | ✅ Correct                                   |
+| `components/ui/Header`            | `queryNavbar`   | `['navbar']`   | `['navbar']`     | ✅ Correct - invalidate when navbar changes  |
+| `components/ui/Footer`            | `queryFooter`   | `['footer']`   | `['footer']`     | ✅ Correct - invalidate when footer changes  |
 
 ---
 
 #### **Homepage**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/page.tsx` | `queryHomePage` | `['homePage']` | `['homePage']` | ✅ Correct - Sanity webhooks auto-fire when referenced docs change |
+| Location       | Query           | Current Tags   | Recommended Tags | Rationale                                                          |
+| -------------- | --------------- | -------------- | ---------------- | ------------------------------------------------------------------ |
+| `app/page.tsx` | `queryHomePage` | `['homePage']` | `['homePage']`   | ✅ Correct - Sanity webhooks auto-fire when referenced docs change |
 
 ---
 
 #### **Dynamic Pages**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/[slug]/page.tsx` (generateStaticParams) | `queryAllPageSlugs` | `['pagesSlugs']` | `['page']` | ⚠️ **Needs Update** - Use document type |
-| `app/[slug]/page.tsx` (fetchPageData) | `queryPageBySlug` | `[sanitySlug]` | `['page']` | ⚠️ **Simplify** - Revalidate all pages on any page change |
+| Location                                     | Query               | Current Tags     | Recommended Tags | Rationale                                                 |
+| -------------------------------------------- | ------------------- | ---------------- | ---------------- | --------------------------------------------------------- |
+| `app/[slug]/page.tsx` (generateStaticParams) | `queryAllPageSlugs` | `['pagesSlugs']` | `['page']`       | ⚠️ **Needs Update** - Use document type                   |
+| `app/[slug]/page.tsx` (fetchPageData)        | `queryPageBySlug`   | `[sanitySlug]`   | `['page']`       | ⚠️ **Simplify** - Revalidate all pages on any page change |
 
 ---
 
 #### **Products Listing**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/produkty/(listing)/page.tsx` (generateMetadata) | `queryProductsPageData` | `['products', 'productCategorySub', 'product', 'brand']` | `['products']` | ⚠️ **Simplify** - Only need singleton tag |
-| `app/produkty/(listing)/page.tsx` (page) | `queryProductsPageData` | `['products', 'productCategorySub', 'product', 'brand']` | `['products']` | ⚠️ **Simplify** - Only need singleton tag |
-| `app/produkty/(listing)/kategoria/[category]/page.tsx` (generateStaticParams) | `queryProductsPageData` | None | `['productCategorySub']` | ⚠️ **Needs Update** - Add tags for static params generation |
-| `app/produkty/(listing)/kategoria/[category]/page.tsx` (generateMetadata) | `queryProductsPageData` | None | `['products']` | ⚠️ **Needs Update** - Add singleton tag |
-| `app/produkty/(listing)/kategoria/[category]/page.tsx` (category metadata) | `queryCategoryMetadata` | `['productCategorySub', categorySlug]` | `['productCategorySub']` | ⚠️ **Simplify** - Revalidate on any category change |
-| `app/produkty/(listing)/kategoria/[category]/page.tsx` (page data) | `queryProductsPageData` | `['products', 'productCategorySub', 'product', 'brand', categorySlug]` | `['products']` | ⚠️ **Simplify** - Revalidate on any product/category change |
-| `components/products/ProductsListing` | Dynamic query | `['product', 'brand', 'productCategorySub']` | `['product']` | ⚠️ **Simplify** - Only need primary document type |
+| Location                                                                      | Query                   | Current Tags                                                           | Recommended Tags         | Rationale                                                   |
+| ----------------------------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------------- | ------------------------ | ----------------------------------------------------------- |
+| `app/produkty/(listing)/page.tsx` (generateMetadata)                          | `queryProductsPageData` | `['products', 'productCategorySub', 'product', 'brand']`               | `['products']`           | ⚠️ **Simplify** - Only need singleton tag                   |
+| `app/produkty/(listing)/page.tsx` (page)                                      | `queryProductsPageData` | `['products', 'productCategorySub', 'product', 'brand']`               | `['products']`           | ⚠️ **Simplify** - Only need singleton tag                   |
+| `app/produkty/(listing)/kategoria/[category]/page.tsx` (generateStaticParams) | `queryProductsPageData` | None                                                                   | `['productCategorySub']` | ⚠️ **Needs Update** - Add tags for static params generation |
+| `app/produkty/(listing)/kategoria/[category]/page.tsx` (generateMetadata)     | `queryProductsPageData` | None                                                                   | `['products']`           | ⚠️ **Needs Update** - Add singleton tag                     |
+| `app/produkty/(listing)/kategoria/[category]/page.tsx` (category metadata)    | `queryCategoryMetadata` | `['productCategorySub', categorySlug]`                                 | `['productCategorySub']` | ⚠️ **Simplify** - Revalidate on any category change         |
+| `app/produkty/(listing)/kategoria/[category]/page.tsx` (page data)            | `queryProductsPageData` | `['products', 'productCategorySub', 'product', 'brand', categorySlug]` | `['products']`           | ⚠️ **Simplify** - Revalidate on any product/category change |
+| `components/products/ProductsListing`                                         | Dynamic query           | `['product', 'brand', 'productCategorySub']`                           | `['product']`            | ⚠️ **Simplify** - Only need primary document type           |
 
 ---
 
 #### **Product Detail Pages**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/produkty/[slug]/page.tsx` (generateStaticParams) | `queryAllProductSlugs` | `['product']` | `['product']` | ✅ Correct |
-| `app/produkty/[slug]/page.tsx` (fetchProductData) | `queryProductBySlug` | `['product', slug]` | `['product']` | ⚠️ **Simplify** - Revalidate all products on any product change |
+| Location                                              | Query                  | Current Tags        | Recommended Tags | Rationale                                                       |
+| ----------------------------------------------------- | ---------------------- | ------------------- | ---------------- | --------------------------------------------------------------- |
+| `app/produkty/[slug]/page.tsx` (generateStaticParams) | `queryAllProductSlugs` | `['product']`       | `['product']`    | ✅ Correct                                                      |
+| `app/produkty/[slug]/page.tsx` (fetchProductData)     | `queryProductBySlug`   | `['product', slug]` | `['product']`    | ⚠️ **Simplify** - Revalidate all products on any product change |
 
 ---
 
 #### **Brand Pages**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/marki/page.tsx` (generateMetadata) | `queryBrandsPageData` | `['brands']` | `['brands']` | ✅ Correct |
-| `app/marki/page.tsx` (page) | `queryBrandsPageData` | `['brands']` | `['brands']` | ✅ Correct |
-| `app/marki/[slug]/page.tsx` (generateStaticParams) | `queryAllBrandSlugs` | `['brand']` | `['brand']` | ✅ Correct |
-| `app/marki/[slug]/page.tsx` (fetchBrandData) | `queryBrandBySlug` | `['brand', slug, 'products', 'product']` | `['brand']` | ⚠️ **Simplify** - Revalidate on any brand change |
+| Location                                           | Query                 | Current Tags                             | Recommended Tags | Rationale                                        |
+| -------------------------------------------------- | --------------------- | ---------------------------------------- | ---------------- | ------------------------------------------------ |
+| `app/marki/page.tsx` (generateMetadata)            | `queryBrandsPageData` | `['brands']`                             | `['brands']`     | ✅ Correct                                       |
+| `app/marki/page.tsx` (page)                        | `queryBrandsPageData` | `['brands']`                             | `['brands']`     | ✅ Correct                                       |
+| `app/marki/[slug]/page.tsx` (generateStaticParams) | `queryAllBrandSlugs`  | `['brand']`                              | `['brand']`      | ✅ Correct                                       |
+| `app/marki/[slug]/page.tsx` (fetchBrandData)       | `queryBrandBySlug`    | `['brand', slug, 'products', 'product']` | `['brand']`      | ⚠️ **Simplify** - Revalidate on any brand change |
 
 ---
 
 #### **Blog Listing**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/blog/(listing)/page.tsx` (generateMetadata) | `queryBlogPageData` | `['blog', 'blog-category']` | `['blog']` | ⚠️ **Simplify** - Only need singleton tag |
-| `app/blog/(listing)/page.tsx` (page) | `queryBlogPageData` | `['blog', 'blog-category']` | `['blog']` | ⚠️ **Simplify** - Only need singleton tag |
-| `app/blog/(listing)/kategoria/[category]/page.tsx` (generateStaticParams) | `queryBlogPageData` | `['blog-category']` | `['blog-category']` | ✅ Correct |
-| `app/blog/(listing)/kategoria/[category]/page.tsx` (generateMetadata) | `queryBlogPageData` | `['blog', 'blog-category', categorySlug]` | `['blog-category']` | ⚠️ **Simplify** - Revalidate on any blog/category change |
-| `app/blog/(listing)/kategoria/[category]/page.tsx` (page) | `queryBlogPageData` | `['blog', 'blog-category', categorySlug]` | `['blog-category']` | ⚠️ **Simplify** - Revalidate on any blog/category change |
-| `components/blog/BlogListing` | Dynamic query | `['blog-article', 'blog-category']` | `['blog-article']` | ⚠️ **Simplify** - Only need primary document type |
+| Location                                                                  | Query               | Current Tags                              | Recommended Tags    | Rationale                                                |
+| ------------------------------------------------------------------------- | ------------------- | ----------------------------------------- | ------------------- | -------------------------------------------------------- |
+| `app/blog/(listing)/page.tsx` (generateMetadata)                          | `queryBlogPageData` | `['blog', 'blog-category']`               | `['blog']`          | ⚠️ **Simplify** - Only need singleton tag                |
+| `app/blog/(listing)/page.tsx` (page)                                      | `queryBlogPageData` | `['blog', 'blog-category']`               | `['blog']`          | ⚠️ **Simplify** - Only need singleton tag                |
+| `app/blog/(listing)/kategoria/[category]/page.tsx` (generateStaticParams) | `queryBlogPageData` | `['blog-category']`                       | `['blog-category']` | ✅ Correct                                               |
+| `app/blog/(listing)/kategoria/[category]/page.tsx` (generateMetadata)     | `queryBlogPageData` | `['blog', 'blog-category', categorySlug]` | `['blog-category']` | ⚠️ **Simplify** - Revalidate on any blog/category change |
+| `app/blog/(listing)/kategoria/[category]/page.tsx` (page)                 | `queryBlogPageData` | `['blog', 'blog-category', categorySlug]` | `['blog-category']` | ⚠️ **Simplify** - Revalidate on any blog/category change |
+| `components/blog/BlogListing`                                             | Dynamic query       | `['blog-article', 'blog-category']`       | `['blog-article']`  | ⚠️ **Simplify** - Only need primary document type        |
 
 ---
 
 #### **Blog Article Pages**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/blog/[slug]/page.tsx` (generateStaticParams) | `queryAllBlogPostSlugs` | `['blog-article']` | `['blog-article']` | ✅ Correct |
-| `app/blog/[slug]/page.tsx` (fetchBlogPostData) | `queryBlogPostBySlug` | `['blog-article', slug]` | `['blog-article']` | ⚠️ **Simplify** - Revalidate on any article change |
+| Location                                          | Query                   | Current Tags             | Recommended Tags   | Rationale                                          |
+| ------------------------------------------------- | ----------------------- | ------------------------ | ------------------ | -------------------------------------------------- |
+| `app/blog/[slug]/page.tsx` (generateStaticParams) | `queryAllBlogPostSlugs` | `['blog-article']`       | `['blog-article']` | ✅ Correct                                         |
+| `app/blog/[slug]/page.tsx` (fetchBlogPostData)    | `queryBlogPostBySlug`   | `['blog-article', slug]` | `['blog-article']` | ⚠️ **Simplify** - Revalidate on any article change |
 
 ---
 
 #### **Review Pages**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/recenzje/[slug]/page.tsx` (generateStaticParams) | `queryAllReviewSlugs` | `['review']` | `['review']` | ✅ Correct |
-| `app/recenzje/[slug]/page.tsx` (fetchReviewData) | `queryReviewBySlug` | `['review', slug]` | `['review']` | ⚠️ **Simplify** - Revalidate on any review change |
-| `app/recenzje/pdf/[slug]/route.ts` | `queryPdfReviewBySlug` | `['review', slug]` | `['review']` | ⚠️ **Simplify** - Revalidate on any review change |
+| Location                                              | Query                  | Current Tags       | Recommended Tags | Rationale                                         |
+| ----------------------------------------------------- | ---------------------- | ------------------ | ---------------- | ------------------------------------------------- |
+| `app/recenzje/[slug]/page.tsx` (generateStaticParams) | `queryAllReviewSlugs`  | `['review']`       | `['review']`     | ✅ Correct                                        |
+| `app/recenzje/[slug]/page.tsx` (fetchReviewData)      | `queryReviewBySlug`    | `['review', slug]` | `['review']`     | ⚠️ **Simplify** - Revalidate on any review change |
+| `app/recenzje/pdf/[slug]/route.ts`                    | `queryPdfReviewBySlug` | `['review', slug]` | `['review']`     | ⚠️ **Simplify** - Revalidate on any review change |
 
 ---
 
 #### **Legal Pages**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/polityka-prywatnosci/page.tsx` | `queryPrivacyPolicy` | `['privacyPolicy']` | `['privacyPolicy']` | ✅ Correct |
-| `app/regulamin/page.tsx` | `queryTermsAndConditions` | `['termsAndConditions']` | `['termsAndConditions']` | ✅ Correct |
-| `app/not-found.tsx` | `queryNotFoundPage` | `['notFound']` | `['notFound']` | ✅ Correct |
+| Location                            | Query                     | Current Tags             | Recommended Tags         | Rationale  |
+| ----------------------------------- | ------------------------- | ------------------------ | ------------------------ | ---------- |
+| `app/polityka-prywatnosci/page.tsx` | `queryPrivacyPolicy`      | `['privacyPolicy']`      | `['privacyPolicy']`      | ✅ Correct |
+| `app/regulamin/page.tsx`            | `queryTermsAndConditions` | `['termsAndConditions']` | `['termsAndConditions']` | ✅ Correct |
+| `app/not-found.tsx`                 | `queryNotFoundPage`       | `['notFound']`           | `['notFound']`           | ✅ Correct |
 
 ---
 
 #### **Comparison Pages**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/porownaj/page.tsx` (minimal) | `queryComparisonProductsMinimal` | `['product']` | `['product']` | ✅ Correct - Webhooks auto-revalidate when brand changes |
-| `app/porownaj/page.tsx` (full) | `queryComparisonProductsFull` | `['product']` | `['product']` | ✅ Correct - Webhooks auto-revalidate when brand changes |
-| `app/porownaj/page.tsx` (all category) | `queryAllCategoryProductsForComparison` | `['product']` | `['product']` | ✅ Correct - Webhooks auto-revalidate when brand changes |
+| Location                               | Query                                   | Current Tags  | Recommended Tags | Rationale                                                |
+| -------------------------------------- | --------------------------------------- | ------------- | ---------------- | -------------------------------------------------------- |
+| `app/porownaj/page.tsx` (minimal)      | `queryComparisonProductsMinimal`        | `['product']` | `['product']`    | ✅ Correct - Webhooks auto-revalidate when brand changes |
+| `app/porownaj/page.tsx` (full)         | `queryComparisonProductsFull`           | `['product']` | `['product']`    | ✅ Correct - Webhooks auto-revalidate when brand changes |
+| `app/porownaj/page.tsx` (all category) | `queryAllCategoryProductsForComparison` | `['product']` | `['product']`    | ✅ Correct - Webhooks auto-revalidate when brand changes |
 
 ---
 
 #### **API Routes & Server Actions**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `app/api/contact/route.ts` | `queryContactSettings` | `['contact-settings']` | `['settings']` | ⚠️ **Needs Update** - Use 'settings' for consistency |
-| `app/api/newsletter/route.ts` | `queryMailchimpSettings` | `['settings']` | `['settings']` | ✅ Correct |
-| `global/mailchimp/subscribe.ts` | `queryMailchimpSettings` | `['settings']` | `['settings']` | ✅ Correct |
-| `app/actions/comparison.ts` (minimal) | `queryComparisonProductsMinimal` | `['product']` | `['product']` | ✅ Correct - Webhooks auto-revalidate when brand changes |
-| `app/actions/comparison.ts` (full) | `queryComparisonProductsFull` | `['product']` | `['product']` | ✅ Correct - Webhooks auto-revalidate when brand changes |
+| Location                              | Query                            | Current Tags           | Recommended Tags | Rationale                                                |
+| ------------------------------------- | -------------------------------- | ---------------------- | ---------------- | -------------------------------------------------------- |
+| `app/api/contact/route.ts`            | `queryContactSettings`           | `['contact-settings']` | `['settings']`   | ⚠️ **Needs Update** - Use 'settings' for consistency     |
+| `app/api/newsletter/route.ts`         | `queryMailchimpSettings`         | `['settings']`         | `['settings']`   | ✅ Correct                                               |
+| `global/mailchimp/subscribe.ts`       | `queryMailchimpSettings`         | `['settings']`         | `['settings']`   | ✅ Correct                                               |
+| `app/actions/comparison.ts` (minimal) | `queryComparisonProductsMinimal` | `['product']`          | `['product']`    | ✅ Correct - Webhooks auto-revalidate when brand changes |
+| `app/actions/comparison.ts` (full)    | `queryComparisonProductsFull`    | `['product']`          | `['product']`    | ✅ Correct - Webhooks auto-revalidate when brand changes |
 
 ---
 
 #### **PageBuilder Components**
 
-| Location | Query | Current Tags | Recommended Tags | Rationale |
-|----------|-------|--------------|------------------|-----------|
-| `components/pageBuilder/ContactMap` | `queryContactSettings` | `['contact-settings']` | `['settings']` | ⚠️ **Needs Update** - Use 'settings' for consistency |
+| Location                            | Query                  | Current Tags           | Recommended Tags | Rationale                                            |
+| ----------------------------------- | ---------------------- | ---------------------- | ---------------- | ---------------------------------------------------- |
+| `components/pageBuilder/ContactMap` | `queryContactSettings` | `['contact-settings']` | `['settings']`   | ⚠️ **Needs Update** - Use 'settings' for consistency |
 
 ---
 
@@ -386,45 +396,56 @@ Below is a comprehensive audit of all `sanityFetch` calls across the application
 **Core Principle**: Use minimal tags. Sanity webhooks automatically revalidate pages when referenced documents change.
 
 #### **Pattern 1: Singleton Pages**
+
 Documents like `settings`, `navbar`, `footer`, `homePage`, `blog`, `products`, `brands`:
+
 ```typescript
-tags: ['documentType']
+tags: ["documentType"];
 ```
 
 #### **Pattern 2: Detail Pages**
+
 Individual documents (product, blog post, review, brand):
+
 ```typescript
-tags: ['documentType']
+tags: ["documentType"];
 ```
+
 **Note**: Do NOT add relationship tags. When a referenced document (e.g., brand, category) changes, Sanity webhook fires for that document type, automatically revalidating all pages that reference it. We also omit slugs for simplicity, revalidating all detail pages of a type when any changes.
 
 #### **Pattern 3: Category/Filter Pages**
+
 Listing pages with category context:
+
 ```typescript
 // Products Category
-tags: ['productCategorySub']
+tags: ["productCategorySub"];
 
 // Blog Category
-tags: ['blog-category']
+tags: ["blog-category"];
 
 // Brand Detail (shows products)
-tags: ['brand']
+tags: ["brand"];
 ```
 
 #### **Pattern 4: Dynamic Listing Components**
+
 Components that fetch filtered lists:
+
 ```typescript
 // Products Listing
-tags: ['product']
+tags: ["product"];
 
 // Blog Listing
-tags: ['blog-article']
+tags: ["blog-article"];
 ```
 
 #### **Pattern 5: Static Params Generation**
+
 Only include the primary document type:
+
 ```typescript
-tags: ['product'] // or ['blog-article'], ['brand'], etc.
+tags: ["product"]; // or ['blog-article'], ['brand'], etc.
 ```
 
 ---
@@ -432,6 +453,7 @@ tags: ['product'] // or ['blog-article'], ['brand'], etc.
 ### Recommended Tag Changes Summary
 
 Total fetches audited: **43**
+
 - ✅ **Correct tags**: 21
 - ⚠️ **Need updates**: 22
 
@@ -448,6 +470,7 @@ Total fetches audited: **43**
 ### Cache Hit Rates
 
 With proper caching:
+
 - **First user**: Cache miss → Fetches from Sanity → Caches result
 - **Subsequent users**: Cache hit → Instant response (no Sanity API call)
 - **After revalidation**: Cache miss → Fetches fresh data → Caches new result
@@ -462,11 +485,13 @@ With proper caching:
 ## 9. Development vs Production Behavior
 
 ### Development (`NODE_ENV=development`)
+
 - `cacheLife('seconds')` - Very short cache (fresh data for development)
 - Cache still works (satisfies Cache Components requirements)
 - Allows seeing changes quickly during development
 
 ### Production (`NODE_ENV=production`)
+
 - `cacheLife('weeks')` - Long cache duration
 - Revalidated only via webhook (on Sanity changes)
 - Maximum performance and minimal API calls
@@ -477,7 +502,8 @@ With proper caching:
 
 **Cause**: A component is accessing dynamic data (fetch, searchParams, cookies, etc.) without `'use cache'` or Suspense.
 
-**Solution**: 
+**Solution**:
+
 - Add `'use cache'` to the data fetching function
 - Or wrap the component in `<Suspense>`
 
@@ -486,6 +512,7 @@ With proper caching:
 **Cause**: Webhook not configured or not firing correctly.
 
 **Solution**:
+
 1. Check webhook is configured in Sanity Dashboard
 2. Verify `SANITY_WEBHOOK_SECRET` is set correctly
 3. Check webhook logs in Sanity Dashboard
@@ -533,6 +560,7 @@ With proper caching:
 ### Testing the Webhook
 
 **Manual Test:**
+
 ```bash
 curl -X POST https://yourdomain.com/api/revalidate \
   -H "Content-Type: application/json" \
@@ -545,6 +573,7 @@ curl -X POST https://yourdomain.com/api/revalidate \
 ```
 
 **Expected Response:**
+
 ```json
 {
   "status": 200,
@@ -557,20 +586,24 @@ curl -X POST https://yourdomain.com/api/revalidate \
 ### Webhook Logs
 
 Monitor webhook deliveries in Sanity Dashboard:
+
 - **Success**: Status 200, tags revalidated
 - **Failure**: Check error message and retry
 
 ### Multiple Environments
 
 **Development Webhook:**
+
 - **URL**: `https://dev.yourdomain.com/api/revalidate`
 - **Dataset**: `development`
 
 **Staging Webhook:**
+
 - **URL**: `https://staging.yourdomain.com/api/revalidate`
 - **Dataset**: `production`
 
 **Production Webhook:**
+
 - **URL**: `https://yourdomain.com/api/revalidate`
 - **Dataset**: `production`
 
@@ -594,6 +627,7 @@ Monitor webhook deliveries in Sanity Dashboard:
 Based on the audit above, update the following files:
 
 **High Priority (affects multiple pages):**
+
 - [x] `app/page.tsx` - Add relationship tags to homepage
 - [x] `app/[slug]/page.tsx` - Add 'page' document type
 - [x] `app/produkty/[slug]/page.tsx` - Add relationship tags
@@ -602,12 +636,14 @@ Based on the audit above, update the following files:
 - [x] `app/recenzje/[slug]/page.tsx` - Add relationship tags
 
 **Medium Priority (listing pages):**
+
 - [x] `app/produkty/(listing)/kategoria/[category]/page.tsx` - Add tags to generateMetadata and generateStaticParams
 - [x] `app/blog/(listing)/page.tsx` - Add 'blog-article' tag
 - [x] `app/blog/(listing)/kategoria/[category]/page.tsx` - Add 'blog-article' tag
 - [x] `app/marki/page.tsx` - Add 'brand' document type
 
 **Low Priority (API routes, comparison):**
+
 - [x] `app/api/contact/route.ts` - Change to 'settings'
 - [x] `components/pageBuilder/ContactMap` - Change to 'settings'
 - [x] `app/porownaj/page.tsx` - Add 'brand' tag to all queries

@@ -12,14 +12,14 @@
  *   SANITY_API_TOKEN="xxx" bun run apps/studio/scripts/migration/brands/migrate-brand-galleries.ts --all
  */
 
-import * as https from 'node:https';
-import { Readable } from 'node:stream';
+import * as https from "node:https";
+import { Readable } from "node:stream";
 
-import { createClient, type SanityClient } from '@sanity/client';
-import { parse } from 'csv-parse/sync';
-import * as fs from 'fs';
-import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
+import { createClient, type SanityClient } from "@sanity/client";
+import { parse } from "csv-parse/sync";
+import * as fs from "fs";
+import * as path from "path";
+import { v4 as uuidv4 } from "uuid";
 
 // ============================================================================
 // CONFIGURATION
@@ -27,10 +27,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 const CSV_FILE_PATH = path.resolve(
   __dirname,
-  '../../../../../brand-gallery-images.csv'
+  "../../../../../brand-gallery-images.csv",
 );
 
-const LEGACY_ASSETS_BASE_URL = 'https://www.audiofast.pl/assets/';
+const LEGACY_ASSETS_BASE_URL = "https://www.audiofast.pl/assets/";
 
 // Minimum images required for a gallery (per schema validation)
 const MIN_GALLERY_IMAGES = 2;
@@ -70,10 +70,10 @@ interface GalleryImage {
 }
 
 interface SanityImageRef {
-  _type: 'image';
+  _type: "image";
   _key: string;
   asset: {
-    _type: 'reference';
+    _type: "reference";
     _ref: string;
   };
 }
@@ -91,7 +91,7 @@ function generateKey(): string {
 // ============================================================================
 
 function parseCSV(filePath: string): CSVRow[] {
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
+  const fileContent = fs.readFileSync(filePath, "utf-8");
 
   const records = parse(fileContent, {
     columns: true,
@@ -139,7 +139,7 @@ function groupImagesByBrand(rows: CSVRow[]): Map<string, BrandGallery> {
 
 function findBrandByName(
   brands: Map<string, BrandGallery>,
-  name: string
+  name: string,
 ): BrandGallery | null {
   const normalizedName = name.toLowerCase().trim();
 
@@ -154,7 +154,7 @@ function findBrandByName(
 
 function findBrandById(
   brands: Map<string, BrandGallery>,
-  id: string
+  id: string,
 ): BrandGallery | null {
   return brands.get(id) || null;
 }
@@ -185,16 +185,16 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
         }
 
         const chunks: Buffer[] = [];
-        response.on('data', (chunk) => chunks.push(chunk));
-        response.on('end', () => resolve(Buffer.concat(chunks)));
-        response.on('error', (error) => {
+        response.on("data", (chunk) => chunks.push(chunk));
+        response.on("end", () => resolve(Buffer.concat(chunks)));
+        response.on("error", (error) => {
           console.error(`    ✗ Response error:`, error);
           resolve(null);
         });
-      }
+      },
     );
 
-    request.on('error', (error) => {
+    request.on("error", (error) => {
       console.error(`    ✗ Request error:`, error);
       resolve(null);
     });
@@ -204,7 +204,7 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
 async function uploadImageToSanity(
   client: SanityClient,
   imageUrl: string,
-  filename: string
+  filename: string,
 ): Promise<string | null> {
   console.log(`    ↓ Downloading: ${filename}`);
 
@@ -217,11 +217,11 @@ async function uploadImageToSanity(
 
   try {
     const asset = await client.assets.upload(
-      'image',
+      "image",
       Readable.from(imageBuffer),
       {
         filename: filename,
-      }
+      },
     );
 
     console.log(`    ✓ Uploaded: ${asset._id}`);
@@ -240,13 +240,13 @@ function createMigrationClient(): SanityClient {
   const token = process.env.SANITY_API_TOKEN;
 
   if (!token) {
-    throw new Error('SANITY_API_TOKEN environment variable is required');
+    throw new Error("SANITY_API_TOKEN environment variable is required");
   }
 
   return createClient({
-    projectId: 'fsw3likv',
-    dataset: 'production',
-    apiVersion: '2024-01-01',
+    projectId: "fsw3likv",
+    dataset: "production",
+    apiVersion: "2024-01-01",
     token,
     useCdn: false,
   });
@@ -259,14 +259,14 @@ function createMigrationClient(): SanityClient {
 async function migrateGalleryForBrand(
   brand: BrandGallery,
   client: SanityClient | null,
-  dryRun: boolean
+  dryRun: boolean,
 ): Promise<boolean> {
   console.log(`\n  📷 Processing ${brand.images.length} gallery images...`);
 
   // Check minimum images requirement
   if (brand.images.length < MIN_GALLERY_IMAGES) {
     console.log(
-      `    ⏭️  Skipping: Only ${brand.images.length} images (minimum ${MIN_GALLERY_IMAGES} required)`
+      `    ⏭️  Skipping: Only ${brand.images.length} images (minimum ${MIN_GALLERY_IMAGES} required)`,
     );
     return false;
   }
@@ -277,7 +277,7 @@ async function migrateGalleryForBrand(
   for (let i = 0; i < brand.images.length; i++) {
     const img = brand.images[i];
     const imageUrl = `${LEGACY_ASSETS_BASE_URL}${img.imagePath}`;
-    const filename = img.imagePath.split('/').pop() || 'gallery-image.jpg';
+    const filename = img.imagePath.split("/").pop() || "gallery-image.jpg";
 
     console.log(`    [${i + 1}/${brand.images.length}] ${filename}`);
 
@@ -286,10 +286,10 @@ async function migrateGalleryForBrand(
 
       if (assetRef) {
         imageRefs.push({
-          _type: 'image',
+          _type: "image",
           _key: generateKey(),
           asset: {
-            _type: 'reference',
+            _type: "reference",
             _ref: assetRef,
           },
         });
@@ -299,10 +299,10 @@ async function migrateGalleryForBrand(
     } else {
       // Dry run - simulate successful upload
       imageRefs.push({
-        _type: 'image',
+        _type: "image",
         _key: generateKey(),
         asset: {
-          _type: 'reference',
+          _type: "reference",
           _ref: `image-simulated-${img.fileId}`,
         },
       });
@@ -312,7 +312,7 @@ async function migrateGalleryForBrand(
   // Check if we have enough images after upload
   if (imageRefs.length < MIN_GALLERY_IMAGES) {
     console.log(
-      `    ⚠️  Only ${imageRefs.length} images uploaded successfully (minimum ${MIN_GALLERY_IMAGES} required)`
+      `    ⚠️  Only ${imageRefs.length} images uploaded successfully (minimum ${MIN_GALLERY_IMAGES} required)`,
     );
     return false;
   }
@@ -322,11 +322,13 @@ async function migrateGalleryForBrand(
     // Look up brand by name
     const existingBrand = await client.fetch<{ _id: string } | null>(
       `*[_type == "brand" && name == $name][0]{_id}`,
-      { name: brand.brandName }
+      { name: brand.brandName },
     );
 
     if (!existingBrand) {
-      console.log(`    ✗ Brand not found in Sanity by name: ${brand.brandName}`);
+      console.log(
+        `    ✗ Brand not found in Sanity by name: ${brand.brandName}`,
+      );
       return false;
     }
 
@@ -340,7 +342,7 @@ async function migrateGalleryForBrand(
       await client.patch(brandDocId).set({ imageGallery: imageRefs }).commit();
 
       console.log(
-        `    ✅ Gallery updated: ${imageRefs.length} images added to ${brand.brandName}`
+        `    ✅ Gallery updated: ${imageRefs.length} images added to ${brand.brandName}`,
       );
       return true;
     } catch (error) {
@@ -348,7 +350,9 @@ async function migrateGalleryForBrand(
       return false;
     }
   } else {
-    console.log(`    📋 DRY RUN - Would update brand "${brand.brandName}" with:`);
+    console.log(
+      `    📋 DRY RUN - Would update brand "${brand.brandName}" with:`,
+    );
     console.log(`       ${imageRefs.length} gallery images`);
     return true;
   }
@@ -368,49 +372,51 @@ async function main() {
   const excludeIds: string[] = [];
 
   for (const arg of args) {
-    if (arg.startsWith('--name=')) {
-      brandName = arg.replace('--name=', '').replace(/"/g, '');
-    } else if (arg.startsWith('--id=')) {
-      brandId = arg.replace('--id=', '');
-    } else if (arg === '--dry-run') {
+    if (arg.startsWith("--name=")) {
+      brandName = arg.replace("--name=", "").replace(/"/g, "");
+    } else if (arg.startsWith("--id=")) {
+      brandId = arg.replace("--id=", "");
+    } else if (arg === "--dry-run") {
       dryRun = true;
-    } else if (arg === '--all') {
+    } else if (arg === "--all") {
       migrateAll = true;
-    } else if (arg.startsWith('--exclude=')) {
-      const ids = arg.replace('--exclude=', '').split(',');
+    } else if (arg.startsWith("--exclude=")) {
+      const ids = arg.replace("--exclude=", "").split(",");
       excludeIds.push(...ids);
     }
   }
 
   if (!brandName && !brandId && !migrateAll) {
     console.error(
-      'Usage: bun run migrate-brand-galleries.ts --name="BrandName" [--dry-run]'
+      'Usage: bun run migrate-brand-galleries.ts --name="BrandName" [--dry-run]',
     );
     console.error(
-      '       bun run migrate-brand-galleries.ts --id=58 [--dry-run]'
+      "       bun run migrate-brand-galleries.ts --id=58 [--dry-run]",
     );
     console.error(
-      '       bun run migrate-brand-galleries.ts --all [--exclude=id1,id2,...] [--dry-run]'
+      "       bun run migrate-brand-galleries.ts --all [--exclude=id1,id2,...] [--dry-run]",
     );
     process.exit(1);
   }
 
   console.log(
-    '╔════════════════════════════════════════════════════════════════╗'
+    "╔════════════════════════════════════════════════════════════════╗",
   );
   console.log(
-    '║           BRAND GALLERY MIGRATION                              ║'
+    "║           BRAND GALLERY MIGRATION                              ║",
   );
   console.log(
-    '╚════════════════════════════════════════════════════════════════╝'
+    "╚════════════════════════════════════════════════════════════════╝",
   );
-  console.log(`Mode: ${dryRun ? 'DRY RUN (no changes)' : 'LIVE'}`);
+  console.log(`Mode: ${dryRun ? "DRY RUN (no changes)" : "LIVE"}`);
   console.log(`Minimum images per gallery: ${MIN_GALLERY_IMAGES}`);
 
   // Check CSV file exists
   if (!fs.existsSync(CSV_FILE_PATH)) {
     console.error(`\n✗ CSV file not found: ${CSV_FILE_PATH}`);
-    console.error('  Please place brand-gallery-images.csv in the project root.');
+    console.error(
+      "  Please place brand-gallery-images.csv in the project root.",
+    );
     process.exit(1);
   }
 
@@ -424,7 +430,7 @@ async function main() {
   console.log(`  Grouped into ${brands.size} unique brands with galleries`);
 
   // Analyze galleries
-  console.log('\n📊 Gallery Analysis:');
+  console.log("\n📊 Gallery Analysis:");
   let totalImages = 0;
   let brandsWithEnoughImages = 0;
   let brandsWithTooFewImages = 0;
@@ -436,23 +442,27 @@ async function main() {
     } else {
       brandsWithTooFewImages++;
       console.log(
-        `   ⚠️  ${brand.brandName}: ${brand.images.length} images (will skip)`
+        `   ⚠️  ${brand.brandName}: ${brand.images.length} images (will skip)`,
       );
     }
   }
 
   console.log(`  Total images: ${totalImages}`);
-  console.log(`  Brands with ≥${MIN_GALLERY_IMAGES} images: ${brandsWithEnoughImages}`);
-  console.log(`  Brands with <${MIN_GALLERY_IMAGES} images: ${brandsWithTooFewImages}`);
+  console.log(
+    `  Brands with ≥${MIN_GALLERY_IMAGES} images: ${brandsWithEnoughImages}`,
+  );
+  console.log(
+    `  Brands with <${MIN_GALLERY_IMAGES} images: ${brandsWithTooFewImages}`,
+  );
 
   // Create Sanity client
   let client: SanityClient | null = null;
   if (!dryRun) {
     try {
       client = createMigrationClient();
-      console.log('\n✓ Sanity client initialized');
+      console.log("\n✓ Sanity client initialized");
     } catch (error) {
-      console.error('\n✗ Failed to create Sanity client:', error);
+      console.error("\n✗ Failed to create Sanity client:", error);
       process.exit(1);
     }
   }
@@ -470,15 +480,17 @@ async function main() {
       }
     }
     console.log(
-      `\n📋 Will migrate ${brandsToMigrate.length} brand galleries (${excludeIds.length} excluded)`
+      `\n📋 Will migrate ${brandsToMigrate.length} brand galleries (${excludeIds.length} excluded)`,
     );
   } else if (brandName) {
     const brand = findBrandByName(brands, brandName);
     if (!brand) {
       console.error(`\n✗ Brand not found: "${brandName}"`);
-      console.log('\nAvailable brands with galleries:');
+      console.log("\nAvailable brands with galleries:");
       for (const b of brands.values()) {
-        console.log(`  - ${b.brandName} (ID: ${b.brandId}, ${b.images.length} images)`);
+        console.log(
+          `  - ${b.brandName} (ID: ${b.brandId}, ${b.images.length} images)`,
+        );
       }
       process.exit(1);
     }
@@ -493,7 +505,7 @@ async function main() {
   }
 
   if (brandsToMigrate.length === 0) {
-    console.error('\n✗ No brands to migrate');
+    console.error("\n✗ No brands to migrate");
     process.exit(1);
   }
 
@@ -509,13 +521,13 @@ async function main() {
     const brand = brandsToMigrate[i];
 
     console.log(
-      '\n═══════════════════════════════════════════════════════════════════'
+      "\n═══════════════════════════════════════════════════════════════════",
     );
     console.log(
-      `🏷️  [${i + 1}/${brandsToMigrate.length}] ${brand.brandName} (ID: ${brand.brandId})`
+      `🏷️  [${i + 1}/${brandsToMigrate.length}] ${brand.brandName} (ID: ${brand.brandId})`,
     );
     console.log(
-      '═══════════════════════════════════════════════════════════════════'
+      "═══════════════════════════════════════════════════════════════════",
     );
     console.log(`  Gallery images: ${brand.images.length}`);
 
@@ -537,11 +549,11 @@ async function main() {
 
   // Print summary
   console.log(
-    '\n════════════════════════════════════════════════════════════════════'
+    "\n════════════════════════════════════════════════════════════════════",
   );
-  console.log('📊 MIGRATION SUMMARY');
+  console.log("📊 MIGRATION SUMMARY");
   console.log(
-    '════════════════════════════════════════════════════════════════════'
+    "════════════════════════════════════════════════════════════════════",
   );
   console.log(`✅ Successful: ${results.success.length}`);
   if (results.success.length > 0) {
@@ -555,11 +567,10 @@ async function main() {
   if (results.failed.length > 0) {
     results.failed.forEach((name) => console.log(`   - ${name}`));
   }
-  console.log('\nGallery migration complete!');
+  console.log("\nGallery migration complete!");
 }
 
 main().catch((error) => {
-  console.error('Fatal error:', error);
+  console.error("Fatal error:", error);
   process.exit(1);
 });
-

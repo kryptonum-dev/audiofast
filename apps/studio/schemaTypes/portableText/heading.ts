@@ -1,57 +1,57 @@
-import { TextIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
+import { TextIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
-import { toPlainText } from '../../utils/helper';
-import { customPortableText } from './index';
+import { toPlainText } from "../../utils/helper";
+import { customPortableText } from "./index";
 
-const title = 'Nagłówek z ikoną';
+const title = "Nagłówek z ikoną";
 
 export const ptHeading = defineType({
-  name: 'ptHeading',
-  type: 'object',
+  name: "ptHeading",
+  type: "object",
   title,
   icon: TextIcon,
-  description: 'Nagłówek z ikoną SVG wyświetlany po lewej stronie tekstu',
+  description: "Nagłówek z ikoną SVG wyświetlany po lewej stronie tekstu",
   fields: [
     defineField({
-      name: 'level',
-      title: 'Poziom nagłówka',
-      type: 'string',
-      description: 'Poziom nagłówka (zawsze H3)',
-      initialValue: 'h3',
+      name: "level",
+      title: "Poziom nagłówka",
+      type: "string",
+      description: "Poziom nagłówka (zawsze H3)",
+      initialValue: "h3",
       readOnly: true,
       hidden: true,
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'icon',
-      title: 'Ikona SVG',
-      type: 'image',
+      name: "icon",
+      title: "Ikona SVG",
+      type: "image",
       description:
-        'Ikona SVG wyświetlana po lewej stronie nagłówka (tylko pliki SVG)',
+        "Ikona SVG wyświetlana po lewej stronie nagłówka (tylko pliki SVG)",
       options: {
-        accept: '.svg',
+        accept: ".svg",
       },
-      validation: (Rule) => Rule.required().error('Ikona SVG jest wymagana'),
+      validation: (Rule) => Rule.required().error("Ikona SVG jest wymagana"),
     }),
     customPortableText({
-      name: 'text',
-      title: 'Tekst nagłówka',
-      description: 'Wprowadź tekst nagłówka',
+      name: "text",
+      title: "Tekst nagłówka",
+      description: "Wprowadź tekst nagłówka",
       include: {
-        styles: ['normal'],
-        decorators: ['strong'],
+        styles: ["normal"],
+        decorators: ["strong"],
         annotations: [],
       },
       validation: (Rule) =>
-        Rule.required().error('Tekst nagłówka jest wymagany'),
+        Rule.required().error("Tekst nagłówka jest wymagany"),
     }),
   ],
   preview: {
     select: {
-      level: 'level',
-      text: 'text',
-      icon: 'icon',
+      level: "level",
+      text: "text",
+      icon: "icon",
     },
     prepare: ({ text, icon }) => ({
       title: toPlainText(text),

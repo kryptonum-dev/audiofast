@@ -15,9 +15,15 @@ const client = createClient({
 });
 
 async function fixDraftBrandReferences() {
-  console.log("\n╔═══════════════════════════════════════════════════════════════╗");
-  console.log("║      FIX DRAFT BRAND REFERENCES IN PRODUCTS                    ║");
-  console.log("╚═══════════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║      FIX DRAFT BRAND REFERENCES IN PRODUCTS                    ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝\n",
+  );
 
   if (!process.env.SANITY_API_TOKEN) {
     console.error("❌ SANITY_API_TOKEN is required");
@@ -27,9 +33,13 @@ async function fixDraftBrandReferences() {
   // Find all products that reference draft brands
   const productsWithDraftRefs = await client.fetch<
     Array<{ _id: string; name: string; brandRef: string }>
-  >(`*[_type == "product" && brand._ref match "drafts.*"]{_id, name, "brandRef": brand._ref}`);
+  >(
+    `*[_type == "product" && brand._ref match "drafts.*"]{_id, name, "brandRef": brand._ref}`,
+  );
 
-  console.log(`📊 Found ${productsWithDraftRefs.length} products with draft brand references\n`);
+  console.log(
+    `📊 Found ${productsWithDraftRefs.length} products with draft brand references\n`,
+  );
 
   if (productsWithDraftRefs.length === 0) {
     console.log("✅ No products need fixing!");
@@ -49,7 +59,9 @@ async function fixDraftBrandReferences() {
   console.log("📋 Products by draft brand:");
   for (const [brandRef, products] of byBrand) {
     const publishedId = brandRef.replace("drafts.", "");
-    console.log(`\n   ${brandRef} → ${publishedId} (${products.length} products)`);
+    console.log(
+      `\n   ${brandRef} → ${publishedId} (${products.length} products)`,
+    );
     for (const p of products.slice(0, 3)) {
       console.log(`      - [${p._id}] ${p.name}`);
     }
@@ -78,7 +90,9 @@ async function fixDraftBrandReferences() {
         })
         .commit();
 
-      console.log(`   ✅ [${product._id}] ${product.name}: ${oldRef} → ${newRef}`);
+      console.log(
+        `   ✅ [${product._id}] ${product.name}: ${oldRef} → ${newRef}`,
+      );
       fixed++;
     } catch (error) {
       console.error(`   ❌ [${product._id}] ${product.name}: ${error}`);
@@ -86,9 +100,15 @@ async function fixDraftBrandReferences() {
     }
   }
 
-  console.log("\n═══════════════════════════════════════════════════════════════");
-  console.log("                         SUMMARY                                ");
-  console.log("═══════════════════════════════════════════════════════════════");
+  console.log(
+    "\n═══════════════════════════════════════════════════════════════",
+  );
+  console.log(
+    "                         SUMMARY                                ",
+  );
+  console.log(
+    "═══════════════════════════════════════════════════════════════",
+  );
   console.log(`   ✅ Fixed: ${fixed}`);
   console.log(`   ❌ Failed: ${failed}`);
   console.log("\n✅ Done.\n");
@@ -101,5 +121,3 @@ async function fixDraftBrandReferences() {
 }
 
 fixDraftBrandReferences().catch(console.error);
-
-

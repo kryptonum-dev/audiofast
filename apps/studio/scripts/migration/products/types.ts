@@ -98,19 +98,19 @@ export interface ProductSourceData {
 // ============================================================================
 
 export interface PortableTextSpan {
-  _type: 'span';
+  _type: "span";
   _key: string;
   text: string;
   marks?: string[];
 }
 
 export interface PortableTextBlock {
-  _type: 'block';
+  _type: "block";
   _key: string;
-  style: 'normal' | 'h3';
+  style: "normal" | "h3";
   markDefs: MarkDef[];
   children: PortableTextSpan[];
-  listItem?: 'bullet' | 'number';
+  listItem?: "bullet" | "number";
   level?: number;
 }
 
@@ -121,86 +121,86 @@ export interface MarkDef {
 }
 
 export interface SanityImageRef {
-  _type: 'image';
+  _type: "image";
   _key?: string;
   asset: {
-    _type: 'reference';
+    _type: "reference";
     _ref: string;
   };
 }
 
 export interface SanityReference {
-  _type: 'reference';
+  _type: "reference";
   _key?: string;
   _ref: string;
 }
 
 // Content block types (array items for details.content)
 export interface ContentBlockText {
-  _type: 'contentBlockText';
+  _type: "contentBlockText";
   _key: string;
   content: PortableTextContent[]; // Portable text inside contentBlockText
 }
 
 export interface ContentBlockYoutube {
-  _type: 'contentBlockYoutube';
+  _type: "contentBlockYoutube";
   _key: string;
   youtubeId: string;
 }
 
 export interface ContentBlockVimeo {
-  _type: 'contentBlockVimeo';
+  _type: "contentBlockVimeo";
   _key: string;
   vimeoId: string;
 }
 
 export interface ContentBlockHorizontalLine {
-  _type: 'contentBlockHorizontalLine';
+  _type: "contentBlockHorizontalLine";
   _key: string;
 }
 
 // Types used inside contentBlockText.content (portable text elements)
 export interface PtPageBreak {
-  _type: 'ptPageBreak';
+  _type: "ptPageBreak";
   _key: string;
-  style: 'columnBreak';
+  style: "columnBreak";
 }
 
 export interface PtMinimalImage {
-  _type: 'ptMinimalImage';
+  _type: "ptMinimalImage";
   _key: string;
   image: SanityImageRef;
 }
 
 export interface PtYoutubeVideo {
-  _type: 'ptYoutubeVideo';
+  _type: "ptYoutubeVideo";
   _key: string;
   youtubeId: string;
 }
 
 export interface PtVimeoVideo {
-  _type: 'ptVimeoVideo';
+  _type: "ptVimeoVideo";
   _key: string;
   vimeoId: string;
 }
 
 export interface PtReviewEmbed {
-  _type: 'ptReviewEmbed';
+  _type: "ptReviewEmbed";
   _key: string;
   review: SanityReference;
 }
 
 export interface PtHorizontalLine {
-  _type: 'ptHorizontalLine';
+  _type: "ptHorizontalLine";
   _key: string;
-  style?: 'horizontalLine';
+  style?: "horizontalLine";
 }
 
 export interface PtInlineImage {
-  _type: 'ptInlineImage';
+  _type: "ptInlineImage";
   _key: string;
   image: SanityImageRef;
-  float: 'left' | 'right';
+  float: "left" | "right";
   alt?: string;
   width?: number;
 }
@@ -242,7 +242,7 @@ export interface TechnicalDataCellValue {
  * - values: Array of values, one per variant (or just one for no-variant tables)
  */
 export interface TechnicalDataRow {
-  _type: 'technicalDataRow';
+  _type: "technicalDataRow";
   _key: string;
   title: string;
   values: TechnicalDataCellValue[];
@@ -254,7 +254,7 @@ export interface TechnicalDataRow {
  * - rows: Array of parameter rows
  */
 export interface TechnicalDataGroup {
-  _type: 'technicalDataGroup';
+  _type: "technicalDataGroup";
   _key: string;
   title?: string;
   rows: TechnicalDataRow[];
@@ -272,11 +272,11 @@ export interface TechnicalData {
 
 export interface SanityProduct {
   _id: string;
-  _type: 'product';
+  _type: "product";
   name: string;
   subtitle?: string;
   slug: {
-    _type: 'slug';
+    _type: "slug";
     current: string;
   };
   previewImage?: SanityImageRef;

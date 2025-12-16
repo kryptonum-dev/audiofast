@@ -3,7 +3,7 @@
  * Product Migration Script (Batch)
  *
  * Migrates all products from legacy database (via CSVs) to Sanity.
- * 
+ *
  * Usage:
  *   bun run migrate-products.ts
  *   bun run migrate-products.ts --dry-run
@@ -17,7 +17,7 @@
  *   SANITY_API_TOKEN   - Sanity API token (required for live migration)
  */
 
-import type { SanityClient } from '@sanity/client';
+import type { SanityClient } from "@sanity/client";
 
 import type {
   ImageCache,
@@ -26,30 +26,31 @@ import type {
   ProductMainRow,
   ProductSourceData,
   SanityProduct,
-} from './types';
+} from "./types";
 import {
   getProductSummary,
   transformProduct,
   validateProduct,
-} from './transformers/product-transformer';
+} from "./transformers/product-transformer";
 import {
   clearReferenceMappings,
   createDryRunMappings,
   loadReferenceMappings,
   printReferenceStats,
-} from './transformers/reference-resolver';
+} from "./transformers/reference-resolver";
 import {
   buildProductSourceData,
   indexDataByProductId,
   loadAllCsvData,
   type IndexedProductData,
   type LoadedCsvData,
-} from './utils/csv-parser';
+} from "./utils/csv-parser";
+import { loadImageCache, saveImageCache } from "./utils/image-optimizer";
 import {
-  loadImageCache,
-  saveImageCache,
-} from './utils/image-optimizer';
-import { createDryRunClient, createMigrationClient, getClientConfig } from './utils/sanity-client';
+  createDryRunClient,
+  createMigrationClient,
+  getClientConfig,
+} from "./utils/sanity-client";
 
 // ============================================================================
 // CLI Options
@@ -57,19 +58,23 @@ import { createDryRunClient, createMigrationClient, getClientConfig } from './ut
 
 function parseArgs(): MigrationOptions {
   const args = process.argv.slice(2);
-  
-  const limitArg = args.find((arg) => arg.startsWith('--limit='));
-  const batchSizeArg = args.find((arg) => arg.startsWith('--batch-size='));
-  const productIdArg = args.find((arg) => arg.startsWith('--id='));
+
+  const limitArg = args.find((arg) => arg.startsWith("--limit="));
+  const batchSizeArg = args.find((arg) => arg.startsWith("--batch-size="));
+  const productIdArg = args.find((arg) => arg.startsWith("--id="));
 
   return {
-    dryRun: args.includes('--dry-run') || args.includes('-d'),
-    verbose: args.includes('--verbose') || args.includes('-v'),
-    limit: limitArg ? parseInt(limitArg.replace('--limit=', ''), 10) : undefined,
-    productId: productIdArg ? productIdArg.replace('--id=', '') : undefined,
-    skipExisting: args.includes('--skip-existing'),
-    batchSize: batchSizeArg ? parseInt(batchSizeArg.replace('--batch-size=', ''), 10) : 10,
-    rollback: args.includes('--rollback'),
+    dryRun: args.includes("--dry-run") || args.includes("-d"),
+    verbose: args.includes("--verbose") || args.includes("-v"),
+    limit: limitArg
+      ? parseInt(limitArg.replace("--limit=", ""), 10)
+      : undefined,
+    productId: productIdArg ? productIdArg.replace("--id=", "") : undefined,
+    skipExisting: args.includes("--skip-existing"),
+    batchSize: batchSizeArg
+      ? parseInt(batchSizeArg.replace("--batch-size=", ""), 10)
+      : 10,
+    rollback: args.includes("--rollback"),
   };
 }
 
@@ -103,13 +108,15 @@ Examples:
 // Existing Products Check
 // ============================================================================
 
-async function getExistingProductIds(client: SanityClient): Promise<Set<string>> {
-  console.log('🔍 Checking for existing products in Sanity...');
-  
+async function getExistingProductIds(
+  client: SanityClient,
+): Promise<Set<string>> {
+  console.log("🔍 Checking for existing products in Sanity...");
+
   const existingProducts = await client.fetch<Array<{ _id: string }>>(
-    `*[_type == "product" && _id match "product-*"]{_id}`
+    `*[_type == "product" && _id match "product-*"]{_id}`,
   );
-  
+
   const ids = new Set(existingProducts.map((p) => p._id));
   console.log(`   Found ${ids.size} existing products`);
   return ids;
@@ -120,24 +127,24 @@ async function getExistingProductIds(client: SanityClient): Promise<Set<string>>
 // ============================================================================
 
 async function rollbackMigration(client: SanityClient): Promise<void> {
-  console.log('\n⚠️  ROLLBACK MODE - Deleting all migrated products...');
-  
+  console.log("\n⚠️  ROLLBACK MODE - Deleting all migrated products...");
+
   const productIds = await client.fetch<string[]>(
-    `*[_type == "product" && _id match "product-*"]._id`
+    `*[_type == "product" && _id match "product-*"]._id`,
   );
-  
+
   if (productIds.length === 0) {
-    console.log('   No migrated products found.');
+    console.log("   No migrated products found.");
     return;
   }
-  
+
   console.log(`   Found ${productIds.length} products to delete`);
-  console.log('   Press Ctrl+C within 5 seconds to cancel...');
-  
+  console.log("   Press Ctrl+C within 5 seconds to cancel...");
+
   await new Promise((resolve) => setTimeout(resolve, 5000));
-  
-  console.log('   Deleting products...');
-  
+
+  console.log("   Deleting products...");
+
   // Delete in batches
   const batchSize = 100;
   for (let i = 0; i < productIds.length; i += batchSize) {
@@ -147,10 +154,12 @@ async function rollbackMigration(client: SanityClient): Promise<void> {
       transaction.delete(id);
     }
     await transaction.commit();
-    console.log(`   Deleted ${Math.min(i + batchSize, productIds.length)}/${productIds.length}`);
+    console.log(
+      `   Deleted ${Math.min(i + batchSize, productIds.length)}/${productIds.length}`,
+    );
   }
-  
-  console.log('✅ Rollback complete');
+
+  console.log("✅ Rollback complete");
 }
 
 // ============================================================================
@@ -162,11 +171,11 @@ async function processBatch(
   client: SanityClient | null,
   imageCache: ImageCache,
   options: MigrationOptions,
-  result: MigrationResult
+  result: MigrationResult,
 ): Promise<void> {
   for (const source of products) {
     const productLogPrefix = `[${source.id}] ${source.name}`;
-    
+
     try {
       // Transform
       const product = await transformProduct(source, {
@@ -179,7 +188,9 @@ async function processBatch(
       // Validate
       const validation = validateProduct(product);
       if (!validation.valid) {
-        console.log(`   ⚠️  ${productLogPrefix} - Validation errors: ${validation.errors.join(', ')}`);
+        console.log(
+          `   ⚠️  ${productLogPrefix} - Validation errors: ${validation.errors.join(", ")}`,
+        );
       }
 
       // Save
@@ -212,7 +223,9 @@ async function processBatch(
 // Main Migration
 // ============================================================================
 
-async function runMigration(options: MigrationOptions): Promise<MigrationResult> {
+async function runMigration(
+  options: MigrationOptions,
+): Promise<MigrationResult> {
   const result: MigrationResult = {
     created: [],
     updated: [],
@@ -226,16 +239,18 @@ async function runMigration(options: MigrationOptions): Promise<MigrationResult>
 
   // Determine products to migrate
   let productsToMigrate: ProductMainRow[] = csvData.mainProducts;
-  
+
   // Filter by specific ID if provided
   if (options.productId) {
-    productsToMigrate = productsToMigrate.filter((p) => p.ProductID === options.productId);
+    productsToMigrate = productsToMigrate.filter(
+      (p) => p.ProductID === options.productId,
+    );
     if (productsToMigrate.length === 0) {
       console.error(`\n❌ Product not found: ${options.productId}`);
       return result;
     }
   }
-  
+
   // Apply limit
   if (options.limit) {
     productsToMigrate = productsToMigrate.slice(0, options.limit);
@@ -269,13 +284,19 @@ async function runMigration(options: MigrationOptions): Promise<MigrationResult>
   }
 
   // Load reference mappings
-  console.log('\n');
+  console.log("\n");
   if (options.dryRun) {
-    const allBrandSlugs = [...new Set(csvData.mainProducts.map((p) => p.BrandSlug))];
-    const allCategorySlugs = [...new Set(csvData.categories.map((c) => c.CategorySlug))];
-    const allReviewSlugs = [...new Set(csvData.reviews.map((r) => r.ReviewSlug))];
+    const allBrandSlugs = [
+      ...new Set(csvData.mainProducts.map((p) => p.BrandSlug)),
+    ];
+    const allCategorySlugs = [
+      ...new Set(csvData.categories.map((c) => c.CategorySlug)),
+    ];
+    const allReviewSlugs = [
+      ...new Set(csvData.reviews.map((r) => r.ReviewSlug)),
+    ];
     createDryRunMappings(allBrandSlugs, allCategorySlugs, allReviewSlugs);
-    console.log('✓ Created mock reference mappings for dry run');
+    console.log("✓ Created mock reference mappings for dry run");
   } else {
     await loadReferenceMappings(client!);
   }
@@ -283,18 +304,20 @@ async function runMigration(options: MigrationOptions): Promise<MigrationResult>
 
   // Load image cache
   const imageCache: ImageCache = options.dryRun ? {} : loadImageCache();
-  console.log(`\n✓ Image cache loaded (${Object.keys(imageCache).length} cached images)`);
+  console.log(
+    `\n✓ Image cache loaded (${Object.keys(imageCache).length} cached images)`,
+  );
 
   // Build source data and filter
   const sourcesToMigrate: ProductSourceData[] = [];
   for (const mainRow of productsToMigrate) {
     const productId = `product-${mainRow.ProductID}`;
-    
+
     if (options.skipExisting && existingIds.has(productId)) {
       result.skipped.push(mainRow.ProductID);
       continue;
     }
-    
+
     sourcesToMigrate.push(buildProductSourceData(mainRow, indexed));
   }
 
@@ -309,10 +332,18 @@ async function runMigration(options: MigrationOptions): Promise<MigrationResult>
   for (let i = 0; i < sourcesToMigrate.length; i += options.batchSize) {
     const batchNum = Math.floor(i / options.batchSize) + 1;
     const batch = sourcesToMigrate.slice(i, i + options.batchSize);
-    
-    console.log(`\n📦 Batch ${batchNum}/${batchCount} (${batch.length} products)`);
-    await processBatch(batch, options.dryRun ? null : client, imageCache, options, result);
-    
+
+    console.log(
+      `\n📦 Batch ${batchNum}/${batchCount} (${batch.length} products)`,
+    );
+    await processBatch(
+      batch,
+      options.dryRun ? null : client,
+      imageCache,
+      options,
+      result,
+    );
+
     // Save image cache after each batch
     if (!options.dryRun) {
       saveImageCache(imageCache);
@@ -329,18 +360,24 @@ async function runMigration(options: MigrationOptions): Promise<MigrationResult>
 async function main(): Promise<void> {
   const options = parseArgs();
 
-  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+  if (process.argv.includes("--help") || process.argv.includes("-h")) {
     printUsage();
     process.exit(0);
   }
 
-  console.log('\n');
-  console.log('╔═══════════════════════════════════════════════════════════════╗');
-  console.log('║             AUDIOFAST PRODUCT MIGRATION (Batch)               ║');
-  console.log('╚═══════════════════════════════════════════════════════════════╝');
-  console.log('');
-  console.log(`Mode: ${options.dryRun ? '🧪 DRY RUN (no writes)' : '🚀 LIVE'}`);
-  console.log(`Skip Existing: ${options.skipExisting ? 'Yes' : 'No'}`);
+  console.log("\n");
+  console.log(
+    "╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║             AUDIOFAST PRODUCT MIGRATION (Batch)               ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝",
+  );
+  console.log("");
+  console.log(`Mode: ${options.dryRun ? "🧪 DRY RUN (no writes)" : "🚀 LIVE"}`);
+  console.log(`Skip Existing: ${options.skipExisting ? "Yes" : "No"}`);
   console.log(`Batch Size: ${options.batchSize}`);
   if (options.limit) console.log(`Limit: ${options.limit}`);
   if (options.productId) console.log(`Product ID: ${options.productId}`);
@@ -353,14 +390,20 @@ async function main(): Promise<void> {
 
   try {
     const result = await runMigration(options);
-    
+
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
     // Print summary
-    console.log('\n');
-    console.log('═══════════════════════════════════════════════════════════════');
-    console.log('                      MIGRATION SUMMARY                         ');
-    console.log('═══════════════════════════════════════════════════════════════');
+    console.log("\n");
+    console.log(
+      "═══════════════════════════════════════════════════════════════",
+    );
+    console.log(
+      "                      MIGRATION SUMMARY                         ",
+    );
+    console.log(
+      "═══════════════════════════════════════════════════════════════",
+    );
     console.log(`   Duration: ${duration}s`);
     console.log(`   Created: ${result.created.length}`);
     console.log(`   Updated: ${result.updated.length}`);
@@ -368,22 +411,21 @@ async function main(): Promise<void> {
     console.log(`   Errors: ${result.errors.length}`);
 
     if (result.errors.length > 0) {
-      console.log('\n❌ Errors:');
+      console.log("\n❌ Errors:");
       for (const err of result.errors) {
         console.log(`   [${err.productId}] ${err.productName}: ${err.error}`);
       }
     }
 
-    console.log('\n');
+    console.log("\n");
     if (options.dryRun) {
-      console.log('✅ Dry run complete. No changes were made to Sanity.');
+      console.log("✅ Dry run complete. No changes were made to Sanity.");
     } else {
-      console.log('✅ Migration complete.');
+      console.log("✅ Migration complete.");
     }
-    console.log('');
-
+    console.log("");
   } catch (error) {
-    console.error('\n❌ Migration failed:', error);
+    console.error("\n❌ Migration failed:", error);
     process.exit(1);
   } finally {
     clearReferenceMappings();
@@ -391,7 +433,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  console.error('❌ Migration failed:', error);
+  console.error("❌ Migration failed:", error);
   process.exit(1);
 });
-

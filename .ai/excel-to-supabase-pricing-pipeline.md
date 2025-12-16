@@ -149,11 +149,11 @@ Capabilities:
 Code (latest, v6):
 
 ```ts
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import {
   createClient,
   SupabaseClient,
-} from 'https://esm.sh/@supabase/supabase-js@2.45.4';
+} from "https://esm.sh/@supabase/supabase-js@2.45.4";
 
 interface VariantInput {
   price_key: string;
@@ -171,7 +171,7 @@ interface ParentRef {
 }
 interface GroupInput {
   name: string;
-  input_type: 'select' | 'numeric_step';
+  input_type: "select" | "numeric_step";
   unit?: string | null;
   required?: boolean;
   position?: number;
@@ -195,7 +195,7 @@ interface NumericRuleInput {
 }
 
 const FALLBACK_EXCEL_TOKEN =
-  Deno.env.get('EXCEL_PUBLISH_TOKEN') ?? '<set-in-env>';
+  Deno.env.get("EXCEL_PUBLISH_TOKEN") ?? "<set-in-env>";
 
 const requiredEnv = (key: string) => {
   const v = Deno.env.get(key);
@@ -203,43 +203,43 @@ const requiredEnv = (key: string) => {
   return v;
 };
 function createSupabaseAdmin(): SupabaseClient {
-  const url = requiredEnv('SUPABASE_URL');
-  const serviceKey = requiredEnv('SUPABASE_SERVICE_ROLE_KEY');
+  const url = requiredEnv("SUPABASE_URL");
+  const serviceKey = requiredEnv("SUPABASE_SERVICE_ROLE_KEY");
   return createClient(url, serviceKey, { auth: { persistSession: false } });
 }
 
 const nowIso = () => new Date().toISOString();
 const normKey = (price_key: string, model: string | null) =>
-  `${price_key}||${model ?? ''}`;
+  `${price_key}||${model ?? ""}`;
 
 async function findVariantId(
   supabase: SupabaseClient,
   price_key: string,
-  model: string | null
+  model: string | null,
 ) {
   let q = supabase
-    .from('pricing_variants')
-    .select('id')
-    .eq('price_key', price_key)
+    .from("pricing_variants")
+    .select("id")
+    .eq("price_key", price_key)
     .limit(1);
-  if (model === null) q = q.is('model', null);
-  else q = q.eq('model', model);
+  if (model === null) q = q.is("model", null);
+  else q = q.eq("model", model);
   const { data, error } = await q;
   if (error) throw error;
   return data?.[0]?.id ?? null;
 }
 
 async function upsertVariant(supabase: SupabaseClient, v: VariantInput) {
-  const currency = v.currency ?? 'PLN';
+  const currency = v.currency ?? "PLN";
   const base_price_cents =
-    typeof v.base_price_cents === 'number'
+    typeof v.base_price_cents === "number"
       ? v.base_price_cents
       : Math.round((v.base_price ?? 0) * 100);
   const model = (v.model === undefined ? null : v.model) as string | null;
   const existingId = await findVariantId(supabase, v.price_key, model);
   if (existingId) {
     const { error } = await supabase
-      .from('pricing_variants')
+      .from("pricing_variants")
       .update({
         brand: v.brand,
         product: v.product,
@@ -247,12 +247,12 @@ async function upsertVariant(supabase: SupabaseClient, v: VariantInput) {
         currency,
         updated_at: nowIso(),
       })
-      .eq('id', existingId);
+      .eq("id", existingId);
     if (error) throw error;
     return existingId;
   } else {
     const { data, error } = await supabase
-      .from('pricing_variants')
+      .from("pricing_variants")
       .insert([
         {
           price_key: v.price_key,
@@ -263,7 +263,7 @@ async function upsertVariant(supabase: SupabaseClient, v: VariantInput) {
           currency,
         },
       ])
-      .select('id');
+      .select("id");
     if (error) throw error;
     return data![0].id as string;
   }
@@ -272,37 +272,37 @@ async function upsertVariant(supabase: SupabaseClient, v: VariantInput) {
 async function ensureValue(
   supabase: SupabaseClient,
   group_id: string,
-  vi: ValueInput
+  vi: ValueInput,
 ) {
   const price_delta_cents =
-    typeof vi.price_delta_cents === 'number'
+    typeof vi.price_delta_cents === "number"
       ? vi.price_delta_cents
       : Math.round((vi.price_delta ?? 0) * 100);
-  const position = typeof vi.position === 'number' ? vi.position : 0;
+  const position = typeof vi.position === "number" ? vi.position : 0;
   const { data: existing, error: selErr } = await supabase
-    .from('pricing_option_values')
-    .select('id')
-    .eq('group_id', group_id)
-    .eq('name', vi.name)
+    .from("pricing_option_values")
+    .select("id")
+    .eq("group_id", group_id)
+    .eq("name", vi.name)
     .limit(1);
   if (selErr) throw selErr;
   if (existing?.[0]?.id) {
     const { error } = await supabase
-      .from('pricing_option_values')
+      .from("pricing_option_values")
       .update({
         name: vi.name,
         price_delta_cents,
         position,
         updated_at: nowIso(),
       })
-      .eq('id', existing[0].id);
+      .eq("id", existing[0].id);
     if (error) throw error;
     return existing[0].id as string;
   } else {
     const { data, error } = await supabase
-      .from('pricing_option_values')
+      .from("pricing_option_values")
       .insert([{ group_id, name: vi.name, price_delta_cents, position }])
-      .select('id');
+      .select("id");
     if (error) throw error;
     return data![0].id as string;
   }
@@ -313,28 +313,28 @@ async function ensureGroup(
   params: {
     variant_id: string;
     name: string;
-    input_type: 'select' | 'numeric_step';
+    input_type: "select" | "numeric_step";
     unit?: string | null;
     required?: boolean;
     position?: number;
     parent_value_id?: string | null;
-  }
+  },
 ) {
-  const position = typeof params.position === 'number' ? params.position : 0;
+  const position = typeof params.position === "number" ? params.position : 0;
   let q = supabase
-    .from('pricing_option_groups')
-    .select('id')
-    .eq('variant_id', params.variant_id)
-    .eq('name', params.name)
+    .from("pricing_option_groups")
+    .select("id")
+    .eq("variant_id", params.variant_id)
+    .eq("name", params.name)
     .limit(1);
   if (params.parent_value_id)
-    q = q.eq('parent_value_id', params.parent_value_id);
-  else q = q.is('parent_value_id', null);
+    q = q.eq("parent_value_id", params.parent_value_id);
+  else q = q.is("parent_value_id", null);
   const { data: existing, error: selErr } = await q;
   if (selErr) throw selErr;
   if (existing?.[0]?.id) {
     const { error } = await supabase
-      .from('pricing_option_groups')
+      .from("pricing_option_groups")
       .update({
         input_type: params.input_type,
         unit: params.unit ?? null,
@@ -342,12 +342,12 @@ async function ensureGroup(
         position,
         updated_at: nowIso(),
       })
-      .eq('id', existing[0].id);
+      .eq("id", existing[0].id);
     if (error) throw error;
     return existing[0].id as string;
   } else {
     const { data, error } = await supabase
-      .from('pricing_option_groups')
+      .from("pricing_option_groups")
       .insert([
         {
           variant_id: params.variant_id,
@@ -359,7 +359,7 @@ async function ensureGroup(
           parent_value_id: params.parent_value_id ?? null,
         },
       ])
-      .select('id');
+      .select("id");
     if (error) throw error;
     return data![0].id as string;
   }
@@ -368,22 +368,22 @@ async function ensureGroup(
 async function upsertNumericRule(
   supabase: SupabaseClient,
   group_id: string,
-  nr: NumericRuleInput
+  nr: NumericRuleInput,
 ) {
   const price_per_step_cents =
-    typeof nr.price_per_step_cents === 'number'
+    typeof nr.price_per_step_cents === "number"
       ? nr.price_per_step_cents
       : Math.round((nr.price_per_step ?? 0) * 100);
   const base_included_value = nr.base_included_value ?? 1.0;
   const { data: existing, error: selErr } = await supabase
-    .from('pricing_numeric_rules')
-    .select('id')
-    .eq('group_id', group_id)
+    .from("pricing_numeric_rules")
+    .select("id")
+    .eq("group_id", group_id)
     .limit(1);
   if (selErr) throw selErr;
   if (existing?.[0]?.id) {
     const { error } = await supabase
-      .from('pricing_numeric_rules')
+      .from("pricing_numeric_rules")
       .update({
         min_value: nr.min_value,
         max_value: nr.max_value,
@@ -393,12 +393,12 @@ async function upsertNumericRule(
         value_id: null,
         updated_at: nowIso(),
       })
-      .eq('id', existing[0].id);
+      .eq("id", existing[0].id);
     if (error) throw error;
     return existing[0].id as string;
   } else {
     const { data, error } = await supabase
-      .from('pricing_numeric_rules')
+      .from("pricing_numeric_rules")
       .insert([
         {
           group_id,
@@ -410,46 +410,46 @@ async function upsertNumericRule(
           base_included_value,
         },
       ])
-      .select('id');
+      .select("id");
     if (error) throw error;
     return data![0].id as string;
   }
 }
 
 function groupSignature(name: string, parent?: ParentRef | null) {
-  return `${name}||${parent ? `${parent.group_name}>>${parent.value_name}` : ''}`;
+  return `${name}||${parent ? `${parent.group_name}>>${parent.value_name}` : ""}`;
 }
 
 Deno.serve(async (req: Request) => {
   try {
-    if (req.method !== 'POST')
-      return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+    if (req.method !== "POST")
+      return new Response(JSON.stringify({ error: "Method not allowed" }), {
         status: 405,
       });
-    const tokenHeader = req.headers.get('x-excel-token') ?? '';
+    const tokenHeader = req.headers.get("x-excel-token") ?? "";
     if (!FALLBACK_EXCEL_TOKEN || tokenHeader !== FALLBACK_EXCEL_TOKEN)
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
-    const contentType = req.headers.get('content-type') || '';
-    if (!contentType.includes('application/json'))
+    const contentType = req.headers.get("content-type") || "";
+    if (!contentType.includes("application/json"))
       return new Response(
         JSON.stringify({
-          error: 'Unsupported Content-Type. Use application/json.',
+          error: "Unsupported Content-Type. Use application/json.",
         }),
-        { status: 415 }
+        { status: 415 },
       );
 
     const body = (await req.json()) as {
       variants: VariantInput[];
-      mode?: 'merge' | 'replace';
+      mode?: "merge" | "replace";
     };
     if (!body?.variants || !Array.isArray(body.variants))
       return new Response(
-        JSON.stringify({ error: 'Invalid payload: variants[] required' }),
-        { status: 422 }
+        JSON.stringify({ error: "Invalid payload: variants[] required" }),
+        { status: 422 },
       );
-    const mode = body.mode ?? 'merge';
+    const mode = body.mode ?? "merge";
 
     const supabase = createSupabaseAdmin();
     const summary = {
@@ -485,7 +485,7 @@ Deno.serve(async (req: Request) => {
         summary.groups_upserted++;
         const sig = groupSignature(g.name, null);
         payloadGroupSigs.add(sig);
-        if (g.input_type === 'select' && g.values?.length) {
+        if (g.input_type === "select" && g.values?.length) {
           const set = new Set<string>();
           for (const val of g.values) {
             await ensureValue(supabase, gid, val);
@@ -494,7 +494,7 @@ Deno.serve(async (req: Request) => {
           }
           payloadValuesBySig.set(sig, set);
         }
-        if (g.input_type === 'numeric_step' && g.numeric_rule) {
+        if (g.input_type === "numeric_step" && g.numeric_rule) {
           await upsertNumericRule(supabase, gid, g.numeric_rule);
           payloadNumericBySig.add(sig);
           summary.numeric_rules_upserted++;
@@ -506,7 +506,7 @@ Deno.serve(async (req: Request) => {
         const parentGroupId = await ensureGroup(supabase, {
           variant_id,
           name: parent.group_name,
-          input_type: 'select',
+          input_type: "select",
           required: false,
           position: (g.position ?? 0) - 1,
           parent_value_id: null,
@@ -528,7 +528,7 @@ Deno.serve(async (req: Request) => {
         summary.groups_upserted++;
         const sig = groupSignature(g.name, parent);
         payloadGroupSigs.add(sig);
-        if (g.input_type === 'select' && g.values?.length) {
+        if (g.input_type === "select" && g.values?.length) {
           const set = new Set<string>();
           for (const val of g.values) {
             await ensureValue(supabase, gid, val);
@@ -537,28 +537,28 @@ Deno.serve(async (req: Request) => {
           }
           payloadValuesBySig.set(sig, set);
         }
-        if (g.input_type === 'numeric_step' && g.numeric_rule) {
+        if (g.input_type === "numeric_step" && g.numeric_rule) {
           await upsertNumericRule(supabase, gid, g.numeric_rule);
           payloadNumericBySig.add(sig);
           summary.numeric_rules_upserted++;
         }
       }
 
-      if (mode === 'replace') {
+      if (mode === "replace") {
         const { data: dbGroups, error: gErr } = await supabase
-          .from('pricing_option_groups')
-          .select('id,name,input_type,parent_value_id')
-          .eq('variant_id', variant_id);
+          .from("pricing_option_groups")
+          .select("id,name,input_type,parent_value_id")
+          .eq("variant_id", variant_id);
         if (gErr) throw gErr;
         const sigOfDb = (row: any) =>
           groupSignature(
             row.name,
             row.parent_value_id
               ? {
-                  group_name: '__PARENT__',
+                  group_name: "__PARENT__",
                   value_name: String(row.parent_value_id),
                 }
-              : null
+              : null,
           );
         const keepGroupIds: string[] = [];
         const deleteGroupIds: string[] = [];
@@ -568,7 +568,7 @@ Deno.serve(async (req: Request) => {
           dbSigToId.set(s, row.id);
           if (row.parent_value_id) {
             const hasNameOnly = Array.from(payloadGroupSigs).some((sig) =>
-              sig.startsWith(`${row.name}||`)
+              sig.startsWith(`${row.name}||`),
             );
             if (hasNameOnly) keepGroupIds.push(row.id);
             else deleteGroupIds.push(row.id);
@@ -580,9 +580,9 @@ Deno.serve(async (req: Request) => {
         }
         if (deleteGroupIds.length) {
           const { error } = await supabase
-            .from('pricing_option_groups')
+            .from("pricing_option_groups")
             .delete()
-            .in('id', deleteGroupIds);
+            .in("id", deleteGroupIds);
           if (error) throw error;
           summary.deleted_groups += deleteGroupIds.length;
         }
@@ -592,9 +592,9 @@ Deno.serve(async (req: Request) => {
           const payloadVals = payloadValuesBySig.get(sig);
           if (!payloadVals) continue;
           const { data: dbVals, error: vErr } = await supabase
-            .from('pricing_option_values')
-            .select('id,name')
-            .eq('group_id', gid);
+            .from("pricing_option_values")
+            .select("id,name")
+            .eq("group_id", gid);
           if (vErr) throw vErr;
           const toDelete: string[] = [];
           for (const dv of dbVals ?? []) {
@@ -602,9 +602,9 @@ Deno.serve(async (req: Request) => {
           }
           if (toDelete.length) {
             const { error } = await supabase
-              .from('pricing_option_values')
+              .from("pricing_option_values")
               .delete()
-              .in('id', toDelete);
+              .in("id", toDelete);
             if (error) throw error;
             summary.deleted_values += toDelete.length;
           }
@@ -615,9 +615,9 @@ Deno.serve(async (req: Request) => {
           const keep = payloadNumericBySig.has(sig);
           if (!keep) {
             const { error } = await supabase
-              .from('pricing_numeric_rules')
+              .from("pricing_numeric_rules")
               .delete()
-              .eq('group_id', gid);
+              .eq("group_id", gid);
             if (error) throw error;
           }
         }
@@ -626,28 +626,28 @@ Deno.serve(async (req: Request) => {
       payloadKeys.add(normKey(v.price_key, v.model ?? null));
     }
 
-    if (mode === 'replace') {
+    if (mode === "replace") {
       const { data: dbKeys, error } = await supabase
-        .from('pricing_variants')
-        .select('price_key,model');
+        .from("pricing_variants")
+        .select("price_key,model");
       if (error) throw error;
       const toDelete: string[] = [];
       for (const row of dbKeys ?? []) {
         const k = normKey(
           row.price_key as string,
-          (row.model as string) ?? null
+          (row.model as string) ?? null,
         );
         if (!payloadKeys.has(k)) toDelete.push(k);
       }
       if (toDelete.length) {
         for (const k of toDelete) {
-          const [pk, m] = k.split('||');
+          const [pk, m] = k.split("||");
           let q = supabase
-            .from('pricing_variants')
+            .from("pricing_variants")
             .delete()
-            .eq('price_key', pk);
-          if (m === '') q = q.is('model', null);
-          else q = q.eq('model', m);
+            .eq("price_key", pk);
+          if (m === "") q = q.is("model", null);
+          else q = q.eq("model", m);
           const { error: delErr } = await q;
           if (delErr) throw delErr;
           summary.deleted_variants++;
@@ -656,16 +656,16 @@ Deno.serve(async (req: Request) => {
     }
 
     await createSupabaseAdmin()
-      .from('pricing_snapshots')
+      .from("pricing_snapshots")
       .insert([{ counts: summary, notes: mode }]);
     return new Response(JSON.stringify({ ok: true, summary }), {
       status: 200,
-      headers: { 'content-type': 'application/json' },
+      headers: { "content-type": "application/json" },
     });
   } catch (e) {
     return new Response(JSON.stringify({ error: e?.message ?? String(e) }), {
       status: 500,
-      headers: { 'content-type': 'application/json' },
+      headers: { "content-type": "application/json" },
     });
   }
 });

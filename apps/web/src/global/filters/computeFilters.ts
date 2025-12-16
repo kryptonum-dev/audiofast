@@ -2,7 +2,7 @@ import type {
   ActiveFilters,
   ComputedFilters,
   ProductFilterMetadata,
-} from './types';
+} from "./types";
 
 /**
  * Filter products by specific criteria (helper for computing filter options)
@@ -25,12 +25,12 @@ function filterProducts(
   if (options.category) {
     const categoryToMatch = options.category;
     // Normalize to check both formats
-    const isFullPath = categoryToMatch.startsWith('/kategoria/');
+    const isFullPath = categoryToMatch.startsWith("/kategoria/");
     const fullPath = isFullPath
       ? categoryToMatch
       : `/kategoria/${categoryToMatch}/`;
     const shortSlug = isFullPath
-      ? categoryToMatch.replace('/kategoria/', '').replace(/\/$/, '')
+      ? categoryToMatch.replace("/kategoria/", "").replace(/\/$/, "")
       : categoryToMatch;
 
     filtered = filtered.filter((p) => {
@@ -39,13 +39,13 @@ function filterProducts(
       if (p.allCategorySlugs?.includes(fullPath)) return true;
       // Check short slug match (extract from full paths)
       const pShortSlug = p.categorySlug
-        ?.replace('/kategoria/', '')
-        .replace(/\/$/, '');
+        ?.replace("/kategoria/", "")
+        .replace(/\/$/, "");
       if (pShortSlug === shortSlug) return true;
       // Check in all categories
       return p.allCategorySlugs?.some(
         (slug) =>
-          slug?.replace('/kategoria/', '').replace(/\/$/, '') === shortSlug,
+          slug?.replace("/kategoria/", "").replace(/\/$/, "") === shortSlug,
       );
     });
   }

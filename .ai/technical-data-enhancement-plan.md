@@ -3,6 +3,7 @@
 ## Overview
 
 This document outlines the plan to enhance the product technical data system to support:
+
 1. **Multi-variant products** (e.g., Atmosphere SX with Alive, Excite, Euphoria, Euphoria HC variants)
 2. **Single-model products** (current simple 2-column format)
 3. **Custom table editor** in Sanity Studio for intuitive editing experience
@@ -13,9 +14,10 @@ This document outlines the plan to enhance the product technical data system to 
 ## Current State
 
 ### Schema (product.ts)
+
 ```typescript
 technicalData: [
-  { 
+  {
     title: string,           // "Wzmocnienie"
     value: PortableText[]    // "MC: 64 dB\nMM: 42 dB"
   }
@@ -23,6 +25,7 @@ technicalData: [
 ```
 
 ### Limitations
+
 - Only supports single-model products (2 columns: parameter + value)
 - No support for multi-variant tables like Atmosphere SX
 - Standard Sanity array input - not table-like editing experience
@@ -38,70 +41,72 @@ technicalData: [
 // apps/studio/schemaTypes/documents/collections/product.ts
 
 defineField({
-  name: 'technicalData',
-  title: 'Dane techniczne',
-  type: 'object',
+  name: "technicalData",
+  title: "Dane techniczne",
+  type: "object",
   group: GROUP.MAIN_CONTENT,
   fields: [
     // Optional: Product variants (for multi-model products)
     defineField({
-      name: 'variants',
-      title: 'Warianty produktu',
-      type: 'array',
-      of: [{ type: 'string' }],
-      description: 'Np. "Alive", "Excite", "Euphoria". Pozostaw puste dla produktów bez wariantów.',
+      name: "variants",
+      title: "Warianty produktu",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        'Np. "Alive", "Excite", "Euphoria". Pozostaw puste dla produktów bez wariantów.',
     }),
-    
+
     // Optional: Group title (shown as header above variants)
     defineField({
-      name: 'groupTitle',
-      title: 'Nazwa grupy wariantów',
-      type: 'string',
-      description: 'Np. "Atmosphere SX". Wyświetla się jako nagłówek tabeli nad wariantami.',
+      name: "groupTitle",
+      title: "Nazwa grupy wariantów",
+      type: "string",
+      description:
+        'Np. "Atmosphere SX". Wyświetla się jako nagłówek tabeli nad wariantami.',
       hidden: ({ parent }) => !parent?.variants || parent.variants.length === 0,
     }),
-    
+
     // The actual specification rows
     defineField({
-      name: 'rows',
-      title: 'Parametry techniczne',
-      type: 'array',
+      name: "rows",
+      title: "Parametry techniczne",
+      type: "array",
       of: [
         {
-          type: 'object',
-          name: 'technicalDataRow',
+          type: "object",
+          name: "technicalDataRow",
           fields: [
             defineField({
-              name: 'title',
-              title: 'Nazwa parametru',
-              type: 'string',
+              name: "title",
+              title: "Nazwa parametru",
+              type: "string",
               validation: (Rule) => Rule.required(),
             }),
             defineField({
-              name: 'values',
-              title: 'Wartości',
-              type: 'array',
+              name: "values",
+              title: "Wartości",
+              type: "array",
               of: [
                 // Each value is a Portable Text block array
                 {
-                  type: 'object',
-                  name: 'cellValue',
+                  type: "object",
+                  name: "cellValue",
                   fields: [
                     customPortableText({
-                      name: 'content',
-                      title: 'Zawartość',
+                      name: "content",
+                      title: "Zawartość",
                       include: {
-                        styles: ['normal'],
-                        lists: ['bullet', 'number'],
-                        decorators: ['strong', 'em'],
-                        annotations: ['customLink'],
+                        styles: ["normal"],
+                        lists: ["bullet", "number"],
+                        decorators: ["strong", "em"],
+                        annotations: ["customLink"],
                       },
                     }),
                   ],
                   preview: {
-                    select: { content: 'content' },
+                    select: { content: "content" },
                     prepare: ({ content }) => ({
-                      title: extractPlainText(content) || 'Pusta komórka',
+                      title: extractPlainText(content) || "Pusta komórka",
                     }),
                   },
                 },
@@ -119,11 +124,11 @@ defineField({
           ],
           preview: {
             select: {
-              title: 'title',
-              values: 'values',
+              title: "title",
+              values: "values",
             },
             prepare: ({ title, values }) => ({
-              title: title || 'Parametr',
+              title: title || "Parametr",
               subtitle: `${values?.length || 0} wartości`,
             }),
           },
@@ -135,12 +140,13 @@ defineField({
   components: {
     input: TechnicalDataTableInput,
   },
-})
+});
 ```
 
 ### Data Examples
 
 #### Single-Model Product
+
 ```json
 {
   "technicalData": {
@@ -167,7 +173,10 @@ defineField({
           {
             "_key": "val1",
             "content": [
-              { "_type": "block", "children": [{ "text": "MC: 10, 20, 80.6, 100, 200, 402 Ohm" }] },
+              {
+                "_type": "block",
+                "children": [{ "text": "MC: 10, 20, 80.6, 100, 200, 402 Ohm" }]
+              },
               { "_type": "block", "children": [{ "text": "MM: 47 kΩ/200pF" }] }
             ]
           }
@@ -179,6 +188,7 @@ defineField({
 ```
 
 #### Multi-Variant Product (Atmosphere SX)
+
 ```json
 {
   "technicalData": {
@@ -189,20 +199,52 @@ defineField({
         "_key": "row1",
         "title": "Przewodnik Copper Matrix Alloy",
         "values": [
-          { "_key": "v1", "content": [{ "_type": "block", "children": [{ "text": "3 wiązki\n12 AWG" }] }] },
-          { "_key": "v2", "content": [{ "_type": "block", "children": [{ "text": "3 wiązki\n12 AWG" }] }] },
-          { "_key": "v3", "content": [{ "_type": "block", "children": [{ "text": "3 wiązki\n12 AWG" }] }] },
-          { "_key": "v4", "content": [{ "_type": "block", "children": [{ "text": "3 wiązki\n10 AWG" }] }] }
+          {
+            "_key": "v1",
+            "content": [
+              { "_type": "block", "children": [{ "text": "3 wiązki\n12 AWG" }] }
+            ]
+          },
+          {
+            "_key": "v2",
+            "content": [
+              { "_type": "block", "children": [{ "text": "3 wiązki\n12 AWG" }] }
+            ]
+          },
+          {
+            "_key": "v3",
+            "content": [
+              { "_type": "block", "children": [{ "text": "3 wiązki\n12 AWG" }] }
+            ]
+          },
+          {
+            "_key": "v4",
+            "content": [
+              { "_type": "block", "children": [{ "text": "3 wiązki\n10 AWG" }] }
+            ]
+          }
         ]
       },
       {
         "_key": "row2",
         "title": "Kondycjonowanie Quantum Tunelling",
         "values": [
-          { "_key": "v1", "content": [{ "_type": "block", "children": [{ "text": "✔" }] }] },
-          { "_key": "v2", "content": [{ "_type": "block", "children": [{ "text": "✔" }] }] },
-          { "_key": "v3", "content": [{ "_type": "block", "children": [{ "text": "✔" }] }] },
-          { "_key": "v4", "content": [{ "_type": "block", "children": [{ "text": "✔" }] }] }
+          {
+            "_key": "v1",
+            "content": [{ "_type": "block", "children": [{ "text": "✔" }] }]
+          },
+          {
+            "_key": "v2",
+            "content": [{ "_type": "block", "children": [{ "text": "✔" }] }]
+          },
+          {
+            "_key": "v3",
+            "content": [{ "_type": "block", "children": [{ "text": "✔" }] }]
+          },
+          {
+            "_key": "v4",
+            "content": [{ "_type": "block", "children": [{ "text": "✔" }] }]
+          }
         ]
       }
     ]
@@ -215,6 +257,7 @@ defineField({
 ## Sanity Studio: Custom Table Component
 
 ### Location
+
 ```
 apps/studio/components/technical-data-table/
 ├── index.tsx                 # Main custom input component
@@ -363,23 +406,20 @@ Add a dedicated view tab in the product document structure:
 // Product document views
 S.document()
   .documentId(documentId)
-  .schemaType('product')
+  .schemaType("product")
   .views([
     // Default form view
-    S.view.form().title('Edycja').icon(EditIcon),
-    
+    S.view.form().title("Edycja").icon(EditIcon),
+
     // Technical Data table view
     S.view
       .component(TechnicalDataView)
-      .title('Dane techniczne')
+      .title("Dane techniczne")
       .icon(TableIcon),
-    
+
     // Preview view
-    S.view
-      .component(PreviewView)
-      .title('Podgląd')
-      .icon(EyeIcon),
-  ])
+    S.view.component(PreviewView).title("Podgląd").icon(EyeIcon),
+  ]);
 ```
 
 This creates a dedicated tab for technical data editing:
@@ -429,7 +469,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
   return (
     <section className={`${styles.technicalData} max-width-block`} id={customId}>
       <h2 className={styles.heading}>Dane techniczne</h2>
-      
+
       <table className={styles.table}>
         {hasVariants && (
           <thead>
@@ -449,7 +489,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
             </tr>
           </thead>
         )}
-        
+
         <tbody>
           {data.rows.map((row, rowIdx) => (
             <tr key={rowIdx} className={styles.row}>
@@ -471,6 +511,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
 ### Visual Design
 
 #### Single-Model Table
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ DANE TECHNICZNE                                                             │
@@ -491,6 +532,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
 ```
 
 #### Multi-Variant Table
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ DANE TECHNICZNE                                                             │
@@ -522,15 +564,16 @@ For multi-variant tables on mobile, use horizontal scroll:
 ```scss
 .technicalData {
   // ... base styles
-  
+
   @media (max-width: 56.1875rem) {
     .table {
       display: block;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      
+
       // Minimum column width to ensure readability
-      th, td {
+      th,
+      td {
         min-width: 6rem;
       }
     }
@@ -560,8 +603,8 @@ export type ComparisonProduct = {
     logo: SanityProjectedImage | null;
   };
   mainImage: SanityProjectedImage | null;
-  imageSource: 'preview' | 'gallery';
-  
+  imageSource: "preview" | "gallery";
+
   // Updated technical data structure
   technicalData: {
     variants?: string[] | null;
@@ -573,7 +616,7 @@ export type ComparisonProduct = {
       }>;
     }>;
   } | null;
-  
+
   categories: Array<{
     slug: string;
   }>;
@@ -607,7 +650,7 @@ export default function ComparisonProductCard({
   index,
   isCompact = false,
 }: ComparisonProductCardProps) {
-  const hasVariants = product.technicalData?.variants && 
+  const hasVariants = product.technicalData?.variants &&
                       product.technicalData.variants.length > 0;
 
   return (
@@ -619,7 +662,7 @@ export default function ComparisonProductCard({
       >
         <CloseIcon />
       </button>
-      
+
       {/* Variant selector - only show if product has variants */}
       {hasVariants && !isCompact && (
         <div className={styles.variantSelector}>
@@ -641,14 +684,14 @@ export default function ComparisonProductCard({
           <ChevronDownIcon className={styles.dropdownIcon} />
         </div>
       )}
-      
+
       {/* Compact variant indicator */}
       {hasVariants && isCompact && (
         <span className={styles.variantBadge}>
           {product.technicalData!.variants![selectedVariantIndex]}
         </span>
       )}
-      
+
       {/* Rest of card content... */}
       <ProductImage ... />
       <ProductInfo ... />
@@ -675,7 +718,7 @@ export default function ComparisonTable({
         initial[p._id] = 0;
       });
       return initial;
-    }
+    },
   );
 
   const handleVariantChange = (productId: string, variantIndex: number) => {
@@ -688,7 +731,7 @@ export default function ComparisonTable({
   // Process comparison data with variant selections
   const comparisonData = useMemo(
     () => processComparisonDataWithVariants(currentProducts, variantSelections),
-    [currentProducts, variantSelections]
+    [currentProducts, variantSelections],
   );
 
   // ... rest of component
@@ -705,10 +748,10 @@ export default function ComparisonTable({
  */
 export function getProductTechDataForVariant(
   product: ComparisonProduct,
-  variantIndex: number
+  variantIndex: number,
 ): Array<{ title: string; value: PortableTextBlock[] }> {
   if (!product.technicalData?.rows) return [];
-  
+
   return product.technicalData.rows.map((row) => ({
     title: row.title,
     value: row.values[variantIndex]?.content || [],
@@ -720,7 +763,7 @@ export function getProductTechDataForVariant(
  */
 export function processComparisonDataWithVariants(
   products: ComparisonProduct[],
-  variantSelections: VariantSelections
+  variantSelections: VariantSelections,
 ): ComparisonTableData {
   // Build normalized tech data per product using selected variants
   const normalizedProducts = products.map((product) => {
@@ -733,7 +776,7 @@ export function processComparisonDataWithVariants(
 
   // Extract all unique headings
   const allHeadings = extractAllHeadingsFromNormalized(normalizedProducts);
-  
+
   // Create comparison rows
   const comparisonRows = allHeadings.map((heading) => {
     const values = normalizedProducts.map((product) => {
@@ -775,7 +818,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
         title,
         values[] {
           _key,
-          ${portableTextFragment('content')}
+          ${portableTextFragment("content")}
         }
       }
     },
@@ -805,7 +848,7 @@ export const queryComparisonProducts = defineQuery(/* groq */ `
         title,
         values[] {
           _key,
-          ${portableTextFragment('content')}
+          ${portableTextFragment("content")}
         }
       }
     },
@@ -846,12 +889,14 @@ export type TechnicalData = {
 ## Implementation Phases
 
 ### Phase 1: Schema & Types (Day 1)
+
 - [ ] Update product schema with new `technicalData` structure
 - [ ] Create TypeScript types for the new structure
 - [ ] Update GROQ queries
 - [ ] Run `sanity typegen generate` to update auto-generated types
 
 ### Phase 2: Custom Sanity Component (Days 2-3)
+
 - [ ] Create `TechnicalDataTableInput` custom component
 - [ ] Implement variant management (add/remove/rename)
 - [ ] Implement row management (add/delete/reorder)
@@ -860,6 +905,7 @@ export type TechnicalData = {
 - [ ] Style the component to match Sanity Studio theme
 
 ### Phase 3: Frontend - Product Page (Day 4)
+
 - [ ] Update `TechnicalData` component for new structure
 - [ ] Handle single-model display
 - [ ] Handle multi-variant display with header rows
@@ -867,6 +913,7 @@ export type TechnicalData = {
 - [ ] Update styles
 
 ### Phase 4: Frontend - Comparison Tool (Day 5)
+
 - [ ] Add variant selection state management
 - [ ] Create variant dropdown in `ComparisonProductCard`
 - [ ] Update `processComparisonData` for variant support
@@ -874,6 +921,7 @@ export type TechnicalData = {
 - [ ] Handle sticky header with variant indicators
 
 ### Phase 5: Testing & Polish (Day 6)
+
 - [ ] Test with single-model products
 - [ ] Test with multi-variant products
 - [ ] Test comparison tool with mixed products
@@ -886,6 +934,7 @@ export type TechnicalData = {
 ## Files to Create/Modify
 
 ### New Files
+
 ```
 apps/studio/components/technical-data-table/
 ├── index.tsx
@@ -901,6 +950,7 @@ apps/studio/views/
 ```
 
 ### Modified Files
+
 ```
 apps/studio/
 ├── schemaTypes/documents/collections/product.ts  # Schema update
@@ -926,16 +976,18 @@ apps/web/src/
 ## Notes
 
 ### Backward Compatibility
+
 The new structure is a complete replacement. Existing `technicalData` arrays will need to be transformed during the data migration to the new object structure.
 
 ### Performance Considerations
+
 - The Portable Text content in cells should be kept concise
 - Multi-variant tables with many columns may need horizontal scroll on mobile
 - Consider lazy loading cell editors in Sanity Studio for large tables
 
 ### Editor Experience
+
 - Provide clear visual feedback when cells are incomplete
 - Auto-focus on parameter name when adding new row
 - Show preview of formatted content in cells (not raw blocks)
 - Keyboard shortcuts: Tab to move between cells, Enter to save
-

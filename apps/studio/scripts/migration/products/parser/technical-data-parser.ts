@@ -13,7 +13,7 @@
  * - Skips non-technical content (videos, iframes, images)
  */
 
-import { HTMLElement, parse as parseHtml, TextNode } from 'node-html-parser';
+import { HTMLElement, parse as parseHtml, TextNode } from "node-html-parser";
 
 import type {
   PortableTextBlock,
@@ -22,7 +22,7 @@ import type {
   TechnicalDataCellValue,
   TechnicalDataGroup,
   TechnicalDataRow,
-} from '../types';
+} from "../types";
 
 // ============================================================================
 // Helpers
@@ -39,16 +39,16 @@ function generateKey(): string {
 function cleanText(text: string, preserveNewlines = false): string {
   if (preserveNewlines) {
     return text
-      .replace(/&nbsp;/g, ' ')
-      .replace(/[ \t]+/g, ' ') // Collapse horizontal whitespace only
-      .replace(/\n[ \t]+/g, '\n') // Remove leading spaces after newlines
-      .replace(/[ \t]+\n/g, '\n') // Remove trailing spaces before newlines
-      .replace(/\n{3,}/g, '\n\n') // Max 2 consecutive newlines
+      .replace(/&nbsp;/g, " ")
+      .replace(/[ \t]+/g, " ") // Collapse horizontal whitespace only
+      .replace(/\n[ \t]+/g, "\n") // Remove leading spaces after newlines
+      .replace(/[ \t]+\n/g, "\n") // Remove trailing spaces before newlines
+      .replace(/\n{3,}/g, "\n\n") // Max 2 consecutive newlines
       .trim();
   }
   return text
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s+/g, ' ')
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -58,7 +58,7 @@ function cleanText(text: string, preserveNewlines = false): string {
 function isMeaningfulText(text: string): boolean {
   const cleaned = cleanText(text);
   // Skip empty strings, single dashes, or just whitespace
-  return cleaned.length > 0 && cleaned !== '-' && !/^[\s\-–—]+$/.test(cleaned);
+  return cleaned.length > 0 && cleaned !== "-" && !/^[\s\-–—]+$/.test(cleaned);
 }
 
 /**
@@ -67,9 +67,9 @@ function isMeaningfulText(text: string): boolean {
  */
 function extractTextFromElement(
   element: HTMLElement,
-  preserveLineBreaks = true
+  preserveLineBreaks = true,
 ): string {
-  let text = '';
+  let text = "";
 
   for (const child of element.childNodes) {
     if (child instanceof TextNode) {
@@ -78,13 +78,13 @@ function extractTextFromElement(
       const tag = child.tagName?.toLowerCase();
 
       // Skip script, style, iframe
-      if (['script', 'style', 'iframe'].includes(tag)) {
+      if (["script", "style", "iframe"].includes(tag)) {
         continue;
       }
 
       // Handle <br> tags - add newline
-      if (tag === 'br') {
-        text += preserveLineBreaks ? '\n' : ' ';
+      if (tag === "br") {
+        text += preserveLineBreaks ? "\n" : " ";
         continue;
       }
 
@@ -94,9 +94,9 @@ function extractTextFromElement(
 
   // Clean whitespace but preserve intentional newlines
   return text
-    .replace(/&nbsp;/g, ' ')
-    .replace(/[ \t]+/g, ' ') // Collapse horizontal whitespace only
-    .replace(/\n\s*\n/g, '\n') // Collapse multiple newlines
+    .replace(/&nbsp;/g, " ")
+    .replace(/[ \t]+/g, " ") // Collapse horizontal whitespace only
+    .replace(/\n\s*\n/g, "\n") // Collapse multiple newlines
     .trim();
 }
 
@@ -107,11 +107,11 @@ function extractTextFromElement(
 function containsOnlyMediaContent(element: HTMLElement): boolean {
   const html = element.innerHTML.toLowerCase();
   // Check for iframe (YouTube, Vimeo, etc.)
-  if (html.includes('<iframe')) {
+  if (html.includes("<iframe")) {
     return true;
   }
   // Check for video elements
-  if (html.includes('<video')) {
+  if (html.includes("<video")) {
     return true;
   }
   return false;
@@ -122,7 +122,7 @@ function containsOnlyMediaContent(element: HTMLElement): boolean {
 // ============================================================================
 
 interface SpanChild {
-  _type: 'span';
+  _type: "span";
   _key: string;
   text: string;
   marks: string[];
@@ -136,7 +136,7 @@ interface SpanChild {
 function extractSpansFromElement(
   element: HTMLElement | TextNode,
   currentMarks: string[] = [],
-  isTopLevel = true
+  isTopLevel = true,
 ): SpanChild[] {
   const spans: SpanChild[] = [];
 
@@ -144,9 +144,9 @@ function extractSpansFromElement(
     const text = element.text;
     if (text && text.trim()) {
       spans.push({
-        _type: 'span',
+        _type: "span",
         _key: generateKey(),
-        text: text.replace(/&nbsp;/g, ' '),
+        text: text.replace(/&nbsp;/g, " "),
         marks: [...currentMarks],
       });
     }
@@ -160,42 +160,42 @@ function extractSpansFromElement(
   const tagName = element.tagName?.toLowerCase();
 
   // Skip script, style, iframe
-  if (['script', 'style', 'iframe'].includes(tagName)) {
+  if (["script", "style", "iframe"].includes(tagName)) {
     return spans;
   }
 
   // Handle <br> tags - add newline span (block separator)
-  if (tagName === 'br') {
+  if (tagName === "br") {
     spans.push({
-      _type: 'span',
+      _type: "span",
       _key: generateKey(),
-      text: '\n',
+      text: "\n",
       marks: [],
     });
     return spans;
   }
 
   // Handle <p> tags - they create new blocks (add newline before if not first)
-  if (tagName === 'p' && !isTopLevel) {
+  if (tagName === "p" && !isTopLevel) {
     // Add newline before <p> content to separate from previous content
     spans.push({
-      _type: 'span',
+      _type: "span",
       _key: generateKey(),
-      text: '\n',
+      text: "\n",
       marks: [],
     });
   }
 
   // Determine marks for this element
   const newMarks = [...currentMarks];
-  if (tagName === 'strong' || tagName === 'b') {
-    if (!newMarks.includes('strong')) {
-      newMarks.push('strong');
+  if (tagName === "strong" || tagName === "b") {
+    if (!newMarks.includes("strong")) {
+      newMarks.push("strong");
     }
   }
-  if (tagName === 'em' || tagName === 'i') {
-    if (!newMarks.includes('em')) {
-      newMarks.push('em');
+  if (tagName === "em" || tagName === "i") {
+    if (!newMarks.includes("em")) {
+      newMarks.push("em");
     }
   }
 
@@ -205,10 +205,10 @@ function extractSpansFromElement(
       const text = child.text;
       if (text) {
         // Handle text that might contain &nbsp;
-        const cleanedText = text.replace(/&nbsp;/g, ' ');
-        if (cleanedText.trim() || cleanedText === ' ') {
+        const cleanedText = text.replace(/&nbsp;/g, " ");
+        if (cleanedText.trim() || cleanedText === " ") {
           spans.push({
-            _type: 'span',
+            _type: "span",
             _key: generateKey(),
             text: cleanedText,
             marks: [...newMarks],
@@ -236,7 +236,7 @@ function mergeConsecutiveSpans(spans: SpanChild[]): SpanChild[] {
     const last = merged[merged.length - 1];
 
     // Keep newline spans separate - they mark block boundaries
-    if (span.text === '\n') {
+    if (span.text === "\n") {
       merged.push({ ...span });
       continue;
     }
@@ -244,7 +244,7 @@ function mergeConsecutiveSpans(spans: SpanChild[]): SpanChild[] {
     // Check if we can merge with the previous span (same marks, and previous is not newline)
     if (
       last &&
-      last.text !== '\n' &&
+      last.text !== "\n" &&
       JSON.stringify(last.marks.sort()) === JSON.stringify(span.marks.sort())
     ) {
       // Merge: append text to previous span
@@ -273,7 +273,7 @@ function cellContentToPortableText(html: string): PortableTextBlock[] {
   const blocks: PortableTextBlock[] = [];
 
   // Check if there are list items
-  const listItems = root.querySelectorAll('li');
+  const listItems = root.querySelectorAll("li");
   if (listItems.length > 0) {
     // Create list blocks with formatting
     for (const li of listItems) {
@@ -281,15 +281,15 @@ function cellContentToPortableText(html: string): PortableTextBlock[] {
       const mergedSpans = mergeConsecutiveSpans(spans);
 
       // Filter out newline spans for lists
-      const filteredSpans = mergedSpans.filter((s) => s.text !== '\n');
+      const filteredSpans = mergedSpans.filter((s) => s.text !== "\n");
       if (filteredSpans.length > 0) {
         blocks.push({
-          _type: 'block',
+          _type: "block",
           _key: generateKey(),
-          style: 'normal',
+          style: "normal",
           markDefs: [],
           children: filteredSpans,
-          listItem: 'bullet',
+          listItem: "bullet",
           level: 1,
         });
       }
@@ -309,16 +309,16 @@ function cellContentToPortableText(html: string): PortableTextBlock[] {
   let currentBlockSpans: SpanChild[] = [];
 
   for (const span of mergedSpans) {
-    if (span.text === '\n') {
+    if (span.text === "\n") {
       // Newline: flush current block and start a new one
       if (currentBlockSpans.length > 0) {
         // Trim whitespace from edges
         const trimmed = trimBlockSpans(currentBlockSpans);
         if (trimmed.length > 0) {
           blocks.push({
-            _type: 'block',
+            _type: "block",
             _key: generateKey(),
-            style: 'normal',
+            style: "normal",
             markDefs: [],
             children: trimmed,
           });
@@ -335,9 +335,9 @@ function cellContentToPortableText(html: string): PortableTextBlock[] {
     const trimmed = trimBlockSpans(currentBlockSpans);
     if (trimmed.length > 0) {
       blocks.push({
-        _type: 'block',
+        _type: "block",
         _key: generateKey(),
-        style: 'normal',
+        style: "normal",
         markDefs: [],
         children: trimmed,
       });
@@ -398,22 +398,22 @@ interface ParsedTable {
  */
 function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
   const rows: ParsedTableRow[] = [];
-  const tableRows = tableElement.querySelectorAll('tr');
+  const tableRows = tableElement.querySelectorAll("tr");
 
   for (const tr of tableRows) {
     const cells: ParsedTableCell[] = [];
-    const tds = tr.querySelectorAll('td, th');
+    const tds = tr.querySelectorAll("td, th");
 
     for (const td of tds) {
-      const colspan = parseInt(td.getAttribute('colspan') || '1', 10);
-      const rowspan = parseInt(td.getAttribute('rowspan') || '1', 10);
+      const colspan = parseInt(td.getAttribute("colspan") || "1", 10);
+      const rowspan = parseInt(td.getAttribute("rowspan") || "1", 10);
       const text = extractTextFromElement(td as HTMLElement);
       const html = td.innerHTML;
 
       // Check if this is a header cell (contains <strong> or is <th>)
       const isHeader =
-        td.tagName?.toLowerCase() === 'th' ||
-        td.querySelector('strong') !== null;
+        td.tagName?.toLowerCase() === "th" ||
+        td.querySelector("strong") !== null;
 
       cells.push({
         text,
@@ -441,10 +441,10 @@ function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
     // Check if we have a complex header with rowspan/colspan pattern
     // Pattern: some cells have rowspan > 1 (standalone variants), others have colspan > 1 (grouped variants)
     const hasRowspanCells = firstRow.cells.some(
-      (c) => c.rowspan > 1 && c.text.trim()
+      (c) => c.rowspan > 1 && c.text.trim(),
     );
     const hasColspanCells = firstRow.cells.some(
-      (c) => c.colspan > 1 && c.text.trim()
+      (c) => c.colspan > 1 && c.text.trim(),
     );
 
     if (hasRowspanCells && hasColspanCells && rows.length > 1) {
@@ -474,7 +474,7 @@ function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
             i++
           ) {
             const subCell = secondRow.cells[secondRowIdx];
-            const subText = subCell?.text?.trim() || '';
+            const subText = subCell?.text?.trim() || "";
             if (subText) {
               // Prepend group name to sub-variant
               resultVariants.push(`${cellText} ${subText}`.trim());
@@ -511,7 +511,7 @@ function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
       for (const cell of secondRow.cells) {
         for (let i = 0; i < cell.colspan; i++) {
           const variantName = cell.text.trim();
-          const groupPrefix = groupPrefixes[colIdx] || '';
+          const groupPrefix = groupPrefixes[colIdx] || "";
 
           if (groupPrefix && groupPrefix !== variantName) {
             expandedVariants.push(`${groupPrefix} ${variantName}`.trim());
@@ -522,7 +522,7 @@ function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
         }
       }
 
-      const firstCellText = expandedVariants[0] || '';
+      const firstCellText = expandedVariants[0] || "";
       const skipFirst = !firstCellText || firstCellText.length < 2;
       variants = skipFirst ? expandedVariants.slice(1) : expandedVariants;
       variants = variants.filter(Boolean);
@@ -532,13 +532,13 @@ function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
       // Title row pattern (single cell spanning many columns)
       const secondRow = rows[1];
       const potentialVariants = secondRow.cells.filter(
-        (c) => c.isHeader || c.text.length > 0
+        (c) => c.isHeader || c.text.length > 0,
       );
 
       if (potentialVariants.length >= 2) {
         hasVariants = true;
         headerRowsToSkip = 2;
-        const firstCellText = secondRow.cells[0]?.text || '';
+        const firstCellText = secondRow.cells[0]?.text || "";
         const skipFirst = !firstCellText || firstCellText.length < 3;
         variants = (skipFirst ? secondRow.cells.slice(1) : secondRow.cells)
           .map((c) => c.text)
@@ -558,7 +558,7 @@ function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
         variants = remainingCells.map((c) => c.text).filter(Boolean);
 
         // If first cell is NOT a header but has meaningful text, it's a group title
-        const firstCellText = firstCell?.text?.trim() || '';
+        const firstCellText = firstCell?.text?.trim() || "";
         if (firstCellText && !firstCell.isHeader && firstCellText.length >= 2) {
           extractedGroupTitle = firstCellText;
         }
@@ -574,7 +574,7 @@ function parseHtmlTable(tableElement: HTMLElement): ParsedTable {
  */
 function tableToTechnicalDataGroup(
   table: ParsedTable,
-  groupTitle?: string
+  groupTitle?: string,
 ): TechnicalDataGroup | null {
   const { rows, hasVariants, variants, headerRowsToSkip, extractedGroupTitle } =
     table;
@@ -635,15 +635,15 @@ function tableToTechnicalDataGroup(
               ? cellContent
               : [
                   {
-                    _type: 'block',
+                    _type: "block",
                     _key: generateKey(),
-                    style: 'normal',
+                    style: "normal",
                     markDefs: [],
                     children: [
                       {
-                        _type: 'span',
+                        _type: "span",
                         _key: generateKey(),
-                        text: cell.text || '-',
+                        text: cell.text || "-",
                         marks: [],
                       },
                     ],
@@ -660,15 +660,15 @@ function tableToTechnicalDataGroup(
         _key: generateKey(),
         content: [
           {
-            _type: 'block',
+            _type: "block",
             _key: generateKey(),
-            style: 'normal',
+            style: "normal",
             markDefs: [],
             children: [
               {
-                _type: 'span',
+                _type: "span",
                 _key: generateKey(),
-                text: '-',
+                text: "-",
                 marks: [],
               },
             ],
@@ -678,7 +678,7 @@ function tableToTechnicalDataGroup(
     }
 
     technicalRows.push({
-      _type: 'technicalDataRow',
+      _type: "technicalDataRow",
       _key: generateKey(),
       title: parameterName,
       values,
@@ -690,7 +690,7 @@ function tableToTechnicalDataGroup(
   }
 
   return {
-    _type: 'technicalDataGroup',
+    _type: "technicalDataGroup",
     _key: generateKey(),
     title: finalGroupTitle || undefined,
     rows: technicalRows,
@@ -709,7 +709,7 @@ export function parseTabContent(htmlContent: string): {
   variants: string[];
   groups: TechnicalDataGroup[];
 } {
-  if (!htmlContent || htmlContent.trim() === '') {
+  if (!htmlContent || htmlContent.trim() === "") {
     return { variants: [], groups: [] };
   }
 
@@ -736,11 +736,11 @@ export function parseTabContent(htmlContent: string): {
     }
 
     // Text elements (headings, paragraphs) - potential group titles
-    if (['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'].includes(tagName)) {
+    if (["h1", "h2", "h3", "h4", "h5", "h6", "p"].includes(tagName)) {
       const text = extractTextFromElement(child);
       if (isMeaningfulText(text)) {
         // Check if this paragraph only contains a table (nested)
-        const nestedTable = child.querySelector('table');
+        const nestedTable = child.querySelector("table");
         if (nestedTable) {
           // Parse the nested table
           const parsedTable = parseHtmlTable(nestedTable as HTMLElement);
@@ -752,7 +752,7 @@ export function parseTabContent(htmlContent: string): {
           }
           const group = tableToTechnicalDataGroup(
             parsedTable,
-            currentGroupTitle
+            currentGroupTitle,
           );
           if (group) {
             groups.push(group);
@@ -761,14 +761,14 @@ export function parseTabContent(htmlContent: string): {
         } else {
           // This is a group title for the next table
           // Clean common suffixes like ":" from titles
-          currentGroupTitle = text.replace(/:$/, '').trim();
+          currentGroupTitle = text.replace(/:$/, "").trim();
         }
       }
       continue;
     }
 
     // Table elements
-    if (tagName === 'table') {
+    if (tagName === "table") {
       const parsedTable = parseHtmlTable(child);
 
       // Update variants if this table has more columns
@@ -788,8 +788,8 @@ export function parseTabContent(htmlContent: string): {
     }
 
     // Divs or other containers might contain tables
-    if (['div', 'section', 'article'].includes(tagName)) {
-      const tables = child.querySelectorAll('table');
+    if (["div", "section", "article"].includes(tagName)) {
+      const tables = child.querySelectorAll("table");
       for (const table of tables) {
         const parsedTable = parseHtmlTable(table as HTMLElement);
         if (
@@ -814,7 +814,7 @@ export function parseTabContent(htmlContent: string): {
  * Parse all technical data rows for a product and combine into TechnicalData
  */
 export function parseTechnicalData(
-  rows: ProductTechnicalDataRow[]
+  rows: ProductTechnicalDataRow[],
 ): TechnicalData | null {
   if (!rows || rows.length === 0) {
     return null;
@@ -857,15 +857,15 @@ export function parseTechnicalData(
             _key: generateKey(),
             content: [
               {
-                _type: 'block',
+                _type: "block",
                 _key: generateKey(),
-                style: 'normal',
+                style: "normal",
                 markDefs: [],
                 children: [
                   {
-                    _type: 'span',
+                    _type: "span",
                     _key: generateKey(),
-                    text: '-',
+                    text: "-",
                     marks: [],
                   },
                 ],

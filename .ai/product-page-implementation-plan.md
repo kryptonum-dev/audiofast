@@ -369,48 +369,48 @@ export interface TechnicalDataProps {
 **File**: `apps/studio/schemaTypes/blocks/products-carousel.ts`
 
 ```typescript
-import { PackageOpen } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { PackageOpen } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
-import { toPlainText } from '../../utils/helper';
-import { customPortableText } from '../definitions/portable-text';
+import { toPlainText } from "../../utils/helper";
+import { customPortableText } from "../definitions/portable-text";
 
-const title = 'Karuzela produktów';
+const title = "Karuzela produktów";
 
 export const productsCarousel = defineType({
-  name: 'productsCarousel',
+  name: "productsCarousel",
   icon: PackageOpen,
-  type: 'object',
+  type: "object",
   description:
-    'Karuzela wyświetlająca produkty (np. powiązane produkty, nowości, bestsellery)',
+    "Karuzela wyświetlająca produkty (np. powiązane produkty, nowości, bestsellery)",
   fields: [
     customPortableText({
-      name: 'heading',
-      title: 'Nagłówek sekcji',
+      name: "heading",
+      title: "Nagłówek sekcji",
       description:
         'Główny nagłówek sekcji (np. "Powiązane produkty", "Polecane produkty")',
-      type: 'heading',
+      type: "heading",
     }),
     customPortableText({
-      name: 'description',
-      title: 'Opis sekcji',
-      description: 'Opcjonalny opis wyświetlany pod nagłówkiem',
+      name: "description",
+      title: "Opis sekcji",
+      description: "Opcjonalny opis wyświetlany pod nagłówkiem",
       include: {
-        styles: ['normal'],
-        decorators: ['strong', 'em'],
-        annotations: ['customLink'],
+        styles: ["normal"],
+        decorators: ["strong", "em"],
+        annotations: ["customLink"],
       },
     }),
     defineField({
-      name: 'products',
-      title: 'Produkty',
-      type: 'array',
+      name: "products",
+      title: "Produkty",
+      type: "array",
       description:
-        'Wybierz produkty do wyświetlenia w karuzeli (minimum 4, maksimum 12)',
+        "Wybierz produkty do wyświetlenia w karuzeli (minimum 4, maksimum 12)",
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'product' }],
+          type: "reference",
+          to: [{ type: "product" }],
           options: {
             disableNew: true,
             filter: ({ parent, document }) => {
@@ -421,7 +421,7 @@ export const productsCarousel = defineType({
                   .map((item) => item._ref) || [];
 
               // Exclude current product if on product detail page
-              const currentProductId = document?._id?.replace(/^drafts\./, '');
+              const currentProductId = document?._id?.replace(/^drafts\./, "");
               const excludedIds = currentProductId
                 ? [...selectedIds, currentProductId]
                 : selectedIds;
@@ -435,25 +435,25 @@ export const productsCarousel = defineType({
         },
       ],
       validation: (Rule) => [
-        Rule.min(4).error('Musisz wybrać co najmniej 4 produkty'),
-        Rule.max(12).error('Możesz wybrać maksymalnie 12 produktów'),
-        Rule.required().error('Produkty są wymagane'),
-        Rule.unique().error('Każdy produkt może być wybrany tylko raz'),
+        Rule.min(4).error("Musisz wybrać co najmniej 4 produkty"),
+        Rule.max(12).error("Możesz wybrać maksymalnie 12 produktów"),
+        Rule.required().error("Produkty są wymagane"),
+        Rule.unique().error("Każdy produkt może być wybrany tylko raz"),
       ],
     }),
     defineField({
-      name: 'button',
-      title: 'Przycisk CTA',
-      type: 'button',
+      name: "button",
+      title: "Przycisk CTA",
+      type: "button",
       description:
         'Opcjonalny przycisk wyświetlany pod karuzelą (np. "Zobacz wszystkie produkty")',
     }),
   ],
   preview: {
     select: {
-      heading: 'heading',
-      description: 'description',
-      productsCount: 'products.length',
+      heading: "heading",
+      description: "description",
+      productsCount: "products.length",
     },
     prepare: ({ heading, description, productsCount }) => {
       return {
@@ -474,7 +474,7 @@ export const productsCarousel = defineType({
 **File**: `apps/studio/schemaTypes/blocks/index.ts`
 
 ```typescript
-import { productsCarousel } from './products-carousel';
+import { productsCarousel } from "./products-carousel";
 // ... other imports
 
 export const pagebuilderBlocks = [
@@ -492,9 +492,9 @@ export const pagebuilderBlocks = [
 const productsCarouselBlock = /* groq */ `
   _type == "productsCarousel" => {
     ...,
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('description')},
-    ${buttonFragment('button')},
+    ${portableTextFragment("heading")},
+    ${portableTextFragment("description")},
+    ${buttonFragment("button")},
     products[]->{
       _id,
       name,
@@ -534,7 +534,7 @@ export interface ProductsCarouselProps {
   button?: ButtonType;
   index: number;
   _key: string;
-  _type: 'productsCarousel';
+  _type: "productsCarousel";
   customId?: string;
 }
 ```
@@ -740,7 +740,7 @@ export default function ProductsCarouselWrapper({
     .viewport {
       // Embla viewport
 
-      &[data-carousel-enabled='false'] {
+      &[data-carousel-enabled="false"] {
         // When carousel is disabled (all items fit)
       }
     }
@@ -1133,7 +1133,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     },
     
     // Short description (hero)
-    ${portableTextFragment('shortDescription')},
+    ${portableTextFragment("shortDescription")},
     
     // Brand reference
     brand->{
@@ -1163,8 +1163,8 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     
     // Product details (two-column content)
     details{
-      ${portableTextFragment('heading')},
-      ${portableTextFragment('content')}
+      ${portableTextFragment("heading")},
+      ${portableTextFragment("content")}
     },
     
     // Technical data
@@ -1370,7 +1370,7 @@ cd apps/studio && bun run type
         gap: 0.5rem;
 
         .brandName {
-          font-family: 'Poppins', sans-serif;
+          font-family: "Poppins", sans-serif;
           font-size: 0.875rem;
           font-weight: 400;
           line-height: 1.5;
@@ -1379,7 +1379,7 @@ cd apps/studio && bun run type
         }
 
         .productName {
-          font-family: 'Switzer Variable', sans-serif;
+          font-family: "Switzer Variable", sans-serif;
           font-size: 2.5rem;
           font-weight: 500;
           line-height: 1.16;
@@ -1389,7 +1389,7 @@ cd apps/studio && bun run type
       }
 
       .subtitle {
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
         font-size: 1rem;
         font-weight: 300;
         line-height: 1.5;
@@ -1402,7 +1402,7 @@ cd apps/studio && bun run type
         gap: 0.5rem;
 
         .price {
-          font-family: 'Switzer Variable', sans-serif;
+          font-family: "Switzer Variable", sans-serif;
           font-size: 2rem;
           font-weight: 500;
           line-height: 1.16;
@@ -1429,7 +1429,7 @@ cd apps/studio && bun run type
       }
 
       .description {
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
         font-size: 0.875rem;
         font-weight: 300;
         line-height: 1.5;
@@ -1535,7 +1535,7 @@ cd apps/studio && bun run type
       align-items: flex-start;
 
       .heading {
-        font-family: 'Switzer Variable', sans-serif;
+        font-family: "Switzer Variable", sans-serif;
         font-size: 1.5rem;
         font-weight: 500;
         line-height: 1.16;
@@ -1568,7 +1568,7 @@ cd apps/studio && bun run type
           .label {
             width: 9.875rem;
             padding: 0.5rem;
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
             font-size: 0.75rem;
             font-weight: 300;
             line-height: 1.5;
@@ -1578,7 +1578,7 @@ cd apps/studio && bun run type
           .value {
             flex: 1;
             padding: 0.5rem;
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
             font-size: 0.875rem;
             font-weight: 300;
             line-height: 1.5;
@@ -1656,7 +1656,7 @@ cd apps/studio && bun run type
     text-align: center;
 
     .heading {
-      font-family: 'Switzer Variable', sans-serif;
+      font-family: "Switzer Variable", sans-serif;
       font-size: 2.5rem;
       font-weight: 500;
       line-height: 1.16;
@@ -1665,7 +1665,7 @@ cd apps/studio && bun run type
     }
 
     .description {
-      font-family: 'Poppins', sans-serif;
+      font-family: "Poppins", sans-serif;
       font-size: 1rem;
       font-weight: 300;
       line-height: 1.5;
@@ -1680,7 +1680,7 @@ cd apps/studio && bun run type
       overflow: hidden;
       border-radius: 0.5rem;
 
-      &[data-carousel-enabled='false'] {
+      &[data-carousel-enabled="false"] {
         overflow: visible;
       }
     }
@@ -1818,7 +1818,7 @@ cd apps/studio && bun run type
 **Add import**:
 
 ```typescript
-import ProductsCarousel from '../pageBuilder/ProductsCarousel';
+import ProductsCarousel from "../pageBuilder/ProductsCarousel";
 ```
 
 **Add case to switch statement**:

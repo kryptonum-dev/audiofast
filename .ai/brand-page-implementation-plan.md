@@ -347,18 +347,18 @@ This document outlines the step-by-step implementation plan for creating a brand
    ```typescript
    // Update existing description field - name will be used as title
    customPortableText({
-     name: 'description',
-     title: 'Opis marki (Hero)',
+     name: "description",
+     title: "Opis marki (Hero)",
      description:
-       'Krótki opis wyświetlany pod nazwą marki w sekcji hero na stronie marki',
+       "Krótki opis wyświetlany pod nazwą marki w sekcji hero na stronie marki",
      group: GROUP.MAIN_CONTENT,
      include: {
-       styles: ['normal'],
-       decorators: ['strong', 'em'],
-       annotations: ['customLink'],
-       lists: ['bullet', 'number'],
+       styles: ["normal"],
+       decorators: ["strong", "em"],
+       annotations: ["customLink"],
+       lists: ["bullet", "number"],
      },
-     validation: (Rule) => Rule.required().error('Opis marki jest wymagany'),
+     validation: (Rule) => Rule.required().error("Opis marki jest wymagany"),
    });
    ```
 
@@ -366,16 +366,16 @@ This document outlines the step-by-step implementation plan for creating a brand
 
    ```typescript
    defineField({
-     name: 'heroImage',
-     title: 'Obraz tła strony marki',
-     type: 'image',
-     description: 'Obraz wyświetlany w tle sekcji hero na stronie marki',
+     name: "heroImage",
+     title: "Obraz tła strony marki",
+     type: "image",
+     description: "Obraz wyświetlany w tle sekcji hero na stronie marki",
      group: GROUP.MAIN_CONTENT,
      options: {
        hotspot: true,
      },
      validation: (Rule) =>
-       Rule.required().error('Obraz tła sekcji hero jest wymagany'),
+       Rule.required().error("Obraz tła sekcji hero jest wymagany"),
    });
    ```
 
@@ -383,11 +383,11 @@ This document outlines the step-by-step implementation plan for creating a brand
 
    ```typescript
    defineField({
-     name: 'bannerImage',
-     title: 'Obraz banera',
-     type: 'image',
+     name: "bannerImage",
+     title: "Obraz banera",
+     type: "image",
      description:
-       'Duży obraz banera wyświetlany między listą produktów a sekcją o marce',
+       "Duży obraz banera wyświetlany między listą produktów a sekcją o marce",
      group: GROUP.MAIN_CONTENT,
      options: {
        hotspot: true,
@@ -399,29 +399,29 @@ This document outlines the step-by-step implementation plan for creating a brand
 
    ```typescript
    defineField({
-     name: 'distributionYear',
-     title: 'Rok rozpoczęcia dystrybucji (opcjonalny)',
-     type: 'object',
+     name: "distributionYear",
+     title: "Rok rozpoczęcia dystrybucji (opcjonalny)",
+     type: "object",
      description:
-       'Rok i obraz tła dla odznaki roku rozpoczęcia dystrybucji. Jeśli ustawisz rok, musisz również ustawić obraz tła i odwrotnie.',
+       "Rok i obraz tła dla odznaki roku rozpoczęcia dystrybucji. Jeśli ustawisz rok, musisz również ustawić obraz tła i odwrotnie.",
      group: GROUP.MAIN_CONTENT,
      fields: [
        defineField({
-         name: 'year',
-         title: 'Rok',
-         type: 'number',
+         name: "year",
+         title: "Rok",
+         type: "number",
          description:
-           'Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)',
+           "Rok, w którym AudioFast rozpoczął dystrybucję tej marki (np. 2005)",
          validation: (Rule) =>
            Rule.min(1900)
              .max(new Date().getFullYear())
-             .error('Podaj prawidłowy rok'),
+             .error("Podaj prawidłowy rok"),
        }),
        defineField({
-         name: 'backgroundImage',
-         title: 'Obraz tła',
-         type: 'image',
-         description: 'Obraz tła wyświetlany za tekstem odznaki roku',
+         name: "backgroundImage",
+         title: "Obraz tła",
+         type: "image",
+         description: "Obraz tła wyświetlany za tekstem odznaki roku",
          options: {
            hotspot: true,
          },
@@ -435,10 +435,10 @@ This document outlines the step-by-step implementation plan for creating a brand
            value.backgroundImage !== undefined &&
            value.backgroundImage !== null;
          if (hasYear && !hasImage) {
-           return 'Jeśli ustawisz rok, musisz również ustawić obraz tła';
+           return "Jeśli ustawisz rok, musisz również ustawić obraz tła";
          }
          if (hasImage && !hasYear) {
-           return 'Jeśli ustawisz obraz tła, musisz również ustawić rok';
+           return "Jeśli ustawisz obraz tła, musisz również ustawić rok";
          }
          return true;
        }),
@@ -450,14 +450,14 @@ This document outlines the step-by-step implementation plan for creating a brand
    ```typescript
    // Brand Description Heading (added above main content)
    customPortableText({
-     name: 'brandDescriptionHeading',
-     title: 'Nagłówek opisu marki',
+     name: "brandDescriptionHeading",
+     title: "Nagłówek opisu marki",
      description:
-       'Nagłówek wyświetlany nad opisem marki w sekcji dwukolumnowej',
+       "Nagłówek wyświetlany nad opisem marki w sekcji dwukolumnowej",
      group: GROUP.MAIN_CONTENT,
      include: {
-       styles: ['normal'],
-       decorators: ['strong'], // Only bold decorator
+       styles: ["normal"],
+       decorators: ["strong"], // Only bold decorator
        annotations: [],
        lists: [],
      },
@@ -466,17 +466,17 @@ This document outlines the step-by-step implementation plan for creating a brand
 
    // Brand Description (main content)
    customPortableText({
-     name: 'brandDescription',
-     title: 'Opis marki',
-     description: 'Szczegółowy opis marki wyświetlany w sekcji dwukolumnowej',
+     name: "brandDescription",
+     title: "Opis marki",
+     description: "Szczegółowy opis marki wyświetlany w sekcji dwukolumnowej",
      group: GROUP.MAIN_CONTENT,
      include: {
-       styles: ['normal', 'h3', 'h4'], // Added h3 and h4
-       lists: ['bullet', 'number'],
-       decorators: ['strong', 'em'],
-       annotations: ['customLink'],
+       styles: ["normal", "h3", "h4"], // Added h3 and h4
+       lists: ["bullet", "number"],
+       decorators: ["strong", "em"],
+       annotations: ["customLink"],
      },
-     components: ['ptImage', 'ptMinimalImage', 'ptHeading'], // Added new components
+     components: ["ptImage", "ptMinimalImage", "ptHeading"], // Added new components
    });
    ```
 
@@ -484,13 +484,13 @@ This document outlines the step-by-step implementation plan for creating a brand
 
    ```typescript
    defineField({
-     name: 'imageGallery',
-     title: 'Galeria zdjęć marki',
-     type: 'array',
+     name: "imageGallery",
+     title: "Galeria zdjęć marki",
+     type: "array",
      description:
-       'Dodaj zdjęcia do galerii marki (opcjonalne, minimum 4 zdjęcia jeśli dodajesz)',
+       "Dodaj zdjęcia do galerii marki (opcjonalne, minimum 4 zdjęcia jeśli dodajesz)",
      group: GROUP.MAIN_CONTENT,
-     of: [{ type: 'image' }],
+     of: [{ type: "image" }],
      validation: (Rule) =>
        Rule.custom((value) => {
          if (
@@ -499,7 +499,7 @@ This document outlines the step-by-step implementation plan for creating a brand
            value.length > 0 &&
            value.length < 4
          ) {
-           return 'Galeria musi zawierać minimum 4 zdjęcia';
+           return "Galeria musi zawierać minimum 4 zdjęcia";
          }
          return true;
        }),
@@ -509,18 +509,18 @@ This document outlines the step-by-step implementation plan for creating a brand
 6. **Review References Array**
    ```typescript
    defineField({
-     name: 'featuredReviews',
-     title: 'Wyróżnione recenzje',
-     type: 'array',
-     description: 'Wybierz recenzje związane z tą marką (maksymalnie 10)',
+     name: "featuredReviews",
+     title: "Wyróżnione recenzje",
+     type: "array",
+     description: "Wybierz recenzje związane z tą marką (maksymalnie 10)",
      group: GROUP.MAIN_CONTENT,
      of: [
        {
-         type: 'reference',
-         to: [{ type: 'review' }],
+         type: "reference",
+         to: [{ type: "review" }],
        },
      ],
-     validation: (Rule) => Rule.max(10).error('Maksymalnie 10 recenzji'),
+     validation: (Rule) => Rule.max(10).error("Maksymalnie 10 recenzji"),
    });
    ```
 
@@ -1145,7 +1145,7 @@ export interface TwoColumnContentProps {
   content: PortableTextProps;
   customId?: string;
   headingContent?: PortableTextProps; // NEW: Heading above content
-  distributionYear?: NonNullable<QueryBrandBySlugResult>['distributionYear']; // Object with year & backgroundImage
+  distributionYear?: NonNullable<QueryBrandBySlugResult>["distributionYear"]; // Object with year & backgroundImage
   gallery?: SanityRawImage[];
 }
 ```
@@ -1609,8 +1609,8 @@ export default async function BrandPage({ params }: BrandPageProps) {
 **Objective**: GROQ queries for fetching brand data
 
 ```typescript
-import { groq } from 'next-sanity';
-import { sanityFetch } from '@/sanity/lib/client';
+import { groq } from "next-sanity";
+import { sanityFetch } from "@/sanity/lib/client";
 
 // Brand detail query (UPDATED)
 const brandDetailQuery = groq`
@@ -1746,7 +1746,7 @@ export async function getAllBrandSlugs() {
         background: transparent;
         border: none;
         border-radius: 31.25rem;
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
         font-size: 0.875rem;
         font-weight: 400;
         line-height: 1.5;
@@ -1823,7 +1823,7 @@ export async function getAllBrandSlugs() {
     overflow: hidden;
 
     .heading {
-      font-family: 'Switzer Variable', sans-serif;
+      font-family: "Switzer Variable", sans-serif;
       font-size: 1.5rem;
       font-weight: 500;
       line-height: 1.16;
@@ -1853,7 +1853,7 @@ export async function getAllBrandSlugs() {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
             font-size: 1.125rem;
             font-weight: 400;
             line-height: 1.16;
@@ -1869,7 +1869,7 @@ export async function getAllBrandSlugs() {
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            font-family: 'Poppins', sans-serif;
+            font-family: "Poppins", sans-serif;
             font-size: 0.875rem;
             font-weight: 300;
             line-height: 1.5;
@@ -2007,7 +2007,7 @@ export async function getAllBrandSlugs() {
     flex: 1;
 
     .text {
-      font-family: 'Switzer Variable', sans-serif;
+      font-family: "Switzer Variable", sans-serif;
       font-size: 1.5rem;
       font-weight: 500;
       line-height: 1.16;
@@ -2070,7 +2070,7 @@ export async function getAllBrandSlugs() {
       gap: 1rem;
 
       .heading {
-        font-family: 'Switzer Variable', sans-serif;
+        font-family: "Switzer Variable", sans-serif;
         font-size: 1.5rem;
         font-weight: 500;
         line-height: 1.16;
@@ -2099,7 +2099,7 @@ export async function getAllBrandSlugs() {
             gap: 0.25rem;
 
             .storeName {
-              font-family: 'Poppins', sans-serif;
+              font-family: "Poppins", sans-serif;
               font-size: 0.875rem;
               font-weight: 400;
               line-height: 1.5;
@@ -2108,7 +2108,7 @@ export async function getAllBrandSlugs() {
             }
 
             .storeAddress {
-              font-family: 'Poppins', sans-serif;
+              font-family: "Poppins", sans-serif;
               font-size: 0.875rem;
               font-weight: 300;
               line-height: 1.5;
@@ -2145,7 +2145,7 @@ export async function getAllBrandSlugs() {
               }
 
               .contactText {
-                font-family: 'Poppins', sans-serif;
+                font-family: "Poppins", sans-serif;
                 font-size: 0.875rem;
                 font-weight: 300;
                 line-height: 1.5;
@@ -2413,8 +2413,8 @@ useEffect(() => {
       });
     },
     {
-      rootMargin: '-100px 0px -80% 0px',
-    }
+      rootMargin: "-100px 0px -80% 0px",
+    },
   );
 
   sections.forEach((section) => {
@@ -2442,7 +2442,7 @@ const handlePillClick = (sectionId: string) => {
 
     window.scrollTo({
       top: offsetPosition,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }
 };

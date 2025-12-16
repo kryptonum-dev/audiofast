@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
+import { useProductsLoading } from "../../products/ProductsLoadingContext";
 import ArrowButton from "../ArrowButton";
 import styles from "./styles.module.scss";
 
@@ -22,7 +24,23 @@ export default function Pagination({
   searchParams,
 }: PaginationProps) {
   const router = useRouter();
+  const { startLoading } = useProductsLoading();
+  const [pendingPage, setPendingPage] = useState<number | null>(null);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Clear pending page when actual currentPage changes (navigation complete)
+  useEffect(() => {
+    setPendingPage(null);
+  }, [currentPage]);
+
+  // Use pending page for optimistic UI, fall back to actual current page
+  const displayPage = pendingPage ?? currentPage;
+
+  // Helper to trigger pagination loading with optimistic update
+  const handlePageNavigate = (pageNum: number) => {
+    setPendingPage(pageNum);
+    startLoading("pagination");
+  };
 
   // Don't render if only 1 page
   if (totalPages <= 1) return null;
@@ -51,8 +69,8 @@ export default function Pagination({
     | "IN_MIDDLE"
     | "NEAR_END" => {
     if (totalPages <= 5) return "FEW_PAGES";
-    if (currentPage <= 2) return "NEAR_START";
-    if (currentPage >= totalPages - 1) return "NEAR_END";
+    if (displayPage <= 2) return "NEAR_START";
+    if (displayPage >= totalPages - 1) return "NEAR_END";
     return "IN_MIDDLE";
   };
 
@@ -68,7 +86,8 @@ export default function Pagination({
               key={pageNum}
               pageNum={pageNum}
               href={getPageUrl(pageNum)}
-              isActive={currentPage === pageNum}
+              isActive={displayPage === pageNum}
+              onNavigate={() => handlePageNavigate(pageNum)}
             />
           ),
         );
@@ -80,23 +99,27 @@ export default function Pagination({
             <PageNumber
               pageNum={1}
               href={getPageUrl(1)}
-              isActive={currentPage === 1}
+              isActive={displayPage === 1}
+              onNavigate={() => handlePageNavigate(1)}
             />
             <PageNumber
               pageNum={2}
               href={getPageUrl(2)}
-              isActive={currentPage === 2}
+              isActive={displayPage === 2}
+              onNavigate={() => handlePageNavigate(2)}
             />
             <PageNumber
               pageNum={3}
               href={getPageUrl(3)}
-              isActive={currentPage === 3}
+              isActive={displayPage === 3}
+              onNavigate={() => handlePageNavigate(3)}
             />
             <Ellipsis />
             <PageNumber
               pageNum={totalPages}
               href={getPageUrl(totalPages)}
-              isActive={currentPage === totalPages}
+              isActive={displayPage === totalPages}
+              onNavigate={() => handlePageNavigate(totalPages)}
             />
           </>
         );
@@ -105,18 +128,25 @@ export default function Pagination({
         // Show: 1, ..., current, ..., last
         return (
           <>
-            <PageNumber pageNum={1} href={getPageUrl(1)} isActive={false} />
+            <PageNumber
+              pageNum={1}
+              href={getPageUrl(1)}
+              isActive={displayPage === 1}
+              onNavigate={() => handlePageNavigate(1)}
+            />
             <Ellipsis />
             <PageNumber
-              pageNum={currentPage}
-              href={getPageUrl(currentPage)}
+              pageNum={displayPage}
+              href={getPageUrl(displayPage)}
               isActive={true}
+              onNavigate={() => handlePageNavigate(displayPage)}
             />
             <Ellipsis />
             <PageNumber
               pageNum={totalPages}
               href={getPageUrl(totalPages)}
-              isActive={false}
+              isActive={displayPage === totalPages}
+              onNavigate={() => handlePageNavigate(totalPages)}
             />
           </>
         );
@@ -125,22 +155,30 @@ export default function Pagination({
         // Show: 1, ..., (last-2), (last-1), last
         return (
           <>
-            <PageNumber pageNum={1} href={getPageUrl(1)} isActive={false} />
+            <PageNumber
+              pageNum={1}
+              href={getPageUrl(1)}
+              isActive={displayPage === 1}
+              onNavigate={() => handlePageNavigate(1)}
+            />
             <Ellipsis />
             <PageNumber
               pageNum={totalPages - 2}
               href={getPageUrl(totalPages - 2)}
-              isActive={currentPage === totalPages - 2}
+              isActive={displayPage === totalPages - 2}
+              onNavigate={() => handlePageNavigate(totalPages - 2)}
             />
             <PageNumber
               pageNum={totalPages - 1}
               href={getPageUrl(totalPages - 1)}
-              isActive={currentPage === totalPages - 1}
+              isActive={displayPage === totalPages - 1}
+              onNavigate={() => handlePageNavigate(totalPages - 1)}
             />
             <PageNumber
               pageNum={totalPages}
               href={getPageUrl(totalPages)}
-              isActive={currentPage === totalPages}
+              isActive={displayPage === totalPages}
+              onNavigate={() => handlePageNavigate(totalPages)}
             />
           </>
         );
@@ -148,14 +186,20 @@ export default function Pagination({
   };
 
   const handlePrevPage = () => {
-    if (currentPage > 1) {
-      router.push(getPageUrl(currentPage - 1), { scroll: false });
+    const prevPage = displayPage - 1;
+    if (prevPage >= 1) {
+      setPendingPage(prevPage);
+      startLoading("pagination");
+      router.push(getPageUrl(prevPage), { scroll: false });
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      router.push(getPageUrl(currentPage + 1), { scroll: false });
+    const nextPage = displayPage + 1;
+    if (nextPage <= totalPages) {
+      setPendingPage(nextPage);
+      startLoading("pagination");
+      router.push(getPageUrl(nextPage), { scroll: false });
     }
   };
 
@@ -166,7 +210,7 @@ export default function Pagination({
         direction="prev"
         onClick={handlePrevPage}
         ariaLabel="Poprzednia strona"
-        disabled={currentPage <= 1}
+        disabled={displayPage <= 1}
         variant="gray"
         size="md"
       />
@@ -179,7 +223,7 @@ export default function Pagination({
         direction="next"
         onClick={handleNextPage}
         ariaLabel="Następna strona"
-        disabled={currentPage >= totalPages}
+        disabled={displayPage >= totalPages}
         variant="gray"
         size="md"
       />
@@ -192,10 +236,12 @@ function PageNumber({
   pageNum,
   href,
   isActive,
+  onNavigate,
 }: {
   pageNum: number;
   href: string;
   isActive: boolean;
+  onNavigate?: () => void;
 }) {
   if (isActive) {
     return (
@@ -209,7 +255,12 @@ function PageNumber({
   }
 
   return (
-    <Link href={href} className={styles.pageNumber} scroll={false}>
+    <Link
+      href={href}
+      className={styles.pageNumber}
+      scroll={false}
+      onClick={onNavigate}
+    >
       {pageNum}
     </Link>
   );

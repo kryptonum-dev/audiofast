@@ -6,25 +6,25 @@ This document describes the data mapping and migration flow for brand data from 
 
 ## Quick Reference: What to Migrate
 
-| Field | Source in CSV | Required |
-|-------|---------------|----------|
-| Name | `Name` column | ✅ |
-| Slug | Generated from `Slug` column | ✅ |
-| Logo | `LogoFilename` column → upload asset | ✅ |
-| Hero Description | `HeroDescription` column | ✅ |
-| Hero Image | **Always PrimaLuna ref** | ✅ |
-| Banner Image | `BannerImageFilename` column → upload asset | Optional |
-| **Content Blocks** | ALL `TextBoxContent` rows → array of content blocks | ✅ |
-| Images in Description | `[image src="..."]` shortcodes → `ptMinimalImage` | Optional |
-| Headings in Description | H3/H4 → `h3` style blocks | Optional |
-| YouTube Videos | Extracted from `<iframe>` in `TextBoxContent` | Optional |
-| **Vimeo Videos** | Extracted from `<iframe>` in `TextBoxContent` | Optional |
-| **Horizontal Lines** | `<hr>` tags → `contentBlockHorizontalLine` | Optional |
-| Distribution Year | **OMIT** | ❌ |
-| Image Gallery | **OMIT** (unless "slider" block → use for gallery) | ❌ |
-| Featured Reviews | **OMIT** | ❌ |
-| SEO Title | Brand name only | ✅ |
-| SEO Description | Generated, 110-140 chars | ✅ |
+| Field                   | Source in CSV                                       | Required |
+| ----------------------- | --------------------------------------------------- | -------- |
+| Name                    | `Name` column                                       | ✅       |
+| Slug                    | Generated from `Slug` column                        | ✅       |
+| Logo                    | `LogoFilename` column → upload asset                | ✅       |
+| Hero Description        | `HeroDescription` column                            | ✅       |
+| Hero Image              | **Always PrimaLuna ref**                            | ✅       |
+| Banner Image            | `BannerImageFilename` column → upload asset         | Optional |
+| **Content Blocks**      | ALL `TextBoxContent` rows → array of content blocks | ✅       |
+| Images in Description   | `[image src="..."]` shortcodes → `ptMinimalImage`   | Optional |
+| Headings in Description | H3/H4 → `h3` style blocks                           | Optional |
+| YouTube Videos          | Extracted from `<iframe>` in `TextBoxContent`       | Optional |
+| **Vimeo Videos**        | Extracted from `<iframe>` in `TextBoxContent`       | Optional |
+| **Horizontal Lines**    | `<hr>` tags → `contentBlockHorizontalLine`          | Optional |
+| Distribution Year       | **OMIT**                                            | ❌       |
+| Image Gallery           | **OMIT** (unless "slider" block → use for gallery)  | ❌       |
+| Featured Reviews        | **OMIT**                                            | ❌       |
+| SEO Title               | Brand name only                                     | ✅       |
+| SEO Description         | Generated, 110-140 chars                            | ✅       |
 
 ---
 
@@ -36,12 +36,12 @@ The `brandDescription` field has been replaced with `brandContentBlocks` - an ar
 
 ### Block Types
 
-| Block Type | Sanity Type | Purpose |
-|------------|-------------|---------|
-| Text Block | `contentBlockText` | Rich text with images, links, videos, and **two-column support** |
-| YouTube Video | `contentBlockYoutube` | Standalone YouTube video embed |
-| Vimeo Video | `contentBlockVimeo` | Standalone Vimeo video embed |
-| Horizontal Line | `contentBlockHorizontalLine` | Visual separator between sections |
+| Block Type      | Sanity Type                  | Purpose                                                          |
+| --------------- | ---------------------------- | ---------------------------------------------------------------- |
+| Text Block      | `contentBlockText`           | Rich text with images, links, videos, and **two-column support** |
+| YouTube Video   | `contentBlockYoutube`        | Standalone YouTube video embed                                   |
+| Vimeo Video     | `contentBlockVimeo`          | Standalone Vimeo video embed                                     |
+| Horizontal Line | `contentBlockHorizontalLine` | Visual separator between sections                                |
 
 ### Schema Structure
 
@@ -82,6 +82,7 @@ Within a `contentBlockText`, you can add a `ptPageBreak` component to split cont
 ```
 
 **Rules:**
+
 - **Max 1 ptPageBreak** per text block (validation enforced)
 - Columns size **naturally based on content amount** (not 50/50)
 - If 3/4 content before break, 1/4 after → columns reflect that ratio
@@ -89,23 +90,24 @@ Within a `contentBlockText`, you can add a `ptPageBreak` component to split cont
 
 ### Portable Text Components (inside contentBlockText)
 
-| Component | Type | Purpose |
-|-----------|------|---------|
-| Page Break | `ptPageBreak` | Splits content into two columns |
-| YouTube Video | `ptYoutubeVideo` | Inline YouTube within text |
-| Vimeo Video | `ptVimeoVideo` | Inline Vimeo within text |
-| Minimal Image | `ptMinimalImage` | Inline image |
-| Heading | `ptHeading` | Custom heading |
+| Component     | Type             | Purpose                         |
+| ------------- | ---------------- | ------------------------------- |
+| Page Break    | `ptPageBreak`    | Splits content into two columns |
+| YouTube Video | `ptYoutubeVideo` | Inline YouTube within text      |
+| Vimeo Video   | `ptVimeoVideo`   | Inline Vimeo within text        |
+| Minimal Image | `ptMinimalImage` | Inline image                    |
+| Heading       | `ptHeading`      | Custom heading                  |
 
 ---
 
 ## CSV Data Structure
 
 ### Source File
+
 Export from phpMyAdmin with this query:
 
 ```sql
-SELECT 
+SELECT
   s.ID,
   s.Title as Name,
   s.URLSegment as Slug,
@@ -130,24 +132,25 @@ ORDER BY s.Title, b_text.Sort;
 
 ### CSV Columns
 
-| Column | Description | Example |
-|--------|-------------|---------|
-| `ID` | Brand ID | `58` |
-| `Name` | Brand name | `Bricasti` |
-| `Slug` | URL segment | `bricasti` |
-| `LogoID` | File ID for logo | `10617` |
-| `LogoFilename` | Logo file path | `producer-logo/Bricasti-250-v5.png` |
-| `HeroDescription` | "Opis marki w menu" HTML | `<p>Bricasti to firma...</p>` |
-| `BannerBoxID` | Box ID for banner | `733` or `NULL` |
-| `BigPictureID` | File ID for banner | `10757` or `NULL` |
-| `BannerImageFilename` | Banner file path | `bigpicture/Bricasti-banner-v3.jpg` or `NULL` |
-| `TextBoxID` | Box ID for text | `734` |
-| `TextBoxContent` | Text or video HTML | `<p>Bricasti Design...</p>` |
-| `BoxType` | Type of box | `text`, `youtube`, `vimeo`, `line`, `slider` |
+| Column                | Description              | Example                                       |
+| --------------------- | ------------------------ | --------------------------------------------- |
+| `ID`                  | Brand ID                 | `58`                                          |
+| `Name`                | Brand name               | `Bricasti`                                    |
+| `Slug`                | URL segment              | `bricasti`                                    |
+| `LogoID`              | File ID for logo         | `10617`                                       |
+| `LogoFilename`        | Logo file path           | `producer-logo/Bricasti-250-v5.png`           |
+| `HeroDescription`     | "Opis marki w menu" HTML | `<p>Bricasti to firma...</p>`                 |
+| `BannerBoxID`         | Box ID for banner        | `733` or `NULL`                               |
+| `BigPictureID`        | File ID for banner       | `10757` or `NULL`                             |
+| `BannerImageFilename` | Banner file path         | `bigpicture/Bricasti-banner-v3.jpg` or `NULL` |
+| `TextBoxID`           | Box ID for text          | `734`                                         |
+| `TextBoxContent`      | Text or video HTML       | `<p>Bricasti Design...</p>`                   |
+| `BoxType`             | Type of box              | `text`, `youtube`, `vimeo`, `line`, `slider`  |
 
 ### Important: Multiple Rows per Brand
 
 A brand may have **multiple rows** in the CSV because:
+
 - It has multiple content boxes (text, video, line sections)
 - Each box creates a separate row
 - Rows are ordered by `Sort` field
@@ -158,34 +161,41 @@ The migration script groups rows by `ID` and processes each box as a separate co
 
 ## SilverStripe Box Types → Sanity Content Blocks
 
-| SilverStripe BoxType | Sanity Block Type | Notes |
-|---------------------|-------------------|-------|
-| `text` | `contentBlockText` | Rich text content |
-| `youtube` | `contentBlockYoutube` | Standalone YouTube |
-| `vimeo` | `contentBlockVimeo` | Standalone Vimeo |
-| `line` / `<hr>` | `contentBlockHorizontalLine` | Visual separator |
-| `slider` | → `imageGallery` field | Images go to brand's imageGallery array |
+| SilverStripe BoxType | Sanity Block Type            | Notes                                   |
+| -------------------- | ---------------------------- | --------------------------------------- |
+| `text`               | `contentBlockText`           | Rich text content                       |
+| `youtube`            | `contentBlockYoutube`        | Standalone YouTube                      |
+| `vimeo`              | `contentBlockVimeo`          | Standalone Vimeo                        |
+| `line` / `<hr>`      | `contentBlockHorizontalLine` | Visual separator                        |
+| `slider`             | → `imageGallery` field       | Images go to brand's imageGallery array |
 
 ---
 
 ## Field Mapping Details
 
 ### 1. Name
+
 **Source:** `Name` column
+
 ```
 'Bricasti' → name: 'Bricasti'
 ```
 
 ### 2. Slug
+
 **Source:** `Slug` column with prefix/suffix
+
 ```
 'bricasti' → slug: '/marki/bricasti/'
 ```
+
 - Prefix with `/marki/`
 - Suffix with `/`
 
 ### 3. Logo
+
 **Source:** `LogoFilename` column
+
 ```
 LogoFilename: 'producer-logo/Bricasti-250-v5.png'
 → Upload from: https://audiofast.pl/assets/producer-logo/Bricasti-250-v5.png
@@ -193,18 +203,24 @@ LogoFilename: 'producer-logo/Bricasti-250-v5.png'
 ```
 
 ### 4. Hero Description
+
 **Source:** `HeroDescription` column
 
 This is the "Opis marki w menu" - the simple description shown in brand cards/menus.
 
 ```html
-<p>Bricasti to firma, której współzałożycielami są dwie amerykańskie 
-legendy branży pro audio, Brian Zolner i Casey Dowdell...</p>
+<p>
+  Bricasti to firma, której współzałożycielami są dwie amerykańskie legendy
+  branży pro audio, Brian Zolner i Casey Dowdell...
+</p>
 ```
+
 → Convert to Portable Text
 
 ### 5. Hero Image
+
 **Source:** **ALWAYS use PrimaLuna reference**
+
 ```javascript
 heroImage: {
   _type: 'image',
@@ -216,7 +232,9 @@ heroImage: {
 ```
 
 ### 6. Banner Image
+
 **Source:** `BannerImageFilename` column (if not NULL)
+
 ```
 BannerImageFilename: 'bigpicture/Bricasti-banner-v3.jpg'
 → Upload from: https://audiofast.pl/assets/bigpicture/Bricasti-banner-v3.jpg
@@ -304,23 +322,27 @@ When encountering a `slider` box type, extract all images and add to brand's `im
 // Don't create a content block
 // Instead, add images to:
 imageGallery: [
-  { _type: 'image', asset: { _ref: 'image-1-xxx' } },
-  { _type: 'image', asset: { _ref: 'image-2-xxx' } },
+  { _type: "image", asset: { _ref: "image-1-xxx" } },
+  { _type: "image", asset: { _ref: "image-2-xxx" } },
   // ...
-]
+];
 ```
 
 ### 8. Image Handling in Text Blocks
 
 Images in text blocks use SilverStripe shortcode format:
+
 ```html
-[image src="/assets/produkty/GrimmAudio/Eelco-Grimm.jpg" id="8089" width="550" height="364" class="leftAlone ss-htmleditorfield-file image"]
+[image src="/assets/produkty/GrimmAudio/Eelco-Grimm.jpg" id="8089" width="550"
+height="364" class="leftAlone ss-htmleditorfield-file image"]
 ```
 
 **Migration behavior:**
+
 1. Extract image shortcodes from text content
 2. Upload image from `https://audiofast.pl/assets/{path}` to Sanity
 3. Convert to `ptMinimalImage` block inside contentBlockText:
+
 ```javascript
 {
   _type: 'ptMinimalImage',
@@ -339,15 +361,15 @@ Images in text blocks use SilverStripe shortcode format:
 
 HTML headings are mapped to Portable Text styles:
 
-| Source HTML | Portable Text Style | Notes |
-|-------------|---------------------|-------|
-| `<h1>` | `h3` | All H1 become H3 in content (section heading is always "O marce") |
-| `<h2 class="left-border">` | `h3` | Left-border headings become H3 |
-| `<h2>` | `h3` | Regular H2 maps to H3 in content |
-| `<h3>` | `h3` | Preserved as H3 |
-| `<h4>` | `h3` | Mapped to H3 |
-| `<p>` | `normal` | Regular paragraphs |
-| `<blockquote>` | `blockquote` | Preserved |
+| Source HTML                | Portable Text Style | Notes                                                             |
+| -------------------------- | ------------------- | ----------------------------------------------------------------- |
+| `<h1>`                     | `h3`                | All H1 become H3 in content (section heading is always "O marce") |
+| `<h2 class="left-border">` | `h3`                | Left-border headings become H3                                    |
+| `<h2>`                     | `h3`                | Regular H2 maps to H3 in content                                  |
+| `<h3>`                     | `h3`                | Preserved as H3                                                   |
+| `<h4>`                     | `h3`                | Mapped to H3                                                      |
+| `<p>`                      | `normal`            | Regular paragraphs                                                |
+| `<blockquote>`             | `blockquote`        | Preserved                                                         |
 
 ### 10. Video Detection in Mixed Content
 
@@ -360,22 +382,27 @@ When a text box contains BOTH text AND video iframes:
 ```
 
 **Migration behavior:**
+
 - Create single `contentBlockText`
 - Video becomes inline `ptYoutubeVideo` or `ptVimeoVideo` within the content
 - Text flows around/after the video
 
 ### 11-13. OMIT These Fields
+
 - **Distribution Year** - Skip entirely
 - **Image Gallery** - Only populate from `slider` boxes
 - **Featured Reviews** - Skip entirely
 
 ### 14. SEO
+
 **SEO Title:** Just the brand name
+
 ```
 seo.title: 'Bricasti'
 ```
 
 **SEO Description:** Generate 110-140 characters
+
 ```
 seo.description: 'Bricasti to firma, której współzałożycielami są dwie amerykańskie legendy branży pro audio, Brian Zolner i Casey Dowdell, a nazwa firmy p...'
 ```
@@ -414,9 +441,9 @@ Row 4 (youtube):
   _id: 'brand-73',
   _type: 'brand',
   name: 'Audio Research',
-  slug: { 
-    _type: 'slug', 
-    current: '/marki/audio-research/' 
+  slug: {
+    _type: 'slug',
+    current: '/marki/audio-research/'
   },
   logo: {
     _type: 'image',
@@ -431,9 +458,9 @@ Row 4 (youtube):
   ],
   heroImage: {
     _type: 'image',
-    asset: { 
-      _type: 'reference', 
-      _ref: 'image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp' 
+    asset: {
+      _type: 'reference',
+      _ref: 'image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp'
     }
   },
   bannerImage: {
@@ -453,14 +480,14 @@ Row 4 (youtube):
         { _type: 'block', style: 'normal', children: [{ text: 'More text...' }] },
       ]
     },
-    
+
     // Row 2 - Horizontal line
     {
       _type: 'contentBlockHorizontalLine',
       _key: 'block-2',
       style: 'horizontalLine'
     },
-    
+
     // Row 3 - Text block (single column, no page break)
     {
       _type: 'contentBlockText',
@@ -470,7 +497,7 @@ Row 4 (youtube):
         { _type: 'block', style: 'normal', children: [{ text: 'W 1951 roku...' }] },
       ]
     },
-    
+
     // Row 4 - Standalone YouTube
     {
       _type: 'contentBlockYoutube',
@@ -480,7 +507,7 @@ Row 4 (youtube):
       thumbnail: null
     }
   ],
-  
+
   seo: {
     title: 'Audio Research',
     description: 'Audio Research kojarzy się z prestiżem, doskonałym brzmieniem i wieloletnią trwałością wśród miłośników muzyki na całym świecie...'
@@ -503,38 +530,38 @@ The component iterates through `brandContentBlocks` and renders each block type:
 ```tsx
 blocks.map((block) => {
   switch (block._type) {
-    case 'contentBlockText':
+    case "contentBlockText":
       // Check if content has ptPageBreak
       // If yes → render in two-column grid layout
       // If no → render as single column
       return <TextBlockRenderer content={block.content} />;
-      
-    case 'contentBlockYoutube':
+
+    case "contentBlockYoutube":
       return <YoutubeBlock youtubeId={block.youtubeId} />;
-      
-    case 'contentBlockVimeo':
+
+    case "contentBlockVimeo":
       return <VimeoBlock vimeoId={block.vimeoId} />;
-      
-    case 'contentBlockHorizontalLine':
+
+    case "contentBlockHorizontalLine":
       return <HorizontalLineBlock />;
   }
-})
+});
 ```
 
 ### Two-Column Detection
 
 ```typescript
 function hasPageBreak(content: PortableTextProps): boolean {
-  return content.some(item => item._type === 'ptPageBreak');
+  return content.some((item) => item._type === "ptPageBreak");
 }
 
 function splitContentAtPageBreak(content) {
-  const index = content.findIndex(item => item._type === 'ptPageBreak');
+  const index = content.findIndex((item) => item._type === "ptPageBreak");
   if (index === -1) return null;
-  
+
   return [
-    content.slice(0, index),      // Left column
-    content.slice(index + 1)      // Right column (skip ptPageBreak)
+    content.slice(0, index), // Left column
+    content.slice(index + 1), // Right column (skip ptPageBreak)
   ];
 }
 ```
@@ -545,14 +572,24 @@ function splitContentAtPageBreak(content) {
 .textBlockTwoColumn {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  
-  .leftColumn { /* natural sizing */ }
-  .columnDivider { width: 1px; background: var(--neutral-400); }
-  .rightColumn { /* natural sizing */ }
-  
+
+  .leftColumn {
+    /* natural sizing */
+  }
+  .columnDivider {
+    width: 1px;
+    background: var(--neutral-400);
+  }
+  .rightColumn {
+    /* natural sizing */
+  }
+
   @media (max-width: 56.1875rem) {
     flex-direction: column;
-    .columnDivider { width: 100%; height: 1px; }
+    .columnDivider {
+      width: 100%;
+      height: 1px;
+    }
   }
 }
 ```
@@ -562,11 +599,13 @@ function splitContentAtPageBreak(content) {
 ## Migration Script
 
 ### Location
+
 ```
 apps/studio/scripts/migration/brands/migrate-brand-csv.ts
 ```
 
 ### Prerequisites
+
 1. CSV file at project root: `brandsall.csv`
 2. Environment variable: `SANITY_API_TOKEN`
 
@@ -603,7 +642,7 @@ SANITY_API_TOKEN="xxx" bun run apps/studio/scripts/migration/brands/migrate-bran
 The legacy site `audiofast.pl` has SSL certificate issues. The script uses:
 
 ```javascript
-import * as https from 'node:https';
+import * as https from "node:https";
 
 const insecureAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -625,23 +664,29 @@ Banner: https://audiofast.pl/assets/{BannerImageFilename}
 ## Handling YouTube vs Vimeo
 
 ### YouTube (Supported ✅)
+
 ```html
-<iframe src="https://www.youtube.com/embed/W2TbD6R7_ug">
+<iframe src="https://www.youtube.com/embed/W2TbD6R7_ug"></iframe>
 ```
+
 → Creates `contentBlockYoutube` (standalone) or `ptYoutubeVideo` (inline)
 
-Extract ID: 
+Extract ID:
+
 ```javascript
 const match = content.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/);
 ```
 
 ### Vimeo (Supported ✅)
+
 ```html
-<iframe src="https://player.vimeo.com/video/328584595">
+<iframe src="https://player.vimeo.com/video/328584595"></iframe>
 ```
+
 → Creates `contentBlockVimeo` (standalone) or `ptVimeoVideo` (inline)
 
 Extract ID:
+
 ```javascript
 const match = content.match(/vimeo\.com\/video\/(\d+)/);
 ```
@@ -650,43 +695,43 @@ const match = content.match(/vimeo\.com\/video\/(\d+)/);
 
 ## Available Brands (from CSV)
 
-| ID | Name |
-|----|------|
-| 46 | Acoustic Signature |
-| 47 | Artesania Audio |
-| 52 | dCS |
-| 55 | Exogal |
-| 56 | Dan D'Agostino |
-| 57 | Goldenear Technology |
-| 58 | Bricasti |
-| 59 | PrimaLuna |
-| 60 | Rogue Audio |
-| 61 | Shunyata Research |
-| 62 | Soundsmith |
-| 63 | Spiral Groove |
-| 64 | Symposium |
-| 65 | Synergistic Research |
-| 67 | Vandersteen |
-| 69 | Vibrapod |
-| 70 | Wilson Audio |
-| 71 | Gryphon Audio |
-| 73 | Audio Research |
-| 79 | Mutec |
-| 232 | Aurender |
-| 235 | Grand Prix Audio |
-| 237 | Moonriver Audio |
-| 242 | Usher |
-| 456 | KLH Audio |
-| 458 | Roon Labs |
-| 489 | Keces Audio |
-| 739 | Thixar |
-| 1543 | Grimm Audio |
-| 1669 | Taiko Audio |
-| 1747 | Dutch & Dutch |
-| 1903 | Stealth Audio |
-| 1982 | Ayre Acoustics |
-| 2049 | Weiss Engineering |
-| 2064 | VIV Laboratory |
+| ID   | Name                 |
+| ---- | -------------------- |
+| 46   | Acoustic Signature   |
+| 47   | Artesania Audio      |
+| 52   | dCS                  |
+| 55   | Exogal               |
+| 56   | Dan D'Agostino       |
+| 57   | Goldenear Technology |
+| 58   | Bricasti             |
+| 59   | PrimaLuna            |
+| 60   | Rogue Audio          |
+| 61   | Shunyata Research    |
+| 62   | Soundsmith           |
+| 63   | Spiral Groove        |
+| 64   | Symposium            |
+| 65   | Synergistic Research |
+| 67   | Vandersteen          |
+| 69   | Vibrapod             |
+| 70   | Wilson Audio         |
+| 71   | Gryphon Audio        |
+| 73   | Audio Research       |
+| 79   | Mutec                |
+| 232  | Aurender             |
+| 235  | Grand Prix Audio     |
+| 237  | Moonriver Audio      |
+| 242  | Usher                |
+| 456  | KLH Audio            |
+| 458  | Roon Labs            |
+| 489  | Keces Audio          |
+| 739  | Thixar               |
+| 1543 | Grimm Audio          |
+| 1669 | Taiko Audio          |
+| 1747 | Dutch & Dutch        |
+| 1903 | Stealth Audio        |
+| 1982 | Ayre Acoustics       |
+| 2049 | Weiss Engineering    |
+| 2064 | VIV Laboratory       |
 
 ---
 

@@ -9,6 +9,7 @@ This document outlines the comprehensive strategy for migrating data from the le
 ## 1. Source System Analysis
 
 ### 1.1 Database Platform
+
 - **CMS**: SilverStripe CMS (PHP-based)
 - **Database**: MySQL (MyISAM/InnoDB mixed)
 - **Character Set**: Mixed (latin2, utf8)
@@ -16,27 +17,29 @@ This document outlines the comprehensive strategy for migrating data from the le
 
 ### 1.2 Key Tables Identified
 
-| Table Group | Tables | Records (approx) | Purpose |
-|-------------|--------|------------------|---------|
-| **Products** | `Product`, `Product_Localised`, `Product_ProductTypes` | ~190 | Audio equipment catalog |
-| **Brands** | `ProducerPage`, `ProducerPage_Localised`, `SiteTree` | ~60 | Brand/manufacturer pages |
-| **Categories** | `DeviceType`, `ProductType`, `ProductType_Localised` | ~40 | Product categorization |
-| **Articles/Blog** | `ArticlePage`, `ArticlePage_Localised`, `ArticleCategory` | ~300 | News and blog content |
-| **Reviews** | `ReviewPage`, `ReviewPage_Localised`, `ReviewProduct` | ~200 | Product reviews |
-| **Stores/Dealers** | `Dealer`, `Dealer_ProducerPage` | 49 | Physical store locations |
-| **Awards** | `Awards`, `BoxAwards` | ~340 | Product awards/accolades |
-| **Content Boxes** | `Box`, `Box_Localised`, `Box_GridImage`, `Tabs` | ~4800 | Product details, galleries, specs |
-| **Files/Assets** | `File`, `File_Live` | ~14000 | Images, PDFs, documents |
-| **Pages** | `SiteTree`, `SiteTree_Localised` | ~2800 | Page metadata, URLs, content |
+| Table Group        | Tables                                                    | Records (approx) | Purpose                           |
+| ------------------ | --------------------------------------------------------- | ---------------- | --------------------------------- |
+| **Products**       | `Product`, `Product_Localised`, `Product_ProductTypes`    | ~190             | Audio equipment catalog           |
+| **Brands**         | `ProducerPage`, `ProducerPage_Localised`, `SiteTree`      | ~60              | Brand/manufacturer pages          |
+| **Categories**     | `DeviceType`, `ProductType`, `ProductType_Localised`      | ~40              | Product categorization            |
+| **Articles/Blog**  | `ArticlePage`, `ArticlePage_Localised`, `ArticleCategory` | ~300             | News and blog content             |
+| **Reviews**        | `ReviewPage`, `ReviewPage_Localised`, `ReviewProduct`     | ~200             | Product reviews                   |
+| **Stores/Dealers** | `Dealer`, `Dealer_ProducerPage`                           | 49               | Physical store locations          |
+| **Awards**         | `Awards`, `BoxAwards`                                     | ~340             | Product awards/accolades          |
+| **Content Boxes**  | `Box`, `Box_Localised`, `Box_GridImage`, `Tabs`           | ~4800            | Product details, galleries, specs |
+| **Files/Assets**   | `File`, `File_Live`                                       | ~14000           | Images, PDFs, documents           |
+| **Pages**          | `SiteTree`, `SiteTree_Localised`                          | ~2800            | Page metadata, URLs, content      |
 
 ### 1.3 Data Characteristics
 
 #### Content Format
+
 - **Rich Text**: HTML stored in `Content` fields
 - **Localization**: Polish (`pl_PL`) primary, English (`en_US`) secondary
 - **Serialized Data**: PHP `serialize()` format in some fields (e.g., `product_limiter`)
 
 #### Relationships
+
 ```
 Product
 ├── → ProducerPage (brand via ProducerPageID)
@@ -66,6 +69,7 @@ ReviewPage
 ```
 
 #### Image Storage
+
 - Images stored as files in `/assets/` directory on legacy server
 - Referenced in `File` table via `FileFilename` column
 - Paths like: `galeria/product-name.jpg`, `produkty/brand/image.png`
@@ -76,25 +80,27 @@ ReviewPage
 
 ### 2.1 Document Types
 
-| Sanity Type | Source Tables | Status |
-|-------------|---------------|--------|
-| `store` | `Dealer` | ✅ **MIGRATED** (49 records) |
-| `productCategoryParent` | `DeviceType` | 🔲 Pending |
-| `productCategorySub` | `ProductType` + `SiteTree` | 🔲 Pending |
-| `brand` | `ProducerPage` + `SiteTree` | 🔲 Pending |
-| `product` | `Product` + `Box` + `Tabs` + `SiteTree` | 🔲 Pending |
-| `blogCategory` | `ArticleCategory` | 🔲 Pending |
-| `blogArticle` | `ArticlePage` + `SiteTree` | 🔲 Pending |
-| `reviewAuthor` | Extracted from `ReviewPage.Author` | 🔲 Pending |
-| `review` | `ReviewPage` + `SiteTree` | 🔲 Pending |
-| `award` | `Awards` | 🔲 Pending |
-| `teamMember` | Manual/existing | ⏭️ Skip (manual entry) |
-| `faq` | Manual/existing | ⏭️ Skip (manual entry) |
+| Sanity Type             | Source Tables                           | Status                       |
+| ----------------------- | --------------------------------------- | ---------------------------- |
+| `store`                 | `Dealer`                                | ✅ **MIGRATED** (49 records) |
+| `productCategoryParent` | `DeviceType`                            | 🔲 Pending                   |
+| `productCategorySub`    | `ProductType` + `SiteTree`              | 🔲 Pending                   |
+| `brand`                 | `ProducerPage` + `SiteTree`             | 🔲 Pending                   |
+| `product`               | `Product` + `Box` + `Tabs` + `SiteTree` | 🔲 Pending                   |
+| `blogCategory`          | `ArticleCategory`                       | 🔲 Pending                   |
+| `blogArticle`           | `ArticlePage` + `SiteTree`              | 🔲 Pending                   |
+| `reviewAuthor`          | Extracted from `ReviewPage.Author`      | 🔲 Pending                   |
+| `review`                | `ReviewPage` + `SiteTree`               | 🔲 Pending                   |
+| `award`                 | `Awards`                                | 🔲 Pending                   |
+| `teamMember`            | Manual/existing                         | ⏭️ Skip (manual entry)       |
+| `faq`                   | Manual/existing                         | ⏭️ Skip (manual entry)       |
 
 ### 2.2 Schema Considerations
 
 #### Portable Text Conversion
+
 All HTML content must be converted to Sanity's Portable Text format:
+
 - `<p>` → `block` with `normal` style
 - `<h2>`, `<h3>` → `block` with heading style
 - `<strong>`, `<em>` → marks/decorators
@@ -104,6 +110,7 @@ All HTML content must be converted to Sanity's Portable Text format:
 - `<table>` → Custom handling or `ptTwoColumnTable`
 
 #### Reference Resolution
+
 - Old IDs must be mapped to new Sanity UUIDs
 - References created after dependent documents exist
 - Cross-references (e.g., related products) applied in final pass
@@ -158,11 +165,12 @@ Phase 4: Cross-References (Updates)
 **Target**: `productCategoryParent`
 
 | Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `ID` | `_id` | Generate UUID |
-| `Title` | `name` | Direct copy |
+| ------------ | ------------ | -------------- |
+| `ID`         | `_id`        | Generate UUID  |
+| `Title`      | `name`       | Direct copy    |
 
 **Sample Data**:
+
 ```
 ID=1: "Źródła cyfrowe i analogowe"
 ID=2: "Zasilanie i uziemianie"
@@ -181,13 +189,13 @@ ID=6: "Akcesoria"
 **Source**: `ProductType` + `SiteTree` + `ProductType_Localised`
 **Target**: `productCategorySub`
 
-| Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `ProductType.ID` | `_id` | Generate UUID |
-| `SiteTree.Title` | `name` | Direct copy |
-| `SiteTree.URLSegment` | `slug` | Add `/kategoria/` prefix |
-| `ProductType.TypeDescription` | `description` | HTML → Portable Text |
-| `DeviceType_ProductType` | `parentCategory` | Reference via mapping |
+| Source Field                  | Target Field     | Transformation           |
+| ----------------------------- | ---------------- | ------------------------ |
+| `ProductType.ID`              | `_id`            | Generate UUID            |
+| `SiteTree.Title`              | `name`           | Direct copy              |
+| `SiteTree.URLSegment`         | `slug`           | Add `/kategoria/` prefix |
+| `ProductType.TypeDescription` | `description`    | HTML → Portable Text     |
+| `DeviceType_ProductType`      | `parentCategory` | Reference via mapping    |
 
 **Complexity**: Medium (requires SiteTree join, HTML conversion)
 **Estimated Records**: ~35
@@ -199,16 +207,16 @@ ID=6: "Akcesoria"
 **Source**: `ProducerPage` + `SiteTree` + `ProducerPage_Localised` + `File`
 **Target**: `brand`
 
-| Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `ProducerPage.ID` | `_id` | Generate UUID |
-| `SiteTree.Title` | `name` | Direct copy |
-| `SiteTree.URLSegment` | `slug` | Add `/marki/` prefix |
-| `ProducerPage.motto` | `description` | HTML → Portable Text |
-| `ProducerPage.ProducerDescription` | `brandDescription` | HTML → Portable Text |
-| `ProducerPage.LogoID` | `logo` | Upload asset, create reference |
-| `File` via `LogoID` | `logo` | Fetch from legacy server |
-| `ProducerGridImage` | `imageGallery` | Upload assets |
+| Source Field                       | Target Field       | Transformation                 |
+| ---------------------------------- | ------------------ | ------------------------------ |
+| `ProducerPage.ID`                  | `_id`              | Generate UUID                  |
+| `SiteTree.Title`                   | `name`             | Direct copy                    |
+| `SiteTree.URLSegment`              | `slug`             | Add `/marki/` prefix           |
+| `ProducerPage.motto`               | `description`      | HTML → Portable Text           |
+| `ProducerPage.ProducerDescription` | `brandDescription` | HTML → Portable Text           |
+| `ProducerPage.LogoID`              | `logo`             | Upload asset, create reference |
+| `File` via `LogoID`                | `logo`             | Fetch from legacy server       |
+| `ProducerGridImage`                | `imageGallery`     | Upload assets                  |
 
 **Complexity**: High (multiple joins, image uploads, HTML conversion)
 **Estimated Records**: ~55
@@ -220,23 +228,23 @@ ID=6: "Akcesoria"
 **Source**: `Product` + `Box` + `Tabs` + `Box_GridImage` + `SiteTree` + `File`
 **Target**: `product`
 
-| Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `Product.ID` | `_id` | Generate UUID |
-| `Product.name` | `name` | Direct copy |
-| `Product.producttitle_desc` | `subtitle` | Direct copy |
-| `Product.URLSegment` | `slug` | Add `/produkty/` prefix |
-| `Product.ProductImageID` | `previewImage` | Upload asset |
-| `Product.ProducerPageID` | `brand` | Reference via mapping |
-| `Product.ProductTypeID` | `categories[0]` | Reference via mapping |
-| `Product_ProductTypes` | `categories[]` | Additional category refs |
-| `Product.archived` | `isArchived` | Boolean conversion |
-| `Box.Content` | `details.content` | HTML → Portable Text |
-| `Box_GridImage` → `File` | `imageGallery` | Upload assets |
-| `Tabs.Content` | `technicalData` | HTML table → structured data |
-| `Dealer_ProducerPage` | `availableInStores` | Reference via mapping |
-| `BoxAwards` | (separate award refs) | Reference via mapping |
-| `SiteTree.MetaDescription` | `seo.metaDescription` | Direct copy |
+| Source Field                | Target Field          | Transformation               |
+| --------------------------- | --------------------- | ---------------------------- |
+| `Product.ID`                | `_id`                 | Generate UUID                |
+| `Product.name`              | `name`                | Direct copy                  |
+| `Product.producttitle_desc` | `subtitle`            | Direct copy                  |
+| `Product.URLSegment`        | `slug`                | Add `/produkty/` prefix      |
+| `Product.ProductImageID`    | `previewImage`        | Upload asset                 |
+| `Product.ProducerPageID`    | `brand`               | Reference via mapping        |
+| `Product.ProductTypeID`     | `categories[0]`       | Reference via mapping        |
+| `Product_ProductTypes`      | `categories[]`        | Additional category refs     |
+| `Product.archived`          | `isArchived`          | Boolean conversion           |
+| `Box.Content`               | `details.content`     | HTML → Portable Text         |
+| `Box_GridImage` → `File`    | `imageGallery`        | Upload assets                |
+| `Tabs.Content`              | `technicalData`       | HTML table → structured data |
+| `Dealer_ProducerPage`       | `availableInStores`   | Reference via mapping        |
+| `BoxAwards`                 | (separate award refs) | Reference via mapping        |
+| `SiteTree.MetaDescription`  | `seo.metaDescription` | Direct copy                  |
 
 **Complexity**: Very High (multiple joins, image uploads, HTML conversion, technical specs parsing)
 **Estimated Records**: ~190
@@ -249,9 +257,9 @@ ID=6: "Akcesoria"
 **Target**: `blogCategory`
 
 | Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `ID` | `_id` | Generate UUID |
-| `Name` | `name` | Direct copy |
+| ------------ | ------------ | -------------- |
+| `ID`         | `_id`        | Generate UUID  |
+| `Name`       | `name`       | Direct copy    |
 
 **Complexity**: Low
 **Estimated Records**: ~10-15
@@ -263,16 +271,16 @@ ID=6: "Akcesoria"
 **Source**: `ArticlePage` + `SiteTree` + `ArticlePage_Localised` + `File`
 **Target**: `blogArticle`
 
-| Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `ArticlePage.ID` | `_id` | Generate UUID |
-| `SiteTree.Title` | `title` | HTML → Portable Text |
-| `SiteTree.URLSegment` | `slug` | Add `/blog/` prefix |
-| `ArticlePage.ArticleDate` | `publishedDate` | Date conversion |
-| `ArticlePage.LeadingText` | `description` | HTML → Portable Text |
-| `ArticlePage.LeadingImageID` | `image` | Upload asset |
-| `SiteTree.Content` | `content` | HTML → Portable Text |
-| `ArticlePage_ArticleCategory` | `category` | Reference via mapping |
+| Source Field                  | Target Field    | Transformation        |
+| ----------------------------- | --------------- | --------------------- |
+| `ArticlePage.ID`              | `_id`           | Generate UUID         |
+| `SiteTree.Title`              | `title`         | HTML → Portable Text  |
+| `SiteTree.URLSegment`         | `slug`          | Add `/blog/` prefix   |
+| `ArticlePage.ArticleDate`     | `publishedDate` | Date conversion       |
+| `ArticlePage.LeadingText`     | `description`   | HTML → Portable Text  |
+| `ArticlePage.LeadingImageID`  | `image`         | Upload asset          |
+| `SiteTree.Content`            | `content`       | HTML → Portable Text  |
+| `ArticlePage_ArticleCategory` | `category`      | Reference via mapping |
 
 **Complexity**: High (HTML conversion, image uploads)
 **Estimated Records**: ~250-300
@@ -284,11 +292,12 @@ ID=6: "Akcesoria"
 **Source**: Extracted from `ReviewPage.Author` field
 **Target**: `reviewAuthor`
 
-| Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| Unique `Author` values | `name` | Deduplicate and create |
+| Source Field           | Target Field | Transformation         |
+| ---------------------- | ------------ | ---------------------- |
+| Unique `Author` values | `name`       | Deduplicate and create |
 
 **Process**:
+
 1. Extract all unique `Author` values from `ReviewPage`
 2. Create `reviewAuthor` documents for each unique name
 3. Build mapping for review migration
@@ -303,19 +312,20 @@ ID=6: "Akcesoria"
 **Source**: `ReviewPage` + `SiteTree` + `ReviewPage_Localised` + `File`
 **Target**: `review`
 
-| Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `ReviewPage.ID` | `_id` | Generate UUID |
-| `SiteTree.Title` | `title` | HTML → Portable Text |
-| `SiteTree.URLSegment` | `slug` | Add `/recenzje/` prefix |
-| `ReviewPage.Author` | `author` | Reference to reviewAuthor |
-| `ReviewPage.LeadingText` | `content` | HTML → Portable Text |
-| `ReviewPage.CoverID` | `image` | Upload asset |
-| `ReviewPage.PDFFileID` | `pdfFile` | Upload asset |
-| `ReviewPage.ExternalLink` | `externalUrl` | Direct copy |
-| `ReviewPage.ArticleDate` | (implicit) | For ordering |
+| Source Field              | Target Field  | Transformation            |
+| ------------------------- | ------------- | ------------------------- |
+| `ReviewPage.ID`           | `_id`         | Generate UUID             |
+| `SiteTree.Title`          | `title`       | HTML → Portable Text      |
+| `SiteTree.URLSegment`     | `slug`        | Add `/recenzje/` prefix   |
+| `ReviewPage.Author`       | `author`      | Reference to reviewAuthor |
+| `ReviewPage.LeadingText`  | `content`     | HTML → Portable Text      |
+| `ReviewPage.CoverID`      | `image`       | Upload asset              |
+| `ReviewPage.PDFFileID`    | `pdfFile`     | Upload asset              |
+| `ReviewPage.ExternalLink` | `externalUrl` | Direct copy               |
+| `ReviewPage.ArticleDate`  | (implicit)    | For ordering              |
 
 **Destination Type Logic**:
+
 - If `PDFFileID` present → `destinationType: 'pdf'`
 - If `ExternalLink` present → `destinationType: 'external'`
 - Otherwise → `destinationType: 'page'`
@@ -330,11 +340,11 @@ ID=6: "Akcesoria"
 **Source**: `Awards` + `Awards_Localised` + `File`
 **Target**: `award`
 
-| Source Field | Target Field | Transformation |
-|--------------|--------------|----------------|
-| `Awards.ID` | `_id` | Generate UUID |
-| `Awards.Name` | `name` | Direct copy |
-| `Awards.LogoID` | `logo` | Upload asset |
+| Source Field    | Target Field | Transformation |
+| --------------- | ------------ | -------------- |
+| `Awards.ID`     | `_id`        | Generate UUID  |
+| `Awards.Name`   | `name`       | Direct copy    |
+| `Awards.LogoID` | `logo`       | Upload asset   |
 
 **Complexity**: Low (simple structure, single image)
 **Estimated Records**: ~340
@@ -396,12 +406,16 @@ apps/studio/scripts/migration/
 ### 5.2 Shared Utilities
 
 #### HTML to Portable Text Converter
+
 ```typescript
 // html-to-portable-text.ts
-import { htmlToBlocks } from '@sanity/block-tools';
-import { Schema } from '@sanity/schema';
+import { htmlToBlocks } from "@sanity/block-tools";
+import { Schema } from "@sanity/schema";
 
-export function convertHtmlToPortableText(html: string, schemaType: string): PortableTextBlock[] {
+export function convertHtmlToPortableText(
+  html: string,
+  schemaType: string,
+): PortableTextBlock[] {
   // Handle common SilverStripe HTML patterns
   // - [sitetree_link,id=XX] shortcodes
   // - Inline styles
@@ -411,12 +425,13 @@ export function convertHtmlToPortableText(html: string, schemaType: string): Por
 ```
 
 #### Asset Uploader
+
 ```typescript
 // asset-uploader.ts
 export async function uploadImageFromUrl(
   client: SanityClient,
   imageUrl: string,
-  filename: string
+  filename: string,
 ): Promise<SanityImageAsset> {
   // 1. Fetch image from legacy server
   // 2. Upload to Sanity CDN
@@ -425,14 +440,15 @@ export async function uploadImageFromUrl(
 ```
 
 #### ID Mapping Store
+
 ```typescript
 // id-mapping.ts
 export class IdMappingStore {
   private mappings: Map<string, Map<number, string>> = new Map();
-  
+
   set(entityType: string, oldId: number, newId: string): void;
   get(entityType: string, oldId: number): string | undefined;
-  save(filePath: string): void;  // Persist for multi-run migrations
+  save(filePath: string): void; // Persist for multi-run migrations
   load(filePath: string): void;
 }
 ```
@@ -481,6 +497,7 @@ bun run migrate:all --rollback
 ### 6.1 Asset Source Options
 
 **Option A: Direct URL Fetch (Recommended if server accessible)**
+
 ```
 https://audiofast.pl/assets/galeria/product-image.jpg
        ↓
@@ -492,6 +509,7 @@ Store asset reference
 ```
 
 **Option B: Local Assets (If downloaded beforehand)**
+
 ```
 /local/assets/galeria/product-image.jpg
        ↓
@@ -548,14 +566,14 @@ interface MigrationValidation {
   sourceCount: number;
   targetCount: number;
   countMatch: boolean;
-  
+
   // Sample verification
   sampleIds: string[];
   sampleValidation: ValidationResult[];
-  
+
   // Reference integrity
   brokenReferences: BrokenReference[];
-  
+
   // Asset verification
   missingAssets: MissingAsset[];
 }
@@ -585,16 +603,16 @@ count(*[_type == "product"])
 
 All migrated documents use predictable ID patterns for easy rollback:
 
-| Entity | ID Pattern | Example |
-|--------|------------|---------|
-| Store | UUID (deterministic from dealer ID) | `e4bb9175-adb8-00b1-1070-64510e0b3cb1` |
-| Category Parent | `cat-parent-{oldId}` | `cat-parent-1` |
-| Category Sub | `cat-sub-{oldId}` | `cat-sub-26` |
-| Brand | `brand-{oldId}` | `brand-46` |
-| Product | `product-{oldId}` | `product-826` |
-| Article | `article-{oldId}` | `article-17` |
-| Review | `review-{oldId}` | `review-77` |
-| Award | `award-{oldId}` | `award-1` |
+| Entity          | ID Pattern                          | Example                                |
+| --------------- | ----------------------------------- | -------------------------------------- |
+| Store           | UUID (deterministic from dealer ID) | `e4bb9175-adb8-00b1-1070-64510e0b3cb1` |
+| Category Parent | `cat-parent-{oldId}`                | `cat-parent-1`                         |
+| Category Sub    | `cat-sub-{oldId}`                   | `cat-sub-26`                           |
+| Brand           | `brand-{oldId}`                     | `brand-46`                             |
+| Product         | `product-{oldId}`                   | `product-826`                          |
+| Article         | `article-{oldId}`                   | `article-17`                           |
+| Review          | `review-{oldId}`                    | `review-77`                            |
+| Award           | `award-{oldId}`                     | `award-1`                              |
 
 ### 8.2 Rollback Commands
 
@@ -613,10 +631,10 @@ bun run migrate:products --rollback
 async function rollback(entityType: string, idPattern: string): Promise<void> {
   const query = `*[_type == "${entityType}" && _id match "${idPattern}"]._id`;
   const ids = await client.fetch(query);
-  
+
   // Batch delete
   const transaction = client.transaction();
-  ids.forEach(id => transaction.delete(id));
+  ids.forEach((id) => transaction.delete(id));
   await transaction.commit();
 }
 ```
@@ -626,6 +644,7 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 ## 9. Migration Timeline
 
 ### Phase 1: Foundation (Week 1) ✅ COMPLETED
+
 - [x] Migration strategy document
 - [x] Store schema updates
 - [x] Store migration script
@@ -633,12 +652,14 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 - [x] Validation
 
 ### Phase 2: Categories & Brands (Week 2)
+
 - [ ] Category parent migration (~6 records)
 - [ ] Category sub migration (~35 records)
 - [ ] Brand migration (~55 records)
 - [ ] Image upload pipeline testing
 
 ### Phase 3: Products (Week 3-4)
+
 - [ ] Product migration script development
 - [ ] HTML → Portable Text converter
 - [ ] Technical specs parser
@@ -647,6 +668,7 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 - [ ] Cross-reference updates (related products)
 
 ### Phase 4: Content (Week 5)
+
 - [ ] Blog category migration
 - [ ] Blog article migration (~300 records)
 - [ ] Review author extraction
@@ -654,6 +676,7 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 - [ ] Award migration (~340 records)
 
 ### Phase 5: Validation & Cleanup (Week 6)
+
 - [ ] Full validation pass
 - [ ] Broken reference fixes
 - [ ] Missing asset resolution
@@ -665,30 +688,34 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 ## 10. Risk Assessment
 
 ### High Risk
-| Risk | Impact | Mitigation |
-|------|--------|------------|
+
+| Risk                      | Impact                        | Mitigation                 |
+| ------------------------- | ----------------------------- | -------------------------- |
 | Image server inaccessible | Cannot migrate product images | Download assets beforehand |
-| HTML conversion failures | Broken content formatting | Manual review queue |
-| Character encoding issues | Corrupted Polish characters | UTF-8 normalization |
+| HTML conversion failures  | Broken content formatting     | Manual review queue        |
+| Character encoding issues | Corrupted Polish characters   | UTF-8 normalization        |
 
 ### Medium Risk
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Missing references | Broken links in Sanity | Validation queries, null checks |
-| Duplicate content | Redundant documents | Idempotent migrations with `createOrReplace` |
-| Rate limiting | Slow migration | Batch operations, delays |
+
+| Risk               | Impact                 | Mitigation                                   |
+| ------------------ | ---------------------- | -------------------------------------------- |
+| Missing references | Broken links in Sanity | Validation queries, null checks              |
+| Duplicate content  | Redundant documents    | Idempotent migrations with `createOrReplace` |
+| Rate limiting      | Slow migration         | Batch operations, delays                     |
 
 ### Low Risk
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Schema changes mid-migration | Script updates needed | Version lock schema |
-| Partial migration failure | Incomplete data | Transaction batching, resume capability |
+
+| Risk                         | Impact                | Mitigation                              |
+| ---------------------------- | --------------------- | --------------------------------------- |
+| Schema changes mid-migration | Script updates needed | Version lock schema                     |
+| Partial migration failure    | Incomplete data       | Transaction batching, resume capability |
 
 ---
 
 ## 11. Success Criteria
 
 ### Quantitative
+
 - [ ] 100% of published products migrated
 - [ ] 100% of brands migrated
 - [ ] 100% of published articles migrated
@@ -697,6 +724,7 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 - [ ] <5% content formatting issues
 
 ### Qualitative
+
 - [ ] Product pages render correctly on new site
 - [ ] Brand pages show all products
 - [ ] Blog articles display with proper formatting
@@ -708,18 +736,21 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 ## 12. Post-Migration Tasks
 
 ### Immediate
+
 - [ ] Update DNS/routing to new site
 - [ ] Set up URL redirects from old URLs
 - [ ] Disable old CMS write access
 - [ ] Monitor error logs
 
 ### Short-term (1-2 weeks)
+
 - [ ] Manual content review
 - [ ] Fix formatting issues
 - [ ] Add missing images manually
 - [ ] Update internal links
 
 ### Long-term
+
 - [ ] Decommission old server
 - [ ] Archive SQL backup
 - [ ] Document lessons learned
@@ -730,6 +761,7 @@ async function rollback(entityType: string, idPattern: string): Promise<void> {
 ## Appendix A: SQL Table Reference
 
 ### Core Content Tables
+
 ```sql
 -- Products
 Product, Product_Localised, Product_ProductTypes, Product_Attachment
@@ -737,7 +769,7 @@ Product, Product_Localised, Product_ProductTypes, Product_Attachment
 -- Brands
 ProducerPage, ProducerPage_Localised, ProducerPage_ProducerGridImage
 
--- Categories  
+-- Categories
 DeviceType, DeviceTypeItem, DeviceType_ProductType
 ProductType, ProductType_Localised
 
@@ -760,6 +792,7 @@ Tabs, Tabs_Localised
 ```
 
 ### Supporting Tables
+
 ```sql
 -- Assets
 File, File_Live, FileLink
@@ -827,4 +860,3 @@ bun run migrate:all
 **Last Updated**: 2025-11-25  
 **Author**: Migration Team  
 **Status**: In Progress - Phase 1 Complete
-

@@ -37,31 +37,34 @@ bun run apps/studio/scripts/migration/blog/migrate-article-content.ts --verbose
 The script requires two CSV files extracted from the SilverStripe database:
 
 ### 1. `real-articles-text.csv` - Article Boxes
+
 Contains the content boxes for each article.
 
-| Column | Description |
-|--------|-------------|
-| `BoxID` | Unique box identifier |
-| `BlogPageID` | Parent article ID |
-| `ArticleSlug` | Article URL slug |
-| `ArticleTitle` | Article title |
-| `Sort` | Box order within article |
-| `BoxType` | Type: `text`, `video`, `gallery`, `slider`, `tabs`, `hr` |
-| `BoxTitle` | Optional heading for the box |
-| `YoutubeId` | YouTube video ID (for video boxes) |
-| `HtmlContent` | HTML content (for text/tabs boxes) |
+| Column         | Description                                              |
+| -------------- | -------------------------------------------------------- |
+| `BoxID`        | Unique box identifier                                    |
+| `BlogPageID`   | Parent article ID                                        |
+| `ArticleSlug`  | Article URL slug                                         |
+| `ArticleTitle` | Article title                                            |
+| `Sort`         | Box order within article                                 |
+| `BoxType`      | Type: `text`, `video`, `gallery`, `slider`, `tabs`, `hr` |
+| `BoxTitle`     | Optional heading for the box                             |
+| `YoutubeId`    | YouTube video ID (for video boxes)                       |
+| `HtmlContent`  | HTML content (for text/tabs boxes)                       |
 
 ### 2. `real-articles-gallery.csv` - Gallery Images
+
 Contains image data for gallery/slider boxes.
 
-| Column | Description |
-|--------|-------------|
-| `BoxID` | Parent box ID |
-| `ImageID` | Image identifier |
-| `ImageSort` | Image order |
+| Column          | Description        |
+| --------------- | ------------------ |
+| `BoxID`         | Parent box ID      |
+| `ImageID`       | Image identifier   |
+| `ImageSort`     | Image order        |
 | `ImageFilename` | Path to image file |
 
 ### 3. Supporting CSV Files
+
 - `product-brand-slug-mapping.csv` - Maps product IDs to full URL paths (e.g., `dcs/vivaldi-dac`)
 - `site-tree.csv` - Maps SiteTree IDs to URL segments
 
@@ -69,13 +72,13 @@ Contains image data for gallery/slider boxes.
 
 ## Box Type Conversions
 
-| SilverStripe Box Type | Sanity Component |
-|----------------------|------------------|
-| `text` | Portable Text blocks (paragraphs, headings, lists) |
-| `video` | `ptYoutubeVideo` |
-| `gallery` / `slider` | `ptImageSlider` (requires ≥4 images) |
-| `tabs` | Portable Text blocks (content extracted) |
-| `hr` | Skipped (page breaks ignored) |
+| SilverStripe Box Type | Sanity Component                                   |
+| --------------------- | -------------------------------------------------- |
+| `text`                | Portable Text blocks (paragraphs, headings, lists) |
+| `video`               | `ptYoutubeVideo`                                   |
+| `gallery` / `slider`  | `ptImageSlider` (requires ≥4 images)               |
+| `tabs`                | Portable Text blocks (content extracted)           |
+| `hr`                  | Skipped (page breaks ignored)                      |
 
 ---
 
@@ -83,25 +86,25 @@ Contains image data for gallery/slider boxes.
 
 ### Supported HTML Elements
 
-| HTML Element | Portable Text Output |
-|--------------|---------------------|
-| `<h1>`, `<h2>` | `block` with style `h2` |
-| `<h3>`, `<h4>`, `<h5>`, `<h6>` | `block` with style `h3` |
-| `<p>` | `block` with style `normal` |
-| `<ul>` / `<li>` | `block` with `listItem: 'bullet'` |
-| `<ol>` / `<li>` | `block` with `listItem: 'number'` |
-| `<a href="...">` | `customLink` mark definition |
-| `<img>` | `ptImage` component |
-| `<iframe>` (YouTube) | `ptYoutubeVideo` component |
-| `<iframe>` (Vimeo) | `ptVimeoVideo` component |
+| HTML Element                   | Portable Text Output              |
+| ------------------------------ | --------------------------------- |
+| `<h1>`, `<h2>`                 | `block` with style `h2`           |
+| `<h3>`, `<h4>`, `<h5>`, `<h6>` | `block` with style `h3`           |
+| `<p>`                          | `block` with style `normal`       |
+| `<ul>` / `<li>`                | `block` with `listItem: 'bullet'` |
+| `<ol>` / `<li>`                | `block` with `listItem: 'number'` |
+| `<a href="...">`               | `customLink` mark definition      |
+| `<img>`                        | `ptImage` component               |
+| `<iframe>` (YouTube)           | `ptYoutubeVideo` component        |
+| `<iframe>` (Vimeo)             | `ptVimeoVideo` component          |
 
 ### SilverStripe Shortcodes
 
-| Shortcode | Conversion |
-|-----------|------------|
-| `[image src="..." class="..."]` | `ptImage` component |
-| `[product_link,id=X]` | Resolved to `https://www.audiofast.pl/{brand}/{product}` |
-| `[sitetree_link,id=X]` | Resolved to `https://www.audiofast.pl/{urlSegment}` |
+| Shortcode                       | Conversion                                               |
+| ------------------------------- | -------------------------------------------------------- |
+| `[image src="..." class="..."]` | `ptImage` component                                      |
+| `[product_link,id=X]`           | Resolved to `https://www.audiofast.pl/{brand}/{product}` |
+| `[sitetree_link,id=X]`          | Resolved to `https://www.audiofast.pl/{urlSegment}`      |
 
 ---
 
@@ -142,6 +145,7 @@ All SilverStripe shortcodes and relative URLs are converted to absolute URLs:
 ### 4. Image Upload
 
 Images are:
+
 1. Downloaded from the legacy server (`https://www.audiofast.pl/assets/...`)
 2. Uploaded to Sanity CDN
 3. Cached to avoid duplicate uploads
@@ -151,19 +155,19 @@ Images are:
 ## Output: Sanity Portable Text Blocks
 
 ### Text Block
+
 ```json
 {
   "_type": "block",
   "_key": "abc123",
   "style": "normal",
   "markDefs": [],
-  "children": [
-    { "_type": "span", "_key": "xyz789", "text": "Content here" }
-  ]
+  "children": [{ "_type": "span", "_key": "xyz789", "text": "Content here" }]
 }
 ```
 
 ### Image Block
+
 ```json
 {
   "_type": "ptImage",
@@ -178,6 +182,7 @@ Images are:
 ```
 
 ### YouTube Video Block
+
 ```json
 {
   "_type": "ptYoutubeVideo",
@@ -187,6 +192,7 @@ Images are:
 ```
 
 ### Vimeo Video Block
+
 ```json
 {
   "_type": "ptVimeoVideo",
@@ -196,13 +202,22 @@ Images are:
 ```
 
 ### Image Slider Block
+
 ```json
 {
   "_type": "ptImageSlider",
   "_key": "abc123",
   "images": [
-    { "_type": "image", "_key": "img1", "asset": { "_type": "reference", "_ref": "image-xxx-jpg" } },
-    { "_type": "image", "_key": "img2", "asset": { "_type": "reference", "_ref": "image-yyy-jpg" } }
+    {
+      "_type": "image",
+      "_key": "img1",
+      "asset": { "_type": "reference", "_ref": "image-xxx-jpg" }
+    },
+    {
+      "_type": "image",
+      "_key": "img2",
+      "asset": { "_type": "reference", "_ref": "image-yyy-jpg" }
+    }
   ]
 }
 ```
@@ -237,7 +252,7 @@ After completion, the script outputs:
 
 ```
 ═══════════════════════════════════════════════════════════════
-                        MIGRATION SUMMARY                       
+                        MIGRATION SUMMARY
 ═══════════════════════════════════════════════════════════════
    Total articles processed: 11
    Successful: 10
@@ -250,9 +265,8 @@ After completion, the script outputs:
 
 ## Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `SANITY_API_TOKEN` | Sanity write token | Yes (for live migration) |
-| `SANITY_PROJECT_ID` | Sanity project ID | No (defaults to `fsw3likv`) |
-| `SANITY_DATASET` | Sanity dataset | No (defaults to `production`) |
-
+| Variable            | Description        | Required                      |
+| ------------------- | ------------------ | ----------------------------- |
+| `SANITY_API_TOKEN`  | Sanity write token | Yes (for live migration)      |
+| `SANITY_PROJECT_ID` | Sanity project ID  | No (defaults to `fsw3likv`)   |
+| `SANITY_DATASET`    | Sanity dataset     | No (defaults to `production`) |

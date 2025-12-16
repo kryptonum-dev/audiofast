@@ -1,42 +1,42 @@
-import { FeedbackIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
+import { FeedbackIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
 export const ptCtaSection = defineType({
-  name: 'ptCtaSection',
-  type: 'object',
-  title: 'Wezwanie do działania',
+  name: "ptCtaSection",
+  type: "object",
+  title: "Wezwanie do działania",
   icon: FeedbackIcon,
   fields: [
     defineField({
-      name: 'heading',
-      title: 'Nagłówek',
-      type: 'string',
-      description: 'Główny nagłówek sekcji CTA',
-      validation: (Rule) => Rule.required().error('Nagłówek jest wymagany'),
+      name: "heading",
+      title: "Nagłówek",
+      type: "string",
+      description: "Główny nagłówek sekcji CTA",
+      validation: (Rule) => Rule.required().error("Nagłówek jest wymagany"),
     }),
     defineField({
-      name: 'button',
-      title: 'Przycisk',
-      type: 'buttonWithNoVariant',
-      description: 'Przycisk wezwania do działania',
-      validation: (Rule) => Rule.required().error('Przycisk jest wymagany'),
+      name: "button",
+      title: "Przycisk",
+      type: "buttonWithNoVariant",
+      description: "Przycisk wezwania do działania",
+      validation: (Rule) => Rule.required().error("Przycisk jest wymagany"),
     }),
     defineField({
-      name: 'showProducts',
-      title: 'Wyświetl produkty',
-      type: 'boolean',
-      description: 'Czy wyświetlić polecane produkty poniżej tekstu?',
+      name: "showProducts",
+      title: "Wyświetl produkty",
+      type: "boolean",
+      description: "Czy wyświetlić polecane produkty poniżej tekstu?",
       initialValue: false,
     }),
     defineField({
-      name: 'products',
-      title: 'Produkty',
-      type: 'array',
-      description: 'Wybierz 2 produkty do wyświetlenia poniżej tekstu',
+      name: "products",
+      title: "Produkty",
+      type: "array",
+      description: "Wybierz 2 produkty do wyświetlenia poniżej tekstu",
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'product' }],
+          type: "reference",
+          to: [{ type: "product" }],
           options: {
             filter: ({ parent }) => {
               const parentData = parent as any;
@@ -67,12 +67,12 @@ export const ptCtaSection = defineType({
   ],
   preview: {
     select: {
-      heading: 'heading',
-      buttonText: 'button.text',
-      urlType: 'button.url.type',
-      externalUrl: 'button.url.external',
-      internalUrl: 'button.url.internal.slug.current',
-      showProducts: 'showProducts',
+      heading: "heading",
+      buttonText: "button.text",
+      urlType: "button.url.type",
+      externalUrl: "button.url.external",
+      internalUrl: "button.url.internal.slug.current",
+      showProducts: "showProducts",
     },
     prepare: ({
       heading,
@@ -82,15 +82,15 @@ export const ptCtaSection = defineType({
       internalUrl,
       showProducts,
     }) => {
-      const url = urlType === 'external' ? externalUrl : internalUrl;
+      const url = urlType === "external" ? externalUrl : internalUrl;
       const truncatedUrl =
         url?.length > 30 ? `${url.substring(0, 30)}...` : url;
-      const productsLabel = showProducts ? ' • Z produktami' : '';
+      const productsLabel = showProducts ? " • Z produktami" : "";
       return {
-        title: heading || 'Wezwanie do działania',
+        title: heading || "Wezwanie do działania",
         subtitle: buttonText
-          ? `${buttonText} → ${truncatedUrl || '(brak linku)'}${productsLabel}`
-          : 'Brak przycisku',
+          ? `${buttonText} → ${truncatedUrl || "(brak linku)"}${productsLabel}`
+          : "Brak przycisku",
         media: FeedbackIcon,
       };
     },

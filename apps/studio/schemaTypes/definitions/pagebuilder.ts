@@ -1,20 +1,19 @@
-import { defineArrayMember, defineType } from 'sanity';
+import { defineArrayMember, defineType } from "sanity";
 
-import { pageBuilderBlocks } from '../blocks';
+import { pageBuilderBlocks } from "../blocks";
 
 // All blocks EXCEPT productsListing (for regular pages)
 const pageBuilderBlocksWithoutProductsListing = pageBuilderBlocks.filter(
-  (block) => block.name !== 'productsListing'
+  (block) => block.name !== "productsListing",
 );
 
 // All blocks INCLUDING productsListing (for CPO page only)
 const pageBuilderBlocksWithProductsListing = pageBuilderBlocks;
 
-export const pagebuilderBlockTypes = pageBuilderBlocksWithoutProductsListing.map(
-  ({ name }) => ({
+export const pagebuilderBlockTypes =
+  pageBuilderBlocksWithoutProductsListing.map(({ name }) => ({
     type: name,
-  })
-);
+  }));
 
 export const pagebuilderBlockTypesWithProductsListing =
   pageBuilderBlocksWithProductsListing.map(({ name }) => ({
@@ -23,8 +22,8 @@ export const pagebuilderBlockTypesWithProductsListing =
 
 // Standard pageBuilder (without productsListing)
 export const pageBuilder = defineType({
-  name: 'pageBuilder',
-  type: 'array',
+  name: "pageBuilder",
+  type: "array",
   of: pagebuilderBlockTypes.map((block) => defineArrayMember(block)),
   options: {
     insertMenu: {
@@ -32,11 +31,11 @@ export const pageBuilder = defineType({
       showIcons: true,
       views: [
         {
-          name: 'grid',
+          name: "grid",
           previewImageUrl: (schemaTypeName) =>
             `/static/components/${schemaTypeName}.webp`,
         },
-        { name: 'list' },
+        { name: "list" },
       ],
     },
   },
@@ -44,10 +43,10 @@ export const pageBuilder = defineType({
 
 // CPO-specific pageBuilder (with productsListing)
 export const cpoPageBuilder = defineType({
-  name: 'cpoPageBuilder',
-  type: 'array',
+  name: "cpoPageBuilder",
+  type: "array",
   of: pagebuilderBlockTypesWithProductsListing.map((block) =>
-    defineArrayMember(block)
+    defineArrayMember(block),
   ),
   options: {
     insertMenu: {
@@ -55,11 +54,11 @@ export const cpoPageBuilder = defineType({
       showIcons: true,
       views: [
         {
-          name: 'grid',
+          name: "grid",
           previewImageUrl: (schemaTypeName) =>
             `/static/components/${schemaTypeName}.webp`,
         },
-        { name: 'list' },
+        { name: "list" },
       ],
     },
   },

@@ -1,4 +1,4 @@
-import { ComposeSparklesIcon,RefreshIcon } from '@sanity/icons';
+import { ComposeSparklesIcon, RefreshIcon } from "@sanity/icons";
 import {
   Box,
   Button,
@@ -13,22 +13,22 @@ import {
   TextInput,
   ToastProvider,
   useToast,
-} from '@sanity/ui';
-import { useState } from 'react';
-import { useClient } from 'sanity';
+} from "@sanity/ui";
+import { useState } from "react";
+import { useClient } from "sanity";
 
 // Types matching our content structure
 type ContentItem = {
   _id: string;
-  _type: 'blog-article' | 'review' | 'product';
+  _type: "blog-article" | "review" | "product";
   title?: string; // articles/reviews
   name?: string; // products/reviews/articles
   description?: string; // portable text blocks usually
   shortDescription?: string; // products
   image?: string;
-  imageSource?: 'preview' | 'gallery' | 'default';
+  imageSource?: "preview" | "gallery" | "default";
   slug: string;
-  destinationType?: 'page' | 'pdf' | 'external' | null; // review types
+  destinationType?: "page" | "pdf" | "external" | null; // review types
   openInNewTab?: boolean; // for external/pdf reviews
   _createdAt: string;
   publishedDate?: string; // override date (if set)
@@ -43,18 +43,18 @@ type GroupedContent = {
 
 const NEWSLETTER_API_URL =
   process.env.SANITY_STUDIO_NEWSLETTER_API_URL ||
-  'https://audiofast-git-dev-kryptonum.vercel.app/api/newsletter/generate/';
+  "https://audiofast-git-dev-kryptonum.vercel.app/api/newsletter/generate/";
 
 export default function NewsletterTool() {
-  const client = useClient({ apiVersion: '2024-01-01' });
+  const client = useClient({ apiVersion: "2024-01-01" });
   const toast = useToast();
 
   // State
   const [startDate, setStartDate] = useState<string>(
-    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
   );
   const [endDate, setEndDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
+    new Date().toISOString().split("T")[0],
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -113,9 +113,9 @@ export default function NewsletterTool() {
       });
 
       const grouped = {
-        articles: result.filter((item) => item._type === 'blog-article'),
-        reviews: result.filter((item) => item._type === 'review'),
-        products: result.filter((item) => item._type === 'product'),
+        articles: result.filter((item) => item._type === "blog-article"),
+        reviews: result.filter((item) => item._type === "review"),
+        products: result.filter((item) => item._type === "product"),
       };
 
       setContent(grouped);
@@ -123,15 +123,15 @@ export default function NewsletterTool() {
       setSelectedIds(new Set(result.map((item) => item._id)));
 
       toast.push({
-        status: 'success',
+        status: "success",
         title: `Znaleziono ${result.length} elementów`,
       });
     } catch (err) {
       console.error(err);
       toast.push({
-        status: 'error',
-        title: 'Błąd pobierania treści',
-        description: err instanceof Error ? err.message : 'Nieznany błąd',
+        status: "error",
+        title: "Błąd pobierania treści",
+        description: err instanceof Error ? err.message : "Nieznany błąd",
       });
     } finally {
       setIsLoading(false);
@@ -151,7 +151,7 @@ export default function NewsletterTool() {
 
   // 3. Generate Newsletter
   const handleAction = async (
-    action: 'download-html' | 'create-mailchimp-draft'
+    action: "download-html" | "create-mailchimp-draft",
   ) => {
     setIsGenerating(true);
 
@@ -168,9 +168,9 @@ export default function NewsletterTool() {
       payloadContent.products.length === 0
     ) {
       toast.push({
-        status: 'warning',
-        title: 'Brak wybranych elementów',
-        description: 'Zaznacz co najmniej jeden element.',
+        status: "warning",
+        title: "Brak wybranych elementów",
+        description: "Zaznacz co najmniej jeden element.",
       });
       setIsGenerating(false);
       return;
@@ -178,8 +178,8 @@ export default function NewsletterTool() {
 
     try {
       const response = await fetch(NEWSLETTER_API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action,
           startDate,
@@ -190,35 +190,35 @@ export default function NewsletterTool() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Błąd serwera');
+        throw new Error(errorData.error || "Błąd serwera");
       }
 
-      if (action === 'download-html') {
+      if (action === "download-html") {
         // Handle file download
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         a.download = `newsletter-audiofast-${startDate}.html`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
-        toast.push({ status: 'success', title: 'Pobrano plik HTML' });
+        toast.push({ status: "success", title: "Pobrano plik HTML" });
       } else {
         // Handle Mailchimp success
         const data = await response.json();
         toast.push({
-          status: 'success',
-          title: 'Utworzono draft w Mailchimp',
+          status: "success",
+          title: "Utworzono draft w Mailchimp",
           description: `ID Kampanii: ${data.campaignId}`,
         });
       }
     } catch (err) {
       console.error(err);
       toast.push({
-        status: 'error',
-        title: 'Błąd generowania',
-        description: err instanceof Error ? err.message : 'Nieznany błąd',
+        status: "error",
+        title: "Błąd generowania",
+        description: err instanceof Error ? err.message : "Nieznany błąd",
       });
     } finally {
       setIsGenerating(false);
@@ -236,14 +236,14 @@ export default function NewsletterTool() {
         <Flex
           direction="column"
           gap={5}
-          style={{ maxWidth: '800px', margin: '0 auto' }}
+          style={{ maxWidth: "800px", margin: "0 auto" }}
         >
           {/* Header */}
           <Box>
             <Heading as="h1" size={4}>
               Generator Newslettera
             </Heading>
-            <Text muted size={1} style={{ marginTop: '0.5rem' }}>
+            <Text muted size={1} style={{ marginTop: "0.5rem" }}>
               Wybierz zakres dat, pobierz treści, dostosuj wybór i wygeneruj
               newsletter.
             </Text>
@@ -251,7 +251,7 @@ export default function NewsletterTool() {
 
           {/* Controls */}
           <Card padding={4} tone="primary" radius={2} shadow={1}>
-            <Grid columns={[1, 2, 3]} gap={3} style={{ alignItems: 'end' }}>
+            <Grid columns={[1, 2, 3]} gap={3} style={{ alignItems: "end" }}>
               <Stack space={2}>
                 <Label>Data początkowa</Label>
                 <TextInput
@@ -270,7 +270,7 @@ export default function NewsletterTool() {
               </Stack>
               <Button
                 icon={RefreshIcon}
-                text={isLoading ? 'Pobieranie...' : 'Pobierz treści'}
+                text={isLoading ? "Pobieranie..." : "Pobierz treści"}
                 onClick={fetchContent}
                 disabled={isLoading}
                 tone="primary"
@@ -316,27 +316,29 @@ export default function NewsletterTool() {
                 padding={4}
                 radius={2}
                 border
-                style={{ position: 'sticky', bottom: 0, background: 'white' }}
+                style={{ position: "sticky", bottom: 0, background: "white" }}
               >
                 <Flex gap={3} justify="flex-end">
                   <Button
                     mode="ghost"
                     text="Pobierz HTML (Magazyn AUDIO)"
-                    onClick={() => handleAction('download-html')}
+                    onClick={() => handleAction("download-html")}
                     disabled={isGenerating}
                   />
                   <Button
-                    icon={selectedIds.size > 0 ? ComposeSparklesIcon : undefined}
+                    icon={
+                      selectedIds.size > 0 ? ComposeSparklesIcon : undefined
+                    }
                     tone="primary"
                     text="Wyślij do Mailchimp"
-                    onClick={() => handleAction('create-mailchimp-draft')}
+                    onClick={() => handleAction("create-mailchimp-draft")}
                     disabled={isGenerating}
                   />
                 </Flex>
               </Card>
             </Stack>
           ) : (
-            <Card padding={5} radius={2} border style={{ textAlign: 'center' }}>
+            <Card padding={5} radius={2} border style={{ textAlign: "center" }}>
               <Text muted>
                 Brak treści. Wybierz zakres dat i kliknij &quot;Pobierz
                 treści&quot;.
@@ -370,7 +372,10 @@ function ContentGroup({
             key={item._id}
             align="center"
             padding={3}
-            style={{ borderBottom: index < items.length - 1 ? '1px solid #e6e8eb' : 'none' }}
+            style={{
+              borderBottom:
+                index < items.length - 1 ? "1px solid #e6e8eb" : "none",
+            }}
             gap={3}
           >
             <Checkbox
@@ -378,14 +383,18 @@ function ContentGroup({
               onChange={() => onToggle(item._id)}
             />
             <Box flex={1}>
-              <Text weight="semibold" size={1} style={{ marginBottom: '0.75rem' }}>
+              <Text
+                weight="semibold"
+                size={1}
+                style={{ marginBottom: "0.75rem" }}
+              >
                 {item.title || item.name}
               </Text>
               <Text size={1} muted textOverflow="ellipsis">
-                {new Date(item.publishDate).toLocaleDateString('pl-PL')} •{' '}
+                {new Date(item.publishDate).toLocaleDateString("pl-PL")} •{" "}
                 {item.shortDescription ||
                   item.description?.substring(0, 60) ||
-                  'Brak opisu'}
+                  "Brak opisu"}
                 ...
               </Text>
             </Box>
@@ -396,7 +405,8 @@ function ContentGroup({
                 style={{
                   width: 40,
                   height: 40,
-                  objectFit: item.imageSource === 'preview' ? 'contain' : 'cover',
+                  objectFit:
+                    item.imageSource === "preview" ? "contain" : "cover",
                   borderRadius: 4,
                 }}
               />

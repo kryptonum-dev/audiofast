@@ -1,7 +1,7 @@
 // Filter computation utilities for PPR client-side filter updates
 // This module enables instant filter updates without server round-trips
 
-export { computeAvailableFilters } from './computeFilters';
+export { computeAvailableFilters } from "./computeFilters";
 export type {
   ActiveFilters,
   BrandMetadata,
@@ -11,4 +11,4 @@ export type {
   ComputedFilters,
   CustomFilterValue,
   ProductFilterMetadata,
-} from './types';
+} from "./types";

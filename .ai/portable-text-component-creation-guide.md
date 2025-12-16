@@ -114,42 +114,42 @@ export const pt[ComponentName] = defineType({
 **Example (YouTube Video):**
 
 ```typescript
-import { VideoIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
+import { VideoIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
 export const ptYoutubeVideo = defineType({
-  name: 'ptYoutubeVideo',
-  type: 'object',
-  title: 'Wideo YouTube',
+  name: "ptYoutubeVideo",
+  type: "object",
+  title: "Wideo YouTube",
   icon: VideoIcon,
-  description: 'Osadź wideo YouTube z miniaturą i przyciskiem odtwarzania',
+  description: "Osadź wideo YouTube z miniaturą i przyciskiem odtwarzania",
   fields: [
     defineField({
-      name: 'youtubeId',
-      title: 'ID wideo YouTube',
-      type: 'string',
+      name: "youtubeId",
+      title: "ID wideo YouTube",
+      type: "string",
       description:
-        'Wprowadź ID wideo YouTube (np. dla https://www.youtube.com/watch?v=dQw4w9WgXcQ, ID to: dQw4w9WgXcQ)',
+        "Wprowadź ID wideo YouTube (np. dla https://www.youtube.com/watch?v=dQw4w9WgXcQ, ID to: dQw4w9WgXcQ)",
       validation: (Rule) =>
-        Rule.required().error('ID wideo YouTube jest wymagane'),
+        Rule.required().error("ID wideo YouTube jest wymagane"),
     }),
     defineField({
-      name: 'thumbnail',
-      title: 'Miniatura wideo',
-      type: 'image',
+      name: "thumbnail",
+      title: "Miniatura wideo",
+      type: "image",
       description:
-        'Opcjonalna miniatura wideo. Jeśli nie zostanie wybrana, zostanie użyta domyślna miniatura YouTube.',
+        "Opcjonalna miniatura wideo. Jeśli nie zostanie wybrana, zostanie użyta domyślna miniatura YouTube.",
       options: { hotspot: true },
     }),
   ],
   preview: {
     select: {
-      youtubeId: 'youtubeId',
-      thumbnail: 'thumbnail',
+      youtubeId: "youtubeId",
+      thumbnail: "thumbnail",
     },
     prepare: ({ youtubeId, thumbnail }) => ({
-      title: 'Wideo YouTube',
-      subtitle: youtubeId ? `ID: ${youtubeId}` : 'Brak ID',
+      title: "Wideo YouTube",
+      subtitle: youtubeId ? `ID: ${youtubeId}` : "Brak ID",
       media: thumbnail || VideoIcon,
     }),
   },
@@ -164,10 +164,10 @@ export const ptYoutubeVideo = defineType({
 
 ```typescript
 const ALL_CUSTOM_COMPONENTS = [
-  { name: 'ptImage', type: 'ptImage' },
-  { name: 'ptMinimalImage', type: 'ptMinimalImage' },
+  { name: "ptImage", type: "ptImage" },
+  { name: "ptMinimalImage", type: "ptMinimalImage" },
   // ... existing components
-  { name: 'pt[ComponentName]', type: 'pt[ComponentName]' },
+  { name: "pt[ComponentName]", type: "pt[ComponentName]" },
 ] as const;
 ```
 
@@ -176,7 +176,7 @@ const ALL_CUSTOM_COMPONENTS = [
 ```typescript
 const ALL_CUSTOM_COMPONENTS = [
   // ... existing components
-  { name: 'ptYoutubeVideo', type: 'ptYoutubeVideo' },
+  { name: "ptYoutubeVideo", type: "ptYoutubeVideo" },
 ] as const;
 ```
 
@@ -202,7 +202,7 @@ export const definitions = [
 **Example:**
 
 ```typescript
-import { ptYoutubeVideo } from '../portableText/youtube-video';
+import { ptYoutubeVideo } from "../portableText/youtube-video";
 
 export const definitions = [
   // ... existing definitions

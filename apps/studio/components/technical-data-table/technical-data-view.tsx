@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   closestCenter,
@@ -8,7 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   arrayMove,
   horizontalListSortingStrategy,
@@ -16,15 +16,15 @@ import {
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   AddIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   DragHandleIcon,
   TrashIcon,
-} from '@sanity/icons';
+} from "@sanity/icons";
 import {
   Box,
   Button,
@@ -36,13 +36,13 @@ import {
   Text,
   TextInput,
   useToast,
-} from '@sanity/ui';
-import { Edit2, FolderPlus } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { PortableTextBlock, SanityDocument } from 'sanity';
-import { useClient } from 'sanity';
+} from "@sanity/ui";
+import { Edit2, FolderPlus } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { PortableTextBlock, SanityDocument } from "sanity";
+import { useClient } from "sanity";
 
-import { CellEditor } from './cell-editor';
+import { CellEditor } from "./cell-editor";
 import {
   createEmptyCellValue,
   createEmptyGroup,
@@ -51,7 +51,7 @@ import {
   type TechnicalDataGroup,
   type TechnicalDataRow,
   type TechnicalDataValue,
-} from './types';
+} from "./types";
 
 type CellEditorState = {
   isOpen: boolean;
@@ -62,7 +62,7 @@ type CellEditorState = {
 } | null;
 
 type DeleteConfirmState = {
-  type: 'row' | 'variant' | 'group';
+  type: "row" | "variant" | "group";
   groupIndex?: number;
   index: number;
   name: string;
@@ -86,21 +86,21 @@ function getGridTemplateColumns(valueColumnCount: number): string {
  */
 function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
   if (!blocks || blocks.length === 0) {
-    return <span style={{ color: 'var(--card-muted-fg-color)' }}>–</span>;
+    return <span style={{ color: "var(--card-muted-fg-color)" }}>–</span>;
   }
 
   return (
-    <div style={{ fontSize: '13px', lineHeight: 1.4 }}>
+    <div style={{ fontSize: "13px", lineHeight: 1.4 }}>
       {blocks.map((block, blockIndex) => {
-        if (block._type !== 'block') return null;
+        if (block._type !== "block") return null;
 
         const isListItem = block.listItem;
         const listStyle =
-          block.listItem === 'bullet'
-            ? '• '
-            : block.listItem === 'number'
+          block.listItem === "bullet"
+            ? "• "
+            : block.listItem === "number"
               ? `${blockIndex + 1}. `
-              : '';
+              : "";
 
         const children =
           (block.children as Array<{
@@ -110,20 +110,20 @@ function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
           }>) || [];
 
         const content = children.map((child, childIndex) => {
-          const text = child.text || '';
+          const text = child.text || "";
           if (!text) return null;
 
           const marks = child.marks || [];
-          const isBold = marks.includes('strong');
-          const isItalic = marks.includes('em');
-          const isLink = marks.some((m) => m !== 'strong' && m !== 'em');
+          const isBold = marks.includes("strong");
+          const isItalic = marks.includes("em");
+          const isLink = marks.some((m) => m !== "strong" && m !== "em");
 
           let style: React.CSSProperties = {};
           if (isBold) style.fontWeight = 600;
-          if (isItalic) style.fontStyle = 'italic';
+          if (isItalic) style.fontStyle = "italic";
           if (isLink) {
-            style.color = 'var(--card-link-color)';
-            style.textDecoration = 'underline';
+            style.color = "var(--card-link-color)";
+            style.textDecoration = "underline";
           }
 
           return (
@@ -137,9 +137,9 @@ function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
           return (
             <div
               key={block._key || blockIndex}
-              style={{ paddingLeft: '0.5em' }}
+              style={{ paddingLeft: "0.5em" }}
             >
-              <span style={{ color: 'var(--card-muted-fg-color)' }}>
+              <span style={{ color: "var(--card-muted-fg-color)" }}>
                 {listStyle}
               </span>
               {content}
@@ -191,15 +191,15 @@ function SortableVariant({
       padding={3}
       border
       radius={2}
-      tone={isDragging ? 'primary' : 'default'}
+      tone={isDragging ? "primary" : "default"}
     >
       <Flex align="center" gap={2}>
         <Box
           {...attributes}
           {...listeners}
           style={{
-            cursor: 'grab',
-            padding: '2px',
+            cursor: "grab",
+            padding: "2px",
             flexShrink: 0,
           }}
         >
@@ -242,11 +242,15 @@ function SortableRow({
   rowIndex: number;
   valueColumnCount: number;
   onTitleChange: (groupIndex: number, rowIndex: number, title: string) => void;
-  onCellClick: (groupIndex: number, rowIndex: number, valueIndex: number) => void;
+  onCellClick: (
+    groupIndex: number,
+    rowIndex: number,
+    valueIndex: number,
+  ) => void;
   onRemove: (groupIndex: number, rowIndex: number) => void;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  
+
   const {
     attributes,
     listeners,
@@ -259,8 +263,9 @@ function SortableRow({
   // Auto-resize textarea on mount and when value changes
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + "px";
     }
   }, [row.title]);
 
@@ -277,14 +282,14 @@ function SortableRow({
       padding={2}
       border
       radius={2}
-      tone={isDragging ? 'primary' : 'default'}
+      tone={isDragging ? "primary" : "default"}
     >
       <div
         style={{
-          display: 'grid',
+          display: "grid",
           gridTemplateColumns: getGridTemplateColumns(valueColumnCount),
-          gap: '8px',
-          alignItems: 'start',
+          gap: "8px",
+          alignItems: "start",
         }}
       >
         {/* Drag handle + Row title */}
@@ -293,10 +298,10 @@ function SortableRow({
             {...attributes}
             {...listeners}
             style={{
-              cursor: 'grab',
-              padding: '2px',
+              cursor: "grab",
+              padding: "2px",
               flexShrink: 0,
-              marginTop: '6px',
+              marginTop: "6px",
             }}
           >
             <DragHandleIcon />
@@ -304,27 +309,29 @@ function SortableRow({
           <Box flex={1}>
             <textarea
               ref={textareaRef}
-              value={row.title || ''}
-              onChange={(e) => onTitleChange(groupIndex, rowIndex, e.target.value)}
+              value={row.title || ""}
+              onChange={(e) =>
+                onTitleChange(groupIndex, rowIndex, e.target.value)
+              }
               placeholder="Parametr"
               rows={1}
               style={{
-                maxWidth: '88%',
-                padding: '6px 8px',
-                fontSize: '13px',
-                fontFamily: 'inherit',
-                border: '1px solid var(--card-border-color)',
-                borderRadius: '3px',
-                background: 'var(--card-bg-color)',
-                color: 'inherit',
-                resize: 'none',
-                overflow: 'hidden',
+                maxWidth: "88%",
+                padding: "6px 8px",
+                fontSize: "13px",
+                fontFamily: "inherit",
+                border: "1px solid var(--card-border-color)",
+                borderRadius: "3px",
+                background: "var(--card-bg-color)",
+                color: "inherit",
+                resize: "none",
+                overflow: "hidden",
                 lineHeight: 1.4,
               }}
               onInput={(e) => {
                 const target = e.target as HTMLTextAreaElement;
-                target.style.height = 'auto';
-                target.style.height = target.scrollHeight + 'px';
+                target.style.height = "auto";
+                target.style.height = target.scrollHeight + "px";
               }}
             />
           </Box>
@@ -339,11 +346,11 @@ function SortableRow({
             radius={2}
             tone="default"
             style={{
-              cursor: 'pointer',
-              minHeight: '2.25rem',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '4px',
+              cursor: "pointer",
+              minHeight: "2.25rem",
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "4px",
             }}
             onClick={() => onCellClick(groupIndex, rowIndex, valueIndex)}
           >
@@ -352,7 +359,7 @@ function SortableRow({
             </Box>
             <Edit2
               size={12}
-              style={{ opacity: 0.4, flexShrink: 0, marginTop: '2px' }}
+              style={{ opacity: 0.4, flexShrink: 0, marginTop: "2px" }}
             />
           </Card>
         ))}
@@ -365,7 +372,7 @@ function SortableRow({
           onClick={() => onRemove(groupIndex, rowIndex)}
           title="Usuń"
           padding={2}
-          style={{ justifySelf: 'center', marginTop: '4px' }}
+          style={{ justifySelf: "center", marginTop: "4px" }}
         />
       </div>
     </Card>
@@ -378,7 +385,7 @@ function SortableRow({
  * Provides a table-like interface for managing technical specifications with groups
  */
 export function TechnicalDataView({ document }: TechnicalDataViewProps) {
-  const client = useClient({ apiVersion: '2024-01-01' });
+  const client = useClient({ apiVersion: "2024-01-01" });
   const toast = useToast();
 
   // Get document info
@@ -391,16 +398,21 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   const [cellEditor, setCellEditor] = useState<CellEditorState>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<DeleteConfirmState>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Track if initial load is complete (to avoid saving on mount)
   const isInitialized = useRef(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Track dirty state to prevent props overwriting local changes
   const isDirty = useRef(false);
   const savePromiseRef = useRef<Promise<void> | null>(null);
-  const latestDataRef = useRef<{ variants: string[]; groups: TechnicalDataGroup[] }>({
+  const latestDataRef = useRef<{
+    variants: string[];
+    groups: TechnicalDataGroup[];
+  }>({
     variants: [],
     groups: [],
   });
@@ -410,7 +422,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // Initialize state from document data (only when not dirty)
@@ -419,16 +431,17 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
     if (isDirty.current) {
       return;
     }
-    
+
     if (technicalData) {
       const newVariants = technicalData.variants || [];
-      const newGroups = technicalData.groups && technicalData.groups.length > 0
-        ? technicalData.groups
-        : [createEmptyGroup(1)];
-      
+      const newGroups =
+        technicalData.groups && technicalData.groups.length > 0
+          ? technicalData.groups
+          : [createEmptyGroup(1)];
+
       setVariants(newVariants);
       setGroups(newGroups);
-      
+
       // Keep ref in sync
       latestDataRef.current = { variants: newVariants, groups: newGroups };
     } else {
@@ -464,7 +477,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       // Use latestDataRef to ensure we're saving the most current data
       const currentVariants = latestDataRef.current.variants;
       const currentGroups = latestDataRef.current.groups;
-      
+
       const newTechnicalData: TechnicalDataValue = {
         variants: currentVariants.length > 0 ? currentVariants : null,
         groups: currentGroups.map((group) => ({
@@ -482,8 +495,8 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       };
 
       // Get the base document ID (without drafts. prefix)
-      const baseId = documentId.startsWith('drafts.')
-        ? documentId.replace('drafts.', '')
+      const baseId = documentId.startsWith("drafts.")
+        ? documentId.replace("drafts.", "")
         : documentId;
       const draftId = `drafts.${baseId}`;
 
@@ -499,24 +512,24 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       transaction.createIfNotExists({
         ...restOfDocument,
         _id: draftId,
-        _type: 'product',
+        _type: "product",
       });
 
       // Then patch the technical data
       transaction.patch(draftId, (patch) =>
-        patch.set({ technicalData: newTechnicalData })
+        patch.set({ technicalData: newTechnicalData }),
       );
 
       await transaction.commit();
-      
+
       // Clear dirty flag on successful save
       isDirty.current = false;
     } catch (error) {
-      console.error('Error saving technical data:', error);
+      console.error("Error saving technical data:", error);
       toast.push({
-        status: 'error',
-        title: 'Błąd zapisu',
-        description: 'Nie udało się zapisać danych technicznych.',
+        status: "error",
+        title: "Błąd zapisu",
+        description: "Nie udało się zapisać danych technicznych.",
       });
       throw error; // Re-throw so flushSave can handle it
     } finally {
@@ -531,11 +544,11 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       clearTimeout(saveTimeoutRef.current);
       saveTimeoutRef.current = null;
     }
-    
+
     // Yield to allow pending state updates and effects to complete
     // This ensures latestDataRef is synced with the latest state
-    await new Promise(resolve => setTimeout(resolve, 0));
-    
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     // If there's an ongoing save, wait for it
     if (savePromiseRef.current) {
       try {
@@ -544,7 +557,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
         // Ignore errors from previous save, we'll try again
       }
     }
-    
+
     // If dirty, save immediately
     if (isDirty.current) {
       const savePromise = saveChanges();
@@ -585,7 +598,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   // Calculate number of value columns (at least 1 for single-model products)
   const valueColumnCount = useMemo(
     () => Math.max(1, variants.length),
-    [variants.length]
+    [variants.length],
   );
 
   // Sync all rows in all groups when variant count changes
@@ -601,7 +614,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             const newValues = [
               ...currentValues,
               ...Array.from({ length: newCount - currentValues.length }).map(
-                () => createEmptyCellValue()
+                () => createEmptyCellValue(),
               ),
             ];
             return { ...row, values: newValues };
@@ -609,7 +622,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             return { ...row, values: currentValues.slice(0, newCount) };
           }
         }),
-      }))
+      })),
     );
   }, []);
 
@@ -623,12 +636,12 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   const handleRequestRemoveVariant = useCallback(
     (index: number) => {
       setDeleteConfirm({
-        type: 'variant',
+        type: "variant",
         index,
         name: variants[index] || `Wariant ${index + 1}`,
       });
     },
-    [variants]
+    [variants],
   );
 
   const handleConfirmRemoveVariant = useCallback(
@@ -654,10 +667,10 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
               values: row.values.filter((_, i) => i !== index),
             };
           }),
-        }))
+        })),
       );
     },
-    [variants]
+    [variants],
   );
 
   const handleVariantNameChange = useCallback(
@@ -666,7 +679,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       newVariants[index] = name;
       setVariants(newVariants);
     },
-    [variants]
+    [variants],
   );
 
   // Variant keys for drag and drop (stable keys based on variant index)
@@ -718,12 +731,12 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                 ...row,
                 values: arrayMove(row.values, oldIndex, newIndex),
               })),
-            }))
+            })),
           );
         }
       }
     },
-    [variantKeys, variants]
+    [variantKeys, variants],
   );
 
   // Group management
@@ -734,12 +747,12 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   const handleRequestRemoveGroup = useCallback(
     (groupIndex: number) => {
       setDeleteConfirm({
-        type: 'group',
+        type: "group",
         index: groupIndex,
         name: groups[groupIndex]?.title || `Sekcja ${groupIndex + 1}`,
       });
     },
-    [groups]
+    [groups],
   );
 
   const handleConfirmRemoveGroup = useCallback((groupIndex: number) => {
@@ -750,11 +763,11 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
     (groupIndex: number, title: string) => {
       setGroups((prev) =>
         prev.map((group, i) =>
-          i === groupIndex ? { ...group, title: title || null } : group
-        )
+          i === groupIndex ? { ...group, title: title || null } : group,
+        ),
       );
     },
-    []
+    [],
   );
 
   const toggleGroupCollapse = useCallback((groupKey: string) => {
@@ -775,24 +788,29 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       setGroups((prev) =>
         prev.map((group, i) =>
           i === groupIndex
-            ? { ...group, rows: [...group.rows, createEmptyRow(valueColumnCount)] }
-            : group
-        )
+            ? {
+                ...group,
+                rows: [...group.rows, createEmptyRow(valueColumnCount)],
+              }
+            : group,
+        ),
       );
     },
-    [valueColumnCount]
+    [valueColumnCount],
   );
 
   const handleRequestRemoveRow = useCallback(
     (groupIndex: number, rowIndex: number) => {
       setDeleteConfirm({
-        type: 'row',
+        type: "row",
         groupIndex,
         index: rowIndex,
-        name: groups[groupIndex]?.rows[rowIndex]?.title || `Parametr ${rowIndex + 1}`,
+        name:
+          groups[groupIndex]?.rows[rowIndex]?.title ||
+          `Parametr ${rowIndex + 1}`,
       });
     },
-    [groups]
+    [groups],
   );
 
   const handleConfirmRemoveRow = useCallback(
@@ -801,11 +819,11 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
         prev.map((group, i) =>
           i === groupIndex
             ? { ...group, rows: group.rows.filter((_, ri) => ri !== rowIndex) }
-            : group
-        )
+            : group,
+        ),
       );
     },
-    []
+    [],
   );
 
   const handleRowTitleChange = useCallback(
@@ -816,14 +834,14 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             ? {
                 ...group,
                 rows: group.rows.map((row, ri) =>
-                  ri === rowIndex ? { ...row, title } : row
+                  ri === rowIndex ? { ...row, title } : row,
                 ),
               }
-            : group
-        )
+            : group,
+        ),
       );
     },
-    []
+    [],
   );
 
   // Drag and drop within a group
@@ -836,17 +854,20 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
           prevGroups.map((group, gi) => {
             if (gi !== groupIndex) return group;
             const oldIndex = group.rows.findIndex(
-              (item) => item._key === active.id
+              (item) => item._key === active.id,
             );
             const newIndex = group.rows.findIndex(
-              (item) => item._key === over.id
+              (item) => item._key === over.id,
             );
-            return { ...group, rows: arrayMove(group.rows, oldIndex, newIndex) };
-          })
+            return {
+              ...group,
+              rows: arrayMove(group.rows, oldIndex, newIndex),
+            };
+          }),
         );
       }
     },
-    []
+    [],
   );
 
   // Cell editing
@@ -856,9 +877,15 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       await flushSave();
       const content =
         groups[groupIndex]?.rows[rowIndex]?.values[valueIndex]?.content || [];
-      setCellEditor({ isOpen: true, groupIndex, rowIndex, valueIndex, content });
+      setCellEditor({
+        isOpen: true,
+        groupIndex,
+        rowIndex,
+        valueIndex,
+        content,
+      });
     },
-    [groups, flushSave]
+    [groups, flushSave],
   );
 
   const handleSaveCellContent = useCallback(
@@ -881,25 +908,28 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
               };
             }),
           };
-        })
+        }),
       );
 
       // Flush save before closing dialog to ensure data is persisted
       await flushSave();
       setCellEditor(null);
     },
-    [cellEditor, flushSave]
+    [cellEditor, flushSave],
   );
 
   // Handle delete confirmation
   const handleConfirmDelete = useCallback(async () => {
     if (!deleteConfirm) return;
 
-    if (deleteConfirm.type === 'row' && deleteConfirm.groupIndex !== undefined) {
+    if (
+      deleteConfirm.type === "row" &&
+      deleteConfirm.groupIndex !== undefined
+    ) {
       handleConfirmRemoveRow(deleteConfirm.groupIndex, deleteConfirm.index);
-    } else if (deleteConfirm.type === 'variant') {
+    } else if (deleteConfirm.type === "variant") {
       handleConfirmRemoveVariant(deleteConfirm.index);
-    } else if (deleteConfirm.type === 'group') {
+    } else if (deleteConfirm.type === "group") {
       handleConfirmRemoveGroup(deleteConfirm.index);
     }
 
@@ -947,8 +977,8 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                 </Text>
                 <Text size={1} muted>
                   {variants.length === 0
-                    ? 'Brak wariantów - produkt jednomodelowy (1 kolumna wartości)'
-                    : `${variants.length} wariant${variants.length === 1 ? '' : variants.length < 5 ? 'y' : 'ów'}`}
+                    ? "Brak wariantów - produkt jednomodelowy (1 kolumna wartości)"
+                    : `${variants.length} wariant${variants.length === 1 ? "" : variants.length < 5 ? "y" : "ów"}`}
                 </Text>
               </Stack>
               <Button
@@ -1027,14 +1057,17 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                         padding={2}
                       />
                     )}
-                    
+
                     {/* Section name input - only show when multiple groups */}
                     {showSectionName ? (
                       <Box flex={1}>
                         <TextInput
-                          value={group.title || ''}
+                          value={group.title || ""}
                           onChange={(e) =>
-                            handleGroupTitleChange(groupIndex, e.currentTarget.value)
+                            handleGroupTitleChange(
+                              groupIndex,
+                              e.currentTarget.value,
+                            )
                           }
                           placeholder="Nazwa sekcji (np. 'Specyfikacja techniczna')"
                           fontSize={2}
@@ -1047,14 +1080,14 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                         </Text>
                       </Box>
                     )}
-                    
+
                     <Text size={1} muted>
                       {group.rows.length} parametr
                       {group.rows.length === 1
-                        ? ''
+                        ? ""
                         : group.rows.length < 5
-                          ? 'y'
-                          : 'ów'}
+                          ? "y"
+                          : "ów"}
                     </Text>
                     {groups.length > 1 && (
                       <Button
@@ -1074,14 +1107,14 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                       {/* Table Header */}
                       <div
                         style={{
-                          display: 'grid',
+                          display: "grid",
                           gridTemplateColumns:
                             getGridTemplateColumns(valueColumnCount),
-                          gap: '8px',
-                          alignItems: 'center',
-                          padding: '8px 12px',
-                          background: 'var(--card-bg2-color)',
-                          borderRadius: '4px',
+                          gap: "8px",
+                          alignItems: "center",
+                          padding: "8px 12px",
+                          background: "var(--card-bg2-color)",
+                          borderRadius: "4px",
                         }}
                       >
                         <Text size={1} weight="bold">
@@ -1147,7 +1180,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                         text="Dodaj parametr"
                         mode="ghost"
                         onClick={() => handleAddRow(groupIndex)}
-                        style={{ width: '100%' }}
+                        style={{ width: "100%" }}
                       />
                     </>
                   )}
@@ -1163,7 +1196,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             mode="ghost"
             tone="positive"
             onClick={handleAddGroup}
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
           />
         </Stack>
 
@@ -1188,11 +1221,11 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
           <Dialog
             id="delete-confirm-dialog"
             header={
-              deleteConfirm.type === 'row'
-                ? 'Usuń parametr'
-                : deleteConfirm.type === 'group'
-                  ? 'Usuń sekcję'
-                  : 'Usuń wariant'
+              deleteConfirm.type === "row"
+                ? "Usuń parametr"
+                : deleteConfirm.type === "group"
+                  ? "Usuń sekcję"
+                  : "Usuń wariant"
             }
             onClose={() => setDeleteConfirm(null)}
             width={0}
@@ -1200,21 +1233,21 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             <Box padding={4}>
               <Stack space={4}>
                 <Text size={2}>
-                  Czy na pewno chcesz usunąć{' '}
-                  {deleteConfirm.type === 'row'
-                    ? 'parametr'
-                    : deleteConfirm.type === 'group'
-                      ? 'sekcję'
-                      : 'wariant'}{' '}
+                  Czy na pewno chcesz usunąć{" "}
+                  {deleteConfirm.type === "row"
+                    ? "parametr"
+                    : deleteConfirm.type === "group"
+                      ? "sekcję"
+                      : "wariant"}{" "}
                   <strong>&ldquo;{deleteConfirm.name}&rdquo;</strong>?
                 </Text>
-                {deleteConfirm.type === 'variant' && (
+                {deleteConfirm.type === "variant" && (
                   <Text size={1} muted>
                     Spowoduje to usunięcie tej kolumny wartości ze wszystkich
                     parametrów.
                   </Text>
                 )}
-                {deleteConfirm.type === 'group' && (
+                {deleteConfirm.type === "group" && (
                   <Text size={1} muted>
                     Spowoduje to usunięcie wszystkich parametrów w tej sekcji.
                   </Text>

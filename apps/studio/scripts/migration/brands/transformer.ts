@@ -4,18 +4,18 @@
  * Handles HTML to Portable Text conversion and logo upload
  */
 
-import * as https from 'node:https';
-import { Readable } from 'node:stream';
+import * as https from "node:https";
+import { Readable } from "node:stream";
 
-import { createClient, type SanityClient } from '@sanity/client';
-import { v4 as uuidv4 } from 'uuid';
+import { createClient, type SanityClient } from "@sanity/client";
+import { v4 as uuidv4 } from "uuid";
 
 import type {
   Brand,
   BrandSourceData,
   PortableTextBlock,
   PortableTextYouTubeBlock,
-} from './types';
+} from "./types";
 
 // Custom HTTPS agent that bypasses SSL verification for legacy assets
 const insecureAgent = new https.Agent({
@@ -24,16 +24,16 @@ const insecureAgent = new https.Agent({
 
 // PrimaLuna hero image reference - used as default for all brands
 const PRIMALUNA_HERO_IMAGE_REF =
-  'image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp';
+  "image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp";
 
 // Legacy assets base URL
-const LEGACY_ASSETS_BASE_URL = 'https://audiofast.pl/assets/';
+const LEGACY_ASSETS_BASE_URL = "https://audiofast.pl/assets/";
 
 /**
  * Generate a unique key for Portable Text blocks
  */
 function generateKey(): string {
-  return uuidv4().replace(/-/g, '').substring(0, 12);
+  return uuidv4().replace(/-/g, "").substring(0, 12);
 }
 
 /**
@@ -41,14 +41,14 @@ function generateKey(): string {
  */
 function stripHtml(html: string): string {
   return html
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
-    .replace(/&nbsp;/g, ' ') // Replace &nbsp;
-    .replace(/&amp;/g, '&') // Replace &amp;
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
+    .replace(/<[^>]*>/g, "") // Remove HTML tags
+    .replace(/&nbsp;/g, " ") // Replace &nbsp;
+    .replace(/&amp;/g, "&") // Replace &amp;
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/\s+/g, ' ') // Normalize whitespace
+    .replace(/\s+/g, " ") // Normalize whitespace
     .trim();
 }
 
@@ -61,17 +61,17 @@ function textToPortableText(text: string): PortableTextBlock[] {
   return [
     {
       _key: generateKey(),
-      _type: 'block',
+      _type: "block",
       children: [
         {
           _key: generateKey(),
-          _type: 'span',
+          _type: "span",
           marks: [],
           text: text.trim(),
         },
       ],
       markDefs: [],
-      style: 'normal',
+      style: "normal",
     },
   ];
 }
@@ -82,7 +82,7 @@ function textToPortableText(text: string): PortableTextBlock[] {
 function createYouTubeBlock(videoId: string): PortableTextYouTubeBlock {
   return {
     _key: generateKey(),
-    _type: 'ptYoutubeVideo',
+    _type: "ptYoutubeVideo",
     youtubeId: videoId,
   };
 }
@@ -97,12 +97,12 @@ function htmlToPortableText(html: string | null): PortableTextBlock[] {
   // Extract paragraphs
   const paragraphs: string[] = [];
   // Use a workaround for dotAll flag - replace newlines with a placeholder
-  const normalizedHtml = html.replace(/\n/g, '___NEWLINE___');
+  const normalizedHtml = html.replace(/\n/g, "___NEWLINE___");
   const pRegex = /<p[^>]*>(.*?)<\/p>/g;
   let match;
 
   while ((match = pRegex.exec(normalizedHtml)) !== null) {
-    const content = stripHtml(match[1].replace(/___NEWLINE___/g, '\n'));
+    const content = stripHtml(match[1].replace(/___NEWLINE___/g, "\n"));
     if (content) {
       paragraphs.push(content);
     }
@@ -110,7 +110,7 @@ function htmlToPortableText(html: string | null): PortableTextBlock[] {
 
   // If no paragraphs found, treat whole content as one block
   if (paragraphs.length === 0) {
-    const content = stripHtml(normalizedHtml.replace(/___NEWLINE___/g, '\n'));
+    const content = stripHtml(normalizedHtml.replace(/___NEWLINE___/g, "\n"));
     if (content) {
       paragraphs.push(content);
     }
@@ -118,17 +118,17 @@ function htmlToPortableText(html: string | null): PortableTextBlock[] {
 
   return paragraphs.map((text) => ({
     _key: generateKey(),
-    _type: 'block' as const,
+    _type: "block" as const,
     children: [
       {
         _key: generateKey(),
-        _type: 'span' as const,
+        _type: "span" as const,
         marks: [],
         text,
       },
     ],
     markDefs: [],
-    style: 'normal',
+    style: "normal",
   }));
 }
 
@@ -141,7 +141,7 @@ function generateSeoDescription(
   description: string | null,
 ): string {
   // Try to use motto first, then description
-  const sourceText = motto || (description ? stripHtml(description) : '');
+  const sourceText = motto || (description ? stripHtml(description) : "");
 
   if (sourceText) {
     // Truncate to 140 chars while keeping whole words
@@ -158,11 +158,11 @@ function generateSeoDescription(
 
     // Truncate at word boundary
     let truncated = sourceText.substring(0, 137);
-    const lastSpace = truncated.lastIndexOf(' ');
+    const lastSpace = truncated.lastIndexOf(" ");
     if (lastSpace > 100) {
       truncated = truncated.substring(0, lastSpace);
     }
-    return truncated + '...';
+    return truncated + "...";
   }
 
   // Default description
@@ -191,10 +191,10 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
       hostname: url.hostname,
       port: 443,
       path: url.pathname + url.search,
-      method: 'GET',
+      method: "GET",
       agent: insecureAgent,
       headers: {
-        'User-Agent': 'Sanity-Migration-Script/1.0',
+        "User-Agent": "Sanity-Migration-Script/1.0",
       },
     };
 
@@ -208,15 +208,15 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
       }
 
       const chunks: Buffer[] = [];
-      res.on('data', (chunk: Buffer) => chunks.push(chunk));
-      res.on('end', () => resolve(Buffer.concat(chunks)));
-      res.on('error', (err) => {
+      res.on("data", (chunk: Buffer) => chunks.push(chunk));
+      res.on("end", () => resolve(Buffer.concat(chunks)));
+      res.on("error", (err) => {
         console.error(`Error reading response for ${imageUrl}:`, err);
         resolve(null);
       });
     });
 
-    req.on('error', (err) => {
+    req.on("error", (err) => {
       console.error(`Error fetching image from ${imageUrl}:`, err);
       resolve(null);
     });
@@ -247,11 +247,11 @@ async function uploadImageFromUrl(
     readable.push(imageBuffer);
     readable.push(null);
 
-    const asset = await client.assets.upload('image', readable, {
+    const asset = await client.assets.upload("image", readable, {
       filename,
       source: {
         id: imageUrl,
-        name: 'WordPress/SilverStripe',
+        name: "WordPress/SilverStripe",
         url: imageUrl,
       },
     });
@@ -310,10 +310,15 @@ export async function transformBrandToSanity(
 
   // Prepare detailed description from Box content if available
   // Append YouTube video block if available
-  let brandDescriptionContent: (PortableTextBlock | PortableTextYouTubeBlock)[] = [];
+  let brandDescriptionContent: (
+    | PortableTextBlock
+    | PortableTextYouTubeBlock
+  )[] = [];
 
   if (source.boxContent?.descriptionContent) {
-    brandDescriptionContent = htmlToPortableText(source.boxContent.descriptionContent);
+    brandDescriptionContent = htmlToPortableText(
+      source.boxContent.descriptionContent,
+    );
   } else if (source.description) {
     // Fallback to ProducerPage description
     brandDescriptionContent = htmlToPortableText(source.description);
@@ -325,7 +330,9 @@ export async function transformBrandToSanity(
 
   // Append YouTube video if available from Box content
   if (source.boxContent?.youtubeVideoId) {
-    brandDescriptionContent.push(createYouTubeBlock(source.boxContent.youtubeVideoId));
+    brandDescriptionContent.push(
+      createYouTubeBlock(source.boxContent.youtubeVideoId),
+    );
     console.log(`  Adding YouTube video: ${source.boxContent.youtubeVideoId}`);
   }
 
@@ -360,7 +367,7 @@ export async function transformBrandToSanity(
         logoRef = await uploadImageFromUrl(
           client,
           logoUrl,
-          source.logoFilename.split('/').pop() || 'logo.png',
+          source.logoFilename.split("/").pop() || "logo.png",
         );
 
         if (logoRef) {
@@ -387,7 +394,9 @@ export async function transformBrandToSanity(
       bannerImageRef = await findExistingLogo(client, bannerUrl);
 
       if (bannerImageRef) {
-        console.log(`  Found existing banner image in Sanity for ${source.name}`);
+        console.log(
+          `  Found existing banner image in Sanity for ${source.name}`,
+        );
         existingLogos.set(bannerUrl, bannerImageRef);
       } else {
         // Upload new banner image
@@ -395,12 +404,15 @@ export async function transformBrandToSanity(
         bannerImageRef = await uploadImageFromUrl(
           client,
           bannerUrl,
-          source.boxContent.bannerImageFilename.split('/').pop() || 'banner.jpg',
+          source.boxContent.bannerImageFilename.split("/").pop() ||
+            "banner.jpg",
         );
 
         if (bannerImageRef) {
           existingLogos.set(bannerUrl, bannerImageRef);
-          console.log(`  Banner image uploaded successfully for ${source.name}`);
+          console.log(
+            `  Banner image uploaded successfully for ${source.name}`,
+          );
         } else {
           console.warn(`  Failed to upload banner image for ${source.name}`);
         }
@@ -410,17 +422,17 @@ export async function transformBrandToSanity(
 
   const brand: Brand = {
     _id: brandId,
-    _type: 'brand',
+    _type: "brand",
     name: source.name,
     slug: {
-      _type: 'slug',
+      _type: "slug",
       current: `/marki/${source.slug}/`,
     },
     description: heroDescription,
     heroImage: {
-      _type: 'image',
+      _type: "image",
       asset: {
-        _type: 'reference',
+        _type: "reference",
         _ref: PRIMALUNA_HERO_IMAGE_REF,
       },
     },
@@ -437,9 +449,9 @@ export async function transformBrandToSanity(
   // Add logo if available
   if (logoRef) {
     brand.logo = {
-      _type: 'image',
+      _type: "image",
       asset: {
-        _type: 'reference',
+        _type: "reference",
         _ref: logoRef,
       },
     };
@@ -448,9 +460,9 @@ export async function transformBrandToSanity(
   // Add banner image if available
   if (bannerImageRef) {
     brand.bannerImage = {
-      _type: 'image',
+      _type: "image",
       asset: {
-        _type: 'reference',
+        _type: "reference",
         _ref: bannerImageRef,
       },
     };
@@ -469,7 +481,7 @@ export function createMigrationClient(): SanityClient {
 
   if (!projectId || !dataset || !token) {
     throw new Error(
-      'Missing required environment variables: SANITY_PROJECT_ID, SANITY_DATASET, SANITY_API_TOKEN',
+      "Missing required environment variables: SANITY_PROJECT_ID, SANITY_DATASET, SANITY_API_TOKEN",
     );
   }
 
@@ -477,8 +489,7 @@ export function createMigrationClient(): SanityClient {
     projectId,
     dataset,
     token,
-    apiVersion: '2024-01-01',
+    apiVersion: "2024-01-01",
     useCdn: false,
   });
 }
-

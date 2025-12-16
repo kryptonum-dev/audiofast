@@ -28,7 +28,7 @@ import { parse } from "csv-parse/sync";
 
 const CSV_PATH = resolve(
   __dirname,
-  "../../../../../csv/products/products-creation-dates.csv"
+  "../../../../../csv/products/products-creation-dates.csv",
 );
 
 const client = createClient({
@@ -67,9 +67,15 @@ const isVerbose = args.includes("--verbose");
 // ============================================================================
 
 async function migrateCreationDates() {
-  console.log("\n╔═══════════════════════════════════════════════════════════════╗");
-  console.log("║         MIGRATE PRODUCT CREATION DATES                        ║");
-  console.log("╚═══════════════════════════════════════════════════════════════╝\n");
+  console.log(
+    "\n╔═══════════════════════════════════════════════════════════════╗",
+  );
+  console.log(
+    "║         MIGRATE PRODUCT CREATION DATES                        ║",
+  );
+  console.log(
+    "╚═══════════════════════════════════════════════════════════════╝\n",
+  );
 
   if (isDryRun) {
     console.log("🔍 DRY RUN MODE - No changes will be made\n");
@@ -107,7 +113,7 @@ async function migrateCreationDates() {
   console.log("🔍 Fetching existing products from Sanity...");
 
   const existingProducts = await client.fetch<ProductWithDate[]>(
-    `*[_type == "product" && _id match "product-*"]{_id, name, publishedDate}`
+    `*[_type == "product" && _id match "product-*"]{_id, name, publishedDate}`,
   );
 
   console.log(`   ✓ Found ${existingProducts.length} products in Sanity\n`);
@@ -170,9 +176,15 @@ async function migrateCreationDates() {
   // ----------------------------------------------------------------
   // Step 4: Report summary
   // ----------------------------------------------------------------
-  console.log("═══════════════════════════════════════════════════════════════");
-  console.log("                       SUMMARY                                 ");
-  console.log("═══════════════════════════════════════════════════════════════");
+  console.log(
+    "═══════════════════════════════════════════════════════════════",
+  );
+  console.log(
+    "                       SUMMARY                                 ",
+  );
+  console.log(
+    "═══════════════════════════════════════════════════════════════",
+  );
   console.log(`   📊 Total in CSV:        ${csvData.length}`);
   console.log(`   ✅ To update:           ${updates.length}`);
   console.log(`   ⏭️  Already set:         ${alreadySet.length}`);
@@ -213,7 +225,9 @@ async function migrateCreationDates() {
   // Step 5: Apply updates
   // ----------------------------------------------------------------
   if (isDryRun) {
-    console.log("\n🔍 DRY RUN - No changes made. Run without --dry-run to apply.\n");
+    console.log(
+      "\n🔍 DRY RUN - No changes made. Run without --dry-run to apply.\n",
+    );
     return;
   }
 
@@ -230,7 +244,7 @@ async function migrateCreationDates() {
 
     for (const update of batch) {
       transaction.patch(update.sanityId, (patch) =>
-        patch.set({ publishedDate: update.newDate })
+        patch.set({ publishedDate: update.newDate }),
       );
     }
 
@@ -245,7 +259,7 @@ async function migrateCreationDates() {
         }
       } else {
         process.stdout.write(
-          `\r   Progress: ${updated}/${updates.length} products updated...`
+          `\r   Progress: ${updated}/${updates.length} products updated...`,
         );
       }
     } catch (error) {
@@ -259,9 +273,15 @@ async function migrateCreationDates() {
   // ----------------------------------------------------------------
   // Step 6: Final report
   // ----------------------------------------------------------------
-  console.log("═══════════════════════════════════════════════════════════════");
-  console.log("                     FINAL REPORT                              ");
-  console.log("═══════════════════════════════════════════════════════════════");
+  console.log(
+    "═══════════════════════════════════════════════════════════════",
+  );
+  console.log(
+    "                     FINAL REPORT                              ",
+  );
+  console.log(
+    "═══════════════════════════════════════════════════════════════",
+  );
   console.log(`   ✅ Updated:  ${updated}`);
   console.log(`   ❌ Failed:   ${failed}`);
   console.log("");
@@ -285,4 +305,3 @@ migrateCreationDates().catch((error) => {
   console.error("❌ Migration failed:", error);
   process.exit(1);
 });
-

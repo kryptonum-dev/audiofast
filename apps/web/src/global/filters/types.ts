@@ -1,4 +1,4 @@
-import type { QueryAllProductsFilterMetadataResult } from '../sanity/sanity.types';
+import type { QueryAllProductsFilterMetadataResult } from "../sanity/sanity.types";
 
 // ----------------------------------------
 // Filter Metadata Types (from Sanity query)
@@ -9,21 +9,21 @@ import type { QueryAllProductsFilterMetadataResult } from '../sanity/sanity.type
  * Lightweight structure for client-side filter computation
  */
 export type ProductFilterMetadata = NonNullable<
-  QueryAllProductsFilterMetadataResult['products']
+  QueryAllProductsFilterMetadataResult["products"]
 >[number];
 
 /**
  * Category metadata for filter sidebar
  */
 export type CategoryMetadata = NonNullable<
-  QueryAllProductsFilterMetadataResult['categories']
+  QueryAllProductsFilterMetadataResult["categories"]
 >[number];
 
 /**
  * Brand metadata for filter sidebar
  */
 export type BrandMetadata = NonNullable<
-  QueryAllProductsFilterMetadataResult['brands']
+  QueryAllProductsFilterMetadataResult["brands"]
 >[number];
 
 // ----------------------------------------

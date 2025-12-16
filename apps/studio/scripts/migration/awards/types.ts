@@ -35,23 +35,23 @@ export interface AwardSourceData {
 // ============================================================================
 
 export interface SanityImageRef {
-  _type: 'image';
+  _type: "image";
   _key?: string;
   asset: {
-    _type: 'reference';
+    _type: "reference";
     _ref: string;
   };
 }
 
 export interface SanityReference {
-  _type: 'reference';
+  _type: "reference";
   _key: string;
   _ref: string;
 }
 
 export interface SanityAward {
   _id: string;
-  _type: 'award';
+  _type: "award";
   name: string;
   logo?: SanityImageRef;
   products?: SanityReference[];
@@ -101,4 +101,3 @@ export interface MigrationOptions {
   batchSize: number;
   rollback: boolean;
 }
-

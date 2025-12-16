@@ -1,34 +1,34 @@
-import { PackageOpen } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { PackageOpen } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
-import { toPlainText } from '../../utils/helper';
-import { customPortableText } from '../portableText';
+import { toPlainText } from "../../utils/helper";
+import { customPortableText } from "../portableText";
 
-const title = 'Karuzela produktów';
+const title = "Karuzela produktów";
 
 export const productsCarousel = defineType({
-  name: 'productsCarousel',
+  name: "productsCarousel",
   icon: PackageOpen,
-  type: 'object',
+  type: "object",
   title,
   description:
-    'Karuzela wyświetlająca produkty (np. powiązane produkty, nowości, bestsellery)',
+    "Karuzela wyświetlająca produkty (np. powiązane produkty, nowości, bestsellery)",
   fields: [
     customPortableText({
-      name: 'heading',
-      title: 'Nagłówek sekcji',
-      type: 'heading',
+      name: "heading",
+      title: "Nagłówek sekcji",
+      type: "heading",
     }),
     defineField({
-      name: 'products',
-      title: 'Produkty',
-      type: 'array',
+      name: "products",
+      title: "Produkty",
+      type: "array",
       description:
-        'Wybierz produkty do wyświetlenia w karuzeli (minimum 4, maksimum 12)',
+        "Wybierz produkty do wyświetlenia w karuzeli (minimum 4, maksimum 12)",
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'product' }],
+          type: "reference",
+          to: [{ type: "product" }],
           options: {
             disableNew: true,
             filter: ({ parent, document }) => {
@@ -39,7 +39,7 @@ export const productsCarousel = defineType({
                   .map((item) => item._ref) || [];
 
               // Exclude current product if on product detail page
-              const currentProductId = document?._id?.replace(/^drafts\./, '');
+              const currentProductId = document?._id?.replace(/^drafts\./, "");
               const excludedIds = currentProductId
                 ? [...selectedIds, currentProductId]
                 : selectedIds;
@@ -54,16 +54,16 @@ export const productsCarousel = defineType({
         },
       ],
       validation: (Rule) => [
-        Rule.min(4).error('Musisz wybrać co najmniej 4 produkty'),
-        Rule.max(12).error('Możesz wybrać maksymalnie 12 produktów'),
-        Rule.required().error('Produkty są wymagane'),
-        Rule.unique().error('Każdy produkt może być wybrany tylko raz'),
+        Rule.min(4).error("Musisz wybrać co najmniej 4 produkty"),
+        Rule.max(12).error("Możesz wybrać maksymalnie 12 produktów"),
+        Rule.required().error("Produkty są wymagane"),
+        Rule.unique().error("Każdy produkt może być wybrany tylko raz"),
       ],
     }),
   ],
   preview: {
     select: {
-      heading: 'heading',
+      heading: "heading",
     },
     prepare: ({ heading }) => {
       return {

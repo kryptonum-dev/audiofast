@@ -1,69 +1,69 @@
-import { MapPinIcon } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { MapPinIcon } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
-import { toPlainText } from '../../utils/helper';
-import { customPortableText } from '../portableText';
+import { toPlainText } from "../../utils/helper";
+import { customPortableText } from "../portableText";
 
-const title = 'Mapa kontaktowa';
+const title = "Mapa kontaktowa";
 
 export const contactMap = defineType({
-  name: 'contactMap',
+  name: "contactMap",
   title,
   icon: MapPinIcon,
-  type: 'object',
+  type: "object",
   description:
-    'Sekcja z mapą Google i informacjami kontaktowymi. Domyślnie używa danych z ustawień globalnych.',
+    "Sekcja z mapą Google i informacjami kontaktowymi. Domyślnie używa danych z ustawień globalnych.",
   fields: [
     customPortableText({
-      name: 'heading',
-      title: 'Nagłówek sekcji',
-      description: 'Główny nagłówek nad informacjami kontaktowymi',
-      type: 'heading',
+      name: "heading",
+      title: "Nagłówek sekcji",
+      description: "Główny nagłówek nad informacjami kontaktowymi",
+      type: "heading",
     }),
     defineField({
-      name: 'useCustomAddress',
-      type: 'boolean',
-      title: 'Użyj niestandardowych danych kontaktowych',
+      name: "useCustomAddress",
+      type: "boolean",
+      title: "Użyj niestandardowych danych kontaktowych",
       description:
-        'Włącz tę opcję, aby zastąpić domyślne dane z ustawień globalnych',
+        "Włącz tę opcję, aby zastąpić domyślne dane z ustawień globalnych",
       initialValue: false,
     }),
     defineField({
-      name: 'customAddress',
-      type: 'string',
-      title: 'Niestandardowy adres',
-      description: 'Adres do wyświetlenia (jeśli włączono nadpisywanie)',
+      name: "customAddress",
+      type: "string",
+      title: "Niestandardowy adres",
+      description: "Adres do wyświetlenia (jeśli włączono nadpisywanie)",
       hidden: ({ parent }) => !parent?.useCustomAddress,
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const useCustom = (context.parent as { useCustomAddress?: boolean })
             ?.useCustomAddress;
           if (useCustom && !value) {
-            return 'Adres jest wymagany, jeśli używasz niestandardowych danych';
+            return "Adres jest wymagany, jeśli używasz niestandardowych danych";
           }
           return true;
         }),
     }),
     defineField({
-      name: 'customPhone',
-      type: 'string',
-      title: 'Niestandardowy telefon',
+      name: "customPhone",
+      type: "string",
+      title: "Niestandardowy telefon",
       description:
-        'Numer telefonu do wyświetlenia (jeśli włączono nadpisywanie)',
+        "Numer telefonu do wyświetlenia (jeśli włączono nadpisywanie)",
       hidden: ({ parent }) => !parent?.useCustomAddress,
     }),
     defineField({
-      name: 'customEmail',
-      type: 'string',
-      title: 'Niestandardowy email',
-      description: 'Adres email do wyświetlenia (jeśli włączono nadpisywanie)',
+      name: "customEmail",
+      type: "string",
+      title: "Niestandardowy email",
+      description: "Adres email do wyświetlenia (jeśli włączono nadpisywanie)",
       hidden: ({ parent }) => !parent?.useCustomAddress,
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const useCustom = (context.parent as { useCustomAddress?: boolean })
             ?.useCustomAddress;
           if (useCustom && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-            return 'Podaj poprawny adres email';
+            return "Podaj poprawny adres email";
           }
           return true;
         }),
@@ -71,8 +71,8 @@ export const contactMap = defineType({
   ],
   preview: {
     select: {
-      heading: 'heading',
-      mapLocation: 'mapLocation',
+      heading: "heading",
+      mapLocation: "mapLocation",
     },
     prepare: ({ heading, mapLocation }) => {
       return {
@@ -80,7 +80,7 @@ export const contactMap = defineType({
         subtitle:
           toPlainText(heading) ||
           mapLocation ||
-          'Mapa kontaktowa - czekamy na Ciebie',
+          "Mapa kontaktowa - czekamy na Ciebie",
         media: MapPinIcon,
       };
     },

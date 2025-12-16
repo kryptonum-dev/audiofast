@@ -1,4 +1,4 @@
-import type { PortableTextBlock } from 'sanity';
+import type { PortableTextBlock } from "sanity";
 
 /**
  * A single cell value containing Portable Text content
@@ -77,7 +77,7 @@ export function createEmptyCellValue(): TechnicalDataCellValue {
 export function createEmptyRow(valueCount: number = 1): TechnicalDataRow {
   return {
     _key: generateKey(),
-    title: '',
+    title: "",
     values: Array.from({ length: valueCount }, () => createEmptyCellValue()),
   };
 }
@@ -87,7 +87,7 @@ export function createEmptyRow(valueCount: number = 1): TechnicalDataRow {
  */
 export function createEmptyGroup(
   valueCount: number = 1,
-  title?: string
+  title?: string,
 ): TechnicalDataGroup {
   return {
     _key: generateKey(),
@@ -100,17 +100,17 @@ export function createEmptyGroup(
  * Extract plain text from Portable Text blocks for preview
  */
 export function extractPlainTextFromBlocks(
-  blocks: PortableTextBlock[]
+  blocks: PortableTextBlock[],
 ): string {
-  if (!blocks || !Array.isArray(blocks)) return '';
+  if (!blocks || !Array.isArray(blocks)) return "";
 
   return blocks
     .map((block) => {
-      if (block._type !== 'block' || !block.children) return '';
+      if (block._type !== "block" || !block.children) return "";
       return (block.children as Array<{ text?: string }>)
-        .map((child) => child.text || '')
-        .join('');
+        .map((child) => child.text || "")
+        .join("");
     })
-    .join('\n')
+    .join("\n")
     .trim();
 }

@@ -7,9 +7,11 @@
 ## 🎯 What Was Implemented
 
 ### Phase 1: Mailchimp Client Integration ✅
+
 **Goal:** Set up Mailchimp client library and helper functions
 
 **Files Created:**
+
 1. `apps/web/src/global/mailchimp/client.ts` (20 lines)
    - Configured Mailchimp client with API credentials
    - Environment-based configuration with warnings
@@ -30,15 +32,18 @@
    - Advanced configuration examples
 
 **Packages Installed:**
+
 - `@mailchimp/mailchimp_marketing` (v3.0.80)
 - `@types/mailchimp__mailchimp_marketing` (v3.0.22)
 
 ---
 
 ### Phase 2: API Route Handler ✅
+
 **Goal:** Create server-side endpoint for newsletter signups
 
 **File Created:**
+
 1. `apps/web/src/app/api/newsletter/route.ts` (69 lines)
    - POST endpoint at `/api/newsletter`
    - Email validation (format + required)
@@ -48,6 +53,7 @@
    - Error handling and logging
 
 **Features:**
+
 - ✅ Request validation (email, consent)
 - ✅ Email format validation using REGEX
 - ✅ Integration with Mailchimp subscribe helper
@@ -58,9 +64,11 @@
 ---
 
 ### Phase 3: Frontend Integration ✅
+
 **Goal:** Connect NewsletterForm to real API
 
 **File Modified:**
+
 1. `apps/web/src/components/ui/Footer/NewsletterForm.tsx`
    - Replaced mock `setTimeout` with real API call to `/api/newsletter`
    - Added analytics tracking before submission
@@ -70,6 +78,7 @@
    - Loading/success/error state management
 
 **Analytics Events Added:**
+
 - Lead event with Meta Pixel
 - GA4 `generate_lead` event
 - User data saved to analytics storage
@@ -79,6 +88,7 @@
 ---
 
 ### Bonus: Sanity CMS Integration ✅
+
 **Goal:** Manage Mailchimp configuration via CMS
 
 **Files Modified:**
@@ -97,6 +107,7 @@
    - Tagged for cache revalidation: `['mailchimp-settings']`
 
 **Benefits:**
+
 - ✅ Content editors can change audience ID without code deployment
 - ✅ Toggle double opt-in from CMS
 - ✅ Manage default tags from CMS
@@ -158,11 +169,13 @@ MAILCHIMP_SERVER_PREFIX=us6
 ## ✨ Key Features Implemented
 
 ### 1. Idempotent Operations
+
 - Uses `setListMember` (PUT) instead of `addListMember` (POST)
 - Safe to call multiple times with same email
 - Won't fail if user already subscribed
 
 ### 2. Comprehensive Error Handling
+
 - Already subscribed detection (returns success)
 - Invalid email handling
 - Previously unsubscribed detection
@@ -171,17 +184,20 @@ MAILCHIMP_SERVER_PREFIX=us6
 - All errors logged with context
 
 ### 3. Double Opt-In Support
+
 - Configurable via Sanity CMS
 - Returns `needsConfirmation: true` when pending
 - User receives confirmation email from Mailchimp
 
 ### 4. Tag Management
+
 - Default tags from Sanity settings
 - Custom tags from API metadata
 - Merged and applied via separate API call
 - Tags don't fail subscription if they error
 
 ### 5. Analytics Integration
+
 - Tracks newsletter signups as leads
 - Saves user email to analytics storage
 - Meta Pixel event: `Lead`
@@ -189,6 +205,7 @@ MAILCHIMP_SERVER_PREFIX=us6
 - Source tracking: `footer`
 
 ### 6. GDPR Compliance
+
 - Double opt-in by default
 - Privacy policy link on form
 - Explicit consent checkbox required
@@ -351,14 +368,15 @@ await fetch('/api/newsletter', {
 
 ```typescript
 await subscribeToNewsletter(body.email, {
-  source: 'homepage',
-  tags: ['website', 'homepage', 'promo-2024'],
+  source: "homepage",
+  tags: ["website", "homepage", "promo-2024"],
 });
 ```
 
 ### Disable Double Opt-In
 
 **In Sanity Studio:**
+
 1. Navigate to: Settings → Dane kontaktowe → Newsletter - Mailchimp
 2. Toggle "Double Opt-In" to OFF
 3. Publish changes
@@ -372,6 +390,7 @@ await subscribeToNewsletter(body.email, {
 ### Events Fired on Signup
 
 **Meta Pixel:**
+
 ```javascript
 {
   eventName: 'Lead',
@@ -383,6 +402,7 @@ await subscribeToNewsletter(body.email, {
 ```
 
 **Google Analytics 4:**
+
 ```javascript
 {
   eventName: 'generate_lead',
@@ -394,6 +414,7 @@ await subscribeToNewsletter(body.email, {
 ```
 
 **User Data Saved:**
+
 - Email address
 - Submission timestamp
 - Form location
@@ -403,6 +424,7 @@ await subscribeToNewsletter(body.email, {
 ## 🔒 Security & Privacy
 
 ### Security Measures
+
 - ✅ API key stored in environment variables (server-side only)
 - ✅ Email validation on both client and server
 - ✅ Consent required before submission
@@ -411,6 +433,7 @@ await subscribeToNewsletter(body.email, {
 - ✅ MD5 hashing for subscriber identification
 
 ### GDPR Compliance
+
 - ✅ Double opt-in enabled by default
 - ✅ Privacy policy link on form
 - ✅ Explicit consent checkbox
@@ -424,11 +447,13 @@ await subscribeToNewsletter(body.email, {
 ### "Newsletter service not available"
 
 **Causes:**
+
 1. Missing Mailchimp API credentials in `.env.local`
 2. Missing Audience ID in Sanity
 3. Sanity fetch error
 
 **Solutions:**
+
 1. Check `.env.local` has `MAILCHIMP_API_KEY` and `MAILCHIMP_SERVER_PREFIX`
 2. Verify Audience ID is set in Sanity Studio
 3. Check server logs for detailed error messages
@@ -436,11 +461,13 @@ await subscribeToNewsletter(body.email, {
 ### Subscribers not appearing
 
 **Causes:**
+
 1. Wrong Audience ID in Sanity
 2. Double opt-in pending (check email)
 3. Email in spam folder
 
 **Solutions:**
+
 1. Verify Audience ID matches Mailchimp dashboard
 2. Check spam folder for confirmation email
 3. Look for "pending" subscribers in Mailchimp
@@ -454,10 +481,12 @@ await subscribeToNewsletter(body.email, {
 ## 📚 Documentation Links
 
 ### Internal
+
 - [Complete Setup Guide](../apps/web/MAILCHIMP_SETUP.md)
 - [Implementation Plan](./.ai/mailchimp-newsletter-integration-plan.md)
 
 ### External
+
 - [Mailchimp Marketing API](https://mailchimp.com/developer/marketing/docs/fundamentals/)
 - [Lists API Documentation](https://mailchimp.com/developer/marketing/api/lists/)
 - [Node.js Client Library](https://github.com/mailchimp/mailchimp-marketing-node)
@@ -469,6 +498,7 @@ await subscribeToNewsletter(body.email, {
 **Total Implementation Time:** ~4 hours (including testing and documentation)
 
 **Lines of Code:**
+
 - Client setup: 20 lines
 - Subscribe logic: 161 lines
 - API route: 69 lines
@@ -487,9 +517,9 @@ All phases complete and tested. Ready for content editors to configure Audience 
 ---
 
 **Next Steps:**
+
 1. Configure Mailchimp settings in Sanity Studio
 2. Add environment variables to production
 3. Test with real email addresses
 4. Set up welcome email automation in Mailchimp (optional)
 5. Monitor signup rates and engagement
-

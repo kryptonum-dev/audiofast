@@ -98,4 +98,3 @@ Goal: deliver a reusable Resend-powered emailing pipeline for every lead-generat
 ---
 
 Following this plan keeps the implementation minimal yet reusable, meets the user’s requirement for a CMS-driven confirmation email, and aligns with Next.js App Router best practices for API work per the official Route Handlers guidance.
-

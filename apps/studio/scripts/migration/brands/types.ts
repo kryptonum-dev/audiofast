@@ -78,10 +78,10 @@ export interface BrandSourceData {
 
 export interface PortableTextBlock {
   _key: string;
-  _type: 'block';
+  _type: "block";
   children: Array<{
     _key: string;
-    _type: 'span';
+    _type: "span";
     marks: string[];
     text: string;
   }>;
@@ -91,38 +91,38 @@ export interface PortableTextBlock {
 
 export interface PortableTextYouTubeBlock {
   _key: string;
-  _type: 'ptYoutubeVideo';
+  _type: "ptYoutubeVideo";
   youtubeId: string;
   title?: string;
 }
 
 export interface Brand {
   _id: string;
-  _type: 'brand';
+  _type: "brand";
   name: string;
   slug: {
-    _type: 'slug';
+    _type: "slug";
     current: string;
   };
   logo?: {
-    _type: 'image';
+    _type: "image";
     asset: {
-      _type: 'reference';
+      _type: "reference";
       _ref: string;
     };
   };
   description: PortableTextBlock[];
   heroImage: {
-    _type: 'image';
+    _type: "image";
     asset: {
-      _type: 'reference';
+      _type: "reference";
       _ref: string;
     };
   };
   bannerImage?: {
-    _type: 'image';
+    _type: "image";
     asset: {
-      _type: 'reference';
+      _type: "reference";
       _ref: string;
     };
   };
@@ -166,4 +166,3 @@ export interface ValidationError {
   field: string;
   message: string;
 }
-

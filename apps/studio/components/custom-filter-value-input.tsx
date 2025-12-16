@@ -1,4 +1,4 @@
-import { TrashIcon } from '@sanity/icons';
+import { TrashIcon } from "@sanity/icons";
 import {
   Autocomplete,
   Box,
@@ -8,10 +8,10 @@ import {
   Stack,
   Text,
   TextInput,
-} from '@sanity/ui';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { ArrayOfObjectsInputProps } from 'sanity';
-import { set, unset, useClient, useFormValue } from 'sanity';
+} from "@sanity/ui";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { ArrayOfObjectsInputProps } from "sanity";
+import { set, unset, useClient, useFormValue } from "sanity";
 
 type FilterValue = {
   _key: string;
@@ -21,7 +21,7 @@ type FilterValue = {
 
 export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
   const { value = [], onChange } = props;
-  const client = useClient({ apiVersion: '2024-01-01' });
+  const client = useClient({ apiVersion: "2024-01-01" });
   const [availableFilters, setAvailableFilters] = useState<string[]>([]);
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -57,7 +57,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
         // Fetch all customFilters from selected categories
         const result = await client.fetch<Array<{ customFilters?: string[] }>>(
           `*[_type == "productCategorySub" && _id in $categoryIds]{customFilters}`,
-          { categoryIds }
+          { categoryIds },
         );
 
         // Combine all filters from all categories and remove duplicates
@@ -68,7 +68,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
 
         setAvailableFilters(allFilters);
       } catch (error) {
-        console.error('Error fetching filters:', error);
+        console.error("Error fetching filters:", error);
         setAvailableFilters([]);
       } finally {
         setInitialLoading(false);
@@ -94,7 +94,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
       newValue.splice(index, 1);
       onChange(newValue.length > 0 ? set(newValue) : unset());
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const handleFilterNameChange = useCallback(
@@ -103,7 +103,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
       newValue[index] = { ...newValue[index], filterName };
       onChange(set(newValue));
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const handleValueChange = useCallback(
@@ -112,7 +112,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
       newValue[index] = { ...newValue[index], value: filterValue };
       onChange(set(newValue));
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const filterValues = (value as FilterValue[]) || [];
@@ -173,7 +173,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                     options={availableFilters.map((filter) => ({
                       value: filter,
                     }))}
-                    value={item.filterName || ''}
+                    value={item.filterName || ""}
                     onChange={(newValue) =>
                       handleFilterNameChange(index, newValue)
                     }
@@ -192,7 +192,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                     fontSize={2}
                     padding={3}
                     placeholder="np. 2m, 100W, 8Ω"
-                    value={item.value || ''}
+                    value={item.value || ""}
                     onChange={(event) =>
                       handleValueChange(index, event.currentTarget.value)
                     }
@@ -230,7 +230,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
               Dostępne filtry z wybranych kategorii:
             </Text>
             <Text size={1} muted>
-              {availableFilters.join(', ')}
+              {availableFilters.join(", ")}
             </Text>
           </Stack>
         </Card>

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';
-import type { PortableTextProps } from '@/src/global/types';
+import type { QueryProductBySlugResult } from "@/src/global/sanity/sanity.types";
+import type { PortableTextProps } from "@/src/global/types";
 
-import PortableText from '../../portableText';
-import styles from './styles.module.scss';
+import PortableText from "../../portableText";
+import styles from "./styles.module.scss";
 
 type TechnicalDataType = NonNullable<
-  NonNullable<QueryProductBySlugResult>['technicalData']
+  NonNullable<QueryProductBySlugResult>["technicalData"]
 >;
 
 interface TechnicalDataProps {
@@ -56,8 +56,8 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
     };
 
     checkBreakpoints();
-    window.addEventListener('resize', checkBreakpoints);
-    return () => window.removeEventListener('resize', checkBreakpoints);
+    window.addEventListener("resize", checkBreakpoints);
+    return () => window.removeEventListener("resize", checkBreakpoints);
   }, []);
 
   // Sync scroll across all containers
@@ -90,7 +90,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
   const renderTable = (group: (typeof validGroups)[0], groupIndex: number) => (
     <div className={styles.tableWrapper}>
       <table
-        className={`${styles.table} ${hasVariants ? styles.multiVariant : ''}`}
+        className={`${styles.table} ${hasVariants ? styles.multiVariant : ""}`}
       >
         {hasVariants && (
           <thead className={styles.thead}>

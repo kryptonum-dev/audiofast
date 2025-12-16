@@ -1,43 +1,45 @@
-import type { Metadata } from 'next';
-import { cacheLife } from 'next/cache';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import type { Metadata } from "next";
+import { cacheLife } from "next/cache";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
-import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
-import ProductsAside from '@/src/components/products/ProductsAside';
-import ProductsListing from '@/src/components/products/ProductsListing';
-import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
-import styles from '@/src/components/products/ProductsListing/styles.module.scss';
-import SortDropdown from '@/src/components/products/SortDropdown';
-import BrandSchema from '@/src/components/schema/BrandSchema';
-import type { SanityRawImage } from '@/src/components/shared/Image';
-import Image from '@/src/components/shared/Image';
-import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
-import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
-import StoreLocations from '@/src/components/ui/StoreLocations';
-import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
+import FeaturedPublications from "@/src/components/pageBuilder/FeaturedPublications";
+import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
+import ProductsAside from "@/src/components/products/ProductsAside";
+import ProductsListing from "@/src/components/products/ProductsListing";
+import ProductsListingSkeleton from "@/src/components/products/ProductsListing/ProductsListingSkeleton";
+import styles from "@/src/components/products/ProductsListing/styles.module.scss";
+import ProductsListingContainer from "@/src/components/products/ProductsListingContainer";
+import { ProductsLoadingProvider } from "@/src/components/products/ProductsLoadingContext";
+import SortDropdown from "@/src/components/products/SortDropdown";
+import BrandSchema from "@/src/components/schema/BrandSchema";
+import type { SanityRawImage } from "@/src/components/shared/Image";
+import Image from "@/src/components/shared/Image";
+import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import type { ContentBlock } from "@/src/components/ui/ContentBlocks";
+import PillsStickyNav from "@/src/components/ui/PillsStickyNav";
+import StoreLocations from "@/src/components/ui/StoreLocations";
+import TwoColumnContent from "@/src/components/ui/TwoColumnContent";
 import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
-} from '@/src/global/constants';
-import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+} from "@/src/global/constants";
+import { logWarn } from "@/src/global/logger";
+import { sanityFetch } from "@/src/global/sanity/fetch";
 import {
   queryAllBrandSlugs,
   queryAllProductsFilterMetadata,
   queryBrandBySlug,
   queryBrandSeoBySlug,
-} from '@/src/global/sanity/query';
+} from "@/src/global/sanity/query";
 import type {
   QueryAllBrandSlugsResult,
   QueryAllProductsFilterMetadataResult,
   QueryBrandBySlugResult,
   QueryBrandSeoBySlugResult,
-} from '@/src/global/sanity/sanity.types';
-import { getSEOMetadata } from '@/src/global/seo';
-import type { PublicationType } from '@/src/global/types';
+} from "@/src/global/sanity/sanity.types";
+import { getSEOMetadata } from "@/src/global/seo";
+import type { PublicationType } from "@/src/global/types";
 
 type BrandPageProps = {
   params: Promise<{ slug: string }>;
@@ -57,34 +59,34 @@ type BrandPageProps = {
 
 // Brand content (specific to each brand, but cacheable)
 async function getBrandContent(slug: string) {
-  'use cache';
-  cacheLife('weeks');
+  "use cache";
+  cacheLife("weeks");
 
   return sanityFetch<QueryBrandBySlugResult>({
     query: queryBrandBySlug,
     params: {
       slug: `/marki/${slug}/`,
       // Pass empty filters - we don't need filtered counts for PPR
-      category: '',
-      search: '',
+      category: "",
+      search: "",
       brands: [],
       minPrice: 0,
       maxPrice: 999999999,
       customFilters: [],
       embeddingResults: [],
     },
-    tags: ['brand'],
+    tags: ["brand"],
   });
 }
 
 // Global filter metadata (shared across all pages, heavily cached)
 async function getStaticFilterMetadata() {
-  'use cache';
-  cacheLife('weeks');
+  "use cache";
+  cacheLife("weeks");
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ['products'],
+    tags: ["products"],
   });
 }
 
@@ -94,13 +96,13 @@ async function getStaticFilterMetadata() {
 export async function generateStaticParams() {
   const brands = await sanityFetch<QueryAllBrandSlugsResult>({
     query: queryAllBrandSlugs,
-    tags: ['brand'],
+    tags: ["brand"],
   });
 
   return brands
     .filter((brand) => brand.slug)
     .map((brand) => ({
-      slug: brand.slug!.replace('/marki/', '').replace(/\/$/, ''),
+      slug: brand.slug!.replace("/marki/", "").replace(/\/$/, ""),
     }));
 }
 
@@ -114,7 +116,7 @@ export async function generateMetadata({
   const seoData = await sanityFetch<QueryBrandSeoBySlugResult>({
     query: queryBrandSeoBySlug,
     params: { slug: `/marki/${slug}/` },
-    tags: ['brand'],
+    tags: ["brand"],
   });
 
   if (!seoData) return getSEOMetadata();
@@ -165,32 +167,32 @@ export default async function BrandPage({
 
   const breadcrumbsData = [
     {
-      name: 'Marki',
-      path: '/marki',
+      name: "Marki",
+      path: "/marki",
     },
     {
-      name: brand.name || '',
-      path: brand.slug || '',
+      name: brand.name || "",
+      path: brand.slug || "",
     },
   ];
 
   // Determine which sections are visible for sticky navigation
   const sections = [
-    { id: 'produkty', label: 'Produkty', visible: true },
+    { id: "produkty", label: "Produkty", visible: true },
     {
-      id: 'o-marce',
-      label: 'O marce',
+      id: "o-marce",
+      label: "O marce",
       visible:
         !!brand.brandContentBlocks && brand.brandContentBlocks.length > 0,
     },
     {
-      id: 'recenzje',
-      label: 'Recenzje',
+      id: "recenzje",
+      label: "Recenzje",
       visible: !!brand.featuredReviews,
     },
     {
-      id: 'gdzie-kupic',
-      label: 'Gdzie kupić',
+      id: "gdzie-kupic",
+      label: "Gdzie kupić",
       visible: !!brand.stores,
     },
   ].filter((section) => section.visible);
@@ -202,10 +204,10 @@ export default async function BrandPage({
       <HeroStatic
         heading={[
           {
-            _type: 'block',
-            children: [{ _type: 'span', text: brand.name || '', _key: '' }],
-            style: 'normal',
-            _key: '',
+            _type: "block",
+            children: [{ _type: "span", text: brand.name || "", _key: "" }],
+            style: "normal",
+            _key: "",
             markDefs: null,
             listItem: undefined,
             level: undefined,
@@ -223,45 +225,52 @@ export default async function BrandPage({
       />
       {sections.length > 1 && <PillsStickyNav sections={sections} />}
 
-      <section id="produkty" className={`${styles.productsListing} max-width`}>
-        {/* Client-side computed sidebar - filtered to this brand's products */}
-        <ProductsAside
-          allProductsMetadata={brandProductsMetadata}
-          allCategories={filterMetadata.categories || []}
-          allBrands={filterMetadata.brands || []}
-          globalMaxPrice={brandMaxPrice}
-          basePath={`/marki/${slug}/`}
-          visibleFilters={{
-            search: true,
-            categories: true,
-            brands: false,
-            priceRange: true,
-          }}
-          headingLevel="h2"
-        />
-
-        <SortDropdown
-          options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
-          basePath={`/marki/${slug}/`}
-          defaultValue="newest"
-        />
-
-        {/* Products listing in Suspense - reads filters from URL */}
-        <Suspense fallback={<ProductsListingSkeleton />}>
-          <ProductsListing
-            searchParams={searchParams}
+      <ProductsLoadingProvider>
+        <section
+          id="produkty"
+          className={`${styles.productsListing} max-width`}
+        >
+          {/* Client-side computed sidebar - filtered to this brand's products */}
+          <ProductsAside
+            allProductsMetadata={brandProductsMetadata}
+            allCategories={filterMetadata.categories || []}
+            allBrands={filterMetadata.brands || []}
+            globalMaxPrice={brandMaxPrice}
             basePath={`/marki/${slug}/`}
-            brandSlug={slug}
-            defaultSortBy="newest"
+            visibleFilters={{
+              search: true,
+              categories: true,
+              brands: false,
+              priceRange: true,
+            }}
+            headingLevel="h2"
           />
-        </Suspense>
-      </section>
+
+          <SortDropdown
+            options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
+            basePath={`/marki/${slug}/`}
+            defaultValue="newest"
+          />
+
+          {/* Products listing - container shows overlay skeleton on filter changes */}
+          <ProductsListingContainer>
+            <Suspense fallback={<ProductsListingSkeleton />}>
+              <ProductsListing
+                searchParams={searchParams}
+                basePath={`/marki/${slug}/`}
+                brandSlug={slug}
+                defaultSortBy="newest"
+              />
+            </Suspense>
+          </ProductsListingContainer>
+        </section>
+      </ProductsLoadingProvider>
 
       {brand.bannerImage && (
         <section className="max-width-block br-md margin-bottom-lg">
           <Image
             image={brand.bannerImage}
-            alt={brand.name || ''}
+            alt={brand.name || ""}
             className="br-md full-width"
             sizes="(max-width: 37.4375rem) 98vw, (max-width: 85.375rem) 96vw, 1302px"
             loading="lazy"
@@ -280,16 +289,16 @@ export default async function BrandPage({
         <FeaturedPublications
           heading={[
             {
-              _type: 'block',
+              _type: "block",
               children: [
                 {
-                  _type: 'span',
-                  text: 'Recenzje Marki',
-                  _key: 'recenzje-marki',
+                  _type: "span",
+                  text: "Recenzje Marki",
+                  _key: "recenzje-marki",
                 },
               ],
-              style: 'normal',
-              _key: '',
+              style: "normal",
+              _key: "",
               markDefs: null,
               listItem: undefined,
               level: undefined,

@@ -410,7 +410,6 @@ export const PRODUCTS_ITEMS_PER_PAGE = 12; // Or appropriate number based on des
      - **Price Range:** Calculate min/max based on all filters EXCEPT price filters
      - **Total Count:** Based on ALL filters
      - **Result:** Single query replaces previous dual-query approach (50% fewer API calls)
-   
    - ✅ `queryProductsListing` - Fetches paginated product cards with ALL filters:
      - Category filtering
      - Search term (name, subtitle, brand, short description)
@@ -419,9 +418,7 @@ export const PRODUCTS_ITEMS_PER_PAGE = 12; // Or appropriate number based on des
      - Price range (minPrice, maxPrice)
      - Custom category filters (dynamic filter values)
      - Validation: Published products only with categories
-   
    - ⚠️ `queryCategoryFilters` - **DEPRECATED** (functionality merged into `queryProductsPageData`)
-   
    - ✅ `queryProductBySlug` - For future product detail page
 
 2. **Main Products Page** (`/produkty/page.tsx`)
@@ -803,22 +800,25 @@ After the initial implementation, we identified and fixed several performance is
 ### 4.1 Query Optimization - Merged Filters Query
 
 **Problem:** Originally had two separate queries per page load:
+
 - `queryProductsPageData` - Page data + global metadata
 - `queryAvailableFilterOptions` - Filtered metadata
 
 **Solution:** Merged into single `queryProductsPageData` with filter parameters
 
 **Changes:**
+
 - Added filter params: `$search`, `$brands`, `$minPrice`, `$maxPrice`, `$customFilters`
 - Categories, brands, and price range now calculate based on active filters
 - **Result: 50% reduction in API calls** 🚀
 
 **Updated Query Structure:**
+
 ```groq
 *[_type == "products"][0] {
   // Static data
   title, description, heroImage, pageBuilder, seo...
-  
+
   // Dynamic filtered data
   "categories": *[...] { "count": count(/* with filters */) } [count > 0]
   "brands": *[...] { "count": count(/* with filters */) } [count > 0]
@@ -831,6 +831,7 @@ After the initial implementation, we identified and fixed several performance is
 ### 4.2 Fixed Circular Filter Dependencies
 
 **Problem:** Filters were including themselves in calculations:
+
 - Brand filter counted products matching selected brands → only showed selected brands
 - Price filter used price params → incorrect max/min values
 - Categories filter used category param → limited category list
@@ -845,7 +846,7 @@ After the initial implementation, we identified and fixed several performance is
   ])
 }
 
-// Brands: exclude brands filter  
+// Brands: exclude brands filter
 "brands": *[...] {
   "count": count(*[
     match all filters EXCEPT $brands
@@ -858,7 +859,8 @@ After the initial implementation, we identified and fixed several performance is
 ].price)
 ```
 
-**Result:** 
+**Result:**
+
 - ✅ Dynamic filter discovery
 - ✅ Users can see all available options
 - ✅ Accurate counts based on other filters
@@ -866,6 +868,7 @@ After the initial implementation, we identified and fixed several performance is
 ### 4.3 Performance: Single State Object Pattern
 
 **Problem:** ProductsAside had 4 separate state variables:
+
 ```typescript
 const [searchValue, setSearchValue] = useState(...)
 const [selectedBrands, setSelectedBrands] = useState(...)
@@ -876,15 +879,20 @@ const [maxPriceState, setMaxPrice] = useState(...)
 ```
 
 **Solution:** Consolidated into single state object:
+
 ```typescript
 const [filters, setFilters] = useState({
-  search, brands, minPrice, maxPrice
-})
+  search,
+  brands,
+  minPrice,
+  maxPrice,
+});
 
 // 1 useEffect = 1 state update = 1 re-render
 ```
 
 **Performance Improvement:**
+
 - Before: ~4-5 re-renders on filter change
 - After: ~2 re-renders on filter change
 - **50-60% reduction in re-renders** 🚀
@@ -892,11 +900,13 @@ const [filters, setFilters] = useState({
 ### 4.4 Price Range Edge Cases Fixed
 
 **Issues Found:**
+
 1. When brand filter changed, price range broke (old max shown)
 2. When user set manual price, it got auto-clamped incorrectly
 3. When filters cleared, price range didn't reset
 
 **Solutions:**
+
 1. Added `useEffect` to sync with `maxLimit` prop changes
 2. Removed aggressive auto-clamping, only clamp when exceeds new limit
 3. Added state sync in ProductsAside when props change
@@ -906,11 +916,13 @@ const [filters, setFilters] = useState({
 ### 4.5 Brand List Enhancements
 
 **Added Features:**
+
 1. **Product counts** - Show count next to each brand: `Aurender (45)`
 2. **Smart sorting** - Selected brands first, then by count (descending)
 3. **Visual hierarchy** - Lighter color for counts vs brand names
 
 **Sorting Logic:**
+
 ```typescript
 // 1. Selected brands at top
 // 2. Within each group, sort by count (highest first)
@@ -922,6 +934,7 @@ return bCount - aCount; // Descending by count
 ### 4.6 Data Validation Filters
 
 **Added Query Validation:**
+
 ```groq
 *[
   _type == "product"
@@ -932,6 +945,7 @@ return bCount - aCount; // Descending by count
 ```
 
 **Benefits:**
+
 - ✅ Only published products shown (no drafts)
 - ✅ Products must have categories (no orphaned products)
 - ✅ Data integrity enforced at query level
@@ -940,18 +954,21 @@ return bCount - aCount; // Descending by count
 ### 4.7 Edge Cases Handled
 
 **Price Range:**
+
 - ✅ Max price adjusts when filters narrow product range
 - ✅ User's manual selection preserved when within valid range
 - ✅ Auto-clamps only when selection exceeds new max
 - ✅ Resets to full range when filters cleared
 
 **Brand Filtering:**
+
 - ✅ Shows all brands with products matching other filters
 - ✅ Selected brands stay at top regardless of count
 - ✅ Counts update dynamically as filters change
 - ✅ No circular dependency issues
 
 **Category Filtering:**
+
 - ✅ Only shows categories with matching products
 - ✅ Categories exclude their own filter from count
 - ✅ Supports nested parent/child categories
@@ -960,23 +977,27 @@ return bCount - aCount; // Descending by count
 ### 4.8 Summary of Optimizations
 
 **Performance:**
+
 - 50% fewer API calls (merged queries)
 - 50-60% fewer re-renders (single state object)
 - Faster filter updates and smoother UX
 
 **Data Quality:**
+
 - Published products only
 - Must have categories
 - No circular filter dependencies
 - Accurate counts at all times
 
 **User Experience:**
+
 - Dynamic filter discovery
 - Intelligent sorting (selected + popularity)
 - Visual feedback (counts, states)
 - Edge cases handled gracefully
 
 **Code Quality:**
+
 - Consolidated state management
 - Clearer data flow
 - Easier to maintain
@@ -1096,6 +1117,7 @@ return bCount - aCount; // Descending by count
 ### Completed Features
 
 **Core Functionality:**
+
 - ✅ Main products listing page (`/produkty/`)
 - ✅ Dynamic category pages (`/produkty/kategoria/[category]/`)
 - ✅ Full-text search across products
@@ -1106,6 +1128,7 @@ return bCount - aCount; // Descending by count
 - ✅ Responsive design (desktop, tablet, mobile)
 
 **Data Layer:**
+
 - ✅ Optimized GROQ queries (single query per page)
 - ✅ Dynamic cascading filters (no circular dependencies)
 - ✅ Published products only (draft protection)
@@ -1114,6 +1137,7 @@ return bCount - aCount; // Descending by count
 - ✅ Type-safe TypeScript integration
 
 **User Experience:**
+
 - ✅ Filter preview with counts before applying
 - ✅ "Filtruj" button to apply multiple filters at once
 - ✅ Clear filters functionality
@@ -1123,6 +1147,7 @@ return bCount - aCount; // Descending by count
 - ✅ Keyboard navigation support
 
 **Performance:**
+
 - ✅ 50% reduction in API calls (merged queries)
 - ✅ 50-60% reduction in re-renders (single state object)
 - ✅ Efficient state management
@@ -1130,6 +1155,7 @@ return bCount - aCount; // Descending by count
 - ✅ Optimized filter calculations
 
 **Code Quality:**
+
 - ✅ TypeScript types generated and validated
 - ✅ No linter errors
 - ✅ Clean component architecture
@@ -1140,6 +1166,7 @@ return bCount - aCount; // Descending by count
 ### Known Limitations
 
 **Not Implemented:**
+
 - ⏳ Custom category filters UI (schema ready, needs component)
 - ⏳ Product detail pages
 - ⏳ Product comparison feature
@@ -1147,16 +1174,19 @@ return bCount - aCount; // Descending by count
 - ⏳ Availability (in stock) filter
 
 **Technical Debt:**
+
 - None identified - code is production-ready
 
 ### Performance Metrics
 
 **Query Performance:**
+
 - Single combined query: ~200-400ms
 - Filter updates: <100ms
 - Page transitions: Instant (Next.js)
 
 **Bundle Size:**
+
 - ProductsAside: ~8KB (gzipped)
 - ProductsListing: ~12KB (gzipped)
 - Total products pages: ~45KB (gzipped)

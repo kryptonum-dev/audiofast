@@ -1,8 +1,8 @@
-import { BASE_URL } from '@/src/global/constants';
-import type { PagebuilderType } from '@/src/global/types';
-import { portableTextToHtml } from '@/src/global/utils';
+import { BASE_URL } from "@/src/global/constants";
+import type { PagebuilderType } from "@/src/global/types";
+import { portableTextToHtml } from "@/src/global/utils";
 
-type FaqSchemaProps = NonNullable<PagebuilderType<'faqSection'>['faqList']>;
+type FaqSchemaProps = NonNullable<PagebuilderType<"faqSection">["faqList"]>;
 
 /**
  * FAQ Schema Component
@@ -23,10 +23,10 @@ export default function FaqSchema({ faqList }: { faqList: FaqSchemaProps }) {
   const mainEntity = faqList
     .filter((faq) => faq.question && faq.answer)
     .map((faq) => ({
-      '@type': 'Question',
+      "@type": "Question",
       name: faq.question,
       acceptedAnswer: {
-        '@type': 'Answer',
+        "@type": "Answer",
         text: portableTextToHtml(faq.answer),
       },
     }));
@@ -37,9 +37,9 @@ export default function FaqSchema({ faqList }: { faqList: FaqSchemaProps }) {
   }
 
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    '@id': `${BASE_URL}#faq`,
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${BASE_URL}#faq`,
     mainEntity,
   };
 

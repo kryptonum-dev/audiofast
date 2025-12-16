@@ -2,10 +2,10 @@
  * CSV Parsing Utilities for Product Migration
  */
 
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
-import { parse } from 'csv-parse/sync';
+import { parse } from "csv-parse/sync";
 
 import type {
   ProductBoxRow,
@@ -15,21 +15,21 @@ import type {
   ProductReviewRow,
   ProductSourceData,
   ProductTechnicalDataRow,
-} from '../types';
+} from "../types";
 
 // ============================================================================
 // CSV File Paths
 // ============================================================================
 
-const CSV_BASE_PATH = resolve(__dirname, '../../../../../../csv/products');
+const CSV_BASE_PATH = resolve(__dirname, "../../../../../../csv/products");
 
 const CSV_FILES = {
-  main: resolve(CSV_BASE_PATH, 'products-main.csv'),
-  categories: resolve(CSV_BASE_PATH, 'products-categories.csv'),
-  gallery: resolve(CSV_BASE_PATH, 'products-gallery.csv'),
-  boxes: resolve(CSV_BASE_PATH, 'products-boxes.csv'),
-  reviews: resolve(CSV_BASE_PATH, 'products-reviews.csv'),
-  technicalData: resolve(CSV_BASE_PATH, 'products-technical-data.csv'),
+  main: resolve(CSV_BASE_PATH, "products-main.csv"),
+  categories: resolve(CSV_BASE_PATH, "products-categories.csv"),
+  gallery: resolve(CSV_BASE_PATH, "products-gallery.csv"),
+  boxes: resolve(CSV_BASE_PATH, "products-boxes.csv"),
+  reviews: resolve(CSV_BASE_PATH, "products-reviews.csv"),
+  technicalData: resolve(CSV_BASE_PATH, "products-technical-data.csv"),
 };
 
 // ============================================================================
@@ -39,7 +39,7 @@ const CSV_FILES = {
 function parseCsvFile<T>(csvPath: string): T[] {
   try {
     const resolved = resolve(process.cwd(), csvPath);
-    const file = readFileSync(resolved, 'utf-8');
+    const file = readFileSync(resolved, "utf-8");
     return parse(file, {
       columns: true,
       skip_empty_lines: true,
@@ -48,7 +48,7 @@ function parseCsvFile<T>(csvPath: string): T[] {
       relax_quotes: true,
       cast: (value: string) => {
         // Handle NULL values
-        if (value === 'NULL' || value === 'null') return null;
+        if (value === "NULL" || value === "null") return null;
         return value;
       },
     }) as T[];
@@ -75,26 +75,30 @@ export interface LoadedCsvData {
  * Load all CSV files for product migration
  */
 export function loadAllCsvData(): LoadedCsvData {
-  console.log('📖 Loading CSV files...');
-  
+  console.log("📖 Loading CSV files...");
+
   const mainProducts = parseCsvFile<ProductMainRow>(CSV_FILES.main);
   console.log(`   ✓ products-main.csv: ${mainProducts.length} products`);
-  
+
   const categories = parseCsvFile<ProductCategoryRow>(CSV_FILES.categories);
   console.log(`   ✓ products-categories.csv: ${categories.length} mappings`);
-  
+
   const gallery = parseCsvFile<ProductGalleryRow>(CSV_FILES.gallery);
   console.log(`   ✓ products-gallery.csv: ${gallery.length} images`);
-  
+
   const boxes = parseCsvFile<ProductBoxRow>(CSV_FILES.boxes);
   console.log(`   ✓ products-boxes.csv: ${boxes.length} content boxes`);
-  
+
   const reviews = parseCsvFile<ProductReviewRow>(CSV_FILES.reviews);
   console.log(`   ✓ products-reviews.csv: ${reviews.length} review mappings`);
-  
-  const technicalData = parseCsvFile<ProductTechnicalDataRow>(CSV_FILES.technicalData);
-  console.log(`   ✓ products-technical-data.csv: ${technicalData.length} technical data tabs`);
-  
+
+  const technicalData = parseCsvFile<ProductTechnicalDataRow>(
+    CSV_FILES.technicalData,
+  );
+  console.log(
+    `   ✓ products-technical-data.csv: ${technicalData.length} technical data tabs`,
+  );
+
   return { mainProducts, categories, gallery, boxes, reviews, technicalData };
 }
 
@@ -114,8 +118,8 @@ export interface IndexedProductData {
  * Index all related data by ProductID for efficient lookup
  */
 export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
-  console.log('\n📑 Indexing data by ProductID...');
-  
+  console.log("\n📑 Indexing data by ProductID...");
+
   // Index categories
   const categoriesByProductId = new Map<string, ProductCategoryRow[]>();
   for (const row of data.categories) {
@@ -123,7 +127,7 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
     existing.push(row);
     categoriesByProductId.set(row.ProductID, existing);
   }
-  
+
   // Index gallery images (sorted by SortOrder)
   const galleryByProductId = new Map<string, ProductGalleryRow[]>();
   for (const row of data.gallery) {
@@ -135,10 +139,12 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
   for (const [productId, images] of galleryByProductId) {
     galleryByProductId.set(
       productId,
-      images.sort((a, b) => parseInt(a.SortOrder, 10) - parseInt(b.SortOrder, 10))
+      images.sort(
+        (a, b) => parseInt(a.SortOrder, 10) - parseInt(b.SortOrder, 10),
+      ),
     );
   }
-  
+
   // Index content boxes (sorted by SortOrder)
   const boxesByProductId = new Map<string, ProductBoxRow[]>();
   for (const row of data.boxes) {
@@ -150,10 +156,12 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
   for (const [productId, boxes] of boxesByProductId) {
     boxesByProductId.set(
       productId,
-      boxes.sort((a, b) => parseInt(a.SortOrder, 10) - parseInt(b.SortOrder, 10))
+      boxes.sort(
+        (a, b) => parseInt(a.SortOrder, 10) - parseInt(b.SortOrder, 10),
+      ),
     );
   }
-  
+
   // Index reviews (sorted by SortOrder)
   const reviewsByProductId = new Map<string, ProductReviewRow[]>();
   for (const row of data.reviews) {
@@ -165,10 +173,12 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
   for (const [productId, reviews] of reviewsByProductId) {
     reviewsByProductId.set(
       productId,
-      reviews.sort((a, b) => parseInt(a.SortOrder, 10) - parseInt(b.SortOrder, 10))
+      reviews.sort(
+        (a, b) => parseInt(a.SortOrder, 10) - parseInt(b.SortOrder, 10),
+      ),
     );
   }
-  
+
   // Index technical data (sorted by TabSort)
   const technicalDataByProductId = new Map<string, ProductTechnicalDataRow[]>();
   for (const row of data.technicalData) {
@@ -180,17 +190,29 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
   for (const [productId, techData] of technicalDataByProductId) {
     technicalDataByProductId.set(
       productId,
-      techData.sort((a, b) => parseInt(a.TabSort, 10) - parseInt(b.TabSort, 10))
+      techData.sort(
+        (a, b) => parseInt(a.TabSort, 10) - parseInt(b.TabSort, 10),
+      ),
     );
   }
-  
-  console.log(`   ✓ Categories indexed for ${categoriesByProductId.size} products`);
+
+  console.log(
+    `   ✓ Categories indexed for ${categoriesByProductId.size} products`,
+  );
   console.log(`   ✓ Gallery indexed for ${galleryByProductId.size} products`);
   console.log(`   ✓ Boxes indexed for ${boxesByProductId.size} products`);
   console.log(`   ✓ Reviews indexed for ${reviewsByProductId.size} products`);
-  console.log(`   ✓ Technical data indexed for ${technicalDataByProductId.size} products`);
-  
-  return { categoriesByProductId, galleryByProductId, boxesByProductId, reviewsByProductId, technicalDataByProductId };
+  console.log(
+    `   ✓ Technical data indexed for ${technicalDataByProductId.size} products`,
+  );
+
+  return {
+    categoriesByProductId,
+    galleryByProductId,
+    boxesByProductId,
+    reviewsByProductId,
+    technicalDataByProductId,
+  };
 }
 
 // ============================================================================
@@ -202,34 +224,35 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
  */
 export function buildProductSourceData(
   mainRow: ProductMainRow,
-  indexed: IndexedProductData
+  indexed: IndexedProductData,
 ): ProductSourceData {
   const productId = mainRow.ProductID;
-  
+
   // Get category slugs
   const categoryRows = indexed.categoriesByProductId.get(productId) || [];
   const categorySlugsByProduct = categoryRows.map((c) => c.CategorySlug);
-  
+
   // Get gallery images
   const galleryImages = indexed.galleryByProductId.get(productId) || [];
-  
+
   // Get content boxes
   const contentBoxes = indexed.boxesByProductId.get(productId) || [];
-  
+
   // Get review rows (contains both ReviewID and ReviewSlug for flexible resolution)
   const reviewRows = indexed.reviewsByProductId.get(productId) || [];
-  
+
   // Get technical data rows
-  const technicalDataRows = indexed.technicalDataByProductId.get(productId) || [];
-  
+  const technicalDataRows =
+    indexed.technicalDataByProductId.get(productId) || [];
+
   return {
     id: productId,
     name: mainRow.ProductName,
     subtitle: mainRow.Subtitle,
     slug: mainRow.ProductSlug,
-    isArchived: mainRow.IsArchived === '1',
-    isPublished: mainRow.IsPublished === '1',
-    isHidden: mainRow.IsHidden === '1',
+    isArchived: mainRow.IsArchived === "1",
+    isPublished: mainRow.IsPublished === "1",
+    isHidden: mainRow.IsHidden === "1",
     mainImageFilename: mainRow.MainImageFilename,
     brandSlug: mainRow.BrandSlug,
     brandName: mainRow.BrandName,
@@ -247,10 +270,9 @@ export function buildProductSourceData(
 export function getProductById(
   productId: string,
   mainProducts: ProductMainRow[],
-  indexed: IndexedProductData
+  indexed: IndexedProductData,
 ): ProductSourceData | null {
   const mainRow = mainProducts.find((p) => p.ProductID === productId);
   if (!mainRow) return null;
   return buildProductSourceData(mainRow, indexed);
 }
-

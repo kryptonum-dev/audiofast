@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
 
-import { fetchComparisonPageData } from '@/src/app/actions/comparison';
-import ComparisonTable from '@/src/components/comparison/ComparisonTable';
-import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import EmptyState from '@/src/components/ui/EmptyState';
-import { getComparisonCookieServer } from '@/src/global/comparison/cookie-manager';
+import { fetchComparisonPageData } from "@/src/app/actions/comparison";
+import ComparisonTable from "@/src/components/comparison/ComparisonTable";
+import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import EmptyState from "@/src/components/ui/EmptyState";
+import { getComparisonCookieServer } from "@/src/global/comparison/cookie-manager";
 
-import styles from '../../components/comparison/ComparisonTable/styles.module.scss';
+import styles from "../../components/comparison/ComparisonTable/styles.module.scss";
 
 export const metadata: Metadata = {
-  title: 'Porównaj produkty | Audiofast',
-  description: 'Porównaj specyfikacje produktów audio wysokiej klasy',
+  title: "Porównaj produkty | Audiofast",
+  description: "Porównaj specyfikacje produktów audio wysokiej klasy",
   robots: {
     index: false,
     follow: false,
@@ -24,8 +24,8 @@ export const metadata: Metadata = {
 
 const breadcrumbsData = [
   {
-    name: 'Porównanie produktów',
-    path: '/porownaj/',
+    name: "Porównanie produktów",
+    path: "/porownaj/",
   },
 ];
 
@@ -33,7 +33,7 @@ function EmptyStateInline({
   type,
   button,
 }: {
-  type: 'comparator-noCookies' | 'comparator-noProduct';
+  type: "comparator-noCookies" | "comparator-noProduct";
   button?: {
     name: string;
     href: string;
@@ -58,8 +58,8 @@ export default async function ComparisonPage() {
       <EmptyStateInline
         type="comparator-noCookies"
         button={{
-          name: 'Przeglądaj produkty',
-          href: '/produkty/',
+          name: "Przeglądaj produkty",
+          href: "/produkty/",
         }}
       />
     );
@@ -91,8 +91,8 @@ export default async function ComparisonPage() {
       <EmptyStateInline
         type="comparator-noProduct"
         button={{
-          name: 'Przeglądaj produkty',
-          href: '/produkty/',
+          name: "Przeglądaj produkty",
+          href: "/produkty/",
         }}
       />
     );

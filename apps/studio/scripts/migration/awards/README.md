@@ -5,7 +5,6 @@ Migrates awards from legacy SilverStripe database to Sanity CMS.
 ## Prerequisites
 
 1. **CSV Files Required** (in `csv/awards/`):
-
    - `awards-all.csv` - Main award data (ID, name, logo filename)
    - `awards-products-relations.csv` - Award-product relationships
 
@@ -18,6 +17,7 @@ Migrates awards from legacy SilverStripe database to Sanity CMS.
    ```
 
 3. **Dependencies**:
+
    ```bash
    cd apps/studio
    bun add sharp csv-parse @sanity/client
@@ -144,11 +144,11 @@ Products are referenced using the pattern `product-{legacyId}`:
 
 ## Field Mapping
 
-| Sanity Field | Source                          | Notes                                       |
-| ------------ | ------------------------------- | ------------------------------------------- |
-| `name`       | `AwardName` from CSV            | Trimmed whitespace                          |
-| `logo`       | `LogoFilename` → uploaded image | Converted to WebP                           |
-| `products`   | `awards-products-relations.csv` | Only existing products referenced           |
+| Sanity Field | Source                          | Notes                             |
+| ------------ | ------------------------------- | --------------------------------- |
+| `name`       | `AwardName` from CSV            | Trimmed whitespace                |
+| `logo`       | `LogoFilename` → uploaded image | Converted to WebP                 |
+| `products`   | `awards-products-relations.csv` | Only existing products referenced |
 
 ## Image Caching
 
@@ -221,4 +221,3 @@ This deletes all documents with `_id` matching `award-*`.
 | Awards with products       | ~290+                          |
 | Total product references   | 1,922 (minus missing products) |
 | Average products per award | ~6.5                           |
-

@@ -1,17 +1,17 @@
-import { sanityFetch } from '@/global/sanity/fetch';
-import { queryNavbar } from '@/global/sanity/query';
-import type { QueryNavbarResult } from '@/global/sanity/sanity.types';
-import LogoLink from '@/src/components/ui/LogoLink';
+import { sanityFetch } from "@/global/sanity/fetch";
+import { queryNavbar } from "@/global/sanity/query";
+import type { QueryNavbarResult } from "@/global/sanity/sanity.types";
+import LogoLink from "@/src/components/ui/LogoLink";
 
-import HeaderLinks from './HeaderLinks';
-import MobileNavToggle from './MobileNavToggle';
-import styles from './styles.module.scss';
+import HeaderLinks from "./HeaderLinks";
+import MobileNavToggle from "./MobileNavToggle";
+import styles from "./styles.module.scss";
 
 export default async function Header() {
-  'use cache';
+  "use cache";
   const navbarData = await sanityFetch<QueryNavbarResult>({
     query: queryNavbar,
-    tags: ['navbar'],
+    tags: ["navbar"],
   });
 
   return (

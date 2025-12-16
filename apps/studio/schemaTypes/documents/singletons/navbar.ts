@@ -1,33 +1,33 @@
-import { PanelTop } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { PanelTop } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
 export const navbar = defineType({
-  name: 'navbar',
-  title: 'Nawigacja',
-  type: 'document',
+  name: "navbar",
+  title: "Nawigacja",
+  type: "document",
   icon: PanelTop,
-  description: 'Konfiguruj główną strukturę nawigacji',
+  description: "Konfiguruj główną strukturę nawigacji",
   fields: [
     defineField({
-      name: 'buttons',
-      title: 'Linki w nawigacji',
-      description: 'Dodaj linki do nawigacji. Maksymalnie 5 linków.',
-      type: 'array',
+      name: "buttons",
+      title: "Linki w nawigacji",
+      description: "Dodaj linki do nawigacji. Maksymalnie 5 linków.",
+      type: "array",
       of: [
         {
-          type: 'buttonWithNoVariant',
-          title: 'Link nawigacji',
+          type: "buttonWithNoVariant",
+          title: "Link nawigacji",
         },
       ],
       validation: (Rule) => [
-        Rule.required().error('Linki w nawigacji są wymagane'),
-        Rule.max(5).error('Maksymalnie 5 linków'),
+        Rule.required().error("Linki w nawigacji są wymagane"),
+        Rule.max(5).error("Maksymalnie 5 linków"),
       ],
     }),
   ],
   preview: {
     prepare: () => ({
-      title: 'Nawigacja',
+      title: "Nawigacja",
       media: PanelTop,
     }),
   },

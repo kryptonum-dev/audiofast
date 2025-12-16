@@ -124,9 +124,9 @@ export const queryProductsPageContent = defineQuery(`
       _type,
       "slug": slug.current,
       name,
-      ${portableTextFragment('title')},
-      ${portableTextFragment('description')},
-      ${imageFragment('heroImage')},
+      ${portableTextFragment("title")},
+      ${portableTextFragment("description")},
+      ${imageFragment("heroImage")},
       ${pageBuilderFragment},
       seo,
       openGraph{
@@ -141,9 +141,9 @@ export const queryProductsPageContent = defineQuery(`
         _id,
         name,
         "slug": slug.current,
-        ${portableTextFragment('title')},
-        ${portableTextFragment('description')},
-        ${imageFragment('heroImage')},
+        ${portableTextFragment("title")},
+        ${portableTextFragment("description")},
+        ${imageFragment("heroImage")},
         customFilters,
         ${pageBuilderFragment},
         seo,
@@ -170,7 +170,7 @@ export const queryProductsPageContent = defineQuery(`
 // For /produkty page
 const data = await sanityFetch({
   query: queryProductsPageContent,
-  params: { category: '' },
+  params: { category: "" },
 });
 // data.defaultContent = main page content
 // data.categoryContent = null
@@ -178,7 +178,7 @@ const data = await sanityFetch({
 // For /produkty/kategoria/streamery page
 const data = await sanityFetch({
   query: queryProductsPageContent,
-  params: { category: '/kategoria/streamery/' },
+  params: { category: "/kategoria/streamery/" },
 });
 // data.defaultContent = fallback content
 // data.categoryContent = streamery-specific content (or null if not found)
@@ -229,7 +229,7 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       _id,
       name,
       "slug": slug.current,
-      ${imageFragment('logo')}
+      ${imageFragment("logo")}
     },
     "globalMaxPrice": math::max(*[
       _type == "product" 
@@ -260,7 +260,7 @@ import type {
   ProductFilterMetadata,
   ComputedFilters,
   ActiveFilters,
-} from './types';
+} from "./types";
 
 /**
  * Computes available filter options from product metadata
@@ -272,7 +272,7 @@ import type {
  */
 export function computeAvailableFilters(
   allProducts: ProductFilterMetadata[],
-  activeFilters: ActiveFilters
+  activeFilters: ActiveFilters,
 ): ComputedFilters {
   // Step 1: Filter products based on active filters
   let filtered = allProducts;
@@ -282,14 +282,14 @@ export function computeAvailableFilters(
     filtered = filtered.filter(
       (p) =>
         p.allCategorySlugs?.includes(activeFilters.category!) ||
-        p.categorySlug === activeFilters.category
+        p.categorySlug === activeFilters.category,
     );
   }
 
   // Apply brand filter
   if (activeFilters.brands.length > 0) {
     filtered = filtered.filter(
-      (p) => p.brandSlug && activeFilters.brands.includes(p.brandSlug)
+      (p) => p.brandSlug && activeFilters.brands.includes(p.brandSlug),
     );
   }
 
@@ -297,13 +297,13 @@ export function computeAvailableFilters(
   if (activeFilters.minPrice > 0) {
     filtered = filtered.filter(
       (p) =>
-        p.basePriceCents !== null && p.basePriceCents >= activeFilters.minPrice
+        p.basePriceCents !== null && p.basePriceCents >= activeFilters.minPrice,
     );
   }
   if (activeFilters.maxPrice < Infinity) {
     filtered = filtered.filter(
       (p) =>
-        p.basePriceCents !== null && p.basePriceCents <= activeFilters.maxPrice
+        p.basePriceCents !== null && p.basePriceCents <= activeFilters.maxPrice,
     );
   }
 
@@ -315,8 +315,8 @@ export function computeAvailableFilters(
         p.customFilterValues?.some(
           (pf) =>
             pf.filterName === activeFilter.filterName &&
-            pf.value === activeFilter.value
-        )
+            pf.value === activeFilter.value,
+        ),
       );
     });
   }
@@ -342,7 +342,7 @@ export function computeAvailableFilters(
     if (p.categorySlug) {
       categoryCounts.set(
         p.categorySlug,
-        (categoryCounts.get(p.categorySlug) || 0) + 1
+        (categoryCounts.get(p.categorySlug) || 0) + 1,
       );
     }
     // Also count parent categories if needed
@@ -364,7 +364,7 @@ export function computeAvailableFilters(
   // Custom filter values (for category pages)
   const customFilterValues = computeCustomFilterValues(
     filtered,
-    activeFilters.customFilters || []
+    activeFilters.customFilters || [],
   );
 
   return {
@@ -382,7 +382,7 @@ export function computeAvailableFilters(
  */
 function computeCustomFilterValues(
   products: ProductFilterMetadata[],
-  activeCustomFilters: Array<{ filterName: string; value: string }>
+  activeCustomFilters: Array<{ filterName: string; value: string }>,
 ): Map<string, string[]> {
   const filterValues = new Map<string, Set<string>>();
 
@@ -477,14 +477,14 @@ export type BrandMetadata = {
 **File**: `apps/web/src/global/filters/index.ts`
 
 ```typescript
-export { computeAvailableFilters } from './computeFilters';
+export { computeAvailableFilters } from "./computeFilters";
 export type {
   ProductFilterMetadata,
   ActiveFilters,
   ComputedFilters,
   CategoryMetadata,
   BrandMetadata,
-} from './types';
+} from "./types";
 ```
 
 ---
@@ -1339,13 +1339,13 @@ Ensure SortDropdown reads current sort value from URL client-side rather than re
 ```typescript
 // Add to SortDropdown component
 const searchParams = useSearchParams();
-const currentSort = searchParams.get('sortBy') || defaultValue;
-const hasSearchQuery = Boolean(searchParams.get('search'));
+const currentSort = searchParams.get("sortBy") || defaultValue;
+const hasSearchQuery = Boolean(searchParams.get("search"));
 
 // Show relevance option only when search is active
 const visibleOptions = hasSearchQuery
   ? options
-  : options.filter((opt) => opt.value !== 'relevance');
+  : options.filter((opt) => opt.value !== "relevance");
 ```
 
 #### Task 5.2: Update CategoryViewTracker

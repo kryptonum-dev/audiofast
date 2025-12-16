@@ -139,7 +139,7 @@ synergistic-research/atmosphere-sx-ic
 ```typescript
 // Extract product slug from Sanity
 const sanitySlug = product.slug; // "/produkty/atmosphere-sx-ic/"
-const productSlug = sanitySlug.replace('/produkty/', '').replace(/\/$/, ''); // "atmosphere-sx-ic"
+const productSlug = sanitySlug.replace("/produkty/", "").replace(/\/$/, ""); // "atmosphere-sx-ic"
 
 // Build Supabase price_key pattern
 // We need to query variants WHERE price_key LIKE '%atmosphere-sx-ic'
@@ -170,9 +170,9 @@ const productSlug = sanitySlug.replace('/produkty/', '').replace(/\/$/, ''); // 
 **File: `apps/web/src/global/supabase/server.ts` (NEW)** - Server-side client
 
 ```typescript
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
-import type { Database } from './database.types';
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
+import type { Database } from "./database.types";
 
 /**
  * Create a Supabase client for server-side operations (Server Components, Route Handlers, Server Actions)
@@ -192,7 +192,7 @@ export async function createClient() {
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+              cookieStore.set(name, value, options),
             );
           } catch {
             // The `setAll` method was called from a Server Component.
@@ -201,7 +201,7 @@ export async function createClient() {
           }
         },
       },
-    }
+    },
   );
 }
 ```
@@ -209,8 +209,8 @@ export async function createClient() {
 **File: `apps/web/src/global/supabase/client.ts` (NEW)** - Browser-side client
 
 ```typescript
-import { createBrowserClient } from '@supabase/ssr';
-import type { Database } from './database.types';
+import { createBrowserClient } from "@supabase/ssr";
+import type { Database } from "./database.types";
 
 /**
  * Create a Supabase client for browser-side operations (Client Components)
@@ -219,7 +219,7 @@ import type { Database } from './database.types';
 export function createClient() {
   return createBrowserClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 }
 ```
@@ -229,14 +229,14 @@ export function createClient() {
 **File: `apps/web/src/global/supabase/queries.ts` (NEW)**
 
 ```typescript
-import { createClient as createServerClient } from './server';
+import { createClient as createServerClient } from "./server";
 import type {
   PricingVariant,
   PricingOptionGroup,
   PricingOptionValue,
   PricingNumericRule,
   CompletePricingData,
-} from './types';
+} from "./types";
 
 /**
  * Fetches all pricing data for a product by matching the product slug
@@ -249,7 +249,7 @@ import type {
  * @returns Complete pricing data with variants, groups, values, and rules
  */
 export async function fetchProductPricing(
-  productSlug: string
+  productSlug: string,
 ): Promise<CompletePricingData | null> {
   try {
     // Create server client for this request
@@ -258,13 +258,13 @@ export async function fetchProductPricing(
     // Step 1: Find all variants for this product
     // Match by price_key ending with the product slug
     const { data: variants, error: variantsError } = await supabase
-      .from('pricing_variants')
-      .select('*')
-      .ilike('price_key', `%${productSlug}`)
-      .order('base_price_cents', { ascending: true }); // Lowest price first
+      .from("pricing_variants")
+      .select("*")
+      .ilike("price_key", `%${productSlug}`)
+      .order("base_price_cents", { ascending: true }); // Lowest price first
 
     if (variantsError) {
-      console.error('Error fetching pricing variants:', variantsError);
+      console.error("Error fetching pricing variants:", variantsError);
       return null;
     }
 
@@ -278,13 +278,13 @@ export async function fetchProductPricing(
       variants.map(async (variant) => {
         // Fetch option groups for this variant
         const { data: groups, error: groupsError } = await supabase
-          .from('pricing_option_groups')
-          .select('*')
-          .eq('variant_id', variant.id)
-          .order('position', { ascending: true });
+          .from("pricing_option_groups")
+          .select("*")
+          .eq("variant_id", variant.id)
+          .order("position", { ascending: true });
 
         if (groupsError) {
-          console.error('Error fetching option groups:', groupsError);
+          console.error("Error fetching option groups:", groupsError);
           return { ...variant, groups: [] };
         }
 
@@ -292,15 +292,15 @@ export async function fetchProductPricing(
         const groupsWithDetails = await Promise.all(
           (groups || []).map(async (group) => {
             // Fetch values if it's a select group
-            if (group.input_type === 'select') {
+            if (group.input_type === "select") {
               const { data: values, error: valuesError } = await supabase
-                .from('pricing_option_values')
-                .select('*')
-                .eq('group_id', group.id)
-                .order('position', { ascending: true });
+                .from("pricing_option_values")
+                .select("*")
+                .eq("group_id", group.id)
+                .order("position", { ascending: true });
 
               if (valuesError) {
-                console.error('Error fetching option values:', valuesError);
+                console.error("Error fetching option values:", valuesError);
               }
 
               return {
@@ -311,17 +311,17 @@ export async function fetchProductPricing(
             }
 
             // Fetch numeric rule if it's a numeric_step group
-            if (group.input_type === 'numeric_step') {
+            if (group.input_type === "numeric_step") {
               const { data: rule, error: ruleError } = await supabase
-                .from('pricing_numeric_rules')
-                .select('*')
-                .eq('group_id', group.id)
+                .from("pricing_numeric_rules")
+                .select("*")
+                .eq("group_id", group.id)
                 .limit(1)
                 .single();
 
-              if (ruleError && ruleError.code !== 'PGRST116') {
+              if (ruleError && ruleError.code !== "PGRST116") {
                 // PGRST116 = not found, which is ok
-                console.error('Error fetching numeric rule:', ruleError);
+                console.error("Error fetching numeric rule:", ruleError);
               }
 
               return {
@@ -336,14 +336,14 @@ export async function fetchProductPricing(
               values: [],
               numeric_rule: null,
             };
-          })
+          }),
         );
 
         return {
           ...variant,
           groups: groupsWithDetails,
         };
-      })
+      }),
     );
 
     return {
@@ -352,7 +352,7 @@ export async function fetchProductPricing(
       lowestPrice: variants[0].base_price_cents,
     };
   } catch (error) {
-    console.error('Unexpected error in fetchProductPricing:', error);
+    console.error("Unexpected error in fetchProductPricing:", error);
     return null;
   }
 }
@@ -378,7 +378,7 @@ export interface PricingOptionGroup {
   id: string;
   variant_id: string;
   name: string;
-  input_type: 'select' | 'numeric_step';
+  input_type: "select" | "numeric_step";
   unit: string | null;
   required: boolean;
   position: number;
@@ -1476,8 +1476,8 @@ Based on the latest Supabase documentation, here are the key best practices we'r
 **✅ DO: Use @supabase/ssr for Next.js App Router**
 
 ```typescript
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -1493,7 +1493,7 @@ export async function createClient() {
 
 ```typescript
 // This pattern is for standalone scripts/Node.js, not Next.js SSR
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 export const supabase = createClient(url, anonKey);
 ```
 
@@ -1527,15 +1527,15 @@ export default async function Page() {
 **Client Components (For Interactive State)**
 
 ```typescript
-'use client';
-import { createClient } from '@/utils/supabase/client';
+"use client";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Component() {
   const [data, setData] = useState(null);
   const supabase = createClient(); // Synchronous in browser
 
   useEffect(() => {
-    supabase.from('pricing_variants').select('*').then(/* ... */);
+    supabase.from("pricing_variants").select("*").then(/* ... */);
   }, []);
 }
 ```
@@ -1562,7 +1562,7 @@ supabase gen types typescript --project-id xuwapsacaymdemmvblak > database.types
 **Use types in client:**
 
 ```typescript
-import type { Database } from './database.types';
+import type { Database } from "./database.types";
 const supabase = createServerClient<Database>(/* ... */);
 ```
 
@@ -1577,9 +1577,9 @@ const supabase = createServerClient<Database>(/* ... */);
 **✅ DO: Check both data and error**
 
 ```typescript
-const { data, error } = await supabase.from('pricing_variants').select('*');
+const { data, error } = await supabase.from("pricing_variants").select("*");
 if (error) {
-  console.error('Error:', error.message);
+  console.error("Error:", error.message);
   return null; // Or throw, or return fallback
 }
 return data;
@@ -1588,7 +1588,7 @@ return data;
 **❌ DON'T: Assume data exists**
 
 ```typescript
-const { data } = await supabase.from('pricing_variants').select('*');
+const { data } = await supabase.from("pricing_variants").select("*");
 return data.map(/* ... */); // Might be null!
 ```
 
@@ -1627,20 +1627,20 @@ return data.map(/* ... */); // Might be null!
 
 ```typescript
 // Automatically cached in production
-const { data } = await supabase.from('pricing_variants').select('*');
+const { data } = await supabase.from("pricing_variants").select("*");
 ```
 
 **To opt out of caching:**
 
 ```typescript
 // Use in your createClient if needed
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 ```
 
 **For our use case**: Pricing data changes infrequently (Excel updates), so caching is beneficial. We rely on Next.js revalidation via tags:
 
 ```typescript
-sanityFetch({ query, tags: ['product', slug] });
+sanityFetch({ query, tags: ["product", slug] });
 // Supabase data will be fresh when Sanity revalidates
 ```
 

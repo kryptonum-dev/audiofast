@@ -1,4 +1,4 @@
-import { defineCliConfig } from 'sanity/cli';
+import { defineCliConfig } from "sanity/cli";
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID;
 const dataset = process.env.SANITY_STUDIO_DATASET;
@@ -8,8 +8,8 @@ export default defineCliConfig({
     projectId: projectId,
     dataset: dataset,
   },
-  studioHost: 'audiofast',
+  studioHost: "audiofast",
   deployment: {
-    appId: 'dlwt2zhgkk7rjx6dj8rdyjfz',
+    appId: "dlwt2zhgkk7rjx6dj8rdyjfz",
   },
 });

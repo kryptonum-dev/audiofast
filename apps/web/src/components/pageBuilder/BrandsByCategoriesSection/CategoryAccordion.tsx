@@ -97,10 +97,7 @@ export default function CategoryAccordion({
           />
         </svg>
       </summary>
-      <div
-        className={styles.brandsWrapper}
-        data-show-gradient={showGradient}
-      >
+      <div className={styles.brandsWrapper} data-show-gradient={showGradient}>
         <div ref={scrollContainerRef} className={styles.inner}>
           <div className={styles.brandsGrid}>
             {category.brands?.map((brand) => (

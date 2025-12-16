@@ -1,77 +1,77 @@
-import { BrickWallShield, Package } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { BrickWallShield, Package } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
-import { defineSlugForDocument } from '../../../components/define-slug-for-document';
-import { GROUP, GROUPS } from '../../../utils/constant';
-import { customPortableText } from '../../portableText';
-import { pageBuilderField } from '../../shared';
-import { getSEOFields } from '../../shared/seo';
+import { defineSlugForDocument } from "../../../components/define-slug-for-document";
+import { GROUP, GROUPS } from "../../../utils/constant";
+import { customPortableText } from "../../portableText";
+import { pageBuilderField } from "../../shared";
+import { getSEOFields } from "../../shared/seo";
 
 export const products = defineType({
-  name: 'products',
-  type: 'document',
-  title: 'Strona produktów',
+  name: "products",
+  type: "document",
+  title: "Strona produktów",
   icon: BrickWallShield,
   groups: GROUPS,
   description:
-    'Strona z produktami audio. Skonfiguruj treść strony, na której będą wyświetlane wszystkie produkty audio.',
+    "Strona z produktami audio. Skonfiguruj treść strony, na której będą wyświetlane wszystkie produkty audio.",
   fields: [
     ...defineSlugForDocument({
-      slug: '/produkty/',
+      slug: "/produkty/",
       group: GROUP.MAIN_CONTENT,
     }),
     customPortableText({
-      name: 'title',
-      title: 'Tytuł strony produktów',
+      name: "title",
+      title: "Tytuł strony produktów",
       description:
-        'Główny tytuł wyświetlany w sekcji hero na stronie produktów',
+        "Główny tytuł wyświetlany w sekcji hero na stronie produktów",
       group: GROUP.MAIN_CONTENT,
       include: {
-        styles: ['normal'],
+        styles: ["normal"],
         lists: [],
-        decorators: ['strong'],
+        decorators: ["strong"],
         annotations: [],
       },
       validation: (Rule) =>
-        Rule.required().error('Tytuł sekcji hero jest wymagany'),
+        Rule.required().error("Tytuł sekcji hero jest wymagany"),
     }),
     customPortableText({
-      name: 'description',
-      title: 'Opis strony produktów',
+      name: "description",
+      title: "Opis strony produktów",
       description:
-        'Krótki opis wyświetlany pod tytułem w sekcji hero na stronie produktów',
+        "Krótki opis wyświetlany pod tytułem w sekcji hero na stronie produktów",
       group: GROUP.MAIN_CONTENT,
       include: {
-        styles: ['normal'],
+        styles: ["normal"],
         lists: [],
-        decorators: ['strong', 'em'],
+        decorators: ["strong", "em"],
         annotations: [],
       },
       validation: (Rule) =>
-        Rule.required().error('Opis strony produktów jest wymagany'),
+        Rule.required().error("Opis strony produktów jest wymagany"),
     }),
     defineField({
-      name: 'heroImage',
-      title: 'Obraz tła strony produktów',
-      type: 'image',
-      description: 'Obraz wyświetlany w tle sekcji hero na stronie produktów',
+      name: "heroImage",
+      title: "Obraz tła strony produktów",
+      type: "image",
+      description: "Obraz wyświetlany w tle sekcji hero na stronie produktów",
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,
       },
       validation: (Rule) =>
-        Rule.required().error('Obraz tła sekcji hero jest wymagany'),
+        Rule.required().error("Obraz tła sekcji hero jest wymagany"),
     }),
     pageBuilderField,
-    ...getSEOFields({ exclude: ['doNotIndex', 'hideFromList'] }),
+    ...getSEOFields({ exclude: ["doNotIndex", "hideFromList"] }),
   ],
   preview: {
     select: {
-      name: 'name',
-      slug: 'slug.current',
+      name: "name",
+      slug: "slug.current",
     },
     prepare: ({ name }) => ({
-      title: name || 'Produkty',
+      title: name || "Produkty",
       media: Package,
     }),
   },

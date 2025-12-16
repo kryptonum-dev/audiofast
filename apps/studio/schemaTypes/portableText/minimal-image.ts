@@ -1,30 +1,28 @@
-import { ImageIcon } from '@sanity/icons';
-import { defineField, defineType } from 'sanity';
+import { ImageIcon } from "@sanity/icons";
+import { defineField, defineType } from "sanity";
 
 export const ptMinimalImage = defineType({
-  name: 'ptMinimalImage',
-  type: 'object',
-  title: 'Minimalny obraz',
+  name: "ptMinimalImage",
+  type: "object",
+  title: "Minimalny obraz",
   icon: ImageIcon,
-  description: 'Pojedynczy obraz bez podpisu',
+  description: "Pojedynczy obraz bez podpisu",
   fields: [
     defineField({
-      name: 'image',
-      title: 'Zdjęcie',
-      type: 'image',
+      name: "image",
+      title: "Zdjęcie",
+      type: "image",
       options: { hotspot: true },
-      validation: (Rule) =>
-        Rule.required().error('Zdjęcie jest wymagane'),
+      validation: (Rule) => Rule.required().error("Zdjęcie jest wymagane"),
     }),
   ],
   preview: {
     select: {
-      image: 'image',
+      image: "image",
     },
     prepare: ({ image }) => ({
-      title: 'Minimalny obraz',
+      title: "Minimalny obraz",
       media: image || ImageIcon,
     }),
   },
 });
-

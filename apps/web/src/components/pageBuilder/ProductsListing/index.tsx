@@ -1,21 +1,23 @@
-import { cacheLife } from 'next/cache';
-import { Suspense } from 'react';
+import { cacheLife } from "next/cache";
+import { Suspense } from "react";
 
-import type { PageBuilderBlock } from '@/src/components/shared/PageBuilder';
-import { PRODUCT_SORT_OPTIONS } from '@/src/global/constants';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { queryAllProductsFilterMetadata } from '@/src/global/sanity/query';
-import type { QueryAllProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
+import type { PageBuilderBlock } from "@/src/components/shared/PageBuilder";
+import { PRODUCT_SORT_OPTIONS } from "@/src/global/constants";
+import { sanityFetch } from "@/src/global/sanity/fetch";
+import { queryAllProductsFilterMetadata } from "@/src/global/sanity/query";
+import type { QueryAllProductsFilterMetadataResult } from "@/src/global/sanity/sanity.types";
 
-import ProductsAside from '../../products/ProductsAside';
-import ProductsListingComponent from '../../products/ProductsListing';
-import ProductsListingSkeleton from '../../products/ProductsListing/ProductsListingSkeleton';
-import styles from '../../products/ProductsListing/styles.module.scss';
-import SortDropdown from '../../products/SortDropdown';
+import ProductsAside from "../../products/ProductsAside";
+import ProductsListingComponent from "../../products/ProductsListing";
+import ProductsListingContainer from "../../products/ProductsListingContainer";
+import ProductsListingSkeleton from "../../products/ProductsListing/ProductsListingSkeleton";
+import styles from "../../products/ProductsListing/styles.module.scss";
+import { ProductsLoadingProvider } from "../../products/ProductsLoadingContext";
+import SortDropdown from "../../products/SortDropdown";
 
 type ProductsListingBlockType = Extract<
   PageBuilderBlock,
-  { _type: 'productsListing' }
+  { _type: "productsListing" }
 >;
 
 type ProductsListingProps = ProductsListingBlockType & {
@@ -32,17 +34,17 @@ type ProductsListingProps = ProductsListingBlockType & {
 // Cached Static Data Fetcher
 // ----------------------------------------
 async function getStaticFilterMetadata() {
-  'use cache';
-  cacheLife('weeks');
+  "use cache";
+  cacheLife("weeks");
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ['products'],
+    tags: ["products"],
   });
 }
 
 export default async function ProductsListing(props: ProductsListingProps) {
-  const { heading, cpoOnly, searchParams, basePath = '/' } = props;
+  const { heading, cpoOnly, searchParams, basePath = "/" } = props;
 
   // Fetch filter metadata (cached)
   const filterMetadata = await getStaticFilterMetadata();
@@ -79,39 +81,43 @@ export default async function ProductsListing(props: ProductsListingProps) {
   const searchParamsPromise = Promise.resolve(normalizedParams);
 
   return (
-    <section className={`${styles.productsListing} max-width`}>
-      {/* Client-side computed sidebar */}
-      <ProductsAside
-        allProductsMetadata={productsMetadata}
-        allCategories={filterMetadata.categories || []}
-        allBrands={filterMetadata.brands || []}
-        globalMaxPrice={maxPrice}
-        basePath={basePath}
-        heading={heading}
-        visibleFilters={{
-          search: false,
-          categories: true,
-          brands: false,
-          priceRange: false,
-        }}
-        headingLevel="h3"
-      />
-
-      <SortDropdown
-        options={PRODUCT_SORT_OPTIONS}
-        basePath={basePath}
-        defaultValue="newest"
-      />
-
-      {/* Products listing in Suspense */}
-      <Suspense fallback={<ProductsListingSkeleton />}>
-        <ProductsListingComponent
-          searchParams={searchParamsPromise}
+    <ProductsLoadingProvider>
+      <section className={`${styles.productsListing} max-width`}>
+        {/* Client-side computed sidebar */}
+        <ProductsAside
+          allProductsMetadata={productsMetadata}
+          allCategories={filterMetadata.categories || []}
+          allBrands={filterMetadata.brands || []}
+          globalMaxPrice={maxPrice}
           basePath={basePath}
-          isCPO={cpoOnly}
-          defaultSortBy="newest"
+          heading={heading}
+          visibleFilters={{
+            search: false,
+            categories: true,
+            brands: false,
+            priceRange: false,
+          }}
+          headingLevel="h3"
         />
-      </Suspense>
-    </section>
+
+        <SortDropdown
+          options={PRODUCT_SORT_OPTIONS}
+          basePath={basePath}
+          defaultValue="newest"
+        />
+
+        {/* Products listing - container shows overlay skeleton on filter changes */}
+        <ProductsListingContainer>
+          <Suspense fallback={<ProductsListingSkeleton />}>
+            <ProductsListingComponent
+              searchParams={searchParamsPromise}
+              basePath={basePath}
+              isCPO={cpoOnly}
+              defaultSortBy="newest"
+            />
+          </Suspense>
+        </ProductsListingContainer>
+      </section>
+    </ProductsLoadingProvider>
   );
 }

@@ -1,6 +1,6 @@
-import { BASE_URL, SITE_TITLE } from '@/src/global/constants';
-import type { QueryReviewBySlugResult } from '@/src/global/sanity/sanity.types';
-import { portableTextToPlainString } from '@/src/global/utils';
+import { BASE_URL, SITE_TITLE } from "@/src/global/constants";
+import type { QueryReviewBySlugResult } from "@/src/global/sanity/sanity.types";
+import { portableTextToPlainString } from "@/src/global/utils";
 
 type Props = {
   review: QueryReviewBySlugResult;
@@ -27,9 +27,9 @@ export default function ArticleSchema({ review }: Props) {
   const articleUrl = `${BASE_URL}${slug}`;
 
   // Extract plain text from content for description
-  const plainTextContent = content ? portableTextToPlainString(content) : '';
+  const plainTextContent = content ? portableTextToPlainString(content) : "";
   const description = plainTextContent
-    ? plainTextContent.substring(0, 200).trim() + '...'
+    ? plainTextContent.substring(0, 200).trim() + "..."
     : undefined;
 
   // Build image URL
@@ -44,35 +44,35 @@ export default function ArticleSchema({ review }: Props) {
   // Note: author.image is not available in current query types
   const authorSchema = author?.name
     ? {
-        '@type': 'Person' as const,
+        "@type": "Person" as const,
         name: author.name,
       }
     : {
-        '@type': 'Organization' as const,
+        "@type": "Organization" as const,
         name: SITE_TITLE,
       };
 
   // Build publisher object
   const publisherSchema = {
-    '@type': 'Organization' as const,
+    "@type": "Organization" as const,
     name: SITE_TITLE,
     url: BASE_URL,
   };
 
   // Build the Article schema
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    '@id': `${articleUrl}#article`,
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${articleUrl}#article`,
     mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': articleUrl,
+      "@type": "WebPage",
+      "@id": articleUrl,
     },
-    headline: name || 'Recenzja',
+    headline: name || "Recenzja",
     ...(description && { description }),
     ...(imageUrl && {
       image: {
-        '@type': 'ImageObject',
+        "@type": "ImageObject",
         url: imageUrl,
         ...(image?.naturalWidth && { width: image.naturalWidth }),
         ...(image?.naturalHeight && { height: image.naturalHeight }),
@@ -82,16 +82,16 @@ export default function ArticleSchema({ review }: Props) {
     dateModified: publishDate, // Use publishDate since _updatedAt is not in query
     author: authorSchema,
     publisher: publisherSchema,
-    articleSection: 'Recenzje',
-    inLanguage: 'pl-PL',
+    articleSection: "Recenzje",
+    inLanguage: "pl-PL",
     // Include reviewed product as "about" if available
     ...(product?.name && {
       about: {
-        '@type': 'Product',
+        "@type": "Product",
         name: product.name,
         ...(product.brand?.name && {
           brand: {
-            '@type': 'Brand',
+            "@type": "Brand",
             name: product.brand.name,
           },
         }),

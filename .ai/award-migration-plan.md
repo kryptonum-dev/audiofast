@@ -188,9 +188,9 @@ Products are referenced using the pattern `product-{legacyId}`:
 ```typescript
 // For ProductID = 38
 const productRef = {
-  _type: 'reference',
-  _ref: 'product-38',
-  _key: 'product-38', // Unique key for array item
+  _type: "reference",
+  _ref: "product-38",
+  _key: "product-38", // Unique key for array item
 };
 ```
 
@@ -234,17 +234,17 @@ async function processLogo(logoFilename: string): Promise<SanityImageAsset> {
     .resize({
       width: 800,
       height: 800,
-      fit: 'inside',
+      fit: "inside",
       withoutEnlargement: true, // No upscaling
     })
     .webp({ quality: 85 })
     .toBuffer();
 
   // 3. Upload to Sanity
-  const filename = logoFilename.replace(/\.[^.]+$/, '.webp');
-  return await sanityClient.assets.upload('image', optimizedBuffer, {
+  const filename = logoFilename.replace(/\.[^.]+$/, ".webp");
+  return await sanityClient.assets.upload("image", optimizedBuffer, {
     filename,
-    contentType: 'image/webp',
+    contentType: "image/webp",
   });
 }
 ```
@@ -288,14 +288,14 @@ interface AwardProductRelation {
 
 interface SanityAward {
   _id: string;
-  _type: 'award';
+  _type: "award";
   name: string;
   logo?: {
-    _type: 'image';
-    asset: { _type: 'reference'; _ref: string };
+    _type: "image";
+    asset: { _type: "reference"; _ref: string };
   };
   products: Array<{
-    _type: 'reference';
+    _type: "reference";
     _ref: string;
     _key: string;
   }>;

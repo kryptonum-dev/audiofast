@@ -1,4 +1,4 @@
-import type { PortableTextBlock } from '@portabletext/react';
+import type { PortableTextBlock } from "@portabletext/react";
 
 import type {
   ComparisonColumn,
@@ -6,7 +6,7 @@ import type {
   ComparisonProduct,
   ComparisonTableData,
   EnabledParameter,
-} from './types';
+} from "./types";
 
 /**
  * Validate if product can be added to comparison
@@ -28,7 +28,7 @@ export function validateProductAddition(
   if (currentComparison?.productIds.includes(productId)) {
     return {
       valid: false,
-      error: 'Ten produkt jest już w porównaniu',
+      error: "Ten produkt jest już w porównaniu",
     };
   }
 
@@ -36,7 +36,7 @@ export function validateProductAddition(
   if (currentComparison && currentComparison.productIds.length >= 3) {
     return {
       valid: false,
-      error: 'Możesz porównywać maksymalnie 3 produkty',
+      error: "Możesz porównywać maksymalnie 3 produkty",
     };
   }
 
@@ -51,7 +51,7 @@ export function validateProductAddition(
     const incomingLabel = getCategoryLabel(categorySlug, categoryName);
     const productLabel = productName
       ? `Produkt "${productName}"`
-      : 'Ten produkt';
+      : "Ten produkt";
 
     return {
       valid: false,
@@ -179,7 +179,7 @@ export function createComparisonRows(
   columns: ComparisonColumn[],
   headings: string[],
   enabledParameters?: EnabledParameter[],
-): ComparisonTableData['comparisonRows'] {
+): ComparisonTableData["comparisonRows"] {
   // If enabledParameters is provided and not empty, use its order
   // Otherwise, use all headings
   const orderedHeadings =

@@ -8,12 +8,12 @@
 
 **Completed**: December 3, 2025
 
-| Metric                         | Value   |
-| ------------------------------ | ------- |
-| **Total Products Migrated**    | **816** |
-| **Total Brands**               | **35**  |
-| **Products Missing Images**    | 8       |
-| **Migration Success Rate**     | 100%    |
+| Metric                      | Value   |
+| --------------------------- | ------- |
+| **Total Products Migrated** | **816** |
+| **Total Brands**            | **35**  |
+| **Products Missing Images** | 8       |
+| **Migration Success Rate**  | 100%    |
 
 All products have been successfully migrated from the legacy SilverStripe CMS to Sanity. Only 8 products are missing preview images due to NULL image paths in the source CSV (no source images available).
 
@@ -185,59 +185,59 @@ Query products missing preview images:
 
 **✅ ALL 35 BRANDS MIGRATED - 816 TOTAL PRODUCTS**
 
-| Brand                  | Sanity Count | Status | Date       | Notes                            |
-| ---------------------- | ------------ | ------ | ---------- | -------------------------------- |
-| Synergistic Research   | 180          | ✅     | 2025-12-03 | 5 missing images (NULL in CSV)   |
-| Shunyata Research      | 131          | ✅     | 2025-12-03 | 3 missing images (NULL in CSV)   |
-| Audio Research         | 67           | ✅     | 2025-12-02 |                                  |
-| Gryphon Audio Designs  | 53           | ✅     | 2025-12-02 | Images fixed (alt path)          |
-| Goldenear Technology   | 42           | ✅     | 2025-12-03 |                                  |
-| Usher Audio Technology | 29           | ✅     | 2025-12-03 |                                  |
-| Wilson Audio           | 27           | ✅     | 2025-12-02 |                                  |
-| Dan D'Agostino         | 25           | ✅     | 2025-12-02 |                                  |
-| Aurender               | 25           | ✅     | 2025-12-02 |                                  |
-| PrimaLuna              | 25           | ✅     | 2025-12-02 |                                  |
-| Stealth Audio          | 24           | ✅     | 2025-12-02 |                                  |
-| Keces Audio            | 22           | ✅     | 2025-12-02 |                                  |
-| Symposium              | 20           | ✅     | 2025-12-02 |                                  |
-| dCS                    | 18           | ✅     | 2025-12-02 |                                  |
-| Rogue Audio            | 17           | ✅     | 2025-12-02 |                                  |
-| Artesania Audio        | 16           | ✅     | 2025-12-02 |                                  |
-| Ayre Acoustics         | 14           | ✅     | 2025-12-02 |                                  |
-| Soundsmith             | 12           | ✅     | 2025-12-02 |                                  |
-| Vandersteen            | 11           | ✅     | 2025-12-02 |                                  |
-| Grimm Audio            | 9            | ✅     | 2025-12-02 |                                  |
-| Bricasti               | 9            | ✅     | 2025-12-02 |                                  |
-| Thixar                 | 9            | ✅     | 2025-12-02 |                                  |
-| Weiss Engineering      | 4            | ✅     | 2025-12-02 |                                  |
-| Acoustic Signature     | 4            | ✅     | 2025-12-02 | Images fixed (alt path)          |
-| Spiral Groove          | 4            | ✅     | 2025-12-02 |                                  |
-| Mutec                  | 4            | ✅     | 2025-12-02 |                                  |
-| Roon Labs              | 3            | ✅     | 2025-12-02 |                                  |
-| Grand Prix Audio       | 2            | ✅     | 2025-12-02 |                                  |
-| Moonriver Audio        | 2            | ✅     | 2025-12-02 |                                  |
-| Exogal                 | 2            | ✅     | 2025-12-02 | Images fixed (alt path)          |
-| Vibrapod               | 2            | ✅     | 2025-12-02 |                                  |
-| Taiko Audio            | 1            | ✅     | 2025-12-02 |                                  |
-| Dutch & Dutch          | 1            | ✅     | 2025-12-02 |                                  |
-| VIV Laboratory         | 1            | ✅     | 2025-12-02 |                                  |
-| KLH Audio              | 1            | ✅     | 2025-12-02 |                                  |
-| **TOTAL**              | **816**      | ✅     |            |                                  |
+| Brand                  | Sanity Count | Status | Date       | Notes                          |
+| ---------------------- | ------------ | ------ | ---------- | ------------------------------ |
+| Synergistic Research   | 180          | ✅     | 2025-12-03 | 5 missing images (NULL in CSV) |
+| Shunyata Research      | 131          | ✅     | 2025-12-03 | 3 missing images (NULL in CSV) |
+| Audio Research         | 67           | ✅     | 2025-12-02 |                                |
+| Gryphon Audio Designs  | 53           | ✅     | 2025-12-02 | Images fixed (alt path)        |
+| Goldenear Technology   | 42           | ✅     | 2025-12-03 |                                |
+| Usher Audio Technology | 29           | ✅     | 2025-12-03 |                                |
+| Wilson Audio           | 27           | ✅     | 2025-12-02 |                                |
+| Dan D'Agostino         | 25           | ✅     | 2025-12-02 |                                |
+| Aurender               | 25           | ✅     | 2025-12-02 |                                |
+| PrimaLuna              | 25           | ✅     | 2025-12-02 |                                |
+| Stealth Audio          | 24           | ✅     | 2025-12-02 |                                |
+| Keces Audio            | 22           | ✅     | 2025-12-02 |                                |
+| Symposium              | 20           | ✅     | 2025-12-02 |                                |
+| dCS                    | 18           | ✅     | 2025-12-02 |                                |
+| Rogue Audio            | 17           | ✅     | 2025-12-02 |                                |
+| Artesania Audio        | 16           | ✅     | 2025-12-02 |                                |
+| Ayre Acoustics         | 14           | ✅     | 2025-12-02 |                                |
+| Soundsmith             | 12           | ✅     | 2025-12-02 |                                |
+| Vandersteen            | 11           | ✅     | 2025-12-02 |                                |
+| Grimm Audio            | 9            | ✅     | 2025-12-02 |                                |
+| Bricasti               | 9            | ✅     | 2025-12-02 |                                |
+| Thixar                 | 9            | ✅     | 2025-12-02 |                                |
+| Weiss Engineering      | 4            | ✅     | 2025-12-02 |                                |
+| Acoustic Signature     | 4            | ✅     | 2025-12-02 | Images fixed (alt path)        |
+| Spiral Groove          | 4            | ✅     | 2025-12-02 |                                |
+| Mutec                  | 4            | ✅     | 2025-12-02 |                                |
+| Roon Labs              | 3            | ✅     | 2025-12-02 |                                |
+| Grand Prix Audio       | 2            | ✅     | 2025-12-02 |                                |
+| Moonriver Audio        | 2            | ✅     | 2025-12-02 |                                |
+| Exogal                 | 2            | ✅     | 2025-12-02 | Images fixed (alt path)        |
+| Vibrapod               | 2            | ✅     | 2025-12-02 |                                |
+| Taiko Audio            | 1            | ✅     | 2025-12-02 |                                |
+| Dutch & Dutch          | 1            | ✅     | 2025-12-02 |                                |
+| VIV Laboratory         | 1            | ✅     | 2025-12-02 |                                |
+| KLH Audio              | 1            | ✅     | 2025-12-02 |                                |
+| **TOTAL**              | **816**      | ✅     |            |                                |
 
 ### Products Missing Preview Images (8 total)
 
 These products have NULL image paths in the source CSV - requires manual upload:
 
-| Product ID  | Brand                | Name                    |
-| ----------- | -------------------- | ----------------------- |
-| product-201 | Synergistic Research | Galileo UEF Interconnect|
-| product-203 | Synergistic Research | Galileo UEF AC          |
-| product-205 | Synergistic Research | Galileo UEF             |
-| product-340 | Synergistic Research | Transporter Ultra       |
-| product-408 | Synergistic Research | Galileo UEF Phono       |
-| product-295 | Shunyata Research    | Hydra Triton 3          |
-| product-296 | Shunyata Research    | Hydra Typhon            |
-| product-297 | Shunyata Research    | Hydra DPC-6             |
+| Product ID  | Brand                | Name                     |
+| ----------- | -------------------- | ------------------------ |
+| product-201 | Synergistic Research | Galileo UEF Interconnect |
+| product-203 | Synergistic Research | Galileo UEF AC           |
+| product-205 | Synergistic Research | Galileo UEF              |
+| product-340 | Synergistic Research | Transporter Ultra        |
+| product-408 | Synergistic Research | Galileo UEF Phono        |
+| product-295 | Shunyata Research    | Hydra Triton 3           |
+| product-296 | Shunyata Research    | Hydra Typhon             |
+| product-297 | Shunyata Research    | Hydra DPC-6              |
 
 ---
 

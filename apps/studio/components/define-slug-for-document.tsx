@@ -1,13 +1,13 @@
-import { defineField, type SlugDefinition, type SlugOptions } from 'sanity';
+import { defineField, type SlugDefinition, type SlugOptions } from "sanity";
 
-import { isProduction, isUniqueSlug, slugify } from '../utils/helper';
-import { PathnameFieldComponent } from './slug-field-component';
+import { isProduction, isUniqueSlug, slugify } from "../utils/helper";
+import { PathnameFieldComponent } from "./slug-field-component";
 
 type DefineSlugConfig = {
   source?: string;
   group?: string;
-  slugify?: SlugOptions['slugify'];
-  validate?: SlugDefinition['validation'];
+  slugify?: SlugOptions["slugify"];
+  validate?: SlugDefinition["validation"];
 } & (
   | { prefix: string; slug?: never }
   | { slug: string; prefix?: never }
@@ -26,29 +26,29 @@ export const defineSlugForDocument = ({
     ? []
     : [
         defineField({
-          name: 'name',
-          type: 'string',
-          title: 'Nazwa',
+          name: "name",
+          type: "string",
+          title: "Nazwa",
           ...(group ? { group } : {}),
           description:
-            'Nazwa dokumentu, używana do wyświetlania w ścieżce nawigacyjnej.',
-          validation: (Rule) => Rule.required().error('Nazwa jest wymagana'),
+            "Nazwa dokumentu, używana do wyświetlania w ścieżce nawigacyjnej.",
+          validation: (Rule) => Rule.required().error("Nazwa jest wymagana"),
         }),
       ]),
   defineField({
-    name: 'slug',
-    type: 'slug',
-    title: 'Slug',
+    name: "slug",
+    type: "slug",
+    title: "Slug",
     ...(group ? { group } : {}),
     components: {
       field: (props) => <PathnameFieldComponent {...props} prefix={prefix} />,
     },
     description: (
-      <span style={{ color: 'var(--card-fg-color)' }}>
+      <span style={{ color: "var(--card-fg-color)" }}>
         Slug to unikalny identyfikator dokumentu, używany do SEO i linków.
         {isProduction() && slug && (
           <>
-            {' '}
+            {" "}
             <strong>
               <em>Ten slug nie może być zmieniony.</em>
             </strong>
@@ -58,7 +58,7 @@ export const defineSlugForDocument = ({
     ),
     readOnly: isProduction() && !!slug,
     options: {
-      source: source || 'name',
+      source: source || "name",
       slugify:
         customSlugify ||
         ((inputSlug, _, context) => {
@@ -66,15 +66,15 @@ export const defineSlugForDocument = ({
             // Return predefined slug as-is
             return slug;
           }
-          const currentPrefix = prefix ?? '';
+          const currentPrefix = prefix ?? "";
           const slugified = `${currentPrefix}${slugify(inputSlug)}`;
           // Ensure leading slash if not present, and trailing slash for non-root paths
-          const withLeadingSlash = slugified.startsWith('/')
+          const withLeadingSlash = slugified.startsWith("/")
             ? slugified
             : `/${slugified}`;
-          return withLeadingSlash === '/'
+          return withLeadingSlash === "/"
             ? withLeadingSlash
-            : `${withLeadingSlash.replace(/\/$/, '')}/`;
+            : `${withLeadingSlash.replace(/\/$/, "")}/`;
         }),
       isUnique: isUniqueSlug,
     },
@@ -82,7 +82,7 @@ export const defineSlugForDocument = ({
       customValidate ||
       ((Rule) =>
         Rule.custom(async (value, context) => {
-          const currentPrefix = prefix ?? '';
+          const currentPrefix = prefix ?? "";
 
           if (
             currentPrefix &&
@@ -101,9 +101,9 @@ export const defineSlugForDocument = ({
 
           if (prefix && value?.current) {
             const contentAfterPrefix = value.current
-              .replace(currentPrefix, '')
+              .replace(currentPrefix, "")
               .trim();
-            if (!contentAfterPrefix || contentAfterPrefix === '/') {
+            if (!contentAfterPrefix || contentAfterPrefix === "/") {
               return `Slug musi zawierać treść po ${currentPrefix}. Sam ukośnik nie wystarczy.`;
             }
           }
@@ -111,25 +111,25 @@ export const defineSlugForDocument = ({
           // Check for trailing slash requirement (except for root)
           if (
             value?.current &&
-            value.current !== '/' &&
-            !value.current.endsWith('/')
+            value.current !== "/" &&
+            !value.current.endsWith("/")
           ) {
-            return 'Slug musi kończyć się ukośnikiem (/)';
+            return "Slug musi kończyć się ukośnikiem (/)";
           }
 
           if (
             value?.current &&
-            value.current.replace(currentPrefix, '') !==
+            value.current.replace(currentPrefix, "") !==
               slugify(
-                value.current.replace(currentPrefix, '').replace(/\/$/, '')
+                value.current.replace(currentPrefix, "").replace(/\/$/, ""),
               ) +
-                (value.current === '/' ? '' : '/')
+                (value.current === "/" ? "" : "/")
           ) {
-            return 'W slugu jest literówka. Pamiętaj, że slug może zawierać tylko małe litery, cyfry i myślniki, oraz musi kończyć się ukośnikiem.';
+            return "W slugu jest literówka. Pamiętaj, że slug może zawierać tylko małe litery, cyfry i myślniki, oraz musi kończyć się ukośnikiem.";
           }
           return true;
         })
           .required()
-          .error('Slug jest wymagany')),
+          .error("Slug jest wymagany")),
   }),
 ];

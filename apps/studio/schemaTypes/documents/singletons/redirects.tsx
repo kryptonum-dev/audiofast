@@ -7,10 +7,10 @@ import {
   Text,
   Tooltip,
   useToast,
-} from '@sanity/ui';
-import { Link } from 'lucide-react';
-import { useCallback, useState } from 'react';
-import { defineField, defineType, type SlugRule, useClient } from 'sanity';
+} from "@sanity/ui";
+import { Link } from "lucide-react";
+import { useCallback, useState } from "react";
+import { defineField, defineType, type SlugRule, useClient } from "sanity";
 
 type RedirectTypes = {
   _key: string;
@@ -21,16 +21,16 @@ type RedirectTypes = {
 
 const SlugValidation = (Rule: SlugRule) =>
   Rule.custom((value) => {
-    if (!value || !value.current) return 'Wartość nie może być pusta';
-    if (!value.current.startsWith('/'))
-      return 'Ścieżka musi być ścieżką względną (zaczynać się od /)';
+    if (!value || !value.current) return "Wartość nie może być pusta";
+    if (!value.current.startsWith("/"))
+      return "Ścieżka musi być ścieżką względną (zaczynać się od /)";
 
     return true;
   });
 
 const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
   const { value, renderDefault } = props;
-  const client = useClient({ apiVersion: '2024-11-29' });
+  const client = useClient({ apiVersion: "2024-11-29" });
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -47,19 +47,19 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
         isPermanent: redirect.isPermanent ?? true,
       }));
       await client
-        .patch('drafts.redirects')
+        .patch("drafts.redirects")
         .set({ redirects: processedRedirects })
         .commit();
       toast.push({
-        status: 'success',
-        title: 'Sukces',
+        status: "success",
+        title: "Sukces",
         description: `${processedRedirects.length} przekierowań zostało pomyślnie przetworzonych i zaktualizowanych`,
       });
     } catch {
       toast.push({
-        status: 'error',
-        title: 'Błąd',
-        description: 'Nie udało się przetworzyć i zaktualizować przekierowań',
+        status: "error",
+        title: "Błąd",
+        description: "Nie udało się przetworzyć i zaktualizować przekierowań",
       });
     } finally {
       setIsLoading(false);
@@ -75,7 +75,8 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
         onClick={() => setShowConfirmDialog(true)}
         disabled={!value || isLoading}
         loading={isLoading}
-        style={{ textAlign: 'center' }}>
+        style={{ textAlign: "center" }}
+      >
         Przetwórz JSON i zaktualizuj przekierowania
       </Button>
       {showConfirmDialog && (
@@ -83,7 +84,8 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
           header="Potwierdź aktualizację"
           id="confirm-dialog"
           onClose={() => setShowConfirmDialog(false)}
-          zOffset={1000}>
+          zOffset={1000}
+        >
           <Box padding={4}>
             <Stack space={5}>
               <Text>
@@ -95,14 +97,16 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
                   tone="caution"
                   onClick={processJson}
                   loading={isLoading}
-                  style={{ textAlign: 'center' }}>
+                  style={{ textAlign: "center" }}
+                >
                   Tak, przetwórz i zaktualizuj
                 </Button>
                 <Button
                   mode="ghost"
                   onClick={() => setShowConfirmDialog(false)}
                   disabled={isLoading}
-                  style={{ textAlign: 'center' }}>
+                  style={{ textAlign: "center" }}
+                >
                   Anuluj
                 </Button>
               </Stack>
@@ -115,24 +119,24 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
 };
 
 export default defineType({
-  name: 'redirects',
-  type: 'document',
-  title: 'Przekierowania',
+  name: "redirects",
+  type: "document",
+  title: "Przekierowania",
   icon: Link,
   fields: [
     defineField({
-      name: 'redirects',
-      type: 'array',
+      name: "redirects",
+      type: "array",
       description:
-        'Przekierowania służą do przekierowywania użytkowników na inną stronę. Jest to przydatne dla celów SEO. Pamiętaj o dobrych praktykach dotyczących przekierowań, ponieważ mogą one wpływać na SEO.',
+        "Przekierowania służą do przekierowywania użytkowników na inną stronę. Jest to przydatne dla celów SEO. Pamiętaj o dobrych praktykach dotyczących przekierowań, ponieważ mogą one wpływać na SEO.",
       of: [
         defineField({
-          name: 'redirect',
-          type: 'object',
+          name: "redirect",
+          type: "object",
           fields: [
             defineField({
-              name: 'source',
-              type: 'slug',
+              name: "source",
+              type: "slug",
               validation: (Rule) => [
                 SlugValidation(Rule),
                 Rule.custom((value, context) => {
@@ -142,30 +146,30 @@ export default defineType({
                   const isDuplicate = redirects.some(
                     (redirect) =>
                       redirect._key !== currentRedirect._key &&
-                      redirect.source?.current === value?.current
+                      redirect.source?.current === value?.current,
                   );
                   if (isDuplicate)
-                    return 'Ta ścieżka źródłowa jest już używana w innym przekierowaniu. Ścieżki źródłowe muszą być unikalne.';
+                    return "Ta ścieżka źródłowa jest już używana w innym przekierowaniu. Ścieżki źródłowe muszą być unikalne.";
                   return true;
                 }),
               ],
             }),
             defineField({
-              name: 'destination',
-              type: 'slug',
+              name: "destination",
+              type: "slug",
               validation: SlugValidation,
             }),
             defineField({
-              name: 'isPermanent',
-              type: 'boolean',
+              name: "isPermanent",
+              type: "boolean",
               initialValue: true,
             }),
           ],
           preview: {
             select: {
-              source: 'source.current',
-              destination: 'destination.current',
-              isPermanent: 'isPermanent',
+              source: "source.current",
+              destination: "destination.current",
+              isPermanent: "isPermanent",
             },
             prepare({ source, destination, isPermanent }) {
               return {
@@ -176,13 +180,14 @@ export default defineType({
                     content={
                       <Box padding={1}>
                         <Text size={1}>
-                          {isPermanent ? '🔒 Stałe' : '🔄 Tymczasowe'}
+                          {isPermanent ? "🔒 Stałe" : "🔄 Tymczasowe"}
                         </Text>
                       </Box>
                     }
                     placement="top"
-                    portal>
-                    <span>{isPermanent ? '🔒' : '🔄'}</span>
+                    portal
+                  >
+                    <span>{isPermanent ? "🔒" : "🔄"}</span>
                   </Tooltip>
                 ),
               };
@@ -192,9 +197,9 @@ export default defineType({
       ],
     }),
     defineField({
-      name: 'jsonEditor',
-      type: 'text',
-      title: 'Edytor JSON',
+      name: "jsonEditor",
+      type: "text",
+      title: "Edytor JSON",
       description: (
         <>
           Wklej tablicę JSON obiektów przekierowań. Wymagane właściwości:
@@ -234,57 +239,57 @@ export default defineType({
       validation: (Rule) =>
         Rule.custom((value) => {
           if (!value) return true;
-          const allowedKeys = ['source', 'destination', 'isPermanent'];
+          const allowedKeys = ["source", "destination", "isPermanent"];
           try {
             const parsed = JSON.parse(value);
             if (!Array.isArray(parsed))
-              return 'JSON musi być tablicą obiektów przekierowań';
+              return "JSON musi być tablicą obiektów przekierowań";
             for (const redirect of parsed) {
               const objectKeys = Object.keys(redirect);
               const hasInvalidKeys = objectKeys.some(
-                (key) => !allowedKeys.includes(key)
+                (key) => !allowedKeys.includes(key),
               );
               if (hasInvalidKeys) {
                 const invalidKeys = objectKeys.filter(
-                  (key) => !allowedKeys.includes(key)
+                  (key) => !allowedKeys.includes(key),
                 );
-                return `Znaleziono nieprawidłowe właściwości: ${invalidKeys.join(', ')}. Dozwolone są tylko "source", "destination" i "isPermanent".`;
+                return `Znaleziono nieprawidłowe właściwości: ${invalidKeys.join(", ")}. Dozwolone są tylko "source", "destination" i "isPermanent".`;
               }
-              if (!redirect.source || typeof redirect.source !== 'string')
+              if (!redirect.source || typeof redirect.source !== "string")
                 return 'Każde przekierowanie musi mieć właściwość "source" z wartością typu string';
-              if (!redirect.source.startsWith('/'))
-                return 'Ścieżki źródłowe muszą zaczynać się od ukośnika (/)';
+              if (!redirect.source.startsWith("/"))
+                return "Ścieżki źródłowe muszą zaczynać się od ukośnika (/)";
 
               if (
                 !redirect.destination ||
-                typeof redirect.destination !== 'string'
+                typeof redirect.destination !== "string"
               )
                 return 'Każde przekierowanie musi mieć właściwość "destination" z wartością typu string';
-              if (!redirect.destination.startsWith('/'))
-                return 'Ścieżki docelowe muszą zaczynać się od ukośnika (/)';
+              if (!redirect.destination.startsWith("/"))
+                return "Ścieżki docelowe muszą zaczynać się od ukośnika (/)";
               if (
                 redirect.isPermanent !== undefined &&
-                typeof redirect.isPermanent !== 'boolean'
+                typeof redirect.isPermanent !== "boolean"
               )
                 return 'Właściwość "isPermanent" musi być wartością logiczną (true/false), jeśli jest podana';
             }
             const sources = parsed.map((r) => r.source);
             const duplicates = sources.filter(
-              (item, index) => sources.indexOf(item) !== index
+              (item, index) => sources.indexOf(item) !== index,
             );
             if (duplicates.length > 0) {
-              return `Znaleziono zduplikowane ścieżki źródłowe: ${duplicates.join(', ')}. Każda ścieżka źródłowa musi być unikalna.`;
+              return `Znaleziono zduplikowane ścieżki źródłowe: ${duplicates.join(", ")}. Każda ścieżka źródłowa musi być unikalna.`;
             }
             return true;
           } catch {
-            return 'Nieprawidłowy format JSON. Sprawdź składnię.';
+            return "Nieprawidłowy format JSON. Sprawdź składnię.";
           }
         }),
     }),
   ],
   preview: {
     prepare: () => ({
-      title: 'Przekierowania',
+      title: "Przekierowania",
     }),
   },
 });

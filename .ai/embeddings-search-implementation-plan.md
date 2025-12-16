@@ -173,7 +173,7 @@ Then create indexes via the Studio UI.
 This route will handle embedding searches for both products AND blog posts.
 
 ```typescript
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 // Type definitions
 type EmbeddingResult = {
@@ -186,16 +186,16 @@ type EmbeddingResult = {
 
 type EmbeddingsResponse = EmbeddingResult[];
 
-type SearchType = 'products' | 'blog';
+type SearchType = "products" | "blog";
 
 const INDEX_NAMES: Record<SearchType, string> = {
-  products: 'products',
-  blog: 'blog',
+  products: "products",
+  blog: "blog",
 };
 
 const TYPE_FILTERS: Record<SearchType, string> = {
-  products: 'product',
-  blog: 'blog',
+  products: "product",
+  blog: "blog",
 };
 
 export async function POST(request: NextRequest) {
@@ -208,30 +208,30 @@ export async function POST(request: NextRequest) {
     };
 
     // Validation
-    if (!searchQuery || typeof searchQuery !== 'string') {
+    if (!searchQuery || typeof searchQuery !== "string") {
       return NextResponse.json(
-        { error: 'Search query is required and must be a string' },
-        { status: 400 }
+        { error: "Search query is required and must be a string" },
+        { status: 400 },
       );
     }
 
-    if (!type || !['products', 'blog'].includes(type)) {
+    if (!type || !["products", "blog"].includes(type)) {
       return NextResponse.json(
-        { error: 'Valid type (products or blog) is required' },
-        { status: 400 }
+        { error: "Valid type (products or blog) is required" },
+        { status: 400 },
       );
     }
 
     // Environment variables
     const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-    const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production';
+    const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
     const bearerToken = process.env.EMBEDDINGS_INDEX_BEARER_TOKEN;
 
     if (!projectId || !bearerToken) {
-      console.error('Missing required environment variables');
+      console.error("Missing required environment variables");
       return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
+        { error: "Server configuration error" },
+        { status: 500 },
       );
     }
 
@@ -243,10 +243,10 @@ export async function POST(request: NextRequest) {
     const embeddingsUrl = `https://${projectId}.api.sanity.io/vX/embeddings-index/query/${dataset}/${indexName}`;
 
     const response = await fetch(embeddingsUrl, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
         Authorization: `Bearer ${bearerToken}`,
       },
       body: JSON.stringify({
@@ -262,8 +262,8 @@ export async function POST(request: NextRequest) {
       const errorText = await response.text();
       console.error(`Embeddings API error (${response.status}):`, errorText);
       return NextResponse.json(
-        { error: 'Failed to fetch embeddings' },
-        { status: response.status }
+        { error: "Failed to fetch embeddings" },
+        { status: response.status },
       );
     }
 
@@ -272,10 +272,10 @@ export async function POST(request: NextRequest) {
     // Return results
     return NextResponse.json({ data, count: data.length }, { status: 200 });
   } catch (error) {
-    console.error('Embeddings API route error:', error);
+    console.error("Embeddings API route error:", error);
     return NextResponse.json(
-      { error: 'Internal server error during embeddings search' },
-      { status: 500 }
+      { error: "Internal server error during embeddings search" },
+      { status: 500 },
     );
   }
 }
@@ -284,16 +284,16 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   return NextResponse.json(
     {
-      message: 'Embeddings API - POST only',
+      message: "Embeddings API - POST only",
       usage: {
-        method: 'POST',
+        method: "POST",
         body: {
-          searchQuery: 'string (required)',
+          searchQuery: "string (required)",
           type: "'products' | 'blog' (required)",
         },
       },
     },
-    { status: 200 }
+    { status: 200 },
   );
 }
 ```
@@ -313,7 +313,7 @@ export type EmbeddingResult = {
 
 export type EmbeddingsResponse = EmbeddingResult[];
 
-export type SearchType = 'products' | 'blog';
+export type SearchType = "products" | "blog";
 ```
 
 ### 3.3 Error Handling Strategy
@@ -342,21 +342,21 @@ The API route should handle:
 **File:** `apps/web/src/global/utils/embeddings.ts`
 
 ```typescript
-import type { EmbeddingsResponse, SearchType } from '@/src/types/embeddings';
+import type { EmbeddingsResponse, SearchType } from "@/src/types/embeddings";
 
 export async function fetchEmbeddings(
   searchQuery: string,
-  type: SearchType
+  type: SearchType,
 ): Promise<EmbeddingsResponse | null> {
   if (!searchQuery || !searchQuery.trim()) {
     return null;
   }
 
   try {
-    const response = await fetch('/api/embeddings', {
-      method: 'POST',
+    const response = await fetch("/api/embeddings", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         searchQuery: searchQuery.trim(),
@@ -367,7 +367,7 @@ export async function fetchEmbeddings(
     if (!response.ok) {
       console.error(
         `Embeddings fetch failed (${response.status}):`,
-        await response.text()
+        await response.text(),
       );
       return null;
     }
@@ -375,7 +375,7 @@ export async function fetchEmbeddings(
     const result = await response.json();
     return result.data || null;
   } catch (error) {
-    console.error('Error fetching embeddings:', error);
+    console.error("Error fetching embeddings:", error);
     return null;
   }
 }
@@ -459,11 +459,11 @@ export const queryBlogPosts = groq`
 
 ```typescript
 // 1. Parse search term from URL
-const searchTerm = searchParams.search || '';
+const searchTerm = searchParams.search || "";
 
 // 2. Fetch embeddings if search exists
 const embeddingResults = searchTerm
-  ? await fetchEmbeddings(searchTerm, 'products')
+  ? await fetchEmbeddings(searchTerm, "products")
   : null;
 
 // 3. Pass to GROQ query
@@ -477,7 +477,7 @@ const productsData = await sanityFetch({
 });
 
 // 4. When embeddings exist, force sort to 'relevance'
-const sortBy = embeddingResults ? 'relevance' : searchParams.sortBy || 'newest';
+const sortBy = embeddingResults ? "relevance" : searchParams.sortBy || "newest";
 ```
 
 **Action Items:**
@@ -570,20 +570,20 @@ Similar changes:
 ```typescript
 export default async function BlogPage(props: BlogPageProps) {
   const searchParams = await props.searchParams;
-  const searchTerm = searchParams.search || '';
+  const searchTerm = searchParams.search || "";
 
   // NEW: Fetch embeddings
   const embeddingResults = searchTerm
-    ? await fetchEmbeddings(searchTerm, 'blog')
+    ? await fetchEmbeddings(searchTerm, "blog")
     : null;
 
   const blogData = await sanityFetch<QueryBlogPageDataResult>({
     query: queryBlogPageData,
     params: {
-      category: '',
+      category: "",
       embeddingResults, // NEW: Pass embeddings
     },
-    tags: ['blog', 'blog-category'],
+    tags: ["blog", "blog-category"],
   });
 
   // ... rest of component
@@ -596,12 +596,12 @@ export default async function BlogPage(props: BlogPageProps) {
 
 ```typescript
 export const PRODUCT_SORT_OPTIONS = [
-  { value: 'newest', label: 'Najnowsze' },
-  { value: 'oldest', label: 'Najstarsze' },
-  { value: 'priceAsc', label: 'Cena: rosnąco' },
-  { value: 'priceDesc', label: 'Cena: malejąco' },
-  { value: 'nameAsc', label: 'Nazwa: A-Z' },
-  { value: 'nameDesc', label: 'Nazwa: Z-A' },
+  { value: "newest", label: "Najnowsze" },
+  { value: "oldest", label: "Najstarsze" },
+  { value: "priceAsc", label: "Cena: rosnąco" },
+  { value: "priceDesc", label: "Cena: malejąco" },
+  { value: "nameAsc", label: "Nazwa: A-Z" },
+  { value: "nameDesc", label: "Nazwa: Z-A" },
   // 'relevance' will be dynamically added when search is active
 ] as const;
 ```
@@ -630,7 +630,7 @@ When using embeddings, show users that results are relevance-based:
     <div className={styles.noResults}>
       <p>Nie znaleziono produktów dla: "{searchTerm}"</p>
       <p>Spróbuj wyszukać inaczej lub przejrzyj wszystkie produkty.</p>
-      <button onClick={() => router.push('/produkty/')}>
+      <button onClick={() => router.push("/produkty/")}>
         Zobacz wszystkie produkty
       </button>
     </div>
@@ -755,17 +755,17 @@ When using embeddings, show users that results are relevance-based:
 
 ```typescript
 // In embeddings API route
-import { unstable_cache } from 'next/cache';
+import { unstable_cache } from "next/cache";
 
 const getCachedEmbeddings = unstable_cache(
   async (searchQuery: string, type: SearchType) => {
     // Fetch from Sanity
   },
-  ['embeddings-search'],
+  ["embeddings-search"],
   {
     revalidate: 3600, // 1 hour
-    tags: ['embeddings'],
-  }
+    tags: ["embeddings"],
+  },
 );
 ```
 
@@ -777,7 +777,7 @@ const debouncedSearch = useDebouncedCallback(
   (query: string) => {
     // Trigger search
   },
-  500 // 500ms delay
+  500, // 500ms delay
 );
 ```
 
@@ -828,11 +828,11 @@ const debouncedSearch = useDebouncedCallback(
 
 ```typescript
 // In page.tsx
-const USE_EMBEDDINGS = process.env.NEXT_PUBLIC_USE_EMBEDDINGS === 'true';
+const USE_EMBEDDINGS = process.env.NEXT_PUBLIC_USE_EMBEDDINGS === "true";
 
 const embeddingResults =
   USE_EMBEDDINGS && searchTerm
-    ? await fetchEmbeddings(searchTerm, 'products')
+    ? await fetchEmbeddings(searchTerm, "products")
     : null;
 ```
 

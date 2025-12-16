@@ -3,12 +3,12 @@ import {
   type SanityDocument,
   type SlugIsUniqueValidator,
   type StringOptions,
-} from 'sanity';
+} from "sanity";
 
-import type { Page, Tree, TreeNode } from './types';
+import type { Page, Tree, TreeNode } from "./types";
 
 export const isRelativeUrl = (url: string) =>
-  url.startsWith('/') || url.startsWith('#') || url.startsWith('?');
+  url.startsWith("/") || url.startsWith("#") || url.startsWith("?");
 
 export const isValidUrl = (url: string) => {
   try {
@@ -25,16 +25,16 @@ export const capitalize = (str: string) => {
 };
 
 export const getTitleCase = (name: string) => {
-  const titleTemp = name.replace(/([A-Z])/g, ' $1');
+  const titleTemp = name.replace(/([A-Z])/g, " $1");
   return titleTemp.charAt(0).toUpperCase() + titleTemp.slice(1);
 };
 
 export const createRadioListLayout = (
   items: Array<string | { title: string; value: string }>,
-  options?: StringOptions
+  options?: StringOptions,
 ): StringOptions => {
   const list = items.map((item) => {
-    if (typeof item === 'string') {
+    if (typeof item === "string") {
       return {
         title: getTitleCase(item),
         value: item,
@@ -43,7 +43,7 @@ export const createRadioListLayout = (
     return item;
   });
   return {
-    layout: 'radio',
+    layout: "radio",
     list,
     ...options,
   };
@@ -51,21 +51,21 @@ export const createRadioListLayout = (
 
 export const parsePortableTextToString = (
   value: unknown,
-  maxWords: number | undefined = undefined
+  maxWords: number | undefined = undefined,
 ) => {
-  if (!Array.isArray(value)) return 'No Content';
+  if (!Array.isArray(value)) return "No Content";
 
   const text = value.map((val) => {
     const test = isPortableTextTextBlock(val);
-    if (!test) return '';
+    if (!test) return "";
     return val.children
       .map((child) => child.text)
       .filter(Boolean)
-      .join(' ');
+      .join(" ");
   });
   if (maxWords)
-    return `${text.join(' ').split(' ').slice(0, maxWords).join(' ')}...`;
-  return text.join(' ');
+    return `${text.join(" ").split(" ").slice(0, maxWords).join(" ")}...`;
+  return text.join(" ");
 };
 
 export function splitArray<T>(array: T[], numChunks: number): T[][] {
@@ -84,7 +84,7 @@ export interface RetryOptions {
 }
 export async function retryPromise<T>(
   promiseFn: () => Promise<T>,
-  options: RetryOptions = {}
+  options: RetryOptions = {},
 ): Promise<T> {
   const {
     maxRetries = 3,
@@ -101,11 +101,11 @@ export async function retryPromise<T>(
       if (isLastAttempt) {
         throw error instanceof Error
           ? error
-          : new Error('Promise retry failed');
+          : new Error("Promise retry failed");
       }
 
       const normalizedError =
-        error instanceof Error ? error : new Error('Unknown error');
+        error instanceof Error ? error : new Error("Unknown error");
 
       if (onRetry) {
         onRetry(normalizedError, attempts + 1);
@@ -117,19 +117,19 @@ export async function retryPromise<T>(
     }
   }
 
-  throw new Error('Promise retry failed');
+  throw new Error("Promise retry failed");
 }
 
 /**
  * Converts a URL pathname to a human-readable title
  */
 export function pathnameToTitle(pathname: string): string {
-  if (pathname === '/') return 'Home';
-  const lastSegment = pathname.split('/').filter(Boolean).pop() || '';
+  if (pathname === "/") return "Home";
+  const lastSegment = pathname.split("/").filter(Boolean).pop() || "";
   return lastSegment
     .charAt(0)
     .toUpperCase()
-    .concat(lastSegment.slice(1).replace(/-/g, ' '));
+    .concat(lastSegment.slice(1).replace(/-/g, " "));
 }
 
 /**
@@ -141,14 +141,14 @@ export function buildTree(pages: Page[]): Tree {
   function createNode(
     item: Page,
     pathSoFar: string,
-    isFolder: boolean
+    isFolder: boolean,
   ): TreeNode {
     return {
       ...item,
       slug: pathSoFar,
-      edited: item._originalId?.startsWith('drafts.'),
-      _id: isFolder ? pathSoFar + pathSoFar.split('/').length : item._id,
-      _type: isFolder ? ('folder' as const) : item._type,
+      edited: item._originalId?.startsWith("drafts."),
+      _id: isFolder ? pathSoFar + pathSoFar.split("/").length : item._id,
+      _type: isFolder ? ("folder" as const) : item._type,
       title: pathnameToTitle(pathSoFar),
       children: {},
     };
@@ -157,9 +157,9 @@ export function buildTree(pages: Page[]): Tree {
   function processSegments(
     item: Page,
     segments: string[],
-    currentFolder: Tree
+    currentFolder: Tree,
   ): void {
-    let pathSoFar = '';
+    let pathSoFar = "";
 
     segments.forEach((segment, index) => {
       pathSoFar += `/${segment}`;
@@ -168,12 +168,12 @@ export function buildTree(pages: Page[]): Tree {
 
       if (!currentFolder[segment]) {
         currentFolder[segment] = node;
-      } else if (!isFolder && currentFolder[segment]._type === 'folder') {
-        currentFolder[segment].children[''] = node;
-      } else if (isFolder && currentFolder[segment]._type !== 'folder') {
+      } else if (!isFolder && currentFolder[segment]._type === "folder") {
+        currentFolder[segment].children[""] = node;
+      } else if (isFolder && currentFolder[segment]._type !== "folder") {
         currentFolder[segment] = {
           ...node,
-          children: { '': currentFolder[segment] },
+          children: { "": currentFolder[segment] },
         };
       }
       // biome-ignore lint/style/noParameterAssign: needed for tree traversal
@@ -183,7 +183,7 @@ export function buildTree(pages: Page[]): Tree {
 
   for (const page of pages) {
     const segments =
-      page.slug === '/' ? [''] : page.slug?.split('/').filter(Boolean) || [];
+      page.slug === "/" ? [""] : page.slug?.split("/").filter(Boolean) || [];
     processSegments(page, segments, root);
   }
 
@@ -194,14 +194,14 @@ export function buildTree(pages: Page[]): Tree {
  * Finds the closest tree containing a folder at the given path
  */
 export function findTreeByPath(root: Tree, path?: string): Tree {
-  if (!path || path === '/') return root;
+  if (!path || path === "/") return root;
 
   let currentTree = root;
-  const segments = path.split('/').filter(Boolean);
+  const segments = path.split("/").filter(Boolean);
 
   for (const segment of segments) {
     const node = currentTree[segment];
-    if (!node || node._type !== 'folder') break;
+    if (!node || node._type !== "folder") break;
     currentTree = node.children;
   }
 
@@ -215,17 +215,17 @@ export function findTreeByPath(root: Tree, path?: string): Tree {
  * 4. Handling undefined/invalid inputs
  */
 export function formatPath(path: string | undefined | null): string {
-  if (typeof path !== 'string') return '/';
+  if (typeof path !== "string") return "/";
 
   return (
     path
       .trim()
       // Remove any double slashes
-      .replace(/\/{2,}/g, '/')
+      .replace(/\/{2,}/g, "/")
       // Remove leading and trailing slashes
-      .replace(/^\/+|\/+$/g, '')
+      .replace(/^\/+|\/+$/g, "")
       // Add single leading slash
-      .replace(/^/, '/')
+      .replace(/^/, "/")
   );
 }
 
@@ -234,7 +234,7 @@ export function formatPath(path: string | undefined | null): string {
  * Useful for path matching and comparisons
  */
 export function getPathVariations(path: string | undefined): string[] {
-  if (typeof path !== 'string') return [];
+  if (typeof path !== "string") return [];
 
   const normalizedPath = formatPath(path).slice(1); // Remove leading slash
 
@@ -251,7 +251,7 @@ export const getTemplateName = (template: string) => {
 };
 
 export const getDocumentPath = (document: SanityDocument) => {
-  if (typeof document.slug !== 'string') return;
+  if (typeof document.slug !== "string") return;
   return formatPath(document.slug);
 };
 
@@ -269,36 +269,36 @@ interface PathnameOptions {
  * 6. Optionally allowing trailing slash
  */
 export function stringToPathname(input: string, options?: PathnameOptions) {
-  if (typeof input !== 'string') {
-    return '/';
+  if (typeof input !== "string") {
+    return "/";
   }
 
   const sanitized = input
     .toLowerCase()
     // Convert spaces to hyphens
-    .replace(/\s+/g, '-')
+    .replace(/\s+/g, "-")
     // Normalize slashes except at start
-    .replace(/(?!^)\/+/g, '/')
+    .replace(/(?!^)\/+/g, "/")
     // Remove invalid characters
-    .replace(/[^a-z0-9-/]+/g, '')
+    .replace(/[^a-z0-9-/]+/g, "")
     // Normalize multiple hyphens
-    .replace(/-+/g, '-')
+    .replace(/-+/g, "-")
     // Normalize multiple slashes
-    .replace(/\/+/g, '/');
+    .replace(/\/+/g, "/");
 
   const withoutTrailingSlash = options?.allowTrailingSlash
     ? sanitized
-    : sanitized.replace(/\/$/, '');
+    : sanitized.replace(/\/$/, "");
 
   // Ensure leading slash and normalize any remaining multiple slashes
-  return `/${withoutTrailingSlash}`.replace(/\/+/g, '/');
+  return `/${withoutTrailingSlash}`.replace(/\/+/g, "/");
 }
 
 export function createPageTemplate() {
   const pages = [
     {
-      title: 'Page',
-      type: 'page',
+      title: "Page",
+      type: "page",
     },
   ];
   return pages.map((page) => {
@@ -309,14 +309,14 @@ export function createPageTemplate() {
       value: (props: { slug?: string }) => {
         return {
           ...(props.slug
-            ? { slug: { current: props.slug, _type: 'slug' } }
+            ? { slug: { current: props.slug, _type: "slug" } }
             : {}),
         };
       },
       parameters: [
         {
-          name: 'slug',
-          type: 'string',
+          name: "slug",
+          type: "string",
         },
       ],
     };
@@ -329,27 +329,27 @@ export function createPageTemplate() {
  * @returns Plain text string
  */
 export function toPlainText(blocks = []) {
-  if (!Array.isArray(blocks)) return '';
+  if (!Array.isArray(blocks)) return "";
   return blocks
     .map((block: { _type?: string; children?: { text: string }[] }) => {
-      if (block._type !== 'block' || !block.children) {
-        return '';
+      if (block._type !== "block" || !block.children) {
+        return "";
       }
-      return block.children.map((child) => child.text).join('');
+      return block.children.map((child) => child.text).join("");
     })
-    .join('\n\n');
+    .join("\n\n");
 }
 
 export function isProduction() {
-  return process.env.NODE_ENV === 'production';
+  return process.env.NODE_ENV === "production";
 }
 
 export const isUniqueSlug: SlugIsUniqueValidator = async (
   slug,
-  { document, getClient }
+  { document, getClient },
 ) => {
-  const client = getClient({ apiVersion: '2024-09-09' });
-  const id = document?._id.replace(/^drafts\./, '');
+  const client = getClient({ apiVersion: "2024-09-09" });
+  const id = document?._id.replace(/^drafts\./, "");
   const query = `!defined(*[!(_id in [$draft, $published]) && slug.current == $slug][0]._id)`;
   const params = { draft: `drafts.${id}`, published: id, slug };
   const result = await client.fetch<boolean>(query, params);
@@ -359,39 +359,39 @@ export const isUniqueSlug: SlugIsUniqueValidator = async (
 export const slugify = (slug: string) => {
   slug = slug.toString().toLowerCase().trim();
   const sets = [
-    { to: 'a', from: '[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶἀ]' },
-    { to: 'c', from: '[ÇĆĈČ]' },
-    { to: 'd', from: '[ÐĎĐÞ]' },
-    { to: 'e', from: '[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]' },
-    { to: 'g', from: '[ĜĞĢǴ]' },
-    { to: 'h', from: '[ĤḦ]' },
-    { to: 'i', from: '[ÌÍÎÏĨĪĮİỈỊ]' },
-    { to: 'j', from: '[Ĵ]' },
-    { to: 'ij', from: '[Ĳ]' },
-    { to: 'k', from: '[Ķ]' },
-    { to: 'l', from: '[ĹĻĽŁ]' },
-    { to: 'm', from: '[Ḿ]' },
-    { to: 'n', from: '[ÑŃŅŇ]' },
-    { to: 'o', from: '[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]' },
-    { to: 'oe', from: '[Œ]' },
-    { to: 'p', from: '[ṕ]' },
-    { to: 'r', from: '[ŔŖŘ]' },
-    { to: 's', from: '[ßŚŜŞŠȘ]' },
-    { to: 't', from: '[ŢŤ]' },
-    { to: 'u', from: '[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]' },
-    { to: 'w', from: '[ẂŴẀẄ]' },
-    { to: 'x', from: '[ẍ]' },
-    { to: 'y', from: '[ÝŶŸỲỴỶỸ]' },
-    { to: 'z', from: '[ŹŻŽ]' },
-    { to: '-', from: "[·/_,:;']" },
+    { to: "a", from: "[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶἀ]" },
+    { to: "c", from: "[ÇĆĈČ]" },
+    { to: "d", from: "[ÐĎĐÞ]" },
+    { to: "e", from: "[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]" },
+    { to: "g", from: "[ĜĞĢǴ]" },
+    { to: "h", from: "[ĤḦ]" },
+    { to: "i", from: "[ÌÍÎÏĨĪĮİỈỊ]" },
+    { to: "j", from: "[Ĵ]" },
+    { to: "ij", from: "[Ĳ]" },
+    { to: "k", from: "[Ķ]" },
+    { to: "l", from: "[ĹĻĽŁ]" },
+    { to: "m", from: "[Ḿ]" },
+    { to: "n", from: "[ÑŃŅŇ]" },
+    { to: "o", from: "[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]" },
+    { to: "oe", from: "[Œ]" },
+    { to: "p", from: "[ṕ]" },
+    { to: "r", from: "[ŔŖŘ]" },
+    { to: "s", from: "[ßŚŜŞŠȘ]" },
+    { to: "t", from: "[ŢŤ]" },
+    { to: "u", from: "[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]" },
+    { to: "w", from: "[ẂŴẀẄ]" },
+    { to: "x", from: "[ẍ]" },
+    { to: "y", from: "[ÝŶŸỲỴỶỸ]" },
+    { to: "z", from: "[ŹŻŽ]" },
+    { to: "-", from: "[·/_,:;']" },
   ];
   sets.forEach(({ from, to }) => {
-    slug = slug.replace(new RegExp(from, 'gi'), to);
+    slug = slug.replace(new RegExp(from, "gi"), to);
   });
   return slug
-    .replace(/\s+/g, '-')
-    .replace(/[^-\w]+/g, '')
-    .replace(/--+/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '');
+    .replace(/\s+/g, "-")
+    .replace(/[^-\w]+/g, "")
+    .replace(/--+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
 };

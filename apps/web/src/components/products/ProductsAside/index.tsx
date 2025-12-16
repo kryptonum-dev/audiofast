@@ -3,7 +3,7 @@
 import { X } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   type ActiveFilters,
@@ -24,6 +24,7 @@ import PortableText from '../../portableText';
 import Button from '../../ui/Button';
 import Searchbar from '../../ui/Searchbar';
 import PriceRange from '../PriceRange';
+import { useProductsLoading } from '../ProductsLoadingContext';
 import ProductsAsideSkeleton from './ProductsAsideSkeleton';
 import styles from './styles.module.scss';
 
@@ -69,6 +70,22 @@ export default function ProductsAside({
 }: ProductsAsideProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { startLoading } = useProductsLoading();
+
+  // ----------------------------------------
+  // Pending State for Optimistic Updates
+  // ----------------------------------------
+  // Track pending category for optimistic UI when clicking category links
+  const [pendingCategory, setPendingCategory] = useState<string | null | 'all'>(
+    null,
+  );
+  // Track pending filters for optimistic UI when clicking Apply
+  const [pendingFilters, setPendingFilters] = useState<{
+    brands: string[];
+    minPrice: number;
+    maxPrice: number;
+    search: string;
+  } | null>(null);
 
   // Get category from URL params (for brand pages that use ?category=xxx)
   const categoryFromUrlParam = searchParams.get('category');
@@ -90,6 +107,33 @@ export default function ProductsAside({
   useEffect(() => {
     setIsInitialized(true);
   }, []);
+
+  // Clear pending state when URL params change (navigation complete)
+  // Also update expandedParents based on the new category
+  const paramsString = searchParams.toString();
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    // Skip on first render - initial state is already set correctly
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    // Clear pending states
+    setPendingCategory(null);
+    setPendingFilters(null);
+
+    // Update expanded parents based on the new URL's category
+    // This runs AFTER clearing pending state, so it uses the real URL state
+    if (currentCategoryClean === null) {
+      // "All Products" - collapse all dropdowns
+      setExpandedParents(new Set());
+    } else {
+      // Category page - expand the parent of the active category
+      setExpandedParents(getInitialExpandedParents());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsString]);
 
   // ----------------------------------------
   // Parse Active Filters from URL
@@ -124,11 +168,56 @@ export default function ProductsAside({
   }, [searchParams, currentCategory]);
 
   // ----------------------------------------
+  // Optimistic Filters (for instant UI updates)
+  // ----------------------------------------
+  // Use pending values when available, fall back to URL values
+  const displayFilters = useMemo((): ActiveFilters => {
+    // Determine the optimistic category
+    let optimisticCategory = activeFilters.category;
+    if (pendingCategory !== null) {
+      if (pendingCategory === 'all') {
+        optimisticCategory = null;
+      } else {
+        optimisticCategory = pendingCategory.startsWith('/kategoria/')
+          ? pendingCategory
+          : `/kategoria/${pendingCategory}/`;
+      }
+    }
+
+    // Use pending filters if available (from Apply button)
+    if (pendingFilters) {
+      return {
+        search: pendingFilters.search,
+        brands: pendingFilters.brands,
+        minPrice: plnToCents(pendingFilters.minPrice),
+        maxPrice:
+          pendingFilters.maxPrice >= centsToPLN(globalMaxPrice)
+            ? Infinity
+            : plnToCents(pendingFilters.maxPrice),
+        category: optimisticCategory,
+        customFilters: [],
+        isCPO: false,
+      };
+    }
+
+    // Only category is pending
+    if (pendingCategory !== null) {
+      return {
+        ...activeFilters,
+        category: optimisticCategory,
+      };
+    }
+
+    return activeFilters;
+  }, [activeFilters, pendingCategory, pendingFilters, globalMaxPrice]);
+
+  // ----------------------------------------
   // Compute Filter Counts (instant, ~1-2ms)
   // ----------------------------------------
+  // Use displayFilters for optimistic UI updates
   const computed = useMemo(() => {
-    return computeAvailableFilters(allProductsMetadata, activeFilters);
-  }, [allProductsMetadata, activeFilters]);
+    return computeAvailableFilters(allProductsMetadata, displayFilters);
+  }, [allProductsMetadata, displayFilters]);
 
   // Merge computed counts with category metadata
   const categoriesWithCounts = useMemo(() => {
@@ -182,8 +271,14 @@ export default function ProductsAside({
     ),
   });
 
+  // Ref to track pending state without affecting dependency array
+  const pendingFiltersRef = useRef(pendingFilters);
+  pendingFiltersRef.current = pendingFilters;
+
   // Sync local state when URL changes (e.g., browser back/forward)
+  // Skip during optimistic updates to preserve user's selections
   useEffect(() => {
+    if (pendingFiltersRef.current !== null) return;
     setLocalFilters({
       search: activeFilters.search,
       brands: activeFilters.brands,
@@ -251,13 +346,11 @@ export default function ProductsAside({
     return expanded;
   }, [currentCategoryClean, groupedCategories]);
 
+  // On "All Products" page (no category), start with all dropdowns collapsed
+  // On category pages, expand the parent of the active category
   const [expandedParents, setExpandedParents] = useState<Set<string>>(() =>
-    getInitialExpandedParents(),
+    currentCategoryClean ? getInitialExpandedParents() : new Set(),
   );
-
-  useEffect(() => {
-    setExpandedParents(getInitialExpandedParents());
-  }, [currentCategoryClean, getInitialExpandedParents]);
 
   // ----------------------------------------
   // Brand Display Logic
@@ -270,6 +363,7 @@ export default function ProductsAside({
   }, []);
 
   // Merge with active brands that might have 0 count
+  // Use displayFilters for optimistic UI
   const allBrandsWithActive = useMemo(() => {
     const brandMap = new Map<string, (typeof brandsWithCounts)[number]>();
 
@@ -279,7 +373,8 @@ export default function ProductsAside({
     });
 
     // Add active brands that aren't in results (0 count)
-    activeFilters.brands.forEach((activeSlug) => {
+    // Use displayFilters.brands for optimistic updates
+    displayFilters.brands.forEach((activeSlug) => {
       if (!brandMap.has(activeSlug)) {
         brandMap.set(activeSlug, {
           _id: activeSlug,
@@ -292,27 +387,28 @@ export default function ProductsAside({
     });
 
     return Array.from(brandMap.values());
-  }, [brandsWithCounts, activeFilters.brands, getBrandSlug]);
+  }, [brandsWithCounts, displayFilters.brands, getBrandSlug]);
 
   // Sort: selected first, then by count
+  // Use displayFilters for optimistic UI
   const sortedBrands = useMemo(() => {
     return [...allBrandsWithActive].sort((a, b) => {
       const aSlug = getBrandSlug(a);
       const bSlug = getBrandSlug(b);
-      const aActive = activeFilters.brands.includes(aSlug);
-      const bActive = activeFilters.brands.includes(bSlug);
+      const aActive = displayFilters.brands.includes(aSlug);
+      const bActive = displayFilters.brands.includes(bSlug);
 
       if (aActive && !bActive) return -1;
       if (!aActive && bActive) return 1;
 
       return (b.count ?? 0) - (a.count ?? 0);
     });
-  }, [allBrandsWithActive, activeFilters.brands, getBrandSlug]);
+  }, [allBrandsWithActive, displayFilters.brands, getBrandSlug]);
 
   const BRANDS_INITIAL_LIMIT = 8;
   const initialLimit = Math.max(
     BRANDS_INITIAL_LIMIT,
-    activeFilters.brands.length,
+    displayFilters.brands.length,
   );
   const visibleBrands = useMemo(
     () => (showAllBrands ? sortedBrands : sortedBrands.slice(0, initialLimit)),
@@ -411,6 +507,31 @@ export default function ProductsAside({
     });
   };
 
+  // Handle category click with optimistic update
+  const handleCategoryClick = (
+    categorySlug: string | null,
+    parentName?: string,
+  ) => {
+    if (categorySlug === null) {
+      // "All Products" clicked - collapse all parent dropdowns
+      setPendingCategory('all');
+      setExpandedParents(new Set());
+    } else {
+      // Specific category clicked
+      const cleanSlug = categorySlug
+        .replace('/kategoria/', '')
+        .replace(/\//g, '');
+      setPendingCategory(cleanSlug);
+
+      // Set expanded parents to only the clicked category's parent
+      // This closes other parents and opens only the relevant one
+      if (parentName) {
+        setExpandedParents(new Set([parentName]));
+      }
+    }
+    startLoading('filter');
+  };
+
   const toggleBrand = (brandSlug: string) => {
     setLocalFilters((prev) => ({
       ...prev,
@@ -421,6 +542,14 @@ export default function ProductsAside({
   };
 
   const applyFilters = () => {
+    // Optimistic update - show new filter values immediately
+    setPendingFilters({
+      search: localFilters.search.trim(),
+      brands: localFilters.brands,
+      minPrice: localFilters.minPrice,
+      maxPrice: localFilters.maxPrice,
+    });
+
     const params = new URLSearchParams(window.location.search);
     params.delete('page');
 
@@ -454,11 +583,20 @@ export default function ProductsAside({
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
+    startLoading('filter');
     router.push(newUrl, { scroll: false });
     setIsOpen(false);
   };
 
   const clearFilters = () => {
+    // Optimistic update - show cleared filters immediately
+    setPendingFilters({
+      search: '',
+      brands: [],
+      minPrice: 0,
+      maxPrice: centsToPLN(maxPrice),
+    });
+
     const params = new URLSearchParams(window.location.search);
     params.delete('search');
     params.delete('brands');
@@ -476,6 +614,7 @@ export default function ProductsAside({
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
+    startLoading('filter');
     router.push(newUrl, { scroll: false });
     setIsOpen(false);
   };
@@ -489,8 +628,16 @@ export default function ProductsAside({
     activeFilters.minPrice > 0 ||
     activeFilters.maxPrice < Infinity;
 
+  // Use optimistic category for UI state
+  const displayCategoryClean =
+    pendingCategory !== null
+      ? pendingCategory === 'all'
+        ? null
+        : pendingCategory
+      : currentCategoryClean;
+
   const isAllProductsActive =
-    !currentCategoryClean || currentCategoryClean === '';
+    !displayCategoryClean || displayCategoryClean === '';
 
   // ----------------------------------------
   // Render Skeleton Until Initialized
@@ -577,6 +724,7 @@ export default function ProductsAside({
                 className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
                 tabIndex={isAllProductsActive ? -1 : 0}
                 scroll={false}
+                onClick={() => handleCategoryClick(null)}
               >
                 <span className={styles.categoryName}>Wszystkie produkty</span>
                 <span className={styles.categoryCount}>
@@ -588,11 +736,12 @@ export default function ProductsAside({
               {Object.entries(groupedCategories).map(
                 ([parentName, { categories: subCategories }]) => {
                   const isExpanded = expandedParents.has(parentName);
+                  // Use optimistic displayCategoryClean for active state
                   const hasActiveChild = subCategories.some((cat) => {
                     const cleanSlug =
                       cat.slug?.replace('/kategoria/', '').replace(/\//g, '') ||
                       '';
-                    return cleanSlug === currentCategoryClean;
+                    return cleanSlug === displayCategoryClean;
                   });
 
                   return (
@@ -618,7 +767,8 @@ export default function ProductsAside({
                             const cleanSlug = categorySlug
                               .replace('/kategoria/', '')
                               .replace(/\//g, '');
-                            const isActive = currentCategoryClean === cleanSlug;
+                            // Use optimistic displayCategoryClean for active state
+                            const isActive = displayCategoryClean === cleanSlug;
 
                             return (
                               <Link
@@ -627,6 +777,9 @@ export default function ProductsAside({
                                 className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
                                 tabIndex={isActive ? -1 : 0}
                                 scroll={false}
+                                onClick={() =>
+                                  handleCategoryClick(categorySlug, parentName)
+                                }
                               >
                                 <span className={styles.categoryName}>
                                   {category.name}

@@ -1,6 +1,6 @@
-import { BASE_URL } from '@/src/global/constants';
-import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
-import { portableTextToPlainString } from '@/src/global/utils';
+import { BASE_URL } from "@/src/global/constants";
+import type { QueryBrandBySlugResult } from "@/src/global/sanity/sanity.types";
+import { portableTextToPlainString } from "@/src/global/utils";
 
 type Props = {
   brand: QueryBrandBySlugResult;
@@ -39,10 +39,10 @@ export default function BrandSchema({ brand }: Props) {
       : undefined;
 
   const schema = {
-    '@context': 'https://schema.org',
-    '@type': 'Brand',
-    '@id': `${brandUrl}#brand`,
-    name: name || 'Brand',
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    "@id": `${brandUrl}#brand`,
+    name: name || "Brand",
     url: brandUrl,
     ...(plainDescription && { description: plainDescription }),
     ...(logoUrl && { logo: logoUrl }),

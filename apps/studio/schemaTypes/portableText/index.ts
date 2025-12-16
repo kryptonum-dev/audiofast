@@ -1,9 +1,9 @@
-import { LinkIcon } from '@sanity/icons';
-import type { Rule } from 'sanity';
-import { defineArrayMember, defineField } from 'sanity';
+import { LinkIcon } from "@sanity/icons";
+import type { Rule } from "sanity";
+import { defineArrayMember, defineField } from "sanity";
 
-import { CustomInput } from '../../components/custom-input';
-import { toPlainText } from '../../utils/helper';
+import { CustomInput } from "../../components/custom-input";
+import { toPlainText } from "../../utils/helper";
 
 // ----------------------------------------
 // Portable Text Configuration
@@ -11,35 +11,35 @@ import { toPlainText } from '../../utils/helper';
 
 // Default building blocks for the portable text "block" member
 const ALL_STYLES = [
-  { title: 'Normalny', value: 'normal' },
-  { title: 'Nagłówek H1', value: 'h1' },
-  { title: 'Nagłówek H2', value: 'h2' },
-  { title: 'Nagłówek H3', value: 'h3' },
-  { title: 'Nagłówek H4', value: 'h4' },
-  { title: 'Nagłówek H5', value: 'h5' },
-  { title: 'Nagłówek H6', value: 'h6' },
+  { title: "Normalny", value: "normal" },
+  { title: "Nagłówek H1", value: "h1" },
+  { title: "Nagłówek H2", value: "h2" },
+  { title: "Nagłówek H3", value: "h3" },
+  { title: "Nagłówek H4", value: "h4" },
+  { title: "Nagłówek H5", value: "h5" },
+  { title: "Nagłówek H6", value: "h6" },
 ] as const;
 
 const ALL_LISTS = [
-  { title: 'Numerowana', value: 'number' },
-  { title: 'Wypunktowana', value: 'bullet' },
+  { title: "Numerowana", value: "number" },
+  { title: "Wypunktowana", value: "bullet" },
 ] as const;
 
 const ALL_DECORATORS = [
-  { title: 'Pogrubienie', value: 'strong' },
-  { title: 'Kursywa', value: 'em' },
+  { title: "Pogrubienie", value: "strong" },
+  { title: "Kursywa", value: "em" },
 ] as const;
 
 const ALL_ANNOTATIONS = [
   {
-    name: 'customLink',
-    type: 'object' as const,
-    title: 'Link wewnętrzny/zewnętrzny',
+    name: "customLink",
+    type: "object" as const,
+    title: "Link wewnętrzny/zewnętrzny",
     icon: LinkIcon,
     fields: [
       defineField({
-        name: 'customLink',
-        type: 'customUrl',
+        name: "customLink",
+        type: "customUrl",
       }),
     ],
   },
@@ -48,40 +48,40 @@ const ALL_ANNOTATIONS = [
 // Custom component registry
 // To add a new component: Add it here with name/type, export the schema from definitions/index.ts
 const ALL_CUSTOM_COMPONENTS = [
-  { name: 'ptImage', type: 'ptImage' },
-  { name: 'ptMinimalImage', type: 'ptMinimalImage' },
-  { name: 'ptArrowList', type: 'ptArrowList' },
-  { name: 'ptCircleNumberedList', type: 'ptCircleNumberedList' },
-  { name: 'ptCtaSection', type: 'ptCtaSection' },
-  { name: 'ptTwoColumnTable', type: 'ptTwoColumnTable' },
-  { name: 'ptFeaturedProducts', type: 'ptFeaturedProducts' },
-  { name: 'ptQuote', type: 'ptQuote' },
-  { name: 'ptButton', type: 'ptButton' },
-  { name: 'ptHeading', type: 'ptHeading' },
-  { name: 'ptYoutubeVideo', type: 'ptYoutubeVideo' },
-  { name: 'ptVimeoVideo', type: 'ptVimeoVideo' },
-  { name: 'ptPageBreak', type: 'ptPageBreak' },
-  { name: 'ptHorizontalLine', type: 'ptHorizontalLine' },
-  { name: 'ptInlineImage', type: 'ptInlineImage' },
-  { name: 'ptImageSlider', type: 'ptImageSlider' },
-  { name: 'ptReviewEmbed', type: 'ptReviewEmbed' },
+  { name: "ptImage", type: "ptImage" },
+  { name: "ptMinimalImage", type: "ptMinimalImage" },
+  { name: "ptArrowList", type: "ptArrowList" },
+  { name: "ptCircleNumberedList", type: "ptCircleNumberedList" },
+  { name: "ptCtaSection", type: "ptCtaSection" },
+  { name: "ptTwoColumnTable", type: "ptTwoColumnTable" },
+  { name: "ptFeaturedProducts", type: "ptFeaturedProducts" },
+  { name: "ptQuote", type: "ptQuote" },
+  { name: "ptButton", type: "ptButton" },
+  { name: "ptHeading", type: "ptHeading" },
+  { name: "ptYoutubeVideo", type: "ptYoutubeVideo" },
+  { name: "ptVimeoVideo", type: "ptVimeoVideo" },
+  { name: "ptPageBreak", type: "ptPageBreak" },
+  { name: "ptHorizontalLine", type: "ptHorizontalLine" },
+  { name: "ptInlineImage", type: "ptInlineImage" },
+  { name: "ptImageSlider", type: "ptImageSlider" },
+  { name: "ptReviewEmbed", type: "ptReviewEmbed" },
 ] as const;
 
 export type PortableTextInclude = {
-  members?: ReadonlyArray<'block'>;
-  styles?: ReadonlyArray<(typeof ALL_STYLES)[number]['value']>;
-  lists?: ReadonlyArray<(typeof ALL_LISTS)[number]['value']>;
-  decorators?: ReadonlyArray<(typeof ALL_DECORATORS)[number]['value']>;
-  annotations?: ReadonlyArray<(typeof ALL_ANNOTATIONS)[number]['name']>;
+  members?: ReadonlyArray<"block">;
+  styles?: ReadonlyArray<(typeof ALL_STYLES)[number]["value"]>;
+  lists?: ReadonlyArray<(typeof ALL_LISTS)[number]["value"]>;
+  decorators?: ReadonlyArray<(typeof ALL_DECORATORS)[number]["value"]>;
+  annotations?: ReadonlyArray<(typeof ALL_ANNOTATIONS)[number]["name"]>;
 };
 
 export type PortableTextComponentName =
-  (typeof ALL_CUSTOM_COMPONENTS)[number]['name'];
+  (typeof ALL_CUSTOM_COMPONENTS)[number]["name"];
 
 function filterByKey<T extends Record<string, any>, K extends keyof T>(
   items: readonly T[],
   allowed: ReadonlyArray<string> | undefined,
-  key: K
+  key: K,
 ) {
   if (allowed === undefined) return items as T[]; // undefined => all
   if (Array.isArray(allowed) && allowed.length === 0) return [] as T[]; // [] => none
@@ -89,18 +89,18 @@ function filterByKey<T extends Record<string, any>, K extends keyof T>(
 }
 
 function buildBlockMember(include?: PortableTextInclude) {
-  const styles = filterByKey(ALL_STYLES, include?.styles, 'value');
-  const lists = filterByKey(ALL_LISTS, include?.lists, 'value');
+  const styles = filterByKey(ALL_STYLES, include?.styles, "value");
+  const lists = filterByKey(ALL_LISTS, include?.lists, "value");
 
   // For annotations and decorators:
   // - If include object exists: only use what's explicitly specified (default to empty if not specified)
   // - If no include object: use all defaults
   const annotations = include
-    ? filterByKey(ALL_ANNOTATIONS, include.annotations ?? [], 'name')
+    ? filterByKey(ALL_ANNOTATIONS, include.annotations ?? [], "name")
     : [...ALL_ANNOTATIONS];
 
   const decorators = include
-    ? filterByKey(ALL_DECORATORS, include.decorators ?? [], 'value')
+    ? filterByKey(ALL_DECORATORS, include.decorators ?? [], "value")
     : [...ALL_DECORATORS];
 
   // Build marks config
@@ -116,14 +116,14 @@ function buildBlockMember(include?: PortableTextInclude) {
   // Default to only 'normal' style if no styles specified
   const finalStyles = specifiedStyles
     ? styles
-    : [{ title: 'Normalny', value: 'normal' }];
+    : [{ title: "Normalny", value: "normal" }];
 
   return defineArrayMember({
-    name: 'block',
-    type: 'block',
+    name: "block",
+    type: "block",
     styles: finalStyles.length
       ? finalStyles
-      : [{ title: 'Normalny', value: 'normal' }],
+      : [{ title: "Normalny", value: "normal" }],
     // When lists are explicitly specified (even as empty array), use them
     // When not specified at all, don't include the lists property (Sanity default)
     // When include object exists but lists is not in it, explicitly set to empty array
@@ -146,7 +146,7 @@ export const customPortableText = (options?: {
   description?: string;
   validation?: (rule: Rule) => unknown | undefined;
   optional?: boolean;
-  type?: 'default' | 'heading';
+  type?: "default" | "heading";
   include?: PortableTextInclude;
   /** Allowlisted custom component types to include in this field */
   components?: ReadonlyArray<PortableTextComponentName>;
@@ -175,26 +175,26 @@ export const customPortableText = (options?: {
 
   // Determine include config (heading enforces bold-only, no lists/annotations, normal style)
   const effectiveInclude: PortableTextInclude | undefined =
-    variant === 'heading'
+    variant === "heading"
       ? {
-          styles: ['normal'],
+          styles: ["normal"],
           lists: [],
-          decorators: ['strong'],
+          decorators: ["strong"],
           annotations: [],
         }
       : include;
 
   // Build base members (block)
   const members: ReturnType<typeof defineArrayMember>[] = (
-    effectiveInclude?.members ?? ['block']
-  ).includes('block')
+    effectiveInclude?.members ?? ["block"]
+  ).includes("block")
     ? [buildBlockMember(effectiveInclude)]
     : [];
 
   // Extend with allowed custom components (opt-in only)
   // If components is undefined/not specified, default to empty array (no custom components)
   const allowedComponents = components
-    ? filterByKey(ALL_CUSTOM_COMPONENTS, components, 'name')
+    ? filterByKey(ALL_CUSTOM_COMPONENTS, components, "name")
     : [];
 
   allowedComponents.forEach((component) => {
@@ -202,7 +202,7 @@ export const customPortableText = (options?: {
       defineArrayMember({
         name: component.name,
         type: component.type,
-      })
+      }),
     );
   });
 
@@ -210,9 +210,9 @@ export const customPortableText = (options?: {
     members.length > 0 ? members : [buildBlockMember(effectiveInclude)];
 
   const userMaxLength =
-    typeof maxLengthProp === 'number'
+    typeof maxLengthProp === "number"
       ? maxLengthProp
-      : typeof maxLenghtAlias === 'number'
+      : typeof maxLenghtAlias === "number"
         ? maxLenghtAlias
         : undefined;
 
@@ -221,9 +221,9 @@ export const customPortableText = (options?: {
     let composed = rule.custom((value, context) => {
       const isEmpty = !value || !Array.isArray(value) || value.length === 0;
       if (isEmpty) {
-        return optional ? true : 'To pole jest wymagane';
+        return optional ? true : "To pole jest wymagane";
       }
-      if (typeof userMaxLength === 'number' && userMaxLength > 0) {
+      if (typeof userMaxLength === "number" && userMaxLength > 0) {
         const plain = toPlainText(value as any);
         const len = plain.trim().length;
         if (len > userMaxLength) {
@@ -234,7 +234,7 @@ export const customPortableText = (options?: {
     }) as unknown as Rule;
 
     // Allow caller to chain more rules if needed
-    if (typeof validation === 'function') {
+    if (typeof validation === "function") {
       composed = validation(composed) as Rule;
     }
 
@@ -246,25 +246,25 @@ export const customPortableText = (options?: {
     ? [
         {
           _key: `initial-block-${Math.random().toString(36).substr(2, 9)}`,
-          _type: 'block',
+          _type: "block",
           children: [
             {
               _key: `initial-span-${Math.random().toString(36).substr(2, 9)}`,
-              _type: 'span',
+              _type: "span",
               marks: [],
               text: initialValueText,
             },
           ],
           markDefs: [],
-          style: 'normal',
+          style: "normal",
         },
       ]
     : undefined;
 
   return defineField({
     ...rest,
-    name: name ?? 'portableText',
-    type: 'array',
+    name: name ?? "portableText",
+    type: "array",
     of: ofMembers,
     validation: finalValidation as any,
     ...(initialValueBlocks ? { initialValue: initialValueBlocks } : {}),

@@ -32,11 +32,13 @@
 **Created:** `apps/web/RESEND_SETUP.md` with complete environment variable documentation.
 
 **Required Variables:**
+
 - `RESEND_API_KEY` - Resend API key (starts with `re_`)
 - `RESEND_FROM_EMAIL` - Verified sender email address
 - `RESEND_REPLY_TO` - (Optional) Reply-to address
 
-**Action Required:** 
+**Action Required:**
+
 - Create `.env.local` file in `apps/web/` with these variables
 - Add to Vercel environment variables for production deployments
 - Verify sending domain in Resend dashboard before production use
@@ -44,6 +46,7 @@
 ### 3. Package Installation
 
 **Installed packages:**
+
 - ✅ `resend@6.4.2` - Resend API client
 - ✅ `@portabletext/to-html@4.0.1` - Portable Text to HTML converter
 
@@ -54,12 +57,14 @@
 **Existing logger:** `apps/web/src/global/logger.ts`
 
 **Available functions:**
+
 - `logInfo(message, context?)` - Info logs (suppressed in production)
 - `logWarn(message, context?)` - Warning logs
 - `logError(message, error?, context?)` - Error logs with structured context
 - `withErrorLogging(label, operation, context?)` - Async operation wrapper
 
 **Implementation plan:**
+
 - Use `logError()` in route handler when Resend API calls fail
 - Include `formKey` and Resend request ID in context for debugging
 - Use structured context objects for better log parsing
@@ -68,6 +73,7 @@
 ## 📋 Next Steps
 
 Phase 0 is complete. Ready to proceed with:
+
 - **Phase 1**: Sanity CMS Configuration (newsletter settings singleton)
 - **Phase 2**: Query & Types Layer (GROQ queries and TypeScript types)
 - **Phase 3**: Server Email Service (route handler and email rendering)
@@ -79,4 +85,3 @@ Phase 0 is complete. Ready to proceed with:
 - Form state management is already implemented (`idle`, `loading`, `success`, `error`)
 - Analytics tracking is in place for ContactForm and FaqSection forms
 - NewsletterForm does not currently track analytics (may want to add in Phase 4)
-

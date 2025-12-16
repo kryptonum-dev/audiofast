@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { LinkIcon } from '@sanity/icons';
+import { LinkIcon } from "@sanity/icons";
 import {
   PortableTextEditable,
   PortableTextEditor,
@@ -11,12 +11,12 @@ import {
   type RenderDecoratorFunction,
   type RenderListItemFunction,
   type RenderStyleFunction,
-} from '@sanity/portable-text-editor';
-import { Box, Button, Card, Flex, Stack, Text, TextInput } from '@sanity/ui';
-import { useCallback, useMemo, useState } from 'react';
-import type { PortableTextBlock } from 'sanity';
+} from "@sanity/portable-text-editor";
+import { Box, Button, Card, Flex, Stack, Text, TextInput } from "@sanity/ui";
+import { useCallback, useMemo, useState } from "react";
+import type { PortableTextBlock } from "sanity";
 
-import { generateKey } from './types';
+import { generateKey } from "./types";
 
 type CellEditorProps = {
   initialContent: PortableTextBlock[];
@@ -26,45 +26,45 @@ type CellEditorProps = {
 
 // Schema type definition for the Portable Text editor
 const CELL_SCHEMA_TYPE = {
-  name: 'cellContent',
-  type: 'array' as const,
+  name: "cellContent",
+  type: "array" as const,
   of: [
     {
-      name: 'block',
-      type: 'block' as const,
-      styles: [{ title: 'Normal', value: 'normal' as const }],
+      name: "block",
+      type: "block" as const,
+      styles: [{ title: "Normal", value: "normal" as const }],
       lists: [
-        { title: 'Bullet', value: 'bullet' as const },
-        { title: 'Number', value: 'number' as const },
+        { title: "Bullet", value: "bullet" as const },
+        { title: "Number", value: "number" as const },
       ],
       marks: {
         decorators: [
-          { title: 'Bold', value: 'strong' as const },
-          { title: 'Italic', value: 'em' as const },
+          { title: "Bold", value: "strong" as const },
+          { title: "Italic", value: "em" as const },
         ],
         annotations: [
           {
-            name: 'link',
-            type: 'object' as const,
-            title: 'Link',
+            name: "link",
+            type: "object" as const,
+            title: "Link",
             icon: LinkIcon,
             fields: [
               {
-                name: 'href',
-                type: 'url' as const,
-                title: 'URL',
+                name: "href",
+                type: "url" as const,
+                title: "URL",
               },
               {
-                name: 'blank',
-                type: 'boolean' as const,
-                title: 'Open in new tab',
+                name: "blank",
+                type: "boolean" as const,
+                title: "Open in new tab",
                 initialValue: true,
               },
             ],
           },
         ],
       },
-      children: [{ name: 'span', type: 'span' as const }],
+      children: [{ name: "span", type: "span" as const }],
     },
   ],
 };
@@ -72,15 +72,13 @@ const CELL_SCHEMA_TYPE = {
 // Render functions for the Portable Text editor
 const renderBlock: RenderBlockFunction = (props) => {
   const { children, value } = props;
-  const style = value.style || 'normal';
+  const style = value.style || "normal";
 
-  if (style === 'normal') {
-    return (
-      <p style={{ margin: '0.5em 0', lineHeight: 1.5 }}>{children}</p>
-    );
+  if (style === "normal") {
+    return <p style={{ margin: "0.5em 0", lineHeight: 1.5 }}>{children}</p>;
   }
 
-  return <p style={{ margin: '0.5em 0' }}>{children}</p>;
+  return <p style={{ margin: "0.5em 0" }}>{children}</p>;
 };
 
 const renderChild: RenderChildFunction = (props) => {
@@ -91,9 +89,9 @@ const renderDecorator: RenderDecoratorFunction = (props) => {
   const { children, value } = props;
 
   switch (value) {
-    case 'strong':
+    case "strong":
       return <strong>{children}</strong>;
-    case 'em':
+    case "em":
       return <em>{children}</em>;
     default:
       return <>{children}</>;
@@ -103,13 +101,13 @@ const renderDecorator: RenderDecoratorFunction = (props) => {
 const renderAnnotation: RenderAnnotationFunction = (props) => {
   const { children, value } = props;
 
-  if (value._type === 'link') {
+  if (value._type === "link") {
     return (
       <span
         style={{
-          color: 'var(--card-link-color)',
-          textDecoration: 'underline',
-          cursor: 'pointer',
+          color: "var(--card-link-color)",
+          textDecoration: "underline",
+          cursor: "pointer",
         }}
         title={value.href}
       >
@@ -122,7 +120,7 @@ const renderAnnotation: RenderAnnotationFunction = (props) => {
 };
 
 const renderListItem: RenderListItemFunction = (props) => {
-  return <li style={{ marginLeft: '1.5em' }}>{props.children}</li>;
+  return <li style={{ marginLeft: "1.5em" }}>{props.children}</li>;
 };
 
 const renderStyle: RenderStyleFunction = (props) => {
@@ -141,7 +139,7 @@ function LinkEditor({
   onChange: (value: { href: string; blank: boolean }) => void;
   onClose: () => void;
 }) {
-  const [href, setHref] = useState(value.href || '');
+  const [href, setHref] = useState(value.href || "");
   const [blank, setBlank] = useState(value.blank ?? true);
 
   const handleSave = () => {
@@ -150,9 +148,21 @@ function LinkEditor({
   };
 
   return (
-    <Card padding={3} radius={2} shadow={2} style={{ position: 'absolute', zIndex: 100, background: 'var(--card-bg-color)', minWidth: '300px' }}>
+    <Card
+      padding={3}
+      radius={2}
+      shadow={2}
+      style={{
+        position: "absolute",
+        zIndex: 100,
+        background: "var(--card-bg-color)",
+        minWidth: "300px",
+      }}
+    >
       <Stack space={3}>
-        <Text size={1} weight="semibold">Dodaj link</Text>
+        <Text size={1} weight="semibold">
+          Dodaj link
+        </Text>
         <TextInput
           value={href}
           onChange={(e) => setHref(e.currentTarget.value)}
@@ -166,13 +176,18 @@ function LinkEditor({
             checked={blank}
             onChange={(e) => setBlank(e.target.checked)}
           />
-          <label htmlFor="blank" style={{ fontSize: '13px' }}>
+          <label htmlFor="blank" style={{ fontSize: "13px" }}>
             Otwórz w nowej karcie
           </label>
         </Flex>
         <Flex gap={2} justify="flex-end">
           <Button text="Anuluj" mode="ghost" onClick={onClose} fontSize={1} />
-          <Button text="Zapisz" tone="primary" onClick={handleSave} fontSize={1} />
+          <Button
+            text="Zapisz"
+            tone="primary"
+            onClick={handleSave}
+            fontSize={1}
+          />
         </Flex>
       </Stack>
     </Card>
@@ -183,21 +198,25 @@ function LinkEditor({
  * Portable Text Cell Editor Component
  * Provides a proper rich text editing experience for table cells
  */
-export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps) {
+export function CellEditor({
+  initialContent,
+  onSave,
+  onCancel,
+}: CellEditorProps) {
   // Ensure content has valid keys
   const normalizedContent = useMemo(() => {
     if (!initialContent || initialContent.length === 0) {
       return [
         {
           _key: generateKey(),
-          _type: 'block',
-          style: 'normal',
+          _type: "block",
+          style: "normal",
           markDefs: [],
           children: [
             {
               _key: generateKey(),
-              _type: 'span',
-              text: '',
+              _type: "span",
+              text: "",
               marks: [],
             },
           ],
@@ -217,7 +236,8 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
     })) as PortableTextBlock[];
   }, [initialContent]);
 
-  const [content, setContent] = useState<PortableTextBlock[]>(normalizedContent);
+  const [content, setContent] =
+    useState<PortableTextBlock[]>(normalizedContent);
   const [editor, setEditor] = useState<PortableTextEditor | null>(null);
   const [linkEditor, setLinkEditor] = useState<{
     value: { href?: string; blank?: boolean };
@@ -229,7 +249,7 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
         setContent(change.snapshot);
       }
     },
-    []
+    [],
   );
 
   const handleSave = useCallback(() => {
@@ -239,25 +259,25 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
   // Toolbar actions
   const handleBold = useCallback(() => {
     if (!editor) return;
-    PortableTextEditor.toggleMark(editor, 'strong');
+    PortableTextEditor.toggleMark(editor, "strong");
     PortableTextEditor.focus(editor);
   }, [editor]);
 
   const handleItalic = useCallback(() => {
     if (!editor) return;
-    PortableTextEditor.toggleMark(editor, 'em');
+    PortableTextEditor.toggleMark(editor, "em");
     PortableTextEditor.focus(editor);
   }, [editor]);
 
   const handleBulletList = useCallback(() => {
     if (!editor) return;
-    PortableTextEditor.toggleList(editor, 'bullet');
+    PortableTextEditor.toggleList(editor, "bullet");
     PortableTextEditor.focus(editor);
   }, [editor]);
 
   const handleNumberList = useCallback(() => {
     if (!editor) return;
-    PortableTextEditor.toggleList(editor, 'number');
+    PortableTextEditor.toggleList(editor, "number");
     PortableTextEditor.focus(editor);
   }, [editor]);
 
@@ -269,7 +289,7 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
 
     // Check if there's an existing link
     const activeAnnotations = PortableTextEditor.activeAnnotations(editor);
-    const existingLink = activeAnnotations.find((a) => a._type === 'link');
+    const existingLink = activeAnnotations.find((a) => a._type === "link");
 
     if (existingLink) {
       // Remove existing link
@@ -288,13 +308,13 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
       const key = generateKey();
       PortableTextEditor.addAnnotation(
         editor,
-        { _type: 'link', name: 'link' } as any,
-        { _key: key, href: value.href, blank: value.blank }
+        { _type: "link", name: "link" } as any,
+        { _key: key, href: value.href, blank: value.blank },
       );
       PortableTextEditor.focus(editor);
       setLinkEditor(null);
     },
-    [editor]
+    [editor],
   );
 
   const editableProps: Partial<PortableTextEditableProps> = useMemo(
@@ -306,14 +326,14 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
       renderListItem,
       renderStyle,
       style: {
-        outline: 'none',
-        minHeight: '150px',
-        padding: '12px',
-        fontSize: '14px',
-        lineHeight: '1.5',
+        outline: "none",
+        minHeight: "150px",
+        padding: "12px",
+        fontSize: "14px",
+        lineHeight: "1.5",
       },
     }),
-    []
+    [],
   );
 
   return (
@@ -321,14 +341,14 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
       <Stack space={4}>
         {/* Toolbar */}
         <Card padding={2} border radius={2}>
-          <Flex gap={1} wrap="wrap" style={{ position: 'relative' }}>
+          <Flex gap={1} wrap="wrap" style={{ position: "relative" }}>
             <Button
               text="B"
               mode="ghost"
               padding={2}
               fontSize={1}
               onClick={handleBold}
-              style={{ fontWeight: 'bold' }}
+              style={{ fontWeight: "bold" }}
               title="Pogrubienie"
             />
             <Button
@@ -337,25 +357,37 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
               padding={2}
               fontSize={1}
               onClick={handleItalic}
-              style={{ fontStyle: 'italic' }}
+              style={{ fontStyle: "italic" }}
               title="Kursywa"
             />
-            <Box style={{ width: '1px', background: 'var(--card-border-color)', margin: '0 4px' }} />
+            <Box
+              style={{
+                width: "1px",
+                background: "var(--card-border-color)",
+                margin: "0 4px",
+              }}
+            />
             <Button
-              icon={() => <span style={{ fontSize: '12px' }}>•</span>}
+              icon={() => <span style={{ fontSize: "12px" }}>•</span>}
               mode="ghost"
               padding={2}
               onClick={handleBulletList}
               title="Lista wypunktowana"
             />
             <Button
-              icon={() => <span style={{ fontSize: '12px' }}>1.</span>}
+              icon={() => <span style={{ fontSize: "12px" }}>1.</span>}
               mode="ghost"
               padding={2}
               onClick={handleNumberList}
               title="Lista numerowana"
             />
-            <Box style={{ width: '1px', background: 'var(--card-border-color)', margin: '0 4px' }} />
+            <Box
+              style={{
+                width: "1px",
+                background: "var(--card-border-color)",
+                margin: "0 4px",
+              }}
+            />
             <Button
               icon={LinkIcon}
               mode="ghost"
@@ -387,7 +419,8 @@ export function CellEditor({ initialContent, onSave, onCancel }: CellEditorProps
 
         {/* Hints */}
         <Text size={1} muted>
-          Wskazówka: Zaznacz tekst, aby sformatować. Obsługiwane: pogrubienie, kursywa, linki, listy.
+          Wskazówka: Zaznacz tekst, aby sformatować. Obsługiwane: pogrubienie,
+          kursywa, linki, listy.
         </Text>
 
         {/* Actions */}

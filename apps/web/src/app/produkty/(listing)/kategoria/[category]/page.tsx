@@ -1,42 +1,44 @@
-import { cacheLife } from 'next/cache';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { cacheLife } from "next/cache";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
-import CustomFiltersBar from '@/src/components/products/CustomFiltersBar';
-import ProductsAside from '@/src/components/products/ProductsAside';
-import ProductsListing from '@/src/components/products/ProductsListing';
-import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
-import styles from '@/src/components/products/ProductsListing/styles.module.scss';
-import SortDropdown from '@/src/components/products/SortDropdown';
-import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
-import { PageBuilder } from '@/src/components/shared/PageBuilder';
-import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
+import CustomFiltersBar from "@/src/components/products/CustomFiltersBar";
+import ProductsAside from "@/src/components/products/ProductsAside";
+import ProductsListing from "@/src/components/products/ProductsListing";
+import ProductsListingSkeleton from "@/src/components/products/ProductsListing/ProductsListingSkeleton";
+import styles from "@/src/components/products/ProductsListing/styles.module.scss";
+import ProductsListingContainer from "@/src/components/products/ProductsListingContainer";
+import { ProductsLoadingProvider } from "@/src/components/products/ProductsLoadingContext";
+import SortDropdown from "@/src/components/products/SortDropdown";
+import CollectionPageSchema from "@/src/components/schema/CollectionPageSchema";
+import { PageBuilder } from "@/src/components/shared/PageBuilder";
+import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
 import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
-} from '@/src/global/constants';
-import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+} from "@/src/global/constants";
+import { logWarn } from "@/src/global/logger";
+import { sanityFetch } from "@/src/global/sanity/fetch";
 import {
   queryAllProductsFilterMetadata,
   queryProductsPageContent,
-} from '@/src/global/sanity/query';
+} from "@/src/global/sanity/query";
 import type {
   QueryAllProductsFilterMetadataResult,
   QueryProductsPageContentResult,
-} from '@/src/global/sanity/sanity.types';
-import { getSEOMetadata } from '@/src/global/seo';
+} from "@/src/global/sanity/sanity.types";
+import { getSEOMetadata } from "@/src/global/seo";
 import {
   extractRawCustomFilters,
   slugifyFilterName,
   validateCustomFilters,
-} from '@/src/global/utils';
+} from "@/src/global/utils";
 
 // Type for category content (GROQ select() returns this or null)
 // Generated types incorrectly infer `null` - this extends the default content type
 type CategoryContentType = NonNullable<
-  QueryProductsPageContentResult['defaultContent']
+  QueryProductsPageContentResult["defaultContent"]
 > & {
   customFilters?: string[];
   parentCategory?: {
@@ -65,24 +67,24 @@ type CategoryPageProps = {
 
 // Shared filter metadata (same for all category pages)
 async function getStaticFilterMetadata() {
-  'use cache';
-  cacheLife('hours');
+  "use cache";
+  cacheLife("hours");
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ['products'],
+    tags: ["products"],
   });
 }
 
 // Page content (handles both default and category-specific content)
 async function getPageContent(categorySlug: string) {
-  'use cache';
-  cacheLife('hours');
+  "use cache";
+  cacheLife("hours");
 
   return sanityFetch<QueryProductsPageContentResult>({
     query: queryProductsPageContent,
     params: { category: `/kategoria/${categorySlug}/` },
-    tags: ['products', 'productCategorySub'],
+    tags: ["products", "productCategorySub"],
   });
 }
 
@@ -96,7 +98,7 @@ export async function generateStaticParams() {
     filterMetadata?.categories
       ?.filter((cat) => cat.slug)
       .map((cat) => ({
-        category: cat.slug?.replace('/kategoria/', '').replace(/\/$/, '') || '',
+        category: cat.slug?.replace("/kategoria/", "").replace(/\/$/, "") || "",
       })) || []
   );
 }
@@ -181,18 +183,18 @@ export default async function CategoryPage({
   // Build current search params for CustomFiltersBar
   const currentSearchParams = new URLSearchParams();
   if (searchParamsData.search)
-    currentSearchParams.set('search', String(searchParamsData.search));
+    currentSearchParams.set("search", String(searchParamsData.search));
   if (searchParamsData.brands)
     currentSearchParams.set(
-      'brands',
+      "brands",
       Array.isArray(searchParamsData.brands)
-        ? searchParamsData.brands.join(',')
+        ? searchParamsData.brands.join(",")
         : searchParamsData.brands,
     );
   if (searchParamsData.minPrice)
-    currentSearchParams.set('minPrice', String(searchParamsData.minPrice));
+    currentSearchParams.set("minPrice", String(searchParamsData.minPrice));
   if (searchParamsData.maxPrice)
-    currentSearchParams.set('maxPrice', String(searchParamsData.maxPrice));
+    currentSearchParams.set("maxPrice", String(searchParamsData.maxPrice));
   activeCustomFilters.forEach((filter) => {
     currentSearchParams.set(slugifyFilterName(filter.filterName), filter.value);
   });
@@ -230,8 +232,8 @@ export default async function CategoryPage({
 
   const breadcrumbsData = [
     {
-      name: defaultContent.name || 'Produkty',
-      path: '/produkty/',
+      name: defaultContent.name || "Produkty",
+      path: "/produkty/",
     },
     {
       name: categoryContent?.name || categorySlug,
@@ -260,48 +262,52 @@ export default async function CategoryPage({
         button={null}
       />
 
-      <section
-        className={`${styles.productsListing} max-width`}
-        data-has-filters={processedFilterValues.length > 0}
-      >
-        {/* Client-side computed sidebar */}
-        <ProductsAside
-          allProductsMetadata={filterMetadata.products || []}
-          allCategories={filterMetadata.categories || []}
-          allBrands={filterMetadata.brands || []}
-          globalMaxPrice={filterMetadata.globalMaxPrice || 100000}
-          basePath={`/produkty/kategoria/${categorySlug}/`}
-          currentCategory={`/kategoria/${categorySlug}/`}
-          headingLevel="h2"
-        />
-
-        {/* Custom filters bar (for categories with custom filters) */}
-        {processedFilterValues.length > 0 && (
-          <CustomFiltersBar
-            customFilters={processedFilterValues}
-            activeFilters={activeCustomFilters}
+      <ProductsLoadingProvider>
+        <section
+          className={`${styles.productsListing} max-width`}
+          data-has-filters={processedFilterValues.length > 0}
+        >
+          {/* Client-side computed sidebar */}
+          <ProductsAside
+            allProductsMetadata={filterMetadata.products || []}
+            allCategories={filterMetadata.categories || []}
+            allBrands={filterMetadata.brands || []}
+            globalMaxPrice={filterMetadata.globalMaxPrice || 100000}
             basePath={`/produkty/kategoria/${categorySlug}/`}
-            currentSearchParams={currentSearchParams}
+            currentCategory={`/kategoria/${categorySlug}/`}
+            headingLevel="h2"
           />
-        )}
 
-        <SortDropdown
-          options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
-          basePath={`/produkty/kategoria/${categorySlug}/`}
-          defaultValue="newest"
-        />
+          {/* Custom filters bar (for categories with custom filters) */}
+          {processedFilterValues.length > 0 && (
+            <CustomFiltersBar
+              customFilters={processedFilterValues}
+              activeFilters={activeCustomFilters}
+              basePath={`/produkty/kategoria/${categorySlug}/`}
+              currentSearchParams={currentSearchParams}
+            />
+          )}
 
-        {/* Products listing in Suspense */}
-        <Suspense fallback={<ProductsListingSkeleton />}>
-          <ProductsListing
-            searchParams={searchParams}
+          <SortDropdown
+            options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
             basePath={`/produkty/kategoria/${categorySlug}/`}
-            category={`/kategoria/${categorySlug}/`}
-            availableCustomFilters={availableCustomFilters}
-            defaultSortBy="newest"
+            defaultValue="newest"
           />
-        </Suspense>
-      </section>
+
+          {/* Products listing - container shows overlay skeleton on filter changes */}
+          <ProductsListingContainer>
+            <Suspense fallback={<ProductsListingSkeleton />}>
+              <ProductsListing
+                searchParams={searchParams}
+                basePath={`/produkty/kategoria/${categorySlug}/`}
+                category={`/kategoria/${categorySlug}/`}
+                availableCustomFilters={availableCustomFilters}
+                defaultSortBy="newest"
+              />
+            </Suspense>
+          </ProductsListingContainer>
+        </section>
+      </ProductsLoadingProvider>
 
       <PageBuilder pageBuilder={pageBuilderSections} />
     </>

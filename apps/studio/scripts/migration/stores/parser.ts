@@ -3,7 +3,7 @@
  * Extracts dealer records from SQL INSERT statements
  */
 
-import type { DealerRecord } from './types';
+import type { DealerRecord } from "./types";
 
 /**
  * Split the VALUES string into individual record strings
@@ -11,14 +11,14 @@ import type { DealerRecord } from './types';
  */
 function splitRecords(valuesStr: string): string[] {
   const records: string[] = [];
-  let current = '';
+  let current = "";
   let depth = 0;
   let inQuotes = false;
-  let quoteChar = '';
+  let quoteChar = "";
 
   for (let i = 0; i < valuesStr.length; i++) {
     const char = valuesStr[i];
-    const nextChar = i + 1 < valuesStr.length ? valuesStr[i + 1] : '';
+    const nextChar = i + 1 < valuesStr.length ? valuesStr[i + 1] : "";
 
     // Handle quote state
     if (!inQuotes && (char === "'" || char === '"')) {
@@ -42,21 +42,21 @@ function splitRecords(valuesStr: string): string[] {
 
     // Track parentheses depth (only when not in quotes)
     if (!inQuotes) {
-      if (char === '(') {
+      if (char === "(") {
         if (depth === 0) {
           // Starting a new record, don't include the opening paren
           depth++;
           continue;
         }
         depth++;
-      } else if (char === ')') {
+      } else if (char === ")") {
         depth--;
         if (depth === 0) {
           // End of record
           if (current.trim()) {
             records.push(current.trim());
           }
-          current = '';
+          current = "";
           continue;
         }
       }
@@ -88,15 +88,15 @@ export function parseDealersFromSQL(sqlContent: string): DealerRecord[] {
   const startMatch = insertRegex.exec(sqlContent);
 
   if (!startMatch) {
-    console.error('Could not find Dealer INSERT statement in SQL file');
+    console.error("Could not find Dealer INSERT statement in SQL file");
     return dealers;
   }
 
   // Find the end of the VALUES clause (ends with semicolon followed by newline or end of section)
   const startIndex = startMatch.index + startMatch[0].length;
-  let endIndex = sqlContent.indexOf(';\n', startIndex);
+  let endIndex = sqlContent.indexOf(";\n", startIndex);
   if (endIndex === -1) {
-    endIndex = sqlContent.indexOf(';', startIndex);
+    endIndex = sqlContent.indexOf(";", startIndex);
   }
 
   const valuesStr = sqlContent.substring(startIndex, endIndex);
@@ -113,7 +113,7 @@ export function parseDealersFromSQL(sqlContent: string): DealerRecord[] {
         dealers.push(record);
       }
     } catch (error) {
-      console.error('Error parsing record:', error);
+      console.error("Error parsing record:", error);
     }
   }
 
@@ -128,7 +128,9 @@ function parseRecordValues(valuesString: string): DealerRecord | null {
   const values = splitCSVValues(valuesString);
 
   if (values.length < 15) {
-    console.warn(`Record has insufficient fields (${values.length}): ${valuesString.substring(0, 100)}...`);
+    console.warn(
+      `Record has insufficient fields (${values.length}): ${valuesString.substring(0, 100)}...`,
+    );
     return null;
   }
 
@@ -156,9 +158,9 @@ function parseRecordValues(valuesString: string): DealerRecord | null {
  */
 function splitCSVValues(input: string): string[] {
   const values: string[] = [];
-  let current = '';
+  let current = "";
   let inQuotes = false;
-  let quoteChar = '';
+  let quoteChar = "";
 
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
@@ -180,9 +182,9 @@ function splitCSVValues(input: string): string[] {
       continue;
     }
 
-    if (!inQuotes && char === ',') {
+    if (!inQuotes && char === ",") {
       values.push(current.trim());
-      current = '';
+      current = "";
       continue;
     }
 
@@ -199,18 +201,20 @@ function splitCSVValues(input: string): string[] {
  * Clean a string value by removing quotes
  */
 function cleanStringValue(value: string): string {
-  if (!value) return '';
-  
+  if (!value) return "";
+
   // Remove surrounding quotes if present
   let cleaned = value.trim();
-  if ((cleaned.startsWith("'") && cleaned.endsWith("'")) ||
-      (cleaned.startsWith('"') && cleaned.endsWith('"'))) {
+  if (
+    (cleaned.startsWith("'") && cleaned.endsWith("'")) ||
+    (cleaned.startsWith('"') && cleaned.endsWith('"'))
+  ) {
     cleaned = cleaned.slice(1, -1);
   }
-  
+
   // Handle escaped quotes
   cleaned = cleaned.replace(/''/g, "'").replace(/""/g, '"');
-  
+
   return cleaned;
 }
 
@@ -219,9 +223,8 @@ function cleanStringValue(value: string): string {
  */
 function parseNullableString(value: string): string | null {
   const cleaned = value.trim().toUpperCase();
-  if (cleaned === 'NULL' || cleaned === '') {
+  if (cleaned === "NULL" || cleaned === "") {
     return null;
   }
   return cleanStringValue(value);
 }
-

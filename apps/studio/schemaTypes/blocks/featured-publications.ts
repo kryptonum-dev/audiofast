@@ -1,36 +1,36 @@
-import { Highlighter } from 'lucide-react';
-import { defineField, defineType } from 'sanity';
+import { Highlighter } from "lucide-react";
+import { defineField, defineType } from "sanity";
 
-import { toPlainText } from '../../utils/helper';
-import { customPortableText } from '../portableText';
+import { toPlainText } from "../../utils/helper";
+import { customPortableText } from "../portableText";
 
-const title = 'Wyróżnione publikacje';
+const title = "Wyróżnione publikacje";
 
 export const featuredPublications = defineType({
-  name: 'featuredPublications',
+  name: "featuredPublications",
   title,
   icon: Highlighter,
-  type: 'object',
+  type: "object",
   description:
-    'Sekcja z karuzelą wyróżnionych publikacji - artykułów blogowych i recenzji',
+    "Sekcja z karuzelą wyróżnionych publikacji - artykułów blogowych i recenzji",
   fields: [
     customPortableText({
-      name: 'heading',
-      title: 'Nagłówek sekcji',
+      name: "heading",
+      title: "Nagłówek sekcji",
       description:
         'Główny nagłówek sekcji wyróżnionych publikacji (np. "Wyróżnione publikacje")',
-      type: 'heading',
+      type: "heading",
     }),
     defineField({
-      name: 'publications',
-      title: 'Wyróżnione publikacje',
-      type: 'array',
+      name: "publications",
+      title: "Wyróżnione publikacje",
+      type: "array",
       description:
-        'Wybierz publikacje do wyświetlenia w karuzeli (5-10 elementów)',
+        "Wybierz publikacje do wyświetlenia w karuzeli (5-10 elementów)",
       of: [
         {
-          type: 'reference',
-          to: [{ type: 'blog-article' }, { type: 'review' }],
+          type: "reference",
+          to: [{ type: "blog-article" }, { type: "review" }],
           options: {
             disableNew: true,
             filter: ({ parent }) => {
@@ -47,16 +47,16 @@ export const featuredPublications = defineType({
         },
       ],
       validation: (Rule) => [
-        Rule.min(5).error('Minimum 5 publikacji'),
-        Rule.max(10).error('Maksimum 10 publikacji'),
-        Rule.required().error('Publikacje są wymagane'),
-        Rule.unique().error('Każda publikacja może być wybrana tylko raz'),
+        Rule.min(5).error("Minimum 5 publikacji"),
+        Rule.max(10).error("Maksimum 10 publikacji"),
+        Rule.required().error("Publikacje są wymagane"),
+        Rule.unique().error("Każda publikacja może być wybrana tylko raz"),
       ],
     }),
   ],
   preview: {
     select: {
-      heading: 'heading',
+      heading: "heading",
     },
     prepare: ({ heading }) => {
       return {

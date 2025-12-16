@@ -232,10 +232,10 @@ In `apps/studio/schemaTypes/documents/collections/product.ts`, related products 
 ```typescript
 // Currently NOT in schema - needs to be added
 defineField({
-  name: 'relatedProducts',
-  title: 'Powiązane produkty',
-  type: 'array',
-  of: [{ type: 'reference', to: [{ type: 'product' }] }],
+  name: "relatedProducts",
+  title: "Powiązane produkty",
+  type: "array",
+  of: [{ type: "reference", to: [{ type: "product" }] }],
   validation: (Rule) => Rule.max(4),
 });
 ```
@@ -353,16 +353,16 @@ interface ListValue {
 }
 
 interface Payload {
-  mode: 'replace' | 'merge';
+  mode: "replace" | "merge";
   variants: VariantPayload[];
 }
 
 async function main(workbook: ExcelScript.Workbook): Promise<void> {
   // Configuration
-  const SUPABASE_URL = 'https://xuwapsacaymdemmvblak.supabase.co';
+  const SUPABASE_URL = "https://xuwapsacaymdemmvblak.supabase.co";
   const ENDPOINT = `${SUPABASE_URL}/functions/v1/pricing-ingest`;
-  const ANON_KEY = '<ANON_KEY>'; // Public key
-  const EXCEL_TOKEN = '<EXCEL_PUBLISH_TOKEN>'; // Secret token
+  const ANON_KEY = "<ANON_KEY>"; // Public key
+  const EXCEL_TOKEN = "<EXCEL_PUBLISH_TOKEN>"; // Secret token
 
   try {
     // 1. Read all sheets
@@ -376,11 +376,11 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
 
     // 3. Send to Supabase
     const response = await fetch(ENDPOINT, {
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Bearer ${ANON_KEY}`,
-        'X-Excel-Token': EXCEL_TOKEN,
-        'Content-Type': 'application/json; charset=utf-8',
+        "X-Excel-Token": EXCEL_TOKEN,
+        "Content-Type": "application/json; charset=utf-8",
       },
       body: JSON.stringify(payload),
     });
@@ -391,15 +391,15 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
     }
 
     const result = await response.json();
-    console.log('Success:', JSON.stringify(result, null, 2));
+    console.log("Success:", JSON.stringify(result, null, 2));
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     throw error;
   }
 }
 
 function readProduktySheet(workbook: ExcelScript.Workbook): ProductRow[] {
-  const sheet = workbook.getWorksheet('Produkty');
+  const sheet = workbook.getWorksheet("Produkty");
   if (!sheet) throw new Error('Sheet "Produkty" not found');
 
   const usedRange = sheet.getUsedRange();
@@ -409,14 +409,14 @@ function readProduktySheet(workbook: ExcelScript.Workbook): ProductRow[] {
   // Skip header rows (first 5 rows are headers/currency info)
   for (let i = 6; i < values.length; i++) {
     const row = values[i];
-    const brand = String(row[0] || '').trim();
-    const product = String(row[1] || '').trim();
-    const model = String(row[2] || '').trim() || null;
-    const priceStr = String(row[4] || '').trim();
-    const url = String(row[6] || '').trim();
+    const brand = String(row[0] || "").trim();
+    const product = String(row[1] || "").trim();
+    const model = String(row[2] || "").trim() || null;
+    const priceStr = String(row[4] || "").trim();
+    const url = String(row[6] || "").trim();
 
     // Skip empty rows or header rows
-    if (!product || !url || product === 'PRODUKT') continue;
+    if (!product || !url || product === "PRODUKT") continue;
 
     // Parse price (e.g., "16 730 zł" -> 1673000 cents)
     const priceCents = parsePriceToCents(priceStr);
@@ -424,7 +424,7 @@ function readProduktySheet(workbook: ExcelScript.Workbook): ProductRow[] {
     // Read P1-P4 (columns AA-AD = indices 26-29)
     const relatedProducts: string[] = [];
     for (let j = 26; j <= 29; j++) {
-      const relatedUrl = String(row[j] || '').trim();
+      const relatedUrl = String(row[j] || "").trim();
       if (relatedUrl) {
         relatedProducts.push(relatedUrl);
       }
@@ -446,7 +446,7 @@ function readProduktySheet(workbook: ExcelScript.Workbook): ProductRow[] {
 function parsePriceToCents(priceStr: string): number {
   // Remove "zł", spaces, and convert to cents
   // "16 730 zł" -> 1673000
-  const cleaned = priceStr.replace(/[^\d,\.]/g, '').replace(',', '.');
+  const cleaned = priceStr.replace(/[^\d,\.]/g, "").replace(",", ".");
   const value = parseFloat(cleaned) || 0;
   return Math.round(value * 100);
 }
@@ -470,7 +470,7 @@ function parsePriceToCents(priceStr: string): number {
 
 ```typescript
 interface PricingPayload {
-  mode: 'merge' | 'replace';
+  mode: "merge" | "replace";
   variants: VariantInput[];
 }
 
@@ -491,8 +491,8 @@ interface VariantInput {
 ```typescript
 // supabase/functions/sync-related-products/index.ts
 
-import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
-import { createClient } from 'https://esm.sh/@sanity/client@6.15.0';
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "https://esm.sh/@sanity/client@6.15.0";
 
 interface VariantWithRelated {
   price_key: string;
@@ -500,20 +500,20 @@ interface VariantWithRelated {
 }
 
 const sanityClient = createClient({
-  projectId: Deno.env.get('SANITY_PROJECT_ID')!,
-  dataset: Deno.env.get('SANITY_DATASET') || 'production',
-  token: Deno.env.get('SANITY_API_TOKEN')!,
-  apiVersion: '2024-01-01',
+  projectId: Deno.env.get("SANITY_PROJECT_ID")!,
+  dataset: Deno.env.get("SANITY_DATASET") || "production",
+  token: Deno.env.get("SANITY_API_TOKEN")!,
+  apiVersion: "2024-01-01",
   useCdn: false,
 });
 
 Deno.serve(async (req: Request) => {
   try {
     // Verify authentication
-    const token = req.headers.get('x-excel-token');
-    const expectedToken = Deno.env.get('EXCEL_PUBLISH_TOKEN');
+    const token = req.headers.get("x-excel-token");
+    const expectedToken = Deno.env.get("EXCEL_PUBLISH_TOKEN");
     if (token !== expectedToken) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
       });
     }
@@ -549,7 +549,7 @@ Deno.serve(async (req: Request) => {
     // Build slug -> _id map
     const slugToIdMap = new Map<string, string>();
     for (const doc of relatedProductDocs) {
-      const slug = doc.slug.replace('/produkty/', '').replace(/\/$/, '');
+      const slug = doc.slug.replace("/produkty/", "").replace(/\/$/, "");
       slugToIdMap.set(slug, doc._id);
     }
 
@@ -579,7 +579,7 @@ Deno.serve(async (req: Request) => {
         const relatedSlug = extractSlugFromUrl(relatedUrl);
         if (relatedSlug && slugToIdMap.has(relatedSlug)) {
           relatedRefs.push({
-            _type: 'reference',
+            _type: "reference",
             _ref: slugToIdMap.get(relatedSlug)!,
             _key: relatedSlug,
           });
@@ -603,12 +603,12 @@ Deno.serve(async (req: Request) => {
 
     return new Response(JSON.stringify({ ok: true, ...results }), {
       status: 200,
-      headers: { 'content-type': 'application/json' },
+      headers: { "content-type": "application/json" },
     });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
-      headers: { 'content-type': 'application/json' },
+      headers: { "content-type": "application/json" },
     });
   }
 });
@@ -617,7 +617,7 @@ function extractSlugFromUrl(url: string): string | null {
   // "artesania-audio/prestige" -> "prestige"
   // "shunyata-research/venom-hc" -> "venom-hc"
   if (!url) return null;
-  const parts = url.split('/');
+  const parts = url.split("/");
   return parts[parts.length - 1] || null;
 }
 ```
@@ -630,31 +630,31 @@ Add to the end of `pricing-ingest/index.ts`:
 // Chain to sync-related-products after successful Supabase ingest
 let relatedResult = null;
 const variantsWithRelated = variants.filter(
-  (v) => v.related_products?.length > 0
+  (v) => v.related_products?.length > 0,
 );
 if (variantsWithRelated.length > 0) {
   try {
     const relatedResponse = await fetch(
-      `${Deno.env.get('SUPABASE_URL')}/functions/v1/sync-related-products`,
+      `${Deno.env.get("SUPABASE_URL")}/functions/v1/sync-related-products`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Authorization: req.headers.get('authorization')!,
-          'X-Excel-Token': token,
-          'Content-Type': 'application/json',
+          Authorization: req.headers.get("authorization")!,
+          "X-Excel-Token": token,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ variants: variantsWithRelated }),
-      }
+      },
     );
 
     if (relatedResponse.ok) {
       relatedResult = await relatedResponse.json();
     } else {
-      console.error('Related products sync failed:', relatedResponse.status);
+      console.error("Related products sync failed:", relatedResponse.status);
       relatedResult = { error: `HTTP ${relatedResponse.status}` };
     }
   } catch (err) {
-    console.error('Related products sync error:', err);
+    console.error("Related products sync error:", err);
     relatedResult = { error: err.message };
   }
 }
@@ -667,7 +667,7 @@ return new Response(
     sanity: sanityResult,
     relatedProducts: relatedResult, // NEW
   }),
-  { status: 200, headers: { 'content-type': 'application/json' } }
+  { status: 200, headers: { "content-type": "application/json" } },
 );
 ```
 

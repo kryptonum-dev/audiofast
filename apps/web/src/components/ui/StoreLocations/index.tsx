@@ -1,13 +1,13 @@
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheLife, cacheTag } from "next/cache";
 
-import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
+import type { QueryBrandBySlugResult } from "@/src/global/sanity/sanity.types";
 
-import StoreMapWrapper from './StoreMapWrapper';
-import styles from './styles.module.scss';
+import StoreMapWrapper from "./StoreMapWrapper";
+import styles from "./styles.module.scss";
 
 export type Store = NonNullable<
   NonNullable<
-    NonNullable<NonNullable<QueryBrandBySlugResult>['stores']>[number]
+    NonNullable<NonNullable<QueryBrandBySlugResult>["stores"]>[number]
   >
 >;
 
@@ -28,14 +28,14 @@ function cleanStreetForGeocoding(street: string): string {
   return (
     street
       // Remove "ul." prefix
-      .replace(/^ul\.?\s*/i, '')
+      .replace(/^ul\.?\s*/i, "")
       // Remove apartment/office numbers: "lok. 9", "lokal 5", etc.
-      .replace(/,?\s*(lok\.?|lokal)\s*\d+[a-zA-Z]?/gi, '')
+      .replace(/,?\s*(lok\.?|lokal)\s*\d+[a-zA-Z]?/gi, "")
       // Remove "pasaż" and similar
-      .replace(/,?\s*pasaż\s*/gi, ' ')
+      .replace(/,?\s*pasaż\s*/gi, " ")
       // Remove trailing letters after building numbers for cleaner search
       // "55e" stays as is, but clean up any trailing punctuation
-      .replace(/\s+/g, ' ')
+      .replace(/\s+/g, " ")
       .trim()
   );
 }
@@ -46,9 +46,9 @@ async function geocodeAddress(address: {
   city: string;
   postalCode: string;
 }): Promise<{ lat: number; lng: number } | null> {
-  'use cache';
-  cacheLife('weeks');
-  cacheTag('store-locations');
+  "use cache";
+  cacheLife("weeks");
+  cacheTag("store-locations");
 
   const cleanStreet = cleanStreetForGeocoding(address.street);
 
@@ -60,9 +60,9 @@ async function geocodeAddress(address: {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?${params.toString()}`,
         {
-          cache: 'force-cache',
+          cache: "force-cache",
           headers: {
-            'User-Agent': 'Audiofast-Website/1.0',
+            "User-Agent": "Audiofast-Website/1.0",
           },
           next: {
             revalidate: 60 * 60 * 24,
@@ -90,10 +90,10 @@ async function geocodeAddress(address: {
     street: cleanStreet,
     city: address.city,
     postalcode: address.postalCode,
-    country: 'Poland',
-    format: 'json',
-    limit: '1',
-    'accept-language': 'pl',
+    country: "Poland",
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
   });
 
   let result = await fetchNominatim(structuredParams);
@@ -103,10 +103,10 @@ async function geocodeAddress(address: {
   const noPostalParams = new URLSearchParams({
     street: cleanStreet,
     city: address.city,
-    country: 'Poland',
-    format: 'json',
-    limit: '1',
-    'accept-language': 'pl',
+    country: "Poland",
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
   });
 
   result = await fetchNominatim(noPostalParams);
@@ -115,25 +115,25 @@ async function geocodeAddress(address: {
   // Strategy 3: Free-form search with full address
   const freeFormParams = new URLSearchParams({
     q: `${cleanStreet}, ${address.city}, Poland`,
-    format: 'json',
-    limit: '1',
-    'accept-language': 'pl',
-    countrycodes: 'pl',
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
+    countrycodes: "pl",
   });
 
   result = await fetchNominatim(freeFormParams);
   if (result) return result;
 
   // Strategy 4: Search just the street name in the city (for streets with complex numbering)
-  const streetNameOnly = cleanStreet.replace(/\s*\d+[a-zA-Z]?$/, '').trim();
+  const streetNameOnly = cleanStreet.replace(/\s*\d+[a-zA-Z]?$/, "").trim();
   if (streetNameOnly !== cleanStreet) {
     const streetOnlyParams = new URLSearchParams({
       street: streetNameOnly,
       city: address.city,
-      country: 'Poland',
-      format: 'json',
-      limit: '1',
-      'accept-language': 'pl',
+      country: "Poland",
+      format: "json",
+      limit: "1",
+      "accept-language": "pl",
     });
 
     result = await fetchNominatim(streetOnlyParams);
@@ -144,10 +144,10 @@ async function geocodeAddress(address: {
   const postalFallbackParams = new URLSearchParams({
     postalcode: address.postalCode,
     city: address.city,
-    country: 'Poland',
-    format: 'json',
-    limit: '1',
-    'accept-language': 'pl',
+    country: "Poland",
+    format: "json",
+    limit: "1",
+    "accept-language": "pl",
   });
 
   result = await fetchNominatim(postalFallbackParams);
@@ -161,7 +161,7 @@ async function geocodeAddress(address: {
 
 export default async function StoreLocations({
   stores,
-  customId = 'gdzie-kupic',
+  customId = "gdzie-kupic",
 }: StoreLocationsProps) {
   // Deduplicate stores by _id
   const uniqueStoresMap = new Map<string, Store>();
@@ -243,7 +243,7 @@ export default async function StoreLocations({
               <p className={styles.storeName}>{store.name}</p>
               {store.address && (
                 <p className={styles.storeAddress}>
-                  {store.address.postalCode} {store.address.city},{' '}
+                  {store.address.postalCode} {store.address.city},{" "}
                   {store.address.street}
                 </p>
               )}
@@ -254,7 +254,7 @@ export default async function StoreLocations({
                   <PhoneIcon />
                 </span>
                 <span className={styles.contactText}>
-                  {store.phone?.replace('+48', '')}
+                  {store.phone?.replace("+48", "")}
                 </span>
               </a>
               {store.website && (
@@ -269,10 +269,10 @@ export default async function StoreLocations({
                   </span>
                   <span className={styles.contactText}>
                     {store.website
-                      .replace('https://', '')
-                      .replace('http://', '')
-                      .replace('www.', '')
-                      .replace(/\/$/, '')}
+                      .replace("https://", "")
+                      .replace("http://", "")
+                      .replace("www.", "")
+                      .replace(/\/$/, "")}
                   </span>
                 </a>
               )}

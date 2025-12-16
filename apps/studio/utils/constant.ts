@@ -5,18 +5,18 @@ import {
   InsertAboveIcon,
   SearchIcon,
   UsersIcon,
-} from '@sanity/icons';
-import type { FieldGroupDefinition } from 'sanity';
+} from "@sanity/icons";
+import type { FieldGroupDefinition } from "sanity";
 
-import { isProduction } from './helper';
+import { isProduction } from "./helper";
 
 export const GROUP = {
-  SEO: 'seo',
-  MAIN_CONTENT: 'main-content',
-  CARD: 'card',
-  RELATED: 'related',
-  OG: 'og',
-  CONTACT: 'contact',
+  SEO: "seo",
+  MAIN_CONTENT: "main-content",
+  CARD: "card",
+  RELATED: "related",
+  OG: "og",
+  CONTACT: "contact",
 };
 
 export const GROUPS: FieldGroupDefinition[] = [
@@ -24,28 +24,28 @@ export const GROUPS: FieldGroupDefinition[] = [
   {
     name: GROUP.MAIN_CONTENT,
     icon: ComposeIcon,
-    title: 'Treść',
+    title: "Treść",
   },
   {
     name: GROUP.CONTACT,
     icon: UsersIcon,
-    title: 'Dane kontaktowe',
+    title: "Dane kontaktowe",
   },
-  { name: GROUP.SEO, icon: SearchIcon, title: 'SEO' },
+  { name: GROUP.SEO, icon: SearchIcon, title: "SEO" },
   {
     name: GROUP.OG,
     icon: InsertAboveIcon,
-    title: 'Open Graph (OG)',
+    title: "Open Graph (OG)",
   },
   {
     name: GROUP.CARD,
     icon: BlockElementIcon,
-    title: 'Karty',
+    title: "Karty",
   },
   {
     name: GROUP.RELATED,
     icon: InlineElementIcon,
-    title: 'Powiązane',
+    title: "Powiązane",
   },
 ];
 
@@ -56,5 +56,5 @@ export const GROUPS: FieldGroupDefinition[] = [
  * @type {string}
  */
 export const WEB_BASE_URL: string = isProduction()
-  ? 'https://www.audiofast.pl/'
-  : 'https://audiofast-git-dev-kryptonum.vercel.app/';
+  ? "https://www.audiofast.pl/"
+  : "https://audiofast-git-dev-kryptonum.vercel.app/";

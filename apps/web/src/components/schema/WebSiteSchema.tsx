@@ -1,8 +1,4 @@
-import {
-  BASE_URL,
-  SITE_DESCRIPTION,
-  SITE_TITLE,
-} from "@/src/global/constants";
+import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from "@/src/global/constants";
 
 /**
  * WebSite Schema Component

@@ -9,6 +9,6 @@
  * - CellEditor: Rich text editor for individual cells
  */
 
-export { CellEditor } from './cell-editor';
-export { TechnicalDataView } from './technical-data-view';
-export * from './types';
+export { CellEditor } from "./cell-editor";
+export { TechnicalDataView } from "./technical-data-view";
+export * from "./types";
