@@ -10,14 +10,18 @@ import {
   type BrandMetadata,
   type CategoryMetadata,
   computeAvailableFilters,
+  type CustomFilterDefinition,
   type ProductFilterMetadata,
 } from '@/src/global/filters';
 import type { PortableTextProps } from '@/src/global/types';
 import {
   centsToPLN,
+  extractRawCustomFilters,
   parseBrands,
   parsePrice,
+  parseRangeFilters,
   plnToCents,
+  validateCustomFilters,
 } from '@/src/global/utils';
 
 import PortableText from '../../portableText';
@@ -27,6 +31,9 @@ import PriceRange from '../PriceRange';
 import { useProductsLoading } from '../ProductsLoadingContext';
 import ProductsAsideSkeleton from './ProductsAsideSkeleton';
 import styles from './styles.module.scss';
+
+// Stable empty array to avoid new reference on each render
+const EMPTY_FILTER_DEFINITIONS: CustomFilterDefinition[] = [];
 
 type VisibleFilters = {
   search?: boolean;
@@ -49,6 +56,9 @@ type ProductsAsideProps = {
   visibleFilters?: VisibleFilters;
   hideBrandFilter?: boolean;
   headingLevel?: 'h2' | 'h3';
+
+  // Custom filters configuration (for range filter support)
+  filterDefinitions?: CustomFilterDefinition[];
 };
 
 export default function ProductsAside({
@@ -67,6 +77,7 @@ export default function ProductsAside({
   },
   hideBrandFilter = false,
   headingLevel = 'h2',
+  filterDefinitions = EMPTY_FILTER_DEFINITIONS,
 }: ProductsAsideProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -152,6 +163,27 @@ export default function ProductsAside({
           : `/kategoria/${categoryFromUrl}/`
         : null);
 
+    // Parse range filters from URL (format: {slug}-min, {slug}-max)
+    const urlSearchParams = new URLSearchParams(searchParams.toString());
+    const rangeFilters = parseRangeFilters(urlSearchParams, filterDefinitions);
+
+    // Parse dropdown custom filters from URL
+    const dropdownFilterNames = filterDefinitions
+      .filter((f) => f.filterType === 'dropdown')
+      .map((f) => f.name);
+
+    // Convert searchParams to object for extractRawCustomFilters
+    const searchParamsObj: Record<string, string> = {};
+    searchParams.forEach((value, key) => {
+      searchParamsObj[key] = value;
+    });
+
+    const rawCustomFilters = extractRawCustomFilters(searchParamsObj);
+    const customFilters = validateCustomFilters(
+      rawCustomFilters,
+      dropdownFilterNames,
+    );
+
     return {
       search: searchParams.get('search') || '',
       brands: brandsParam ? parseBrands(brandsParam) : [],
@@ -162,10 +194,11 @@ export default function ProductsAside({
         Infinity,
       ),
       category: effectiveCategory,
-      customFilters: [],
+      customFilters,
+      rangeFilters,
       isCPO: false,
     };
-  }, [searchParams, currentCategory]);
+  }, [searchParams, currentCategory, filterDefinitions]);
 
   // ----------------------------------------
   // Optimistic Filters (for instant UI updates)
@@ -195,7 +228,8 @@ export default function ProductsAside({
             ? Infinity
             : plnToCents(pendingFilters.maxPrice),
         category: optimisticCategory,
-        customFilters: [],
+        customFilters: activeFilters.customFilters,
+        rangeFilters: activeFilters.rangeFilters,
         isCPO: false,
       };
     }

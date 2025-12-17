@@ -1,46 +1,59 @@
-import { cacheLife } from "next/cache";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cacheLife } from 'next/cache';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
-import CustomFiltersBar from "@/src/components/products/CustomFiltersBar";
-import ProductsAside from "@/src/components/products/ProductsAside";
-import ProductsListing from "@/src/components/products/ProductsListing";
-import ProductsListingSkeleton from "@/src/components/products/ProductsListing/ProductsListingSkeleton";
-import styles from "@/src/components/products/ProductsListing/styles.module.scss";
-import ProductsListingContainer from "@/src/components/products/ProductsListingContainer";
-import { ProductsLoadingProvider } from "@/src/components/products/ProductsLoadingContext";
-import SortDropdown from "@/src/components/products/SortDropdown";
-import CollectionPageSchema from "@/src/components/schema/CollectionPageSchema";
-import { PageBuilder } from "@/src/components/shared/PageBuilder";
-import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
+import CustomFiltersBar from '@/src/components/products/CustomFiltersBar';
+import ProductsAside from '@/src/components/products/ProductsAside';
+import ProductsListing from '@/src/components/products/ProductsListing';
+import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
+import styles from '@/src/components/products/ProductsListing/styles.module.scss';
+import ProductsListingContainer from '@/src/components/products/ProductsListingContainer';
+import { ProductsLoadingProvider } from '@/src/components/products/ProductsLoadingContext';
+import SortDropdown from '@/src/components/products/SortDropdown';
+import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
+import { PageBuilder } from '@/src/components/shared/PageBuilder';
+import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
-} from "@/src/global/constants";
-import { logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
+} from '@/src/global/constants';
+import {
+  type ActiveFilters,
+  computeAvailableFilters,
+  type CustomFilterDefinition,
+} from '@/src/global/filters';
+import { logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductsFilterMetadata,
   queryProductsPageContent,
-} from "@/src/global/sanity/query";
+} from '@/src/global/sanity/query';
 import type {
   QueryAllProductsFilterMetadataResult,
   QueryProductsPageContentResult,
-} from "@/src/global/sanity/sanity.types";
-import { getSEOMetadata } from "@/src/global/seo";
+} from '@/src/global/sanity/sanity.types';
+import { getSEOMetadata } from '@/src/global/seo';
 import {
   extractRawCustomFilters,
+  parseBrands,
+  parsePrice,
+  parseRangeFilters,
   slugifyFilterName,
   validateCustomFilters,
-} from "@/src/global/utils";
+} from '@/src/global/utils';
 
 // Type for category content (GROQ select() returns this or null)
 // Generated types incorrectly infer `null` - this extends the default content type
 type CategoryContentType = NonNullable<
-  QueryProductsPageContentResult["defaultContent"]
+  QueryProductsPageContentResult['defaultContent']
 > & {
-  customFilters?: string[];
+  customFilters?: Array<{
+    _key: string;
+    name: string;
+    filterType: 'dropdown' | 'range';
+    unit?: string;
+  }>;
   parentCategory?: {
     _id: string;
     name: string | null;
@@ -67,24 +80,24 @@ type CategoryPageProps = {
 
 // Shared filter metadata (same for all category pages)
 async function getStaticFilterMetadata() {
-  "use cache";
-  cacheLife("hours");
+  'use cache';
+  cacheLife('hours');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ["products"],
+    tags: ['products'],
   });
 }
 
 // Page content (handles both default and category-specific content)
 async function getPageContent(categorySlug: string) {
-  "use cache";
-  cacheLife("hours");
+  'use cache';
+  cacheLife('hours');
 
   return sanityFetch<QueryProductsPageContentResult>({
     query: queryProductsPageContent,
     params: { category: `/kategoria/${categorySlug}/` },
-    tags: ["products", "productCategorySub"],
+    tags: ['products', 'productCategorySub'],
   });
 }
 
@@ -98,7 +111,7 @@ export async function generateStaticParams() {
     filterMetadata?.categories
       ?.filter((cat) => cat.slug)
       .map((cat) => ({
-        category: cat.slug?.replace("/kategoria/", "").replace(/\/$/, "") || "",
+        category: cat.slug?.replace('/kategoria/', '').replace(/\/$/, '') || '',
       })) || []
   );
 }
@@ -170,70 +183,148 @@ export default async function CategoryPage({
       ? categoryContent.pageBuilder
       : defaultContent.pageBuilder || [];
 
-  // Available custom filters for this category
-  const availableCustomFilters = categoryContent?.customFilters || [];
+  // ----------------------------------------
+  // Custom Filters Processing
+  // ----------------------------------------
 
-  // Parse custom filters from URL for CustomFiltersBar
+  // Get filter definitions from category (with filterType and unit)
+  const filterDefinitions: CustomFilterDefinition[] =
+    categoryContent?.customFilters?.map((f) => ({
+      _key: f._key,
+      name: f.name,
+      filterType: f.filterType,
+      unit: f.unit,
+    })) || [];
+
+  // Get dropdown filter names for backward compatibility
+  const dropdownFilterNames = filterDefinitions
+    .filter((f) => f.filterType === 'dropdown')
+    .map((f) => f.name);
+
+  // Parse dropdown filters from URL
   const rawCustomFilters = extractRawCustomFilters(searchParamsData);
   const activeCustomFilters = validateCustomFilters(
     rawCustomFilters,
-    availableCustomFilters,
+    dropdownFilterNames,
+  );
+
+  // Build URLSearchParams for parsing range filters
+  const urlSearchParams = new URLSearchParams();
+  Object.entries(searchParamsData).forEach(([key, value]) => {
+    if (value !== undefined) {
+      const stringValue = Array.isArray(value) ? value[0] : value;
+      if (stringValue) {
+        urlSearchParams.set(key, stringValue);
+      }
+    }
+  });
+
+  // Parse range filters from URL
+  const activeRangeFilters = parseRangeFilters(
+    urlSearchParams,
+    filterDefinitions,
   );
 
   // Build current search params for CustomFiltersBar
   const currentSearchParams = new URLSearchParams();
   if (searchParamsData.search)
-    currentSearchParams.set("search", String(searchParamsData.search));
+    currentSearchParams.set('search', String(searchParamsData.search));
   if (searchParamsData.brands)
     currentSearchParams.set(
-      "brands",
+      'brands',
       Array.isArray(searchParamsData.brands)
-        ? searchParamsData.brands.join(",")
+        ? searchParamsData.brands.join(',')
         : searchParamsData.brands,
     );
   if (searchParamsData.minPrice)
-    currentSearchParams.set("minPrice", String(searchParamsData.minPrice));
+    currentSearchParams.set('minPrice', String(searchParamsData.minPrice));
   if (searchParamsData.maxPrice)
-    currentSearchParams.set("maxPrice", String(searchParamsData.maxPrice));
+    currentSearchParams.set('maxPrice', String(searchParamsData.maxPrice));
+
+  // Add dropdown filter params
   activeCustomFilters.forEach((filter) => {
     currentSearchParams.set(slugifyFilterName(filter.filterName), filter.value);
   });
 
-  // Process available filter values from products metadata
-  const processedFilterValues = availableCustomFilters
-    .map((filterName: string) => {
-      // Get products in this category
-      const categoryProducts =
-        filterMetadata.products?.filter((p) =>
-          p.allCategorySlugs?.includes(`/kategoria/${categorySlug}/`),
-        ) || [];
+  // Add range filter params (format: {slug}-min, {slug}-max)
+  activeRangeFilters.forEach((rf) => {
+    const slug = slugifyFilterName(rf.filterName);
+    if (rf.minValue !== undefined) {
+      currentSearchParams.set(`${slug}-min`, rf.minValue.toString());
+    }
+    if (rf.maxValue !== undefined) {
+      currentSearchParams.set(`${slug}-max`, rf.maxValue.toString());
+    }
+  });
 
-      // Get unique values for this filter
-      const values = Array.from(
-        new Set(
-          categoryProducts.flatMap(
-            (product) =>
-              product.customFilterValues
-                ?.filter((fv) => fv?.filterName === filterName)
-                .map((fv) => fv?.value)
-                .filter(Boolean) || [],
-          ),
-        ),
-      ).sort() as string[];
+  // ----------------------------------------
+  // Compute Filter Options (client-side style, but on server)
+  // ----------------------------------------
 
+  // Parse sidebar filters from URL
+  const brandsParam = searchParamsData.brands;
+  const activeBrands = brandsParam
+    ? parseBrands(Array.isArray(brandsParam) ? brandsParam[0] : brandsParam)
+    : [];
+  const activeMinPrice = parsePrice(
+    searchParamsData.minPrice
+      ? String(
+          Array.isArray(searchParamsData.minPrice)
+            ? searchParamsData.minPrice[0]
+            : searchParamsData.minPrice,
+        )
+      : undefined,
+    0,
+  );
+  const activeMaxPrice = parsePrice(
+    searchParamsData.maxPrice
+      ? String(
+          Array.isArray(searchParamsData.maxPrice)
+            ? searchParamsData.maxPrice[0]
+            : searchParamsData.maxPrice,
+        )
+      : undefined,
+    Infinity,
+    Infinity,
+  );
+
+  // Build active filters for computation (includes sidebar filters)
+  const activeFiltersForComputation: ActiveFilters = {
+    search: '',
+    brands: activeBrands,
+    minPrice: activeMinPrice,
+    maxPrice: activeMaxPrice,
+    category: `/kategoria/${categorySlug}/`,
+    customFilters: activeCustomFilters.map((f) => ({
+      filterName: f.filterName,
+      value: f.value,
+    })),
+    rangeFilters: activeRangeFilters,
+    isCPO: false,
+  };
+
+  // Compute available filters (this gives us dropdown values and range bounds)
+  const computedFilters = computeAvailableFilters(
+    filterMetadata.products || [],
+    activeFiltersForComputation,
+  );
+
+  // Process dropdown filter values from computed filters
+  const processedFilterValues = filterDefinitions
+    .filter((def) => def.filterType === 'dropdown')
+    .map((def) => {
+      const values = computedFilters.customFilterValues.get(def.name) || [];
       return {
-        name: filterName,
-        values,
+        name: def.name,
+        values: values.sort(),
       };
     })
-    .filter(
-      (filter: { name: string; values: string[] }) => filter.values.length > 0,
-    );
+    .filter((filter) => filter.values.length > 0);
 
   const breadcrumbsData = [
     {
-      name: defaultContent.name || "Produkty",
-      path: "/produkty/",
+      name: defaultContent.name || 'Produkty',
+      path: '/produkty/',
     },
     {
       name: categoryContent?.name || categorySlug,
@@ -265,7 +356,7 @@ export default async function CategoryPage({
       <ProductsLoadingProvider>
         <section
           className={`${styles.productsListing} max-width`}
-          data-has-filters={processedFilterValues.length > 0}
+          data-has-filters={filterDefinitions.length > 0}
         >
           {/* Client-side computed sidebar */}
           <ProductsAside
@@ -276,13 +367,17 @@ export default async function CategoryPage({
             basePath={`/produkty/kategoria/${categorySlug}/`}
             currentCategory={`/kategoria/${categorySlug}/`}
             headingLevel="h2"
+            filterDefinitions={filterDefinitions}
           />
 
           {/* Custom filters bar (for categories with custom filters) */}
-          {processedFilterValues.length > 0 && (
+          {filterDefinitions.length > 0 && (
             <CustomFiltersBar
+              filterDefinitions={filterDefinitions}
               customFilters={processedFilterValues}
               activeFilters={activeCustomFilters}
+              activeRangeFilters={activeRangeFilters}
+              rangeFilterBounds={computedFilters.rangeFilterBounds}
               basePath={`/produkty/kategoria/${categorySlug}/`}
               currentSearchParams={currentSearchParams}
             />
@@ -301,7 +396,8 @@ export default async function CategoryPage({
                 searchParams={searchParams}
                 basePath={`/produkty/kategoria/${categorySlug}/`}
                 category={`/kategoria/${categorySlug}/`}
-                availableCustomFilters={availableCustomFilters}
+                availableCustomFilters={dropdownFilterNames}
+                filterDefinitions={filterDefinitions}
                 defaultSortBy="newest"
               />
             </Suspense>

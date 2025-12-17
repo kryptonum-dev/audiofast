@@ -1,8 +1,10 @@
 import type {
   ActiveFilters,
+  ActiveRangeFilter,
   ComputedFilters,
+  CustomFilterValue,
   ProductFilterMetadata,
-} from "./types";
+} from './types';
 
 /**
  * Filter products by specific criteria (helper for computing filter options)
@@ -14,7 +16,8 @@ function filterProducts(
     brands?: string[];
     minPrice?: number;
     maxPrice?: number;
-    customFilters?: Array<{ filterName: string; value: string }>;
+    customFilters?: CustomFilterValue[];
+    rangeFilters?: ActiveRangeFilter[];
     isCPO?: boolean;
   },
 ): ProductFilterMetadata[] {
@@ -25,12 +28,12 @@ function filterProducts(
   if (options.category) {
     const categoryToMatch = options.category;
     // Normalize to check both formats
-    const isFullPath = categoryToMatch.startsWith("/kategoria/");
+    const isFullPath = categoryToMatch.startsWith('/kategoria/');
     const fullPath = isFullPath
       ? categoryToMatch
       : `/kategoria/${categoryToMatch}/`;
     const shortSlug = isFullPath
-      ? categoryToMatch.replace("/kategoria/", "").replace(/\/$/, "")
+      ? categoryToMatch.replace('/kategoria/', '').replace(/\/$/, '')
       : categoryToMatch;
 
     filtered = filtered.filter((p) => {
@@ -39,13 +42,13 @@ function filterProducts(
       if (p.allCategorySlugs?.includes(fullPath)) return true;
       // Check short slug match (extract from full paths)
       const pShortSlug = p.categorySlug
-        ?.replace("/kategoria/", "")
-        .replace(/\/$/, "");
+        ?.replace('/kategoria/', '')
+        .replace(/\/$/, '');
       if (pShortSlug === shortSlug) return true;
       // Check in all categories
       return p.allCategorySlugs?.some(
         (slug) =>
-          slug?.replace("/kategoria/", "").replace(/\/$/, "") === shortSlug,
+          slug?.replace('/kategoria/', '').replace(/\/$/, '') === shortSlug,
       );
     });
   }
@@ -83,6 +86,37 @@ function filterProducts(
     });
   }
 
+  // Apply range filters
+  if (options.rangeFilters && options.rangeFilters.length > 0) {
+    filtered = filtered.filter((p) => {
+      return options.rangeFilters!.every((rangeFilter) => {
+        const productValue = p.customFilterValues?.find(
+          (fv) => fv.filterName === rangeFilter.filterName,
+        );
+
+        // Product must have a numeric value for this filter
+        if (productValue?.numericValue === undefined) return false;
+
+        const value = productValue.numericValue;
+
+        if (
+          rangeFilter.minValue !== undefined &&
+          value < rangeFilter.minValue
+        ) {
+          return false;
+        }
+        if (
+          rangeFilter.maxValue !== undefined &&
+          value > rangeFilter.maxValue
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+    });
+  }
+
   // Apply CPO filter
   if (options.isCPO) {
     filtered = filtered.filter((p) => p.isCPO === true);
@@ -116,6 +150,7 @@ export function computeAvailableFilters(
     minPrice: activeFilters.minPrice,
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
+    rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
   });
 
@@ -134,6 +169,7 @@ export function computeAvailableFilters(
     minPrice: activeFilters.minPrice,
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
+    rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
   });
 
@@ -162,6 +198,7 @@ export function computeAvailableFilters(
     // minPrice: EXCLUDED
     // maxPrice: EXCLUDED
     customFilters: activeFilters.customFilters,
+    rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
   });
 
@@ -179,14 +216,46 @@ export function computeAvailableFilters(
     minPrice: activeFilters.minPrice,
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
+    rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
   });
 
-  // Compute custom filter values from fully filtered products
-  // (custom filters are on category pages where we want cascading behavior)
+  // Products filtered by everything EXCEPT custom dropdown filters
+  // This is the base for computing dropdown filter options (each dropdown
+  // should not affect its own options, only other filters should)
+  const productsForDropdownValues = filterProducts(allProducts, {
+    category: activeFilters.category,
+    brands: activeFilters.brands,
+    minPrice: activeFilters.minPrice,
+    maxPrice: activeFilters.maxPrice,
+    // customFilters: EXCLUDED - will be applied per-filter inside computeCustomFilterValues
+    rangeFilters: activeFilters.rangeFilters,
+    isCPO: activeFilters.isCPO,
+  });
+
+  // Compute custom filter values
   const customFilterValues = computeCustomFilterValues(
-    fullyFiltered,
+    productsForDropdownValues,
     activeFilters.customFilters || [],
+  );
+
+  // Products filtered by everything EXCEPT range filters
+  // This is the base for computing range filter bounds (each range filter
+  // should not affect its own bounds, only other filters should)
+  const productsForRangeBounds = filterProducts(allProducts, {
+    category: activeFilters.category,
+    brands: activeFilters.brands,
+    minPrice: activeFilters.minPrice,
+    maxPrice: activeFilters.maxPrice,
+    customFilters: activeFilters.customFilters,
+    // rangeFilters: EXCLUDED - will be applied per-filter inside computeRangeFilterBounds
+    isCPO: activeFilters.isCPO,
+  });
+
+  // Compute range filter bounds
+  const rangeFilterBounds = computeRangeFilterBounds(
+    productsForRangeBounds,
+    activeFilters.rangeFilters || [],
   );
 
   return {
@@ -198,6 +267,7 @@ export function computeAvailableFilters(
     // This is used for the "Wszystkie produkty" option in the sidebar
     allProductsCount: productsForCategoryCounts.length,
     customFilterValues,
+    rangeFilterBounds,
   };
 }
 
@@ -208,13 +278,13 @@ export function computeAvailableFilters(
  * For each custom filter, we compute available values by filtering
  * products with all OTHER custom filters (excluding the one being computed)
  *
- * @param products - Products already filtered by non-custom filters
- * @param activeCustomFilters - Currently active custom filter selections
+ * @param products - Products filtered by category, brand, price, range filters, but NOT dropdown filters
+ * @param activeCustomFilters - Currently active custom filter selections (to apply OTHER dropdowns)
  * @returns Map of filter name → available values
  */
 function computeCustomFilterValues(
   products: ProductFilterMetadata[],
-  activeCustomFilters: Array<{ filterName: string; value: string }>,
+  activeCustomFilters: Array<CustomFilterValue>,
 ): Map<string, string[]> {
   // First, collect all unique filter names from products
   const allFilterNames = new Set<string>();
@@ -233,9 +303,10 @@ function computeCustomFilterValues(
       (f) => f.filterName !== filterName,
     );
 
+    // Range filters already applied to products, now apply other dropdown filters
     let filteredProducts = products;
     if (otherFilters.length > 0) {
-      filteredProducts = products.filter((p) => {
+      filteredProducts = filteredProducts.filter((p) => {
         if (!p.customFilterValues) return false;
         return otherFilters.every((activeFilter) =>
           p.customFilterValues?.some(
@@ -258,6 +329,88 @@ function computeCustomFilterValues(
     });
 
     result.set(filterName, Array.from(values).sort());
+  });
+
+  return result;
+}
+
+/**
+ * Computes available range filter bounds (min/max) from products
+ * KEY RULE: Filter X does NOT reduce options for Filter X
+ *
+ * For each range filter, we compute bounds by filtering products
+ * with all OTHER filters (excluding the current range filter)
+ *
+ * @param products - Products filtered by category, brand, price, custom filters, but NOT range filters
+ * @param activeRangeFilters - Currently active range filters (to apply OTHER range filters)
+ */
+function computeRangeFilterBounds(
+  products: ProductFilterMetadata[],
+  activeRangeFilters: Array<ActiveRangeFilter>,
+): Map<string, { min: number; max: number; productCount: number }> {
+  const allFilterNames = new Set<string>();
+  products.forEach((p) => {
+    p.customFilterValues?.forEach((fv) => {
+      if (fv.filterName && fv.numericValue !== undefined) {
+        allFilterNames.add(fv.filterName);
+      }
+    });
+  });
+
+  const result = new Map<
+    string,
+    { min: number; max: number; productCount: number }
+  >();
+
+  allFilterNames.forEach((filterName) => {
+    // Filter products by all OTHER range filters (not this one)
+    const otherRangeFilters = activeRangeFilters.filter(
+      (f) => f.filterName !== filterName,
+    );
+
+    // Custom filters already applied to products
+    let filteredProducts = products;
+
+    // Apply other range filters
+    if (otherRangeFilters.length > 0) {
+      filteredProducts = filteredProducts.filter((p) => {
+        return otherRangeFilters.every((rangeFilter) => {
+          const productValue = p.customFilterValues?.find(
+            (fv) => fv.filterName === rangeFilter.filterName,
+          );
+          if (productValue?.numericValue === undefined) return false;
+          const value = productValue.numericValue;
+          if (
+            rangeFilter.minValue !== undefined &&
+            value < rangeFilter.minValue
+          )
+            return false;
+          if (
+            rangeFilter.maxValue !== undefined &&
+            value > rangeFilter.maxValue
+          )
+            return false;
+          return true;
+        });
+      });
+    }
+
+    // Compute min/max for this filter
+    const values = filteredProducts
+      .map(
+        (p) =>
+          p.customFilterValues?.find((fv) => fv.filterName === filterName)
+            ?.numericValue,
+      )
+      .filter((v): v is number => v !== undefined && v !== null);
+
+    if (values.length > 0) {
+      result.set(filterName, {
+        min: Math.min(...values),
+        max: Math.max(...values),
+        productCount: values.length,
+      });
+    }
   });
 
   return result;

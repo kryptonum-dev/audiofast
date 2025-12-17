@@ -246,150 +246,109 @@ defineField({
 
 ## Sanity Studio Components
 
-### 1. Custom Filters Configuration View
+> **✅ IMPLEMENTED** - All Sanity Studio components have been created and are functional.
 
-Create a dedicated view for sub-category filter management, similar to TechnicalDataView:
+### 1. Custom Filters Configuration View (Sub-category)
+
+A dedicated view for sub-category filter management with inline editing and product value management:
 
 ```
 apps/studio/components/custom-filters-config/
-├── index.tsx                    # Export barrel
-├── custom-filters-config-view.tsx  # Main view component
-├── filter-item.tsx              # Sortable filter item
-├── filter-editor-dialog.tsx     # Edit filter dialog
-├── product-values-preview.tsx   # Preview of products with this filter
-└── types.ts                     # Type definitions
+├── index.tsx                       # Export barrel
+├── custom-filters-config-view.tsx  # Main view component (599 lines)
+├── filter-item.tsx                 # Sortable filter item with inline editing
+├── filter-editor-dialog.tsx        # Edit filter dialog (legacy, replaced by inline)
+├── product-filter-values.tsx       # Product values management with search/pagination
+└── types.ts                        # Type definitions
 ```
 
-#### Main View Component Features
+#### Implemented Features
+
+1. **Drag-drop sorting** using `@dnd-kit/core` and `@dnd-kit/sortable`
+2. **Inline editing** of filter name, type (dropdown/range), and unit
+3. **Add new filter** button with automatic key generation
+4. **Delete filter** with modal confirmation dialog
+5. **Auto-save** with debounce (800ms) and status indicator
+6. **Optimistic updates** for instant UI feedback
+7. **Product values management** - expand each filter to see/edit product values:
+   - Search products by name
+   - Product image previews
+   - Shows products with/without values separately
+   - Pagination (10 products initially, "show all" button)
+   - Product counts shown even when collapsed
+
+#### Key Implementation Details
 
 ```typescript
-// apps/studio/components/custom-filters-config/custom-filters-config-view.tsx
-
-// Features:
-// 1. List all filters with drag-drop sorting (using @dnd-kit)
-// 2. Show filter type badge (dropdown/range)
-// 3. Show product count per filter
-// 4. Edit filter inline or via dialog
-// 5. Add new filter button
-// 6. Delete filter with confirmation
-// 7. Preview products with filter values
-
+// Types used in the implementation
 type FilterConfigItem = {
   _key: string;
   name: string;
   filterType: 'dropdown' | 'range';
-  unit?: string; // Only for range filters
-  // Note: min/max are computed from product values, not stored here
+  unit?: string;
 };
 
-type ProductFilterSummary = {
-  productId: string;
-  productName: string;
-  value?: string; // For dropdown filters
-  numericValue?: number; // For range filters
+type ProductCounts = {
+  total: number;
+  withValue: number;
 };
 
-// Computed bounds for range filters (shown in the config view)
-type RangeFilterStats = {
-  filterName: string;
-  min: number;
-  max: number;
-  productCount: number;
-};
+// GROQ query to fetch products (prefers drafts)
+`*[_type == "product" && references($categoryId) && (isArchived != true) && !(_id in path("drafts.**"))] {
+  "product": coalesce(
+    *[_id == "drafts." + ^._id][0],
+    @
+  ) {
+    _id,
+    name,
+    "brandName": brand->name,
+    "imageUrl": previewImage.asset->url,
+    customFilterValues
+  }
+}.product | order(name asc)`;
 ```
 
-#### View Structure
+### 2. Product Filters View (Product)
 
-```tsx
-<Card padding={4}>
-  <Stack space={5}>
-    {/* Header */}
-    <Flex align='center' justify='space-between'>
-      <Stack space={2}>
-        <Text size={3} weight='bold'>
-          Konfiguracja filtrów
-        </Text>
-        <Text size={1} muted>
-          Zarządzaj filtrami dla tej kategorii. Przeciągaj aby zmienić
-          kolejność.
-        </Text>
-      </Stack>
-      <Button icon={AddIcon} text='Dodaj filtr' onClick={handleAddFilter} />
-    </Flex>
+A new dedicated view for products to manage their filter values:
 
-    {/* Filter List (Sortable) */}
-    <DndContext onDragEnd={handleDragEnd}>
-      <SortableContext items={filterKeys}>
-        {filters.map((filter, index) => (
-          <SortableFilterItem
-            key={filter._key}
-            filter={filter}
-            productCount={productCounts[filter.name]}
-            onEdit={() => openEditor(index)}
-            onDelete={() => confirmDelete(index)}
-            onViewProducts={() => openProductsPreview(filter.name)}
-          />
-        ))}
-      </SortableContext>
-    </DndContext>
-
-    {/* Empty State */}
-    {filters.length === 0 && (
-      <Card padding={5} tone='transparent' border>
-        <Stack space={3} align='center'>
-          <Filter size={32} opacity={0.5} />
-          <Text muted>Brak zdefiniowanych filtrów dla tej kategorii.</Text>
-          <Button text='Dodaj pierwszy filtr' onClick={handleAddFilter} />
-        </Stack>
-      </Card>
-    )}
-  </Stack>
-</Card>
+```
+apps/studio/components/product-filters-view/
+├── index.tsx                    # Export barrel
+└── product-filters-view.tsx     # Main view component (584 lines)
 ```
 
-### 2. Enhanced CustomFilterValueInput
+#### Implemented Features
 
-Update the existing component to handle both dropdown and range filter types:
+1. **Lists all custom filters** from product's categories
+2. **Visual cards** for each filter with:
+   - Icon (Sliders for range, Hash for dropdown)
+   - Filter name and type badge
+   - Source category name
+   - Appropriate input (number/text)
+   - Unit suffix for range filters
+   - Green styling when filled
+3. **Progress badge** showing X/Y filters completed
+4. **Auto-save** with debounce and status indicator
+5. **Empty state** when no filters are defined in categories
+6. **Draft management** - creates drafts when saving to published products
 
-```typescript
-// apps/studio/components/custom-filter-value-input.tsx (enhanced)
+### 3. Structure.ts Configuration
 
-// Key changes:
-// 1. Fetch filter definitions with filterType and unit from categories
-// 2. Show appropriate input based on filterType:
-//    - Dropdown: TextInput or Autocomplete (string value)
-//    - Range: NumberInput ONLY (numericValue, no text allowed)
-// 3. Display unit next to number input for range filters
-// 4. Validation: range filters MUST have numericValue set
-// 5. Hide value field for range filters, hide numericValue for dropdown filters
-
-// Example UI for range filter:
-// ┌─────────────────────────────────────────────────┐
-// │ Nazwa filtra: Impedancja                        │
-// │ Wartość: [    8    ] Ω                          │
-// └─────────────────────────────────────────────────┘
-
-// Example UI for dropdown filter:
-// ┌─────────────────────────────────────────────────┐
-// │ Nazwa filtra: Kolor                             │
-// │ Wartość: [ Złoty_________________ ]             │
-// └─────────────────────────────────────────────────┘
-```
-
-### 3. Structure.ts Updates
-
-Add the custom view for sub-category documents:
+Both custom views are registered in the document node resolver:
 
 ```typescript
 // apps/studio/structure.ts
 
 import { CustomFiltersConfigView } from './components/custom-filters-config';
+import { ProductFiltersView } from './components/product-filters-view';
+import { TechnicalDataView } from './components/technical-data-table/technical-data-view';
 
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (
   S,
   { schemaType }
 ) => {
-  // Add Technical Data view for product documents
+  // Product: 3 tabs
   if (schemaType === 'product') {
     return S.document().views([
       S.view.form().title('Zawartość').icon(EditIcon),
@@ -397,22 +356,61 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
         .component(TechnicalDataView)
         .title('Dane techniczne')
         .icon(BlockContentIcon),
+      S.view.component(ProductFiltersView).title('Filtry').icon(FilterIcon),
     ]);
   }
 
-  // Add Custom Filters Config view for sub-category documents
+  // Sub-category: 2 tabs
   if (schemaType === 'productCategorySub') {
     return S.document().views([
       S.view.form().title('Zawartość').icon(EditIcon),
       S.view
         .component(CustomFiltersConfigView)
         .title('Konfiguracja filtrów')
-        .icon(FilterIcon), // from lucide-react
+        .icon(FilterIcon),
     ]);
   }
 
   return S.document();
 };
+```
+
+### 4. Hidden Fields in Content Views
+
+Since filters are now managed via dedicated view tabs, the raw array fields are hidden from the main content forms:
+
+```typescript
+// product.ts - customFilterValues field
+defineField({
+  name: 'customFilterValues',
+  // ...
+  hidden: true, // Managed via "Filtry" view tab
+});
+
+// product-category-sub.ts - customFilters field
+defineField({
+  name: 'customFilters',
+  // ...
+  hidden: true, // Managed via "Konfiguracja filtrów" view tab
+});
+```
+
+### 5. CustomFilterValueInput Component
+
+The existing component was updated to handle both filter types:
+
+```typescript
+// apps/studio/components/custom-filter-value-input.tsx
+
+// Changes made:
+// 1. Fetches filter definitions with filterType and unit from categories
+// 2. Shows TextInput for dropdown filters (string value)
+// 3. Shows number input for range filters (numericValue)
+// 4. Displays unit suffix for range filters
+// 5. Updated validation messages
+
+// Note: This component is no longer used in the main form since
+// customFilterValues is hidden, but remains for reference/API access.
 ```
 
 ---
@@ -881,41 +879,46 @@ export function buildRangeFilterParams(
 
 ## Implementation Phases
 
-### Phase 1: Schema & Type Updates (1-2 days)
+### Phase 1: Schema & Type Updates ✅ COMPLETED
 
-1. Create `customFilterDefinition` object type
-2. Update `productCategorySub` schema to use new filter definition
-3. Update `product` schema to support `numericValue`
-4. Create migration script for existing filter data
-5. Run Sanity typegen
+1. ✅ Create `customFilterDefinition` object type
+2. ✅ Update `productCategorySub` schema to use new filter definition
+3. ✅ Update `product` schema to support `numericValue`
+4. ⏭️ Migration script not needed (additive change, existing data compatible)
+5. ✅ Run Sanity typegen
 
-**Files to create/modify:**
+**Files created/modified:**
 
-- `apps/studio/schemaTypes/definitions/custom-filter-definition.ts` (new)
-- `apps/studio/schemaTypes/definitions/index.ts` (update)
-- `apps/studio/schemaTypes/documents/collections/product-category-sub.ts` (update)
-- `apps/studio/schemaTypes/documents/collections/product.ts` (update)
+- ✅ `apps/studio/schemaTypes/definitions/custom-filter-definition.ts` (new)
+- ✅ `apps/studio/schemaTypes/definitions/index.ts` (updated)
+- ✅ `apps/studio/schemaTypes/documents/collections/product-category-sub.ts` (updated)
+- ✅ `apps/studio/schemaTypes/documents/collections/product.ts` (updated)
 
-### Phase 2: Sanity Studio Components (2-3 days)
+### Phase 2: Sanity Studio Components ✅ COMPLETED
 
-1. Create CustomFiltersConfigView component
-2. Create sortable filter item component
-3. Create filter editor dialog
-4. Create products preview component
-5. Update structure.ts to add new view
-6. Update CustomFilterValueInput for range support
+1. ✅ Create CustomFiltersConfigView component (with inline editing, drag-drop, auto-save)
+2. ✅ Create sortable filter item component
+3. ✅ Create filter editor dialog (replaced by inline editing)
+4. ✅ Create product values management component (with search, images, pagination)
+5. ✅ Create ProductFiltersView for products (new - not in original plan)
+6. ✅ Update structure.ts to add both new views
+7. ✅ Update CustomFilterValueInput for range support
+8. ✅ Hide raw fields from content views (managed via dedicated tabs)
 
-**Files to create/modify:**
+**Files created/modified:**
 
-- `apps/studio/components/custom-filters-config/` (new folder)
+- ✅ `apps/studio/components/custom-filters-config/` (new folder)
   - `index.tsx`
-  - `custom-filters-config-view.tsx`
-  - `filter-item.tsx`
-  - `filter-editor-dialog.tsx`
-  - `product-values-preview.tsx`
-  - `types.ts`
-- `apps/studio/components/custom-filter-value-input.tsx` (update)
-- `apps/studio/structure.ts` (update)
+  - `custom-filters-config-view.tsx` (599 lines)
+  - `filter-item.tsx` (179 lines)
+  - `filter-editor-dialog.tsx` (145 lines)
+  - `product-filter-values.tsx` (629 lines)
+  - `types.ts` (30 lines)
+- ✅ `apps/studio/components/product-filters-view/` (new folder - bonus feature)
+  - `index.tsx`
+  - `product-filters-view.tsx` (584 lines)
+- ✅ `apps/studio/components/custom-filter-value-input.tsx` (updated)
+- ✅ `apps/studio/structure.ts` (updated)
 
 ### Phase 3: GROQ & Type Updates (1 day)
 
@@ -1104,18 +1107,24 @@ Range filter params use `min{name}` and `max{name}` prefixes to avoid conflicts 
 
 ## Testing Checklist
 
-### Sanity Studio
+### Sanity Studio ✅ IMPLEMENTED
 
-- [ ] Create new filter (dropdown type)
-- [ ] Create new filter (range type)
-- [ ] Edit existing filter
-- [ ] Delete filter (with confirmation)
-- [ ] Drag-drop reorder filters
-- [ ] View products with filter values
-- [ ] Set filter values on products (dropdown)
-- [ ] Set filter values on products (range/numeric)
+- [x] Create new filter (dropdown type)
+- [x] Create new filter (range type)
+- [x] Edit existing filter (inline editing)
+- [x] Delete filter (with modal confirmation)
+- [x] Drag-drop reorder filters
+- [x] View products with filter values (expandable section per filter)
+- [x] Set filter values on products from sub-category view
+- [x] Set filter values on products from product view ("Filtry" tab)
+- [x] Search products by name in filter values
+- [x] Product image previews in filter values
+- [x] Pagination for products without values (10 initial, show all button)
+- [x] Progress indicators (X/Y uzupełnionych)
+- [x] Auto-save with status indicator
+- [x] Hidden fields in content views (managed via dedicated tabs)
 
-### Frontend
+### Frontend (Not Yet Implemented)
 
 - [ ] Dropdown filter renders correctly
 - [ ] Range filter renders correctly
@@ -1129,7 +1138,7 @@ Range filter params use `min{name}` and `max{name}` prefixes to avoid conflicts 
 - [ ] Products list updates on filter change
 - [ ] Mobile responsive layout
 
-### Edge Cases
+### Edge Cases (Frontend - Not Yet Implemented)
 
 - [ ] Category with no filters
 - [ ] Filter with no products
@@ -1155,6 +1164,17 @@ Range filter params use `min{name}` and `max{name}` prefixes to avoid conflicts 
 
 This implementation adds sophisticated filter management capabilities to the Audiofast product catalog while maintaining the existing user experience for dropdown filters. The new range filter type enables numeric filtering for specifications like impedance, power, and length, providing users with a more intuitive way to find products within specific parameter ranges.
 
+### Current Implementation Status
+
+| Phase                          | Status      | Notes                                 |
+| ------------------------------ | ----------- | ------------------------------------- |
+| Phase 1: Schema & Types        | ✅ Complete | All schemas updated                   |
+| Phase 2: Sanity Studio         | ✅ Complete | Views for sub-categories and products |
+| Phase 3: GROQ & Types          | ⏳ Pending  | Frontend queries not yet updated      |
+| Phase 4: Frontend Logic        | ⏳ Pending  | Filter computation not yet updated    |
+| Phase 5: Frontend Components   | ⏳ Pending  | RangeFilter component not yet created |
+| Phase 6: Integration & Testing | ⏳ Pending  | -                                     |
+
 ### Key Simplifications
 
 - **No min/max/step configuration** in sub-category: Range bounds are computed dynamically from product values
@@ -1177,4 +1197,19 @@ This implementation adds sophisticated filter management capabilities to the Aud
 | Dropdown    | `value` (string)        | Any text     |
 | Range       | `numericValue` (number) | Numbers only |
 
-The Sanity Studio custom view provides content editors with a powerful, visual interface for managing filters per category, including drag-drop sorting and product preview, matching the quality of the existing TechnicalDataView implementation.
+### Sanity Studio Views
+
+| Document Type        | View Tab             | Purpose                                    |
+| -------------------- | -------------------- | ------------------------------------------ |
+| `productCategorySub` | Konfiguracja filtrów | Define filters, set product values in bulk |
+| `product`            | Filtry               | Set filter values for individual product   |
+
+Both views feature:
+
+- Auto-save with debounce
+- Optimistic UI updates
+- Draft/published document management
+- Visual progress indicators
+- Search and pagination (sub-category view)
+
+The Sanity Studio custom views provide content editors with a powerful, visual interface for managing filters per category, including drag-drop sorting and product value management, matching the quality of the existing TechnicalDataView implementation.

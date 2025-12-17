@@ -2,12 +2,18 @@ import { notFound } from 'next/navigation';
 
 import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
+import type { CustomFilterDefinition } from '@/src/global/filters';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import { getProductsListingQuery } from '@/src/global/sanity/query';
 import type { QueryProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
 import type { ProductType } from '@/src/global/types';
-import { parseBrands, parsePrice, slugifyFilterName } from '@/src/global/utils';
+import {
+  parseBrands,
+  parsePrice,
+  parseRangeFilters,
+  slugifyFilterName,
+} from '@/src/global/utils';
 
 import EmptyState from '../../ui/EmptyState';
 import Pagination from '../../ui/Pagination';
@@ -36,7 +42,8 @@ type ProductsListingProps = {
   isCPO?: boolean; // Filter for CPO products only
 
   // Custom filters configuration
-  availableCustomFilters?: string[]; // Custom filter names for parsing
+  availableCustomFilters?: string[]; // Dropdown filter names for parsing
+  filterDefinitions?: CustomFilterDefinition[]; // All filter definitions (for range filters)
   defaultSortBy?: string; // Default sort order when no search
 };
 
@@ -47,6 +54,7 @@ export default async function ProductsListing({
   brandSlug,
   isCPO = false,
   availableCustomFilters = [],
+  filterDefinitions = [],
   defaultSortBy = 'orderRank',
 }: ProductsListingProps) {
   // Await and parse searchParams
@@ -83,7 +91,7 @@ export default async function ProductsListing({
   const minPrice = parsePrice(params.minPrice, 0);
   const maxPrice = parsePrice(params.maxPrice, 999999999, 999999999);
 
-  // Parse custom filters
+  // Parse dropdown custom filters
   const customFilters = availableCustomFilters
     .map((filterName) => {
       const slugified = slugifyFilterName(filterName);
@@ -94,6 +102,26 @@ export default async function ProductsListing({
       return null;
     })
     .filter((f): f is { filterName: string; value: string } => f !== null);
+
+  // Parse range filters from URL (format: {slug}-min, {slug}-max)
+  const urlSearchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined) {
+      const stringValue = Array.isArray(value) ? value[0] : value;
+      if (stringValue) {
+        urlSearchParams.set(key, stringValue);
+      }
+    }
+  });
+  const activeRangeFilters = parseRangeFilters(urlSearchParams, filterDefinitions);
+
+  // Convert range filters to GROQ format (null for undefined values)
+  const rangeFilters = activeRangeFilters.map((rf) => ({
+    filterName: rf.filterName,
+    minValue: rf.minValue ?? null,
+    maxValue: rf.maxValue ?? null,
+  }));
+
 
   // Calculate offset/limit
   const offset = (currentPage - 1) * itemsPerPage;
@@ -116,6 +144,7 @@ export default async function ProductsListing({
       minPrice,
       maxPrice,
       customFilters,
+      rangeFilters,
       isCPO,
       embeddingResults: embeddingResults || [],
     },
@@ -130,22 +159,35 @@ export default async function ProductsListing({
   const hasProducts = productsData.products && productsData.products.length > 0;
 
   // Create URLSearchParams for Pagination
-  const urlSearchParams = new URLSearchParams();
-  if (searchTerm) urlSearchParams.set('search', searchTerm);
-  if (sortBy && sortBy !== defaultSortBy) urlSearchParams.set('sortBy', sortBy);
+  const paginationSearchParams = new URLSearchParams();
+  if (searchTerm) paginationSearchParams.set('search', searchTerm);
+  if (sortBy && sortBy !== defaultSortBy) paginationSearchParams.set('sortBy', sortBy);
   if (!brandSlug && brands.length > 0) {
-    urlSearchParams.set('brands', brands.join(','));
+    paginationSearchParams.set('brands', brands.join(','));
   }
   // Preserve category from URL params (for brand pages)
-  if (categoryFromUrl) urlSearchParams.set('category', categoryFromUrl);
-  if (minPrice > 0) urlSearchParams.set('minPrice', minPrice.toString());
+  if (categoryFromUrl) paginationSearchParams.set('category', categoryFromUrl);
+  if (minPrice > 0) paginationSearchParams.set('minPrice', minPrice.toString());
   if (maxPrice < 999999999) {
-    urlSearchParams.set('maxPrice', maxPrice.toString());
+    paginationSearchParams.set('maxPrice', maxPrice.toString());
   }
   if (customFilters.length > 0) {
     customFilters.forEach(({ filterName, value }) => {
       const slugifiedFilterName = slugifyFilterName(filterName);
-      urlSearchParams.set(slugifiedFilterName, value);
+      paginationSearchParams.set(slugifiedFilterName, value);
+    });
+  }
+
+  // Preserve range filters in pagination URL
+  if (activeRangeFilters.length > 0) {
+    activeRangeFilters.forEach((rf) => {
+      const slugifiedFilterName = slugifyFilterName(rf.filterName);
+      if (rf.minValue !== undefined) {
+        paginationSearchParams.set(`${slugifiedFilterName}-min`, rf.minValue.toString());
+      }
+      if (rf.maxValue !== undefined) {
+        paginationSearchParams.set(`${slugifiedFilterName}-max`, rf.maxValue.toString());
+      }
     });
   }
 
@@ -167,7 +209,7 @@ export default async function ProductsListing({
             itemsPerPage={itemsPerPage}
             currentPage={currentPage}
             basePath={basePath}
-            searchParams={urlSearchParams}
+            searchParams={paginationSearchParams}
           />
           <ul className={styles.productsGrid}>
             {productsData.products!.map((product: ProductType, index) => {
@@ -195,7 +237,7 @@ export default async function ProductsListing({
             itemsPerPage={itemsPerPage}
             currentPage={currentPage}
             basePath={basePath}
-            searchParams={urlSearchParams}
+            searchParams={paginationSearchParams}
           />
         </>
       )}

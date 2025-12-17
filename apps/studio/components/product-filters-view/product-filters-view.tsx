@@ -499,9 +499,7 @@ function FilterInputRow({
       border
       radius={2}
       tone={hasValue ? "positive" : "default"}
-      style={{
-        borderColor: hasValue ? "var(--card-positive-border-color)" : undefined,
-      }}
+
     >
       <Flex align="center" gap={4}>
         {/* Icon */}
@@ -531,7 +529,7 @@ function FilterInputRow({
           <Text size={2} weight="medium">
             {filter.name}
           </Text>
-          <Flex align="center" gap={2} style={{ marginTop: 2 }}>
+          <Flex align="center" gap={2} style={{ marginTop: "8px" }}>
             <Badge mode="outline" fontSize={0}>
               {isRangeFilter ? "Zakres" : "Lista"}
             </Badge>

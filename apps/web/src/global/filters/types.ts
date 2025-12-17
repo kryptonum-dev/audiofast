@@ -1,4 +1,4 @@
-import type { QueryAllProductsFilterMetadataResult } from "../sanity/sanity.types";
+import type { QueryAllProductsFilterMetadataResult } from '../sanity/sanity.types';
 
 // ----------------------------------------
 // Filter Metadata Types (from Sanity query)
@@ -9,21 +9,21 @@ import type { QueryAllProductsFilterMetadataResult } from "../sanity/sanity.type
  * Lightweight structure for client-side filter computation
  */
 export type ProductFilterMetadata = NonNullable<
-  QueryAllProductsFilterMetadataResult["products"]
+  QueryAllProductsFilterMetadataResult['products']
 >[number];
 
 /**
  * Category metadata for filter sidebar
  */
 export type CategoryMetadata = NonNullable<
-  QueryAllProductsFilterMetadataResult["categories"]
+  QueryAllProductsFilterMetadataResult['categories']
 >[number];
 
 /**
  * Brand metadata for filter sidebar
  */
 export type BrandMetadata = NonNullable<
-  QueryAllProductsFilterMetadataResult["brands"]
+  QueryAllProductsFilterMetadataResult['brands']
 >[number];
 
 // ----------------------------------------
@@ -35,7 +35,17 @@ export type BrandMetadata = NonNullable<
  */
 export type CustomFilterValue = {
   filterName: string;
-  value: string;
+  value?: string;
+  numericValue?: number;
+};
+
+/**
+ * Active range filter
+ */
+export type ActiveRangeFilter = {
+  filterName: string;
+  minValue?: number;
+  maxValue?: number;
 };
 
 /**
@@ -55,8 +65,20 @@ export type ActiveFilters = {
   category: string | null;
   /** Category-specific custom filters */
   customFilters: CustomFilterValue[];
+  /** Category-specific range filters */
+  rangeFilters: ActiveRangeFilter[];
   /** CPO (Certified Pre-Owned) filter */
   isCPO: boolean;
+};
+
+/**
+ * Filter definition from sub-category
+ */
+export type CustomFilterDefinition = {
+  _key: string;
+  name: string;
+  filterType: 'dropdown' | 'range';
+  unit?: string;
 };
 
 // ----------------------------------------
@@ -83,6 +105,11 @@ export type ComputedFilters = {
   allProductsCount: number;
   /** Available custom filter values → array of possible values */
   customFilterValues: Map<string, string[]>;
+  /** Available range filter bounds → min/max values and product count */
+  rangeFilterBounds: Map<
+    string,
+    { min: number; max: number; productCount: number }
+  >;
 };
 
 // ----------------------------------------

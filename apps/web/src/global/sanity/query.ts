@@ -1204,7 +1204,12 @@ export const queryProductsPageContent = defineQuery(`
         ${portableTextFragment('title')},
         ${portableTextFragment('description')},
         ${imageFragment('heroImage')},
-        customFilters,
+        customFilters[]{
+          _key,
+          name,
+          filterType,
+          unit
+        },
         ${pageBuilderFragment},
         seo,
         openGraph{
@@ -1244,7 +1249,11 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       "allCategorySlugs": categories[]->slug.current,
       basePriceCents,
       isCPO,
-      customFilterValues
+      customFilterValues[]{
+        filterName,
+        value,
+        numericValue
+      }
     },
     "categories": *[_type == "productCategorySub" && defined(slug.current)] | order(orderRank) {
       _id,
@@ -1495,7 +1504,12 @@ export const queryProductsPageData = defineQuery(`
         ${portableTextFragment('title')},
         ${portableTextFragment('description')},
         ${imageFragment('heroImage')},
-        customFilters,
+        customFilters[]{
+          _key,
+          name,
+          filterType,
+          unit
+        },
         "productsWithFilters": *[
           _type == "product" 
           && defined(slug.current)
@@ -1510,7 +1524,11 @@ export const queryProductsPageData = defineQuery(`
           )
         ]{
           _id,
-          customFilterValues
+          customFilterValues[]{
+            filterName,
+            value,
+            numericValue
+          }
         },
         ${pageBuilderFragment},
         seo,
@@ -1536,8 +1554,12 @@ export const queryProductsPageData = defineQuery(`
 // ----------------------------------------
 
 // Shared filter conditions for products (used in both query and count)
+// Parameters:
+// - $customFilters: array of {filterName, value} for dropdown filters
+// - $rangeFilters: array of {filterName, minValue, maxValue} for range filters
+//   Note: minValue/maxValue can be null to indicate "no limit"
 const productsFilterConditions = /* groq */ `
-  _type == "product" 
+  _type == "product"
   && defined(slug.current)
   && isArchived != true
   && count(categories) > 0
@@ -1553,6 +1575,19 @@ const productsFilterConditions = /* groq */ `
     count($customFilters) <= count(customFilterValues[
       select(
         count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+        false
+      )
+    ])
+  )
+  && (
+    count($rangeFilters) == 0 ||
+    count($rangeFilters) <= count(customFilterValues[
+      select(
+        count($rangeFilters[
+          filterName == ^.filterName 
+          && (minValue == null || ^.numericValue >= minValue)
+          && (maxValue == null || ^.numericValue <= maxValue)
+        ]) > 0 => true,
         false
       )
     ])
@@ -1623,6 +1658,9 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
 // - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
 //   Format: [{filterName: "Długość kabla", value: "2m"}, ...]
 //   Note: ALL custom filters must match (AND logic)
+// - $rangeFilters: array of range filter objects (optional) - empty array [] for no range filters
+//   Format: [{filterName: "Impedancja", minValue: 4, maxValue: 12}, ...]
+//   Note: minValue/maxValue can be null for "no limit"
 // - $isCPO: boolean to filter CPO products only (optional) - false for all products
 
 // Static queries for each sort type (required for typegen)
@@ -1689,7 +1727,12 @@ export const queryCategoryMetadata = defineQuery(`
     _id,
     name,
     "slug": slug.current,
-    customFilters
+    customFilters[]{
+      _key,
+      name,
+      filterType,
+      unit
+    }
   }
 `);
 
