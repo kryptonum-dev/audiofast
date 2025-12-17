@@ -22,12 +22,14 @@ import {
   contentBlockVimeo,
   contentBlockYoutube,
 } from "./content-blocks";
+import { customFilterDefinition } from "./custom-filter-definition";
 import { customUrl } from "./custom-url";
 import { formState } from "./form-state";
 import { cpoPageBuilder, pageBuilder } from "./pagebuilder";
 
 export const definitions = [
   customUrl,
+  customFilterDefinition,
   button,
   buttonWithNoVariant,
   pageBuilder,

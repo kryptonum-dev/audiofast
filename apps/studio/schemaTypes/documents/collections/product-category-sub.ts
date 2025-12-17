@@ -77,14 +77,24 @@ export const productCategorySub = defineType({
     }),
     defineField({
       name: "customFilters",
-      title: "Niestandardowe filtry",
+      title: "Konfiguracja filtrów",
       type: "array",
       description:
-        'Zdefiniuj nazwy filtrów dla tej kategorii (np. "Długość kabla", "Moc wzmacniacza", "Impedancja"). Produkty będą mogły podać wartości dla tych filtrów.',
+        "Zdefiniuj filtry dostępne dla tej kategorii. Przeciągnij aby zmienić kolejność.",
       group: GROUP.MAIN_CONTENT,
-      of: [{ type: "string" }],
+      of: [{ type: "customFilterDefinition" }],
       validation: (Rule) =>
-        Rule.unique().error("Nazwy filtrów muszą być unikalne"),
+        Rule.custom((filters) => {
+          if (!filters || !Array.isArray(filters)) return true;
+          const names = filters
+            .map((f: any) => f.name?.toLowerCase())
+            .filter(Boolean);
+          const uniqueNames = new Set(names);
+          if (names.length !== uniqueNames.size) {
+            return "Nazwy filtrów muszą być unikalne";
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "pageBuilder",

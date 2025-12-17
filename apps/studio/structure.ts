@@ -6,6 +6,7 @@ import {
   Calendar,
   File,
   FileText,
+  Filter,
   Folder,
   FolderOpen,
   type LucideIcon,
@@ -23,6 +24,7 @@ import type {
 } from "sanity/structure";
 import { createBulkActionsTable } from "sanity-plugin-bulk-actions-table";
 
+import { CustomFiltersConfigView } from "./components/custom-filters-config";
 import { TechnicalDataView } from "./components/technical-data-table/technical-data-view";
 import type { SchemaType, SingletonType } from "./schemaTypes";
 import { schemaTypes } from "./schemaTypes";
@@ -584,6 +586,19 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
         .component(TechnicalDataView)
         .title("Dane techniczne")
         .icon(BlockContentIcon),
+    ]);
+  }
+
+  // Add Custom Filters Config view for sub-category documents
+  if (schemaType === "productCategorySub") {
+    return S.document().views([
+      // Default form view
+      S.view.form().title("Zawartość").icon(EditIcon),
+      // Custom Filters Config view
+      S.view
+        .component(CustomFiltersConfigView)
+        .title("Konfiguracja filtrów")
+        .icon(Filter),
     ]);
   }
 

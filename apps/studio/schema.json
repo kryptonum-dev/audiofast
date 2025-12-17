@@ -13069,6 +13069,53 @@
     }
   },
   {
+    "name": "customFilterDefinition",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "customFilterDefinition"
+          }
+        },
+        "name": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "filterType": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "dropdown"
+              },
+              {
+                "type": "string",
+                "value": "range"
+              }
+            ]
+          },
+          "optional": true
+        },
+        "unit": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "comparatorConfig",
     "type": "document",
     "attributes": {
@@ -18206,7 +18253,19 @@
         "value": {
           "type": "array",
           "of": {
-            "type": "string"
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "customFilterDefinition"
+            }
           }
         },
         "optional": true
@@ -18889,6 +18948,13 @@
                 "type": "objectAttribute",
                 "value": {
                   "type": "string"
+                },
+                "optional": true
+              },
+              "numericValue": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "number"
                 },
                 "optional": true
               },

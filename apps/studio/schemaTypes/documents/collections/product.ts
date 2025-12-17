@@ -182,21 +182,36 @@ export const product = defineType({
             }),
             defineField({
               name: "value",
-              title: "Wartość",
+              title: "Wartość tekstowa",
               type: "string",
-              description: 'Wartość dla tego filtra (np. "2m", "100W", "8Ω")',
+              description: 'Dla filtrów typu lista (np. "2m", "Złoty", "Custom")',
+            }),
+            defineField({
+              name: "numericValue",
+              title: "Wartość liczbowa",
+              type: "number",
+              description:
+                "Dla filtrów typu zakres - tylko liczby (np. 4, 8, 12)",
               validation: (Rule) =>
-                Rule.required().error("Wartość filtra jest wymagana"),
+                Rule.custom((value, context) => {
+                  // numericValue is required for range filters
+                  // This validation is handled in CustomFilterValueInput component
+                  return true;
+                }),
             }),
           ],
           preview: {
             select: {
               filterName: "filterName",
               value: "value",
+              numericValue: "numericValue",
             },
-            prepare: ({ filterName, value }) => ({
+            prepare: ({ filterName, value, numericValue }) => ({
               title: filterName || "Filtr",
-              subtitle: value || "Brak wartości",
+              subtitle:
+                numericValue !== undefined
+                  ? String(numericValue)
+                  : value || "Brak wartości",
               media: Settings,
             }),
           },
