@@ -47,7 +47,8 @@ function generateKey(): string {
  * Custom Filters Config View Component
  * Renders as a separate view tab in the Sanity document editor for sub-categories
  * Provides a sortable list interface for managing custom filter definitions
- * with real-time optimistic updates and background saving
+ * with real-time optimistic updates and background saving.
+ * Also allows setting filter values for products directly in this view.
  */
 export function CustomFiltersConfigView({
   document,
@@ -222,7 +223,7 @@ export function CustomFiltersConfigView({
           }>;
         }>
       >(
-        `*[_type == "product" && references($categoryId) && defined(customFilterValues)]{
+        `*[_type == "product" && references($categoryId) && (isArchived != true) && defined(customFilterValues)]{
           _id,
           name,
           customFilterValues[]{filterName, value, numericValue}
@@ -333,6 +334,108 @@ export function CustomFiltersConfigView({
     setDeletingIndex(null);
   }, []);
 
+  // Save product filter value
+  const handleSaveProductValue = useCallback(
+    async (
+      productId: string,
+      filterName: string,
+      value: string | undefined,
+      numericValue: number | undefined,
+    ): Promise<void> => {
+      try {
+        // Get base product ID
+        const baseProductId = productId.startsWith("drafts.")
+          ? productId.replace("drafts.", "")
+          : productId;
+        const draftProductId = `drafts.${baseProductId}`;
+
+        // First, fetch the current product to get existing filter values
+        const currentProduct = await client.fetch<{
+          _id: string;
+          _type: string;
+          customFilterValues?: Array<{
+            _key: string;
+            filterName: string;
+            value?: string;
+            numericValue?: number;
+          }>;
+        }>(
+          `*[_id == $productId || _id == $draftProductId][0]{
+            _id,
+            _type,
+            customFilterValues
+          }`,
+          { productId: baseProductId, draftProductId },
+        );
+
+        if (!currentProduct) {
+          throw new Error("Product not found");
+        }
+
+        // Build the new customFilterValues array
+        let newFilterValues = [
+          ...(currentProduct.customFilterValues || []),
+        ];
+
+        // Find existing value for this filter
+        const existingIndex = newFilterValues.findIndex(
+          (fv) => fv.filterName === filterName,
+        );
+
+        // If both value and numericValue are empty, remove the filter value
+        if (value === undefined && numericValue === undefined) {
+          if (existingIndex !== -1) {
+            newFilterValues.splice(existingIndex, 1);
+          }
+        } else {
+          const newFilterValue = {
+            _key: existingIndex !== -1 ? newFilterValues[existingIndex]._key : generateKey(),
+            filterName,
+            value,
+            numericValue,
+          };
+
+          if (existingIndex !== -1) {
+            newFilterValues[existingIndex] = newFilterValue;
+          } else {
+            newFilterValues.push(newFilterValue);
+          }
+        }
+
+        // Use transaction to create draft if not exists, then patch
+        const transaction = client.transaction();
+
+        // Create draft from published if needed
+        transaction.createIfNotExists({
+          _id: draftProductId,
+          _type: "product",
+        });
+
+        // Patch the product's customFilterValues
+        transaction.patch(draftProductId, (patch) =>
+          patch.set({
+            customFilterValues:
+              newFilterValues.length > 0 ? newFilterValues : [],
+          }),
+        );
+
+        await transaction.commit();
+
+        // Refresh stats after saving
+        loadProductStats();
+      } catch (error) {
+        console.error("Error saving product filter value:", error);
+        toast.push({
+          status: "error",
+          title: "Błąd zapisu",
+          description: "Nie udało się zapisać wartości filtra dla produktu.",
+        });
+        throw error;
+      }
+    },
+    [client, toast, loadProductStats],
+  );
+
   return (
     <Card padding={4} sizing="border">
       <Stack space={5}>
@@ -360,8 +463,8 @@ export function CustomFiltersConfigView({
               )}
             </Flex>
             <Text size={1} muted>
-              Zarządzaj filtrami dla tej kategorii. Zmiany zapisują się
-              automatycznie.
+              Zarządzaj filtrami i przypisuj wartości produktom. Zmiany zapisują
+              się automatycznie.
             </Text>
           </Stack>
           <Button
@@ -390,8 +493,11 @@ export function CustomFiltersConfigView({
                     key={filter._key}
                     id={filter._key}
                     filter={filter}
+                    categoryId={documentId}
+                    client={client}
                     onUpdate={handleUpdateFilter}
                     onDelete={() => handleRequestDelete(index)}
+                    onSaveProductValue={handleSaveProductValue}
                     rangeStats={productStats.get(filter.name)}
                   />
                 ))}
@@ -428,7 +534,11 @@ export function CustomFiltersConfigView({
                 filtr nie będzie już wyświetlany na stronie.
               </Text>
               <Flex gap={2}>
-                <Button text="Anuluj" mode="ghost" onClick={handleCancelDelete} />
+                <Button
+                  text="Anuluj"
+                  mode="ghost"
+                  onClick={handleCancelDelete}
+                />
                 <Button
                   text="Usuń filtr"
                   tone="critical"
@@ -455,7 +565,8 @@ export function CustomFiltersConfigView({
                 wartości (np. impedancja 4-16Ω, moc 10-100W)
               </Text>
               <Text size={1} muted>
-                • Przeciągnij filtry aby zmienić ich kolejność na stronie
+                • Kliknij &ldquo;Wartości produktów&rdquo; aby przypisać wartości
+                do produktów w tej kategorii
               </Text>
             </Stack>
           </Card>

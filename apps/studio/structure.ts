@@ -1,4 +1,4 @@
-import { BlockContentIcon, EditIcon } from "@sanity/icons";
+import { BlockContentIcon, EditIcon, FilterIcon} from "@sanity/icons";
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import {
   BadgeCheck,
@@ -6,7 +6,6 @@ import {
   Calendar,
   File,
   FileText,
-  Filter,
   Folder,
   FolderOpen,
   type LucideIcon,
@@ -598,7 +597,7 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
       S.view
         .component(CustomFiltersConfigView)
         .title("Konfiguracja filtrów")
-        .icon(Filter),
+        .icon(FilterIcon),
     ]);
   }
 

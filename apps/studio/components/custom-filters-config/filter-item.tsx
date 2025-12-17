@@ -1,8 +1,7 @@
 "use client";
 
-import { EditIcon, TrashIcon } from "@sanity/icons";
+import { TrashIcon } from "@sanity/icons";
 import {
-  Badge,
   Box,
   Button,
   Card,
@@ -15,22 +14,35 @@ import {
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Grip } from "lucide-react";
+import type { SanityClient } from "sanity";
 
+import { ProductFilterValues } from "./product-filter-values";
 import type { FilterConfigItem, RangeFilterStats } from "./types";
 
 interface SortableFilterItemProps {
   id: string;
   filter: FilterConfigItem;
+  categoryId: string;
+  client: SanityClient;
   onUpdate: (filter: FilterConfigItem) => void;
   onDelete: () => void;
+  onSaveProductValue: (
+    productId: string,
+    filterName: string,
+    value: string | undefined,
+    numericValue: number | undefined,
+  ) => Promise<void>;
   rangeStats?: RangeFilterStats;
 }
 
 export function SortableFilterItem({
   id,
   filter,
+  categoryId,
+  client,
   onUpdate,
   onDelete,
+  onSaveProductValue,
   rangeStats,
 }: SortableFilterItemProps) {
   const {
@@ -67,7 +79,12 @@ export function SortableFilterItem({
 
   return (
     <div ref={setNodeRef} style={style}>
-      <Card border padding={3} radius={2} tone={isDragging ? "primary" : "default"}>
+      <Card
+        border
+        padding={3}
+        radius={2}
+        tone={isDragging ? "primary" : "default"}
+      >
         <Stack space={3}>
           {/* Main row with drag handle, name input, and actions */}
           <Flex align="center" gap={3}>
@@ -95,7 +112,9 @@ export function SortableFilterItem({
               <Select
                 value={filter.filterType}
                 onChange={(e) =>
-                  handleTypeChange(e.currentTarget.value as "dropdown" | "range")
+                  handleTypeChange(
+                    e.currentTarget.value as "dropdown" | "range",
+                  )
                 }
                 fontSize={1}
               >
@@ -141,6 +160,16 @@ export function SortableFilterItem({
             <Card padding={2} tone="caution" radius={2}>
               <Text size={1}>Wprowadź nazwę filtra</Text>
             </Card>
+          )}
+
+          {/* Product filter values section */}
+          {filter.name && (
+            <ProductFilterValues
+              filter={filter}
+              categoryId={categoryId}
+              client={client}
+              onSaveProduct={onSaveProductValue}
+            />
           )}
         </Stack>
       </Card>
