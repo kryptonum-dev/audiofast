@@ -151,22 +151,25 @@ export function ProductFilterValues({
         { categoryId: baseCategoryId },
       );
 
-      const productsWithValues = result.map((product) => {
-        const filterValue = product.customFilterValues?.find(
-          (fv) => fv.filterName === filter.name,
-        );
-        const baseId = product._id.startsWith("drafts.")
-          ? product._id.replace("drafts.", "")
-          : product._id;
-        return {
-          _id: baseId,
-          name: product.name,
-          brandName: product.brandName,
-          imageUrl: product.imageUrl,
-          currentValue: filterValue?.value,
-          currentNumericValue: filterValue?.numericValue,
-        };
-      });
+      const productsWithValues = result
+        // Filter out products without names (incomplete drafts)
+        .filter((product) => product.name)
+        .map((product) => {
+          const filterValue = product.customFilterValues?.find(
+            (fv) => fv.filterName === filter.name,
+          );
+          const baseId = product._id.startsWith("drafts.")
+            ? product._id.replace("drafts.", "")
+            : product._id;
+          return {
+            _id: baseId,
+            name: product.name,
+            brandName: product.brandName,
+            imageUrl: product.imageUrl,
+            currentValue: filterValue?.value,
+            currentNumericValue: filterValue?.numericValue,
+          };
+        });
 
       setProducts(productsWithValues);
 
@@ -307,7 +310,7 @@ export function ProductFilterValues({
     const query = searchQuery.toLowerCase();
     return products.filter(
       (p) =>
-        p.name.toLowerCase().includes(query) ||
+        p.name?.toLowerCase().includes(query) ||
         p.brandName?.toLowerCase().includes(query),
     );
   }, [products, searchQuery]);
