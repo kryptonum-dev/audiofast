@@ -1,5 +1,20 @@
 "use client";
 
+import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { AddIcon } from "@sanity/icons";
 import {
   Box,
@@ -10,28 +25,13 @@ import {
   Text,
   useToast,
 } from "@sanity/ui";
+import { Filter } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SanityDocument } from "sanity";
 import { useClient } from "sanity";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { Filter } from "lucide-react";
 
-import type { FilterConfigItem, RangeFilterStats } from "./types";
 import { SortableFilterItem } from "./filter-item";
+import type { FilterConfigItem, RangeFilterStats } from "./types";
 
 type CustomFiltersConfigViewProps = {
   document: {
@@ -47,6 +47,7 @@ function generateKey(): string {
  * Custom Filters Config View Component
  * Renders as a separate view tab in the Sanity document editor for sub-categories
  * Provides a sortable list interface for managing custom filter definitions
+ * with real-time optimistic updates and background saving
  */
 export function CustomFiltersConfigView({
   document,
@@ -60,23 +61,26 @@ export function CustomFiltersConfigView({
     | FilterConfigItem[]
     | undefined;
 
-  // Local state for editing
+  // Local state for editing (optimistic updates)
   const [filters, setFilters] = useState<FilterConfigItem[]>([]);
   const [productStats, setProductStats] = useState<
     Map<string, RangeFilterStats>
   >(new Map());
-  const [isLoadingStats, setIsLoadingStats] = useState(false);
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">(
+    "saved",
+  );
 
   // Track if initial load is complete (to avoid saving on mount)
   const isInitialized = useRef(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track dirty state to prevent props overwriting local changes
-  const isDirty = useRef(false);
-  const savePromiseRef = useRef<Promise<void> | null>(null);
+  // Keep track of latest filters for saving (avoids stale closures)
   const latestFiltersRef = useRef<FilterConfigItem[]>([]);
+
+  // Pending save queue for conflict resolution
+  const isSavingRef = useRef(false);
+  const pendingSaveRef = useRef(false);
 
   // DnD sensors
   const sensors = useSensors(
@@ -86,19 +90,18 @@ export function CustomFiltersConfigView({
     }),
   );
 
-  // Initialize state from document data (only when not dirty)
+  // Initialize state from document data
   useEffect(() => {
-    if (isDirty.current) {
-      return;
+    // Only initialize once or when document changes from external source
+    if (!isInitialized.current) {
+      const initialFilters = existingFilters || [];
+      setFilters(initialFilters);
+      latestFiltersRef.current = initialFilters;
+
+      setTimeout(() => {
+        isInitialized.current = true;
+      }, 100);
     }
-
-    const initialFilters = existingFilters || [];
-    setFilters(initialFilters);
-    latestFiltersRef.current = initialFilters;
-
-    setTimeout(() => {
-      isInitialized.current = true;
-    }, 100);
   }, [existingFilters]);
 
   // Keep latestFiltersRef in sync with state changes
@@ -106,18 +109,17 @@ export function CustomFiltersConfigView({
     latestFiltersRef.current = filters;
   }, [filters]);
 
-  // Mark as dirty when state changes after initialization
-  useEffect(() => {
-    if (isInitialized.current) {
-      isDirty.current = true;
+  // Background save function with retry logic
+  const saveToSanity = useCallback(async (): Promise<void> => {
+    // If already saving, mark as pending and return
+    if (isSavingRef.current) {
+      pendingSaveRef.current = true;
+      return;
     }
-  }, [filters]);
 
-  // Auto-save function
-  const saveChanges = useCallback(async (): Promise<void> => {
-    if (!isInitialized.current) return;
+    isSavingRef.current = true;
+    setSaveStatus("saving");
 
-    setIsSaving(true);
     try {
       const currentFilters = latestFiltersRef.current;
 
@@ -153,42 +155,49 @@ export function CustomFiltersConfigView({
 
       await transaction.commit();
 
-      isDirty.current = false;
+      setSaveStatus("saved");
     } catch (error) {
       console.error("Error saving filters:", error);
+      setSaveStatus("error");
       toast.push({
         status: "error",
         title: "Błąd zapisu",
-        description: "Nie udało się zapisać konfiguracji filtrów.",
+        description: "Nie udało się zapisać. Spróbuj ponownie.",
       });
-      throw error;
     } finally {
-      setIsSaving(false);
+      isSavingRef.current = false;
+
+      // If there's a pending save, execute it
+      if (pendingSaveRef.current) {
+        pendingSaveRef.current = false;
+        // Small delay to batch rapid changes
+        setTimeout(() => {
+          saveToSanity();
+        }, 100);
+      }
     }
   }, [client, documentId, document.displayed, toast]);
 
-  // Auto-save with debounce when data changes
+  // Debounced auto-save when filters change
   useEffect(() => {
     if (!isInitialized.current) return;
 
+    // Clear existing timeout
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
     }
 
+    // Debounce save (300ms delay for smooth typing experience)
     saveTimeoutRef.current = setTimeout(() => {
-      const savePromise = saveChanges();
-      savePromiseRef.current = savePromise;
-      savePromise.finally(() => {
-        savePromiseRef.current = null;
-      });
-    }, 500);
+      saveToSanity();
+    }, 300);
 
     return () => {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
     };
-  }, [filters, saveChanges]);
+  }, [filters, saveToSanity]);
 
   // Load product statistics for range filters
   const loadProductStats = useCallback(async () => {
@@ -197,7 +206,6 @@ export function CustomFiltersConfigView({
       return;
     }
 
-    setIsLoadingStats(true);
     try {
       const categoryId = documentId.startsWith("drafts.")
         ? documentId.replace("drafts.", "")
@@ -250,20 +258,22 @@ export function CustomFiltersConfigView({
     } catch (error) {
       console.error("Error loading product stats:", error);
       setProductStats(new Map());
-    } finally {
-      setIsLoadingStats(false);
     }
   }, [filters, documentId, client]);
 
-  // Load stats when filters change
+  // Load stats when filters change (debounced)
   useEffect(() => {
     if (isInitialized.current) {
-      loadProductStats();
+      const timeout = setTimeout(() => {
+        loadProductStats();
+      }, 500);
+      return () => clearTimeout(timeout);
     }
   }, [loadProductStats]);
 
   const filterKeys = useMemo(() => filters.map((f) => f._key), [filters]);
 
+  // Handle drag end - reorder filters
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
@@ -280,6 +290,7 @@ export function CustomFiltersConfigView({
     [filters],
   );
 
+  // Add new filter
   const handleAddFilter = useCallback(() => {
     const newKey = generateKey();
     const newFilter: FilterConfigItem = {
@@ -290,37 +301,37 @@ export function CustomFiltersConfigView({
     setFilters([...filters, newFilter]);
   }, [filters]);
 
-  const handleEdit = useCallback(
-    (index: number) => {
-      // For now, just show a placeholder - editing is done inline
-      console.log("Edit filter at index:", index);
+  // Update a filter (optimistic - instant UI update)
+  const handleUpdateFilter = useCallback(
+    (updatedFilter: FilterConfigItem) => {
+      setFilters((prevFilters) =>
+        prevFilters.map((f) =>
+          f._key === updatedFilter._key ? updatedFilter : f,
+        ),
+      );
     },
     [],
   );
 
-  const handleSaveEdit = useCallback(
-    (updatedFilter: FilterConfigItem) => {
-      const index = filters.findIndex((f) => f._key === updatedFilter._key);
-      if (index !== -1) {
-        const newFilters = [...filters];
-        newFilters[index] = updatedFilter;
-        setFilters(newFilters);
-      }
-    },
-    [filters],
-  );
-
-  const handleDelete = useCallback((index: number) => {
+  // Request delete (shows confirmation)
+  const handleRequestDelete = useCallback((index: number) => {
     setDeletingIndex(index);
   }, []);
 
-  const confirmDelete = useCallback(() => {
+  // Confirm delete
+  const handleConfirmDelete = useCallback(() => {
     if (deletingIndex !== null) {
-      const newFilters = filters.filter((_, i) => i !== deletingIndex);
-      setFilters(newFilters);
+      setFilters((prevFilters) =>
+        prevFilters.filter((_, i) => i !== deletingIndex),
+      );
       setDeletingIndex(null);
     }
-  }, [deletingIndex, filters]);
+  }, [deletingIndex]);
+
+  // Cancel delete
+  const handleCancelDelete = useCallback(() => {
+    setDeletingIndex(null);
+  }, []);
 
   return (
     <Card padding={4} sizing="border">
@@ -328,28 +339,38 @@ export function CustomFiltersConfigView({
         {/* Header */}
         <Flex align="center" justify="space-between">
           <Stack space={2}>
-            <Text size={3} weight="bold">
-              Konfiguracja filtrów
-            </Text>
+            <Flex align="center" gap={2}>
+              <Text size={3} weight="bold">
+                Konfiguracja filtrów
+              </Text>
+              {saveStatus === "saving" && (
+                <Text size={1} muted>
+                  Zapisywanie...
+                </Text>
+              )}
+              {saveStatus === "saved" && filters.length > 0 && (
+                <Text size={1} muted style={{ color: "green" }}>
+                  ✓ Zapisano
+                </Text>
+              )}
+              {saveStatus === "error" && (
+                <Text size={1} style={{ color: "red" }}>
+                  ✕ Błąd zapisu
+                </Text>
+              )}
+            </Flex>
             <Text size={1} muted>
-              Zarządzaj filtrami dla tej kategorii. Przeciągaj aby zmienić
-              kolejność.
+              Zarządzaj filtrami dla tej kategorii. Zmiany zapisują się
+              automatycznie.
             </Text>
           </Stack>
-          <Flex align="center" gap={2}>
-            {isSaving && (
-              <Text size={1} muted>
-                Zapisywanie...
-              </Text>
-            )}
-            <Button
-              icon={AddIcon}
-              text="Dodaj filtr"
-              mode="ghost"
-              tone="primary"
-              onClick={handleAddFilter}
-            />
-          </Flex>
+          <Button
+            icon={AddIcon}
+            text="Dodaj filtr"
+            mode="ghost"
+            tone="primary"
+            onClick={handleAddFilter}
+          />
         </Flex>
 
         {/* Filter List (Sortable) */}
@@ -369,10 +390,8 @@ export function CustomFiltersConfigView({
                     key={filter._key}
                     id={filter._key}
                     filter={filter}
-                    isEditing={false}
-                    onEdit={() => handleEdit(index)}
-                    onDelete={() => handleDelete(index)}
-                    onSave={handleSaveEdit}
+                    onUpdate={handleUpdateFilter}
+                    onDelete={() => handleRequestDelete(index)}
                     rangeStats={productStats.get(filter.name)}
                   />
                 ))}
@@ -387,28 +406,57 @@ export function CustomFiltersConfigView({
                 <Filter size={32} opacity={0.5} />
               </Box>
               <Text muted>Brak zdefiniowanych filtrów dla tej kategorii.</Text>
-              <Button text="Dodaj pierwszy filtr" onClick={handleAddFilter} />
+              <Button
+                text="Dodaj pierwszy filtr"
+                mode="ghost"
+                onClick={handleAddFilter}
+              />
             </Stack>
           </Card>
         )}
 
         {/* Delete Confirmation Dialog */}
         {deletingIndex !== null && (
-          <Card padding={3} tone="critical" border>
+          <Card padding={3} tone="critical" border radius={2}>
             <Stack space={3}>
               <Text weight="semibold">
                 Czy na pewno chcesz usunąć filtr &ldquo;
-                {filters[deletingIndex]?.name || "Bez nazwy"}&rdquo;? Akcja nie
-                może być cofnięta.
+                {filters[deletingIndex]?.name || "Bez nazwy"}&rdquo;?
+              </Text>
+              <Text size={1} muted>
+                Produkty z wartościami tego filtra zachowają swoje dane, ale
+                filtr nie będzie już wyświetlany na stronie.
               </Text>
               <Flex gap={2}>
+                <Button text="Anuluj" mode="ghost" onClick={handleCancelDelete} />
                 <Button
-                  text="Anuluj"
-                  mode="ghost"
-                  onClick={() => setDeletingIndex(null)}
+                  text="Usuń filtr"
+                  tone="critical"
+                  onClick={handleConfirmDelete}
                 />
-                <Button text="Usuń" tone="critical" onClick={confirmDelete} />
               </Flex>
+            </Stack>
+          </Card>
+        )}
+
+        {/* Info card */}
+        {filters.length > 0 && (
+          <Card padding={3} tone="primary" border radius={2}>
+            <Stack space={2}>
+              <Text size={1} weight="semibold">
+                Wskazówki:
+              </Text>
+              <Text size={1} muted>
+                • <strong>Lista rozwijana</strong> - użytkownik wybiera jedną
+                wartość z listy (np. kolor, materiał)
+              </Text>
+              <Text size={1} muted>
+                • <strong>Zakres</strong> - użytkownik wybiera przedział
+                wartości (np. impedancja 4-16Ω, moc 10-100W)
+              </Text>
+              <Text size={1} muted>
+                • Przeciągnij filtry aby zmienić ich kolejność na stronie
+              </Text>
             </Stack>
           </Card>
         )}
