@@ -1,4 +1,4 @@
-import { BlockContentIcon, EditIcon, FilterIcon} from "@sanity/icons";
+import { BlockContentIcon, EditIcon, FilterIcon } from "@sanity/icons";
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import {
   BadgeCheck,
@@ -24,6 +24,7 @@ import type {
 import { createBulkActionsTable } from "sanity-plugin-bulk-actions-table";
 
 import { CustomFiltersConfigView } from "./components/custom-filters-config";
+import { ProductFiltersView } from "./components/product-filters-view";
 import { TechnicalDataView } from "./components/technical-data-table/technical-data-view";
 import type { SchemaType, SingletonType } from "./schemaTypes";
 import { schemaTypes } from "./schemaTypes";
@@ -575,7 +576,7 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
   S,
   { schemaType },
 ) => {
-  // Add Technical Data view for product documents
+  // Add Technical Data view and Product Filters view for product documents
   if (schemaType === "product") {
     return S.document().views([
       // Default form view
@@ -585,6 +586,11 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
         .component(TechnicalDataView)
         .title("Dane techniczne")
         .icon(BlockContentIcon),
+      // Product Filters view
+      S.view
+        .component(ProductFiltersView)
+        .title("Filtry")
+        .icon(FilterIcon),
     ]);
   }
 

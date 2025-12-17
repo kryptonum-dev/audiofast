@@ -31,7 +31,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SanityDocument } from "sanity";
 import { useClient } from "sanity";
 
-import { SortableFilterItem } from "./filter-item";
+import { SortableFilterItem } from "../custom-filters-config/filter-item";
 import type { FilterConfigItem, RangeFilterStats } from "./types";
 
 type CustomFiltersConfigViewProps = {

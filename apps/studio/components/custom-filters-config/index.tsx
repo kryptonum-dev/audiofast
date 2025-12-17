@@ -1,1 +1,1 @@
-export { CustomFiltersConfigView } from "./custom-filters-config-view";
+export { CustomFiltersConfigView } from "../custom-filters-config/custom-filters-config-view";
