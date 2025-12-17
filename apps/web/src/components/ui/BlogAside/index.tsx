@@ -1,19 +1,12 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useState, useTransition } from 'react';
 
-import Pill from "../Pill";
-import Searchbar from "../Searchbar";
-import styles from "./styles.module.scss";
-
-export type ArticleByYearItem = {
-  _id: string;
-  name: string;
-  slug: string;
-  _createdAt: string;
-  year: string;
-};
+import Button from '../Button';
+import Pill from '../Pill';
+import Searchbar from '../Searchbar';
+import styles from './styles.module.scss';
 
 type BlogAsideProps = {
   categories: {
@@ -23,72 +16,92 @@ type BlogAsideProps = {
     count: number;
   }[];
   totalCount: number;
+  availableYears: string[];
   basePath?: string;
   currentCategory?: string | null;
-  initialSearch?: string;
-  articlesByYear?: ArticleByYearItem[];
 };
 
 export default function BlogAside({
   categories,
   totalCount,
-  basePath = "/blog/",
+  availableYears,
+  basePath = '/blog/',
   currentCategory = null,
-  initialSearch = "",
-  articlesByYear = [],
 }: BlogAsideProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
-  const [localSearch, setLocalSearch] = useState(initialSearch);
-  const [expandedYears, setExpandedYears] = useState<Set<string>>(new Set());
+  const [localSearch, setLocalSearch] = useState(
+    searchParams.get('search') || '',
+  );
+
+  // Get current year filter from URL
+  const currentYear = searchParams.get('year') || '';
 
   // Check if we're on the main blog page (no category selected)
-  const isAllPostsActive = !currentCategory || currentCategory === "";
+  const isAllPostsActive = !currentCategory || currentCategory === '';
 
-  // Group articles by year
-  const groupedArticles = articlesByYear.reduce(
-    (acc, article) => {
-      const year = article.year;
-      if (!acc[year]) {
-        acc[year] = [];
+  // Build URL with preserved params
+  const buildUrl = useCallback(
+    (updates: {
+      year?: string | null;
+      search?: string | null;
+      page?: null;
+    }) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      // Always reset page when changing filters
+      params.delete('page');
+
+      // Handle year
+      if (updates.year === null) {
+        params.delete('year');
+      } else if (updates.year !== undefined) {
+        params.set('year', updates.year);
       }
-      acc[year].push(article);
-      return acc;
+
+      // Handle search
+      if (updates.search === null) {
+        params.delete('search');
+      } else if (updates.search !== undefined) {
+        if (updates.search.trim()) {
+          params.set('search', updates.search.trim());
+        } else {
+          params.delete('search');
+        }
+      }
+
+      const queryString = params.toString();
+      return queryString ? `${basePath}?${queryString}` : basePath;
     },
-    {} as Record<string, ArticleByYearItem[]>,
+    [basePath, searchParams],
   );
 
-  // Sort years in descending order
-  const sortedYears = Object.keys(groupedArticles).sort(
-    (a, b) => parseInt(b) - parseInt(a),
-  );
-
-  const toggleYear = (year: string) => {
-    const newExpandedYears = new Set(expandedYears);
-    if (newExpandedYears.has(year)) {
-      newExpandedYears.delete(year);
-    } else {
-      newExpandedYears.add(year);
-    }
-    setExpandedYears(newExpandedYears);
-  };
-
-  const applySearch = () => {
-    const params = new URLSearchParams();
-
-    // Remove page param to reset pagination
-    // Add search term if present
-    if (localSearch.trim()) {
-      params.set("search", localSearch.trim());
-    }
-
-    const queryString = params.toString();
-    const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
+  const handleYearClick = (year: string) => {
+    const newUrl =
+      currentYear === year ? buildUrl({ year: null }) : buildUrl({ year });
 
     startTransition(() => {
       router.push(newUrl, { scroll: false });
     });
   };
+
+  const applySearch = () => {
+    const newUrl = buildUrl({ search: localSearch });
+
+    startTransition(() => {
+      router.push(newUrl, { scroll: false });
+    });
+  };
+
+  const clearAllFilters = () => {
+    setLocalSearch('');
+    startTransition(() => {
+      router.push(basePath, { scroll: false });
+    });
+  };
+
+  const hasActiveFilters = currentYear || localSearch;
 
   return (
     <aside className={styles.sidebar}>
@@ -99,19 +112,20 @@ export default function BlogAside({
         onSubmit={applySearch}
         placeholder="Szukaj"
       />
+
+      {/* Categories section */}
       <nav className={styles.categories}>
         <Pill
           label="Wszystkie publikacje"
           count={totalCount}
-          isActive={isAllPostsActive}
+          isActive={isAllPostsActive && !currentYear}
           href="/blog/"
         />
         {categories.map((category) => {
           const categorySlug = category.slug
-            ?.replace("/blog/kategoria/", "")
-            .replace("/", "");
+            ?.replace('/blog/kategoria/', '')
+            .replace('/', '');
 
-          // Check if this category is active
           const isActive = currentCategory === categorySlug;
 
           return (
@@ -126,55 +140,33 @@ export default function BlogAside({
         })}
       </nav>
 
-      {sortedYears.length > 0 && (
-        <div className={styles.yearNavigation}>
-          <h2 className={styles.yearNavigationTitle}>Przeglądaj według lat</h2>
-          <div className={styles.yearsList}>
-            {sortedYears.map((year) => (
-              <div key={year} className={styles.yearItem}>
-                <button
-                  className={styles.yearButton}
-                  onClick={() => toggleYear(year)}
-                  aria-expanded={expandedYears.has(year)}
-                  type="button"
-                >
-                  <span className={styles.yearLabel}>{year}</span>
-                  <span className={styles.yearCount}>
-                    ({groupedArticles[year]?.length || 0})
-                  </span>
-                  <svg
-                    className={`${styles.yearIcon} ${expandedYears.has(year) ? styles.yearIconExpanded : ""}`}
-                    width="14"
-                    height="14"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M4 6L8 10L12 6"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                {expandedYears.has(year) && groupedArticles[year] && (
-                  <ul className={styles.articlesList}>
-                    {groupedArticles[year]!.map((article) => (
-                      <li key={article._id} className={styles.articleItem}>
-                        <a href={article.slug} className={styles.articleLink}>
-                          {article.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+      {/* Year filter section */}
+      {availableYears.length > 0 && (
+        <div className={styles.yearFilter}>
+          <h2 className={styles.sectionTitle}>Filtruj według roku</h2>
+          <div className={styles.yearPills}>
+            {availableYears.map((year) => (
+              <button
+                key={year}
+                type="button"
+                className={`${styles.yearPill} ${currentYear === year ? styles.yearPillActive : ''}`}
+                onClick={() => handleYearClick(year)}
+                aria-pressed={currentYear === year}
+              >
+                {year}
+              </button>
             ))}
           </div>
         </div>
+      )}
+      {hasActiveFilters && (
+        <Button
+          text="Wyczyść filtry"
+          variant="primary"
+          onClick={clearAllFilters}
+          className={styles.clearFilters}
+          iconUsed="clearFilters"
+        />
       )}
     </aside>
   );

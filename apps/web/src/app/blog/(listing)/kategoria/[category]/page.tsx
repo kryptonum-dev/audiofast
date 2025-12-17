@@ -1,69 +1,99 @@
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cacheLife } from 'next/cache';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { fetchEmbeddings } from "@/src/app/actions/embeddings";
-import BlogListing from "@/src/components/blog/BlogListing";
-import BlogListingSkeleton from "@/src/components/blog/BlogListing/BlogListingSkeleton";
-import styles from "@/src/components/blog/BlogListing/styles.module.scss";
-import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
-import CollectionPageSchema from "@/src/components/schema/CollectionPageSchema";
-import { PageBuilder } from "@/src/components/shared/PageBuilder";
-import type { ArticleByYearItem } from "@/src/components/ui/BlogAside";
-import BlogAside from "@/src/components/ui/BlogAside";
-import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
-import { BLOG_ITEMS_PER_PAGE } from "@/src/global/constants";
-import { logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
-import { queryBlogPageData } from "@/src/global/sanity/query";
-import type { QueryBlogPageDataResult } from "@/src/global/sanity/sanity.types";
-import { getSEOMetadata } from "@/src/global/seo";
+import BlogListing from '@/src/components/blog/BlogListing';
+import BlogListingSkeleton from '@/src/components/blog/BlogListing/BlogListingSkeleton';
+import styles from '@/src/components/blog/BlogListing/styles.module.scss';
+import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
+import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
+import { PageBuilder } from '@/src/components/shared/PageBuilder';
+import BlogAside from '@/src/components/ui/BlogAside';
+import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import { logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
+import { queryBlogPageContent } from '@/src/global/sanity/query';
+import type { QueryBlogPageContentResult } from '@/src/global/sanity/sanity.types';
+import { getSEOMetadata } from '@/src/global/seo';
 
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
   searchParams: Promise<{
     page?: string;
     search?: string;
+    year?: string;
   }>;
 };
 
-export async function generateStaticParams() {
-  // Fetch all categories for static generation
-  const blogData = await sanityFetch<QueryBlogPageDataResult>({
-    query: queryBlogPageData,
-    params: { category: "" },
-    tags: ["blog-category"],
-  });
+// Manually defined type for category content to resolve typegen issues
+// We reuse types from defaultContent which shares the same structure
+type DefaultContent = NonNullable<QueryBlogPageContentResult['defaultContent']>;
 
-  // Only generate static pages for categories that have articles
+type CategoryContent = {
+  _id: string;
+  name: string | null;
+  slug: string | null;
+  title: DefaultContent['title'];
+  description: DefaultContent['description'];
+  seo: DefaultContent['seo'];
+  openGraph: DefaultContent['openGraph'];
+  heroImage?: DefaultContent['heroImage'];
+};
+
+// Cached static data fetcher for main blog data
+async function getStaticBlogData() {
+  'use cache';
+  cacheLife('hours');
+
+  return sanityFetch<QueryBlogPageContentResult>({
+    query: queryBlogPageContent,
+    params: { category: '' },
+    tags: ['blog'],
+  });
+}
+
+// Cached page content fetcher (handles category-specific content)
+async function getPageContent(categorySlug: string) {
+  'use cache';
+  cacheLife('hours');
+
+  return sanityFetch<QueryBlogPageContentResult>({
+    query: queryBlogPageContent,
+    params: { category: `/blog/kategoria/${categorySlug}/` },
+    tags: ['blog', 'blog-category'],
+  });
+}
+
+export async function generateStaticParams() {
+  const blogData = await getStaticBlogData();
+
   return (
     blogData?.categories
       ?.filter((cat) => cat.count > 0)
       .map((cat) => ({
         category:
-          cat.slug?.replace("/blog/kategoria/", "").replace("/", "") || "",
+          cat.slug?.replace('/blog/kategoria/', '').replace('/', '') || '',
       })) || []
   );
 }
 
 export async function generateMetadata(props: CategoryPageProps) {
-  const params = await props.params;
-  const categorySlug = params.category;
+  const { category: categorySlug } = await props.params;
+  const contentData = await getPageContent(categorySlug);
 
-  const blogData = await sanityFetch<QueryBlogPageDataResult>({
-    query: queryBlogPageData,
-    params: { category: `/blog/kategoria/${categorySlug}/` },
-    tags: ["blog-category"],
-  });
+  // Cast the category content to our manual type
+  const categoryContent =
+    contentData?.categoryContent as unknown as CategoryContent | null;
 
-  if (!blogData || !blogData.selectedCategory) {
+  if (!contentData || !categoryContent) {
     logWarn(`Category not found: ${categorySlug}`);
     return getSEOMetadata();
   }
 
   // Check if category has any articles
-  const categoryInfo = blogData.categories?.find(
+  const categoryInfo = contentData.categories?.find(
     (cat) =>
-      cat.slug?.replace("/blog/kategoria/", "").replace("/", "") ===
+      cat.slug?.replace('/blog/kategoria/', '').replace('/', '') ===
       categorySlug,
   );
 
@@ -72,79 +102,72 @@ export async function generateMetadata(props: CategoryPageProps) {
     return getSEOMetadata();
   }
 
-  const category = blogData.selectedCategory;
-
   return getSEOMetadata({
-    seo: category.seo,
-    slug: category.slug,
-    openGraph: category.openGraph,
+    seo: categoryContent.seo,
+    slug: categoryContent.slug,
+    openGraph: categoryContent.openGraph,
   });
 }
 
 export default async function CategoryPage(props: CategoryPageProps) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-  const currentPage = Number(searchParams.page) || 1;
-  const searchTerm = searchParams.search || "";
-  const hasSearchQuery = Boolean(searchTerm);
-  const categorySlug = params.category;
+  const { category: categorySlug } = await props.params;
 
-  // Fetch embeddings if search query exists (for semantic search)
-  // Always return an array (empty if no search) to satisfy GROQ parameter requirements
-  const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, "blog")) || []
-    : [];
+  // Fetch all cached static data in parallel
+  const [blogData, contentData] = await Promise.all([
+    getStaticBlogData(),
+    getPageContent(categorySlug),
+  ]);
 
-  // Sort by relevance if search is active, otherwise by newest
-  const sortBy = hasSearchQuery ? "relevance" : "newest";
+  const defaultContent = blogData?.defaultContent;
+  // Cast the category content to our manual type
+  const categoryContent =
+    contentData?.categoryContent as unknown as CategoryContent | null;
 
-  const blogData = await sanityFetch<QueryBlogPageDataResult>({
-    query: queryBlogPageData,
-    params: { category: `/blog/kategoria/${categorySlug}/`, embeddingResults },
-    tags: ["blog-category"],
-  });
-
-  if (!blogData || !blogData.selectedCategory) {
-    logWarn(`Category page data not found for: ${categorySlug}, returning 404`);
+  if (!defaultContent || !blogData) {
+    logWarn(`Blog page data not found`);
     notFound();
   }
 
-  const category = blogData.selectedCategory;
+  if (!categoryContent) {
+    logWarn(`Category page data not found for: ${categorySlug}`);
+    notFound();
+  }
 
-  // Check if category has any articles
+  // Check if category exists and has articles
   const categoryInfo = blogData.categories?.find(
     (cat) =>
-      cat.slug?.replace("/blog/kategoria/", "").replace("/", "") ===
+      cat.slug?.replace('/blog/kategoria/', '').replace('/', '') ===
       categorySlug,
   );
 
   if (!categoryInfo || categoryInfo.count === 0) {
-    logWarn(`Category "${categorySlug}" has no articles, returning 404`);
+    logWarn(`Category "${categorySlug}" not found or has no articles`);
     notFound();
   }
 
   const breadcrumbsData = [
     {
-      name: blogData.name || "Blog",
-      path: "/blog/",
+      name: defaultContent.name || 'Blog',
+      path: '/blog/',
     },
     {
-      name: category.name || categorySlug,
-      path: category.slug || `/blog/kategoria/${categorySlug}/`,
+      name: categoryContent.name || categorySlug,
+      path: categoryContent.slug || `/blog/kategoria/${categorySlug}/`,
     },
   ];
 
-  // Use category's custom title/description if available, otherwise fall back to main blog data
-  const heroTitle = category.title || blogData.title;
-  const heroDescription = category.description || blogData.description;
-  const heroImage = blogData.heroImage;
+  // Use category's custom title/description if available
+  const heroTitle = categoryContent.title || defaultContent.title;
+  const heroDescription =
+    categoryContent.description || defaultContent.description;
+  const heroImage = defaultContent.heroImage;
 
   return (
     <>
       <CollectionPageSchema
-        name={category.name || categorySlug}
+        name={categoryContent.name || categorySlug}
         url={`/blog/kategoria/${categorySlug}/`}
-        description={category.description || blogData.description}
+        description={categoryContent.description || defaultContent.description}
       />
       <Breadcrumbs data={breadcrumbsData} firstItemType="heroStatic" />
       <HeroStatic
@@ -155,37 +178,32 @@ export default async function CategoryPage(props: CategoryPageProps) {
         blocksHeading={null}
         blocks={[]}
         index={0}
-        _key={""}
-        _type={"heroStatic"}
+        _key={''}
+        _type={'heroStatic'}
         button={null}
       />
       <section className={`${styles.blogListing} max-width`}>
+        {/* Static sidebar with year filter */}
         <BlogAside
           categories={blogData.categories || []}
           totalCount={blogData.totalCount || 0}
+          availableYears={(blogData.availableYears || []).filter(
+            (y): y is string => y !== null,
+          )}
           basePath={`/blog/kategoria/${categorySlug}/`}
           currentCategory={categorySlug}
-          initialSearch={searchTerm}
-          articlesByYear={
-            (blogData.articlesByYear as ArticleByYearItem[]) || []
-          }
         />
-        <Suspense
-          key={`category-${categorySlug}-page-${currentPage}-search-${searchTerm}-sort-${sortBy}`}
-          fallback={<BlogListingSkeleton />}
-        >
+
+        {/* Blog listing in Suspense */}
+        <Suspense fallback={<BlogListingSkeleton />}>
           <BlogListing
-            currentPage={currentPage}
-            itemsPerPage={BLOG_ITEMS_PER_PAGE}
-            searchTerm={searchTerm}
-            category={`/blog/kategoria/${categorySlug}/`}
+            searchParams={props.searchParams}
             basePath={`/blog/kategoria/${categorySlug}/`}
-            embeddingResults={embeddingResults}
-            sortBy={sortBy}
+            category={`/blog/kategoria/${categorySlug}/`}
           />
         </Suspense>
       </section>
-      <PageBuilder pageBuilder={blogData.pageBuilder || []} />
+      <PageBuilder pageBuilder={defaultContent.pageBuilder || []} />
     </>
   );
 }

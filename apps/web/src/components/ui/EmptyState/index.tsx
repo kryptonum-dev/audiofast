@@ -1,11 +1,12 @@
-import Button from "@/src/components/ui/Button";
+import Button from '@/src/components/ui/Button';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 type EmptyStateProps = {
   searchTerm?: string;
   category?: string;
-  type: "blog" | "products" | "comparator-noCookies" | "comparator-noProduct";
+  year?: string;
+  type: 'blog' | 'products' | 'comparator-noCookies' | 'comparator-noProduct';
   button?: {
     name: string;
     href: string;
@@ -21,57 +22,70 @@ type EmptyStateConfig = {
 export default function EmptyState({
   searchTerm,
   category,
+  year,
   type,
   button,
 }: EmptyStateProps) {
-  const contentType = type === "blog" ? "artykułów" : "produktów";
-  const contentTypeSingular = type === "blog" ? "publikacji" : "produktów";
+  const contentType = type === 'blog' ? 'artykułów' : 'produktów';
+  const contentTypeSingular = type === 'blog' ? 'publikacji' : 'produktów';
 
   // Configuration object for each type
   const getConfig = (): EmptyStateConfig => {
     // Comparator variants
-    if (type === "comparator-noCookies") {
+    if (type === 'comparator-noCookies') {
       return {
-        title: "Brak produktów do porównania",
+        title: 'Brak produktów do porównania',
         description:
-          "Dodaj produkty do porównania, aby zobaczyć ich specyfikacje obok siebie",
+          'Dodaj produkty do porównania, aby zobaczyć ich specyfikacje obok siebie',
         hint: null,
       };
     }
 
-    if (type === "comparator-noProduct") {
+    if (type === 'comparator-noProduct') {
       return {
-        title: "Nie znaleziono produktów do porównania",
+        title: 'Nie znaleziono produktów do porównania',
         description:
-          "Niektóre produkty mogły zostać usunięte. Dodaj nowe produkty do porównania.",
+          'Niektóre produkty mogły zostać usunięte. Dodaj nowe produkty do porównania.',
         hint: null,
       };
     }
 
-    // Blog/Products variants with search/category logic
-    if (searchTerm && category) {
+    // Filter parts builder
+    const filterParts: React.ReactNode[] = [];
+
+    if (searchTerm) {
+      filterParts.push(
+        <span key="search">
+          dla <strong>&bdquo;{searchTerm}&rdquo;</strong>
+        </span>,
+      );
+    }
+
+    if (year) {
+      filterParts.push(
+        <span key="year">
+          z roku <strong>{year}</strong>
+        </span>,
+      );
+    }
+
+    if (category) {
+      filterParts.push(<span key="category">w tej kategorii</span>);
+    }
+
+    // Blog/Products variants with search/category/year logic
+    if (filterParts.length > 0) {
       return {
         title: `Nie znaleziono ${contentType}`,
         description: (
           <>
-            Nie znaleziono {contentType} dla{" "}
-            <strong>&bdquo;{searchTerm}&rdquo;</strong> w tej kategorii
+            Nie znaleziono {contentType}
+            {filterParts.map((part, index) => (
+              <span key={index}> {part}</span>
+            ))}
           </>
         ),
-        hint: "Spróbuj wyszukać we wszystkich kategoriach lub użyć innych słów kluczowych",
-      };
-    }
-
-    if (searchTerm) {
-      return {
-        title: "Brak wyników wyszukiwania",
-        description: (
-          <>
-            Nie znaleziono {contentType} dla{" "}
-            <strong>&bdquo;{searchTerm}&rdquo;</strong>
-          </>
-        ),
-        hint: "Spróbuj użyć innych słów kluczowych",
+        hint: 'Spróbuj zmienić filtry lub użyć innych słów kluczowych',
       };
     }
 

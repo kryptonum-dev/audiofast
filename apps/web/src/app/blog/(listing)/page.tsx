@@ -1,129 +1,112 @@
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cacheLife } from 'next/cache';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import { fetchEmbeddings } from "@/src/app/actions/embeddings";
-import BlogListing from "@/src/components/blog/BlogListing";
-import BlogListingSkeleton from "@/src/components/blog/BlogListing/BlogListingSkeleton";
-import styles from "@/src/components/blog/BlogListing/styles.module.scss";
-import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
-import CollectionPageSchema from "@/src/components/schema/CollectionPageSchema";
-import { PageBuilder } from "@/src/components/shared/PageBuilder";
-import type { ArticleByYearItem } from "@/src/components/ui/BlogAside";
-import BlogAside from "@/src/components/ui/BlogAside";
-import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
-import { BLOG_ITEMS_PER_PAGE } from "@/src/global/constants";
-import { logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
-import { queryBlogPageData } from "@/src/global/sanity/query";
-import type { QueryBlogPageDataResult } from "@/src/global/sanity/sanity.types";
-import { getSEOMetadata } from "@/src/global/seo";
+import BlogListing from '@/src/components/blog/BlogListing';
+import BlogListingSkeleton from '@/src/components/blog/BlogListing/BlogListingSkeleton';
+import styles from '@/src/components/blog/BlogListing/styles.module.scss';
+import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
+import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
+import { PageBuilder } from '@/src/components/shared/PageBuilder';
+import BlogAside from '@/src/components/ui/BlogAside';
+import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import { logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
+import { queryBlogPageContent } from '@/src/global/sanity/query';
+import type { QueryBlogPageContentResult } from '@/src/global/sanity/sanity.types';
+import { getSEOMetadata } from '@/src/global/seo';
 
 type BlogPageProps = {
   searchParams: Promise<{
     page?: string;
     search?: string;
+    year?: string;
   }>;
 };
 
-export async function generateMetadata() {
-  const blogData = await sanityFetch<QueryBlogPageDataResult>({
-    query: queryBlogPageData,
-    params: { category: "" },
-    tags: ["blog"],
-  });
+// Cached static data fetcher
+async function getStaticPageData() {
+  'use cache';
+  cacheLife('hours');
 
-  if (!blogData) {
-    logWarn("Blog page data not found");
+  return sanityFetch<QueryBlogPageContentResult>({
+    query: queryBlogPageContent,
+    params: { category: '' },
+    tags: ['blog'],
+  });
+}
+
+export async function generateMetadata() {
+  const contentData = await getStaticPageData();
+  const pageData = contentData?.defaultContent;
+
+  if (!pageData) {
+    logWarn('Blog page data not found');
     return getSEOMetadata();
   }
 
   return getSEOMetadata({
-    seo: blogData.seo,
-    slug: blogData.slug,
-    openGraph: blogData.openGraph,
+    seo: pageData.seo,
+    slug: pageData.slug,
+    openGraph: pageData.openGraph,
   });
 }
 
-export default async function BlogPage(props: BlogPageProps) {
-  const searchParams = await props.searchParams;
-  const currentPage = Number(searchParams.page) || 1;
-  const searchTerm = searchParams.search || "";
-  const hasSearchQuery = Boolean(searchTerm);
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  // Fetch cached static data (instant after first load)
+  const contentData = await getStaticPageData();
+  const pageData = contentData?.defaultContent;
 
-  // Fetch embeddings if search query exists (for semantic search)
-  // Always return an array (empty if no search) to satisfy GROQ parameter requirements
-  const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, "blog")) || []
-    : [];
-
-  // Sort by relevance if search is active, otherwise by newest
-  const sortBy = hasSearchQuery ? "relevance" : "newest";
-
-  const blogData = await sanityFetch<QueryBlogPageDataResult>({
-    query: queryBlogPageData,
-    params: { category: "", embeddingResults },
-    tags: ["blog"],
-  });
-
-  if (!blogData) {
-    logWarn("Blog layout data not found");
+  if (!pageData || !contentData) {
+    logWarn('Blog page data not found');
     notFound();
   }
 
   const breadcrumbsData = [
     {
-      name: blogData.name || "Blog",
-      path: "/blog/",
+      name: pageData.name || 'Blog',
+      path: '/blog/',
     },
   ];
 
   return (
     <>
       <CollectionPageSchema
-        name={blogData.name || "Blog"}
+        name={pageData.name || 'Blog'}
         url="/blog/"
-        description={blogData.description}
+        description={pageData.description}
       />
       <Breadcrumbs data={breadcrumbsData} firstItemType="heroStatic" />
       <HeroStatic
-        heading={blogData.title!}
-        description={blogData.description!}
-        image={blogData.heroImage!}
+        heading={pageData.title!}
+        description={pageData.description!}
+        image={pageData.heroImage!}
         showBlocks={false}
         blocksHeading={null}
         blocks={[]}
         index={0}
-        _key={""}
-        _type={"heroStatic"}
+        _key={''}
+        _type={'heroStatic'}
         button={null}
       />
       <section className={`${styles.blogListing} max-width`}>
+        {/* Static sidebar with year filter */}
         <BlogAside
-          categories={blogData.categories || []}
-          totalCount={blogData.totalCount || 0}
+          categories={contentData.categories || []}
+          totalCount={contentData.totalCount || 0}
+          availableYears={(contentData.availableYears || []).filter(
+            (y): y is string => y !== null,
+          )}
           basePath="/blog/"
           currentCategory={null}
-          initialSearch={searchTerm}
-          articlesByYear={
-            (blogData.articlesByYear as ArticleByYearItem[]) || []
-          }
         />
 
-        <Suspense
-          key={`page-${currentPage}-search-${searchTerm}-sort-${sortBy}`}
-          fallback={<BlogListingSkeleton />}
-        >
-          <BlogListing
-            currentPage={currentPage}
-            itemsPerPage={BLOG_ITEMS_PER_PAGE}
-            searchTerm={searchTerm}
-            basePath="/blog/"
-            embeddingResults={embeddingResults}
-            sortBy={sortBy}
-          />
+        {/* Blog listing in Suspense - only this shows skeleton */}
+        <Suspense fallback={<BlogListingSkeleton />}>
+          <BlogListing searchParams={searchParams} basePath="/blog/" />
         </Suspense>
       </section>
-      <PageBuilder pageBuilder={blogData.pageBuilder || []} />
+      <PageBuilder pageBuilder={pageData.pageBuilder || []} />
     </>
   );
 }

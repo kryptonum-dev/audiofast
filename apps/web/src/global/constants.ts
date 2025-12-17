@@ -55,7 +55,7 @@ export const REGEX: { email: RegExp; phone: RegExp; string: RegExp } = {
  * @type {number}
  */
 
-export const BLOG_ITEMS_PER_PAGE: number = 12;
+export const BLOG_ITEMS_PER_PAGE: number = 4;
 
 /**
  * Global declaration of the number of items per page for the products listing.
@@ -63,7 +63,7 @@ export const BLOG_ITEMS_PER_PAGE: number = 12;
  * @type {number}
  */
 
-export const PRODUCTS_ITEMS_PER_PAGE: number = 8;
+export const PRODUCTS_ITEMS_PER_PAGE: number = 12;
 
 /**
  * Sort options for product listings.

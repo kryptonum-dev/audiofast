@@ -1,37 +1,51 @@
 import { notFound } from "next/navigation";
 
+import { fetchEmbeddings } from "@/src/app/actions/embeddings";
 import { logWarn } from "@/src/global/logger";
 import { sanityFetch } from "@/src/global/sanity/fetch";
 import { getBlogArticlesQuery } from "@/src/global/sanity/query";
 import type { QueryBlogArticlesNewestResult } from "@/src/global/sanity/sanity.types";
+import { BLOG_ITEMS_PER_PAGE } from "@/src/global/constants";
 
 import EmptyState from "../../ui/EmptyState";
 import Pagination from "../../ui/Pagination";
 import PublicationCard from "../../ui/PublicationCard";
 import styles from "./styles.module.scss";
 
+type SearchParamsType = {
+  page?: string;
+  search?: string;
+  year?: string;
+};
+
 type BlogListingProps = {
-  currentPage: number;
-  itemsPerPage: number;
-  searchTerm?: string;
-  category?: string;
+  searchParams: Promise<SearchParamsType>;
   basePath: string;
-  embeddingResults?: Array<{
-    score: number;
-    value: { documentId: string; type: string };
-  }> | null; // Embeddings for semantic search
-  sortBy?: string;
+  category?: string;
 };
 
 export default async function BlogListing({
-  currentPage,
-  itemsPerPage,
-  searchTerm = "",
-  category = "",
+  searchParams,
   basePath,
-  embeddingResults,
-  sortBy = "newest",
+  category = "",
 }: BlogListingProps) {
+  const params = await searchParams;
+
+  const currentPage = Number(params.page) || 1;
+  const itemsPerPage = BLOG_ITEMS_PER_PAGE;
+  const searchTerm = params.search || "";
+  const year = params.year || "";
+
+  const hasSearchQuery = Boolean(searchTerm);
+
+  // Fetch embeddings if search exists
+  const embeddingResults = hasSearchQuery
+    ? (await fetchEmbeddings(searchTerm, "blog")) || []
+    : [];
+
+  // Determine sort order
+  const sortBy = hasSearchQuery ? "relevance" : "newest";
+
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
 
@@ -41,11 +55,12 @@ export default async function BlogListing({
   const articlesData = await sanityFetch<QueryBlogArticlesNewestResult>({
     query,
     params: {
-      category: category,
-      search: searchTerm || "",
+      category,
+      search: searchTerm,
+      year,
       offset,
       limit,
-      embeddingResults, // Pass embeddings for filtering
+      embeddingResults,
     },
     tags: ["blog-article"],
   });
@@ -60,6 +75,7 @@ export default async function BlogListing({
   // Create URLSearchParams for Pagination
   const urlSearchParams = new URLSearchParams();
   if (searchTerm) urlSearchParams.set("search", searchTerm);
+  if (year) urlSearchParams.set("year", year);
 
   const ITEMS_PER_ROW = 2;
   const ROW_DELAY = 80; // delay between rows in ms
@@ -67,7 +83,12 @@ export default async function BlogListing({
   return (
     <>
       {!hasArticles ? (
-        <EmptyState searchTerm={searchTerm} category={category} type="blog" />
+        <EmptyState
+          searchTerm={searchTerm}
+          category={category}
+          year={year}
+          type="blog"
+        />
       ) : (
         <>
           <div className={styles.articlesGrid}>
