@@ -80,8 +80,10 @@ export const productCategorySub = defineType({
       title: "Konfiguracja filtrów",
       type: "array",
       description:
-        "Zdefiniuj filtry dostępne dla tej kategorii. Przeciągnij aby zmienić kolejność.",
+        '⚠️ Edytuj filtry w zakładce "Konfiguracja filtrów" powyżej. To pole jest zarządzane przez dedykowany widok.',
       group: GROUP.MAIN_CONTENT,
+      // Hidden - managed via dedicated "Konfiguracja filtrów" view tab
+      hidden: true,
       of: [{ type: "customFilterDefinition" }],
       validation: (Rule) =>
         Rule.custom((filters) => {

@@ -5,7 +5,6 @@ import {
 import { BookAudio, Package, Settings, Table } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
-import { CustomFilterValueInput } from "../../../components/custom-filter-value-input";
 import { defineSlugForDocument } from "../../../components/define-slug-for-document";
 import { GROUP, GROUPS } from "../../../utils/constant";
 import { customPortableText } from "../../portableText";
@@ -156,15 +155,10 @@ export const product = defineType({
       title: "Wartości niestandardowych filtrów",
       type: "array",
       description:
-        "Podaj wartości dla filtrów zdefiniowanych w wybranych kategoriach. Filtry są automatycznie pobierane z przypisanych kategorii.",
+        '⚠️ Edytuj wartości filtrów w zakładce "Filtry" powyżej. To pole jest zarządzane przez dedykowany widok.',
       group: GROUP.MAIN_CONTENT,
-      hidden: ({ document }) =>
-        !document?.categories ||
-        !Array.isArray(document.categories) ||
-        document.categories.length === 0,
-      components: {
-        input: CustomFilterValueInput,
-      },
+      // Hidden - managed via dedicated "Filtry" view tab
+      hidden: true,
       of: [
         defineField({
           type: "object",

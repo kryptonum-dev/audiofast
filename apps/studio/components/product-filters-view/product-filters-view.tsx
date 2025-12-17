@@ -11,7 +11,7 @@ import {
   Text,
   TextInput,
 } from "@sanity/ui";
-import { Filter, Sliders, Hash } from "lucide-react";
+import { Filter, Hash,Sliders } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SanityDocument } from "sanity";
 import { useClient } from "sanity";
