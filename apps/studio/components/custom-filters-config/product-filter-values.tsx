@@ -25,6 +25,11 @@ type ProductWithFilterValue = {
   currentNumericValue?: number;
 };
 
+type ProductCounts = {
+  total: number;
+  withValue: number;
+};
+
 interface ProductFilterValuesProps {
   filter: FilterConfigItem;
   categoryId: string;
@@ -47,26 +52,77 @@ export function ProductFilterValues({
 }: ProductFilterValuesProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [products, setProducts] = useState<ProductWithFilterValue[]>([]);
+  const [counts, setCounts] = useState<ProductCounts>({ total: 0, withValue: 0 });
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCounts, setIsLoadingCounts] = useState(true);
   const [savingProductIds, setSavingProductIds] = useState<Set<string>>(
     new Set(),
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllWithoutValue, setShowAllWithoutValue] = useState(false);
 
-  // Fetch products when expanded - prefer drafts over published
+  // Load counts initially (even when collapsed)
+  const loadCounts = useCallback(async () => {
+    if (!filter.name) {
+      setCounts({ total: 0, withValue: 0 });
+      setIsLoadingCounts(false);
+      return;
+    }
+
+    setIsLoadingCounts(true);
+    try {
+      const baseCategoryId = categoryId.startsWith("drafts.")
+        ? categoryId.replace("drafts.", "")
+        : categoryId;
+
+      const isRangeFilter = filter.filterType === "range";
+
+      // Lightweight query to just get counts
+      const result = await client.fetch<
+        Array<{
+          hasValue: boolean;
+        }>
+      >(
+        `*[_type == "product" && references($categoryId) && (isArchived != true) && !(_id in path("drafts.**"))] {
+          "product": coalesce(
+            *[_id == "drafts." + ^._id][0],
+            @
+          ) {
+            customFilterValues
+          }
+        }.product {
+          "hasValue": defined(customFilterValues) && count(customFilterValues[filterName == $filterName && (${isRangeFilter ? "defined(numericValue)" : "defined(value) && value != ''"})] ) > 0
+        }`,
+        { categoryId: baseCategoryId, filterName: filter.name },
+      );
+
+      const total = result.length;
+      const withValue = result.filter((p) => p.hasValue).length;
+
+      setCounts({ total, withValue });
+    } catch (error) {
+      console.error("Error loading counts:", error);
+      setCounts({ total: 0, withValue: 0 });
+    } finally {
+      setIsLoadingCounts(false);
+    }
+  }, [filter.name, filter.filterType, categoryId, client]);
+
+  // Load counts on mount and when filter changes
+  useEffect(() => {
+    loadCounts();
+  }, [loadCounts]);
+
+  // Fetch full products when expanded - prefer drafts over published
   const loadProducts = useCallback(async () => {
     if (!isExpanded || !filter.name) return;
 
     setIsLoading(true);
     try {
-      // Get base category ID (without drafts prefix)
       const baseCategoryId = categoryId.startsWith("drafts.")
         ? categoryId.replace("drafts.", "")
         : categoryId;
 
-      // Query that prefers drafts over published documents
-      // Also fetch preview image
       const result = await client.fetch<
         Array<{
           _id: string;
@@ -99,7 +155,6 @@ export function ProductFilterValues({
         const filterValue = product.customFilterValues?.find(
           (fv) => fv.filterName === filter.name,
         );
-        // Use base ID (without drafts prefix) for consistency
         const baseId = product._id.startsWith("drafts.")
           ? product._id.replace("drafts.", "")
           : product._id;
@@ -114,13 +169,22 @@ export function ProductFilterValues({
       });
 
       setProducts(productsWithValues);
+
+      // Update counts from loaded data
+      const isRangeFilter = filter.filterType === "range";
+      const withValue = productsWithValues.filter(
+        (p) =>
+          (isRangeFilter && p.currentNumericValue !== undefined) ||
+          (!isRangeFilter && p.currentValue),
+      ).length;
+      setCounts({ total: productsWithValues.length, withValue });
     } catch (error) {
       console.error("Error loading products:", error);
       setProducts([]);
     } finally {
       setIsLoading(false);
     }
-  }, [isExpanded, filter.name, categoryId, client]);
+  }, [isExpanded, filter.name, filter.filterType, categoryId, client]);
 
   useEffect(() => {
     loadProducts();
@@ -149,6 +213,20 @@ export function ProductFilterValues({
         ),
       );
 
+      // Update counts optimistically
+      setCounts((prev) => {
+        const product = products.find((p) => p._id === productId);
+        const hadValue = product?.currentValue;
+        const willHaveValue = !!newValue;
+
+        if (hadValue && !willHaveValue) {
+          return { ...prev, withValue: Math.max(0, prev.withValue - 1) };
+        } else if (!hadValue && willHaveValue) {
+          return { ...prev, withValue: prev.withValue + 1 };
+        }
+        return prev;
+      });
+
       setSavingProductIds((prev) => new Set([...prev, productId]));
       try {
         await onSaveProduct(
@@ -158,8 +236,9 @@ export function ProductFilterValues({
           undefined,
         );
       } catch (error) {
-        // Revert on error - reload products
+        // Revert on error - reload products and counts
         loadProducts();
+        loadCounts();
       } finally {
         setSavingProductIds((prev) => {
           const next = new Set(prev);
@@ -168,7 +247,7 @@ export function ProductFilterValues({
         });
       }
     },
-    [filter.name, onSaveProduct, loadProducts],
+    [filter.name, onSaveProduct, loadProducts, loadCounts, products],
   );
 
   const handleNumericValueChange = useCallback(
@@ -188,12 +267,27 @@ export function ProductFilterValues({
         ),
       );
 
+      // Update counts optimistically
+      setCounts((prev) => {
+        const product = products.find((p) => p._id === productId);
+        const hadValue = product?.currentNumericValue !== undefined;
+        const willHaveValue = numericValue !== undefined;
+
+        if (hadValue && !willHaveValue) {
+          return { ...prev, withValue: Math.max(0, prev.withValue - 1) };
+        } else if (!hadValue && willHaveValue) {
+          return { ...prev, withValue: prev.withValue + 1 };
+        }
+        return prev;
+      });
+
       setSavingProductIds((prev) => new Set([...prev, productId]));
       try {
         await onSaveProduct(productId, filter.name, undefined, numericValue);
       } catch (error) {
-        // Revert on error - reload products
+        // Revert on error - reload products and counts
         loadProducts();
+        loadCounts();
       } finally {
         setSavingProductIds((prev) => {
           const next = new Set(prev);
@@ -202,7 +296,7 @@ export function ProductFilterValues({
         });
       }
     },
-    [filter.name, onSaveProduct, loadProducts],
+    [filter.name, onSaveProduct, loadProducts, loadCounts, products],
   );
 
   const isRangeFilter = filter.filterType === "range";
@@ -276,9 +370,13 @@ export function ProductFilterValues({
                 Wartości produktów
               </Text>
             </Flex>
-            <Text size={1} muted>
-              {productsWithValue.length}/{products.length} uzupełnionych
-            </Text>
+            {isLoadingCounts ? (
+              <Spinner muted />
+            ) : (
+              <Text size={1} muted>
+                {counts.withValue}/{counts.total} uzupełnionych
+              </Text>
+            )}
           </Flex>
         </Button>
 

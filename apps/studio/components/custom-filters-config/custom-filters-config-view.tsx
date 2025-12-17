@@ -20,6 +20,7 @@ import {
   Box,
   Button,
   Card,
+  Dialog,
   Flex,
   Stack,
   Text,
@@ -542,32 +543,40 @@ export function CustomFiltersConfigView({
           </Card>
         )}
 
-        {/* Delete Confirmation Dialog */}
+        {/* Delete Confirmation Modal */}
         {deletingIndex !== null && (
-          <Card padding={3} tone="critical" border radius={2}>
-            <Stack space={3}>
-              <Text weight="semibold">
-                Czy na pewno chcesz usunąć filtr &ldquo;
-                {filters[deletingIndex]?.name || "Bez nazwy"}&rdquo;?
-              </Text>
-              <Text size={1} muted>
-                Produkty z wartościami tego filtra zachowają swoje dane, ale
-                filtr nie będzie już wyświetlany na stronie.
-              </Text>
-              <Flex gap={2}>
-                <Button
-                  text="Anuluj"
-                  mode="ghost"
-                  onClick={handleCancelDelete}
-                />
-                <Button
-                  text="Usuń filtr"
-                  tone="critical"
-                  onClick={handleConfirmDelete}
-                />
-              </Flex>
-            </Stack>
-          </Card>
+          <Dialog
+            id="delete-filter-dialog"
+            header="Usuń filtr"
+            onClose={handleCancelDelete}
+            width={1}
+          >
+            <Box padding={4}>
+              <Stack space={4}>
+                <Text size={2}>
+                  Czy na pewno chcesz usunąć filtr &ldquo;
+                  <strong>{filters[deletingIndex]?.name || "Bez nazwy"}</strong>
+                  &rdquo;?
+                </Text>
+                <Text size={1} muted>
+                  Produkty z wartościami tego filtra zachowają swoje dane, ale
+                  filtr nie będzie już wyświetlany na stronie.
+                </Text>
+                <Flex gap={3} justify="flex-end">
+                  <Button
+                    text="Anuluj"
+                    mode="ghost"
+                    onClick={handleCancelDelete}
+                  />
+                  <Button
+                    text="Usuń filtr"
+                    tone="critical"
+                    onClick={handleConfirmDelete}
+                  />
+                </Flex>
+              </Stack>
+            </Box>
+          </Dialog>
         )}
 
         {/* Info card */}
