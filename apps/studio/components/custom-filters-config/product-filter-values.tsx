@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDownIcon, ChevronUpIcon } from "@sanity/icons";
+import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "@sanity/icons";
 import {
   Box,
   Button,
@@ -11,7 +11,7 @@ import {
   Text,
   TextInput,
 } from "@sanity/ui";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SanityClient } from "sanity";
 
 import type { FilterConfigItem } from "./types";
@@ -20,6 +20,7 @@ type ProductWithFilterValue = {
   _id: string;
   name: string;
   brandName?: string;
+  imageUrl?: string;
   currentValue?: string;
   currentNumericValue?: number;
 };
@@ -36,6 +37,8 @@ interface ProductFilterValuesProps {
   ) => Promise<void>;
 }
 
+const INITIAL_PRODUCTS_LIMIT = 10;
+
 export function ProductFilterValues({
   filter,
   categoryId,
@@ -48,6 +51,8 @@ export function ProductFilterValues({
   const [savingProductIds, setSavingProductIds] = useState<Set<string>>(
     new Set(),
   );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showAllWithoutValue, setShowAllWithoutValue] = useState(false);
 
   // Fetch products when expanded - prefer drafts over published
   const loadProducts = useCallback(async () => {
@@ -61,12 +66,13 @@ export function ProductFilterValues({
         : categoryId;
 
       // Query that prefers drafts over published documents
-      // First get all product IDs in this category, then for each get draft or published
+      // Also fetch preview image
       const result = await client.fetch<
         Array<{
           _id: string;
           name: string;
           brandName?: string;
+          imageUrl?: string;
           customFilterValues?: Array<{
             filterName: string;
             value?: string;
@@ -82,6 +88,7 @@ export function ProductFilterValues({
             _id,
             name,
             "brandName": brand->name,
+            "imageUrl": previewImage.asset->url,
             customFilterValues
           }
         }.product | order(name asc)`,
@@ -100,6 +107,7 @@ export function ProductFilterValues({
           _id: baseId,
           name: product.name,
           brandName: product.brandName,
+          imageUrl: product.imageUrl,
           currentValue: filterValue?.value,
           currentNumericValue: filterValue?.numericValue,
         };
@@ -117,6 +125,14 @@ export function ProductFilterValues({
   useEffect(() => {
     loadProducts();
   }, [loadProducts]);
+
+  // Reset show all when collapsing or changing filter
+  useEffect(() => {
+    if (!isExpanded) {
+      setShowAllWithoutValue(false);
+      setSearchQuery("");
+    }
+  }, [isExpanded]);
 
   const handleValueChange = useCallback(
     async (productId: string, newValue: string) => {
@@ -190,16 +206,49 @@ export function ProductFilterValues({
   );
 
   const isRangeFilter = filter.filterType === "range";
-  const productsWithValue = products.filter(
-    (p) =>
-      (isRangeFilter && p.currentNumericValue !== undefined) ||
-      (!isRangeFilter && p.currentValue),
+
+  // Filter products by search query
+  const filteredProducts = useMemo(() => {
+    if (!searchQuery.trim()) return products;
+    const query = searchQuery.toLowerCase();
+    return products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.brandName?.toLowerCase().includes(query),
+    );
+  }, [products, searchQuery]);
+
+  // Split into with/without value
+  const productsWithValue = useMemo(
+    () =>
+      filteredProducts.filter(
+        (p) =>
+          (isRangeFilter && p.currentNumericValue !== undefined) ||
+          (!isRangeFilter && p.currentValue),
+      ),
+    [filteredProducts, isRangeFilter],
   );
-  const productsWithoutValue = products.filter(
-    (p) =>
-      (isRangeFilter && p.currentNumericValue === undefined) ||
-      (!isRangeFilter && !p.currentValue),
+
+  const productsWithoutValue = useMemo(
+    () =>
+      filteredProducts.filter(
+        (p) =>
+          (isRangeFilter && p.currentNumericValue === undefined) ||
+          (!isRangeFilter && !p.currentValue),
+      ),
+    [filteredProducts, isRangeFilter],
   );
+
+  // Limit products without value unless "show all" is clicked
+  const displayedProductsWithoutValue = useMemo(() => {
+    if (showAllWithoutValue || searchQuery.trim()) {
+      return productsWithoutValue;
+    }
+    return productsWithoutValue.slice(0, INITIAL_PRODUCTS_LIMIT);
+  }, [productsWithoutValue, showAllWithoutValue, searchQuery]);
+
+  const hiddenProductsCount =
+    productsWithoutValue.length - displayedProductsWithoutValue.length;
 
   if (!filter.name) {
     return null;
@@ -251,6 +300,24 @@ export function ProductFilterValues({
               </Text>
             ) : (
               <Stack space={4}>
+                {/* Search input */}
+                <TextInput
+                  icon={SearchIcon}
+                  placeholder="Szukaj produktu..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.currentTarget.value)}
+                  fontSize={1}
+                />
+
+                {/* No results message */}
+                {filteredProducts.length === 0 && searchQuery && (
+                  <Card padding={3} tone="transparent">
+                    <Text size={1} muted>
+                      Nie znaleziono produktów dla &ldquo;{searchQuery}&rdquo;
+                    </Text>
+                  </Card>
+                )}
+
                 {/* Products WITH values */}
                 {productsWithValue.length > 0 && (
                   <Stack space={2}>
@@ -274,13 +341,13 @@ export function ProductFilterValues({
                 )}
 
                 {/* Products WITHOUT values */}
-                {productsWithoutValue.length > 0 && (
+                {displayedProductsWithoutValue.length > 0 && (
                   <Stack space={2}>
                     <Text size={1} weight="semibold" muted>
                       Bez wartości ({productsWithoutValue.length})
                     </Text>
                     <Stack space={2}>
-                      {productsWithoutValue.map((product) => (
+                      {displayedProductsWithoutValue.map((product) => (
                         <ProductRow
                           key={product._id}
                           product={product}
@@ -292,6 +359,21 @@ export function ProductFilterValues({
                         />
                       ))}
                     </Stack>
+
+                    {/* Show all button */}
+                    {hiddenProductsCount > 0 && !searchQuery && (
+                      <Button
+                        mode="ghost"
+                        tone="primary"
+                        onClick={() => setShowAllWithoutValue(true)}
+                        style={{ width: "100%" }}
+                        padding={3}
+                      >
+                        <Text size={1}>
+                          Pokaż wszystkie ({hiddenProductsCount} więcej)
+                        </Text>
+                      </Button>
+                    )}
                   </Stack>
                 )}
               </Stack>
@@ -303,7 +385,7 @@ export function ProductFilterValues({
   );
 }
 
-// Individual product row component
+// Individual product row component with image
 function ProductRow({
   product,
   isRangeFilter,
@@ -372,20 +454,59 @@ function ProductRow({
       tone={isSaving ? "positive" : "default"}
     >
       <Flex align="center" gap={3}>
+        {/* Product image */}
+        <Box
+          style={{
+            width: "40px",
+            height: "40px",
+            flexShrink: 0,
+            borderRadius: "4px",
+            overflow: "hidden",
+            backgroundColor: "var(--card-bg2-color)",
+          }}
+        >
+          {product.imageUrl ? (
+            <img
+              src={`${product.imageUrl}?w=80&h=80&fit=max`}
+              alt={product.name}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
+          ) : (
+            <Flex
+              align="center"
+              justify="center"
+              style={{ width: "100%", height: "100%" }}
+            >
+              <Text size={0} muted>
+                –
+              </Text>
+            </Flex>
+          )}
+        </Box>
+
+        {/* Product name */}
         <Box flex={1}>
           <Text size={1} weight="medium">
-            {product.brandName && `${product.brandName} `}
+            {product.brandName && (
+              <span style={{ opacity: 0.6 }}>{product.brandName} </span>
+            )}
             {product.name}
           </Text>
         </Box>
-        <Box style={{ width: isRangeFilter ? "120px" : "200px" }}>
+
+        {/* Value input */}
+        <Box style={{ width: isRangeFilter ? "100px" : "180px" }}>
           <Flex align="center" gap={1}>
             <TextInput
               value={localValue}
               onChange={handleChange}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              placeholder={isRangeFilter ? "Wartość" : "Wpisz wartość..."}
+              placeholder={isRangeFilter ? "Wartość" : "Wpisz..."}
               type={isRangeFilter ? "number" : "text"}
               fontSize={1}
               disabled={isSaving}
@@ -397,6 +518,8 @@ function ProductRow({
             )}
           </Flex>
         </Box>
+
+        {/* Saving indicator */}
         {isSaving && <Spinner muted />}
       </Flex>
     </Card>
