@@ -49,7 +49,7 @@ export function ProductFilterValues({
     new Set(),
   );
 
-  // Fetch products when expanded
+  // Fetch products when expanded - prefer drafts over published
   const loadProducts = useCallback(async () => {
     if (!isExpanded || !filter.name) return;
 
@@ -60,6 +60,8 @@ export function ProductFilterValues({
         ? categoryId.replace("drafts.", "")
         : categoryId;
 
+      // Query that prefers drafts over published documents
+      // First get all product IDs in this category, then for each get draft or published
       const result = await client.fetch<
         Array<{
           _id: string;
@@ -72,12 +74,17 @@ export function ProductFilterValues({
           }>;
         }>
       >(
-        `*[_type == "product" && references($categoryId) && (isArchived != true)] | order(name asc) {
-          _id,
-          name,
-          "brandName": brand->name,
-          customFilterValues
-        }`,
+        `*[_type == "product" && references($categoryId) && (isArchived != true) && !(_id in path("drafts.**"))] {
+          "product": coalesce(
+            *[_id == "drafts." + ^._id][0],
+            @
+          ) {
+            _id,
+            name,
+            "brandName": brand->name,
+            customFilterValues
+          }
+        }.product | order(name asc)`,
         { categoryId: baseCategoryId },
       );
 
@@ -85,8 +92,12 @@ export function ProductFilterValues({
         const filterValue = product.customFilterValues?.find(
           (fv) => fv.filterName === filter.name,
         );
+        // Use base ID (without drafts prefix) for consistency
+        const baseId = product._id.startsWith("drafts.")
+          ? product._id.replace("drafts.", "")
+          : product._id;
         return {
-          _id: product._id,
+          _id: baseId,
           name: product.name,
           brandName: product.brandName,
           currentValue: filterValue?.value,
@@ -130,6 +141,9 @@ export function ProductFilterValues({
           newValue || undefined,
           undefined,
         );
+      } catch (error) {
+        // Revert on error - reload products
+        loadProducts();
       } finally {
         setSavingProductIds((prev) => {
           const next = new Set(prev);
@@ -138,7 +152,7 @@ export function ProductFilterValues({
         });
       }
     },
-    [filter.name, onSaveProduct],
+    [filter.name, onSaveProduct, loadProducts],
   );
 
   const handleNumericValueChange = useCallback(
@@ -161,6 +175,9 @@ export function ProductFilterValues({
       setSavingProductIds((prev) => new Set([...prev, productId]));
       try {
         await onSaveProduct(productId, filter.name, undefined, numericValue);
+      } catch (error) {
+        // Revert on error - reload products
+        loadProducts();
       } finally {
         setSavingProductIds((prev) => {
           const next = new Set(prev);
@@ -169,7 +186,7 @@ export function ProductFilterValues({
         });
       }
     },
-    [filter.name, onSaveProduct],
+    [filter.name, onSaveProduct, loadProducts],
   );
 
   const isRangeFilter = filter.filterType === "range";
@@ -199,13 +216,13 @@ export function ProductFilterValues({
           style={{ width: "100%" }}
           padding={2}
         >
-          <Flex align="center" justify="space-between" style={{ width: "100%" }}>
+          <Flex
+            align="center"
+            justify="space-between"
+            style={{ width: "100%" }}
+          >
             <Flex align="center" gap={2}>
-              {isExpanded ? (
-                <ChevronUpIcon />
-              ) : (
-                <ChevronDownIcon />
-              )}
+              {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
               <Text size={1} weight="medium">
                 Wartości produktów
               </Text>
@@ -318,7 +335,12 @@ function ProductRow({
           : product.currentValue || "",
       );
     }
-  }, [product.currentValue, product.currentNumericValue, isRangeFilter, isDirty]);
+  }, [
+    product.currentValue,
+    product.currentNumericValue,
+    isRangeFilter,
+    isDirty,
+  ]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(e.currentTarget.value);
@@ -343,7 +365,12 @@ function ProductRow({
   };
 
   return (
-    <Card padding={2} border radius={2} tone={isSaving ? "positive" : "default"}>
+    <Card
+      padding={2}
+      border
+      radius={2}
+      tone={isSaving ? "positive" : "default"}
+    >
       <Flex align="center" gap={3}>
         <Box flex={1}>
           <Text size={1} weight="medium">
@@ -370,9 +397,7 @@ function ProductRow({
             )}
           </Flex>
         </Box>
-        {isSaving && (
-          <Spinner muted />
-        )}
+        {isSaving && <Spinner muted />}
       </Flex>
     </Card>
   );

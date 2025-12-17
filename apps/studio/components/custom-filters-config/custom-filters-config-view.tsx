@@ -343,29 +343,31 @@ export function CustomFiltersConfigView({
       numericValue: number | undefined,
     ): Promise<void> => {
       try {
-        // Get base product ID
+        // Get base product ID (always without drafts prefix)
         const baseProductId = productId.startsWith("drafts.")
           ? productId.replace("drafts.", "")
           : productId;
         const draftProductId = `drafts.${baseProductId}`;
 
-        // First, fetch the current product to get existing filter values
+        // Fetch the product - prefer draft over published, get full document
+        // Use coalesce to get draft first, then published
         const currentProduct = await client.fetch<{
           _id: string;
           _type: string;
+          _rev?: string;
           customFilterValues?: Array<{
             _key: string;
             filterName: string;
             value?: string;
             numericValue?: number;
           }>;
-        }>(
-          `*[_id == $productId || _id == $draftProductId][0]{
-            _id,
-            _type,
-            customFilterValues
-          }`,
-          { productId: baseProductId, draftProductId },
+          [key: string]: unknown;
+        } | null>(
+          `coalesce(
+            *[_id == $draftProductId][0],
+            *[_id == $baseProductId][0]
+          )`,
+          { baseProductId, draftProductId },
         );
 
         if (!currentProduct) {
@@ -373,23 +375,25 @@ export function CustomFiltersConfigView({
         }
 
         // Build the new customFilterValues array
-        let newFilterValues = [
-          ...(currentProduct.customFilterValues || []),
-        ];
+        const existingFilterValues = currentProduct.customFilterValues || [];
+        let newFilterValues = [...existingFilterValues];
 
         // Find existing value for this filter
         const existingIndex = newFilterValues.findIndex(
           (fv) => fv.filterName === filterName,
         );
 
-        // If both value and numericValue are empty, remove the filter value
+        // If both value and numericValue are empty/undefined, remove the filter value
         if (value === undefined && numericValue === undefined) {
           if (existingIndex !== -1) {
             newFilterValues.splice(existingIndex, 1);
           }
         } else {
           const newFilterValue = {
-            _key: existingIndex !== -1 ? newFilterValues[existingIndex]._key : generateKey(),
+            _key:
+              existingIndex !== -1
+                ? newFilterValues[existingIndex]._key
+                : generateKey(),
             filterName,
             value,
             numericValue,
@@ -402,24 +406,41 @@ export function CustomFiltersConfigView({
           }
         }
 
-        // Use transaction to create draft if not exists, then patch
-        const transaction = client.transaction();
+        // Check if we're working with a draft or need to create one
+        const isCurrentlyDraft = currentProduct._id.startsWith("drafts.");
 
-        // Create draft from published if needed
-        transaction.createIfNotExists({
-          _id: draftProductId,
-          _type: "product",
-        });
+        if (isCurrentlyDraft) {
+          // Draft exists - just patch it
+          await client
+            .patch(draftProductId)
+            .set({
+              customFilterValues:
+                newFilterValues.length > 0 ? newFilterValues : [],
+            })
+            .commit();
+        } else {
+          // No draft exists - create draft from published document, then patch
+          // Remove system fields that shouldn't be copied
+          const { _rev, ...documentWithoutRev } = currentProduct;
 
-        // Patch the product's customFilterValues
-        transaction.patch(draftProductId, (patch) =>
-          patch.set({
-            customFilterValues:
-              newFilterValues.length > 0 ? newFilterValues : [],
-          }),
-        );
+          const transaction = client.transaction();
 
-        await transaction.commit();
+          // Create draft as a copy of published document
+          transaction.createIfNotExists({
+            ...documentWithoutRev,
+            _id: draftProductId,
+          });
+
+          // Patch the customFilterValues
+          transaction.patch(draftProductId, (patch) =>
+            patch.set({
+              customFilterValues:
+                newFilterValues.length > 0 ? newFilterValues : [],
+            }),
+          );
+
+          await transaction.commit();
+        }
 
         // Refresh stats after saving
         loadProductStats();
