@@ -1,45 +1,45 @@
-import type { PortableTextBlock } from "@portabletext/react";
+import type { PortableTextBlock } from '@portabletext/react';
 import {
   PortableText,
   type PortableTextComponentProps,
   type PortableTextComponents,
   type PortableTextMarkComponentProps,
-} from "@portabletext/react";
-import Link from "next/link";
-import type { PortableTextTypeComponentProps } from "next-sanity";
-import React, { Suspense } from "react";
+} from '@portabletext/react';
+import Link from 'next/link';
+import type { PortableTextTypeComponentProps } from 'next-sanity';
+import React, { Suspense } from 'react';
 
-import type { PortableTextProps } from "@/global/types";
-import { convertToSlug, portableTextToPlainString } from "@/global/utils";
+import type { PortableTextProps } from '@/global/types';
+import { convertToSlug, portableTextToPlainString } from '@/global/utils';
 
-import { ArrowListComponent } from "./ArrowList";
-import { ButtonPortableTextComponent } from "./Button";
-import { CircleNumberedListComponent } from "./CircleNumberedList";
-import { CtaSectionComponent } from "./CtaSection";
-import { FeaturedProductsComponent } from "./FeaturedProducts";
-import { HeadingComponent } from "./Heading";
-import { ImageComponent } from "./Image";
-import { ImageSliderComponent } from "./ImageSlider";
-import { InlineImageComponent } from "./InlineImage";
-import { MinimalImageComponent } from "./MinimalImage";
-import { PageBreakComponent } from "./PageBreak";
-import { QuoteComponent } from "./Quote";
-import { ReviewEmbedComponent } from "./ReviewEmbed";
-import portableTextStyles from "./styles.module.scss";
-import { TwoColumnTableComponent } from "./TwoColumnTable";
-import { VimeoVideoComponent } from "./VimeoVideo";
-import { YoutubeVideoComponent } from "./YouTubeVideo";
-import { YoutubeVideoSkeleton } from "./YouTubeVideo/YoutubeVideoSkeleton";
+import { ArrowListComponent } from './ArrowList';
+import { ButtonPortableTextComponent } from './Button';
+import { CircleNumberedListComponent } from './CircleNumberedList';
+import { CtaSectionComponent } from './CtaSection';
+import { FeaturedProductsComponent } from './FeaturedProducts';
+import { HeadingComponent } from './Heading';
+import { ImageComponent } from './Image';
+import { ImageSliderComponent } from './ImageSlider';
+import { InlineImageComponent } from './InlineImage';
+import { MinimalImageComponent } from './MinimalImage';
+import { PageBreakComponent } from './PageBreak';
+import { QuoteComponent } from './Quote';
+import { ReviewEmbedComponent } from './ReviewEmbed';
+import portableTextStyles from './styles.module.scss';
+import { TwoColumnTableComponent } from './TwoColumnTable';
+import { VimeoVideoComponent } from './VimeoVideo';
+import { YoutubeVideoComponent } from './YouTubeVideo';
+import { YoutubeVideoSkeleton } from './YouTubeVideo/YoutubeVideoSkeleton';
 
 type Props = {
   value: PortableTextProps;
   className?: string;
-  headingLevel?: "h1" | "h2" | "h3" | "h4";
-  parentHeadingLevel?: "h1" | "h2" | "h3" | "h4" | "h5";
+  headingLevel?: 'h1' | 'h2' | 'h3' | 'h4';
+  parentHeadingLevel?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5';
   enablePortableTextStyles?: boolean;
   addHeadingIds?: boolean;
   /** Optional override for custom component types (merges with default registry) */
-  customComponentTypes?: PortableTextComponents["types"];
+  customComponentTypes?: PortableTextComponents['types'];
 };
 
 export function PortableTextRenderer({
@@ -126,7 +126,7 @@ export function PortableTextRenderer({
     block: {
       // Handle normal text blocks
       normal: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
-        const Tag = (headingLevel || "p") as React.ElementType;
+        const Tag = (headingLevel || 'p') as React.ElementType;
         return (
           <Tag
             className={
@@ -142,7 +142,7 @@ export function PortableTextRenderer({
         children,
         value: blockValue,
       }: PortableTextComponentProps<PortableTextProps>) => {
-        const Tag = getActualHeading("h1");
+        const Tag = getActualHeading('h1');
         const id = addHeadingIds
           ? convertToSlug(
               portableTextToPlainString([
@@ -165,7 +165,7 @@ export function PortableTextRenderer({
         children,
         value: blockValue,
       }: PortableTextComponentProps<PortableTextProps>) => {
-        const Tag = getActualHeading("h2");
+        const Tag = getActualHeading('h2');
         const id = addHeadingIds
           ? convertToSlug(
               portableTextToPlainString([
@@ -188,7 +188,7 @@ export function PortableTextRenderer({
         children,
         value: blockValue,
       }: PortableTextComponentProps<PortableTextProps>) => {
-        const Tag = getActualHeading("h3");
+        const Tag = getActualHeading('h3');
         const id = addHeadingIds
           ? convertToSlug(
               portableTextToPlainString([
@@ -208,7 +208,7 @@ export function PortableTextRenderer({
         );
       },
       h4: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
-        const Tag = getActualHeading("h4");
+        const Tag = getActualHeading('h4');
         return (
           <Tag
             className={
@@ -220,7 +220,7 @@ export function PortableTextRenderer({
         );
       },
       h5: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
-        const Tag = getActualHeading("h5");
+        const Tag = getActualHeading('h5');
         return (
           <Tag
             className={
@@ -232,7 +232,7 @@ export function PortableTextRenderer({
         );
       },
       h6: ({ children }: PortableTextComponentProps<PortableTextProps>) => {
-        const Tag = getActualHeading("h6");
+        const Tag = getActualHeading('h6');
         return (
           <Tag
             className={
@@ -285,17 +285,17 @@ export function PortableTextRenderer({
       // Handle customLink (used in most portable text fields)
       customLink: ({ children, value }: PortableTextMarkComponentProps) => {
         const linkData = value?.customLink || {};
-        const href = linkData?.href || "#";
+        const href = linkData?.href || '#';
         const linkType = linkData?.type;
         const openInNewTab = linkData?.openInNewTab;
 
         // Determine if it's an external link
         const isExternal =
-          linkType === "external" ||
+          linkType === 'external' ||
           openInNewTab ||
-          href.startsWith("http") ||
-          href.startsWith("mailto:") ||
-          href.startsWith("tel:");
+          href.startsWith('http') ||
+          href.startsWith('mailto:') ||
+          href.startsWith('tel:');
 
         // For external links, use regular <a> tag
         if (isExternal) {
@@ -320,15 +320,15 @@ export function PortableTextRenderer({
       },
       // Handle link (used in technical data cells)
       link: ({ children, value }: PortableTextMarkComponentProps) => {
-        const href = value?.href || "#";
+        const href = value?.href || '#';
         const openInNewTab = value?.blank;
 
         // Determine if it's an external link
         const isExternal =
           openInNewTab ||
-          href.startsWith("http") ||
-          href.startsWith("mailto:") ||
-          href.startsWith("tel:");
+          href.startsWith('http') ||
+          href.startsWith('mailto:') ||
+          href.startsWith('tel:');
 
         // For external links, use regular <a> tag
         if (isExternal) {
@@ -409,7 +409,7 @@ export function PortableTextRenderer({
   if (enablePortableTextStyles) {
     const wrapperClasses = [portableTextStyles.portableText, className]
       .filter(Boolean)
-      .join(" ");
+      .join(' ');
     return (
       <div className={wrapperClasses}>
         <PortableText

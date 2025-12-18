@@ -333,6 +333,15 @@ export default function NewsletterTool() {
     setIsAssetBrowserOpen(false);
   };
 
+  // Calculate if there are any items currently selected in enabled lists
+  const hasSelectedItems =
+    (listsEnabled.articles &&
+      content.articles.some((i) => selectedIds.has(i._id))) ||
+    (listsEnabled.reviews &&
+      content.reviews.some((i) => selectedIds.has(i._id))) ||
+    (listsEnabled.products &&
+      content.products.some((i) => selectedIds.has(i._id)));
+
   // 6. Generate Newsletter
   const handleAction = async (
     action: "download-html" | "create-mailchimp-draft",
@@ -637,23 +646,31 @@ export default function NewsletterTool() {
               >
                 <Flex gap={3} justify="space-between" align="center">
                   <Text size={1} muted>
-                    {!heroConfig.imageUrl && "⚠️ Dodaj obraz nagłówka"}
+                    {!heroConfig.imageUrl
+                      ? "⚠️ Dodaj obraz nagłówka"
+                      : !hasSelectedItems
+                        ? "⚠️ Wybierz co najmniej jeden element"
+                        : ""}
                   </Text>
                   <Flex gap={3}>
                     <Button
                       mode="ghost"
                       text="Pobierz HTML"
                       onClick={() => handleAction("download-html")}
-                      disabled={isGenerating || !heroConfig.imageUrl}
+                      disabled={
+                        isGenerating || !heroConfig.imageUrl || !hasSelectedItems
+                      }
                     />
                     <Button
                       icon={
-                        selectedIds.size > 0 ? ComposeSparklesIcon : undefined
+                        hasSelectedItems ? ComposeSparklesIcon : undefined
                       }
                       tone="primary"
                       text="Wyślij do Mailchimp"
                       onClick={() => handleAction("create-mailchimp-draft")}
-                      disabled={isGenerating || !heroConfig.imageUrl}
+                      disabled={
+                        isGenerating || !heroConfig.imageUrl || !hasSelectedItems
+                      }
                     />
                   </Flex>
                 </Flex>
