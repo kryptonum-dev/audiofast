@@ -12,7 +12,7 @@ export const featuredPublications = defineType({
   icon: Highlighter,
   type: "object",
   description:
-    "Sekcja z karuzelą wyróżnionych publikacji - artykułów blogowych i recenzji",
+    "Sekcja z karuzelą wyróżnionych publikacji - artykułów blogowych, recenzji i produktów z danymi publikacji",
   fields: [
     customPortableText({
       name: "heading",
@@ -26,11 +26,11 @@ export const featuredPublications = defineType({
       title: "Wyróżnione publikacje",
       type: "array",
       description:
-        "Wybierz publikacje do wyświetlenia w karuzeli (5-10 elementów)",
+        "Wybierz publikacje do wyświetlenia w karuzeli (5-10 elementów). Produkty mogą być dodane tylko jeśli mają ustawiony obraz publikacji lub krótki opis.",
       of: [
         {
           type: "reference",
-          to: [{ type: "blog-article" }, { type: "review" }],
+          to: [{ type: "blog-article" }, { type: "review" }, { type: "product" }],
           options: {
             disableNew: true,
             filter: ({ parent }) => {
@@ -39,7 +39,11 @@ export const featuredPublications = defineType({
                   ?.filter((item) => item._ref)
                   .map((item) => item._ref) || [];
               return {
-                filter: '!(_id in $selectedIds) && !(_id in path("drafts.**"))',
+                filter: `!(_id in $selectedIds) && !(_id in path("drafts.**")) && (
+                  _type != "product" ||
+                  (defined(publicationImage) &&
+                  defined(shortDescription))
+                )`,
                 params: { selectedIds },
               };
             },

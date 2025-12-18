@@ -17,15 +17,24 @@ export default function LatestPublication({
   index,
 }: LatestPublicationProps) {
   const {
+    _type,
     _createdAt,
     publishDate,
     slug,
     title,
+    name,
     description,
     image,
     publicationType,
     openInNewTab,
   } = publication!;
+
+  // Products use name field instead of portable text title
+  const isProduct = _type === "product";
+  const TitleHeading = index === 0 ? "h2" : "h3";
+
+  // Determine button text based on publication type
+  const buttonText = isProduct ? "Zobacz produkt" : "Przeczytaj recenzję";
 
   return (
     <section className={`${styles.latestPublication} max-width`}>
@@ -44,22 +53,24 @@ export default function LatestPublication({
         <header className={styles.header}>
           <DateBox date={publishDate || _createdAt} />
           <PublicationType publicationType={publicationType!} />
-          <PortableText
-            value={title}
-            headingLevel={index === 0 ? "h2" : "h3"}
-            className={styles.title}
-          />
+          {isProduct ? (
+            <TitleHeading className={styles.title}>{name}</TitleHeading>
+          ) : (
+            <PortableText
+              value={title}
+              headingLevel={index === 0 ? "h2" : "h3"}
+              className={styles.title}
+            />
+          )}
 
-          <PortableText
-            value={description as unknown as PortableTextProps}
-            enablePortableTextStyles
-            className={styles.description}
-          />
-          <Button
-            href={slug}
-            text="Przeczytaj recenzję"
-            openInNewTab={openInNewTab}
-          />
+          {description && (
+            <PortableText
+              value={description as unknown as PortableTextProps}
+              enablePortableTextStyles
+              className={styles.description}
+            />
+          )}
+          <Button href={slug} text={buttonText} openInNewTab={openInNewTab} />
         </header>
       </article>
     </section>

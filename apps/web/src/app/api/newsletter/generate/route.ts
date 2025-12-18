@@ -2,7 +2,10 @@ import { render } from "@react-email/render";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import type { NewsletterContent } from "@/src/emails/newsletter-template";
+import type {
+  HeroConfig,
+  NewsletterContent,
+} from "@/src/emails/newsletter-template";
 import NewsletterTemplate from "@/src/emails/newsletter-template";
 import { mailchimpClient } from "@/src/global/mailchimp/client";
 import { client } from "@/src/global/sanity/client";
@@ -14,6 +17,7 @@ interface GeneratePayload {
   startDate?: string;
   endDate?: string;
   content: NewsletterContent;
+  hero: HeroConfig;
   subject?: string; // Optional custom subject line
 }
 
@@ -43,7 +47,7 @@ export async function OPTIONS() {
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as GeneratePayload;
-    const { action, content, startDate, endDate, subject } = body;
+    const { action, content, startDate, endDate, hero, subject } = body;
 
     if (!content) {
       return NextResponse.json(
@@ -52,15 +56,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Format date range for display
-    const dateRangeDisplay =
-      startDate && endDate ? `${startDate} - ${endDate}` : undefined;
+    if (!hero?.imageUrl) {
+      return NextResponse.json(
+        { error: "Hero image is required" },
+        { status: 400, headers: corsHeaders },
+      );
+    }
 
     // Generate the HTML email
     const emailHtml = await render(
       NewsletterTemplate({
         content,
-        dateRange: dateRangeDisplay,
+        hero,
       }),
     );
 

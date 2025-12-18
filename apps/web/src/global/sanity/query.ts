@@ -230,22 +230,37 @@ const publicationBlock = /* groq */ `
   "publishDate": select(
     _type == "review" => coalesce(publishedDate, _createdAt),
     _type == "blog-article" => coalesce(publishedDate, _createdAt),
+    _type == "product" => coalesce(publishedDate, _createdAt),
     _createdAt
   ),
   "name": select(
     _type == "review" => pt::text(title),
+    _type == "product" => name,
     name
   ),
-  ${portableTextFragment('title')},
+  "title": select(
+    _type == "product" => null,
+    ${portableTextFragment('title')}
+  ),
   "description": select(
     _type == "review" && count(description) > 0 => description,
     _type == "review" => content[_type == "block"][0...3],
+    _type == "product" => shortDescription,
     ${portableTextFragment('description')}
   ),
-  ${imageFragment('image')},
+  "image": select(
+    _type == "product" && defined(publicationImage) => {
+      ${imageFragment('"image": publicationImage')}
+    }.image,
+    _type == "product" => {
+      ${imageFragment('"image": previewImage')}
+    }.image,
+    ${imageFragment('image')}
+  ),
   "publicationType": select(
     _type == "review" => "Recenzja",
     _type == "blog-article" => category->name,
+    _type == "product" => "Produkt",
     "Artykuł"
   ),
   "destinationType": select(
@@ -257,6 +272,7 @@ const publicationBlock = /* groq */ `
     _type == "review" && destinationType == "pdf" => pdfSlug.current,
     _type == "review" && destinationType == "external" => externalUrl,
     _type == "blog-article" => slug.current,
+    _type == "product" => slug.current,
     slug.current
   ),
   "openInNewTab": select(

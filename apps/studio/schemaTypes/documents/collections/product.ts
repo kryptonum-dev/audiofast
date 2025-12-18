@@ -90,8 +90,19 @@ export const product = defineType({
       title: "Krótki opis (opcjonalny)",
       optional: true,
       description:
-        "Opcjonalny krótki opis produktu wyświetlany na górze strony. Jeśli nie zostanie wypełniony, sekcja opisu nie będzie wyświetlana.",
+        "Opcjonalny krótki opis produktu wyświetlany na górze strony produktu oraz w kontekstach publikacji (newsletter, wyróżnione publikacje). Jeśli nie zostanie wypełniony, sekcja opisu nie będzie wyświetlana.",
       group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "publicationImage",
+      title: "Obraz publikacji (opcjonalny)",
+      type: "image",
+      description:
+        "Obraz wyświetlany gdy produkt jest prezentowany jako publikacja (newsletter, wyróżnione publikacje). Zalecany format 16:10. Jeśli nie ustawiono, zostanie użyte zdjęcie główne produktu. Wypełnienie tego pola lub krótkiego opisu umożliwia użycie produktu jako publikacji.",
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        hotspot: true,
+      },
     }),
     defineField({
       name: "isArchived",

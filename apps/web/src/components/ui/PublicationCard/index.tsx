@@ -25,16 +25,25 @@ export default function PublicationCard({
   loading = "lazy",
 }: PublicationCardProps) {
   const {
+    _type,
     _createdAt,
     publishDate,
     slug,
     title,
+    name,
     image,
     publicationType,
     openInNewTab,
   } = publication;
 
   const Heading = headingLevel;
+
+  // Products use name field instead of portable text title
+  const isProduct = _type === "product";
+  const displayTitle = isProduct ? name : portableTextToPlainString(title);
+
+  // Determine button text based on publication type
+  const buttonText = isProduct ? "Zobacz produkt" : "Czytaj artykuł";
 
   return (
     <article className={styles.publicationCard} data-layout={layout}>
@@ -54,11 +63,9 @@ export default function PublicationCard({
         <div className={styles.content}>
           <PublicationType publicationType={publicationType!} />
           <DateBox date={publishDate || _createdAt} />
-          <Heading className={styles.title}>
-            {portableTextToPlainString(title)}
-          </Heading>
+          <Heading className={styles.title}>{displayTitle}</Heading>
           {layout === "vertical" && (
-            <Button tabIndex={-1} text="Czytaj artykuł" variant="primary" />
+            <Button tabIndex={-1} text={buttonText} variant="primary" />
           )}
         </div>
       </a>

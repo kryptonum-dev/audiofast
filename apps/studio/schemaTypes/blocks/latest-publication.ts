@@ -10,7 +10,7 @@ export const latestPublication = defineType({
   icon: Newspaper,
   type: "object",
   description:
-    "Sekcja wyświetlająca najnowszą publikację - może być to artykuł blogowy lub recenzja produktu",
+    "Sekcja wyświetlająca najnowszą publikację - może być to artykuł blogowy, recenzja produktu lub produkt z danymi publikacji",
   fields: [
     customPortableText({
       name: "heading",
@@ -25,8 +25,15 @@ export const latestPublication = defineType({
       title: "Wybierz publikację",
       type: "reference",
       description:
-        "Wybierz najnowszą publikację do wyświetlenia - może być to artykuł blogowy lub recenzja",
-      to: [{ type: "blog-article" }, { type: "review" }],
+        "Wybierz najnowszą publikację do wyświetlenia - może być to artykuł blogowy, recenzja lub produkt (z obrazem publikacji lub krótkim opisem)",
+      to: [{ type: "blog-article" }, { type: "review" }, { type: "product" }],
+      options: {
+        filter: `!(_id in path("drafts.**")) && (
+          _type != "product" ||
+          (defined(publicationImage) &&
+          defined(shortDescription))
+        )`,
+      },
       validation: (Rule) => Rule.required().error("Publikacja jest wymagana"),
     }),
   ],
@@ -47,7 +54,11 @@ export const latestPublication = defineType({
 
       // Determine publication type for subtitle
       const typeLabel =
-        publicationType === "blog-article" ? "Artykuł blogowy" : "Recenzja";
+        publicationType === "blog-article"
+          ? "Artykuł blogowy"
+          : publicationType === "product"
+            ? "Produkt"
+            : "Recenzja";
 
       return {
         title: headingText,
