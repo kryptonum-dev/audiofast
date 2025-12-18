@@ -102,16 +102,18 @@ function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
     const model = cellStr(row, 2);
     const priceStr = cellStr(row, 4);
     const priceKey = cellStr(row, 6);
-    // Powiązane produkty P1-P10 (kolumny AA-AJ, indeksy 26-35)
-    const relatedProducts: string[] = [];
-    for (let col = 26; col <= 35; col++) {
-      const pVal = cellStr(row, col);
-      if (pVal && pVal.trim() !== '') relatedProducts.push(pVal);
-    }
+    // Powiązane produkty P1-P4 (kolumny J-M, indeksy 9-12)
+    // Kolumny H i I są puste
+    const p1 = cellStr(row, 9);
+    const p2 = cellStr(row, 10);
+    const p3 = cellStr(row, 11);
+    const p4 = cellStr(row, 12);
 
     if (!brand || !product || !priceKey) continue;
     if (priceKey.toLowerCase() === 'url' || product.toLowerCase() === 'produkt') continue;
     if (!priceKey.includes('/')) continue;
+
+    const relatedProducts = [p1, p2, p3, p4].filter(p => p && p.trim() !== '');
     variants.set(variantKey(product, model || null), {
       price_key: priceKey,
       brand,

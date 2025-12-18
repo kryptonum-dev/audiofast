@@ -32,9 +32,12 @@ import {
   Box,
   Button,
   Card,
+  Checkbox,
+  Dialog,
   Flex,
   Heading,
   Label,
+  Select,
   Spinner,
   Stack,
   Text,
@@ -44,6 +47,7 @@ import {
 } from "@sanity/ui";
 import {
   ArrowDownWideNarrow,
+  ArrowRightLeft,
   ArrowUpNarrowWide,
   ChevronDown,
   ChevronRight,
@@ -98,6 +102,29 @@ type ComparatorConfigDoc = {
   _id: string;
   _type: "comparatorConfig";
   categoryConfigs?: CategoryConfig[];
+};
+
+// Transform feature types
+type TransformPreview = {
+  eligible: ProductInfo[];
+  skipped: ProductInfo[];
+};
+
+type FullProductTechnicalData = {
+  _id: string;
+  name: string;
+  technicalData?: {
+    variants?: string[];
+    groups?: Array<{
+      _key: string;
+      title?: string;
+      rows?: Array<{
+        _key: string;
+        title: string;
+        values?: unknown[];
+      }>;
+    }>;
+  };
 };
 
 // Sortable parameter item component with products dropdown
@@ -350,6 +377,20 @@ export default function ComparatorTool() {
   const [sortOrder, setSortOrder] = useState<"most" | "least">("most");
   const [visibleCount, setVisibleCount] = useState(20);
   const PARAMS_PER_PAGE = 20;
+
+  // Transform modal state
+  const [transformModalOpen, setTransformModalOpen] = useState(false);
+  const [sourceParam, setSourceParam] = useState<DiscoveredParameter | null>(
+    null,
+  );
+  const [selectedExistingParam, setSelectedExistingParam] = useState<string>("");
+  const [customParamName, setCustomParamName] = useState<string>("");
+  const [transformPreview, setTransformPreview] =
+    useState<TransformPreview | null>(null);
+  const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [isTransforming, setIsTransforming] = useState(false);
 
   // Refs
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -866,6 +907,231 @@ export default function ComparatorTool() {
     [discoveredParams],
   );
 
+  // ============================================
+  // TRANSFORM PARAMETER FUNCTIONS
+  // ============================================
+
+  // Open transform modal
+  const openTransformModal = useCallback((param: DiscoveredParameter) => {
+    setSourceParam(param);
+    setSelectedExistingParam("");
+    setCustomParamName("");
+    setTransformPreview(null);
+    setSelectedProductIds(new Set());
+    setTransformModalOpen(true);
+  }, []);
+
+  // Close transform modal
+  const closeTransformModal = useCallback(() => {
+    setTransformModalOpen(false);
+    setSourceParam(null);
+    setSelectedExistingParam("");
+    setCustomParamName("");
+    setTransformPreview(null);
+    setSelectedProductIds(new Set());
+  }, []);
+
+  // Calculate preview when target changes
+  const calculateTransformPreview = useCallback(
+    (targetName: string) => {
+      if (!sourceParam || !targetName.trim()) {
+        setTransformPreview(null);
+        setSelectedProductIds(new Set());
+        return;
+      }
+
+      // Check if target parameter already exists in the category
+      const existingTargetParam = discoveredParams.find(
+        (p) => p.name === targetName.trim(),
+      );
+
+      let eligible: ProductInfo[];
+      let skipped: ProductInfo[];
+
+      if (existingTargetParam) {
+        // Target exists - check for duplicates
+        const targetProductIds = new Set(
+          existingTargetParam.products.map((p) => p._id),
+        );
+        eligible = sourceParam.products.filter(
+          (p) => !targetProductIds.has(p._id),
+        );
+        skipped = sourceParam.products.filter((p) =>
+          targetProductIds.has(p._id),
+        );
+      } else {
+        // Target is a NEW name - all products with source are eligible
+        eligible = sourceParam.products;
+        skipped = [];
+      }
+
+      setTransformPreview({ eligible, skipped });
+      // Select all eligible products by default
+      setSelectedProductIds(new Set(eligible.map((p) => p._id)));
+    },
+    [sourceParam, discoveredParams],
+  );
+
+  // Handle dropdown selection
+  const handleExistingParamSelect = useCallback(
+    (value: string) => {
+      setSelectedExistingParam(value);
+      setCustomParamName(""); // Clear custom input when dropdown is used
+      calculateTransformPreview(value);
+    },
+    [calculateTransformPreview],
+  );
+
+  // Handle custom name input
+  const handleCustomNameChange = useCallback(
+    (value: string) => {
+      setCustomParamName(value);
+      setSelectedExistingParam(""); // Clear dropdown when custom input is used
+      calculateTransformPreview(value);
+    },
+    [calculateTransformPreview],
+  );
+
+  // Toggle single product selection
+  const toggleProductSelection = useCallback((productId: string) => {
+    setSelectedProductIds((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(productId)) {
+        newSet.delete(productId);
+      } else {
+        newSet.add(productId);
+      }
+      return newSet;
+    });
+  }, []);
+
+  // Select all eligible products
+  const selectAllProducts = useCallback(() => {
+    if (transformPreview?.eligible) {
+      setSelectedProductIds(
+        new Set(transformPreview.eligible.map((p) => p._id)),
+      );
+    }
+  }, [transformPreview?.eligible]);
+
+  // Deselect all products
+  const deselectAllProducts = useCallback(() => {
+    setSelectedProductIds(new Set());
+  }, []);
+
+  // Computed target name
+  const targetParamName = customParamName.trim() || selectedExistingParam;
+
+  // Execute transformation
+  const handleTransformConfirm = useCallback(async () => {
+    if (
+      !sourceParam ||
+      !targetParamName ||
+      !transformPreview?.eligible.length ||
+      selectedProductIds.size === 0
+    ) {
+      return;
+    }
+
+    // Validation: target cannot be same as source
+    if (targetParamName === sourceParam.name) {
+      toast.push({
+        status: "error",
+        title: "Błąd",
+        description: "Nazwa docelowa nie może być taka sama jak źródłowa.",
+      });
+      return;
+    }
+
+    setIsTransforming(true);
+
+    try {
+      // 1. Fetch full product data for SELECTED products only
+      const productIds = Array.from(selectedProductIds);
+      const fullProducts = await client.fetch<FullProductTechnicalData[]>(
+        `*[_type == "product" && _id in $productIds] {
+          _id,
+          name,
+          technicalData {
+            variants,
+            groups[] {
+              _key,
+              title,
+              rows[] {
+                _key,
+                title,
+                values
+              }
+            }
+          }
+        }`,
+        { productIds },
+      );
+
+      // 2. Build and execute transaction
+      const transaction = client.transaction();
+      let patchCount = 0;
+
+      for (const product of fullProducts) {
+        const groups = product.technicalData?.groups || [];
+
+        for (const group of groups) {
+          const rows = group.rows || [];
+          for (const row of rows) {
+            if (row.title === sourceParam.name) {
+              // Use _key based path for reliability
+              transaction.patch(product._id, (patch) =>
+                patch.set({
+                  [`technicalData.groups[_key=="${group._key}"].rows[_key=="${row._key}"].title`]:
+                    targetParamName,
+                }),
+              );
+              patchCount++;
+              break; // Only patch first occurrence per group
+            }
+          }
+        }
+      }
+
+      if (patchCount > 0) {
+        await transaction.commit();
+      }
+
+      // 3. Success handling
+      toast.push({
+        status: "success",
+        title: "Przekształcono!",
+        description: `Zaktualizowano ${patchCount} parametrów w ${selectedProductIds.size} produktach.`,
+      });
+
+      // 4. Refresh data and close modal
+      await fetchParameters(selectedCategoryId!, true);
+      closeTransformModal();
+    } catch (error) {
+      console.error("Transform error:", error);
+      toast.push({
+        status: "error",
+        title: "Błąd przekształcenia",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Nie udało się przekształcić parametrów.",
+      });
+    } finally {
+      setIsTransforming(false);
+    }
+  }, [
+    sourceParam,
+    targetParamName,
+    transformPreview,
+    selectedProductIds,
+    client,
+    toast,
+    fetchParameters,
+    selectedCategoryId,
+    closeTransformModal,
+  ]);
+
   return (
     <ToastProvider>
       <Flex style={{ height: "100%", overflow: "hidden" }}>
@@ -1258,6 +1524,27 @@ export default function ComparatorTool() {
                                       </Flex>
                                     </Box>
 
+                                    {/* Transform button */}
+                                    {param.products.length > 0 &&
+                                      discoveredParams.length > 1 && (
+                                        <Button
+                                          icon={() => (
+                                            <ArrowRightLeft size={17} />
+                                          )}
+                                          mode="bleed"
+                                          padding={3}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            openTransformModal(param);
+                                          }}
+                                          title="Przekształć w inny parametr"
+                                          style={{
+                                            paddingTop: "1px",
+                                       
+                                          }}
+                                        />
+                                      )}
+
                                     {/* Expand button */}
                                     {hasAnyProducts && (
                                       <Button
@@ -1529,6 +1816,255 @@ export default function ComparatorTool() {
           )}
         </Box>
       </Flex>
+
+      {/* Transform Parameter Modal */}
+      {transformModalOpen && sourceParam && (
+        <Dialog
+          id="transform-parameter-modal"
+          header="Przekształć parametr"
+          onClose={closeTransformModal}
+          width={1}
+        >
+          <Box padding={4}>
+            <Stack space={4}>
+              {/* Source parameter info */}
+              <Card padding={3} radius={2} tone="primary">
+                <Stack space={2}>
+                  <Text size={1} weight="medium">
+                    Parametr źródłowy:
+                  </Text>
+                  <Flex align="center" gap={2}>
+                    <Text size={2} weight="semibold">
+                      {sourceParam.name}
+                    </Text>
+                    <Badge tone="positive">
+                      {sourceParam.products.length} produktów
+                    </Badge>
+                  </Flex>
+                </Stack>
+              </Card>
+
+              {/* Target selection - Dropdown for existing params */}
+              <Stack space={2}>
+                <Label size={1}>Przekształć w istniejący parametr:</Label>
+                <Select
+                  value={selectedExistingParam}
+                  onChange={(e) =>
+                    handleExistingParamSelect(e.currentTarget.value)
+                  }
+                >
+                  <option value="">Wybierz parametr docelowy...</option>
+                  {discoveredParams
+                    .filter((p) => p.name !== sourceParam.name)
+                    .map((p) => (
+                      <option key={p.name} value={p.name}>
+                        {p.name} ({p.products.length} produktów)
+                      </option>
+                    ))}
+                </Select>
+              </Stack>
+
+              {/* Divider */}
+              <Flex align="center" gap={3}>
+                <Box
+                  style={{
+                    flex: 1,
+                    height: "1px",
+                    background: "var(--card-border-color)",
+                  }}
+                />
+                <Text size={0} muted>
+                  lub wpisz nową nazwę
+                </Text>
+                <Box
+                  style={{
+                    flex: 1,
+                    height: "1px",
+                    background: "var(--card-border-color)",
+                  }}
+                />
+              </Flex>
+
+              {/* Custom name input */}
+              <Stack space={2}>
+                <Label size={1}>Nowa nazwa parametru:</Label>
+                <TextInput
+                  value={customParamName}
+                  onChange={(e) => handleCustomNameChange(e.currentTarget.value)}
+                  placeholder="Wpisz nową nazwę parametru..."
+                />
+                {customParamName.trim() &&
+                  !discoveredParams.find(
+                    (p) => p.name === customParamName.trim(),
+                  ) && (
+                    <Text size={0} muted>
+                      ✨ Ta nazwa nie istnieje jeszcze w tej kategorii - zostanie
+                      utworzona
+                    </Text>
+                  )}
+              </Stack>
+
+              {/* Preview with checkboxes */}
+              {transformPreview && (
+                <Card padding={3} radius={2} border>
+                  <Stack space={3}>
+                    {/* Eligible products with checkboxes */}
+                    {transformPreview.eligible.length > 0 && (
+                      <Stack space={2}>
+                        <Flex align="center" justify="space-between">
+                          <Flex align="center" gap={2}>
+                            <Badge tone="positive">✓</Badge>
+                            <Text size={1} weight="medium">
+                              Produkty do przekształcenia ({selectedProductIds.size}
+                              /{transformPreview.eligible.length}):
+                            </Text>
+                          </Flex>
+                          <Flex gap={2}>
+                            <Button
+                              text="Zaznacz wszystkie"
+                              mode="ghost"
+                              fontSize={0}
+                              padding={2}
+                              onClick={selectAllProducts}
+                              disabled={
+                                selectedProductIds.size ===
+                                transformPreview.eligible.length
+                              }
+                            />
+                            <Button
+                              text="Odznacz wszystkie"
+                              mode="ghost"
+                              fontSize={0}
+                              padding={2}
+                              onClick={deselectAllProducts}
+                              disabled={selectedProductIds.size === 0}
+                            />
+                          </Flex>
+                        </Flex>
+                        <Stack space={1}>
+                          {transformPreview.eligible.map((p) => (
+                            <Flex
+                              key={p._id}
+                              align="center"
+                              gap={2}
+                              padding={2}
+                              style={{
+                                background: selectedProductIds.has(p._id)
+                                  ? "var(--card-bg2-color)"
+                                  : "transparent",
+                                borderRadius: "4px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() => toggleProductSelection(p._id)}
+                            >
+                              <Checkbox
+                                checked={selectedProductIds.has(p._id)}
+                                onChange={() => toggleProductSelection(p._id)}
+                              />
+                              <Avatar
+                                src={p.imageUrl}
+                                size={1}
+                                style={{ borderRadius: "4px" }}
+                              />
+                              <Box flex={1}>
+                                <Text size={1}>{p.name}</Text>
+                              </Box>
+                              {p.brandName && (
+                                <Badge tone="primary" fontSize={0} padding={1}>
+                                  {p.brandName}
+                                </Badge>
+                              )}
+                            </Flex>
+                          ))}
+                        </Stack>
+                      </Stack>
+                    )}
+
+                    {/* Skipped products (no checkboxes - just info) */}
+                    {transformPreview.skipped.length > 0 && (
+                      <Stack space={2}>
+                        <Flex align="center" gap={2}>
+                          <Badge tone="caution">⚠</Badge>
+                          <Text size={1} weight="medium">
+                            Produkty pominięte - mają już &quot;
+                            {targetParamName}&quot; (
+                            {transformPreview.skipped.length}):
+                          </Text>
+                        </Flex>
+                        <Stack space={1}>
+                          {transformPreview.skipped.slice(0, 5).map((p) => (
+                            <Flex
+                              key={p._id}
+                              align="center"
+                              gap={2}
+                              padding={1}
+                            >
+                              <Avatar
+                                src={p.imageUrl}
+                                size={1}
+                                style={{
+                                  borderRadius: "4px",
+                                  opacity: 0.6,
+                                }}
+                              />
+                              <Text size={0} muted>
+                                {p.name}
+                              </Text>
+                            </Flex>
+                          ))}
+                          {transformPreview.skipped.length > 5 && (
+                            <Text size={0} muted>
+                              ... i {transformPreview.skipped.length - 5} więcej
+                            </Text>
+                          )}
+                        </Stack>
+                      </Stack>
+                    )}
+
+                    {/* No eligible products message */}
+                    {transformPreview.eligible.length === 0 && (
+                      <Card padding={3} radius={2} tone="caution">
+                        <Text size={1}>
+                          Wszystkie produkty z &quot;{sourceParam.name}&quot; mają
+                          już parametr &quot;{targetParamName}&quot;. Nie ma nic
+                          do przekształcenia.
+                        </Text>
+                      </Card>
+                    )}
+                  </Stack>
+                </Card>
+              )}
+
+              {/* Actions */}
+              <Flex gap={3} justify="flex-end">
+                <Button
+                  text="Anuluj"
+                  mode="ghost"
+                  onClick={closeTransformModal}
+                  disabled={isTransforming}
+                />
+                <Button
+                  text={
+                    isTransforming
+                      ? "Przekształcanie..."
+                      : selectedProductIds.size > 0
+                        ? `Przekształć ${selectedProductIds.size} prod.`
+                        : "Przekształć"
+                  }
+                  tone="positive"
+                  onClick={handleTransformConfirm}
+                  disabled={
+                    !targetParamName ||
+                    selectedProductIds.size === 0 ||
+                    isTransforming
+                  }
+                  loading={isTransforming}
+                />
+              </Flex>
+            </Stack>
+          </Box>
+        </Dialog>
+      )}
     </ToastProvider>
   );
 }
