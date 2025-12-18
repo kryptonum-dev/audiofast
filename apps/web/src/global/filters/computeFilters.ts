@@ -101,12 +101,14 @@ function filterProducts(
 
         if (
           rangeFilter.minValue !== undefined &&
+          value !== null &&
           value < rangeFilter.minValue
         ) {
           return false;
         }
         if (
           rangeFilter.maxValue !== undefined &&
+          value !== null &&
           value > rangeFilter.maxValue
         ) {
           return false;
@@ -382,11 +384,13 @@ function computeRangeFilterBounds(
           const value = productValue.numericValue;
           if (
             rangeFilter.minValue !== undefined &&
+            value !== null &&
             value < rangeFilter.minValue
           )
             return false;
           if (
             rangeFilter.maxValue !== undefined &&
+            value !== null &&
             value > rangeFilter.maxValue
           )
             return false;
