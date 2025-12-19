@@ -1,17 +1,11 @@
-'use cache';
-
 import type { Metadata } from 'next';
-import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
 import ProductHero, {
   type AwardType,
 } from '@/src/components/products/ProductHero';
-import PricingSkeleton from '@/src/components/products/ProductHero/PricingSkeleton';
-import ProductPricing from '@/src/components/products/ProductHero/ProductPricing';
 import TechnicalData from '@/src/components/products/TechnicalData';
 import ProductViewTracker from '@/src/components/shared/analytics/ProductViewTracker';
 import type { SanityRawImage } from '@/src/components/shared/Image';
@@ -33,19 +27,25 @@ import type {
   QueryProductSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
+import { fetchProductPricing } from '@/src/global/supabase/queries';
 import type { BrandType, PortableTextProps } from '@/src/global/types';
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-// Fetch product data from Sanity only (pricing is streamed separately via Suspense)
+// Fetch product data from Sanity and Supabase
 async function fetchProductData(slug: string) {
-  return await sanityFetch<QueryProductBySlugResult>({
-    query: queryProductBySlug,
-    params: { slug: `/produkty/${slug}/` },
-    tags: ['product'],
-  });
+  const [sanityData, pricingData] = await Promise.all([
+    sanityFetch<QueryProductBySlugResult>({
+      query: queryProductBySlug,
+      params: { slug: `/produkty/${slug}/` },
+      tags: ['product'],
+    }),
+    fetchProductPricing(slug), // Fetch pricing from Supabase
+  ]);
+
+  return { sanityData, pricingData };
 }
 
 export async function generateStaticParams() {
@@ -82,20 +82,16 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage(props: ProductPageProps) {
-  'use cache';
-  cacheLife('max');
-
   const { slug } = await props.params;
 
-  const product = await fetchProductData(slug);
+  const { sanityData: product, pricingData } = await fetchProductData(slug);
 
   if (!product) {
     console.error(`Product not found: ${slug}`);
     notFound();
   }
 
-  // Use basePriceCents from Sanity for analytics (pricing streams in separately)
-  const priceCents = product.basePriceCents ?? null;
+  const priceCents = pricingData?.lowestPrice ?? product.basePriceCents ?? null;
   const pricePLN =
     typeof priceCents === 'number' ? Math.round(priceCents) / 100 : null;
   const categorySlugs =
@@ -169,11 +165,7 @@ export default async function ProductPage(props: ProductPageProps) {
         name={product.name || ''}
         subtitle={product.subtitle || ''}
         brand={product.brand as unknown as BrandType | undefined}
-        pricingSlot={
-          <Suspense fallback={<PricingSkeleton />}>
-            <ProductPricing slug={slug} />
-          </Suspense>
-        }
+        pricingData={pricingData}
         previewImage={product.previewImage as SanityRawImage}
         shortDescription={product.shortDescription}
         awards={product.awards as AwardType[]}
