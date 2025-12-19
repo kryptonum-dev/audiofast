@@ -1,11 +1,11 @@
+import type { ReactNode } from "react";
+
 import type { SanityRawImage } from "@/components/shared/Image";
 import Image from "@/components/shared/Image";
-import type { CompletePricingData } from "@/src/global/supabase/types";
 import type { BrandType, PortableTextProps } from "@/src/global/types";
 
 import Button from "../../ui/Button";
 import AddToComparison from "./AddToComparison";
-import PricingConfigurator from "./PricingConfigurator";
 import ProductDescription from "./ProductDescription";
 import styles from "./styles.module.scss";
 
@@ -19,7 +19,8 @@ export interface ProductHeroProps {
   name: string;
   subtitle?: string;
   brand?: BrandType;
-  pricingData?: CompletePricingData | null;
+  /** Slot for pricing component (wrapped in Suspense for streaming) */
+  pricingSlot: ReactNode;
   previewImage: SanityRawImage;
   shortDescription?: PortableTextProps;
   awards?: AwardType[];
@@ -33,7 +34,7 @@ export default function ProductHero({
   name,
   subtitle,
   brand,
-  pricingData,
+  pricingSlot,
   previewImage,
   shortDescription,
   awards,
@@ -87,11 +88,7 @@ export default function ProductHero({
         <ProductDescription shortDescription={shortDescription} />
       )}
       <div className={styles.priceWrapper}>
-        {pricingData ? (
-          <PricingConfigurator pricingData={pricingData} />
-        ) : (
-          <span className={styles.price}>Brak ceny</span>
-        )}
+        {pricingSlot}
 
         <Button
           text="Zapytaj o produkt"
