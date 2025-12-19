@@ -20,11 +20,15 @@ type ProductsListingContainerProps = {
  * Benefits:
  * - PPR works for initial load (Suspense is in Server Component)
  * - Instant visual feedback on filter clicks (overlay skeleton)
+ * - Cached pages show no skeleton (navigation completes before delay)
+ * - Uncached pages show skeleton after ~120ms delay
  */
 export default function ProductsListingContainer({
   children,
 }: ProductsListingContainerProps) {
-  const { isPending, changeType } = useProductsLoading();
+  // Use showSkeleton (delayed) instead of isPending (immediate) for rendering skeleton
+  // This prevents skeleton flash on cached pages while still showing it for slow loads
+  const { showSkeleton, changeType } = useProductsLoading();
 
   // For filter changes: need to cover top pagination separately (sort dropdown stays visible)
   // For pagination/sort: only cover products grid (top pagination stays visible)
@@ -33,7 +37,7 @@ export default function ProductsListingContainer({
   return (
     <div className={styles.container}>
       {children}
-      {isPending && (
+      {showSkeleton && (
         <>
           {/* For filter changes: separate overlay for top pagination area */}
           {isFilterChange && (
