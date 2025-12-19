@@ -1,5 +1,5 @@
 /**
- * Resend API Client - Contact Form Submission
+ * Email API Client - Contact Form Submission
  */
 
 type ContactFormData = {
@@ -15,20 +15,19 @@ type ContactFormResponse = {
 };
 
 /**
- * Sends contact form data to the Resend API endpoint
+ * Sends contact form data to the email API endpoint
  *
  * @param data - Contact form data (name, email, message, consent)
- * @param metadata - Optional tracking metadata
  * @returns Promise with success status and optional error message
  */
 export async function sendContactForm(
-  data: ContactFormData,
+  data: ContactFormData
 ): Promise<ContactFormResponse> {
   try {
-    const response = await fetch("/api/contact", {
-      method: "POST",
+    const response = await fetch('/api/contact', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name: data.name,
@@ -45,10 +44,10 @@ export async function sendContactForm(
       message: result.message,
     };
   } catch (error) {
-    console.error("[Resend] Contact form submission failed", error);
+    console.error('[Email] Contact form submission failed', error);
     return {
       success: false,
-      message: "Failed to send message",
+      message: 'Failed to send message',
     };
   }
 }

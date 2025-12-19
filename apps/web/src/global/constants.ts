@@ -90,12 +90,12 @@ export const RELEVANCE_SORT_OPTION: { value: string; label: string } = {
 };
 
 /**
- * Fallback email address for form submissions when newsletter settings are not configured
+ * Fallback email address for form submissions when contact settings are not configured
  * @constant
  * @type {string}
  */
 export const FALLBACK_SUPPORT_EMAIL: string =
-  process.env.RESEND_FROM_EMAIL || 'noreply@audiofast.pl';
+  process.env.MS_GRAPH_SENDER_EMAIL || 'www@audiofast.pl';
 
 /**
  * Fallback email subject for confirmation emails when newsletter settings are not configured

@@ -1,22 +1,25 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 import {
   FALLBACK_EMAIL_BODY,
   FALLBACK_EMAIL_SUBJECT,
   FALLBACK_SUPPORT_EMAIL,
-} from "@/global/constants";
-import { sanityFetch } from "@/global/sanity/fetch";
-import { queryContactSettings } from "@/global/sanity/query";
-import type { QueryContactSettingsResult } from "@/global/sanity/sanity.types";
-import type { PortableTextProps } from "@/global/types";
-import { portableTextToHtml } from "@/global/utils";
+} from '@/global/constants';
+import {
+  isGraphConfigured,
+  type SendEmailOptions,
+  sendEmails,
+} from '@/global/microsoft-graph/client';
+import { sanityFetch } from '@/global/sanity/fetch';
+import { queryContactSettings } from '@/global/sanity/query';
+import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
+import type { PortableTextProps } from '@/global/types';
+import { portableTextToHtml } from '@/global/utils';
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const RESEND_FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || FALLBACK_SUPPORT_EMAIL;
-const RESEND_REPLY_TO = process.env.RESEND_REPLY_TO;
+// Reply-to address for confirmation emails
+const REPLY_TO_EMAIL =
+  process.env.MS_GRAPH_REPLY_TO || process.env.MS_GRAPH_SENDER_EMAIL;
 
 type FormSubmission = {
   name?: string;
@@ -37,8 +40,6 @@ type ContactSettingsType = {
 function getContactConfig(
   contactSettings: NonNullable<QueryContactSettingsResult>,
 ): ContactSettingsType {
-  // Use fallback if contact settings are not available
-
   const supportEmails = contactSettings.supportEmails || [
     FALLBACK_SUPPORT_EMAIL,
   ];
@@ -62,11 +63,11 @@ function getContactConfig(
 // Escape HTML to prevent injection
 function escapeHtml(text: string): string {
   const htmlEscapeMap: Record<string, string> = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;",
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
   };
   return text.replace(/[&<>"']/g, (char) => htmlEscapeMap[char] || char);
 }
@@ -77,9 +78,9 @@ function replacePlaceholders(
   variables: { name?: string; email?: string; message?: string },
 ): string {
   return text
-    .replace(/\{\{name\}\}/g, escapeHtml(variables.name || ""))
-    .replace(/\{\{email\}\}/g, escapeHtml(variables.email || ""))
-    .replace(/\{\{message\}\}/g, escapeHtml(variables.message || ""));
+    .replace(/\{\{name\}\}/g, escapeHtml(variables.name || ''))
+    .replace(/\{\{email\}\}/g, escapeHtml(variables.email || ''))
+    .replace(/\{\{message\}\}/g, escapeHtml(variables.message || ''));
 }
 
 // Create email HTML wrapper
@@ -99,11 +100,11 @@ function createEmailHTML(body: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  // Validate Resend is configured
-  if (!RESEND_API_KEY) {
-    console.error("[Contact API] RESEND_API_KEY not configured");
+  // Validate Microsoft Graph is configured
+  if (!isGraphConfigured()) {
+    console.error('[Contact API] Microsoft Graph not configured');
     return NextResponse.json(
-      { success: false, message: "Email service not configured" },
+      { success: false, message: 'Email service not configured' },
       { status: 500 },
     );
   }
@@ -114,7 +115,7 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, message: "Invalid JSON" },
+      { success: false, message: 'Invalid JSON' },
       { status: 400 },
     );
   }
@@ -122,7 +123,7 @@ export async function POST(request: NextRequest) {
   // Validate required fields
   if (!body.email || !body.consent) {
     return NextResponse.json(
-      { success: false, message: "Email and consent are required" },
+      { success: false, message: 'Email and consent are required' },
       { status: 400 },
     );
   }
@@ -132,22 +133,19 @@ export async function POST(request: NextRequest) {
   try {
     contactSettings = await sanityFetch<QueryContactSettingsResult>({
       query: queryContactSettings,
-      tags: ["settings"],
+      tags: ['settings'],
     });
   } catch (error) {
-    console.error("[Contact API] Failed to fetch contact settings", error);
+    console.error('[Contact API] Failed to fetch contact settings', error);
   }
 
   const emailConfig = getContactConfig(contactSettings!);
 
-  // Initialize Resend
-  const resend = new Resend(RESEND_API_KEY);
-
   // Prepare variables for template replacement
   const variables = {
-    name: body.name || "",
+    name: body.name || '',
     email: body.email,
-    message: body.message || "",
+    message: body.message || '',
   };
 
   // Render confirmation email content
@@ -164,58 +162,61 @@ export async function POST(request: NextRequest) {
   const internalSubject = `Nowe zgłoszenie z formularza kontaktowego`;
   const internalBody = `
     <h2>Nowe zgłoszenie z formularza</h2>
-    ${body.name ? `<p><strong>Imię i nazwisko:</strong> ${escapeHtml(body.name)}</p>` : ""}
+    ${body.name ? `<p><strong>Imię i nazwisko:</strong> ${escapeHtml(body.name)}</p>` : ''}
     <p><strong>E-mail:</strong> ${escapeHtml(body.email)}</p>
-    ${body.message ? `<p><strong>Wiadomość:</strong><br>${escapeHtml(body.message).replace(/\n/g, "<br>")}</p>` : ""}
-
+    ${body.message ? `<p><strong>Wiadomość:</strong><br>${escapeHtml(body.message).replace(/\n/g, '<br>')}</p>` : ''}
   `;
+
+  // Prepare email payloads
+  const emails: SendEmailOptions[] = [
+    // Internal notification email (to support team)
+    {
+      to: emailConfig.supportEmails.map((email) => ({ email })),
+      subject: internalSubject,
+      htmlBody: createEmailHTML(internalBody),
+      replyTo: body.email, // Reply goes to the person who submitted the form
+      saveToSentItems: true,
+    },
+    // Confirmation email (to the user)
+    {
+      to: { email: body.email, name: body.name },
+      subject: confirmationSubject,
+      htmlBody: createEmailHTML(confirmationBody),
+      replyTo: REPLY_TO_EMAIL,
+      saveToSentItems: true,
+    },
+  ];
 
   // Send emails concurrently
   try {
-    const [confirmationResult, internalResult] = await Promise.allSettled([
-      // Internal notification email
-      resend.emails.send({
-        from: RESEND_FROM_EMAIL,
-        to: emailConfig.supportEmails,
-        replyTo: body.email,
-        subject: internalSubject,
-        html: createEmailHTML(internalBody),
-      }),
-      // Confirmation email
-      resend.emails.send({
-        from: RESEND_FROM_EMAIL,
-        to: body.email,
-        replyTo: RESEND_REPLY_TO,
-        subject: confirmationSubject,
-        html: createEmailHTML(confirmationBody),
-      }),
-    ]);
+    const results = await sendEmails(emails);
+    const [internalResult, confirmationResult] = results;
 
-    // // Check if internal email succeeded (required)
-    if (internalResult.status === "rejected") {
+    // Check if internal email succeeded (required)
+    if (!internalResult?.success) {
       console.error(
-        "[Contact API] Internal email failed",
-        internalResult.reason,
+        '[Contact API] Internal email failed:',
+        internalResult?.error,
       );
       return NextResponse.json(
-        { success: false, message: "Failed to send notification email" },
+        { success: false, message: 'Failed to send notification email' },
         { status: 500 },
       );
     }
 
     // Log confirmation email result (optional, don't fail if it fails)
-    if (confirmationResult.status === "rejected") {
+    if (!confirmationResult?.success) {
       console.error(
-        "[Contact API] Confirmation email failed",
-        confirmationResult.reason,
+        '[Contact API] Confirmation email failed:',
+        confirmationResult?.error,
       );
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error("[Contact API] Email sending failed", error);
+    console.error('[Contact API] Email sending failed', error);
     return NextResponse.json(
-      { success: false, message: "Failed to send emails" },
+      { success: false, message: 'Failed to send emails' },
       { status: 500 },
     );
   }

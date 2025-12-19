@@ -13,7 +13,7 @@ import Input from "@/src/components/ui/Input";
 import { saveAnalyticsUser } from "@/src/global/analytics/analytics-user-storage";
 import { trackEvent } from "@/src/global/analytics/track-event";
 import { REGEX } from "@/src/global/constants";
-import { sendContactForm } from "@/src/global/resend/send-contact";
+import { sendContactForm } from "@/src/global/email/send-contact";
 import type { PagebuilderType } from "@/src/global/types";
 
 import styles from "./styles.module.scss";

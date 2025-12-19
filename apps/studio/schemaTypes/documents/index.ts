@@ -19,7 +19,6 @@ import { cpoPage } from "./singletons/cpo-page";
 import { footer } from "./singletons/footer";
 import { homePage } from "./singletons/home-page";
 import { navbar } from "./singletons/navbar";
-import { newsletterHeroConfig } from "./singletons/newsletter-hero-config";
 import { notFound } from "./singletons/not-found";
 import { privacyPolicy } from "./singletons/privacy-policy";
 import { products } from "./singletons/products";
@@ -41,7 +40,6 @@ export const singletons = [
   brands,
   cpoPage,
   comparatorConfig,
-  newsletterHeroConfig, // Hidden from sidebar - only accessed via Newsletter tool
 ];
 
 export const collection = [
