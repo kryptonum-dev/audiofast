@@ -180,10 +180,10 @@ export function createComparisonRows(
   headings: string[],
   enabledParameters?: EnabledParameter[],
 ): ComparisonTableData["comparisonRows"] {
-  // If enabledParameters is provided and not empty, use its order
-  // Otherwise, use all headings
+  // If enabledParameters is provided (even if empty), use it as the source of truth
+  // Only fall back to all headings if enabledParameters is undefined/null (no config exists)
   const orderedHeadings =
-    enabledParameters && enabledParameters.length > 0
+    enabledParameters !== undefined && enabledParameters !== null
       ? enabledParameters
           .map((param) => param.name)
           .filter((name) => headings.includes(name))

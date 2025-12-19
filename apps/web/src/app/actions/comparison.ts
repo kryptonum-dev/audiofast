@@ -4,7 +4,7 @@ import type {
   ComparisonProduct,
   EnabledParameter,
 } from "@/src/global/comparison/types";
-import { sanityFetch } from "@/src/global/sanity/fetch";
+import { sanityFetch, sanityFetchDynamic } from "@/src/global/sanity/fetch";
 import {
   queryComparisonPageData,
   queryComparisonProductsMinimal,
@@ -44,6 +44,12 @@ export async function fetchComparisonProducts(
 /**
  * Server Action to fetch ALL comparison page data in a single query
  * Fetches both products and comparator config for a category
+ *
+ * Uses uncached fetch because:
+ * - The comparison page is already dynamic (uses cookies)
+ * - Comparator config changes should be reflected immediately
+ * - No benefit to caching since the page won't be served from cache anyway
+ *
  * @param categorySlug - Category slug to fetch data for
  * @returns Object with products array and enabledParameters array
  */
@@ -51,13 +57,12 @@ export async function fetchComparisonPageData(
   categorySlug: string,
 ): Promise<ComparisonPageData> {
   try {
-    const result = await sanityFetch<{
+    const result = await sanityFetchDynamic<{
       products: ComparisonProduct[] | null;
       enabledParameters: EnabledParameter[] | null;
     }>({
       query: queryComparisonPageData,
       params: { categorySlug },
-      tags: ["product", "comparatorConfig"],
     });
 
     return {

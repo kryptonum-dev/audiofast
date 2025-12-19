@@ -33,3 +33,20 @@ export async function sanityFetch<QueryResponse>({
 
   return await client.fetch<QueryResponse>(query, params);
 }
+
+/**
+ * Uncached fetch function for dynamic pages that are already outside the cache boundary.
+ * Use this for pages that use cookies(), headers(), or other request-time APIs.
+ *
+ * Since the page is already dynamic, there's no benefit to caching individual fetches -
+ * they won't be served from cache anyway.
+ */
+export async function sanityFetchDynamic<QueryResponse>({
+  query,
+  params = {},
+}: {
+  query: string;
+  params?: QueryParams;
+}): Promise<QueryResponse> {
+  return await client.fetch<QueryResponse>(query, params);
+}
