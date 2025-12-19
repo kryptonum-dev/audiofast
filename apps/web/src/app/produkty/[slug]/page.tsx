@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
 import FeaturedPublications from "@/src/components/pageBuilder/FeaturedPublications";
@@ -82,7 +83,18 @@ export async function generateMetadata({
 }
 
 export default async function ProductPage(props: ProductPageProps) {
+  "use cache";
+
   const { slug } = await props.params;
+
+  // Cache this page with product tags for revalidation
+  cacheTag("product", "product-pricing");
+  if (process.env.NODE_ENV === "development") {
+    cacheLife("seconds");
+  } else {
+    cacheLife("weeks");
+  }
+
   const { sanityData: product, pricingData } = await fetchProductData(slug);
 
   if (!product) {

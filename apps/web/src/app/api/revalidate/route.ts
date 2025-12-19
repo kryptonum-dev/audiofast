@@ -49,6 +49,7 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   product: [
     'product', // Product pages
     'products', // Product listing page & filter metadata
+    'product-pricing', // Supabase pricing data for products
     'homePage', // Home page often has featured products
     'page', // Generic pages with PageBuilder (productsCarousel, featuredProducts, etc.)
     'cpoPage', // CPO page has product listings
