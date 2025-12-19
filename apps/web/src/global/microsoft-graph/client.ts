@@ -38,7 +38,7 @@ function getGraphClient(): Client {
   if (!isGraphConfigured()) {
     throw new Error(
       '[MS Graph] Missing required environment variables. ' +
-        'Required: AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, MS_GRAPH_SENDER_EMAIL'
+        'Required: AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, MS_GRAPH_SENDER_EMAIL',
     );
   }
 
@@ -46,7 +46,7 @@ function getGraphClient(): Client {
   const credential = new ClientSecretCredential(
     AZURE_TENANT_ID!,
     AZURE_CLIENT_ID!,
-    AZURE_CLIENT_SECRET!
+    AZURE_CLIENT_SECRET!,
   );
 
   // Initialize Graph client with custom auth provider
@@ -54,7 +54,7 @@ function getGraphClient(): Client {
     authProvider: {
       getAccessToken: async () => {
         const tokenResponse = await credential.getToken(
-          'https://graph.microsoft.com/.default'
+          'https://graph.microsoft.com/.default',
         );
         return tokenResponse.token;
       },
@@ -90,7 +90,7 @@ export type SendEmailResult = {
  * @returns Promise with success status
  */
 export async function sendEmail(
-  options: SendEmailOptions
+  options: SendEmailOptions,
 ): Promise<SendEmailResult> {
   try {
     const client = getGraphClient();
@@ -144,10 +144,10 @@ export async function sendEmail(
  * @returns Promise with array of results
  */
 export async function sendEmails(
-  emails: SendEmailOptions[]
+  emails: SendEmailOptions[],
 ): Promise<SendEmailResult[]> {
   const results = await Promise.allSettled(
-    emails.map((email) => sendEmail(email))
+    emails.map((email) => sendEmail(email)),
   );
 
   return results.map((result) => {
