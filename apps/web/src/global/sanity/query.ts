@@ -937,10 +937,6 @@ export const queryReviewBySlug =
   ${imageFragment('imageGallery[]')},
   ${portableTextFragmentExtended('content')},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
-  author->{
-    name,
-    ${imageFragment('image')}
-  },
   "product": *[_type == "product" && references(^._id)][0]{
     _id,
     _createdAt,

@@ -37,10 +37,8 @@ export const review = defineType({
       name: "author",
       title: "Autor recenzji",
       type: "reference",
-      description: "Wybierz autora tej recenzji",
+      description: "Wybierz autora tej recenzji (opcjonalne)",
       to: [{ type: "reviewAuthor" }],
-      validation: (Rule) =>
-        Rule.required().error("Autor recenzji jest wymagany"),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({

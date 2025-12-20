@@ -28,7 +28,7 @@ import { parse } from "csv-parse/sync";
 
 const CSV_PATH = resolve(
   __dirname,
-  "../../../../../csv/products/products-creation-dates.csv",
+  "../../../../../csv/products/december/products-creation-dates.csv",
 );
 
 const client = createClient({

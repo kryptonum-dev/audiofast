@@ -25,7 +25,7 @@ let legacyReviewIdMapping: Map<string, string> | null = null;
 // Set of review IDs that actually exist in Sanity (for validation)
 let existingReviewIds: Set<string> | null = null;
 
-const DEFAULT_PRODUCTS_REVIEWS_CSV_PATH = "csv/products/products-reviews.csv";
+const DEFAULT_PRODUCTS_REVIEWS_CSV_PATH = "csv/products/december/products-reviews.csv";
 
 type ProductReviewRow = {
   ProductID: string;

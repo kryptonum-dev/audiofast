@@ -1876,5 +1876,41 @@
     "originalSize": 65893,
     "optimizedSize": 8932,
     "uploadedAt": "2025-12-03T06:16:07.402Z"
+  },
+  "https://audiofast.pl/assets/awards/watt-audio-great-value.png": {
+    "assetId": "image-178be26e741328655a9de7553c28f42a7e79bc8f-220x220-webp",
+    "originalSize": 74563,
+    "optimizedSize": 9912,
+    "uploadedAt": "2025-12-20T12:01:40.052Z"
+  },
+  "https://audiofast.pl/assets/awards/High_Fidelity_Best_Product2025.png": {
+    "assetId": "image-235ef9129e648589c634fc7b195acfdd5295e70d-200x200-webp",
+    "originalSize": 21126,
+    "optimizedSize": 5074,
+    "uploadedAt": "2025-12-20T12:01:42.627Z"
+  },
+  "https://audiofast.pl/assets/awards/Best_Of_2025_Blue_Note_Award.png": {
+    "assetId": "image-a07ee450c98734b4c330a6d2a0eda9af719b3a2f-550x550-webp",
+    "originalSize": 41145,
+    "optimizedSize": 32544,
+    "uploadedAt": "2025-12-20T12:01:44.972Z"
+  },
+  "https://audiofast.pl/assets/awards/nagroda_hf-clube_sabrina_2025.png": {
+    "assetId": "image-53bfcc1513d6d1d828bc5f625f7f6a176e2c50ec-500x500-webp",
+    "originalSize": 339375,
+    "optimizedSize": 42728,
+    "uploadedAt": "2025-12-20T12:01:47.862Z"
+  },
+  "https://audiofast.pl/assets/awards/nagroda_hf-clube_varese_2025.png": {
+    "assetId": "image-7e5724a4a844465c537165b1563523863aecbe2e-500x500-webp",
+    "originalSize": 316851,
+    "optimizedSize": 40064,
+    "uploadedAt": "2025-12-20T12:01:50.299Z"
+  },
+  "https://audiofast.pl/assets/awards/nagroda_hf-clube_evo300_2025.png": {
+    "assetId": "image-fda166cb0a9a42a881afa3b0300d6f9e707c8fcc-500x500-webp",
+    "originalSize": 325345,
+    "optimizedSize": 39470,
+    "uploadedAt": "2025-12-20T12:01:52.599Z"
   }
 }

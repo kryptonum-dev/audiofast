@@ -15,7 +15,7 @@ export interface StoreWithLocation extends Store {
   location: {
     lat: number;
     lng: number;
-  };
+  } | null;
 }
 
 export interface StoreLocationsProps {
@@ -177,47 +177,55 @@ export default async function StoreLocations({
     return null;
   }
 
-  // Geocode all stores on the server with delays between requests
-  const storesWithLocations: StoreWithLocation[] = [];
+  // Geocode all stores on the server - stores without geocoding still appear in list
+  const allStoresWithLocation: StoreWithLocation[] = [];
 
   for (const store of uniqueStores) {
-    if (
-      !store ||
-      !store.address?.city ||
-      !store.address?.street ||
-      !store.address?.postalCode
-    ) {
-      continue;
-    }
+    if (!store) continue;
 
-    const location = await geocodeAddress({
-      street: store.address.street,
-      city: store.address.city,
-      postalCode: store.address.postalCode,
-    });
-    if (location) {
-      storesWithLocations.push({
+    // If store has complete address, try to geocode
+    if (
+      store.address?.city &&
+      store.address?.street &&
+      store.address?.postalCode
+    ) {
+      const location = await geocodeAddress({
+        street: store.address.street,
+        city: store.address.city,
+        postalCode: store.address.postalCode,
+      });
+      allStoresWithLocation.push({
         ...store,
-        location,
+        location, // null if geocoding failed
+      });
+    } else {
+      // Store without complete address - still show in list, no map pin
+      allStoresWithLocation.push({
+        ...store,
+        location: null,
       });
     }
   }
 
-  if (storesWithLocations.length === 0) {
+  if (allStoresWithLocation.length === 0) {
     return null;
   }
 
-  // Calculate map center
-  let mapCenter: [number, number];
+  // Filter stores with valid locations for the map
+  const storesWithLocations = allStoresWithLocation.filter(
+    (store): store is StoreWithLocation & { location: NonNullable<StoreWithLocation["location"]> } =>
+      store.location !== null
+  );
+
+  // Calculate map center (only from stores with locations)
+  let mapCenter: [number, number] = [52.0693, 19.4803]; // Default to Poland center
 
   if (storesWithLocations.length === 1) {
     const firstStore = storesWithLocations[0];
     if (firstStore) {
       mapCenter = [firstStore.location.lat, firstStore.location.lng];
-    } else {
-      mapCenter = [52.0693, 19.4803]; // Default to Poland center
     }
-  } else {
+  } else if (storesWithLocations.length > 1) {
     const avgLat =
       storesWithLocations.reduce((sum, store) => sum + store.location.lat, 0) /
       storesWithLocations.length;
@@ -232,12 +240,14 @@ export default async function StoreLocations({
       id={customId}
       className={`${styles.storeLocations} max-width-block`}
     >
-      <div className={styles.mapWrapper}>
-        <StoreMapWrapper stores={storesWithLocations} mapCenter={mapCenter} />
-      </div>
+      {storesWithLocations.length > 0 && (
+        <div className={styles.mapWrapper}>
+          <StoreMapWrapper stores={storesWithLocations} mapCenter={mapCenter} />
+        </div>
+      )}
       <h2 className={styles.heading}>Gdzie kupić</h2>
       <ul className={styles.storesList}>
-        {[...storesWithLocations].map((store, index) => (
+        {[...allStoresWithLocation].map((store, index) => (
           <li key={store._id + index} id={store._id} className={styles.store}>
             <div className={styles.storeInfo}>
               <p className={styles.storeName}>{store.name}</p>

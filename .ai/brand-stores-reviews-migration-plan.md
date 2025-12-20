@@ -72,11 +72,11 @@ Add `stores` field - array of store references:
 
 ```typescript
 defineField({
-  name: "stores",
-  title: "Salony dystrybucji",
-  type: "array",
-  description: "Wybierz salony, w których dostępne są produkty tej marki.",
-  of: [{ type: "reference", to: [{ type: "store" }] }],
+  name: 'stores',
+  title: 'Salony dystrybucji',
+  type: 'array',
+  description: 'Wybierz salony, w których dostępne są produkty tej marki.',
+  of: [{ type: 'reference', to: [{ type: 'store' }] }],
   // Optional, unlimited
 });
 ```
@@ -87,12 +87,12 @@ Make `availableInStores` **optional** (remove min validation):
 
 ```typescript
 defineField({
-  name: "availableInStores",
-  title: "Dostępny w salonach (opcjonalny)",
-  type: "array",
+  name: 'availableInStores',
+  title: 'Dostępny w salonach (opcjonalny)',
+  type: 'array',
   description:
-    "Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, używane są salony marki.",
-  of: [{ type: "reference", to: [{ type: "store" }] }],
+    'Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, używane są salony marki.',
+  of: [{ type: 'reference', to: [{ type: 'store' }] }],
   // NO validation - fully optional
 });
 ```
@@ -124,6 +124,7 @@ Product Page Store Display Logic:
 
 1. Add `stores` field (array of store references, optional, unlimited)
 2. Keep `featuredReviews` field as-is (already has correct filter validation)
+   waht does this plan say aobut the review brand relation? And waht about @br
 
 ```typescript
 // Add after imageGallery field:
@@ -308,7 +309,7 @@ The brand page already has:
 {
   brand.stores && Array.isArray(brand.stores) && brand.stores.length > 0 && (
     <StoreLocations
-      customId="gdzie-kupic"
+      customId='gdzie-kupic'
       stores={brand.stores.filter((s) => s !== null)}
     />
   );
@@ -442,13 +443,13 @@ interface BrandMapping {
 async function migrateBrandStores() {
   // 1. Load CSV data
   const relations = await parseCSV<BrandDealerRelation>(
-    "csv/brands/brands-dealers.csv",
+    'csv/brands/brands-dealers.csv'
   );
 
   // 2. Query Sanity for all stores and brands
   const stores = await client.fetch(`*[_type == "store"]{_id, name}`);
   const brands = await client.fetch(
-    `*[_type == "brand"]{"id": _id, "slug": slug.current, name}`,
+    `*[_type == "brand"]{"id": _id, "slug": slug.current, name}`
   );
 
   // 3. Build store mapping (using store migration pattern)
@@ -459,7 +460,7 @@ async function migrateBrandStores() {
   // 4. Build brand mapping
   const brandMap = new Map<string, string>(); // brandSlug → sanityBrandId
   brands.forEach((b) => {
-    const slug = b.slug?.replace("/marki/", "").replace(/\/$/, "");
+    const slug = b.slug?.replace('/marki/', '').replace(/\/$/, '');
     brandMap.set(slug, b.id);
   });
 
@@ -482,7 +483,7 @@ async function migrateBrandStores() {
     if (!brandId) continue;
 
     const storeRefs = storeIds.map((id, idx) => ({
-      _type: "reference",
+      _type: 'reference',
       _ref: id,
       _key: `store-${idx}`,
     }));
@@ -540,7 +541,7 @@ async function cleanupProductStores() {
 
     // If product stores exactly match brand stores, clear them
     if (setsEqual(productStores, brandStores) && brandStores.size > 0) {
-      await client.patch(product._id).unset(["availableInStores"]).commit();
+      await client.patch(product._id).unset(['availableInStores']).commit();
     }
   }
 }

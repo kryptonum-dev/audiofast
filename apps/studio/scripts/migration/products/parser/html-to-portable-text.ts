@@ -36,8 +36,8 @@ import type {
 // ============================================================================
 
 const DEFAULT_PRODUCT_SLUGS_CSV_PATH =
-  "csv/products/product-brand-slug-map.csv";
-const DEFAULT_SITETREE_CSV_PATH = "csv/products/sitetree-map.csv";
+  "csv/products/december/products-brand-slug.csv";
+const DEFAULT_SITETREE_CSV_PATH = "csv/products/december/sitetree-map.csv";
 
 // Mapping caches (loaded lazily)
 let productSlugMap: Map<string, string> | null = null;

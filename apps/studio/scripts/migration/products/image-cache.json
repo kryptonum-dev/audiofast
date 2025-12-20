@@ -18556,5 +18556,1565 @@
     "originalSize": 97447,
     "optimizedSize": 80512,
     "uploadedAt": "2025-12-02T17:13:43.566Z"
+  },
+  "https://audiofast.pl/assets/article/vivaldi-HF_XX-v3.jpg": {
+    "assetId": "image-a38621593988c9b269de6940bd0384e135a90a2a-2270x1192-webp",
+    "originalSize": 134468,
+    "optimizedSize": 61970,
+    "uploadedAt": "2025-12-20T11:20:18.217Z"
+  },
+  "https://audiofast.pl/assets/article/progression-mono-3-3.jpg": {
+    "assetId": "image-80635c48ac6e41af4a28a59cf68e7acc6c2cb10a-500x500-webp",
+    "originalSize": 21963,
+    "optimizedSize": 7724,
+    "uploadedAt": "2025-12-20T11:20:23.479Z"
+  },
+  "https://audiofast.pl/assets/article/dcs-nb-news.jpg": {
+    "assetId": "image-38bf8cbcc65e85b365e7fe59aaa737ee52e6c9d5-520x520-webp",
+    "originalSize": 18660,
+    "optimizedSize": 2956,
+    "uploadedAt": "2025-12-20T11:20:26.162Z"
+  },
+  "https://audiofast.pl/assets/article/Sphinx3BLMed.jpg": {
+    "assetId": "image-4647bdf73cd4b0b6dfab6a0d89c9eee2e4f0bef9-1200x898-webp",
+    "originalSize": 58978,
+    "optimizedSize": 66046,
+    "uploadedAt": "2025-12-20T11:22:19.687Z"
+  },
+  "https://audiofast.pl/assets/article/Award2019-Triton-Five-Pair.jpg": {
+    "assetId": "image-90c9b128f742d2b078a707b0700bcfc987373eea-722x876-webp",
+    "originalSize": 51298,
+    "optimizedSize": 27122,
+    "uploadedAt": "2025-12-20T11:22:22.377Z"
+  },
+  "https://audiofast.pl/assets/article/alexia-series-2-cobalt-01-sm.jpg": {
+    "assetId": "image-1f8fb7e3e4d0999f21d863c216ee9c6c29faa840-520x520-webp",
+    "originalSize": 28911,
+    "optimizedSize": 11842,
+    "uploadedAt": "2025-12-20T11:22:26.165Z"
+  },
+  "https://audiofast.pl/assets/article/Yvette-Bairritz-White-Contemp-Portrait-1.jpg": {
+    "assetId": "image-8b33ac294f1df4fd39185e702f644cf4fadce62f-800x800-webp",
+    "originalSize": 143347,
+    "optimizedSize": 44130,
+    "uploadedAt": "2025-12-20T11:22:28.310Z"
+  },
+  "https://audiofast.pl/assets/article/small-news-Sabrina-white.jpg": {
+    "assetId": "image-2b74460e569ca3d61d377ac1c11ae96d0fe097ad-1000x1000-webp",
+    "originalSize": 80540,
+    "optimizedSize": 16470,
+    "uploadedAt": "2025-12-20T11:22:31.184Z"
+  },
+  "https://audiofast.pl/assets/article/Power-UEF-News.jpg": {
+    "assetId": "image-72ad09c540d7df7dee8f6244923f68314d8f90de-300x390-webp",
+    "originalSize": 39530,
+    "optimizedSize": 9094,
+    "uploadedAt": "2025-12-20T11:22:35.561Z"
+  },
+  "https://audiofast.pl/assets/article/PowerCell-8-UEF-Schuko.jpg": {
+    "assetId": "image-f60a8e01c3b5c933436b96a0ff71f729307881fd-1148x1148-webp",
+    "originalSize": 39496,
+    "optimizedSize": 26368,
+    "uploadedAt": "2025-12-20T11:22:38.200Z"
+  },
+  "https://audiofast.pl/assets/article/nagroda-sigma.jpg": {
+    "assetId": "image-32cb438003109ef57738ab7de3e6916f3d309753-1292x898-webp",
+    "originalSize": 138395,
+    "optimizedSize": 60862,
+    "uploadedAt": "2025-12-20T11:22:40.573Z"
+  },
+  "https://audiofast.pl/assets/article/news-Shunyata-1024x683.jpg": {
+    "assetId": "image-91fa1e187ba49ed38e0d5a7e1dd6bf521f36e457-900x600-webp",
+    "originalSize": 95118,
+    "optimizedSize": 27646,
+    "uploadedAt": "2025-12-20T11:22:44.417Z"
+  },
+  "https://audiofast.pl/assets/article/shunyata-denali-group.jpg": {
+    "assetId": "image-3f707931dc4dcf6e619bbaa9b81c2ecb8e991aa7-520x520-webp",
+    "originalSize": 24340,
+    "optimizedSize": 8470,
+    "uploadedAt": "2025-12-20T11:22:46.956Z"
+  },
+  "https://audiofast.pl/assets/article/nagroda-denali.jpg": {
+    "assetId": "image-591e1e500d2b7284d28d5309746de6406a4beaf2-872x898-webp",
+    "originalSize": 82585,
+    "optimizedSize": 29044,
+    "uploadedAt": "2025-12-20T11:22:49.284Z"
+  },
+  "https://audiofast.pl/assets/article/aktualnosc-tritonreference-1.jpg": {
+    "assetId": "image-d85aa71a5e52d59024866c8280e1442496dab968-1148x1148-webp",
+    "originalSize": 104151,
+    "optimizedSize": 21914,
+    "uploadedAt": "2025-12-20T11:22:51.803Z"
+  },
+  "https://audiofast.pl/assets/article/news-Rogue-RP7-POY2018.jpg": {
+    "assetId": "image-664ccc26637f34de62eba64aaa2ba5edde0eba1e-1200x1200-webp",
+    "originalSize": 155403,
+    "optimizedSize": 49772,
+    "uploadedAt": "2025-12-20T11:22:54.917Z"
+  },
+  "https://audiofast.pl/assets/article/Vivaldi-One-APEX-news.jpg": {
+    "assetId": "image-7a84402a6481d78907b6fcc5b46fb9f3f107f020-2280x1470-webp",
+    "originalSize": 227352,
+    "optimizedSize": 48518,
+    "uploadedAt": "2025-12-20T11:22:57.790Z"
+  },
+  "https://audiofast.pl/assets/article/Ref8s-prod.png": {
+    "assetId": "image-b6e1f8ab807db353c421e2cc2c4769f90471e111-2280x1354-webp",
+    "originalSize": 626587,
+    "optimizedSize": 149132,
+    "uploadedAt": "2025-12-20T11:23:01.358Z"
+  },
+  "https://audiofast.pl/assets/article/REF10_SE120.jpg": {
+    "assetId": "image-4d8c627591bba460bf8c70a3c7482fb035465f3d-2280x1140-webp",
+    "originalSize": 79109,
+    "optimizedSize": 72458,
+    "uploadedAt": "2025-12-20T11:23:05.072Z"
+  },
+  "https://audiofast.pl/assets/article/news-Exogal-.jpg": {
+    "assetId": "image-c6edd96ccd37ac325d97f1fc447c03c82fe7dcf4-1000x666-webp",
+    "originalSize": 146128,
+    "optimizedSize": 47486,
+    "uploadedAt": "2025-12-20T11:23:07.604Z"
+  },
+  "https://audiofast.pl/assets/article/High_Fidelity_Best_Product2019.jpg": {
+    "assetId": "image-d62ba1e915701bcbb572546b9a00d744e06b1551-2103x1000-webp",
+    "originalSize": 189391,
+    "optimizedSize": 42674,
+    "uploadedAt": "2025-12-20T11:23:11.143Z"
+  },
+  "https://audiofast.pl/assets/article/dagostino-relentless-news.jpg": {
+    "assetId": "image-60a2deda54c8ef29ab069ca3ce2997dae0703de6-500x500-webp",
+    "originalSize": 30012,
+    "optimizedSize": 11430,
+    "uploadedAt": "2025-12-20T11:23:13.187Z"
+  },
+  "https://audiofast.pl/assets/article/mini-ok-dcs-rossini-transport.jpg": {
+    "assetId": "image-f0487d1d3bcdff591b236a5de069e761b529949f-800x800-webp",
+    "originalSize": 31517,
+    "optimizedSize": 4548,
+    "uploadedAt": "2025-12-20T11:23:15.619Z"
+  },
+  "https://audiofast.pl/assets/article/tunetot-001-sm.jpg": {
+    "assetId": "image-f9c3c05944505dee797eb09b47d033bc7f5e605d-500x500-webp",
+    "originalSize": 30086,
+    "optimizedSize": 13654,
+    "uploadedAt": "2025-12-20T11:23:18.404Z"
+  },
+  "https://audiofast.pl/assets/article/mini-GCTwBox.jpg": {
+    "assetId": "image-d221a1cd2ffa8c98c4e38b6786a21b74741034c3-800x800-webp",
+    "originalSize": 20182,
+    "optimizedSize": 9618,
+    "uploadedAt": "2025-12-20T11:23:20.439Z"
+  },
+  "https://audiofast.pl/assets/article/MINI-bar-020-2.jpg": {
+    "assetId": "image-1ed2a35a821007e6b1d77bfb75cf654b6d7593a7-800x800-webp",
+    "originalSize": 30870,
+    "optimizedSize": 4846,
+    "uploadedAt": "2025-12-20T11:23:22.617Z"
+  },
+  "https://audiofast.pl/assets/article/aurender-acs10-mini.jpg": {
+    "assetId": "image-bed91eefc2633f6bfe47481b7d3408bb36538704-800x800-webp",
+    "originalSize": 28040,
+    "optimizedSize": 17798,
+    "uploadedAt": "2025-12-20T11:23:25.226Z"
+  },
+  "https://audiofast.pl/assets/article/Synergistic_Research_Galileo_SX-0013.jpg": {
+    "assetId": "image-5f0ffecf42b03770cbd6bb5fec70c2a627ae724a-2200x1600-webp",
+    "originalSize": 177564,
+    "optimizedSize": 179270,
+    "uploadedAt": "2025-12-20T11:23:28.507Z"
+  },
+  "https://audiofast.pl/assets/article/sasha-daw-white-cut.jpg": {
+    "assetId": "image-e342ecee652ba550401e5a302d9109811d40aa9f-1416x1222-webp",
+    "originalSize": 170913,
+    "optimizedSize": 37256,
+    "uploadedAt": "2025-12-20T11:23:31.037Z"
+  },
+  "https://audiofast.pl/assets/article/news-GoldenEar-Triton-One.jpg": {
+    "assetId": "image-51fb3217ef9b8ac979f0dc36c3f8e94764eaf9f8-900x900-webp",
+    "originalSize": 52800,
+    "optimizedSize": 7306,
+    "uploadedAt": "2025-12-20T11:23:33.691Z"
+  },
+  "https://audiofast.pl/assets/article/577x470-a100-7.png": {
+    "assetId": "image-f0fe26464a90f0686390f810261d4676a9d81458-1154x940-webp",
+    "originalSize": 93100,
+    "optimizedSize": 14586,
+    "uploadedAt": "2025-12-20T11:23:36.232Z"
+  },
+  "https://audiofast.pl/assets/article/Kecec-Audio-rekomendacja.jpg": {
+    "assetId": "image-b568f4017b9ad317987e84645eec3f0deecc3a7d-1600x1600-webp",
+    "originalSize": 139577,
+    "optimizedSize": 74504,
+    "uploadedAt": "2025-12-20T11:23:39.680Z"
+  },
+  "https://audiofast.pl/assets/article/577x470-SRX1.png": {
+    "assetId": "image-2cb80c301b04d02f4787c6e8ce027f3908835683-1154x940-webp",
+    "originalSize": 150745,
+    "optimizedSize": 59772,
+    "uploadedAt": "2025-12-20T11:23:46.195Z"
+  },
+  "https://audiofast.pl/assets/article/577x470-A30.png": {
+    "assetId": "image-0a15c4b0cfb41120e3ec38a7670b6f1af2c08a6e-1154x940-webp",
+    "originalSize": 115212,
+    "optimizedSize": 21002,
+    "uploadedAt": "2025-12-20T11:23:48.916Z"
+  },
+  "https://audiofast.pl/assets/article/news-ETHOS-1-FRIT.jpg": {
+    "assetId": "image-0806fc8655f97e7f87ff7cb3ca8996b30de08ab0-1154x856-webp",
+    "originalSize": 125954,
+    "optimizedSize": 33046,
+    "uploadedAt": "2025-12-20T11:23:51.544Z"
+  },
+  "https://audiofast.pl/assets/article/news-mom-HD-pre.jpg": {
+    "assetId": "image-48634b55ffbe19b4bf2221f97fb8d59415334896-1200x940-webp",
+    "originalSize": 62543,
+    "optimizedSize": 43082,
+    "uploadedAt": "2025-12-20T11:23:54.167Z"
+  },
+  "https://audiofast.pl/assets/article/GalileoPCSX2020-news.jpg": {
+    "assetId": "image-cd3b047f43c9a7d7c7770cadaddd4a78c8b38d76-2280x1440-webp",
+    "originalSize": 127541,
+    "optimizedSize": 162630,
+    "uploadedAt": "2025-12-20T11:23:57.111Z"
+  },
+  "https://audiofast.pl/assets/article/PCOnewithText.jpg": {
+    "assetId": "image-14ecf3b40ccc1f7de441a0b6354a5432cca33243-1000x1000-webp",
+    "originalSize": 30828,
+    "optimizedSize": 24184,
+    "uploadedAt": "2025-12-20T11:23:59.747Z"
+  },
+  "https://audiofast.pl/assets/article/FoundationWhiteSpeaker-kopia.jpg": {
+    "assetId": "image-267894363019c3a1a331c8e60c2dbb9775958192-2400x1260-webp",
+    "originalSize": 234460,
+    "optimizedSize": 97100,
+    "uploadedAt": "2025-12-20T11:24:03.183Z"
+  },
+  "https://audiofast.pl/assets/article/fb.jpg": {
+    "assetId": "image-a756f121b13a652c3cde7b32a598c886b4623adf-1620x1600-webp",
+    "originalSize": 361060,
+    "optimizedSize": 47720,
+    "uploadedAt": "2025-12-20T11:24:06.821Z"
+  },
+  "https://audiofast.pl/assets/article/High_Fidelity_Best_Product2021.jpg": {
+    "assetId": "image-9e4858aa58e9cd8fd035c336807bcdac56c9873f-1613x502-webp",
+    "originalSize": 230996,
+    "optimizedSize": 37686,
+    "uploadedAt": "2025-12-20T11:24:10.390Z"
+  },
+  "https://audiofast.pl/assets/article/poty-wilson-2022f.jpg": {
+    "assetId": "image-41f51dd1e0d5062abe9bd772228fbbf56886166b-1737x1600-webp",
+    "originalSize": 418957,
+    "optimizedSize": 173100,
+    "uploadedAt": "2025-12-20T11:24:14.099Z"
+  },
+  "https://audiofast.pl/assets/article/News-ANTILEON_1TASPOTY2021.jpg": {
+    "assetId": "image-3d2ef7b03e984545b2c1f1d29c7f43c502e6c192-2280x1408-webp",
+    "originalSize": 83666,
+    "optimizedSize": 74886,
+    "uploadedAt": "2025-12-20T11:24:17.257Z"
+  },
+  "https://audiofast.pl/assets/article/ESSENCE-PRE-POWER.jpg": {
+    "assetId": "image-e4ea5b1008459d6e7c423f8a323c9021096187c6-2400x1411-webp",
+    "originalSize": 6068045,
+    "optimizedSize": 329296,
+    "uploadedAt": "2025-12-20T11:24:20.344Z"
+  },
+  "https://audiofast.pl/assets/article/NewCableElevatorSingle1.jpg": {
+    "assetId": "image-166fad93c731c539240358455c4e43c0a1383a5a-464x464-webp",
+    "originalSize": 37905,
+    "optimizedSize": 9076,
+    "uploadedAt": "2025-12-20T11:24:22.901Z"
+  },
+  "https://audiofast.pl/assets/article/piktogram.jpg": {
+    "assetId": "image-71351358f6b93b1e378caa33ca96871eaebdb937-464x254-webp",
+    "originalSize": 24906,
+    "optimizedSize": 6134,
+    "uploadedAt": "2025-12-20T11:24:24.834Z"
+  },
+  "https://audiofast.pl/assets/article/Piktogram-v2.jpg": {
+    "assetId": "image-fea0f30129e14e1e850765d82720b43772fc2142-464x382-webp",
+    "originalSize": 28832,
+    "optimizedSize": 5542,
+    "uploadedAt": "2025-12-20T11:24:27.123Z"
+  },
+  "https://audiofast.pl/assets/article/piktogram-v3.jpg": {
+    "assetId": "image-f41d413f79dde52ca5ca89c9bb6be0a659ad8f17-464x290-webp",
+    "originalSize": 17543,
+    "optimizedSize": 3964,
+    "uploadedAt": "2025-12-20T11:24:29.789Z"
+  },
+  "https://audiofast.pl/assets/article/W20SE-small.jpg": {
+    "assetId": "image-7bd3d0bb6f9a1138bcf0afb1500951e7d9a6abd7-1100x428-webp",
+    "originalSize": 28231,
+    "optimizedSize": 8456,
+    "uploadedAt": "2025-12-20T11:24:31.741Z"
+  },
+  "https://audiofast.pl/assets/produkty/Produkt1.png": {
+    "assetId": "image-a8386fa5cde613f00758b2a3aebcc6f32caac651-1138x474-webp",
+    "originalSize": 78278,
+    "optimizedSize": 15904,
+    "uploadedAt": "2025-12-20T11:24:35.244Z"
+  },
+  "https://audiofast.pl/assets/article/Pedestal-news.jpg": {
+    "assetId": "image-66424391445d64ba936648f1e5ebc98331b2f4d0-2280x1520-webp",
+    "originalSize": 97093,
+    "optimizedSize": 109126,
+    "uploadedAt": "2025-12-20T11:24:38.315Z"
+  },
+  "https://audiofast.pl/assets/article/Grimm-MU1-kopia.jpg": {
+    "assetId": "image-f75eb5ed420f9b7adfabc2c6d836c5d7114bb090-1100x768-webp",
+    "originalSize": 46917,
+    "optimizedSize": 25814,
+    "uploadedAt": "2025-12-20T11:24:40.968Z"
+  },
+  "https://audiofast.pl/assets/article/shunyata-v2-news.jpg": {
+    "assetId": "image-5ebaaa3e9df2420b88bc87c70da051a21f1054a7-1200x524-webp",
+    "originalSize": 51818,
+    "optimizedSize": 50876,
+    "uploadedAt": "2025-12-20T11:24:43.069Z"
+  },
+  "https://audiofast.pl/assets/article/shunyata2020taspoty.jpg": {
+    "assetId": "image-0ba74b2205aedf6a1125ebe82fdbf79916a23273-2280x1274-webp",
+    "originalSize": 118052,
+    "optimizedSize": 170554,
+    "uploadedAt": "2025-12-20T11:24:46.502Z"
+  },
+  "https://audiofast.pl/assets/article/SabrinaX-Mid-Century-Modern-CropFinal.jpg": {
+    "assetId": "image-2355cdb652f32747880dd061ae72ed93e652c394-2280x1482-webp",
+    "originalSize": 172672,
+    "optimizedSize": 264352,
+    "uploadedAt": "2025-12-20T11:24:51.072Z"
+  },
+  "https://audiofast.pl/assets/article/aurender_N20-news.jpg": {
+    "assetId": "image-65faf398e7497debe5bfef94b971bce82874cf76-2084x1304-webp",
+    "originalSize": 76513,
+    "optimizedSize": 63814,
+    "uploadedAt": "2025-12-20T11:24:53.426Z"
+  },
+  "https://audiofast.pl/assets/article/turntable-with-uefrecordmat1.jpg": {
+    "assetId": "image-214555b9459cdacc619383b8f02492d8aa35164b-2274x1600-webp",
+    "originalSize": 93283,
+    "optimizedSize": 100070,
+    "uploadedAt": "2025-12-20T11:24:56.117Z"
+  },
+  "https://audiofast.pl/assets/article/PowerCellTwo-news.jpg": {
+    "assetId": "image-d7a56e7cbd1e13f0271543c59bfed033a8a4315c-2280x1218-webp",
+    "originalSize": 87892,
+    "optimizedSize": 96102,
+    "uploadedAt": "2025-12-20T11:24:58.722Z"
+  },
+  "https://audiofast.pl/assets/article/8c-roon-news-v2.jpg": {
+    "assetId": "image-10aab1ae203137ba9c907d256af34f3998448f5a-2280x1524-webp",
+    "originalSize": 71599,
+    "optimizedSize": 59646,
+    "uploadedAt": "2025-12-20T11:25:02.331Z"
+  },
+  "https://audiofast.pl/assets/article/standard-news.jpg": {
+    "assetId": "image-5010c5cfb3e0b66bac4bcc29fbeebdcd7703832f-2022x1600-webp",
+    "originalSize": 246162,
+    "optimizedSize": 349116,
+    "uploadedAt": "2025-12-20T11:25:06.252Z"
+  },
+  "https://audiofast.pl/assets/article/Moonriver_404_Reference-news.jpg": {
+    "assetId": "image-7e0ef505e2ed020fc9d1b93cb19fbfb0d31dcb71-1934x1600-webp",
+    "originalSize": 95572,
+    "optimizedSize": 78596,
+    "uploadedAt": "2025-12-20T11:25:09.151Z"
+  },
+  "https://audiofast.pl/assets/article/roon-1.jpg": {
+    "assetId": "image-a6a22ab16a736b8fe1135658b17a61e14dbfb8c4-1816x1128-webp",
+    "originalSize": 124574,
+    "optimizedSize": 99902,
+    "uploadedAt": "2025-12-20T11:25:11.927Z"
+  },
+  "https://audiofast.pl/assets/article/AlexxV-news.jpg": {
+    "assetId": "image-09878f6c7a953927792c2aef3ea3b981398d9ed2-1443x1600-webp",
+    "originalSize": 121177,
+    "optimizedSize": 47454,
+    "uploadedAt": "2025-12-20T11:25:14.644Z"
+  },
+  "https://audiofast.pl/assets/article/FoundationDigital.jpg": {
+    "assetId": "image-2c93cbe09c8999b17e295b75e1173a218f6f46b2-1940x1600-webp",
+    "originalSize": 93565,
+    "optimizedSize": 82392,
+    "uploadedAt": "2025-12-20T11:25:17.509Z"
+  },
+  "https://audiofast.pl/assets/article/HDSX-news.jpg": {
+    "assetId": "image-9f9b56240a89cda8126437d19b11c3fe816b0f30-2280x1240-webp",
+    "originalSize": 91998,
+    "optimizedSize": 97774,
+    "uploadedAt": "2025-12-20T11:25:19.908Z"
+  },
+  "https://audiofast.pl/assets/article/GalileoAGBNews.jpg": {
+    "assetId": "image-d16958212f81d9c66c67a6734d54416d930e689f-2068x1600-webp",
+    "originalSize": 161958,
+    "optimizedSize": 227412,
+    "uploadedAt": "2025-12-20T11:25:22.860Z"
+  },
+  "https://audiofast.pl/assets/article/FoundationUSB-news-kopia.jpg": {
+    "assetId": "image-5312af04e7961a9b4c8079eea751ed2e12c81732-2280x1494-webp",
+    "originalSize": 66379,
+    "optimizedSize": 66560,
+    "uploadedAt": "2025-12-20T11:25:25.655Z"
+  },
+  "https://audiofast.pl/assets/article/Dan-DAgostino-Progression-v2.jpg": {
+    "assetId": "image-967fb0601ddff2e94adfc9646227f190e791a98c-2013x1600-webp",
+    "originalSize": 95745,
+    "optimizedSize": 83768,
+    "uploadedAt": "2025-12-20T11:25:28.725Z"
+  },
+  "https://audiofast.pl/assets/article/N200-prod.jpg": {
+    "assetId": "image-a8c33292804bf199daf977a580e1fc5d59e5400a-2280x1130-webp",
+    "originalSize": 62655,
+    "optimizedSize": 52212,
+    "uploadedAt": "2025-12-20T11:25:31.621Z"
+  },
+  "https://audiofast.pl/assets/article/EthernetSwitch-news-v4.jpg": {
+    "assetId": "image-964e3e4bcad0396575bf1242fd7ff3d62673699b-2280x984-webp",
+    "originalSize": 67432,
+    "optimizedSize": 67330,
+    "uploadedAt": "2025-12-20T11:25:34.022Z"
+  },
+  "https://audiofast.pl/assets/article/Evo300hybrid-news-v3.jpg": {
+    "assetId": "image-b77340c93a0e0222adacd23768b4f7268635be6e-2280x1384-webp",
+    "originalSize": 62802,
+    "optimizedSize": 59014,
+    "uploadedAt": "2025-12-20T11:25:36.828Z"
+  },
+  "https://audiofast.pl/assets/article/I50-news.jpg": {
+    "assetId": "image-b5b3ec8a5bba0bfd9deee76ce765971291862cbb-2280x1404-webp",
+    "originalSize": 131296,
+    "optimizedSize": 147676,
+    "uploadedAt": "2025-12-20T11:25:39.211Z"
+  },
+  "https://audiofast.pl/assets/article/aurender_N30SA-news-v2.jpg": {
+    "assetId": "image-8c9ef62ae0c927493aa50f34069f2e047380dd0a-2280x1300-webp",
+    "originalSize": 70382,
+    "optimizedSize": 61662,
+    "uploadedAt": "2025-12-20T11:25:42.053Z"
+  },
+  "https://audiofast.pl/assets/article/PurpleFuse-news-v2.png": {
+    "assetId": "image-53dab92d0ccc028106f92ac2f5b09e1ec6d578c3-2280x1020-webp",
+    "originalSize": 546709,
+    "optimizedSize": 96082,
+    "uploadedAt": "2025-12-20T11:25:44.932Z"
+  },
+  "https://audiofast.pl/assets/article/aurender_N150_news.jpg": {
+    "assetId": "image-dfa8c32e7bc06eaa6ecda4302e41f6ade37cafc1-2280x1452-webp",
+    "originalSize": 45804,
+    "optimizedSize": 63862,
+    "uploadedAt": "2025-12-20T11:25:47.494Z"
+  },
+  "https://audiofast.pl/assets/article/S250-prod-v2.png": {
+    "assetId": "image-d3832b6b3a678235b0bd9b9373696b9be8fbb997-2280x1402-webp",
+    "originalSize": 447172,
+    "optimizedSize": 103090,
+    "uploadedAt": "2025-12-20T11:25:51.168Z"
+  },
+  "https://audiofast.pl/assets/article/Relentless-news.jpg": {
+    "assetId": "image-e72716712e0ec16bd4594bf8679ff7eaea5e6a22-1955x1600-webp",
+    "originalSize": 156560,
+    "optimizedSize": 140982,
+    "uploadedAt": "2025-12-20T11:25:53.937Z"
+  },
+  "https://audiofast.pl/assets/article/SRX-news.jpg": {
+    "assetId": "image-227ab6ff1da89117f39ec442280f337121d4c12d-2280x1174-webp",
+    "originalSize": 129530,
+    "optimizedSize": 175398,
+    "uploadedAt": "2025-12-20T11:25:56.675Z"
+  },
+  "https://audiofast.pl/assets/article/IQRP-news.jpg": {
+    "assetId": "image-df65e7194f8db65f1b3ff493298be6ebe5d5cef6-2280x1420-webp",
+    "originalSize": 51018,
+    "optimizedSize": 52800,
+    "uploadedAt": "2025-12-20T11:25:59.594Z"
+  },
+  "https://audiofast.pl/assets/article/p28-prod.png": {
+    "assetId": "image-b2724621965c2e27a14fb941b7c409b2b330959e-2280x1440-webp",
+    "originalSize": 612298,
+    "optimizedSize": 159368,
+    "uploadedAt": "2025-12-20T11:26:03.149Z"
+  },
+  "https://audiofast.pl/assets/article/acoustic-diode-prod.jpg": {
+    "assetId": "image-2d6ac390007995f969eddc07e2bf30d836f8e856-1857x1600-webp",
+    "originalSize": 64929,
+    "optimizedSize": 44208,
+    "uploadedAt": "2025-12-20T11:26:05.633Z"
+  },
+  "https://audiofast.pl/assets/article/GRYPHON_COMMANDER_NEWS.jpg": {
+    "assetId": "image-4bae307bb2c1389585f2dfb0798d1ea3ef0d08c6-1774x1600-webp",
+    "originalSize": 160063,
+    "optimizedSize": 141452,
+    "uploadedAt": "2025-12-20T11:26:08.855Z"
+  },
+  "https://audiofast.pl/assets/article/GRYPHON_APEX_NEWS.jpg": {
+    "assetId": "image-497e2d534f27edf50bf4b1569d6b9182d78c1ef7-2143x1600-webp",
+    "originalSize": 173425,
+    "optimizedSize": 204894,
+    "uploadedAt": "2025-12-20T11:26:11.822Z"
+  },
+  "https://audiofast.pl/assets/article/AtmoSX-news.jpg": {
+    "assetId": "image-3219565639f4703f4653a548653e9eb8cfdaa0f3-1987x1600-webp",
+    "originalSize": 76641,
+    "optimizedSize": 95960,
+    "uploadedAt": "2025-12-20T11:26:14.626Z"
+  },
+  "https://audiofast.pl/assets/article/VenomX-news-v2.jpg": {
+    "assetId": "image-1178952ff6f6e03fceffb7c6b126e6ed75e3c897-2196x1600-webp",
+    "originalSize": 205103,
+    "optimizedSize": 180082,
+    "uploadedAt": "2025-12-20T11:26:19.136Z"
+  },
+  "https://audiofast.pl/assets/article/SR30-news.jpg": {
+    "assetId": "image-7e9330b8dcdcae13fd987ea6e5c7cf73c26f79c9-2280x1508-webp",
+    "originalSize": 82513,
+    "optimizedSize": 94308,
+    "uploadedAt": "2025-12-20T11:26:21.658Z"
+  },
+  "https://audiofast.pl/assets/article/SRXDigital-news.jpg": {
+    "assetId": "image-f602a70fd895b15fe06f0fa2fb47a2be04662c16-2200x1190-webp",
+    "originalSize": 70253,
+    "optimizedSize": 85986,
+    "uploadedAt": "2025-12-20T11:26:25.847Z"
+  },
+  "https://audiofast.pl/assets/article/Loke-news.jpg": {
+    "assetId": "image-eec8c833d5fd2c37b9b42bf95a28a47e1cd25429-1839x1600-webp",
+    "originalSize": 225679,
+    "optimizedSize": 210270,
+    "uploadedAt": "2025-12-20T11:26:28.560Z"
+  },
+  "https://audiofast.pl/assets/article/GalileoDiscoveryNews-v2.jpg": {
+    "assetId": "image-e0fd6ea995ccc7c51d974fc6df663e8c14d20777-2206x1600-webp",
+    "originalSize": 125754,
+    "optimizedSize": 92406,
+    "uploadedAt": "2025-12-20T11:26:31.940Z"
+  },
+  "https://audiofast.pl/assets/article/EOS-2-news.jpg": {
+    "assetId": "image-1815f9db4ba3ca919fc52f8837ebdc7c30ce1676-1651x1600-webp",
+    "originalSize": 214822,
+    "optimizedSize": 106592,
+    "uploadedAt": "2025-12-20T11:26:34.511Z"
+  },
+  "https://audiofast.pl/assets/article/ML-news.jpg": {
+    "assetId": "image-fd7741e194df1746d59778dd6e8b1044120a9015-1594x1222-webp",
+    "originalSize": 214448,
+    "optimizedSize": 134392,
+    "uploadedAt": "2025-12-20T11:26:39.026Z"
+  },
+  "https://audiofast.pl/assets/article/Aurender_A15_news-v2.jpg": {
+    "assetId": "image-f2c81fadc73aed6a8155ec07ec42acac88eca256-2280x1114-webp",
+    "originalSize": 97349,
+    "optimizedSize": 57570,
+    "uploadedAt": "2025-12-20T11:26:41.809Z"
+  },
+  "https://audiofast.pl/assets/article/Alexia-V-news.jpg": {
+    "assetId": "image-f7927dfbada3ffcd1e59de1e0f1f3fae41df5840-2000x1600-webp",
+    "originalSize": 425246,
+    "optimizedSize": 118476,
+    "uploadedAt": "2025-12-20T11:26:44.446Z"
+  },
+  "https://audiofast.pl/assets/article/shunyata-altaira_1140-v3.jpg": {
+    "assetId": "image-ae2534397d91f9a67c58fca0ed3bb9f1e5749159-2280x1372-webp",
+    "originalSize": 70443,
+    "optimizedSize": 63182,
+    "uploadedAt": "2025-12-20T11:26:47.051Z"
+  },
+  "https://audiofast.pl/assets/article/evo100_phono_pre_1-v2.jpg": {
+    "assetId": "image-9e8fca44fc0e506f8ab2d36a882194a8449f28f0-2109x1600-webp",
+    "originalSize": 367914,
+    "optimizedSize": 241424,
+    "uploadedAt": "2025-12-20T11:26:49.978Z"
+  },
+  "https://audiofast.pl/assets/article/nowosc_FF-v4.jpg": {
+    "assetId": "image-a59c4fcabbc777fd4fc04a9748696e72cd2c9a87-2280x1464-webp",
+    "originalSize": 150240,
+    "optimizedSize": 155592,
+    "uploadedAt": "2025-12-20T11:26:52.988Z"
+  },
+  "https://audiofast.pl/assets/article/srx_new-v4.jpg": {
+    "assetId": "image-90dc7e21201227cd26bd0daf32e4601919c88f1c-2067x1600-webp",
+    "originalSize": 754819,
+    "optimizedSize": 239828,
+    "uploadedAt": "2025-12-20T11:26:56.278Z"
+  },
+  "https://audiofast.pl/assets/article/new-active-ground-1140-v2.jpg": {
+    "assetId": "image-c52c6a614bc0105f10a7f14bf517b67d47c499f4-2236x1600-webp",
+    "originalSize": 560170,
+    "optimizedSize": 142494,
+    "uploadedAt": "2025-12-20T11:26:59.320Z"
+  },
+  "https://audiofast.pl/assets/article/keces_p6_.jpg": {
+    "assetId": "image-65408ace2eb49559aa5cf8ac5dee62137979e18d-2280x1344-webp",
+    "originalSize": 227667,
+    "optimizedSize": 141808,
+    "uploadedAt": "2025-12-20T11:27:02.536Z"
+  },
+  "https://audiofast.pl/assets/article/master-fuse-01-v2.jpg": {
+    "assetId": "image-bf8238f54fef4e314ad44b2dd6c9d927d839aab2-1873x1600-webp",
+    "originalSize": 333394,
+    "optimizedSize": 164882,
+    "uploadedAt": "2025-12-20T11:27:05.883Z"
+  },
+  "https://audiofast.pl/assets/article/eiger-v3.jpg": {
+    "assetId": "image-8ec79913d07fd859ba3925f3fc577f0135529d51-2280x1340-webp",
+    "originalSize": 134660,
+    "optimizedSize": 67676,
+    "uploadedAt": "2025-12-20T11:27:08.427Z"
+  },
+  "https://audiofast.pl/assets/article/TranquilityPODcarbon_news.jpg": {
+    "assetId": "image-1539bc6f8a9df01163b0ad3e1e3dcbc18c1a1b77-2015x1600-webp",
+    "originalSize": 819698,
+    "optimizedSize": 240828,
+    "uploadedAt": "2025-12-20T11:27:11.519Z"
+  },
+  "https://audiofast.pl/assets/article/Rogue-Monoblocks-news-v3.jpg": {
+    "assetId": "image-68de009470b36754a0f9eedc888b43f8b505ea08-2105x1600-webp",
+    "originalSize": 184608,
+    "optimizedSize": 120354,
+    "uploadedAt": "2025-12-20T11:27:14.533Z"
+  },
+  "https://audiofast.pl/assets/article/P14-1-1140-v2.jpg": {
+    "assetId": "image-b4db78bc4db998a4f16849afcd5c43819f254768-2400x1570-webp",
+    "originalSize": 885941,
+    "optimizedSize": 287490,
+    "uploadedAt": "2025-12-20T11:27:18.061Z"
+  },
+  "https://audiofast.pl/assets/article/IQRP800-1-1600_nowosc-v3.jpg": {
+    "assetId": "image-fa571d0d230865440134fabd174494541abb4b1a-2127x1600-webp",
+    "originalSize": 706833,
+    "optimizedSize": 190580,
+    "uploadedAt": "2025-12-20T11:27:20.531Z"
+  },
+  "https://audiofast.pl/assets/article/t66-nowosc.jpg": {
+    "assetId": "image-4729caaec7fb04747ca7273f9bacedbc0bc04b7d-2105x1600-webp",
+    "originalSize": 256484,
+    "optimizedSize": 177582,
+    "uploadedAt": "2025-12-20T11:27:24.921Z"
+  },
+  "https://audiofast.pl/assets/article/SashaVnews2.jpg": {
+    "assetId": "image-35ba30edf339e1bea2b585dcac5014975c6155be-2400x1538-webp",
+    "originalSize": 345098,
+    "optimizedSize": 134748,
+    "uploadedAt": "2025-12-20T11:27:32.176Z"
+  },
+  "https://audiofast.pl/assets/article/gemini-nowosc3-v3.jpg": {
+    "assetId": "image-802348d793d0defd5b761b73dd859d0e42cd477d-2340x1518-webp",
+    "originalSize": 249847,
+    "optimizedSize": 144122,
+    "uploadedAt": "2025-12-20T11:27:35.472Z"
+  },
+  "https://audiofast.pl/assets/article/mutec-zegar-v4.jpg": {
+    "assetId": "image-2c0da87e957ae27af23d908f5fe92a08fa833655-2090x1472-webp",
+    "originalSize": 250621,
+    "optimizedSize": 127196,
+    "uploadedAt": "2025-12-20T11:27:38.468Z"
+  },
+  "https://audiofast.pl/assets/article/lina-nagrody2-v2.jpg": {
+    "assetId": "image-7df17b53993032d87402aa3dfc67c35a3ac0d725-1923x1600-webp",
+    "originalSize": 163526,
+    "optimizedSize": 90386,
+    "uploadedAt": "2025-12-20T11:27:43.491Z"
+  },
+  "https://audiofast.pl/assets/article/MU2a.jpg": {
+    "assetId": "image-a6622b56182ecb3300c4e128dd15dd76e13fe72c-2071x1600-webp",
+    "originalSize": 608496,
+    "optimizedSize": 420526,
+    "uploadedAt": "2025-12-20T11:27:48.999Z"
+  },
+  "https://audiofast.pl/assets/article/USB_srx-v2.jpg": {
+    "assetId": "image-cbd2e3fc08467911728cc934e383a0e714aebf13-1941x1600-webp",
+    "originalSize": 186134,
+    "optimizedSize": 87040,
+    "uploadedAt": "2025-12-20T11:27:51.889Z"
+  },
+  "https://audiofast.pl/assets/article/usher-UA50b-v2.jpg": {
+    "assetId": "image-519b863a24871ba3e065e3c1ff3b0d376ea6e529-1569x1290-webp",
+    "originalSize": 332755,
+    "optimizedSize": 100010,
+    "uploadedAt": "2025-12-20T11:27:54.572Z"
+  },
+  "https://audiofast.pl/assets/article/7-1600s-v2.jpg": {
+    "assetId": "image-93552ee83637b5690000664a2048b2aac780d444-2045x1600-webp",
+    "originalSize": 326675,
+    "optimizedSize": 145230,
+    "uploadedAt": "2025-12-20T11:27:59.413Z"
+  },
+  "https://audiofast.pl/assets/article/voodoo-nowosc-v3.jpg": {
+    "assetId": "image-ca597095895f2e9a2f33336d5eca7600ffb69a38-1808x1600-webp",
+    "originalSize": 731302,
+    "optimizedSize": 269910,
+    "uploadedAt": "2025-12-20T11:28:02.409Z"
+  },
+  "https://audiofast.pl/assets/article/ebravo-nowosc.jpg": {
+    "assetId": "image-b3a37da23d6dc3dd20d0acb43397fe07dc0ee357-1846x1600-webp",
+    "originalSize": 327540,
+    "optimizedSize": 208842,
+    "uploadedAt": "2025-12-20T11:28:05.824Z"
+  },
+  "https://audiofast.pl/assets/article/Powerzone2-v2.jpg": {
+    "assetId": "image-3a4466c74003ef97eff68642900fae2ffc5330d9-2200x1594-webp",
+    "originalSize": 216861,
+    "optimizedSize": 134820,
+    "uploadedAt": "2025-12-20T11:28:09.224Z"
+  },
+  "https://audiofast.pl/assets/article/pink.jpg": {
+    "assetId": "image-a78ab0cb22fd4fd20eb6b3a3de8d58bcb31cccdb-1877x1600-webp",
+    "originalSize": 200152,
+    "optimizedSize": 86492,
+    "uploadedAt": "2025-12-20T11:28:12.647Z"
+  },
+  "https://audiofast.pl/assets/article/watt2.jpg": {
+    "assetId": "image-eccabdcfb4c6fd562cac635727e08af709ab2e0c-2125x1600-webp",
+    "originalSize": 313118,
+    "optimizedSize": 216494,
+    "uploadedAt": "2025-12-20T11:28:15.311Z"
+  },
+  "https://audiofast.pl/assets/article/Siren-v3.jpg": {
+    "assetId": "image-b025055bf2058ffcaf1e9433d1dbf14bd73987bd-2400x1396-webp",
+    "originalSize": 209940,
+    "optimizedSize": 124034,
+    "uploadedAt": "2025-12-20T11:28:18.205Z"
+  },
+  "https://audiofast.pl/assets/article/power-cell-8-sx3.jpg": {
+    "assetId": "image-b18a26391ec7d6d82f5ac252f582a27e135979e7-2152x1600-webp",
+    "originalSize": 314045,
+    "optimizedSize": 174652,
+    "uploadedAt": "2025-12-20T11:28:28.428Z"
+  },
+  "https://audiofast.pl/assets/article/foundation-sx-sc-2.jpg": {
+    "assetId": "image-dd600f5fc89ec810e82e5be625f93219d95a47f2-2013x1600-webp",
+    "originalSize": 159381,
+    "optimizedSize": 65706,
+    "uploadedAt": "2025-12-20T11:28:31.439Z"
+  },
+  "https://audiofast.pl/assets/article/Alpha_X-v4.jpg": {
+    "assetId": "image-d19907e2dc0bcea012cc65d501fcf542df9aa13c-1771x1600-webp",
+    "originalSize": 308270,
+    "optimizedSize": 101940,
+    "uploadedAt": "2025-12-20T11:28:34.167Z"
+  },
+  "https://audiofast.pl/assets/article/Sigma_X.jpg": {
+    "assetId": "image-f28cd7e6be1ed283b2368c92d612cdf62f2b2940-1771x1600-webp",
+    "originalSize": 196684,
+    "optimizedSize": 119688,
+    "uploadedAt": "2025-12-20T11:28:37.243Z"
+  },
+  "https://audiofast.pl/assets/article/A1000_photo_1b-v2.jpg": {
+    "assetId": "image-86d2bd226a04dad58f141adb68175f2e531a4556-1940x1600-webp",
+    "originalSize": 286283,
+    "optimizedSize": 147300,
+    "uploadedAt": "2025-12-20T11:28:39.642Z"
+  },
+  "https://audiofast.pl/assets/article/srx-powercell-2.jpg": {
+    "assetId": "image-53f1724a8925eee3ad4d5d4c673f016ed7dcead6-2297x1600-webp",
+    "originalSize": 1048222,
+    "optimizedSize": 259630,
+    "uploadedAt": "2025-12-20T11:28:43.738Z"
+  },
+  "https://audiofast.pl/assets/article/black-diamond-v2.jpg": {
+    "assetId": "image-189e92e524f7a9326b1cde279ea4924af3dc2f03-1712x1510-webp",
+    "originalSize": 145430,
+    "optimizedSize": 89508,
+    "uploadedAt": "2025-12-20T11:28:47.992Z"
+  },
+  "https://audiofast.pl/assets/article/linda-dac-x-v3.jpg": {
+    "assetId": "image-bbc80681c256fffccbfce8c191672ef62871e288-2280x1594-webp",
+    "originalSize": 159395,
+    "optimizedSize": 108276,
+    "uploadedAt": "2025-12-20T11:28:50.549Z"
+  },
+  "https://audiofast.pl/assets/article/N50_2.jpg": {
+    "assetId": "image-17ac81950a723d85f9f8117f05275cf02baf644f-1984x1600-webp",
+    "originalSize": 269462,
+    "optimizedSize": 120082,
+    "uploadedAt": "2025-12-20T11:28:53.625Z"
+  },
+  "https://audiofast.pl/assets/article/A1_1-v2.jpg": {
+    "assetId": "image-214c2a3a35ae7219b2cebccf59b040878b102985-2158x1600-webp",
+    "originalSize": 218287,
+    "optimizedSize": 124314,
+    "uploadedAt": "2025-12-20T11:28:56.593Z"
+  },
+  "https://audiofast.pl/assets/produkty/New-products-insets-LS2_464-v2.jpg": {
+    "assetId": "image-134b781c592e47851a1f8f478cca6830474875a5-928x928-webp",
+    "originalSize": 49438,
+    "optimizedSize": 22078,
+    "uploadedAt": "2025-12-20T11:32:14.646Z"
+  },
+  "https://audiofast.pl/assets/galeria/LS-3-BACK-dark-S.jpg": {
+    "assetId": "image-317d36378532a83c7f72c4ed7e6237983807bc7a-1920x1280-webp",
+    "originalSize": 539464,
+    "optimizedSize": 118718,
+    "uploadedAt": "2025-12-20T11:32:16.249Z"
+  },
+  "https://audiofast.pl/assets/produkty/New-products-insets-S-100-464.jpg": {
+    "assetId": "image-f96670cdb1b90e18b6422e750771dd7ae9437ee8-928x928-webp",
+    "originalSize": 49536,
+    "optimizedSize": 26536,
+    "uploadedAt": "2025-12-20T11:45:06.059Z"
+  },
+  "https://audiofast.pl/assets/galeria/S-100-back-darkS.jpg": {
+    "assetId": "image-da52d54c6734c1defc1db99c33b95e661b915d24-1920x1280-webp",
+    "originalSize": 532158,
+    "optimizedSize": 139378,
+    "uploadedAt": "2025-12-20T11:45:07.718Z"
+  },
+  "https://audiofast.pl/assets/galeria/S-100-Nat-darkS.jpg": {
+    "assetId": "image-0155e15eb6ed9bcb0059abfdc897c3600ab1f81a-1920x1280-webp",
+    "originalSize": 523661,
+    "optimizedSize": 137598,
+    "uploadedAt": "2025-12-20T11:45:09.670Z"
+  },
+  "https://audiofast.pl/assets/produkty/New-products-insets-S-200-464.jpg": {
+    "assetId": "image-7234589fd6dd011f9012dba0158310ebd6c6e02d-928x928-webp",
+    "originalSize": 46622,
+    "optimizedSize": 19396,
+    "uploadedAt": "2025-12-20T11:45:12.872Z"
+  },
+  "https://audiofast.pl/assets/galeria/Stack-LS_S-200-s.jpg": {
+    "assetId": "image-021747e93a0ce597d8a18d693e02bcc8a933e672-1890x1280-webp",
+    "originalSize": 473344,
+    "optimizedSize": 62418,
+    "uploadedAt": "2025-12-20T11:45:14.778Z"
+  },
+  "https://audiofast.pl/assets/produkty/New-products-insets-D-80-464.jpg": {
+    "assetId": "image-e35db030afd2466240a533e78b4915d96b9390a6-928x928-webp",
+    "originalSize": 38777,
+    "optimizedSize": 16710,
+    "uploadedAt": "2025-12-20T11:45:18.258Z"
+  },
+  "https://audiofast.pl/assets/galeria/D-80-angle-Nat-lite.jpg": {
+    "assetId": "image-8dd6b6addd909d089d58cb1c39fb0966a732c8ac-1890x1280-webp",
+    "originalSize": 391290,
+    "optimizedSize": 46676,
+    "uploadedAt": "2025-12-20T11:45:19.788Z"
+  },
+  "https://audiofast.pl/assets/galeria/all-headers-D80.jpg": {
+    "assetId": "image-4093aff192541e9b57485ae98d0ef68bd2391984-1920x1044-webp",
+    "originalSize": 241526,
+    "optimizedSize": 73464,
+    "uploadedAt": "2025-12-20T11:45:21.306Z"
+  },
+  "https://audiofast.pl/assets/galeria/D-80-Blk-front.jpg": {
+    "assetId": "image-525858fe6991043ce948f36ca0dd10f43f860e00-1664x1280-webp",
+    "originalSize": 537839,
+    "optimizedSize": 110840,
+    "uploadedAt": "2025-12-20T11:45:23.784Z"
+  },
+  "https://audiofast.pl/assets/produkty/New-products-insets-LS2_464.jpg": {
+    "assetId": "image-134b781c592e47851a1f8f478cca6830474875a5-928x928-webp",
+    "originalSize": 49438,
+    "optimizedSize": 22078,
+    "uploadedAt": "2025-12-20T11:45:27.371Z"
+  },
+  "https://audiofast.pl/assets/galeria/LS-black_dark-S.jpg": {
+    "assetId": "image-9b547797aa2febbd455a215298d1a77814cdd8c4-1920x1280-webp",
+    "originalSize": 190562,
+    "optimizedSize": 17252,
+    "uploadedAt": "2025-12-20T11:45:28.955Z"
+  },
+  "https://audiofast.pl/assets/produkty/PD_Everest_X_Front_2-464.jpg": {
+    "assetId": "image-6289c0c294af06940cdf61ea74f9943287c7b73f-928x928-webp",
+    "originalSize": 35047,
+    "optimizedSize": 9584,
+    "uploadedAt": "2025-12-20T11:45:31.812Z"
+  },
+  "https://audiofast.pl/assets/galeria/pd_everest_x_web-sm-1200x800.jpg": {
+    "assetId": "image-c9e6c40cb8b9377a484162c25d737326efa6abfd-1920x1280-webp",
+    "originalSize": 121843,
+    "optimizedSize": 135216,
+    "uploadedAt": "2025-12-20T11:45:33.418Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Everest_X_Pair_2-web-1200x961.jpg": {
+    "assetId": "image-b854df52c2fd12a5b497d21004650f63a0764ab5-1598x1280-webp",
+    "originalSize": 55425,
+    "optimizedSize": 31644,
+    "uploadedAt": "2025-12-20T11:45:34.945Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Everest_X_Badge_1-web-1200x893.jpg": {
+    "assetId": "image-f4837d9e9bbf8ce71c84a7f2967c867ca3ce3997-1720x1280-webp",
+    "originalSize": 213615,
+    "optimizedSize": 283024,
+    "uploadedAt": "2025-12-20T11:45:36.266Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Everest_X_Badge_2-web-1200x893.jpg": {
+    "assetId": "image-65649abd37431ab107b3b05cca0310a1746214fc-1720x1280-webp",
+    "originalSize": 111633,
+    "optimizedSize": 105206,
+    "uploadedAt": "2025-12-20T11:45:37.542Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Everest_X_Badge_3-web-1200x893.jpg": {
+    "assetId": "image-9476cfd456fecdbde006188dd4e2f051d088623a-1720x1280-webp",
+    "originalSize": 55724,
+    "optimizedSize": 30942,
+    "uploadedAt": "2025-12-20T11:45:39.191Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Everest_X_Badge_4-web-1200x893.jpg": {
+    "assetId": "image-70e7724d9390d6982f719a206be9fb5b76bd81c1-1720x1280-webp",
+    "originalSize": 147537,
+    "optimizedSize": 161910,
+    "uploadedAt": "2025-12-20T11:45:40.595Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Everest_X_Front_2-web-1200x912.jpg": {
+    "assetId": "image-4ade810ac46397ec758fa8ded8225484177244bb-1684x1280-webp",
+    "originalSize": 43864,
+    "optimizedSize": 24542,
+    "uploadedAt": "2025-12-20T11:45:42.155Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Everest_X_Pair_1-web-1200x875.jpg": {
+    "assetId": "image-9eaa9d31b154a2befaddda859b9b0636a965399f-1755x1280-webp",
+    "originalSize": 74130,
+    "optimizedSize": 55392,
+    "uploadedAt": "2025-12-20T11:45:44.096Z"
+  },
+  "https://audiofast.pl/assets/article/everest-x2-v3.jpg": {
+    "assetId": "image-4e06cd0f953f5e508f74b6e185d0b860a5419f1e-1432x1104-webp",
+    "originalSize": 399615,
+    "optimizedSize": 133626,
+    "uploadedAt": "2025-12-20T11:45:45.410Z"
+  },
+  "https://www.audiofast.pl/assets/TAPc-v8.png": {
+    "assetId": "image-0293d5ad5406a499c95144764edfb7acfb41ea40-300x363-webp",
+    "originalSize": 44944,
+    "optimizedSize": 20758,
+    "uploadedAt": "2025-12-20T11:45:48.130Z"
+  },
+  "https://www.audiofast.pl/assets/harp.png": {
+    "assetId": "image-b4c3cc2beb54f517deacb8d04a458f57d629cb3b-300x351-webp",
+    "originalSize": 57315,
+    "optimizedSize": 14028,
+    "uploadedAt": "2025-12-20T11:45:49.120Z"
+  },
+  "https://www.audiofast.pl/assets/QRBB-131x160.jpg": {
+    "assetId": "image-46c72b302e4725488c105e0c51be84caba5e4afe-131x160-webp",
+    "originalSize": 8655,
+    "optimizedSize": 7530,
+    "uploadedAt": "2025-12-20T11:45:50.114Z"
+  },
+  "https://www.audiofast.pl/assets/kpip_v2-510x600.png": {
+    "assetId": "image-b77d21e696ee87dbf5ee3d55d72ac6d070520d1a-300x353-webp",
+    "originalSize": 33253,
+    "optimizedSize": 16256,
+    "uploadedAt": "2025-12-20T11:45:51.521Z"
+  },
+  "https://www.audiofast.pl/assets/NIC-v4.png": {
+    "assetId": "image-2a93216f5a3955f48a57f43c4acfdb8cf616b79f-300x351-webp",
+    "originalSize": 116420,
+    "optimizedSize": 44010,
+    "uploadedAt": "2025-12-20T11:45:52.939Z"
+  },
+  "https://www.audiofast.pl/assets/CopperCONN-1-138x160-v5.jpg": {
+    "assetId": "image-773c166a0d0a142792173dd318445ca007ba7cc2-138x160-webp",
+    "originalSize": 6712,
+    "optimizedSize": 5088,
+    "uploadedAt": "2025-12-20T11:45:54.137Z"
+  },
+  "https://www.audiofast.pl/assets/cmode-e1627512371364-v6.jpg": {
+    "assetId": "image-bf29c44725182e40180089509eadc5c5c14cbf43-300x352-webp",
+    "originalSize": 17893,
+    "optimizedSize": 8522,
+    "uploadedAt": "2025-12-20T11:45:55.588Z"
+  },
+  "https://www.audiofast.pl/assets/CCI-v5.png": {
+    "assetId": "image-cc069ca84ddfd5748630e36302fe7fdeed8bed18-300x358-webp",
+    "originalSize": 64405,
+    "optimizedSize": 15284,
+    "uploadedAt": "2025-12-20T11:45:57.136Z"
+  },
+  "https://www.audiofast.pl/assets/DTCD-2-240x84.jpg": {
+    "assetId": "image-caef37be24f2eb334c315eab70293981bb045ef0-240x84-webp",
+    "originalSize": 4195,
+    "optimizedSize": 2526,
+    "uploadedAt": "2025-12-20T11:45:58.061Z"
+  },
+  "https://audiofast.pl/assets/produkty/denali-464.jpg": {
+    "assetId": "image-3c7f2029ec89cc268002c586514a3a4c26397098-928x928-webp",
+    "originalSize": 34236,
+    "optimizedSize": 4844,
+    "uploadedAt": "2025-12-20T11:46:01.442Z"
+  },
+  "https://audiofast.pl/assets/galeria/PD_Denali_X_Stack-web-1200x937.jpg": {
+    "assetId": "image-b6f54ca78438dbf544309cdef88e7cc5e8eead61-1639x1280-webp",
+    "originalSize": 71798,
+    "optimizedSize": 39202,
+    "uploadedAt": "2025-12-20T11:46:02.745Z"
+  },
+  "https://audiofast.pl/assets/galeria/Denali_New_Silver_FP-web-1200x775.jpg": {
+    "assetId": "image-d3b745c82102a9012e5e0637c17bac19b1481e26-1920x1240-webp",
+    "originalSize": 23019,
+    "optimizedSize": 13264,
+    "uploadedAt": "2025-12-20T11:46:04.131Z"
+  },
+  "https://audiofast.pl/assets/galeria/imgi_4_PD_Denali_X_Front_1-expanded-web-1-1200x703.jpg": {
+    "assetId": "image-bfc565a22d1c80c31f26594193740e371dbc2f99-1920x1125-webp",
+    "originalSize": 47862,
+    "optimizedSize": 17434,
+    "uploadedAt": "2025-12-20T11:46:05.715Z"
+  },
+  "https://audiofast.pl/assets/galeria/imgi_4_PD_Denali_X_Rear_1-web-1200x684.jpg": {
+    "assetId": "image-c19fc72974f41ad052ffab2041044613b6090927-1920x1094-webp",
+    "originalSize": 72681,
+    "optimizedSize": 37978,
+    "uploadedAt": "2025-12-20T11:46:07.019Z"
+  },
+  "https://audiofast.pl/assets/galeria/imgi_4_PD_Denali_X_Rear_Detail_1-web-1200x917.jpg": {
+    "assetId": "image-5d921ff4ff443ea5847f47898f38f6e21bc2ff7f-1675x1280-webp",
+    "originalSize": 158929,
+    "optimizedSize": 105876,
+    "uploadedAt": "2025-12-20T11:46:08.637Z"
+  },
+  "https://www.audiofast.pl/assets/TAPc-v8__ResizedImageWzgwLDk3XQ.png": {
+    "assetId": "image-c2d12f8c6f775cd73de8936a7824d0e305ea8055-160x194-webp",
+    "originalSize": 7329,
+    "optimizedSize": 18458,
+    "uploadedAt": "2025-12-20T11:46:10.047Z"
+  },
+  "https://www.audiofast.pl/assets/harp__ResizedImageWzgwLDk0XQ.png": {
+    "assetId": "image-288cb359b90ff8d57a5e1e326e2bcd6abb92d985-160x188-webp",
+    "originalSize": 3480,
+    "optimizedSize": 9232,
+    "uploadedAt": "2025-12-20T11:46:11.251Z"
+  },
+  "https://www.audiofast.pl/assets/QRBB-131x160__ResizedImageWzgwLDk4XQ.jpg": {
+    "assetId": "image-4b57c988a2c5a80953dd94aac86ee16b96c554ae-160x196-webp",
+    "originalSize": 5404,
+    "optimizedSize": 6140,
+    "uploadedAt": "2025-12-20T11:46:12.231Z"
+  },
+  "https://www.audiofast.pl/assets/kpip_v2-510x600__ResizedImageWzgwLDk0XQ.png": {
+    "assetId": "image-c7c0f73140b6b096a49d31ac8c07f13f38a32ea2-160x188-webp",
+    "originalSize": 4203,
+    "optimizedSize": 10864,
+    "uploadedAt": "2025-12-20T11:46:13.279Z"
+  },
+  "https://www.audiofast.pl/assets/NIC-v4__ResizedImageWzgwLDk0XQ.png": {
+    "assetId": "image-825b0c2b4b678383861d3575c4b071ef7bbf3dd2-160x188-webp",
+    "originalSize": 9816,
+    "optimizedSize": 20308,
+    "uploadedAt": "2025-12-20T11:46:14.333Z"
+  },
+  "https://www.audiofast.pl/assets/CopperCONN-1-138x160-v5__ResizedImageWzgwLDkzXQ.jpg": {
+    "assetId": "image-c28d35b99f03175841caa22ef981a434bcb7efd8-160x186-webp",
+    "originalSize": 4777,
+    "optimizedSize": 3778,
+    "uploadedAt": "2025-12-20T11:46:15.399Z"
+  },
+  "https://www.audiofast.pl/assets/CCI-v5__ResizedImageWzgwLDk2XQ.png": {
+    "assetId": "image-a0a11cdbfe9c11539a6683ec92a747ed1efe3248-160x192-webp",
+    "originalSize": 3661,
+    "optimizedSize": 8374,
+    "uploadedAt": "2025-12-20T11:46:16.512Z"
+  },
+  "https://www.audiofast.pl/assets/DTCD-2-240x84__ResizedImageWzEwMCwzNV0.jpg": {
+    "assetId": "image-be305da0ebd79ec5eee7fbdfe6baa7d46d6dec4b-200x70-webp",
+    "originalSize": 2276,
+    "optimizedSize": 1488,
+    "uploadedAt": "2025-12-20T11:46:17.596Z"
+  },
+  "https://audiofast.pl/assets/produkty/GRD_Altaira_X_464.jpg": {
+    "assetId": "image-58c50c0a175a3f40c56fc6582035a7a41b96e68d-928x928-webp",
+    "originalSize": 36698,
+    "optimizedSize": 7414,
+    "uploadedAt": "2025-12-20T11:46:21.262Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Black_Front_1_edit-1200x591.jpg": {
+    "assetId": "image-3ddc4a49c0f07f57894bf45cf4e0e9b9bfa4a80c-1920x946-webp",
+    "originalSize": 26572,
+    "optimizedSize": 14416,
+    "uploadedAt": "2025-12-20T11:46:22.358Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Black_Front_2_edit-1200x885.jpg": {
+    "assetId": "image-42ac7e56667eb6859cf8b9eace8aa2a2b91d924a-1736x1280-webp",
+    "originalSize": 38252,
+    "optimizedSize": 20658,
+    "uploadedAt": "2025-12-20T11:46:24.303Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Black_Rear_2-web-1200x772.jpg": {
+    "assetId": "image-e8f979606a711ab2bd5df1b36145a09dd38a1ef2-1920x1235-webp",
+    "originalSize": 61799,
+    "optimizedSize": 57470,
+    "uploadedAt": "2025-12-20T11:46:25.527Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Silver_Front_1-web-1200x610.jpg": {
+    "assetId": "image-615fb772d7012c653e885f8d1dea97dcc6a99b75-1920x976-webp",
+    "originalSize": 31220,
+    "optimizedSize": 15718,
+    "uploadedAt": "2025-12-20T11:46:26.760Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Silver_Front_2-expanded-web-1200x584.jpg": {
+    "assetId": "image-56be41c158e744e51ba1c27edb01eee702647415-1920x934-webp",
+    "originalSize": 30671,
+    "optimizedSize": 20152,
+    "uploadedAt": "2025-12-20T11:46:28.085Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Silver_Front_3-web-1200x878.jpg": {
+    "assetId": "image-5294436e1354c7570f73defd8388baeb78ff5297-1749x1280-webp",
+    "originalSize": 43002,
+    "optimizedSize": 23692,
+    "uploadedAt": "2025-12-20T11:46:29.930Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Silver_Rear_1-web-1200x623.jpg": {
+    "assetId": "image-829b3db9d9062c9d26f4c3308c03e06d3302580d-1920x997-webp",
+    "originalSize": 48168,
+    "optimizedSize": 35686,
+    "uploadedAt": "2025-12-20T11:46:31.204Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_Altaira_X_Silver_Rear_2-web-1200x770.jpg": {
+    "assetId": "image-bf19907100692ace210f1110cc63a29eb1d52277-1920x1232-webp",
+    "originalSize": 102224,
+    "optimizedSize": 111880,
+    "uploadedAt": "2025-12-20T11:46:32.926Z"
+  },
+  "https://audiofast.pl/assets/article/altairaX-v2.jpg": {
+    "assetId": "image-417c1f5085f2b6ac407282d5aa4a5c4e40996c0b-2131x1600-webp",
+    "originalSize": 167677,
+    "optimizedSize": 59744,
+    "uploadedAt": "2025-12-20T11:46:34.283Z"
+  },
+  "https://www.audiofast.pl/assets/TAPc-v9.png": {
+    "assetId": "image-0293d5ad5406a499c95144764edfb7acfb41ea40-300x363-webp",
+    "originalSize": 44944,
+    "optimizedSize": 20758,
+    "uploadedAt": "2025-12-20T11:46:35.248Z"
+  },
+  "https://www.audiofast.pl/assets/NIC-v5.png": {
+    "assetId": "image-2a93216f5a3955f48a57f43c4acfdb8cf616b79f-300x351-webp",
+    "originalSize": 116420,
+    "optimizedSize": 44010,
+    "uploadedAt": "2025-12-20T11:46:36.501Z"
+  },
+  "https://www.audiofast.pl/assets/kpip_v2-510x600-v2.png": {
+    "assetId": "image-b77d21e696ee87dbf5ee3d55d72ac6d070520d1a-300x353-webp",
+    "originalSize": 33253,
+    "optimizedSize": 16256,
+    "uploadedAt": "2025-12-20T11:46:37.822Z"
+  },
+  "https://www.audiofast.pl/assets/platinum-plated.png": {
+    "assetId": "image-22597ff274e8c269ab0905762dccd021cd8b73cf-300x351-webp",
+    "originalSize": 28728,
+    "optimizedSize": 9764,
+    "uploadedAt": "2025-12-20T11:46:39.013Z"
+  },
+  "https://audiofast.pl/assets/produkty/t44_464.jpg": {
+    "assetId": "image-9a6ca383fd487f718092070b1709b21cd3be94b4-928x928-webp",
+    "originalSize": 36199,
+    "optimizedSize": 9148,
+    "uploadedAt": "2025-12-20T11:46:42.280Z"
+  },
+  "https://audiofast.pl/assets/galeria/Cutaway.jpeg": {
+    "assetId": "image-4447d91e4a977865ab3cfe9916ddb33adef2bcef-1280x1280-webp",
+    "originalSize": 111446,
+    "optimizedSize": 50544,
+    "uploadedAt": "2025-12-20T11:46:43.941Z"
+  },
+  "https://audiofast.pl/assets/galeria/11.jpeg": {
+    "assetId": "image-c3acb7557dd8c1d5bf0ef46b37cda03c8a316736-1280x1280-webp",
+    "originalSize": 97245,
+    "optimizedSize": 49340,
+    "uploadedAt": "2025-12-20T11:46:45.131Z"
+  },
+  "https://audiofast.pl/assets/galeria/68b564eab67bc.jpeg": {
+    "assetId": "image-86a55dd2ce8157e44732d198af4f860234cbc980-1280x1280-webp",
+    "originalSize": 76306,
+    "optimizedSize": 25742,
+    "uploadedAt": "2025-12-20T11:46:46.682Z"
+  },
+  "https://audiofast.pl/assets/galeria/1.jpeg": {
+    "assetId": "image-c3acb7557dd8c1d5bf0ef46b37cda03c8a316736-1280x1280-webp",
+    "originalSize": 97245,
+    "optimizedSize": 49340,
+    "uploadedAt": "2025-12-20T11:46:48.242Z"
+  },
+  "https://audiofast.pl/assets/galeria/2.jpeg": {
+    "assetId": "image-f318ae6ade0ed5b507561644a270a02540feb003-1280x1280-webp",
+    "originalSize": 100045,
+    "optimizedSize": 50576,
+    "uploadedAt": "2025-12-20T11:46:49.393Z"
+  },
+  "https://audiofast.pl/assets/galeria/3.jpeg": {
+    "assetId": "image-52468a3f9bdaa6c3a5afa2977b4c28d7ce40af41-1280x1280-webp",
+    "originalSize": 82012,
+    "optimizedSize": 40884,
+    "uploadedAt": "2025-12-20T11:46:52.009Z"
+  },
+  "https://audiofast.pl/assets/galeria/4.jpeg": {
+    "assetId": "image-39b7e4f449e09d02f80b704b493812b22f8b9708-1280x1280-webp",
+    "originalSize": 84142,
+    "optimizedSize": 40762,
+    "uploadedAt": "2025-12-20T11:46:53.523Z"
+  },
+  "https://audiofast.pl/assets/galeria/5.jpeg": {
+    "assetId": "image-36e07ad01d8ea34fefbb313f5283ca6048d259ff-1280x1280-webp",
+    "originalSize": 85584,
+    "optimizedSize": 37160,
+    "uploadedAt": "2025-12-20T11:46:54.624Z"
+  },
+  "https://audiofast.pl/assets/galeria/6.jpeg": {
+    "assetId": "image-3973e51a54600c157b1b90280efe3e8ef186f98e-1280x1280-webp",
+    "originalSize": 89002,
+    "optimizedSize": 38782,
+    "uploadedAt": "2025-12-20T11:46:55.955Z"
+  },
+  "https://audiofast.pl/assets/galeria/7.jpeg": {
+    "assetId": "image-09fe2f1ba930b41270126ffc9ecd2c638fe7a0be-1280x1280-webp",
+    "originalSize": 52679,
+    "optimizedSize": 17874,
+    "uploadedAt": "2025-12-20T11:46:57.377Z"
+  },
+  "https://audiofast.pl/assets/galeria/8.jpeg": {
+    "assetId": "image-e6212f73e73620f9be0e11ab341922353c512d56-1280x1280-webp",
+    "originalSize": 61127,
+    "optimizedSize": 19954,
+    "uploadedAt": "2025-12-20T11:46:59.078Z"
+  },
+  "https://audiofast.pl/assets/galeria/9.jpeg": {
+    "assetId": "image-c9a4539a6ee20d2424e54e3b000bf07dadf68972-1280x1280-webp",
+    "originalSize": 65505,
+    "optimizedSize": 20744,
+    "uploadedAt": "2025-12-20T11:47:00.408Z"
+  },
+  "https://audiofast.pl/assets/galeria/Lifestyle-1.jpeg": {
+    "assetId": "image-c2ca130f221177dbb88bcaf99bc4f56f21d6d4da-1280x1280-webp",
+    "originalSize": 106046,
+    "optimizedSize": 73178,
+    "uploadedAt": "2025-12-20T11:47:02.165Z"
+  },
+  "https://audiofast.pl/assets/galeria/t44-loudspeakers-2-jpg.jpeg": {
+    "assetId": "image-04b5faab1af4bcb874367ee99896cebfc3456679-1024x1280-webp",
+    "originalSize": 262408,
+    "optimizedSize": 83218,
+    "uploadedAt": "2025-12-20T11:47:03.624Z"
+  },
+  "https://www.audiofast.pl/assets/imgi_18_image2.jpeg": {
+    "assetId": "image-3ec39ba5dcfa392dc60c825634449e33295cf3a5-675x1200-webp",
+    "originalSize": 39678,
+    "optimizedSize": 25580,
+    "uploadedAt": "2025-12-20T11:47:05.117Z"
+  },
+  "https://www.audiofast.pl/assets/t44-loudspeakers-2-jpg-v2.jpeg": {
+    "assetId": "image-8dcd4daf348385796b2dcda591520af3d785e1c9-1600x1110-webp",
+    "originalSize": 128783,
+    "optimizedSize": 74040,
+    "uploadedAt": "2025-12-20T11:47:06.401Z"
+  },
+  "https://www.audiofast.pl/assets/Lifestyle-1.jpeg": {
+    "assetId": "image-fe451b891bfa9d5d35702ff7714c32254b568c49-1200x1200-webp",
+    "originalSize": 106046,
+    "optimizedSize": 70520,
+    "uploadedAt": "2025-12-20T11:47:07.786Z"
+  },
+  "https://audiofast.pl/assets/produkty/imgi_19_SRXPC14Lights-464.jpg": {
+    "assetId": "image-6dca8c09c4e5d5bb4c8a2472658cdb3e015ece02-928x926-webp",
+    "originalSize": 110303,
+    "optimizedSize": 36646,
+    "uploadedAt": "2025-12-20T11:47:11.102Z"
+  },
+  "https://audiofast.pl/assets/galeria/imgi_7_SRXPC14wSRXXLAC-scaled.jpeg": {
+    "assetId": "image-412312e43b80100996ba591d3394f6434b3a97e9-1920x1152-webp",
+    "originalSize": 137443,
+    "optimizedSize": 63560,
+    "uploadedAt": "2025-12-20T11:47:12.556Z"
+  },
+  "https://audiofast.pl/assets/galeria/imgi_16_SRXPC14Angled-scaled.jpeg": {
+    "assetId": "image-8a07168211d9deb785493100b8d49bf9ee2fb4f4-1920x992-webp",
+    "originalSize": 175322,
+    "optimizedSize": 85664,
+    "uploadedAt": "2025-12-20T11:47:13.618Z"
+  },
+  "https://audiofast.pl/assets/galeria/imgi_17_srx-pc14-ulf.jpg": {
+    "assetId": "image-49b14c2f4f949897ddfe5166acb6c3fb1206ec5a-1920x1204-webp",
+    "originalSize": 574247,
+    "optimizedSize": 140296,
+    "uploadedAt": "2025-12-20T11:47:16.213Z"
+  },
+  "https://audiofast.pl/assets/galeria/imgi_18_SRXPC14wGAGB-scaled.jpeg": {
+    "assetId": "image-39f861f84f6672eaacba1cb9cd2b21aacfa9cd52-1920x525-webp",
+    "originalSize": 177002,
+    "optimizedSize": 45530,
+    "uploadedAt": "2025-12-20T11:47:17.495Z"
+  },
+  "https://audiofast.pl/assets/article/SRX-14-v2.jpg": {
+    "assetId": "image-660b73417408855cd072649b9ddadcd33ccead82-2040x1600-webp",
+    "originalSize": 183784,
+    "optimizedSize": 136216,
+    "uploadedAt": "2025-12-20T11:47:19.234Z"
+  },
+  "https://audiofast.pl/assets/produkty/p9-464.jpg": {
+    "assetId": "image-012dbe44834dcfcb657b29c213d3adcaf065c0aa-1200x1200-webp",
+    "originalSize": 83376,
+    "optimizedSize": 21840,
+    "uploadedAt": "2025-12-20T11:47:22.699Z"
+  },
+  "https://audiofast.pl/assets/galeria/keces-p9_wizual.jpg": {
+    "assetId": "image-3cece81d45fe967905cdfec14a9baa095b124204-1920x1280-webp",
+    "originalSize": 400076,
+    "optimizedSize": 46484,
+    "uploadedAt": "2025-12-20T11:47:23.940Z"
+  },
+  "https://audiofast.pl/assets/galeria/IMG_1532.JPG": {
+    "assetId": "image-f1a5211ae16a2466d95ae846b45e50868104b4c2-1920x1280-webp",
+    "originalSize": 58930,
+    "optimizedSize": 45204,
+    "uploadedAt": "2025-12-20T11:47:25.294Z"
+  },
+  "https://audiofast.pl/assets/galeria/IMG_1533.JPG": {
+    "assetId": "image-23a66c13b531fb39a54bdcd6380cec2d85b5a603-1920x1280-webp",
+    "originalSize": 54011,
+    "optimizedSize": 41782,
+    "uploadedAt": "2025-12-20T11:47:26.607Z"
+  },
+  "https://audiofast.pl/assets/galeria/IMG_1534.JPG": {
+    "assetId": "image-1c641041e0d5e22f23a87d85505e092c050b66a1-1920x1280-webp",
+    "originalSize": 110720,
+    "optimizedSize": 101738,
+    "uploadedAt": "2025-12-20T11:47:30.615Z"
+  },
+  "https://audiofast.pl/assets/galeria/IMG_1537-Kopie.JPG": {
+    "assetId": "image-d334026e6fd3a3017259253abefc44765f005eb9-1920x1280-webp",
+    "originalSize": 100215,
+    "optimizedSize": 90970,
+    "uploadedAt": "2025-12-20T11:47:32.133Z"
+  },
+  "https://audiofast.pl/assets/galeria/IMG_1538.JPG": {
+    "assetId": "image-668cf970d19afe4c47a9643b3bc7518c5b29d3c8-1920x1280-webp",
+    "originalSize": 75587,
+    "optimizedSize": 65486,
+    "uploadedAt": "2025-12-20T11:47:33.603Z"
+  },
+  "https://www.audiofast.pl/assets/KECES-P9-back.jpg": {
+    "assetId": "image-b7feb75033f3c08e9844999da849e52113d8f184-1600x673-webp",
+    "originalSize": 194667,
+    "optimizedSize": 32364,
+    "uploadedAt": "2025-12-20T11:47:35.216Z"
+  },
+  "https://audiofast.pl/assets/produkty/omega-x-SP-464.jpg": {
+    "assetId": "image-fda1ca1a24a4a3aab2296dd3f45f58705bb0eac2-928x928-webp",
+    "originalSize": 42336,
+    "optimizedSize": 17294,
+    "uploadedAt": "2025-12-20T11:47:38.498Z"
+  },
+  "https://audiofast.pl/assets/galeria/SP_Omega_X_Detail_1-web-1200x948.jpg": {
+    "assetId": "image-3cdf76b7f5c398a61d81de7434fb68ad50ebaff6-1620x1280-webp",
+    "originalSize": 91729,
+    "optimizedSize": 81610,
+    "uploadedAt": "2025-12-20T11:47:39.759Z"
+  },
+  "https://audiofast.pl/assets/galeria/SP_Omega_X_Detail_2-web-1200x900.jpg": {
+    "assetId": "image-20c1bccd69c6ec558381fec55d614315faba7d04-1707x1280-webp",
+    "originalSize": 127321,
+    "optimizedSize": 151702,
+    "uploadedAt": "2025-12-20T11:47:42.153Z"
+  },
+  "https://audiofast.pl/assets/galeria/SP_Omega_X_Detail_3-web-1200x900.jpg": {
+    "assetId": "image-993cfbb0de3b171d2816afaea8b1acb8a904bdc2-1707x1280-webp",
+    "originalSize": 129825,
+    "optimizedSize": 143560,
+    "uploadedAt": "2025-12-20T11:47:43.689Z"
+  },
+  "https://audiofast.pl/assets/galeria/SP_Omega_X_Full_1-web-1200x778.jpg": {
+    "assetId": "image-48afc81437371298313dfd24e80188ea402ee99f-1920x1245-webp",
+    "originalSize": 80195,
+    "optimizedSize": 89758,
+    "uploadedAt": "2025-12-20T11:47:45.494Z"
+  },
+  "https://www.audiofast.pl/assets/TAPc-v10.png": {
+    "assetId": "image-0293d5ad5406a499c95144764edfb7acfb41ea40-300x363-webp",
+    "originalSize": 44944,
+    "optimizedSize": 20758,
+    "uploadedAt": "2025-12-20T11:47:46.714Z"
+  },
+  "https://www.audiofast.pl/assets/Gen3-NR-v3_ResizedImageWzkwLDEwNl0.png": {
+    "assetId": "image-1452e310f8c152746047585fb572aa1e453035aa-90x106-webp",
+    "originalSize": 13180,
+    "optimizedSize": 4354,
+    "uploadedAt": "2025-12-20T11:47:48.202Z"
+  },
+  "https://www.audiofast.pl/assets/kpip_v2-510x600-v3.png": {
+    "assetId": "image-b77d21e696ee87dbf5ee3d55d72ac6d070520d1a-300x353-webp",
+    "originalSize": 33253,
+    "optimizedSize": 16256,
+    "uploadedAt": "2025-12-20T11:47:49.331Z"
+  },
+  "https://www.audiofast.pl/assets/VTX-Ag.png": {
+    "assetId": "image-8060782f68a2124f8d36d9477d8031da05c43ecd-300x361-webp",
+    "originalSize": 130697,
+    "optimizedSize": 42264,
+    "uploadedAt": "2025-12-20T11:47:50.651Z"
+  },
+  "https://www.audiofast.pl/assets/2022-fluorocarbon-dielectrics-150x150_ResizedImageWzEwMCwxMDBd.png": {
+    "assetId": "image-a55ac1c1d381f5ae7d146b214499b81b7df3a7aa-100x100-webp",
+    "originalSize": 5498,
+    "optimizedSize": 3206,
+    "uploadedAt": "2025-12-20T11:47:51.506Z"
+  },
+  "https://www.audiofast.pl/assets/CopperCONN-1-138x160-v6.jpg": {
+    "assetId": "image-773c166a0d0a142792173dd318445ca007ba7cc2-138x160-webp",
+    "originalSize": 6712,
+    "optimizedSize": 5088,
+    "uploadedAt": "2025-12-20T11:47:52.771Z"
+  },
+  "https://audiofast.pl/assets/produkty/omega-x-xlr-464.jpg": {
+    "assetId": "image-2d39e76dcb40ffa59f8795fba1a957ff9f54302d-928x928-webp",
+    "originalSize": 53187,
+    "optimizedSize": 25082,
+    "uploadedAt": "2025-12-20T11:47:56.113Z"
+  },
+  "https://audiofast.pl/assets/galeria/IC_Omega_X_RCA_Detail_1-web-1200x858.jpg": {
+    "assetId": "image-646cc71c3c2a24916ab796feee7f99d14d033d5a-1790x1280-webp",
+    "originalSize": 131812,
+    "optimizedSize": 142340,
+    "uploadedAt": "2025-12-20T11:47:57.719Z"
+  },
+  "https://audiofast.pl/assets/galeria/IC_Omega_X_RCA_Full_1-web-1200x858.jpg": {
+    "assetId": "image-63a18fabab4a619e7888ac0c5aa7c9e95a798378-1790x1280-webp",
+    "originalSize": 100610,
+    "optimizedSize": 109900,
+    "uploadedAt": "2025-12-20T11:47:59.503Z"
+  },
+  "https://audiofast.pl/assets/galeria/IC_Omega_X_XLR_Detail_1-web-1200x858.jpg": {
+    "assetId": "image-040e89560215e3a80184386116028b7134976433-1790x1280-webp",
+    "originalSize": 128273,
+    "optimizedSize": 146728,
+    "uploadedAt": "2025-12-20T11:48:01.166Z"
+  },
+  "https://audiofast.pl/assets/galeria/IC_Omega_X_XLR_Detail_2-web-1200x900.jpg": {
+    "assetId": "image-a3d776223d33b2068b218aa2836bb46817ce6457-1707x1280-webp",
+    "originalSize": 136655,
+    "optimizedSize": 143988,
+    "uploadedAt": "2025-12-20T11:48:03.044Z"
+  },
+  "https://audiofast.pl/assets/galeria/IC_Omega_X_XLR_Full_2_New-web-1200x900.jpg": {
+    "assetId": "image-d059219d070b208de3ecb9f52eec878d5a396d01-1707x1280-webp",
+    "originalSize": 120687,
+    "optimizedSize": 129172,
+    "uploadedAt": "2025-12-20T11:48:04.289Z"
+  },
+  "https://www.audiofast.pl/assets/TRON_ResizedImageWzEwMCwxMDld.jpg": {
+    "assetId": "image-5f734a63fb5e76843e59d166605f577a5ec87796-100x109-webp",
+    "originalSize": 5248,
+    "optimizedSize": 2738,
+    "uploadedAt": "2025-12-20T11:48:05.301Z"
+  },
+  "https://www.audiofast.pl/assets/ArNi-v3.png": {
+    "assetId": "image-15abe59e13b0cdbda570d12998455b8546f4c4e6-300x350-webp",
+    "originalSize": 96035,
+    "optimizedSize": 33378,
+    "uploadedAt": "2025-12-20T11:48:06.650Z"
+  },
+  "https://www.audiofast.pl/assets/VTX-v2.png": {
+    "assetId": "image-f4b1587cb2ff2e4283997a97bda7c10a4b0f4e7d-300x350-webp",
+    "originalSize": 123724,
+    "optimizedSize": 39132,
+    "uploadedAt": "2025-12-20T11:48:08.112Z"
+  },
+  "https://www.audiofast.pl/assets/kpip_v2-510x600-v4.png": {
+    "assetId": "image-b77d21e696ee87dbf5ee3d55d72ac6d070520d1a-300x353-webp",
+    "originalSize": 33253,
+    "optimizedSize": 16256,
+    "uploadedAt": "2025-12-20T11:48:09.429Z"
+  },
+  "https://www.audiofast.pl/assets/Ohno-1-136x160-v3.jpg": {
+    "assetId": "image-05b6999418869ac9a37202b30e7124d8a521b7a0-136x160-webp",
+    "originalSize": 6781,
+    "optimizedSize": 5404,
+    "uploadedAt": "2025-12-20T11:48:10.482Z"
+  },
+  "https://www.audiofast.pl/assets/cmode-e1627512371364-v7.jpg": {
+    "assetId": "image-bf29c44725182e40180089509eadc5c5c14cbf43-300x352-webp",
+    "originalSize": 17893,
+    "optimizedSize": 8522,
+    "uploadedAt": "2025-12-20T11:48:11.670Z"
+  },
+  "https://www.audiofast.pl/assets/IC_Omega_X_XLR_Detail_2-web-1200x900.jpg": {
+    "assetId": "image-171609ee2ace69320907f0f1766c42bcae18d493-1600x1200-webp",
+    "originalSize": 136655,
+    "optimizedSize": 135922,
+    "uploadedAt": "2025-12-20T11:48:13.488Z"
+  },
+  "https://audiofast.pl/assets/produkty/powercell-12-sx-464.jpg": {
+    "assetId": "image-cdb96683ac702c463ca10f4ecf56f8132d843adc-928x928-webp",
+    "originalSize": 40307,
+    "optimizedSize": 15594,
+    "uploadedAt": "2025-12-20T11:48:16.750Z"
+  },
+  "https://audiofast.pl/assets/galeria/PC12SXFrontandBack-scaled.jpg": {
+    "assetId": "image-a57a5cce4aa055b2b0a72149831aff42e43243d0-1920x549-webp",
+    "originalSize": 115004,
+    "optimizedSize": 59630,
+    "uploadedAt": "2025-12-20T11:48:18.225Z"
+  },
+  "https://audiofast.pl/assets/galeria/pc12sx-internal-lighting.jpg": {
+    "assetId": "image-d4508f982fe5e986b0785262f9b865884fe85c6d-1920x734-webp",
+    "originalSize": 162138,
+    "optimizedSize": 88454,
+    "uploadedAt": "2025-12-20T11:48:19.559Z"
+  },
+  "https://audiofast.pl/assets/galeria/PC12SXINTL-scaled.jpg": {
+    "assetId": "image-3936d3841e2c3ce7d6678709f3e9b9c8faecd749-1920x869-webp",
+    "originalSize": 192192,
+    "optimizedSize": 120190,
+    "uploadedAt": "2025-12-20T11:48:20.816Z"
+  },
+  "https://audiofast.pl/assets/galeria/PC12SXmain-scaled.jpg": {
+    "assetId": "image-8f71b01428b04ccc46264e5b86ce93983528261d-1920x1165-webp",
+    "originalSize": 101165,
+    "optimizedSize": 52270,
+    "uploadedAt": "2025-12-20T11:48:22.450Z"
+  },
+  "https://audiofast.pl/assets/galeria/pc12sx-ulf-bias.jpg": {
+    "assetId": "image-debde3e38385634456407106b0919fff549bd2fd-1920x970-webp",
+    "originalSize": 122238,
+    "optimizedSize": 42080,
+    "uploadedAt": "2025-12-20T11:48:23.900Z"
+  },
+  "https://audiofast.pl/assets/galeria/PCSX12wGAGB-scaled.jpg": {
+    "assetId": "image-b0519490f33ffef1253953281a54e91d10777683-1920x504-webp",
+    "originalSize": 97862,
+    "optimizedSize": 52142,
+    "uploadedAt": "2025-12-20T11:48:26.041Z"
+  },
+  "https://audiofast.pl/assets/produkty/omega-x-phono-464.jpg": {
+    "assetId": "image-81c48da527704e5c55da6ed32cdc4406b9b275e6-928x928-webp",
+    "originalSize": 44139,
+    "optimizedSize": 23620,
+    "uploadedAt": "2025-12-20T11:48:29.479Z"
+  },
+  "https://audiofast.pl/assets/galeria/IC_Omega_X_Phono_Detail_1-web-1200x884-v2.jpg": {
+    "assetId": "image-f60da3a8fb19eb4419be8d0896eaae2edcbdcffd-1738x1280-webp",
+    "originalSize": 121023,
+    "optimizedSize": 133176,
+    "uploadedAt": "2025-12-20T11:48:30.985Z"
+  },
+  "https://audiofast.pl/assets/galeria/IC_Omega_X_Phono_Full_1_New-web-1200x955-v2.jpg": {
+    "assetId": "image-be96c2b86252fffc59813a389963de695a2d3c60-1608x1280-webp",
+    "originalSize": 119987,
+    "optimizedSize": 122600,
+    "uploadedAt": "2025-12-20T11:48:32.243Z"
+  },
+  "https://www.audiofast.pl/assets/b334340610/IC_Omega_X_Phono_Detail_1-web-1200x884.jpg": {
+    "assetId": "image-83c32e6b307d3074358acb1b450aa4131d3c475c-1600x1179-webp",
+    "originalSize": 121023,
+    "optimizedSize": 124738,
+    "uploadedAt": "2025-12-20T11:48:34.156Z"
+  },
+  "https://audiofast.pl/assets/produkty/x-ground-464.jpg": {
+    "assetId": "image-3a3fce5720c32111daa34158261fe58f6fa96b35-928x928-webp",
+    "originalSize": 42098,
+    "optimizedSize": 15820,
+    "uploadedAt": "2025-12-20T11:48:37.420Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_X_CGC_1-web-1200x958.jpg": {
+    "assetId": "image-046e85ef5a0d979ebc6aede26a616f04c241bc3a-1603x1280-webp",
+    "originalSize": 76957,
+    "optimizedSize": 68392,
+    "uploadedAt": "2025-12-20T11:48:38.768Z"
+  },
+  "https://audiofast.pl/assets/galeria/GRD_X_CGC_2-web-1200x889.jpg": {
+    "assetId": "image-e03b35f5d36dc5a0134650b50ef5a72bdd87636f-1728x1280-webp",
+    "originalSize": 97946,
+    "optimizedSize": 103316,
+    "uploadedAt": "2025-12-20T11:48:40.392Z"
   }
 }

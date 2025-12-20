@@ -28,6 +28,7 @@ import type {
   ContentBlockText,
   DetailsContentBlock,
   ImageCache,
+  PortableTextBlock,
   PortableTextContent,
   ProductBoxRow,
   ProductGalleryRow,
@@ -188,8 +189,8 @@ async function transformContentBoxes(
     switch (boxType) {
       case "text": {
         // Parse HTML content to Portable Text
-        if (box.TextContent) {
-          const parsed = htmlToPortableText(box.TextContent);
+        if (box.BoxContent) {
+          const parsed = htmlToPortableText(box.BoxContent);
           const portableTextContent: PortableTextContent[] = [];
 
           // Process parsed content and handle placeholders (images, review embeds)
@@ -298,19 +299,9 @@ async function transformContentBoxes(
       }
 
       case "video": {
-        if (box.VideoUrl) {
-          // Try YouTube first
-          const youtubeId = extractYouTubeId(box.VideoUrl);
-          if (youtubeId) {
-            contentBlocks.push(createYoutubeBlock(youtubeId));
-            break;
-          }
-
-          // Try Vimeo
-          const vimeoId = extractVimeoId(box.VideoUrl);
-          if (vimeoId) {
-            contentBlocks.push(createVimeoBlock(vimeoId));
-          }
+        if (box.YoutubeId) {
+          // YoutubeId is now directly provided in the CSV
+          contentBlocks.push(createYoutubeBlock(box.YoutubeId));
         }
         break;
       }
@@ -402,6 +393,40 @@ export async function transformProduct(
     );
     if (galleryImages.length > 0) {
       product.imageGallery = galleryImages;
+    }
+  }
+
+  // 4b. Article data (shortDescription and publicationImage)
+  if (source.articleData) {
+    if (verbose) console.log("   📰 Processing article data...");
+
+    // Parse ShortDescription HTML to Portable Text
+    if (source.articleData.ShortDescription) {
+      const descriptionBlocks = htmlToPortableText(
+        source.articleData.ShortDescription,
+      );
+      // Extract only PortableTextBlock items (not images, videos, etc.)
+      const textBlocks = descriptionBlocks.filter(
+        (block): block is PortableTextBlock => block._type === "block",
+      );
+      if (textBlocks.length > 0) {
+        product.shortDescription = textBlocks;
+        if (verbose) console.log(`   ✓ Short description: ${textBlocks.length} blocks`);
+      }
+    }
+
+    // Upload PublicationImage
+    if (source.articleData.PublicationImageFilename) {
+      const publicationImage = await transformMainImage(
+        source.articleData.PublicationImageFilename,
+        client,
+        imageCache,
+        dryRun,
+      );
+      if (publicationImage) {
+        product.publicationImage = publicationImage;
+        if (verbose) console.log("   ✓ Publication image uploaded");
+      }
     }
   }
 
@@ -569,6 +594,8 @@ export function getProductSummary(product: SanityProduct): string {
     `Slug: ${product.slug.current}`,
     `Preview: ${product.previewImage ? "✓" : "✗"}`,
     `Gallery: ${product.imageGallery?.length || 0}`,
+    `ShortDesc: ${product.shortDescription ? "✓" : "✗"}`,
+    `PubImg: ${product.publicationImage ? "✓" : "✗"}`,
     `Brand: ${product.brand ? "✓" : "✗"}`,
     `Categories: ${product.categories?.length || 0}`,
     `Content blocks: ${product.details?.content?.length || 0}`,

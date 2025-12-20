@@ -35,21 +35,24 @@ export interface ProductCategoryRow {
 }
 
 export interface ProductGalleryRow {
-  ProductID: string;
   BoxID: string;
-  SortOrder: string;
-  FileID: string;
+  ProductID: string;
+  ProductName: string;
+  ImageID: string;
+  ImageSort: string;
   ImageFilename: string;
-  ImageTitle: string | null;
+  ImageName: string | null;
 }
 
 export interface ProductBoxRow {
-  ProductID: string;
   BoxID: string;
-  SortOrder: string;
-  BoxType: string; // 'text', 'hr', 'video'
-  TextContent: string | null;
-  VideoUrl: string | null;
+  ProductID: string;
+  ProductName: string;
+  BoxSort: string;
+  BoxType: string; // 'text', 'hr', 'video', 'gallery'
+  BoxTitle: string | null;
+  BoxContent: string | null;
+  YoutubeId: string | null;
 }
 
 export interface ProductReviewRow {
@@ -69,6 +72,16 @@ export interface ProductTechnicalDataRow {
   TabSort: string;
   TabTitle: string | null;
   TabContent: string | null;
+}
+
+export interface ProductArticleRow {
+  ProductID: string;
+  ProductName: string;
+  ProductSlug: string;
+  ShortDescription: string | null;
+  PublicationImageID: string | null;
+  PublicationImageFilename: string | null;
+  ArticleDate: string | null;
 }
 
 // ============================================================================
@@ -91,6 +104,8 @@ export interface ProductSourceData {
   contentBoxes: ProductBoxRow[];
   reviewRows: ProductReviewRow[];
   technicalDataRows: ProductTechnicalDataRow[];
+  // Article data (for shortDescription and publicationImage)
+  articleData: ProductArticleRow | null;
 }
 
 // ============================================================================
@@ -281,6 +296,8 @@ export interface SanityProduct {
   };
   previewImage?: SanityImageRef;
   imageGallery?: SanityImageRef[];
+  shortDescription?: PortableTextBlock[]; // From ArticlePage.LeadingText
+  publicationImage?: SanityImageRef; // From ArticlePage.LeadingImageID
   isArchived: boolean;
   isCPO: boolean;
   brand?: SanityReference;

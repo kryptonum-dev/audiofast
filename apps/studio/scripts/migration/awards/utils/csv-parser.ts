@@ -18,7 +18,7 @@ import type {
 // Constants
 // ============================================================================
 
-const CSV_BASE_PATH = path.resolve(__dirname, "../../../../../../csv/awards");
+const CSV_BASE_PATH = path.resolve(__dirname, "../../../../../../csv/awards/december");
 
 const CSV_FILES = {
   main: "awards-all.csv",

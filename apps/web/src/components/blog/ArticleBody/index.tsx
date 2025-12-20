@@ -30,14 +30,10 @@ export function ArticleBody({
       ? props.category?.name
       : 'Recenzja';
 
-  // Use publishDate for blog articles, _createdAt for reviews
+  // Use publishDate for both blog articles and reviews
+  // For reviews, publishDate contains coalesce(publishedDate, _createdAt) from the query
   const displayDate =
-    _type === 'blog-article' && 'publishDate' in props
-      ? props.publishDate || _createdAt
-      : _createdAt;
-
-  // Get author for reviews
-  const author = _type === 'review' && 'author' in props ? props.author : null;
+    'publishDate' in props ? props.publishDate || _createdAt : _createdAt;
 
   // Get description for blog articles only
   const description =
@@ -68,11 +64,6 @@ export function ArticleBody({
           className={styles.heading}
           headingLevel="h1"
         />
-        {author && (
-          <p className={styles.author}>
-            Autor: <strong>{author.name}</strong>
-          </p>
-        )}
         {description && (
           <PortableText value={description} className={styles.description} />
         )}
