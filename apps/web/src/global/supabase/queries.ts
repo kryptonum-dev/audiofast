@@ -51,6 +51,9 @@ export async function fetchProductPricing(
 
     // Single query with all nested relationships
     // This replaces multiple sequential queries with one efficient query
+    // Note: We must specify the FK relationship explicitly because there are two:
+    // - pricing_option_values.group_id -> pricing_option_groups.id (the one we want)
+    // - pricing_option_groups.parent_value_id -> pricing_option_values.id (for conditional options)
     const { data, error } = await supabase
       .from('pricing_variants')
       .select(
@@ -58,7 +61,7 @@ export async function fetchProductPricing(
         *,
         pricing_option_groups (
           *,
-          pricing_option_values (*),
+          pricing_option_values!pricing_option_values_group_id_fkey (*),
           pricing_numeric_rules (*)
         )
       `,
