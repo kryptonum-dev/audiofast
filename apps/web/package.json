@@ -5,11 +5,12 @@
   "private": true,
   "scripts": {
     "dev": "bun run next dev --turbopack",
-    "build": "bun run next build",
+    "build": "bun run generate:redirects && bun run next build",
     "start": "bun run next start",
     "lint": "bun run eslint .",
     "format": "bun run prettier --write .",
-    "check-types": "bun run tsc --noEmit"
+    "check-types": "bun run tsc --noEmit",
+    "generate:redirects": "bun run scripts/generate-redirects.ts"
   },
   "browserslist": {
     "production": [
@@ -37,6 +38,7 @@
     "@sanity/visual-editing": "^2.15.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.0",
+    "@vercel/edge-config": "^1.4.3",
     "embla-carousel-react": "^8.6.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.553.0",
