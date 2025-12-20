@@ -1,7 +1,6 @@
 /**
- * Synchronizacja cen do Supabase
- * Skrypt odczytuje dane z arkuszy Produkty, Opcje, Wartości, Listy
- * i wysyła je do bazy danych.
+ * Synchronizacja cen z Excel do Supabase
+ * Przenieś ceny do bazy danych
  */
 
 const CONFIG = {
@@ -95,33 +94,43 @@ function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
     const data = usedRange.getValues();
     const variants = new Map<string, Variant>();
 
+    // Find P1-P4 columns dynamically from header row (row before data starts)
+    const headerRowIndex = CONFIG.DATA_START_ROW_PRODUKTY - 1;
+    const headerRow = data[headerRowIndex];
+    
+    let p1Col = -1, p2Col = -1, p3Col = -1, p4Col = -1;
+    
+    for (let col = 0; col < headerRow.length; col++) {
+        const header = String(headerRow[col] || '').trim().toUpperCase();
+        if (header === 'P1') p1Col = col;
+        else if (header === 'P2') p2Col = col;
+        else if (header === 'P3') p3Col = col;
+        else if (header === 'P4') p4Col = col;
+    }
+
     let relatedCount = 0;
 
     for (let i = CONFIG.DATA_START_ROW_PRODUKTY; i < data.length; i++) {
         const row = data[i];
-        const brand = cellStr(row, 0);       // A - Marka
-        const product = cellStr(row, 1);     // B - Produkt
-        const model = cellStr(row, 2);       // C - Model
-        const priceStr = cellStr(row, 4);    // E - Cena WWW
-        const priceKey = cellStr(row, 6);    // G - URL
+        const brand = cellStr(row, 0);
+        const product = cellStr(row, 1);
+        const model = cellStr(row, 2);
+        const priceStr = cellStr(row, 4);
+        const priceKey = cellStr(row, 6);
         
-        // Powiązane produkty P1-P4 (kolumny J-M, indeksy 9-12)
-        // Kolumny H i I są puste
-        const p1 = cellStr(row, 9);          // J - P1
-        const p2 = cellStr(row, 10);         // K - P2
-        const p3 = cellStr(row, 11);         // L - P3
-        const p4 = cellStr(row, 12);         // M - P4
+        // Read related products from dynamically found columns
+        const p1 = p1Col >= 0 ? cellStr(row, p1Col) : '';
+        const p2 = p2Col >= 0 ? cellStr(row, p2Col) : '';
+        const p3 = p3Col >= 0 ? cellStr(row, p3Col) : '';
+        const p4 = p4Col >= 0 ? cellStr(row, p4Col) : '';
 
         if (!brand || !product || !priceKey) continue;
         if (priceKey.toLowerCase() === 'url' || product.toLowerCase() === 'produkt') continue;
         if (!priceKey.includes('/')) continue;
 
         const relatedProducts = [p1, p2, p3, p4].filter(p => p && p.trim() !== '');
+        if (relatedProducts.length > 0) relatedCount++;
         
-        if (relatedProducts.length > 0) {
-            relatedCount++;
-        }
-
         variants.set(variantKey(product, model || null), {
             price_key: priceKey,
             brand,
@@ -133,8 +142,9 @@ function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
             groups: [],
         });
     }
-
-    console.log(`Znaleziono ${relatedCount} produktów z powiązaniami w Excelu`);
+    
+    console.log(`Znaleziono ${relatedCount} produktów z powiązaniami (P1-P4 w kolumnach: ${p1Col >= 0 ? p1Col : 'brak'}, ${p2Col >= 0 ? p2Col : 'brak'}, ${p3Col >= 0 ? p3Col : 'brak'}, ${p4Col >= 0 ? p4Col : 'brak'})`);
+    
     return variants;
 }
 
@@ -351,31 +361,23 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
             ok?: boolean;
             supabase?: { counts?: { variants?: number }; deleted_products?: number };
             sanity?: { 
-                status?: string;
-                related_products_count?: number; 
-                sample_related?: string[];
+                prices?: string;
+                related_products?: string;
+                related_products_count?: number;
             };
         };
 
         console.log('=== SYNCHRONIZACJA ZAKOŃCZONA ===');
         console.log(`Status: ${result.ok ? 'SUKCES ✓' : 'BŁĄD'}`);
-        
         if (result.supabase?.counts) {
             console.log(`Zaktualizowano: ${result.supabase.counts.variants} produktów`);
         }
-        
         if (result.supabase?.deleted_products && result.supabase.deleted_products > 0) {
             console.log(`Usunięto: ${result.supabase.deleted_products} produktów (brak URL)`);
         }
-        
-        // Informacje o powiązanych produktach
         if (result.sanity) {
-            console.log(`Powiązane produkty wysłane: ${result.sanity.related_products_count || 0}`);
-            if (result.sanity.sample_related && result.sanity.sample_related.length > 0) {
-                console.log(`Przykłady: ${result.sanity.sample_related.join(', ')}`);
-            }
+            console.log(`Powiązane produkty: ${result.sanity.related_products || 'w trakcie'}`);
         }
-        
         console.log('Ceny w Sanity zostaną zaktualizowane w tle.');
 
     } catch (error) {

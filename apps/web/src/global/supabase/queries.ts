@@ -1,16 +1,24 @@
-import "server-only";
+import 'server-only';
 
-import type { PostgrestError } from "@supabase/supabase-js";
-import { cacheLife, cacheTag } from "next/cache";
+import { cacheLife, cacheTag } from 'next/cache';
 
-import { createClient as createServerClient } from "./server";
+import { createClient as createServerClient } from './server';
 import type {
   CompletePricingData,
+  PricingNumericRule,
   PricingOptionGroup,
-  PricingOptionGroupWithDetails,
+  PricingOptionValue,
   PricingVariant,
   PricingVariantWithOptions,
-} from "./types";
+} from './types';
+
+// Type for the raw response from Supabase nested select query
+type SupabaseVariantWithRelations = PricingVariant & {
+  pricing_option_groups: (PricingOptionGroup & {
+    pricing_option_values: PricingOptionValue[];
+    pricing_numeric_rules: PricingNumericRule[];
+  })[];
+};
 
 /**
  * Fetches all pricing data for a product by matching the product slug
@@ -19,118 +27,88 @@ import type {
  * This function is designed to be called from Server Components.
  * Uses Next.js 16 Cache Components for performance and static generation.
  *
+ * Optimized to use a single query with nested relationships instead of
+ * multiple sequential queries (N+1 problem).
+ *
  * @param productSlug - The product slug (e.g., "atmosphere-sx-ic")
  * @returns Complete pricing data with variants, groups, values, and rules
  */
 export async function fetchProductPricing(
   productSlug: string,
 ): Promise<CompletePricingData | null> {
-  "use cache";
+  'use cache';
 
-  cacheTag("product-pricing");
+  cacheTag('product-pricing');
 
-  if (process.env.NODE_ENV === "development") {
-    cacheLife("seconds");
+  if (process.env.NODE_ENV === 'development') {
+    cacheLife('seconds');
   } else {
-    cacheLife("weeks");
+    cacheLife('weeks');
   }
+
   try {
-    // Create server client for this request
     const supabase = createServerClient();
 
-    // Step 1: Find all variants for this product
-    // Match by price_key ending with the product slug
-    const {
-      data: variants,
-      error: variantsError,
-    }: { data: PricingVariant[] | null; error: PostgrestError | null } =
-      await supabase
-        .from("pricing_variants")
-        .select("*")
-        .ilike("price_key", `%${productSlug}`)
-        .order("base_price_cents", { ascending: true }); // Lowest price first
+    // Single query with all nested relationships
+    // This replaces multiple sequential queries with one efficient query
+    const { data, error } = await supabase
+      .from('pricing_variants')
+      .select(
+        `
+        *,
+        pricing_option_groups (
+          *,
+          pricing_option_values (*),
+          pricing_numeric_rules (*)
+        )
+      `,
+      )
+      .ilike('price_key', `%${productSlug}`)
+      .order('base_price_cents', { ascending: true });
 
-    if (variantsError) {
-      console.error("Error fetching pricing variants:", variantsError);
+    if (error) {
+      console.error('Error fetching pricing data:', error);
       return null;
     }
 
-    if (!variants || variants.length === 0) {
+    if (!data || data.length === 0) {
       console.warn(`No pricing data found for product: ${productSlug}`);
       return null;
     }
 
-    // Step 2: For each variant, fetch option groups, values, and rules
-    const variantsWithOptions: PricingVariantWithOptions[] = await Promise.all(
-      variants.map(async (variant: PricingVariant) => {
-        // Fetch option groups for this variant
-        const { data: groups, error: groupsError } = await supabase
-          .from("pricing_option_groups")
-          .select("*")
-          .eq("variant_id", variant.id)
-          .order("position", { ascending: true });
+    // Cast to our expected type (Supabase can't infer nested query types from string)
+    const variants = data as unknown as SupabaseVariantWithRelations[];
 
-        if (groupsError) {
-          console.error("Error fetching option groups:", groupsError);
-          return { ...variant, groups: [] };
-        }
-
-        // For each group, fetch values and numeric rules
-        const groupsWithDetails: PricingOptionGroupWithDetails[] =
-          await Promise.all(
-            (groups || []).map(async (group: PricingOptionGroup) => {
-              // Fetch values if it's a select group
-              if (group.input_type === "select") {
-                const { data: values, error: valuesError } = await supabase
-                  .from("pricing_option_values")
-                  .select("*")
-                  .eq("group_id", group.id)
-                  .order("position", { ascending: true });
-
-                if (valuesError) {
-                  console.error("Error fetching option values:", valuesError);
-                }
-
-                return {
-                  ...group,
-                  values: values || [],
-                  numeric_rule: null,
-                };
-              }
-
-              // Fetch numeric rule if it's a numeric_step group
-              if (group.input_type === "numeric_step") {
-                const { data: rule, error: ruleError } = await supabase
-                  .from("pricing_numeric_rules")
-                  .select("*")
-                  .eq("group_id", group.id)
-                  .limit(1)
-                  .single();
-
-                if (ruleError && ruleError.code !== "PGRST116") {
-                  // PGRST116 = not found, which is ok
-                  console.error("Error fetching numeric rule:", ruleError);
-                }
-
-                return {
-                  ...group,
-                  values: [],
-                  numeric_rule: rule || null,
-                };
-              }
-
-              return {
-                ...group,
-                values: [],
-                numeric_rule: null,
-              };
-            }),
-          );
-
-        return {
-          ...variant,
-          groups: groupsWithDetails,
-        };
+    // Transform the nested data to match the existing types
+    const variantsWithOptions: PricingVariantWithOptions[] = variants.map(
+      (variant) => ({
+        id: variant.id,
+        price_key: variant.price_key,
+        brand: variant.brand,
+        product: variant.product,
+        model: variant.model,
+        base_price_cents: variant.base_price_cents,
+        currency: variant.currency,
+        created_at: variant.created_at,
+        updated_at: variant.updated_at,
+        groups: (variant.pricing_option_groups || [])
+          .sort((a, b) => a.position - b.position)
+          .map((group) => ({
+            id: group.id,
+            variant_id: group.variant_id,
+            name: group.name,
+            input_type: group.input_type,
+            unit: group.unit,
+            required: group.required,
+            position: group.position,
+            parent_value_id: group.parent_value_id,
+            created_at: group.created_at,
+            updated_at: group.updated_at,
+            values: (group.pricing_option_values || []).sort(
+              (a, b) => a.position - b.position,
+            ),
+            numeric_rule: group.pricing_numeric_rules?.[0] || null,
+          })),
       }),
     );
 
@@ -140,7 +118,7 @@ export async function fetchProductPricing(
       lowestPrice: variants[0]?.base_price_cents || 0,
     };
   } catch (error) {
-    console.error("Unexpected error in fetchProductPricing:", error);
+    console.error('Unexpected error in fetchProductPricing:', error);
     return null;
   }
 }

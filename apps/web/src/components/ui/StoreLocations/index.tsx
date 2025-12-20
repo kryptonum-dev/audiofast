@@ -1,5 +1,3 @@
-import { cacheLife, cacheTag } from "next/cache";
-
 import type { QueryBrandBySlugResult } from "@/src/global/sanity/sanity.types";
 
 import StoreMapWrapper from "./StoreMapWrapper";
@@ -41,15 +39,13 @@ function cleanStreetForGeocoding(street: string): string {
 }
 
 // Server-side geocoding function using Nominatim structured search
+// Note: Uses Next.js fetch cache (force-cache) instead of 'use cache' directive
+// to avoid timeout issues during prerender with external API calls
 async function geocodeAddress(address: {
   street: string;
   city: string;
   postalCode: string;
 }): Promise<{ lat: number; lng: number } | null> {
-  "use cache";
-  cacheLife("weeks");
-  cacheTag("store-locations");
-
   const cleanStreet = cleanStreetForGeocoding(address.street);
 
   // Helper to make Nominatim request

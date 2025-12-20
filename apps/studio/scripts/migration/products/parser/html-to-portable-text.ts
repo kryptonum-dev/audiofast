@@ -1014,17 +1014,41 @@ export function htmlToPortableText(
       // Note: [image ...] shortcodes are already handled at the top level extraction
       const imgTagRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
 
-      const imgTags: Array<{ src: string; alt: string; fullMatch: string }> =
-        [];
+      const imgTags: Array<{
+        src: string;
+        alt: string;
+        fullMatch: string;
+        float?: "left" | "right";
+        width?: number;
+        height?: number;
+      }> = [];
 
       // Find all <img> tags
       let imgTagMatch;
       while ((imgTagMatch = imgTagRegex.exec(innerContent)) !== null) {
         const altMatch = imgTagMatch[0].match(/alt=["']([^"']*)["']/i);
+        const classMatch = imgTagMatch[0].match(/class=["']([^"']+)["']/i);
+        const widthMatch = imgTagMatch[0].match(/width=["']?(\d+)["']?/i);
+        const heightMatch = imgTagMatch[0].match(/height=["']?(\d+)["']?/i);
+
+        // Check for float class (strict match: only "left" or "right")
+        let floatValue: "left" | "right" | undefined;
+        if (classMatch) {
+          const classes = classMatch[1].split(/\s+/);
+          if (classes.includes("left")) {
+            floatValue = "left";
+          } else if (classes.includes("right")) {
+            floatValue = "right";
+          }
+        }
+
         imgTags.push({
           src: imgTagMatch[1],
           alt: altMatch ? altMatch[1] : "",
           fullMatch: imgTagMatch[0],
+          float: floatValue,
+          width: widthMatch ? parseInt(widthMatch[1], 10) : undefined,
+          height: heightMatch ? parseInt(heightMatch[1], 10) : undefined,
         });
       }
 
@@ -1078,12 +1102,24 @@ export function htmlToPortableText(
             }
           }
 
-          blocks.push({
+          const placeholder: ImagePlaceholder = {
             _type: "imagePlaceholder",
             _key: generateKey(),
             src: imgSrc,
             alt: img.alt,
-          } as ImagePlaceholder);
+          };
+          // Add float for inline images with left/right class
+          if (img.float) {
+            placeholder.float = img.float;
+          }
+          // Add dimensions if specified
+          if (img.width) {
+            placeholder.width = img.width;
+          }
+          if (img.height) {
+            placeholder.height = img.height;
+          }
+          blocks.push(placeholder);
 
           // Update content to process (everything after this image)
           contentToProcess = contentToProcess.substring(
