@@ -188,13 +188,19 @@ export default async function CategoryPage({
   // ----------------------------------------
 
   // Get filter definitions from category (with filterType and unit)
+  // Filter out null/incomplete filter items (empty filters in Sanity, deleted items, etc.)
   const filterDefinitions: CustomFilterDefinition[] =
-    categoryContent?.customFilters?.map((f) => ({
-      _key: f._key,
-      name: f.name,
-      filterType: f.filterType,
-      unit: f.unit,
-    })) || [];
+    categoryContent?.customFilters
+      ?.filter(
+        (f): f is NonNullable<typeof f> =>
+          f !== null && !!f._key && !!f.name && !!f.filterType,
+      )
+      ?.map((f) => ({
+        _key: f._key,
+        name: f.name,
+        filterType: f.filterType,
+        unit: f.unit,
+      })) || [];
 
   // Get dropdown filter names for backward compatibility
   const dropdownFilterNames = filterDefinitions
