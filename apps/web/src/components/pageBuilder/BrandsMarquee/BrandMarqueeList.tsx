@@ -35,7 +35,8 @@ export default function BrandMarqueeList({
       <div className={styles.marqueeTrack}>
         <div className={styles.marqueeList}>
           {duplicatedBrands.map((brand, idx) => {
-            const key = `${brand?.slug || "brand"}-${idx}`;
+            if (!brand || !brand.slug) return null;
+            const key = `${brand.slug}-${idx}`;
             const isDuplicate = idx >= brands.length;
 
             return (

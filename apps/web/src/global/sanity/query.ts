@@ -616,7 +616,7 @@ const brandsMarqueeBlock = /* groq */ `
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
     ${imageFragment('backgroundImage')},
-    "topBrands": topBrands[]->[doNotShowBrand != true]{
+    "topBrands": topBrands[]->[defined(_id) && doNotShowBrand != true]{
       _id,
       _createdAt,
       "slug": slug.current,
@@ -624,7 +624,7 @@ const brandsMarqueeBlock = /* groq */ `
       ${portableTextFragment('description')},
       ${imageFragment('logo')},
     },
-    "bottomBrands": bottomBrands[]->[doNotShowBrand != true]{
+    "bottomBrands": bottomBrands[]->[defined(_id) && doNotShowBrand != true]{
       _id,
       _createdAt,
       "slug": slug.current,
@@ -644,7 +644,7 @@ const brandsListBlock = /* groq */ `
     "brands": select(
       brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')},
       brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
-      brandsDisplayMode == "manual" => selectedBrands[]->[doNotShowBrand != true]{
+      brandsDisplayMode == "manual" => selectedBrands[]->[defined(_id) && doNotShowBrand != true]{
         _id,
         _createdAt,
         "slug": slug.current,
