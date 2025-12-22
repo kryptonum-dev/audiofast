@@ -22,11 +22,38 @@ export const featuredPublications = defineType({
       type: "heading",
     }),
     defineField({
+      name: "selectionMode",
+      title: "Tryb wyboru publikacji",
+      type: "string",
+      description:
+        "Wybierz sposób wyświetlania publikacji: automatycznie od najnowszej, od 2. najnowszej lub ręcznie wybrane",
+      options: {
+        list: [
+          {
+            title: "Najnowsze publikacje (od najnowszej)",
+            value: "latest",
+          },
+          {
+            title: "Najnowsze publikacje (od 2. najnowszej)",
+            value: "secondLatest",
+          },
+          {
+            title: "Ręcznie wybrane publikacje",
+            value: "manual",
+          },
+        ],
+        layout: "radio",
+      },
+      initialValue: "secondLatest",
+      validation: (Rule) => Rule.required().error("Tryb wyboru jest wymagany"),
+    }),
+    defineField({
       name: "publications",
       title: "Wyróżnione publikacje",
       type: "array",
       description:
         "Wybierz publikacje do wyświetlenia w karuzeli (5-10 elementów). Produkty mogą być dodane tylko jeśli mają ustawiony obraz publikacji lub krótki opis.",
+      hidden: ({ parent }) => parent?.selectionMode !== "manual",
       of: [
         {
           type: "reference",
@@ -50,22 +77,40 @@ export const featuredPublications = defineType({
           },
         },
       ],
-      validation: (Rule) => [
-        Rule.min(5).error("Minimum 5 publikacji"),
-        Rule.max(10).error("Maksimum 10 publikacji"),
-        Rule.required().error("Publikacje są wymagane"),
-        Rule.unique().error("Każda publikacja może być wybrana tylko raz"),
-      ],
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as { selectionMode?: string };
+          if (parent?.selectionMode === "manual") {
+            if (!value || value.length === 0) {
+              return "Publikacje są wymagane w trybie ręcznego wyboru";
+            }
+            if (value.length < 5) {
+              return "Minimum 5 publikacji";
+            }
+            if (value.length > 10) {
+              return "Maksimum 10 publikacji";
+            }
+          }
+          return true;
+        }),
     }),
   ],
   preview: {
     select: {
       heading: "heading",
+      selectionMode: "selectionMode",
+      publicationsCount: "publications.length",
     },
-    prepare: ({ heading }) => {
+    prepare: ({ heading, selectionMode, publicationsCount }) => {
+      const modeLabels: Record<string, string> = {
+        latest: "Automatycznie: od najnowszej (20 publikacji)",
+        secondLatest: "Automatycznie: od 2. najnowszej (20 publikacji)",
+        manual: `Ręcznie: ${publicationsCount || 0} publikacji`,
+      };
+
       return {
         title,
-        subtitle: toPlainText(heading),
+        subtitle: `${toPlainText(heading) || "Brak nagłówka"} • ${modeLabels[selectionMode || "secondLatest"]}`,
         media: Highlighter,
       };
     },

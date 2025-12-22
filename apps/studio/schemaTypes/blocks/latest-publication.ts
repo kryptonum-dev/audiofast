@@ -21,11 +21,27 @@ export const latestPublication = defineType({
       maxLength: 60,
     }),
     defineField({
+      name: "selectionMode",
+      title: "Tryb wyboru publikacji",
+      type: "string",
+      description: "Wybierz, czy wyświetlić najnowszą publikację automatycznie, czy ręcznie wybraną",
+      options: {
+        list: [
+          { title: "Najnowsza publikacja (automatycznie)", value: "latest" },
+          { title: "Ręcznie wybrana publikacja", value: "manual" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "latest",
+      validation: (Rule) => Rule.required().error("Tryb wyboru jest wymagany"),
+    }),
+    defineField({
       name: "publication",
       title: "Wybierz publikację",
       type: "reference",
       description:
-        "Wybierz najnowszą publikację do wyświetlenia - może być to artykuł blogowy, recenzja lub produkt (z obrazem publikacji lub krótkim opisem)",
+        "Wybierz publikację do wyświetlenia - może być to artykuł blogowy, recenzja lub produkt (z obrazem publikacji lub krótkim opisem)",
+      hidden: ({ parent }) => parent?.selectionMode !== "manual",
       to: [{ type: "blog-article" }, { type: "review" }, { type: "product" }],
       options: {
         filter: `!(_id in path("drafts.**")) && (
@@ -34,20 +50,37 @@ export const latestPublication = defineType({
           defined(shortDescription))
         )`,
       },
-      validation: (Rule) => Rule.required().error("Publikacja jest wymagana"),
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as { selectionMode?: string };
+          if (parent?.selectionMode === "manual" && !value) {
+            return "Publikacja jest wymagana w trybie ręcznego wyboru";
+          }
+          return true;
+        }),
     }),
   ],
   preview: {
     select: {
       heading: "heading",
+      selectionMode: "selectionMode",
       publication: "publication",
       publicationType: "publication._type",
       title: "publication.title",
       name: "publication.name",
     },
-    prepare: ({ heading, publication, publicationType, title, name }) => {
+    prepare: ({ heading, selectionMode, publication, publicationType, title, name }) => {
       // Get heading text if available
       const headingText = toPlainText(heading) || "Najnowsza publikacja";
+
+      // Handle automatic latest mode
+      if (selectionMode === "latest" || !selectionMode) {
+        return {
+          title: headingText,
+          subtitle: "Automatycznie: najnowsza publikacja",
+          media: Newspaper,
+        };
+      }
 
       // Get display name - prefer title if it's portable text, fallback to name
       const displayName = toPlainText(title) || name || "Brak tytułu";
@@ -63,7 +96,7 @@ export const latestPublication = defineType({
       return {
         title: headingText,
         subtitle: publication
-          ? `${typeLabel}: ${displayName}`
+          ? `Ręcznie: ${typeLabel} - ${displayName}`
           : "Nie wybrano publikacji",
         media: Newspaper,
       };

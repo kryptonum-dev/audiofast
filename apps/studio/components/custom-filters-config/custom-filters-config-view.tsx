@@ -31,7 +31,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SanityDocument } from "sanity";
 import { useClient } from "sanity";
 
-import { computeFilterKeys } from "../../utils/denormalize-product";
 import { SortableFilterItem } from "../custom-filters-config/filter-item";
 import type { FilterConfigItem, RangeFilterStats } from "./types";
 
@@ -411,9 +410,6 @@ export function CustomFiltersConfigView({
         // Check if we're working with a draft or need to create one
         const isCurrentlyDraft = currentProduct._id.startsWith("drafts.");
 
-        // Compute denormalized filter keys for dropdown filters
-        const denormFilterKeys = computeFilterKeys(newFilterValues);
-
         if (isCurrentlyDraft) {
           // Draft exists - just patch it
           await client
@@ -421,10 +417,6 @@ export function CustomFiltersConfigView({
             .set({
               customFilterValues:
                 newFilterValues.length > 0 ? newFilterValues : [],
-              // Update denormalized filter keys
-              denormFilterKeys:
-                denormFilterKeys.length > 0 ? denormFilterKeys : [],
-              denormLastSync: new Date().toISOString(),
             })
             .commit();
         } else {
@@ -440,14 +432,11 @@ export function CustomFiltersConfigView({
             _id: draftProductId,
           });
 
-          // Patch the customFilterValues and denormalized filter keys
+          // Patch the customFilterValues
           transaction.patch(draftProductId, (patch) =>
             patch.set({
               customFilterValues:
                 newFilterValues.length > 0 ? newFilterValues : [],
-              denormFilterKeys:
-                denormFilterKeys.length > 0 ? denormFilterKeys : [],
-              denormLastSync: new Date().toISOString(),
             }),
           );
 

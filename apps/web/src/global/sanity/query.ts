@@ -440,7 +440,23 @@ const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ...,
     ${portableTextFragment('heading')},
-      ${publicationFragment('publication->')}
+    selectionMode,
+    "publication": select(
+      selectionMode == "manual" => publication->{
+        ${publicationBlock}
+      },
+      // Default: fetch the latest publication automatically
+      *[
+        _type in ["blog-article", "review", "product"] &&
+        !(_id in path("drafts.**")) &&
+        (
+          _type != "product" ||
+          (defined(publicationImage) && defined(shortDescription))
+        )
+      ] | order(coalesce(publishedDate, _createdAt) desc)[0]{
+        ${publicationBlock}
+      }
+    )
   }
 `;
 
@@ -506,8 +522,59 @@ const featuredPublicationsBlock = /* groq */ `
   _type == "featuredPublications" => {
     ...,
     ${portableTextFragment('heading')},
-    ${publicationFragment('publications[]->')}
+    selectionMode,
+    "publications": select(
+      selectionMode == "manual" => publications[]->{
+        ${publicationBlock}
+      },
+      // Automatic modes: fetch latest publications sorted by publishedDate (or _createdAt as fallback)
+      selectionMode == "latest" => *[
+        _type in ["blog-article", "review", "product"] &&
+        !(_id in path("drafts.**")) &&
+        (
+          _type != "product" ||
+          (defined(publicationImage) && defined(shortDescription))
+        )
+      ] | order(coalesce(publishedDate, _createdAt) desc)[0...20]{
+        ${publicationBlock}
+      },
+      // Default: secondLatest - skip the first publication, show next 20
+      *[
+        _type in ["blog-article", "review", "product"] &&
+        !(_id in path("drafts.**")) &&
+        (
+          _type != "product" ||
+          (defined(publicationImage) && defined(shortDescription))
+        )
+      ] | order(coalesce(publishedDate, _createdAt) desc)[1...21]{
+        ${publicationBlock}
+      }
+    )
   }
+`;
+
+// Product projection for reuse in automatic queries (without the wrapper)
+const productProjection = /* groq */ `
+  _id,
+  _createdAt,
+  "publishDate": coalesce(publishedDate, _createdAt),
+  "slug": slug.current,
+  name,
+  subtitle,
+  basePriceCents,
+  isArchived,
+  categories[]->{
+    _id,
+    "slug": slug.current,
+    name,
+  },
+  brand->{
+    name,
+    "slug": slug.current,
+    ${imageFragment('logo')},
+  },
+  ${imageFragment('"mainImage": previewImage')},
+  ${portableTextFragment('shortDescription')}
 `;
 
 const featuredProductsBlock = /* groq */ `
@@ -516,7 +583,20 @@ const featuredProductsBlock = /* groq */ `
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
-    ${productFragment('newProducts[]->')},
+    newProductsMode,
+    "newProducts": select(
+      newProductsMode == "manual" => newProducts[]->{
+        ${productProjection}
+      },
+      // Default: automatic - fetch 10 newest products
+      *[
+        _type == "product" &&
+        !(_id in path("drafts.**")) &&
+        isArchived != true
+      ] | order(coalesce(publishedDate, _createdAt) desc)[0...10]{
+        ${productProjection}
+      }
+    ),
     ${productFragment('bestsellers[]->')},
   }
 `;
@@ -1338,7 +1418,7 @@ export const queryAllProductsFilterMetadata = defineQuery(`
 // - $brands: array of brand slugs filter
 // - $minPrice: minimum price filter
 // - $maxPrice: maximum price filter
-// - $customFilters: array of filter key strings (e.g., ["kolor:czarny"])
+// - $customFilters: array of {filterName, value} objects (original format)
 const productsFilterMetadataFragment = () => /* groq */ `
   "categories": *[_type == "productCategorySub" && defined(slug.current)] {
     _id,
@@ -1366,7 +1446,12 @@ const productsFilterMetadataFragment = () => /* groq */ `
       )
       && (
         count($customFilters) == 0 ||
-        count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
+        count($customFilters) <= count(customFilterValues[
+          select(
+            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+            false
+          )
+        ])
       )
     ])
   } [count > 0] | order(orderRank),
@@ -1414,7 +1499,12 @@ const productsFilterMetadataFragment = () => /* groq */ `
       )
       && (
         count($customFilters) == 0 ||
-        count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
+        count($customFilters) <= count(customFilterValues[
+          select(
+            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+            false
+          )
+        ])
       )
     ])
   } [count > 0] | order(orderRank),
@@ -1433,7 +1523,12 @@ const productsFilterMetadataFragment = () => /* groq */ `
     )
     && (
       count($customFilters) == 0 ||
-      count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
+      count($customFilters) <= count(customFilterValues[
+        select(
+          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+          false
+        )
+      ])
     )
   ]),
   "totalCountAll": count(*[
@@ -1461,7 +1556,12 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
       count($customFilters) == 0 ||
-      count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
+      count($customFilters) <= count(customFilterValues[
+        select(
+          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+          false
+        )
+      ])
     )
   ].basePriceCents),
   "minPrice": math::min(*[
@@ -1476,7 +1576,12 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
       count($customFilters) == 0 ||
-      count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
+      count($customFilters) <= count(customFilterValues[
+        select(
+          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+          false
+        )
+      ])
     )
   ].basePriceCents)
 `;
@@ -1587,8 +1692,10 @@ export const queryProductsPageData = defineQuery(`
 
 // Shared filter conditions for products (used in both query and count)
 // OPTIMIZED: Uses denormalized fields for faster queries (no dereferencing)
+// - Category/Brand filtering uses denormalized fields (major perf win)
+// - Custom filters use original customFilterValues (rarely used, minimal impact)
 // Parameters:
-// - $customFilters: array of filter key strings (e.g., ["kolor:czarny", "material:drewno"])
+// - $customFilters: array of {filterName, value} objects for dropdown filters
 // - $rangeFilters: array of {filterName, minValue, maxValue} for range filters
 //   Note: minValue/maxValue can be null to indicate "no limit"
 const productsFilterConditions = /* groq */ `
@@ -1616,11 +1723,17 @@ const productsFilterConditions = /* groq */ `
     (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
   )
   
-  // DROPDOWN FILTERS - uses denormalized denormFilterKeys (fast string matching)
-  // $customFilters is now an array of strings like ["kolor:czarny", "material:drewno"]
+  // DROPDOWN FILTERS - uses original customFilterValues (kept for compatibility)
+  // $customFilters is an array of {filterName, value} objects
+  // Note: Not denormalized since custom filters are rarely used (only on category pages)
   && (
     count($customFilters) == 0 ||
-    count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
+    count($customFilters) <= count(customFilterValues[
+      select(
+        count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
+        false
+      )
+    ])
   )
   
   // RANGE FILTERS - still uses customFilterValues (numeric comparison, no deref needed)

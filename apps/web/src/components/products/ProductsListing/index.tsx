@@ -122,13 +122,6 @@ export default async function ProductsListing({
     maxValue: rf.maxValue ?? null,
   }));
 
-  // Convert dropdown custom filters to filter key format for denormalized matching
-  // The denormalized field denormFilterKeys stores strings like ["kolor:czarny", "material:drewno"]
-  const customFilterKeys = customFilters.map(({ filterName, value }) => {
-    const slug = slugifyFilterName(filterName);
-    return `${slug}:${value.toLowerCase()}`;
-  });
-
   // Calculate offset/limit
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
@@ -149,7 +142,7 @@ export default async function ProductsListing({
       brands: effectiveBrands,
       minPrice,
       maxPrice,
-      customFilters: customFilterKeys, // Now uses denormalized filter key format
+      customFilters, // Original format: [{filterName, value}]
       rangeFilters,
       isCPO,
       embeddingResults: embeddingResults || [],

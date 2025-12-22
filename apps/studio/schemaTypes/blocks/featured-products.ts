@@ -39,10 +39,27 @@ export const featuredProducts = defineType({
       validation: (Rule) => Rule.required().error("Przycisk CTA jest wymagany"),
     }),
     defineField({
+      name: "newProductsMode",
+      title: "Tryb wyboru nowych produktów",
+      type: "string",
+      description:
+        "Wybierz, czy automatycznie pobrać 10 najnowszych produktów, czy wybrać ręcznie",
+      options: {
+        list: [
+          { title: "Automatycznie (10 najnowszych)", value: "automatic" },
+          { title: "Ręcznie wybrane", value: "manual" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "automatic",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "newProducts",
       title: "Nowe produkty",
       type: "array",
       description: "Wybierz nowe produkty do wyświetlenia (3-8 elementów)",
+      hidden: ({ parent }) => parent?.newProductsMode !== "manual",
       of: [
         {
           type: "reference",
@@ -76,12 +93,19 @@ export const featuredProducts = defineType({
           },
         },
       ],
-      validation: (Rule) => [
-        Rule.min(3).error("Minimum 3 produkty"),
-        Rule.max(8).error("Maksimum 8 produktów"),
-        Rule.required().error("Produkty są wymagane"),
-        Rule.unique().error("Każdy produkt może być wybrany tylko raz"),
-      ],
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as { newProductsMode?: string };
+          if (parent?.newProductsMode === "manual") {
+            if (!value || !Array.isArray(value) || value.length < 3) {
+              return "Minimum 3 produkty są wymagane";
+            }
+            if (value.length > 8) {
+              return "Maksimum 8 produktów";
+            }
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "bestsellers",
@@ -134,14 +158,18 @@ export const featuredProducts = defineType({
     select: {
       heading: "heading",
       description: "description",
+      newProductsMode: "newProductsMode",
+      newProductsCount: "newProducts",
     },
-    prepare: ({ heading, description }) => {
+    prepare: ({ heading, description, newProductsMode, newProductsCount }) => {
+      const modeLabel =
+        newProductsMode === "manual"
+          ? `Ręcznie (${Array.isArray(newProductsCount) ? newProductsCount.length : 0})`
+          : "Auto (10 najnowszych)";
+
       return {
         title,
-        subtitle:
-          toPlainText(heading) ||
-          toPlainText(description) ||
-          "Nowości i bestsellery",
+        subtitle: `${toPlainText(heading) || toPlainText(description) || "Nowości i bestsellery"} | Nowości: ${modeLabel}`,
         media: Speaker,
       };
     },

@@ -77,7 +77,7 @@ type SanityAsset = {
 };
 
 const NEWSLETTER_API_URL =
-  "http://localhost:3000/api/newsletter/generate/";
+  "http://audiofast.vercel.app/api/newsletter/generate/";
 
 export default function NewsletterTool() {
   const client = useClient({ apiVersion: "2024-01-01" });
