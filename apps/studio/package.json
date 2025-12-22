@@ -12,7 +12,9 @@
     "build": "NODE_OPTIONS='--max-old-space-size=8192' bun run sanity build",
     "deploy": "NODE_OPTIONS='--max-old-space-size=8192' bun run sanity deploy",
     "type": "bun run sanity schema extract --enforce-required-fields && bun run sanity typegen generate",
-    "check-types": "bun run tsc --noEmit"
+    "check-types": "bun run tsc --noEmit",
+    "migrate:denormalize": "bun run scripts/migrate-denormalized-fields.ts",
+    "migrate:denormalize:dry": "bun run scripts/migrate-denormalized-fields.ts --dry-run --verbose"
   },
   "keywords": [
     "sanity"

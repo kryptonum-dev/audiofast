@@ -26,6 +26,28 @@ export const imageFragment = (name: string = 'image') => /* groq */ `
   }
 `;
 
+// Lightweight image fragment for listings (fill mode, no naturalWidth/Height needed)
+// Reduces payload size while keeping essential image data for proper rendering
+export const imageFragmentLite = (name: string = 'image') => /* groq */ `
+  ${name} {
+    "id": asset._ref,
+    "preview": asset->metadata.lqip,
+    "alt": asset->altText,
+    hotspot {
+      x,
+      y,
+      width,
+      height
+    },
+    crop {
+      bottom,
+      left,
+      right,
+      top
+    }
+  }
+`;
+
 const markDefsFragment = (name: string = 'markDefs[]') => /* groq */ `
   ${name}{
     ...,
@@ -1241,6 +1263,7 @@ export const queryProductsPageContent = defineQuery(`
 `);
 
 // Query for all products filter metadata (lightweight)
+// OPTIMIZED: Uses denormalized fields for faster queries (no dereferencing)
 // Used for client-side filter computation in PPR architecture
 // ~150 bytes per product × 551 products = ~80KB total
 // Parameters: none (fetches all data)
@@ -1251,14 +1274,15 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       _type == "product" 
       && defined(slug.current)
       && isArchived != true
-      && count(categories) > 0
+      && defined(denormCategorySlugs)
+      && count(denormCategorySlugs) > 0
     ] {
       _id,
-      "brandSlug": string::split(brand->slug.current, "/")[2],
-      "brandName": brand->name,
-      "categorySlug": categories[0]->slug.current,
-      "parentCategorySlug": categories[0]->parentCategory->slug.current,
-      "allCategorySlugs": categories[]->slug.current,
+      "brandSlug": denormBrandSlug,
+      "brandName": denormBrandName,
+      "categorySlug": denormCategorySlugs[0],
+      "parentCategorySlug": denormParentCategorySlugs[0],
+      "allCategorySlugs": denormCategorySlugs,
       basePriceCents,
       isCPO,
       customFilterValues[]{
@@ -1302,13 +1326,14 @@ export const queryAllProductsFilterMetadata = defineQuery(`
 // Products Filter Metadata Fragment
 // ----------------------------------------
 // Reusable fragment for filter metadata (categories, brands, price ranges, counts)
+// OPTIMIZED: Uses denormalized fields for faster queries (no dereferencing)
 // Used in both products page and brand pages to avoid duplication
 // Parameters:
 // - $category: category slug filter
 // - $brands: array of brand slugs filter
 // - $minPrice: minimum price filter
 // - $maxPrice: maximum price filter
-// - $customFilters: array of custom filter objects
+// - $customFilters: array of filter key strings (e.g., ["kolor:czarny"])
 const productsFilterMetadataFragment = () => /* groq */ `
   "categories": *[_type == "productCategorySub" && defined(slug.current)] {
     _id,
@@ -1324,22 +1349,18 @@ const productsFilterMetadataFragment = () => /* groq */ `
       _type == "product" 
       && defined(slug.current)
       && isArchived != true
-      && count(categories) > 0
-      && references(^._id)
-      && ($category == "" || $category in categories[]->slug.current)
-      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+      && defined(denormCategorySlugs)
+      && count(denormCategorySlugs) > 0
+      && ^.slug.current in denormCategorySlugs
+      && ($category == "" || $category in denormCategorySlugs)
+      && (count($brands) == 0 || denormBrandSlug in $brands)
       && (
         ($minPrice == 0 && $maxPrice == 999999999) ||
         (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
       )
       && (
         count($customFilters) == 0 ||
-        count($customFilters) <= count(customFilterValues[
-          select(
-            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-            false
-          )
-        ])
+        count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
       )
     ])
   } [count > 0] | order(orderRank),
@@ -1357,9 +1378,10 @@ const productsFilterMetadataFragment = () => /* groq */ `
       _type == "product" 
       && defined(slug.current)
       && isArchived != true
-      && count(categories) > 0
-      && references(^._id)
-      && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+      && defined(denormCategorySlugs)
+      && count(denormCategorySlugs) > 0
+      && ^.slug.current in denormCategorySlugs
+      && (count($brands) == 0 || denormBrandSlug in $brands)
       && (
         ($minPrice == 0 && $maxPrice == 999999999) ||
         (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
@@ -1375,21 +1397,17 @@ const productsFilterMetadataFragment = () => /* groq */ `
       _type == "product" 
       && defined(slug.current)
       && isArchived != true
-      && count(categories) > 0
+      && defined(denormCategorySlugs)
+      && count(denormCategorySlugs) > 0
       && brand._ref == ^._id
-      && ($category == "" || $category in categories[]->slug.current)
+      && ($category == "" || $category in denormCategorySlugs)
       && (
         ($minPrice == 0 && $maxPrice == 999999999) ||
         (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
       )
       && (
         count($customFilters) == 0 ||
-        count($customFilters) <= count(customFilterValues[
-          select(
-            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-            false
-          )
-        ])
+        count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
       )
     ])
   } [count > 0] | order(orderRank),
@@ -1397,29 +1415,26 @@ const productsFilterMetadataFragment = () => /* groq */ `
     _type == "product" 
     && defined(slug.current)
     && isArchived != true
-    && count(categories) > 0
-    && ($category == "" || $category in categories[]->slug.current)
-    && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+    && defined(denormCategorySlugs)
+    && count(denormCategorySlugs) > 0
+    && ($category == "" || $category in denormCategorySlugs)
+    && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
       ($minPrice == 0 && $maxPrice == 999999999) ||
       (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
     )
     && (
       count($customFilters) == 0 ||
-      count($customFilters) <= count(customFilterValues[
-        select(
-          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-          false
-        )
-      ])
+      count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
     )
   ]),
   "totalCountAll": count(*[
     _type == "product" 
     && defined(slug.current)
     && isArchived != true
-    && count(categories) > 0
-    && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+    && defined(denormCategorySlugs)
+    && count(denormCategorySlugs) > 0
+    && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
       ($minPrice == 0 && $maxPrice == 999999999) ||
       (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
@@ -1429,36 +1444,28 @@ const productsFilterMetadataFragment = () => /* groq */ `
     _type == "product" 
     && defined(slug.current)
     && isArchived != true
-    && count(categories) > 0
+    && defined(denormCategorySlugs)
+    && count(denormCategorySlugs) > 0
     && defined(basePriceCents)
-    && ($category == "" || $category in categories[]->slug.current)
-    && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+    && ($category == "" || $category in denormCategorySlugs)
+    && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
       count($customFilters) == 0 ||
-      count($customFilters) <= count(customFilterValues[
-        select(
-          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-          false
-        )
-      ])
+      count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
     )
   ].basePriceCents),
   "minPrice": math::min(*[
     _type == "product" 
     && defined(slug.current)
     && isArchived != true
-    && count(categories) > 0
+    && defined(denormCategorySlugs)
+    && count(denormCategorySlugs) > 0
     && defined(basePriceCents)
-    && ($category == "" || $category in categories[]->slug.current)
-    && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+    && ($category == "" || $category in denormCategorySlugs)
+    && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
       count($customFilters) == 0 ||
-      count($customFilters) <= count(customFilterValues[
-        select(
-          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-          false
-        )
-      ])
+      count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
     )
   ].basePriceCents)
 `;
@@ -1526,10 +1533,11 @@ export const queryProductsPageData = defineQuery(`
           _type == "product" 
           && defined(slug.current)
           && isArchived != true
-          && count(categories) > 0
-          && $category in categories[]->slug.current
+          && defined(denormCategorySlugs)
+          && count(denormCategorySlugs) > 0
+          && $category in denormCategorySlugs
           && defined(customFilterValues)
-          && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+          && (count($brands) == 0 || denormBrandSlug in $brands)
           && (
             ($minPrice == 0 && $maxPrice == 999999999) ||
             (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
@@ -1566,31 +1574,42 @@ export const queryProductsPageData = defineQuery(`
 // ----------------------------------------
 
 // Shared filter conditions for products (used in both query and count)
+// OPTIMIZED: Uses denormalized fields for faster queries (no dereferencing)
 // Parameters:
-// - $customFilters: array of {filterName, value} for dropdown filters
+// - $customFilters: array of filter key strings (e.g., ["kolor:czarny", "material:drewno"])
 // - $rangeFilters: array of {filterName, minValue, maxValue} for range filters
 //   Note: minValue/maxValue can be null to indicate "no limit"
 const productsFilterConditions = /* groq */ `
   _type == "product"
   && defined(slug.current)
   && isArchived != true
-  && count(categories) > 0
-  && ($category == "" || $category in categories[]->slug.current)
-  && ($search == "" || count($embeddingResults) > 0 || [name, subtitle, brand->name, pt::text(shortDescription)] match $search)
-  && (count($brands) == 0 || string::split(brand->slug.current, "/")[2] in $brands)
+  && defined(denormCategorySlugs)
+  && count(denormCategorySlugs) > 0
+  
+  // Category filter - uses denormalized denormCategorySlugs (no dereferencing)
+  && ($category == "" || $category in denormCategorySlugs)
+  
+  // Search filter - uses denormalized denormBrandName for brand name matching
+  && ($search == "" || count($embeddingResults) > 0 || [name, subtitle, denormBrandName, pt::text(shortDescription)] match $search)
+  
+  // Brand filter - uses denormalized denormBrandSlug (no dereferencing, no string::split)
+  && (count($brands) == 0 || denormBrandSlug in $brands)
+  
+  // Price filter - same as before (already fast, just numeric comparison)
   && (
     ($minPrice == 0 && $maxPrice == 999999999) ||
     (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
   )
+  
+  // DROPDOWN FILTERS - uses denormalized denormFilterKeys (fast string matching)
+  // $customFilters is now an array of strings like ["kolor:czarny", "material:drewno"]
   && (
     count($customFilters) == 0 ||
-    count($customFilters) <= count(customFilterValues[
-      select(
-        count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-        false
-      )
-    ])
+    count($customFilters) <= count(denormFilterKeys[@ in $customFilters])
   )
+  
+  // RANGE FILTERS - still uses customFilterValues (numeric comparison, no deref needed)
+  // Range filters cannot be pre-computed as they require dynamic min/max comparison
   && (
     count($rangeFilters) == 0 ||
     count($rangeFilters) <= count(customFilterValues[
@@ -1604,23 +1623,30 @@ const productsFilterConditions = /* groq */ `
       )
     ])
   )
+  
+  // CPO filter - same as before
   && ($isCPO == false || isCPO == true)
+  
+  // Embeddings search - same as before
   && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
 `;
 
 // Shared projection fields for products (the {...} block)
+// OPTIMIZED: Removed unused fields for ProductCard rendering:
+// - _createdAt, publishedDate, publishDate (not displayed in cards)
+// - isArchived (already filtered in query conditions)
+// - shortDescription (not shown in listing cards)
+// - _score (not needed except for relevance sort ordering)
+// - categories[]._id (only slug and name needed for comparison button)
+// - Main image uses lite fragment (fill mode doesn't need dimensions)
+// - Brand logo keeps full fragment (needs dimensions for non-fill rendering)
 const productsProjection = /* groq */ `
   _id,
-  _createdAt,
-  publishedDate,
-  "publishDate": coalesce(publishedDate, _createdAt),
   name,
   subtitle,
   "slug": slug.current,
   basePriceCents,
-  isArchived,
-  "categories": categories[]->{
-    _id,
+  "categories": categories[0...1]->{
     name,
     "slug": slug.current
   },
@@ -1629,12 +1655,7 @@ const productsProjection = /* groq */ `
     "slug": slug.current,
     ${imageFragment('logo')}
   },
-  ${imageFragment('"mainImage": previewImage')},
-  ${portableTextFragment('shortDescription')},
-  "_score": select(
-    count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
-    0
-  )
+  ${imageFragmentLite('"mainImage": previewImage')}
 `;
 
 // Shared inline score calculation for relevance sorting

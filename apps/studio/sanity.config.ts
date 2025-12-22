@@ -7,6 +7,7 @@ import { structureTool } from "sanity/structure";
 // import { bulkActionsTable } from 'sanity-plugin-bulk-actions-table';
 import { media } from "sanity-plugin-media";
 
+import { applyDenormToPublish } from "./actions";
 import { Logo } from "./components/logo";
 import type { SingletonType } from "./schemaTypes";
 import { schemaTypes, singletonActions } from "./schemaTypes";
@@ -74,8 +75,8 @@ export default defineConfig({
         });
       }
 
-      // For all other types
-      return input;
+      // For all other types (including products with wrapped publish)
+      return applyDenormToPublish(input, context);
     },
     newDocumentOptions: (prev, { creationContext }) => {
       const { type, schemaType } = creationContext;

@@ -161,6 +161,81 @@ export const product = defineType({
         ),
       group: GROUP.MAIN_CONTENT,
     }),
+
+    // ----------------------------------------
+    // Denormalized Fields (Computed)
+    // ----------------------------------------
+    // These fields are automatically populated by document actions
+    // and used for optimized filtering in GROQ queries.
+    // DO NOT edit manually - they are kept in sync automatically.
+
+    defineField({
+      name: "denormBrandSlug",
+      title: "Brand Slug (computed)",
+      type: "string",
+      description:
+        "Extracted brand slug without prefix (e.g., 'yamaha' from '/marki/yamaha/'). Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    defineField({
+      name: "denormBrandName",
+      title: "Brand Name (computed)",
+      type: "string",
+      description: "Denormalized brand name for display. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    defineField({
+      name: "denormCategorySlugs",
+      title: "Category Slugs (computed)",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Array of all category slugs this product belongs to. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    defineField({
+      name: "denormParentCategorySlugs",
+      title: "Parent Category Slugs (computed)",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "Array of parent category slugs. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    defineField({
+      name: "denormFilterKeys",
+      title: "Filter Keys (computed)",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Pre-computed filter keys for DROPDOWN filters only (e.g., 'kolor:czarny'). Range filters use customFilterValues.numericValue. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    defineField({
+      name: "denormLastSync",
+      title: "Last Denormalization Sync",
+      type: "datetime",
+      description:
+        "Timestamp of last denormalization sync. Used for debugging.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
     defineField({
       name: "customFilterValues",
       title: "Wartości niestandardowych filtrów",

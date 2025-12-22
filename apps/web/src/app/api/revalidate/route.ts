@@ -1,3 +1,4 @@
+import { createClient } from '@sanity/client';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -6,7 +7,7 @@ import { NextResponse } from 'next/server';
  * Request payload types for the revalidation API.
  *
  * Supports multiple use cases:
- * - Sanity webhooks: { _type, _id, slug }
+ * - Sanity webhooks: { _type, _id, slug, operation }
  * - Manual/programmatic: { tags: [...], paths: [...] }
  * - Combined: All fields can be used together
  */
@@ -15,10 +16,38 @@ type RevalidateRequest = {
   _id?: string;
   _type?: string;
   slug?: string | null;
+  operation?: 'create' | 'update' | 'delete';
   // Manual/programmatic revalidation
   tags?: string[];
   paths?: string[];
 };
+
+// ============================================================================
+// SANITY CLIENT FOR DENORMALIZATION
+// ============================================================================
+
+/**
+ * Sanity client for denormalization operations.
+ * Uses a write token to update product documents when brands/categories change.
+ */
+function getSanityClient() {
+  const token = process.env.NEXT_REVALIDATE_TOKEN;
+
+  if (!token) {
+    console.warn(
+      '[Denorm] SANITY_WEBHOOK_WRITE_TOKEN not set - denormalization disabled',
+    );
+    return null;
+  }
+
+  return createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    apiVersion: '2024-01-01',
+    token,
+    useCdn: false,
+  });
+}
 
 const TAG_DENYLIST = new Set(['sanity.imageAsset', 'sanity.fileAsset']);
 
@@ -288,6 +317,9 @@ export async function POST(request: NextRequest) {
   const revalidatedPaths: string[] = [];
   const tags = new Set<string>();
 
+  // Track denormalization tasks to run in parallel
+  const denormTasks: Promise<void>[] = [];
+
   for (const doc of documents) {
     // =========================================================================
     // Handle Sanity webhook payload (_type)
@@ -296,6 +328,19 @@ export async function POST(request: NextRequest) {
       // Add all transitive dependencies from the static map
       const transitiveDeps = getTransitiveDependencies(doc._type);
       transitiveDeps.forEach((tag) => addTag(tags, tag));
+
+      // =========================================================================
+      // Denormalization for brand/category changes
+      // =========================================================================
+      // When a brand or category is updated (not deleted), update the
+      // denormalized fields on all products referencing it.
+      if (doc._id && doc.operation !== 'delete') {
+        if (doc._type === 'brand') {
+          denormTasks.push(updateProductsForBrand(doc._id));
+        } else if (doc._type === 'productCategorySub') {
+          denormTasks.push(updateProductsForCategory(doc._id));
+        }
+      }
     }
 
     // =========================================================================
@@ -324,6 +369,14 @@ export async function POST(request: NextRequest) {
   for (const tag of tags) {
     revalidateTag(tag, 'max');
     revalidatedTags.push(tag);
+  }
+
+  // Wait for denormalization tasks to complete (fire-and-forget style)
+  // We don't block the response on these, but we log any errors
+  if (denormTasks.length > 0) {
+    Promise.all(denormTasks).catch((error) => {
+      console.error('[Denorm] Error in denormalization tasks:', error);
+    });
   }
 
   // Log what was revalidated
@@ -411,4 +464,166 @@ function addTag(tagSet: Set<string>, tag?: string | null) {
   }
 
   tagSet.add(trimmed);
+}
+
+// ============================================================================
+// DENORMALIZATION FUNCTIONS
+// ============================================================================
+
+/**
+ * Updates denormalized brand fields on all products referencing a brand.
+ * Called when a brand document is created or updated.
+ */
+async function updateProductsForBrand(brandId: string): Promise<void> {
+  const client = getSanityClient();
+  if (!client) return;
+
+  try {
+    // Fetch brand data
+    const brand = await client.fetch<{ name: string; slug: string } | null>(
+      `*[_id == $id][0]{ name, "slug": slug.current }`,
+      { id: brandId },
+    );
+
+    if (!brand) {
+      console.log(`[Denorm] Brand ${brandId} not found, skipping`);
+      return;
+    }
+
+    // Extract slug without prefix: "/marki/yamaha/" -> "yamaha"
+    const brandSlug =
+      brand.slug?.replace('/marki/', '').replace(/\/$/, '') || null;
+
+    // Find all products referencing this brand (published only)
+    const productIds = await client.fetch<string[]>(
+      `*[_type == "product" && brand._ref == $brandId && !(_id in path("drafts.**"))]._id`,
+      { brandId },
+    );
+
+    if (productIds.length === 0) {
+      console.log(`[Denorm] No products found for brand ${brand.name}`);
+      return;
+    }
+
+    console.log(
+      `[Denorm] Updating ${productIds.length} products for brand ${brand.name}`,
+    );
+
+    // Update products in batches
+    const BATCH_SIZE = 50;
+    for (let i = 0; i < productIds.length; i += BATCH_SIZE) {
+      const batch = productIds.slice(i, i + BATCH_SIZE);
+      const transaction = client.transaction();
+
+      for (const id of batch) {
+        transaction.patch(id, (p) =>
+          p.set({
+            denormBrandSlug: brandSlug,
+            denormBrandName: brand.name,
+            denormLastSync: new Date().toISOString(),
+          }),
+        );
+      }
+
+      await transaction.commit({ visibility: 'async' });
+    }
+
+    console.log(
+      `[Denorm] Successfully updated ${productIds.length} products for brand ${brand.name}`,
+    );
+  } catch (error) {
+    console.error(
+      `[Denorm] Error updating products for brand ${brandId}:`,
+      error,
+    );
+  }
+}
+
+/**
+ * Updates denormalized category fields on all products referencing a category.
+ * Called when a category document is created or updated.
+ */
+async function updateProductsForCategory(categoryId: string): Promise<void> {
+  const client = getSanityClient();
+  if (!client) return;
+
+  try {
+    // Fetch category data
+    const category = await client.fetch<{
+      slug: string;
+      parentSlug: string | null;
+    } | null>(
+      `*[_id == $id][0]{
+        "slug": slug.current,
+        "parentSlug": parentCategory->slug.current
+      }`,
+      { id: categoryId },
+    );
+
+    if (!category) {
+      console.log(`[Denorm] Category ${categoryId} not found, skipping`);
+      return;
+    }
+
+    // Find all products referencing this category (published only)
+    const products = await client.fetch<
+      Array<{
+        _id: string;
+        categories: Array<{ _ref: string }>;
+      }>
+    >(
+      `*[_type == "product" && $categoryId in categories[]._ref && !(_id in path("drafts.**"))]{
+        _id,
+        categories
+      }`,
+      { categoryId },
+    );
+
+    if (products.length === 0) {
+      console.log(`[Denorm] No products found for category ${category.slug}`);
+      return;
+    }
+
+    console.log(
+      `[Denorm] Updating ${products.length} products for category ${category.slug}`,
+    );
+
+    // For each product, recompute all category slugs
+    for (const product of products) {
+      const categoryRefs = product.categories.map((c) => c._ref);
+
+      const categories = await client.fetch<
+        Array<{ slug: string; parentSlug: string | null }>
+      >(
+        `*[_id in $ids]{
+          "slug": slug.current,
+          "parentSlug": parentCategory->slug.current
+        }`,
+        { ids: categoryRefs },
+      );
+
+      const categorySlugs = categories.map((c) => c.slug).filter(Boolean);
+      const parentCategorySlugs = categories
+        .map((c) => c.parentSlug)
+        .filter((s): s is string => Boolean(s));
+
+      await client
+        .patch(product._id)
+        .set({
+          denormCategorySlugs: categorySlugs,
+          denormParentCategorySlugs: parentCategorySlugs,
+          denormLastSync: new Date().toISOString(),
+        })
+        .commit({ visibility: 'async' });
+    }
+
+    console.log(
+      `[Denorm] Successfully updated ${products.length} products for category ${category.slug}`,
+    );
+  } catch (error) {
+    console.error(
+      `[Denorm] Error updating products for category ${categoryId}:`,
+      error,
+    );
+  }
 }
