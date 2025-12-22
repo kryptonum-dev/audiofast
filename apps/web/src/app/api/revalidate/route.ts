@@ -63,8 +63,8 @@ const TAG_DENYLIST = new Set(['sanity.imageAsset', 'sanity.fileAsset']);
  * When a type on the left changes, ALL tags on the right are revalidated.
  * This ensures content using that type (even via PageBuilder sections) gets fresh data.
  *
- * NOTE: With stale-while-revalidate (revalidateTag with 'max'), over-revalidation
- * is acceptable - users still get instant responses while fresh data loads.
+ * NOTE: With immediate expiration ({ expire: 0 }), over-revalidation results in
+ * slightly more cache misses, but users see fresh content immediately after publishing.
  */
 const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // ============================================================================
@@ -366,8 +366,11 @@ export async function POST(request: NextRequest) {
   }
 
   // Revalidate all collected tags
+  // Using { expire: 0 } for immediate cache expiration instead of stale-while-revalidate.
+  // This ensures clients see fresh content on the FIRST visit after publishing in Sanity,
+  // rather than needing a second visit/refresh with 'max' profile.
   for (const tag of tags) {
-    revalidateTag(tag, 'max');
+    revalidateTag(tag, { expire: 0 });
     revalidatedTags.push(tag);
   }
 
@@ -415,7 +418,7 @@ export async function GET() {
     status: 'ok',
     endpoint: 'Cache Revalidation API',
     description:
-      'Invalidates Next.js cache using stale-while-revalidate strategy',
+      'Invalidates Next.js cache with immediate expiration for instant content updates',
     supportedPayloads: {
       sanityWebhook: {
         description: 'Sanity document change webhook',
@@ -442,8 +445,8 @@ export async function GET() {
     features: {
       transitiveRevalidation:
         'Automatically revalidates dependent content (e.g., brand → products → pages)',
-      staleWhileRevalidate:
-        'Uses revalidateTag with "max" profile for instant responses',
+      immediateExpiration:
+        'Uses revalidateTag with { expire: 0 } for immediate cache invalidation - visitors see fresh content on first visit after publishing',
       staticDependencyMap:
         'Pre-defined content relationships for instant, zero-latency revalidation',
     },
