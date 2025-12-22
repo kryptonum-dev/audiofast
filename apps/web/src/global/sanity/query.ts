@@ -319,6 +319,7 @@ const publicationFragment = (name: string = 'publication') => /* groq */ `
 `;
 
 // Reusable brand fragment for brand listings
+// NOTE: This fragment does NOT filter by doNotShowBrand - callers must filter beforehand
 const brandFragment = (name: string = 'brand') => /* groq */ `
   ${name} {
   _id,
@@ -409,7 +410,7 @@ const heroCarouselBlock = /* groq */ `
       ${portableTextFragment('title')},
       ${portableTextFragment('description')},
     },
-    brands[]->{
+    "brands": brands[!(@->doNotShowBrand == true)]->{
       name,
       "slug": slug.current,
       ${imageFragment('logo')},
@@ -535,8 +536,8 @@ const brandsMarqueeBlock = /* groq */ `
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
     ${imageFragment('backgroundImage')},
-    ${brandFragment('topBrands[]->')},
-    ${brandFragment('bottomBrands[]->')},
+    ${brandFragment('topBrands[!(@->doNotShowBrand == true)]->')},
+    ${brandFragment('bottomBrands[!(@->doNotShowBrand == true)]->')},
   }
 `;
 
@@ -547,10 +548,10 @@ const brandsListBlock = /* groq */ `
     ${portableTextFragment('description')},
     ${portableTextFragment('ctaText')},
     "brands": select(
-      brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')},
-      brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
-      brandsDisplayMode == "manual" => ${brandFragment('selectedBrands[]->  | order(orderRank)')},
-      ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank)')}
+      brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')},
+      brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
+      brandsDisplayMode == "manual" => ${brandFragment('selectedBrands[!(@->doNotShowBrand == true)]->  | order(orderRank)')},
+      ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')}
     )
   }
 `;
@@ -573,6 +574,7 @@ const productsListingBlock = /* groq */ `
         _type == "product" 
         && defined(slug.current)
         && isArchived != true
+        && brand->doNotShowBrand != true
         && (^.cpoOnly == false || isCPO == true)
         && count(categories) > 0
         && references(^._id)
@@ -582,6 +584,7 @@ const productsListingBlock = /* groq */ `
       _type == "product" 
       && defined(slug.current)
       && isArchived != true
+      && brand->doNotShowBrand != true
       && (^.cpoOnly == false || isCPO == true)
       && count(categories) > 0
     ])
@@ -602,6 +605,7 @@ const brandsByCategoriesSectionBlock = /* groq */ `
           _type == "product" && 
           !(_id in path("drafts.**")) && 
           isArchived != true &&
+          brand->doNotShowBrand != true &&
           ^._id in categories[]->parentCategory._ref
         ].brand->{_id, name, "slug": slug.current}
       )
@@ -1276,6 +1280,7 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       && isArchived != true
       && defined(denormCategorySlugs)
       && count(denormCategorySlugs) > 0
+      && brand->doNotShowBrand != true
     ] {
       _id,
       "brandSlug": denormBrandSlug,
@@ -1301,7 +1306,7 @@ export const queryAllProductsFilterMetadata = defineQuery(`
         "slug": slug.current
       }
     },
-    "brands": *[_type == "brand" && defined(slug.current)] | order(orderRank) {
+    "brands": *[_type == "brand" && defined(slug.current) && doNotShowBrand != true] | order(orderRank) {
       _id,
       name,
       "slug": slug.current,
@@ -1351,6 +1356,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && isArchived != true
       && defined(denormCategorySlugs)
       && count(denormCategorySlugs) > 0
+      && brand->doNotShowBrand != true
       && ^.slug.current in denormCategorySlugs
       && ($category == "" || $category in denormCategorySlugs)
       && (count($brands) == 0 || denormBrandSlug in $brands)
@@ -1380,6 +1386,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
       && isArchived != true
       && defined(denormCategorySlugs)
       && count(denormCategorySlugs) > 0
+      && brand->doNotShowBrand != true
       && ^.slug.current in denormCategorySlugs
       && (count($brands) == 0 || denormBrandSlug in $brands)
       && (
@@ -1388,7 +1395,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
       )
     ])
   } [count > 0] | order(orderRank),
-  "brands": *[_type == "brand" && defined(slug.current)] {
+  "brands": *[_type == "brand" && defined(slug.current) && doNotShowBrand != true] {
     _id,
     name,
     "slug": slug.current,
@@ -1417,6 +1424,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && isArchived != true
     && defined(denormCategorySlugs)
     && count(denormCategorySlugs) > 0
+    && brand->doNotShowBrand != true
     && ($category == "" || $category in denormCategorySlugs)
     && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
@@ -1434,6 +1442,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && isArchived != true
     && defined(denormCategorySlugs)
     && count(denormCategorySlugs) > 0
+    && brand->doNotShowBrand != true
     && (count($brands) == 0 || denormBrandSlug in $brands)
     && (
       ($minPrice == 0 && $maxPrice == 999999999) ||
@@ -1446,6 +1455,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && isArchived != true
     && defined(denormCategorySlugs)
     && count(denormCategorySlugs) > 0
+    && brand->doNotShowBrand != true
     && defined(basePriceCents)
     && ($category == "" || $category in denormCategorySlugs)
     && (count($brands) == 0 || denormBrandSlug in $brands)
@@ -1460,6 +1470,7 @@ const productsFilterMetadataFragment = () => /* groq */ `
     && isArchived != true
     && defined(denormCategorySlugs)
     && count(denormCategorySlugs) > 0
+    && brand->doNotShowBrand != true
     && defined(basePriceCents)
     && ($category == "" || $category in denormCategorySlugs)
     && (count($brands) == 0 || denormBrandSlug in $brands)
@@ -1535,6 +1546,7 @@ export const queryProductsPageData = defineQuery(`
           && isArchived != true
           && defined(denormCategorySlugs)
           && count(denormCategorySlugs) > 0
+          && brand->doNotShowBrand != true
           && $category in denormCategorySlugs
           && defined(customFilterValues)
           && (count($brands) == 0 || denormBrandSlug in $brands)
@@ -1585,6 +1597,9 @@ const productsFilterConditions = /* groq */ `
   && isArchived != true
   && defined(denormCategorySlugs)
   && count(denormCategorySlugs) > 0
+  
+  // Exclude products from hidden brands (doNotShowBrand == true)
+  && brand->doNotShowBrand != true
   
   // Category filter - uses denormalized denormCategorySlugs (no dereferencing)
   && ($category == "" || $category in denormCategorySlugs)
@@ -1822,6 +1837,7 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
 `);
 
 // Get all brand slugs for static generation
+// NOTE: Includes all brands (even doNotShowBrand) since brand pages should still be accessible via direct URL
 export const queryAllBrandSlugs = defineQuery(/* groq */ `
   *[_type == "brand" && defined(slug.current) && !(_id in path("drafts.**"))] {
     "slug": slug.current
@@ -2112,8 +2128,9 @@ export const queryAllBlogPostSlugsForSitemap = defineQuery(`
   }
 `);
 
+// NOTE: Excludes hidden brands from sitemap - they should not be indexed
 export const queryAllBrandSlugsForSitemap = defineQuery(`
-  *[_type == "brand" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  *[_type == "brand" && defined(slug.current) && !(_id in path("drafts.**")) && doNotShowBrand != true] {
     "slug": slug.current,
     _updatedAt
   }

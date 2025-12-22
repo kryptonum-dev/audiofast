@@ -22,6 +22,15 @@ export const brand = defineType({
     "Marka produktów audio. Dodaj nazwę marki, opis i informacje o producencie.",
   fields: [
     orderRankField({ type: "brands" }),
+    defineField({
+      name: "doNotShowBrand",
+      title: "Nie pokazuj marki",
+      type: "boolean",
+      description:
+        "Jeśli zaznaczone, marka nie będzie wyświetlana w żadnych sekcjach marek ani na liście produktów. Produkty tej marki również nie będą widoczne na listingach.",
+      group: GROUP.MAIN_CONTENT,
+      initialValue: false,
+    }),
     ...defineSlugForDocument({
       prefix: "/marki/",
       group: GROUP.MAIN_CONTENT,
@@ -207,7 +216,11 @@ export const brand = defineType({
         },
       ],
     }),
-    ...getSEOFields(),
+    ...getSEOFields(
+      {
+        exclude: ["hideFromList"],
+      }
+    ),
   ],
   preview: {
     select: {

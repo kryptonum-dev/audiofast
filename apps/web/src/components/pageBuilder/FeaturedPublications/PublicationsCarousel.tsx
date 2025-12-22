@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
-} from "embla-carousel-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+} from 'embla-carousel-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import type { PagebuilderType } from "@/src/global/types";
+import type { PagebuilderType } from '@/src/global/types';
 
-import ArrowButton from "../../ui/ArrowButton";
-import PublicationCard from "../../ui/PublicationCard";
-import styles from "./styles.module.scss";
+import ArrowButton from '../../ui/ArrowButton';
+import PublicationCard from '../../ui/PublicationCard';
+import styles from './styles.module.scss';
 
 interface PublicationsCarouselProps {
-  publications: PagebuilderType<"featuredPublications">["publications"];
+  publications: PagebuilderType<'featuredPublications'>['publications'];
   index: number;
-  publicationLayout?: "vertical" | "horizontal";
+  publicationLayout?: 'vertical' | 'horizontal';
 }
 
 export default function PublicationsCarousel({
   publications,
   index,
-  publicationLayout = "horizontal",
+  publicationLayout = 'horizontal',
 }: PublicationsCarouselProps) {
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
@@ -39,7 +39,7 @@ export default function PublicationsCarousel({
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    align: "start",
+    align: 'start',
     skipSnaps: false,
     watchDrag: canScroll,
   });
@@ -68,10 +68,10 @@ export default function PublicationsCarousel({
     };
 
     checkOverflow();
-    window.addEventListener("resize", checkOverflow);
+    window.addEventListener('resize', checkOverflow);
 
     return () => {
-      window.removeEventListener("resize", checkOverflow);
+      window.removeEventListener('resize', checkOverflow);
     };
   }, [displayPublications]);
 
@@ -79,12 +79,12 @@ export default function PublicationsCarousel({
     if (!emblaApi) return;
 
     onSelect(emblaApi);
-    emblaApi.on("reInit", onSelect);
-    emblaApi.on("select", onSelect);
+    emblaApi.on('reInit', onSelect);
+    emblaApi.on('select', onSelect);
 
     return () => {
-      emblaApi.off("reInit", onSelect);
-      emblaApi.off("select", onSelect);
+      emblaApi.off('reInit', onSelect);
+      emblaApi.off('select', onSelect);
     };
   }, [emblaApi, onSelect]);
 
@@ -107,17 +107,19 @@ export default function PublicationsCarousel({
         }}
       >
         <div className={styles.container} ref={containerRef}>
-          {displayPublications.map((publication, idx) => (
-            <PublicationCard
-              imageSizes="(max-width: 72rem) 222px, 279px"
-              priority={index === 0 && idx === 0}
-              loading={index === 0 ? "eager" : "lazy"}
-              key={`${publication._id || idx}-${idx}`}
-              publication={publication}
-              layout={publicationLayout}
-              headingLevel={index === 0 ? "h2" : "h3"}
-            />
-          ))}
+          {displayPublications
+            .filter((publication) => !!publication?._id)
+            .map((publication, idx) => (
+              <PublicationCard
+                imageSizes="(max-width: 72rem) 222px, 279px"
+                priority={index === 0 && idx === 0}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                key={`${publication._id || idx}-${idx}`}
+                publication={publication}
+                layout={publicationLayout}
+                headingLevel={index === 0 ? 'h2' : 'h3'}
+              />
+            ))}
         </div>
       </div>
       {canScroll && (
