@@ -410,7 +410,7 @@ const heroCarouselBlock = /* groq */ `
       ${portableTextFragment('title')},
       ${portableTextFragment('description')},
     },
-    "brands": brands[!(@->doNotShowBrand == true)]->{
+    "brands": brands[]->[doNotShowBrand != true]{
       name,
       "slug": slug.current,
       ${imageFragment('logo')},
@@ -616,8 +616,22 @@ const brandsMarqueeBlock = /* groq */ `
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
     ${imageFragment('backgroundImage')},
-    ${brandFragment('topBrands[!(@->doNotShowBrand == true)]->')},
-    ${brandFragment('bottomBrands[!(@->doNotShowBrand == true)]->')},
+    "topBrands": topBrands[]->[doNotShowBrand != true]{
+      _id,
+      _createdAt,
+      "slug": slug.current,
+      name,
+      ${portableTextFragment('description')},
+      ${imageFragment('logo')},
+    },
+    "bottomBrands": bottomBrands[]->[doNotShowBrand != true]{
+      _id,
+      _createdAt,
+      "slug": slug.current,
+      name,
+      ${portableTextFragment('description')},
+      ${imageFragment('logo')},
+    },
   }
 `;
 
@@ -630,7 +644,14 @@ const brandsListBlock = /* groq */ `
     "brands": select(
       brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')},
       brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
-      brandsDisplayMode == "manual" => ${brandFragment('selectedBrands[!(@->doNotShowBrand == true)]->  | order(orderRank)')},
+      brandsDisplayMode == "manual" => selectedBrands[]->[doNotShowBrand != true]{
+        _id,
+        _createdAt,
+        "slug": slug.current,
+        name,
+        ${portableTextFragment('description')},
+        ${imageFragment('logo')},
+      } | order(orderRank),
       ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')}
     )
   }
