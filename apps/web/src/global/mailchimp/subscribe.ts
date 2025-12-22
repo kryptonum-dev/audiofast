@@ -84,13 +84,21 @@ export async function subscribeToNewsletter(
         : "Successfully subscribed to newsletter",
     };
   } catch (error: unknown) {
-    console.error("[Mailchimp] Subscribe error:", error);
+    // Log full error details for debugging
+    const mailchimpError = error as {
+      status?: number;
+      response?: { body?: { title?: string; detail?: string; errors?: unknown[] } };
+    };
+    console.error("[Mailchimp] Subscribe error:", {
+      status: mailchimpError.status,
+      title: mailchimpError.response?.body?.title,
+      detail: mailchimpError.response?.body?.detail,
+      errors: mailchimpError.response?.body?.errors,
+    });
 
     // Handle specific Mailchimp errors
-    if ((error as { status?: number }).status === 400) {
-      const errorDetail =
-        (error as { response?: { body?: { title?: string } } }).response?.body
-          ?.title || "";
+    if (mailchimpError.status === 400) {
+      const errorDetail = mailchimpError.response?.body?.title || "";
 
       if (errorDetail.includes("already a list member")) {
         return {
@@ -116,7 +124,7 @@ export async function subscribeToNewsletter(
       }
     }
 
-    if ((error as { status?: number }).status === 403) {
+    if (mailchimpError.status === 403) {
       return {
         success: false,
         message: "Newsletter signup is temporarily unavailable",

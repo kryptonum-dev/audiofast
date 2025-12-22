@@ -410,7 +410,7 @@ const heroCarouselBlock = /* groq */ `
       ${portableTextFragment('title')},
       ${portableTextFragment('description')},
     },
-    "brands": brands[]->[doNotShowBrand != true]{
+    "brands": brands[]->{
       name,
       "slug": slug.current,
       ${imageFragment('logo')},
