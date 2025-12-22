@@ -137,23 +137,42 @@ export function CustomFiltersConfigView({
         : documentId;
       const draftId = `drafts.${baseId}`;
 
-      // Use transaction to create draft if not exists, then patch
+      // Check if published and draft exist
+      const [publishedExists, draftExists] = await Promise.all([
+        client.fetch<boolean>(`defined(*[_id == $id][0]._id)`, { id: baseId }),
+        client.fetch<boolean>(`defined(*[_id == $id][0]._id)`, { id: draftId }),
+      ]);
+
       const transaction = client.transaction();
+      const patchData = { customFilters: filtersWithKeys };
 
-      const {
-        _id: _unusedId,
-        _type: _unusedType,
-        ...restOfDocument
-      } = document.displayed;
-      transaction.createIfNotExists({
-        ...restOfDocument,
-        _id: draftId,
-        _type: "productCategorySub",
-      });
+      if (publishedExists) {
+        // AUTO-PUBLISH: Patch the PUBLISHED document directly
+        // This makes filter configuration changes instant without requiring manual publish
+        transaction.patch(baseId, (patch) => patch.set(patchData));
 
-      transaction.patch(draftId, (patch) =>
-        patch.set({ customFilters: filtersWithKeys }),
-      );
+        // If a draft also exists, update it to keep in sync
+        if (draftExists) {
+          transaction.patch(draftId, (patch) => patch.set(patchData));
+        }
+      } else if (draftExists) {
+        // Category only exists as draft (never published)
+        // Just patch the draft
+        transaction.patch(draftId, (patch) => patch.set(patchData));
+      } else {
+        // Neither exists - create draft from displayed document
+        const {
+          _id: _unusedId,
+          _type: _unusedType,
+          ...restOfDocument
+        } = document.displayed;
+        transaction.createIfNotExists({
+          ...restOfDocument,
+          ...patchData,
+          _id: draftId,
+          _type: "productCategorySub",
+        });
+      }
 
       await transaction.commit();
 
@@ -350,33 +369,42 @@ export function CustomFiltersConfigView({
           : productId;
         const draftProductId = `drafts.${baseProductId}`;
 
-        // Fetch the product - prefer draft over published, get full document
-        // Use coalesce to get draft first, then published
-        const currentProduct = await client.fetch<{
-          _id: string;
-          _type: string;
-          _rev?: string;
-          customFilterValues?: Array<{
-            _key: string;
-            filterName: string;
-            value?: string;
-            numericValue?: number;
-          }>;
-          [key: string]: unknown;
-        } | null>(
-          `coalesce(
-            *[_id == $draftProductId][0],
-            *[_id == $baseProductId][0]
-          )`,
-          { baseProductId, draftProductId },
-        );
+        // Fetch both published and draft versions to check what exists
+        const [publishedProduct, draftProduct] = await Promise.all([
+          client.fetch<{
+            _id: string;
+            customFilterValues?: Array<{
+              _key: string;
+              filterName: string;
+              value?: string;
+              numericValue?: number;
+            }>;
+          } | null>(`*[_id == $id][0]{ _id, customFilterValues }`, {
+            id: baseProductId,
+          }),
+          client.fetch<{
+            _id: string;
+            customFilterValues?: Array<{
+              _key: string;
+              filterName: string;
+              value?: string;
+              numericValue?: number;
+            }>;
+          } | null>(`*[_id == $id][0]{ _id, customFilterValues }`, {
+            id: draftProductId,
+          }),
+        ]);
 
-        if (!currentProduct) {
-          throw new Error("Product not found");
+        // Determine which document to use as source for existing values
+        // Prefer published, fall back to draft if product was never published
+        const sourceProduct = publishedProduct || draftProduct;
+
+        if (!sourceProduct) {
+          throw new Error("Product not found (neither published nor draft)");
         }
 
         // Build the new customFilterValues array
-        const existingFilterValues = currentProduct.customFilterValues || [];
+        const existingFilterValues = sourceProduct.customFilterValues || [];
         let newFilterValues = [...existingFilterValues];
 
         // Find existing value for this filter
@@ -407,41 +435,29 @@ export function CustomFiltersConfigView({
           }
         }
 
-        // Check if we're working with a draft or need to create one
-        const isCurrentlyDraft = currentProduct._id.startsWith("drafts.");
+        const patchData = {
+          customFilterValues:
+            newFilterValues.length > 0 ? newFilterValues : [],
+        };
 
-        if (isCurrentlyDraft) {
-          // Draft exists - just patch it
-          await client
-            .patch(draftProductId)
-            .set({
-              customFilterValues:
-                newFilterValues.length > 0 ? newFilterValues : [],
-            })
-            .commit();
+        const transaction = client.transaction();
+
+        if (publishedProduct) {
+          // AUTO-PUBLISH: Patch the PUBLISHED document directly
+          // This makes filter value changes instant without requiring manual publish
+          transaction.patch(baseProductId, (patch) => patch.set(patchData));
+
+          // If a draft also exists, update it to keep in sync
+          if (draftProduct) {
+            transaction.patch(draftProductId, (patch) => patch.set(patchData));
+          }
         } else {
-          // No draft exists - create draft from published document, then patch
-          // Remove system fields that shouldn't be copied
-          const { _rev, ...documentWithoutRev } = currentProduct;
-
-          const transaction = client.transaction();
-
-          // Create draft as a copy of published document
-          transaction.createIfNotExists({
-            ...documentWithoutRev,
-            _id: draftProductId,
-          });
-
-          // Patch the customFilterValues
-          transaction.patch(draftProductId, (patch) =>
-            patch.set({
-              customFilterValues:
-                newFilterValues.length > 0 ? newFilterValues : [],
-            }),
-          );
-
-          await transaction.commit();
+          // Product only exists as draft (never published)
+          // Just patch the draft - user will need to publish the product first
+          transaction.patch(draftProductId, (patch) => patch.set(patchData));
         }
+
+        await transaction.commit();
 
         // Refresh stats after saving
         loadProductStats();
