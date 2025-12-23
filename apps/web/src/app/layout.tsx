@@ -1,36 +1,36 @@
-import "../global/global.scss";
+import '../global/global.scss';
 
-import { preconnect, prefetchDNS } from "react-dom";
-import { Toaster } from "sonner";
+import { preconnect, prefetchDNS } from 'react-dom';
+import { Toaster } from 'sonner';
 
-import { poppins, switzer } from "@/global/fonts";
-import FloatingComparisonBox from "@/src/components/comparison/FloatingComparisonBox";
-import OrganizationSchema from "@/src/components/schema/OrganizationSchema";
-import WebSiteSchema from "@/src/components/schema/WebSiteSchema";
-import Analytics from "@/src/components/shared/Analytics";
-import CookieConsent from "@/src/components/shared/CookieConsent";
-import Footer from "@/src/components/ui/Footer";
-import Header from "@/src/components/ui/Header";
+import { poppins, switzer } from '@/global/fonts';
+import FloatingComparisonBox from '@/src/components/comparison/FloatingComparisonBox';
+import OrganizationSchema from '@/src/components/schema/OrganizationSchema';
+import WebSiteSchema from '@/src/components/schema/WebSiteSchema';
+import Analytics from '@/src/components/shared/Analytics';
+import CookieConsent from '@/src/components/shared/CookieConsent';
+import Footer from '@/src/components/ui/Footer';
+import Header from '@/src/components/ui/Header';
 
-import { IS_PRODUCTION_DEPLOYMENT } from "../global/constants";
-import { sanityFetch } from "../global/sanity/fetch";
-import { querySettings } from "../global/sanity/query";
-import type { QuerySettingsResult } from "../global/sanity/sanity.types";
+import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
+import { sanityFetch } from '../global/sanity/fetch';
+import { querySettings } from '../global/sanity/query';
+import type { QuerySettingsResult } from '../global/sanity/sanity.types';
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  "use cache";
-  preconnect("https://cdn.sanity.io");
-  prefetchDNS("https://cdn.sanity.io");
-  preconnect("https://vercel.live");
-  prefetchDNS("https://vercel.live");
+  'use cache';
+  preconnect('https://cdn.sanity.io');
+  prefetchDNS('https://cdn.sanity.io');
+  preconnect('https://vercel.live');
+  prefetchDNS('https://vercel.live');
 
   const settings = await sanityFetch<QuerySettingsResult>({
     query: querySettings,
-    tags: ["settings"],
+    tags: ['settings'],
   });
 
   return (
