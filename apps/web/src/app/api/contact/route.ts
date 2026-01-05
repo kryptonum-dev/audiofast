@@ -1,6 +1,6 @@
+import { render } from '@react-email/render';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { render } from '@react-email/render';
 
 import {
   FALLBACK_EMAIL_BODY,
@@ -17,8 +17,8 @@ import { queryContactSettings } from '@/global/sanity/query';
 import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/global/types';
 import { portableTextToHtml } from '@/global/utils';
-import { ContactConfirmationTemplate } from '@/emails/contact-confirmation-template';
-import { ContactNotificationTemplate } from '@/emails/contact-notification-template';
+import { ContactConfirmationTemplate } from '@/src/emails/contact-confirmation-template';
+import { ContactNotificationTemplate } from '@/src/emails/contact-notification-template';
 
 // Reply-to address for confirmation emails
 const REPLY_TO_EMAIL =
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
 
   // Render internal notification email using React Email
   const internalSubject = `Nowe zgłoszenie z formularza kontaktowego`;
-  const internalEmailHtml = render(
+  const internalEmailHtml = await render(
     ContactNotificationTemplate({
       name: body.name,
       email: body.email,
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
   );
 
   // Render confirmation email using React Email
-  const confirmationEmailHtml = render(
+  const confirmationEmailHtml = await render(
     ContactConfirmationTemplate({
       name: body.name,
       email: body.email,
