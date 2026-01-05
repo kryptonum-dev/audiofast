@@ -376,10 +376,47 @@ export const review = defineType({
         "Dodaj niestandardowe sekcje na końcu recenzji (opcjonalne).",
       hidden: ({ document }: any) => document?.destinationType !== "page",
     },
-    ...(getSEOFields().map((field) => ({
-      ...field,
-      hidden: ({ document }: any) => document?.destinationType !== "page",
-    })) as FieldDefinition[]),
+    // SEO fields with conditional validation - only required for "page" type reviews
+    ...(getSEOFields().map((field) => {
+      // For the main 'seo' object, make validation conditional
+      if (field.name === "seo") {
+        return {
+          ...field,
+          hidden: ({ document }: any) => document?.destinationType !== "page",
+          validation: (Rule: any) =>
+            Rule.custom((value: any, context: any) => {
+              const destinationType = context.document?.destinationType;
+              // Only require SEO for page type reviews
+              if (destinationType !== "page") return true;
+              if (!value) return "SEO jest wymagane";
+              return true;
+            }),
+          // Override nested fields' validation to be conditional
+          fields: (field as any).fields?.map((nestedField: any) => {
+            if (nestedField.name === "title") {
+              return {
+                ...nestedField,
+                validation: (Rule: any) => [
+                  Rule.custom((value: any, context: any) => {
+                    const destinationType = context.document?.destinationType;
+                    if (destinationType !== "page") return true;
+                    if (!value) return "Tytuł SEO jest wymagany";
+                    return true;
+                  }),
+                  Rule.max(70).warning("Nie więcej niż 70 znaków"),
+                ],
+              };
+            }
+            return nestedField;
+          }),
+        };
+      }
+      // For other SEO-related fields (doNotIndex, hideFromList, openGraph)
+      return {
+        ...field,
+        hidden: ({ document }: any) => document?.destinationType !== "page",
+      };
+    }) as FieldDefinition[]),
   ],
   preview: {
     select: {

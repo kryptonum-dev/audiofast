@@ -452,6 +452,15 @@ const latestPublicationBlock = /* groq */ `
         (
           _type != "product" ||
           (defined(publicationImage) && defined(shortDescription))
+        ) &&
+        // Reviews must have their required fields based on destinationType
+        (
+          _type != "review" ||
+          (
+            (coalesce(destinationType, "page") == "page" && defined(slug.current)) ||
+            (destinationType == "pdf" && defined(pdfSlug.current) && defined(pdfFile)) ||
+            (destinationType == "external" && defined(externalUrl))
+          )
         )
       ] | order(coalesce(publishedDate, _createdAt) desc)[0]{
         ${publicationBlock}
@@ -534,6 +543,14 @@ const featuredPublicationsBlock = /* groq */ `
         (
           _type != "product" ||
           (defined(publicationImage) && defined(shortDescription))
+        ) &&
+        (
+          _type != "review" ||
+          (
+            (coalesce(destinationType, "page") == "page" && defined(slug.current)) ||
+            (destinationType == "pdf" && defined(pdfSlug.current) && defined(pdfFile)) ||
+            (destinationType == "external" && defined(externalUrl))
+          )
         )
       ] | order(coalesce(publishedDate, _createdAt) desc)[0...20]{
         ${publicationBlock}
@@ -545,6 +562,14 @@ const featuredPublicationsBlock = /* groq */ `
         (
           _type != "product" ||
           (defined(publicationImage) && defined(shortDescription))
+        ) &&
+        (
+          _type != "review" ||
+          (
+            (coalesce(destinationType, "page") == "page" && defined(slug.current)) ||
+            (destinationType == "pdf" && defined(pdfSlug.current) && defined(pdfFile)) ||
+            (destinationType == "external" && defined(externalUrl))
+          )
         )
       ] | order(coalesce(publishedDate, _createdAt) desc)[1...21]{
         ${publicationBlock}

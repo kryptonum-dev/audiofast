@@ -30,6 +30,44 @@ import type { SchemaType, SingletonType } from "./schemaTypes";
 import { schemaTypes } from "./schemaTypes";
 import { getTitleCase } from "./utils/helper";
 
+/**
+ * Product ordering configurations
+ * Default: Price ascending (lowest first), products without price at the end
+ */
+const getProductOrderingMenuItems = (S: StructureBuilder) => [
+  S.orderingMenuItem({
+    name: "priceAsc",
+    title: "Cena (od najniższej)",
+    by: [
+      { field: "basePriceCents", direction: "asc" },
+      { field: "_createdAt", direction: "desc" },
+    ],
+  }),
+  S.orderingMenuItem({
+    name: "priceDesc",
+    title: "Cena (od najwyższej)",
+    by: [
+      { field: "basePriceCents", direction: "desc" },
+      { field: "_createdAt", direction: "desc" },
+    ],
+  }),
+  S.orderingMenuItem({
+    name: "createdAtDesc",
+    title: "Data utworzenia (od najnowszych)",
+    by: [{ field: "_createdAt", direction: "desc" }],
+  }),
+  S.orderingMenuItem({
+    name: "createdAtAsc",
+    title: "Data utworzenia (od najstarszych)",
+    by: [{ field: "_createdAt", direction: "asc" }],
+  }),
+];
+
+const productDefaultOrdering: Array<{ field: string; direction: "asc" | "desc" }> = [
+  { field: "basePriceCents", direction: "asc" },
+  { field: "_createdAt", direction: "desc" },
+];
+
 type CreateSingleTon = {
   S: StructureBuilder;
   type: SingletonType;
@@ -157,9 +195,8 @@ export const structure = (
                           S.documentList()
                             .title("Wszystkie produkty")
                             .filter('_type == "product"')
-                            .defaultOrdering([
-                              { field: "orderRank", direction: "asc" },
-                            ]),
+                            .defaultOrdering(productDefaultOrdering)
+                            .menuItems(getProductOrderingMenuItems(S)),
                         ),
                       S.divider(),
                       // Dynamic list items for each brand
@@ -175,9 +212,8 @@ export const structure = (
                                 '_type == "product" && brand._ref == $brandId',
                               )
                               .params({ brandId: brand._id })
-                              .defaultOrdering([
-                                { field: "orderRank", direction: "asc" },
-                              ]),
+                              .defaultOrdering(productDefaultOrdering)
+                              .menuItems(getProductOrderingMenuItems(S)),
                           ),
                       ),
                     ]);
@@ -218,9 +254,8 @@ export const structure = (
                           S.documentList()
                             .title("Wszystkie produkty")
                             .filter('_type == "product"')
-                            .defaultOrdering([
-                              { field: "orderRank", direction: "asc" },
-                            ]),
+                            .defaultOrdering(productDefaultOrdering)
+                            .menuItems(getProductOrderingMenuItems(S)),
                         ),
                       S.divider(),
                       // Parent categories with nested sub-categories
@@ -245,12 +280,8 @@ export const structure = (
                                           '_type == "product" && references($categoryId)',
                                         )
                                         .params({ categoryId: subCategory._id })
-                                        .defaultOrdering([
-                                          {
-                                            field: "orderRank",
-                                            direction: "asc",
-                                          },
-                                        ]),
+                                        .defaultOrdering(productDefaultOrdering)
+                                        .menuItems(getProductOrderingMenuItems(S)),
                                     ),
                                 ),
                               ),
@@ -534,9 +565,8 @@ export const structure = (
                   S.documentList()
                     .title("Produkty CPO")
                     .filter('_type == "product" && isCPO == true')
-                    .defaultOrdering([
-                      { field: "orderRank", direction: "asc" },
-                    ]),
+                    .defaultOrdering(productDefaultOrdering)
+                    .menuItems(getProductOrderingMenuItems(S)),
                 ),
             ]),
         ),

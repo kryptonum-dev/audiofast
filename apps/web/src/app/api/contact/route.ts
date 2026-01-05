@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { render } from '@react-email/render';
 
 import {
   FALLBACK_EMAIL_BODY,
@@ -16,6 +17,8 @@ import { queryContactSettings } from '@/global/sanity/query';
 import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/global/types';
 import { portableTextToHtml } from '@/global/utils';
+import { ContactConfirmationTemplate } from '@/emails/contact-confirmation-template';
+import { ContactNotificationTemplate } from '@/emails/contact-notification-template';
 
 // Reply-to address for confirmation emails
 const REPLY_TO_EMAIL =
@@ -72,7 +75,7 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (char) => htmlEscapeMap[char] || char);
 }
 
-// Replace placeholders in text
+// Replace placeholders in text (for content from Sanity)
 function replacePlaceholders(
   text: string,
   variables: { name?: string; email?: string; message?: string },
@@ -81,22 +84,6 @@ function replacePlaceholders(
     .replace(/\{\{name\}\}/g, escapeHtml(variables.name || ''))
     .replace(/\{\{email\}\}/g, escapeHtml(variables.email || ''))
     .replace(/\{\{message\}\}/g, escapeHtml(variables.message || ''));
-}
-
-// Create email HTML wrapper
-function createEmailHTML(body: string): string {
-  return `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-  ${body}
-</body>
-</html>
-  `.trim();
 }
 
 export async function POST(request: NextRequest) {
@@ -153,19 +140,31 @@ export async function POST(request: NextRequest) {
     emailConfig.confirmationEmail.subject,
     variables,
   );
-  const confirmationBody = replacePlaceholders(
+  const confirmationContentHtml = replacePlaceholders(
     emailConfig.confirmationEmail.content,
     variables,
   );
 
-  // Build internal notification email
+  // Render internal notification email using React Email
   const internalSubject = `Nowe zgłoszenie z formularza kontaktowego`;
-  const internalBody = `
-    <h2>Nowe zgłoszenie z formularza</h2>
-    ${body.name ? `<p><strong>Imię i nazwisko:</strong> ${escapeHtml(body.name)}</p>` : ''}
-    <p><strong>E-mail:</strong> ${escapeHtml(body.email)}</p>
-    ${body.message ? `<p><strong>Wiadomość:</strong><br>${escapeHtml(body.message).replace(/\n/g, '<br>')}</p>` : ''}
-  `;
+  const internalEmailHtml = render(
+    ContactNotificationTemplate({
+      name: body.name,
+      email: body.email,
+      message: body.message,
+    }),
+  );
+
+  // Render confirmation email using React Email
+  const confirmationEmailHtml = render(
+    ContactConfirmationTemplate({
+      name: body.name,
+      email: body.email,
+      message: body.message,
+      subject: confirmationSubject,
+      htmlContent: confirmationContentHtml,
+    }),
+  );
 
   // Prepare email payloads
   const emails: SendEmailOptions[] = [
@@ -173,7 +172,7 @@ export async function POST(request: NextRequest) {
     {
       to: emailConfig.supportEmails.map((email) => ({ email })),
       subject: internalSubject,
-      htmlBody: createEmailHTML(internalBody),
+      htmlBody: internalEmailHtml,
       replyTo: body.email, // Reply goes to the person who submitted the form
       saveToSentItems: true,
     },
@@ -181,7 +180,7 @@ export async function POST(request: NextRequest) {
     {
       to: { email: body.email, name: body.name },
       subject: confirmationSubject,
-      htmlBody: createEmailHTML(confirmationBody),
+      htmlBody: confirmationEmailHtml,
       replyTo: REPLY_TO_EMAIL,
       saveToSentItems: true,
     },
