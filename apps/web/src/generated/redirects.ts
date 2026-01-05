@@ -16,31 +16,162 @@ export interface RedirectEntry {
  * Using a Map for O(1) lookup performance in middleware.
  */
 export const redirectsMap = new Map<string, RedirectEntry>([
-  ['/pl/audioshow-2018/', { destination: '/blog/audioshow-2018/', permanent: true }],
-  ['/audioshow-2018/', { destination: '/blog/audioshow-2018/', permanent: true }],
-  ['/pl/audioshow-2019/', { destination: '/blog/audioshow-2019/', permanent: true }],
-  ['/audioshow-2019/', { destination: '/blog/audioshow-2019/', permanent: true }],
-  ['/pl/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/', { destination: '/blog/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/', permanent: true }],
-  ['/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/', { destination: '/blog/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/', permanent: true }],
-  ['/pl/nagrody-stereophile-recommended-components-2024/', { destination: '/blog/nagrody-stereophile-recommended-components-2024/', permanent: true }],
-  ['/nagrody-stereophile-recommended-components-2024/', { destination: '/blog/nagrody-stereophile-recommended-components-2024/', permanent: true }],
-  ['/pl/nagrody-the-absolute-sound-editors-choice-2025/', { destination: '/blog/nagrody-the-absolute-sound-editors-choice-2025/', permanent: true }],
-  ['/nagrody-the-absolute-sound-editors-choice-2025/', { destination: '/blog/nagrody-the-absolute-sound-editors-choice-2025/', permanent: true }],
-  ['/pl/nagrody-the-absolute-sound-product-of-the-year-2025/', { destination: '/blog/nagrody-the-absolute-sound-product-of-the-year-2025/', permanent: true }],
-  ['/nagrody-the-absolute-sound-product-of-the-year-2025/', { destination: '/blog/nagrody-the-absolute-sound-product-of-the-year-2025/', permanent: true }],
-  ['/pl/pazdziernik-z-gryphon-audio-designs/', { destination: '/blog/pazdziernik-z-gryphon-audio-designs/', permanent: true }],
-  ['/pazdziernik-z-gryphon-audio-designs/', { destination: '/blog/pazdziernik-z-gryphon-audio-designs/', permanent: true }],
-  ['/pl/porady-na-temat-doboru-bezpiecznikow-synergistic-research/', { destination: '/blog/porady-na-temat-doboru-bezpiecznikow-synergistic-research/', permanent: true }],
-  ['/porady-na-temat-doboru-bezpiecznikow-synergistic-research/', { destination: '/blog/porady-na-temat-doboru-bezpiecznikow-synergistic-research/', permanent: true }],
-  ['/pl/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/', { destination: '/blog/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/', permanent: true }],
-  ['/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/', { destination: '/blog/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/', permanent: true }],
-  ['/pl/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/', { destination: '/blog/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/', permanent: true }],
-  ['/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/', { destination: '/blog/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/', permanent: true }],
-  ['/pl/refleksje-po-audio-video-show-2022/', { destination: '/blog/refleksje-po-audio-video-show-2022/', permanent: true }],
-  ['/refleksje-po-audio-video-show-2022/', { destination: '/blog/refleksje-po-audio-video-show-2022/', permanent: true }],
+  [
+    '/pl/audioshow-2018/',
+    { destination: '/blog/audioshow-2018/', permanent: true },
+  ],
+  [
+    '/audioshow-2018/',
+    { destination: '/blog/audioshow-2018/', permanent: true },
+  ],
+  [
+    '/pl/audioshow-2019/',
+    { destination: '/blog/audioshow-2019/', permanent: true },
+  ],
+  [
+    '/audioshow-2019/',
+    { destination: '/blog/audioshow-2019/', permanent: true },
+  ],
+  [
+    '/pl/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/',
+    {
+      destination:
+        '/blog/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/',
+    {
+      destination:
+        '/blog/doglebna-analiza-wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/nagrody-stereophile-recommended-components-2024/',
+    {
+      destination: '/blog/nagrody-stereophile-recommended-components-2024/',
+      permanent: true,
+    },
+  ],
+  [
+    '/nagrody-stereophile-recommended-components-2024/',
+    {
+      destination: '/blog/nagrody-stereophile-recommended-components-2024/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/nagrody-the-absolute-sound-editors-choice-2025/',
+    {
+      destination: '/blog/nagrody-the-absolute-sound-editors-choice-2025/',
+      permanent: true,
+    },
+  ],
+  [
+    '/nagrody-the-absolute-sound-editors-choice-2025/',
+    {
+      destination: '/blog/nagrody-the-absolute-sound-editors-choice-2025/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/nagrody-the-absolute-sound-product-of-the-year-2025/',
+    {
+      destination: '/blog/nagrody-the-absolute-sound-product-of-the-year-2025/',
+      permanent: true,
+    },
+  ],
+  [
+    '/nagrody-the-absolute-sound-product-of-the-year-2025/',
+    {
+      destination: '/blog/nagrody-the-absolute-sound-product-of-the-year-2025/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/pazdziernik-z-gryphon-audio-designs/',
+    {
+      destination: '/blog/pazdziernik-z-gryphon-audio-designs/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pazdziernik-z-gryphon-audio-designs/',
+    {
+      destination: '/blog/pazdziernik-z-gryphon-audio-designs/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/porady-na-temat-doboru-bezpiecznikow-synergistic-research/',
+    {
+      destination:
+        '/blog/porady-na-temat-doboru-bezpiecznikow-synergistic-research/',
+      permanent: true,
+    },
+  ],
+  [
+    '/porady-na-temat-doboru-bezpiecznikow-synergistic-research/',
+    {
+      destination:
+        '/blog/porady-na-temat-doboru-bezpiecznikow-synergistic-research/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/',
+    {
+      destination:
+        '/blog/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/',
+    {
+      destination:
+        '/blog/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/',
+    {
+      destination:
+        '/blog/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/',
+      permanent: true,
+    },
+  ],
+  [
+    '/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/',
+    {
+      destination:
+        '/blog/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/refleksje-po-audio-video-show-2022/',
+    {
+      destination: '/blog/refleksje-po-audio-video-show-2022/',
+      permanent: true,
+    },
+  ],
+  [
+    '/refleksje-po-audio-video-show-2022/',
+    {
+      destination: '/blog/refleksje-po-audio-video-show-2022/',
+      permanent: true,
+    },
+  ],
   ['/pl/o-nas/', { destination: '/o-nas/', permanent: true }],
   ['/pl/kontakt/', { destination: '/kontakt/', permanent: true }],
-  ['/pl/polityka-prywatnosci/', { destination: '/polityka-prywatnosci/', permanent: true }],
+  [
+    '/pl/polityka-prywatnosci/',
+    { destination: '/polityka-prywatnosci/', permanent: true },
+  ],
   ['/pl/regulamin/', { destination: '/regulamin/', permanent: true }],
   ['/pl/marki/', { destination: '/marki/', permanent: true }],
   ['/pl/cenniki/', { destination: '/marki/', permanent: true }],
@@ -55,20 +186,44 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/typy-urzadzen/', { destination: '/produkty/', permanent: true }],
   ['/pl/mapa-serwisu/', { destination: '/', permanent: true }],
   ['/mapa-serwisu/', { destination: '/', permanent: true }],
-  ['/pl/acoustic-signature/', { destination: '/marki/acoustic-signature/', permanent: true }],
-  ['/acoustic-signature/', { destination: '/marki/acoustic-signature/', permanent: true }],
-  ['/pl/artesania-audio/', { destination: '/marki/artesania-audio/', permanent: true }],
-  ['/artesania-audio/', { destination: '/marki/artesania-audio/', permanent: true }],
-  ['/pl/audioresearch/', { destination: '/marki/audioresearch/', permanent: true }],
-  ['/audioresearch/', { destination: '/marki/audioresearch/', permanent: true }],
+  [
+    '/pl/acoustic-signature/',
+    { destination: '/marki/acoustic-signature/', permanent: true },
+  ],
+  [
+    '/acoustic-signature/',
+    { destination: '/marki/acoustic-signature/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/',
+    { destination: '/marki/artesania-audio/', permanent: true },
+  ],
+  [
+    '/artesania-audio/',
+    { destination: '/marki/artesania-audio/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/',
+    { destination: '/marki/audioresearch/', permanent: true },
+  ],
+  [
+    '/audioresearch/',
+    { destination: '/marki/audioresearch/', permanent: true },
+  ],
   ['/pl/aurender/', { destination: '/marki/aurender/', permanent: true }],
   ['/aurender/', { destination: '/marki/aurender/', permanent: true }],
   ['/pl/ayre/', { destination: '/marki/ayre/', permanent: true }],
   ['/ayre/', { destination: '/marki/ayre/', permanent: true }],
   ['/pl/bricasti/', { destination: '/marki/bricasti/', permanent: true }],
   ['/bricasti/', { destination: '/marki/bricasti/', permanent: true }],
-  ['/pl/dan-dagostino/', { destination: '/marki/dan-dagostino/', permanent: true }],
-  ['/dan-dagostino/', { destination: '/marki/dan-dagostino/', permanent: true }],
+  [
+    '/pl/dan-dagostino/',
+    { destination: '/marki/dan-dagostino/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/',
+    { destination: '/marki/dan-dagostino/', permanent: true },
+  ],
   ['/pl/dcs/', { destination: '/marki/dcs/', permanent: true }],
   ['/dcs/', { destination: '/marki/dcs/', permanent: true }],
   ['/pl/dutchdutch/', { destination: '/marki/dutchdutch/', permanent: true }],
@@ -77,18 +232,36 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/exogal/', { destination: '/marki/exogal/', permanent: true }],
   ['/pl/goldenear/', { destination: '/marki/goldenear/', permanent: true }],
   ['/goldenear/', { destination: '/marki/goldenear/', permanent: true }],
-  ['/pl/grand-prix-audio/', { destination: '/marki/grand-prix-audio/', permanent: true }],
-  ['/grand-prix-audio/', { destination: '/marki/grand-prix-audio/', permanent: true }],
+  [
+    '/pl/grand-prix-audio/',
+    { destination: '/marki/grand-prix-audio/', permanent: true },
+  ],
+  [
+    '/grand-prix-audio/',
+    { destination: '/marki/grand-prix-audio/', permanent: true },
+  ],
   ['/pl/grimm-audio/', { destination: '/marki/grimm-audio/', permanent: true }],
   ['/grimm-audio/', { destination: '/marki/grimm-audio/', permanent: true }],
-  ['/pl/gryphon-audio/', { destination: '/marki/gryphon-audio/', permanent: true }],
-  ['/gryphon-audio/', { destination: '/marki/gryphon-audio/', permanent: true }],
+  [
+    '/pl/gryphon-audio/',
+    { destination: '/marki/gryphon-audio/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/',
+    { destination: '/marki/gryphon-audio/', permanent: true },
+  ],
   ['/pl/keces-audio/', { destination: '/marki/keces-audio/', permanent: true }],
   ['/keces-audio/', { destination: '/marki/keces-audio/', permanent: true }],
   ['/pl/klh-audio/', { destination: '/marki/klh-audio/', permanent: true }],
   ['/klh-audio/', { destination: '/marki/klh-audio/', permanent: true }],
-  ['/pl/moonriver-audio/', { destination: '/marki/moonriver-audio/', permanent: true }],
-  ['/moonriver-audio/', { destination: '/marki/moonriver-audio/', permanent: true }],
+  [
+    '/pl/moonriver-audio/',
+    { destination: '/marki/moonriver-audio/', permanent: true },
+  ],
+  [
+    '/moonriver-audio/',
+    { destination: '/marki/moonriver-audio/', permanent: true },
+  ],
   ['/pl/mutec/', { destination: '/marki/mutec/', permanent: true }],
   ['/mutec/', { destination: '/marki/mutec/', permanent: true }],
   ['/pl/primaluna/', { destination: '/marki/primaluna/', permanent: true }],
@@ -97,18 +270,42 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/rogue-audio/', { destination: '/marki/rogue-audio/', permanent: true }],
   ['/pl/roon-labs/', { destination: '/marki/roon-labs/', permanent: true }],
   ['/roon-labs/', { destination: '/marki/roon-labs/', permanent: true }],
-  ['/pl/shunyata-research/', { destination: '/marki/shunyata-research/', permanent: true }],
-  ['/shunyata-research/', { destination: '/marki/shunyata-research/', permanent: true }],
+  [
+    '/pl/shunyata-research/',
+    { destination: '/marki/shunyata-research/', permanent: true },
+  ],
+  [
+    '/shunyata-research/',
+    { destination: '/marki/shunyata-research/', permanent: true },
+  ],
   ['/pl/soundsmith/', { destination: '/marki/soundsmith/', permanent: true }],
   ['/soundsmith/', { destination: '/marki/soundsmith/', permanent: true }],
-  ['/pl/spiral-groove/', { destination: '/marki/spiral-groove/', permanent: true }],
-  ['/spiral-groove/', { destination: '/marki/spiral-groove/', permanent: true }],
-  ['/pl/stealth-audio/', { destination: '/marki/stealth-audio/', permanent: true }],
-  ['/stealth-audio/', { destination: '/marki/stealth-audio/', permanent: true }],
+  [
+    '/pl/spiral-groove/',
+    { destination: '/marki/spiral-groove/', permanent: true },
+  ],
+  [
+    '/spiral-groove/',
+    { destination: '/marki/spiral-groove/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/',
+    { destination: '/marki/stealth-audio/', permanent: true },
+  ],
+  [
+    '/stealth-audio/',
+    { destination: '/marki/stealth-audio/', permanent: true },
+  ],
   ['/pl/symposium/', { destination: '/marki/symposium/', permanent: true }],
   ['/symposium/', { destination: '/marki/symposium/', permanent: true }],
-  ['/pl/synergistic-research/', { destination: '/marki/synergistic-research/', permanent: true }],
-  ['/synergistic-research/', { destination: '/marki/synergistic-research/', permanent: true }],
+  [
+    '/pl/synergistic-research/',
+    { destination: '/marki/synergistic-research/', permanent: true },
+  ],
+  [
+    '/synergistic-research/',
+    { destination: '/marki/synergistic-research/', permanent: true },
+  ],
   ['/pl/taiko-audio/', { destination: '/marki/taiko-audio/', permanent: true }],
   ['/taiko-audio/', { destination: '/marki/taiko-audio/', permanent: true }],
   ['/pl/thixar/', { destination: '/marki/thixar/', permanent: true }],
@@ -119,182 +316,709 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/vandersteen/', { destination: '/marki/vandersteen/', permanent: true }],
   ['/pl/vibrapod/', { destination: '/marki/vibrapod/', permanent: true }],
   ['/vibrapod/', { destination: '/marki/vibrapod/', permanent: true }],
-  ['/pl/viv-laboratory/', { destination: '/marki/viv-laboratory/', permanent: true }],
-  ['/viv-laboratory/', { destination: '/marki/viv-laboratory/', permanent: true }],
+  [
+    '/pl/viv-laboratory/',
+    { destination: '/marki/viv-laboratory/', permanent: true },
+  ],
+  [
+    '/viv-laboratory/',
+    { destination: '/marki/viv-laboratory/', permanent: true },
+  ],
   ['/pl/weiss/', { destination: '/marki/weiss/', permanent: true }],
   ['/weiss/', { destination: '/marki/weiss/', permanent: true }],
-  ['/pl/wilson-audio/', { destination: '/marki/wilson-audio/', permanent: true }],
+  [
+    '/pl/wilson-audio/',
+    { destination: '/marki/wilson-audio/', permanent: true },
+  ],
   ['/wilson-audio/', { destination: '/marki/wilson-audio/', permanent: true }],
-  ['/pl/akcesoria-akustyczne/', { destination: '/produkty/kategoria/akcesoria-akustyczne/', permanent: true }],
-  ['/akcesoria-akustyczne/', { destination: '/produkty/kategoria/akcesoria-akustyczne/', permanent: true }],
-  ['/pl/akcesoria-gramofonowe/', { destination: '/produkty/kategoria/akcesoria/', permanent: true }],
-  ['/akcesoria-gramofonowe/', { destination: '/produkty/kategoria/akcesoria/', permanent: true }],
-  ['/pl/bezpieczniki/', { destination: '/produkty/kategoria/bezpieczniki/', permanent: true }],
-  ['/bezpieczniki/', { destination: '/produkty/kategoria/bezpieczniki/', permanent: true }],
-  ['/pl/gramofony/', { destination: '/produkty/kategoria/gramofony/', permanent: true }],
-  ['/gramofony/', { destination: '/produkty/kategoria/gramofony/', permanent: true }],
-  ['/pl/glosniki-aktywne/', { destination: '/produkty/kategoria/glosniki-aktywne/', permanent: true }],
-  ['/glosniki-aktywne/', { destination: '/produkty/kategoria/glosniki-aktywne/', permanent: true }],
-  ['/pl/glosniki-do-kina-domowego/', { destination: '/produkty/kategoria/glosniki-do-kina-domowego/', permanent: true }],
-  ['/glosniki-do-kina-domowego/', { destination: '/produkty/kategoria/glosniki-do-kina-domowego/', permanent: true }],
-  ['/pl/glosniki-instalacyjne/', { destination: '/produkty/kategoria/glosniki-instalacyjne/', permanent: true }],
-  ['/glosniki-instalacyjne/', { destination: '/produkty/kategoria/glosniki-instalacyjne/', permanent: true }],
-  ['/pl/glosniki-podstawkowe/', { destination: '/produkty/kategoria/glosniki-podstawkowe/', permanent: true }],
-  ['/glosniki-podstawkowe/', { destination: '/produkty/kategoria/glosniki-podstawkowe/', permanent: true }],
-  ['/pl/glosniki-podlogowe/', { destination: '/produkty/kategoria/glosniki-podlogowe/', permanent: true }],
-  ['/glosniki-podlogowe/', { destination: '/produkty/kategoria/glosniki-podlogowe/', permanent: true }],
-  ['/pl/interkonekty/', { destination: '/produkty/kategoria/interkonekty/', permanent: true }],
-  ['/interkonekty/', { destination: '/produkty/kategoria/interkonekty/', permanent: true }],
-  ['/pl/kable-cyfrowe/', { destination: '/produkty/kategoria/kable-cyfrowe/', permanent: true }],
-  ['/kable-cyfrowe/', { destination: '/produkty/kategoria/kable-cyfrowe/', permanent: true }],
-  ['/pl/kable-do-subwooferow/', { destination: '/produkty/kategoria/kable-do-subwooferow/', permanent: true }],
-  ['/kable-do-subwooferow/', { destination: '/produkty/kategoria/kable-do-subwooferow/', permanent: true }],
-  ['/pl/kable-ethernet/', { destination: '/produkty/kategoria/kable-ethernet/', permanent: true }],
-  ['/kable-ethernet/', { destination: '/produkty/kategoria/kable-ethernet/', permanent: true }],
-  ['/pl/kable-glosnikowe/', { destination: '/produkty/kategoria/kable-glosnikowe/', permanent: true }],
-  ['/kable-glosnikowe/', { destination: '/produkty/kategoria/kable-glosnikowe/', permanent: true }],
-  ['/pl/kable-usb/', { destination: '/produkty/kategoria/kable-usb/', permanent: true }],
-  ['/kable-usb/', { destination: '/produkty/kategoria/kable-usb/', permanent: true }],
-  ['/pl/kable-uziemiajace/', { destination: '/produkty/kategoria/kable-uziemiajace/', permanent: true }],
-  ['/kable-uziemiajace/', { destination: '/produkty/kategoria/kable-uziemiajace/', permanent: true }],
-  ['/pl/kable-zasilajace/', { destination: '/produkty/kategoria/kable-zasilajace/', permanent: true }],
-  ['/kable-zasilajace/', { destination: '/produkty/kategoria/kable-zasilajace/', permanent: true }],
-  ['/pl/kable-zegarowe/', { destination: '/produkty/kategoria/kable-zegarowe/', permanent: true }],
-  ['/kable-zegarowe/', { destination: '/produkty/kategoria/kable-zegarowe/', permanent: true }],
-  ['/pl/kondycjonery/', { destination: '/produkty/kategoria/kondycjonery/', permanent: true }],
-  ['/kondycjonery/', { destination: '/produkty/kategoria/kondycjonery/', permanent: true }],
-  ['/pl/odtwarzacze-cd/', { destination: '/produkty/kategoria/odtwarzacze-cd/', permanent: true }],
-  ['/odtwarzacze-cd/', { destination: '/produkty/kategoria/odtwarzacze-cd/', permanent: true }],
-  ['/pl/podstawki-i-kolce/', { destination: '/produkty/kategoria/podstawki-i-kolce/', permanent: true }],
-  ['/podstawki-i-kolce/', { destination: '/produkty/kategoria/podstawki-i-kolce/', permanent: true }],
-  ['/pl/akcesoria/', { destination: '/produkty/kategoria/akcesoria/', permanent: true }],
-  ['/akcesoria/', { destination: '/produkty/kategoria/akcesoria/', permanent: true }],
-  ['/pl/polki/', { destination: '/produkty/kategoria/polki/', permanent: true }],
+  [
+    '/pl/akcesoria-akustyczne/',
+    {
+      destination: '/produkty/kategoria/akcesoria-akustyczne/',
+      permanent: true,
+    },
+  ],
+  [
+    '/akcesoria-akustyczne/',
+    {
+      destination: '/produkty/kategoria/akcesoria-akustyczne/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/akcesoria-gramofonowe/',
+    { destination: '/produkty/kategoria/akcesoria/', permanent: true },
+  ],
+  [
+    '/akcesoria-gramofonowe/',
+    { destination: '/produkty/kategoria/akcesoria/', permanent: true },
+  ],
+  [
+    '/pl/bezpieczniki/',
+    { destination: '/produkty/kategoria/bezpieczniki/', permanent: true },
+  ],
+  [
+    '/bezpieczniki/',
+    { destination: '/produkty/kategoria/bezpieczniki/', permanent: true },
+  ],
+  [
+    '/pl/gramofony/',
+    { destination: '/produkty/kategoria/gramofony/', permanent: true },
+  ],
+  [
+    '/gramofony/',
+    { destination: '/produkty/kategoria/gramofony/', permanent: true },
+  ],
+  [
+    '/pl/glosniki-aktywne/',
+    { destination: '/produkty/kategoria/glosniki-aktywne/', permanent: true },
+  ],
+  [
+    '/glosniki-aktywne/',
+    { destination: '/produkty/kategoria/glosniki-aktywne/', permanent: true },
+  ],
+  [
+    '/pl/glosniki-do-kina-domowego/',
+    {
+      destination: '/produkty/kategoria/glosniki-do-kina-domowego/',
+      permanent: true,
+    },
+  ],
+  [
+    '/glosniki-do-kina-domowego/',
+    {
+      destination: '/produkty/kategoria/glosniki-do-kina-domowego/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/glosniki-instalacyjne/',
+    {
+      destination: '/produkty/kategoria/glosniki-instalacyjne/',
+      permanent: true,
+    },
+  ],
+  [
+    '/glosniki-instalacyjne/',
+    {
+      destination: '/produkty/kategoria/glosniki-instalacyjne/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/glosniki-podstawkowe/',
+    {
+      destination: '/produkty/kategoria/glosniki-podstawkowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/glosniki-podstawkowe/',
+    {
+      destination: '/produkty/kategoria/glosniki-podstawkowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/glosniki-podlogowe/',
+    { destination: '/produkty/kategoria/glosniki-podlogowe/', permanent: true },
+  ],
+  [
+    '/glosniki-podlogowe/',
+    { destination: '/produkty/kategoria/glosniki-podlogowe/', permanent: true },
+  ],
+  [
+    '/pl/interkonekty/',
+    { destination: '/produkty/kategoria/interkonekty/', permanent: true },
+  ],
+  [
+    '/interkonekty/',
+    { destination: '/produkty/kategoria/interkonekty/', permanent: true },
+  ],
+  [
+    '/pl/kable-cyfrowe/',
+    { destination: '/produkty/kategoria/kable-cyfrowe/', permanent: true },
+  ],
+  [
+    '/kable-cyfrowe/',
+    { destination: '/produkty/kategoria/kable-cyfrowe/', permanent: true },
+  ],
+  [
+    '/pl/kable-do-subwooferow/',
+    {
+      destination: '/produkty/kategoria/kable-do-subwooferow/',
+      permanent: true,
+    },
+  ],
+  [
+    '/kable-do-subwooferow/',
+    {
+      destination: '/produkty/kategoria/kable-do-subwooferow/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/kable-ethernet/',
+    { destination: '/produkty/kategoria/kable-ethernet/', permanent: true },
+  ],
+  [
+    '/kable-ethernet/',
+    { destination: '/produkty/kategoria/kable-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/kable-glosnikowe/',
+    { destination: '/produkty/kategoria/kable-glosnikowe/', permanent: true },
+  ],
+  [
+    '/kable-glosnikowe/',
+    { destination: '/produkty/kategoria/kable-glosnikowe/', permanent: true },
+  ],
+  [
+    '/pl/kable-usb/',
+    { destination: '/produkty/kategoria/kable-usb/', permanent: true },
+  ],
+  [
+    '/kable-usb/',
+    { destination: '/produkty/kategoria/kable-usb/', permanent: true },
+  ],
+  [
+    '/pl/kable-uziemiajace/',
+    { destination: '/produkty/kategoria/kable-uziemiajace/', permanent: true },
+  ],
+  [
+    '/kable-uziemiajace/',
+    { destination: '/produkty/kategoria/kable-uziemiajace/', permanent: true },
+  ],
+  [
+    '/pl/kable-zasilajace/',
+    { destination: '/produkty/kategoria/kable-zasilajace/', permanent: true },
+  ],
+  [
+    '/kable-zasilajace/',
+    { destination: '/produkty/kategoria/kable-zasilajace/', permanent: true },
+  ],
+  [
+    '/pl/kable-zegarowe/',
+    { destination: '/produkty/kategoria/kable-zegarowe/', permanent: true },
+  ],
+  [
+    '/kable-zegarowe/',
+    { destination: '/produkty/kategoria/kable-zegarowe/', permanent: true },
+  ],
+  [
+    '/pl/kondycjonery/',
+    { destination: '/produkty/kategoria/kondycjonery/', permanent: true },
+  ],
+  [
+    '/kondycjonery/',
+    { destination: '/produkty/kategoria/kondycjonery/', permanent: true },
+  ],
+  [
+    '/pl/odtwarzacze-cd/',
+    { destination: '/produkty/kategoria/odtwarzacze-cd/', permanent: true },
+  ],
+  [
+    '/odtwarzacze-cd/',
+    { destination: '/produkty/kategoria/odtwarzacze-cd/', permanent: true },
+  ],
+  [
+    '/pl/podstawki-i-kolce/',
+    { destination: '/produkty/kategoria/podstawki-i-kolce/', permanent: true },
+  ],
+  [
+    '/podstawki-i-kolce/',
+    { destination: '/produkty/kategoria/podstawki-i-kolce/', permanent: true },
+  ],
+  [
+    '/pl/akcesoria/',
+    { destination: '/produkty/kategoria/akcesoria/', permanent: true },
+  ],
+  [
+    '/akcesoria/',
+    { destination: '/produkty/kategoria/akcesoria/', permanent: true },
+  ],
+  [
+    '/pl/polki/',
+    { destination: '/produkty/kategoria/polki/', permanent: true },
+  ],
   ['/polki/', { destination: '/produkty/kategoria/polki/', permanent: true }],
-  ['/pl/przedwzmacniacze-gramofonowe/', { destination: '/produkty/kategoria/przedwzmacniacze-gramofonowe/', permanent: true }],
-  ['/przedwzmacniacze-gramofonowe/', { destination: '/produkty/kategoria/przedwzmacniacze-gramofonowe/', permanent: true }],
-  ['/pl/przedwzmacniacze/', { destination: '/produkty/kategoria/przedwzmacniacze/', permanent: true }],
-  ['/przedwzmacniacze/', { destination: '/produkty/kategoria/przedwzmacniacze/', permanent: true }],
-  ['/pl/przetworniki-dac/', { destination: '/produkty/kategoria/przetworniki-dac/', permanent: true }],
-  ['/przetworniki-dac/', { destination: '/produkty/kategoria/przetworniki-dac/', permanent: true }],
-  ['/pl/przewody-gramofonowe/', { destination: '/produkty/kategoria/przewody-gramofonowe/', permanent: true }],
-  ['/przewody-gramofonowe/', { destination: '/produkty/kategoria/przewody-gramofonowe/', permanent: true }],
-  ['/pl/ramiona-gramofonowe/', { destination: '/produkty/kategoria/ramiona-gramofonowe/', permanent: true }],
-  ['/ramiona-gramofonowe/', { destination: '/produkty/kategoria/ramiona-gramofonowe/', permanent: true }],
-  ['/pl/zegary-wzorcowe/', { destination: '/produkty/kategoria/zegary-wzorcowe/', permanent: true }],
-  ['/zegary-wzorcowe/', { destination: '/produkty/kategoria/zegary-wzorcowe/', permanent: true }],
-  ['/pl/serwery-muzyczne/', { destination: '/produkty/kategoria/serwery-muzyczne/', permanent: true }],
-  ['/serwery-muzyczne/', { destination: '/produkty/kategoria/serwery-muzyczne/', permanent: true }],
-  ['/pl/serwery-muzyczne-z-wyjsciem-analogowym/', { destination: '/produkty/kategoria/serwery-muzyczne-z-wyjsciem-analogowym/', permanent: true }],
-  ['/serwery-muzyczne-z-wyjsciem-analogowym/', { destination: '/produkty/kategoria/serwery-muzyczne-z-wyjsciem-analogowym/', permanent: true }],
-  ['/pl/soundbary/', { destination: '/produkty/kategoria/soundbary/', permanent: true }],
-  ['/soundbary/', { destination: '/produkty/kategoria/soundbary/', permanent: true }],
-  ['/pl/stacje-uziemiajace/', { destination: '/produkty/kategoria/stacje-uziemiajace/', permanent: true }],
-  ['/stacje-uziemiajace/', { destination: '/produkty/kategoria/stacje-uziemiajace/', permanent: true }],
-  ['/pl/stoliki/', { destination: '/produkty/kategoria/stoliki/', permanent: true }],
-  ['/stoliki/', { destination: '/produkty/kategoria/stoliki/', permanent: true }],
-  ['/pl/subwoofery/', { destination: '/produkty/kategoria/subwoofery/', permanent: true }],
-  ['/subwoofery/', { destination: '/produkty/kategoria/subwoofery/', permanent: true }],
-  ['/pl/switche/', { destination: '/produkty/kategoria/switche/', permanent: true }],
-  ['/switche/', { destination: '/produkty/kategoria/switche/', permanent: true }],
+  [
+    '/pl/przedwzmacniacze-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/przedwzmacniacze-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/przedwzmacniacze-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/przedwzmacniacze-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/przedwzmacniacze/',
+    { destination: '/produkty/kategoria/przedwzmacniacze/', permanent: true },
+  ],
+  [
+    '/przedwzmacniacze/',
+    { destination: '/produkty/kategoria/przedwzmacniacze/', permanent: true },
+  ],
+  [
+    '/pl/przetworniki-dac/',
+    { destination: '/produkty/kategoria/przetworniki-dac/', permanent: true },
+  ],
+  [
+    '/przetworniki-dac/',
+    { destination: '/produkty/kategoria/przetworniki-dac/', permanent: true },
+  ],
+  [
+    '/pl/przewody-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/przewody-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/przewody-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/przewody-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/ramiona-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/ramiona-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/ramiona-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/ramiona-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/zegary-wzorcowe/',
+    { destination: '/produkty/kategoria/zegary-wzorcowe/', permanent: true },
+  ],
+  [
+    '/zegary-wzorcowe/',
+    { destination: '/produkty/kategoria/zegary-wzorcowe/', permanent: true },
+  ],
+  [
+    '/pl/serwery-muzyczne/',
+    { destination: '/produkty/kategoria/serwery-muzyczne/', permanent: true },
+  ],
+  [
+    '/serwery-muzyczne/',
+    { destination: '/produkty/kategoria/serwery-muzyczne/', permanent: true },
+  ],
+  [
+    '/pl/serwery-muzyczne-z-wyjsciem-analogowym/',
+    {
+      destination:
+        '/produkty/kategoria/serwery-muzyczne-z-wyjsciem-analogowym/',
+      permanent: true,
+    },
+  ],
+  [
+    '/serwery-muzyczne-z-wyjsciem-analogowym/',
+    {
+      destination:
+        '/produkty/kategoria/serwery-muzyczne-z-wyjsciem-analogowym/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/soundbary/',
+    { destination: '/produkty/kategoria/soundbary/', permanent: true },
+  ],
+  [
+    '/soundbary/',
+    { destination: '/produkty/kategoria/soundbary/', permanent: true },
+  ],
+  [
+    '/pl/stacje-uziemiajace/',
+    { destination: '/produkty/kategoria/stacje-uziemiajace/', permanent: true },
+  ],
+  [
+    '/stacje-uziemiajace/',
+    { destination: '/produkty/kategoria/stacje-uziemiajace/', permanent: true },
+  ],
+  [
+    '/pl/stoliki/',
+    { destination: '/produkty/kategoria/stoliki/', permanent: true },
+  ],
+  [
+    '/stoliki/',
+    { destination: '/produkty/kategoria/stoliki/', permanent: true },
+  ],
+  [
+    '/pl/subwoofery/',
+    { destination: '/produkty/kategoria/subwoofery/', permanent: true },
+  ],
+  [
+    '/subwoofery/',
+    { destination: '/produkty/kategoria/subwoofery/', permanent: true },
+  ],
+  [
+    '/pl/switche/',
+    { destination: '/produkty/kategoria/switche/', permanent: true },
+  ],
+  [
+    '/switche/',
+    { destination: '/produkty/kategoria/switche/', permanent: true },
+  ],
   ['/pl/sluchawki/', { destination: '/produkty/', permanent: true }],
   ['/sluchawki/', { destination: '/produkty/', permanent: true }],
-  ['/pl/upsamplery/', { destination: '/produkty/kategoria/upsamplery/', permanent: true }],
-  ['/upsamplery/', { destination: '/produkty/kategoria/upsamplery/', permanent: true }],
-  ['/pl/wkladki-gramofonowe/', { destination: '/produkty/kategoria/wkladki-gramofonowe/', permanent: true }],
-  ['/wkladki-gramofonowe/', { destination: '/produkty/kategoria/wkladki-gramofonowe/', permanent: true }],
-  ['/pl/wzmacniacze/', { destination: '/produkty/kategoria/wzmacniacze/', permanent: true }],
-  ['/wzmacniacze/', { destination: '/produkty/kategoria/wzmacniacze/', permanent: true }],
-  ['/pl/wzmacniacze-sluchawkowe/', { destination: '/produkty/kategoria/wzmacniacze-sluchawkowe/', permanent: true }],
-  ['/wzmacniacze-sluchawkowe/', { destination: '/produkty/kategoria/wzmacniacze-sluchawkowe/', permanent: true }],
-  ['/pl/wzmacniacze-zintegrowane/', { destination: '/produkty/kategoria/wzmacniacze-zintegrowane/', permanent: true }],
-  ['/wzmacniacze-zintegrowane/', { destination: '/produkty/kategoria/wzmacniacze-zintegrowane/', permanent: true }],
-  ['/pl/zasilacze/', { destination: '/produkty/kategoria/zasilacze/', permanent: true }],
-  ['/zasilacze/', { destination: '/produkty/kategoria/zasilacze/', permanent: true }],
-  ['/pl/artesania-audio/Absolute-Rack', { destination: '/produkty/absolute-rack/', permanent: true }],
-  ['/artesania-audio/Absolute-Rack', { destination: '/produkty/absolute-rack/', permanent: true }],
-  ['/pl/artesania-audio/air-force-rack', { destination: '/produkty/air-force-rack/', permanent: true }],
-  ['/artesania-audio/air-force-rack', { destination: '/produkty/air-force-rack/', permanent: true }],
-  ['/pl/artesania-audio/audiovideo', { destination: '/produkty/audiovideo/', permanent: true }],
-  ['/artesania-audio/audiovideo', { destination: '/produkty/audiovideo/', permanent: true }],
-  ['/pl/artesania-audio/Cable-elevator', { destination: '/produkty/cable-elevator/', permanent: true }],
-  ['/artesania-audio/Cable-elevator', { destination: '/produkty/cable-elevator/', permanent: true }],
-  ['/pl/artesania-audio/decoupling-discs', { destination: '/produkty/decoupling-discs/', permanent: true }],
-  ['/artesania-audio/decoupling-discs', { destination: '/produkty/decoupling-discs/', permanent: true }],
-  ['/pl/artesania-audio/exoteryc', { destination: '/produkty/exoteryc/', permanent: true }],
-  ['/artesania-audio/exoteryc', { destination: '/produkty/exoteryc/', permanent: true }],
-  ['/pl/artesania-audio/floor-platforms', { destination: '/produkty/floor-platforms/', permanent: true }],
-  ['/artesania-audio/floor-platforms', { destination: '/produkty/floor-platforms/', permanent: true }],
-  ['/pl/artesania-audio/improved', { destination: '/produkty/improved/', permanent: true }],
-  ['/artesania-audio/improved', { destination: '/produkty/improved/', permanent: true }],
-  ['/pl/artesania-audio/Kalista-Rack', { destination: '/produkty/kalista-rack/', permanent: true }],
-  ['/artesania-audio/Kalista-Rack', { destination: '/produkty/kalista-rack/', permanent: true }],
-  ['/pl/artesania-audio/Master-Kio', { destination: '/produkty/master-kio/', permanent: true }],
-  ['/artesania-audio/Master-Kio', { destination: '/produkty/master-kio/', permanent: true }],
-  ['/pl/artesania-audio/Modular-Rack', { destination: '/produkty/modular-rack/', permanent: true }],
-  ['/artesania-audio/Modular-Rack', { destination: '/produkty/modular-rack/', permanent: true }],
-  ['/pl/artesania-audio/platforma-aire', { destination: '/produkty/platforma-aire/', permanent: true }],
-  ['/artesania-audio/platforma-aire', { destination: '/produkty/platforma-aire/', permanent: true }],
-  ['/pl/artesania-audio/platforms', { destination: '/produkty/platforms/', permanent: true }],
-  ['/artesania-audio/platforms', { destination: '/produkty/platforms/', permanent: true }],
-  ['/pl/artesania-audio/prestige', { destination: '/produkty/prestige/', permanent: true }],
-  ['/artesania-audio/prestige', { destination: '/produkty/prestige/', permanent: true }],
-  ['/pl/artesania-audio/shelves', { destination: '/produkty/shelves/', permanent: true }],
-  ['/artesania-audio/shelves', { destination: '/produkty/shelves/', permanent: true }],
-  ['/pl/artesania-audio/tlumiki-drgan', { destination: '/produkty/tlumiki-drgan/', permanent: true }],
-  ['/artesania-audio/tlumiki-drgan', { destination: '/produkty/tlumiki-drgan/', permanent: true }],
+  [
+    '/pl/upsamplery/',
+    { destination: '/produkty/kategoria/upsamplery/', permanent: true },
+  ],
+  [
+    '/upsamplery/',
+    { destination: '/produkty/kategoria/upsamplery/', permanent: true },
+  ],
+  [
+    '/pl/wkladki-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/wkladki-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/wkladki-gramofonowe/',
+    {
+      destination: '/produkty/kategoria/wkladki-gramofonowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/wzmacniacze/',
+    { destination: '/produkty/kategoria/wzmacniacze/', permanent: true },
+  ],
+  [
+    '/wzmacniacze/',
+    { destination: '/produkty/kategoria/wzmacniacze/', permanent: true },
+  ],
+  [
+    '/pl/wzmacniacze-sluchawkowe/',
+    {
+      destination: '/produkty/kategoria/wzmacniacze-sluchawkowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/wzmacniacze-sluchawkowe/',
+    {
+      destination: '/produkty/kategoria/wzmacniacze-sluchawkowe/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/wzmacniacze-zintegrowane/',
+    {
+      destination: '/produkty/kategoria/wzmacniacze-zintegrowane/',
+      permanent: true,
+    },
+  ],
+  [
+    '/wzmacniacze-zintegrowane/',
+    {
+      destination: '/produkty/kategoria/wzmacniacze-zintegrowane/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/zasilacze/',
+    { destination: '/produkty/kategoria/zasilacze/', permanent: true },
+  ],
+  [
+    '/zasilacze/',
+    { destination: '/produkty/kategoria/zasilacze/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/Absolute-Rack',
+    { destination: '/produkty/absolute-rack/', permanent: true },
+  ],
+  [
+    '/artesania-audio/Absolute-Rack',
+    { destination: '/produkty/absolute-rack/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/air-force-rack',
+    { destination: '/produkty/air-force-rack/', permanent: true },
+  ],
+  [
+    '/artesania-audio/air-force-rack',
+    { destination: '/produkty/air-force-rack/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/audiovideo',
+    { destination: '/produkty/audiovideo/', permanent: true },
+  ],
+  [
+    '/artesania-audio/audiovideo',
+    { destination: '/produkty/audiovideo/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/Cable-elevator',
+    { destination: '/produkty/cable-elevator/', permanent: true },
+  ],
+  [
+    '/artesania-audio/Cable-elevator',
+    { destination: '/produkty/cable-elevator/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/decoupling-discs',
+    { destination: '/produkty/decoupling-discs/', permanent: true },
+  ],
+  [
+    '/artesania-audio/decoupling-discs',
+    { destination: '/produkty/decoupling-discs/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/exoteryc',
+    { destination: '/produkty/exoteryc/', permanent: true },
+  ],
+  [
+    '/artesania-audio/exoteryc',
+    { destination: '/produkty/exoteryc/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/floor-platforms',
+    { destination: '/produkty/floor-platforms/', permanent: true },
+  ],
+  [
+    '/artesania-audio/floor-platforms',
+    { destination: '/produkty/floor-platforms/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/improved',
+    { destination: '/produkty/improved/', permanent: true },
+  ],
+  [
+    '/artesania-audio/improved',
+    { destination: '/produkty/improved/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/Kalista-Rack',
+    { destination: '/produkty/kalista-rack/', permanent: true },
+  ],
+  [
+    '/artesania-audio/Kalista-Rack',
+    { destination: '/produkty/kalista-rack/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/Master-Kio',
+    { destination: '/produkty/master-kio/', permanent: true },
+  ],
+  [
+    '/artesania-audio/Master-Kio',
+    { destination: '/produkty/master-kio/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/Modular-Rack',
+    { destination: '/produkty/modular-rack/', permanent: true },
+  ],
+  [
+    '/artesania-audio/Modular-Rack',
+    { destination: '/produkty/modular-rack/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/platforma-aire',
+    { destination: '/produkty/platforma-aire/', permanent: true },
+  ],
+  [
+    '/artesania-audio/platforma-aire',
+    { destination: '/produkty/platforma-aire/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/platforms',
+    { destination: '/produkty/platforms/', permanent: true },
+  ],
+  [
+    '/artesania-audio/platforms',
+    { destination: '/produkty/platforms/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/prestige',
+    { destination: '/produkty/prestige/', permanent: true },
+  ],
+  [
+    '/artesania-audio/prestige',
+    { destination: '/produkty/prestige/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/shelves',
+    { destination: '/produkty/shelves/', permanent: true },
+  ],
+  [
+    '/artesania-audio/shelves',
+    { destination: '/produkty/shelves/', permanent: true },
+  ],
+  [
+    '/pl/artesania-audio/tlumiki-drgan',
+    { destination: '/produkty/tlumiki-drgan/', permanent: true },
+  ],
+  [
+    '/artesania-audio/tlumiki-drgan',
+    { destination: '/produkty/tlumiki-drgan/', permanent: true },
+  ],
   ['/pl/audioresearch/cd3', { destination: '/produkty/cd3/', permanent: true }],
   ['/audioresearch/cd3', { destination: '/produkty/cd3/', permanent: true }],
-  ['/pl/audioresearch/cd3mk2', { destination: '/produkty/cd3mk2/', permanent: true }],
-  ['/audioresearch/cd3mk2', { destination: '/produkty/cd3mk2/', permanent: true }],
+  [
+    '/pl/audioresearch/cd3mk2',
+    { destination: '/produkty/cd3mk2/', permanent: true },
+  ],
+  [
+    '/audioresearch/cd3mk2',
+    { destination: '/produkty/cd3mk2/', permanent: true },
+  ],
   ['/pl/audioresearch/cd5', { destination: '/produkty/cd5/', permanent: true }],
   ['/audioresearch/cd5', { destination: '/produkty/cd5/', permanent: true }],
   ['/pl/audioresearch/cd6', { destination: '/produkty/cd6/', permanent: true }],
   ['/audioresearch/cd6', { destination: '/produkty/cd6/', permanent: true }],
-  ['/pl/audioresearch/cd6se', { destination: '/produkty/cd6se/', permanent: true }],
-  ['/audioresearch/cd6se', { destination: '/produkty/cd6se/', permanent: true }],
-  ['/pl/audioresearch/d-80', { destination: '/produkty/d-80/', permanent: true }],
+  [
+    '/pl/audioresearch/cd6se',
+    { destination: '/produkty/cd6se/', permanent: true },
+  ],
+  [
+    '/audioresearch/cd6se',
+    { destination: '/produkty/cd6se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/d-80',
+    { destination: '/produkty/d-80/', permanent: true },
+  ],
   ['/audioresearch/d-80', { destination: '/produkty/d-80/', permanent: true }],
-  ['/pl/audioresearch/dac7', { destination: '/produkty/dac7/', permanent: true }],
+  [
+    '/pl/audioresearch/dac7',
+    { destination: '/produkty/dac7/', permanent: true },
+  ],
   ['/audioresearch/dac7', { destination: '/produkty/dac7/', permanent: true }],
-  ['/pl/audioresearch/dac8', { destination: '/produkty/dac8/', permanent: true }],
+  [
+    '/pl/audioresearch/dac8',
+    { destination: '/produkty/dac8/', permanent: true },
+  ],
   ['/audioresearch/dac8', { destination: '/produkty/dac8/', permanent: true }],
-  ['/pl/audioresearch/dac9', { destination: '/produkty/dac9/', permanent: true }],
+  [
+    '/pl/audioresearch/dac9',
+    { destination: '/produkty/dac9/', permanent: true },
+  ],
   ['/audioresearch/dac9', { destination: '/produkty/dac9/', permanent: true }],
-  ['/pl/audioresearch/dsi200', { destination: '/produkty/dsi200/', permanent: true }],
-  ['/audioresearch/dsi200', { destination: '/produkty/dsi200/', permanent: true }],
-  ['/pl/audioresearch/dspre', { destination: '/produkty/dspre/', permanent: true }],
-  ['/audioresearch/dspre', { destination: '/produkty/dspre/', permanent: true }],
-  ['/pl/audioresearch/gs150', { destination: '/produkty/gs150/', permanent: true }],
-  ['/audioresearch/gs150', { destination: '/produkty/gs150/', permanent: true }],
-  ['/pl/audioresearch/gsi75', { destination: '/produkty/gsi75/', permanent: true }],
-  ['/audioresearch/gsi75', { destination: '/produkty/gsi75/', permanent: true }],
-  ['/pl/audioresearch/gspre', { destination: '/produkty/gspre/', permanent: true }],
-  ['/audioresearch/gspre', { destination: '/produkty/gspre/', permanent: true }],
-  ['/pl/audioresearch/hd220', { destination: '/produkty/hd220/', permanent: true }],
-  ['/audioresearch/hd220', { destination: '/produkty/hd220/', permanent: true }],
-  ['/pl/audioresearch/I-50', { destination: '/produkty/i-50/', permanent: true }],
+  [
+    '/pl/audioresearch/dsi200',
+    { destination: '/produkty/dsi200/', permanent: true },
+  ],
+  [
+    '/audioresearch/dsi200',
+    { destination: '/produkty/dsi200/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/dspre',
+    { destination: '/produkty/dspre/', permanent: true },
+  ],
+  [
+    '/audioresearch/dspre',
+    { destination: '/produkty/dspre/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/gs150',
+    { destination: '/produkty/gs150/', permanent: true },
+  ],
+  [
+    '/audioresearch/gs150',
+    { destination: '/produkty/gs150/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/gsi75',
+    { destination: '/produkty/gsi75/', permanent: true },
+  ],
+  [
+    '/audioresearch/gsi75',
+    { destination: '/produkty/gsi75/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/gspre',
+    { destination: '/produkty/gspre/', permanent: true },
+  ],
+  [
+    '/audioresearch/gspre',
+    { destination: '/produkty/gspre/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/hd220',
+    { destination: '/produkty/hd220/', permanent: true },
+  ],
+  [
+    '/audioresearch/hd220',
+    { destination: '/produkty/hd220/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/I-50',
+    { destination: '/produkty/i-50/', permanent: true },
+  ],
   ['/audioresearch/I-50', { destination: '/produkty/i-50/', permanent: true }],
-  ['/pl/audioresearch/I-70', { destination: '/produkty/i-70/', permanent: true }],
+  [
+    '/pl/audioresearch/I-70',
+    { destination: '/produkty/i-70/', permanent: true },
+  ],
   ['/audioresearch/I-70', { destination: '/produkty/i-70/', permanent: true }],
-  ['/pl/audioresearch/ls-2', { destination: '/produkty/ls-2/', permanent: true }],
+  [
+    '/pl/audioresearch/ls-2',
+    { destination: '/produkty/ls-2/', permanent: true },
+  ],
   ['/audioresearch/ls-2', { destination: '/produkty/ls-2/', permanent: true }],
-  ['/pl/audioresearch/ls-3', { destination: '/produkty/ls-3/', permanent: true }],
+  [
+    '/pl/audioresearch/ls-3',
+    { destination: '/produkty/ls-3/', permanent: true },
+  ],
   ['/audioresearch/ls-3', { destination: '/produkty/ls-3/', permanent: true }],
-  ['/pl/audioresearch/ls-4', { destination: '/produkty/ls-4/', permanent: true }],
+  [
+    '/pl/audioresearch/ls-4',
+    { destination: '/produkty/ls-4/', permanent: true },
+  ],
   ['/audioresearch/ls-4', { destination: '/produkty/ls-4/', permanent: true }],
-  ['/pl/audioresearch/ls-5', { destination: '/produkty/ls-5/', permanent: true }],
+  [
+    '/pl/audioresearch/ls-5',
+    { destination: '/produkty/ls-5/', permanent: true },
+  ],
   ['/audioresearch/ls-5', { destination: '/produkty/ls-5/', permanent: true }],
-  ['/pl/audioresearch/ls17se', { destination: '/produkty/ls17se/', permanent: true }],
-  ['/audioresearch/ls17se', { destination: '/produkty/ls17se/', permanent: true }],
-  ['/pl/audioresearch/ls26', { destination: '/produkty/ls26/', permanent: true }],
+  [
+    '/pl/audioresearch/ls17se',
+    { destination: '/produkty/ls17se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ls17se',
+    { destination: '/produkty/ls17se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ls26',
+    { destination: '/produkty/ls26/', permanent: true },
+  ],
   ['/audioresearch/ls26', { destination: '/produkty/ls26/', permanent: true }],
-  ['/pl/audioresearch/ls27', { destination: '/produkty/ls27/', permanent: true }],
+  [
+    '/pl/audioresearch/ls27',
+    { destination: '/produkty/ls27/', permanent: true },
+  ],
   ['/audioresearch/ls27', { destination: '/produkty/ls27/', permanent: true }],
-  ['/pl/audioresearch/ls28', { destination: '/produkty/ls28/', permanent: true }],
+  [
+    '/pl/audioresearch/ls28',
+    { destination: '/produkty/ls28/', permanent: true },
+  ],
   ['/audioresearch/ls28', { destination: '/produkty/ls28/', permanent: true }],
-  ['/pl/audioresearch/ls28se', { destination: '/produkty/ls28se/', permanent: true }],
-  ['/audioresearch/ls28se', { destination: '/produkty/ls28se/', permanent: true }],
+  [
+    '/pl/audioresearch/ls28se',
+    { destination: '/produkty/ls28se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ls28se',
+    { destination: '/produkty/ls28se/', permanent: true },
+  ],
   ['/pl/audioresearch/ph5', { destination: '/produkty/ph5/', permanent: true }],
   ['/audioresearch/ph5', { destination: '/produkty/ph5/', permanent: true }],
   ['/pl/audioresearch/ph6', { destination: '/produkty/ph6/', permanent: true }],
@@ -305,94 +1029,340 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/audioresearch/ph8', { destination: '/produkty/ph8/', permanent: true }],
   ['/pl/audioresearch/ph9', { destination: '/produkty/ph9/', permanent: true }],
   ['/audioresearch/ph9', { destination: '/produkty/ph9/', permanent: true }],
-  ['/pl/audioresearch/ref10', { destination: '/produkty/ref10/', permanent: true }],
-  ['/audioresearch/ref10', { destination: '/produkty/ref10/', permanent: true }],
-  ['/pl/audioresearch/ref110', { destination: '/produkty/ref110/', permanent: true }],
-  ['/audioresearch/ref110', { destination: '/produkty/ref110/', permanent: true }],
-  ['/pl/audioresearch/ref150', { destination: '/produkty/ref150/', permanent: true }],
-  ['/audioresearch/ref150', { destination: '/produkty/ref150/', permanent: true }],
-  ['/pl/audioresearch/ref150se', { destination: '/produkty/ref150se/', permanent: true }],
-  ['/audioresearch/ref150se', { destination: '/produkty/ref150se/', permanent: true }],
-  ['/pl/audioresearch/ref160m', { destination: '/produkty/ref160m/', permanent: true }],
-  ['/audioresearch/ref160m', { destination: '/produkty/ref160m/', permanent: true }],
-  ['/pl/audioresearch/ref160s', { destination: '/produkty/ref160s/', permanent: true }],
-  ['/audioresearch/ref160s', { destination: '/produkty/ref160s/', permanent: true }],
-  ['/pl/audioresearch/ref210', { destination: '/produkty/ref210/', permanent: true }],
-  ['/audioresearch/ref210', { destination: '/produkty/ref210/', permanent: true }],
-  ['/pl/audioresearch/ref250', { destination: '/produkty/ref250/', permanent: true }],
-  ['/audioresearch/ref250', { destination: '/produkty/ref250/', permanent: true }],
-  ['/pl/audioresearch/ref250se', { destination: '/produkty/ref250se/', permanent: true }],
-  ['/audioresearch/ref250se', { destination: '/produkty/ref250se/', permanent: true }],
-  ['/pl/audioresearch/ref3', { destination: '/produkty/ref3/', permanent: true }],
+  [
+    '/pl/audioresearch/ref10',
+    { destination: '/produkty/ref10/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref10',
+    { destination: '/produkty/ref10/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref110',
+    { destination: '/produkty/ref110/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref110',
+    { destination: '/produkty/ref110/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref150',
+    { destination: '/produkty/ref150/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref150',
+    { destination: '/produkty/ref150/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref150se',
+    { destination: '/produkty/ref150se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref150se',
+    { destination: '/produkty/ref150se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref160m',
+    { destination: '/produkty/ref160m/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref160m',
+    { destination: '/produkty/ref160m/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref160s',
+    { destination: '/produkty/ref160s/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref160s',
+    { destination: '/produkty/ref160s/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref210',
+    { destination: '/produkty/ref210/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref210',
+    { destination: '/produkty/ref210/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref250',
+    { destination: '/produkty/ref250/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref250',
+    { destination: '/produkty/ref250/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref250se',
+    { destination: '/produkty/ref250se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref250se',
+    { destination: '/produkty/ref250se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref3',
+    { destination: '/produkty/ref3/', permanent: true },
+  ],
   ['/audioresearch/ref3', { destination: '/produkty/ref3/', permanent: true }],
-  ['/pl/audioresearch/ref330m', { destination: '/produkty/ref330m/', permanent: true }],
-  ['/audioresearch/ref330m', { destination: '/produkty/ref330m/', permanent: true }],
-  ['/pl/audioresearch/ref40anniversary', { destination: '/produkty/ref40anniversary/', permanent: true }],
-  ['/audioresearch/ref40anniversary', { destination: '/produkty/ref40anniversary/', permanent: true }],
-  ['/pl/audioresearch/ref5se', { destination: '/produkty/ref5se/', permanent: true }],
-  ['/audioresearch/ref5se', { destination: '/produkty/ref5se/', permanent: true }],
-  ['/pl/audioresearch/ref6', { destination: '/produkty/ref6/', permanent: true }],
+  [
+    '/pl/audioresearch/ref330m',
+    { destination: '/produkty/ref330m/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref330m',
+    { destination: '/produkty/ref330m/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref40anniversary',
+    { destination: '/produkty/ref40anniversary/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref40anniversary',
+    { destination: '/produkty/ref40anniversary/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref5se',
+    { destination: '/produkty/ref5se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref5se',
+    { destination: '/produkty/ref5se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref6',
+    { destination: '/produkty/ref6/', permanent: true },
+  ],
   ['/audioresearch/ref6', { destination: '/produkty/ref6/', permanent: true }],
-  ['/pl/audioresearch/ref610t', { destination: '/produkty/ref610t/', permanent: true }],
-  ['/audioresearch/ref610t', { destination: '/produkty/ref610t/', permanent: true }],
-  ['/pl/audioresearch/ref6se', { destination: '/produkty/ref6se/', permanent: true }],
-  ['/audioresearch/ref6se', { destination: '/produkty/ref6se/', permanent: true }],
-  ['/pl/audioresearch/ref75', { destination: '/produkty/ref75/', permanent: true }],
-  ['/audioresearch/ref75', { destination: '/produkty/ref75/', permanent: true }],
-  ['/pl/audioresearch/ref750se', { destination: '/produkty/ref750se/', permanent: true }],
-  ['/audioresearch/ref750se', { destination: '/produkty/ref750se/', permanent: true }],
-  ['/pl/audioresearch/ref750sel', { destination: '/produkty/ref750sel/', permanent: true }],
-  ['/audioresearch/ref750sel', { destination: '/produkty/ref750sel/', permanent: true }],
-  ['/pl/audioresearch/ref75se', { destination: '/produkty/ref75se/', permanent: true }],
-  ['/audioresearch/ref75se', { destination: '/produkty/ref75se/', permanent: true }],
-  ['/pl/audioresearch/ref80s', { destination: '/produkty/ref80s/', permanent: true }],
-  ['/audioresearch/ref80s', { destination: '/produkty/ref80s/', permanent: true }],
-  ['/pl/audioresearch/refcd7', { destination: '/produkty/refcd7/', permanent: true }],
-  ['/audioresearch/refcd7', { destination: '/produkty/refcd7/', permanent: true }],
-  ['/pl/audioresearch/refcd8', { destination: '/produkty/refcd8/', permanent: true }],
-  ['/audioresearch/refcd8', { destination: '/produkty/refcd8/', permanent: true }],
-  ['/pl/audioresearch/refcd9', { destination: '/produkty/refcd9/', permanent: true }],
-  ['/audioresearch/refcd9', { destination: '/produkty/refcd9/', permanent: true }],
-  ['/pl/audioresearch/refcd9se', { destination: '/produkty/refcd9se/', permanent: true }],
-  ['/audioresearch/refcd9se', { destination: '/produkty/refcd9se/', permanent: true }],
-  ['/pl/audioresearch/refdac', { destination: '/produkty/refdac/', permanent: true }],
-  ['/audioresearch/refdac', { destination: '/produkty/refdac/', permanent: true }],
-  ['/pl/audioresearch/refphono10', { destination: '/produkty/refphono10/', permanent: true }],
-  ['/audioresearch/refphono10', { destination: '/produkty/refphono10/', permanent: true }],
-  ['/pl/audioresearch/refphono2se', { destination: '/produkty/refphono2se/', permanent: true }],
-  ['/audioresearch/refphono2se', { destination: '/produkty/refphono2se/', permanent: true }],
-  ['/pl/audioresearch/refphono3', { destination: '/produkty/refphono3/', permanent: true }],
-  ['/audioresearch/refphono3', { destination: '/produkty/refphono3/', permanent: true }],
-  ['/pl/audioresearch/refphono3se', { destination: '/produkty/refphono3se/', permanent: true }],
-  ['/audioresearch/refphono3se', { destination: '/produkty/refphono3se/', permanent: true }],
-  ['/pl/audioresearch/s-100', { destination: '/produkty/s-100/', permanent: true }],
-  ['/audioresearch/s-100', { destination: '/produkty/s-100/', permanent: true }],
-  ['/pl/audioresearch/s-200', { destination: '/produkty/s-200/', permanent: true }],
-  ['/audioresearch/s-200', { destination: '/produkty/s-200/', permanent: true }],
-  ['/pl/audioresearch/sd135', { destination: '/produkty/sd135/', permanent: true }],
-  ['/audioresearch/sd135', { destination: '/produkty/sd135/', permanent: true }],
-  ['/pl/audioresearch/sp16', { destination: '/produkty/sp16/', permanent: true }],
+  [
+    '/pl/audioresearch/ref610t',
+    { destination: '/produkty/ref610t/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref610t',
+    { destination: '/produkty/ref610t/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref6se',
+    { destination: '/produkty/ref6se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref6se',
+    { destination: '/produkty/ref6se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref75',
+    { destination: '/produkty/ref75/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref75',
+    { destination: '/produkty/ref75/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref750se',
+    { destination: '/produkty/ref750se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref750se',
+    { destination: '/produkty/ref750se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref750sel',
+    { destination: '/produkty/ref750sel/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref750sel',
+    { destination: '/produkty/ref750sel/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref75se',
+    { destination: '/produkty/ref75se/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref75se',
+    { destination: '/produkty/ref75se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/ref80s',
+    { destination: '/produkty/ref80s/', permanent: true },
+  ],
+  [
+    '/audioresearch/ref80s',
+    { destination: '/produkty/ref80s/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refcd7',
+    { destination: '/produkty/refcd7/', permanent: true },
+  ],
+  [
+    '/audioresearch/refcd7',
+    { destination: '/produkty/refcd7/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refcd8',
+    { destination: '/produkty/refcd8/', permanent: true },
+  ],
+  [
+    '/audioresearch/refcd8',
+    { destination: '/produkty/refcd8/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refcd9',
+    { destination: '/produkty/refcd9/', permanent: true },
+  ],
+  [
+    '/audioresearch/refcd9',
+    { destination: '/produkty/refcd9/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refcd9se',
+    { destination: '/produkty/refcd9se/', permanent: true },
+  ],
+  [
+    '/audioresearch/refcd9se',
+    { destination: '/produkty/refcd9se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refdac',
+    { destination: '/produkty/refdac/', permanent: true },
+  ],
+  [
+    '/audioresearch/refdac',
+    { destination: '/produkty/refdac/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refphono10',
+    { destination: '/produkty/refphono10/', permanent: true },
+  ],
+  [
+    '/audioresearch/refphono10',
+    { destination: '/produkty/refphono10/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refphono2se',
+    { destination: '/produkty/refphono2se/', permanent: true },
+  ],
+  [
+    '/audioresearch/refphono2se',
+    { destination: '/produkty/refphono2se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refphono3',
+    { destination: '/produkty/refphono3/', permanent: true },
+  ],
+  [
+    '/audioresearch/refphono3',
+    { destination: '/produkty/refphono3/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/refphono3se',
+    { destination: '/produkty/refphono3se/', permanent: true },
+  ],
+  [
+    '/audioresearch/refphono3se',
+    { destination: '/produkty/refphono3se/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/s-100',
+    { destination: '/produkty/s-100/', permanent: true },
+  ],
+  [
+    '/audioresearch/s-100',
+    { destination: '/produkty/s-100/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/s-200',
+    { destination: '/produkty/s-200/', permanent: true },
+  ],
+  [
+    '/audioresearch/s-200',
+    { destination: '/produkty/s-200/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/sd135',
+    { destination: '/produkty/sd135/', permanent: true },
+  ],
+  [
+    '/audioresearch/sd135',
+    { destination: '/produkty/sd135/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/sp16',
+    { destination: '/produkty/sp16/', permanent: true },
+  ],
   ['/audioresearch/sp16', { destination: '/produkty/sp16/', permanent: true }],
-  ['/pl/audioresearch/sp17', { destination: '/produkty/sp17/', permanent: true }],
+  [
+    '/pl/audioresearch/sp17',
+    { destination: '/produkty/sp17/', permanent: true },
+  ],
   ['/audioresearch/sp17', { destination: '/produkty/sp17/', permanent: true }],
-  ['/pl/audioresearch/sp20', { destination: '/produkty/sp20/', permanent: true }],
+  [
+    '/pl/audioresearch/sp20',
+    { destination: '/produkty/sp20/', permanent: true },
+  ],
   ['/audioresearch/sp20', { destination: '/produkty/sp20/', permanent: true }],
-  ['/pl/audioresearch/vm220', { destination: '/produkty/vm220/', permanent: true }],
-  ['/audioresearch/vm220', { destination: '/produkty/vm220/', permanent: true }],
-  ['/pl/audioresearch/vs110', { destination: '/produkty/vs110/', permanent: true }],
-  ['/audioresearch/vs110', { destination: '/produkty/vs110/', permanent: true }],
-  ['/pl/audioresearch/vs55', { destination: '/produkty/vs55/', permanent: true }],
+  [
+    '/pl/audioresearch/vm220',
+    { destination: '/produkty/vm220/', permanent: true },
+  ],
+  [
+    '/audioresearch/vm220',
+    { destination: '/produkty/vm220/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/vs110',
+    { destination: '/produkty/vs110/', permanent: true },
+  ],
+  [
+    '/audioresearch/vs110',
+    { destination: '/produkty/vs110/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/vs55',
+    { destination: '/produkty/vs55/', permanent: true },
+  ],
   ['/audioresearch/vs55', { destination: '/produkty/vs55/', permanent: true }],
-  ['/pl/audioresearch/vsi55', { destination: '/produkty/vsi55/', permanent: true }],
-  ['/audioresearch/vsi55', { destination: '/produkty/vsi55/', permanent: true }],
-  ['/pl/audioresearch/vsi60', { destination: '/produkty/vsi60/', permanent: true }],
-  ['/audioresearch/vsi60', { destination: '/produkty/vsi60/', permanent: true }],
-  ['/pl/audioresearch/vsi75', { destination: '/produkty/vsi75/', permanent: true }],
-  ['/audioresearch/vsi75', { destination: '/produkty/vsi75/', permanent: true }],
-  ['/pl/audioresearch/vt80se', { destination: '/produkty/vt80se/', permanent: true }],
-  ['/audioresearch/vt80se', { destination: '/produkty/vt80se/', permanent: true }],
-  ['/pl/aurender/a1-15th-anniversary', { destination: '/produkty/a1-15th-anniversary/', permanent: true }],
-  ['/aurender/a1-15th-anniversary', { destination: '/produkty/a1-15th-anniversary/', permanent: true }],
+  [
+    '/pl/audioresearch/vsi55',
+    { destination: '/produkty/vsi55/', permanent: true },
+  ],
+  [
+    '/audioresearch/vsi55',
+    { destination: '/produkty/vsi55/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/vsi60',
+    { destination: '/produkty/vsi60/', permanent: true },
+  ],
+  [
+    '/audioresearch/vsi60',
+    { destination: '/produkty/vsi60/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/vsi75',
+    { destination: '/produkty/vsi75/', permanent: true },
+  ],
+  [
+    '/audioresearch/vsi75',
+    { destination: '/produkty/vsi75/', permanent: true },
+  ],
+  [
+    '/pl/audioresearch/vt80se',
+    { destination: '/produkty/vt80se/', permanent: true },
+  ],
+  [
+    '/audioresearch/vt80se',
+    { destination: '/produkty/vt80se/', permanent: true },
+  ],
+  [
+    '/pl/aurender/a1-15th-anniversary',
+    { destination: '/produkty/a1-15th-anniversary/', permanent: true },
+  ],
+  [
+    '/aurender/a1-15th-anniversary',
+    { destination: '/produkty/a1-15th-anniversary/', permanent: true },
+  ],
   ['/pl/aurender/a10', { destination: '/produkty/a10/', permanent: true }],
   ['/aurender/a10', { destination: '/produkty/a10/', permanent: true }],
   ['/pl/aurender/a100', { destination: '/produkty/a100/', permanent: true }],
@@ -409,7 +1379,10 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/aurender/A30', { destination: '/produkty/a30/', permanent: true }],
   ['/pl/aurender/acs10', { destination: '/produkty/acs10/', permanent: true }],
   ['/aurender/acs10', { destination: '/produkty/acs10/', permanent: true }],
-  ['/pl/aurender/acs100', { destination: '/produkty/acs100/', permanent: true }],
+  [
+    '/pl/aurender/acs100',
+    { destination: '/produkty/acs100/', permanent: true },
+  ],
   ['/aurender/acs100', { destination: '/produkty/acs100/', permanent: true }],
   ['/pl/aurender/ap20', { destination: '/produkty/ap20/', permanent: true }],
   ['/aurender/ap20', { destination: '/produkty/ap20/', permanent: true }],
@@ -431,44 +1404,95 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/aurender/n30sa', { destination: '/produkty/n30sa/', permanent: true }],
   ['/pl/aurender/N50', { destination: '/produkty/n50/', permanent: true }],
   ['/aurender/N50', { destination: '/produkty/n50/', permanent: true }],
-  ['/pl/aurender/uc100-2', { destination: '/produkty/uc100-2/', permanent: true }],
+  [
+    '/pl/aurender/uc100-2',
+    { destination: '/produkty/uc100-2/', permanent: true },
+  ],
   ['/aurender/uc100-2', { destination: '/produkty/uc100-2/', permanent: true }],
-  ['/pl/aurender/ut100usb-toslink', { destination: '/produkty/ut100usb-toslink/', permanent: true }],
-  ['/aurender/ut100usb-toslink', { destination: '/produkty/ut100usb-toslink/', permanent: true }],
+  [
+    '/pl/aurender/ut100usb-toslink',
+    { destination: '/produkty/ut100usb-toslink/', permanent: true },
+  ],
+  [
+    '/aurender/ut100usb-toslink',
+    { destination: '/produkty/ut100usb-toslink/', permanent: true },
+  ],
   ['/pl/aurender/w20', { destination: '/produkty/w20/', permanent: true }],
   ['/aurender/w20', { destination: '/produkty/w20/', permanent: true }],
   ['/pl/aurender/w20se', { destination: '/produkty/w20se/', permanent: true }],
   ['/aurender/w20se', { destination: '/produkty/w20se/', permanent: true }],
   ['/pl/aurender/x100', { destination: '/produkty/x100/', permanent: true }],
   ['/aurender/x100', { destination: '/produkty/x100/', permanent: true }],
-  ['/pl/ayre/ax-5-twenty', { destination: '/produkty/ax-5-twenty/', permanent: true }],
-  ['/ayre/ax-5-twenty', { destination: '/produkty/ax-5-twenty/', permanent: true }],
+  [
+    '/pl/ayre/ax-5-twenty',
+    { destination: '/produkty/ax-5-twenty/', permanent: true },
+  ],
+  [
+    '/ayre/ax-5-twenty',
+    { destination: '/produkty/ax-5-twenty/', permanent: true },
+  ],
   ['/pl/ayre/codex', { destination: '/produkty/codex/', permanent: true }],
   ['/ayre/codex', { destination: '/produkty/codex/', permanent: true }],
   ['/pl/ayre/cx-8', { destination: '/produkty/cx-8/', permanent: true }],
   ['/ayre/cx-8', { destination: '/produkty/cx-8/', permanent: true }],
   ['/pl/ayre/ex-8', { destination: '/produkty/ex-8/', permanent: true }],
   ['/ayre/ex-8', { destination: '/produkty/ex-8/', permanent: true }],
-  ['/pl/ayre/kx-5-twenty', { destination: '/produkty/kx-5-twenty/', permanent: true }],
-  ['/ayre/kx-5-twenty', { destination: '/produkty/kx-5-twenty/', permanent: true }],
+  [
+    '/pl/ayre/kx-5-twenty',
+    { destination: '/produkty/kx-5-twenty/', permanent: true },
+  ],
+  [
+    '/ayre/kx-5-twenty',
+    { destination: '/produkty/kx-5-twenty/', permanent: true },
+  ],
   ['/pl/ayre/kx-8', { destination: '/produkty/kx-8/', permanent: true }],
   ['/ayre/kx-8', { destination: '/produkty/kx-8/', permanent: true }],
-  ['/pl/ayre/kx-r-twenty', { destination: '/produkty/kx-r-twenty/', permanent: true }],
-  ['/ayre/kx-r-twenty', { destination: '/produkty/kx-r-twenty/', permanent: true }],
-  ['/pl/ayre/mx-r-twenty', { destination: '/produkty/mx-r-twenty/', permanent: true }],
-  ['/ayre/mx-r-twenty', { destination: '/produkty/mx-r-twenty/', permanent: true }],
+  [
+    '/pl/ayre/kx-r-twenty',
+    { destination: '/produkty/kx-r-twenty/', permanent: true },
+  ],
+  [
+    '/ayre/kx-r-twenty',
+    { destination: '/produkty/kx-r-twenty/', permanent: true },
+  ],
+  [
+    '/pl/ayre/mx-r-twenty',
+    { destination: '/produkty/mx-r-twenty/', permanent: true },
+  ],
+  [
+    '/ayre/mx-r-twenty',
+    { destination: '/produkty/mx-r-twenty/', permanent: true },
+  ],
   ['/pl/ayre/px-8', { destination: '/produkty/px-8/', permanent: true }],
   ['/ayre/px-8', { destination: '/produkty/px-8/', permanent: true }],
-  ['/pl/ayre/qx-5-twenty', { destination: '/produkty/qx-5-twenty/', permanent: true }],
-  ['/ayre/qx-5-twenty', { destination: '/produkty/qx-5-twenty/', permanent: true }],
+  [
+    '/pl/ayre/qx-5-twenty',
+    { destination: '/produkty/qx-5-twenty/', permanent: true },
+  ],
+  [
+    '/ayre/qx-5-twenty',
+    { destination: '/produkty/qx-5-twenty/', permanent: true },
+  ],
   ['/pl/ayre/qx-8', { destination: '/produkty/qx-8/', permanent: true }],
   ['/ayre/qx-8', { destination: '/produkty/qx-8/', permanent: true }],
-  ['/pl/ayre/vx-5-twenty', { destination: '/produkty/vx-5-twenty/', permanent: true }],
-  ['/ayre/vx-5-twenty', { destination: '/produkty/vx-5-twenty/', permanent: true }],
+  [
+    '/pl/ayre/vx-5-twenty',
+    { destination: '/produkty/vx-5-twenty/', permanent: true },
+  ],
+  [
+    '/ayre/vx-5-twenty',
+    { destination: '/produkty/vx-5-twenty/', permanent: true },
+  ],
   ['/pl/ayre/vx-8', { destination: '/produkty/vx-8/', permanent: true }],
   ['/ayre/vx-8', { destination: '/produkty/vx-8/', permanent: true }],
-  ['/pl/ayre/vx-r-twenty', { destination: '/produkty/vx-r-twenty/', permanent: true }],
-  ['/ayre/vx-r-twenty', { destination: '/produkty/vx-r-twenty/', permanent: true }],
+  [
+    '/pl/ayre/vx-r-twenty',
+    { destination: '/produkty/vx-r-twenty/', permanent: true },
+  ],
+  [
+    '/ayre/vx-r-twenty',
+    { destination: '/produkty/vx-r-twenty/', permanent: true },
+  ],
   ['/pl/bricasti/m1', { destination: '/produkty/m1/', permanent: true }],
   ['/bricasti/m1', { destination: '/produkty/m1/', permanent: true }],
   ['/pl/bricasti/m11', { destination: '/produkty/m11/', permanent: true }],
@@ -483,100 +1507,382 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/bricasti/m3', { destination: '/produkty/m3/', permanent: true }],
   ['/pl/bricasti/m5', { destination: '/produkty/m5/', permanent: true }],
   ['/bricasti/m5', { destination: '/produkty/m5/', permanent: true }],
-  ['/pl/bricasti/reference-transport', { destination: '/produkty/reference-transport/', permanent: true }],
-  ['/bricasti/reference-transport', { destination: '/produkty/reference-transport/', permanent: true }],
-  ['/pl/bricasti/select-transport', { destination: '/produkty/select-transport/', permanent: true }],
-  ['/bricasti/select-transport', { destination: '/produkty/select-transport/', permanent: true }],
-  ['/pl/dan-dagostino/classic-stereo', { destination: '/produkty/classic-stereo/', permanent: true }],
-  ['/dan-dagostino/classic-stereo', { destination: '/produkty/classic-stereo/', permanent: true }],
-  ['/pl/dan-dagostino/classic2', { destination: '/produkty/classic2/', permanent: true }],
-  ['/dan-dagostino/classic2', { destination: '/produkty/classic2/', permanent: true }],
-  ['/pl/dan-dagostino/classic3', { destination: '/produkty/classic3/', permanent: true }],
-  ['/dan-dagostino/classic3', { destination: '/produkty/classic3/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-c2-preamplifier', { destination: '/produkty/momentum-c2-preamplifier/', permanent: true }],
-  ['/dan-dagostino/momentum-c2-preamplifier', { destination: '/produkty/momentum-c2-preamplifier/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-hd-preamplifier', { destination: '/produkty/momentum-hd-preamplifier/', permanent: true }],
-  ['/dan-dagostino/momentum-hd-preamplifier', { destination: '/produkty/momentum-hd-preamplifier/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-integrated', { destination: '/produkty/momentum-integrated/', permanent: true }],
-  ['/dan-dagostino/momentum-integrated', { destination: '/produkty/momentum-integrated/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-lifestyle', { destination: '/produkty/momentum-lifestyle/', permanent: true }],
-  ['/dan-dagostino/momentum-lifestyle', { destination: '/produkty/momentum-lifestyle/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-m400-mvx', { destination: '/produkty/momentum-m400-mvx/', permanent: true }],
-  ['/dan-dagostino/momentum-m400-mvx', { destination: '/produkty/momentum-m400-mvx/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-mono-m400', { destination: '/produkty/momentum-mono-m400/', permanent: true }],
-  ['/dan-dagostino/momentum-mono-m400', { destination: '/produkty/momentum-mono-m400/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-mxv-integrated', { destination: '/produkty/momentum-mxv-integrated/', permanent: true }],
-  ['/dan-dagostino/momentum-mxv-integrated', { destination: '/produkty/momentum-mxv-integrated/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-phonostage', { destination: '/produkty/momentum-phonostage/', permanent: true }],
-  ['/dan-dagostino/momentum-phonostage', { destination: '/produkty/momentum-phonostage/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-preamplifier', { destination: '/produkty/momentum-preamplifier/', permanent: true }],
-  ['/dan-dagostino/momentum-preamplifier', { destination: '/produkty/momentum-preamplifier/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-s250-mvx', { destination: '/produkty/momentum-s250-mvx/', permanent: true }],
-  ['/dan-dagostino/momentum-s250-mvx', { destination: '/produkty/momentum-s250-mvx/', permanent: true }],
-  ['/pl/dan-dagostino/momentum-stereo-s250', { destination: '/produkty/momentum-stereo-s250/', permanent: true }],
-  ['/dan-dagostino/momentum-stereo-s250', { destination: '/produkty/momentum-stereo-s250/', permanent: true }],
-  ['/pl/dan-dagostino/pendulum', { destination: '/produkty/pendulum/', permanent: true }],
-  ['/dan-dagostino/pendulum', { destination: '/produkty/pendulum/', permanent: true }],
-  ['/pl/dan-dagostino/progression-integrated-amplifier', { destination: '/produkty/progression-integrated-amplifier/', permanent: true }],
-  ['/dan-dagostino/progression-integrated-amplifier', { destination: '/produkty/progression-integrated-amplifier/', permanent: true }],
-  ['/pl/dan-dagostino/progression-M550', { destination: '/produkty/progression-m550/', permanent: true }],
-  ['/dan-dagostino/progression-M550', { destination: '/produkty/progression-m550/', permanent: true }],
-  ['/pl/dan-dagostino/progression-mono', { destination: '/produkty/progression-mono/', permanent: true }],
-  ['/dan-dagostino/progression-mono', { destination: '/produkty/progression-mono/', permanent: true }],
-  ['/pl/dan-dagostino/progression-preamplifier', { destination: '/produkty/progression-preamplifier/', permanent: true }],
-  ['/dan-dagostino/progression-preamplifier', { destination: '/produkty/progression-preamplifier/', permanent: true }],
-  ['/pl/dan-dagostino/progression-S350', { destination: '/produkty/progression-s350/', permanent: true }],
-  ['/dan-dagostino/progression-S350', { destination: '/produkty/progression-s350/', permanent: true }],
-  ['/pl/dan-dagostino/progression-stereo', { destination: '/produkty/progression-stereo/', permanent: true }],
-  ['/dan-dagostino/progression-stereo', { destination: '/produkty/progression-stereo/', permanent: true }],
-  ['/pl/dan-dagostino/relentless', { destination: '/produkty/relentless/', permanent: true }],
-  ['/dan-dagostino/relentless', { destination: '/produkty/relentless/', permanent: true }],
-  ['/pl/dan-dagostino/relentless-800-mono-amplifier', { destination: '/produkty/relentless-800-mono-amplifier/', permanent: true }],
-  ['/dan-dagostino/relentless-800-mono-amplifier', { destination: '/produkty/relentless-800-mono-amplifier/', permanent: true }],
-  ['/pl/dan-dagostino/relentless-epic-1600', { destination: '/produkty/relentless-epic-1600/', permanent: true }],
-  ['/dan-dagostino/relentless-epic-1600', { destination: '/produkty/relentless-epic-1600/', permanent: true }],
-  ['/pl/dan-dagostino/relentless-preamplifier', { destination: '/produkty/relentless-preamplifier/', permanent: true }],
-  ['/dan-dagostino/relentless-preamplifier', { destination: '/produkty/relentless-preamplifier/', permanent: true }],
-  ['/pl/dcs/apex-ringdac-upgrade', { destination: '/produkty/apex-ringdac-upgrade/', permanent: true }],
-  ['/dcs/apex-ringdac-upgrade', { destination: '/produkty/apex-ringdac-upgrade/', permanent: true }],
-  ['/pl/dcs/bartok-dac', { destination: '/produkty/bartok-dac/', permanent: true }],
-  ['/dcs/bartok-dac', { destination: '/produkty/bartok-dac/', permanent: true }],
-  ['/pl/dcs/debussy-dac', { destination: '/produkty/debussy-dac/', permanent: true }],
-  ['/dcs/debussy-dac', { destination: '/produkty/debussy-dac/', permanent: true }],
-  ['/pl/dcs/lina-clock', { destination: '/produkty/lina-clock/', permanent: true }],
-  ['/dcs/lina-clock', { destination: '/produkty/lina-clock/', permanent: true }],
-  ['/pl/dcs/lina-dac-x', { destination: '/produkty/lina-dac-x/', permanent: true }],
-  ['/dcs/lina-dac-x', { destination: '/produkty/lina-dac-x/', permanent: true }],
-  ['/pl/dcs/lina-headphone-amplifier', { destination: '/produkty/lina-headphone-amplifier/', permanent: true }],
-  ['/dcs/lina-headphone-amplifier', { destination: '/produkty/lina-headphone-amplifier/', permanent: true }],
-  ['/pl/dcs/lina-network-dac-2-0', { destination: '/produkty/lina-network-dac-2-0/', permanent: true }],
-  ['/dcs/lina-network-dac-2-0', { destination: '/produkty/lina-network-dac-2-0/', permanent: true }],
-  ['/pl/dcs/network-bridge', { destination: '/produkty/network-bridge/', permanent: true }],
-  ['/dcs/network-bridge', { destination: '/produkty/network-bridge/', permanent: true }],
-  ['/pl/dcs/rossini-cdsacd-transport', { destination: '/produkty/rossini-cdsacd-transport/', permanent: true }],
-  ['/dcs/rossini-cdsacd-transport', { destination: '/produkty/rossini-cdsacd-transport/', permanent: true }],
-  ['/pl/dcs/rossini-clock', { destination: '/produkty/rossini-clock/', permanent: true }],
-  ['/dcs/rossini-clock', { destination: '/produkty/rossini-clock/', permanent: true }],
-  ['/pl/dcs/rossini-dac', { destination: '/produkty/rossini-dac/', permanent: true }],
-  ['/dcs/rossini-dac', { destination: '/produkty/rossini-dac/', permanent: true }],
-  ['/pl/dcs/rossini-player', { destination: '/produkty/rossini-player/', permanent: true }],
-  ['/dcs/rossini-player', { destination: '/produkty/rossini-player/', permanent: true }],
+  [
+    '/pl/bricasti/reference-transport',
+    { destination: '/produkty/reference-transport/', permanent: true },
+  ],
+  [
+    '/bricasti/reference-transport',
+    { destination: '/produkty/reference-transport/', permanent: true },
+  ],
+  [
+    '/pl/bricasti/select-transport',
+    { destination: '/produkty/select-transport/', permanent: true },
+  ],
+  [
+    '/bricasti/select-transport',
+    { destination: '/produkty/select-transport/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/classic-stereo',
+    { destination: '/produkty/classic-stereo/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/classic-stereo',
+    { destination: '/produkty/classic-stereo/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/classic2',
+    { destination: '/produkty/classic2/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/classic2',
+    { destination: '/produkty/classic2/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/classic3',
+    { destination: '/produkty/classic3/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/classic3',
+    { destination: '/produkty/classic3/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-c2-preamplifier',
+    { destination: '/produkty/momentum-c2-preamplifier/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-c2-preamplifier',
+    { destination: '/produkty/momentum-c2-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-hd-preamplifier',
+    { destination: '/produkty/momentum-hd-preamplifier/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-hd-preamplifier',
+    { destination: '/produkty/momentum-hd-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-integrated',
+    { destination: '/produkty/momentum-integrated/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-integrated',
+    { destination: '/produkty/momentum-integrated/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-lifestyle',
+    { destination: '/produkty/momentum-lifestyle/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-lifestyle',
+    { destination: '/produkty/momentum-lifestyle/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-m400-mvx',
+    { destination: '/produkty/momentum-m400-mvx/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-m400-mvx',
+    { destination: '/produkty/momentum-m400-mvx/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-mono-m400',
+    { destination: '/produkty/momentum-mono-m400/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-mono-m400',
+    { destination: '/produkty/momentum-mono-m400/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-mxv-integrated',
+    { destination: '/produkty/momentum-mxv-integrated/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-mxv-integrated',
+    { destination: '/produkty/momentum-mxv-integrated/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-phonostage',
+    { destination: '/produkty/momentum-phonostage/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-phonostage',
+    { destination: '/produkty/momentum-phonostage/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-preamplifier',
+    { destination: '/produkty/momentum-preamplifier/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-preamplifier',
+    { destination: '/produkty/momentum-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-s250-mvx',
+    { destination: '/produkty/momentum-s250-mvx/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-s250-mvx',
+    { destination: '/produkty/momentum-s250-mvx/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/momentum-stereo-s250',
+    { destination: '/produkty/momentum-stereo-s250/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/momentum-stereo-s250',
+    { destination: '/produkty/momentum-stereo-s250/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/pendulum',
+    { destination: '/produkty/pendulum/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/pendulum',
+    { destination: '/produkty/pendulum/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/progression-integrated-amplifier',
+    {
+      destination: '/produkty/progression-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/dan-dagostino/progression-integrated-amplifier',
+    {
+      destination: '/produkty/progression-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/dan-dagostino/progression-M550',
+    { destination: '/produkty/progression-m550/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/progression-M550',
+    { destination: '/produkty/progression-m550/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/progression-mono',
+    { destination: '/produkty/progression-mono/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/progression-mono',
+    { destination: '/produkty/progression-mono/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/progression-preamplifier',
+    { destination: '/produkty/progression-preamplifier/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/progression-preamplifier',
+    { destination: '/produkty/progression-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/progression-S350',
+    { destination: '/produkty/progression-s350/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/progression-S350',
+    { destination: '/produkty/progression-s350/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/progression-stereo',
+    { destination: '/produkty/progression-stereo/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/progression-stereo',
+    { destination: '/produkty/progression-stereo/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/relentless',
+    { destination: '/produkty/relentless/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/relentless',
+    { destination: '/produkty/relentless/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/relentless-800-mono-amplifier',
+    {
+      destination: '/produkty/relentless-800-mono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/dan-dagostino/relentless-800-mono-amplifier',
+    {
+      destination: '/produkty/relentless-800-mono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/dan-dagostino/relentless-epic-1600',
+    { destination: '/produkty/relentless-epic-1600/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/relentless-epic-1600',
+    { destination: '/produkty/relentless-epic-1600/', permanent: true },
+  ],
+  [
+    '/pl/dan-dagostino/relentless-preamplifier',
+    { destination: '/produkty/relentless-preamplifier/', permanent: true },
+  ],
+  [
+    '/dan-dagostino/relentless-preamplifier',
+    { destination: '/produkty/relentless-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/dcs/apex-ringdac-upgrade',
+    { destination: '/produkty/apex-ringdac-upgrade/', permanent: true },
+  ],
+  [
+    '/dcs/apex-ringdac-upgrade',
+    { destination: '/produkty/apex-ringdac-upgrade/', permanent: true },
+  ],
+  [
+    '/pl/dcs/bartok-dac',
+    { destination: '/produkty/bartok-dac/', permanent: true },
+  ],
+  [
+    '/dcs/bartok-dac',
+    { destination: '/produkty/bartok-dac/', permanent: true },
+  ],
+  [
+    '/pl/dcs/debussy-dac',
+    { destination: '/produkty/debussy-dac/', permanent: true },
+  ],
+  [
+    '/dcs/debussy-dac',
+    { destination: '/produkty/debussy-dac/', permanent: true },
+  ],
+  [
+    '/pl/dcs/lina-clock',
+    { destination: '/produkty/lina-clock/', permanent: true },
+  ],
+  [
+    '/dcs/lina-clock',
+    { destination: '/produkty/lina-clock/', permanent: true },
+  ],
+  [
+    '/pl/dcs/lina-dac-x',
+    { destination: '/produkty/lina-dac-x/', permanent: true },
+  ],
+  [
+    '/dcs/lina-dac-x',
+    { destination: '/produkty/lina-dac-x/', permanent: true },
+  ],
+  [
+    '/pl/dcs/lina-headphone-amplifier',
+    { destination: '/produkty/lina-headphone-amplifier/', permanent: true },
+  ],
+  [
+    '/dcs/lina-headphone-amplifier',
+    { destination: '/produkty/lina-headphone-amplifier/', permanent: true },
+  ],
+  [
+    '/pl/dcs/lina-network-dac-2-0',
+    { destination: '/produkty/lina-network-dac-2-0/', permanent: true },
+  ],
+  [
+    '/dcs/lina-network-dac-2-0',
+    { destination: '/produkty/lina-network-dac-2-0/', permanent: true },
+  ],
+  [
+    '/pl/dcs/network-bridge',
+    { destination: '/produkty/network-bridge/', permanent: true },
+  ],
+  [
+    '/dcs/network-bridge',
+    { destination: '/produkty/network-bridge/', permanent: true },
+  ],
+  [
+    '/pl/dcs/rossini-cdsacd-transport',
+    { destination: '/produkty/rossini-cdsacd-transport/', permanent: true },
+  ],
+  [
+    '/dcs/rossini-cdsacd-transport',
+    { destination: '/produkty/rossini-cdsacd-transport/', permanent: true },
+  ],
+  [
+    '/pl/dcs/rossini-clock',
+    { destination: '/produkty/rossini-clock/', permanent: true },
+  ],
+  [
+    '/dcs/rossini-clock',
+    { destination: '/produkty/rossini-clock/', permanent: true },
+  ],
+  [
+    '/pl/dcs/rossini-dac',
+    { destination: '/produkty/rossini-dac/', permanent: true },
+  ],
+  [
+    '/dcs/rossini-dac',
+    { destination: '/produkty/rossini-dac/', permanent: true },
+  ],
+  [
+    '/pl/dcs/rossini-player',
+    { destination: '/produkty/rossini-player/', permanent: true },
+  ],
+  [
+    '/dcs/rossini-player',
+    { destination: '/produkty/rossini-player/', permanent: true },
+  ],
   ['/pl/dcs/varese', { destination: '/produkty/varese/', permanent: true }],
   ['/dcs/varese', { destination: '/produkty/varese/', permanent: true }],
-  ['/pl/dcs/vivaldi-clock', { destination: '/produkty/vivaldi-clock/', permanent: true }],
-  ['/dcs/vivaldi-clock', { destination: '/produkty/vivaldi-clock/', permanent: true }],
-  ['/pl/dcs/vivaldi-dac', { destination: '/produkty/vivaldi-dac/', permanent: true }],
-  ['/dcs/vivaldi-dac', { destination: '/produkty/vivaldi-dac/', permanent: true }],
-  ['/pl/dcs/vivaldi-one', { destination: '/produkty/vivaldi-one/', permanent: true }],
-  ['/dcs/vivaldi-one', { destination: '/produkty/vivaldi-one/', permanent: true }],
-  ['/pl/dcs/vivaldi-transport', { destination: '/produkty/vivaldi-transport/', permanent: true }],
-  ['/dcs/vivaldi-transport', { destination: '/produkty/vivaldi-transport/', permanent: true }],
-  ['/pl/dcs/vivaldi-upsampler', { destination: '/produkty/vivaldi-upsampler/', permanent: true }],
-  ['/dcs/vivaldi-upsampler', { destination: '/produkty/vivaldi-upsampler/', permanent: true }],
+  [
+    '/pl/dcs/vivaldi-clock',
+    { destination: '/produkty/vivaldi-clock/', permanent: true },
+  ],
+  [
+    '/dcs/vivaldi-clock',
+    { destination: '/produkty/vivaldi-clock/', permanent: true },
+  ],
+  [
+    '/pl/dcs/vivaldi-dac',
+    { destination: '/produkty/vivaldi-dac/', permanent: true },
+  ],
+  [
+    '/dcs/vivaldi-dac',
+    { destination: '/produkty/vivaldi-dac/', permanent: true },
+  ],
+  [
+    '/pl/dcs/vivaldi-one',
+    { destination: '/produkty/vivaldi-one/', permanent: true },
+  ],
+  [
+    '/dcs/vivaldi-one',
+    { destination: '/produkty/vivaldi-one/', permanent: true },
+  ],
+  [
+    '/pl/dcs/vivaldi-transport',
+    { destination: '/produkty/vivaldi-transport/', permanent: true },
+  ],
+  [
+    '/dcs/vivaldi-transport',
+    { destination: '/produkty/vivaldi-transport/', permanent: true },
+  ],
+  [
+    '/pl/dcs/vivaldi-upsampler',
+    { destination: '/produkty/vivaldi-upsampler/', permanent: true },
+  ],
+  [
+    '/dcs/vivaldi-upsampler',
+    { destination: '/produkty/vivaldi-upsampler/', permanent: true },
+  ],
   ['/pl/exogal/comet', { destination: '/produkty/comet/', permanent: true }],
   ['/exogal/comet', { destination: '/produkty/comet/', permanent: true }],
-  ['/pl/exogal/ion-power-dac', { destination: '/produkty/ion-power-dac/', permanent: true }],
-  ['/exogal/ion-power-dac', { destination: '/produkty/ion-power-dac/', permanent: true }],
+  [
+    '/pl/exogal/ion-power-dac',
+    { destination: '/produkty/ion-power-dac/', permanent: true },
+  ],
+  [
+    '/exogal/ion-power-dac',
+    { destination: '/produkty/ion-power-dac/', permanent: true },
+  ],
   ['/pl/exogal/Vortex', { destination: '/produkty/vortex/', permanent: true }],
   ['/exogal/Vortex', { destination: '/produkty/vortex/', permanent: true }],
   ['/pl/goldenear/aon2', { destination: '/produkty/aon2/', permanent: true }],
@@ -585,99 +1891,342 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/goldenear/aon3', { destination: '/produkty/aon3/', permanent: true }],
   ['/pl/goldenear/brx', { destination: '/produkty/brx/', permanent: true }],
   ['/goldenear/brx', { destination: '/produkty/brx/', permanent: true }],
-  ['/pl/goldenear/floorstands', { destination: '/produkty/floorstands/', permanent: true }],
-  ['/goldenear/floorstands', { destination: '/produkty/floorstands/', permanent: true }],
-  ['/pl/goldenear/forcefield-30-40', { destination: '/produkty/forcefield-30-40/', permanent: true }],
-  ['/goldenear/forcefield-30-40', { destination: '/produkty/forcefield-30-40/', permanent: true }],
-  ['/pl/goldenear/forcefield3', { destination: '/produkty/forcefield3/', permanent: true }],
-  ['/goldenear/forcefield3', { destination: '/produkty/forcefield3/', permanent: true }],
-  ['/pl/goldenear/forcefield4', { destination: '/produkty/forcefield4/', permanent: true }],
-  ['/goldenear/forcefield4', { destination: '/produkty/forcefield4/', permanent: true }],
-  ['/pl/goldenear/forcefield5', { destination: '/produkty/forcefield5/', permanent: true }],
-  ['/goldenear/forcefield5', { destination: '/produkty/forcefield5/', permanent: true }],
-  ['/pl/goldenear/invisa-600', { destination: '/produkty/invisa-600/', permanent: true }],
-  ['/goldenear/invisa-600', { destination: '/produkty/invisa-600/', permanent: true }],
-  ['/pl/goldenear/invisa-htr7000', { destination: '/produkty/invisa-htr7000/', permanent: true }],
-  ['/goldenear/invisa-htr7000', { destination: '/produkty/invisa-htr7000/', permanent: true }],
-  ['/pl/goldenear/invisa-mpx', { destination: '/produkty/invisa-mpx/', permanent: true }],
-  ['/goldenear/invisa-mpx', { destination: '/produkty/invisa-mpx/', permanent: true }],
-  ['/pl/goldenear/invisa-sp652', { destination: '/produkty/invisa-sp652/', permanent: true }],
-  ['/goldenear/invisa-sp652', { destination: '/produkty/invisa-sp652/', permanent: true }],
-  ['/pl/goldenear/invisa-sps', { destination: '/produkty/invisa-sps/', permanent: true }],
-  ['/goldenear/invisa-sps', { destination: '/produkty/invisa-sps/', permanent: true }],
-  ['/pl/goldenear/invisa525-650', { destination: '/produkty/invisa525-650/', permanent: true }],
-  ['/goldenear/invisa525-650', { destination: '/produkty/invisa525-650/', permanent: true }],
-  ['/pl/goldenear/rb-525', { destination: '/produkty/rb-525/', permanent: true }],
+  [
+    '/pl/goldenear/floorstands',
+    { destination: '/produkty/floorstands/', permanent: true },
+  ],
+  [
+    '/goldenear/floorstands',
+    { destination: '/produkty/floorstands/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/forcefield-30-40',
+    { destination: '/produkty/forcefield-30-40/', permanent: true },
+  ],
+  [
+    '/goldenear/forcefield-30-40',
+    { destination: '/produkty/forcefield-30-40/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/forcefield3',
+    { destination: '/produkty/forcefield3/', permanent: true },
+  ],
+  [
+    '/goldenear/forcefield3',
+    { destination: '/produkty/forcefield3/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/forcefield4',
+    { destination: '/produkty/forcefield4/', permanent: true },
+  ],
+  [
+    '/goldenear/forcefield4',
+    { destination: '/produkty/forcefield4/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/forcefield5',
+    { destination: '/produkty/forcefield5/', permanent: true },
+  ],
+  [
+    '/goldenear/forcefield5',
+    { destination: '/produkty/forcefield5/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/invisa-600',
+    { destination: '/produkty/invisa-600/', permanent: true },
+  ],
+  [
+    '/goldenear/invisa-600',
+    { destination: '/produkty/invisa-600/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/invisa-htr7000',
+    { destination: '/produkty/invisa-htr7000/', permanent: true },
+  ],
+  [
+    '/goldenear/invisa-htr7000',
+    { destination: '/produkty/invisa-htr7000/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/invisa-mpx',
+    { destination: '/produkty/invisa-mpx/', permanent: true },
+  ],
+  [
+    '/goldenear/invisa-mpx',
+    { destination: '/produkty/invisa-mpx/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/invisa-sp652',
+    { destination: '/produkty/invisa-sp652/', permanent: true },
+  ],
+  [
+    '/goldenear/invisa-sp652',
+    { destination: '/produkty/invisa-sp652/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/invisa-sps',
+    { destination: '/produkty/invisa-sps/', permanent: true },
+  ],
+  [
+    '/goldenear/invisa-sps',
+    { destination: '/produkty/invisa-sps/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/invisa525-650',
+    { destination: '/produkty/invisa525-650/', permanent: true },
+  ],
+  [
+    '/goldenear/invisa525-650',
+    { destination: '/produkty/invisa525-650/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/rb-525',
+    { destination: '/produkty/rb-525/', permanent: true },
+  ],
   ['/goldenear/rb-525', { destination: '/produkty/rb-525/', permanent: true }],
-  ['/pl/goldenear/rb-650', { destination: '/produkty/rb-650/', permanent: true }],
+  [
+    '/pl/goldenear/rb-650',
+    { destination: '/produkty/rb-650/', permanent: true },
+  ],
   ['/goldenear/rb-650', { destination: '/produkty/rb-650/', permanent: true }],
-  ['/pl/goldenear/rb-7000', { destination: '/produkty/rb-7000/', permanent: true }],
-  ['/goldenear/rb-7000', { destination: '/produkty/rb-7000/', permanent: true }],
-  ['/pl/goldenear/rb-mpx', { destination: '/produkty/rb-mpx/', permanent: true }],
+  [
+    '/pl/goldenear/rb-7000',
+    { destination: '/produkty/rb-7000/', permanent: true },
+  ],
+  [
+    '/goldenear/rb-7000',
+    { destination: '/produkty/rb-7000/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/rb-mpx',
+    { destination: '/produkty/rb-mpx/', permanent: true },
+  ],
   ['/goldenear/rb-mpx', { destination: '/produkty/rb-mpx/', permanent: true }],
-  ['/pl/goldenear/square-invisa-grille-isg-525', { destination: '/produkty/square-invisa-grille-isg-525/', permanent: true }],
-  ['/goldenear/square-invisa-grille-isg-525', { destination: '/produkty/square-invisa-grille-isg-525/', permanent: true }],
-  ['/pl/goldenear/square-invisa-grille-isg-650', { destination: '/produkty/square-invisa-grille-isg-650/', permanent: true }],
-  ['/goldenear/square-invisa-grille-isg-650', { destination: '/produkty/square-invisa-grille-isg-650/', permanent: true }],
-  ['/pl/goldenear/square-invisa-grille-isg-7000', { destination: '/produkty/square-invisa-grille-isg-7000/', permanent: true }],
-  ['/goldenear/square-invisa-grille-isg-7000', { destination: '/produkty/square-invisa-grille-isg-7000/', permanent: true }],
-  ['/pl/goldenear/supercenter-reference', { destination: '/produkty/supercenter-reference/', permanent: true }],
-  ['/goldenear/supercenter-reference', { destination: '/produkty/supercenter-reference/', permanent: true }],
-  ['/pl/goldenear/supercenterx', { destination: '/produkty/supercenterx/', permanent: true }],
-  ['/goldenear/supercenterx', { destination: '/produkty/supercenterx/', permanent: true }],
-  ['/pl/goldenear/supercenterxl', { destination: '/produkty/supercenterxl/', permanent: true }],
-  ['/goldenear/supercenterxl', { destination: '/produkty/supercenterxl/', permanent: true }],
-  ['/pl/goldenear/supercenterxxl', { destination: '/produkty/supercenterxxl/', permanent: true }],
-  ['/goldenear/supercenterxxl', { destination: '/produkty/supercenterxxl/', permanent: true }],
-  ['/pl/goldenear/supercinema-3d-array', { destination: '/produkty/supercinema-3d-array/', permanent: true }],
-  ['/goldenear/supercinema-3d-array', { destination: '/produkty/supercinema-3d-array/', permanent: true }],
-  ['/pl/goldenear/supercinema-3d-array-xl', { destination: '/produkty/supercinema-3d-array-xl/', permanent: true }],
-  ['/goldenear/supercinema-3d-array-xl', { destination: '/produkty/supercinema-3d-array-xl/', permanent: true }],
-  ['/pl/goldenear/supersat3-3c', { destination: '/produkty/supersat3-3c/', permanent: true }],
-  ['/goldenear/supersat3-3c', { destination: '/produkty/supersat3-3c/', permanent: true }],
-  ['/pl/goldenear/supersat50-50c', { destination: '/produkty/supersat50-50c/', permanent: true }],
-  ['/goldenear/supersat50-50c', { destination: '/produkty/supersat50-50c/', permanent: true }],
-  ['/pl/goldenear/supersat60-60c', { destination: '/produkty/supersat60-60c/', permanent: true }],
-  ['/goldenear/supersat60-60c', { destination: '/produkty/supersat60-60c/', permanent: true }],
-  ['/pl/goldenear/supersubx', { destination: '/produkty/supersubx/', permanent: true }],
-  ['/goldenear/supersubx', { destination: '/produkty/supersubx/', permanent: true }],
-  ['/pl/goldenear/supersubxxl', { destination: '/produkty/supersubxxl/', permanent: true }],
-  ['/goldenear/supersubxxl', { destination: '/produkty/supersubxxl/', permanent: true }],
-  ['/pl/goldenear/superswivel', { destination: '/produkty/superswivel/', permanent: true }],
-  ['/goldenear/superswivel', { destination: '/produkty/superswivel/', permanent: true }],
+  [
+    '/pl/goldenear/square-invisa-grille-isg-525',
+    { destination: '/produkty/square-invisa-grille-isg-525/', permanent: true },
+  ],
+  [
+    '/goldenear/square-invisa-grille-isg-525',
+    { destination: '/produkty/square-invisa-grille-isg-525/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/square-invisa-grille-isg-650',
+    { destination: '/produkty/square-invisa-grille-isg-650/', permanent: true },
+  ],
+  [
+    '/goldenear/square-invisa-grille-isg-650',
+    { destination: '/produkty/square-invisa-grille-isg-650/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/square-invisa-grille-isg-7000',
+    {
+      destination: '/produkty/square-invisa-grille-isg-7000/',
+      permanent: true,
+    },
+  ],
+  [
+    '/goldenear/square-invisa-grille-isg-7000',
+    {
+      destination: '/produkty/square-invisa-grille-isg-7000/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/goldenear/supercenter-reference',
+    { destination: '/produkty/supercenter-reference/', permanent: true },
+  ],
+  [
+    '/goldenear/supercenter-reference',
+    { destination: '/produkty/supercenter-reference/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supercenterx',
+    { destination: '/produkty/supercenterx/', permanent: true },
+  ],
+  [
+    '/goldenear/supercenterx',
+    { destination: '/produkty/supercenterx/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supercenterxl',
+    { destination: '/produkty/supercenterxl/', permanent: true },
+  ],
+  [
+    '/goldenear/supercenterxl',
+    { destination: '/produkty/supercenterxl/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supercenterxxl',
+    { destination: '/produkty/supercenterxxl/', permanent: true },
+  ],
+  [
+    '/goldenear/supercenterxxl',
+    { destination: '/produkty/supercenterxxl/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supercinema-3d-array',
+    { destination: '/produkty/supercinema-3d-array/', permanent: true },
+  ],
+  [
+    '/goldenear/supercinema-3d-array',
+    { destination: '/produkty/supercinema-3d-array/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supercinema-3d-array-xl',
+    { destination: '/produkty/supercinema-3d-array-xl/', permanent: true },
+  ],
+  [
+    '/goldenear/supercinema-3d-array-xl',
+    { destination: '/produkty/supercinema-3d-array-xl/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supersat3-3c',
+    { destination: '/produkty/supersat3-3c/', permanent: true },
+  ],
+  [
+    '/goldenear/supersat3-3c',
+    { destination: '/produkty/supersat3-3c/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supersat50-50c',
+    { destination: '/produkty/supersat50-50c/', permanent: true },
+  ],
+  [
+    '/goldenear/supersat50-50c',
+    { destination: '/produkty/supersat50-50c/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supersat60-60c',
+    { destination: '/produkty/supersat60-60c/', permanent: true },
+  ],
+  [
+    '/goldenear/supersat60-60c',
+    { destination: '/produkty/supersat60-60c/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supersubx',
+    { destination: '/produkty/supersubx/', permanent: true },
+  ],
+  [
+    '/goldenear/supersubx',
+    { destination: '/produkty/supersubx/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/supersubxxl',
+    { destination: '/produkty/supersubxxl/', permanent: true },
+  ],
+  [
+    '/goldenear/supersubxxl',
+    { destination: '/produkty/supersubxxl/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/superswivel',
+    { destination: '/produkty/superswivel/', permanent: true },
+  ],
+  [
+    '/goldenear/superswivel',
+    { destination: '/produkty/superswivel/', permanent: true },
+  ],
   ['/pl/goldenear/t-66', { destination: '/produkty/t-66/', permanent: true }],
   ['/goldenear/t-66', { destination: '/produkty/t-66/', permanent: true }],
   ['/pl/goldenear/t44', { destination: '/produkty/t44/', permanent: true }],
   ['/goldenear/t44', { destination: '/produkty/t44/', permanent: true }],
-  ['/pl/goldenear/tablestand', { destination: '/produkty/tablestand/', permanent: true }],
-  ['/goldenear/tablestand', { destination: '/produkty/tablestand/', permanent: true }],
-  ['/pl/goldenear/triton-five', { destination: '/produkty/triton-five/', permanent: true }],
-  ['/goldenear/triton-five', { destination: '/produkty/triton-five/', permanent: true }],
-  ['/pl/goldenear/triton-one', { destination: '/produkty/triton-one/', permanent: true }],
-  ['/goldenear/triton-one', { destination: '/produkty/triton-one/', permanent: true }],
-  ['/pl/goldenear/triton-one-r', { destination: '/produkty/triton-one-r/', permanent: true }],
-  ['/goldenear/triton-one-r', { destination: '/produkty/triton-one-r/', permanent: true }],
-  ['/pl/goldenear/triton-reference', { destination: '/produkty/triton-reference/', permanent: true }],
-  ['/goldenear/triton-reference', { destination: '/produkty/triton-reference/', permanent: true }],
-  ['/pl/goldenear/triton-seven', { destination: '/produkty/triton-seven/', permanent: true }],
-  ['/goldenear/triton-seven', { destination: '/produkty/triton-seven/', permanent: true }],
-  ['/pl/goldenear/triton-three', { destination: '/produkty/triton-three/', permanent: true }],
-  ['/goldenear/triton-three', { destination: '/produkty/triton-three/', permanent: true }],
-  ['/pl/goldenear/triton-two', { destination: '/produkty/triton-two/', permanent: true }],
-  ['/goldenear/triton-two', { destination: '/produkty/triton-two/', permanent: true }],
-  ['/pl/grand-prix-audio/monaco', { destination: '/produkty/monaco/', permanent: true }],
-  ['/grand-prix-audio/monaco', { destination: '/produkty/monaco/', permanent: true }],
-  ['/pl/grand-prix-audio/parabolica', { destination: '/produkty/parabolica/', permanent: true }],
-  ['/grand-prix-audio/parabolica', { destination: '/produkty/parabolica/', permanent: true }],
+  [
+    '/pl/goldenear/tablestand',
+    { destination: '/produkty/tablestand/', permanent: true },
+  ],
+  [
+    '/goldenear/tablestand',
+    { destination: '/produkty/tablestand/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/triton-five',
+    { destination: '/produkty/triton-five/', permanent: true },
+  ],
+  [
+    '/goldenear/triton-five',
+    { destination: '/produkty/triton-five/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/triton-one',
+    { destination: '/produkty/triton-one/', permanent: true },
+  ],
+  [
+    '/goldenear/triton-one',
+    { destination: '/produkty/triton-one/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/triton-one-r',
+    { destination: '/produkty/triton-one-r/', permanent: true },
+  ],
+  [
+    '/goldenear/triton-one-r',
+    { destination: '/produkty/triton-one-r/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/triton-reference',
+    { destination: '/produkty/triton-reference/', permanent: true },
+  ],
+  [
+    '/goldenear/triton-reference',
+    { destination: '/produkty/triton-reference/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/triton-seven',
+    { destination: '/produkty/triton-seven/', permanent: true },
+  ],
+  [
+    '/goldenear/triton-seven',
+    { destination: '/produkty/triton-seven/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/triton-three',
+    { destination: '/produkty/triton-three/', permanent: true },
+  ],
+  [
+    '/goldenear/triton-three',
+    { destination: '/produkty/triton-three/', permanent: true },
+  ],
+  [
+    '/pl/goldenear/triton-two',
+    { destination: '/produkty/triton-two/', permanent: true },
+  ],
+  [
+    '/goldenear/triton-two',
+    { destination: '/produkty/triton-two/', permanent: true },
+  ],
+  [
+    '/pl/grand-prix-audio/monaco',
+    { destination: '/produkty/monaco/', permanent: true },
+  ],
+  [
+    '/grand-prix-audio/monaco',
+    { destination: '/produkty/monaco/', permanent: true },
+  ],
+  [
+    '/pl/grand-prix-audio/parabolica',
+    { destination: '/produkty/parabolica/', permanent: true },
+  ],
+  [
+    '/grand-prix-audio/parabolica',
+    { destination: '/produkty/parabolica/', permanent: true },
+  ],
   ['/pl/grimm-audio/ls1', { destination: '/produkty/ls1/', permanent: true }],
   ['/grimm-audio/ls1', { destination: '/produkty/ls1/', permanent: true }],
   ['/pl/grimm-audio/ls1a', { destination: '/produkty/ls1a/', permanent: true }],
   ['/grimm-audio/ls1a', { destination: '/produkty/ls1a/', permanent: true }],
-  ['/pl/grimm-audio/ls1be', { destination: '/produkty/ls1be/', permanent: true }],
+  [
+    '/pl/grimm-audio/ls1be',
+    { destination: '/produkty/ls1be/', permanent: true },
+  ],
   ['/grimm-audio/ls1be', { destination: '/produkty/ls1be/', permanent: true }],
   ['/pl/grimm-audio/ls1s', { destination: '/produkty/ls1s/', permanent: true }],
   ['/grimm-audio/ls1s', { destination: '/produkty/ls1s/', permanent: true }],
-  ['/pl/grimm-audio/ls1v2', { destination: '/produkty/ls1v2/', permanent: true }],
+  [
+    '/pl/grimm-audio/ls1v2',
+    { destination: '/produkty/ls1v2/', permanent: true },
+  ],
   ['/grimm-audio/ls1v2', { destination: '/produkty/ls1v2/', permanent: true }],
   ['/pl/grimm-audio/mu1', { destination: '/produkty/mu1/', permanent: true }],
   ['/grimm-audio/mu1', { destination: '/produkty/mu1/', permanent: true }],
@@ -687,134 +2236,500 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/grimm-audio/pw1', { destination: '/produkty/pw1/', permanent: true }],
   ['/pl/grimm-audio/SB1', { destination: '/produkty/sb1/', permanent: true }],
   ['/grimm-audio/SB1', { destination: '/produkty/sb1/', permanent: true }],
-  ['/pl/gryphon-audio/antileon-evo', { destination: '/produkty/antileon-evo/', permanent: true }],
-  ['/gryphon-audio/antileon-evo', { destination: '/produkty/antileon-evo/', permanent: true }],
-  ['/pl/gryphon-audio/antileon-evo-mono', { destination: '/produkty/antileon-evo-mono/', permanent: true }],
-  ['/gryphon-audio/antileon-evo-mono', { destination: '/produkty/antileon-evo-mono/', permanent: true }],
-  ['/pl/gryphon-audio/antileon-evo-stereo', { destination: '/produkty/antileon-evo-stereo/', permanent: true }],
-  ['/gryphon-audio/antileon-evo-stereo', { destination: '/produkty/antileon-evo-stereo/', permanent: true }],
-  ['/pl/gryphon-audio/antileon-revelation', { destination: '/produkty/antileon-revelation/', permanent: true }],
-  ['/gryphon-audio/antileon-revelation', { destination: '/produkty/antileon-revelation/', permanent: true }],
-  ['/pl/gryphon-audio/apex', { destination: '/produkty/apex/', permanent: true }],
+  [
+    '/pl/gryphon-audio/antileon-evo',
+    { destination: '/produkty/antileon-evo/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/antileon-evo',
+    { destination: '/produkty/antileon-evo/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/antileon-evo-mono',
+    { destination: '/produkty/antileon-evo-mono/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/antileon-evo-mono',
+    { destination: '/produkty/antileon-evo-mono/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/antileon-evo-stereo',
+    { destination: '/produkty/antileon-evo-stereo/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/antileon-evo-stereo',
+    { destination: '/produkty/antileon-evo-stereo/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/antileon-revelation',
+    { destination: '/produkty/antileon-revelation/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/antileon-revelation',
+    { destination: '/produkty/antileon-revelation/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/apex',
+    { destination: '/produkty/apex/', permanent: true },
+  ],
   ['/gryphon-audio/apex', { destination: '/produkty/apex/', permanent: true }],
-  ['/pl/gryphon-audio/apollo', { destination: '/produkty/apollo/', permanent: true }],
-  ['/gryphon-audio/apollo', { destination: '/produkty/apollo/', permanent: true }],
-  ['/pl/gryphon-audio/atlas', { destination: '/produkty/atlas/', permanent: true }],
-  ['/gryphon-audio/atlas', { destination: '/produkty/atlas/', permanent: true }],
-  ['/pl/gryphon-audio/black-diamond-dlc', { destination: '/produkty/black-diamond-dlc/', permanent: true }],
-  ['/gryphon-audio/black-diamond-dlc', { destination: '/produkty/black-diamond-dlc/', permanent: true }],
-  ['/pl/gryphon-audio/black-spike-st', { destination: '/produkty/black-spike-st/', permanent: true }],
-  ['/gryphon-audio/black-spike-st', { destination: '/produkty/black-spike-st/', permanent: true }],
-  ['/pl/gryphon-audio/colosseum', { destination: '/produkty/colosseum/', permanent: true }],
-  ['/gryphon-audio/colosseum', { destination: '/produkty/colosseum/', permanent: true }],
-  ['/pl/gryphon-audio/colosseum-solo', { destination: '/produkty/colosseum-solo/', permanent: true }],
-  ['/gryphon-audio/colosseum-solo', { destination: '/produkty/colosseum-solo/', permanent: true }],
-  ['/pl/gryphon-audio/commander', { destination: '/produkty/commander/', permanent: true }],
-  ['/gryphon-audio/commander', { destination: '/produkty/commander/', permanent: true }],
-  ['/pl/gryphon-audio/diablo-120', { destination: '/produkty/diablo-120/', permanent: true }],
-  ['/gryphon-audio/diablo-120', { destination: '/produkty/diablo-120/', permanent: true }],
-  ['/pl/gryphon-audio/diablo-120-dac', { destination: '/produkty/diablo-120-dac/', permanent: true }],
-  ['/gryphon-audio/diablo-120-dac', { destination: '/produkty/diablo-120-dac/', permanent: true }],
-  ['/pl/gryphon-audio/diablo-300', { destination: '/produkty/diablo-300/', permanent: true }],
-  ['/gryphon-audio/diablo-300', { destination: '/produkty/diablo-300/', permanent: true }],
-  ['/pl/gryphon-audio/diablo-300-dac', { destination: '/produkty/diablo-300-dac/', permanent: true }],
-  ['/gryphon-audio/diablo-300-dac', { destination: '/produkty/diablo-300-dac/', permanent: true }],
-  ['/pl/gryphon-audio/diablo-333', { destination: '/produkty/diablo-333/', permanent: true }],
-  ['/gryphon-audio/diablo-333', { destination: '/produkty/diablo-333/', permanent: true }],
-  ['/pl/gryphon-audio/eos-5', { destination: '/produkty/eos-5/', permanent: true }],
-  ['/gryphon-audio/eos-5', { destination: '/produkty/eos-5/', permanent: true }],
-  ['/pl/gryphon-audio/eos2', { destination: '/produkty/eos2/', permanent: true }],
+  [
+    '/pl/gryphon-audio/apollo',
+    { destination: '/produkty/apollo/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/apollo',
+    { destination: '/produkty/apollo/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/atlas',
+    { destination: '/produkty/atlas/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/atlas',
+    { destination: '/produkty/atlas/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/black-diamond-dlc',
+    { destination: '/produkty/black-diamond-dlc/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/black-diamond-dlc',
+    { destination: '/produkty/black-diamond-dlc/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/black-spike-st',
+    { destination: '/produkty/black-spike-st/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/black-spike-st',
+    { destination: '/produkty/black-spike-st/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/colosseum',
+    { destination: '/produkty/colosseum/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/colosseum',
+    { destination: '/produkty/colosseum/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/colosseum-solo',
+    { destination: '/produkty/colosseum-solo/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/colosseum-solo',
+    { destination: '/produkty/colosseum-solo/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/commander',
+    { destination: '/produkty/commander/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/commander',
+    { destination: '/produkty/commander/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/diablo-120',
+    { destination: '/produkty/diablo-120/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/diablo-120',
+    { destination: '/produkty/diablo-120/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/diablo-120-dac',
+    { destination: '/produkty/diablo-120-dac/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/diablo-120-dac',
+    { destination: '/produkty/diablo-120-dac/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/diablo-300',
+    { destination: '/produkty/diablo-300/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/diablo-300',
+    { destination: '/produkty/diablo-300/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/diablo-300-dac',
+    { destination: '/produkty/diablo-300-dac/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/diablo-300-dac',
+    { destination: '/produkty/diablo-300-dac/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/diablo-333',
+    { destination: '/produkty/diablo-333/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/diablo-333',
+    { destination: '/produkty/diablo-333/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/eos-5',
+    { destination: '/produkty/eos-5/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/eos-5',
+    { destination: '/produkty/eos-5/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/eos2',
+    { destination: '/produkty/eos2/', permanent: true },
+  ],
   ['/gryphon-audio/eos2', { destination: '/produkty/eos2/', permanent: true }],
-  ['/pl/gryphon-audio/essence', { destination: '/produkty/essence/', permanent: true }],
-  ['/gryphon-audio/essence', { destination: '/produkty/essence/', permanent: true }],
-  ['/pl/gryphon-audio/essence-mono', { destination: '/produkty/essence-mono/', permanent: true }],
-  ['/gryphon-audio/essence-mono', { destination: '/produkty/essence-mono/', permanent: true }],
-  ['/pl/gryphon-audio/essence-pre', { destination: '/produkty/essence-pre/', permanent: true }],
-  ['/gryphon-audio/essence-pre', { destination: '/produkty/essence-pre/', permanent: true }],
-  ['/pl/gryphon-audio/essence-stereo', { destination: '/produkty/essence-stereo/', permanent: true }],
-  ['/gryphon-audio/essence-stereo', { destination: '/produkty/essence-stereo/', permanent: true }],
-  ['/pl/gryphon-audio/ethos', { destination: '/produkty/ethos/', permanent: true }],
-  ['/gryphon-audio/ethos', { destination: '/produkty/ethos/', permanent: true }],
-  ['/pl/gryphon-audio/guideline-reference', { destination: '/produkty/guideline-reference/', permanent: true }],
-  ['/gryphon-audio/guideline-reference', { destination: '/produkty/guideline-reference/', permanent: true }],
-  ['/pl/gryphon-audio/headline-ac', { destination: '/produkty/headline-ac/', permanent: true }],
-  ['/gryphon-audio/headline-ac', { destination: '/produkty/headline-ac/', permanent: true }],
-  ['/pl/gryphon-audio/kaliope', { destination: '/produkty/kaliope/', permanent: true }],
-  ['/gryphon-audio/kaliope', { destination: '/produkty/kaliope/', permanent: true }],
-  ['/pl/gryphon-audio/kodo', { destination: '/produkty/kodo/', permanent: true }],
+  [
+    '/pl/gryphon-audio/essence',
+    { destination: '/produkty/essence/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/essence',
+    { destination: '/produkty/essence/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/essence-mono',
+    { destination: '/produkty/essence-mono/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/essence-mono',
+    { destination: '/produkty/essence-mono/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/essence-pre',
+    { destination: '/produkty/essence-pre/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/essence-pre',
+    { destination: '/produkty/essence-pre/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/essence-stereo',
+    { destination: '/produkty/essence-stereo/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/essence-stereo',
+    { destination: '/produkty/essence-stereo/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/ethos',
+    { destination: '/produkty/ethos/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/ethos',
+    { destination: '/produkty/ethos/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/guideline-reference',
+    { destination: '/produkty/guideline-reference/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/guideline-reference',
+    { destination: '/produkty/guideline-reference/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/headline-ac',
+    { destination: '/produkty/headline-ac/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/headline-ac',
+    { destination: '/produkty/headline-ac/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/kaliope',
+    { destination: '/produkty/kaliope/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/kaliope',
+    { destination: '/produkty/kaliope/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/kodo',
+    { destination: '/produkty/kodo/', permanent: true },
+  ],
   ['/gryphon-audio/kodo', { destination: '/produkty/kodo/', permanent: true }],
-  ['/pl/gryphon-audio/legato-legacy', { destination: '/produkty/legato-legacy/', permanent: true }],
-  ['/gryphon-audio/legato-legacy', { destination: '/produkty/legato-legacy/', permanent: true }],
-  ['/pl/gryphon-audio/mephisto', { destination: '/produkty/mephisto/', permanent: true }],
-  ['/gryphon-audio/mephisto', { destination: '/produkty/mephisto/', permanent: true }],
-  ['/pl/gryphon-audio/mephisto-solo', { destination: '/produkty/mephisto-solo/', permanent: true }],
-  ['/gryphon-audio/mephisto-solo', { destination: '/produkty/mephisto-solo/', permanent: true }],
-  ['/pl/gryphon-audio/modul-phono-ps2-mmmc', { destination: '/produkty/modul-phono-ps2-mmmc/', permanent: true }],
-  ['/gryphon-audio/modul-phono-ps2-mmmc', { destination: '/produkty/modul-phono-ps2-mmmc/', permanent: true }],
-  ['/pl/gryphon-audio/mojo-s', { destination: '/produkty/mojo-s/', permanent: true }],
-  ['/gryphon-audio/mojo-s', { destination: '/produkty/mojo-s/', permanent: true }],
-  ['/pl/gryphon-audio/pandora', { destination: '/produkty/pandora/', permanent: true }],
-  ['/gryphon-audio/pandora', { destination: '/produkty/pandora/', permanent: true }],
-  ['/pl/gryphon-audio/pantheon', { destination: '/produkty/pantheon/', permanent: true }],
-  ['/gryphon-audio/pantheon', { destination: '/produkty/pantheon/', permanent: true }],
-  ['/pl/gryphon-audio/powerzone-3', { destination: '/produkty/powerzone-3/', permanent: true }],
-  ['/gryphon-audio/powerzone-3', { destination: '/produkty/powerzone-3/', permanent: true }],
-  ['/pl/gryphon-audio/rosso-ac', { destination: '/produkty/rosso-ac/', permanent: true }],
-  ['/gryphon-audio/rosso-ac', { destination: '/produkty/rosso-ac/', permanent: true }],
-  ['/pl/gryphon-audio/rosso-ic', { destination: '/produkty/rosso-ic/', permanent: true }],
-  ['/gryphon-audio/rosso-ic', { destination: '/produkty/rosso-ic/', permanent: true }],
-  ['/pl/gryphon-audio/rosso-sp', { destination: '/produkty/rosso-sp/', permanent: true }],
-  ['/gryphon-audio/rosso-sp', { destination: '/produkty/rosso-sp/', permanent: true }],
-  ['/pl/gryphon-audio/scorpio', { destination: '/produkty/scorpio/', permanent: true }],
-  ['/gryphon-audio/scorpio', { destination: '/produkty/scorpio/', permanent: true }],
-  ['/pl/gryphon-audio/Siren', { destination: '/produkty/siren/', permanent: true }],
-  ['/gryphon-audio/Siren', { destination: '/produkty/siren/', permanent: true }],
-  ['/pl/gryphon-audio/sonett', { destination: '/produkty/sonett/', permanent: true }],
-  ['/gryphon-audio/sonett', { destination: '/produkty/sonett/', permanent: true }],
-  ['/pl/gryphon-audio/standart', { destination: '/produkty/standart/', permanent: true }],
-  ['/gryphon-audio/standart', { destination: '/produkty/standart/', permanent: true }],
-  ['/pl/gryphon-audio/trident-ii', { destination: '/produkty/trident-ii/', permanent: true }],
-  ['/gryphon-audio/trident-ii', { destination: '/produkty/trident-ii/', permanent: true }],
-  ['/pl/gryphon-audio/vanta-ac', { destination: '/produkty/vanta-ac/', permanent: true }],
-  ['/gryphon-audio/vanta-ac', { destination: '/produkty/vanta-ac/', permanent: true }],
-  ['/pl/gryphon-audio/vanta-digital', { destination: '/produkty/vanta-digital/', permanent: true }],
-  ['/gryphon-audio/vanta-digital', { destination: '/produkty/vanta-digital/', permanent: true }],
-  ['/pl/gryphon-audio/vanta-ic', { destination: '/produkty/vanta-ic/', permanent: true }],
-  ['/gryphon-audio/vanta-ic', { destination: '/produkty/vanta-ic/', permanent: true }],
-  ['/pl/gryphon-audio/vanta-sp', { destination: '/produkty/vanta-sp/', permanent: true }],
-  ['/gryphon-audio/vanta-sp', { destination: '/produkty/vanta-sp/', permanent: true }],
-  ['/pl/gryphon-audio/vip-ic', { destination: '/produkty/vip-ic/', permanent: true }],
-  ['/gryphon-audio/vip-ic', { destination: '/produkty/vip-ic/', permanent: true }],
-  ['/pl/gryphon-audio/vip-m5-ac', { destination: '/produkty/vip-m5-ac/', permanent: true }],
-  ['/gryphon-audio/vip-m5-ac', { destination: '/produkty/vip-m5-ac/', permanent: true }],
-  ['/pl/gryphon-audio/vip-sc', { destination: '/produkty/vip-sc/', permanent: true }],
-  ['/gryphon-audio/vip-sc', { destination: '/produkty/vip-sc/', permanent: true }],
-  ['/pl/gryphon-audio/zena', { destination: '/produkty/zena/', permanent: true }],
+  [
+    '/pl/gryphon-audio/legato-legacy',
+    { destination: '/produkty/legato-legacy/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/legato-legacy',
+    { destination: '/produkty/legato-legacy/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/mephisto',
+    { destination: '/produkty/mephisto/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/mephisto',
+    { destination: '/produkty/mephisto/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/mephisto-solo',
+    { destination: '/produkty/mephisto-solo/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/mephisto-solo',
+    { destination: '/produkty/mephisto-solo/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/modul-phono-ps2-mmmc',
+    { destination: '/produkty/modul-phono-ps2-mmmc/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/modul-phono-ps2-mmmc',
+    { destination: '/produkty/modul-phono-ps2-mmmc/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/mojo-s',
+    { destination: '/produkty/mojo-s/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/mojo-s',
+    { destination: '/produkty/mojo-s/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/pandora',
+    { destination: '/produkty/pandora/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/pandora',
+    { destination: '/produkty/pandora/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/pantheon',
+    { destination: '/produkty/pantheon/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/pantheon',
+    { destination: '/produkty/pantheon/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/powerzone-3',
+    { destination: '/produkty/powerzone-3/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/powerzone-3',
+    { destination: '/produkty/powerzone-3/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/rosso-ac',
+    { destination: '/produkty/rosso-ac/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/rosso-ac',
+    { destination: '/produkty/rosso-ac/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/rosso-ic',
+    { destination: '/produkty/rosso-ic/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/rosso-ic',
+    { destination: '/produkty/rosso-ic/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/rosso-sp',
+    { destination: '/produkty/rosso-sp/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/rosso-sp',
+    { destination: '/produkty/rosso-sp/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/scorpio',
+    { destination: '/produkty/scorpio/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/scorpio',
+    { destination: '/produkty/scorpio/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/Siren',
+    { destination: '/produkty/siren/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/Siren',
+    { destination: '/produkty/siren/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/sonett',
+    { destination: '/produkty/sonett/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/sonett',
+    { destination: '/produkty/sonett/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/standart',
+    { destination: '/produkty/standart/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/standart',
+    { destination: '/produkty/standart/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/trident-ii',
+    { destination: '/produkty/trident-ii/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/trident-ii',
+    { destination: '/produkty/trident-ii/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/vanta-ac',
+    { destination: '/produkty/vanta-ac/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/vanta-ac',
+    { destination: '/produkty/vanta-ac/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/vanta-digital',
+    { destination: '/produkty/vanta-digital/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/vanta-digital',
+    { destination: '/produkty/vanta-digital/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/vanta-ic',
+    { destination: '/produkty/vanta-ic/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/vanta-ic',
+    { destination: '/produkty/vanta-ic/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/vanta-sp',
+    { destination: '/produkty/vanta-sp/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/vanta-sp',
+    { destination: '/produkty/vanta-sp/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/vip-ic',
+    { destination: '/produkty/vip-ic/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/vip-ic',
+    { destination: '/produkty/vip-ic/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/vip-m5-ac',
+    { destination: '/produkty/vip-m5-ac/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/vip-m5-ac',
+    { destination: '/produkty/vip-m5-ac/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/vip-sc',
+    { destination: '/produkty/vip-sc/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/vip-sc',
+    { destination: '/produkty/vip-sc/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-audio/zena',
+    { destination: '/produkty/zena/', permanent: true },
+  ],
   ['/gryphon-audio/zena', { destination: '/produkty/zena/', permanent: true }],
-  ['/pl/gryphon-audio/zena-dac', { destination: '/produkty/zena-dac/', permanent: true }],
-  ['/gryphon-audio/zena-dac', { destination: '/produkty/zena-dac/', permanent: true }],
-  ['/pl/keces-audio/bp-1200', { destination: '/produkty/bp-1200/', permanent: true }],
-  ['/keces-audio/bp-1200', { destination: '/produkty/bp-1200/', permanent: true }],
-  ['/pl/keces-audio/BP-2400', { destination: '/produkty/bp-2400/', permanent: true }],
-  ['/keces-audio/BP-2400', { destination: '/produkty/bp-2400/', permanent: true }],
-  ['/pl/keces-audio/bp-5000', { destination: '/produkty/bp-5000/', permanent: true }],
-  ['/keces-audio/bp-5000', { destination: '/produkty/bp-5000/', permanent: true }],
-  ['/pl/keces-audio/bp-600', { destination: '/produkty/bp-600/', permanent: true }],
-  ['/keces-audio/bp-600', { destination: '/produkty/bp-600/', permanent: true }],
-  ['/pl/keces-audio/dc-116', { destination: '/produkty/dc-116/', permanent: true }],
-  ['/keces-audio/dc-116', { destination: '/produkty/dc-116/', permanent: true }],
+  [
+    '/pl/gryphon-audio/zena-dac',
+    { destination: '/produkty/zena-dac/', permanent: true },
+  ],
+  [
+    '/gryphon-audio/zena-dac',
+    { destination: '/produkty/zena-dac/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/bp-1200',
+    { destination: '/produkty/bp-1200/', permanent: true },
+  ],
+  [
+    '/keces-audio/bp-1200',
+    { destination: '/produkty/bp-1200/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/BP-2400',
+    { destination: '/produkty/bp-2400/', permanent: true },
+  ],
+  [
+    '/keces-audio/BP-2400',
+    { destination: '/produkty/bp-2400/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/bp-5000',
+    { destination: '/produkty/bp-5000/', permanent: true },
+  ],
+  [
+    '/keces-audio/bp-5000',
+    { destination: '/produkty/bp-5000/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/bp-600',
+    { destination: '/produkty/bp-600/', permanent: true },
+  ],
+  [
+    '/keces-audio/bp-600',
+    { destination: '/produkty/bp-600/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/dc-116',
+    { destination: '/produkty/dc-116/', permanent: true },
+  ],
+  [
+    '/keces-audio/dc-116',
+    { destination: '/produkty/dc-116/', permanent: true },
+  ],
   ['/pl/keces-audio/e40', { destination: '/produkty/e40/', permanent: true }],
   ['/keces-audio/e40', { destination: '/produkty/e40/', permanent: true }],
-  ['/pl/keces-audio/ebravo', { destination: '/produkty/ebravo/', permanent: true }],
-  ['/keces-audio/ebravo', { destination: '/produkty/ebravo/', permanent: true }],
-  ['/pl/keces-audio/ephono-ephono-power', { destination: '/produkty/ephono-ephono-power/', permanent: true }],
-  ['/keces-audio/ephono-ephono-power', { destination: '/produkty/ephono-ephono-power/', permanent: true }],
-  ['/pl/keces-audio/iqrp-1500', { destination: '/produkty/iqrp-1500/', permanent: true }],
-  ['/keces-audio/iqrp-1500', { destination: '/produkty/iqrp-1500/', permanent: true }],
-  ['/pl/keces-audio/iqrp-3600', { destination: '/produkty/iqrp-3600/', permanent: true }],
-  ['/keces-audio/iqrp-3600', { destination: '/produkty/iqrp-3600/', permanent: true }],
-  ['/pl/keces-audio/IQRP-800', { destination: '/produkty/iqrp-800/', permanent: true }],
-  ['/keces-audio/IQRP-800', { destination: '/produkty/iqrp-800/', permanent: true }],
+  [
+    '/pl/keces-audio/ebravo',
+    { destination: '/produkty/ebravo/', permanent: true },
+  ],
+  [
+    '/keces-audio/ebravo',
+    { destination: '/produkty/ebravo/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/ephono-ephono-power',
+    { destination: '/produkty/ephono-ephono-power/', permanent: true },
+  ],
+  [
+    '/keces-audio/ephono-ephono-power',
+    { destination: '/produkty/ephono-ephono-power/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/iqrp-1500',
+    { destination: '/produkty/iqrp-1500/', permanent: true },
+  ],
+  [
+    '/keces-audio/iqrp-1500',
+    { destination: '/produkty/iqrp-1500/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/iqrp-3600',
+    { destination: '/produkty/iqrp-3600/', permanent: true },
+  ],
+  [
+    '/keces-audio/iqrp-3600',
+    { destination: '/produkty/iqrp-3600/', permanent: true },
+  ],
+  [
+    '/pl/keces-audio/IQRP-800',
+    { destination: '/produkty/iqrp-800/', permanent: true },
+  ],
+  [
+    '/keces-audio/IQRP-800',
+    { destination: '/produkty/iqrp-800/', permanent: true },
+  ],
   ['/pl/keces-audio/P14', { destination: '/produkty/p14/', permanent: true }],
   ['/keces-audio/P14', { destination: '/produkty/p14/', permanent: true }],
   ['/pl/keces-audio/p28', { destination: '/produkty/p28/', permanent: true }],
@@ -833,90 +2748,363 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/keces-audio/s3', { destination: '/produkty/s3/', permanent: true }],
   ['/pl/keces-audio/s300', { destination: '/produkty/s300/', permanent: true }],
   ['/keces-audio/s300', { destination: '/produkty/s300/', permanent: true }],
-  ['/pl/keces-audio/s300plus', { destination: '/produkty/s300plus/', permanent: true }],
-  ['/keces-audio/s300plus', { destination: '/produkty/s300plus/', permanent: true }],
+  [
+    '/pl/keces-audio/s300plus',
+    { destination: '/produkty/s300plus/', permanent: true },
+  ],
+  [
+    '/keces-audio/s300plus',
+    { destination: '/produkty/s300plus/', permanent: true },
+  ],
   ['/pl/keces-audio/s4', { destination: '/produkty/s4/', permanent: true }],
   ['/keces-audio/s4', { destination: '/produkty/s4/', permanent: true }],
-  ['/pl/keces-audio/sphono-sphono-power', { destination: '/produkty/sphono-sphono-power/', permanent: true }],
-  ['/keces-audio/sphono-sphono-power', { destination: '/produkty/sphono-sphono-power/', permanent: true }],
-  ['/pl/mutec/mc-3-usb', { destination: '/produkty/mc-3-usb/', permanent: true }],
+  [
+    '/pl/keces-audio/sphono-sphono-power',
+    { destination: '/produkty/sphono-sphono-power/', permanent: true },
+  ],
+  [
+    '/keces-audio/sphono-sphono-power',
+    { destination: '/produkty/sphono-sphono-power/', permanent: true },
+  ],
+  [
+    '/pl/mutec/mc-3-usb',
+    { destination: '/produkty/mc-3-usb/', permanent: true },
+  ],
   ['/mutec/mc-3-usb', { destination: '/produkty/mc-3-usb/', permanent: true }],
   ['/pl/mutec/mc1-2', { destination: '/produkty/mc1-2/', permanent: true }],
   ['/mutec/mc1-2', { destination: '/produkty/mc1-2/', permanent: true }],
   ['/pl/mutec/ref-10', { destination: '/produkty/ref-10/', permanent: true }],
   ['/mutec/ref-10', { destination: '/produkty/ref-10/', permanent: true }],
-  ['/pl/mutec/ref10-nano', { destination: '/produkty/ref10-nano/', permanent: true }],
-  ['/mutec/ref10-nano', { destination: '/produkty/ref10-nano/', permanent: true }],
-  ['/pl/primaluna/dialogue-premium-integrated-amplifier', { destination: '/produkty/dialogue-premium-integrated-amplifier/', permanent: true }],
-  ['/primaluna/dialogue-premium-integrated-amplifier', { destination: '/produkty/dialogue-premium-integrated-amplifier/', permanent: true }],
-  ['/pl/primaluna/dialogue-premium-preamplifier', { destination: '/produkty/dialogue-premium-preamplifier/', permanent: true }],
-  ['/primaluna/dialogue-premium-preamplifier', { destination: '/produkty/dialogue-premium-preamplifier/', permanent: true }],
-  ['/pl/primaluna/dialogue-premium-stereomono-amplifier', { destination: '/produkty/dialogue-premium-stereomono-amplifier/', permanent: true }],
-  ['/primaluna/dialogue-premium-stereomono-amplifier', { destination: '/produkty/dialogue-premium-stereomono-amplifier/', permanent: true }],
-  ['/pl/primaluna/dialogue-premiumhp-integrated-amplifier', { destination: '/produkty/dialogue-premiumhp-integrated-amplifier/', permanent: true }],
-  ['/primaluna/dialogue-premiumhp-integrated-amplifier', { destination: '/produkty/dialogue-premiumhp-integrated-amplifier/', permanent: true }],
-  ['/pl/primaluna/dialogue-premiumhp-stereomono-amplifier', { destination: '/produkty/dialogue-premiumhp-stereomono-amplifier/', permanent: true }],
-  ['/primaluna/dialogue-premiumhp-stereomono-amplifier', { destination: '/produkty/dialogue-premiumhp-stereomono-amplifier/', permanent: true }],
-  ['/pl/primaluna/evo-100-dac', { destination: '/produkty/evo-100-dac/', permanent: true }],
-  ['/primaluna/evo-100-dac', { destination: '/produkty/evo-100-dac/', permanent: true }],
-  ['/pl/primaluna/evo-100-integrated', { destination: '/produkty/evo-100-integrated/', permanent: true }],
-  ['/primaluna/evo-100-integrated', { destination: '/produkty/evo-100-integrated/', permanent: true }],
-  ['/pl/primaluna/evo-100-phono-preamplifier', { destination: '/produkty/evo-100-phono-preamplifier/', permanent: true }],
-  ['/primaluna/evo-100-phono-preamplifier', { destination: '/produkty/evo-100-phono-preamplifier/', permanent: true }],
-  ['/pl/primaluna/evo-100-poweramp', { destination: '/produkty/evo-100-poweramp/', permanent: true }],
-  ['/primaluna/evo-100-poweramp', { destination: '/produkty/evo-100-poweramp/', permanent: true }],
-  ['/pl/primaluna/evo-100-preamplifier', { destination: '/produkty/evo-100-preamplifier/', permanent: true }],
-  ['/primaluna/evo-100-preamplifier', { destination: '/produkty/evo-100-preamplifier/', permanent: true }],
-  ['/pl/primaluna/evo-200-integrated', { destination: '/produkty/evo-200-integrated/', permanent: true }],
-  ['/primaluna/evo-200-integrated', { destination: '/produkty/evo-200-integrated/', permanent: true }],
-  ['/pl/primaluna/evo-200-poweramp', { destination: '/produkty/evo-200-poweramp/', permanent: true }],
-  ['/primaluna/evo-200-poweramp', { destination: '/produkty/evo-200-poweramp/', permanent: true }],
-  ['/pl/primaluna/evo-200-preamplifier', { destination: '/produkty/evo-200-preamplifier/', permanent: true }],
-  ['/primaluna/evo-200-preamplifier', { destination: '/produkty/evo-200-preamplifier/', permanent: true }],
-  ['/pl/primaluna/evo-300-hybrid-integrated', { destination: '/produkty/evo-300-hybrid-integrated/', permanent: true }],
-  ['/primaluna/evo-300-hybrid-integrated', { destination: '/produkty/evo-300-hybrid-integrated/', permanent: true }],
-  ['/pl/primaluna/evo-300-hybrid-poweramplifier', { destination: '/produkty/evo-300-hybrid-poweramplifier/', permanent: true }],
-  ['/primaluna/evo-300-hybrid-poweramplifier', { destination: '/produkty/evo-300-hybrid-poweramplifier/', permanent: true }],
-  ['/pl/primaluna/evo-300-integrated', { destination: '/produkty/evo-300-integrated/', permanent: true }],
-  ['/primaluna/evo-300-integrated', { destination: '/produkty/evo-300-integrated/', permanent: true }],
-  ['/pl/primaluna/evo-300-poweramp', { destination: '/produkty/evo-300-poweramp/', permanent: true }],
-  ['/primaluna/evo-300-poweramp', { destination: '/produkty/evo-300-poweramp/', permanent: true }],
-  ['/pl/primaluna/evo-300-preamplifier', { destination: '/produkty/evo-300-preamplifier/', permanent: true }],
-  ['/primaluna/evo-300-preamplifier', { destination: '/produkty/evo-300-preamplifier/', permanent: true }],
-  ['/pl/primaluna/evo-400-integrated', { destination: '/produkty/evo-400-integrated/', permanent: true }],
-  ['/primaluna/evo-400-integrated', { destination: '/produkty/evo-400-integrated/', permanent: true }],
-  ['/pl/primaluna/evo-400-poweramp', { destination: '/produkty/evo-400-poweramp/', permanent: true }],
-  ['/primaluna/evo-400-poweramp', { destination: '/produkty/evo-400-poweramp/', permanent: true }],
-  ['/pl/primaluna/evo-400-preamplifier', { destination: '/produkty/evo-400-preamplifier/', permanent: true }],
-  ['/primaluna/evo-400-preamplifier', { destination: '/produkty/evo-400-preamplifier/', permanent: true }],
-  ['/pl/primaluna/prologue-classic-integrated-amplifier', { destination: '/produkty/prologue-classic-integrated-amplifier/', permanent: true }],
-  ['/primaluna/prologue-classic-integrated-amplifier', { destination: '/produkty/prologue-classic-integrated-amplifier/', permanent: true }],
-  ['/pl/primaluna/prologue-premium-integrated', { destination: '/produkty/prologue-premium-integrated/', permanent: true }],
-  ['/primaluna/prologue-premium-integrated', { destination: '/produkty/prologue-premium-integrated/', permanent: true }],
-  ['/pl/primaluna/prologue-premium-preamplifier', { destination: '/produkty/prologue-premium-preamplifier/', permanent: true }],
-  ['/primaluna/prologue-premium-preamplifier', { destination: '/produkty/prologue-premium-preamplifier/', permanent: true }],
-  ['/pl/primaluna/prologue-premium-stereomono-amplifier', { destination: '/produkty/prologue-premium-stereomono-amplifier/', permanent: true }],
-  ['/primaluna/prologue-premium-stereomono-amplifier', { destination: '/produkty/prologue-premium-stereomono-amplifier/', permanent: true }],
-  ['/pl/rogue-audio/apollo-dark', { destination: '/produkty/apollo-dark/', permanent: true }],
-  ['/rogue-audio/apollo-dark', { destination: '/produkty/apollo-dark/', permanent: true }],
+  [
+    '/pl/mutec/ref10-nano',
+    { destination: '/produkty/ref10-nano/', permanent: true },
+  ],
+  [
+    '/mutec/ref10-nano',
+    { destination: '/produkty/ref10-nano/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/dialogue-premium-integrated-amplifier',
+    {
+      destination: '/produkty/dialogue-premium-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/dialogue-premium-integrated-amplifier',
+    {
+      destination: '/produkty/dialogue-premium-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/dialogue-premium-preamplifier',
+    {
+      destination: '/produkty/dialogue-premium-preamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/dialogue-premium-preamplifier',
+    {
+      destination: '/produkty/dialogue-premium-preamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/dialogue-premium-stereomono-amplifier',
+    {
+      destination: '/produkty/dialogue-premium-stereomono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/dialogue-premium-stereomono-amplifier',
+    {
+      destination: '/produkty/dialogue-premium-stereomono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/dialogue-premiumhp-integrated-amplifier',
+    {
+      destination: '/produkty/dialogue-premiumhp-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/dialogue-premiumhp-integrated-amplifier',
+    {
+      destination: '/produkty/dialogue-premiumhp-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/dialogue-premiumhp-stereomono-amplifier',
+    {
+      destination: '/produkty/dialogue-premiumhp-stereomono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/dialogue-premiumhp-stereomono-amplifier',
+    {
+      destination: '/produkty/dialogue-premiumhp-stereomono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/evo-100-dac',
+    { destination: '/produkty/evo-100-dac/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-100-dac',
+    { destination: '/produkty/evo-100-dac/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-100-integrated',
+    { destination: '/produkty/evo-100-integrated/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-100-integrated',
+    { destination: '/produkty/evo-100-integrated/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-100-phono-preamplifier',
+    { destination: '/produkty/evo-100-phono-preamplifier/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-100-phono-preamplifier',
+    { destination: '/produkty/evo-100-phono-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-100-poweramp',
+    { destination: '/produkty/evo-100-poweramp/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-100-poweramp',
+    { destination: '/produkty/evo-100-poweramp/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-100-preamplifier',
+    { destination: '/produkty/evo-100-preamplifier/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-100-preamplifier',
+    { destination: '/produkty/evo-100-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-200-integrated',
+    { destination: '/produkty/evo-200-integrated/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-200-integrated',
+    { destination: '/produkty/evo-200-integrated/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-200-poweramp',
+    { destination: '/produkty/evo-200-poweramp/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-200-poweramp',
+    { destination: '/produkty/evo-200-poweramp/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-200-preamplifier',
+    { destination: '/produkty/evo-200-preamplifier/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-200-preamplifier',
+    { destination: '/produkty/evo-200-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-300-hybrid-integrated',
+    { destination: '/produkty/evo-300-hybrid-integrated/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-300-hybrid-integrated',
+    { destination: '/produkty/evo-300-hybrid-integrated/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-300-hybrid-poweramplifier',
+    {
+      destination: '/produkty/evo-300-hybrid-poweramplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/evo-300-hybrid-poweramplifier',
+    {
+      destination: '/produkty/evo-300-hybrid-poweramplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/evo-300-integrated',
+    { destination: '/produkty/evo-300-integrated/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-300-integrated',
+    { destination: '/produkty/evo-300-integrated/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-300-poweramp',
+    { destination: '/produkty/evo-300-poweramp/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-300-poweramp',
+    { destination: '/produkty/evo-300-poweramp/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-300-preamplifier',
+    { destination: '/produkty/evo-300-preamplifier/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-300-preamplifier',
+    { destination: '/produkty/evo-300-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-400-integrated',
+    { destination: '/produkty/evo-400-integrated/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-400-integrated',
+    { destination: '/produkty/evo-400-integrated/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-400-poweramp',
+    { destination: '/produkty/evo-400-poweramp/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-400-poweramp',
+    { destination: '/produkty/evo-400-poweramp/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/evo-400-preamplifier',
+    { destination: '/produkty/evo-400-preamplifier/', permanent: true },
+  ],
+  [
+    '/primaluna/evo-400-preamplifier',
+    { destination: '/produkty/evo-400-preamplifier/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/prologue-classic-integrated-amplifier',
+    {
+      destination: '/produkty/prologue-classic-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/prologue-classic-integrated-amplifier',
+    {
+      destination: '/produkty/prologue-classic-integrated-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/prologue-premium-integrated',
+    { destination: '/produkty/prologue-premium-integrated/', permanent: true },
+  ],
+  [
+    '/primaluna/prologue-premium-integrated',
+    { destination: '/produkty/prologue-premium-integrated/', permanent: true },
+  ],
+  [
+    '/pl/primaluna/prologue-premium-preamplifier',
+    {
+      destination: '/produkty/prologue-premium-preamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/prologue-premium-preamplifier',
+    {
+      destination: '/produkty/prologue-premium-preamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna/prologue-premium-stereomono-amplifier',
+    {
+      destination: '/produkty/prologue-premium-stereomono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/primaluna/prologue-premium-stereomono-amplifier',
+    {
+      destination: '/produkty/prologue-premium-stereomono-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/rogue-audio/apollo-dark',
+    { destination: '/produkty/apollo-dark/', permanent: true },
+  ],
+  [
+    '/rogue-audio/apollo-dark',
+    { destination: '/produkty/apollo-dark/', permanent: true },
+  ],
   ['/pl/rogue-audio/ares', { destination: '/produkty/ares/', permanent: true }],
   ['/rogue-audio/ares', { destination: '/produkty/ares/', permanent: true }],
-  ['/pl/rogue-audio/atlas-magnum', { destination: '/produkty/atlas-magnum/', permanent: true }],
-  ['/rogue-audio/atlas-magnum', { destination: '/produkty/atlas-magnum/', permanent: true }],
-  ['/pl/rogue-audio/cronus-magnumii', { destination: '/produkty/cronus-magnumii/', permanent: true }],
-  ['/rogue-audio/cronus-magnumii', { destination: '/produkty/cronus-magnumii/', permanent: true }],
-  ['/pl/rogue-audio/dragon-hydra', { destination: '/produkty/dragon-hydra/', permanent: true }],
-  ['/rogue-audio/dragon-hydra', { destination: '/produkty/dragon-hydra/', permanent: true }],
-  ['/pl/rogue-audio/dragon-mono', { destination: '/produkty/dragon-mono/', permanent: true }],
-  ['/rogue-audio/dragon-mono', { destination: '/produkty/dragon-mono/', permanent: true }],
-  ['/pl/rogue-audio/m-100', { destination: '/produkty/m-100/', permanent: true }],
+  [
+    '/pl/rogue-audio/atlas-magnum',
+    { destination: '/produkty/atlas-magnum/', permanent: true },
+  ],
+  [
+    '/rogue-audio/atlas-magnum',
+    { destination: '/produkty/atlas-magnum/', permanent: true },
+  ],
+  [
+    '/pl/rogue-audio/cronus-magnumii',
+    { destination: '/produkty/cronus-magnumii/', permanent: true },
+  ],
+  [
+    '/rogue-audio/cronus-magnumii',
+    { destination: '/produkty/cronus-magnumii/', permanent: true },
+  ],
+  [
+    '/pl/rogue-audio/dragon-hydra',
+    { destination: '/produkty/dragon-hydra/', permanent: true },
+  ],
+  [
+    '/rogue-audio/dragon-hydra',
+    { destination: '/produkty/dragon-hydra/', permanent: true },
+  ],
+  [
+    '/pl/rogue-audio/dragon-mono',
+    { destination: '/produkty/dragon-mono/', permanent: true },
+  ],
+  [
+    '/rogue-audio/dragon-mono',
+    { destination: '/produkty/dragon-mono/', permanent: true },
+  ],
+  [
+    '/pl/rogue-audio/m-100',
+    { destination: '/produkty/m-100/', permanent: true },
+  ],
   ['/rogue-audio/m-100', { destination: '/produkty/m-100/', permanent: true }],
-  ['/pl/rogue-audio/m-180', { destination: '/produkty/m-180/', permanent: true }],
+  [
+    '/pl/rogue-audio/m-180',
+    { destination: '/produkty/m-180/', permanent: true },
+  ],
   ['/rogue-audio/m-180', { destination: '/produkty/m-180/', permanent: true }],
-  ['/pl/rogue-audio/pharaoh', { destination: '/produkty/pharaoh/', permanent: true }],
-  ['/rogue-audio/pharaoh', { destination: '/produkty/pharaoh/', permanent: true }],
-  ['/pl/rogue-audio/rh-5-headphone-amp', { destination: '/produkty/rh-5-headphone-amp/', permanent: true }],
-  ['/rogue-audio/rh-5-headphone-amp', { destination: '/produkty/rh-5-headphone-amp/', permanent: true }],
+  [
+    '/pl/rogue-audio/pharaoh',
+    { destination: '/produkty/pharaoh/', permanent: true },
+  ],
+  [
+    '/rogue-audio/pharaoh',
+    { destination: '/produkty/pharaoh/', permanent: true },
+  ],
+  [
+    '/pl/rogue-audio/rh-5-headphone-amp',
+    { destination: '/produkty/rh-5-headphone-amp/', permanent: true },
+  ],
+  [
+    '/rogue-audio/rh-5-headphone-amp',
+    { destination: '/produkty/rh-5-headphone-amp/', permanent: true },
+  ],
   ['/pl/rogue-audio/rp-1', { destination: '/produkty/rp-1/', permanent: true }],
   ['/rogue-audio/rp-1', { destination: '/produkty/rp-1/', permanent: true }],
   ['/pl/rogue-audio/rp-3', { destination: '/produkty/rp-3/', permanent: true }],
@@ -927,802 +3115,3172 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/rogue-audio/rp-7', { destination: '/produkty/rp-7/', permanent: true }],
   ['/pl/rogue-audio/RP-9', { destination: '/produkty/rp-9/', permanent: true }],
   ['/rogue-audio/RP-9', { destination: '/produkty/rp-9/', permanent: true }],
-  ['/pl/rogue-audio/sphinx', { destination: '/produkty/sphinx/', permanent: true }],
-  ['/rogue-audio/sphinx', { destination: '/produkty/sphinx/', permanent: true }],
-  ['/pl/rogue-audio/triton', { destination: '/produkty/triton/', permanent: true }],
-  ['/rogue-audio/triton', { destination: '/produkty/triton/', permanent: true }],
-  ['/pl/roon-labs/nucleus', { destination: '/produkty/nucleus/', permanent: true }],
-  ['/roon-labs/nucleus', { destination: '/produkty/nucleus/', permanent: true }],
-  ['/pl/roon-labs/nucleus-titan', { destination: '/produkty/nucleus-titan/', permanent: true }],
-  ['/roon-labs/nucleus-titan', { destination: '/produkty/nucleus-titan/', permanent: true }],
+  [
+    '/pl/rogue-audio/sphinx',
+    { destination: '/produkty/sphinx/', permanent: true },
+  ],
+  [
+    '/rogue-audio/sphinx',
+    { destination: '/produkty/sphinx/', permanent: true },
+  ],
+  [
+    '/pl/rogue-audio/triton',
+    { destination: '/produkty/triton/', permanent: true },
+  ],
+  [
+    '/rogue-audio/triton',
+    { destination: '/produkty/triton/', permanent: true },
+  ],
+  [
+    '/pl/roon-labs/nucleus',
+    { destination: '/produkty/nucleus/', permanent: true },
+  ],
+  [
+    '/roon-labs/nucleus',
+    { destination: '/produkty/nucleus/', permanent: true },
+  ],
+  [
+    '/pl/roon-labs/nucleus-titan',
+    { destination: '/produkty/nucleus-titan/', permanent: true },
+  ],
+  [
+    '/roon-labs/nucleus-titan',
+    { destination: '/produkty/nucleus-titan/', permanent: true },
+  ],
   ['/pl/roon-labs/roon', { destination: '/produkty/roon/', permanent: true }],
   ['/roon-labs/roon', { destination: '/produkty/roon/', permanent: true }],
-  ['/pl/shunyata-research/adapter-venom-mini', { destination: '/produkty/adapter-venom-mini/', permanent: true }],
-  ['/shunyata-research/adapter-venom-mini', { destination: '/produkty/adapter-venom-mini/', permanent: true }],
-  ['/pl/shunyata-research/alpha-cgcsgc', { destination: '/produkty/alpha-cgcsgc/', permanent: true }],
-  ['/shunyata-research/alpha-cgcsgc', { destination: '/produkty/alpha-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/alpha-clock', { destination: '/produkty/alpha-clock/', permanent: true }],
-  ['/shunyata-research/alpha-clock', { destination: '/produkty/alpha-clock/', permanent: true }],
-  ['/pl/shunyata-research/alpha-digital', { destination: '/produkty/alpha-digital/', permanent: true }],
-  ['/shunyata-research/alpha-digital', { destination: '/produkty/alpha-digital/', permanent: true }],
-  ['/pl/shunyata-research/alpha-ef', { destination: '/produkty/alpha-ef/', permanent: true }],
-  ['/shunyata-research/alpha-ef', { destination: '/produkty/alpha-ef/', permanent: true }],
-  ['/pl/shunyata-research/alpha-nr', { destination: '/produkty/alpha-nr/', permanent: true }],
-  ['/shunyata-research/alpha-nr', { destination: '/produkty/alpha-nr/', permanent: true }],
-  ['/pl/shunyata-research/alpha-phono', { destination: '/produkty/alpha-phono/', permanent: true }],
-  ['/shunyata-research/alpha-phono', { destination: '/produkty/alpha-phono/', permanent: true }],
-  ['/pl/shunyata-research/alpha-sc', { destination: '/produkty/alpha-sc/', permanent: true }],
-  ['/shunyata-research/alpha-sc', { destination: '/produkty/alpha-sc/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x', { destination: '/produkty/alpha-x/', permanent: true }],
-  ['/shunyata-research/alpha-x', { destination: '/produkty/alpha-x/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-cgcsgc', { destination: '/produkty/alpha-x-cgcsgc/', permanent: true }],
-  ['/shunyata-research/alpha-x-cgcsgc', { destination: '/produkty/alpha-x-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-clock', { destination: '/produkty/alpha-x-clock/', permanent: true }],
-  ['/shunyata-research/alpha-x-clock', { destination: '/produkty/alpha-x-clock/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-digital', { destination: '/produkty/alpha-x-digital/', permanent: true }],
-  ['/shunyata-research/alpha-x-digital', { destination: '/produkty/alpha-x-digital/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-ethernet', { destination: '/produkty/alpha-x-ethernet/', permanent: true }],
-  ['/shunyata-research/alpha-x-ethernet', { destination: '/produkty/alpha-x-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-ic', { destination: '/produkty/alpha-x-ic/', permanent: true }],
-  ['/shunyata-research/alpha-x-ic', { destination: '/produkty/alpha-x-ic/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-phono', { destination: '/produkty/alpha-x-phono/', permanent: true }],
-  ['/shunyata-research/alpha-x-phono', { destination: '/produkty/alpha-x-phono/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-sp', { destination: '/produkty/alpha-x-sp/', permanent: true }],
-  ['/shunyata-research/alpha-x-sp', { destination: '/produkty/alpha-x-sp/', permanent: true }],
-  ['/pl/shunyata-research/alpha-x-usb', { destination: '/produkty/alpha-x-usb/', permanent: true }],
-  ['/shunyata-research/alpha-x-usb', { destination: '/produkty/alpha-x-usb/', permanent: true }],
-  ['/pl/shunyata-research/altaira', { destination: '/produkty/altaira/', permanent: true }],
-  ['/shunyata-research/altaira', { destination: '/produkty/altaira/', permanent: true }],
-  ['/pl/shunyata-research/altaira-x', { destination: '/produkty/altaira-x/', permanent: true }],
-  ['/shunyata-research/altaira-x', { destination: '/produkty/altaira-x/', permanent: true }],
-  ['/pl/shunyata-research/aplha-ic', { destination: '/produkty/aplha-ic/', permanent: true }],
-  ['/shunyata-research/aplha-ic', { destination: '/produkty/aplha-ic/', permanent: true }],
-  ['/pl/shunyata-research/darkfield-mini-elevators', { destination: '/produkty/darkfield-mini-elevators/', permanent: true }],
-  ['/shunyata-research/darkfield-mini-elevators', { destination: '/produkty/darkfield-mini-elevators/', permanent: true }],
-  ['/pl/shunyata-research/delta-cgcsgc', { destination: '/produkty/delta-cgcsgc/', permanent: true }],
-  ['/shunyata-research/delta-cgcsgc', { destination: '/produkty/delta-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/delta-digital', { destination: '/produkty/delta-digital/', permanent: true }],
-  ['/shunyata-research/delta-digital', { destination: '/produkty/delta-digital/', permanent: true }],
-  ['/pl/shunyata-research/delta-ef', { destination: '/produkty/delta-ef/', permanent: true }],
-  ['/shunyata-research/delta-ef', { destination: '/produkty/delta-ef/', permanent: true }],
-  ['/pl/shunyata-research/delta-ic', { destination: '/produkty/delta-ic/', permanent: true }],
-  ['/shunyata-research/delta-ic', { destination: '/produkty/delta-ic/', permanent: true }],
-  ['/pl/shunyata-research/delta-nr', { destination: '/produkty/delta-nr/', permanent: true }],
-  ['/shunyata-research/delta-nr', { destination: '/produkty/delta-nr/', permanent: true }],
-  ['/pl/shunyata-research/delta-phono', { destination: '/produkty/delta-phono/', permanent: true }],
-  ['/shunyata-research/delta-phono', { destination: '/produkty/delta-phono/', permanent: true }],
-  ['/pl/shunyata-research/delta-sc', { destination: '/produkty/delta-sc/', permanent: true }],
-  ['/shunyata-research/delta-sc', { destination: '/produkty/delta-sc/', permanent: true }],
-  ['/pl/shunyata-research/denail-d6000t', { destination: '/produkty/denail-d6000t/', permanent: true }],
-  ['/shunyata-research/denail-d6000t', { destination: '/produkty/denail-d6000t/', permanent: true }],
-  ['/pl/shunyata-research/DENALI-6000-S-V2', { destination: '/produkty/denali-6000-s-v2/', permanent: true }],
-  ['/shunyata-research/DENALI-6000-S-V2', { destination: '/produkty/denali-6000-s-v2/', permanent: true }],
-  ['/pl/shunyata-research/denali-d2000t', { destination: '/produkty/denali-d2000t/', permanent: true }],
-  ['/shunyata-research/denali-d2000t', { destination: '/produkty/denali-d2000t/', permanent: true }],
-  ['/pl/shunyata-research/denali-d6000s', { destination: '/produkty/denali-d6000s/', permanent: true }],
-  ['/shunyata-research/denali-d6000s', { destination: '/produkty/denali-d6000s/', permanent: true }],
-  ['/pl/shunyata-research/denali-x', { destination: '/produkty/denali-x/', permanent: true }],
-  ['/shunyata-research/denali-x', { destination: '/produkty/denali-x/', permanent: true }],
-  ['/pl/shunyata-research/eiger-6000t', { destination: '/produkty/eiger-6000t/', permanent: true }],
-  ['/shunyata-research/eiger-6000t', { destination: '/produkty/eiger-6000t/', permanent: true }],
-  ['/pl/shunyata-research/everest-x', { destination: '/produkty/everest-x/', permanent: true }],
-  ['/shunyata-research/everest-x', { destination: '/produkty/everest-x/', permanent: true }],
-  ['/pl/shunyata-research/everest8000', { destination: '/produkty/everest8000/', permanent: true }],
-  ['/shunyata-research/everest8000', { destination: '/produkty/everest8000/', permanent: true }],
-  ['/pl/shunyata-research/gamma-cgcsgc', { destination: '/produkty/gamma-cgcsgc/', permanent: true }],
-  ['/shunyata-research/gamma-cgcsgc', { destination: '/produkty/gamma-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/gamma-clock', { destination: '/produkty/gamma-clock/', permanent: true }],
-  ['/shunyata-research/gamma-clock', { destination: '/produkty/gamma-clock/', permanent: true }],
-  ['/pl/shunyata-research/gamma-digital', { destination: '/produkty/gamma-digital/', permanent: true }],
-  ['/shunyata-research/gamma-digital', { destination: '/produkty/gamma-digital/', permanent: true }],
-  ['/pl/shunyata-research/gamma-ethernet', { destination: '/produkty/gamma-ethernet/', permanent: true }],
-  ['/shunyata-research/gamma-ethernet', { destination: '/produkty/gamma-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/gamma-ic', { destination: '/produkty/gamma-ic/', permanent: true }],
-  ['/shunyata-research/gamma-ic', { destination: '/produkty/gamma-ic/', permanent: true }],
-  ['/pl/shunyata-research/gamma-nr-xc', { destination: '/produkty/gamma-nr-xc/', permanent: true }],
-  ['/shunyata-research/gamma-nr-xc', { destination: '/produkty/gamma-nr-xc/', permanent: true }],
-  ['/pl/shunyata-research/gamma-phono', { destination: '/produkty/gamma-phono/', permanent: true }],
-  ['/shunyata-research/gamma-phono', { destination: '/produkty/gamma-phono/', permanent: true }],
-  ['/pl/shunyata-research/gamma-sp', { destination: '/produkty/gamma-sp/', permanent: true }],
-  ['/shunyata-research/gamma-sp', { destination: '/produkty/gamma-sp/', permanent: true }],
-  ['/pl/shunyata-research/gamma-usb', { destination: '/produkty/gamma-usb/', permanent: true }],
-  ['/shunyata-research/gamma-usb', { destination: '/produkty/gamma-usb/', permanent: true }],
-  ['/pl/shunyata-research/gemini', { destination: '/produkty/gemini/', permanent: true }],
-  ['/shunyata-research/gemini', { destination: '/produkty/gemini/', permanent: true }],
-  ['/pl/shunyata-research/ground-tail-adapters', { destination: '/produkty/ground-tail-adapters/', permanent: true }],
-  ['/shunyata-research/ground-tail-adapters', { destination: '/produkty/ground-tail-adapters/', permanent: true }],
-  ['/pl/shunyata-research/hydra-alpha-a12', { destination: '/produkty/hydra-alpha-a12/', permanent: true }],
-  ['/shunyata-research/hydra-alpha-a12', { destination: '/produkty/hydra-alpha-a12/', permanent: true }],
-  ['/pl/shunyata-research/Hydra-Delta-D6', { destination: '/produkty/hydra-delta-d6/', permanent: true }],
-  ['/shunyata-research/Hydra-Delta-D6', { destination: '/produkty/hydra-delta-d6/', permanent: true }],
-  ['/pl/shunyata-research/hydra-dpc6', { destination: '/produkty/hydra-dpc6/', permanent: true }],
-  ['/shunyata-research/hydra-dpc6', { destination: '/produkty/hydra-dpc6/', permanent: true }],
-  ['/pl/shunyata-research/hydra-triton3', { destination: '/produkty/hydra-triton3/', permanent: true }],
-  ['/shunyata-research/hydra-triton3', { destination: '/produkty/hydra-triton3/', permanent: true }],
-  ['/pl/shunyata-research/hydra-typhon', { destination: '/produkty/hydra-typhon/', permanent: true }],
-  ['/shunyata-research/hydra-typhon', { destination: '/produkty/hydra-typhon/', permanent: true }],
-  ['/pl/shunyata-research/hydra-typhon-qr', { destination: '/produkty/hydra-typhon-qr/', permanent: true }],
-  ['/shunyata-research/hydra-typhon-qr', { destination: '/produkty/hydra-typhon-qr/', permanent: true }],
-  ['/pl/shunyata-research/kolce-ssf', { destination: '/produkty/kolce-ssf/', permanent: true }],
-  ['/shunyata-research/kolce-ssf', { destination: '/produkty/kolce-ssf/', permanent: true }],
-  ['/pl/shunyata-research/mobius', { destination: '/produkty/mobius/', permanent: true }],
-  ['/shunyata-research/mobius', { destination: '/produkty/mobius/', permanent: true }],
-  ['/pl/shunyata-research/omega-cgc-sgc', { destination: '/produkty/omega-cgc-sgc/', permanent: true }],
-  ['/shunyata-research/omega-cgc-sgc', { destination: '/produkty/omega-cgc-sgc/', permanent: true }],
-  ['/pl/shunyata-research/omega-clock', { destination: '/produkty/omega-clock/', permanent: true }],
-  ['/shunyata-research/omega-clock', { destination: '/produkty/omega-clock/', permanent: true }],
-  ['/pl/shunyata-research/omega-digital', { destination: '/produkty/omega-digital/', permanent: true }],
-  ['/shunyata-research/omega-digital', { destination: '/produkty/omega-digital/', permanent: true }],
-  ['/pl/shunyata-research/omega-ethernet', { destination: '/produkty/omega-ethernet/', permanent: true }],
-  ['/shunyata-research/omega-ethernet', { destination: '/produkty/omega-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/omega-ic', { destination: '/produkty/omega-ic/', permanent: true }],
-  ['/shunyata-research/omega-ic', { destination: '/produkty/omega-ic/', permanent: true }],
-  ['/pl/shunyata-research/omega-phono', { destination: '/produkty/omega-phono/', permanent: true }],
-  ['/shunyata-research/omega-phono', { destination: '/produkty/omega-phono/', permanent: true }],
-  ['/pl/shunyata-research/omega-qr-xc', { destination: '/produkty/omega-qr-xc/', permanent: true }],
-  ['/shunyata-research/omega-qr-xc', { destination: '/produkty/omega-qr-xc/', permanent: true }],
-  ['/pl/shunyata-research/omega-sp', { destination: '/produkty/omega-sp/', permanent: true }],
-  ['/shunyata-research/omega-sp', { destination: '/produkty/omega-sp/', permanent: true }],
-  ['/pl/shunyata-research/omega-usb', { destination: '/produkty/omega-usb/', permanent: true }],
-  ['/shunyata-research/omega-usb', { destination: '/produkty/omega-usb/', permanent: true }],
-  ['/pl/shunyata-research/omega-x', { destination: '/produkty/omega-x/', permanent: true }],
-  ['/shunyata-research/omega-x', { destination: '/produkty/omega-x/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-cgcsgc', { destination: '/produkty/omega-x-cgcsgc/', permanent: true }],
-  ['/shunyata-research/omega-x-cgcsgc', { destination: '/produkty/omega-x-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-clock', { destination: '/produkty/omega-x-clock/', permanent: true }],
-  ['/shunyata-research/omega-x-clock', { destination: '/produkty/omega-x-clock/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-digital', { destination: '/produkty/omega-x-digital/', permanent: true }],
-  ['/shunyata-research/omega-x-digital', { destination: '/produkty/omega-x-digital/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-ethernet', { destination: '/produkty/omega-x-ethernet/', permanent: true }],
-  ['/shunyata-research/omega-x-ethernet', { destination: '/produkty/omega-x-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-phono', { destination: '/produkty/omega-x-phono/', permanent: true }],
-  ['/shunyata-research/omega-x-phono', { destination: '/produkty/omega-x-phono/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-rcaxlr', { destination: '/produkty/omega-x-rcaxlr/', permanent: true }],
-  ['/shunyata-research/omega-x-rcaxlr', { destination: '/produkty/omega-x-rcaxlr/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-speaker', { destination: '/produkty/omega-x-speaker/', permanent: true }],
-  ['/shunyata-research/omega-x-speaker', { destination: '/produkty/omega-x-speaker/', permanent: true }],
-  ['/pl/shunyata-research/omega-x-usb', { destination: '/produkty/omega-x-usb/', permanent: true }],
-  ['/shunyata-research/omega-x-usb', { destination: '/produkty/omega-x-usb/', permanent: true }],
-  ['/pl/shunyata-research/Podstawki-DFSS', { destination: '/produkty/podstawki-dfss/', permanent: true }],
-  ['/shunyata-research/Podstawki-DFSS', { destination: '/produkty/podstawki-dfss/', permanent: true }],
-  ['/pl/shunyata-research/podstawki-ssf', { destination: '/produkty/podstawki-ssf/', permanent: true }],
-  ['/shunyata-research/podstawki-ssf', { destination: '/produkty/podstawki-ssf/', permanent: true }],
-  ['/pl/shunyata-research/przejsciowki-do-kabli-zasilajacych', { destination: '/produkty/przejsciowki-do-kabli-zasilajacych/', permanent: true }],
-  ['/shunyata-research/przejsciowki-do-kabli-zasilajacych', { destination: '/produkty/przejsciowki-do-kabli-zasilajacych/', permanent: true }],
-  ['/pl/shunyata-research/reference-cgc-sgc', { destination: '/produkty/reference-cgc-sgc/', permanent: true }],
-  ['/shunyata-research/reference-cgc-sgc', { destination: '/produkty/reference-cgc-sgc/', permanent: true }],
-  ['/pl/shunyata-research/reference-clock-v2', { destination: '/produkty/reference-clock-v2/', permanent: true }],
-  ['/shunyata-research/reference-clock-v2', { destination: '/produkty/reference-clock-v2/', permanent: true }],
-  ['/pl/shunyata-research/reference-digital-v2', { destination: '/produkty/reference-digital-v2/', permanent: true }],
-  ['/shunyata-research/reference-digital-v2', { destination: '/produkty/reference-digital-v2/', permanent: true }],
-  ['/pl/shunyata-research/reference-phono-v2', { destination: '/produkty/reference-phono-v2/', permanent: true }],
-  ['/shunyata-research/reference-phono-v2', { destination: '/produkty/reference-phono-v2/', permanent: true }],
-  ['/pl/shunyata-research/reference-v2-ic', { destination: '/produkty/reference-v2-ic/', permanent: true }],
-  ['/shunyata-research/reference-v2-ic', { destination: '/produkty/reference-v2-ic/', permanent: true }],
-  ['/pl/shunyata-research/reference-v2-sp', { destination: '/produkty/reference-v2-sp/', permanent: true }],
-  ['/shunyata-research/reference-v2-sp', { destination: '/produkty/reference-v2-sp/', permanent: true }],
-  ['/pl/shunyata-research/reference-v2-sp-jumper', { destination: '/produkty/reference-v2-sp-jumper/', permanent: true }],
-  ['/shunyata-research/reference-v2-sp-jumper', { destination: '/produkty/reference-v2-sp-jumper/', permanent: true }],
-  ['/pl/shunyata-research/sigma-alpha-delta-ethernet', { destination: '/produkty/sigma-alpha-delta-ethernet/', permanent: true }],
-  ['/shunyata-research/sigma-alpha-delta-ethernet', { destination: '/produkty/sigma-alpha-delta-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/sigma-alpha-delta-nr-xc-v2', { destination: '/produkty/sigma-alpha-delta-nr-xc-v2/', permanent: true }],
-  ['/shunyata-research/sigma-alpha-delta-nr-xc-v2', { destination: '/produkty/sigma-alpha-delta-nr-xc-v2/', permanent: true }],
-  ['/pl/shunyata-research/sigma-alpha-delta-usb', { destination: '/produkty/sigma-alpha-delta-usb/', permanent: true }],
-  ['/shunyata-research/sigma-alpha-delta-usb', { destination: '/produkty/sigma-alpha-delta-usb/', permanent: true }],
-  ['/pl/shunyata-research/sigma-cgcsgc', { destination: '/produkty/sigma-cgcsgc/', permanent: true }],
-  ['/shunyata-research/sigma-cgcsgc', { destination: '/produkty/sigma-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/sigma-clock', { destination: '/produkty/sigma-clock/', permanent: true }],
-  ['/shunyata-research/sigma-clock', { destination: '/produkty/sigma-clock/', permanent: true }],
-  ['/pl/shunyata-research/sigma-digital', { destination: '/produkty/sigma-digital/', permanent: true }],
-  ['/shunyata-research/sigma-digital', { destination: '/produkty/sigma-digital/', permanent: true }],
-  ['/pl/shunyata-research/sigma-ef', { destination: '/produkty/sigma-ef/', permanent: true }],
-  ['/shunyata-research/sigma-ef', { destination: '/produkty/sigma-ef/', permanent: true }],
-  ['/pl/shunyata-research/sigma-ic', { destination: '/produkty/sigma-ic/', permanent: true }],
-  ['/shunyata-research/sigma-ic', { destination: '/produkty/sigma-ic/', permanent: true }],
-  ['/pl/shunyata-research/sigma-nr', { destination: '/produkty/sigma-nr/', permanent: true }],
-  ['/shunyata-research/sigma-nr', { destination: '/produkty/sigma-nr/', permanent: true }],
-  ['/pl/shunyata-research/sigma-phono', { destination: '/produkty/sigma-phono/', permanent: true }],
-  ['/shunyata-research/sigma-phono', { destination: '/produkty/sigma-phono/', permanent: true }],
-  ['/pl/shunyata-research/sigma-sc', { destination: '/produkty/sigma-sc/', permanent: true }],
-  ['/shunyata-research/sigma-sc', { destination: '/produkty/sigma-sc/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x', { destination: '/produkty/sigma-x/', permanent: true }],
-  ['/shunyata-research/sigma-x', { destination: '/produkty/sigma-x/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-cgcsgc', { destination: '/produkty/sigma-x-cgcsgc/', permanent: true }],
-  ['/shunyata-research/sigma-x-cgcsgc', { destination: '/produkty/sigma-x-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-clock', { destination: '/produkty/sigma-x-clock/', permanent: true }],
-  ['/shunyata-research/sigma-x-clock', { destination: '/produkty/sigma-x-clock/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-digital', { destination: '/produkty/sigma-x-digital/', permanent: true }],
-  ['/shunyata-research/sigma-x-digital', { destination: '/produkty/sigma-x-digital/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-ethernet', { destination: '/produkty/sigma-x-ethernet/', permanent: true }],
-  ['/shunyata-research/sigma-x-ethernet', { destination: '/produkty/sigma-x-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-ic', { destination: '/produkty/sigma-x-ic/', permanent: true }],
-  ['/shunyata-research/sigma-x-ic', { destination: '/produkty/sigma-x-ic/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-phono', { destination: '/produkty/sigma-x-phono/', permanent: true }],
-  ['/shunyata-research/sigma-x-phono', { destination: '/produkty/sigma-x-phono/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-sp', { destination: '/produkty/sigma-x-sp/', permanent: true }],
-  ['/shunyata-research/sigma-x-sp', { destination: '/produkty/sigma-x-sp/', permanent: true }],
-  ['/pl/shunyata-research/sigma-x-usb', { destination: '/produkty/sigma-x-usb/', permanent: true }],
-  ['/shunyata-research/sigma-x-usb', { destination: '/produkty/sigma-x-usb/', permanent: true }],
-  ['/pl/shunyata-research/theta-cgcsgc', { destination: '/produkty/theta-cgcsgc/', permanent: true }],
-  ['/shunyata-research/theta-cgcsgc', { destination: '/produkty/theta-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/theta-clock', { destination: '/produkty/theta-clock/', permanent: true }],
-  ['/shunyata-research/theta-clock', { destination: '/produkty/theta-clock/', permanent: true }],
-  ['/pl/shunyata-research/theta-digital', { destination: '/produkty/theta-digital/', permanent: true }],
-  ['/shunyata-research/theta-digital', { destination: '/produkty/theta-digital/', permanent: true }],
-  ['/pl/shunyata-research/theta-ethernet', { destination: '/produkty/theta-ethernet/', permanent: true }],
-  ['/shunyata-research/theta-ethernet', { destination: '/produkty/theta-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/theta-ic', { destination: '/produkty/theta-ic/', permanent: true }],
-  ['/shunyata-research/theta-ic', { destination: '/produkty/theta-ic/', permanent: true }],
-  ['/pl/shunyata-research/theta-nr-xc', { destination: '/produkty/theta-nr-xc/', permanent: true }],
-  ['/shunyata-research/theta-nr-xc', { destination: '/produkty/theta-nr-xc/', permanent: true }],
-  ['/pl/shunyata-research/theta-phono', { destination: '/produkty/theta-phono/', permanent: true }],
-  ['/shunyata-research/theta-phono', { destination: '/produkty/theta-phono/', permanent: true }],
-  ['/pl/shunyata-research/Theta-SP', { destination: '/produkty/theta-sp/', permanent: true }],
-  ['/shunyata-research/Theta-SP', { destination: '/produkty/theta-sp/', permanent: true }],
-  ['/pl/shunyata-research/theta-usb', { destination: '/produkty/theta-usb/', permanent: true }],
-  ['/shunyata-research/theta-usb', { destination: '/produkty/theta-usb/', permanent: true }],
-  ['/pl/shunyata-research/typhon-t2', { destination: '/produkty/typhon-t2/', permanent: true }],
-  ['/shunyata-research/typhon-t2', { destination: '/produkty/typhon-t2/', permanent: true }],
-  ['/pl/shunyata-research/typhon-t30', { destination: '/produkty/typhon-t30/', permanent: true }],
-  ['/shunyata-research/typhon-t30', { destination: '/produkty/typhon-t30/', permanent: true }],
-  ['/pl/shunyata-research/uniwersalny-reduktor-kabla', { destination: '/produkty/uniwersalny-reduktor-kabla/', permanent: true }],
-  ['/shunyata-research/uniwersalny-reduktor-kabla', { destination: '/produkty/uniwersalny-reduktor-kabla/', permanent: true }],
-  ['/pl/shunyata-research/venom-3', { destination: '/produkty/venom-3/', permanent: true }],
-  ['/shunyata-research/venom-3', { destination: '/produkty/venom-3/', permanent: true }],
-  ['/pl/shunyata-research/venom-amp-1', { destination: '/produkty/venom-amp-1/', permanent: true }],
-  ['/shunyata-research/venom-amp-1', { destination: '/produkty/venom-amp-1/', permanent: true }],
-  ['/pl/shunyata-research/venom-cgcsgc', { destination: '/produkty/venom-cgcsgc/', permanent: true }],
-  ['/shunyata-research/venom-cgcsgc', { destination: '/produkty/venom-cgcsgc/', permanent: true }],
-  ['/pl/shunyata-research/venom-digital', { destination: '/produkty/venom-digital/', permanent: true }],
-  ['/shunyata-research/venom-digital', { destination: '/produkty/venom-digital/', permanent: true }],
-  ['/pl/shunyata-research/venom-ethernet', { destination: '/produkty/venom-ethernet/', permanent: true }],
-  ['/shunyata-research/venom-ethernet', { destination: '/produkty/venom-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/venom-eu7', { destination: '/produkty/venom-eu7/', permanent: true }],
-  ['/shunyata-research/venom-eu7', { destination: '/produkty/venom-eu7/', permanent: true }],
-  ['/pl/shunyata-research/venom-hc', { destination: '/produkty/venom-hc/', permanent: true }],
-  ['/shunyata-research/venom-hc', { destination: '/produkty/venom-hc/', permanent: true }],
-  ['/pl/shunyata-research/venom-hdmi', { destination: '/produkty/venom-hdmi/', permanent: true }],
-  ['/shunyata-research/venom-hdmi', { destination: '/produkty/venom-hdmi/', permanent: true }],
-  ['/pl/shunyata-research/venom-ic', { destination: '/produkty/venom-ic/', permanent: true }],
-  ['/shunyata-research/venom-ic', { destination: '/produkty/venom-ic/', permanent: true }],
-  ['/pl/shunyata-research/venom-nr-xc', { destination: '/produkty/venom-nr-xc/', permanent: true }],
-  ['/shunyata-research/venom-nr-xc', { destination: '/produkty/venom-nr-xc/', permanent: true }],
-  ['/pl/shunyata-research/venom-phono', { destination: '/produkty/venom-phono/', permanent: true }],
-  ['/shunyata-research/venom-phono', { destination: '/produkty/venom-phono/', permanent: true }],
-  ['/pl/shunyata-research/venom-sc', { destination: '/produkty/venom-sc/', permanent: true }],
-  ['/shunyata-research/venom-sc', { destination: '/produkty/venom-sc/', permanent: true }],
-  ['/pl/shunyata-research/venom-series-v6', { destination: '/produkty/venom-series-v6/', permanent: true }],
-  ['/shunyata-research/venom-series-v6', { destination: '/produkty/venom-series-v6/', permanent: true }],
-  ['/pl/shunyata-research/venom-usb', { destination: '/produkty/venom-usb/', permanent: true }],
-  ['/shunyata-research/venom-usb', { destination: '/produkty/venom-usb/', permanent: true }],
-  ['/pl/shunyata-research/venom-v2-jumper', { destination: '/produkty/venom-v2-jumper/', permanent: true }],
-  ['/shunyata-research/venom-v2-jumper', { destination: '/produkty/venom-v2-jumper/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-clock', { destination: '/produkty/venom-x-clock/', permanent: true }],
-  ['/shunyata-research/venom-x-clock', { destination: '/produkty/venom-x-clock/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-digital', { destination: '/produkty/venom-x-digital/', permanent: true }],
-  ['/shunyata-research/venom-x-digital', { destination: '/produkty/venom-x-digital/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-ef', { destination: '/produkty/venom-x-ef/', permanent: true }],
-  ['/shunyata-research/venom-x-ef', { destination: '/produkty/venom-x-ef/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-ethernet', { destination: '/produkty/venom-x-ethernet/', permanent: true }],
-  ['/shunyata-research/venom-x-ethernet', { destination: '/produkty/venom-x-ethernet/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-ic', { destination: '/produkty/venom-x-ic/', permanent: true }],
-  ['/shunyata-research/venom-x-ic', { destination: '/produkty/venom-x-ic/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-phono', { destination: '/produkty/venom-x-phono/', permanent: true }],
-  ['/shunyata-research/venom-x-phono', { destination: '/produkty/venom-x-phono/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-sp', { destination: '/produkty/venom-x-sp/', permanent: true }],
-  ['/shunyata-research/venom-x-sp', { destination: '/produkty/venom-x-sp/', permanent: true }],
-  ['/pl/shunyata-research/venom-x-usb', { destination: '/produkty/venom-x-usb/', permanent: true }],
-  ['/shunyata-research/venom-x-usb', { destination: '/produkty/venom-x-usb/', permanent: true }],
-  ['/pl/shunyata-research/x-ground-cable', { destination: '/produkty/x-ground-cable/', permanent: true }],
-  ['/shunyata-research/x-ground-cable', { destination: '/produkty/x-ground-cable/', permanent: true }],
+  [
+    '/pl/shunyata-research/adapter-venom-mini',
+    { destination: '/produkty/adapter-venom-mini/', permanent: true },
+  ],
+  [
+    '/shunyata-research/adapter-venom-mini',
+    { destination: '/produkty/adapter-venom-mini/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-cgcsgc',
+    { destination: '/produkty/alpha-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-cgcsgc',
+    { destination: '/produkty/alpha-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-clock',
+    { destination: '/produkty/alpha-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-clock',
+    { destination: '/produkty/alpha-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-digital',
+    { destination: '/produkty/alpha-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-digital',
+    { destination: '/produkty/alpha-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-ef',
+    { destination: '/produkty/alpha-ef/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-ef',
+    { destination: '/produkty/alpha-ef/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-nr',
+    { destination: '/produkty/alpha-nr/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-nr',
+    { destination: '/produkty/alpha-nr/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-phono',
+    { destination: '/produkty/alpha-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-phono',
+    { destination: '/produkty/alpha-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-sc',
+    { destination: '/produkty/alpha-sc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-sc',
+    { destination: '/produkty/alpha-sc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x',
+    { destination: '/produkty/alpha-x/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x',
+    { destination: '/produkty/alpha-x/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-cgcsgc',
+    { destination: '/produkty/alpha-x-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-cgcsgc',
+    { destination: '/produkty/alpha-x-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-clock',
+    { destination: '/produkty/alpha-x-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-clock',
+    { destination: '/produkty/alpha-x-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-digital',
+    { destination: '/produkty/alpha-x-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-digital',
+    { destination: '/produkty/alpha-x-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-ethernet',
+    { destination: '/produkty/alpha-x-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-ethernet',
+    { destination: '/produkty/alpha-x-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-ic',
+    { destination: '/produkty/alpha-x-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-ic',
+    { destination: '/produkty/alpha-x-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-phono',
+    { destination: '/produkty/alpha-x-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-phono',
+    { destination: '/produkty/alpha-x-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-sp',
+    { destination: '/produkty/alpha-x-sp/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-sp',
+    { destination: '/produkty/alpha-x-sp/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/alpha-x-usb',
+    { destination: '/produkty/alpha-x-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/alpha-x-usb',
+    { destination: '/produkty/alpha-x-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/altaira',
+    { destination: '/produkty/altaira/', permanent: true },
+  ],
+  [
+    '/shunyata-research/altaira',
+    { destination: '/produkty/altaira/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/altaira-x',
+    { destination: '/produkty/altaira-x/', permanent: true },
+  ],
+  [
+    '/shunyata-research/altaira-x',
+    { destination: '/produkty/altaira-x/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/aplha-ic',
+    { destination: '/produkty/aplha-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/aplha-ic',
+    { destination: '/produkty/aplha-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/darkfield-mini-elevators',
+    { destination: '/produkty/darkfield-mini-elevators/', permanent: true },
+  ],
+  [
+    '/shunyata-research/darkfield-mini-elevators',
+    { destination: '/produkty/darkfield-mini-elevators/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/delta-cgcsgc',
+    { destination: '/produkty/delta-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/delta-cgcsgc',
+    { destination: '/produkty/delta-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/delta-digital',
+    { destination: '/produkty/delta-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/delta-digital',
+    { destination: '/produkty/delta-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/delta-ef',
+    { destination: '/produkty/delta-ef/', permanent: true },
+  ],
+  [
+    '/shunyata-research/delta-ef',
+    { destination: '/produkty/delta-ef/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/delta-ic',
+    { destination: '/produkty/delta-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/delta-ic',
+    { destination: '/produkty/delta-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/delta-nr',
+    { destination: '/produkty/delta-nr/', permanent: true },
+  ],
+  [
+    '/shunyata-research/delta-nr',
+    { destination: '/produkty/delta-nr/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/delta-phono',
+    { destination: '/produkty/delta-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/delta-phono',
+    { destination: '/produkty/delta-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/delta-sc',
+    { destination: '/produkty/delta-sc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/delta-sc',
+    { destination: '/produkty/delta-sc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/denail-d6000t',
+    { destination: '/produkty/denail-d6000t/', permanent: true },
+  ],
+  [
+    '/shunyata-research/denail-d6000t',
+    { destination: '/produkty/denail-d6000t/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/DENALI-6000-S-V2',
+    { destination: '/produkty/denali-6000-s-v2/', permanent: true },
+  ],
+  [
+    '/shunyata-research/DENALI-6000-S-V2',
+    { destination: '/produkty/denali-6000-s-v2/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/denali-d2000t',
+    { destination: '/produkty/denali-d2000t/', permanent: true },
+  ],
+  [
+    '/shunyata-research/denali-d2000t',
+    { destination: '/produkty/denali-d2000t/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/denali-d6000s',
+    { destination: '/produkty/denali-d6000s/', permanent: true },
+  ],
+  [
+    '/shunyata-research/denali-d6000s',
+    { destination: '/produkty/denali-d6000s/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/denali-x',
+    { destination: '/produkty/denali-x/', permanent: true },
+  ],
+  [
+    '/shunyata-research/denali-x',
+    { destination: '/produkty/denali-x/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/eiger-6000t',
+    { destination: '/produkty/eiger-6000t/', permanent: true },
+  ],
+  [
+    '/shunyata-research/eiger-6000t',
+    { destination: '/produkty/eiger-6000t/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/everest-x',
+    { destination: '/produkty/everest-x/', permanent: true },
+  ],
+  [
+    '/shunyata-research/everest-x',
+    { destination: '/produkty/everest-x/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/everest8000',
+    { destination: '/produkty/everest8000/', permanent: true },
+  ],
+  [
+    '/shunyata-research/everest8000',
+    { destination: '/produkty/everest8000/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-cgcsgc',
+    { destination: '/produkty/gamma-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-cgcsgc',
+    { destination: '/produkty/gamma-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-clock',
+    { destination: '/produkty/gamma-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-clock',
+    { destination: '/produkty/gamma-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-digital',
+    { destination: '/produkty/gamma-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-digital',
+    { destination: '/produkty/gamma-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-ethernet',
+    { destination: '/produkty/gamma-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-ethernet',
+    { destination: '/produkty/gamma-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-ic',
+    { destination: '/produkty/gamma-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-ic',
+    { destination: '/produkty/gamma-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-nr-xc',
+    { destination: '/produkty/gamma-nr-xc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-nr-xc',
+    { destination: '/produkty/gamma-nr-xc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-phono',
+    { destination: '/produkty/gamma-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-phono',
+    { destination: '/produkty/gamma-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-sp',
+    { destination: '/produkty/gamma-sp/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-sp',
+    { destination: '/produkty/gamma-sp/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gamma-usb',
+    { destination: '/produkty/gamma-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gamma-usb',
+    { destination: '/produkty/gamma-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/gemini',
+    { destination: '/produkty/gemini/', permanent: true },
+  ],
+  [
+    '/shunyata-research/gemini',
+    { destination: '/produkty/gemini/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/ground-tail-adapters',
+    { destination: '/produkty/ground-tail-adapters/', permanent: true },
+  ],
+  [
+    '/shunyata-research/ground-tail-adapters',
+    { destination: '/produkty/ground-tail-adapters/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/hydra-alpha-a12',
+    { destination: '/produkty/hydra-alpha-a12/', permanent: true },
+  ],
+  [
+    '/shunyata-research/hydra-alpha-a12',
+    { destination: '/produkty/hydra-alpha-a12/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/Hydra-Delta-D6',
+    { destination: '/produkty/hydra-delta-d6/', permanent: true },
+  ],
+  [
+    '/shunyata-research/Hydra-Delta-D6',
+    { destination: '/produkty/hydra-delta-d6/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/hydra-dpc6',
+    { destination: '/produkty/hydra-dpc6/', permanent: true },
+  ],
+  [
+    '/shunyata-research/hydra-dpc6',
+    { destination: '/produkty/hydra-dpc6/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/hydra-triton3',
+    { destination: '/produkty/hydra-triton3/', permanent: true },
+  ],
+  [
+    '/shunyata-research/hydra-triton3',
+    { destination: '/produkty/hydra-triton3/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/hydra-typhon',
+    { destination: '/produkty/hydra-typhon/', permanent: true },
+  ],
+  [
+    '/shunyata-research/hydra-typhon',
+    { destination: '/produkty/hydra-typhon/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/hydra-typhon-qr',
+    { destination: '/produkty/hydra-typhon-qr/', permanent: true },
+  ],
+  [
+    '/shunyata-research/hydra-typhon-qr',
+    { destination: '/produkty/hydra-typhon-qr/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/kolce-ssf',
+    { destination: '/produkty/kolce-ssf/', permanent: true },
+  ],
+  [
+    '/shunyata-research/kolce-ssf',
+    { destination: '/produkty/kolce-ssf/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/mobius',
+    { destination: '/produkty/mobius/', permanent: true },
+  ],
+  [
+    '/shunyata-research/mobius',
+    { destination: '/produkty/mobius/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-cgc-sgc',
+    { destination: '/produkty/omega-cgc-sgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-cgc-sgc',
+    { destination: '/produkty/omega-cgc-sgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-clock',
+    { destination: '/produkty/omega-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-clock',
+    { destination: '/produkty/omega-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-digital',
+    { destination: '/produkty/omega-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-digital',
+    { destination: '/produkty/omega-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-ethernet',
+    { destination: '/produkty/omega-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-ethernet',
+    { destination: '/produkty/omega-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-ic',
+    { destination: '/produkty/omega-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-ic',
+    { destination: '/produkty/omega-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-phono',
+    { destination: '/produkty/omega-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-phono',
+    { destination: '/produkty/omega-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-qr-xc',
+    { destination: '/produkty/omega-qr-xc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-qr-xc',
+    { destination: '/produkty/omega-qr-xc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-sp',
+    { destination: '/produkty/omega-sp/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-sp',
+    { destination: '/produkty/omega-sp/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-usb',
+    { destination: '/produkty/omega-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-usb',
+    { destination: '/produkty/omega-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x',
+    { destination: '/produkty/omega-x/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x',
+    { destination: '/produkty/omega-x/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-cgcsgc',
+    { destination: '/produkty/omega-x-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-cgcsgc',
+    { destination: '/produkty/omega-x-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-clock',
+    { destination: '/produkty/omega-x-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-clock',
+    { destination: '/produkty/omega-x-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-digital',
+    { destination: '/produkty/omega-x-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-digital',
+    { destination: '/produkty/omega-x-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-ethernet',
+    { destination: '/produkty/omega-x-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-ethernet',
+    { destination: '/produkty/omega-x-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-phono',
+    { destination: '/produkty/omega-x-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-phono',
+    { destination: '/produkty/omega-x-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-rcaxlr',
+    { destination: '/produkty/omega-x-rcaxlr/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-rcaxlr',
+    { destination: '/produkty/omega-x-rcaxlr/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-speaker',
+    { destination: '/produkty/omega-x-speaker/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-speaker',
+    { destination: '/produkty/omega-x-speaker/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/omega-x-usb',
+    { destination: '/produkty/omega-x-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/omega-x-usb',
+    { destination: '/produkty/omega-x-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/Podstawki-DFSS',
+    { destination: '/produkty/podstawki-dfss/', permanent: true },
+  ],
+  [
+    '/shunyata-research/Podstawki-DFSS',
+    { destination: '/produkty/podstawki-dfss/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/podstawki-ssf',
+    { destination: '/produkty/podstawki-ssf/', permanent: true },
+  ],
+  [
+    '/shunyata-research/podstawki-ssf',
+    { destination: '/produkty/podstawki-ssf/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/przejsciowki-do-kabli-zasilajacych',
+    {
+      destination: '/produkty/przejsciowki-do-kabli-zasilajacych/',
+      permanent: true,
+    },
+  ],
+  [
+    '/shunyata-research/przejsciowki-do-kabli-zasilajacych',
+    {
+      destination: '/produkty/przejsciowki-do-kabli-zasilajacych/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/shunyata-research/reference-cgc-sgc',
+    { destination: '/produkty/reference-cgc-sgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/reference-cgc-sgc',
+    { destination: '/produkty/reference-cgc-sgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/reference-clock-v2',
+    { destination: '/produkty/reference-clock-v2/', permanent: true },
+  ],
+  [
+    '/shunyata-research/reference-clock-v2',
+    { destination: '/produkty/reference-clock-v2/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/reference-digital-v2',
+    { destination: '/produkty/reference-digital-v2/', permanent: true },
+  ],
+  [
+    '/shunyata-research/reference-digital-v2',
+    { destination: '/produkty/reference-digital-v2/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/reference-phono-v2',
+    { destination: '/produkty/reference-phono-v2/', permanent: true },
+  ],
+  [
+    '/shunyata-research/reference-phono-v2',
+    { destination: '/produkty/reference-phono-v2/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/reference-v2-ic',
+    { destination: '/produkty/reference-v2-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/reference-v2-ic',
+    { destination: '/produkty/reference-v2-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/reference-v2-sp',
+    { destination: '/produkty/reference-v2-sp/', permanent: true },
+  ],
+  [
+    '/shunyata-research/reference-v2-sp',
+    { destination: '/produkty/reference-v2-sp/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/reference-v2-sp-jumper',
+    { destination: '/produkty/reference-v2-sp-jumper/', permanent: true },
+  ],
+  [
+    '/shunyata-research/reference-v2-sp-jumper',
+    { destination: '/produkty/reference-v2-sp-jumper/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-alpha-delta-ethernet',
+    { destination: '/produkty/sigma-alpha-delta-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-alpha-delta-ethernet',
+    { destination: '/produkty/sigma-alpha-delta-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-alpha-delta-nr-xc-v2',
+    { destination: '/produkty/sigma-alpha-delta-nr-xc-v2/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-alpha-delta-nr-xc-v2',
+    { destination: '/produkty/sigma-alpha-delta-nr-xc-v2/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-alpha-delta-usb',
+    { destination: '/produkty/sigma-alpha-delta-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-alpha-delta-usb',
+    { destination: '/produkty/sigma-alpha-delta-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-cgcsgc',
+    { destination: '/produkty/sigma-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-cgcsgc',
+    { destination: '/produkty/sigma-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-clock',
+    { destination: '/produkty/sigma-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-clock',
+    { destination: '/produkty/sigma-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-digital',
+    { destination: '/produkty/sigma-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-digital',
+    { destination: '/produkty/sigma-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-ef',
+    { destination: '/produkty/sigma-ef/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-ef',
+    { destination: '/produkty/sigma-ef/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-ic',
+    { destination: '/produkty/sigma-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-ic',
+    { destination: '/produkty/sigma-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-nr',
+    { destination: '/produkty/sigma-nr/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-nr',
+    { destination: '/produkty/sigma-nr/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-phono',
+    { destination: '/produkty/sigma-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-phono',
+    { destination: '/produkty/sigma-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-sc',
+    { destination: '/produkty/sigma-sc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-sc',
+    { destination: '/produkty/sigma-sc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x',
+    { destination: '/produkty/sigma-x/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x',
+    { destination: '/produkty/sigma-x/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-cgcsgc',
+    { destination: '/produkty/sigma-x-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-cgcsgc',
+    { destination: '/produkty/sigma-x-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-clock',
+    { destination: '/produkty/sigma-x-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-clock',
+    { destination: '/produkty/sigma-x-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-digital',
+    { destination: '/produkty/sigma-x-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-digital',
+    { destination: '/produkty/sigma-x-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-ethernet',
+    { destination: '/produkty/sigma-x-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-ethernet',
+    { destination: '/produkty/sigma-x-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-ic',
+    { destination: '/produkty/sigma-x-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-ic',
+    { destination: '/produkty/sigma-x-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-phono',
+    { destination: '/produkty/sigma-x-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-phono',
+    { destination: '/produkty/sigma-x-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-sp',
+    { destination: '/produkty/sigma-x-sp/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-sp',
+    { destination: '/produkty/sigma-x-sp/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/sigma-x-usb',
+    { destination: '/produkty/sigma-x-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/sigma-x-usb',
+    { destination: '/produkty/sigma-x-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-cgcsgc',
+    { destination: '/produkty/theta-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-cgcsgc',
+    { destination: '/produkty/theta-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-clock',
+    { destination: '/produkty/theta-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-clock',
+    { destination: '/produkty/theta-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-digital',
+    { destination: '/produkty/theta-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-digital',
+    { destination: '/produkty/theta-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-ethernet',
+    { destination: '/produkty/theta-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-ethernet',
+    { destination: '/produkty/theta-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-ic',
+    { destination: '/produkty/theta-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-ic',
+    { destination: '/produkty/theta-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-nr-xc',
+    { destination: '/produkty/theta-nr-xc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-nr-xc',
+    { destination: '/produkty/theta-nr-xc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-phono',
+    { destination: '/produkty/theta-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-phono',
+    { destination: '/produkty/theta-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/Theta-SP',
+    { destination: '/produkty/theta-sp/', permanent: true },
+  ],
+  [
+    '/shunyata-research/Theta-SP',
+    { destination: '/produkty/theta-sp/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/theta-usb',
+    { destination: '/produkty/theta-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/theta-usb',
+    { destination: '/produkty/theta-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/typhon-t2',
+    { destination: '/produkty/typhon-t2/', permanent: true },
+  ],
+  [
+    '/shunyata-research/typhon-t2',
+    { destination: '/produkty/typhon-t2/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/typhon-t30',
+    { destination: '/produkty/typhon-t30/', permanent: true },
+  ],
+  [
+    '/shunyata-research/typhon-t30',
+    { destination: '/produkty/typhon-t30/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/uniwersalny-reduktor-kabla',
+    { destination: '/produkty/uniwersalny-reduktor-kabla/', permanent: true },
+  ],
+  [
+    '/shunyata-research/uniwersalny-reduktor-kabla',
+    { destination: '/produkty/uniwersalny-reduktor-kabla/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-3',
+    { destination: '/produkty/venom-3/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-3',
+    { destination: '/produkty/venom-3/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-amp-1',
+    { destination: '/produkty/venom-amp-1/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-amp-1',
+    { destination: '/produkty/venom-amp-1/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-cgcsgc',
+    { destination: '/produkty/venom-cgcsgc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-cgcsgc',
+    { destination: '/produkty/venom-cgcsgc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-digital',
+    { destination: '/produkty/venom-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-digital',
+    { destination: '/produkty/venom-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-ethernet',
+    { destination: '/produkty/venom-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-ethernet',
+    { destination: '/produkty/venom-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-eu7',
+    { destination: '/produkty/venom-eu7/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-eu7',
+    { destination: '/produkty/venom-eu7/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-hc',
+    { destination: '/produkty/venom-hc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-hc',
+    { destination: '/produkty/venom-hc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-hdmi',
+    { destination: '/produkty/venom-hdmi/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-hdmi',
+    { destination: '/produkty/venom-hdmi/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-ic',
+    { destination: '/produkty/venom-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-ic',
+    { destination: '/produkty/venom-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-nr-xc',
+    { destination: '/produkty/venom-nr-xc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-nr-xc',
+    { destination: '/produkty/venom-nr-xc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-phono',
+    { destination: '/produkty/venom-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-phono',
+    { destination: '/produkty/venom-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-sc',
+    { destination: '/produkty/venom-sc/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-sc',
+    { destination: '/produkty/venom-sc/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-series-v6',
+    { destination: '/produkty/venom-series-v6/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-series-v6',
+    { destination: '/produkty/venom-series-v6/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-usb',
+    { destination: '/produkty/venom-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-usb',
+    { destination: '/produkty/venom-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-v2-jumper',
+    { destination: '/produkty/venom-v2-jumper/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-v2-jumper',
+    { destination: '/produkty/venom-v2-jumper/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-clock',
+    { destination: '/produkty/venom-x-clock/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-clock',
+    { destination: '/produkty/venom-x-clock/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-digital',
+    { destination: '/produkty/venom-x-digital/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-digital',
+    { destination: '/produkty/venom-x-digital/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-ef',
+    { destination: '/produkty/venom-x-ef/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-ef',
+    { destination: '/produkty/venom-x-ef/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-ethernet',
+    { destination: '/produkty/venom-x-ethernet/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-ethernet',
+    { destination: '/produkty/venom-x-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-ic',
+    { destination: '/produkty/venom-x-ic/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-ic',
+    { destination: '/produkty/venom-x-ic/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-phono',
+    { destination: '/produkty/venom-x-phono/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-phono',
+    { destination: '/produkty/venom-x-phono/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-sp',
+    { destination: '/produkty/venom-x-sp/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-sp',
+    { destination: '/produkty/venom-x-sp/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/venom-x-usb',
+    { destination: '/produkty/venom-x-usb/', permanent: true },
+  ],
+  [
+    '/shunyata-research/venom-x-usb',
+    { destination: '/produkty/venom-x-usb/', permanent: true },
+  ],
+  [
+    '/pl/shunyata-research/x-ground-cable',
+    { destination: '/produkty/x-ground-cable/', permanent: true },
+  ],
+  [
+    '/shunyata-research/x-ground-cable',
+    { destination: '/produkty/x-ground-cable/', permanent: true },
+  ],
   ['/pl/soundsmith/aida', { destination: '/produkty/aida/', permanent: true }],
   ['/soundsmith/aida', { destination: '/produkty/aida/', permanent: true }],
-  ['/pl/soundsmith/carmen', { destination: '/produkty/carmen/', permanent: true }],
+  [
+    '/pl/soundsmith/carmen',
+    { destination: '/produkty/carmen/', permanent: true },
+  ],
   ['/soundsmith/carmen', { destination: '/produkty/carmen/', permanent: true }],
-  ['/pl/soundsmith/hyperion', { destination: '/produkty/hyperion/', permanent: true }],
-  ['/soundsmith/hyperion', { destination: '/produkty/hyperion/', permanent: true }],
-  ['/pl/soundsmith/irox-blue', { destination: '/produkty/irox-blue/', permanent: true }],
-  ['/soundsmith/irox-blue', { destination: '/produkty/irox-blue/', permanent: true }],
-  ['/pl/soundsmith/irox-ultimate', { destination: '/produkty/irox-ultimate/', permanent: true }],
-  ['/soundsmith/irox-ultimate', { destination: '/produkty/irox-ultimate/', permanent: true }],
-  ['/pl/soundsmith/mimc-star', { destination: '/produkty/mimc-star/', permanent: true }],
-  ['/soundsmith/mimc-star', { destination: '/produkty/mimc-star/', permanent: true }],
-  ['/pl/soundsmith/otello', { destination: '/produkty/otello/', permanent: true }],
+  [
+    '/pl/soundsmith/hyperion',
+    { destination: '/produkty/hyperion/', permanent: true },
+  ],
+  [
+    '/soundsmith/hyperion',
+    { destination: '/produkty/hyperion/', permanent: true },
+  ],
+  [
+    '/pl/soundsmith/irox-blue',
+    { destination: '/produkty/irox-blue/', permanent: true },
+  ],
+  [
+    '/soundsmith/irox-blue',
+    { destination: '/produkty/irox-blue/', permanent: true },
+  ],
+  [
+    '/pl/soundsmith/irox-ultimate',
+    { destination: '/produkty/irox-ultimate/', permanent: true },
+  ],
+  [
+    '/soundsmith/irox-ultimate',
+    { destination: '/produkty/irox-ultimate/', permanent: true },
+  ],
+  [
+    '/pl/soundsmith/mimc-star',
+    { destination: '/produkty/mimc-star/', permanent: true },
+  ],
+  [
+    '/soundsmith/mimc-star',
+    { destination: '/produkty/mimc-star/', permanent: true },
+  ],
+  [
+    '/pl/soundsmith/otello',
+    { destination: '/produkty/otello/', permanent: true },
+  ],
   ['/soundsmith/otello', { destination: '/produkty/otello/', permanent: true }],
   ['/pl/soundsmith/paua', { destination: '/produkty/paua/', permanent: true }],
   ['/soundsmith/paua', { destination: '/produkty/paua/', permanent: true }],
-  ['/pl/soundsmith/phono-preamplifiers', { destination: '/produkty/phono-preamplifiers/', permanent: true }],
-  ['/soundsmith/phono-preamplifiers', { destination: '/produkty/phono-preamplifiers/', permanent: true }],
-  ['/pl/soundsmith/sussurro', { destination: '/produkty/sussurro/', permanent: true }],
-  ['/soundsmith/sussurro', { destination: '/produkty/sussurro/', permanent: true }],
-  ['/pl/soundsmith/voice', { destination: '/produkty/voice/', permanent: true }],
+  [
+    '/pl/soundsmith/phono-preamplifiers',
+    { destination: '/produkty/phono-preamplifiers/', permanent: true },
+  ],
+  [
+    '/soundsmith/phono-preamplifiers',
+    { destination: '/produkty/phono-preamplifiers/', permanent: true },
+  ],
+  [
+    '/pl/soundsmith/sussurro',
+    { destination: '/produkty/sussurro/', permanent: true },
+  ],
+  [
+    '/soundsmith/sussurro',
+    { destination: '/produkty/sussurro/', permanent: true },
+  ],
+  [
+    '/pl/soundsmith/voice',
+    { destination: '/produkty/voice/', permanent: true },
+  ],
   ['/soundsmith/voice', { destination: '/produkty/voice/', permanent: true }],
-  ['/pl/soundsmith/zephyr', { destination: '/produkty/zephyr/', permanent: true }],
+  [
+    '/pl/soundsmith/zephyr',
+    { destination: '/produkty/zephyr/', permanent: true },
+  ],
   ['/soundsmith/zephyr', { destination: '/produkty/zephyr/', permanent: true }],
-  ['/pl/spiral-groove/centroid', { destination: '/produkty/centroid/', permanent: true }],
-  ['/spiral-groove/centroid', { destination: '/produkty/centroid/', permanent: true }],
-  ['/pl/spiral-groove/centroid-universal', { destination: '/produkty/centroid-universal/', permanent: true }],
-  ['/spiral-groove/centroid-universal', { destination: '/produkty/centroid-universal/', permanent: true }],
-  ['/pl/spiral-groove/revolution', { destination: '/produkty/revolution/', permanent: true }],
-  ['/spiral-groove/revolution', { destination: '/produkty/revolution/', permanent: true }],
-  ['/pl/spiral-groove/sg12', { destination: '/produkty/sg12/', permanent: true }],
+  [
+    '/pl/spiral-groove/centroid',
+    { destination: '/produkty/centroid/', permanent: true },
+  ],
+  [
+    '/spiral-groove/centroid',
+    { destination: '/produkty/centroid/', permanent: true },
+  ],
+  [
+    '/pl/spiral-groove/centroid-universal',
+    { destination: '/produkty/centroid-universal/', permanent: true },
+  ],
+  [
+    '/spiral-groove/centroid-universal',
+    { destination: '/produkty/centroid-universal/', permanent: true },
+  ],
+  [
+    '/pl/spiral-groove/revolution',
+    { destination: '/produkty/revolution/', permanent: true },
+  ],
+  [
+    '/spiral-groove/revolution',
+    { destination: '/produkty/revolution/', permanent: true },
+  ],
+  [
+    '/pl/spiral-groove/sg12',
+    { destination: '/produkty/sg12/', permanent: true },
+  ],
   ['/spiral-groove/sg12', { destination: '/produkty/sg12/', permanent: true }],
-  ['/pl/stealth-audio/air-king', { destination: '/produkty/air-king/', permanent: true }],
-  ['/stealth-audio/air-king', { destination: '/produkty/air-king/', permanent: true }],
-  ['/pl/stealth-audio/black-magic', { destination: '/produkty/black-magic/', permanent: true }],
-  ['/stealth-audio/black-magic', { destination: '/produkty/black-magic/', permanent: true }],
-  ['/pl/stealth-audio/cloude-grande', { destination: '/produkty/cloude-grande/', permanent: true }],
-  ['/stealth-audio/cloude-grande', { destination: '/produkty/cloude-grande/', permanent: true }],
-  ['/pl/stealth-audio/cloude99', { destination: '/produkty/cloude99/', permanent: true }],
-  ['/stealth-audio/cloude99', { destination: '/produkty/cloude99/', permanent: true }],
-  ['/pl/stealth-audio/dream', { destination: '/produkty/dream/', permanent: true }],
-  ['/stealth-audio/dream', { destination: '/produkty/dream/', permanent: true }],
-  ['/pl/stealth-audio/dream-20-20', { destination: '/produkty/dream-20-20/', permanent: true }],
-  ['/stealth-audio/dream-20-20', { destination: '/produkty/dream-20-20/', permanent: true }],
-  ['/pl/stealth-audio/dream-ac', { destination: '/produkty/dream-ac/', permanent: true }],
-  ['/stealth-audio/dream-ac', { destination: '/produkty/dream-ac/', permanent: true }],
-  ['/pl/stealth-audio/dream-petite', { destination: '/produkty/dream-petite/', permanent: true }],
-  ['/stealth-audio/dream-petite', { destination: '/produkty/dream-petite/', permanent: true }],
-  ['/pl/stealth-audio/dream-royale', { destination: '/produkty/dream-royale/', permanent: true }],
-  ['/stealth-audio/dream-royale', { destination: '/produkty/dream-royale/', permanent: true }],
-  ['/pl/stealth-audio/helios-phono', { destination: '/produkty/helios-phono/', permanent: true }],
-  ['/stealth-audio/helios-phono', { destination: '/produkty/helios-phono/', permanent: true }],
-  ['/pl/stealth-audio/hyperphono', { destination: '/produkty/hyperphono/', permanent: true }],
-  ['/stealth-audio/hyperphono', { destination: '/produkty/hyperphono/', permanent: true }],
-  ['/pl/stealth-audio/indra', { destination: '/produkty/indra/', permanent: true }],
-  ['/stealth-audio/indra', { destination: '/produkty/indra/', permanent: true }],
-  ['/pl/stealth-audio/m8000', { destination: '/produkty/m8000/', permanent: true }],
-  ['/stealth-audio/m8000', { destination: '/produkty/m8000/', permanent: true }],
-  ['/pl/stealth-audio/metacarbon', { destination: '/produkty/metacarbon/', permanent: true }],
-  ['/stealth-audio/metacarbon', { destination: '/produkty/metacarbon/', permanent: true }],
-  ['/pl/stealth-audio/nanofiber', { destination: '/produkty/nanofiber/', permanent: true }],
-  ['/stealth-audio/nanofiber', { destination: '/produkty/nanofiber/', permanent: true }],
-  ['/pl/stealth-audio/octava', { destination: '/produkty/octava/', permanent: true }],
-  ['/stealth-audio/octava', { destination: '/produkty/octava/', permanent: true }],
+  [
+    '/pl/stealth-audio/air-king',
+    { destination: '/produkty/air-king/', permanent: true },
+  ],
+  [
+    '/stealth-audio/air-king',
+    { destination: '/produkty/air-king/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/black-magic',
+    { destination: '/produkty/black-magic/', permanent: true },
+  ],
+  [
+    '/stealth-audio/black-magic',
+    { destination: '/produkty/black-magic/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/cloude-grande',
+    { destination: '/produkty/cloude-grande/', permanent: true },
+  ],
+  [
+    '/stealth-audio/cloude-grande',
+    { destination: '/produkty/cloude-grande/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/cloude99',
+    { destination: '/produkty/cloude99/', permanent: true },
+  ],
+  [
+    '/stealth-audio/cloude99',
+    { destination: '/produkty/cloude99/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/dream',
+    { destination: '/produkty/dream/', permanent: true },
+  ],
+  [
+    '/stealth-audio/dream',
+    { destination: '/produkty/dream/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/dream-20-20',
+    { destination: '/produkty/dream-20-20/', permanent: true },
+  ],
+  [
+    '/stealth-audio/dream-20-20',
+    { destination: '/produkty/dream-20-20/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/dream-ac',
+    { destination: '/produkty/dream-ac/', permanent: true },
+  ],
+  [
+    '/stealth-audio/dream-ac',
+    { destination: '/produkty/dream-ac/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/dream-petite',
+    { destination: '/produkty/dream-petite/', permanent: true },
+  ],
+  [
+    '/stealth-audio/dream-petite',
+    { destination: '/produkty/dream-petite/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/dream-royale',
+    { destination: '/produkty/dream-royale/', permanent: true },
+  ],
+  [
+    '/stealth-audio/dream-royale',
+    { destination: '/produkty/dream-royale/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/helios-phono',
+    { destination: '/produkty/helios-phono/', permanent: true },
+  ],
+  [
+    '/stealth-audio/helios-phono',
+    { destination: '/produkty/helios-phono/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/hyperphono',
+    { destination: '/produkty/hyperphono/', permanent: true },
+  ],
+  [
+    '/stealth-audio/hyperphono',
+    { destination: '/produkty/hyperphono/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/indra',
+    { destination: '/produkty/indra/', permanent: true },
+  ],
+  [
+    '/stealth-audio/indra',
+    { destination: '/produkty/indra/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/m8000',
+    { destination: '/produkty/m8000/', permanent: true },
+  ],
+  [
+    '/stealth-audio/m8000',
+    { destination: '/produkty/m8000/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/metacarbon',
+    { destination: '/produkty/metacarbon/', permanent: true },
+  ],
+  [
+    '/stealth-audio/metacarbon',
+    { destination: '/produkty/metacarbon/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/nanofiber',
+    { destination: '/produkty/nanofiber/', permanent: true },
+  ],
+  [
+    '/stealth-audio/nanofiber',
+    { destination: '/produkty/nanofiber/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/octava',
+    { destination: '/produkty/octava/', permanent: true },
+  ],
+  [
+    '/stealth-audio/octava',
+    { destination: '/produkty/octava/', permanent: true },
+  ],
   ['/pl/stealth-audio/pgs', { destination: '/produkty/pgs/', permanent: true }],
   ['/stealth-audio/pgs', { destination: '/produkty/pgs/', permanent: true }],
-  ['/pl/stealth-audio/reverie', { destination: '/produkty/reverie/', permanent: true }],
-  ['/stealth-audio/reverie', { destination: '/produkty/reverie/', permanent: true }],
-  ['/pl/stealth-audio/sakra', { destination: '/produkty/sakra/', permanent: true }],
-  ['/stealth-audio/sakra', { destination: '/produkty/sakra/', permanent: true }],
-  ['/pl/stealth-audio/sextet', { destination: '/produkty/sextet/', permanent: true }],
-  ['/stealth-audio/sextet', { destination: '/produkty/sextet/', permanent: true }],
-  ['/pl/stealth-audio/straight-ac', { destination: '/produkty/straight-ac/', permanent: true }],
-  ['/stealth-audio/straight-ac', { destination: '/produkty/straight-ac/', permanent: true }],
-  ['/pl/stealth-audio/swift', { destination: '/produkty/swift/', permanent: true }],
-  ['/stealth-audio/swift', { destination: '/produkty/swift/', permanent: true }],
-  ['/pl/stealth-audio/swift-ac', { destination: '/produkty/swift-ac/', permanent: true }],
-  ['/stealth-audio/swift-ac', { destination: '/produkty/swift-ac/', permanent: true }],
-  ['/pl/stealth-audio/the-wave', { destination: '/produkty/the-wave/', permanent: true }],
-  ['/stealth-audio/the-wave', { destination: '/produkty/the-wave/', permanent: true }],
+  [
+    '/pl/stealth-audio/reverie',
+    { destination: '/produkty/reverie/', permanent: true },
+  ],
+  [
+    '/stealth-audio/reverie',
+    { destination: '/produkty/reverie/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/sakra',
+    { destination: '/produkty/sakra/', permanent: true },
+  ],
+  [
+    '/stealth-audio/sakra',
+    { destination: '/produkty/sakra/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/sextet',
+    { destination: '/produkty/sextet/', permanent: true },
+  ],
+  [
+    '/stealth-audio/sextet',
+    { destination: '/produkty/sextet/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/straight-ac',
+    { destination: '/produkty/straight-ac/', permanent: true },
+  ],
+  [
+    '/stealth-audio/straight-ac',
+    { destination: '/produkty/straight-ac/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/swift',
+    { destination: '/produkty/swift/', permanent: true },
+  ],
+  [
+    '/stealth-audio/swift',
+    { destination: '/produkty/swift/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/swift-ac',
+    { destination: '/produkty/swift-ac/', permanent: true },
+  ],
+  [
+    '/stealth-audio/swift-ac',
+    { destination: '/produkty/swift-ac/', permanent: true },
+  ],
+  [
+    '/pl/stealth-audio/the-wave',
+    { destination: '/produkty/the-wave/', permanent: true },
+  ],
+  [
+    '/stealth-audio/the-wave',
+    { destination: '/produkty/the-wave/', permanent: true },
+  ],
   ['/pl/stealth-audio/usb', { destination: '/produkty/usb/', permanent: true }],
   ['/stealth-audio/usb', { destination: '/produkty/usb/', permanent: true }],
-  ['/pl/stealth-audio/varidig', { destination: '/produkty/varidig/', permanent: true }],
-  ['/stealth-audio/varidig', { destination: '/produkty/varidig/', permanent: true }],
-  ['/pl/symposium/fat-padz', { destination: '/produkty/fat-padz/', permanent: true }],
-  ['/symposium/fat-padz', { destination: '/produkty/fat-padz/', permanent: true }],
-  ['/pl/symposium/foundation-rack', { destination: '/produkty/foundation-rack/', permanent: true }],
-  ['/symposium/foundation-rack', { destination: '/produkty/foundation-rack/', permanent: true }],
-  ['/pl/symposium/isis-rack', { destination: '/produkty/isis-rack/', permanent: true }],
-  ['/symposium/isis-rack', { destination: '/produkty/isis-rack/', permanent: true }],
-  ['/pl/symposium/Osiris-Rack', { destination: '/produkty/osiris-rack/', permanent: true }],
-  ['/symposium/Osiris-Rack', { destination: '/produkty/osiris-rack/', permanent: true }],
-  ['/pl/symposium/point-pods', { destination: '/produkty/point-pods/', permanent: true }],
-  ['/symposium/point-pods', { destination: '/produkty/point-pods/', permanent: true }],
-  ['/pl/symposium/precision-coupler', { destination: '/produkty/precision-coupler/', permanent: true }],
-  ['/symposium/precision-coupler', { destination: '/produkty/precision-coupler/', permanent: true }],
-  ['/pl/symposium/precision-supercoupler', { destination: '/produkty/precision-supercoupler/', permanent: true }],
-  ['/symposium/precision-supercoupler', { destination: '/produkty/precision-supercoupler/', permanent: true }],
-  ['/pl/symposium/quantum-signature', { destination: '/produkty/quantum-signature/', permanent: true }],
-  ['/symposium/quantum-signature', { destination: '/produkty/quantum-signature/', permanent: true }],
-  ['/pl/symposium/quantum-signature-ampstand', { destination: '/produkty/quantum-signature-ampstand/', permanent: true }],
-  ['/symposium/quantum-signature-ampstand', { destination: '/produkty/quantum-signature-ampstand/', permanent: true }],
-  ['/pl/symposium/rollerblock-hdse', { destination: '/produkty/rollerblock-hdse/', permanent: true }],
-  ['/symposium/rollerblock-hdse', { destination: '/produkty/rollerblock-hdse/', permanent: true }],
-  ['/pl/symposium/rollerblock-jr', { destination: '/produkty/rollerblock-jr/', permanent: true }],
-  ['/symposium/rollerblock-jr', { destination: '/produkty/rollerblock-jr/', permanent: true }],
-  ['/pl/symposium/rollerblock-series2', { destination: '/produkty/rollerblock-series2/', permanent: true }],
-  ['/symposium/rollerblock-series2', { destination: '/produkty/rollerblock-series2/', permanent: true }],
+  [
+    '/pl/stealth-audio/varidig',
+    { destination: '/produkty/varidig/', permanent: true },
+  ],
+  [
+    '/stealth-audio/varidig',
+    { destination: '/produkty/varidig/', permanent: true },
+  ],
+  [
+    '/pl/symposium/fat-padz',
+    { destination: '/produkty/fat-padz/', permanent: true },
+  ],
+  [
+    '/symposium/fat-padz',
+    { destination: '/produkty/fat-padz/', permanent: true },
+  ],
+  [
+    '/pl/symposium/foundation-rack',
+    { destination: '/produkty/foundation-rack/', permanent: true },
+  ],
+  [
+    '/symposium/foundation-rack',
+    { destination: '/produkty/foundation-rack/', permanent: true },
+  ],
+  [
+    '/pl/symposium/isis-rack',
+    { destination: '/produkty/isis-rack/', permanent: true },
+  ],
+  [
+    '/symposium/isis-rack',
+    { destination: '/produkty/isis-rack/', permanent: true },
+  ],
+  [
+    '/pl/symposium/Osiris-Rack',
+    { destination: '/produkty/osiris-rack/', permanent: true },
+  ],
+  [
+    '/symposium/Osiris-Rack',
+    { destination: '/produkty/osiris-rack/', permanent: true },
+  ],
+  [
+    '/pl/symposium/point-pods',
+    { destination: '/produkty/point-pods/', permanent: true },
+  ],
+  [
+    '/symposium/point-pods',
+    { destination: '/produkty/point-pods/', permanent: true },
+  ],
+  [
+    '/pl/symposium/precision-coupler',
+    { destination: '/produkty/precision-coupler/', permanent: true },
+  ],
+  [
+    '/symposium/precision-coupler',
+    { destination: '/produkty/precision-coupler/', permanent: true },
+  ],
+  [
+    '/pl/symposium/precision-supercoupler',
+    { destination: '/produkty/precision-supercoupler/', permanent: true },
+  ],
+  [
+    '/symposium/precision-supercoupler',
+    { destination: '/produkty/precision-supercoupler/', permanent: true },
+  ],
+  [
+    '/pl/symposium/quantum-signature',
+    { destination: '/produkty/quantum-signature/', permanent: true },
+  ],
+  [
+    '/symposium/quantum-signature',
+    { destination: '/produkty/quantum-signature/', permanent: true },
+  ],
+  [
+    '/pl/symposium/quantum-signature-ampstand',
+    { destination: '/produkty/quantum-signature-ampstand/', permanent: true },
+  ],
+  [
+    '/symposium/quantum-signature-ampstand',
+    { destination: '/produkty/quantum-signature-ampstand/', permanent: true },
+  ],
+  [
+    '/pl/symposium/rollerblock-hdse',
+    { destination: '/produkty/rollerblock-hdse/', permanent: true },
+  ],
+  [
+    '/symposium/rollerblock-hdse',
+    { destination: '/produkty/rollerblock-hdse/', permanent: true },
+  ],
+  [
+    '/pl/symposium/rollerblock-jr',
+    { destination: '/produkty/rollerblock-jr/', permanent: true },
+  ],
+  [
+    '/symposium/rollerblock-jr',
+    { destination: '/produkty/rollerblock-jr/', permanent: true },
+  ],
+  [
+    '/pl/symposium/rollerblock-series2',
+    { destination: '/produkty/rollerblock-series2/', permanent: true },
+  ],
+  [
+    '/symposium/rollerblock-series2',
+    { destination: '/produkty/rollerblock-series2/', permanent: true },
+  ],
   ['/pl/symposium/segue', { destination: '/produkty/segue/', permanent: true }],
   ['/symposium/segue', { destination: '/produkty/segue/', permanent: true }],
-  ['/pl/symposium/segue-iso', { destination: '/produkty/segue-iso/', permanent: true }],
-  ['/symposium/segue-iso', { destination: '/produkty/segue-iso/', permanent: true }],
-  ['/pl/symposium/super-segue-iso', { destination: '/produkty/super-segue-iso/', permanent: true }],
-  ['/symposium/super-segue-iso', { destination: '/produkty/super-segue-iso/', permanent: true }],
-  ['/pl/symposium/svelte', { destination: '/produkty/svelte/', permanent: true }],
+  [
+    '/pl/symposium/segue-iso',
+    { destination: '/produkty/segue-iso/', permanent: true },
+  ],
+  [
+    '/symposium/segue-iso',
+    { destination: '/produkty/segue-iso/', permanent: true },
+  ],
+  [
+    '/pl/symposium/super-segue-iso',
+    { destination: '/produkty/super-segue-iso/', permanent: true },
+  ],
+  [
+    '/symposium/super-segue-iso',
+    { destination: '/produkty/super-segue-iso/', permanent: true },
+  ],
+  [
+    '/pl/symposium/svelte',
+    { destination: '/produkty/svelte/', permanent: true },
+  ],
   ['/symposium/svelte', { destination: '/produkty/svelte/', permanent: true }],
-  ['/pl/symposium/svelte-plus', { destination: '/produkty/svelte-plus/', permanent: true }],
-  ['/symposium/svelte-plus', { destination: '/produkty/svelte-plus/', permanent: true }],
-  ['/pl/symposium/ultra-ampstand', { destination: '/produkty/ultra-ampstand/', permanent: true }],
-  ['/symposium/ultra-ampstand', { destination: '/produkty/ultra-ampstand/', permanent: true }],
-  ['/pl/symposium/ultra-padz', { destination: '/produkty/ultra-padz/', permanent: true }],
-  ['/symposium/ultra-padz', { destination: '/produkty/ultra-padz/', permanent: true }],
-  ['/pl/symposium/ultra-platform', { destination: '/produkty/ultra-platform/', permanent: true }],
-  ['/symposium/ultra-platform', { destination: '/produkty/ultra-platform/', permanent: true }],
-  ['/pl/synergistic-research/acoustic-art', { destination: '/produkty/acoustic-art/', permanent: true }],
-  ['/synergistic-research/acoustic-art', { destination: '/produkty/acoustic-art/', permanent: true }],
-  ['/pl/synergistic-research/active-ground-block', { destination: '/produkty/active-ground-block/', permanent: true }],
-  ['/synergistic-research/active-ground-block', { destination: '/produkty/active-ground-block/', permanent: true }],
-  ['/pl/synergistic-research/active-ground-block-sx', { destination: '/produkty/active-ground-block-sx/', permanent: true }],
-  ['/synergistic-research/active-ground-block-sx', { destination: '/produkty/active-ground-block-sx/', permanent: true }],
-  ['/pl/synergistic-research/ATM-Green', { destination: '/produkty/atm-green/', permanent: true }],
-  ['/synergistic-research/ATM-Green', { destination: '/produkty/atm-green/', permanent: true }],
-  ['/pl/synergistic-research/ATM-Red', { destination: '/produkty/atm-red/', permanent: true }],
-  ['/synergistic-research/ATM-Red', { destination: '/produkty/atm-red/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere', { destination: '/produkty/atmosphere/', permanent: true }],
-  ['/synergistic-research/atmosphere', { destination: '/produkty/atmosphere/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-devialet-ac', { destination: '/produkty/atmosphere-devialet-ac/', permanent: true }],
-  ['/synergistic-research/atmosphere-devialet-ac', { destination: '/produkty/atmosphere-devialet-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-infinity', { destination: '/produkty/atmosphere-infinity/', permanent: true }],
-  ['/synergistic-research/atmosphere-infinity', { destination: '/produkty/atmosphere-infinity/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-1-ac', { destination: '/produkty/atmosphere-level-1-ac/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-1-ac', { destination: '/produkty/atmosphere-level-1-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-1-ic', { destination: '/produkty/atmosphere-level-1-ic/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-1-ic', { destination: '/produkty/atmosphere-level-1-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-1-sc', { destination: '/produkty/atmosphere-level-1-sc/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-1-sc', { destination: '/produkty/atmosphere-level-1-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-2-ac', { destination: '/produkty/atmosphere-level-2-ac/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-2-ac', { destination: '/produkty/atmosphere-level-2-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-2-ic', { destination: '/produkty/atmosphere-level-2-ic/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-2-ic', { destination: '/produkty/atmosphere-level-2-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-2-sc', { destination: '/produkty/atmosphere-level-2-sc/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-2-sc', { destination: '/produkty/atmosphere-level-2-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-3-analog-ac', { destination: '/produkty/atmosphere-level-3-analog-ac/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-3-analog-ac', { destination: '/produkty/atmosphere-level-3-analog-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-3-digital-ac', { destination: '/produkty/atmosphere-level-3-digital-ac/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-3-digital-ac', { destination: '/produkty/atmosphere-level-3-digital-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-3-high-current-ac', { destination: '/produkty/atmosphere-level-3-high-current-ac/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-3-high-current-ac', { destination: '/produkty/atmosphere-level-3-high-current-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-3-ic', { destination: '/produkty/atmosphere-level-3-ic/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-3-ic', { destination: '/produkty/atmosphere-level-3-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-3-sc', { destination: '/produkty/atmosphere-level-3-sc/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-3-sc', { destination: '/produkty/atmosphere-level-3-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-4-ic', { destination: '/produkty/atmosphere-level-4-ic/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-4-ic', { destination: '/produkty/atmosphere-level-4-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level-4-sc', { destination: '/produkty/atmosphere-level-4-sc/', permanent: true }],
-  ['/synergistic-research/atmosphere-level-4-sc', { destination: '/produkty/atmosphere-level-4-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level1-cyfrowy', { destination: '/produkty/atmosphere-level1-cyfrowy/', permanent: true }],
-  ['/synergistic-research/atmosphere-level1-cyfrowy', { destination: '/produkty/atmosphere-level1-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level2-cyfrowy', { destination: '/produkty/atmosphere-level2-cyfrowy/', permanent: true }],
-  ['/synergistic-research/atmosphere-level2-cyfrowy', { destination: '/produkty/atmosphere-level2-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-level3-cyfrowy', { destination: '/produkty/atmosphere-level3-cyfrowy/', permanent: true }],
-  ['/synergistic-research/atmosphere-level3-cyfrowy', { destination: '/produkty/atmosphere-level3-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-mini', { destination: '/produkty/atmosphere-mini/', permanent: true }],
-  ['/synergistic-research/atmosphere-mini', { destination: '/produkty/atmosphere-mini/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-mini-x4', { destination: '/produkty/atmosphere-mini-x4/', permanent: true }],
-  ['/synergistic-research/atmosphere-mini-x4', { destination: '/produkty/atmosphere-mini-x4/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-satellites', { destination: '/produkty/atmosphere-satellites/', permanent: true }],
-  ['/synergistic-research/atmosphere-satellites', { destination: '/produkty/atmosphere-satellites/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-sx-ac', { destination: '/produkty/atmosphere-sx-ac/', permanent: true }],
-  ['/synergistic-research/atmosphere-sx-ac', { destination: '/produkty/atmosphere-sx-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-sx-digital-ic', { destination: '/produkty/atmosphere-sx-digital-ic/', permanent: true }],
-  ['/synergistic-research/atmosphere-sx-digital-ic', { destination: '/produkty/atmosphere-sx-digital-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-sx-ic', { destination: '/produkty/atmosphere-sx-ic/', permanent: true }],
-  ['/synergistic-research/atmosphere-sx-ic', { destination: '/produkty/atmosphere-sx-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-sx-phono', { destination: '/produkty/atmosphere-sx-phono/', permanent: true }],
-  ['/synergistic-research/atmosphere-sx-phono', { destination: '/produkty/atmosphere-sx-phono/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-sx-sc', { destination: '/produkty/atmosphere-sx-sc/', permanent: true }],
-  ['/synergistic-research/atmosphere-sx-sc', { destination: '/produkty/atmosphere-sx-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-sx-subwoofer', { destination: '/produkty/atmosphere-sx-subwoofer/', permanent: true }],
-  ['/synergistic-research/atmosphere-sx-subwoofer', { destination: '/produkty/atmosphere-sx-subwoofer/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-x-reference-subwoofer', { destination: '/produkty/atmosphere-x-reference-subwoofer/', permanent: true }],
-  ['/synergistic-research/atmosphere-x-reference-subwoofer', { destination: '/produkty/atmosphere-x-reference-subwoofer/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-x-subwoofer', { destination: '/produkty/atmosphere-x-subwoofer/', permanent: true }],
-  ['/synergistic-research/atmosphere-x-subwoofer', { destination: '/produkty/atmosphere-x-subwoofer/', permanent: true }],
-  ['/pl/synergistic-research/atmosphere-xl4', { destination: '/produkty/atmosphere-xl4/', permanent: true }],
-  ['/synergistic-research/atmosphere-xl4', { destination: '/produkty/atmosphere-xl4/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-alive-ac', { destination: '/produkty/atmospherex-alive-ac/', permanent: true }],
-  ['/synergistic-research/atmospherex-alive-ac', { destination: '/produkty/atmospherex-alive-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-alive-cyfrowy', { destination: '/produkty/atmospherex-alive-cyfrowy/', permanent: true }],
-  ['/synergistic-research/atmospherex-alive-cyfrowy', { destination: '/produkty/atmospherex-alive-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-alive-ic', { destination: '/produkty/atmospherex-alive-ic/', permanent: true }],
-  ['/synergistic-research/atmospherex-alive-ic', { destination: '/produkty/atmospherex-alive-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-alive-phono', { destination: '/produkty/atmospherex-alive-phono/', permanent: true }],
-  ['/synergistic-research/atmospherex-alive-phono', { destination: '/produkty/atmospherex-alive-phono/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-alive-sc', { destination: '/produkty/atmospherex-alive-sc/', permanent: true }],
-  ['/synergistic-research/atmospherex-alive-sc', { destination: '/produkty/atmospherex-alive-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-ethernet', { destination: '/produkty/atmospherex-ethernet/', permanent: true }],
-  ['/synergistic-research/atmospherex-ethernet', { destination: '/produkty/atmospherex-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-euphoria-ac', { destination: '/produkty/atmospherex-euphoria-ac/', permanent: true }],
-  ['/synergistic-research/atmospherex-euphoria-ac', { destination: '/produkty/atmospherex-euphoria-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-euphoria-cyfrowy', { destination: '/produkty/atmospherex-euphoria-cyfrowy/', permanent: true }],
-  ['/synergistic-research/atmospherex-euphoria-cyfrowy', { destination: '/produkty/atmospherex-euphoria-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-euphoria-ic', { destination: '/produkty/atmospherex-euphoria-ic/', permanent: true }],
-  ['/synergistic-research/atmospherex-euphoria-ic', { destination: '/produkty/atmospherex-euphoria-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-euphoria-phono', { destination: '/produkty/atmospherex-euphoria-phono/', permanent: true }],
-  ['/synergistic-research/atmospherex-euphoria-phono', { destination: '/produkty/atmospherex-euphoria-phono/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-euphoria-sc', { destination: '/produkty/atmospherex-euphoria-sc/', permanent: true }],
-  ['/synergistic-research/atmospherex-euphoria-sc', { destination: '/produkty/atmospherex-euphoria-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-excite-ac', { destination: '/produkty/atmospherex-excite-ac/', permanent: true }],
-  ['/synergistic-research/atmospherex-excite-ac', { destination: '/produkty/atmospherex-excite-ac/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-excite-cyfrowy', { destination: '/produkty/atmospherex-excite-cyfrowy/', permanent: true }],
-  ['/synergistic-research/atmospherex-excite-cyfrowy', { destination: '/produkty/atmospherex-excite-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-excite-ic', { destination: '/produkty/atmospherex-excite-ic/', permanent: true }],
-  ['/synergistic-research/atmospherex-excite-ic', { destination: '/produkty/atmospherex-excite-ic/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-excite-phono', { destination: '/produkty/atmospherex-excite-phono/', permanent: true }],
-  ['/synergistic-research/atmospherex-excite-phono', { destination: '/produkty/atmospherex-excite-phono/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-excite-sc', { destination: '/produkty/atmospherex-excite-sc/', permanent: true }],
-  ['/synergistic-research/atmospherex-excite-sc', { destination: '/produkty/atmospherex-excite-sc/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-reference-ethernet', { destination: '/produkty/atmospherex-reference-ethernet/', permanent: true }],
-  ['/synergistic-research/atmospherex-reference-ethernet', { destination: '/produkty/atmospherex-reference-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-reference-usb', { destination: '/produkty/atmospherex-reference-usb/', permanent: true }],
-  ['/synergistic-research/atmospherex-reference-usb', { destination: '/produkty/atmospherex-reference-usb/', permanent: true }],
-  ['/pl/synergistic-research/atmospherex-usb', { destination: '/produkty/atmospherex-usb/', permanent: true }],
-  ['/synergistic-research/atmospherex-usb', { destination: '/produkty/atmospherex-usb/', permanent: true }],
-  ['/pl/synergistic-research/basic-ground-cable', { destination: '/produkty/basic-ground-cable/', permanent: true }],
-  ['/synergistic-research/basic-ground-cable', { destination: '/produkty/basic-ground-cable/', permanent: true }],
-  ['/pl/synergistic-research/bezpiecznik-master', { destination: '/produkty/bezpiecznik-master/', permanent: true }],
-  ['/synergistic-research/bezpiecznik-master', { destination: '/produkty/bezpiecznik-master/', permanent: true }],
-  ['/pl/synergistic-research/bezpiecznik-orange', { destination: '/produkty/bezpiecznik-orange/', permanent: true }],
-  ['/synergistic-research/bezpiecznik-orange', { destination: '/produkty/bezpiecznik-orange/', permanent: true }],
-  ['/pl/synergistic-research/bezpiecznik-pink', { destination: '/produkty/bezpiecznik-pink/', permanent: true }],
-  ['/synergistic-research/bezpiecznik-pink', { destination: '/produkty/bezpiecznik-pink/', permanent: true }],
-  ['/pl/synergistic-research/bezpiecznik-red', { destination: '/produkty/bezpiecznik-red/', permanent: true }],
-  ['/synergistic-research/bezpiecznik-red', { destination: '/produkty/bezpiecznik-red/', permanent: true }],
-  ['/pl/synergistic-research/black-box', { destination: '/produkty/black-box/', permanent: true }],
-  ['/synergistic-research/black-box', { destination: '/produkty/black-box/', permanent: true }],
-  ['/pl/synergistic-research/black-uef-ac', { destination: '/produkty/black-uef-ac/', permanent: true }],
-  ['/synergistic-research/black-uef-ac', { destination: '/produkty/black-uef-ac/', permanent: true }],
-  ['/pl/synergistic-research/blue-uef-ac', { destination: '/produkty/blue-uef-ac/', permanent: true }],
-  ['/synergistic-research/blue-uef-ac', { destination: '/produkty/blue-uef-ac/', permanent: true }],
-  ['/pl/synergistic-research/carbon-discs', { destination: '/produkty/carbon-discs/', permanent: true }],
-  ['/synergistic-research/carbon-discs', { destination: '/produkty/carbon-discs/', permanent: true }],
-  ['/pl/synergistic-research/core-2-0-ethernet', { destination: '/produkty/core-2-0-ethernet/', permanent: true }],
-  ['/synergistic-research/core-2-0-ethernet', { destination: '/produkty/core-2-0-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/core-2-0-phono', { destination: '/produkty/core-2-0-phono/', permanent: true }],
-  ['/synergistic-research/core-2-0-phono', { destination: '/produkty/core-2-0-phono/', permanent: true }],
-  ['/pl/synergistic-research/core-2-0-usb', { destination: '/produkty/core-2-0-usb/', permanent: true }],
-  ['/synergistic-research/core-2-0-usb', { destination: '/produkty/core-2-0-usb/', permanent: true }],
-  ['/pl/synergistic-research/core-uef-ic', { destination: '/produkty/core-uef-ic/', permanent: true }],
-  ['/synergistic-research/core-uef-ic', { destination: '/produkty/core-uef-ic/', permanent: true }],
-  ['/pl/synergistic-research/core-uef-sc', { destination: '/produkty/core-uef-sc/', permanent: true }],
-  ['/synergistic-research/core-uef-sc', { destination: '/produkty/core-uef-sc/', permanent: true }],
-  ['/pl/synergistic-research/dc-sx', { destination: '/produkty/dc-sx/', permanent: true }],
-  ['/synergistic-research/dc-sx', { destination: '/produkty/dc-sx/', permanent: true }],
-  ['/pl/synergistic-research/ect', { destination: '/produkty/ect/', permanent: true }],
-  ['/synergistic-research/ect', { destination: '/produkty/ect/', permanent: true }],
-  ['/pl/synergistic-research/element-cts-cyfrowy', { destination: '/produkty/element-cts-cyfrowy/', permanent: true }],
-  ['/synergistic-research/element-cts-cyfrowy', { destination: '/produkty/element-cts-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/equalizer-czestotliwosciowy-feq', { destination: '/produkty/equalizer-czestotliwosciowy-feq/', permanent: true }],
-  ['/synergistic-research/equalizer-czestotliwosciowy-feq', { destination: '/produkty/equalizer-czestotliwosciowy-feq/', permanent: true }],
-  ['/pl/synergistic-research/equalizer-czestotliwosciowy-feq-carbon', { destination: '/produkty/equalizer-czestotliwosciowy-feq-carbon/', permanent: true }],
-  ['/synergistic-research/equalizer-czestotliwosciowy-feq-carbon', { destination: '/produkty/equalizer-czestotliwosciowy-feq-carbon/', permanent: true }],
-  ['/pl/synergistic-research/feq-x4', { destination: '/produkty/feq-x4/', permanent: true }],
-  ['/synergistic-research/feq-x4', { destination: '/produkty/feq-x4/', permanent: true }],
-  ['/pl/synergistic-research/foundation-ac', { destination: '/produkty/foundation-ac/', permanent: true }],
-  ['/synergistic-research/foundation-ac', { destination: '/produkty/foundation-ac/', permanent: true }],
-  ['/pl/synergistic-research/foundation-digital', { destination: '/produkty/foundation-digital/', permanent: true }],
-  ['/synergistic-research/foundation-digital', { destination: '/produkty/foundation-digital/', permanent: true }],
-  ['/pl/synergistic-research/foundation-ethernet', { destination: '/produkty/foundation-ethernet/', permanent: true }],
-  ['/synergistic-research/foundation-ethernet', { destination: '/produkty/foundation-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/foundation-ground-cable', { destination: '/produkty/foundation-ground-cable/', permanent: true }],
-  ['/synergistic-research/foundation-ground-cable', { destination: '/produkty/foundation-ground-cable/', permanent: true }],
-  ['/pl/synergistic-research/foundation-ic', { destination: '/produkty/foundation-ic/', permanent: true }],
-  ['/synergistic-research/foundation-ic', { destination: '/produkty/foundation-ic/', permanent: true }],
-  ['/pl/synergistic-research/foundation-phono', { destination: '/produkty/foundation-phono/', permanent: true }],
-  ['/synergistic-research/foundation-phono', { destination: '/produkty/foundation-phono/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sc', { destination: '/produkty/foundation-sc/', permanent: true }],
-  ['/synergistic-research/foundation-sc', { destination: '/produkty/foundation-sc/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-ac', { destination: '/produkty/foundation-sx-ac/', permanent: true }],
-  ['/synergistic-research/foundation-sx-ac', { destination: '/produkty/foundation-sx-ac/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-digital-ic', { destination: '/produkty/foundation-sx-digital-ic/', permanent: true }],
-  ['/synergistic-research/foundation-sx-digital-ic', { destination: '/produkty/foundation-sx-digital-ic/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-ethernet', { destination: '/produkty/foundation-sx-ethernet/', permanent: true }],
-  ['/synergistic-research/foundation-sx-ethernet', { destination: '/produkty/foundation-sx-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-ic', { destination: '/produkty/foundation-sx-ic/', permanent: true }],
-  ['/synergistic-research/foundation-sx-ic', { destination: '/produkty/foundation-sx-ic/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-phono', { destination: '/produkty/foundation-sx-phono/', permanent: true }],
-  ['/synergistic-research/foundation-sx-phono', { destination: '/produkty/foundation-sx-phono/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-sc', { destination: '/produkty/foundation-sx-sc/', permanent: true }],
-  ['/synergistic-research/foundation-sx-sc', { destination: '/produkty/foundation-sx-sc/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-usb', { destination: '/produkty/foundation-sx-usb/', permanent: true }],
-  ['/synergistic-research/foundation-sx-usb', { destination: '/produkty/foundation-sx-usb/', permanent: true }],
-  ['/pl/synergistic-research/foundation-sx-xl-sc', { destination: '/produkty/foundation-sx-xl-sc/', permanent: true }],
-  ['/synergistic-research/foundation-sx-xl-sc', { destination: '/produkty/foundation-sx-xl-sc/', permanent: true }],
-  ['/pl/synergistic-research/foundation-usb', { destination: '/produkty/foundation-usb/', permanent: true }],
-  ['/synergistic-research/foundation-usb', { destination: '/produkty/foundation-usb/', permanent: true }],
-  ['/pl/synergistic-research/foundation-xl-ac', { destination: '/produkty/foundation-xl-ac/', permanent: true }],
-  ['/synergistic-research/foundation-xl-ac', { destination: '/produkty/foundation-xl-ac/', permanent: true }],
-  ['/pl/synergistic-research/foundation-xl-digital-ic', { destination: '/produkty/foundation-xl-digital-ic/', permanent: true }],
-  ['/synergistic-research/foundation-xl-digital-ic', { destination: '/produkty/foundation-xl-digital-ic/', permanent: true }],
-  ['/pl/synergistic-research/foundation-xl-ethernet', { destination: '/produkty/foundation-xl-ethernet/', permanent: true }],
-  ['/synergistic-research/foundation-xl-ethernet', { destination: '/produkty/foundation-xl-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/foundation-xl-ic', { destination: '/produkty/foundation-xl-ic/', permanent: true }],
-  ['/synergistic-research/foundation-xl-ic', { destination: '/produkty/foundation-xl-ic/', permanent: true }],
-  ['/pl/synergistic-research/foundation-xl-phono', { destination: '/produkty/foundation-xl-phono/', permanent: true }],
-  ['/synergistic-research/foundation-xl-phono', { destination: '/produkty/foundation-xl-phono/', permanent: true }],
-  ['/pl/synergistic-research/foundation-xl-subwoofer', { destination: '/produkty/foundation-xl-subwoofer/', permanent: true }],
-  ['/synergistic-research/foundation-xl-subwoofer', { destination: '/produkty/foundation-xl-subwoofer/', permanent: true }],
-  ['/pl/synergistic-research/foundation-xl-usb', { destination: '/produkty/foundation-xl-usb/', permanent: true }],
-  ['/synergistic-research/foundation-xl-usb', { destination: '/produkty/foundation-xl-usb/', permanent: true }],
-  ['/pl/synergistic-research/fuse-black', { destination: '/produkty/fuse-black/', permanent: true }],
-  ['/synergistic-research/fuse-black', { destination: '/produkty/fuse-black/', permanent: true }],
-  ['/pl/synergistic-research/fuse-blue', { destination: '/produkty/fuse-blue/', permanent: true }],
-  ['/synergistic-research/fuse-blue', { destination: '/produkty/fuse-blue/', permanent: true }],
-  ['/pl/synergistic-research/galileo-discovery-ac', { destination: '/produkty/galileo-discovery-ac/', permanent: true }],
-  ['/synergistic-research/galileo-discovery-ac', { destination: '/produkty/galileo-discovery-ac/', permanent: true }],
-  ['/pl/synergistic-research/galileo-discovery-digital-ic', { destination: '/produkty/galileo-discovery-digital-ic/', permanent: true }],
-  ['/synergistic-research/galileo-discovery-digital-ic', { destination: '/produkty/galileo-discovery-digital-ic/', permanent: true }],
-  ['/pl/synergistic-research/galileo-discovery-ethernet', { destination: '/produkty/galileo-discovery-ethernet/', permanent: true }],
-  ['/synergistic-research/galileo-discovery-ethernet', { destination: '/produkty/galileo-discovery-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/galileo-discovery-ic', { destination: '/produkty/galileo-discovery-ic/', permanent: true }],
-  ['/synergistic-research/galileo-discovery-ic', { destination: '/produkty/galileo-discovery-ic/', permanent: true }],
-  ['/pl/synergistic-research/galileo-discovery-phono', { destination: '/produkty/galileo-discovery-phono/', permanent: true }],
-  ['/synergistic-research/galileo-discovery-phono', { destination: '/produkty/galileo-discovery-phono/', permanent: true }],
-  ['/pl/synergistic-research/galileo-discovery-sc', { destination: '/produkty/galileo-discovery-sc/', permanent: true }],
-  ['/synergistic-research/galileo-discovery-sc', { destination: '/produkty/galileo-discovery-sc/', permanent: true }],
-  ['/pl/synergistic-research/galileo-discovery-usb', { destination: '/produkty/galileo-discovery-usb/', permanent: true }],
-  ['/synergistic-research/galileo-discovery-usb', { destination: '/produkty/galileo-discovery-usb/', permanent: true }],
-  ['/pl/synergistic-research/galileo-ground-block', { destination: '/produkty/galileo-ground-block/', permanent: true }],
-  ['/synergistic-research/galileo-ground-block', { destination: '/produkty/galileo-ground-block/', permanent: true }],
-  ['/pl/synergistic-research/galileo-powercell-sx', { destination: '/produkty/galileo-powercell-sx/', permanent: true }],
-  ['/synergistic-research/galileo-powercell-sx', { destination: '/produkty/galileo-powercell-sx/', permanent: true }],
-  ['/pl/synergistic-research/galileo-sx-ac', { destination: '/produkty/galileo-sx-ac/', permanent: true }],
-  ['/synergistic-research/galileo-sx-ac', { destination: '/produkty/galileo-sx-ac/', permanent: true }],
-  ['/pl/synergistic-research/galileo-sx-cyfrowy', { destination: '/produkty/galileo-sx-cyfrowy/', permanent: true }],
-  ['/synergistic-research/galileo-sx-cyfrowy', { destination: '/produkty/galileo-sx-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/galileo-sx-ethernet', { destination: '/produkty/galileo-sx-ethernet/', permanent: true }],
-  ['/synergistic-research/galileo-sx-ethernet', { destination: '/produkty/galileo-sx-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/galileo-sx-ic', { destination: '/produkty/galileo-sx-ic/', permanent: true }],
-  ['/synergistic-research/galileo-sx-ic', { destination: '/produkty/galileo-sx-ic/', permanent: true }],
-  ['/pl/synergistic-research/galileo-sx-phono', { destination: '/produkty/galileo-sx-phono/', permanent: true }],
-  ['/synergistic-research/galileo-sx-phono', { destination: '/produkty/galileo-sx-phono/', permanent: true }],
-  ['/pl/synergistic-research/galileo-sx-sc', { destination: '/produkty/galileo-sx-sc/', permanent: true }],
-  ['/synergistic-research/galileo-sx-sc', { destination: '/produkty/galileo-sx-sc/', permanent: true }],
-  ['/pl/synergistic-research/galileo-sx-usb', { destination: '/produkty/galileo-sx-usb/', permanent: true }],
-  ['/synergistic-research/galileo-sx-usb', { destination: '/produkty/galileo-sx-usb/', permanent: true }],
-  ['/pl/synergistic-research/galileo-uef-ac', { destination: '/produkty/galileo-uef-ac/', permanent: true }],
-  ['/synergistic-research/galileo-uef-ac', { destination: '/produkty/galileo-uef-ac/', permanent: true }],
-  ['/pl/synergistic-research/galileo-uef-cyfrowy', { destination: '/produkty/galileo-uef-cyfrowy/', permanent: true }],
-  ['/synergistic-research/galileo-uef-cyfrowy', { destination: '/produkty/galileo-uef-cyfrowy/', permanent: true }],
-  ['/pl/synergistic-research/galileo-uef-ethernet', { destination: '/produkty/galileo-uef-ethernet/', permanent: true }],
-  ['/synergistic-research/galileo-uef-ethernet', { destination: '/produkty/galileo-uef-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/galileo-uef-ic', { destination: '/produkty/galileo-uef-ic/', permanent: true }],
-  ['/synergistic-research/galileo-uef-ic', { destination: '/produkty/galileo-uef-ic/', permanent: true }],
-  ['/pl/synergistic-research/galileo-uef-phono', { destination: '/produkty/galileo-uef-phono/', permanent: true }],
-  ['/synergistic-research/galileo-uef-phono', { destination: '/produkty/galileo-uef-phono/', permanent: true }],
-  ['/pl/synergistic-research/galileo-uef-sc', { destination: '/produkty/galileo-uef-sc/', permanent: true }],
-  ['/synergistic-research/galileo-uef-sc', { destination: '/produkty/galileo-uef-sc/', permanent: true }],
-  ['/pl/synergistic-research/galileo-uef-usb', { destination: '/produkty/galileo-uef-usb/', permanent: true }],
-  ['/synergistic-research/galileo-uef-usb', { destination: '/produkty/galileo-uef-usb/', permanent: true }],
-  ['/pl/synergistic-research/gct', { destination: '/produkty/gct/', permanent: true }],
-  ['/synergistic-research/gct', { destination: '/produkty/gct/', permanent: true }],
-  ['/pl/synergistic-research/grounding-block', { destination: '/produkty/grounding-block/', permanent: true }],
-  ['/synergistic-research/grounding-block', { destination: '/produkty/grounding-block/', permanent: true }],
-  ['/pl/synergistic-research/hd-ground-cable', { destination: '/produkty/hd-ground-cable/', permanent: true }],
-  ['/synergistic-research/hd-ground-cable', { destination: '/produkty/hd-ground-cable/', permanent: true }],
-  ['/pl/synergistic-research/hdsx-ground-cable', { destination: '/produkty/hdsx-ground-cable/', permanent: true }],
-  ['/synergistic-research/hdsx-ground-cable', { destination: '/produkty/hdsx-ground-cable/', permanent: true }],
-  ['/pl/synergistic-research/hft', { destination: '/produkty/hft/', permanent: true }],
-  ['/synergistic-research/hft', { destination: '/produkty/hft/', permanent: true }],
-  ['/pl/synergistic-research/ht-carbon', { destination: '/produkty/ht-carbon/', permanent: true }],
-  ['/synergistic-research/ht-carbon', { destination: '/produkty/ht-carbon/', permanent: true }],
-  ['/pl/synergistic-research/krazki-akustyczne', { destination: '/produkty/krazki-akustyczne/', permanent: true }],
-  ['/synergistic-research/krazki-akustyczne', { destination: '/produkty/krazki-akustyczne/', permanent: true }],
-  ['/pl/synergistic-research/Linear-Power-Supply-UEF', { destination: '/produkty/linear-power-supply-uef/', permanent: true }],
-  ['/synergistic-research/Linear-Power-Supply-UEF', { destination: '/produkty/linear-power-supply-uef/', permanent: true }],
-  ['/pl/synergistic-research/mata-uef1', { destination: '/produkty/mata-uef1/', permanent: true }],
-  ['/synergistic-research/mata-uef1', { destination: '/produkty/mata-uef1/', permanent: true }],
-  ['/pl/synergistic-research/mig', { destination: '/produkty/mig/', permanent: true }],
-  ['/synergistic-research/mig', { destination: '/produkty/mig/', permanent: true }],
-  ['/pl/synergistic-research/mig-sx', { destination: '/produkty/mig-sx/', permanent: true }],
-  ['/synergistic-research/mig-sx', { destination: '/produkty/mig-sx/', permanent: true }],
-  ['/pl/synergistic-research/mig1', { destination: '/produkty/mig1/', permanent: true }],
-  ['/synergistic-research/mig1', { destination: '/produkty/mig1/', permanent: true }],
-  ['/pl/synergistic-research/mig20', { destination: '/produkty/mig20/', permanent: true }],
-  ['/synergistic-research/mig20', { destination: '/produkty/mig20/', permanent: true }],
-  ['/pl/synergistic-research/panele-akustyczne', { destination: '/produkty/panele-akustyczne/', permanent: true }],
-  ['/synergistic-research/panele-akustyczne', { destination: '/produkty/panele-akustyczne/', permanent: true }],
-  ['/pl/synergistic-research/powercell-12-sx', { destination: '/produkty/powercell-12-sx/', permanent: true }],
-  ['/synergistic-research/powercell-12-sx', { destination: '/produkty/powercell-12-sx/', permanent: true }],
-  ['/pl/synergistic-research/powercell-12-uef', { destination: '/produkty/powercell-12-uef/', permanent: true }],
-  ['/synergistic-research/powercell-12-uef', { destination: '/produkty/powercell-12-uef/', permanent: true }],
-  ['/pl/synergistic-research/powercell-12-uef-s', { destination: '/produkty/powercell-12-uef-s/', permanent: true }],
-  ['/synergistic-research/powercell-12-uef-s', { destination: '/produkty/powercell-12-uef-s/', permanent: true }],
-  ['/pl/synergistic-research/powercell-12-uef-se', { destination: '/produkty/powercell-12-uef-se/', permanent: true }],
-  ['/synergistic-research/powercell-12-uef-se', { destination: '/produkty/powercell-12-uef-se/', permanent: true }],
-  ['/pl/synergistic-research/powercell-14', { destination: '/produkty/powercell-14/', permanent: true }],
-  ['/synergistic-research/powercell-14', { destination: '/produkty/powercell-14/', permanent: true }],
-  ['/pl/synergistic-research/powercell-8-sx', { destination: '/produkty/powercell-8-sx/', permanent: true }],
-  ['/synergistic-research/powercell-8-sx', { destination: '/produkty/powercell-8-sx/', permanent: true }],
-  ['/pl/synergistic-research/powercell-8-uef', { destination: '/produkty/powercell-8-uef/', permanent: true }],
-  ['/synergistic-research/powercell-8-uef', { destination: '/produkty/powercell-8-uef/', permanent: true }],
-  ['/pl/synergistic-research/powercell-8-uef-se', { destination: '/produkty/powercell-8-uef-se/', permanent: true }],
-  ['/synergistic-research/powercell-8-uef-se', { destination: '/produkty/powercell-8-uef-se/', permanent: true }],
-  ['/pl/synergistic-research/powercell-one', { destination: '/produkty/powercell-one/', permanent: true }],
-  ['/synergistic-research/powercell-one', { destination: '/produkty/powercell-one/', permanent: true }],
-  ['/pl/synergistic-research/powercell-two', { destination: '/produkty/powercell-two/', permanent: true }],
-  ['/synergistic-research/powercell-two', { destination: '/produkty/powercell-two/', permanent: true }],
-  ['/pl/synergistic-research/powercellsx', { destination: '/produkty/powercellsx/', permanent: true }],
-  ['/synergistic-research/powercellsx', { destination: '/produkty/powercellsx/', permanent: true }],
-  ['/pl/synergistic-research/przetwornik-pht', { destination: '/produkty/przetwornik-pht/', permanent: true }],
-  ['/synergistic-research/przetwornik-pht', { destination: '/produkty/przetwornik-pht/', permanent: true }],
-  ['/pl/synergistic-research/purple', { destination: '/produkty/purple/', permanent: true }],
-  ['/synergistic-research/purple', { destination: '/produkty/purple/', permanent: true }],
-  ['/pl/synergistic-research/red-uef-ac', { destination: '/produkty/red-uef-ac/', permanent: true }],
-  ['/synergistic-research/red-uef-ac', { destination: '/produkty/red-uef-ac/', permanent: true }],
-  ['/pl/synergistic-research/sr30-ac', { destination: '/produkty/sr30-ac/', permanent: true }],
-  ['/synergistic-research/sr30-ac', { destination: '/produkty/sr30-ac/', permanent: true }],
-  ['/pl/synergistic-research/sr30-digital-ic', { destination: '/produkty/sr30-digital-ic/', permanent: true }],
-  ['/synergistic-research/sr30-digital-ic', { destination: '/produkty/sr30-digital-ic/', permanent: true }],
-  ['/pl/synergistic-research/sr30-ic', { destination: '/produkty/sr30-ic/', permanent: true }],
-  ['/synergistic-research/sr30-ic', { destination: '/produkty/sr30-ic/', permanent: true }],
-  ['/pl/synergistic-research/sr30-sc', { destination: '/produkty/sr30-sc/', permanent: true }],
-  ['/synergistic-research/sr30-sc', { destination: '/produkty/sr30-sc/', permanent: true }],
-  ['/pl/synergistic-research/SRX-ac', { destination: '/produkty/srx-ac/', permanent: true }],
-  ['/synergistic-research/SRX-ac', { destination: '/produkty/srx-ac/', permanent: true }],
-  ['/pl/synergistic-research/srx-digital', { destination: '/produkty/srx-digital/', permanent: true }],
-  ['/synergistic-research/srx-digital', { destination: '/produkty/srx-digital/', permanent: true }],
-  ['/pl/synergistic-research/srx-ethernet', { destination: '/produkty/srx-ethernet/', permanent: true }],
-  ['/synergistic-research/srx-ethernet', { destination: '/produkty/srx-ethernet/', permanent: true }],
-  ['/pl/synergistic-research/srx-ic', { destination: '/produkty/srx-ic/', permanent: true }],
-  ['/synergistic-research/srx-ic', { destination: '/produkty/srx-ic/', permanent: true }],
-  ['/pl/synergistic-research/srx-phono', { destination: '/produkty/srx-phono/', permanent: true }],
-  ['/synergistic-research/srx-phono', { destination: '/produkty/srx-phono/', permanent: true }],
-  ['/pl/synergistic-research/srx-powercell', { destination: '/produkty/srx-powercell/', permanent: true }],
-  ['/synergistic-research/srx-powercell', { destination: '/produkty/srx-powercell/', permanent: true }],
-  ['/pl/synergistic-research/srx-powercell-14', { destination: '/produkty/srx-powercell-14/', permanent: true }],
-  ['/synergistic-research/srx-powercell-14', { destination: '/produkty/srx-powercell-14/', permanent: true }],
-  ['/pl/synergistic-research/srx-sc', { destination: '/produkty/srx-sc/', permanent: true }],
-  ['/synergistic-research/srx-sc', { destination: '/produkty/srx-sc/', permanent: true }],
-  ['/pl/synergistic-research/srx-slim-line-sc', { destination: '/produkty/srx-slim-line-sc/', permanent: true }],
-  ['/synergistic-research/srx-slim-line-sc', { destination: '/produkty/srx-slim-line-sc/', permanent: true }],
-  ['/pl/synergistic-research/srx-usb', { destination: '/produkty/srx-usb/', permanent: true }],
-  ['/synergistic-research/srx-usb', { destination: '/produkty/srx-usb/', permanent: true }],
-  ['/pl/synergistic-research/srx-xl-ac', { destination: '/produkty/srx-xl-ac/', permanent: true }],
-  ['/synergistic-research/srx-xl-ac', { destination: '/produkty/srx-xl-ac/', permanent: true }],
-  ['/pl/synergistic-research/srx-xl-ic', { destination: '/produkty/srx-xl-ic/', permanent: true }],
-  ['/synergistic-research/srx-xl-ic', { destination: '/produkty/srx-xl-ic/', permanent: true }],
-  ['/pl/synergistic-research/srx-xl-sc', { destination: '/produkty/srx-xl-sc/', permanent: true }],
-  ['/synergistic-research/srx-xl-sc', { destination: '/produkty/srx-xl-sc/', permanent: true }],
-  ['/pl/synergistic-research/tranquility-base', { destination: '/produkty/tranquility-base/', permanent: true }],
-  ['/synergistic-research/tranquility-base', { destination: '/produkty/tranquility-base/', permanent: true }],
-  ['/pl/synergistic-research/tranquility-carbon', { destination: '/produkty/tranquility-carbon/', permanent: true }],
-  ['/synergistic-research/tranquility-carbon', { destination: '/produkty/tranquility-carbon/', permanent: true }],
-  ['/pl/synergistic-research/tranquility-pod', { destination: '/produkty/tranquility-pod/', permanent: true }],
-  ['/synergistic-research/tranquility-pod', { destination: '/produkty/tranquility-pod/', permanent: true }],
-  ['/pl/synergistic-research/tranquility-pod-carbon', { destination: '/produkty/tranquility-pod-carbon/', permanent: true }],
-  ['/synergistic-research/tranquility-pod-carbon', { destination: '/produkty/tranquility-pod-carbon/', permanent: true }],
-  ['/pl/synergistic-research/tranquility-uef-linear-power-supply', { destination: '/produkty/tranquility-uef-linear-power-supply/', permanent: true }],
-  ['/synergistic-research/tranquility-uef-linear-power-supply', { destination: '/produkty/tranquility-uef-linear-power-supply/', permanent: true }],
-  ['/pl/synergistic-research/transporter', { destination: '/produkty/transporter/', permanent: true }],
-  ['/synergistic-research/transporter', { destination: '/produkty/transporter/', permanent: true }],
-  ['/pl/synergistic-research/tricon-analog-20th-anniversary-phono', { destination: '/produkty/tricon-analog-20th-anniversary-phono/', permanent: true }],
-  ['/synergistic-research/tricon-analog-20th-anniversary-phono', { destination: '/produkty/tricon-analog-20th-anniversary-phono/', permanent: true }],
-  ['/pl/synergistic-research/uef-ac', { destination: '/produkty/uef-ac/', permanent: true }],
-  ['/synergistic-research/uef-ac', { destination: '/produkty/uef-ac/', permanent: true }],
-  ['/pl/synergistic-research/uef-ethernet-switch', { destination: '/produkty/uef-ethernet-switch/', permanent: true }],
-  ['/synergistic-research/uef-ethernet-switch', { destination: '/produkty/uef-ethernet-switch/', permanent: true }],
-  ['/pl/synergistic-research/uef-network-router', { destination: '/produkty/uef-network-router/', permanent: true }],
-  ['/synergistic-research/uef-network-router', { destination: '/produkty/uef-network-router/', permanent: true }],
-  ['/pl/synergistic-research/uef-performance-elevators', { destination: '/produkty/uef-performance-elevators/', permanent: true }],
-  ['/synergistic-research/uef-performance-elevators', { destination: '/produkty/uef-performance-elevators/', permanent: true }],
-  ['/pl/synergistic-research/uef-performance-enhancers', { destination: '/produkty/uef-performance-enhancers/', permanent: true }],
-  ['/synergistic-research/uef-performance-enhancers', { destination: '/produkty/uef-performance-enhancers/', permanent: true }],
-  ['/pl/synergistic-research/uef-record-weight', { destination: '/produkty/uef-record-weight/', permanent: true }],
-  ['/synergistic-research/uef-record-weight', { destination: '/produkty/uef-record-weight/', permanent: true }],
-  ['/pl/synergistic-research/vibratron-sx', { destination: '/produkty/vibratron-sx/', permanent: true }],
-  ['/synergistic-research/vibratron-sx', { destination: '/produkty/vibratron-sx/', permanent: true }],
-  ['/pl/synergistic-research/voodoo', { destination: '/produkty/voodoo/', permanent: true }],
-  ['/synergistic-research/voodoo', { destination: '/produkty/voodoo/', permanent: true }],
-  ['/pl/synergistic-research/xot', { destination: '/produkty/xot/', permanent: true }],
-  ['/synergistic-research/xot', { destination: '/produkty/xot/', permanent: true }],
+  [
+    '/pl/symposium/svelte-plus',
+    { destination: '/produkty/svelte-plus/', permanent: true },
+  ],
+  [
+    '/symposium/svelte-plus',
+    { destination: '/produkty/svelte-plus/', permanent: true },
+  ],
+  [
+    '/pl/symposium/ultra-ampstand',
+    { destination: '/produkty/ultra-ampstand/', permanent: true },
+  ],
+  [
+    '/symposium/ultra-ampstand',
+    { destination: '/produkty/ultra-ampstand/', permanent: true },
+  ],
+  [
+    '/pl/symposium/ultra-padz',
+    { destination: '/produkty/ultra-padz/', permanent: true },
+  ],
+  [
+    '/symposium/ultra-padz',
+    { destination: '/produkty/ultra-padz/', permanent: true },
+  ],
+  [
+    '/pl/symposium/ultra-platform',
+    { destination: '/produkty/ultra-platform/', permanent: true },
+  ],
+  [
+    '/symposium/ultra-platform',
+    { destination: '/produkty/ultra-platform/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/acoustic-art',
+    { destination: '/produkty/acoustic-art/', permanent: true },
+  ],
+  [
+    '/synergistic-research/acoustic-art',
+    { destination: '/produkty/acoustic-art/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/active-ground-block',
+    { destination: '/produkty/active-ground-block/', permanent: true },
+  ],
+  [
+    '/synergistic-research/active-ground-block',
+    { destination: '/produkty/active-ground-block/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/active-ground-block-sx',
+    { destination: '/produkty/active-ground-block-sx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/active-ground-block-sx',
+    { destination: '/produkty/active-ground-block-sx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/ATM-Green',
+    { destination: '/produkty/atm-green/', permanent: true },
+  ],
+  [
+    '/synergistic-research/ATM-Green',
+    { destination: '/produkty/atm-green/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/ATM-Red',
+    { destination: '/produkty/atm-red/', permanent: true },
+  ],
+  [
+    '/synergistic-research/ATM-Red',
+    { destination: '/produkty/atm-red/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere',
+    { destination: '/produkty/atmosphere/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere',
+    { destination: '/produkty/atmosphere/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-devialet-ac',
+    { destination: '/produkty/atmosphere-devialet-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-devialet-ac',
+    { destination: '/produkty/atmosphere-devialet-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-infinity',
+    { destination: '/produkty/atmosphere-infinity/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-infinity',
+    { destination: '/produkty/atmosphere-infinity/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-1-ac',
+    { destination: '/produkty/atmosphere-level-1-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-1-ac',
+    { destination: '/produkty/atmosphere-level-1-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-1-ic',
+    { destination: '/produkty/atmosphere-level-1-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-1-ic',
+    { destination: '/produkty/atmosphere-level-1-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-1-sc',
+    { destination: '/produkty/atmosphere-level-1-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-1-sc',
+    { destination: '/produkty/atmosphere-level-1-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-2-ac',
+    { destination: '/produkty/atmosphere-level-2-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-2-ac',
+    { destination: '/produkty/atmosphere-level-2-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-2-ic',
+    { destination: '/produkty/atmosphere-level-2-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-2-ic',
+    { destination: '/produkty/atmosphere-level-2-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-2-sc',
+    { destination: '/produkty/atmosphere-level-2-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-2-sc',
+    { destination: '/produkty/atmosphere-level-2-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-3-analog-ac',
+    { destination: '/produkty/atmosphere-level-3-analog-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-3-analog-ac',
+    { destination: '/produkty/atmosphere-level-3-analog-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-3-digital-ac',
+    {
+      destination: '/produkty/atmosphere-level-3-digital-ac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-3-digital-ac',
+    {
+      destination: '/produkty/atmosphere-level-3-digital-ac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-3-high-current-ac',
+    {
+      destination: '/produkty/atmosphere-level-3-high-current-ac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-3-high-current-ac',
+    {
+      destination: '/produkty/atmosphere-level-3-high-current-ac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-3-ic',
+    { destination: '/produkty/atmosphere-level-3-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-3-ic',
+    { destination: '/produkty/atmosphere-level-3-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-3-sc',
+    { destination: '/produkty/atmosphere-level-3-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-3-sc',
+    { destination: '/produkty/atmosphere-level-3-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-4-ic',
+    { destination: '/produkty/atmosphere-level-4-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-4-ic',
+    { destination: '/produkty/atmosphere-level-4-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level-4-sc',
+    { destination: '/produkty/atmosphere-level-4-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level-4-sc',
+    { destination: '/produkty/atmosphere-level-4-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level1-cyfrowy',
+    { destination: '/produkty/atmosphere-level1-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level1-cyfrowy',
+    { destination: '/produkty/atmosphere-level1-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level2-cyfrowy',
+    { destination: '/produkty/atmosphere-level2-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level2-cyfrowy',
+    { destination: '/produkty/atmosphere-level2-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-level3-cyfrowy',
+    { destination: '/produkty/atmosphere-level3-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-level3-cyfrowy',
+    { destination: '/produkty/atmosphere-level3-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-mini',
+    { destination: '/produkty/atmosphere-mini/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-mini',
+    { destination: '/produkty/atmosphere-mini/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-mini-x4',
+    { destination: '/produkty/atmosphere-mini-x4/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-mini-x4',
+    { destination: '/produkty/atmosphere-mini-x4/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-satellites',
+    { destination: '/produkty/atmosphere-satellites/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-satellites',
+    { destination: '/produkty/atmosphere-satellites/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-sx-ac',
+    { destination: '/produkty/atmosphere-sx-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-sx-ac',
+    { destination: '/produkty/atmosphere-sx-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-sx-digital-ic',
+    { destination: '/produkty/atmosphere-sx-digital-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-sx-digital-ic',
+    { destination: '/produkty/atmosphere-sx-digital-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-sx-ic',
+    { destination: '/produkty/atmosphere-sx-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-sx-ic',
+    { destination: '/produkty/atmosphere-sx-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-sx-phono',
+    { destination: '/produkty/atmosphere-sx-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-sx-phono',
+    { destination: '/produkty/atmosphere-sx-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-sx-sc',
+    { destination: '/produkty/atmosphere-sx-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-sx-sc',
+    { destination: '/produkty/atmosphere-sx-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-sx-subwoofer',
+    { destination: '/produkty/atmosphere-sx-subwoofer/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-sx-subwoofer',
+    { destination: '/produkty/atmosphere-sx-subwoofer/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-x-reference-subwoofer',
+    {
+      destination: '/produkty/atmosphere-x-reference-subwoofer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/atmosphere-x-reference-subwoofer',
+    {
+      destination: '/produkty/atmosphere-x-reference-subwoofer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-x-subwoofer',
+    { destination: '/produkty/atmosphere-x-subwoofer/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-x-subwoofer',
+    { destination: '/produkty/atmosphere-x-subwoofer/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmosphere-xl4',
+    { destination: '/produkty/atmosphere-xl4/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmosphere-xl4',
+    { destination: '/produkty/atmosphere-xl4/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-alive-ac',
+    { destination: '/produkty/atmospherex-alive-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-alive-ac',
+    { destination: '/produkty/atmospherex-alive-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-alive-cyfrowy',
+    { destination: '/produkty/atmospherex-alive-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-alive-cyfrowy',
+    { destination: '/produkty/atmospherex-alive-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-alive-ic',
+    { destination: '/produkty/atmospherex-alive-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-alive-ic',
+    { destination: '/produkty/atmospherex-alive-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-alive-phono',
+    { destination: '/produkty/atmospherex-alive-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-alive-phono',
+    { destination: '/produkty/atmospherex-alive-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-alive-sc',
+    { destination: '/produkty/atmospherex-alive-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-alive-sc',
+    { destination: '/produkty/atmospherex-alive-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-ethernet',
+    { destination: '/produkty/atmospherex-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-ethernet',
+    { destination: '/produkty/atmospherex-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-euphoria-ac',
+    { destination: '/produkty/atmospherex-euphoria-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-euphoria-ac',
+    { destination: '/produkty/atmospherex-euphoria-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-euphoria-cyfrowy',
+    { destination: '/produkty/atmospherex-euphoria-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-euphoria-cyfrowy',
+    { destination: '/produkty/atmospherex-euphoria-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-euphoria-ic',
+    { destination: '/produkty/atmospherex-euphoria-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-euphoria-ic',
+    { destination: '/produkty/atmospherex-euphoria-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-euphoria-phono',
+    { destination: '/produkty/atmospherex-euphoria-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-euphoria-phono',
+    { destination: '/produkty/atmospherex-euphoria-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-euphoria-sc',
+    { destination: '/produkty/atmospherex-euphoria-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-euphoria-sc',
+    { destination: '/produkty/atmospherex-euphoria-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-excite-ac',
+    { destination: '/produkty/atmospherex-excite-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-excite-ac',
+    { destination: '/produkty/atmospherex-excite-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-excite-cyfrowy',
+    { destination: '/produkty/atmospherex-excite-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-excite-cyfrowy',
+    { destination: '/produkty/atmospherex-excite-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-excite-ic',
+    { destination: '/produkty/atmospherex-excite-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-excite-ic',
+    { destination: '/produkty/atmospherex-excite-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-excite-phono',
+    { destination: '/produkty/atmospherex-excite-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-excite-phono',
+    { destination: '/produkty/atmospherex-excite-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-excite-sc',
+    { destination: '/produkty/atmospherex-excite-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-excite-sc',
+    { destination: '/produkty/atmospherex-excite-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-reference-ethernet',
+    {
+      destination: '/produkty/atmospherex-reference-ethernet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/atmospherex-reference-ethernet',
+    {
+      destination: '/produkty/atmospherex-reference-ethernet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-reference-usb',
+    { destination: '/produkty/atmospherex-reference-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-reference-usb',
+    { destination: '/produkty/atmospherex-reference-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/atmospherex-usb',
+    { destination: '/produkty/atmospherex-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/atmospherex-usb',
+    { destination: '/produkty/atmospherex-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/basic-ground-cable',
+    { destination: '/produkty/basic-ground-cable/', permanent: true },
+  ],
+  [
+    '/synergistic-research/basic-ground-cable',
+    { destination: '/produkty/basic-ground-cable/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/bezpiecznik-master',
+    { destination: '/produkty/bezpiecznik-master/', permanent: true },
+  ],
+  [
+    '/synergistic-research/bezpiecznik-master',
+    { destination: '/produkty/bezpiecznik-master/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/bezpiecznik-orange',
+    { destination: '/produkty/bezpiecznik-orange/', permanent: true },
+  ],
+  [
+    '/synergistic-research/bezpiecznik-orange',
+    { destination: '/produkty/bezpiecznik-orange/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/bezpiecznik-pink',
+    { destination: '/produkty/bezpiecznik-pink/', permanent: true },
+  ],
+  [
+    '/synergistic-research/bezpiecznik-pink',
+    { destination: '/produkty/bezpiecznik-pink/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/bezpiecznik-red',
+    { destination: '/produkty/bezpiecznik-red/', permanent: true },
+  ],
+  [
+    '/synergistic-research/bezpiecznik-red',
+    { destination: '/produkty/bezpiecznik-red/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/black-box',
+    { destination: '/produkty/black-box/', permanent: true },
+  ],
+  [
+    '/synergistic-research/black-box',
+    { destination: '/produkty/black-box/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/black-uef-ac',
+    { destination: '/produkty/black-uef-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/black-uef-ac',
+    { destination: '/produkty/black-uef-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/blue-uef-ac',
+    { destination: '/produkty/blue-uef-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/blue-uef-ac',
+    { destination: '/produkty/blue-uef-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/carbon-discs',
+    { destination: '/produkty/carbon-discs/', permanent: true },
+  ],
+  [
+    '/synergistic-research/carbon-discs',
+    { destination: '/produkty/carbon-discs/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/core-2-0-ethernet',
+    { destination: '/produkty/core-2-0-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/core-2-0-ethernet',
+    { destination: '/produkty/core-2-0-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/core-2-0-phono',
+    { destination: '/produkty/core-2-0-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/core-2-0-phono',
+    { destination: '/produkty/core-2-0-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/core-2-0-usb',
+    { destination: '/produkty/core-2-0-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/core-2-0-usb',
+    { destination: '/produkty/core-2-0-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/core-uef-ic',
+    { destination: '/produkty/core-uef-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/core-uef-ic',
+    { destination: '/produkty/core-uef-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/core-uef-sc',
+    { destination: '/produkty/core-uef-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/core-uef-sc',
+    { destination: '/produkty/core-uef-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/dc-sx',
+    { destination: '/produkty/dc-sx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/dc-sx',
+    { destination: '/produkty/dc-sx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/ect',
+    { destination: '/produkty/ect/', permanent: true },
+  ],
+  [
+    '/synergistic-research/ect',
+    { destination: '/produkty/ect/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/element-cts-cyfrowy',
+    { destination: '/produkty/element-cts-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/element-cts-cyfrowy',
+    { destination: '/produkty/element-cts-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/equalizer-czestotliwosciowy-feq',
+    {
+      destination: '/produkty/equalizer-czestotliwosciowy-feq/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/equalizer-czestotliwosciowy-feq',
+    {
+      destination: '/produkty/equalizer-czestotliwosciowy-feq/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/equalizer-czestotliwosciowy-feq-carbon',
+    {
+      destination: '/produkty/equalizer-czestotliwosciowy-feq-carbon/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/equalizer-czestotliwosciowy-feq-carbon',
+    {
+      destination: '/produkty/equalizer-czestotliwosciowy-feq-carbon/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/feq-x4',
+    { destination: '/produkty/feq-x4/', permanent: true },
+  ],
+  [
+    '/synergistic-research/feq-x4',
+    { destination: '/produkty/feq-x4/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-ac',
+    { destination: '/produkty/foundation-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-ac',
+    { destination: '/produkty/foundation-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-digital',
+    { destination: '/produkty/foundation-digital/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-digital',
+    { destination: '/produkty/foundation-digital/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-ethernet',
+    { destination: '/produkty/foundation-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-ethernet',
+    { destination: '/produkty/foundation-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-ground-cable',
+    { destination: '/produkty/foundation-ground-cable/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-ground-cable',
+    { destination: '/produkty/foundation-ground-cable/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-ic',
+    { destination: '/produkty/foundation-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-ic',
+    { destination: '/produkty/foundation-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-phono',
+    { destination: '/produkty/foundation-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-phono',
+    { destination: '/produkty/foundation-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sc',
+    { destination: '/produkty/foundation-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sc',
+    { destination: '/produkty/foundation-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-ac',
+    { destination: '/produkty/foundation-sx-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-ac',
+    { destination: '/produkty/foundation-sx-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-digital-ic',
+    { destination: '/produkty/foundation-sx-digital-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-digital-ic',
+    { destination: '/produkty/foundation-sx-digital-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-ethernet',
+    { destination: '/produkty/foundation-sx-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-ethernet',
+    { destination: '/produkty/foundation-sx-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-ic',
+    { destination: '/produkty/foundation-sx-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-ic',
+    { destination: '/produkty/foundation-sx-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-phono',
+    { destination: '/produkty/foundation-sx-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-phono',
+    { destination: '/produkty/foundation-sx-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-sc',
+    { destination: '/produkty/foundation-sx-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-sc',
+    { destination: '/produkty/foundation-sx-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-usb',
+    { destination: '/produkty/foundation-sx-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-usb',
+    { destination: '/produkty/foundation-sx-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-sx-xl-sc',
+    { destination: '/produkty/foundation-sx-xl-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-sx-xl-sc',
+    { destination: '/produkty/foundation-sx-xl-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-usb',
+    { destination: '/produkty/foundation-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-usb',
+    { destination: '/produkty/foundation-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-xl-ac',
+    { destination: '/produkty/foundation-xl-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-xl-ac',
+    { destination: '/produkty/foundation-xl-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-xl-digital-ic',
+    { destination: '/produkty/foundation-xl-digital-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-xl-digital-ic',
+    { destination: '/produkty/foundation-xl-digital-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-xl-ethernet',
+    { destination: '/produkty/foundation-xl-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-xl-ethernet',
+    { destination: '/produkty/foundation-xl-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-xl-ic',
+    { destination: '/produkty/foundation-xl-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-xl-ic',
+    { destination: '/produkty/foundation-xl-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-xl-phono',
+    { destination: '/produkty/foundation-xl-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-xl-phono',
+    { destination: '/produkty/foundation-xl-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-xl-subwoofer',
+    { destination: '/produkty/foundation-xl-subwoofer/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-xl-subwoofer',
+    { destination: '/produkty/foundation-xl-subwoofer/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/foundation-xl-usb',
+    { destination: '/produkty/foundation-xl-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/foundation-xl-usb',
+    { destination: '/produkty/foundation-xl-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/fuse-black',
+    { destination: '/produkty/fuse-black/', permanent: true },
+  ],
+  [
+    '/synergistic-research/fuse-black',
+    { destination: '/produkty/fuse-black/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/fuse-blue',
+    { destination: '/produkty/fuse-blue/', permanent: true },
+  ],
+  [
+    '/synergistic-research/fuse-blue',
+    { destination: '/produkty/fuse-blue/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-discovery-ac',
+    { destination: '/produkty/galileo-discovery-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-discovery-ac',
+    { destination: '/produkty/galileo-discovery-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-discovery-digital-ic',
+    { destination: '/produkty/galileo-discovery-digital-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-discovery-digital-ic',
+    { destination: '/produkty/galileo-discovery-digital-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-discovery-ethernet',
+    { destination: '/produkty/galileo-discovery-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-discovery-ethernet',
+    { destination: '/produkty/galileo-discovery-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-discovery-ic',
+    { destination: '/produkty/galileo-discovery-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-discovery-ic',
+    { destination: '/produkty/galileo-discovery-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-discovery-phono',
+    { destination: '/produkty/galileo-discovery-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-discovery-phono',
+    { destination: '/produkty/galileo-discovery-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-discovery-sc',
+    { destination: '/produkty/galileo-discovery-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-discovery-sc',
+    { destination: '/produkty/galileo-discovery-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-discovery-usb',
+    { destination: '/produkty/galileo-discovery-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-discovery-usb',
+    { destination: '/produkty/galileo-discovery-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-ground-block',
+    { destination: '/produkty/galileo-ground-block/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-ground-block',
+    { destination: '/produkty/galileo-ground-block/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-powercell-sx',
+    { destination: '/produkty/galileo-powercell-sx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-powercell-sx',
+    { destination: '/produkty/galileo-powercell-sx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-sx-ac',
+    { destination: '/produkty/galileo-sx-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-sx-ac',
+    { destination: '/produkty/galileo-sx-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-sx-cyfrowy',
+    { destination: '/produkty/galileo-sx-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-sx-cyfrowy',
+    { destination: '/produkty/galileo-sx-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-sx-ethernet',
+    { destination: '/produkty/galileo-sx-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-sx-ethernet',
+    { destination: '/produkty/galileo-sx-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-sx-ic',
+    { destination: '/produkty/galileo-sx-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-sx-ic',
+    { destination: '/produkty/galileo-sx-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-sx-phono',
+    { destination: '/produkty/galileo-sx-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-sx-phono',
+    { destination: '/produkty/galileo-sx-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-sx-sc',
+    { destination: '/produkty/galileo-sx-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-sx-sc',
+    { destination: '/produkty/galileo-sx-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-sx-usb',
+    { destination: '/produkty/galileo-sx-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-sx-usb',
+    { destination: '/produkty/galileo-sx-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-uef-ac',
+    { destination: '/produkty/galileo-uef-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-uef-ac',
+    { destination: '/produkty/galileo-uef-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-uef-cyfrowy',
+    { destination: '/produkty/galileo-uef-cyfrowy/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-uef-cyfrowy',
+    { destination: '/produkty/galileo-uef-cyfrowy/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-uef-ethernet',
+    { destination: '/produkty/galileo-uef-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-uef-ethernet',
+    { destination: '/produkty/galileo-uef-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-uef-ic',
+    { destination: '/produkty/galileo-uef-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-uef-ic',
+    { destination: '/produkty/galileo-uef-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-uef-phono',
+    { destination: '/produkty/galileo-uef-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-uef-phono',
+    { destination: '/produkty/galileo-uef-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-uef-sc',
+    { destination: '/produkty/galileo-uef-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-uef-sc',
+    { destination: '/produkty/galileo-uef-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/galileo-uef-usb',
+    { destination: '/produkty/galileo-uef-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/galileo-uef-usb',
+    { destination: '/produkty/galileo-uef-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/gct',
+    { destination: '/produkty/gct/', permanent: true },
+  ],
+  [
+    '/synergistic-research/gct',
+    { destination: '/produkty/gct/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/grounding-block',
+    { destination: '/produkty/grounding-block/', permanent: true },
+  ],
+  [
+    '/synergistic-research/grounding-block',
+    { destination: '/produkty/grounding-block/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/hd-ground-cable',
+    { destination: '/produkty/hd-ground-cable/', permanent: true },
+  ],
+  [
+    '/synergistic-research/hd-ground-cable',
+    { destination: '/produkty/hd-ground-cable/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/hdsx-ground-cable',
+    { destination: '/produkty/hdsx-ground-cable/', permanent: true },
+  ],
+  [
+    '/synergistic-research/hdsx-ground-cable',
+    { destination: '/produkty/hdsx-ground-cable/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/hft',
+    { destination: '/produkty/hft/', permanent: true },
+  ],
+  [
+    '/synergistic-research/hft',
+    { destination: '/produkty/hft/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/ht-carbon',
+    { destination: '/produkty/ht-carbon/', permanent: true },
+  ],
+  [
+    '/synergistic-research/ht-carbon',
+    { destination: '/produkty/ht-carbon/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/krazki-akustyczne',
+    { destination: '/produkty/krazki-akustyczne/', permanent: true },
+  ],
+  [
+    '/synergistic-research/krazki-akustyczne',
+    { destination: '/produkty/krazki-akustyczne/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/Linear-Power-Supply-UEF',
+    { destination: '/produkty/linear-power-supply-uef/', permanent: true },
+  ],
+  [
+    '/synergistic-research/Linear-Power-Supply-UEF',
+    { destination: '/produkty/linear-power-supply-uef/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/mata-uef1',
+    { destination: '/produkty/mata-uef1/', permanent: true },
+  ],
+  [
+    '/synergistic-research/mata-uef1',
+    { destination: '/produkty/mata-uef1/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/mig',
+    { destination: '/produkty/mig/', permanent: true },
+  ],
+  [
+    '/synergistic-research/mig',
+    { destination: '/produkty/mig/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/mig-sx',
+    { destination: '/produkty/mig-sx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/mig-sx',
+    { destination: '/produkty/mig-sx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/mig1',
+    { destination: '/produkty/mig1/', permanent: true },
+  ],
+  [
+    '/synergistic-research/mig1',
+    { destination: '/produkty/mig1/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/mig20',
+    { destination: '/produkty/mig20/', permanent: true },
+  ],
+  [
+    '/synergistic-research/mig20',
+    { destination: '/produkty/mig20/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/panele-akustyczne',
+    { destination: '/produkty/panele-akustyczne/', permanent: true },
+  ],
+  [
+    '/synergistic-research/panele-akustyczne',
+    { destination: '/produkty/panele-akustyczne/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-12-sx',
+    { destination: '/produkty/powercell-12-sx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-12-sx',
+    { destination: '/produkty/powercell-12-sx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-12-uef',
+    { destination: '/produkty/powercell-12-uef/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-12-uef',
+    { destination: '/produkty/powercell-12-uef/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-12-uef-s',
+    { destination: '/produkty/powercell-12-uef-s/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-12-uef-s',
+    { destination: '/produkty/powercell-12-uef-s/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-12-uef-se',
+    { destination: '/produkty/powercell-12-uef-se/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-12-uef-se',
+    { destination: '/produkty/powercell-12-uef-se/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-14',
+    { destination: '/produkty/powercell-14/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-14',
+    { destination: '/produkty/powercell-14/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-8-sx',
+    { destination: '/produkty/powercell-8-sx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-8-sx',
+    { destination: '/produkty/powercell-8-sx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-8-uef',
+    { destination: '/produkty/powercell-8-uef/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-8-uef',
+    { destination: '/produkty/powercell-8-uef/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-8-uef-se',
+    { destination: '/produkty/powercell-8-uef-se/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-8-uef-se',
+    { destination: '/produkty/powercell-8-uef-se/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-one',
+    { destination: '/produkty/powercell-one/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-one',
+    { destination: '/produkty/powercell-one/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercell-two',
+    { destination: '/produkty/powercell-two/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercell-two',
+    { destination: '/produkty/powercell-two/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/powercellsx',
+    { destination: '/produkty/powercellsx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/powercellsx',
+    { destination: '/produkty/powercellsx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/przetwornik-pht',
+    { destination: '/produkty/przetwornik-pht/', permanent: true },
+  ],
+  [
+    '/synergistic-research/przetwornik-pht',
+    { destination: '/produkty/przetwornik-pht/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/purple',
+    { destination: '/produkty/purple/', permanent: true },
+  ],
+  [
+    '/synergistic-research/purple',
+    { destination: '/produkty/purple/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/red-uef-ac',
+    { destination: '/produkty/red-uef-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/red-uef-ac',
+    { destination: '/produkty/red-uef-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/sr30-ac',
+    { destination: '/produkty/sr30-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/sr30-ac',
+    { destination: '/produkty/sr30-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/sr30-digital-ic',
+    { destination: '/produkty/sr30-digital-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/sr30-digital-ic',
+    { destination: '/produkty/sr30-digital-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/sr30-ic',
+    { destination: '/produkty/sr30-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/sr30-ic',
+    { destination: '/produkty/sr30-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/sr30-sc',
+    { destination: '/produkty/sr30-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/sr30-sc',
+    { destination: '/produkty/sr30-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/SRX-ac',
+    { destination: '/produkty/srx-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/SRX-ac',
+    { destination: '/produkty/srx-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-digital',
+    { destination: '/produkty/srx-digital/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-digital',
+    { destination: '/produkty/srx-digital/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-ethernet',
+    { destination: '/produkty/srx-ethernet/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-ethernet',
+    { destination: '/produkty/srx-ethernet/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-ic',
+    { destination: '/produkty/srx-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-ic',
+    { destination: '/produkty/srx-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-phono',
+    { destination: '/produkty/srx-phono/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-phono',
+    { destination: '/produkty/srx-phono/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-powercell',
+    { destination: '/produkty/srx-powercell/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-powercell',
+    { destination: '/produkty/srx-powercell/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-powercell-14',
+    { destination: '/produkty/srx-powercell-14/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-powercell-14',
+    { destination: '/produkty/srx-powercell-14/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-sc',
+    { destination: '/produkty/srx-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-sc',
+    { destination: '/produkty/srx-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-slim-line-sc',
+    { destination: '/produkty/srx-slim-line-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-slim-line-sc',
+    { destination: '/produkty/srx-slim-line-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-usb',
+    { destination: '/produkty/srx-usb/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-usb',
+    { destination: '/produkty/srx-usb/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-xl-ac',
+    { destination: '/produkty/srx-xl-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-xl-ac',
+    { destination: '/produkty/srx-xl-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-xl-ic',
+    { destination: '/produkty/srx-xl-ic/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-xl-ic',
+    { destination: '/produkty/srx-xl-ic/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/srx-xl-sc',
+    { destination: '/produkty/srx-xl-sc/', permanent: true },
+  ],
+  [
+    '/synergistic-research/srx-xl-sc',
+    { destination: '/produkty/srx-xl-sc/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/tranquility-base',
+    { destination: '/produkty/tranquility-base/', permanent: true },
+  ],
+  [
+    '/synergistic-research/tranquility-base',
+    { destination: '/produkty/tranquility-base/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/tranquility-carbon',
+    { destination: '/produkty/tranquility-carbon/', permanent: true },
+  ],
+  [
+    '/synergistic-research/tranquility-carbon',
+    { destination: '/produkty/tranquility-carbon/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/tranquility-pod',
+    { destination: '/produkty/tranquility-pod/', permanent: true },
+  ],
+  [
+    '/synergistic-research/tranquility-pod',
+    { destination: '/produkty/tranquility-pod/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/tranquility-pod-carbon',
+    { destination: '/produkty/tranquility-pod-carbon/', permanent: true },
+  ],
+  [
+    '/synergistic-research/tranquility-pod-carbon',
+    { destination: '/produkty/tranquility-pod-carbon/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/tranquility-uef-linear-power-supply',
+    {
+      destination: '/produkty/tranquility-uef-linear-power-supply/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/tranquility-uef-linear-power-supply',
+    {
+      destination: '/produkty/tranquility-uef-linear-power-supply/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/transporter',
+    { destination: '/produkty/transporter/', permanent: true },
+  ],
+  [
+    '/synergistic-research/transporter',
+    { destination: '/produkty/transporter/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/tricon-analog-20th-anniversary-phono',
+    {
+      destination: '/produkty/tricon-analog-20th-anniversary-phono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research/tricon-analog-20th-anniversary-phono',
+    {
+      destination: '/produkty/tricon-analog-20th-anniversary-phono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research/uef-ac',
+    { destination: '/produkty/uef-ac/', permanent: true },
+  ],
+  [
+    '/synergistic-research/uef-ac',
+    { destination: '/produkty/uef-ac/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/uef-ethernet-switch',
+    { destination: '/produkty/uef-ethernet-switch/', permanent: true },
+  ],
+  [
+    '/synergistic-research/uef-ethernet-switch',
+    { destination: '/produkty/uef-ethernet-switch/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/uef-network-router',
+    { destination: '/produkty/uef-network-router/', permanent: true },
+  ],
+  [
+    '/synergistic-research/uef-network-router',
+    { destination: '/produkty/uef-network-router/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/uef-performance-elevators',
+    { destination: '/produkty/uef-performance-elevators/', permanent: true },
+  ],
+  [
+    '/synergistic-research/uef-performance-elevators',
+    { destination: '/produkty/uef-performance-elevators/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/uef-performance-enhancers',
+    { destination: '/produkty/uef-performance-enhancers/', permanent: true },
+  ],
+  [
+    '/synergistic-research/uef-performance-enhancers',
+    { destination: '/produkty/uef-performance-enhancers/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/uef-record-weight',
+    { destination: '/produkty/uef-record-weight/', permanent: true },
+  ],
+  [
+    '/synergistic-research/uef-record-weight',
+    { destination: '/produkty/uef-record-weight/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/vibratron-sx',
+    { destination: '/produkty/vibratron-sx/', permanent: true },
+  ],
+  [
+    '/synergistic-research/vibratron-sx',
+    { destination: '/produkty/vibratron-sx/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/voodoo',
+    { destination: '/produkty/voodoo/', permanent: true },
+  ],
+  [
+    '/synergistic-research/voodoo',
+    { destination: '/produkty/voodoo/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/xot',
+    { destination: '/produkty/xot/', permanent: true },
+  ],
+  [
+    '/synergistic-research/xot',
+    { destination: '/produkty/xot/', permanent: true },
+  ],
   ['/pl/usher/be-10', { destination: '/produkty/be-10/', permanent: true }],
   ['/usher/be-10', { destination: '/produkty/be-10/', permanent: true }],
   ['/pl/usher/be-20', { destination: '/produkty/be-20/', permanent: true }],
   ['/usher/be-20', { destination: '/produkty/be-20/', permanent: true }],
   ['/pl/usher/be-616', { destination: '/produkty/be-616/', permanent: true }],
   ['/usher/be-616', { destination: '/produkty/be-616/', permanent: true }],
-  ['/pl/usher/dancer-mini-one-diamond', { destination: '/produkty/dancer-mini-one-diamond/', permanent: true }],
-  ['/usher/dancer-mini-one-diamond', { destination: '/produkty/dancer-mini-one-diamond/', permanent: true }],
-  ['/pl/usher/dancer-mini-two-diamond', { destination: '/produkty/dancer-mini-two-diamond/', permanent: true }],
-  ['/usher/dancer-mini-two-diamond', { destination: '/produkty/dancer-mini-two-diamond/', permanent: true }],
-  ['/pl/usher/dancer-mini-x-diamond', { destination: '/produkty/dancer-mini-x-diamond/', permanent: true }],
-  ['/usher/dancer-mini-x-diamond', { destination: '/produkty/dancer-mini-x-diamond/', permanent: true }],
-  ['/pl/usher/grand-tower', { destination: '/produkty/grand-tower/', permanent: true }],
-  ['/usher/grand-tower', { destination: '/produkty/grand-tower/', permanent: true }],
-  ['/pl/usher/mini-x-stand', { destination: '/produkty/mini-x-stand/', permanent: true }],
-  ['/usher/mini-x-stand', { destination: '/produkty/mini-x-stand/', permanent: true }],
+  [
+    '/pl/usher/dancer-mini-one-diamond',
+    { destination: '/produkty/dancer-mini-one-diamond/', permanent: true },
+  ],
+  [
+    '/usher/dancer-mini-one-diamond',
+    { destination: '/produkty/dancer-mini-one-diamond/', permanent: true },
+  ],
+  [
+    '/pl/usher/dancer-mini-two-diamond',
+    { destination: '/produkty/dancer-mini-two-diamond/', permanent: true },
+  ],
+  [
+    '/usher/dancer-mini-two-diamond',
+    { destination: '/produkty/dancer-mini-two-diamond/', permanent: true },
+  ],
+  [
+    '/pl/usher/dancer-mini-x-diamond',
+    { destination: '/produkty/dancer-mini-x-diamond/', permanent: true },
+  ],
+  [
+    '/usher/dancer-mini-x-diamond',
+    { destination: '/produkty/dancer-mini-x-diamond/', permanent: true },
+  ],
+  [
+    '/pl/usher/grand-tower',
+    { destination: '/produkty/grand-tower/', permanent: true },
+  ],
+  [
+    '/usher/grand-tower',
+    { destination: '/produkty/grand-tower/', permanent: true },
+  ],
+  [
+    '/pl/usher/mini-x-stand',
+    { destination: '/produkty/mini-x-stand/', permanent: true },
+  ],
+  [
+    '/usher/mini-x-stand',
+    { destination: '/produkty/mini-x-stand/', permanent: true },
+  ],
   ['/pl/usher/ml-801', { destination: '/produkty/ml-801/', permanent: true }],
   ['/usher/ml-801', { destination: '/produkty/ml-801/', permanent: true }],
   ['/pl/usher/ml-802', { destination: '/produkty/ml-802/', permanent: true }],
@@ -1745,8 +6303,14 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/usher/s-525', { destination: '/produkty/s-525/', permanent: true }],
   ['/pl/usher/sd-500', { destination: '/produkty/sd-500/', permanent: true }],
   ['/usher/sd-500', { destination: '/produkty/sd-500/', permanent: true }],
-  ['/pl/usher/sd-501-502', { destination: '/produkty/sd-501-502/', permanent: true }],
-  ['/usher/sd-501-502', { destination: '/produkty/sd-501-502/', permanent: true }],
+  [
+    '/pl/usher/sd-501-502',
+    { destination: '/produkty/sd-501-502/', permanent: true },
+  ],
+  [
+    '/usher/sd-501-502',
+    { destination: '/produkty/sd-501-502/', permanent: true },
+  ],
   ['/pl/usher/sd-503', { destination: '/produkty/sd-503/', permanent: true }],
   ['/usher/sd-503', { destination: '/produkty/sd-503/', permanent: true }],
   ['/pl/usher/sw-210', { destination: '/produkty/sw-210/', permanent: true }],
@@ -1767,10 +6331,22 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/usher/v-604', { destination: '/produkty/v-604/', permanent: true }],
   ['/pl/vibrapod/cone', { destination: '/produkty/cone/', permanent: true }],
   ['/vibrapod/cone', { destination: '/produkty/cone/', permanent: true }],
-  ['/pl/vibrapod/isolator', { destination: '/produkty/isolator/', permanent: true }],
-  ['/vibrapod/isolator', { destination: '/produkty/isolator/', permanent: true }],
-  ['/pl/viv-laboratory/rigid-float', { destination: '/produkty/rigid-float/', permanent: true }],
-  ['/viv-laboratory/rigid-float', { destination: '/produkty/rigid-float/', permanent: true }],
+  [
+    '/pl/vibrapod/isolator',
+    { destination: '/produkty/isolator/', permanent: true },
+  ],
+  [
+    '/vibrapod/isolator',
+    { destination: '/produkty/isolator/', permanent: true },
+  ],
+  [
+    '/pl/viv-laboratory/rigid-float',
+    { destination: '/produkty/rigid-float/', permanent: true },
+  ],
+  [
+    '/viv-laboratory/rigid-float',
+    { destination: '/produkty/rigid-float/', permanent: true },
+  ],
   ['/pl/weiss/dac204', { destination: '/produkty/dac204/', permanent: true }],
   ['/weiss/dac204', { destination: '/produkty/dac204/', permanent: true }],
   ['/pl/weiss/dac205', { destination: '/produkty/dac205/', permanent: true }],
@@ -1779,1072 +6355,8287 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/weiss/dac50x', { destination: '/produkty/dac50x/', permanent: true }],
   ['/pl/weiss/helios', { destination: '/produkty/helios/', permanent: true }],
   ['/weiss/helios', { destination: '/produkty/helios/', permanent: true }],
-  ['/pl/wilson-audio/acoustic-diode', { destination: '/produkty/acoustic-diode/', permanent: true }],
-  ['/wilson-audio/acoustic-diode', { destination: '/produkty/acoustic-diode/', permanent: true }],
-  ['/pl/wilson-audio/alexandria-xlf', { destination: '/produkty/alexandria-xlf/', permanent: true }],
-  ['/wilson-audio/alexandria-xlf', { destination: '/produkty/alexandria-xlf/', permanent: true }],
-  ['/pl/wilson-audio/alexia', { destination: '/produkty/alexia/', permanent: true }],
-  ['/wilson-audio/alexia', { destination: '/produkty/alexia/', permanent: true }],
-  ['/pl/wilson-audio/alexia-v', { destination: '/produkty/alexia-v/', permanent: true }],
-  ['/wilson-audio/alexia-v', { destination: '/produkty/alexia-v/', permanent: true }],
-  ['/pl/wilson-audio/alexx', { destination: '/produkty/alexx/', permanent: true }],
+  [
+    '/pl/wilson-audio/acoustic-diode',
+    { destination: '/produkty/acoustic-diode/', permanent: true },
+  ],
+  [
+    '/wilson-audio/acoustic-diode',
+    { destination: '/produkty/acoustic-diode/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/alexandria-xlf',
+    { destination: '/produkty/alexandria-xlf/', permanent: true },
+  ],
+  [
+    '/wilson-audio/alexandria-xlf',
+    { destination: '/produkty/alexandria-xlf/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/alexia',
+    { destination: '/produkty/alexia/', permanent: true },
+  ],
+  [
+    '/wilson-audio/alexia',
+    { destination: '/produkty/alexia/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/alexia-v',
+    { destination: '/produkty/alexia-v/', permanent: true },
+  ],
+  [
+    '/wilson-audio/alexia-v',
+    { destination: '/produkty/alexia-v/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/alexx',
+    { destination: '/produkty/alexx/', permanent: true },
+  ],
   ['/wilson-audio/alexx', { destination: '/produkty/alexx/', permanent: true }],
-  ['/pl/wilson-audio/alexx-v', { destination: '/produkty/alexx-v/', permanent: true }],
-  ['/wilson-audio/alexx-v', { destination: '/produkty/alexx-v/', permanent: true }],
-  ['/pl/wilson-audio/alida', { destination: '/produkty/alida/', permanent: true }],
+  [
+    '/pl/wilson-audio/alexx-v',
+    { destination: '/produkty/alexx-v/', permanent: true },
+  ],
+  [
+    '/wilson-audio/alexx-v',
+    { destination: '/produkty/alexx-v/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/alida',
+    { destination: '/produkty/alida/', permanent: true },
+  ],
   ['/wilson-audio/alida', { destination: '/produkty/alida/', permanent: true }],
-  ['/pl/wilson-audio/chronosonic-xvx', { destination: '/produkty/chronosonic-xvx/', permanent: true }],
-  ['/wilson-audio/chronosonic-xvx', { destination: '/produkty/chronosonic-xvx/', permanent: true }],
-  ['/pl/wilson-audio/duette', { destination: '/produkty/duette/', permanent: true }],
-  ['/wilson-audio/duette', { destination: '/produkty/duette/', permanent: true }],
-  ['/pl/wilson-audio/loke', { destination: '/produkty/loke/', permanent: true }],
+  [
+    '/pl/wilson-audio/chronosonic-xvx',
+    { destination: '/produkty/chronosonic-xvx/', permanent: true },
+  ],
+  [
+    '/wilson-audio/chronosonic-xvx',
+    { destination: '/produkty/chronosonic-xvx/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/duette',
+    { destination: '/produkty/duette/', permanent: true },
+  ],
+  [
+    '/wilson-audio/duette',
+    { destination: '/produkty/duette/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/loke',
+    { destination: '/produkty/loke/', permanent: true },
+  ],
   ['/wilson-audio/loke', { destination: '/produkty/loke/', permanent: true }],
-  ['/pl/wilson-audio/mezzo', { destination: '/produkty/mezzo/', permanent: true }],
+  [
+    '/pl/wilson-audio/mezzo',
+    { destination: '/produkty/mezzo/', permanent: true },
+  ],
   ['/wilson-audio/mezzo', { destination: '/produkty/mezzo/', permanent: true }],
-  ['/pl/wilson-audio/pedestal', { destination: '/produkty/pedestal/', permanent: true }],
-  ['/wilson-audio/pedestal', { destination: '/produkty/pedestal/', permanent: true }],
-  ['/pl/wilson-audio/polaris', { destination: '/produkty/polaris/', permanent: true }],
-  ['/wilson-audio/polaris', { destination: '/produkty/polaris/', permanent: true }],
-  ['/pl/wilson-audio/sabrina', { destination: '/produkty/sabrina/', permanent: true }],
-  ['/wilson-audio/sabrina', { destination: '/produkty/sabrina/', permanent: true }],
-  ['/pl/wilson-audio/sabrina-v', { destination: '/produkty/sabrina-v/', permanent: true }],
-  ['/wilson-audio/sabrina-v', { destination: '/produkty/sabrina-v/', permanent: true }],
-  ['/pl/wilson-audio/sabrina-x', { destination: '/produkty/sabrina-x/', permanent: true }],
-  ['/wilson-audio/sabrina-x', { destination: '/produkty/sabrina-x/', permanent: true }],
-  ['/pl/wilson-audio/sasha', { destination: '/produkty/sasha/', permanent: true }],
+  [
+    '/pl/wilson-audio/pedestal',
+    { destination: '/produkty/pedestal/', permanent: true },
+  ],
+  [
+    '/wilson-audio/pedestal',
+    { destination: '/produkty/pedestal/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/polaris',
+    { destination: '/produkty/polaris/', permanent: true },
+  ],
+  [
+    '/wilson-audio/polaris',
+    { destination: '/produkty/polaris/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/sabrina',
+    { destination: '/produkty/sabrina/', permanent: true },
+  ],
+  [
+    '/wilson-audio/sabrina',
+    { destination: '/produkty/sabrina/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/sabrina-v',
+    { destination: '/produkty/sabrina-v/', permanent: true },
+  ],
+  [
+    '/wilson-audio/sabrina-v',
+    { destination: '/produkty/sabrina-v/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/sabrina-x',
+    { destination: '/produkty/sabrina-x/', permanent: true },
+  ],
+  [
+    '/wilson-audio/sabrina-x',
+    { destination: '/produkty/sabrina-x/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/sasha',
+    { destination: '/produkty/sasha/', permanent: true },
+  ],
   ['/wilson-audio/sasha', { destination: '/produkty/sasha/', permanent: true }],
-  ['/pl/wilson-audio/sasha-daw', { destination: '/produkty/sasha-daw/', permanent: true }],
-  ['/wilson-audio/sasha-daw', { destination: '/produkty/sasha-daw/', permanent: true }],
-  ['/pl/wilson-audio/sasha-v', { destination: '/produkty/sasha-v/', permanent: true }],
-  ['/wilson-audio/sasha-v', { destination: '/produkty/sasha-v/', permanent: true }],
-  ['/pl/wilson-audio/submerge', { destination: '/produkty/submerge/', permanent: true }],
-  ['/wilson-audio/submerge', { destination: '/produkty/submerge/', permanent: true }],
-  ['/pl/wilson-audio/subsonic', { destination: '/produkty/subsonic/', permanent: true }],
-  ['/wilson-audio/subsonic', { destination: '/produkty/subsonic/', permanent: true }],
-  ['/pl/wilson-audio/the-wattpuppy', { destination: '/produkty/the-wattpuppy/', permanent: true }],
-  ['/wilson-audio/the-wattpuppy', { destination: '/produkty/the-wattpuppy/', permanent: true }],
-  ['/pl/wilson-audio/thors-hammer', { destination: '/produkty/thors-hammer/', permanent: true }],
-  ['/wilson-audio/thors-hammer', { destination: '/produkty/thors-hammer/', permanent: true }],
-  ['/pl/wilson-audio/tunetot', { destination: '/produkty/tunetot/', permanent: true }],
-  ['/wilson-audio/tunetot', { destination: '/produkty/tunetot/', permanent: true }],
-  ['/pl/wilson-audio/wasae', { destination: '/produkty/wasae/', permanent: true }],
+  [
+    '/pl/wilson-audio/sasha-daw',
+    { destination: '/produkty/sasha-daw/', permanent: true },
+  ],
+  [
+    '/wilson-audio/sasha-daw',
+    { destination: '/produkty/sasha-daw/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/sasha-v',
+    { destination: '/produkty/sasha-v/', permanent: true },
+  ],
+  [
+    '/wilson-audio/sasha-v',
+    { destination: '/produkty/sasha-v/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/submerge',
+    { destination: '/produkty/submerge/', permanent: true },
+  ],
+  [
+    '/wilson-audio/submerge',
+    { destination: '/produkty/submerge/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/subsonic',
+    { destination: '/produkty/subsonic/', permanent: true },
+  ],
+  [
+    '/wilson-audio/subsonic',
+    { destination: '/produkty/subsonic/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/the-wattpuppy',
+    { destination: '/produkty/the-wattpuppy/', permanent: true },
+  ],
+  [
+    '/wilson-audio/the-wattpuppy',
+    { destination: '/produkty/the-wattpuppy/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/thors-hammer',
+    { destination: '/produkty/thors-hammer/', permanent: true },
+  ],
+  [
+    '/wilson-audio/thors-hammer',
+    { destination: '/produkty/thors-hammer/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/tunetot',
+    { destination: '/produkty/tunetot/', permanent: true },
+  ],
+  [
+    '/wilson-audio/tunetot',
+    { destination: '/produkty/tunetot/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/wasae',
+    { destination: '/produkty/wasae/', permanent: true },
+  ],
   ['/wilson-audio/wasae', { destination: '/produkty/wasae/', permanent: true }],
-  ['/pl/wilson-audio/watch-center', { destination: '/produkty/watch-center/', permanent: true }],
-  ['/wilson-audio/watch-center', { destination: '/produkty/watch-center/', permanent: true }],
-  ['/pl/wilson-audio/watch-dog', { destination: '/produkty/watch-dog/', permanent: true }],
-  ['/wilson-audio/watch-dog', { destination: '/produkty/watch-dog/', permanent: true }],
-  ['/pl/wilson-audio/yvette', { destination: '/produkty/yvette/', permanent: true }],
-  ['/wilson-audio/yvette', { destination: '/produkty/yvette/', permanent: true }],
-  ['/pl/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/', { destination: '/recenzje/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/', permanent: true }],
-  ['/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/', { destination: '/recenzje/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/', permanent: true }],
-  ['/pl/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/', { destination: '/recenzje/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/', permanent: true }],
-  ['/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/', { destination: '/recenzje/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/', permanent: true }],
-  ['/pl/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/', { destination: '/recenzje/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/', permanent: true }],
-  ['/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/', { destination: '/recenzje/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/', permanent: true }],
-  ['/pl/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/', { destination: '/recenzje/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/', permanent: true }],
-  ['/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/', { destination: '/recenzje/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/', permanent: true }],
-  ['/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/', permanent: true }],
-  ['/pl/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/', { destination: '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/', permanent: true }],
-  ['/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/', { destination: '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/', permanent: true }],
-  ['/pl/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/', { destination: '/recenzje/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/', permanent: true }],
-  ['/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/', { destination: '/recenzje/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/', permanent: true }],
-  ['/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/', permanent: true }],
-  ['/pl/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/', { destination: '/recenzje/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/', permanent: true }],
-  ['/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/', { destination: '/recenzje/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/', { destination: '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/', permanent: true }],
-  ['/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/', { destination: '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/', permanent: true }],
-  ['/pl/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/', { destination: '/recenzje/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/', permanent: true }],
-  ['/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/', { destination: '/recenzje/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/', permanent: true }],
-  ['/pl/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/', { destination: '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/', permanent: true }],
-  ['/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/', { destination: '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/', permanent: true }],
-  ['/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/', permanent: true }],
-  ['/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/', permanent: true }],
-  ['/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/', permanent: true }],
-  ['/pl/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/', { destination: '/recenzje/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/', permanent: true }],
-  ['/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/', { destination: '/recenzje/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/', permanent: true }],
-  ['/pl/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/', { destination: '/recenzje/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/', permanent: true }],
-  ['/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/', { destination: '/recenzje/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/', permanent: true }],
-  ['/pl/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/', { destination: '/recenzje/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/', permanent: true }],
-  ['/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/', { destination: '/recenzje/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/', permanent: true }],
-  ['/pl/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/', { destination: '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/', permanent: true }],
-  ['/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/', { destination: '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/', permanent: true }],
-  ['/pl/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/', { destination: '/recenzje/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/', permanent: true }],
-  ['/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/', { destination: '/recenzje/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/', permanent: true }],
-  ['/pl/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/', { destination: '/recenzje/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/', permanent: true }],
-  ['/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/', { destination: '/recenzje/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/', permanent: true }],
-  ['/pl/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/', { destination: '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/', permanent: true }],
-  ['/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/', { destination: '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/', permanent: true }],
-  ['/pl/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/', { destination: '/recenzje/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/', permanent: true }],
-  ['/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/', { destination: '/recenzje/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/', permanent: true }],
-  ['/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/', permanent: true }],
-  ['/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/', { destination: '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/', permanent: true }],
-  ['/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/', { destination: '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/', permanent: true }],
-  ['/pl/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/', { destination: '/recenzje/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/', permanent: true }],
-  ['/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/', { destination: '/recenzje/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/', permanent: true }],
-  ['/pl/test-systemu-muzycznego-dcs-varese-w-stereophile/', { destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-stereophile/', permanent: true }],
-  ['/test-systemu-muzycznego-dcs-varese-w-stereophile/', { destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-stereophile/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/', { destination: '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/', permanent: true }],
-  ['/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/', { destination: '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/', permanent: true }],
-  ['/pl/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/', { destination: '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/', permanent: true }],
-  ['/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/', { destination: '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/', permanent: true }],
-  ['/pl/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/', { destination: '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/', permanent: true }],
-  ['/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/', { destination: '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/', permanent: true }],
-  ['/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/', permanent: true }],
-  ['/pl/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/', permanent: true }],
-  ['/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/', permanent: true }],
-  ['/pl/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/', { destination: '/recenzje/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/', permanent: true }],
-  ['/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/', { destination: '/recenzje/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/', { destination: '/recenzje/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/', permanent: true }],
-  ['/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/', { destination: '/recenzje/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/', permanent: true }],
-  ['/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/', { destination: '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/', permanent: true }],
-  ['/pl/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/', { destination: '/recenzje/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/', permanent: true }],
-  ['/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/', { destination: '/recenzje/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/', permanent: true }],
-  ['/pl/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/', { destination: '/recenzje/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/', permanent: true }],
-  ['/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/', { destination: '/recenzje/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/', permanent: true }],
-  ['/pl/test-systemu-muzycznego-dcs-varese-w-hifi-plus/', { destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/', permanent: true }],
-  ['/test-systemu-muzycznego-dcs-varese-w-hifi-plus/', { destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/', permanent: true }],
-  ['/pl/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/', { destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/', permanent: true }],
-  ['/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/', { destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-aktywnych-zestawow-glosnikowych-grimm-audio/', { destination: '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/', permanent: true }],
-  ['/test-aktywnych-zestawow-glosnikowych-grimm-audio/', { destination: '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/', { destination: '/recenzje/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/', { destination: '/recenzje/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/', permanent: true }],
-  ['/pl/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/', { destination: '/recenzje/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/', permanent: true }],
-  ['/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/', { destination: '/recenzje/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/', permanent: true }],
-  ['/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/', { destination: '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/', permanent: true }],
-  ['/pl/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/', { destination: '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/', permanent: true }],
-  ['/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/', { destination: '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/', permanent: true }],
-  ['/pl/test-zegara-referencyjneo-mutec-ref10-se120the-ear/', { destination: '/recenzje/test-zegara-referencyjneo-mutec-ref10-se120the-ear/', permanent: true }],
-  ['/test-zegara-referencyjneo-mutec-ref10-se120the-ear/', { destination: '/recenzje/test-zegara-referencyjneo-mutec-ref10-se120the-ear/', permanent: true }],
-  ['/pl/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/', { destination: '/recenzje/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/', permanent: true }],
-  ['/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/', { destination: '/recenzje/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/', permanent: true }],
-  ['/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/', permanent: true }],
-  ['/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/', permanent: true }],
-  ['/pl/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/', { destination: '/recenzje/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/', permanent: true }],
-  ['/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/', { destination: '/recenzje/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/', permanent: true }],
-  ['/pl/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/', { destination: '/recenzje/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/', permanent: true }],
-  ['/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/', { destination: '/recenzje/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/', permanent: true }],
-  ['/pl/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/', { destination: '/recenzje/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/', permanent: true }],
-  ['/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/', { destination: '/recenzje/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/', { destination: '/recenzje/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/', { destination: '/recenzje/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/', permanent: true }],
-  ['/pl/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/', { destination: '/recenzje/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/', permanent: true }],
-  ['/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/', { destination: '/recenzje/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/', permanent: true }],
-  ['/pl/test-przewodow-shunyata-research-theta-w-the-absolute-sound/', { destination: '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/', permanent: true }],
-  ['/test-przewodow-shunyata-research-theta-w-the-absolute-sound/', { destination: '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/', { destination: '/recenzje/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/', permanent: true }],
-  ['/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/', { destination: '/recenzje/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/', permanent: true }],
-  ['/pl/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/', { destination: '/recenzje/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/', permanent: true }],
-  ['/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/', { destination: '/recenzje/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/', permanent: true }],
-  ['/pl/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/', { destination: '/recenzje/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/', permanent: true }],
-  ['/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/', { destination: '/recenzje/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/', permanent: true }],
-  ['/pl/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/', { destination: '/recenzje/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/', permanent: true }],
-  ['/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/', { destination: '/recenzje/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/', permanent: true }],
-  ['/pl/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/', permanent: true }],
-  ['/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/', permanent: true }],
-  ['/pl/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/', { destination: '/recenzje/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/', permanent: true }],
-  ['/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/', { destination: '/recenzje/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/', permanent: true }],
-  ['/pl/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/', { destination: '/recenzje/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/', permanent: true }],
-  ['/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/', { destination: '/recenzje/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/', { destination: '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/', { destination: '/recenzje/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/', permanent: true }],
-  ['/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/', { destination: '/recenzje/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/', permanent: true }],
-  ['/pl/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/', permanent: true }],
-  ['/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/', permanent: true }],
-  ['/pl/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/', { destination: '/recenzje/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/', permanent: true }],
-  ['/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/', { destination: '/recenzje/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/', permanent: true }],
-  ['/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/', { destination: '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/', permanent: true }],
-  ['/pl/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/', { destination: '/recenzje/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/', permanent: true }],
-  ['/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/', { destination: '/recenzje/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/', permanent: true }],
-  ['/pl/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/', { destination: '/recenzje/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/', permanent: true }],
-  ['/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/', { destination: '/recenzje/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/', permanent: true }],
-  ['/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/', permanent: true }],
-  ['/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/', permanent: true }],
-  ['/pl/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/', { destination: '/recenzje/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/', permanent: true }],
-  ['/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/', { destination: '/recenzje/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/', permanent: true }],
-  ['/pl/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/', { destination: '/recenzje/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/', permanent: true }],
-  ['/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/', { destination: '/recenzje/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/', permanent: true }],
-  ['/pl/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/', { destination: '/recenzje/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/', permanent: true }],
-  ['/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/', { destination: '/recenzje/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/', { destination: '/recenzje/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/', permanent: true }],
-  ['/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/', { destination: '/recenzje/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/', permanent: true }],
-  ['/pl/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/', { destination: '/recenzje/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/', permanent: true }],
-  ['/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/', { destination: '/recenzje/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/', permanent: true }],
-  ['/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/', permanent: true }],
-  ['/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/', permanent: true }],
-  ['/pl/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/', { destination: '/recenzje/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/', permanent: true }],
-  ['/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/', { destination: '/recenzje/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/', permanent: true }],
-  ['/pl/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/', permanent: true }],
-  ['/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/', { destination: '/recenzje/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/', permanent: true }],
-  ['/pl/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/', { destination: '/recenzje/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/', permanent: true }],
-  ['/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/', { destination: '/recenzje/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/', permanent: true }],
-  ['/pl/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/', { destination: '/recenzje/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/', permanent: true }],
-  ['/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/', { destination: '/recenzje/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/', permanent: true }],
-  ['/pl/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/', permanent: true }],
-  ['/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/', permanent: true }],
-  ['/pl/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/', { destination: '/recenzje/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/', permanent: true }],
-  ['/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/', { destination: '/recenzje/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/', permanent: true }],
-  ['/pl/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/', { destination: '/recenzje/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/', permanent: true }],
-  ['/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/', { destination: '/recenzje/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/', permanent: true }],
-  ['/pl/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/', { destination: '/recenzje/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/', permanent: true }],
-  ['/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/', { destination: '/recenzje/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/', permanent: true }],
-  ['/pl/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/', { destination: '/recenzje/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/', permanent: true }],
-  ['/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/', { destination: '/recenzje/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/', permanent: true }],
-  ['/pl/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/', { destination: '/recenzje/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/', permanent: true }],
-  ['/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/', { destination: '/recenzje/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/', permanent: true }],
-  ['/pl/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/', { destination: '/recenzje/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/', permanent: true }],
-  ['/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/', { destination: '/recenzje/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/', permanent: true }],
-  ['/pl/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/', { destination: '/recenzje/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/', permanent: true }],
-  ['/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/', { destination: '/recenzje/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/', permanent: true }],
-  ['/pl/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/', permanent: true }],
-  ['/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/', permanent: true }],
-  ['/pl/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/', { destination: '/recenzje/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/', permanent: true }],
-  ['/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/', { destination: '/recenzje/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/', permanent: true }],
-  ['/pl/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/', permanent: true }],
-  ['/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/', permanent: true }],
-  ['/pl/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/', { destination: '/recenzje/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/', permanent: true }],
-  ['/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/', { destination: '/recenzje/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/', permanent: true }],
-  ['/pl/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/', { destination: '/recenzje/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/', permanent: true }],
-  ['/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/', { destination: '/recenzje/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/', permanent: true }],
-  ['/pl/test-subwoofera-goldenear-forcefield-40-w-stereonet/', { destination: '/recenzje/test-subwoofera-goldenear-forcefield-40-w-stereonet/', permanent: true }],
-  ['/test-subwoofera-goldenear-forcefield-40-w-stereonet/', { destination: '/recenzje/test-subwoofera-goldenear-forcefield-40-w-stereonet/', permanent: true }],
-  ['/pl/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/', { destination: '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/', permanent: true }],
-  ['/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/', { destination: '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/', permanent: true }],
-  ['/pl/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/', { destination: '/recenzje/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/', permanent: true }],
-  ['/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/', { destination: '/recenzje/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/', permanent: true }],
-  ['/pl/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/', { destination: '/recenzje/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/', permanent: true }],
-  ['/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/', { destination: '/recenzje/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/', permanent: true }],
-  ['/pl/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/', { destination: '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/', permanent: true }],
-  ['/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/', { destination: '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/', permanent: true }],
-  ['/pl/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/', { destination: '/recenzje/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/', permanent: true }],
-  ['/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/', { destination: '/recenzje/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/', permanent: true }],
-  ['/pl/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/', { destination: '/recenzje/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/', permanent: true }],
-  ['/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/', { destination: '/recenzje/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/', permanent: true }],
-  ['/pl/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/', permanent: true }],
-  ['/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/', permanent: true }],
-  ['/pl/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/', { destination: '/recenzje/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/', permanent: true }],
-  ['/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/', { destination: '/recenzje/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/', permanent: true }],
-  ['/pl/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/', { destination: '/recenzje/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/', permanent: true }],
-  ['/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/', { destination: '/recenzje/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/', permanent: true }],
-  ['/pl/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/', { destination: '/recenzje/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/', permanent: true }],
-  ['/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/', { destination: '/recenzje/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/', permanent: true }],
-  ['/pl/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/', { destination: '/recenzje/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/', permanent: true }],
-  ['/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/', { destination: '/recenzje/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/', permanent: true }],
-  ['/pl/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/', { destination: '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/', permanent: true }],
-  ['/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/', { destination: '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/', permanent: true }],
-  ['/pl/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/', { destination: '/recenzje/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/', permanent: true }],
-  ['/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/', { destination: '/recenzje/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/', permanent: true }],
-  ['/pl/test-systemu-dcs-vivaldi-apex-w-stereophile/', { destination: '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/', permanent: true }],
-  ['/test-systemu-dcs-vivaldi-apex-w-stereophile/', { destination: '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/', permanent: true }],
-  ['/pl/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/', { destination: '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/', permanent: true }],
-  ['/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/', { destination: '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/', { destination: '/recenzje/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/', permanent: true }],
-  ['/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/', { destination: '/recenzje/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/', permanent: true }],
-  ['/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/', { destination: '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/', { destination: '/recenzje/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/', permanent: true }],
-  ['/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/', { destination: '/recenzje/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/', permanent: true }],
-  ['/pl/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/', { destination: '/recenzje/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/', permanent: true }],
-  ['/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/', { destination: '/recenzje/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/', { destination: '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/', permanent: true }],
-  ['/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/', { destination: '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/', permanent: true }],
-  ['/pl/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/', { destination: '/recenzje/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/', permanent: true }],
-  ['/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/', { destination: '/recenzje/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/', permanent: true }],
-  ['/pl/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/', { destination: '/recenzje/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/', permanent: true }],
-  ['/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/', { destination: '/recenzje/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/', { destination: '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/', permanent: true }],
-  ['/pl/test-polki-artesania-ksh2-krion-w-hifi-advice-com/', { destination: '/recenzje/test-polki-artesania-ksh2-krion-w-hifi-advice-com/', permanent: true }],
-  ['/test-polki-artesania-ksh2-krion-w-hifi-advice-com/', { destination: '/recenzje/test-polki-artesania-ksh2-krion-w-hifi-advice-com/', permanent: true }],
-  ['/pl/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/', permanent: true }],
-  ['/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/', { destination: '/recenzje/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/', permanent: true }],
-  ['/pl/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/', { destination: '/recenzje/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/', permanent: true }],
-  ['/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/', { destination: '/recenzje/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/', { destination: '/recenzje/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/', permanent: true }],
-  ['/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/', { destination: '/recenzje/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/', { destination: '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-commander-w-stereophile/', { destination: '/recenzje/test-przedwzmacniacza-commander-w-stereophile/', permanent: true }],
-  ['/test-przedwzmacniacza-commander-w-stereophile/', { destination: '/recenzje/test-przedwzmacniacza-commander-w-stereophile/', permanent: true }],
-  ['/pl/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/', { destination: '/recenzje/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/', permanent: true }],
-  ['/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/', { destination: '/recenzje/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/', permanent: true }],
-  ['/pl/test-dcs-vivaldi-apex-w-hifi-news/', { destination: '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/', permanent: true }],
-  ['/test-dcs-vivaldi-apex-w-hifi-news/', { destination: '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/', permanent: true }],
-  ['/pl/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/', { destination: '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/', permanent: true }],
-  ['/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/', { destination: '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/', permanent: true }],
-  ['/pl/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/', permanent: true }],
-  ['/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/', permanent: true }],
-  ['/pl/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/', permanent: true }],
-  ['/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/', permanent: true }],
-  ['/pl/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/', { destination: '/recenzje/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/', permanent: true }],
-  ['/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/', { destination: '/recenzje/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/', { destination: '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/', permanent: true }],
-  ['/pl/test-podstawek-mig-sx-w-soundrebels/', { destination: '/recenzje/test-podstawek-mig-sx-w-soundrebels/', permanent: true }],
-  ['/test-podstawek-mig-sx-w-soundrebels/', { destination: '/recenzje/test-podstawek-mig-sx-w-soundrebels/', permanent: true }],
-  ['/pl/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/', permanent: true }],
-  ['/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/', permanent: true }],
-  ['/pl/test-glosnikow-sabrinax-w-the-absolute-sound/', { destination: '/recenzje/test-glosnikow-sabrinax-w-the-absolute-sound/', permanent: true }],
-  ['/test-glosnikow-sabrinax-w-the-absolute-sound/', { destination: '/recenzje/test-glosnikow-sabrinax-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/', { destination: '/recenzje/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/', permanent: true }],
-  ['/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/', { destination: '/recenzje/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/', permanent: true }],
-  ['/pl/test-wilson-audio-sabrinax-w-hi-fi-plus/', { destination: '/recenzje/test-wilson-audio-sabrinax-w-hi-fi-plus/', permanent: true }],
-  ['/test-wilson-audio-sabrinax-w-hi-fi-plus/', { destination: '/recenzje/test-wilson-audio-sabrinax-w-hi-fi-plus/', permanent: true }],
-  ['/pl/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/', { destination: '/recenzje/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/', permanent: true }],
-  ['/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/', { destination: '/recenzje/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-glosnikow-gryphon-trident-ii-w-soundrebels/', { destination: '/recenzje/test-glosnikow-gryphon-trident-ii-w-soundrebels/', permanent: true }],
-  ['/test-glosnikow-gryphon-trident-ii-w-soundrebels/', { destination: '/recenzje/test-glosnikow-gryphon-trident-ii-w-soundrebels/', permanent: true }],
-  ['/pl/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/', { destination: '/recenzje/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/', permanent: true }],
-  ['/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/', { destination: '/recenzje/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/', permanent: true }],
-  ['/pl/test-glosnikow-goldenear-brx-w-the-absolute-sound/', { destination: '/recenzje/test-glosnikow-goldenear-brx-w-the-absolute-sound/', permanent: true }],
-  ['/test-glosnikow-goldenear-brx-w-the-absolute-sound/', { destination: '/recenzje/test-glosnikow-goldenear-brx-w-the-absolute-sound/', permanent: true }],
-  ['/pl/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/', permanent: true }],
-  ['/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/', { destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/', permanent: true }],
-  ['/pl/test-gryphon-essence-w-enjoy-the-music/', { destination: '/recenzje/test-gryphon-essence-w-enjoy-the-music/', permanent: true }],
-  ['/test-gryphon-essence-w-enjoy-the-music/', { destination: '/recenzje/test-gryphon-essence-w-enjoy-the-music/', permanent: true }],
-  ['/pl/test-przetwornika-dcs-bartok-w-tone-audio/', { destination: '/recenzje/test-przetwornika-dcs-bartok-w-tone-audio/', permanent: true }],
-  ['/test-przetwornika-dcs-bartok-w-tone-audio/', { destination: '/recenzje/test-przetwornika-dcs-bartok-w-tone-audio/', permanent: true }],
-  ['/pl/test-wzmacniacza-moonriver-404-reference-w-stereophile/', { destination: '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/', permanent: true }],
-  ['/test-wzmacniacza-moonriver-404-reference-w-stereophile/', { destination: '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/', permanent: true }],
-  ['/pl/evo-400-integrated-w-the-ear/', { destination: '/recenzje/evo-400-integrated-w-the-ear/', permanent: true }],
-  ['/evo-400-integrated-w-the-ear/', { destination: '/recenzje/evo-400-integrated-w-the-ear/', permanent: true }],
-  ['/pl/evo-100-dac-w-hifi/', { destination: '/recenzje/evo-100-dac-w-hifi/', permanent: true }],
-  ['/evo-100-dac-w-hifi/', { destination: '/recenzje/evo-100-dac-w-hifi/', permanent: true }],
-  ['/pl/test-wzmacniacza-audio-research-ref160s-w-hi-fi/', { destination: '/recenzje/test-wzmacniacza-audio-research-ref160s-w-hi-fi/', permanent: true }],
-  ['/test-wzmacniacza-audio-research-ref160s-w-hi-fi/', { destination: '/recenzje/test-wzmacniacza-audio-research-ref160s-w-hi-fi/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-grimm-mu1-w-stereophile/', { destination: '/recenzje/test-serwera-muzycznego-grimm-mu1-w-stereophile/', permanent: true }],
-  ['/test-serwera-muzycznego-grimm-mu1-w-stereophile/', { destination: '/recenzje/test-serwera-muzycznego-grimm-mu1-w-stereophile/', permanent: true }],
-  ['/pl/test-przewodow-shunyata-sigma-v2/', { destination: '/recenzje/test-przewodow-shunyata-sigma-v2/', permanent: true }],
-  ['/test-przewodow-shunyata-sigma-v2/', { destination: '/recenzje/test-przewodow-shunyata-sigma-v2/', permanent: true }],
-  ['/pl/evo-400-w-hi-fi-world/', { destination: '/recenzje/evo-400-w-hi-fi-world/', permanent: true }],
-  ['/evo-400-w-hi-fi-world/', { destination: '/recenzje/evo-400-w-hi-fi-world/', permanent: true }],
-  ['/pl/gryphon-essence-test-stereophiole/', { destination: '/recenzje/gryphon-essence-test-stereophiole/', permanent: true }],
-  ['/gryphon-essence-test-stereophiole/', { destination: '/recenzje/gryphon-essence-test-stereophiole/', permanent: true }],
-  ['/pl/test-keces-sphono-w-positive-feedback/', { destination: '/recenzje/test-keces-sphono-w-positive-feedback/', permanent: true }],
-  ['/test-keces-sphono-w-positive-feedback/', { destination: '/recenzje/test-keces-sphono-w-positive-feedback/', permanent: true }],
-  ['/pl/dan-dagostino-progression-integrated-w-stereonet/', { destination: '/recenzje/dan-dagostino-progression-integrated-w-stereonet/', permanent: true }],
-  ['/dan-dagostino-progression-integrated-w-stereonet/', { destination: '/recenzje/dan-dagostino-progression-integrated-w-stereonet/', permanent: true }],
-  ['/pl/test-powercellsx-soundstage-ultra/', { destination: '/recenzje/test-powercellsx-soundstage-ultra/', permanent: true }],
-  ['/test-powercellsx-soundstage-ultra/', { destination: '/recenzje/test-powercellsx-soundstage-ultra/', permanent: true }],
-  ['/pl/test-gryphon-essence-w-hifi-plus/', { destination: '/recenzje/test-gryphon-essence-w-hifi-plus/', permanent: true }],
-  ['/test-gryphon-essence-w-hifi-plus/', { destination: '/recenzje/test-gryphon-essence-w-hifi-plus/', permanent: true }],
-  ['/pl/test-dagostino-progression-integrated-w-hifi-news/', { destination: '/recenzje/test-dagostino-progression-integrated-w-hifi-news/', permanent: true }],
-  ['/test-dagostino-progression-integrated-w-hifi-news/', { destination: '/recenzje/test-dagostino-progression-integrated-w-hifi-news/', permanent: true }],
-  ['/pl/docisk-plyty-uef-w-positive-feedback/', { destination: '/recenzje/docisk-plyty-uef-w-positive-feedback/', permanent: true }],
-  ['/docisk-plyty-uef-w-positive-feedback/', { destination: '/recenzje/docisk-plyty-uef-w-positive-feedback/', permanent: true }],
-  ['/pl/test-everest-8000-w-the-audio-beat/', { destination: '/recenzje/test-everest-8000-w-the-audio-beat/', permanent: true }],
-  ['/test-everest-8000-w-the-audio-beat/', { destination: '/recenzje/test-everest-8000-w-the-audio-beat/', permanent: true }],
-  ['/pl/test-primaluny-evo300-w-hifi-critic/', { destination: '/recenzje/test-primaluny-evo300-w-hifi-critic/', permanent: true }],
-  ['/test-primaluny-evo300-w-hifi-critic/', { destination: '/recenzje/test-primaluny-evo300-w-hifi-critic/', permanent: true }],
-  ['/pl/test-taiko-sgm-extreme-w-mono-and-stereo/', { destination: '/recenzje/test-taiko-sgm-extreme-w-mono-and-stereo/', permanent: true }],
-  ['/test-taiko-sgm-extreme-w-mono-and-stereo/', { destination: '/recenzje/test-taiko-sgm-extreme-w-mono-and-stereo/', permanent: true }],
-  ['/pl/recenzja-synergistic-research-foundation-enjoythemusic2020/', { destination: '/recenzje/recenzja-synergistic-research-foundation-enjoythemusic2020/', permanent: true }],
-  ['/recenzja-synergistic-research-foundation-enjoythemusic2020/', { destination: '/recenzje/recenzja-synergistic-research-foundation-enjoythemusic2020/', permanent: true }],
-  ['/pl/test-wzmacniacza-moonriver-404-w-the-ear/', { destination: '/recenzje/test-wzmacniacza-moonriver-404-w-the-ear/', permanent: true }],
-  ['/test-wzmacniacza-moonriver-404-w-the-ear/', { destination: '/recenzje/test-wzmacniacza-moonriver-404-w-the-ear/', permanent: true }],
-  ['/pl/recenzja-enjoy-the-music-audio-research-reference-160m/', { destination: '/recenzje/recenzja-enjoy-the-music-audio-research-reference-160m/', permanent: true }],
-  ['/recenzja-enjoy-the-music-audio-research-reference-160m/', { destination: '/recenzje/recenzja-enjoy-the-music-audio-research-reference-160m/', permanent: true }],
-  ['/pl/test-evo-400-preamplifier-tas-2020/', { destination: '/recenzje/test-evo-400-preamplifier-tas-2020/', permanent: true }],
-  ['/test-evo-400-preamplifier-tas-2020/', { destination: '/recenzje/test-evo-400-preamplifier-tas-2020/', permanent: true }],
-  ['/pl/test-delta-nr-v2-theear-2020-06/', { destination: '/recenzje/test-delta-nr-v2-theear-2020-06/', permanent: true }],
-  ['/test-delta-nr-v2-theear-2020-06/', { destination: '/recenzje/test-delta-nr-v2-theear-2020-06/', permanent: true }],
-  ['/pl/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/', { destination: '/recenzje/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/', permanent: true }],
-  ['/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/', { destination: '/recenzje/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/', permanent: true }],
-  ['/pl/recenzja-ssu202004-hydraalphaa12venomnrv10/', { destination: '/recenzje/recenzja-ssu202004-hydraalphaa12venomnrv10/', permanent: true }],
-  ['/recenzja-ssu202004-hydraalphaa12venomnrv10/', { destination: '/recenzje/recenzja-ssu202004-hydraalphaa12venomnrv10/', permanent: true }],
-  ['/pl/recenzja-grimm-mu1-6moons-202004/', { destination: '/recenzje/recenzja-grimm-mu1-6moons-202004/', permanent: true }],
-  ['/recenzja-grimm-mu1-6moons-202004/', { destination: '/recenzje/recenzja-grimm-mu1-6moons-202004/', permanent: true }],
-  ['/pl/recenzja-tas202004-dcsbartokdac/', { destination: '/recenzje/recenzja-tas202004-dcsbartokdac/', permanent: true }],
-  ['/recenzja-tas202004-dcsbartokdac/', { destination: '/recenzje/recenzja-tas202004-dcsbartokdac/', permanent: true }],
-  ['/pl/recenzja-hfn202003-dandagostinomomentumhdpremplifier/', { destination: '/recenzje/recenzja-hfn202003-dandagostinomomentumhdpremplifier/', permanent: true }],
-  ['/recenzja-hfn202003-dandagostinomomentumhdpremplifier/', { destination: '/recenzje/recenzja-hfn202003-dandagostinomomentumhdpremplifier/', permanent: true }],
-  ['/pl/recenzja-hfp202001-wilsonaudiosashadaw/', { destination: '/recenzje/recenzja-hfp202001-wilsonaudiosashadaw/', permanent: true }],
-  ['/recenzja-hfp202001-wilsonaudiosashadaw/', { destination: '/recenzje/recenzja-hfp202001-wilsonaudiosashadaw/', permanent: true }],
-  ['/pl/recenzja-rogue-audio-dragon-w-tas-2021-01/', { destination: '/recenzje/recenzja-rogue-audio-dragon-w-tas-2021-01/', permanent: true }],
-  ['/recenzja-rogue-audio-dragon-w-tas-2021-01/', { destination: '/recenzje/recenzja-rogue-audio-dragon-w-tas-2021-01/', permanent: true }],
-  ['/pl/recenzja-sp202001-dandagostinomomentumhd/', { destination: '/recenzje/recenzja-sp202001-dandagostinomomentumhd/', permanent: true }],
-  ['/recenzja-sp202001-dandagostinomomentumhd/', { destination: '/recenzje/recenzja-sp202001-dandagostinomomentumhd/', permanent: true }],
-  ['/pl/recenzja-sterophile-201912-gryphonethos/', { destination: '/recenzje/recenzja-sterophile-201912-gryphonethos/', permanent: true }],
-  ['/recenzja-sterophile-201912-gryphonethos/', { destination: '/recenzje/recenzja-sterophile-201912-gryphonethos/', permanent: true }],
-  ['/pl/moonriver-404/', { destination: '/recenzje/moonriver-404/', permanent: true }],
-  ['/moonriver-404/', { destination: '/recenzje/moonriver-404/', permanent: true }],
-  ['/pl/recenzja-stereophile-201911-goldeneartritononer/', { destination: '/recenzje/recenzja-stereophile-201911-goldeneartritononer/', permanent: true }],
-  ['/recenzja-stereophile-201911-goldeneartritononer/', { destination: '/recenzje/recenzja-stereophile-201911-goldeneartritononer/', permanent: true }],
-  ['/pl/recenzja-tab201911-shunyataresearchdenalid6000sv2/', { destination: '/recenzje/recenzja-tab201911-shunyataresearchdenalid6000sv2/', permanent: true }],
-  ['/recenzja-tab201911-shunyataresearchdenalid6000sv2/', { destination: '/recenzje/recenzja-tab201911-shunyataresearchdenalid6000sv2/', permanent: true }],
-  ['/pl/recenzja-sohtahf201910-goldeneartritononer/', { destination: '/recenzje/recenzja-sohtahf201910-goldeneartritononer/', permanent: true }],
-  ['/recenzja-sohtahf201910-goldeneartritononer/', { destination: '/recenzje/recenzja-sohtahf201910-goldeneartritononer/', permanent: true }],
-  ['/pl/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/', { destination: '/recenzje/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/', permanent: true }],
-  ['/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/', { destination: '/recenzje/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/', permanent: true }],
-  ['/pl/recenzja-hfp201910-dcsbartoknetworkdac/', { destination: '/recenzje/recenzja-hfp201910-dcsbartoknetworkdac/', permanent: true }],
-  ['/recenzja-hfp201910-dcsbartoknetworkdac/', { destination: '/recenzje/recenzja-hfp201910-dcsbartoknetworkdac/', permanent: true }],
-  ['/pl/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/', { destination: '/recenzje/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/', permanent: true }],
-  ['/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/', { destination: '/recenzje/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/', permanent: true }],
-  ['/pl/recenzja-goldenearreference-theoccasionalmagazine/', { destination: '/recenzje/recenzja-goldenearreference-theoccasionalmagazine/', permanent: true }],
-  ['/recenzja-goldenearreference-theoccasionalmagazine/', { destination: '/recenzje/recenzja-goldenearreference-theoccasionalmagazine/', permanent: true }],
-  ['/pl/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/', { destination: '/recenzje/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/', permanent: true }],
-  ['/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/', { destination: '/recenzje/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/', permanent: true }],
-  ['/pl/goldenear-triton-one-r/', { destination: '/recenzje/goldenear-triton-one-r/', permanent: true }],
-  ['/goldenear-triton-one-r/', { destination: '/recenzje/goldenear-triton-one-r/', permanent: true }],
-  ['/pl/recenzja-tas201910-wilsonaudioalexx/', { destination: '/recenzje/recenzja-tas201910-wilsonaudioalexx/', permanent: true }],
-  ['/recenzja-tas201910-wilsonaudioalexx/', { destination: '/recenzje/recenzja-tas201910-wilsonaudioalexx/', permanent: true }],
-  ['/pl/recenzja-dcs-rossini-transport-dac-hifi-news/', { destination: '/recenzje/recenzja-dcs-rossini-transport-dac-hifi-news/', permanent: true }],
-  ['/recenzja-dcs-rossini-transport-dac-hifi-news/', { destination: '/recenzje/recenzja-dcs-rossini-transport-dac-hifi-news/', permanent: true }],
-  ['/pl/recenzja-toneaudio201908-primaluna-evo-400/', { destination: '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/', permanent: true }],
-  ['/recenzja-toneaudio201908-primaluna-evo-400/', { destination: '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/', permanent: true }],
-  ['/pl/synergistic-research-galileo-sx-phono/', { destination: '/recenzje/synergistic-research-galileo-sx-phono/', permanent: true }],
-  ['/synergistic-research-galileo-sx-phono/', { destination: '/recenzje/synergistic-research-galileo-sx-phono/', permanent: true }],
-  ['/pl/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/', { destination: '/recenzje/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/', permanent: true }],
-  ['/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/', { destination: '/recenzje/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/', permanent: true }],
-  ['/pl/test-positive-feedback-201908-hft/', { destination: '/recenzje/test-positive-feedback-201908-hft/', permanent: true }],
-  ['/test-positive-feedback-201908-hft/', { destination: '/recenzje/test-positive-feedback-201908-hft/', permanent: true }],
-  ['/pl/recenzja-hifis201906-kecessphonospower/', { destination: '/recenzje/recenzja-hifis201906-kecessphonospower/', permanent: true }],
-  ['/recenzja-hifis201906-kecessphonospower/', { destination: '/recenzje/recenzja-hifis201906-kecessphonospower/', permanent: true }],
-  ['/pl/dcs-bartok-network-dac/', { destination: '/recenzje/dcs-bartok-network-dac/', permanent: true }],
-  ['/dcs-bartok-network-dac/', { destination: '/recenzje/dcs-bartok-network-dac/', permanent: true }],
-  ['/pl/recenzja-at-201905-thixarsmdambitiousmk2/', { destination: '/recenzje/recenzja-at-201905-thixarsmdambitiousmk2/', permanent: true }],
-  ['/recenzja-at-201905-thixarsmdambitiousmk2/', { destination: '/recenzje/recenzja-at-201905-thixarsmdambitiousmk2/', permanent: true }],
-  ['/pl/recenzja-highfidelity201904-shunyata-venom/', { destination: '/recenzje/recenzja-highfidelity201904-shunyata-venom/', permanent: true }],
-  ['/recenzja-highfidelity201904-shunyata-venom/', { destination: '/recenzje/recenzja-highfidelity201904-shunyata-venom/', permanent: true }],
-  ['/pl/recenzja-highfidelity201904-keces-e40/', { destination: '/recenzje/recenzja-highfidelity201904-keces-e40/', permanent: true }],
-  ['/recenzja-highfidelity201904-keces-e40/', { destination: '/recenzje/recenzja-highfidelity201904-keces-e40/', permanent: true }],
-  ['/pl/recenzje-soundrebels201903-mephisto-and-co/', { destination: '/recenzje/recenzje-soundrebels201903-mephisto-and-co/', permanent: true }],
-  ['/recenzje-soundrebels201903-mephisto-and-co/', { destination: '/recenzje/recenzje-soundrebels201903-mephisto-and-co/', permanent: true }],
-  ['/pl/keces-ephono-dzielona-klasa-srednia/', { destination: '/recenzje/keces-ephono-dzielona-klasa-srednia/', permanent: true }],
-  ['/keces-ephono-dzielona-klasa-srednia/', { destination: '/recenzje/keces-ephono-dzielona-klasa-srednia/', permanent: true }],
-  ['/pl/recenzja-hifiphilosophy201902-synergistic-research-ac/', { destination: '/recenzje/recenzja-hifiphilosophy201902-synergistic-research-ac/', permanent: true }],
-  ['/recenzja-hifiphilosophy201902-synergistic-research-ac/', { destination: '/recenzje/recenzja-hifiphilosophy201902-synergistic-research-ac/', permanent: true }],
-  ['/pl/recenzja-stereophile201211-spiralgroove-sg11/', { destination: '/recenzje/recenzja-stereophile201211-spiralgroove-sg11/', permanent: true }],
-  ['/recenzja-stereophile201211-spiralgroove-sg11/', { destination: '/recenzje/recenzja-stereophile201211-spiralgroove-sg11/', permanent: true }],
-  ['/pl/recenzja-hifinews201812-shunyataresearch-deltanr-ef/', { destination: '/recenzje/recenzja-hifinews201812-shunyataresearch-deltanr-ef/', permanent: true }],
-  ['/recenzja-hifinews201812-shunyataresearch-deltanr-ef/', { destination: '/recenzje/recenzja-hifinews201812-shunyataresearch-deltanr-ef/', permanent: true }],
-  ['/pl/recenzja-audiovideo201812-aurender-acs10/', { destination: '/recenzje/recenzja-audiovideo201812-aurender-acs10/', permanent: true }],
-  ['/recenzja-audiovideo201812-aurender-acs10/', { destination: '/recenzje/recenzja-audiovideo201812-aurender-acs10/', permanent: true }],
-  ['/pl/recenzja-highfidelity201811-shunyata-denali-vs-triton/', { destination: '/recenzje/recenzja-highfidelity201811-shunyata-denali-vs-triton/', permanent: true }],
-  ['/recenzja-highfidelity201811-shunyata-denali-vs-triton/', { destination: '/recenzje/recenzja-highfidelity201811-shunyata-denali-vs-triton/', permanent: true }],
-  ['/pl/recenzja-hifiphilosophy201811-dcs-rossini-dac/', { destination: '/recenzje/recenzja-hifiphilosophy201811-dcs-rossini-dac/', permanent: true }],
-  ['/recenzja-hifiphilosophy201811-dcs-rossini-dac/', { destination: '/recenzje/recenzja-hifiphilosophy201811-dcs-rossini-dac/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201811-rogue-audio-triton/', { destination: '/recenzje/recenzja-hifiimuzyka201811-rogue-audio-triton/', permanent: true }],
-  ['/recenzja-hifiimuzyka201811-rogue-audio-triton/', { destination: '/recenzje/recenzja-hifiimuzyka201811-rogue-audio-triton/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/', { destination: '/recenzje/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/', permanent: true }],
-  ['/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/', { destination: '/recenzje/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/', { destination: '/recenzje/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/', permanent: true }],
-  ['/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/', { destination: '/recenzje/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/', permanent: true }],
-  ['/pl/przewody-synergistic-research-galileo-sx/', { destination: '/recenzje/przewody-synergistic-research-galileo-sx/', permanent: true }],
-  ['/przewody-synergistic-research-galileo-sx/', { destination: '/recenzje/przewody-synergistic-research-galileo-sx/', permanent: true }],
-  ['/pl/recenzja-audiovideo201809-rogue-audio-stereo-100/', { destination: '/recenzje/recenzja-audiovideo201809-rogue-audio-stereo-100/', permanent: true }],
-  ['/recenzja-audiovideo201809-rogue-audio-stereo-100/', { destination: '/recenzje/recenzja-audiovideo201809-rogue-audio-stereo-100/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka092018-soundsmith-paua/', { destination: '/recenzje/recenzja-hifiimuzyka092018-soundsmith-paua/', permanent: true }],
-  ['/recenzja-hifiimuzyka092018-soundsmith-paua/', { destination: '/recenzje/recenzja-hifiimuzyka092018-soundsmith-paua/', permanent: true }],
-  ['/pl/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/', { destination: '/recenzje/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/', permanent: true }],
-  ['/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/', { destination: '/recenzje/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/', permanent: true }],
-  ['/pl/recenzja-hifiphilosophy201808-exogal-comet/', { destination: '/recenzje/recenzja-hifiphilosophy201808-exogal-comet/', permanent: true }],
-  ['/recenzja-hifiphilosophy201808-exogal-comet/', { destination: '/recenzje/recenzja-hifiphilosophy201808-exogal-comet/', permanent: true }],
-  ['/pl/recenzja-audiovideo201808-aurender-a10/', { destination: '/recenzje/recenzja-audiovideo201808-aurender-a10/', permanent: true }],
-  ['/recenzja-audiovideo201808-aurender-a10/', { destination: '/recenzje/recenzja-audiovideo201808-aurender-a10/', permanent: true }],
-  ['/pl/recenzja201808-shunyata-research-denali-d6000t/', { destination: '/recenzje/recenzja201808-shunyata-research-denali-d6000t/', permanent: true }],
-  ['/recenzja201808-shunyata-research-denali-d6000t/', { destination: '/recenzje/recenzja201808-shunyata-research-denali-d6000t/', permanent: true }],
-  ['/pl/recenzja-highfidelity201808-synergisticresearch-atmospherex/', { destination: '/recenzje/recenzja-highfidelity201808-synergisticresearch-atmospherex/', permanent: true }],
-  ['/recenzja-highfidelity201808-synergisticresearch-atmospherex/', { destination: '/recenzje/recenzja-highfidelity201808-synergisticresearch-atmospherex/', permanent: true }],
-  ['/pl/recenzja-audioesoterica201807-dagostino-progression/', { destination: '/recenzje/recenzja-audioesoterica201807-dagostino-progression/', permanent: true }],
-  ['/recenzja-audioesoterica201807-dagostino-progression/', { destination: '/recenzje/recenzja-audioesoterica201807-dagostino-progression/', permanent: true }],
-  ['/pl/recenzja-audiovideo201807-goldenear-supersubx/', { destination: '/recenzje/recenzja-audiovideo201807-goldenear-supersubx/', permanent: true }],
-  ['/recenzja-audiovideo201807-goldenear-supersubx/', { destination: '/recenzje/recenzja-audiovideo201807-goldenear-supersubx/', permanent: true }],
-  ['/pl/recenzje-highfidelity201807-roon-lnucleus/', { destination: '/recenzje/recenzje-highfidelity201807-roon-lnucleus/', permanent: true }],
-  ['/recenzje-highfidelity201807-roon-lnucleus/', { destination: '/recenzje/recenzje-highfidelity201807-roon-lnucleus/', permanent: true }],
-  ['/pl/recenzja-absolutesound201806-rougeaudio-rp7/', { destination: '/recenzje/recenzja-absolutesound201806-rougeaudio-rp7/', permanent: true }],
-  ['/recenzja-absolutesound201806-rougeaudio-rp7/', { destination: '/recenzje/recenzja-absolutesound201806-rougeaudio-rp7/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/', { destination: '/recenzje/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/', permanent: true }],
-  ['/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/', { destination: '/recenzje/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/', permanent: true }],
-  ['/pl/recenzja-audiovideo201804-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-audiovideo201804-wilsonaudio-sabrina/', permanent: true }],
-  ['/recenzja-audiovideo201804-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-audiovideo201804-wilsonaudio-sabrina/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/', { destination: '/recenzje/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/', permanent: true }],
-  ['/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/', { destination: '/recenzje/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/', { destination: '/recenzje/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/', permanent: true }],
-  ['/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/', { destination: '/recenzje/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201802-aurender-a10/', { destination: '/recenzje/recenzja-hifiimuzyka201802-aurender-a10/', permanent: true }],
-  ['/recenzja-hifiimuzyka201802-aurender-a10/', { destination: '/recenzje/recenzja-hifiimuzyka201802-aurender-a10/', permanent: true }],
-  ['/pl/recenzja-absolutesound201801-dagostino-momentumsystem/', { destination: '/recenzje/recenzja-absolutesound201801-dagostino-momentumsystem/', permanent: true }],
-  ['/recenzja-absolutesound201801-dagostino-momentumsystem/', { destination: '/recenzje/recenzja-absolutesound201801-dagostino-momentumsystem/', permanent: true }],
-  ['/pl/recenzja-audiovideo201801-soundsmith-mcp2mkii/', { destination: '/recenzje/recenzja-audiovideo201801-soundsmith-mcp2mkii/', permanent: true }],
-  ['/recenzja-audiovideo201801-soundsmith-mcp2mkii/', { destination: '/recenzje/recenzja-audiovideo201801-soundsmith-mcp2mkii/', permanent: true }],
-  ['/pl/recenzja-absolutesound201710-spiralgroove-sg12/', { destination: '/recenzje/recenzja-absolutesound201710-spiralgroove-sg12/', permanent: true }],
-  ['/recenzja-absolutesound201710-spiralgroove-sg12/', { destination: '/recenzje/recenzja-absolutesound201710-spiralgroove-sg12/', permanent: true }],
-  ['/pl/recenzja-highfidelity201710-shunyata-triton3/', { destination: '/recenzje/recenzja-highfidelity201710-shunyata-triton3/', permanent: true }],
-  ['/recenzja-highfidelity201710-shunyata-triton3/', { destination: '/recenzje/recenzja-highfidelity201710-shunyata-triton3/', permanent: true }],
-  ['/pl/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/', { destination: '/recenzje/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/', permanent: true }],
-  ['/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/', { destination: '/recenzje/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/', permanent: true }],
-  ['/pl/recenzja-absolutesound201708-goldenear-tritonreference/', { destination: '/recenzje/recenzja-absolutesound201708-goldenear-tritonreference/', permanent: true }],
-  ['/recenzja-absolutesound201708-goldenear-tritonreference/', { destination: '/recenzje/recenzja-absolutesound201708-goldenear-tritonreference/', permanent: true }],
-  ['/pl/recenzja-toneaudio201707-grandprixaudio-monaco20/', { destination: '/recenzje/recenzja-toneaudio201707-grandprixaudio-monaco20/', permanent: true }],
-  ['/recenzja-toneaudio201707-grandprixaudio-monaco20/', { destination: '/recenzje/recenzja-toneaudio201707-grandprixaudio-monaco20/', permanent: true }],
-  ['/pl/recenzja-audiobeat201706-grandprixaudio-monaco2/', { destination: '/recenzje/recenzja-audiobeat201706-grandprixaudio-monaco2/', permanent: true }],
-  ['/recenzja-audiobeat201706-grandprixaudio-monaco2/', { destination: '/recenzje/recenzja-audiobeat201706-grandprixaudio-monaco2/', permanent: true }],
-  ['/pl/recenzja-highfidelity201706-dcs-networkbridge/', { destination: '/recenzje/recenzja-highfidelity201706-dcs-networkbridge/', permanent: true }],
-  ['/recenzja-highfidelity201706-dcs-networkbridge/', { destination: '/recenzje/recenzja-highfidelity201706-dcs-networkbridge/', permanent: true }],
-  ['/pl/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/', { destination: '/recenzje/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/', permanent: true }],
-  ['/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/', { destination: '/recenzje/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/', permanent: true }],
-  ['/pl/recenzja-hifinews2017-dagostino-progressionmono/', { destination: '/recenzje/recenzja-hifinews2017-dagostino-progressionmono/', permanent: true }],
-  ['/recenzja-hifinews2017-dagostino-progressionmono/', { destination: '/recenzje/recenzja-hifinews2017-dagostino-progressionmono/', permanent: true }],
-  ['/pl/recenzja-soundandvision201706-goldenear-tritonreference/', { destination: '/recenzje/recenzja-soundandvision201706-goldenear-tritonreference/', permanent: true }],
-  ['/recenzja-soundandvision201706-goldenear-tritonreference/', { destination: '/recenzje/recenzja-soundandvision201706-goldenear-tritonreference/', permanent: true }],
-  ['/pl/primaluna-prologue-premium/', { destination: '/recenzje/primaluna-prologue-premium/', permanent: true }],
-  ['/primaluna-prologue-premium/', { destination: '/recenzje/primaluna-prologue-premium/', permanent: true }],
-  ['/pl/recenzja-absolutesound201705-dcs-vivaldi-one/', { destination: '/recenzje/recenzja-absolutesound201705-dcs-vivaldi-one/', permanent: true }],
-  ['/recenzja-absolutesound201705-dcs-vivaldi-one/', { destination: '/recenzje/recenzja-absolutesound201705-dcs-vivaldi-one/', permanent: true }],
-  ['/pl/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/', { destination: '/recenzje/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/', permanent: true }],
-  ['/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/', { destination: '/recenzje/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/', permanent: true }],
-  ['/pl/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/', { destination: '/recenzje/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/', permanent: true }],
-  ['/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/', { destination: '/recenzje/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/', permanent: true }],
-  ['/pl/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/', { destination: '/recenzje/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/', permanent: true }],
-  ['/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/', { destination: '/recenzje/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/', permanent: true }],
-  ['/pl/recenzja-highfidelity201703-exogal-ion/', { destination: '/recenzje/recenzja-highfidelity201703-exogal-ion/', permanent: true }],
-  ['/recenzja-highfidelity201703-exogal-ion/', { destination: '/recenzje/recenzja-highfidelity201703-exogal-ion/', permanent: true }],
-  ['/pl/recenzja-stereophile201702-dagostino-momentumphonostage/', { destination: '/recenzje/recenzja-stereophile201702-dagostino-momentumphonostage/', permanent: true }],
-  ['/recenzja-stereophile201702-dagostino-momentumphonostage/', { destination: '/recenzje/recenzja-stereophile201702-dagostino-momentumphonostage/', permanent: true }],
-  ['/pl/recenzja-audiovideo201702-wilsonaudio-yvette/', { destination: '/recenzje/recenzja-audiovideo201702-wilsonaudio-yvette/', permanent: true }],
-  ['/recenzja-audiovideo201702-wilsonaudio-yvette/', { destination: '/recenzje/recenzja-audiovideo201702-wilsonaudio-yvette/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/', { destination: '/recenzje/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/', permanent: true }],
-  ['/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/', { destination: '/recenzje/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/', permanent: true }],
-  ['/pl/recenzja-highfidelity201701-aurender-a10/', { destination: '/recenzje/recenzja-highfidelity201701-aurender-a10/', permanent: true }],
-  ['/recenzja-highfidelity201701-aurender-a10/', { destination: '/recenzje/recenzja-highfidelity201701-aurender-a10/', permanent: true }],
-  ['/pl/recenzja-audiovideo201612-acousticsignature-primus/', { destination: '/recenzje/recenzja-audiovideo201612-acousticsignature-primus/', permanent: true }],
-  ['/recenzja-audiovideo201612-acousticsignature-primus/', { destination: '/recenzje/recenzja-audiovideo201612-acousticsignature-primus/', permanent: true }],
-  ['/pl/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/', { destination: '/recenzje/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/', permanent: true }],
-  ['/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/', { destination: '/recenzje/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/', permanent: true }],
-  ['/pl/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/', { destination: '/recenzje/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/', permanent: true }],
-  ['/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/', { destination: '/recenzje/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/', permanent: true }],
-  ['/pl/recenzja-absolutesound201608-acousticsignature-invictus/', { destination: '/recenzje/recenzja-absolutesound201608-acousticsignature-invictus/', permanent: true }],
-  ['/recenzja-absolutesound201608-acousticsignature-invictus/', { destination: '/recenzje/recenzja-absolutesound201608-acousticsignature-invictus/', permanent: true }],
-  ['/pl/recenzja-highfidelity201607-soundsmith-carmen/', { destination: '/recenzje/recenzja-highfidelity201607-soundsmith-carmen/', permanent: true }],
-  ['/recenzja-highfidelity201607-soundsmith-carmen/', { destination: '/recenzje/recenzja-highfidelity201607-soundsmith-carmen/', permanent: true }],
-  ['/pl/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/', { destination: '/recenzje/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/', permanent: true }],
-  ['/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/', { destination: '/recenzje/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/', permanent: true }],
-  ['/pl/recenzja-hifiplus201609-dagostino-momentumintegrated/', { destination: '/recenzje/recenzja-hifiplus201609-dagostino-momentumintegrated/', permanent: true }],
-  ['/recenzja-hifiplus201609-dagostino-momentumintegrated/', { destination: '/recenzje/recenzja-hifiplus201609-dagostino-momentumintegrated/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/', permanent: true }],
-  ['/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/', permanent: true }],
-  ['/pl/recenzja-stereophile201604-aurender-n10/', { destination: '/recenzje/recenzja-stereophile201604-aurender-n10/', permanent: true }],
-  ['/recenzja-stereophile201604-aurender-n10/', { destination: '/recenzje/recenzja-stereophile201604-aurender-n10/', permanent: true }],
-  ['/pl/recenzja-audiobeat201604-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-audiobeat201604-wilsonaudio-sabrina/', permanent: true }],
-  ['/recenzja-audiobeat201604-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-audiobeat201604-wilsonaudio-sabrina/', permanent: true }],
-  ['/pl/recenzja-hifiplus201602-arc-gsi75/', { destination: '/recenzje/recenzja-hifiplus201602-arc-gsi75/', permanent: true }],
-  ['/recenzja-hifiplus201602-arc-gsi75/', { destination: '/recenzje/recenzja-hifiplus201602-arc-gsi75/', permanent: true }],
-  ['/pl/recenzja-audiostream201603-aurender-n100h/', { destination: '/recenzje/recenzja-audiostream201603-aurender-n100h/', permanent: true }],
-  ['/recenzja-audiostream201603-aurender-n100h/', { destination: '/recenzje/recenzja-audiostream201603-aurender-n100h/', permanent: true }],
-  ['/pl/recenzja-absolutesound201602-rogueaudio-rp5/', { destination: '/recenzje/recenzja-absolutesound201602-rogueaudio-rp5/', permanent: true }],
-  ['/recenzja-absolutesound201602-rogueaudio-rp5/', { destination: '/recenzje/recenzja-absolutesound201602-rogueaudio-rp5/', permanent: true }],
-  ['/pl/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/', { destination: '/recenzje/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/', permanent: true }],
-  ['/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/', { destination: '/recenzje/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/', permanent: true }],
-  ['/pl/recenzja-highfidelity201601-dcs-rossiniplayer/', { destination: '/recenzje/recenzja-highfidelity201601-dcs-rossiniplayer/', permanent: true }],
-  ['/recenzja-highfidelity201601-dcs-rossiniplayer/', { destination: '/recenzje/recenzja-highfidelity201601-dcs-rossiniplayer/', permanent: true }],
-  ['/pl/recenzja-absolutesound201601-dagostino-classicstereo/', { destination: '/recenzje/recenzja-absolutesound201601-dagostino-classicstereo/', permanent: true }],
-  ['/recenzja-absolutesound201601-dagostino-classicstereo/', { destination: '/recenzje/recenzja-absolutesound201601-dagostino-classicstereo/', permanent: true }],
-  ['/pl/recenzja-speakershack201601-dagostino-momentumintegrated/', { destination: '/recenzje/recenzja-speakershack201601-dagostino-momentumintegrated/', permanent: true }],
-  ['/recenzja-speakershack201601-dagostino-momentumintegrated/', { destination: '/recenzje/recenzja-speakershack201601-dagostino-momentumintegrated/', permanent: true }],
-  ['/pl/recenzja-hiresaudiocentral201512-goldenear-tritonone/', { destination: '/recenzje/recenzja-hiresaudiocentral201512-goldenear-tritonone/', permanent: true }],
-  ['/recenzja-hiresaudiocentral201512-goldenear-tritonone/', { destination: '/recenzje/recenzja-hiresaudiocentral201512-goldenear-tritonone/', permanent: true }],
-  ['/pl/recenzja-absolutesound201512-aurender-w20/', { destination: '/recenzje/recenzja-absolutesound201512-aurender-w20/', permanent: true }],
-  ['/recenzja-absolutesound201512-aurender-w20/', { destination: '/recenzje/recenzja-absolutesound201512-aurender-w20/', permanent: true }],
-  ['/pl/recenzja-positivefeedback201511-synergisticresearch-groundingblock/', { destination: '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/', permanent: true }],
-  ['/recenzja-positivefeedback201511-synergisticresearch-groundingblock/', { destination: '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/', permanent: true }],
-  ['/pl/recenzja-hifiimuzyka201511-goldenear-tritonfive/', { destination: '/recenzje/recenzja-hifiimuzyka201511-goldenear-tritonfive/', permanent: true }],
-  ['/recenzja-hifiimuzyka201511-goldenear-tritonfive/', { destination: '/recenzje/recenzja-hifiimuzyka201511-goldenear-tritonfive/', permanent: true }],
-  ['/pl/recenzja-positivefeedback201511-synergisticresearch-hft/', { destination: '/recenzje/recenzja-positivefeedback201511-synergisticresearch-hft/', permanent: true }],
-  ['/recenzja-positivefeedback201511-synergisticresearch-hft/', { destination: '/recenzje/recenzja-positivefeedback201511-synergisticresearch-hft/', permanent: true }],
-  ['/pl/recenzja-hifiplus201511-dcs-rossini/', { destination: '/recenzje/recenzja-hifiplus201511-dcs-rossini/', permanent: true }],
-  ['/recenzja-hifiplus201511-dcs-rossini/', { destination: '/recenzje/recenzja-hifiplus201511-dcs-rossini/', permanent: true }],
-  ['/pl/vandersteen-vlr-woods/', { destination: '/recenzje/vandersteen-vlr-woods/', permanent: true }],
-  ['/vandersteen-vlr-woods/', { destination: '/recenzje/vandersteen-vlr-woods/', permanent: true }],
-  ['/pl/recenzja-absolutesound201510-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-absolutesound201510-wilsonaudio-sabrina/', permanent: true }],
-  ['/recenzja-absolutesound201510-wilsonaudio-sabrina/', { destination: '/recenzje/recenzja-absolutesound201510-wilsonaudio-sabrina/', permanent: true }],
-  ['/pl/recenzja-audiovideo201508-wilsonaudio-sasha2/', { destination: '/recenzje/recenzja-audiovideo201508-wilsonaudio-sasha2/', permanent: true }],
-  ['/recenzja-audiovideo201508-wilsonaudio-sasha2/', { destination: '/recenzje/recenzja-audiovideo201508-wilsonaudio-sasha2/', permanent: true }],
-  ['/pl/recenzja-absolutesound201509-goldenear-tritonfive/', { destination: '/recenzje/recenzja-absolutesound201509-goldenear-tritonfive/', permanent: true }],
-  ['/recenzja-absolutesound201509-goldenear-tritonfive/', { destination: '/recenzje/recenzja-absolutesound201509-goldenear-tritonfive/', permanent: true }],
-  ['/pl/recenzja-audiobeat201508-shunyataresearch-sigma/', { destination: '/recenzje/recenzja-audiobeat201508-shunyataresearch-sigma/', permanent: true }],
-  ['/recenzja-audiobeat201508-shunyataresearch-sigma/', { destination: '/recenzje/recenzja-audiobeat201508-shunyataresearch-sigma/', permanent: true }],
-  ['/pl/recenzja-audiovideo201507-dagostino-classicstereo/', { destination: '/recenzje/recenzja-audiovideo201507-dagostino-classicstereo/', permanent: true }],
-  ['/recenzja-audiovideo201507-dagostino-classicstereo/', { destination: '/recenzje/recenzja-audiovideo201507-dagostino-classicstereo/', permanent: true }],
-  ['/pl/recenzja-audio201505-rogueaudio-sphinx/', { destination: '/recenzje/recenzja-audio201505-rogueaudio-sphinx/', permanent: true }],
-  ['/recenzja-audio201505-rogueaudio-sphinx/', { destination: '/recenzje/recenzja-audio201505-rogueaudio-sphinx/', permanent: true }],
-  ['/pl/recenzja-absolutesound201504-wilsonaudio-duette/', { destination: '/recenzje/recenzja-absolutesound201504-wilsonaudio-duette/', permanent: true }],
-  ['/recenzja-absolutesound201504-wilsonaudio-duette/', { destination: '/recenzje/recenzja-absolutesound201504-wilsonaudio-duette/', permanent: true }],
-  ['/pl/recenzja-audiovideo201503-goldenear-aon3/', { destination: '/recenzje/recenzja-audiovideo201503-goldenear-aon3/', permanent: true }],
-  ['/recenzja-audiovideo201503-goldenear-aon3/', { destination: '/recenzje/recenzja-audiovideo201503-goldenear-aon3/', permanent: true }],
-  ['/pl/recenzja-audiobeat201503-shunyataresearch-venom/', { destination: '/recenzje/recenzja-audiobeat201503-shunyataresearch-venom/', permanent: true }],
-  ['/recenzja-audiobeat201503-shunyataresearch-venom/', { destination: '/recenzje/recenzja-audiobeat201503-shunyataresearch-venom/', permanent: true }],
-  ['/pl/recenzja-highfidelity201501-goldenear-tritonone/', { destination: '/recenzje/recenzja-highfidelity201501-goldenear-tritonone/', permanent: true }],
-  ['/recenzja-highfidelity201501-goldenear-tritonone/', { destination: '/recenzje/recenzja-highfidelity201501-goldenear-tritonone/', permanent: true }],
-  ['/pl/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/', { destination: '/recenzje/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/', permanent: true }],
-  ['/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/', { destination: '/recenzje/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/', permanent: true }],
-  ['/pl/recenzja-audiostream201412-synergisticresearch-atmosphere/', { destination: '/recenzje/recenzja-audiostream201412-synergisticresearch-atmosphere/', permanent: true }],
-  ['/recenzja-audiostream201412-synergisticresearch-atmosphere/', { destination: '/recenzje/recenzja-audiostream201412-synergisticresearch-atmosphere/', permanent: true }],
-  ['/pl/recenzja-hifiplus201412-goldenear-tritonone/', { destination: '/recenzje/recenzja-hifiplus201412-goldenear-tritonone/', permanent: true }],
-  ['/recenzja-hifiplus201412-goldenear-tritonone/', { destination: '/recenzje/recenzja-hifiplus201412-goldenear-tritonone/', permanent: true }],
-  ['/pl/recenzja-absolutesound201410-goldenear-tritonone/', { destination: '/recenzje/recenzja-absolutesound201410-goldenear-tritonone/', permanent: true }],
-  ['/recenzja-absolutesound201410-goldenear-tritonone/', { destination: '/recenzje/recenzja-absolutesound201410-goldenear-tritonone/', permanent: true }],
-  ['/pl/recenzja-hifiplus201410-aurender-w20/', { destination: '/recenzje/recenzja-hifiplus201410-aurender-w20/', permanent: true }],
-  ['/recenzja-hifiplus201410-aurender-w20/', { destination: '/recenzje/recenzja-hifiplus201410-aurender-w20/', permanent: true }],
-  ['/pl/grimm-ls1-test-w-positive-feedback/', { destination: '/recenzje/grimm-ls1-test-w-positive-feedback/', permanent: true }],
-  ['/grimm-ls1-test-w-positive-feedback/', { destination: '/recenzje/grimm-ls1-test-w-positive-feedback/', permanent: true }],
-  ['/pl/recenzja-highfidelity201408-goldenear-tritonseven/', { destination: '/recenzje/recenzja-highfidelity201408-goldenear-tritonseven/', permanent: true }],
-  ['/recenzja-highfidelity201408-goldenear-tritonseven/', { destination: '/recenzje/recenzja-highfidelity201408-goldenear-tritonseven/', permanent: true }],
-  ['/pl/recenzja-soundandvision201407-goldenear-tritonone/', { destination: '/recenzje/recenzja-soundandvision201407-goldenear-tritonone/', permanent: true }],
-  ['/recenzja-soundandvision201407-goldenear-tritonone/', { destination: '/recenzje/recenzja-soundandvision201407-goldenear-tritonone/', permanent: true }],
-  ['/pl/recenzja-arc-vsi75-w-hifiplus-201408/', { destination: '/recenzje/recenzja-arc-vsi75-w-hifiplus-201408/', permanent: true }],
-  ['/recenzja-arc-vsi75-w-hifiplus-201408/', { destination: '/recenzje/recenzja-arc-vsi75-w-hifiplus-201408/', permanent: true }],
-  ['/pl/recenzja-absolutesound201407-acousticsignature-wow-xl/', { destination: '/recenzje/recenzja-absolutesound201407-acousticsignature-wow-xl/', permanent: true }],
-  ['/recenzja-absolutesound201407-acousticsignature-wow-xl/', { destination: '/recenzje/recenzja-absolutesound201407-acousticsignature-wow-xl/', permanent: true }],
-  ['/pl/recenzja-audiovideo201407-rogueaudio-sphinx/', { destination: '/recenzje/recenzja-audiovideo201407-rogueaudio-sphinx/', permanent: true }],
-  ['/recenzja-audiovideo201407-rogueaudio-sphinx/', { destination: '/recenzje/recenzja-audiovideo201407-rogueaudio-sphinx/', permanent: true }],
-  ['/pl/recenzja-audiostream-201407-synergisticresearch-ect/', { destination: '/recenzje/recenzja-audiostream-201407-synergisticresearch-ect/', permanent: true }],
-  ['/recenzja-audiostream-201407-synergisticresearch-ect/', { destination: '/recenzje/recenzja-audiostream-201407-synergisticresearch-ect/', permanent: true }],
-  ['/pl/recenzja-audiovideo201407-primaluna-prologueclassickt120/', { destination: '/recenzje/recenzja-audiovideo201407-primaluna-prologueclassickt120/', permanent: true }],
-  ['/recenzja-audiovideo201407-primaluna-prologueclassickt120/', { destination: '/recenzje/recenzja-audiovideo201407-primaluna-prologueclassickt120/', permanent: true }],
-  ['/pl/recenzja-highfidelity201406-aurender-x100l/', { destination: '/recenzje/recenzja-highfidelity201406-aurender-x100l/', permanent: true }],
-  ['/recenzja-highfidelity201406-aurender-x100l/', { destination: '/recenzje/recenzja-highfidelity201406-aurender-x100l/', permanent: true }],
-  ['/pl/recenzja-soundstage201404-aurender-x100l-i-x100s/', { destination: '/recenzje/recenzja-soundstage201404-aurender-x100l-i-x100s/', permanent: true }],
-  ['/recenzja-soundstage201404-aurender-x100l-i-x100s/', { destination: '/recenzje/recenzja-soundstage201404-aurender-x100l-i-x100s/', permanent: true }],
-  ['/pl/recenzja-hometheaterreview201404-goldenear-tritonseven/', { destination: '/recenzje/recenzja-hometheaterreview201404-goldenear-tritonseven/', permanent: true }],
-  ['/recenzja-hometheaterreview201404-goldenear-tritonseven/', { destination: '/recenzje/recenzja-hometheaterreview201404-goldenear-tritonseven/', permanent: true }],
-  ['/pl/recenzja-hifiplus201403-wilsonaudio-duette/', { destination: '/recenzje/recenzja-hifiplus201403-wilsonaudio-duette/', permanent: true }],
-  ['/recenzja-hifiplus201403-wilsonaudio-duette/', { destination: '/recenzje/recenzja-hifiplus201403-wilsonaudio-duette/', permanent: true }],
-  ['/pl/recenzja-audiovideo201403-atresaniaaudio-exoteryc/', { destination: '/recenzje/recenzja-audiovideo201403-atresaniaaudio-exoteryc/', permanent: true }],
-  ['/recenzja-audiovideo201403-atresaniaaudio-exoteryc/', { destination: '/recenzje/recenzja-audiovideo201403-atresaniaaudio-exoteryc/', permanent: true }],
-  ['/pl/recenzja-arc-reference-250-hifiplus/', { destination: '/recenzje/recenzja-arc-reference-250-hifiplus/', permanent: true }],
-  ['/recenzja-arc-reference-250-hifiplus/', { destination: '/recenzje/recenzja-arc-reference-250-hifiplus/', permanent: true }],
-  ['/pl/recenzja-highfidelity201401-dcs-vivaldi/', { destination: '/recenzje/recenzja-highfidelity201401-dcs-vivaldi/', permanent: true }],
-  ['/recenzja-highfidelity201401-dcs-vivaldi/', { destination: '/recenzje/recenzja-highfidelity201401-dcs-vivaldi/', permanent: true }],
-  ['/pl/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/', { destination: '/recenzje/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/', permanent: true }],
-  ['/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/', { destination: '/recenzje/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/', permanent: true }],
-  ['/pl/recenzja-absolutesound201401-dagostino-momentum/', { destination: '/recenzje/recenzja-absolutesound201401-dagostino-momentum/', permanent: true }],
-  ['/recenzja-absolutesound201401-dagostino-momentum/', { destination: '/recenzje/recenzja-absolutesound201401-dagostino-momentum/', permanent: true }],
-  ['/pl/recenzja-digitaltrends201401-goldenear-tritonseven/', { destination: '/recenzje/recenzja-digitaltrends201401-goldenear-tritonseven/', permanent: true }],
-  ['/recenzja-digitaltrends201401-goldenear-tritonseven/', { destination: '/recenzje/recenzja-digitaltrends201401-goldenear-tritonseven/', permanent: true }],
-  ['/pl/recenzja-absolutesound201312-wilsonaudio-alexia/', { destination: '/recenzje/recenzja-absolutesound201312-wilsonaudio-alexia/', permanent: true }],
-  ['/recenzja-absolutesound201312-wilsonaudio-alexia/', { destination: '/recenzje/recenzja-absolutesound201312-wilsonaudio-alexia/', permanent: true }],
-  ['/pl/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/', { destination: '/recenzje/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/', permanent: true }],
-  ['/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/', { destination: '/recenzje/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/', permanent: true }],
-  ['/pl/recenzja-hificritic201312-aurender-w20/', { destination: '/recenzje/recenzja-hificritic201312-aurender-w20/', permanent: true }],
-  ['/recenzja-hificritic201312-aurender-w20/', { destination: '/recenzje/recenzja-hificritic201312-aurender-w20/', permanent: true }],
-  ['/pl/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/', { destination: '/recenzje/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/', permanent: true }],
-  ['/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/', { destination: '/recenzje/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/', permanent: true }],
-  ['/pl/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/', { destination: '/recenzje/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/', permanent: true }],
-  ['/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/', { destination: '/recenzje/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/', permanent: true }],
-  ['/pl/recenzja-highfidelity201311-dagostino-momentumpreamplifier/', { destination: '/recenzje/recenzja-highfidelity201311-dagostino-momentumpreamplifier/', permanent: true }],
-  ['/recenzja-highfidelity201311-dagostino-momentumpreamplifier/', { destination: '/recenzje/recenzja-highfidelity201311-dagostino-momentumpreamplifier/', permanent: true }],
-  ['/pl/recenzja-audiovideo201311-aurender-w20/', { destination: '/recenzje/recenzja-audiovideo201311-aurender-w20/', permanent: true }],
-  ['/recenzja-audiovideo201311-aurender-w20/', { destination: '/recenzje/recenzja-audiovideo201311-aurender-w20/', permanent: true }],
-  ['/pl/recenzja-absolutesound201311-goldenear-tritonseven/', { destination: '/recenzje/recenzja-absolutesound201311-goldenear-tritonseven/', permanent: true }],
-  ['/recenzja-absolutesound201311-goldenear-tritonseven/', { destination: '/recenzje/recenzja-absolutesound201311-goldenear-tritonseven/', permanent: true }],
-  ['/pl/recenzja-stereophile201311-goldenear-aon2/', { destination: '/recenzje/recenzja-stereophile201311-goldenear-aon2/', permanent: true }],
-  ['/recenzja-stereophile201311-goldenear-aon2/', { destination: '/recenzje/recenzja-stereophile201311-goldenear-aon2/', permanent: true }],
-  ['/pl/recenzja-audiostream201310-synergistic-research-feq-hft/', { destination: '/recenzje/recenzja-audiostream201310-synergistic-research-feq-hft/', permanent: true }],
-  ['/recenzja-audiostream201310-synergistic-research-feq-hft/', { destination: '/recenzje/recenzja-audiostream201310-synergistic-research-feq-hft/', permanent: true }],
-  ['/pl/recenzja-stereophile-201310-arc-refcd9/', { destination: '/recenzje/recenzja-stereophile-201310-arc-refcd9/', permanent: true }],
-  ['/recenzja-stereophile-201310-arc-refcd9/', { destination: '/recenzje/recenzja-stereophile-201310-arc-refcd9/', permanent: true }],
-  ['/pl/recenzja-australianhifi20130708-usheraudio-dancerminix/', { destination: '/recenzje/recenzja-australianhifi20130708-usheraudio-dancerminix/', permanent: true }],
-  ['/recenzja-australianhifi20130708-usheraudio-dancerminix/', { destination: '/recenzje/recenzja-australianhifi20130708-usheraudio-dancerminix/', permanent: true }],
-  ['/pl/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/', { destination: '/recenzje/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/', permanent: true }],
-  ['/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/', { destination: '/recenzje/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/', permanent: true }],
-  ['/pl/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/', { destination: '/recenzje/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/', permanent: true }],
-  ['/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/', { destination: '/recenzje/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/', permanent: true }],
-  ['/pl/recenzja-audiovideo201306-dagostino-momentum-stereo/', { destination: '/recenzje/recenzja-audiovideo201306-dagostino-momentum-stereo/', permanent: true }],
-  ['/recenzja-audiovideo201306-dagostino-momentum-stereo/', { destination: '/recenzje/recenzja-audiovideo201306-dagostino-momentum-stereo/', permanent: true }],
-  ['/pl/recenzja-absolutesound201305-dcs-vivaldi/', { destination: '/recenzje/recenzja-absolutesound201305-dcs-vivaldi/', permanent: true }],
-  ['/recenzja-absolutesound201305-dcs-vivaldi/', { destination: '/recenzje/recenzja-absolutesound201305-dcs-vivaldi/', permanent: true }],
-  ['/pl/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/', { destination: '/recenzje/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/', permanent: true }],
-  ['/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/', { destination: '/recenzje/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/', permanent: true }],
-  ['/pl/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/', { destination: '/recenzje/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/', permanent: true }],
-  ['/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/', { destination: '/recenzje/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/', permanent: true }],
-  ['/pl/recenzja-highfidelity201303-dagostino-momentumstereo/', { destination: '/recenzje/recenzja-highfidelity201303-dagostino-momentumstereo/', permanent: true }],
-  ['/recenzja-highfidelity201303-dagostino-momentumstereo/', { destination: '/recenzje/recenzja-highfidelity201303-dagostino-momentumstereo/', permanent: true }],
-  ['/pl/test-glosnikow-vandersteen-audio-treo-w-stereophile/', { destination: '/recenzje/test-glosnikow-vandersteen-audio-treo-w-stereophile/', permanent: true }],
-  ['/test-glosnikow-vandersteen-audio-treo-w-stereophile/', { destination: '/recenzje/test-glosnikow-vandersteen-audio-treo-w-stereophile/', permanent: true }],
-  ['/pl/recenzja-stereophile201302-dagostino-momentum/', { destination: '/recenzje/recenzja-stereophile201302-dagostino-momentum/', permanent: true }],
-  ['/recenzja-stereophile201302-dagostino-momentum/', { destination: '/recenzje/recenzja-stereophile201302-dagostino-momentum/', permanent: true }],
-  ['/pl/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/', { destination: '/recenzje/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/', permanent: true }],
-  ['/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/', { destination: '/recenzje/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/', permanent: true }],
-  ['/pl/recenzja-hifiplus201301-artesaniaaudio-exoteryc/', { destination: '/recenzje/recenzja-hifiplus201301-artesaniaaudio-exoteryc/', permanent: true }],
-  ['/recenzja-hifiplus201301-artesaniaaudio-exoteryc/', { destination: '/recenzje/recenzja-hifiplus201301-artesaniaaudio-exoteryc/', permanent: true }],
-  ['/pl/recenzja-hificritic201210-dagostino-momentumstereo/', { destination: '/recenzje/recenzja-hificritic201210-dagostino-momentumstereo/', permanent: true }],
-  ['/recenzja-hificritic201210-dagostino-momentumstereo/', { destination: '/recenzje/recenzja-hificritic201210-dagostino-momentumstereo/', permanent: true }],
-  ['/pl/recenzja-audiotechnique201210-dcs-vivaldi/', { destination: '/recenzje/recenzja-audiotechnique201210-dcs-vivaldi/', permanent: true }],
-  ['/recenzja-audiotechnique201210-dcs-vivaldi/', { destination: '/recenzje/recenzja-audiotechnique201210-dcs-vivaldi/', permanent: true }],
-  ['/pl/recenzja-audiovideo201210-usheraudio-v602/', { destination: '/recenzje/recenzja-audiovideo201210-usheraudio-v602/', permanent: true }],
-  ['/recenzja-audiovideo201210-usheraudio-v602/', { destination: '/recenzje/recenzja-audiovideo201210-usheraudio-v602/', permanent: true }],
-  ['/pl/recenzja-hifinews201208-dagostino-momentumstereo/', { destination: '/recenzje/recenzja-hifinews201208-dagostino-momentumstereo/', permanent: true }],
-  ['/recenzja-hifinews201208-dagostino-momentumstereo/', { destination: '/recenzje/recenzja-hifinews201208-dagostino-momentumstereo/', permanent: true }],
-  ['/pl/recenzja-soundstageultra201207-vandersteen-treo/', { destination: '/recenzje/recenzja-soundstageultra201207-vandersteen-treo/', permanent: true }],
-  ['/recenzja-soundstageultra201207-vandersteen-treo/', { destination: '/recenzje/recenzja-soundstageultra201207-vandersteen-treo/', permanent: true }],
-  ['/pl/recenzja-stereophile201206-primaluna-prologuepremium/', { destination: '/recenzje/recenzja-stereophile201206-primaluna-prologuepremium/', permanent: true }],
-  ['/recenzja-stereophile201206-primaluna-prologuepremium/', { destination: '/recenzje/recenzja-stereophile201206-primaluna-prologuepremium/', permanent: true }],
-  ['/pl/recenzja-arc-ref5se-hificritic-2012-2/', { destination: '/recenzje/recenzja-arc-ref5se-hificritic-2012-2/', permanent: true }],
-  ['/recenzja-arc-ref5se-hificritic-2012-2/', { destination: '/recenzje/recenzja-arc-ref5se-hificritic-2012-2/', permanent: true }],
-  ['/pl/recenzja-arc-ref150-hificritic-2012-01/', { destination: '/recenzje/recenzja-arc-ref150-hificritic-2012-01/', permanent: true }],
-  ['/recenzja-arc-ref150-hificritic-2012-01/', { destination: '/recenzje/recenzja-arc-ref150-hificritic-2012-01/', permanent: true }],
-  ['/pl/recenzja-stereophile201202-goldenear-tritontwo/', { destination: '/recenzje/recenzja-stereophile201202-goldenear-tritontwo/', permanent: true }],
-  ['/recenzja-stereophile201202-goldenear-tritontwo/', { destination: '/recenzje/recenzja-stereophile201202-goldenear-tritontwo/', permanent: true }],
-  ['/pl/recenzja-absolutesound201201-vandersteen-5acarbon/', { destination: '/recenzje/recenzja-absolutesound201201-vandersteen-5acarbon/', permanent: true }],
-  ['/recenzja-absolutesound201201-vandersteen-5acarbon/', { destination: '/recenzje/recenzja-absolutesound201201-vandersteen-5acarbon/', permanent: true }],
-  ['/pl/recenzja-hifinews20117-dagostino-momentum/', { destination: '/recenzje/recenzja-hifinews20117-dagostino-momentum/', permanent: true }],
-  ['/recenzja-hifinews20117-dagostino-momentum/', { destination: '/recenzje/recenzja-hifinews20117-dagostino-momentum/', permanent: true }],
-  ['/pl/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/', { destination: '/recenzje/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/', permanent: true }],
-  ['/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/', { destination: '/recenzje/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/', permanent: true }],
-  ['/pl/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/', { destination: '/recenzje/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/', permanent: true }],
-  ['/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/', { destination: '/recenzje/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/', permanent: true }],
-  ['/pl/recenzja-stereophile201006-spiralgroove-sg2/', { destination: '/recenzje/recenzja-stereophile201006-spiralgroove-sg2/', permanent: true }],
-  ['/recenzja-stereophile201006-spiralgroove-sg2/', { destination: '/recenzje/recenzja-stereophile201006-spiralgroove-sg2/', permanent: true }],
-  ['/pl/recenzja-stereophile201006-spiralgroove-centroid/', { destination: '/recenzje/recenzja-stereophile201006-spiralgroove-centroid/', permanent: true }],
-  ['/recenzja-stereophile201006-spiralgroove-centroid/', { destination: '/recenzje/recenzja-stereophile201006-spiralgroove-centroid/', permanent: true }],
-  ['/pl/recenzja-hifiplus200911-usheraudio-minidancertwo/', { destination: '/recenzje/recenzja-hifiplus200911-usheraudio-minidancertwo/', permanent: true }],
-  ['/recenzja-hifiplus200911-usheraudio-minidancertwo/', { destination: '/recenzje/recenzja-hifiplus200911-usheraudio-minidancertwo/', permanent: true }],
-  ['/pl/recenzja-audiovideo200910-vandersteen-2ce/', { destination: '/recenzje/recenzja-audiovideo200910-vandersteen-2ce/', permanent: true }],
-  ['/recenzja-audiovideo200910-vandersteen-2ce/', { destination: '/recenzje/recenzja-audiovideo200910-vandersteen-2ce/', permanent: true }],
-  ['/pl/test-glosnikow-vandersteen-1c-w-audio-video/', { destination: '/recenzje/test-glosnikow-vandersteen-1c-w-audio-video/', permanent: true }],
-  ['/test-glosnikow-vandersteen-1c-w-audio-video/', { destination: '/recenzje/test-glosnikow-vandersteen-1c-w-audio-video/', permanent: true }],
-  ['/pl/recenzja-playbackmagazine200909-usheraudio-minidancertwo/', { destination: '/recenzje/recenzja-playbackmagazine200909-usheraudio-minidancertwo/', permanent: true }],
-  ['/recenzja-playbackmagazine200909-usheraudio-minidancertwo/', { destination: '/recenzje/recenzja-playbackmagazine200909-usheraudio-minidancertwo/', permanent: true }],
-  ['/pl/recenzja-absolutesound200804-usheraudio-be20/', { destination: '/recenzje/recenzja-absolutesound200804-usheraudio-be20/', permanent: true }],
-  ['/recenzja-absolutesound200804-usheraudio-be20/', { destination: '/recenzje/recenzja-absolutesound200804-usheraudio-be20/', permanent: true }],
-  ['/pl/recenzja-audiovideo200704-usheraudio-v601/', { destination: '/recenzje/recenzja-audiovideo200704-usheraudio-v601/', permanent: true }],
-  ['/recenzja-audiovideo200704-usheraudio-v601/', { destination: '/recenzje/recenzja-audiovideo200704-usheraudio-v601/', permanent: true }],
-  ['/pl/recenzja-audiovideo200701-usheraudio-v602/', { destination: '/recenzje/recenzja-audiovideo200701-usheraudio-v602/', permanent: true }],
-  ['/recenzja-audiovideo200701-usheraudio-v602/', { destination: '/recenzje/recenzja-audiovideo200701-usheraudio-v602/', permanent: true }],
-  ['/pl/recenzja-stereophile200611-vandersteen-quatro/', { destination: '/recenzje/recenzja-stereophile200611-vandersteen-quatro/', permanent: true }],
-  ['/recenzja-stereophile200611-vandersteen-quatro/', { destination: '/recenzje/recenzja-stereophile200611-vandersteen-quatro/', permanent: true }],
-  ['/pl/recenzja-hifidelity200601-usher-s-520/', { destination: '/recenzje/recenzja-hifidelity200601-usher-s-520/', permanent: true }],
-  ['/recenzja-hifidelity200601-usher-s-520/', { destination: '/recenzje/recenzja-hifidelity200601-usher-s-520/', permanent: true }],
-  ['/pl/recenzja-stereophile200511-usheraudio-s520/', { destination: '/recenzje/recenzja-stereophile200511-usheraudio-s520/', permanent: true }],
-  ['/recenzja-stereophile200511-usheraudio-s520/', { destination: '/recenzje/recenzja-stereophile200511-usheraudio-s520/', permanent: true }],
-  ['/pl/recenzja-audiovideo20050708-usheraudio-s520/', { destination: '/recenzje/recenzja-audiovideo20050708-usheraudio-s520/', permanent: true }],
-  ['/recenzja-audiovideo20050708-usheraudio-s520/', { destination: '/recenzje/recenzja-audiovideo20050708-usheraudio-s520/', permanent: true }],
-  ['/pl/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/', { destination: '/recenzje/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/', permanent: true }],
-  ['/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/', { destination: '/recenzje/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/', permanent: true }],
-  ['/pl/recenzja-avguide200411-usheraudio-b520/', { destination: '/recenzje/recenzja-avguide200411-usheraudio-b520/', permanent: true }],
-  ['/recenzja-avguide200411-usheraudio-b520/', { destination: '/recenzje/recenzja-avguide200411-usheraudio-b520/', permanent: true }],
-  ['/pl/recenzja-audioperfectionistjournal200312-vandersteen-5a/', { destination: '/recenzje/recenzja-audioperfectionistjournal200312-vandersteen-5a/', permanent: true }],
-  ['/recenzja-audioperfectionistjournal200312-vandersteen-5a/', { destination: '/recenzje/recenzja-audioperfectionistjournal200312-vandersteen-5a/', permanent: true }],
-  ['/pl/recenzja-soundstage199901-vibrapod/', { destination: '/recenzje/recenzja-soundstage199901-vibrapod/', permanent: true }],
-  ['/recenzja-soundstage199901-vibrapod/', { destination: '/recenzje/recenzja-soundstage199901-vibrapod/', permanent: true }],
-  ['/pl/audio-research-ref-cd9se-w-audio-video/', { destination: '/recenzje/pdf/audio-research-ref-cd9se-w-audio-video/', permanent: true }],
-  ['/audio-research-ref-cd9se-w-audio-video/', { destination: '/recenzje/pdf/audio-research-ref-cd9se-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/Audio-Research-Ref-CD9-SE_av10-20.pdf', { destination: '/recenzje/pdf/audio-research-ref-cd9se-w-audio-video/', permanent: true }],
-  ['/pl/audio-research-sp20-na-lata-hfm-0614/', { destination: '/recenzje/pdf/audio-research-sp20-na-lata-hfm-0614/', permanent: true }],
-  ['/audio-research-sp20-na-lata-hfm-0614/', { destination: '/recenzje/pdf/audio-research-sp20-na-lata-hfm-0614/', permanent: true }],
-  ['/assets/pdfy/HFM_06_14_pg42-47.pdf', { destination: '/recenzje/pdf/audio-research-sp20-na-lata-hfm-0614/', permanent: true }],
-  ['/pl/goldenear-brx-w-audiovideo/', { destination: '/recenzje/pdf/goldenear-brx-w-audiovideo/', permanent: true }],
-  ['/goldenear-brx-w-audiovideo/', { destination: '/recenzje/pdf/goldenear-brx-w-audiovideo/', permanent: true }],
-  ['/assets/Uploads/GoldenEar-BRX_av11-20.pdf', { destination: '/recenzje/pdf/goldenear-brx-w-audiovideo/', permanent: true }],
-  ['/pl/grimm-audio-mu1-transport-nowej-ery/', { destination: '/recenzje/pdf/grimm-audio-mu1-transport-nowej-ery/', permanent: true }],
-  ['/grimm-audio-mu1-transport-nowej-ery/', { destination: '/recenzje/pdf/grimm-audio-mu1-transport-nowej-ery/', permanent: true }],
-  ['/assets/Uploads/Grimm-MU1_av7-8_20.pdf', { destination: '/recenzje/pdf/grimm-audio-mu1-transport-nowej-ery/', permanent: true }],
-  ['/pl/nowa-article-page/', { destination: '/recenzje/pdf/nowa-article-page/', permanent: true }],
-  ['/nowa-article-page/', { destination: '/recenzje/pdf/nowa-article-page/', permanent: true }],
-  ['/assets/Uploads/KLH-MODEL-FIVE.pdf', { destination: '/recenzje/pdf/nowa-article-page/', permanent: true }],
-  ['/pl/recenzja-a202004-primalunaevo300/', { destination: '/recenzje/pdf/recenzja-a202004-primalunaevo300/', permanent: true }],
-  ['/recenzja-a202004-primalunaevo300/', { destination: '/recenzje/pdf/recenzja-a202004-primalunaevo300/', permanent: true }],
-  ['/assets/Uploads/PrimaLuna-EVO-300.pdf', { destination: '/recenzje/pdf/recenzja-a202004-primalunaevo300/', permanent: true }],
-  ['/pl/recenzja-arc-dac8-av-2011-03/', { destination: '/recenzje/pdf/recenzja-arc-dac8-av-2011-03/', permanent: true }],
-  ['/recenzja-arc-dac8-av-2011-03/', { destination: '/recenzje/pdf/recenzja-arc-dac8-av-2011-03/', permanent: true }],
-  ['/assets/Uploads/ARC-DAC8-AudioVideo.pdf', { destination: '/recenzje/pdf/recenzja-arc-dac8-av-2011-03/', permanent: true }],
-  ['/pl/recenzja-arc-gs150-audiovideo-201505/', { destination: '/recenzje/pdf/recenzja-arc-gs150-audiovideo-201505/', permanent: true }],
-  ['/recenzja-arc-gs150-audiovideo-201505/', { destination: '/recenzje/pdf/recenzja-arc-gs150-audiovideo-201505/', permanent: true }],
-  ['/assets/Uploads/ARC-GS150_av5-6_2015lr.pdf', { destination: '/recenzje/pdf/recenzja-arc-gs150-audiovideo-201505/', permanent: true }],
-  ['/pl/recenzja-arc-ls27-hfm-2012-02/', { destination: '/recenzje/pdf/recenzja-arc-ls27-hfm-2012-02/', permanent: true }],
-  ['/recenzja-arc-ls27-hfm-2012-02/', { destination: '/recenzje/pdf/recenzja-arc-ls27-hfm-2012-02/', permanent: true }],
-  ['/assets/Uploads/HiFiiMuzyka022012.pdf', { destination: '/recenzje/pdf/recenzja-arc-ls27-hfm-2012-02/', permanent: true }],
-  ['/pl/recenzja-arc-ref150-audio-video-2011-12/', { destination: '/recenzje/pdf/recenzja-arc-ref150-audio-video-2011-12/', permanent: true }],
-  ['/recenzja-arc-ref150-audio-video-2011-12/', { destination: '/recenzje/pdf/recenzja-arc-ref150-audio-video-2011-12/', permanent: true }],
-  ['/assets/Uploads/AudioVideo122011Audio-Research-REF150.pdf', { destination: '/recenzje/pdf/recenzja-arc-ref150-audio-video-2011-12/', permanent: true }],
-  ['/pl/recenzja-arc-refcd9-hfm-2013-10/', { destination: '/recenzje/pdf/recenzja-arc-refcd9-hfm-2013-10/', permanent: true }],
-  ['/recenzja-arc-refcd9-hfm-2013-10/', { destination: '/recenzje/pdf/recenzja-arc-refcd9-hfm-2013-10/', permanent: true }],
-  ['/assets/Uploads/HiFiiMuzyka102013_Audio_Research_CD9-v2.pdf', { destination: '/recenzje/pdf/recenzja-arc-refcd9-hfm-2013-10/', permanent: true }],
-  ['/pl/recenzja-arc-vsi60-hfm/', { destination: '/recenzje/pdf/recenzja-arc-vsi60-hfm/', permanent: true }],
-  ['/recenzja-arc-vsi60-hfm/', { destination: '/recenzje/pdf/recenzja-arc-vsi60-hfm/', permanent: true }],
-  ['/assets/Uploads/VSi60-Hi-fiiMuzyka102011.pdf', { destination: '/recenzje/pdf/recenzja-arc-vsi60-hfm/', permanent: true }],
-  ['/pl/recenzja-arc-vsi75-maly-wspanialy-audio-video/', { destination: '/recenzje/pdf/recenzja-arc-vsi75-maly-wspanialy-audio-video/', permanent: true }],
-  ['/recenzja-arc-vsi75-maly-wspanialy-audio-video/', { destination: '/recenzje/pdf/recenzja-arc-vsi75-maly-wspanialy-audio-video/', permanent: true }],
-  ['/assets/pdfy/recenzja-ARC-VSi75-audio-video.pdf', { destination: '/recenzje/pdf/recenzja-arc-vsi75-maly-wspanialy-audio-video/', permanent: true }],
-  ['/pl/recenzja-audio-research-cd5-hfm-2009/', { destination: '/recenzje/pdf/recenzja-audio-research-cd5-hfm-2009/', permanent: true }],
-  ['/recenzja-audio-research-cd5-hfm-2009/', { destination: '/recenzje/pdf/recenzja-audio-research-cd5-hfm-2009/', permanent: true }],
-  ['/assets/Uploads/HIFIiMuzyka032009_Audio_Research_CD5.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-cd5-hfm-2009/', permanent: true }],
-  ['/pl/recenzja-audio-research-cd5-hifi-choice-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-cd5-hifi-choice-2010/', permanent: true }],
-  ['/recenzja-audio-research-cd5-hifi-choice-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-cd5-hifi-choice-2010/', permanent: true }],
-  ['/assets/Uploads/HiFiChoice112010AudioResearchCD5.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-cd5-hifi-choice-2010/', permanent: true }],
-  ['/pl/recenzja-audio-research-dspre-audio-video/', { destination: '/recenzje/pdf/recenzja-audio-research-dspre-audio-video/', permanent: true }],
-  ['/recenzja-audio-research-dspre-audio-video/', { destination: '/recenzje/pdf/recenzja-audio-research-dspre-audio-video/', permanent: true }],
-  ['/assets/pdfy/AudioVideo0708-2012AudioResearch-DSPre.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-dspre-audio-video/', permanent: true }],
-  ['/pl/recenzja-audio-research-ref-cd8-av-2010-08/', { destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-av-2010-08/', permanent: true }],
-  ['/recenzja-audio-research-ref-cd8-av-2010-08/', { destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-av-2010-08/', permanent: true }],
-  ['/assets/Uploads/AudioVideo07082010_CD8.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-av-2010-08/', permanent: true }],
-  ['/pl/recenzja-audio-research-ref-cd8-hfm-2009/', { destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-hfm-2009/', permanent: true }],
-  ['/recenzja-audio-research-ref-cd8-hfm-2009/', { destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-hfm-2009/', permanent: true }],
-  ['/assets/Uploads/HIFIiMuzyka092009_Audio_Research_CD8.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-hfm-2009/', permanent: true }],
-  ['/pl/recenzja-audio-research-reference-150/', { destination: '/recenzje/pdf/recenzja-audio-research-reference-150/', permanent: true }],
-  ['/recenzja-audio-research-reference-150/', { destination: '/recenzje/pdf/recenzja-audio-research-reference-150/', permanent: true }],
-  ['/assets/Uploads/HiFiiMuzyka7-82012AR-Reference-150.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-reference-150/', permanent: true }],
-  ['/pl/recenzja-audio-research-reference-5-hfm-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-reference-5-hfm-2010/', permanent: true }],
-  ['/recenzja-audio-research-reference-5-hfm-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-reference-5-hfm-2010/', permanent: true }],
-  ['/assets/Uploads/ARC-Ref5-HiFi-Muzyka.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-reference-5-hfm-2010/', permanent: true }],
-  ['/pl/recenzja-audio-research-vsi60-audiovideo-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-audiovideo-2010/', permanent: true }],
-  ['/recenzja-audio-research-vsi60-audiovideo-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-audiovideo-2010/', permanent: true }],
-  ['/assets/Uploads/AudioVideo052010_AR_VSi60.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-audiovideo-2010/', permanent: true }],
-  ['/pl/recenzja-audio-research-vsi60-hfc-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfc-2010/', permanent: true }],
-  ['/recenzja-audio-research-vsi60-hfc-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfc-2010/', permanent: true }],
-  ['/assets/Uploads/HiFiChoice092010AudioResearchVSi60.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfc-2010/', permanent: true }],
-  ['/pl/recenzja-audio-research-vsi60-hfm-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfm-2010/', permanent: true }],
-  ['/recenzja-audio-research-vsi60-hfm-2010/', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfm-2010/', permanent: true }],
-  ['/assets/Uploads/HIFIiMuzyka112009_Audio_Research_VSi60.pdf', { destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfm-2010/', permanent: true }],
-  ['/pl/recenzja-audio-video-audio-research-reference-dac/', { destination: '/recenzje/pdf/recenzja-audio-video-audio-research-reference-dac/', permanent: true }],
-  ['/recenzja-audio-video-audio-research-reference-dac/', { destination: '/recenzje/pdf/recenzja-audio-video-audio-research-reference-dac/', permanent: true }],
-  ['/assets/pdfy/ARC-Reference-DAC_av11-2012.pdf', { destination: '/recenzje/pdf/recenzja-audio-video-audio-research-reference-dac/', permanent: true }],
-  ['/pl/recenzja-audio201911-goldeneartechnologyaon2/', { destination: '/recenzje/pdf/recenzja-audio201911-goldeneartechnologyaon2/', permanent: true }],
-  ['/recenzja-audio201911-goldeneartechnologyaon2/', { destination: '/recenzje/pdf/recenzja-audio201911-goldeneartechnologyaon2/', permanent: true }],
-  ['/assets/Uploads/GoldenEar-Technology-AON-2.pdf', { destination: '/recenzje/pdf/recenzja-audio201911-goldeneartechnologyaon2/', permanent: true }],
-  ['/pl/recenzja-audio201911-gryphondiablo120/', { destination: '/recenzje/pdf/recenzja-audio201911-gryphondiablo120/', permanent: true }],
-  ['/recenzja-audio201911-gryphondiablo120/', { destination: '/recenzje/pdf/recenzja-audio201911-gryphondiablo120/', permanent: true }],
-  ['/assets/Uploads/Gryphon-DIABLO-120.pdf', { destination: '/recenzje/pdf/recenzja-audio201911-gryphondiablo120/', permanent: true }],
-  ['/pl/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/', { destination: '/recenzje/pdf/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/', permanent: true }],
-  ['/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/', { destination: '/recenzje/pdf/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/', permanent: true }],
-  ['/assets/Uploads/Keces-BP-2400_av5-2020.pdf', { destination: '/recenzje/pdf/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/', permanent: true }],
-  ['/pl/recenzja-aurender-a100-audio202005/', { destination: '/recenzje/pdf/recenzja-aurender-a100-audio202005/', permanent: true }],
-  ['/recenzja-aurender-a100-audio202005/', { destination: '/recenzje/pdf/recenzja-aurender-a100-audio202005/', permanent: true }],
-  ['/assets/Uploads/Aurender-A100.pdf', { destination: '/recenzje/pdf/recenzja-aurender-a100-audio202005/', permanent: true }],
-  ['/pl/recenzja-hfm-arc-ref75/', { destination: '/recenzje/pdf/recenzja-hfm-arc-ref75/', permanent: true }],
-  ['/recenzja-hfm-arc-ref75/', { destination: '/recenzje/pdf/recenzja-hfm-arc-ref75/', permanent: true }],
-  ['/assets/Uploads/recenzja-hfm-arc-ref75.pdf', { destination: '/recenzje/pdf/recenzja-hfm-arc-ref75/', permanent: true }],
-  ['/pl/recenzja-hfm201301-arcvsi75/', { destination: '/recenzje/pdf/recenzja-hfm201301-arcvsi75/', permanent: true }],
-  ['/recenzja-hfm201301-arcvsi75/', { destination: '/recenzje/pdf/recenzja-hfm201301-arcvsi75/', permanent: true }],
-  ['/assets/Uploads/HiFiiMuzyka092013_Audio_Research_VSi75.pdf', { destination: '/recenzje/pdf/recenzja-hfm201301-arcvsi75/', permanent: true }],
-  ['/pl/recenzja-kondycjonera-keces-bp-1200-av-202006/', { destination: '/recenzje/pdf/recenzja-kondycjonera-keces-bp-1200-av-202006/', permanent: true }],
-  ['/recenzja-kondycjonera-keces-bp-1200-av-202006/', { destination: '/recenzje/pdf/recenzja-kondycjonera-keces-bp-1200-av-202006/', permanent: true }],
-  ['/assets/Uploads/Keces-BP-1200_av6-2020.pdf', { destination: '/recenzje/pdf/recenzja-kondycjonera-keces-bp-1200-av-202006/', permanent: true }],
-  ['/pl/recenzja-system-zegarowy-mutec-ref10-mc3-usb/', { destination: '/recenzje/pdf/recenzja-system-zegarowy-mutec-ref10-mc3-usb/', permanent: true }],
-  ['/recenzja-system-zegarowy-mutec-ref10-mc3-usb/', { destination: '/recenzje/pdf/recenzja-system-zegarowy-mutec-ref10-mc3-usb/', permanent: true }],
-  ['/assets/Uploads/Mutec_av4-2020.pdf', { destination: '/recenzje/pdf/recenzja-system-zegarowy-mutec-ref10-mc3-usb/', permanent: true }],
-  ['/pl/rfecenzja-arc-reference-5se-hfm/', { destination: '/recenzje/pdf/rfecenzja-arc-reference-5se-hfm/', permanent: true }],
-  ['/rfecenzja-arc-reference-5se-hfm/', { destination: '/recenzje/pdf/rfecenzja-arc-reference-5se-hfm/', permanent: true }],
-  ['/assets/Uploads/HiFiiMuzyka052012AR-Reference-5SE.pdf', { destination: '/recenzje/pdf/rfecenzja-arc-reference-5se-hfm/', permanent: true }],
+  [
+    '/pl/wilson-audio/watch-center',
+    { destination: '/produkty/watch-center/', permanent: true },
+  ],
+  [
+    '/wilson-audio/watch-center',
+    { destination: '/produkty/watch-center/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/watch-dog',
+    { destination: '/produkty/watch-dog/', permanent: true },
+  ],
+  [
+    '/wilson-audio/watch-dog',
+    { destination: '/produkty/watch-dog/', permanent: true },
+  ],
+  [
+    '/pl/wilson-audio/yvette',
+    { destination: '/produkty/yvette/', permanent: true },
+  ],
+  [
+    '/wilson-audio/yvette',
+    { destination: '/produkty/yvette/', permanent: true },
+  ],
+  [
+    '/pl/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-zegara-wzorcowego-dcs-lina-master-clock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-power-amplifier-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/',
+    {
+      destination:
+        '/recenzje/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/',
+    {
+      destination:
+        '/recenzje/test-ultra-hi-endowego-systemu-muzycznego-dcs-varese-w-hifi-clube-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereofonicznego-dan-dagostino-progression-s350-w-hifi-statement/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-sound-image/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-alpha-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/',
+    {
+      destination:
+        '/recenzje/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/',
+    {
+      destination:
+        '/recenzje/test-zasilacza-liniowego-keces-audio-p14-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-clube/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/recenzja-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-dual-mono-klasy-d-i-streamera-z-przetwornikiem-cyfrowo-analogowym-aurender-ap20-w-dagogo-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-strumieniowego-odtwarzacza-plikow-i-przetwornika-cyfrowo-analogowego-dcs-lina-dac-x-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/recenzja-subwoofera-aktywnego-wilson-audio-submerge-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-hybrid-poweramplifier-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-analog-planet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-mocy-primaluna-evo-300-gybrid-power-amplifier-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sabrina-v-w-audiophilestyle/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-low-beats/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/',
+    {
+      destination: '/recenzje/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/',
+    {
+      destination: '/recenzje/test-wkladki-gramofonowej-zephyr-mimc-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/',
+    {
+      destination:
+        '/recenzje/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/',
+    {
+      destination:
+        '/recenzje/recenzja-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-moon-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-zasilania-gryphon-audio-powerzone-3-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio-ls1-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-systemu-muzycznego-klasy-ultra-hi-end-dcs-varese-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-kabli-zasilajacych-shunyata-research-sigma-x-nr-ac-power-cables-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-sx-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-sieciowego-gryphon-powerzone-3-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-integrated-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-diablo-333-we-future-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-dan-dagostino-pendulum-w-hificlube-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-hifi-statement/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-grimm-audio-mu2-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/',
+    {
+      destination:
+        '/recenzje/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/',
+    {
+      destination:
+        '/recenzje/recenzja-wzmacniacza-gramofonowego-grimm-audio-pw1-w-lite-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-muzycznego-dcs-varese-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-systemu-muzycznego-dcs-varese-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-muzycznego-dcs-varese-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-systemu-muzycznego-dcs-varese-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-research-altaira-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-sieciowego-synergistic-research-powercell-14-w-enjoythemusic-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-magnum-hybrid-stereo-integrated-amplifier-w-enjoythemusic-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-aktywnych-trojdroznych-zestawow-glosnikowych-dutch-and-dutch-8c-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-i-przetwornika-cyfrowo-analogowego-ayre-kx-8-w-part-time-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-what-hifi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-gramofonowego-grimm-audio-pw1-w-alpha-audio-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/',
+    {
+      destination:
+        '/recenzje/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/',
+    {
+      destination:
+        '/recenzje/recenzja-systemu-sluchawkowego-dcs-lina-network-dac-lina-headphone-amplifier-lina-master-clock-w-moon-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/',
+    {
+      destination:
+        '/recenzje/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/',
+    {
+      destination:
+        '/recenzje/test-referencyjnej-wkladki-gramofonowej-z-ruchoma-cewka-gryphon-audio-black-diamond-dlc-w-tracking-angle/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-muzycznego-dcs-varese-w-hifi-plus/',
+    {
+      destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-muzycznego-dcs-varese-w-hifi-plus/',
+    {
+      destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-systemu-muzycznego-dcs-varese-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-aktywnych-zestawow-glosnikowych-grimm-audio/',
+    {
+      destination:
+        '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-aktywnych-zestawow-glosnikowych-grimm-audio/',
+    {
+      destination:
+        '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-mocy-audio-research-ref-330m-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-kabli-glosnikowych-shunyata-theta-speaker-cable-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-monofonicznego-lampowego-wzmacniacza-mocy-audio-research-reference-330m-mono-amplifier-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-design-m11-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zegara-referencyjneo-mutec-ref10-se120the-ear/',
+    {
+      destination:
+        '/recenzje/test-zegara-referencyjneo-mutec-ref10-se120the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zegara-referencyjneo-mutec-ref10-se120the-ear/',
+    {
+      destination:
+        '/recenzje/test-zegara-referencyjneo-mutec-ref10-se120the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-aktywnego-wilson-audio-submerger-w-part-time-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hihi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-ze-wzmacniaczem-sluchawkowym-ayre-codex-dac-w-audio-resurgence/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-watt-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/',
+    {
+      destination:
+        '/recenzje/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/',
+    {
+      destination:
+        '/recenzje/test-odtwarzacza-sieciowego-i-streamera-bricasti-design-m5-w-future-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/',
+    {
+      destination:
+        '/recenzje/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/',
+    {
+      destination:
+        '/recenzje/test-kabli-glosnikowych-i-interkonektow-shunyata-research-theta-w-the-audio-beat/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-pursuit-perfect-system/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-anaogowego-weiss-dac-501-mkii-w-stevehuffphoto/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przewodow-shunyata-research-theta-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przewodow-shunyata-research-theta-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/',
+    {
+      destination:
+        '/recenzje/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/',
+    {
+      destination:
+        '/recenzje/test-systemu-dcs-lina-i-dcs-bartok-w-headphone-guru/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/',
+    {
+      destination:
+        '/recenzje/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/',
+    {
+      destination:
+        '/recenzje/test-zestawu-glosnikow-podstawowych-goldenear-brx-w-headfonia-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/',
+    {
+      destination:
+        '/recenzje/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/',
+    {
+      destination:
+        '/recenzje/test-kabli-gramofonowych-stealth-helios-i-hyper-phono-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/recenzja-wolnostojacego-zestawu-glosnikowego-wilson-audio-wattpuppy-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/',
+    {
+      destination:
+        '/recenzje/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/',
+    {
+      destination:
+        '/recenzje/test-strumieniowego-przetwornika-cyfrowo-analogowego-i-zegara-wzorcowego-dcs-lina-network-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dual-mono-bricasti-m1-series-ii-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-wattpuppy-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-w-home-theater-and-high-fidelity/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-monofonicznego-wzmacniacza-mocy-dan-dagostino-relentless-800-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-hybrydowego-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-integrated-amplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-liniowego-ze-wzmacniaczem-sluchawkowym-i-przedwzmacniaczem-gramofonowym-keces-audio-s4-i-wzmacniaczem-s300/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-sasha-v-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-i-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-zegara-referencyjnego-dcs-lina-master-clock-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-audiophile-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-referencyjnych-kabli-glosnikowych-shunyata-research-omega-sp-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-przedwzmacniacza-liniowego-dual-mono-z-opcjonalnym-modulem-stumieniowym-dan-dagostino-relentless-preamplifier-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-gryphon-audio-diablo-333-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-odtwarzacza-cd-z-wbudowanym-dac-gryphon-audio-ethos-w-fidelity-magazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-uziemienia-synergistic-research-active-grounding-block-sx-w-stereo-times/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-z-opcjonalnym-streamerem-i-wejsciem-phono-dan-dagostino-progression-integrated-w-hifi-de/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-podlogowych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/',
+    {
+      destination:
+        '/recenzje/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/',
+    {
+      destination:
+        '/recenzje/test-kolumn-wolnostojacych-z-aktywna-sekcja-basowa-goldenear-technology-t66-w-soundstage-hi-fi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/',
+    {
+      destination:
+        '/recenzje/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/',
+    {
+      destination:
+        '/recenzje/test-recenzja-wzmacniacza-zintegrowanego-ayre-ex-8-integrated-amplifier-w-avforums/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-sasha-v-w-audio-beat/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-gramofonowego-przedwzmacniacza-lampowego-primaluna-evo-100-phono-preamplifier-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac-w-magazynie-av-magazin-de/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-i-dac-grimm-audio-mu2-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/',
+    {
+      destination:
+        '/recenzje/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/',
+    {
+      destination:
+        '/recenzje/test-daca-i-streamera-sieciowego-z-opcjonalnym-wzmacniaczem-sluchawkowym-dcs-bartok-apex-dac-w-headfonics/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-lampowego-wzmacniacza-stereo-audio-research-reference-80s-w-hifi-choice/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-z-aktywna-sekcja-basowa-goldenear-t66-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/',
+    {
+      destination:
+        '/recenzje/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/',
+    {
+      destination:
+        '/recenzje/test-sieciowego-przetwornika-dac-i-odtwarzacza-cd-i-zegara-wzorcowego-dcs-rossini-apex-cd-player-streamer-w-audio-resurgence/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-streaming-dac-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-helios-dac-w-part-time-audiophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-zegara-wzorcowego-i-re-clockera-z-wejsciem-usb-i-z-wejsciem-referencyjnym-mutec-mc-3-usb-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/',
+    {
+      destination:
+        '/recenzje/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/',
+    {
+      destination:
+        '/recenzje/test-serwera-roon-przetwornika-dac-z-wejsciami-analogowymi-i-cyfrowymi-grimm-audio-mu2-w-hifi-advice-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i-50-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-aktywnego-wilson-audio-loke-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-systemu-dcs-lina-dacstreamer-master-clock-i-wzmacniacz-sluchawkowy-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-sasha-v-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-bezpiecznikow-audiofilskich-synergistic-research-master-fuse-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-weiss-dac204-w-twittering-machines/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-phono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-przewodu-zasilajacego-shunyata-research-omega-xc-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo-100-tube-phono-preamplifier-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-monofonicznego-wzmacniacza-referencyjnego-dan-dagostino-momentum-m400-mxv-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-strumieniowego-przetwornika-cyfrowo-analogowego-bricasti-m21-w-dagogo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-subwoofera-goldenear-forcefield-40-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-goldenear-forcefield-40-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-subwoofera-goldenear-forcefield-40-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-goldenear-forcefield-40-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-odtwarzacza-i-streamera-dcs-rossini-apex-cd-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-referencyjnego-serwera-muzycznego-aurender-w20se-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-zasilania-shunyata-research-everest-8000-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/',
+    {
+      destination:
+        '/recenzje/test-konwertera-analogowo-cyfrowego-dcs-apex-ring-dac-upgrade-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-gramofonowego-primaluna-evo100-w-hifi-nl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/',
+    {
+      destination:
+        '/recenzje/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/',
+    {
+      destination:
+        '/recenzje/test-przewodow-glosnikowych-i-interkonektow-synergistic-research-foundation-sx-w-hifi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/',
+    {
+      destination:
+        '/recenzje/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/',
+    {
+      destination:
+        '/recenzje/test-zegara-i-upsamplera-dcs-vivaldi-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/',
+    {
+      destination:
+        '/recenzje/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/',
+    {
+      destination:
+        '/recenzje/test-zegara-wzorcowego-dcs-rossini-master-clock-w-audiophile-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-podstawkowych-goldenear-bookshelf-reference-x-brx-w-hifi-i-muzyka/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/',
+    {
+      destination:
+        '/recenzje/test-streamera-i-serwera-muzycznego-z-dac-aurender-a15-w-soundstage-australia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-audiophile-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-systemu-dcs-vivaldi-apex-w-stereophile/',
+    {
+      destination: '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-systemu-dcs-vivaldi-apex-w-stereophile/',
+    {
+      destination: '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przewodow-glosnikowych-sieciowych-i-interkonektow-synergristic-research-srx-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-podlogowych-zestawow-glosnikowych-wilson-audio-alexia-v-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-subwoofera-goldenear-forcefield-30-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dsc-vivaldi-apex-dac-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-bricasti-m2sii-w-10audio-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/',
+    {
+      destination:
+        '/recenzje/test-kondycjonera-zasilania-shunyata-research-denali-6000s-v2-w-soundstage-ultra/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-podlogowy-wilson-audio-alexia-v-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-rogue-audio-pharaoh-ii-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/',
+    {
+      destination:
+        '/recenzje/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/',
+    {
+      destination:
+        '/recenzje/test-interkonektow-analogowych-stealth-audio-sakra-v17-i-v17-limited-edition-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-bartok-2-0-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-dcs-rossini-apex-dac-w-what-hi-fi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-polki-artesania-ksh2-krion-w-hifi-advice-com/',
+    {
+      destination:
+        '/recenzje/test-polki-artesania-ksh2-krion-w-hifi-advice-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-polki-artesania-ksh2-krion-w-hifi-advice-com/',
+    {
+      destination:
+        '/recenzje/test-polki-artesania-ksh2-krion-w-hifi-advice-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przedwzmacniacza-referencyjnego-audio-research-reference-6se-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereo-gryphon-audio-apex-stereo-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-lampowego-rogue-audio-rp-9-w-10audio-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-lb-tech-review/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-commander-w-stereophile/',
+    {
+      destination: '/recenzje/test-przedwzmacniacza-commander-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-commander-w-stereophile/',
+    {
+      destination: '/recenzje/test-przedwzmacniacza-commander-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/',
+    {
+      destination:
+        '/recenzje/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/',
+    {
+      destination:
+        '/recenzje/test-przewodow-glosnikowych-shunyata-venom-x-w-alpha-audio-net/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-dcs-vivaldi-apex-w-hifi-news/',
+    {
+      destination: '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-dcs-vivaldi-apex-w-hifi-news/',
+    {
+      destination: '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/',
+    {
+      destination:
+        '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/',
+    {
+      destination:
+        '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/',
+    {
+      destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/',
+    {
+      destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/',
+    {
+      destination: '/recenzje/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/',
+    {
+      destination: '/recenzje/test-weiss-dac501-w-steve-huff-hi-fi-and-photo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-podstawek-mig-sx-w-soundrebels/',
+    {
+      destination: '/recenzje/test-podstawek-mig-sx-w-soundrebels/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-podstawek-mig-sx-w-soundrebels/',
+    {
+      destination: '/recenzje/test-podstawek-mig-sx-w-soundrebels/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-primaluna-evo-100-integrated-w-tone-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-sabrinax-w-the-absolute-sound/',
+    {
+      destination: '/recenzje/test-glosnikow-sabrinax-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-sabrinax-w-the-absolute-sound/',
+    {
+      destination: '/recenzje/test-glosnikow-sabrinax-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/',
+    {
+      destination:
+        '/recenzje/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/',
+    {
+      destination:
+        '/recenzje/test-kabli-shunyata-omega-clock-i-sigma-nr-v2-w-soundrebels/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wilson-audio-sabrinax-w-hi-fi-plus/',
+    {
+      destination: '/recenzje/test-wilson-audio-sabrinax-w-hi-fi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wilson-audio-sabrinax-w-hi-fi-plus/',
+    {
+      destination: '/recenzje/test-wilson-audio-sabrinax-w-hi-fi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-gryphon-antileon-evo-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-gryphon-trident-ii-w-soundrebels/',
+    {
+      destination: '/recenzje/test-glosnikow-gryphon-trident-ii-w-soundrebels/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-gryphon-trident-ii-w-soundrebels/',
+    {
+      destination: '/recenzje/test-glosnikow-gryphon-trident-ii-w-soundrebels/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-dan-dagostino-progression-integrated-w-what-hifi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-goldenear-brx-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-goldenear-brx-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-goldenear-brx-w-the-absolute-sound/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-goldenear-brx-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-primaluna-evo-300-integrated-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-gryphon-essence-w-enjoy-the-music/',
+    {
+      destination: '/recenzje/test-gryphon-essence-w-enjoy-the-music/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-gryphon-essence-w-enjoy-the-music/',
+    {
+      destination: '/recenzje/test-gryphon-essence-w-enjoy-the-music/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-dcs-bartok-w-tone-audio/',
+    {
+      destination: '/recenzje/test-przetwornika-dcs-bartok-w-tone-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-dcs-bartok-w-tone-audio/',
+    {
+      destination: '/recenzje/test-przetwornika-dcs-bartok-w-tone-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-moonriver-404-reference-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-moonriver-404-reference-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/evo-400-integrated-w-the-ear/',
+    { destination: '/recenzje/evo-400-integrated-w-the-ear/', permanent: true },
+  ],
+  [
+    '/evo-400-integrated-w-the-ear/',
+    { destination: '/recenzje/evo-400-integrated-w-the-ear/', permanent: true },
+  ],
+  [
+    '/pl/evo-100-dac-w-hifi/',
+    { destination: '/recenzje/evo-100-dac-w-hifi/', permanent: true },
+  ],
+  [
+    '/evo-100-dac-w-hifi/',
+    { destination: '/recenzje/evo-100-dac-w-hifi/', permanent: true },
+  ],
+  [
+    '/pl/test-wzmacniacza-audio-research-ref160s-w-hi-fi/',
+    {
+      destination: '/recenzje/test-wzmacniacza-audio-research-ref160s-w-hi-fi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-audio-research-ref160s-w-hi-fi/',
+    {
+      destination: '/recenzje/test-wzmacniacza-audio-research-ref160s-w-hi-fi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-grimm-mu1-w-stereophile/',
+    {
+      destination: '/recenzje/test-serwera-muzycznego-grimm-mu1-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-grimm-mu1-w-stereophile/',
+    {
+      destination: '/recenzje/test-serwera-muzycznego-grimm-mu1-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przewodow-shunyata-sigma-v2/',
+    {
+      destination: '/recenzje/test-przewodow-shunyata-sigma-v2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przewodow-shunyata-sigma-v2/',
+    {
+      destination: '/recenzje/test-przewodow-shunyata-sigma-v2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/evo-400-w-hi-fi-world/',
+    { destination: '/recenzje/evo-400-w-hi-fi-world/', permanent: true },
+  ],
+  [
+    '/evo-400-w-hi-fi-world/',
+    { destination: '/recenzje/evo-400-w-hi-fi-world/', permanent: true },
+  ],
+  [
+    '/pl/gryphon-essence-test-stereophiole/',
+    {
+      destination: '/recenzje/gryphon-essence-test-stereophiole/',
+      permanent: true,
+    },
+  ],
+  [
+    '/gryphon-essence-test-stereophiole/',
+    {
+      destination: '/recenzje/gryphon-essence-test-stereophiole/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-keces-sphono-w-positive-feedback/',
+    {
+      destination: '/recenzje/test-keces-sphono-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-keces-sphono-w-positive-feedback/',
+    {
+      destination: '/recenzje/test-keces-sphono-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/dan-dagostino-progression-integrated-w-stereonet/',
+    {
+      destination:
+        '/recenzje/dan-dagostino-progression-integrated-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/dan-dagostino-progression-integrated-w-stereonet/',
+    {
+      destination:
+        '/recenzje/dan-dagostino-progression-integrated-w-stereonet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-powercellsx-soundstage-ultra/',
+    {
+      destination: '/recenzje/test-powercellsx-soundstage-ultra/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-powercellsx-soundstage-ultra/',
+    {
+      destination: '/recenzje/test-powercellsx-soundstage-ultra/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-gryphon-essence-w-hifi-plus/',
+    {
+      destination: '/recenzje/test-gryphon-essence-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-gryphon-essence-w-hifi-plus/',
+    {
+      destination: '/recenzje/test-gryphon-essence-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-dagostino-progression-integrated-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-dagostino-progression-integrated-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-dagostino-progression-integrated-w-hifi-news/',
+    {
+      destination:
+        '/recenzje/test-dagostino-progression-integrated-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/docisk-plyty-uef-w-positive-feedback/',
+    {
+      destination: '/recenzje/docisk-plyty-uef-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/docisk-plyty-uef-w-positive-feedback/',
+    {
+      destination: '/recenzje/docisk-plyty-uef-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-everest-8000-w-the-audio-beat/',
+    {
+      destination: '/recenzje/test-everest-8000-w-the-audio-beat/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-everest-8000-w-the-audio-beat/',
+    {
+      destination: '/recenzje/test-everest-8000-w-the-audio-beat/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-primaluny-evo300-w-hifi-critic/',
+    {
+      destination: '/recenzje/test-primaluny-evo300-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-primaluny-evo300-w-hifi-critic/',
+    {
+      destination: '/recenzje/test-primaluny-evo300-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-taiko-sgm-extreme-w-mono-and-stereo/',
+    {
+      destination: '/recenzje/test-taiko-sgm-extreme-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-taiko-sgm-extreme-w-mono-and-stereo/',
+    {
+      destination: '/recenzje/test-taiko-sgm-extreme-w-mono-and-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-synergistic-research-foundation-enjoythemusic2020/',
+    {
+      destination:
+        '/recenzje/recenzja-synergistic-research-foundation-enjoythemusic2020/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-synergistic-research-foundation-enjoythemusic2020/',
+    {
+      destination:
+        '/recenzje/recenzja-synergistic-research-foundation-enjoythemusic2020/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-moonriver-404-w-the-ear/',
+    {
+      destination: '/recenzje/test-wzmacniacza-moonriver-404-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-moonriver-404-w-the-ear/',
+    {
+      destination: '/recenzje/test-wzmacniacza-moonriver-404-w-the-ear/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-enjoy-the-music-audio-research-reference-160m/',
+    {
+      destination:
+        '/recenzje/recenzja-enjoy-the-music-audio-research-reference-160m/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-enjoy-the-music-audio-research-reference-160m/',
+    {
+      destination:
+        '/recenzje/recenzja-enjoy-the-music-audio-research-reference-160m/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-evo-400-preamplifier-tas-2020/',
+    {
+      destination: '/recenzje/test-evo-400-preamplifier-tas-2020/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-evo-400-preamplifier-tas-2020/',
+    {
+      destination: '/recenzje/test-evo-400-preamplifier-tas-2020/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-delta-nr-v2-theear-2020-06/',
+    {
+      destination: '/recenzje/test-delta-nr-v2-theear-2020-06/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-delta-nr-v2-theear-2020-06/',
+    {
+      destination: '/recenzje/test-delta-nr-v2-theear-2020-06/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/',
+    {
+      destination:
+        '/recenzje/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/',
+    {
+      destination:
+        '/recenzje/recenzja-shunyata-hydra-delta-d6-venom-nr-i-v14-digital-2020-05/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-ssu202004-hydraalphaa12venomnrv10/',
+    {
+      destination: '/recenzje/recenzja-ssu202004-hydraalphaa12venomnrv10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-ssu202004-hydraalphaa12venomnrv10/',
+    {
+      destination: '/recenzje/recenzja-ssu202004-hydraalphaa12venomnrv10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-grimm-mu1-6moons-202004/',
+    {
+      destination: '/recenzje/recenzja-grimm-mu1-6moons-202004/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-grimm-mu1-6moons-202004/',
+    {
+      destination: '/recenzje/recenzja-grimm-mu1-6moons-202004/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-tas202004-dcsbartokdac/',
+    {
+      destination: '/recenzje/recenzja-tas202004-dcsbartokdac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-tas202004-dcsbartokdac/',
+    {
+      destination: '/recenzje/recenzja-tas202004-dcsbartokdac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hfn202003-dandagostinomomentumhdpremplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-hfn202003-dandagostinomomentumhdpremplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hfn202003-dandagostinomomentumhdpremplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-hfn202003-dandagostinomomentumhdpremplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hfp202001-wilsonaudiosashadaw/',
+    {
+      destination: '/recenzje/recenzja-hfp202001-wilsonaudiosashadaw/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hfp202001-wilsonaudiosashadaw/',
+    {
+      destination: '/recenzje/recenzja-hfp202001-wilsonaudiosashadaw/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-rogue-audio-dragon-w-tas-2021-01/',
+    {
+      destination: '/recenzje/recenzja-rogue-audio-dragon-w-tas-2021-01/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-rogue-audio-dragon-w-tas-2021-01/',
+    {
+      destination: '/recenzje/recenzja-rogue-audio-dragon-w-tas-2021-01/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-sp202001-dandagostinomomentumhd/',
+    {
+      destination: '/recenzje/recenzja-sp202001-dandagostinomomentumhd/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-sp202001-dandagostinomomentumhd/',
+    {
+      destination: '/recenzje/recenzja-sp202001-dandagostinomomentumhd/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-sterophile-201912-gryphonethos/',
+    {
+      destination: '/recenzje/recenzja-sterophile-201912-gryphonethos/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-sterophile-201912-gryphonethos/',
+    {
+      destination: '/recenzje/recenzja-sterophile-201912-gryphonethos/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/moonriver-404/',
+    { destination: '/recenzje/moonriver-404/', permanent: true },
+  ],
+  [
+    '/moonriver-404/',
+    { destination: '/recenzje/moonriver-404/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-stereophile-201911-goldeneartritononer/',
+    {
+      destination: '/recenzje/recenzja-stereophile-201911-goldeneartritononer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile-201911-goldeneartritononer/',
+    {
+      destination: '/recenzje/recenzja-stereophile-201911-goldeneartritononer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-tab201911-shunyataresearchdenalid6000sv2/',
+    {
+      destination:
+        '/recenzje/recenzja-tab201911-shunyataresearchdenalid6000sv2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-tab201911-shunyataresearchdenalid6000sv2/',
+    {
+      destination:
+        '/recenzje/recenzja-tab201911-shunyataresearchdenalid6000sv2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-sohtahf201910-goldeneartritononer/',
+    {
+      destination: '/recenzje/recenzja-sohtahf201910-goldeneartritononer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-sohtahf201910-goldeneartritononer/',
+    {
+      destination: '/recenzje/recenzja-sohtahf201910-goldeneartritononer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/',
+    {
+      destination:
+        '/recenzje/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/',
+    {
+      destination:
+        '/recenzje/recenzja-dcs-bartok-hedphone-dac-w-audiophilestyle-com/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hfp201910-dcsbartoknetworkdac/',
+    {
+      destination: '/recenzje/recenzja-hfp201910-dcsbartoknetworkdac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hfp201910-dcsbartoknetworkdac/',
+    {
+      destination: '/recenzje/recenzja-hfp201910-dcsbartoknetworkdac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/',
+    {
+      destination:
+        '/recenzje/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/',
+    {
+      destination:
+        '/recenzje/recenzja-te201910-shunyataresearchvenomnr-v10nr-v12uk6/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-goldenearreference-theoccasionalmagazine/',
+    {
+      destination:
+        '/recenzje/recenzja-goldenearreference-theoccasionalmagazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-goldenearreference-theoccasionalmagazine/',
+    {
+      destination:
+        '/recenzje/recenzja-goldenearreference-theoccasionalmagazine/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/',
+    {
+      destination:
+        '/recenzje/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/',
+    {
+      destination:
+        '/recenzje/recenzja-st201909-synergisticresearchatmospherexeuphoriaac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/goldenear-triton-one-r/',
+    { destination: '/recenzje/goldenear-triton-one-r/', permanent: true },
+  ],
+  [
+    '/goldenear-triton-one-r/',
+    { destination: '/recenzje/goldenear-triton-one-r/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-tas201910-wilsonaudioalexx/',
+    {
+      destination: '/recenzje/recenzja-tas201910-wilsonaudioalexx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-tas201910-wilsonaudioalexx/',
+    {
+      destination: '/recenzje/recenzja-tas201910-wilsonaudioalexx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-dcs-rossini-transport-dac-hifi-news/',
+    {
+      destination: '/recenzje/recenzja-dcs-rossini-transport-dac-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-dcs-rossini-transport-dac-hifi-news/',
+    {
+      destination: '/recenzje/recenzja-dcs-rossini-transport-dac-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-toneaudio201908-primaluna-evo-400/',
+    {
+      destination: '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-toneaudio201908-primaluna-evo-400/',
+    {
+      destination: '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/synergistic-research-galileo-sx-phono/',
+    {
+      destination: '/recenzje/synergistic-research-galileo-sx-phono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/synergistic-research-galileo-sx-phono/',
+    {
+      destination: '/recenzje/synergistic-research-galileo-sx-phono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/',
+    {
+      destination:
+        '/recenzje/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/',
+    {
+      destination:
+        '/recenzje/test-przewodow-zasilajacych-synergistic-research-galileo-srx-i-galileo-sx-ethernet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-positive-feedback-201908-hft/',
+    {
+      destination: '/recenzje/test-positive-feedback-201908-hft/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-positive-feedback-201908-hft/',
+    {
+      destination: '/recenzje/test-positive-feedback-201908-hft/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifis201906-kecessphonospower/',
+    {
+      destination: '/recenzje/recenzja-hifis201906-kecessphonospower/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifis201906-kecessphonospower/',
+    {
+      destination: '/recenzje/recenzja-hifis201906-kecessphonospower/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/dcs-bartok-network-dac/',
+    { destination: '/recenzje/dcs-bartok-network-dac/', permanent: true },
+  ],
+  [
+    '/dcs-bartok-network-dac/',
+    { destination: '/recenzje/dcs-bartok-network-dac/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-at-201905-thixarsmdambitiousmk2/',
+    {
+      destination: '/recenzje/recenzja-at-201905-thixarsmdambitiousmk2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-at-201905-thixarsmdambitiousmk2/',
+    {
+      destination: '/recenzje/recenzja-at-201905-thixarsmdambitiousmk2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201904-shunyata-venom/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201904-shunyata-venom/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201904-shunyata-venom/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201904-shunyata-venom/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201904-keces-e40/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201904-keces-e40/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201904-keces-e40/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201904-keces-e40/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzje-soundrebels201903-mephisto-and-co/',
+    {
+      destination: '/recenzje/recenzje-soundrebels201903-mephisto-and-co/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje-soundrebels201903-mephisto-and-co/',
+    {
+      destination: '/recenzje/recenzje-soundrebels201903-mephisto-and-co/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/keces-ephono-dzielona-klasa-srednia/',
+    {
+      destination: '/recenzje/keces-ephono-dzielona-klasa-srednia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/keces-ephono-dzielona-klasa-srednia/',
+    {
+      destination: '/recenzje/keces-ephono-dzielona-klasa-srednia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiphilosophy201902-synergistic-research-ac/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiphilosophy201902-synergistic-research-ac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiphilosophy201902-synergistic-research-ac/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiphilosophy201902-synergistic-research-ac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201211-spiralgroove-sg11/',
+    {
+      destination: '/recenzje/recenzja-stereophile201211-spiralgroove-sg11/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201211-spiralgroove-sg11/',
+    {
+      destination: '/recenzje/recenzja-stereophile201211-spiralgroove-sg11/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifinews201812-shunyataresearch-deltanr-ef/',
+    {
+      destination:
+        '/recenzje/recenzja-hifinews201812-shunyataresearch-deltanr-ef/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifinews201812-shunyataresearch-deltanr-ef/',
+    {
+      destination:
+        '/recenzje/recenzja-hifinews201812-shunyataresearch-deltanr-ef/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201812-aurender-acs10/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201812-aurender-acs10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201812-aurender-acs10/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201812-aurender-acs10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201811-shunyata-denali-vs-triton/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201811-shunyata-denali-vs-triton/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201811-shunyata-denali-vs-triton/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201811-shunyata-denali-vs-triton/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiphilosophy201811-dcs-rossini-dac/',
+    {
+      destination: '/recenzje/recenzja-hifiphilosophy201811-dcs-rossini-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiphilosophy201811-dcs-rossini-dac/',
+    {
+      destination: '/recenzje/recenzja-hifiphilosophy201811-dcs-rossini-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201811-rogue-audio-triton/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201811-rogue-audio-triton/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201811-rogue-audio-triton/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201811-rogue-audio-triton/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201811-acoustic-signature-tango-mk3/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201810-acoustic-signature-wow-xxl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/przewody-synergistic-research-galileo-sx/',
+    {
+      destination: '/recenzje/przewody-synergistic-research-galileo-sx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/przewody-synergistic-research-galileo-sx/',
+    {
+      destination: '/recenzje/przewody-synergistic-research-galileo-sx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201809-rogue-audio-stereo-100/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201809-rogue-audio-stereo-100/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201809-rogue-audio-stereo-100/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201809-rogue-audio-stereo-100/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka092018-soundsmith-paua/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka092018-soundsmith-paua/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka092018-soundsmith-paua/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka092018-soundsmith-paua/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiphilosophy201808-shunyataresearch-denali6000s/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiphilosophy201808-exogal-comet/',
+    {
+      destination: '/recenzje/recenzja-hifiphilosophy201808-exogal-comet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiphilosophy201808-exogal-comet/',
+    {
+      destination: '/recenzje/recenzja-hifiphilosophy201808-exogal-comet/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201808-aurender-a10/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201808-aurender-a10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201808-aurender-a10/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201808-aurender-a10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja201808-shunyata-research-denali-d6000t/',
+    {
+      destination: '/recenzje/recenzja201808-shunyata-research-denali-d6000t/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja201808-shunyata-research-denali-d6000t/',
+    {
+      destination: '/recenzje/recenzja201808-shunyata-research-denali-d6000t/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201808-synergisticresearch-atmospherex/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201808-synergisticresearch-atmospherex/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201808-synergisticresearch-atmospherex/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201808-synergisticresearch-atmospherex/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audioesoterica201807-dagostino-progression/',
+    {
+      destination:
+        '/recenzje/recenzja-audioesoterica201807-dagostino-progression/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audioesoterica201807-dagostino-progression/',
+    {
+      destination:
+        '/recenzje/recenzja-audioesoterica201807-dagostino-progression/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201807-goldenear-supersubx/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201807-goldenear-supersubx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201807-goldenear-supersubx/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201807-goldenear-supersubx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzje-highfidelity201807-roon-lnucleus/',
+    {
+      destination: '/recenzje/recenzje-highfidelity201807-roon-lnucleus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje-highfidelity201807-roon-lnucleus/',
+    {
+      destination: '/recenzje/recenzje-highfidelity201807-roon-lnucleus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201806-rougeaudio-rp7/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201806-rougeaudio-rp7/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201806-rougeaudio-rp7/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201806-rougeaudio-rp7/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201805dan-dagostino-progression-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201804-wilsonaudio-sabrina/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201804-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201804-wilsonaudio-sabrina/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201804-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201804-shunyataresearch-denali6000s/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201805-dagostino-progressionpreamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201802-aurender-a10/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201802-aurender-a10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201802-aurender-a10/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201802-aurender-a10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201801-dagostino-momentumsystem/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201801-dagostino-momentumsystem/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201801-dagostino-momentumsystem/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201801-dagostino-momentumsystem/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201801-soundsmith-mcp2mkii/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201801-soundsmith-mcp2mkii/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201801-soundsmith-mcp2mkii/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201801-soundsmith-mcp2mkii/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201710-spiralgroove-sg12/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201710-spiralgroove-sg12/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201710-spiralgroove-sg12/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201710-spiralgroove-sg12/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201710-shunyata-triton3/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201710-shunyata-triton3/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201710-shunyata-triton3/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201710-shunyata-triton3/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201708-synergisticresearch-powercell12uefse/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201708-goldenear-tritonreference/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201708-goldenear-tritonreference/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201708-goldenear-tritonreference/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201708-goldenear-tritonreference/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-toneaudio201707-grandprixaudio-monaco20/',
+    {
+      destination:
+        '/recenzje/recenzja-toneaudio201707-grandprixaudio-monaco20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-toneaudio201707-grandprixaudio-monaco20/',
+    {
+      destination:
+        '/recenzje/recenzja-toneaudio201707-grandprixaudio-monaco20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiobeat201706-grandprixaudio-monaco2/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201706-grandprixaudio-monaco2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiobeat201706-grandprixaudio-monaco2/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201706-grandprixaudio-monaco2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201706-dcs-networkbridge/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201706-dcs-networkbridge/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201706-dcs-networkbridge/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201706-dcs-networkbridge/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201706-shunyataresearch-hydradenali-d2000t-d6000t/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifinews2017-dagostino-progressionmono/',
+    {
+      destination: '/recenzje/recenzja-hifinews2017-dagostino-progressionmono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifinews2017-dagostino-progressionmono/',
+    {
+      destination: '/recenzje/recenzja-hifinews2017-dagostino-progressionmono/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-soundandvision201706-goldenear-tritonreference/',
+    {
+      destination:
+        '/recenzje/recenzja-soundandvision201706-goldenear-tritonreference/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-soundandvision201706-goldenear-tritonreference/',
+    {
+      destination:
+        '/recenzje/recenzja-soundandvision201706-goldenear-tritonreference/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/primaluna-prologue-premium/',
+    { destination: '/recenzje/primaluna-prologue-premium/', permanent: true },
+  ],
+  [
+    '/primaluna-prologue-premium/',
+    { destination: '/recenzje/primaluna-prologue-premium/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-absolutesound201705-dcs-vivaldi-one/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201705-dcs-vivaldi-one/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201705-dcs-vivaldi-one/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201705-dcs-vivaldi-one/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-enjoythemusic201704-momentum-phono-stage-preamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201704-rogueaudio-cronusmagnumii/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201704-soundsmith-zephyrmimcstar/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201703-exogal-ion/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201703-exogal-ion/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201703-exogal-ion/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201703-exogal-ion/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201702-dagostino-momentumphonostage/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201702-dagostino-momentumphonostage/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201702-dagostino-momentumphonostage/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201702-dagostino-momentumphonostage/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201702-wilsonaudio-yvette/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201702-wilsonaudio-yvette/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201702-wilsonaudio-yvette/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201702-wilsonaudio-yvette/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiimuzyka201702-dagostino-masterpower-classicstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201701-aurender-a10/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201701-aurender-a10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201701-aurender-a10/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201701-aurender-a10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201612-acousticsignature-primus/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201612-acousticsignature-primus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201612-acousticsignature-primus/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201612-acousticsignature-primus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/',
+    {
+      destination:
+        '/recenzje/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/',
+    {
+      destination:
+        '/recenzje/recenzja-enjoythemusic201611-gryphon-diablo-300-integrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201611-primaluna-prologue-premium-power-amplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201608-acousticsignature-invictus/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201608-acousticsignature-invictus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201608-acousticsignature-invictus/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201608-acousticsignature-invictus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201607-soundsmith-carmen/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201607-soundsmith-carmen/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201607-soundsmith-carmen/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201607-soundsmith-carmen/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/',
+    {
+      destination:
+        '/recenzje/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/',
+    {
+      destination:
+        '/recenzje/recenzcja-toneaudio201606-primaluna-dialogue-premium-hp-integrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201609-dagostino-momentumintegrated/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus201609-dagostino-momentumintegrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201609-dagostino-momentumintegrated/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus201609-dagostino-momentumintegrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201605-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201604-aurender-n10/',
+    {
+      destination: '/recenzje/recenzja-stereophile201604-aurender-n10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201604-aurender-n10/',
+    {
+      destination: '/recenzje/recenzja-stereophile201604-aurender-n10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiobeat201604-wilsonaudio-sabrina/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201604-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiobeat201604-wilsonaudio-sabrina/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201604-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201602-arc-gsi75/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201602-arc-gsi75/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201602-arc-gsi75/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201602-arc-gsi75/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiostream201603-aurender-n100h/',
+    {
+      destination: '/recenzje/recenzja-audiostream201603-aurender-n100h/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiostream201603-aurender-n100h/',
+    {
+      destination: '/recenzje/recenzja-audiostream201603-aurender-n100h/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201602-rogueaudio-rp5/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201602-rogueaudio-rp5/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201602-rogueaudio-rp5/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201602-rogueaudio-rp5/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201602-dcs-rossiniplayerstreamer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201601-dcs-rossiniplayer/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201601-dcs-rossiniplayer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201601-dcs-rossiniplayer/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201601-dcs-rossiniplayer/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201601-dagostino-classicstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201601-dagostino-classicstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201601-dagostino-classicstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201601-dagostino-classicstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-speakershack201601-dagostino-momentumintegrated/',
+    {
+      destination:
+        '/recenzje/recenzja-speakershack201601-dagostino-momentumintegrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-speakershack201601-dagostino-momentumintegrated/',
+    {
+      destination:
+        '/recenzje/recenzja-speakershack201601-dagostino-momentumintegrated/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hiresaudiocentral201512-goldenear-tritonone/',
+    {
+      destination:
+        '/recenzje/recenzja-hiresaudiocentral201512-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hiresaudiocentral201512-goldenear-tritonone/',
+    {
+      destination:
+        '/recenzje/recenzja-hiresaudiocentral201512-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201512-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201512-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201512-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201512-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-positivefeedback201511-synergisticresearch-groundingblock/',
+    {
+      destination:
+        '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-positivefeedback201511-synergisticresearch-groundingblock/',
+    {
+      destination:
+        '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiimuzyka201511-goldenear-tritonfive/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201511-goldenear-tritonfive/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiimuzyka201511-goldenear-tritonfive/',
+    {
+      destination: '/recenzje/recenzja-hifiimuzyka201511-goldenear-tritonfive/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-positivefeedback201511-synergisticresearch-hft/',
+    {
+      destination:
+        '/recenzje/recenzja-positivefeedback201511-synergisticresearch-hft/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-positivefeedback201511-synergisticresearch-hft/',
+    {
+      destination:
+        '/recenzje/recenzja-positivefeedback201511-synergisticresearch-hft/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201511-dcs-rossini/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201511-dcs-rossini/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201511-dcs-rossini/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201511-dcs-rossini/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/vandersteen-vlr-woods/',
+    { destination: '/recenzje/vandersteen-vlr-woods/', permanent: true },
+  ],
+  [
+    '/vandersteen-vlr-woods/',
+    { destination: '/recenzje/vandersteen-vlr-woods/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-absolutesound201510-wilsonaudio-sabrina/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201510-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201510-wilsonaudio-sabrina/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201510-wilsonaudio-sabrina/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201508-wilsonaudio-sasha2/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201508-wilsonaudio-sasha2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201508-wilsonaudio-sasha2/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201508-wilsonaudio-sasha2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201509-goldenear-tritonfive/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201509-goldenear-tritonfive/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201509-goldenear-tritonfive/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201509-goldenear-tritonfive/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiobeat201508-shunyataresearch-sigma/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201508-shunyataresearch-sigma/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiobeat201508-shunyataresearch-sigma/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201508-shunyataresearch-sigma/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201507-dagostino-classicstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201507-dagostino-classicstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201507-dagostino-classicstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201507-dagostino-classicstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio201505-rogueaudio-sphinx/',
+    {
+      destination: '/recenzje/recenzja-audio201505-rogueaudio-sphinx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio201505-rogueaudio-sphinx/',
+    {
+      destination: '/recenzje/recenzja-audio201505-rogueaudio-sphinx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201504-wilsonaudio-duette/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201504-wilsonaudio-duette/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201504-wilsonaudio-duette/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201504-wilsonaudio-duette/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201503-goldenear-aon3/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201503-goldenear-aon3/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201503-goldenear-aon3/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201503-goldenear-aon3/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiobeat201503-shunyataresearch-venom/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201503-shunyataresearch-venom/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiobeat201503-shunyataresearch-venom/',
+    {
+      destination: '/recenzje/recenzja-audiobeat201503-shunyataresearch-venom/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201501-goldenear-tritonone/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201501-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201501-goldenear-tritonone/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201501-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile-201412-primaluna-dialoguepremiumhp/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiostream201412-synergisticresearch-atmosphere/',
+    {
+      destination:
+        '/recenzje/recenzja-audiostream201412-synergisticresearch-atmosphere/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiostream201412-synergisticresearch-atmosphere/',
+    {
+      destination:
+        '/recenzje/recenzja-audiostream201412-synergisticresearch-atmosphere/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201412-goldenear-tritonone/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201412-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201412-goldenear-tritonone/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201412-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201410-goldenear-tritonone/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201410-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201410-goldenear-tritonone/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201410-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201410-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201410-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201410-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201410-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/grimm-ls1-test-w-positive-feedback/',
+    {
+      destination: '/recenzje/grimm-ls1-test-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/grimm-ls1-test-w-positive-feedback/',
+    {
+      destination: '/recenzje/grimm-ls1-test-w-positive-feedback/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201408-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201408-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201408-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201408-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-soundandvision201407-goldenear-tritonone/',
+    {
+      destination:
+        '/recenzje/recenzja-soundandvision201407-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-soundandvision201407-goldenear-tritonone/',
+    {
+      destination:
+        '/recenzje/recenzja-soundandvision201407-goldenear-tritonone/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-vsi75-w-hifiplus-201408/',
+    {
+      destination: '/recenzje/recenzja-arc-vsi75-w-hifiplus-201408/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-vsi75-w-hifiplus-201408/',
+    {
+      destination: '/recenzje/recenzja-arc-vsi75-w-hifiplus-201408/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201407-acousticsignature-wow-xl/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201407-acousticsignature-wow-xl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201407-acousticsignature-wow-xl/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201407-acousticsignature-wow-xl/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201407-rogueaudio-sphinx/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201407-rogueaudio-sphinx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201407-rogueaudio-sphinx/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201407-rogueaudio-sphinx/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiostream-201407-synergisticresearch-ect/',
+    {
+      destination:
+        '/recenzje/recenzja-audiostream-201407-synergisticresearch-ect/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiostream-201407-synergisticresearch-ect/',
+    {
+      destination:
+        '/recenzje/recenzja-audiostream-201407-synergisticresearch-ect/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201407-primaluna-prologueclassickt120/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201407-primaluna-prologueclassickt120/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201407-primaluna-prologueclassickt120/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201407-primaluna-prologueclassickt120/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201406-aurender-x100l/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201406-aurender-x100l/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201406-aurender-x100l/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201406-aurender-x100l/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-soundstage201404-aurender-x100l-i-x100s/',
+    {
+      destination:
+        '/recenzje/recenzja-soundstage201404-aurender-x100l-i-x100s/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-soundstage201404-aurender-x100l-i-x100s/',
+    {
+      destination:
+        '/recenzje/recenzja-soundstage201404-aurender-x100l-i-x100s/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hometheaterreview201404-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-hometheaterreview201404-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hometheaterreview201404-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-hometheaterreview201404-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201403-wilsonaudio-duette/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201403-wilsonaudio-duette/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201403-wilsonaudio-duette/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201403-wilsonaudio-duette/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201403-atresaniaaudio-exoteryc/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201403-atresaniaaudio-exoteryc/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201403-atresaniaaudio-exoteryc/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201403-atresaniaaudio-exoteryc/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-reference-250-hifiplus/',
+    {
+      destination: '/recenzje/recenzja-arc-reference-250-hifiplus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-reference-250-hifiplus/',
+    {
+      destination: '/recenzje/recenzja-arc-reference-250-hifiplus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201401-dcs-vivaldi/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201401-dcs-vivaldi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201401-dcs-vivaldi/',
+    {
+      destination: '/recenzje/recenzja-highfidelity201401-dcs-vivaldi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201401-dcs-vivaldi-digitalplaybacksystem/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201401-dagostino-momentum/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201401-dagostino-momentum/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201401-dagostino-momentum/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201401-dagostino-momentum/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-digitaltrends201401-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-digitaltrends201401-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-digitaltrends201401-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-digitaltrends201401-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201312-wilsonaudio-alexia/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201312-wilsonaudio-alexia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201312-wilsonaudio-alexia/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201312-wilsonaudio-alexia/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/',
+    {
+      destination:
+        '/recenzje/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/',
+    {
+      destination:
+        '/recenzje/recenzja-audiobeat201303-shunyataresearch-hydratritontyphoon/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hificritic201312-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-hificritic201312-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hificritic201312-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-hificritic201312-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus122013-vivaldi-upsampler-master-clock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus201311-dcs-vivaldi-cdsacd-transport-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201311-dagostino-momentumpreamplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201311-dagostino-momentumpreamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201311-dagostino-momentumpreamplifier/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201311-dagostino-momentumpreamplifier/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201311-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201311-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201311-aurender-w20/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201311-aurender-w20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201311-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201311-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201311-goldenear-tritonseven/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201311-goldenear-tritonseven/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201311-goldenear-aon2/',
+    {
+      destination: '/recenzje/recenzja-stereophile201311-goldenear-aon2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201311-goldenear-aon2/',
+    {
+      destination: '/recenzje/recenzja-stereophile201311-goldenear-aon2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiostream201310-synergistic-research-feq-hft/',
+    {
+      destination:
+        '/recenzje/recenzja-audiostream201310-synergistic-research-feq-hft/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiostream201310-synergistic-research-feq-hft/',
+    {
+      destination:
+        '/recenzje/recenzja-audiostream201310-synergistic-research-feq-hft/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile-201310-arc-refcd9/',
+    {
+      destination: '/recenzje/recenzja-stereophile-201310-arc-refcd9/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile-201310-arc-refcd9/',
+    {
+      destination: '/recenzje/recenzja-stereophile-201310-arc-refcd9/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-australianhifi20130708-usheraudio-dancerminix/',
+    {
+      destination:
+        '/recenzje/recenzja-australianhifi20130708-usheraudio-dancerminix/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-australianhifi20130708-usheraudio-dancerminix/',
+    {
+      destination:
+        '/recenzje/recenzja-australianhifi20130708-usheraudio-dancerminix/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo20130708-primaluna-dialoguepremiumkt120/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201307-symposium-ultra-rollerblock2-superballs-doublestackkit/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201306-dagostino-momentum-stereo/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201306-dagostino-momentum-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201306-dagostino-momentum-stereo/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201306-dagostino-momentum-stereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201305-dcs-vivaldi/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201305-dcs-vivaldi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201305-dcs-vivaldi/',
+    {
+      destination: '/recenzje/recenzja-absolutesound201305-dcs-vivaldi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/',
+    {
+      destination:
+        '/recenzje/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/',
+    {
+      destination:
+        '/recenzje/recenzja-hometheaterandhighfidelity201305-goldenear-tritonthree/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiadvice201304-artesaniaaudio-exoteryc/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-highfidelity201303-dagostino-momentumstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201303-dagostino-momentumstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-highfidelity201303-dagostino-momentumstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-highfidelity201303-dagostino-momentumstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-vandersteen-audio-treo-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-vandersteen-audio-treo-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-vandersteen-audio-treo-w-stereophile/',
+    {
+      destination:
+        '/recenzje/test-glosnikow-vandersteen-audio-treo-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201302-dagostino-momentum/',
+    {
+      destination: '/recenzje/recenzja-stereophile201302-dagostino-momentum/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201302-dagostino-momentum/',
+    {
+      destination: '/recenzje/recenzja-stereophile201302-dagostino-momentum/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201301-wilsonaudio-alexandriaxlf/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus201301-artesaniaaudio-exoteryc/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201301-artesaniaaudio-exoteryc/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus201301-artesaniaaudio-exoteryc/',
+    {
+      destination: '/recenzje/recenzja-hifiplus201301-artesaniaaudio-exoteryc/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hificritic201210-dagostino-momentumstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hificritic201210-dagostino-momentumstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hificritic201210-dagostino-momentumstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hificritic201210-dagostino-momentumstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiotechnique201210-dcs-vivaldi/',
+    {
+      destination: '/recenzje/recenzja-audiotechnique201210-dcs-vivaldi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiotechnique201210-dcs-vivaldi/',
+    {
+      destination: '/recenzje/recenzja-audiotechnique201210-dcs-vivaldi/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201210-usheraudio-v602/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201210-usheraudio-v602/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201210-usheraudio-v602/',
+    {
+      destination: '/recenzje/recenzja-audiovideo201210-usheraudio-v602/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifinews201208-dagostino-momentumstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifinews201208-dagostino-momentumstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifinews201208-dagostino-momentumstereo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifinews201208-dagostino-momentumstereo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-soundstageultra201207-vandersteen-treo/',
+    {
+      destination: '/recenzje/recenzja-soundstageultra201207-vandersteen-treo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-soundstageultra201207-vandersteen-treo/',
+    {
+      destination: '/recenzje/recenzja-soundstageultra201207-vandersteen-treo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201206-primaluna-prologuepremium/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201206-primaluna-prologuepremium/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201206-primaluna-prologuepremium/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201206-primaluna-prologuepremium/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-ref5se-hificritic-2012-2/',
+    {
+      destination: '/recenzje/recenzja-arc-ref5se-hificritic-2012-2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-ref5se-hificritic-2012-2/',
+    {
+      destination: '/recenzje/recenzja-arc-ref5se-hificritic-2012-2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-ref150-hificritic-2012-01/',
+    {
+      destination: '/recenzje/recenzja-arc-ref150-hificritic-2012-01/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-ref150-hificritic-2012-01/',
+    {
+      destination: '/recenzje/recenzja-arc-ref150-hificritic-2012-01/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201202-goldenear-tritontwo/',
+    {
+      destination: '/recenzje/recenzja-stereophile201202-goldenear-tritontwo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201202-goldenear-tritontwo/',
+    {
+      destination: '/recenzje/recenzja-stereophile201202-goldenear-tritontwo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound201201-vandersteen-5acarbon/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201201-vandersteen-5acarbon/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound201201-vandersteen-5acarbon/',
+    {
+      destination:
+        '/recenzje/recenzja-absolutesound201201-vandersteen-5acarbon/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifinews20117-dagostino-momentum/',
+    {
+      destination: '/recenzje/recenzja-hifinews20117-dagostino-momentum/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifinews20117-dagostino-momentum/',
+    {
+      destination: '/recenzje/recenzja-hifinews20117-dagostino-momentum/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201105-vandersteen-1ci-vcc1-vsm1/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo201012-usheraudio-dancermini-onediamond/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201006-spiralgroove-sg2/',
+    {
+      destination: '/recenzje/recenzja-stereophile201006-spiralgroove-sg2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201006-spiralgroove-sg2/',
+    {
+      destination: '/recenzje/recenzja-stereophile201006-spiralgroove-sg2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile201006-spiralgroove-centroid/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201006-spiralgroove-centroid/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile201006-spiralgroove-centroid/',
+    {
+      destination:
+        '/recenzje/recenzja-stereophile201006-spiralgroove-centroid/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifiplus200911-usheraudio-minidancertwo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus200911-usheraudio-minidancertwo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifiplus200911-usheraudio-minidancertwo/',
+    {
+      destination:
+        '/recenzje/recenzja-hifiplus200911-usheraudio-minidancertwo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo200910-vandersteen-2ce/',
+    {
+      destination: '/recenzje/recenzja-audiovideo200910-vandersteen-2ce/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo200910-vandersteen-2ce/',
+    {
+      destination: '/recenzje/recenzja-audiovideo200910-vandersteen-2ce/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-vandersteen-1c-w-audio-video/',
+    {
+      destination: '/recenzje/test-glosnikow-vandersteen-1c-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-vandersteen-1c-w-audio-video/',
+    {
+      destination: '/recenzje/test-glosnikow-vandersteen-1c-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-playbackmagazine200909-usheraudio-minidancertwo/',
+    {
+      destination:
+        '/recenzje/recenzja-playbackmagazine200909-usheraudio-minidancertwo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-playbackmagazine200909-usheraudio-minidancertwo/',
+    {
+      destination:
+        '/recenzje/recenzja-playbackmagazine200909-usheraudio-minidancertwo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-absolutesound200804-usheraudio-be20/',
+    {
+      destination: '/recenzje/recenzja-absolutesound200804-usheraudio-be20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-absolutesound200804-usheraudio-be20/',
+    {
+      destination: '/recenzje/recenzja-absolutesound200804-usheraudio-be20/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo200704-usheraudio-v601/',
+    {
+      destination: '/recenzje/recenzja-audiovideo200704-usheraudio-v601/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo200704-usheraudio-v601/',
+    {
+      destination: '/recenzje/recenzja-audiovideo200704-usheraudio-v601/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo200701-usheraudio-v602/',
+    {
+      destination: '/recenzje/recenzja-audiovideo200701-usheraudio-v602/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo200701-usheraudio-v602/',
+    {
+      destination: '/recenzje/recenzja-audiovideo200701-usheraudio-v602/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile200611-vandersteen-quatro/',
+    {
+      destination: '/recenzje/recenzja-stereophile200611-vandersteen-quatro/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile200611-vandersteen-quatro/',
+    {
+      destination: '/recenzje/recenzja-stereophile200611-vandersteen-quatro/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hifidelity200601-usher-s-520/',
+    {
+      destination: '/recenzje/recenzja-hifidelity200601-usher-s-520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hifidelity200601-usher-s-520/',
+    {
+      destination: '/recenzje/recenzja-hifidelity200601-usher-s-520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-stereophile200511-usheraudio-s520/',
+    {
+      destination: '/recenzje/recenzja-stereophile200511-usheraudio-s520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-stereophile200511-usheraudio-s520/',
+    {
+      destination: '/recenzje/recenzja-stereophile200511-usheraudio-s520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo20050708-usheraudio-s520/',
+    {
+      destination: '/recenzje/recenzja-audiovideo20050708-usheraudio-s520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo20050708-usheraudio-s520/',
+    {
+      destination: '/recenzje/recenzja-audiovideo20050708-usheraudio-s520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/',
+    {
+      destination:
+        '/recenzje/recenzja-audiovideo200412-usher-p-307-i-reference-1-5/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-avguide200411-usheraudio-b520/',
+    {
+      destination: '/recenzje/recenzja-avguide200411-usheraudio-b520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-avguide200411-usheraudio-b520/',
+    {
+      destination: '/recenzje/recenzja-avguide200411-usheraudio-b520/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audioperfectionistjournal200312-vandersteen-5a/',
+    {
+      destination:
+        '/recenzje/recenzja-audioperfectionistjournal200312-vandersteen-5a/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audioperfectionistjournal200312-vandersteen-5a/',
+    {
+      destination:
+        '/recenzje/recenzja-audioperfectionistjournal200312-vandersteen-5a/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-soundstage199901-vibrapod/',
+    {
+      destination: '/recenzje/recenzja-soundstage199901-vibrapod/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-soundstage199901-vibrapod/',
+    {
+      destination: '/recenzje/recenzja-soundstage199901-vibrapod/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/audio-research-ref-cd9se-w-audio-video/',
+    {
+      destination: '/recenzje/pdf/audio-research-ref-cd9se-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/audio-research-ref-cd9se-w-audio-video/',
+    {
+      destination: '/recenzje/pdf/audio-research-ref-cd9se-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Audio-Research-Ref-CD9-SE_av10-20.pdf',
+    {
+      destination: '/recenzje/pdf/audio-research-ref-cd9se-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/audio-research-sp20-na-lata-hfm-0614/',
+    {
+      destination: '/recenzje/pdf/audio-research-sp20-na-lata-hfm-0614/',
+      permanent: true,
+    },
+  ],
+  [
+    '/audio-research-sp20-na-lata-hfm-0614/',
+    {
+      destination: '/recenzje/pdf/audio-research-sp20-na-lata-hfm-0614/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/pdfy/HFM_06_14_pg42-47.pdf',
+    {
+      destination: '/recenzje/pdf/audio-research-sp20-na-lata-hfm-0614/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/goldenear-brx-w-audiovideo/',
+    {
+      destination: '/recenzje/pdf/goldenear-brx-w-audiovideo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/goldenear-brx-w-audiovideo/',
+    {
+      destination: '/recenzje/pdf/goldenear-brx-w-audiovideo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/GoldenEar-BRX_av11-20.pdf',
+    {
+      destination: '/recenzje/pdf/goldenear-brx-w-audiovideo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/grimm-audio-mu1-transport-nowej-ery/',
+    {
+      destination: '/recenzje/pdf/grimm-audio-mu1-transport-nowej-ery/',
+      permanent: true,
+    },
+  ],
+  [
+    '/grimm-audio-mu1-transport-nowej-ery/',
+    {
+      destination: '/recenzje/pdf/grimm-audio-mu1-transport-nowej-ery/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Grimm-MU1_av7-8_20.pdf',
+    {
+      destination: '/recenzje/pdf/grimm-audio-mu1-transport-nowej-ery/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/nowa-article-page/',
+    { destination: '/recenzje/pdf/nowa-article-page/', permanent: true },
+  ],
+  [
+    '/nowa-article-page/',
+    { destination: '/recenzje/pdf/nowa-article-page/', permanent: true },
+  ],
+  [
+    '/assets/Uploads/KLH-MODEL-FIVE.pdf',
+    { destination: '/recenzje/pdf/nowa-article-page/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-a202004-primalunaevo300/',
+    {
+      destination: '/recenzje/pdf/recenzja-a202004-primalunaevo300/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-a202004-primalunaevo300/',
+    {
+      destination: '/recenzje/pdf/recenzja-a202004-primalunaevo300/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/PrimaLuna-EVO-300.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-a202004-primalunaevo300/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-dac8-av-2011-03/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-dac8-av-2011-03/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-dac8-av-2011-03/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-dac8-av-2011-03/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/ARC-DAC8-AudioVideo.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-dac8-av-2011-03/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-gs150-audiovideo-201505/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-gs150-audiovideo-201505/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-gs150-audiovideo-201505/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-gs150-audiovideo-201505/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/ARC-GS150_av5-6_2015lr.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-gs150-audiovideo-201505/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-ls27-hfm-2012-02/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-ls27-hfm-2012-02/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-ls27-hfm-2012-02/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-ls27-hfm-2012-02/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiiMuzyka022012.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-ls27-hfm-2012-02/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-ref150-audio-video-2011-12/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-ref150-audio-video-2011-12/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-ref150-audio-video-2011-12/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-ref150-audio-video-2011-12/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/AudioVideo122011Audio-Research-REF150.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-ref150-audio-video-2011-12/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-refcd9-hfm-2013-10/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-refcd9-hfm-2013-10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-refcd9-hfm-2013-10/',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-refcd9-hfm-2013-10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiiMuzyka102013_Audio_Research_CD9-v2.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-arc-refcd9-hfm-2013-10/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-arc-vsi60-hfm/',
+    { destination: '/recenzje/pdf/recenzja-arc-vsi60-hfm/', permanent: true },
+  ],
+  [
+    '/recenzja-arc-vsi60-hfm/',
+    { destination: '/recenzje/pdf/recenzja-arc-vsi60-hfm/', permanent: true },
+  ],
+  [
+    '/assets/Uploads/VSi60-Hi-fiiMuzyka102011.pdf',
+    { destination: '/recenzje/pdf/recenzja-arc-vsi60-hfm/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-arc-vsi75-maly-wspanialy-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-arc-vsi75-maly-wspanialy-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-arc-vsi75-maly-wspanialy-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-arc-vsi75-maly-wspanialy-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/pdfy/recenzja-ARC-VSi75-audio-video.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-arc-vsi75-maly-wspanialy-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-cd5-hfm-2009/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-cd5-hfm-2009/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-cd5-hfm-2009/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-cd5-hfm-2009/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HIFIiMuzyka032009_Audio_Research_CD5.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-cd5-hfm-2009/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-cd5-hifi-choice-2010/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-cd5-hifi-choice-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-cd5-hifi-choice-2010/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-cd5-hifi-choice-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiChoice112010AudioResearchCD5.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-cd5-hifi-choice-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-dspre-audio-video/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-dspre-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-dspre-audio-video/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-dspre-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/pdfy/AudioVideo0708-2012AudioResearch-DSPre.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-dspre-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-ref-cd8-av-2010-08/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-av-2010-08/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-ref-cd8-av-2010-08/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-av-2010-08/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/AudioVideo07082010_CD8.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-av-2010-08/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-ref-cd8-hfm-2009/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-hfm-2009/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-ref-cd8-hfm-2009/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-hfm-2009/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HIFIiMuzyka092009_Audio_Research_CD8.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-ref-cd8-hfm-2009/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-reference-150/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-reference-150/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-reference-150/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-reference-150/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiiMuzyka7-82012AR-Reference-150.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-reference-150/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-reference-5-hfm-2010/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-reference-5-hfm-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-reference-5-hfm-2010/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-reference-5-hfm-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/ARC-Ref5-HiFi-Muzyka.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-reference-5-hfm-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-vsi60-audiovideo-2010/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-vsi60-audiovideo-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-vsi60-audiovideo-2010/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-vsi60-audiovideo-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/AudioVideo052010_AR_VSi60.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-research-vsi60-audiovideo-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-vsi60-hfc-2010/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfc-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-vsi60-hfc-2010/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfc-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiChoice092010AudioResearchVSi60.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfc-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-research-vsi60-hfm-2010/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfm-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-research-vsi60-hfm-2010/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfm-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HIFIiMuzyka112009_Audio_Research_VSi60.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio-research-vsi60-hfm-2010/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio-video-audio-research-reference-dac/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-video-audio-research-reference-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio-video-audio-research-reference-dac/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-video-audio-research-reference-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/pdfy/ARC-Reference-DAC_av11-2012.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio-video-audio-research-reference-dac/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio201911-goldeneartechnologyaon2/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio201911-goldeneartechnologyaon2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio201911-goldeneartechnologyaon2/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio201911-goldeneartechnologyaon2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/GoldenEar-Technology-AON-2.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audio201911-goldeneartechnologyaon2/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audio201911-gryphondiablo120/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio201911-gryphondiablo120/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audio201911-gryphondiablo120/',
+    {
+      destination: '/recenzje/pdf/recenzja-audio201911-gryphondiablo120/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Gryphon-DIABLO-120.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-audio201911-gryphondiablo120/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Keces-BP-2400_av5-2020.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-audiovideo-kondycjonera-zasilania-keces-bp2400/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-aurender-a100-audio202005/',
+    {
+      destination: '/recenzje/pdf/recenzja-aurender-a100-audio202005/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-aurender-a100-audio202005/',
+    {
+      destination: '/recenzje/pdf/recenzja-aurender-a100-audio202005/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Aurender-A100.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-aurender-a100-audio202005/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-hfm-arc-ref75/',
+    { destination: '/recenzje/pdf/recenzja-hfm-arc-ref75/', permanent: true },
+  ],
+  [
+    '/recenzja-hfm-arc-ref75/',
+    { destination: '/recenzje/pdf/recenzja-hfm-arc-ref75/', permanent: true },
+  ],
+  [
+    '/assets/Uploads/recenzja-hfm-arc-ref75.pdf',
+    { destination: '/recenzje/pdf/recenzja-hfm-arc-ref75/', permanent: true },
+  ],
+  [
+    '/pl/recenzja-hfm201301-arcvsi75/',
+    {
+      destination: '/recenzje/pdf/recenzja-hfm201301-arcvsi75/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-hfm201301-arcvsi75/',
+    {
+      destination: '/recenzje/pdf/recenzja-hfm201301-arcvsi75/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiiMuzyka092013_Audio_Research_VSi75.pdf',
+    {
+      destination: '/recenzje/pdf/recenzja-hfm201301-arcvsi75/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-kondycjonera-keces-bp-1200-av-202006/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-kondycjonera-keces-bp-1200-av-202006/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-kondycjonera-keces-bp-1200-av-202006/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-kondycjonera-keces-bp-1200-av-202006/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Keces-BP-1200_av6-2020.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-kondycjonera-keces-bp-1200-av-202006/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/recenzja-system-zegarowy-mutec-ref10-mc3-usb/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-system-zegarowy-mutec-ref10-mc3-usb/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzja-system-zegarowy-mutec-ref10-mc3-usb/',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-system-zegarowy-mutec-ref10-mc3-usb/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Mutec_av4-2020.pdf',
+    {
+      destination:
+        '/recenzje/pdf/recenzja-system-zegarowy-mutec-ref10-mc3-usb/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/rfecenzja-arc-reference-5se-hfm/',
+    {
+      destination: '/recenzje/pdf/rfecenzja-arc-reference-5se-hfm/',
+      permanent: true,
+    },
+  ],
+  [
+    '/rfecenzja-arc-reference-5se-hfm/',
+    {
+      destination: '/recenzje/pdf/rfecenzja-arc-reference-5se-hfm/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiiMuzyka052012AR-Reference-5SE.pdf',
+    {
+      destination: '/recenzje/pdf/rfecenzja-arc-reference-5se-hfm/',
+      permanent: true,
+    },
+  ],
   ['/pl/test-3/', { destination: '/recenzje/pdf/test-3/', permanent: true }],
   ['/test-3/', { destination: '/recenzje/pdf/test-3/', permanent: true }],
-  ['/assets/Uploads/Aurender-N150_av10-2022.pdf', { destination: '/recenzje/pdf/test-3/', permanent: true }],
-  ['/pl/test-audio-research-ref-6se-i-ref-160s-w-audio/', { destination: '/recenzje/pdf/test-audio-research-ref-6se-i-ref-160s-w-audio/', permanent: true }],
-  ['/test-audio-research-ref-6se-i-ref-160s-w-audio/', { destination: '/recenzje/pdf/test-audio-research-ref-6se-i-ref-160s-w-audio/', permanent: true }],
-  ['/assets/Uploads/Audio-Research-Reference-6SE+160S.pdf', { destination: '/recenzje/pdf/test-audio-research-ref-6se-i-ref-160s-w-audio/', permanent: true }],
-  ['/pl/test-dcs-rossini-apex-player-w-audiovideo/', { destination: '/recenzje/pdf/test-dcs-rossini-apex-player-w-audiovideo/', permanent: true }],
-  ['/test-dcs-rossini-apex-player-w-audiovideo/', { destination: '/recenzje/pdf/test-dcs-rossini-apex-player-w-audiovideo/', permanent: true }],
-  ['/assets/Uploads/dCS-Rossini-APEX_av6-2022.pdf', { destination: '/recenzje/pdf/test-dcs-rossini-apex-player-w-audiovideo/', permanent: true }],
-  ['/pl/test-glosnikow-grimm-ls1a-w-audio-video/', { destination: '/recenzje/pdf/test-glosnikow-grimm-ls1a-w-audio-video/', permanent: true }],
-  ['/test-glosnikow-grimm-ls1a-w-audio-video/', { destination: '/recenzje/pdf/test-glosnikow-grimm-ls1a-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/Grimm-Audio-LS1a_av10-21.pdf', { destination: '/recenzje/pdf/test-glosnikow-grimm-ls1a-w-audio-video/', permanent: true }],
-  ['/pl/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/', { destination: '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/', permanent: true }],
-  ['/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/', { destination: '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/', permanent: true }],
-  ['/assets/Uploads/Wilson-Audio-ALEXIA-V-recenzja-Audio.pdf', { destination: '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/', permanent: true }],
-  ['/pl/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/', { destination: '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/', permanent: true }],
-  ['/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/', { destination: '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/', permanent: true }],
-  ['/assets/Uploads/Wilson-Audio-SASHA-V.pdf', { destination: '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/', permanent: true }],
-  ['/pl/test-glosnikow-wilson-audio-sabrina-x-w-audio/', { destination: '/recenzje/pdf/test-glosnikow-wilson-audio-sabrina-x-w-audio/', permanent: true }],
-  ['/test-glosnikow-wilson-audio-sabrina-x-w-audio/', { destination: '/recenzje/pdf/test-glosnikow-wilson-audio-sabrina-x-w-audio/', permanent: true }],
-  ['/assets/Uploads/Wilson-Audio-SABRINA-X.pdf', { destination: '/recenzje/pdf/test-glosnikow-wilson-audio-sabrina-x-w-audio/', permanent: true }],
-  ['/pl/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/', { destination: '/recenzje/pdf/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/', permanent: true }],
-  ['/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/', { destination: '/recenzje/pdf/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/Rogue_Sphinx-v3.pdf', { destination: '/recenzje/pdf/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/', permanent: true }],
-  ['/pl/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/', { destination: '/recenzje/pdf/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/', permanent: true }],
-  ['/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/', { destination: '/recenzje/pdf/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/KECES-IQRP-1500av3-2022.pdf', { destination: '/recenzje/pdf/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/', permanent: true }],
-  ['/pl/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/', { destination: '/recenzje/pdf/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/', permanent: true }],
-  ['/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/', { destination: '/recenzje/pdf/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/Prima-Luna-EVO100-DAC.pdf', { destination: '/recenzje/pdf/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/Audio-Research-i50-10-13.pdf', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/', permanent: true }],
-  ['/assets/Uploads/PrimaLuna-EVO-100.pdf', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/HiFi-Class-EVO300.pdf', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/', permanent: true }],
-  ['/pl/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/', permanent: true }],
-  ['/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/HiFiClass_RogueAudio_CronusMagnumIII.pdf', { destination: '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/', permanent: true }],
-  ['/pl/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/', { destination: '/recenzje/pdf/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/', permanent: true }],
-  ['/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/', { destination: '/recenzje/pdf/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/', permanent: true }],
-  ['/assets/Uploads/Ayre-Acoustics-CX-8-+-EX-8.pdf', { destination: '/recenzje/pdf/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/', { destination: '/recenzje/pdf/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/', permanent: true }],
-  ['/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/', { destination: '/recenzje/pdf/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/', permanent: true }],
-  ['/assets/Uploads/Keces-Audio-EPHONO.pdf', { destination: '/recenzje/pdf/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/', permanent: true }],
-  ['/pl/test-przedwzmacniacza-keces-s3-w-audio/', { destination: '/recenzje/pdf/test-przedwzmacniacza-keces-s3-w-audio/', permanent: true }],
-  ['/test-przedwzmacniacza-keces-s3-w-audio/', { destination: '/recenzje/pdf/test-przedwzmacniacza-keces-s3-w-audio/', permanent: true }],
-  ['/assets/Uploads/Keces-S3.pdf', { destination: '/recenzje/pdf/test-przedwzmacniacza-keces-s3-w-audio/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/Pages-from-106-Bricasti.pdf', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/', permanent: true }],
-  ['/assets/Uploads/054-058_Hifi_10_2022.pdf', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/dCS-Lina.pdf', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/', permanent: true }],
-  ['/pl/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/', permanent: true }],
-  ['/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/Weiss-DAC204.pdf', { destination: '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/', permanent: true }],
-  ['/pl/test-przetwornika-gryphon-kalliope-w-audio-video/', { destination: '/recenzje/pdf/test-przetwornika-gryphon-kalliope-w-audio-video/', permanent: true }],
-  ['/test-przetwornika-gryphon-kalliope-w-audio-video/', { destination: '/recenzje/pdf/test-przetwornika-gryphon-kalliope-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/Audio-video_02-16.pdf', { destination: '/recenzje/pdf/test-przetwornika-gryphon-kalliope-w-audio-video/', permanent: true }],
-  ['/pl/test-serwera-cyfrowego-aurender-n150-w-audio/', { destination: '/recenzje/pdf/test-serwera-cyfrowego-aurender-n150-w-audio/', permanent: true }],
-  ['/test-serwera-cyfrowego-aurender-n150-w-audio/', { destination: '/recenzje/pdf/test-serwera-cyfrowego-aurender-n150-w-audio/', permanent: true }],
-  ['/assets/Uploads/Aurender-N150.pdf', { destination: '/recenzje/pdf/test-serwera-cyfrowego-aurender-n150-w-audio/', permanent: true }],
-  ['/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/', { destination: '/recenzje/pdf/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/', permanent: true }],
-  ['/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/', { destination: '/recenzje/pdf/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/a1000-hifi-class-v2.pdf', { destination: '/recenzje/pdf/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/', permanent: true }],
-  ['/pl/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/', { destination: '/recenzje/pdf/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/', permanent: true }],
-  ['/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/', { destination: '/recenzje/pdf/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/', permanent: true }],
-  ['/assets/Uploads/audio-12_2024_watt.pdf', { destination: '/recenzje/pdf/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/', permanent: true }],
-  ['/pl/test-wzmacniacza-keces-e40-w-audio/', { destination: '/recenzje/pdf/test-wzmacniacza-keces-e40-w-audio/', permanent: true }],
-  ['/test-wzmacniacza-keces-e40-w-audio/', { destination: '/recenzje/pdf/test-wzmacniacza-keces-e40-w-audio/', permanent: true }],
-  ['/assets/Uploads/Keces-E40.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-keces-e40-w-audio/', permanent: true }],
-  ['/pl/test-wzmacniacza-moonriver-404-reference-w-audio-video/', { destination: '/recenzje/pdf/test-wzmacniacza-moonriver-404-reference-w-audio-video/', permanent: true }],
-  ['/test-wzmacniacza-moonriver-404-reference-w-audio-video/', { destination: '/recenzje/pdf/test-wzmacniacza-moonriver-404-reference-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/Moonriver-404-Reference_av6-21.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-moonriver-404-reference-w-audio-video/', permanent: true }],
-  ['/pl/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/', { destination: '/recenzje/pdf/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/', permanent: true }],
-  ['/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/', { destination: '/recenzje/pdf/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/', permanent: true }],
-  ['/assets/Uploads/Prima-Luna-EVO-400.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/', permanent: true }],
-  ['/pl/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/', { destination: '/recenzje/pdf/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/', permanent: true }],
-  ['/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/', { destination: '/recenzje/pdf/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/', permanent: true }],
-  ['/assets/Uploads/PrimaLuna-EVO-300-HYBRID1.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/', permanent: true }],
-  ['/pl/test-wzmacniacza-rogue-audio-dragon-w-audio-video/', { destination: '/recenzje/pdf/test-wzmacniacza-rogue-audio-dragon-w-audio-video/', permanent: true }],
-  ['/test-wzmacniacza-rogue-audio-dragon-w-audio-video/', { destination: '/recenzje/pdf/test-wzmacniacza-rogue-audio-dragon-w-audio-video/', permanent: true }],
-  ['/assets/Uploads/Rogue-Audio-Dragon_av7-8_2022.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-rogue-audio-dragon-w-audio-video/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/120_strony_18-22.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/Keces-E40-v2.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/', permanent: true }],
-  ['/pl/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/', permanent: true }],
-  ['/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/', permanent: true }],
-  ['/assets/Uploads/HFC_Moonriver.pdf', { destination: '/recenzje/pdf/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/', permanent: true }],
-  ['/pl/test-zasilacza-liniowego-keces-p6-w-hifi-class/', { destination: '/recenzje/pdf/test-zasilacza-liniowego-keces-p6-w-hifi-class/', permanent: true }],
-  ['/test-zasilacza-liniowego-keces-p6-w-hifi-class/', { destination: '/recenzje/pdf/test-zasilacza-liniowego-keces-p6-w-hifi-class/', permanent: true }],
-  ['/assets/Uploads/Keces-P6_hificlass_108.pdf', { destination: '/recenzje/pdf/test-zasilacza-liniowego-keces-p6-w-hifi-class/', permanent: true }],
+  [
+    '/assets/Uploads/Aurender-N150_av10-2022.pdf',
+    { destination: '/recenzje/pdf/test-3/', permanent: true },
+  ],
+  [
+    '/pl/test-audio-research-ref-6se-i-ref-160s-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-audio-research-ref-6se-i-ref-160s-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-audio-research-ref-6se-i-ref-160s-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-audio-research-ref-6se-i-ref-160s-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Audio-Research-Reference-6SE+160S.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-audio-research-ref-6se-i-ref-160s-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-dcs-rossini-apex-player-w-audiovideo/',
+    {
+      destination: '/recenzje/pdf/test-dcs-rossini-apex-player-w-audiovideo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-dcs-rossini-apex-player-w-audiovideo/',
+    {
+      destination: '/recenzje/pdf/test-dcs-rossini-apex-player-w-audiovideo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/dCS-Rossini-APEX_av6-2022.pdf',
+    {
+      destination: '/recenzje/pdf/test-dcs-rossini-apex-player-w-audiovideo/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-grimm-ls1a-w-audio-video/',
+    {
+      destination: '/recenzje/pdf/test-glosnikow-grimm-ls1a-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-grimm-ls1a-w-audio-video/',
+    {
+      destination: '/recenzje/pdf/test-glosnikow-grimm-ls1a-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Grimm-Audio-LS1a_av10-21.pdf',
+    {
+      destination: '/recenzje/pdf/test-glosnikow-grimm-ls1a-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Wilson-Audio-ALEXIA-V-recenzja-Audio.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-alexia-v-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Wilson-Audio-SASHA-V.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-podlogowych-wilson-audio-sasha-v-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-glosnikow-wilson-audio-sabrina-x-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-wilson-audio-sabrina-x-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-glosnikow-wilson-audio-sabrina-x-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-wilson-audio-sabrina-x-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Wilson-Audio-SABRINA-X.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-glosnikow-wilson-audio-sabrina-x-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Rogue_Sphinx-v3.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-hybrydowego-wzmacniacza-zintegrowanego-rogue-audio-sphinx-v3-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/KECES-IQRP-1500av3-2022.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-kondycjonera-zasilania-keces-iqrp-1500-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Prima-Luna-EVO100-DAC.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo100-dac-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Audio-Research-i50-10-13.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-audio-research-i50-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/PrimaLuna-EVO-100.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-100-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFi-Class-EVO300.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-300-integrated-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HiFiClass_RogueAudio_CronusMagnumIII.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-lampowego-wzmacniacza-zintegrowanego-rogue-audio-cronus-magnum-iii-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Ayre-Acoustics-CX-8-+-EX-8.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-odtwarzacza-ayre-acoustics-cx-8-i-wzmacniacza-ayre-acoustics-ex-8-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Keces-Audio-EPHONO.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-przedwzmacniacza-gramofonowego-keces-audio-ephono-ephono-power-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przedwzmacniacza-keces-s3-w-audio/',
+    {
+      destination: '/recenzje/pdf/test-przedwzmacniacza-keces-s3-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przedwzmacniacza-keces-s3-w-audio/',
+    {
+      destination: '/recenzje/pdf/test-przedwzmacniacza-keces-s3-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Keces-S3.pdf',
+    {
+      destination: '/recenzje/pdf/test-przedwzmacniacza-keces-s3-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Pages-from-106-Bricasti.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-design-m1se-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/054-058_Hifi_10_2022.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-bricasti-m3-w-hifi-i-muzyka/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/dCS-Lina.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-lina-network-dac-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Weiss-DAC204.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-cyfrowo-analogowego-weiss-engineering-dac204-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-przetwornika-gryphon-kalliope-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-gryphon-kalliope-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-przetwornika-gryphon-kalliope-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-gryphon-kalliope-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Audio-video_02-16.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-przetwornika-gryphon-kalliope-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-cyfrowego-aurender-n150-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-serwera-cyfrowego-aurender-n150-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-cyfrowego-aurender-n150-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-serwera-cyfrowego-aurender-n150-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Aurender-N150.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-serwera-cyfrowego-aurender-n150-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/a1000-hifi-class-v2.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-serwera-muzycznego-z-wyjsciem-analogowym-aurender-a1000-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/audio-12_2024_watt.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wolnostojacego-zestawu-glosnikowego-wilson-audio-the-wattpuppy-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-keces-e40-w-audio/',
+    {
+      destination: '/recenzje/pdf/test-wzmacniacza-keces-e40-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-keces-e40-w-audio/',
+    {
+      destination: '/recenzje/pdf/test-wzmacniacza-keces-e40-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Keces-E40.pdf',
+    {
+      destination: '/recenzje/pdf/test-wzmacniacza-keces-e40-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-moonriver-404-reference-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-moonriver-404-reference-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-moonriver-404-reference-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-moonriver-404-reference-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Moonriver-404-Reference_av6-21.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-moonriver-404-reference-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Prima-Luna-EVO-400.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-primaluna-evo-400-integrated-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/PrimaLuna-EVO-300-HYBRID1.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-primaluna-evo300-hybrid-w-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-rogue-audio-dragon-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-rogue-audio-dragon-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-rogue-audio-dragon-w-audio-video/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-rogue-audio-dragon-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Rogue-Audio-Dragon_av7-8_2022.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-rogue-audio-dragon-w-audio-video/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/120_strony_18-22.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-ayre-acoustics-ex-8-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Keces-E40-v2.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-keces-audio-e40-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/HFC_Moonriver.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-wzmacniacza-zintegrowanego-moonriver-audio-model-404-reference/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/test-zasilacza-liniowego-keces-p6-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-zasilacza-liniowego-keces-p6-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/test-zasilacza-liniowego-keces-p6-w-hifi-class/',
+    {
+      destination:
+        '/recenzje/pdf/test-zasilacza-liniowego-keces-p6-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+  [
+    '/assets/Uploads/Keces-P6_hificlass_108.pdf',
+    {
+      destination:
+        '/recenzje/pdf/test-zasilacza-liniowego-keces-p6-w-hifi-class/',
+      permanent: true,
+    },
+  ],
+
+  // ===== BROKEN REDIRECTS FIX (2026-01-05) =====
+  // Old product URLs - redirect to correct product pages
+  ['/thixar/Silence', { destination: '/produkty/silence/', permanent: true }],
+  ['/thixar/Silence/', { destination: '/produkty/silence/', permanent: true }],
+  [
+    '/thixar/silence-plus',
+    { destination: '/produkty/silence-plus/', permanent: true },
+  ],
+  [
+    '/thixar/silence-plus/',
+    { destination: '/produkty/silence-plus/', permanent: true },
+  ],
+  [
+    '/synergistic-research/carbon-disks',
+    { destination: '/produkty/carbon-disks/', permanent: true },
+  ],
+  [
+    '/synergistic-research/carbon-disks/',
+    { destination: '/produkty/carbon-disks/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/carbon-disks',
+    { destination: '/produkty/carbon-disks/', permanent: true },
+  ],
+  [
+    '/pl/synergistic-research/carbon-disks/',
+    { destination: '/produkty/carbon-disks/', permanent: true },
+  ],
+  [
+    '/taiko-audio/extreme',
+    { destination: '/produkty/extreme/', permanent: true },
+  ],
+  [
+    '/taiko-audio/extreme/',
+    { destination: '/produkty/extreme/', permanent: true },
+  ],
+  [
+    '/moonriver-audio/404',
+    { destination: '/produkty/404-reference/', permanent: true },
+  ],
+  [
+    '/moonriver-audio/404/',
+    { destination: '/produkty/404-reference/', permanent: true },
+  ],
+
+  // Old blog/page URLs
+  [
+    '/pl/nowosc-audiofast-na-audio-show-2022/',
+    {
+      destination: '/blog/refleksje-po-audio-video-show-2022/',
+      permanent: true,
+    },
+  ],
+  [
+    '/pl/horchhouse/',
+    {
+      destination: '/blog/refleksje-po-audio-video-show-2022/',
+      permanent: true,
+    },
+  ],
+
+  // Broken [file_link,id=...] URLs - redirect to parent review pages
+  [
+    '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/[file_link,id=14530]',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/[file_link,id=14530]/',
+    {
+      destination:
+        '/recenzje/test-centrum-muzycznego-z-serwerem-roon-przetwornikiem-dac-grimm-audio-mu2-w-audio-key-reviews/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przedwzmacniacza-commander-w-stereophile/[file_link,id=11317]',
+    {
+      destination: '/recenzje/test-przedwzmacniacza-commander-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przedwzmacniacza-commander-w-stereophile/[file_link,id=11317]/',
+    {
+      destination: '/recenzje/test-przedwzmacniacza-commander-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/evo-400-w-hi-fi-world/[file_link,id=9661]',
+    { destination: '/recenzje/evo-400-w-hi-fi-world/', permanent: true },
+  ],
+  [
+    '/recenzje/evo-400-w-hi-fi-world/[file_link,id=9661]/',
+    { destination: '/recenzje/evo-400-w-hi-fi-world/', permanent: true },
+  ],
+  [
+    '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/[file_link,id=12122]',
+    {
+      destination:
+        '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/[file_link,id=12122]/',
+    {
+      destination:
+        '/recenzje/test-lampowego-przetwornika-cyfrowo-analogowego-primaluna-evo-100-tube-dac-w-high-and-style/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/[file_link,id=14471]',
+    {
+      destination:
+        '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/[file_link,id=14471]/',
+    {
+      destination:
+        '/recenzje/test-aktywnych-zestawow-glosnikowych-grimm-audio/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/moonriver-404/[file_link,id=7679]',
+    { destination: '/recenzje/moonriver-404/', permanent: true },
+  ],
+  [
+    '/recenzje/moonriver-404/[file_link,id=7679]/',
+    { destination: '/recenzje/moonriver-404/', permanent: true },
+  ],
+  [
+    '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/[file_link,id=11845]',
+    {
+      destination: '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/[file_link,id=11845]/',
+    {
+      destination: '/recenzje/test-systemu-dcs-vivaldi-apex-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/[file_link,id=10746]',
+    {
+      destination: '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/[file_link,id=10746]/',
+    {
+      destination: '/recenzje/test-dcs-vivaldi-apex-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/[file_link,id=11930]',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/[file_link,id=11930]/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-grimm-audio-mu1-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-primaluny-evo300-w-hifi-critic/[file_link,id=9156]',
+    {
+      destination: '/recenzje/test-primaluny-evo300-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-primaluny-evo300-w-hifi-critic/[file_link,id=9156]/',
+    {
+      destination: '/recenzje/test-primaluny-evo300-w-hifi-critic/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/[file_link,id=undefined]',
+    {
+      destination: '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/[file_link,id=undefined]/',
+    {
+      destination: '/recenzje/recenzja-toneaudio201908-primaluna-evo-400/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/[file_link,id=13803]',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/[file_link,id=13803]/',
+    {
+      destination:
+        '/recenzje/test-lampowego-wzmacniacza-zintegrowanego-primaluna-evo-200-w-hifi-choice-uk/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/[file_link,id=10665]',
+    {
+      destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/[file_link,id=10665]/',
+    {
+      destination: '/recenzje/test-wzmacniacza-primaluna-evo-300-hybrid-w-tas/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/[file_link,id=12054]',
+    {
+      destination:
+        '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/[file_link,id=12054]/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-dac-i-streamera-dcs-bartok-apex-dac-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/[file_link,id=14206]',
+    {
+      destination:
+        '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/[file_link,id=14206]/',
+    {
+      destination:
+        '/recenzje/test-przewodow-shunyata-research-theta-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/[file_link,id=9759]',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/[file_link,id=9759]/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-moonriver-404-reference-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/[file_link,id=12451]',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/[file_link,id=12451]/',
+    {
+      destination:
+        '/recenzje/test-przetwornika-cyfrowo-analogowego-i-streamera-dcs-bartok-apex-dac-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/pl/synergistic-research/product-174',
+    {
+      destination:
+        '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/pl/synergistic-research/product-174/',
+    {
+      destination:
+        '/recenzje/recenzja-positivefeedback201511-synergisticresearch-groundingblock/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/gryphon-essence-test-stereophiole/[file_link,id=9529]',
+    {
+      destination: '/recenzje/gryphon-essence-test-stereophiole/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/gryphon-essence-test-stereophiole/[file_link,id=9529]/',
+    {
+      destination: '/recenzje/gryphon-essence-test-stereophiole/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/[file_link,id=14518]',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/[file_link,id=14518]/',
+    {
+      destination:
+        '/recenzje/test-przedwzmacniacza-ayre-accoustics-kx-8-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/[file_link,id=11273]',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/[file_link,id=11273]/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-zintegrowanego-primaluna-evo-300-hybrid-w-hi-fi-world/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/[file_link,id=12197]',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/[file_link,id=12197]/',
+    {
+      destination:
+        '/recenzje/test-wzmacniacza-stereofonicznego-dagostino-progression-s350-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/[file_link,id=14280]',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/[file_link,id=14280]/',
+    {
+      destination:
+        '/recenzje/test-wolnostojacych-zestawow-glosnikowych-wilson-audio-the-wattpuppy-w-stereophile/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/[file_link,id=12388]',
+    {
+      destination:
+        '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/[file_link,id=12388]/',
+    {
+      destination:
+        '/recenzje/test-scentralizowanego-systemu-kondycjonowania-uziemienia-shunyata-altaira-w-the-absolute-sound/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/[file_link,id=14576]',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/[file_link,id=14576]/',
+    {
+      destination:
+        '/recenzje/test-serwera-muzycznego-roon-nucleus-titan-w-hifi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/[file_link,id=14466]',
+    {
+      destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/[file_link,id=14466]/',
+    {
+      destination: '/recenzje/test-systemu-muzycznego-dcs-varese-w-hifi-plus/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/[file_link,id=11265]',
+    {
+      destination:
+        '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/',
+      permanent: true,
+    },
+  ],
+  [
+    '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/[file_link,id=11265]/',
+    {
+      destination:
+        '/recenzje/test-monofonicznego-wzmacniacza-mocy-dagostino-momentum-m400mxv-w-hi-fi-news/',
+      permanent: true,
+    },
+  ],
 ]);
 
 /**
- * Total number of redirects: 2826
+ * Total number of redirects: 2906
  */
-export const REDIRECTS_COUNT = 2826;
+export const REDIRECTS_COUNT = 2906;

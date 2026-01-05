@@ -132,7 +132,7 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 
   return getSEOMetadata({
     seo: pageData.seo,
-    slug: pageData.slug,
+    slug: `/produkty${pageData.slug}`,
     openGraph: pageData.openGraph,
   });
 }
