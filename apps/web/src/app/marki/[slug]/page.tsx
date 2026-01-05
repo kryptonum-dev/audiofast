@@ -304,6 +304,7 @@ export default async function BrandPage({
               level: undefined,
             },
           ]}
+          selectionMode="latest"
           publications={brand.featuredReviews as unknown as PublicationType[]}
           index={1}
           _key=""
