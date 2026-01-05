@@ -222,8 +222,10 @@ export default async function ProductPage(props: ProductPageProps) {
               level: undefined,
             },
           ]}
+          selectionMode="latest"
           publications={product.reviews}
           index={1}
+
           _key=""
           _type="featuredPublications"
           customId="recenzje"

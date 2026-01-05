@@ -21,7 +21,7 @@ export default function ArticleSchema({ review }: Props) {
     return null;
   }
 
-  const { name, slug, publishDate, image, author, content, product } = review;
+  const { name, slug, publishDate, image, content, product } = review;
 
   // Build canonical URL
   const articleUrl = `${BASE_URL}${slug}`;
@@ -42,15 +42,10 @@ export default function ArticleSchema({ review }: Props) {
 
   // Build author object
   // Note: author.image is not available in current query types
-  const authorSchema = author?.name
-    ? {
-        "@type": "Person" as const,
-        name: author.name,
-      }
-    : {
-        "@type": "Organization" as const,
-        name: SITE_TITLE,
-      };
+  const authorSchema = {
+    "@type": "Organization" as const,
+    name: SITE_TITLE,
+  };
 
   // Build publisher object
   const publisherSchema = {
