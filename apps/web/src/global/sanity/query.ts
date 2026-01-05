@@ -2296,7 +2296,7 @@ export const queryAllBrandSlugsForSitemap = defineQuery(`
 `);
 
 export const queryAllProductSlugsForSitemap = defineQuery(`
-  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && isArchived != true] {
     "slug": slug.current,
     _updatedAt
   }
@@ -2320,5 +2320,14 @@ export const queryAllProductCategorySlugsForSitemap = defineQuery(`
   *[_type == "productCategorySub" && defined(slug.current) && !(_id in path("drafts.**"))] {
     "slug": slug.current,
     _updatedAt
+  }
+`);
+
+// Query for archived products (for /produkty/archiwalne/ page)
+// Fetches minimal data - only slug and name for crawler links
+export const queryArchivedProducts = defineQuery(`
+  *[_type == "product" && defined(slug.current) && isArchived == true && !(_id in path("drafts.**"))] | order(name asc) {
+    "slug": slug.current,
+    name
   }
 `);

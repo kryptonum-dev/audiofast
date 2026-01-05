@@ -7899,6 +7899,23 @@
           },
           "optional": true
         },
+        "newProductsMode": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "automatic"
+              },
+              {
+                "type": "string",
+                "value": "manual"
+              }
+            ]
+          },
+          "optional": true
+        },
         "newProducts": {
           "type": "objectAttribute",
           "value": {
@@ -8112,6 +8129,27 @@
                 }
               }
             }
+          },
+          "optional": true
+        },
+        "selectionMode": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "latest"
+              },
+              {
+                "type": "string",
+                "value": "secondLatest"
+              },
+              {
+                "type": "string",
+                "value": "manual"
+              }
+            ]
           },
           "optional": true
         },
@@ -8691,6 +8729,23 @@
                 }
               }
             }
+          },
+          "optional": true
+        },
+        "selectionMode": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "latest"
+              },
+              {
+                "type": "string",
+                "value": "manual"
+              }
+            ]
           },
           "optional": true
         },
@@ -19051,6 +19106,57 @@
         },
         "optional": true
       },
+      "denormBrandSlug": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "denormBrandName": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "denormCategorySlugs": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "denormParentCategorySlugs": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "denormFilterKeys": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "string"
+          }
+        },
+        "optional": true
+      },
+      "denormLastSync": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "customFilterValues": {
         "type": "objectAttribute",
         "value": {
@@ -19882,6 +19988,13 @@
         },
         "optional": true
       },
+      "doNotShowBrand": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "name": {
         "type": "objectAttribute",
         "value": {
@@ -20568,13 +20681,6 @@
         "optional": true
       },
       "doNotIndex": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "boolean"
-        },
-        "optional": true
-      },
-      "hideFromList": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
