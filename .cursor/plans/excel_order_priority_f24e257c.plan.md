@@ -4,23 +4,23 @@ overview: Add a `position` field to track Excel row order throughout the pricing
 todos:
   - id: add-db-column
     content: Add position column to pricing_variants table via Supabase migration
-    status: pending
+    status: completed
   - id: update-rpc
     content: Update ingest_pricing_json RPC to accept and store position field
-    status: pending
+    status: completed
     dependencies:
       - add-db-column
   - id: update-excel-script
     content: Modify TypeScript script to include position based on Excel row order
-    status: pending
+    status: completed
   - id: update-frontend-query
     content: Change queries.ts to order by position instead of base_price_cents
-    status: pending
+    status: completed
     dependencies:
       - add-db-column
   - id: update-sanity-sync
     content: Update sync-prices-to-sanity to use lowest position instead of lowest price
-    status: pending
+    status: completed
     dependencies:
       - add-db-column
 ---
@@ -158,4 +158,3 @@ if (!entry || v.position < entry.position) {
 1. Add database column (backwards compatible - default 0)
 2. Update RPC function to store position
 3. Update Excel script to send position
-4. Run Excel sync to populate positions

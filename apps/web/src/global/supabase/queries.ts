@@ -67,7 +67,7 @@ export async function fetchProductPricing(
       `,
       )
       .ilike('price_key', `%${productSlug}`)
-      .order('base_price_cents', { ascending: true });
+      .order('position', { ascending: true });
 
     if (error) {
       console.error('Error fetching pricing data:', error);
@@ -118,6 +118,7 @@ export async function fetchProductPricing(
     return {
       variants: variantsWithOptions,
       hasMultipleModels: variants.length > 1,
+      // First variant is now the first model from Excel (ordered by position)
       lowestPrice: variants[0]?.base_price_cents || 0,
     };
   } catch (error) {

@@ -40,13 +40,13 @@ export default function BrandsList({
         {brands?.map((brand, idx) => (
           <Link
             key={brand?._id}
-            href={brand?.slug!}
+            href={brand?.slug || '/'}
             aria-label={`Przejdź do marki ${brand?.name}`}
             className={styles.brand}
           >
             <Image
               image={brand?.logo}
-              alt={brand?.name!}
+              alt={brand?.name || ''}
               sizes="190px"
               loading={index === 0 ? 'eager' : 'lazy'}
               priority={index === 0 && idx === 0}
