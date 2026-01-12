@@ -66,7 +66,7 @@ export async function fetchProductPricing(
         )
       `,
       )
-      .ilike('price_key', `%${productSlug}`)
+      .ilike('price_key', `%/${productSlug}`)
       .order('position', { ascending: true });
 
     if (error) {
