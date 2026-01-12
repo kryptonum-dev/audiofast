@@ -108,7 +108,7 @@ export default function PublicationsCarousel({
       >
         <div className={styles.container} ref={containerRef}>
           {displayPublications
-            .filter((publication) => !!publication?._id)
+            .filter((publication) => !!publication?._id && !!publication?.slug)
             .map((publication, idx) => (
               <PublicationCard
                 imageSizes="(max-width: 72rem) 222px, 279px"

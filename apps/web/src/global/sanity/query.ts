@@ -442,16 +442,20 @@ const latestPublicationBlock = /* groq */ `
     ${portableTextFragment('heading')},
     selectionMode,
     "publication": select(
-      selectionMode == "manual" => publication->{
-        ${publicationBlock}
-      },
+      // Manual selection: filter out drafts and archived products
+      selectionMode == "manual" => (
+        [publication->][!(_id in path("drafts.**")) && (_type != "product" || isArchived != true)][0]{
+          ${publicationBlock}
+        }
+      ),
       // Default: fetch the latest publication automatically
       *[
         _type in ["blog-article", "review", "product"] &&
         !(_id in path("drafts.**")) &&
+        // Products must be published with required fields and not archived
         (
           _type != "product" ||
-          (defined(publicationImage) && defined(shortDescription))
+          (defined(publicationImage) && defined(shortDescription) && isArchived != true)
         ) &&
         // Reviews must have their required fields based on destinationType
         (
@@ -533,16 +537,18 @@ const featuredPublicationsBlock = /* groq */ `
     ${portableTextFragment('heading')},
     selectionMode,
     "publications": select(
-      selectionMode == "manual" => publications[]->{
+      // Manual selection: filter out drafts and archived products
+      selectionMode == "manual" => publications[]-> [!(_id in path("drafts.**")) && (_type != "product" || isArchived != true)] {
         ${publicationBlock}
       },
       // Automatic modes: fetch latest publications sorted by publishedDate (or _createdAt as fallback)
       selectionMode == "latest" => *[
         _type in ["blog-article", "review", "product"] &&
         !(_id in path("drafts.**")) &&
+        // Products must be published with required fields and not archived
         (
           _type != "product" ||
-          (defined(publicationImage) && defined(shortDescription))
+          (defined(publicationImage) && defined(shortDescription) && isArchived != true)
         ) &&
         (
           _type != "review" ||
@@ -559,9 +565,10 @@ const featuredPublicationsBlock = /* groq */ `
       *[
         _type in ["blog-article", "review", "product"] &&
         !(_id in path("drafts.**")) &&
+        // Products must be published with required fields and not archived
         (
           _type != "product" ||
-          (defined(publicationImage) && defined(shortDescription))
+          (defined(publicationImage) && defined(shortDescription) && isArchived != true)
         ) &&
         (
           _type != "review" ||
@@ -2316,18 +2323,42 @@ export const queryAllBlogCategorySlugsForSitemap = defineQuery(`
   }
 `);
 
+// Only include categories that have at least one visible product (not archived, not from hidden brand)
 export const queryAllProductCategorySlugsForSitemap = defineQuery(`
-  *[_type == "productCategorySub" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  *[_type == "productCategorySub" && defined(slug.current) && !(_id in path("drafts.**")) && count(*[
+    _type == "product"
+    && defined(slug.current)
+    && isArchived != true
+    && brand->doNotShowBrand != true
+    && ^._id in categories[]._ref
+  ]) > 0] {
     "slug": slug.current,
     _updatedAt
   }
 `);
 
-// Query for archived products (for /produkty/archiwalne/ page)
-// Fetches minimal data - only slug and name for crawler links
+// Query for archived/hidden products (for /produkty/archiwalne/ page)
+// Includes: archived products OR products from hidden brands (doNotShowBrand)
+// This ensures all products in sitemap have at least one internal link (SEO)
 export const queryArchivedProducts = defineQuery(`
-  *[_type == "product" && defined(slug.current) && isArchived == true && !(_id in path("drafts.**"))] | order(name asc) {
+  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && (isArchived == true || brand->doNotShowBrand == true)] | order(name asc) {
     "slug": slug.current,
     name
+  }
+`);
+
+// Query for orphan reviews (for /recenzje/archiwalne/ page)
+// Includes reviews that are NOT linked from any visible product (products that are not archived and not from hidden brands)
+// This ensures all reviews in sitemap have at least one internal link (SEO)
+export const queryOrphanReviews = defineQuery(`
+  *[_type == "review" && destinationType == "page" && defined(slug.current) && !(_id in path("drafts.**")) && count(*[
+    _type == "product"
+    && defined(slug.current)
+    && isArchived != true
+    && brand->doNotShowBrand != true
+    && ^._id in reviews[]._ref
+  ]) == 0] | order(pt::text(title) asc) {
+    "slug": slug.current,
+    "name": pt::text(title)
   }
 `);

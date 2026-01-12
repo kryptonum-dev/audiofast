@@ -440,7 +440,7 @@ export default function ComparatorTool() {
           name,
           "parentName": parentCategory->name,
           "parentId": parentCategory->_id,
-          "productCount": count(*[_type == "product" && !(_id in path("drafts.**")) && references(^._id)])
+          "productCount": count(*[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && references(^._id)])
         }`;
 
         const result = await client.fetch<Category[]>(query);
@@ -478,8 +478,8 @@ export default function ComparatorTool() {
       }
 
       try {
-        // Fetch all products in this category with their technical data (exclude drafts)
-        const productsQuery = `*[_type == "product" && !(_id in path("drafts.**")) && references($categoryId)] {
+        // Fetch all products in this category with their technical data (exclude drafts and archived)
+        const productsQuery = `*[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && references($categoryId)] {
         _id,
         name,
         "brandName": brand->name,

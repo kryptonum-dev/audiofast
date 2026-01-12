@@ -43,6 +43,7 @@
     ]
   },
   "dependencies": {
+    "@sanity/cli": "^5.2.0",
     "csv-parse": "^6.1.0"
   }
 }

@@ -6,7 +6,7 @@ import { queryArchivedProducts } from '@/src/global/sanity/query';
 import type { QueryArchivedProductsResult } from '@/src/global/sanity/sanity.types';
 
 export const metadata: Metadata = {
-  title: 'Archived Products',
+  title: 'Archived & Hidden Products',
   robots: {
     index: false,
     follow: true,
@@ -21,8 +21,11 @@ export default async function ArchivedProductsPage() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1>Archived Products</h1>
-      <p>This page exists for crawling purposes only.</p>
+      <h1>Archived & Hidden Products</h1>
+      <p>
+        This page exists for crawling purposes only. It includes archived
+        products and products from hidden brands.
+      </p>
       {products && products.length > 0 ? (
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {products.map((product) => (
@@ -34,7 +37,7 @@ export default async function ArchivedProductsPage() {
           ))}
         </ul>
       ) : (
-        <p>No archived products found.</p>
+        <p>No archived or hidden products found.</p>
       )}
     </div>
   );
