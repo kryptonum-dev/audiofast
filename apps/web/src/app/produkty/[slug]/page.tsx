@@ -3,10 +3,10 @@ import { notFound } from 'next/navigation';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
+import DownloadSection from '@/src/components/products/DownloadSection';
 import ProductHero, {
   type AwardType,
 } from '@/src/components/products/ProductHero';
-import DownloadSection from '@/src/components/products/DownloadSection';
 import TechnicalData from '@/src/components/products/TechnicalData';
 import ProductViewTracker from '@/src/components/shared/analytics/ProductViewTracker';
 import type { SanityRawImage } from '@/src/components/shared/Image';
@@ -127,7 +127,8 @@ export default async function ProductPage(props: ProductPageProps) {
     {
       id: 'szczegoly',
       label: 'Szczegóły',
-      visible: !!product.details?.productDetailContent || !!product.details?.content,
+      visible:
+        !!product.details?.productDetailContent || !!product.details?.content,
     },
     {
       id: 'dane-techniczne',
@@ -188,7 +189,9 @@ export default async function ProductPage(props: ProductPageProps) {
         />
       )}
       <TwoColumnContent
-        unifiedContent={product.details?.productDetailContent as PortableTextProps}
+        unifiedContent={
+          product.details?.productDetailContent as PortableTextProps
+        }
         contentBlocks={product.details?.content as ContentBlock[]}
         heading={
           product.details?.heading
@@ -240,7 +243,6 @@ export default async function ProductPage(props: ProductPageProps) {
           selectionMode="latest"
           publications={product.reviews}
           index={1}
-
           _key=""
           _type="featuredPublications"
           customId="recenzje"

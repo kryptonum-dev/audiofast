@@ -216,7 +216,7 @@ export default async function BrandPage({
           },
         ]}
         description={brand.description}
-        image={brand.heroImage}
+        image={brand.heroImage!}
         showBlocks={false}
         blocksHeading={null}
         blocks={[]}
