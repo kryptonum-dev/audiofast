@@ -1,0 +1,7 @@
+.twoColumnLine {
+  // Marker element - actual layout logic is handled by parent container
+  // This is rendered but visually hidden, serves as a structural marker
+  display: block;
+  width: 100%;
+  height: 0;
+}

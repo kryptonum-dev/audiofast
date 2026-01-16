@@ -12,6 +12,7 @@ import { ptMinimalImage } from "../portableText/minimal-image";
 import { ptPageBreak } from "../portableText/page-break";
 import { ptQuote } from "../portableText/quote";
 import { ptReviewEmbed } from "../portableText/review-embed";
+import { ptTwoColumnLine } from "../portableText/two-column-line";
 import { ptTwoColumnTable } from "../portableText/two-column-table";
 import { ptVimeoVideo } from "../portableText/vimeo-video";
 import { ptYoutubeVideo } from "../portableText/youtube-video";
@@ -50,6 +51,7 @@ export const definitions = [
   ptYoutubeVideo,
   ptVimeoVideo,
   ptPageBreak,
+  ptTwoColumnLine,
   ptHorizontalLine,
   ptReviewEmbed,
   contentBlockText,

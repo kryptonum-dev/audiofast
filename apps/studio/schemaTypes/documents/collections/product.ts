@@ -315,10 +315,10 @@ export const product = defineType({
         }),
         defineField({
           name: "content",
-          title: "Treść szczegółów",
+          title: "Treść szczegółów (stary format)",
           type: "array",
           description:
-            "Szczegółowy opis produktu, specyfikacja i inne informacje. Dodaj bloki tekstowe, filmy YouTube/Vimeo lub linie poziome.",
+            "⚠️ STARY FORMAT - Użyj pola 'Treść zunifikowana' poniżej. To pole pozostaje dla kompatybilności wstecznej.",
           of: [
             { type: "contentBlockText" },
             { type: "contentBlockYoutube" },
@@ -332,6 +332,30 @@ export const product = defineType({
               views: [{ name: "list" }],
             },
           },
+        }),
+        customPortableText({
+          name: "productDetailContent",
+          title: "Szczegółowy opis",
+          description:
+            "Zunifikowana treść produktu. Użyj 'Sekcja dwukolumnowa' do oznaczenia początku i końca sekcji dwukolumnowych, a 'Podział kolumn' do rozdzielenia lewej i prawej kolumny.",
+          optional: true,
+          include: {
+            styles: ["normal", "h3"],
+            lists: ["bullet", "number"],
+            decorators: ["strong", "em"],
+            annotations: ["customLink"],
+          },
+          components: [
+            "ptMinimalImage",
+            "ptInlineImage",
+            "ptHeading",
+            "ptYoutubeVideo",
+            "ptVimeoVideo",
+            "ptPageBreak",
+            "ptTwoColumnLine",
+            "ptHorizontalLine",
+            "ptReviewEmbed",
+          ],
         }),
       ],
       validation: (Rule) =>

@@ -78,10 +78,10 @@ export const brand = defineType({
     }),
     defineField({
       name: "brandContentBlocks",
-      title: "Szczegółowy opis",
+      title: "Szczegółowy opis (stary format)",
       type: "array",
       description:
-        "Szczegółowy opis marki wyświetlany na stronie marki. Dodaj bloki tekstowe, filmy YouTube lub linie poziome.",
+        "⚠️ STARY FORMAT - Użyj pola 'Szczegółowy opis' poniżej. To pole pozostaje dla kompatybilności wstecznej.",
       group: GROUP.MAIN_CONTENT,
       of: [
         { type: "contentBlockText" },
@@ -96,6 +96,31 @@ export const brand = defineType({
           views: [{ name: "list" }],
         },
       },
+    }),
+    customPortableText({
+      name: "brandDetailContent",
+      title: "Szczegółowy opis",
+      description:
+        "Zunifikowana treść marki. Użyj 'Sekcja dwukolumnowa' do oznaczenia początku i końca sekcji dwukolumnowych, a 'Podział kolumn' do rozdzielenia lewej i prawej kolumny.",
+      group: GROUP.MAIN_CONTENT,
+      optional: true,
+      include: {
+        styles: ["normal", "h3"],
+        lists: ["bullet", "number"],
+        decorators: ["strong", "em"],
+        annotations: ["customLink"],
+      },
+      components: [
+        "ptMinimalImage",
+        "ptInlineImage",
+        "ptHeading",
+        "ptYoutubeVideo",
+        "ptVimeoVideo",
+        "ptPageBreak",
+        "ptTwoColumnLine",
+        "ptHorizontalLine",
+        "ptReviewEmbed",
+      ],
     }),
     defineField({
       name: "distributionYear",

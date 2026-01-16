@@ -2,18 +2,17 @@
 
 import { LinkIcon } from "@sanity/icons";
 import {
-  PortableTextEditable,
-  PortableTextEditor,
-  type PortableTextEditableProps,
-  type RenderAnnotationFunction,
-  type RenderBlockFunction,
-  type RenderChildFunction,
-  type RenderDecoratorFunction,
-  type RenderListItemFunction,
-  type RenderStyleFunction,
-} from "@sanity/portable-text-editor";
-import { Box, Button, Card, Flex, Stack, Text, TextInput } from "@sanity/ui";
-import { useCallback, useMemo, useState } from "react";
+  Box,
+  Button,
+  Card,
+  Flex,
+  Stack,
+  Text,
+  TextArea,
+  TextInput,
+} from "@sanity/ui";
+import { Bold, Italic, Link2, List, ListOrdered } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PortableTextBlock } from "sanity";
 
 import { generateKey } from "./types";
@@ -24,126 +23,33 @@ type CellEditorProps = {
   onCancel: () => void;
 };
 
-// Schema type definition for the Portable Text editor
-const CELL_SCHEMA_TYPE = {
-  name: "cellContent",
-  type: "array" as const,
-  of: [
-    {
-      name: "block",
-      type: "block" as const,
-      styles: [{ title: "Normal", value: "normal" as const }],
-      lists: [
-        { title: "Bullet", value: "bullet" as const },
-        { title: "Number", value: "number" as const },
-      ],
-      marks: {
-        decorators: [
-          { title: "Bold", value: "strong" as const },
-          { title: "Italic", value: "em" as const },
-        ],
-        annotations: [
-          {
-            name: "link",
-            type: "object" as const,
-            title: "Link",
-            icon: LinkIcon,
-            fields: [
-              {
-                name: "href",
-                type: "url" as const,
-                title: "URL",
-              },
-              {
-                name: "blank",
-                type: "boolean" as const,
-                title: "Open in new tab",
-                initialValue: true,
-              },
-            ],
-          },
-        ],
-      },
-      children: [{ name: "span", type: "span" as const }],
-    },
-  ],
+type TextSelection = {
+  start: number;
+  end: number;
 };
 
-// Render functions for the Portable Text editor
-const renderBlock: RenderBlockFunction = (props) => {
-  const { children, value } = props;
-  const style = value.style || "normal";
-
-  if (style === "normal") {
-    return <p style={{ margin: "0.5em 0", lineHeight: 1.5 }}>{children}</p>;
-  }
-
-  return <p style={{ margin: "0.5em 0" }}>{children}</p>;
-};
-
-const renderChild: RenderChildFunction = (props) => {
-  return <>{props.children}</>;
-};
-
-const renderDecorator: RenderDecoratorFunction = (props) => {
-  const { children, value } = props;
-
-  switch (value) {
-    case "strong":
-      return <strong>{children}</strong>;
-    case "em":
-      return <em>{children}</em>;
-    default:
-      return <>{children}</>;
-  }
-};
-
-const renderAnnotation: RenderAnnotationFunction = (props) => {
-  const { children, value } = props;
-
-  if (value._type === "link") {
-    return (
-      <span
-        style={{
-          color: "var(--card-link-color)",
-          textDecoration: "underline",
-          cursor: "pointer",
-        }}
-        title={value.href}
-      >
-        {children}
-      </span>
-    );
-  }
-
-  return <>{children}</>;
-};
-
-const renderListItem: RenderListItemFunction = (props) => {
-  return <li style={{ marginLeft: "1.5em" }}>{props.children}</li>;
-};
-
-const renderStyle: RenderStyleFunction = (props) => {
-  return <>{props.children}</>;
-};
+type MarkType = "strong" | "em";
+type ListType = "bullet" | "number";
 
 /**
- * Link annotation editor component
+ * Link editor popover component
  */
 function LinkEditor({
-  value,
-  onChange,
+  onSave,
   onClose,
+  initialHref = "",
 }: {
-  value: { href?: string; blank?: boolean };
-  onChange: (value: { href: string; blank: boolean }) => void;
+  onSave: (href: string, blank: boolean) => void;
   onClose: () => void;
+  initialHref?: string;
 }) {
-  const [href, setHref] = useState(value.href || "");
-  const [blank, setBlank] = useState(value.blank ?? true);
+  const [href, setHref] = useState(initialHref);
+  const [blank, setBlank] = useState(true);
 
   const handleSave = () => {
-    onChange({ href, blank });
+    if (href.trim()) {
+      onSave(href.trim(), blank);
+    }
     onClose();
   };
 
@@ -154,9 +60,12 @@ function LinkEditor({
       shadow={2}
       style={{
         position: "absolute",
+        top: "100%",
+        left: 0,
         zIndex: 100,
         background: "var(--card-bg-color)",
         minWidth: "300px",
+        marginTop: "4px",
       }}
     >
       <Stack space={3}>
@@ -168,15 +77,16 @@ function LinkEditor({
           onChange={(e) => setHref(e.currentTarget.value)}
           placeholder="https://..."
           fontSize={1}
+          autoFocus
         />
         <Flex gap={2} align="center">
           <input
             type="checkbox"
-            id="blank"
+            id="blank-checkbox"
             checked={blank}
             onChange={(e) => setBlank(e.target.checked)}
           />
-          <label htmlFor="blank" style={{ fontSize: "13px" }}>
+          <label htmlFor="blank-checkbox" style={{ fontSize: "13px" }}>
             Otwórz w nowej karcie
           </label>
         </Flex>
@@ -187,6 +97,7 @@ function LinkEditor({
             tone="primary"
             onClick={handleSave}
             fontSize={1}
+            disabled={!href.trim()}
           />
         </Flex>
       </Stack>
@@ -195,16 +106,265 @@ function LinkEditor({
 }
 
 /**
+ * Convert Portable Text blocks to plain text for editing
+ */
+function blocksToText(blocks: PortableTextBlock[]): string {
+  if (!blocks || blocks.length === 0) return "";
+
+  return blocks
+    .map((block) => {
+      if (block._type !== "block") return "";
+
+      const children = (block.children as Array<{ text?: string }>) || [];
+      const text = children.map((child) => child.text || "").join("");
+
+      // Add list prefix for display
+      if (block.listItem === "bullet") {
+        return `• ${text}`;
+      }
+      if (block.listItem === "number") {
+        return `1. ${text}`;
+      }
+
+      return text;
+    })
+    .join("\n");
+}
+
+/**
+ * Parse text into Portable Text blocks
+ * Supports basic formatting detection and list prefixes
+ */
+function textToBlocks(text: string): PortableTextBlock[] {
+  if (!text.trim()) return [];
+
+  const lines = text.split("\n");
+  const blocks: PortableTextBlock[] = [];
+
+  lines.forEach((line) => {
+    let listItem: ListType | undefined;
+    let processedLine = line;
+
+    // Detect bullet list
+    if (line.match(/^[•\-\*]\s+/)) {
+      listItem = "bullet";
+      processedLine = line.replace(/^[•\-\*]\s+/, "");
+    }
+    // Detect numbered list
+    else if (line.match(/^\d+\.\s+/)) {
+      listItem = "number";
+      processedLine = line.replace(/^\d+\.\s+/, "");
+    }
+
+    const block: PortableTextBlock = {
+      _key: generateKey(),
+      _type: "block",
+      style: "normal",
+      markDefs: [],
+      children: [
+        {
+          _key: generateKey(),
+          _type: "span",
+          text: processedLine,
+          marks: [],
+        },
+      ],
+    };
+
+    if (listItem) {
+      (block as any).listItem = listItem;
+      (block as any).level = 1;
+    }
+
+    blocks.push(block);
+  });
+
+  return blocks;
+}
+
+/**
+ * Apply mark to selected text in blocks
+ */
+function applyMarkToBlocks(
+  blocks: PortableTextBlock[],
+  mark: MarkType,
+): PortableTextBlock[] {
+  return blocks.map((block) => {
+    if (block._type !== "block") return block;
+
+    const children = (block.children as any[]) || [];
+    const newChildren = children.map((child) => {
+      if (child._type !== "span") return child;
+
+      const marks = child.marks || [];
+      const hasMark = marks.includes(mark);
+
+      return {
+        ...child,
+        marks: hasMark ? marks.filter((m: string) => m !== mark) : [...marks, mark],
+      };
+    });
+
+    return {
+      ...block,
+      children: newChildren,
+    };
+  });
+}
+
+/**
+ * Toggle list type on all blocks
+ */
+function toggleListOnBlocks(
+  blocks: PortableTextBlock[],
+  listType: ListType,
+): PortableTextBlock[] {
+  // Check if all blocks already have this list type
+  const allHaveList = blocks.every(
+    (block) => (block as any).listItem === listType,
+  );
+
+  return blocks.map((block) => {
+    if (block._type !== "block") return block;
+
+    if (allHaveList) {
+      // Remove list
+      const { listItem, level, ...rest } = block as any;
+      return rest;
+    } else {
+      // Add list
+      return {
+        ...block,
+        listItem: listType,
+        level: 1,
+      } as PortableTextBlock;
+    }
+  });
+}
+
+/**
+ * Add link to blocks (wraps all text in a link)
+ */
+function addLinkToBlocks(
+  blocks: PortableTextBlock[],
+  href: string,
+  blank: boolean,
+): PortableTextBlock[] {
+  const linkKey = generateKey();
+
+  return blocks.map((block) => {
+    if (block._type !== "block") return block;
+
+    const markDefs = [...((block.markDefs as any[]) || [])];
+    
+    // Check if there's already a link
+    const existingLinkIndex = markDefs.findIndex((m) => m._type === "link");
+    if (existingLinkIndex >= 0) {
+      // Update existing link
+      markDefs[existingLinkIndex] = {
+        ...markDefs[existingLinkIndex],
+        href,
+        blank,
+      };
+      return { ...block, markDefs };
+    }
+
+    // Add new link
+    markDefs.push({
+      _key: linkKey,
+      _type: "link",
+      href,
+      blank,
+    });
+
+    const children = (block.children as any[]) || [];
+    const newChildren = children.map((child) => {
+      if (child._type !== "span") return child;
+      const marks = child.marks || [];
+      return {
+        ...child,
+        marks: [...marks, linkKey],
+      };
+    });
+
+    return {
+      ...block,
+      markDefs,
+      children: newChildren,
+    };
+  });
+}
+
+/**
+ * Check if blocks have a specific mark
+ */
+function blocksHaveMark(blocks: PortableTextBlock[], mark: MarkType): boolean {
+  return blocks.some((block) => {
+    if (block._type !== "block") return false;
+    const children = (block.children as any[]) || [];
+    return children.some((child) => {
+      const marks = child.marks || [];
+      return marks.includes(mark);
+    });
+  });
+}
+
+/**
+ * Check if blocks have a specific list type
+ */
+function blocksHaveList(blocks: PortableTextBlock[], listType: ListType): boolean {
+  return blocks.some((block) => (block as any).listItem === listType);
+}
+
+/**
+ * Check if blocks have a link
+ */
+function blocksHaveLink(blocks: PortableTextBlock[]): boolean {
+  return blocks.some((block) => {
+    if (block._type !== "block") return false;
+    const markDefs = (block.markDefs as any[]) || [];
+    return markDefs.some((m) => m._type === "link");
+  });
+}
+
+/**
+ * Remove links from blocks
+ */
+function removeLinksFromBlocks(blocks: PortableTextBlock[]): PortableTextBlock[] {
+  return blocks.map((block) => {
+    if (block._type !== "block") return block;
+
+    const markDefs = (block.markDefs as any[]) || [];
+    const linkKeys = markDefs.filter((m) => m._type === "link").map((m) => m._key);
+
+    const newMarkDefs = markDefs.filter((m) => m._type !== "link");
+    const children = (block.children as any[]) || [];
+    const newChildren = children.map((child) => {
+      if (child._type !== "span") return child;
+      const marks = (child.marks || []).filter((m: string) => !linkKeys.includes(m));
+      return { ...child, marks };
+    });
+
+    return {
+      ...block,
+      markDefs: newMarkDefs,
+      children: newChildren,
+    };
+  });
+}
+
+/**
  * Portable Text Cell Editor Component
- * Provides a proper rich text editing experience for table cells
+ * Provides a rich text editing experience for table cells using a textarea-based approach
+ * that properly converts to/from Portable Text format
  */
 export function CellEditor({
   initialContent,
   onSave,
   onCancel,
 }: CellEditorProps) {
-  // Ensure content has valid keys
-  const normalizedContent = useMemo(() => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [content, setContent] = useState<PortableTextBlock[]>(() => {
     if (!initialContent || initialContent.length === 0) {
       return [
         {
@@ -221,120 +381,126 @@ export function CellEditor({
             },
           ],
         },
-      ] as PortableTextBlock[];
+      ];
     }
-
     return initialContent.map((block) => ({
       ...block,
       _key: block._key || generateKey(),
-      children: Array.isArray(block.children)
-        ? block.children.map((child: any) => ({
-            ...child,
-            _key: child._key || generateKey(),
-          }))
-        : block.children,
-    })) as PortableTextBlock[];
-  }, [initialContent]);
+    }));
+  });
 
-  const [content, setContent] =
-    useState<PortableTextBlock[]>(normalizedContent);
-  const [editor, setEditor] = useState<PortableTextEditor | null>(null);
-  const [linkEditor, setLinkEditor] = useState<{
-    value: { href?: string; blank?: boolean };
-  } | null>(null);
+  const [text, setText] = useState(() => blocksToText(content));
+  const [showLinkEditor, setShowLinkEditor] = useState(false);
 
-  const handleChange = useCallback(
-    (change: { patches: any[]; snapshot: PortableTextBlock[] | undefined }) => {
-      if (change.snapshot) {
-        setContent(change.snapshot);
+  // Sync text changes back to blocks
+  const syncTextToBlocks = useCallback(() => {
+    const newBlocks = textToBlocks(text);
+    
+    // Preserve marks and markDefs from existing content where possible
+    if (content.length > 0 && newBlocks.length > 0) {
+      const existingMarks = content[0]?.children?.[0]?.marks || [];
+      const existingMarkDefs = content[0]?.markDefs || [];
+      
+      if (existingMarks.length > 0 || existingMarkDefs.length > 0) {
+        newBlocks.forEach((block) => {
+          (block as any).markDefs = existingMarkDefs;
+          const children = (block.children as any[]) || [];
+          children.forEach((child) => {
+            if (child._type === "span") {
+              child.marks = [...existingMarks];
+            }
+          });
+        });
       }
-    },
-    [],
-  );
+    }
+    
+    setContent(newBlocks);
+  }, [text, content]);
 
-  const handleSave = useCallback(() => {
-    onSave(content);
-  }, [content, onSave]);
+  // Update blocks when text changes (debounced)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      syncTextToBlocks();
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [text, syncTextToBlocks]);
+
+  // Formatting state
+  const hasBold = useMemo(() => blocksHaveMark(content, "strong"), [content]);
+  const hasItalic = useMemo(() => blocksHaveMark(content, "em"), [content]);
+  const hasBulletList = useMemo(() => blocksHaveList(content, "bullet"), [content]);
+  const hasNumberList = useMemo(() => blocksHaveList(content, "number"), [content]);
+  const hasLink = useMemo(() => blocksHaveLink(content), [content]);
 
   // Toolbar actions
   const handleBold = useCallback(() => {
-    if (!editor) return;
-    PortableTextEditor.toggleMark(editor, "strong");
-    PortableTextEditor.focus(editor);
-  }, [editor]);
+    setContent((prev) => applyMarkToBlocks(prev, "strong"));
+  }, []);
 
   const handleItalic = useCallback(() => {
-    if (!editor) return;
-    PortableTextEditor.toggleMark(editor, "em");
-    PortableTextEditor.focus(editor);
-  }, [editor]);
+    setContent((prev) => applyMarkToBlocks(prev, "em"));
+  }, []);
 
   const handleBulletList = useCallback(() => {
-    if (!editor) return;
-    PortableTextEditor.toggleList(editor, "bullet");
-    PortableTextEditor.focus(editor);
-  }, [editor]);
+    // Parse current text and apply list
+    const blocks = textToBlocks(text);
+    const newBlocks = toggleListOnBlocks(blocks, "bullet");
+    setContent(newBlocks);
+    setText(blocksToText(newBlocks));
+  }, [text]);
 
   const handleNumberList = useCallback(() => {
-    if (!editor) return;
-    PortableTextEditor.toggleList(editor, "number");
-    PortableTextEditor.focus(editor);
-  }, [editor]);
+    // Parse current text and apply list
+    const blocks = textToBlocks(text);
+    const newBlocks = toggleListOnBlocks(blocks, "number");
+    setContent(newBlocks);
+    setText(blocksToText(newBlocks));
+  }, [text]);
 
   const handleLink = useCallback(() => {
-    if (!editor) return;
-
-    const selection = PortableTextEditor.getSelection(editor);
-    if (!selection) return;
-
-    // Check if there's an existing link
-    const activeAnnotations = PortableTextEditor.activeAnnotations(editor);
-    const existingLink = activeAnnotations.find((a) => a._type === "link");
-
-    if (existingLink) {
+    if (hasLink) {
       // Remove existing link
-      PortableTextEditor.removeAnnotation(editor, existingLink);
-      PortableTextEditor.focus(editor);
+      setContent((prev) => removeLinksFromBlocks(prev));
     } else {
-      // Open link editor
-      setLinkEditor({ value: {} });
+      setShowLinkEditor(true);
     }
-  }, [editor]);
+  }, [hasLink]);
 
   const handleLinkSave = useCallback(
-    (value: { href: string; blank: boolean }) => {
-      if (!editor) return;
-
-      const key = generateKey();
-      PortableTextEditor.addAnnotation(
-        editor,
-        { _type: "link", name: "link" } as any,
-        { _key: key, href: value.href, blank: value.blank },
-      );
-      PortableTextEditor.focus(editor);
-      setLinkEditor(null);
+    (href: string, blank: boolean) => {
+      // First sync text to blocks, then add link
+      const blocks = textToBlocks(text);
+      const linkedBlocks = addLinkToBlocks(blocks, href, blank);
+      setContent(linkedBlocks);
+      setShowLinkEditor(false);
     },
-    [editor],
+    [text],
   );
 
-  const editableProps: Partial<PortableTextEditableProps> = useMemo(
-    () => ({
-      renderBlock,
-      renderChild,
-      renderDecorator,
-      renderAnnotation,
-      renderListItem,
-      renderStyle,
-      style: {
-        outline: "none",
-        minHeight: "150px",
-        padding: "12px",
-        fontSize: "14px",
-        lineHeight: "1.5",
-      },
-    }),
-    [],
-  );
+  const handleSave = useCallback(() => {
+    // Make sure we have the latest content
+    const finalBlocks = textToBlocks(text);
+    
+    // Preserve formatting from content state
+    const mergedBlocks = finalBlocks.map((block, index) => {
+      const existingBlock = content[index];
+      if (!existingBlock) return block;
+      
+      return {
+        ...block,
+        markDefs: existingBlock.markDefs || [],
+        children: (block.children as any[]).map((child, childIndex) => {
+          const existingChild = (existingBlock.children as any[])?.[childIndex];
+          return {
+            ...child,
+            marks: existingChild?.marks || [],
+          };
+        }),
+      };
+    });
+    
+    onSave(mergedBlocks.length > 0 ? mergedBlocks : content);
+  }, [text, content, onSave]);
 
   return (
     <Box padding={4}>
@@ -343,40 +509,41 @@ export function CellEditor({
         <Card padding={2} border radius={2}>
           <Flex gap={1} wrap="wrap" style={{ position: "relative" }}>
             <Button
-              text="B"
-              mode="ghost"
+              icon={Bold}
+              mode={hasBold ? "default" : "ghost"}
+              tone={hasBold ? "primary" : "default"}
               padding={2}
-              fontSize={1}
               onClick={handleBold}
-              style={{ fontWeight: "bold" }}
-              title="Pogrubienie"
+              title="Pogrubienie (stosuje do całego tekstu)"
             />
             <Button
-              text="I"
-              mode="ghost"
+              icon={Italic}
+              mode={hasItalic ? "default" : "ghost"}
+              tone={hasItalic ? "primary" : "default"}
               padding={2}
-              fontSize={1}
               onClick={handleItalic}
-              style={{ fontStyle: "italic" }}
-              title="Kursywa"
+              title="Kursywa (stosuje do całego tekstu)"
             />
             <Box
               style={{
                 width: "1px",
                 background: "var(--card-border-color)",
                 margin: "0 4px",
+                alignSelf: "stretch",
               }}
             />
             <Button
-              icon={() => <span style={{ fontSize: "12px" }}>•</span>}
-              mode="ghost"
+              icon={List}
+              mode={hasBulletList ? "default" : "ghost"}
+              tone={hasBulletList ? "primary" : "default"}
               padding={2}
               onClick={handleBulletList}
               title="Lista wypunktowana"
             />
             <Button
-              icon={() => <span style={{ fontSize: "12px" }}>1.</span>}
-              mode="ghost"
+              icon={ListOrdered}
+              mode={hasNumberList ? "default" : "ghost"}
+              tone={hasNumberList ? "primary" : "default"}
               padding={2}
               onClick={handleNumberList}
               title="Lista numerowana"
@@ -386,42 +553,67 @@ export function CellEditor({
                 width: "1px",
                 background: "var(--card-border-color)",
                 margin: "0 4px",
+                alignSelf: "stretch",
               }}
             />
             <Button
-              icon={LinkIcon}
-              mode="ghost"
+              icon={Link2}
+              mode={hasLink ? "default" : "ghost"}
+              tone={hasLink ? "primary" : "default"}
               padding={2}
               onClick={handleLink}
-              title="Link"
+              title={hasLink ? "Usuń link" : "Dodaj link"}
             />
-            {linkEditor && (
+            {showLinkEditor && (
               <LinkEditor
-                value={linkEditor.value}
-                onChange={handleLinkSave}
-                onClose={() => setLinkEditor(null)}
+                onSave={handleLinkSave}
+                onClose={() => setShowLinkEditor(false)}
               />
             )}
           </Flex>
         </Card>
 
-        {/* Editor */}
+        {/* Text Area */}
         <Card padding={0} border radius={2}>
-          <PortableTextEditor
-            ref={(ref) => setEditor(ref)}
-            schemaType={CELL_SCHEMA_TYPE as any}
-            value={content}
-            onChange={handleChange}
-          >
-            <PortableTextEditable {...editableProps} />
-          </PortableTextEditor>
+          <textarea
+            ref={textareaRef}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Wpisz tekst..."
+            autoFocus
+            style={{
+              width: "100%",
+              minHeight: "150px",
+              padding: "12px",
+              fontSize: "14px",
+              lineHeight: "1.6",
+              fontFamily: "inherit",
+              border: "none",
+              outline: "none",
+              resize: "vertical",
+              background: "transparent",
+              color: "inherit",
+              fontWeight: hasBold ? 600 : 400,
+              fontStyle: hasItalic ? "italic" : "normal",
+            }}
+          />
         </Card>
 
         {/* Hints */}
-        <Text size={1} muted>
-          Wskazówka: Zaznacz tekst, aby sformatować. Obsługiwane: pogrubienie,
-          kursywa, linki, listy.
-        </Text>
+        <Stack space={2}>
+          <Text size={1} muted>
+            Wskazówki:
+          </Text>
+          <Text size={1} muted>
+            • Użyj "• " lub "- " na początku linii dla listy wypunktowanej
+          </Text>
+          <Text size={1} muted>
+            • Użyj "1. " na początku linii dla listy numerowanej
+          </Text>
+          <Text size={1} muted>
+            • Przyciski formatowania stosują styl do całego tekstu
+          </Text>
+        </Stack>
 
         {/* Actions */}
         <Flex gap={3} justify="flex-end">

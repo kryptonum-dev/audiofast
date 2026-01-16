@@ -1,0 +1,38 @@
+.unifiedContent {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
+
+  // Shared text content styles for both single and two-column layouts
+  .columnContent {
+    font-size: var(--typography-body-m, 0.875rem);
+
+    h3:not(:first-child) {
+      margin-top: 2rem !important;
+    }
+  }
+
+  // Single column section
+  .singleColumn {
+    width: 100%;
+  }
+
+  // Two column section (created by ptPageBreak)
+  .twoColumn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+
+    .leftColumn,
+    .rightColumn {
+      // Content naturally sizes based on its length
+    }
+  }
+
+  @media (max-width: 43.6875rem) {
+    .twoColumn {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+}

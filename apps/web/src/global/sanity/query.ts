@@ -176,6 +176,9 @@ const portableTextFragmentExtended = (
     _type == "ptPageBreak" => {
       ...,
     },
+    _type == "ptTwoColumnLine" => {
+      ...,
+    },
     _type == "ptImageSlider" => {
       ...,
       ${imageFragment('images[]')}
@@ -1993,6 +1996,7 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
       ${imageFragment('backgroundImage')},
     },
     ${brandContentBlocksFragment('brandContentBlocks')},
+    ${portableTextFragmentExtended('brandDetailContent')},
     ${imageFragment('imageGallery[]')},
     ${publicationFragment('featuredReviews[]->')},
     stores[]->{
@@ -2062,7 +2066,8 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     },
     details{
       ${portableTextFragment('heading')},
-      ${brandContentBlocksFragment('content')}
+      ${brandContentBlocksFragment('content')},
+      ${portableTextFragmentExtended('productDetailContent')}
     },
     technicalData {
       variants,

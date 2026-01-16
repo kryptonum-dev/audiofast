@@ -61,6 +61,7 @@ const ALL_CUSTOM_COMPONENTS = [
   { name: "ptYoutubeVideo", type: "ptYoutubeVideo" },
   { name: "ptVimeoVideo", type: "ptVimeoVideo" },
   { name: "ptPageBreak", type: "ptPageBreak" },
+  { name: "ptTwoColumnLine", type: "ptTwoColumnLine" },
   { name: "ptHorizontalLine", type: "ptHorizontalLine" },
   { name: "ptInlineImage", type: "ptInlineImage" },
   { name: "ptImageSlider", type: "ptImageSlider" },

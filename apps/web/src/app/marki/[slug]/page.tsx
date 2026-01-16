@@ -17,6 +17,7 @@ import type { SanityRawImage } from '@/src/components/shared/Image';
 import Image from '@/src/components/shared/Image';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
+import type { PortableTextProps } from '@/src/global/types';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
@@ -183,7 +184,8 @@ export default async function BrandPage({
       id: 'o-marce',
       label: 'O marce',
       visible:
-        !!brand.brandContentBlocks && brand.brandContentBlocks.length > 0,
+        (!!brand.brandDetailContent && brand.brandDetailContent.length > 0) ||
+        (!!brand.brandContentBlocks && brand.brandContentBlocks.length > 0),
     },
     {
       id: 'recenzje',
@@ -279,6 +281,7 @@ export default async function BrandPage({
       )}
 
       <TwoColumnContent
+        unifiedContent={brand.brandDetailContent as PortableTextProps}
         contentBlocks={brand.brandContentBlocks as ContentBlock[]}
         customId="o-marce"
         distributionYear={brand.distributionYear}

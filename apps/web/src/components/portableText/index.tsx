@@ -15,6 +15,7 @@ import { convertToSlug, portableTextToPlainString } from '@/global/utils';
 import { ArrowListComponent } from './ArrowList';
 import { ButtonPortableTextComponent } from './Button';
 import { CircleNumberedListComponent } from './CircleNumberedList';
+import { TwoColumnLineComponent } from './TwoColumnLine';
 import { CtaSectionComponent } from './CtaSection';
 import { FeaturedProductsComponent } from './FeaturedProducts';
 import { HeadingComponent } from './Heading';
@@ -395,6 +396,9 @@ export function PortableTextRenderer({
         },
         ptPageBreak: () => {
           return <PageBreakComponent />;
+        },
+        ptTwoColumnLine: () => {
+          return <TwoColumnLineComponent />;
         },
         ptHorizontalLine: () => {
           return <hr className={portableTextStyles.horizontalLine} />;

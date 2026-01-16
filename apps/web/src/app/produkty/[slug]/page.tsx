@@ -127,7 +127,7 @@ export default async function ProductPage(props: ProductPageProps) {
     {
       id: 'szczegoly',
       label: 'Szczegóły',
-      visible: !!product.details?.content,
+      visible: !!product.details?.productDetailContent || !!product.details?.content,
     },
     {
       id: 'dane-techniczne',
@@ -188,6 +188,7 @@ export default async function ProductPage(props: ProductPageProps) {
         />
       )}
       <TwoColumnContent
+        unifiedContent={product.details?.productDetailContent as PortableTextProps}
         contentBlocks={product.details?.content as ContentBlock[]}
         heading={
           product.details?.heading
