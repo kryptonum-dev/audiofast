@@ -6,6 +6,7 @@ import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
 import ProductHero, {
   type AwardType,
 } from '@/src/components/products/ProductHero';
+import DownloadSection from '@/src/components/products/DownloadSection';
 import TechnicalData from '@/src/components/products/TechnicalData';
 import ProductViewTracker from '@/src/components/shared/analytics/ProductViewTracker';
 import type { SanityRawImage } from '@/src/components/shared/Image';
@@ -137,6 +138,12 @@ export default async function ProductPage(props: ProductPageProps) {
         product.technicalData.groups.length > 0,
     },
     {
+      id: 'do-pobrania',
+      label: 'Do pobrania',
+      visible:
+        !!product.downloadablePdfs && product.downloadablePdfs.length > 0,
+    },
+    {
       id: 'gdzie-kupic',
       label: 'Gdzie kupić',
       visible: !!effectiveStores && effectiveStores.length > 0,
@@ -195,6 +202,13 @@ export default async function ProductPage(props: ProductPageProps) {
         <TechnicalData
           data={product.technicalData}
           customId="dane-techniczne"
+        />
+      )}
+      {product.downloadablePdfs && product.downloadablePdfs.length > 0 && (
+        <DownloadSection
+          data={product.downloadablePdfs}
+          productSlug={product.slug || ''}
+          customId="do-pobrania"
         />
       )}
       {effectiveStores && effectiveStores.length > 0 && (

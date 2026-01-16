@@ -48,6 +48,8 @@ export async function GET(request: NextRequest, props: RouteParams) {
         "Content-Disposition": `inline; filename="${pdfReview.pdfFilename || "review.pdf"}"`,
         "Content-Length": String(pdfBuffer.byteLength),
         "Cache-Control": "public, max-age=31536000, immutable",
+        // SEO: Tell search engines not to index this PDF URL
+        "X-Robots-Tag": "noindex, nofollow",
       },
     });
   } catch (error) {

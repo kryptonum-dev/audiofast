@@ -2,7 +2,7 @@ import {
   orderRankField,
   orderRankOrdering,
 } from "@sanity/orderable-document-list";
-import { BookAudio, Package, Settings, Table } from "lucide-react";
+import { BookAudio, FileText, Package, Settings, Table } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { defineSlugForDocument } from "../../../components/define-slug-for-document";
@@ -529,6 +529,60 @@ export const product = defineType({
               },
             }),
           ],
+        }),
+      ],
+    }),
+    defineField({
+      name: "downloadablePdfs",
+      title: "Pliki do pobrania (PDF)",
+      type: "array",
+      description:
+        "Lista plików PDF do pobrania (instrukcje obsługi, broszury, specyfikacje itp.). Wyświetlane w sekcji 'Do pobrania' na stronie produktu.",
+      group: GROUP.MAIN_CONTENT,
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "pdfItem",
+          title: "Plik PDF",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Tytuł",
+              type: "string",
+              description:
+                'Nagłówek pliku wyświetlany na stronie (np. "Aurender N30SA - Instrukcja obsługi")',
+              validation: (Rule) =>
+                Rule.required().error("Tytuł pliku jest wymagany"),
+            }),
+            defineField({
+              name: "description",
+              title: "Opis (opcjonalny)",
+              type: "string",
+              description:
+                'Krótki opis pod tytułem (np. "Pobierz instrukcję w wersji polskiej")',
+            }),
+            defineField({
+              name: "file",
+              title: "Plik PDF",
+              type: "file",
+              options: {
+                accept: ".pdf",
+              },
+              validation: (Rule) =>
+                Rule.required().error("Plik PDF jest wymagany"),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "title",
+              fileName: "file.asset.originalFilename",
+            },
+            prepare: ({ title, fileName }) => ({
+              title: title || "Plik PDF",
+              subtitle: fileName || "Brak pliku",
+              media: FileText,
+            }),
+          },
         }),
       ],
     }),

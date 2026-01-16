@@ -1138,6 +1138,21 @@ export const queryPdfReviewBySlug =
   "pdfMimeType": pdfFile.asset->mimeType
 }`);
 
+// Query for fetching a specific PDF from a product by slug and PDF key
+// Used by /produkty/[slug]/pliki/[pdfKey] route handler
+export const queryProductPdfBySlugAndKey = defineQuery(`
+  *[_type == "product" && slug.current == $slug][0]{
+    "pdf": downloadablePdfs[_key == $pdfKey][0]{
+      _key,
+      title,
+      description,
+      "fileUrl": file.asset->url,
+      "fileName": file.asset->originalFilename,
+      "mimeType": file.asset->mimeType
+    }
+  }.pdf
+`);
+
 // Query for blog page static content - handles both /blog and /blog/kategoria/[category]
 // Uses GROQ select() to conditionally fetch category-specific or default content
 // Parameters:
@@ -2085,6 +2100,13 @@ export const queryProductBySlug = defineQuery(/* groq */ `
       ${publicationBlock}
     },
     ${productFragment('relatedProducts[]->')},
+    downloadablePdfs[]{
+      _key,
+      title,
+      description,
+      "fileUrl": file.asset->url,
+      "fileName": file.asset->originalFilename
+    },
     ${pageBuilderFragment},
         seo {
       title,

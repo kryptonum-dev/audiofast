@@ -1,0 +1,98 @@
+.downloadSection {
+  background-color: var(--neutral-200, #f8f8f8);
+  border-radius: 0.5rem;
+  margin: clamp(1rem, calc(1.5vw / 0.48), 1.5rem) auto
+    clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
+  padding: clamp(1rem, calc(2vw / 0.48), 2rem);
+
+  .heading {
+    align-self: start;
+    margin-bottom: clamp(0.75rem, calc(1.5vw / 0.48), 1.5rem);
+  }
+
+  .list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.375rem, calc(0.5vw / 0.48), 0.5rem);
+  }
+
+  .item {
+    background-color: var(--neutral-white, #ffffff);
+    border-radius: 0.5rem;
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.625rem, calc(1vw / 0.48), 1rem);
+    padding: clamp(0.75rem, calc(1vw / 0.48), 1rem)
+      clamp(0.875rem, calc(1.25vw / 0.48), 1.25rem);
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+  }
+
+  .iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(2rem, calc(2.5vw / 0.48), 2.5rem);
+    height: clamp(2rem, calc(2.5vw / 0.48), 2.5rem);
+    background-color: var(--neutral-200, #f8f8f8);
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .icon {
+    width: clamp(1rem, calc(1.25vw / 0.48), 1.25rem);
+    height: clamp(1rem, calc(1.25vw / 0.48), 1.25rem);
+    color: var(--neutral-600, #5b5a5a);
+    transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .item:hover .icon {
+    color: var(--neutral-900, #0a0a0a);
+  }
+
+  .textContent {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.125rem, calc(0.25vw / 0.48), 0.25rem);
+  }
+
+  .title {
+    font-size: var(--typography-body-m, 0.875rem);
+    font-weight: 500;
+    color: var(--neutral-700, #303030);
+    line-height: 1.4;
+    transition: color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .item:hover .title {
+    color: var(--neutral-900, #0a0a0a);
+  }
+
+  .description {
+    font-size: var(--typography-body-s, 0.8125rem);
+    font-weight: 400;
+    color: var(--neutral-600, #5b5a5a);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 56.1875rem) {
+    .title {
+      font-size: var(--typography-body-s, 0.8125rem);
+    }
+
+    .description {
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (max-width: 33.6875rem) {
+    width: 100%;
+  }
+}
