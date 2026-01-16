@@ -17,7 +17,6 @@ import type { SanityRawImage } from '@/src/components/shared/Image';
 import Image from '@/src/components/shared/Image';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
-import type { PortableTextProps } from '@/src/global/types';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
@@ -40,6 +39,7 @@ import type {
   QueryBrandSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
+import type { PortableTextProps } from '@/src/global/types';
 import type { PublicationType } from '@/src/global/types';
 
 type BrandPageProps = {

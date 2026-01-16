@@ -169,14 +169,14 @@ export default function UnifiedContentBlocks({
           <div key={index} className={styles.twoColumn}>
             <div className={styles.leftColumn}>
               <PortableText
-                value={section.leftContent}
+                value={section.leftContent ?? []}
                 enablePortableTextStyles
                 className={styles.columnContent}
               />
             </div>
             <div className={styles.rightColumn}>
               <PortableText
-                value={section.rightContent}
+                value={section.rightContent ?? []}
                 enablePortableTextStyles
                 className={styles.columnContent}
               />
