@@ -20,106 +20,17 @@ export const product = defineType({
   description:
     "Produkt audio, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis i specyfikację, aby utworzyć nowy produkt.",
   fields: [
-    orderRankField({ type: "products" }),
+    // ----------------------------------------
+    // 1-4: Core Identification (Client's order)
+    // ----------------------------------------
     defineField({
-      name: "subtitle",
-      title: "Podtytuł (opcjonalny)",
+      name: "name",
       type: "string",
+      title: "Nazwa",
+      group: GROUP.MAIN_CONTENT,
       description:
-        'Opcjonalny krótki opis kategorii produktu (np. "Trójdrożny głośnik wolnostojący"). Jeśli nie zostanie wypełniony, sekcja nie będzie wyświetlana.',
-      group: GROUP.MAIN_CONTENT,
-    }),
-    ...defineSlugForDocument({
-      prefix: "/produkty/",
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "basePriceCents",
-      title: "Cena bazowa (grosze)",
-      type: "number",
-      description:
-        "Automatycznie synchronizowana z danych cenowych z Excela. To pole jest tylko do odczytu i jest aktualizowane przez pipeline cenowy. 1 PLN = 100 groszy.",
-      readOnly: false,
-      validation: (Rule) => Rule.integer().min(0),
-      // hidden: ({ document }) => !document?.basePriceCents,
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "lastPricingSync",
-      title: "Ostatnia synchronizacja cen",
-      type: "datetime",
-      description:
-        "Znacznik czasu ostatniej aktualizacji ceny z Excela. Aktualizowany automatycznie.",
-      readOnly: false,
-      // hidden: ({ document }) => !document?.lastPricingSync,
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "publishedDate",
-      title: "Nadpisz datę publikacji",
-      type: "datetime",
-      description:
-        "Niestandardowa data publikacji produktu. Jeśli nie jest ustawiona, używana jest data utworzenia dokumentu. Przydatne przy migracji treści z innych systemów.",
-      group: GROUP.MAIN_CONTENT,
-      options: {
-        dateFormat: "YYYY-MM-DD",
-        timeFormat: "HH:mm",
-      },
-    }),
-    defineField({
-      name: "previewImage",
-      title: "Zdjęcie główne produktu",
-      type: "image",
-      description:
-        "Główne zdjęcie produktu używane w kartach produktów, listingach i sekcji hero na stronie produktu. Zalecane: zdjęcie na białym/czystym tle.",
-      group: GROUP.MAIN_CONTENT,
-      validation: (Rule) =>
-        Rule.required().error("Zdjęcie główne produktu jest wymagane"),
-    }),
-    defineField({
-      name: "imageGallery",
-      title: "Galeria zdjęć (opcjonalna)",
-      type: "array",
-      description:
-        "Dodatkowe zdjęcia produktu wyświetlane w sekcji galerii na stronie produktu. Mogą zawierać różne tła, konteksty użycia, zbliżenia itp.",
-      of: [{ type: "image" }],
-      group: GROUP.MAIN_CONTENT,
-    }),
-    customPortableText({
-      name: "shortDescription",
-      title: "Krótki opis (opcjonalny)",
-      optional: true,
-      description:
-        "Opcjonalny krótki opis produktu wyświetlany na górze strony produktu oraz w kontekstach publikacji (newsletter, wyróżnione publikacje). Jeśli nie zostanie wypełniony, sekcja opisu nie będzie wyświetlana.",
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "publicationImage",
-      title: "Obraz publikacji (opcjonalny)",
-      type: "image",
-      description:
-        "Obraz wyświetlany gdy produkt jest prezentowany jako publikacja (newsletter, wyróżnione publikacje). Zalecany format 16:10. Jeśli nie ustawiono, zostanie użyte zdjęcie główne produktu. Wypełnienie tego pola lub krótkiego opisu umożliwia użycie produktu jako publikacji.",
-      group: GROUP.MAIN_CONTENT,
-      options: {
-        hotspot: true,
-      },
-    }),
-    defineField({
-      name: "isArchived",
-      title: "Produkt archiwalny",
-      type: "boolean",
-      description:
-        "Oznacz jako archiwalne, jeśli producent już nie produkuje tego produktu, ale Audiofast nadal ma go w sprzedaży.",
-      initialValue: false,
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "isCPO",
-      title: "Certyfikowany sprzęt używany (CPO)",
-      type: "boolean",
-      description: "Oznacz, jeśli produkt jest objęty w programie CPO.",
-      initialValue: false,
-      group: GROUP.MAIN_CONTENT,
+        "Nazwa dokumentu, używana do wyświetlania w ścieżce nawigacyjnej.",
+      validation: (Rule) => Rule.required().error("Nazwa jest wymagana"),
     }),
     defineField({
       name: "brand",
@@ -161,144 +72,69 @@ export const product = defineType({
         ),
       group: GROUP.MAIN_CONTENT,
     }),
+    // Slug only (name is defined above)
+    ...defineSlugForDocument({
+      source: "name",
+      prefix: "/produkty/",
+      group: GROUP.MAIN_CONTENT,
+    }),
 
     // ----------------------------------------
-    // Denormalized Fields (Computed)
+    // 5: Subtitle
     // ----------------------------------------
-    // These fields are automatically populated by document actions
-    // and used for optimized filtering in GROQ queries.
-    // DO NOT edit manually - they are kept in sync automatically.
-
     defineField({
-      name: "denormBrandSlug",
-      title: "Brand Slug (computed)",
+      name: "subtitle",
+      title: "Podtytuł (opcjonalny)",
       type: "string",
       description:
-        "Extracted brand slug without prefix (e.g., 'yamaha' from '/marki/yamaha/'). Auto-computed on save.",
-      hidden: true,
-      readOnly: true,
+        'Opcjonalny krótki opis kategorii produktu (np. "Trójdrożny głośnik wolnostojący"). Jeśli nie zostanie wypełniony, sekcja nie będzie wyświetlana.',
       group: GROUP.MAIN_CONTENT,
     }),
 
+    // ----------------------------------------
+    // 6: Main Image
+    // ----------------------------------------
     defineField({
-      name: "denormBrandName",
-      title: "Brand Name (computed)",
-      type: "string",
-      description: "Denormalized brand name for display. Auto-computed on save.",
-      hidden: true,
-      readOnly: true,
-      group: GROUP.MAIN_CONTENT,
-    }),
-
-    defineField({
-      name: "denormCategorySlugs",
-      title: "Category Slugs (computed)",
-      type: "array",
-      of: [{ type: "string" }],
+      name: "previewImage",
+      title: "Zdjęcie główne produktu",
+      type: "image",
       description:
-        "Array of all category slugs this product belongs to. Auto-computed on save.",
-      hidden: true,
-      readOnly: true,
+        "Główne zdjęcie produktu używane w kartach produktów, listingach i sekcji hero na stronie produktu. Zalecane: zdjęcie na białym/czystym tle.",
       group: GROUP.MAIN_CONTENT,
+      validation: (Rule) =>
+        Rule.required().error("Zdjęcie główne produktu jest wymagane"),
     }),
 
-    defineField({
-      name: "denormParentCategorySlugs",
-      title: "Parent Category Slugs (computed)",
-      type: "array",
-      of: [{ type: "string" }],
-      description: "Array of parent category slugs. Auto-computed on save.",
-      hidden: true,
-      readOnly: true,
-      group: GROUP.MAIN_CONTENT,
-    }),
-
-    defineField({
-      name: "denormFilterKeys",
-      title: "Filter Keys (computed)",
-      type: "array",
-      of: [{ type: "string" }],
+    // ----------------------------------------
+    // 7: Short Description
+    // ----------------------------------------
+    customPortableText({
+      name: "shortDescription",
+      title: "Krótki opis (opcjonalny)",
+      optional: true,
       description:
-        "Pre-computed filter keys for DROPDOWN filters only (e.g., 'kolor:czarny'). Range filters use customFilterValues.numericValue. Auto-computed on save.",
-      hidden: true,
-      readOnly: true,
+        "Opcjonalny krótki opis produktu wyświetlany na górze strony produktu oraz w kontekstach publikacji (newsletter, wyróżnione publikacje). Jeśli nie zostanie wypełniony, sekcja opisu nie będzie wyświetlana.",
       group: GROUP.MAIN_CONTENT,
     }),
 
+    // ----------------------------------------
+    // 8: Publication Image
+    // ----------------------------------------
     defineField({
-      name: "denormLastSync",
-      title: "Last Denormalization Sync",
-      type: "datetime",
+      name: "publicationImage",
+      title: "Obraz publikacji (opcjonalny)",
+      type: "image",
       description:
-        "Timestamp of last denormalization sync. Used for debugging.",
-      hidden: true,
-      readOnly: true,
+        "Obraz wyświetlany gdy produkt jest prezentowany jako publikacja (newsletter, wyróżnione publikacje). Zalecany format 16:10. Jeśli nie ustawiono, zostanie użyte zdjęcie główne produktu. Wypełnienie tego pola lub krótkiego opisu umożliwia użycie produktu jako publikacji.",
       group: GROUP.MAIN_CONTENT,
+      options: {
+        hotspot: true,
+      },
     }),
 
-    defineField({
-      name: "customFilterValues",
-      title: "Wartości niestandardowych filtrów",
-      type: "array",
-      description:
-        '⚠️ Edytuj wartości filtrów w zakładce "Filtry" powyżej. To pole jest zarządzane przez dedykowany widok.',
-      group: GROUP.MAIN_CONTENT,
-      // Hidden - managed via dedicated "Filtry" view tab
-      hidden: true,
-      of: [
-        defineField({
-          type: "object",
-          name: "filterValue",
-          title: "Wartość filtra",
-          fields: [
-            defineField({
-              name: "filterName",
-              title: "Nazwa filtra",
-              type: "string",
-              description:
-                'Nazwa filtra z kategorii (np. "Długość kabla", "Moc wzmacniacza")',
-              validation: (Rule) =>
-                Rule.required().error("Nazwa filtra jest wymagana"),
-            }),
-            defineField({
-              name: "value",
-              title: "Wartość tekstowa",
-              type: "string",
-              description: 'Dla filtrów typu lista (np. "2m", "Złoty", "Custom")',
-            }),
-            defineField({
-              name: "numericValue",
-              title: "Wartość liczbowa",
-              type: "number",
-              description:
-                "Dla filtrów typu zakres - tylko liczby (np. 4, 8, 12)",
-              validation: (Rule) =>
-                Rule.custom((value, context) => {
-                  // numericValue is required for range filters
-                  // This validation is handled in CustomFilterValueInput component
-                  return true;
-                }),
-            }),
-          ],
-          preview: {
-            select: {
-              filterName: "filterName",
-              value: "value",
-              numericValue: "numericValue",
-            },
-            prepare: ({ filterName, value, numericValue }) => ({
-              title: filterName || "Filtr",
-              subtitle:
-                numericValue !== undefined
-                  ? String(numericValue)
-                  : value || "Brak wartości",
-              media: Settings,
-            }),
-          },
-        }),
-      ],
-    }),
-
+    // ----------------------------------------
+    // 9: Product Details
+    // ----------------------------------------
     defineField({
       name: "details",
       title: "Szczegóły produktu",
@@ -362,6 +198,375 @@ export const product = defineType({
         Rule.required().error("Szczegóły produktu są wymagane"),
       group: GROUP.MAIN_CONTENT,
     }),
+
+    // ----------------------------------------
+    // 10: Downloadable PDFs
+    // ----------------------------------------
+    defineField({
+      name: "downloadablePdfs",
+      title: "Pliki do pobrania (PDF)",
+      type: "array",
+      description:
+        "Lista plików PDF do pobrania (instrukcje obsługi, broszury, specyfikacje itp.). Wyświetlane w sekcji 'Do pobrania' na stronie produktu.",
+      group: GROUP.MAIN_CONTENT,
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "pdfItem",
+          title: "Plik PDF",
+          fields: [
+            defineField({
+              name: "title",
+              title: "Tytuł",
+              type: "string",
+              description:
+                'Nagłówek pliku wyświetlany na stronie (np. "Aurender N30SA - Instrukcja obsługi")',
+              validation: (Rule) =>
+                Rule.required().error("Tytuł pliku jest wymagany"),
+            }),
+            defineField({
+              name: "description",
+              title: "Opis (opcjonalny)",
+              type: "string",
+              description:
+                'Krótki opis pod tytułem (np. "Pobierz instrukcję w wersji polskiej")',
+            }),
+            defineField({
+              name: "file",
+              title: "Plik PDF",
+              type: "file",
+              options: {
+                accept: ".pdf",
+              },
+              validation: (Rule) =>
+                Rule.required().error("Plik PDF jest wymagany"),
+            }),
+          ],
+          preview: {
+            select: {
+              title: "title",
+              fileName: "file.asset.originalFilename",
+            },
+            prepare: ({ title, fileName }) => ({
+              title: title || "Plik PDF",
+              subtitle: fileName || "Brak pliku",
+              media: FileText,
+            }),
+          },
+        }),
+      ],
+    }),
+
+    // ----------------------------------------
+    // 11: Image Gallery
+    // ----------------------------------------
+    defineField({
+      name: "imageGallery",
+      title: "Galeria zdjęć (opcjonalna)",
+      type: "array",
+      description:
+        "Dodatkowe zdjęcia produktu wyświetlane w sekcji galerii na stronie produktu. Mogą zawierać różne tła, konteksty użycia, zbliżenia itp.",
+      of: [{ type: "image" }],
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
+    // 12: Reviews
+    // ----------------------------------------
+    defineField({
+      name: "reviews",
+      title: "Recenzje",
+      type: "array",
+      description: "Wybierz recenzje tego produktu (opcjonalne).",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "review" }],
+          options: {
+            filter: ({ document }) => {
+              const selectedIds = Array.isArray(document?.reviews)
+                ? document.reviews.map((item: any) => item._ref).filter(Boolean)
+                : [];
+              return {
+                filter: "!(_id in $selectedIds)",
+                params: { selectedIds },
+              };
+            },
+          },
+        },
+      ],
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
+    // 13: Related Products
+    // ----------------------------------------
+    defineField({
+      name: "relatedProducts",
+      title: "Powiązane produkty (opcjonalne)",
+      type: "array",
+      description:
+        "Wybierz powiązane produkty, które będą wyświetlane na stronie tego produktu. To pole jest automatycznie synchronizowane z pipeline cenowego Excel, ale można je również edytować ręcznie.",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "product" }],
+          options: {
+            filter: ({ document }) => {
+              const currentId = document?._id;
+              const selectedIds = Array.isArray(document?.relatedProducts)
+                ? document.relatedProducts
+                    .map((item: any) => item._ref)
+                    .filter(Boolean)
+                : [];
+              return {
+                filter: "_id != $currentId && !(_id in $selectedIds)",
+                params: { currentId, selectedIds },
+              };
+            },
+          },
+        },
+      ],
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
+    // 14: Available in Stores
+    // ----------------------------------------
+    defineField({
+      name: "availableInStores",
+      title: "Dostępny w salonach (opcjonalny)",
+      type: "array",
+      description:
+        "Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, na stronie produktu wyświetlone zostaną salony przypisane do marki.",
+      of: [
+        {
+          type: "reference",
+          to: [{ type: "store" }],
+          options: {
+            filter: ({ document }) => {
+              const selectedIds = Array.isArray(document?.availableInStores)
+                ? document.availableInStores
+                    .map((item: any) => item._ref)
+                    .filter(Boolean)
+                : [];
+              return {
+                filter: "!(_id in $selectedIds)",
+                params: { selectedIds },
+              };
+            },
+          },
+        },
+      ],
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
+    // 15: Page Builder (Custom Sections)
+    // ----------------------------------------
+    defineField({
+      name: "pageBuilder",
+      title: "Niestandardowe sekcje",
+      type: "pageBuilder",
+      description:
+        "Dodaj niestandardowe sekcje na końcu strony produktu (opcjonalne).",
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
+    // 16-17: Status Flags
+    // ----------------------------------------
+    defineField({
+      name: "isArchived",
+      title: "Produkt archiwalny",
+      type: "boolean",
+      description:
+        "Oznacz jako archiwalne, jeśli producent już nie produkuje tego produktu, ale Audiofast nadal ma go w sprzedaży.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "isCPO",
+      title: "Certyfikowany sprzęt używany (CPO)",
+      type: "boolean",
+      description: "Oznacz, jeśli produkt jest objęty w programie CPO.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
+    // 18-20: Pricing and Dates
+    // ----------------------------------------
+    defineField({
+      name: "basePriceCents",
+      title: "Cena bazowa (grosze)",
+      type: "number",
+      description:
+        "Automatycznie synchronizowana z danych cenowych z Excela. To pole jest tylko do odczytu i jest aktualizowane przez pipeline cenowy. 1 PLN = 100 groszy.",
+      readOnly: false,
+      validation: (Rule) => Rule.integer().min(0),
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "lastPricingSync",
+      title: "Ostatnia synchronizacja cen",
+      type: "datetime",
+      description:
+        "Znacznik czasu ostatniej aktualizacji ceny z Excela. Aktualizowany automatycznie.",
+      readOnly: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "publishedDate",
+      title: "Nadpisz datę publikacji",
+      type: "datetime",
+      description:
+        "Niestandardowa data publikacji produktu. Jeśli nie jest ustawiona, używana jest data utworzenia dokumentu. Przydatne przy migracji treści z innych systemów.",
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        dateFormat: "YYYY-MM-DD",
+        timeFormat: "HH:mm",
+      },
+    }),
+
+    // ----------------------------------------
+    // System Fields (Order Rank)
+    // ----------------------------------------
+    orderRankField({ type: "products" }),
+
+    // ----------------------------------------
+    // Denormalized Fields (Computed, Hidden)
+    // ----------------------------------------
+    defineField({
+      name: "denormBrandSlug",
+      title: "Brand Slug (computed)",
+      type: "string",
+      description:
+        "Extracted brand slug without prefix (e.g., 'yamaha' from '/marki/yamaha/'). Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "denormBrandName",
+      title: "Brand Name (computed)",
+      type: "string",
+      description: "Denormalized brand name for display. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "denormCategorySlugs",
+      title: "Category Slugs (computed)",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Array of all category slugs this product belongs to. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "denormParentCategorySlugs",
+      title: "Parent Category Slugs (computed)",
+      type: "array",
+      of: [{ type: "string" }],
+      description: "Array of parent category slugs. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "denormFilterKeys",
+      title: "Filter Keys (computed)",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Pre-computed filter keys for DROPDOWN filters only (e.g., 'kolor:czarny'). Range filters use customFilterValues.numericValue. Auto-computed on save.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "denormLastSync",
+      title: "Last Denormalization Sync",
+      type: "datetime",
+      description:
+        "Timestamp of last denormalization sync. Used for debugging.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
+    // Custom Filter Values (Hidden, managed via tab)
+    // ----------------------------------------
+    defineField({
+      name: "customFilterValues",
+      title: "Wartości niestandardowych filtrów",
+      type: "array",
+      description:
+        '⚠️ Edytuj wartości filtrów w zakładce "Filtry" powyżej. To pole jest zarządzane przez dedykowany widok.',
+      group: GROUP.MAIN_CONTENT,
+      hidden: true,
+      of: [
+        defineField({
+          type: "object",
+          name: "filterValue",
+          title: "Wartość filtra",
+          fields: [
+            defineField({
+              name: "filterName",
+              title: "Nazwa filtra",
+              type: "string",
+              description:
+                'Nazwa filtra z kategorii (np. "Długość kabla", "Moc wzmacniacza")',
+              validation: (Rule) =>
+                Rule.required().error("Nazwa filtra jest wymagana"),
+            }),
+            defineField({
+              name: "value",
+              title: "Wartość tekstowa",
+              type: "string",
+              description: 'Dla filtrów typu lista (np. "2m", "Złoty", "Custom")',
+            }),
+            defineField({
+              name: "numericValue",
+              title: "Wartość liczbowa",
+              type: "number",
+              description:
+                "Dla filtrów typu zakres - tylko liczby (np. 4, 8, 12)",
+              validation: (Rule) =>
+                Rule.custom((value, context) => {
+                  // numericValue is required for range filters
+                  // This validation is handled in CustomFilterValueInput component
+                  return true;
+                }),
+            }),
+          ],
+          preview: {
+            select: {
+              filterName: "filterName",
+              value: "value",
+              numericValue: "numericValue",
+            },
+            prepare: ({ filterName, value, numericValue }) => ({
+              title: filterName || "Filtr",
+              subtitle:
+                numericValue !== undefined
+                  ? String(numericValue)
+                  : value || "Brak wartości",
+              media: Settings,
+            }),
+          },
+        }),
+      ],
+    }),
+
+    // ----------------------------------------
+    // Technical Data (Hidden, managed via tab)
+    // ----------------------------------------
     defineField({
       name: "technicalData",
       title: "Dane techniczne",
@@ -370,11 +575,8 @@ export const product = defineType({
         '⚠️ Edytuj dane techniczne w zakładce "Dane techniczne" powyżej. Ta sekcja obsługuje zarówno produkty z jednym modelem, jak i produkty z wieloma wariantami.',
       icon: Table,
       group: GROUP.MAIN_CONTENT,
-      // Technical data is edited in a dedicated view tab (not in main form)
-      // The field is kept in schema for data structure but hidden from main form
       hidden: true,
       fields: [
-        // Variants array (for multi-model products)
         defineField({
           name: "variants",
           title: "Warianty produktu",
@@ -383,8 +585,6 @@ export const product = defineType({
           description:
             'Nazwy wariantów produktu (np. "Alive", "Excite", "Euphoria"). Pozostaw puste dla produktów bez wariantów.',
         }),
-
-        // Technical data groups (sections with optional titles)
         defineField({
           name: "groups",
           title: "Sekcje danych technicznych",
@@ -556,148 +756,10 @@ export const product = defineType({
         }),
       ],
     }),
-    defineField({
-      name: "downloadablePdfs",
-      title: "Pliki do pobrania (PDF)",
-      type: "array",
-      description:
-        "Lista plików PDF do pobrania (instrukcje obsługi, broszury, specyfikacje itp.). Wyświetlane w sekcji 'Do pobrania' na stronie produktu.",
-      group: GROUP.MAIN_CONTENT,
-      of: [
-        defineArrayMember({
-          type: "object",
-          name: "pdfItem",
-          title: "Plik PDF",
-          fields: [
-            defineField({
-              name: "title",
-              title: "Tytuł",
-              type: "string",
-              description:
-                'Nagłówek pliku wyświetlany na stronie (np. "Aurender N30SA - Instrukcja obsługi")',
-              validation: (Rule) =>
-                Rule.required().error("Tytuł pliku jest wymagany"),
-            }),
-            defineField({
-              name: "description",
-              title: "Opis (opcjonalny)",
-              type: "string",
-              description:
-                'Krótki opis pod tytułem (np. "Pobierz instrukcję w wersji polskiej")',
-            }),
-            defineField({
-              name: "file",
-              title: "Plik PDF",
-              type: "file",
-              options: {
-                accept: ".pdf",
-              },
-              validation: (Rule) =>
-                Rule.required().error("Plik PDF jest wymagany"),
-            }),
-          ],
-          preview: {
-            select: {
-              title: "title",
-              fileName: "file.asset.originalFilename",
-            },
-            prepare: ({ title, fileName }) => ({
-              title: title || "Plik PDF",
-              subtitle: fileName || "Brak pliku",
-              media: FileText,
-            }),
-          },
-        }),
-      ],
-    }),
-    defineField({
-      name: "availableInStores",
-      title: "Dostępny w salonach (opcjonalny)",
-      type: "array",
-      description:
-        "Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, na stronie produktu wyświetlone zostaną salony przypisane do marki.",
-      of: [
-        {
-          type: "reference",
-          to: [{ type: "store" }],
-          options: {
-            filter: ({ document }) => {
-              const selectedIds = Array.isArray(document?.availableInStores)
-                ? document.availableInStores
-                    .map((item: any) => item._ref)
-                    .filter(Boolean)
-                : [];
-              return {
-                filter: "!(_id in $selectedIds)",
-                params: { selectedIds },
-              };
-            },
-          },
-        },
-      ],
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "reviews",
-      title: "Recenzje",
-      type: "array",
-      description:
-        "Wybierz recenzje tego produktu (opcjonalne).",
-      of: [
-        {
-          type: "reference",
-          to: [{ type: "review" }],
-          options: {
-            filter: ({ document }) => {
-              const selectedIds = Array.isArray(document?.reviews)
-                ? document.reviews.map((item: any) => item._ref).filter(Boolean)
-                : [];
-              return {
-                filter: "!(_id in $selectedIds)",
-                params: { selectedIds },
-              };
-            },
-          },
-        },
-      ],
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "relatedProducts",
-      title: "Powiązane produkty (opcjonalne)",
-      type: "array",
-      description:
-        "Wybierz powiązane produkty, które będą wyświetlane na stronie tego produktu. To pole jest automatycznie synchronizowane z pipeline cenowego Excel, ale można je również edytować ręcznie.",
-      of: [
-        {
-          type: "reference",
-          to: [{ type: "product" }],
-          options: {
-            filter: ({ document }) => {
-              const currentId = document?._id;
-              const selectedIds = Array.isArray(document?.relatedProducts)
-                ? document.relatedProducts
-                    .map((item: any) => item._ref)
-                    .filter(Boolean)
-                : [];
-              return {
-                filter: "_id != $currentId && !(_id in $selectedIds)",
-                params: { currentId, selectedIds },
-              };
-            },
-          },
-        },
-      ],
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "pageBuilder",
-      title: "Niestandardowe sekcje",
-      type: "pageBuilder",
-      description:
-        "Dodaj niestandardowe sekcje na końcu strony produktu (opcjonalne).",
-      group: GROUP.MAIN_CONTENT,
-    }),
+
+    // ----------------------------------------
+    // SEO Fields (Always Last)
+    // ----------------------------------------
     ...getSEOFields({ exclude: ["hideFromList"] }),
   ],
   preview: {
