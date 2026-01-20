@@ -48,7 +48,7 @@ export default async function Footer() {
         ))}
       </nav>
       <div className={styles.additionalLinks}>
-        <span className={styles.copyright}>© 2025 Audiofast</span>
+        <span className={styles.copyright}>© 2026 Audiofast</span>
         <span className={styles.createdBy}>
           Stworzone przez{' '}
           <Link href="https://kryptonum.eu/pl" target="_blank" className="logo">
