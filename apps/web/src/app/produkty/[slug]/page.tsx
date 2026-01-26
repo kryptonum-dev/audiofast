@@ -20,11 +20,13 @@ import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductSlugs,
   queryProductBySlug,
+  queryProductInquiryFormState,
   queryProductSeoBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllProductSlugsResult,
   QueryProductBySlugResult,
+  QueryProductInquiryFormStateResult,
   QueryProductSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -37,16 +39,20 @@ type ProductPageProps = {
 
 // Fetch product data from Sanity and Supabase
 async function fetchProductData(slug: string) {
-  const [sanityData, pricingData] = await Promise.all([
+  const [sanityData, pricingData, formStateData] = await Promise.all([
     sanityFetch<QueryProductBySlugResult>({
       query: queryProductBySlug,
       params: { slug: `/produkty/${slug}/` },
       tags: ['product'],
     }),
     fetchProductPricing(slug), // Fetch pricing from Supabase
+    sanityFetch<QueryProductInquiryFormStateResult>({
+      query: queryProductInquiryFormState,
+      tags: ['settings'],
+    }),
   ]);
 
-  return { sanityData, pricingData };
+  return { sanityData, pricingData, formStateData };
 }
 
 export async function generateStaticParams() {
@@ -85,7 +91,11 @@ export async function generateMetadata({
 export default async function ProductPage(props: ProductPageProps) {
   const { slug } = await props.params;
 
-  const { sanityData: product, pricingData } = await fetchProductData(slug);
+  const {
+    sanityData: product,
+    pricingData,
+    formStateData,
+  } = await fetchProductData(slug);
 
   if (!product) {
     console.error(`Product not found: ${slug}`);
@@ -180,6 +190,7 @@ export default async function ProductPage(props: ProductPageProps) {
         productId={product._id}
         categorySlug={primaryCategorySlug}
         categoryName={primaryCategoryName}
+        formStateData={formStateData}
       />
       {sections.length > 1 && (
         <PillsStickyNav

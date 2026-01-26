@@ -160,7 +160,8 @@
       }
     }
 
-    a {
+    a,
+    .inquiryButton {
       width: 100%;
       max-width: 100%;
       margin-top: 1rem;
@@ -650,32 +651,12 @@
       'image header'
       'image description'
       'image pricing';
-
-    .header {
-      align-self: end;
-    }
-
-    .priceWrapper {
-      align-self: start;
-    }
-
-    .descriptionWrapper {
-      align-self: start;
-    }
   }
 
   &[data-has-awards='false'][data-has-description='false'] {
     grid-template-areas:
       'image header'
       'image pricing';
-
-    .header {
-      align-self: end;
-    }
-
-    .priceWrapper {
-      align-self: start;
-    }
   }
 
   @media (max-width: 69.3125rem) {

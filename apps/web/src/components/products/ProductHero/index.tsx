@@ -1,13 +1,13 @@
-import type { SanityRawImage } from "@/components/shared/Image";
-import Image from "@/components/shared/Image";
-import type { CompletePricingData } from "@/src/global/supabase/types";
-import type { BrandType, PortableTextProps } from "@/src/global/types";
+import type { SanityRawImage } from '@/components/shared/Image';
+import Image from '@/components/shared/Image';
+import type { FormStateData } from '@/src/components/ui/FormStates';
+import type { CompletePricingData } from '@/src/global/supabase/types';
+import type { BrandType, PortableTextProps } from '@/src/global/types';
 
-import Button from "../../ui/Button";
-import AddToComparison from "./AddToComparison";
-import PricingConfigurator from "./PricingConfigurator";
-import ProductDescription from "./ProductDescription";
-import styles from "./styles.module.scss";
+import AddToComparison from './AddToComparison';
+import PricingSection from './PricingSection';
+import ProductDescription from './ProductDescription';
+import styles from './styles.module.scss';
 
 export type AwardType = {
   _id: string;
@@ -27,6 +27,7 @@ export interface ProductHeroProps {
   productId?: string;
   categorySlug?: string;
   categoryName?: string;
+  formStateData?: FormStateData | null;
 }
 
 export default function ProductHero({
@@ -41,6 +42,7 @@ export default function ProductHero({
   productId,
   categorySlug,
   categoryName,
+  formStateData,
 }: ProductHeroProps) {
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
@@ -88,17 +90,21 @@ export default function ProductHero({
       )}
       <div className={styles.priceWrapper}>
         {pricingData ? (
-          <PricingConfigurator pricingData={pricingData} />
+          <PricingSection
+            pricingData={pricingData}
+            product={{
+              id: productId || '',
+              name,
+              brandName: brand?.name || '',
+              brandLogo: brand?.logo || undefined,
+              image: previewImage,
+            }}
+            formStateData={formStateData}
+          />
         ) : (
           <span className={styles.price}>Brak ceny</span>
         )}
 
-        <Button
-          text="Zapytaj o produkt"
-          variant="primary"
-          href="/kontakt/"
-          iconUsed="information"
-        />
         <AddToComparison
           productId={productId}
           categorySlug={categorySlug}
@@ -120,7 +126,7 @@ export default function ProductHero({
           style={
             shouldUseMarquee
               ? ({
-                  "--animation-duration": `${animationDuration}s`,
+                  '--animation-duration': `${animationDuration}s`,
                 } as React.CSSProperties)
               : undefined
           }
@@ -134,7 +140,7 @@ export default function ProductHero({
                 return (
                   <Image
                     image={award.logo}
-                    alt={award.name || "Nagroda produktu"}
+                    alt={award.name || 'Nagroda produktu'}
                     sizes="80px"
                     quality={90}
                     className={styles.awardLogo}

@@ -2226,6 +2226,25 @@ export const queryMailchimpSettings = defineQuery(/* groq */ `
   *[_type == "settings"][0].mailchimpAudienceId
 `);
 
+export const queryProductInquiryFormState = defineQuery(/* groq */ `
+  *[_type == "settings"][0].productInquiryFormState {
+    success {
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText
+    },
+    error {
+      withIcon,
+      ${portableTextFragment('heading')},
+      ${portableTextFragment('paragraph')},
+      refreshButton,
+      refreshButtonText
+    }
+  }
+`);
+
 // ----------------------------------------
 // Lightweight SEO-Only Queries (for generateMetadata)
 // These queries fetch ONLY the fields needed for SEO metadata

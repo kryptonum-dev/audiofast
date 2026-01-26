@@ -2367,6 +2367,10 @@ export type Settings = {
       }>;
     };
   };
+  productInquiryFormState?: {
+    success?: Success;
+    error?: Error;
+  };
   mailchimpAudienceId?: string;
   analytics?: {
     gtm_id?: string;
@@ -2565,13 +2569,15 @@ export type Product = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  orderRank?: string;
-  subtitle?: string;
   name?: string;
+  brand?: BrandReference;
+  categories?: Array<
+    {
+      _key: string;
+    } & ProductCategorySubReference
+  >;
   slug?: Slug;
-  basePriceCents?: number;
-  lastPricingSync?: string;
-  publishedDate?: string;
+  subtitle?: string;
   previewImage?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
@@ -2579,14 +2585,6 @@ export type Product = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  imageGallery?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-    _key: string;
-  }>;
   shortDescription?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -2612,27 +2610,6 @@ export type Product = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  isArchived?: boolean;
-  isCPO?: boolean;
-  brand?: BrandReference;
-  categories?: Array<
-    {
-      _key: string;
-    } & ProductCategorySubReference
-  >;
-  denormBrandSlug?: string;
-  denormBrandName?: string;
-  denormCategorySlugs?: Array<string>;
-  denormParentCategorySlugs?: Array<string>;
-  denormFilterKeys?: Array<string>;
-  denormLastSync?: string;
-  customFilterValues?: Array<{
-    filterName?: string;
-    value?: string;
-    numericValue?: number;
-    _type: "filterValue";
-    _key: string;
-  }>;
   details?: {
     heading?: Array<{
       children?: Array<{
@@ -2710,6 +2687,60 @@ export type Product = {
         } & PtReviewEmbed)
     >;
   };
+  downloadablePdfs?: Array<{
+    title?: string;
+    description?: string;
+    file?: {
+      asset?: SanityFileAssetReference;
+      media?: unknown;
+      _type: "file";
+    };
+    _type: "pdfItem";
+    _key: string;
+  }>;
+  imageGallery?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  reviews?: Array<
+    {
+      _key: string;
+    } & ReviewReference
+  >;
+  relatedProducts?: Array<
+    {
+      _key: string;
+    } & ProductReference
+  >;
+  availableInStores?: Array<
+    {
+      _key: string;
+    } & StoreReference
+  >;
+  pageBuilder?: PageBuilder;
+  isArchived?: boolean;
+  isCPO?: boolean;
+  basePriceCents?: number;
+  lastPricingSync?: string;
+  publishedDate?: string;
+  orderRank?: string;
+  denormBrandSlug?: string;
+  denormBrandName?: string;
+  denormCategorySlugs?: Array<string>;
+  denormParentCategorySlugs?: Array<string>;
+  denormFilterKeys?: Array<string>;
+  denormLastSync?: string;
+  customFilterValues?: Array<{
+    filterName?: string;
+    value?: string;
+    numericValue?: number;
+    _type: "filterValue";
+    _key: string;
+  }>;
   technicalData?: {
     variants?: Array<string>;
     groups?: Array<{
@@ -2746,33 +2777,6 @@ export type Product = {
       _key: string;
     }>;
   };
-  downloadablePdfs?: Array<{
-    title?: string;
-    description?: string;
-    file?: {
-      asset?: SanityFileAssetReference;
-      media?: unknown;
-      _type: "file";
-    };
-    _type: "pdfItem";
-    _key: string;
-  }>;
-  availableInStores?: Array<
-    {
-      _key: string;
-    } & StoreReference
-  >;
-  reviews?: Array<
-    {
-      _key: string;
-    } & ReviewReference
-  >;
-  relatedProducts?: Array<
-    {
-      _key: string;
-    } & ProductReference
-  >;
-  pageBuilder?: PageBuilder;
   seo?: {
     title?: string;
     description?: string;
@@ -38227,6 +38231,98 @@ export type QueryContactSettingsResult = {
 export type QueryMailchimpSettingsResult = string | null;
 
 // Source: ../web/src/global/sanity/query.ts
+// Variable: queryProductInquiryFormState
+// Query: *[_type == "settings"][0].productInquiryFormState {    success {      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText    },    error {      withIcon,        heading[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },        paragraph[]{    ...,    _type == "block" => {      ...,        markDefs[]{    ...,    _type == "customLink" => {    ...,    customLink{      type,      openInNewTab,      external,      "href": select(        type == "internal" => internal->slug.current,        type == "external" => external,        "#"      ),      "internalSlug": internal->slug.current    }  }  }    },  },      refreshButton,      refreshButtonText    }  }
+export type QueryProductInquiryFormStateResult = {
+  success: {
+    withIcon: boolean | null;
+    heading: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs: null;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    paragraph: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: "bullet" | "number";
+      markDefs: Array<{
+        customLink: {
+          type: "external" | "internal" | null;
+          openInNewTab: boolean | null;
+          external: string | null;
+          href: string | "#" | null;
+          internalSlug: string | null;
+        } | null;
+        _type: "customLink";
+        _key: string;
+      }> | null;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    refreshButton: boolean | null;
+    refreshButtonText: string | null;
+  } | null;
+  error: {
+    withIcon: boolean | null;
+    heading: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: never;
+      markDefs: null;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    paragraph: Array<{
+      children?: Array<{
+        marks?: Array<string>;
+        text?: string;
+        _type: "span";
+        _key: string;
+      }>;
+      style?: "normal";
+      listItem?: "bullet" | "number";
+      markDefs: Array<{
+        customLink: {
+          type: "external" | "internal" | null;
+          openInNewTab: boolean | null;
+          external: string | null;
+          href: string | "#" | null;
+          internalSlug: string | null;
+        } | null;
+        _type: "customLink";
+        _key: string;
+      }> | null;
+      level?: number;
+      _type: "block";
+      _key: string;
+    }> | null;
+    refreshButton: boolean | null;
+    refreshButtonText: string | null;
+  } | null;
+} | null;
+
+// Source: ../web/src/global/sanity/query.ts
 // Variable: queryReviewSeoBySlug
 // Query: *[_type == "review" && destinationType == "page" && slug.current == $slug][0]{  "slug": slug.current,  seo,  openGraph{    title,    description,    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",  }}
 export type QueryReviewSeoBySlugResult = {
@@ -38424,6 +38520,7 @@ declare module "@sanity/client" {
     '{\n  "products": *[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && $categorySlug in categories[]->slug.current] | order(name asc) {\n    _id,\n    name,\n    "slug": slug.current,\n    subtitle,\n    basePriceCents,\n    \n  "mainImage": previewImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    brand->{\n      _id,\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n    },\n    technicalData {\n      variants,\n      groups[] {\n        _key,\n        title,\n        rows[] {\n          _key,\n          title,\n          values[] {\n            _key,\n            \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n          }\n        }\n      }\n    },\n    "categories": categories[]->{\n    "slug": slug.current,\n    name\n    }\n  },\n  "enabledParameters": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current == $categorySlug][0].enabledParameters[] {\n    name,\n    displayName\n  }\n}': QueryComparisonPageDataResult;
     '\n  *[_type == "settings"][0].contactSettings {\n    supportEmails,\n    confirmationEmail {\n      subject,\n      \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  } \n': QueryContactSettingsResult;
     '\n  *[_type == "settings"][0].mailchimpAudienceId\n': QueryMailchimpSettingsResult;
+    '\n  *[_type == "settings"][0].productInquiryFormState {\n    success {\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText\n    },\n    error {\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText\n    }\n  }\n': QueryProductInquiryFormStateResult;
     '*[_type == "review" && destinationType == "page" && slug.current == $slug][0]{\n  "slug": slug.current,\n  seo,\n  openGraph{\n    title,\n    description,\n    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n  }\n}': QueryReviewSeoBySlugResult;
     '*[_type == "product" && slug.current == $slug][0]{\n  "slug": slug.current,\n  seo {\n    title,\n    description\n  },\n  openGraph {\n    title,\n    description,\n    "seoImage": select(\n      defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n      defined(previewImage) => previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n      null\n    )\n  }\n}': QueryProductSeoBySlugResult;
     '*[_type == "brand" && slug.current == $slug][0]{\n  "slug": slug.current,\n  seo {\n    title,\n    description\n  },\n  openGraph {\n    title,\n    description,\n    "seoImage": openGraph.ogImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"\n  }\n}': QueryBrandSeoBySlugResult;

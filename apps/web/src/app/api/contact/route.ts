@@ -24,11 +24,24 @@ import { ContactNotificationTemplate } from '@/src/emails/contact-notification-t
 const REPLY_TO_EMAIL =
   process.env.MS_GRAPH_REPLY_TO || process.env.MS_GRAPH_SENDER_EMAIL;
 
+type ProductInquiryData = {
+  name: string;
+  brandName: string;
+  configuration: Array<{
+    label: string;
+    value: string;
+    priceDelta: number;
+  }>;
+  basePrice: number;
+  totalPrice: number;
+};
+
 type FormSubmission = {
   name?: string;
   email: string;
   message?: string;
   consent: boolean;
+  product?: ProductInquiryData;
 };
 
 type ContactSettingsType = {
@@ -146,12 +159,15 @@ export async function POST(request: NextRequest) {
   );
 
   // Render internal notification email using React Email
-  const internalSubject = `Nowe zgłoszenie z formularza kontaktowego`;
+  const internalSubject = body.product
+    ? `Zapytanie o produkt: ${body.product.brandName} ${body.product.name}`
+    : `Nowe zgłoszenie z formularza kontaktowego`;
   const internalEmailHtml = await render(
     ContactNotificationTemplate({
       name: body.name,
       email: body.email,
       message: body.message,
+      product: body.product,
     }),
   );
 

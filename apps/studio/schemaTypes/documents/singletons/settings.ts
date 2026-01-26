@@ -2,6 +2,7 @@ import { CogIcon } from "lucide-react";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 import { GROUP, GROUPS } from "../../../utils/constant";
+import { formState } from "../../definitions/form-state";
 import { customPortableText } from "../../portableText";
 
 export const settings = defineType({
@@ -124,6 +125,14 @@ export const settings = defineType({
       validation: (Rule) =>
         Rule.required().error("Ustawienia formularzy kontaktowych są wymagane"),
     }),
+    {
+      ...formState,
+      name: "productInquiryFormState",
+      title: "Formularz zapytania o produkt",
+      description:
+        "Teksty wyświetlane po wysłaniu formularza zapytania o produkt (sukces/błąd). Ten formularz pojawia się w pop-upie na stronie produktu po kliknięciu przycisku 'Zapytaj o produkt'.",
+      group: GROUP.CONTACT,
+    },
     defineField({
       name: "mailchimpAudienceId",
       type: "string",
