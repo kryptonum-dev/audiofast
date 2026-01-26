@@ -138,16 +138,35 @@ export default function ProductHero({
                 const isDuplicate = shouldUseMarquee && idx >= awards!.length;
 
                 return (
-                  <Image
-                    image={award.logo}
-                    alt={award.name || 'Nagroda produktu'}
-                    sizes="80px"
-                    quality={90}
-                    className={styles.awardLogo}
-                    loading="lazy"
+                  <div
+                    className={styles.awardItem}
                     key={key}
                     aria-hidden={isDuplicate}
-                  />
+                  >
+                    <Image
+                      image={award.logo}
+                      alt={award.name || 'Nagroda produktu'}
+                      sizes="80px"
+                      quality={90}
+                      className={styles.awardLogo}
+                      loading="lazy"
+                    />
+                    <div className={styles.awardTooltip} aria-hidden="true">
+                      <Image
+                        image={award.logo}
+                        alt=""
+                        sizes="200px"
+                        quality={100}
+                        className={styles.awardTooltipImage}
+                        loading="lazy"
+                      />
+                      {award.name && (
+                        <span className={styles.awardTooltipName}>
+                          {award.name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 );
               })}
             </div>

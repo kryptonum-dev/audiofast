@@ -271,22 +271,88 @@
         will-change: transform;
         transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
 
-        .awardLogo {
+        .awardItem {
+          position: relative;
           flex-shrink: 0;
-          width: clamp(3.75rem, calc(4.5vw / 0.48), 4.5rem);
-          aspect-ratio: 1;
-          padding: 0.5rem;
-          background-color: var(--neutral-white, #ffffff);
-          border-radius: 0.5rem;
-          border: 0.0625rem solid var(--neutral-300, #e0e0e0);
-          object-fit: contain;
-          transition:
-            transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
-            border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+          .awardLogo {
+            width: clamp(3.75rem, calc(4.5vw / 0.48), 4.5rem);
+            aspect-ratio: 1;
+            padding: 0.5rem;
+            background-color: var(--neutral-white, #ffffff);
+            border-radius: 0.5rem;
+            border: 0.0625rem solid var(--neutral-300, #e0e0e0);
+            object-fit: contain;
+            cursor: pointer;
+            transition:
+              transform 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          .awardTooltip {
+            position: absolute;
+            bottom: calc(100% + 0.75rem);
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background-color: var(--neutral-white, #ffffff);
+            border-radius: 0.75rem;
+            border: 0.0625rem solid var(--neutral-300, #e0e0e0);
+            box-shadow:
+              0 0.5rem 1.5rem rgba(0, 0, 0, 0.12),
+              0 0.25rem 0.5rem rgba(0, 0, 0, 0.08);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 100;
+            transition:
+              opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              visibility 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+            &::after {
+              content: '';
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              transform: translateX(-50%);
+              border: 0.5rem solid transparent;
+              border-top-color: var(--neutral-white, #ffffff);
+              filter: drop-shadow(0 0.125rem 0.125rem rgba(0, 0, 0, 0.05));
+            }
+
+            .awardTooltipImage {
+              width: 10rem;
+              height: 10rem;
+              object-fit: contain;
+              border-radius: 0.5rem;
+            }
+
+            .awardTooltipName {
+              font-size: 0.75rem;
+              font-weight: 500;
+              color: var(--neutral-700, #303030);
+              text-align: center;
+              max-width: 12rem;
+              line-height: 1.3;
+            }
+          }
 
           &:hover {
-            transform: translateY(-0.125rem) scale(1.05);
-            border-color: var(--neutral-400, #d0d0d0);
+            .awardLogo {
+              transform: translateY(-0.125rem) scale(1.05);
+              border-color: var(--neutral-400, #d0d0d0);
+            }
+
+            .awardTooltip {
+              opacity: 1;
+              visibility: visible;
+              transform: translateX(-50%) scale(1);
+            }
           }
         }
       }
@@ -304,12 +370,44 @@
           justify-content: center;
           flex-wrap: wrap;
           gap: clamp(0.875rem, calc(1.25vw / 0.48), 1.25rem);
+
+          .awardItem {
+            &:first-child .awardTooltip {
+              left: 0;
+              transform: translateX(0) scale(0.9);
+
+              &::after {
+                left: 1.5rem;
+                transform: translateX(0);
+              }
+            }
+
+            &:first-child:hover .awardTooltip {
+              transform: translateX(0) scale(1);
+            }
+
+            &:last-child .awardTooltip {
+              left: auto;
+              right: 0;
+              transform: translateX(0) scale(0.9);
+
+              &::after {
+                left: auto;
+                right: 1.5rem;
+                transform: translateX(0);
+              }
+            }
+
+            &:last-child:hover .awardTooltip {
+              transform: translateX(0) scale(1);
+            }
+          }
         }
       }
     }
 
     &[data-use-marquee='true'] {
-      overflow: hidden;
+      overflow: visible;
       padding-top: clamp(2.25rem, calc(2.75vw / 0.48), 2.75rem);
 
       .awardsTrack {
@@ -318,6 +416,18 @@
         @media (prefers-reduced-motion: reduce) {
           animation: none;
         }
+      }
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--neutral-200, #f8f8f8);
+        border-radius: 1rem;
+        z-index: -1;
       }
 
       &::after {
@@ -333,6 +443,12 @@
             transform: translateX(-0.5rem);
           }
         }
+      }
+    }
+
+    @media (max-width: 56.1875rem) {
+      .awardsTrack .awardsList .awardItem .awardTooltip {
+        display: none;
       }
     }
   }
