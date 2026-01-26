@@ -326,10 +326,11 @@
             }
 
             .awardTooltipImage {
-              width: 10rem;
-              height: 10rem;
+              width: auto;
+              height: auto;
+              max-width: 12rem;
+              max-height: 10rem;
               object-fit: contain;
-              border-radius: 0.5rem;
             }
 
             .awardTooltipName {
