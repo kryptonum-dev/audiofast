@@ -308,7 +308,7 @@
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            z-index: 100;
+            z-index: 500;
             transition:
               opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
               transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1),
