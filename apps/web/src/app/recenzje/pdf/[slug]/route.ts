@@ -40,12 +40,20 @@ export async function GET(request: NextRequest, props: RouteParams) {
     // Get the PDF buffer
     const pdfBuffer = await pdfResponse.arrayBuffer();
 
+    // Prepare filename for Content-Disposition header
+    // HTTP headers only support ASCII, so we need RFC 5987 encoding for UTF-8 filenames
+    const originalFileName = pdfReview.pdfFilename || "review.pdf";
+    // Create ASCII-safe fallback by removing non-ASCII characters
+    const asciiFileName = originalFileName.replace(/[^\x20-\x7E]/g, "_");
+    // RFC 5987 encoded version for UTF-8 support
+    const encodedFileName = encodeURIComponent(originalFileName);
+
     // Return the PDF with appropriate headers
     return new NextResponse(pdfBuffer, {
       status: 200,
       headers: {
         "Content-Type": pdfReview.pdfMimeType || "application/pdf",
-        "Content-Disposition": `inline; filename="${pdfReview.pdfFilename || "review.pdf"}"`,
+        "Content-Disposition": `inline; filename="${asciiFileName}"; filename*=UTF-8''${encodedFileName}`,
         "Content-Length": String(pdfBuffer.byteLength),
         "Cache-Control": "public, max-age=31536000, immutable",
         // SEO: Tell search engines not to index this PDF URL
