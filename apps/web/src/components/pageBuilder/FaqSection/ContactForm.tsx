@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import PortableText from "@/src/components/portableText";
-import Button from "@/src/components/ui/Button";
-import Checkbox from "@/src/components/ui/Checkbox";
-import type { FormStateData as FormStateDataProps } from "@/src/components/ui/FormStates";
-import FormStates, { type FormState } from "@/src/components/ui/FormStates";
-import Input from "@/src/components/ui/Input";
-import { saveAnalyticsUser } from "@/src/global/analytics/analytics-user-storage";
-import { trackEvent } from "@/src/global/analytics/track-event";
-import { REGEX } from "@/src/global/constants";
-import { sendContactForm } from "@/src/global/email/send-contact";
-import type { PagebuilderType } from "@/src/global/types";
+import PortableText from '@/src/components/portableText';
+import Button from '@/src/components/ui/Button';
+import Checkbox from '@/src/components/ui/Checkbox';
+import type { FormStateData as FormStateDataProps } from '@/src/components/ui/FormStates';
+import FormStates, { type FormState } from '@/src/components/ui/FormStates';
+import Input from '@/src/components/ui/Input';
+import { saveAnalyticsUser } from '@/src/global/analytics/analytics-user-storage';
+import { trackEvent } from '@/src/global/analytics/track-event';
+import { REGEX } from '@/src/global/constants';
+import { sendContactForm } from '@/src/global/email/send-contact';
+import type { PagebuilderType } from '@/src/global/types';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 type ContactFormData = {
   message: string;
@@ -32,12 +32,12 @@ export default function ContactForm({
   index,
   isContactOnly = false,
 }: {
-  contactForm: PagebuilderType<"faqSection">["contactForm"];
+  contactForm: PagebuilderType<'faqSection'>['contactForm'];
   index: number;
   isContactOnly?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState<FormStep>(1);
-  const [formState, setFormState] = useState<FormState>("idle");
+  const [formState, setFormState] = useState<FormState>('success');
   const [formKey, setFormKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const previousStepRef = useRef<FormStep>(1);
@@ -50,19 +50,19 @@ export default function ContactForm({
     setFocus,
     formState: { errors },
   } = useForm<ContactFormData>({
-    mode: "onTouched",
-    defaultValues: { consent: false, email: "", name: "", message: "" },
+    mode: 'onTouched',
+    defaultValues: { consent: false, email: '', name: '', message: '' },
   });
 
   // Focus management when step changes
   useEffect(() => {
     // Moving from step 1 to step 2 - focus email input
     if (currentStep === 2 && previousStepRef.current === 1) {
-      setFocus("email");
+      setFocus('email');
     }
     // Going back from step 2 to step 1 - focus textarea
     else if (currentStep === 1 && previousStepRef.current === 2) {
-      setFocus("message");
+      setFocus('message');
     }
 
     previousStepRef.current = currentStep;
@@ -74,7 +74,7 @@ export default function ContactForm({
 
   const trackLead = (data: ContactFormData) => {
     const [firstName, ...rest] = data.name.trim().split(/\s+/);
-    const lastName = rest.length ? rest.join(" ") : undefined;
+    const lastName = rest.length ? rest.join(' ') : undefined;
 
     saveAnalyticsUser({
       email: data.email,
@@ -91,24 +91,24 @@ export default function ContactForm({
         last_name: lastName,
       },
       meta: {
-        eventName: "Lead",
+        eventName: 'Lead',
         params: {
-          content_name: "faq_contact_form",
-          form_location: isContactOnly ? "contact_page" : "faq_section",
+          content_name: 'faq_contact_form',
+          form_location: isContactOnly ? 'contact_page' : 'faq_section',
         },
       },
       ga4: {
-        eventName: "generate_lead",
+        eventName: 'generate_lead',
         params: {
-          form_name: "faq_contact_form",
-          form_location: isContactOnly ? "contact_page" : "faq_section",
+          form_name: 'faq_contact_form',
+          form_location: isContactOnly ? 'contact_page' : 'faq_section',
         },
       },
     });
   };
 
   const onSubmit = async (data: ContactFormData) => {
-    setFormState("loading");
+    setFormState('loading');
 
     try {
       trackLead(data);
@@ -116,21 +116,21 @@ export default function ContactForm({
       const result = await sendContactForm(data);
 
       if (result.success) {
-        setFormState("success");
+        setFormState('success');
         setCurrentStep(1);
       } else {
-        setFormState("error");
+        setFormState('error');
       }
     } catch {
-      setFormState("error");
+      setFormState('error');
     }
   };
 
   const handleRefresh = () => {
     const previousFormState = formState;
-    setFormState("idle");
+    setFormState('idle');
 
-    if (previousFormState === "success") {
+    if (previousFormState === 'success') {
       // Go back to step 1 for new message
       setCurrentStep(1);
       setFormKey((prev) => prev + 1);
@@ -138,25 +138,25 @@ export default function ContactForm({
 
       // Focus textarea after refresh from success
       setTimeout(() => {
-        setFocus("message");
+        setFocus('message');
       }, 50);
-    } else if (previousFormState === "error") {
+    } else if (previousFormState === 'error') {
       // For error state, stay on current step and focus appropriate input
       setTimeout(() => {
         if (currentStep === 1) {
-          setFocus("message");
+          setFocus('message');
         } else {
-          setFocus("email");
+          setFocus('email');
         }
       }, 50);
     }
   };
 
-  const isDisabled = formState === "loading";
+  const isDisabled = formState === 'loading';
 
   const handleStep1Submit = async () => {
     // Trigger validation for the message field
-    const isValid = await trigger("message");
+    const isValid = await trigger('message');
     if (isValid) {
       setCurrentStep(2);
     }
@@ -167,7 +167,7 @@ export default function ContactForm({
       <PortableText
         value={contactForm!.heading}
         className={styles.formHeading}
-        headingLevel={isContactOnly ? (index === 0 ? "h1" : "h2") : "h3"}
+        headingLevel={isContactOnly ? (index === 0 ? 'h1' : 'h2') : 'h3'}
       />
       <form
         key={formKey}
@@ -183,17 +183,17 @@ export default function ContactForm({
           textarea
           disabled={isDisabled}
           placeholder="Treść wiadomości"
-          register={register("message", {
+          register={register('message', {
             required: {
               value: true,
-              message: "Wiadomość jest wymagana",
+              message: 'Wiadomość jest wymagana',
             },
             minLength: {
               value: 10,
-              message: "Wiadomość musi mieć co najmniej 10 znaków",
+              message: 'Wiadomość musi mieć co najmniej 10 znaków',
             },
           })}
-          errors={errors.message?.message ?? ""}
+          errors={errors.message?.message ?? ''}
           className={styles.messageInput}
         />
 
@@ -203,37 +203,37 @@ export default function ContactForm({
           name="email"
           type="email"
           disabled={isDisabled}
-          register={register("email", {
-            required: { value: true, message: "E-mail jest wymagany" },
+          register={register('email', {
+            required: { value: true, message: 'E-mail jest wymagany' },
             pattern: {
               value: REGEX.email,
-              message: "Niepoprawny adres e-mail",
+              message: 'Niepoprawny adres e-mail',
             },
           })}
-          errors={errors.email?.message ?? ""}
+          errors={errors.email?.message ?? ''}
         />
 
         <Input
           label="Imię i nazwisko"
           name="name"
           disabled={isDisabled}
-          register={register("name", {
+          register={register('name', {
             required: {
               value: true,
-              message: "Imię i nazwisko jest wymagane",
+              message: 'Imię i nazwisko jest wymagane',
             },
             minLength: {
               value: 2,
-              message: "Imię i nazwisko musi mieć co najmniej 2 znaki",
+              message: 'Imię i nazwisko musi mieć co najmniej 2 znaki',
             },
           })}
-          errors={errors.name?.message ?? ""}
+          errors={errors.name?.message ?? ''}
         />
         <Checkbox
           disabled={isDisabled}
           label={
             <>
-              Akceptuję{" "}
+              Akceptuję{' '}
               <Link
                 href="/polityka-prywatnosci"
                 target="_blank"
@@ -244,13 +244,13 @@ export default function ContactForm({
               </Link>
             </>
           }
-          register={register("consent", {
+          register={register('consent', {
             required: {
               value: true,
-              message: "Zgoda jest wymagana",
+              message: 'Zgoda jest wymagana',
             },
           })}
-          errors={errors.consent?.message ?? ""}
+          errors={errors.consent?.message ?? ''}
         />
         <Button
           type="button"
