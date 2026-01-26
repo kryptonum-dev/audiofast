@@ -144,7 +144,7 @@ export default async function ProductsPage({
           <SortDropdown
             options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
             basePath="/produkty/"
-            defaultValue="orderRank"
+            defaultValue="priceAsc"
           />
 
           {/* Products listing - container shows overlay skeleton on filter changes */}
@@ -153,7 +153,7 @@ export default async function ProductsPage({
               <ProductsListing
                 searchParams={searchParams}
                 basePath="/produkty/"
-                defaultSortBy="orderRank"
+                defaultSortBy="priceAsc"
                 scrollTargetId="products-listing"
               />
             </Suspense>

@@ -392,7 +392,7 @@ export default async function CategoryPage({
           <SortDropdown
             options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
             basePath={`/produkty/kategoria/${categorySlug}/`}
-            defaultValue="newest"
+            defaultValue="priceAsc"
           />
 
           {/* Products listing - container shows overlay skeleton on filter changes */}
@@ -404,7 +404,7 @@ export default async function CategoryPage({
                 category={`/kategoria/${categorySlug}/`}
                 availableCustomFilters={dropdownFilterNames}
                 filterDefinitions={filterDefinitions}
-                defaultSortBy="newest"
+                defaultSortBy="priceAsc"
               />
             </Suspense>
           </ProductsListingContainer>
