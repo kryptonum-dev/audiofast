@@ -262,6 +262,7 @@ export default async function BrandPage({
                 basePath={`/marki/${slug}/`}
                 brandSlug={slug}
                 defaultSortBy="newest"
+                scrollTargetId="produkty"
               />
             </Suspense>
           </ProductsListingContainer>

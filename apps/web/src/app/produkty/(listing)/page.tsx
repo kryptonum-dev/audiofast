@@ -1,33 +1,33 @@
-import { cacheLife } from "next/cache";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cacheLife } from 'next/cache';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
-import HeroStatic from "@/src/components/pageBuilder/HeroStatic";
-import ProductsAside from "@/src/components/products/ProductsAside";
-import ProductsListing from "@/src/components/products/ProductsListing";
-import ProductsListingSkeleton from "@/src/components/products/ProductsListing/ProductsListingSkeleton";
-import styles from "@/src/components/products/ProductsListing/styles.module.scss";
-import ProductsListingContainer from "@/src/components/products/ProductsListingContainer";
-import { ProductsLoadingProvider } from "@/src/components/products/ProductsLoadingContext";
-import SortDropdown from "@/src/components/products/SortDropdown";
-import CollectionPageSchema from "@/src/components/schema/CollectionPageSchema";
-import { PageBuilder } from "@/src/components/shared/PageBuilder";
-import Breadcrumbs from "@/src/components/ui/Breadcrumbs";
+import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
+import ProductsAside from '@/src/components/products/ProductsAside';
+import ProductsListing from '@/src/components/products/ProductsListing';
+import ProductsListingSkeleton from '@/src/components/products/ProductsListing/ProductsListingSkeleton';
+import styles from '@/src/components/products/ProductsListing/styles.module.scss';
+import ProductsListingContainer from '@/src/components/products/ProductsListingContainer';
+import { ProductsLoadingProvider } from '@/src/components/products/ProductsLoadingContext';
+import SortDropdown from '@/src/components/products/SortDropdown';
+import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
+import { PageBuilder } from '@/src/components/shared/PageBuilder';
+import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
-} from "@/src/global/constants";
-import { logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
+} from '@/src/global/constants';
+import { logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductsFilterMetadata,
   queryProductsPageContent,
-} from "@/src/global/sanity/query";
+} from '@/src/global/sanity/query';
 import type {
   QueryAllProductsFilterMetadataResult,
   QueryProductsPageContentResult,
-} from "@/src/global/sanity/sanity.types";
-import { getSEOMetadata } from "@/src/global/seo";
+} from '@/src/global/sanity/sanity.types';
+import { getSEOMetadata } from '@/src/global/seo';
 
 type ProductsPageProps = {
   searchParams: Promise<{
@@ -44,18 +44,18 @@ type ProductsPageProps = {
 // Cached Static Data Fetcher
 // ----------------------------------------
 async function getStaticPageData() {
-  "use cache";
-  cacheLife("weeks");
+  'use cache';
+  cacheLife('weeks');
 
   const [contentData, filterMetadata] = await Promise.all([
     sanityFetch<QueryProductsPageContentResult>({
       query: queryProductsPageContent,
-      params: { category: "" },
-      tags: ["products"],
+      params: { category: '' },
+      tags: ['products'],
     }),
     sanityFetch<QueryAllProductsFilterMetadataResult>({
       query: queryAllProductsFilterMetadata,
-      tags: ["products"],
+      tags: ['products'],
     }),
   ]);
 
@@ -70,7 +70,7 @@ export async function generateMetadata() {
   const pageData = contentData?.defaultContent;
 
   if (!pageData) {
-    logWarn("Products page data not found");
+    logWarn('Products page data not found');
     return getSEOMetadata();
   }
 
@@ -92,21 +92,21 @@ export default async function ProductsPage({
   const pageData = contentData?.defaultContent;
 
   if (!pageData || !filterMetadata) {
-    logWarn("Products page data not found");
+    logWarn('Products page data not found');
     notFound();
   }
 
   const breadcrumbsData = [
     {
-      name: pageData.name || "Produkty",
-      path: "/produkty/",
+      name: pageData.name || 'Produkty',
+      path: '/produkty/',
     },
   ];
 
   return (
     <>
       <CollectionPageSchema
-        name={pageData.name || "Produkty"}
+        name={pageData.name || 'Produkty'}
         url="/produkty/"
         description={pageData.description}
       />
@@ -125,7 +125,10 @@ export default async function ProductsPage({
       />
 
       <ProductsLoadingProvider>
-        <section className={`${styles.productsListing} max-width`}>
+        <section
+          id="products-listing"
+          className={`${styles.productsListing} max-width`}
+        >
           {/* Client-side computed sidebar - instant filter updates */}
           <ProductsAside
             allProductsMetadata={filterMetadata.products || []}
@@ -151,6 +154,7 @@ export default async function ProductsPage({
                 searchParams={searchParams}
                 basePath="/produkty/"
                 defaultSortBy="orderRank"
+                scrollTargetId="products-listing"
               />
             </Suspense>
           </ProductsListingContainer>

@@ -45,6 +45,9 @@ type ProductsListingProps = {
   availableCustomFilters?: string[]; // Dropdown filter names for parsing
   filterDefinitions?: CustomFilterDefinition[]; // All filter definitions (for range filters)
   defaultSortBy?: string; // Default sort order when no search
+
+  // Scroll target for pagination
+  scrollTargetId?: string;
 };
 
 export default async function ProductsListing({
@@ -56,6 +59,7 @@ export default async function ProductsListing({
   availableCustomFilters = [],
   filterDefinitions = [],
   defaultSortBy = 'orderRank',
+  scrollTargetId,
 }: ProductsListingProps) {
   // Await and parse searchParams
   const params = await searchParams;
@@ -113,7 +117,10 @@ export default async function ProductsListing({
       }
     }
   });
-  const activeRangeFilters = parseRangeFilters(urlSearchParams, filterDefinitions);
+  const activeRangeFilters = parseRangeFilters(
+    urlSearchParams,
+    filterDefinitions,
+  );
 
   // Convert range filters to GROQ format (null for undefined values)
   const rangeFilters = activeRangeFilters.map((rf) => ({
@@ -160,7 +167,8 @@ export default async function ProductsListing({
   // Create URLSearchParams for Pagination
   const paginationSearchParams = new URLSearchParams();
   if (searchTerm) paginationSearchParams.set('search', searchTerm);
-  if (sortBy && sortBy !== defaultSortBy) paginationSearchParams.set('sortBy', sortBy);
+  if (sortBy && sortBy !== defaultSortBy)
+    paginationSearchParams.set('sortBy', sortBy);
   if (!brandSlug && brands.length > 0) {
     paginationSearchParams.set('brands', brands.join(','));
   }
@@ -182,10 +190,16 @@ export default async function ProductsListing({
     activeRangeFilters.forEach((rf) => {
       const slugifiedFilterName = slugifyFilterName(rf.filterName);
       if (rf.minValue !== undefined) {
-        paginationSearchParams.set(`${slugifiedFilterName}-min`, rf.minValue.toString());
+        paginationSearchParams.set(
+          `${slugifiedFilterName}-min`,
+          rf.minValue.toString(),
+        );
       }
       if (rf.maxValue !== undefined) {
-        paginationSearchParams.set(`${slugifiedFilterName}-max`, rf.maxValue.toString());
+        paginationSearchParams.set(
+          `${slugifiedFilterName}-max`,
+          rf.maxValue.toString(),
+        );
       }
     });
   }
@@ -237,6 +251,7 @@ export default async function ProductsListing({
             currentPage={currentPage}
             basePath={basePath}
             searchParams={paginationSearchParams}
+            scrollTargetId={scrollTargetId}
           />
         </>
       )}

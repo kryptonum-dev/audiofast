@@ -14,6 +14,7 @@ type PaginationProps = {
   currentPage: number;
   basePath: string;
   searchParams?: URLSearchParams;
+  scrollTargetId?: string;
 };
 
 export default function Pagination({
@@ -22,11 +23,22 @@ export default function Pagination({
   currentPage,
   basePath,
   searchParams,
+  scrollTargetId,
 }: PaginationProps) {
   const router = useRouter();
   const { startLoading } = useProductsLoading();
   const [pendingPage, setPendingPage] = useState<number | null>(null);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  // Scroll to target element when navigating pages
+  const scrollToTarget = () => {
+    if (scrollTargetId) {
+      const target = document.getElementById(scrollTargetId);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
 
   // Clear pending page when actual currentPage changes (navigation complete)
   useEffect(() => {
@@ -40,6 +52,7 @@ export default function Pagination({
   const handlePageNavigate = (pageNum: number) => {
     setPendingPage(pageNum);
     startLoading("pagination");
+    scrollToTarget();
   };
 
   // Don't render if only 1 page
@@ -190,6 +203,7 @@ export default function Pagination({
     if (prevPage >= 1) {
       setPendingPage(prevPage);
       startLoading("pagination");
+      scrollToTarget();
       router.push(getPageUrl(prevPage), { scroll: false });
     }
   };
@@ -199,6 +213,7 @@ export default function Pagination({
     if (nextPage <= totalPages) {
       setPendingPage(nextPage);
       startLoading("pagination");
+      scrollToTarget();
       router.push(getPageUrl(nextPage), { scroll: false });
     }
   };

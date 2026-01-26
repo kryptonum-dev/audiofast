@@ -1,23 +1,23 @@
-import { cacheLife } from "next/cache";
-import { Suspense } from "react";
+import { cacheLife } from 'next/cache';
+import { Suspense } from 'react';
 
-import type { PageBuilderBlock } from "@/src/components/shared/PageBuilder";
-import { PRODUCT_SORT_OPTIONS } from "@/src/global/constants";
-import { sanityFetch } from "@/src/global/sanity/fetch";
-import { queryAllProductsFilterMetadata } from "@/src/global/sanity/query";
-import type { QueryAllProductsFilterMetadataResult } from "@/src/global/sanity/sanity.types";
+import type { PageBuilderBlock } from '@/src/components/shared/PageBuilder';
+import { PRODUCT_SORT_OPTIONS } from '@/src/global/constants';
+import { sanityFetch } from '@/src/global/sanity/fetch';
+import { queryAllProductsFilterMetadata } from '@/src/global/sanity/query';
+import type { QueryAllProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
 
-import ProductsAside from "../../products/ProductsAside";
-import ProductsListingComponent from "../../products/ProductsListing";
-import ProductsListingContainer from "../../products/ProductsListingContainer";
-import ProductsListingSkeleton from "../../products/ProductsListing/ProductsListingSkeleton";
-import styles from "../../products/ProductsListing/styles.module.scss";
-import { ProductsLoadingProvider } from "../../products/ProductsLoadingContext";
-import SortDropdown from "../../products/SortDropdown";
+import ProductsAside from '../../products/ProductsAside';
+import ProductsListingComponent from '../../products/ProductsListing';
+import ProductsListingSkeleton from '../../products/ProductsListing/ProductsListingSkeleton';
+import styles from '../../products/ProductsListing/styles.module.scss';
+import ProductsListingContainer from '../../products/ProductsListingContainer';
+import { ProductsLoadingProvider } from '../../products/ProductsLoadingContext';
+import SortDropdown from '../../products/SortDropdown';
 
 type ProductsListingBlockType = Extract<
   PageBuilderBlock,
-  { _type: "productsListing" }
+  { _type: 'productsListing' }
 >;
 
 type ProductsListingProps = ProductsListingBlockType & {
@@ -34,17 +34,17 @@ type ProductsListingProps = ProductsListingBlockType & {
 // Cached Static Data Fetcher
 // ----------------------------------------
 async function getStaticFilterMetadata() {
-  "use cache";
-  cacheLife("weeks");
+  'use cache';
+  cacheLife('weeks');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ["products"],
+    tags: ['products'],
   });
 }
 
 export default async function ProductsListing(props: ProductsListingProps) {
-  const { heading, cpoOnly, searchParams, basePath = "/" } = props;
+  const { heading, cpoOnly, searchParams, basePath = '/' } = props;
 
   // Fetch filter metadata (cached)
   const filterMetadata = await getStaticFilterMetadata();
@@ -82,7 +82,10 @@ export default async function ProductsListing(props: ProductsListingProps) {
 
   return (
     <ProductsLoadingProvider>
-      <section className={`${styles.productsListing} max-width`}>
+      <section
+        id="products-listing"
+        className={`${styles.productsListing} max-width`}
+      >
         {/* Client-side computed sidebar */}
         <ProductsAside
           allProductsMetadata={productsMetadata}
@@ -114,6 +117,7 @@ export default async function ProductsListing(props: ProductsListingProps) {
               basePath={basePath}
               isCPO={cpoOnly}
               defaultSortBy="newest"
+              scrollTargetId="products-listing"
             />
           </Suspense>
         </ProductsListingContainer>
