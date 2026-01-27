@@ -1,9 +1,11 @@
 import { BlockContentIcon, EditIcon, FilterIcon } from "@sanity/icons";
 import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
 import {
+  Archive,
   BadgeCheck,
   BookOpen,
   Calendar,
+  CheckCircle,
   File,
   FileText,
   Folder,
@@ -289,6 +291,36 @@ export const structure = (
                       ),
                     ]);
                 }),
+              // Products by archive status (archived vs non-archived)
+              S.listItem()
+                .title("Produkty według statusu")
+                .icon(Archive)
+                .child(
+                  S.list()
+                    .title("Produkty według statusu")
+                    .items([
+                      S.listItem()
+                        .title("Produkty aktywne")
+                        .icon(CheckCircle)
+                        .child(
+                          S.documentList()
+                            .title("Produkty aktywne")
+                            .filter('_type == "product" && isArchived != true')
+                            .defaultOrdering(productDefaultOrdering)
+                            .menuItems(getProductOrderingMenuItems(S)),
+                        ),
+                      S.listItem()
+                        .title("Produkty archiwalne")
+                        .icon(Archive)
+                        .child(
+                          S.documentList()
+                            .title("Produkty archiwalne")
+                            .filter('_type == "product" && isArchived == true')
+                            .defaultOrdering(productDefaultOrdering)
+                            .menuItems(getProductOrderingMenuItems(S)),
+                        ),
+                    ]),
+                ),
               createCollection({
                 S,
                 context,

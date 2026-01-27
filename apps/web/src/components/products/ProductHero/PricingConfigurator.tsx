@@ -698,7 +698,7 @@ export default function PricingConfigurator({
           return null;
         })}
       <div className={styles.priceDisplay}>
-        <span className={styles.priceLabel}>Cena całkowita:</span>
+        <span className={styles.priceLabel}>Cena od:</span>
         <span className={styles.price}>
           {formatPrice(selection.calculatedPrice)}
         </span>

@@ -66,7 +66,7 @@ export default function ProductSummary({ product }: ProductSummaryProps) {
         {totalAdditions > 0 && (
           <>
             <div className={styles.priceRow}>
-              <span className={styles.priceLabel}>Cena bazowa</span>
+              <span className={styles.priceLabel}>Cena od</span>
               <span className={styles.priceValue}>
                 {formatPrice(product.basePrice)}
               </span>

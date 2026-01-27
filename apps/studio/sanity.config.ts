@@ -7,7 +7,7 @@ import { structureTool } from "sanity/structure";
 // import { bulkActionsTable } from 'sanity-plugin-bulk-actions-table';
 import { media } from "sanity-plugin-media";
 
-import { applyDenormToPublish } from "./actions";
+import { applyDenormToPublish, UnpublishAction } from "./actions";
 import { Logo } from "./components/logo";
 import type { SingletonType } from "./schemaTypes";
 import { schemaTypes, singletonActions } from "./schemaTypes";
@@ -75,8 +75,21 @@ export default defineConfig({
         });
       }
 
-      // For all other types (including products with wrapped publish)
-      return applyDenormToPublish(input, context);
+      // Apply denorm publish wrapper for all other types
+      let actions = applyDenormToPublish(input, context);
+
+      // Document types that should always have unpublish action available
+      // Always add our custom unpublish action for these types
+      const typesWithUnpublish = ["product", "brand", "blog-category"];
+      if (typesWithUnpublish.includes(context.schemaType)) {
+        // Remove any existing unpublish action and add our custom one
+        actions = actions.filter(
+          (a) => a.action !== "unpublish" && (a as any).name !== "unpublish",
+        );
+        actions = [...actions, UnpublishAction];
+      }
+
+      return actions;
     },
     newDocumentOptions: (prev, { creationContext }) => {
       const { type, schemaType } = creationContext;
