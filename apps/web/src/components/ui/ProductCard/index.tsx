@@ -77,7 +77,10 @@ export default function ProductCard({
           </Heading>
           <p className={styles.subtitle}>{subtitle}</p>
           <div className={styles.priceContainer} data-layout={layout}>
-            <span className={styles.price}>{formatPrice(basePriceCents)}</span>
+            <span className={styles.price}>
+              {basePriceCents && basePriceCents > 0 ? "od " : ""}
+              {formatPrice(basePriceCents)}
+            </span>
             {showButton && (
               <Button
                 tabIndex={-1}

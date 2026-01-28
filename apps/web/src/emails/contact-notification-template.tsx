@@ -105,7 +105,7 @@ export const ContactNotificationTemplate = ({
                   {totalAdditions > 0 && (
                     <>
                       <Section style={priceRow}>
-                        <Text style={priceLabel}>Cena od:</Text>
+                        <Text style={priceLabel}>Cena bazowa:</Text>
                         <Text style={priceValue}>
                           {formatPrice(product.basePrice)}
                         </Text>
