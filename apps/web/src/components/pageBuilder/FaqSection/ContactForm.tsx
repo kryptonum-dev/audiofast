@@ -37,7 +37,7 @@ export default function ContactForm({
   isContactOnly?: boolean;
 }) {
   const [currentStep, setCurrentStep] = useState<FormStep>(1);
-  const [formState, setFormState] = useState<FormState>('success');
+  const [formState, setFormState] = useState<FormState>('idle');
   const [formKey, setFormKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const previousStepRef = useRef<FormStep>(1);
