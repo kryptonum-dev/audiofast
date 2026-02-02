@@ -5,6 +5,7 @@ import type { CompletePricingData } from '@/src/global/supabase/types';
 import type { BrandType, PortableTextProps } from '@/src/global/types';
 
 import AddToComparison from './AddToComparison';
+import AwardItem from './AwardItem';
 import PricingSection from './PricingSection';
 import ProductDescription from './ProductDescription';
 import styles from './styles.module.scss';
@@ -138,35 +139,11 @@ export default function ProductHero({
                 const isDuplicate = shouldUseMarquee && idx >= awards!.length;
 
                 return (
-                  <div
-                    className={styles.awardItem}
+                  <AwardItem
                     key={key}
-                    aria-hidden={isDuplicate}
-                  >
-                    <Image
-                      image={award.logo}
-                      alt={award.name || 'Nagroda produktu'}
-                      sizes="80px"
-                      quality={90}
-                      className={styles.awardLogo}
-                      loading="lazy"
-                    />
-                    <div className={styles.awardTooltip} aria-hidden="true">
-                      <Image
-                        image={award.logo}
-                        alt=""
-                        sizes="200px"
-                        quality={100}
-                        className={styles.awardTooltipImage}
-                        loading="lazy"
-                      />
-                      {award.name && (
-                        <span className={styles.awardTooltipName}>
-                          {award.name}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                    award={award}
+                    isDuplicate={isDuplicate}
+                  />
                 );
               })}
             </div>
