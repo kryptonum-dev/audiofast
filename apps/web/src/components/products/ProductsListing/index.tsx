@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { fetchEmbeddings } from '@/src/app/actions/embeddings';
+// TEXT-ONLY MODE: Embeddings import commented out (to re-enable, uncomment this and the fetchEmbeddings call below)
+// import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
 import type { CustomFilterDefinition } from '@/src/global/filters';
 import { logWarn } from '@/src/global/logger';
@@ -80,15 +81,15 @@ export default async function ProductsListing({
         : `/kategoria/${categoryFromUrl}/`
       : '');
 
-  // Fetch embeddings if search exists
-  const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, 'products')) || []
-    : [];
+  // TEXT-ONLY SEARCH: Disabled embeddings for products (using GROQ name match instead)
+  // To re-enable AI embeddings search, uncomment the following and change sortBy default to 'relevance':
+  // const embeddingResults = hasSearchQuery
+  //   ? (await fetchEmbeddings(searchTerm, 'products')) || []
+  //   : [];
+  const embeddingResults: never[] = []; // Always empty - text-only search mode
 
-  // Determine sort order
-  const sortBy = hasSearchQuery
-    ? params.sortBy || 'relevance'
-    : params.sortBy || defaultSortBy;
+  // Determine sort order (no 'relevance' option in text-only mode)
+  const sortBy = params.sortBy || defaultSortBy;
 
   // Parse filters from URL
   const brands = parseBrands(params.brands);

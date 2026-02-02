@@ -35,10 +35,13 @@ export default function SortDropdown({
   // Check if search query exists (read from URL, not props)
   const hasSearchQuery = Boolean(searchParams.get('search'));
 
-  // Filter out relevance-based options if there's no search query
-  // 'orderRank' = "Od najważniejszych", 'relevance' = "Trafność"
+  // TEXT-ONLY MODE: Always filter out 'relevance' option (no AI scores available)
+  // To re-enable relevance sorting with embeddings, change back to:
+  // const availableOptions = hasSearchQuery
+  //   ? options
+  //   : options.filter((opt) => opt.value !== 'orderRank' && opt.value !== 'relevance');
   const availableOptions = hasSearchQuery
-    ? options
+    ? options.filter((opt) => opt.value !== 'relevance') // No relevance in text-only mode
     : options.filter(
         (opt) => opt.value !== 'orderRank' && opt.value !== 'relevance',
       );

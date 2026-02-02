@@ -19,9 +19,18 @@ function filterProducts(
     customFilters?: CustomFilterValue[];
     rangeFilters?: ActiveRangeFilter[];
     isCPO?: boolean;
+    search?: string; // TEXT-ONLY: Filter by product name
   },
 ): ProductFilterMetadata[] {
   let filtered = products;
+
+  // Apply search filter (TEXT-ONLY: matches product name)
+  if (options.search && options.search.trim()) {
+    const searchLower = options.search.trim().toLowerCase();
+    filtered = filtered.filter(
+      (p) => p.name && p.name.toLowerCase().includes(searchLower),
+    );
+  }
 
   // Apply category filter
   // Supports both short slugs ("glosniki") and full paths ("/kategoria/glosniki/")
@@ -146,6 +155,7 @@ export function computeAvailableFilters(
 ): ComputedFilters {
   // Compute BRAND counts: Apply all filters EXCEPT brands
   // This shows what brands are available if user changes brand selection
+  // Search IS applied - only show brands that have products matching the search
   const productsForBrandCounts = filterProducts(allProducts, {
     category: activeFilters.category,
     // brands: EXCLUDED - don't filter by brands when counting brands
@@ -154,6 +164,7 @@ export function computeAvailableFilters(
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
+    search: activeFilters.search, // TEXT-ONLY: Filter brands by search
   });
 
   const brandCounts = new Map<string, number>();
@@ -165,6 +176,7 @@ export function computeAvailableFilters(
 
   // Compute CATEGORY counts: Apply all filters EXCEPT category
   // This shows what categories are available if user changes category selection
+  // Search IS applied - only show categories that have products matching the search
   const productsForCategoryCounts = filterProducts(allProducts, {
     // category: EXCLUDED - don't filter by category when counting categories
     brands: activeFilters.brands,
@@ -173,6 +185,7 @@ export function computeAvailableFilters(
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
+    search: activeFilters.search, // TEXT-ONLY: Filter categories by search
   });
 
   const categoryCounts = new Map<string, number>();
@@ -194,6 +207,7 @@ export function computeAvailableFilters(
 
   // Compute PRICE range: Apply all filters EXCEPT price
   // This shows the available price range if user changes price selection
+  // Search IS applied - price range reflects only products matching the search
   const productsForPriceRange = filterProducts(allProducts, {
     category: activeFilters.category,
     brands: activeFilters.brands,
@@ -202,6 +216,7 @@ export function computeAvailableFilters(
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
+    search: activeFilters.search, // TEXT-ONLY: Filter price range by search
   });
 
   const prices = productsForPriceRange
@@ -220,11 +235,13 @@ export function computeAvailableFilters(
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
+    search: activeFilters.search, // TEXT-ONLY: Include search in total count
   });
 
   // Products filtered by everything EXCEPT custom dropdown filters
   // This is the base for computing dropdown filter options (each dropdown
   // should not affect its own options, only other filters should)
+  // Search IS applied - dropdown options reflect only products matching the search
   const productsForDropdownValues = filterProducts(allProducts, {
     category: activeFilters.category,
     brands: activeFilters.brands,
@@ -233,6 +250,7 @@ export function computeAvailableFilters(
     // customFilters: EXCLUDED - will be applied per-filter inside computeCustomFilterValues
     rangeFilters: activeFilters.rangeFilters,
     isCPO: activeFilters.isCPO,
+    search: activeFilters.search, // TEXT-ONLY: Filter dropdown options by search
   });
 
   // Compute custom filter values
@@ -244,6 +262,7 @@ export function computeAvailableFilters(
   // Products filtered by everything EXCEPT range filters
   // This is the base for computing range filter bounds (each range filter
   // should not affect its own bounds, only other filters should)
+  // Search IS applied - range bounds reflect only products matching the search
   const productsForRangeBounds = filterProducts(allProducts, {
     category: activeFilters.category,
     brands: activeFilters.brands,
@@ -252,6 +271,7 @@ export function computeAvailableFilters(
     customFilters: activeFilters.customFilters,
     // rangeFilters: EXCLUDED - will be applied per-filter inside computeRangeFilterBounds
     isCPO: activeFilters.isCPO,
+    search: activeFilters.search, // TEXT-ONLY: Filter range bounds by search
   });
 
   // Compute range filter bounds

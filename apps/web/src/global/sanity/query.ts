@@ -1436,6 +1436,7 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       && brand->doNotShowBrand != true
     ] {
       _id,
+      name,
       "brandSlug": denormBrandSlug,
       "brandName": denormBrandName,
       "categorySlug": denormCategorySlugs[0],
@@ -1784,8 +1785,10 @@ const productsFilterConditions = /* groq */ `
   // Category filter - uses denormalized denormCategorySlugs (no dereferencing)
   && ($category == "" || $category in denormCategorySlugs)
   
-  // Search filter - uses denormalized denormBrandName for brand name matching
-  && ($search == "" || count($embeddingResults) > 0 || [name, subtitle, denormBrandName, pt::text(shortDescription)] match $search)
+  // Search filter - TEXT-ONLY MODE: only matches product name (not subtitle, brand, description)
+  // To re-enable broader search with embeddings, change back to:
+  // && ($search == "" || count($embeddingResults) > 0 || [name, subtitle, denormBrandName, pt::text(shortDescription)] match $search)
+  && ($search == "" || name match $search + "*")
   
   // Brand filter - uses denormalized denormBrandSlug (no dereferencing, no string::split)
   && (count($brands) == 0 || denormBrandSlug in $brands)
