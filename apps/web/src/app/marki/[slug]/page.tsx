@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -61,6 +61,7 @@ type BrandPageProps = {
 // Brand content (specific to each brand, but cacheable)
 async function getBrandContent(slug: string) {
   'use cache';
+  cacheTag('brand');
   cacheLife('weeks');
 
   return sanityFetch<QueryBrandBySlugResult>({
@@ -83,6 +84,7 @@ async function getBrandContent(slug: string) {
 // Global filter metadata (shared across all pages, heavily cached)
 async function getStaticFilterMetadata() {
   'use cache';
+  cacheTag('products', 'brands');
   cacheLife('weeks');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({

@@ -1,4 +1,4 @@
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { Suspense } from 'react';
 
 import type { PageBuilderBlock } from '@/src/components/shared/PageBuilder';
@@ -35,6 +35,7 @@ type ProductsListingProps = ProductsListingBlockType & {
 // ----------------------------------------
 async function getStaticFilterMetadata() {
   'use cache';
+  cacheTag('products', 'brands');
   cacheLife('weeks');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({

@@ -1,4 +1,4 @@
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -81,6 +81,7 @@ type CategoryPageProps = {
 // Shared filter metadata (same for all category pages)
 async function getStaticFilterMetadata() {
   'use cache';
+  cacheTag('products', 'brands');
   cacheLife('hours');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
@@ -92,6 +93,7 @@ async function getStaticFilterMetadata() {
 // Page content (handles both default and category-specific content)
 async function getPageContent(categorySlug: string) {
   'use cache';
+  cacheTag('products', 'productCategorySub');
   cacheLife('hours');
 
   return sanityFetch<QueryProductsPageContentResult>({

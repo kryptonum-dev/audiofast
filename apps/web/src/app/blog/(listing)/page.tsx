@@ -1,4 +1,4 @@
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -27,6 +27,7 @@ type BlogPageProps = {
 // Cached static data fetcher
 async function getStaticPageData() {
   'use cache';
+  cacheTag('blog');
   cacheLife('hours');
 
   return sanityFetch<QueryBlogPageContentResult>({

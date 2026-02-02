@@ -1,4 +1,4 @@
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -43,6 +43,7 @@ type CategoryContent = {
 // Cached static data fetcher for main blog data
 async function getStaticBlogData() {
   'use cache';
+  cacheTag('blog');
   cacheLife('hours');
 
   return sanityFetch<QueryBlogPageContentResult>({
@@ -55,6 +56,7 @@ async function getStaticBlogData() {
 // Cached page content fetcher (handles category-specific content)
 async function getPageContent(categorySlug: string) {
   'use cache';
+  cacheTag('blog', 'blog-category');
   cacheLife('hours');
 
   return sanityFetch<QueryBlogPageContentResult>({

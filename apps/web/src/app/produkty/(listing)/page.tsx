@@ -1,4 +1,4 @@
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -45,6 +45,7 @@ type ProductsPageProps = {
 // ----------------------------------------
 async function getStaticPageData() {
   'use cache';
+  cacheTag('products', 'brands');
   cacheLife('weeks');
 
   const [contentData, filterMetadata] = await Promise.all([
