@@ -343,6 +343,7 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   name,
   subtitle,
   basePriceCents,
+  hasMultiplePrices,
   isArchived,
   categories[]->{
     _id,
@@ -597,6 +598,7 @@ const productProjection = /* groq */ `
   name,
   subtitle,
   basePriceCents,
+  hasMultiplePrices,
   isArchived,
   categories[]->{
     _id,
@@ -1845,6 +1847,7 @@ const productsProjection = /* groq */ `
   subtitle,
   "slug": slug.current,
   basePriceCents,
+  hasMultiplePrices,
   "categories": categories[0...1]->{
     name,
     "slug": slug.current

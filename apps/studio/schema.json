@@ -18194,6 +18194,13 @@
         },
         "optional": true
       },
+      "hasMultiplePrices": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "lastPricingSync": {
         "type": "objectAttribute",
         "value": {

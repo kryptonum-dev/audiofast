@@ -408,6 +408,16 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: "hasMultiplePrices",
+      title: "Cena zmienna",
+      type: "boolean",
+      description:
+        "Automatycznie synchronizowane. Określa czy produkt ma wiele wariantów cenowych (różne modele lub opcje konfiguracji). Jeśli true, na listingu wyświetla się prefix 'od'.",
+      readOnly: true,
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: "lastPricingSync",
       title: "Ostatnia synchronizacja cen",
       type: "datetime",

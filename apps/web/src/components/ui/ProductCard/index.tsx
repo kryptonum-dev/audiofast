@@ -29,6 +29,7 @@ export default function ProductCard({
     name,
     subtitle,
     basePriceCents,
+    hasMultiplePrices,
     brand,
     mainImage,
     _id,
@@ -78,7 +79,7 @@ export default function ProductCard({
           <p className={styles.subtitle}>{subtitle}</p>
           <div className={styles.priceContainer} data-layout={layout}>
             <span className={styles.price}>
-              {basePriceCents && basePriceCents > 0 ? "od " : ""}
+              {hasMultiplePrices ? "od " : ""}
               {formatPrice(basePriceCents)}
             </span>
             {showButton && (
