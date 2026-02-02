@@ -30,7 +30,8 @@ async function fetchBlogPostData(slug: string) {
   return await sanityFetch<QueryBlogPostBySlugResult>({
     query: queryBlogPostBySlug,
     params: { slug: `/blog/${slug}/` },
-    tags: ['blog-article'],
+    // Specific tag for this article + broad tag for type
+    tags: ['blog-article', `blog-article:${slug}`],
   });
 }
 
@@ -51,7 +52,8 @@ export async function generateMetadata(props: BlogPostPageProps) {
   const seoData = await sanityFetch<QueryBlogPostSeoBySlugResult>({
     query: queryBlogPostSeoBySlug,
     params: { slug: `/blog/${slug}/` },
-    tags: ['blog-article'],
+    // Specific tag for this article + broad tag for type
+    tags: ['blog-article', `blog-article:${slug}`],
   });
 
   if (!seoData) {

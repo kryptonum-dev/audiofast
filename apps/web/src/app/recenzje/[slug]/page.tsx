@@ -27,7 +27,8 @@ async function fetchReviewData(slug: string) {
   return await sanityFetch<QueryReviewBySlugResult>({
     query: queryReviewBySlug,
     params: { slug: `/recenzje/${slug}/` },
-    tags: ['review'],
+    // Specific tag for this review + broad tag for type
+    tags: ['review', `review:${slug}`],
   });
 }
 
@@ -48,7 +49,8 @@ export async function generateMetadata(props: ReviewPageProps) {
   const seoData = await sanityFetch<QueryReviewSeoBySlugResult>({
     query: queryReviewSeoBySlug,
     params: { slug: `/recenzje/${slug}/` },
-    tags: ['review'],
+    // Specific tag for this review + broad tag for type
+    tags: ['review', `review:${slug}`],
   });
 
   if (!seoData) {

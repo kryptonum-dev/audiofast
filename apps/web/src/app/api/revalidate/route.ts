@@ -51,209 +51,255 @@ function getSanityClient() {
 
 const TAG_DENYLIST = new Set(['sanity.imageAsset', 'sanity.fileAsset']);
 
+// ============================================================================
+// REVERSE LOOKUP UTILITIES
+// ============================================================================
+
+/**
+ * Extract the slug portion from a full Sanity slug path.
+ * Examples:
+ *   "/produkty/yamaha-thr10ii/" -> "yamaha-thr10ii"
+ *   "/blog/nowy-artykul/" -> "nowy-artykul"
+ *   "/kontakt/" -> "kontakt"
+ */
+function extractSlug(fullSlug: string | null | undefined): string | null {
+  if (!fullSlug) return null;
+  // Remove leading path segment and trailing slash
+  const slug = fullSlug.replace(/^\/[^/]+\//, '').replace(/\/$/, '');
+  // Handle root-level pages like "/kontakt/" -> "kontakt"
+  if (!slug && fullSlug.startsWith('/')) {
+    return fullSlug.replace(/^\//, '').replace(/\/$/, '') || null;
+  }
+  return slug || null;
+}
+
+/**
+ * Types that should trigger reverse lookup to find referencing documents.
+ * These types can be embedded/referenced in other documents via PageBuilder,
+ * portable text, or direct references.
+ */
+const REVERSE_LOOKUP_TYPES = new Set([
+  'product',
+  'review',
+  'blog-article',
+  'productCategorySub',
+  'productCategoryParent',
+]);
+
+/**
+ * Perform reverse lookup to find all documents that reference a given document,
+ * then return the specific cache tags for those documents.
+ *
+ * This enables precise invalidation: when Product X changes, we find all documents
+ * that reference Product X (related products, home page carousels, etc.) and
+ * invalidate only those specific pages instead of broad categories.
+ */
+async function getReferencingDocumentTags(
+  docId: string,
+  docType: string,
+  docSlug: string | null | undefined,
+): Promise<string[]> {
+  const client = getSanityClient();
+  if (!client) return [];
+
+  const tags: string[] = [];
+
+  // 1. Add specific tag for the edited document itself
+  if (docSlug) {
+    const slug = extractSlug(docSlug);
+    if (slug) {
+      switch (docType) {
+        case 'product':
+          tags.push(`product:${slug}`);
+          break;
+        case 'blog-article':
+          tags.push(`blog-article:${slug}`);
+          break;
+        case 'review':
+          tags.push(`review:${slug}`);
+          break;
+        case 'page':
+          tags.push(`page:${slug}`);
+          break;
+      }
+    }
+  }
+
+  // 2. Find all documents that reference this document
+  try {
+    const references = await client.fetch<
+      Array<{
+        _type: string;
+        slug: string | null;
+      }>
+    >(
+      `*[references($id) && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
+      { id: docId },
+    );
+
+    for (const ref of references) {
+      // Handle singleton types (no slug needed)
+      if (ref._type === 'homePage') {
+        tags.push('homePage');
+        continue;
+      }
+      if (ref._type === 'cpoPage') {
+        tags.push('cpoPage');
+        continue;
+      }
+
+      // Handle document types with slugs
+      const refSlug = extractSlug(ref.slug);
+      if (!refSlug) continue;
+
+      switch (ref._type) {
+        case 'product':
+          tags.push(`product:${refSlug}`);
+          break;
+        case 'page':
+          tags.push(`page:${refSlug}`);
+          break;
+        case 'review':
+          tags.push(`review:${refSlug}`);
+          break;
+        case 'blog-article':
+          tags.push(`blog-article:${refSlug}`);
+          break;
+      }
+    }
+
+    if (references.length > 0) {
+      console.log(
+        `[ReverseLookup] Found ${references.length} documents referencing ${docType} ${docId}`,
+      );
+    }
+  } catch (error) {
+    console.error(
+      `[ReverseLookup] Error querying references for ${docId}:`,
+      error,
+    );
+  }
+
+  return tags;
+}
+
+/**
+ * For category changes, find all products in that category and return their specific tags.
+ * This ensures product pages show updated category information.
+ */
+async function getProductsInCategoryTags(
+  categoryId: string,
+): Promise<string[]> {
+  const client = getSanityClient();
+  if (!client) return [];
+
+  try {
+    const products = await client.fetch<Array<{ slug: string | null }>>(
+      `*[_type == "product" && $categoryId in categories[]._ref && !(_id in path("drafts.**"))]{ "slug": slug.current }`,
+      { categoryId },
+    );
+
+    const tags: string[] = [];
+    for (const product of products) {
+      const slug = extractSlug(product.slug);
+      if (slug) {
+        tags.push(`product:${slug}`);
+      }
+    }
+
+    if (products.length > 0) {
+      console.log(
+        `[ReverseLookup] Found ${products.length} products in category ${categoryId}`,
+      );
+    }
+
+    return tags;
+  } catch (error) {
+    console.error(
+      `[ReverseLookup] Error querying products for category ${categoryId}:`,
+      error,
+    );
+    return [];
+  }
+}
+
 /**
  * Static dependency map - defines which cache tags should be revalidated
  * when a document of a given type changes.
  *
- * This captures TRANSITIVE dependencies based on schema knowledge:
- * - Direct references (e.g., product → brand)
- * - PageBuilder embeds (e.g., page → featuredProducts → product)
- * - Portable text embeds (e.g., blog-article → ptFeaturedProducts → product)
+ * SIMPLIFIED FOR ISR COST REDUCTION (Hybrid Approach):
+ * - Product/brand edits only invalidate listings + all brand pages
+ * - Home page, CMS pages, reviews, blog articles are NOT auto-invalidated
+ * - Those will be handled by reverse lookup in the webhook handler (Phase 3)
  *
- * When a type on the left changes, ALL tags on the right are revalidated.
- * This ensures content using that type (even via PageBuilder sections) gets fresh data.
- *
- * NOTE: With immediate expiration ({ expire: 0 }), over-revalidation results in
- * slightly more cache misses, but users see fresh content immediately after publishing.
+ * Why "brand" for all brand pages (hybrid approach)?
+ * When a product's brand changes (e.g., from Suniata to Yamaha), we need to
+ * invalidate BOTH the old and new brand pages. But the webhook only tells us
+ * the NEW brand. By using a broad "brand" tag, all ~30 brand pages are invalidated,
+ * ensuring correct data without needing to track the old brand.
  */
 const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // ============================================================================
-  // CORE CONTENT TYPES
+  // CORE CONTENT TYPES - Simplified for ISR cost reduction
   // ============================================================================
 
-  // Products are embedded in many places via PageBuilder sections:
-  // - featuredProducts, productsCarousel, latestPublication, featuredPublications
-  // - ptFeaturedProducts, ptCtaSection (portable text)
-  // - productsListing, brandsByCategoriesSection
-  product: [
-    'product', // Product pages
-    'products', // Product listing page & filter metadata
-    'product-pricing', // Supabase pricing data for products
-    'homePage', // Home page often has featured products
-    'page', // Generic pages with PageBuilder (productsCarousel, featuredProducts, etc.)
-    'cpoPage', // CPO page has product listings
-    'review', // Reviews have related products
-    'blog-article', // Blog articles can embed products via portable text
-    'brand', // Brand pages show their products
-    'comparatorConfig', // Comparator uses product data
-  ],
+  // Products: Only invalidate listings and ALL brand pages (hybrid approach)
+  // Home page, CMS pages, reviews, blog articles handled by reverse lookup (Phase 3)
+  product: ['products', 'brand'],
 
-  // Brands are displayed via PageBuilder sections:
-  // - heroCarousel (brand marquee), brandsMarquee, brandsList, brandsByCategoriesSection
-  brand: [
-    'brand', // Brand pages
-    'brands', // Brands listing page
-    'product', // Products display their brand info
-    'products', // Product listings show brand filters
-    'homePage', // Home page often has brand sections
-    'page', // Generic pages with brand PageBuilder sections
-    'cpoPage', // CPO page may show brands
-  ],
+  // Brands: Invalidate brand listings, product filters, and all brand pages
+  brand: ['brands', 'products', 'brand'],
 
-  // Reviews can be featured via PageBuilder:
-  // - latestPublication, featuredPublications, ptReviewEmbed
-  review: [
-    'review', // Review pages
-    'homePage', // Home page can feature reviews
-    'page', // Generic pages can embed reviews
-    'cpoPage', // CPO page can feature reviews
-    'brand', // Brand pages have featured reviews
-    'blog-article', // Blog can embed reviews
-  ],
+  // Reviews: No automatic cascade - handled by reverse lookup
+  review: [],
 
-  // Blog articles can be featured via PageBuilder:
-  // - latestPublication, featuredPublications
-  'blog-article': [
-    'blog-article', // Blog post pages
-    'blog', // Blog listing page
-    'blog-category', // Category pages list articles
-    'homePage', // Home can feature blog posts
-    'page', // Generic pages can show publications
-  ],
+  // Blog articles: Only blog listing
+  'blog-article': ['blog'],
 
   // ============================================================================
   // CATEGORY & ORGANIZATION TYPES
   // ============================================================================
 
-  // Product categories affect product organization and filtering
-  productCategorySub: [
-    'productCategorySub', // Category pages
-    'product', // Products are organized by category
-    'products', // Product listings filter by category
-    'homePage', // Home may show category navigation
-    'page', // Pages with productsListing section
-    'cpoPage', // CPO page categorizes products
-  ],
-
-  // Parent categories affect subcategories and brandsByCategoriesSection
-  productCategoryParent: [
-    'productCategoryParent',
-    'productCategorySub', // Subcategories reference parent
-    'products', // Filter metadata
-    'homePage', // brandsByCategoriesSection
-    'page', // Pages with brandsByCategoriesSection
-  ],
-
-  // Blog categories affect article organization
-  'blog-category': [
-    'blog-category', // Category pages
-    'blog-article', // Articles show their category
-    'blog', // Blog listing shows category counts
-  ],
+  productCategorySub: ['products', 'productCategorySub'],
+  productCategoryParent: ['products'],
+  'blog-category': ['blog', 'blog-category'],
 
   // ============================================================================
   // PEOPLE & ORGANIZATION TYPES
   // ============================================================================
 
-  // Team members appear in PageBuilder sections:
-  // - teamSection, faqSection (contactPeople), contactForm (contactPeople)
-  teamMember: [
-    'teamMember',
-    'homePage', // Home may have team section
-    'page', // Pages with team/contact sections
-    'cpoPage',
-  ],
-
-  // Review authors are displayed on reviews
-  reviewAuthor: [
-    'reviewAuthor',
-    'review', // Reviews show author info
-  ],
-
-  // FAQ items are used in faqSection PageBuilder block
-  faq: [
-    'faq',
-    'homePage', // Home may have FAQ section
-    'page', // Pages with FAQ section
-    'cpoPage',
-  ],
-
-  // Stores are displayed on brand pages
-  store: [
-    'store',
-    'brand', // Brand pages list their stores
-  ],
-
-  // Awards are displayed on product pages
-  award: [
-    'award',
-    'product', // Products show their awards
-  ],
+  teamMember: ['teamMember'],
+  reviewAuthor: ['reviewAuthor'],
+  faq: ['faq'],
+  store: ['store', 'brand'], // Stores appear on brand pages
+  award: ['award'],
 
   // ============================================================================
   // SINGLETON PAGES
   // ============================================================================
 
-  // Home page singleton - only affects itself
   homePage: ['homePage'],
-
-  // CPO page singleton
   cpoPage: ['cpoPage'],
-
-  // Blog listing singleton
-  blog: ['blog', 'blog-article'], // Blog page affects article listings
-
-  // Products listing singleton
-  products: ['products', 'product'], // Products singleton affects listings
-
-  // Brands listing singleton
-  brands: ['brands', 'brand'], // Brands singleton affects brand pages
-
-  // Generic pages - only affects page cache
+  blog: ['blog'],
+  products: ['products'],
+  brands: ['brands'],
   page: ['page'],
 
   // ============================================================================
   // GLOBAL/LAYOUT TYPES
   // ============================================================================
 
-  // Settings affect multiple areas (contact info, SEO, analytics)
-  settings: [
-    'settings',
-    'homePage', // Structured data, contact info
-    'page', // Contact forms use settings
-    'blog-article', // Structured data
-    'product', // Structured data
-  ],
-
-  // Navigation affects all pages via layout
+  settings: ['settings'],
   navbar: ['navbar'],
-
-  // Footer affects all pages via layout
   footer: ['footer'],
-
-  // Social media links appear in footer
-  socialMedia: [
-    'socialMedia',
-    'footer', // Footer displays social links
-  ],
+  socialMedia: ['socialMedia', 'footer'],
 
   // ============================================================================
   // CONFIGURATION TYPES
   // ============================================================================
 
-  // Comparator config affects comparison functionality
-  comparatorConfig: [
-    'comparatorConfig',
-    'product', // Comparator shows product data
-  ],
-
-  // Newsletter settings used in contact/FAQ sections
-  newsletterSettings: [
-    'newsletterSettings',
-    'page', // Pages with faqSection or contactForm
-    'homePage',
-    'cpoPage',
-  ],
+  comparatorConfig: ['comparatorConfig'],
+  newsletterSettings: ['newsletterSettings'],
 
   // ============================================================================
   // LEGAL/STATIC PAGES
@@ -262,8 +308,6 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   privacyPolicy: ['privacyPolicy'],
   termsAndConditions: ['termsAndConditions'],
   notFound: ['notFound'],
-
-  // Redirects don't need cache invalidation (handled at edge)
   redirects: [],
 };
 
@@ -320,6 +364,9 @@ export async function POST(request: NextRequest) {
   // Track denormalization tasks to run in parallel
   const denormTasks: Promise<void>[] = [];
 
+  // Track reverse lookup tasks
+  const reverseLookupTasks: Promise<string[]>[] = [];
+
   for (const doc of documents) {
     // =========================================================================
     // Handle Sanity webhook payload (_type)
@@ -328,6 +375,25 @@ export async function POST(request: NextRequest) {
       // Add all transitive dependencies from the static map
       const transitiveDeps = getTransitiveDependencies(doc._type);
       transitiveDeps.forEach((tag) => addTag(tags, tag));
+
+      // =========================================================================
+      // Reverse Lookup for precise invalidation (Phase 3)
+      // =========================================================================
+      // For certain types, find documents that reference this document and
+      // invalidate their specific cache tags instead of broad categories.
+      if (doc._id && REVERSE_LOOKUP_TYPES.has(doc._type)) {
+        reverseLookupTasks.push(
+          getReferencingDocumentTags(doc._id, doc._type, doc.slug),
+        );
+
+        // For category changes, also find products in that category
+        if (
+          doc._type === 'productCategorySub' ||
+          doc._type === 'productCategoryParent'
+        ) {
+          reverseLookupTasks.push(getProductsInCategoryTags(doc._id));
+        }
+      }
 
       // =========================================================================
       // Denormalization for brand/category changes
@@ -362,6 +428,22 @@ export async function POST(request: NextRequest) {
           revalidatedPaths.push(path);
         }
       }
+    }
+  }
+
+  // =========================================================================
+  // Wait for reverse lookup tasks and add their tags
+  // =========================================================================
+  if (reverseLookupTasks.length > 0) {
+    try {
+      const reverseLookupResults = await Promise.all(reverseLookupTasks);
+      for (const resultTags of reverseLookupResults) {
+        for (const tag of resultTags) {
+          addTag(tags, tag);
+        }
+      }
+    } catch (error) {
+      console.error('[ReverseLookup] Error in reverse lookup tasks:', error);
     }
   }
 
@@ -449,6 +531,8 @@ export async function GET() {
         'Uses revalidateTag with { expire: 0 } for immediate cache invalidation - visitors see fresh content on first visit after publishing',
       staticDependencyMap:
         'Pre-defined content relationships for instant, zero-latency revalidation',
+      reverseLookup:
+        'Queries Sanity to find documents referencing the edited document, enabling precise specific-tag invalidation instead of broad categories',
     },
     authentication:
       'Bearer token via NEXT_REVALIDATE_TOKEN environment variable',
@@ -468,7 +552,6 @@ function addTag(tagSet: Set<string>, tag?: string | null) {
 
   tagSet.add(trimmed);
 }
-
 // ============================================================================
 // DENORMALIZATION FUNCTIONS
 // ============================================================================

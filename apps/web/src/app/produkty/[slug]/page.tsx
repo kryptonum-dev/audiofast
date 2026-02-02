@@ -43,7 +43,8 @@ async function fetchProductData(slug: string) {
     sanityFetch<QueryProductBySlugResult>({
       query: queryProductBySlug,
       params: { slug: `/produkty/${slug}/` },
-      tags: ['product'],
+      // Specific tag for this product + broad tag for type
+      tags: ['product', `product:${slug}`],
     }),
     fetchProductPricing(slug), // Fetch pricing from Supabase
     sanityFetch<QueryProductInquiryFormStateResult>({
@@ -76,7 +77,8 @@ export async function generateMetadata({
   const seoData = await sanityFetch<QueryProductSeoBySlugResult>({
     query: queryProductSeoBySlug,
     params: { slug: `/produkty/${slug}/` },
-    tags: ['product'],
+    // Specific tag for this product + broad tag for type
+    tags: ['product', `product:${slug}`],
   });
 
   if (!seoData) return getSEOMetadata();
