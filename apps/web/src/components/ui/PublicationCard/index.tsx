@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { PublicationType as PublicationTypeProps } from "@/src/global/types";
 import { portableTextToPlainString } from "@/src/global/utils";
 
@@ -47,7 +49,7 @@ export default function PublicationCard({
 
   return (
     <article className={styles.publicationCard} data-layout={layout}>
-      <a
+      <Link
         href={slug!}
         className={styles.link}
         {...(openInNewTab && { target: "_blank", rel: "noopener noreferrer" })}
@@ -68,7 +70,7 @@ export default function PublicationCard({
             <Button tabIndex={-1} text={buttonText} variant="primary" />
           )}
         </div>
-      </a>
+      </Link>
     </article>
   );
 }

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import type { ProductType } from "@/src/global/types";
 
 import Image from "../../shared/Image";
@@ -51,7 +53,7 @@ export default function ProductCard({
 
   return (
     <article className={styles.productCard}>
-      <a href={slug!} className={styles.link}>
+      <Link href={slug!} className={styles.link}>
         <div className={styles.imgBox}>
           <Image
             image={mainImage}
@@ -91,7 +93,7 @@ export default function ProductCard({
             )}
           </div>
         </div>
-      </a>
+      </Link>
     </article>
   );
 }
