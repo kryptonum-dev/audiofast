@@ -1064,12 +1064,16 @@ export const queryBlogPostBySlug =
     name,
     "slug": slug.current,
   },
-  "author": author->{
-    _id,
-    name,
-    position,
-    ${imageFragment('image')},
-  },
+  authorType,
+  "author": select(
+    authorType == "external" => { "name": customAuthor },
+    author->{
+      _id,
+      name,
+      position,
+      ${imageFragment('image')},
+    }
+  ),
   keywords,
   ${portableTextFragmentExtended('content')},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],

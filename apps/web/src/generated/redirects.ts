@@ -3,7 +3,7 @@
  * Generated from Sanity CMS redirects document.
  *
  * DO NOT EDIT MANUALLY - regenerate using: bun run generate:redirects
- * Generated at: 2026-01-26T11:28:35.388Z
+ * Generated at: 2026-02-08T08:56:19.921Z
  */
 
 export interface RedirectEntry {
@@ -2973,7 +2973,6 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/recenzje/1584/', { destination: '/', permanent: true }],
   ['/parabolica/', { destination: '/', permanent: true }],
   ['/galileo-discovery-sc/', { destination: '/', permanent: true }],
-  ['/produkty/carbon-discs/', { destination: '/', permanent: true }],
   ['/[file_link,id=14811]/', { destination: '/', permanent: true }],
   ['/atmosphere-sx-ic/', { destination: '/', permanent: true }],
   ['/ph9/', { destination: '/', permanent: true }],
@@ -3087,7 +3086,6 @@ export const redirectsMap = new Map<string, RedirectEntry>([
   ['/ref160m/', { destination: '/', permanent: true }],
   ['/altaira/', { destination: '/', permanent: true }],
   ['/m1/', { destination: '/', permanent: true }],
-  ['/produkty/i-50/', { destination: '/', permanent: true }],
   ['/ref80s/', { destination: '/', permanent: true }],
   ['/loke/', { destination: '/', permanent: true }],
   ['/n30sa/', { destination: '/', permanent: true }],
@@ -3182,6 +3180,6 @@ export const redirectsMap = new Map<string, RedirectEntry>([
 ]);
 
 /**
- * Total number of redirects: 3163
+ * Total number of redirects: 3161
  */
-export const REDIRECTS_COUNT = 3163;
+export const REDIRECTS_COUNT = 3161;

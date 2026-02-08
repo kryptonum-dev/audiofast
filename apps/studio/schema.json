@@ -21446,11 +21446,35 @@
         },
         "optional": true
       },
+      "authorType": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "internal"
+            },
+            {
+              "type": "string",
+              "value": "external"
+            }
+          ]
+        },
+        "optional": true
+      },
       "author": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
           "name": "teamMember.reference"
+        },
+        "optional": true
+      },
+      "customAuthor": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },

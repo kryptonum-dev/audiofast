@@ -65,17 +65,19 @@ export default function BlogPostSchema({ blogPost, settings }: Props) {
   const publisherName = settings.structuredData?.companyName || "Audiofast";
   const publisherLogo = settings.structuredData?.logo;
 
-  // Build author object
-  const authorSchema =
-    author && projectId && dataset
-      ? {
-          "@type": "Person" as const,
-          name: author.name || "Unknown Author",
-          ...(author.image?.id && {
+  // Build author object (supports both internal team members and external authors)
+  const authorSchema = author?.name
+    ? {
+        "@type": "Person" as const,
+        name: author.name,
+        ...(projectId &&
+          dataset &&
+          'image' in author &&
+          author.image?.id && {
             image: `https://cdn.sanity.io/images/${projectId}/${dataset}/${author.image.id}.jpg?w=400&h=400&fit=crop`,
           }),
-        }
-      : undefined;
+      }
+    : undefined;
 
   // Build publisher object
   const publisherSchema = {

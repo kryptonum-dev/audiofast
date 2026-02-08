@@ -20,12 +20,11 @@
     padding: 1rem 0;
     border-bottom: 1px solid var(--neutral-300, #e5e5e5);
     grid-template-columns: auto 1fr;
-    grid-template-rows: repeat(3, auto) 1fr;
+    grid-template-rows: repeat(2, auto) 1fr;
     column-gap: 1rem;
     grid-template-areas:
       'publicationType date'
       'heading heading'
-      'description description'
       'image image';
 
     > span {
@@ -47,12 +46,6 @@
       letter-spacing: -0.03em;
       line-height: 1.16;
       font-size: var(--typography-header-m, 1.5rem);
-    }
-
-    .description {
-      font-size: var(--typography-body-l, 1rem);
-      grid-area: description;
-      margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2rem);
     }
 
     img {

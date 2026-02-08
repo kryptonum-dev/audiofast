@@ -126,14 +126,56 @@ export const blogArticle = defineType({
     }),
     pageBuilderField,
     defineField({
+      name: "authorType",
+      title: "Typ autora",
+      type: "string",
+      description:
+        "Wybierz, czy autor jest członkiem zespołu (wewnętrzny) czy zewnętrznym autorem",
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        list: [
+          { title: "Wewnętrzny (członek zespołu)", value: "internal" },
+          { title: "Zewnętrzny", value: "external" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "internal",
+      validation: (Rule) =>
+        Rule.required().error("Typ autora jest wymagany"),
+    }),
+    defineField({
       name: "author",
       type: "reference",
-      title: "Autor",
+      title: "Autor (członek zespołu)",
       to: [{ type: "teamMember" }],
       description:
         "Autor artykułu - wymagane dla optymalizacji SEO (structured data)",
+      hidden: ({ parent }) => parent?.authorType === "external",
       validation: (Rule) =>
-        Rule.required().error("Autor artykułu jest wymagany"),
+        Rule.custom((value, context) => {
+          const parent = context.parent as { authorType?: string };
+          if (parent?.authorType !== "external" && !value) {
+            return "Autor artykułu jest wymagany";
+          }
+          return true;
+        }),
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "customAuthor",
+      type: "string",
+      title: "Autor (zewnętrzny)",
+      description:
+        'Imię i nazwisko lub nazwa zewnętrznego autora (np. "D\'Agostino Master Audio Systems")',
+      hidden: ({ parent }) => parent?.authorType !== "external",
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const parent = context.parent as { authorType?: string };
+          if (parent?.authorType === "external" && !value) {
+            return "Nazwa zewnętrznego autora jest wymagana";
+          }
+          return true;
+        }),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({

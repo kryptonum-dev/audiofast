@@ -35,12 +35,6 @@ export function ArticleBody({
   const displayDate =
     'publishDate' in props ? props.publishDate || _createdAt : _createdAt;
 
-  // Get description for blog articles only
-  const description =
-    _type === 'blog-article' && 'description' in props
-      ? props.description
-      : null;
-
   return (
     <article
       className={`${styles.container} content`}
@@ -64,9 +58,6 @@ export function ArticleBody({
           className={styles.heading}
           headingLevel="h1"
         />
-        {description && (
-          <PortableText value={description} className={styles.description} />
-        )}
         <Image
           image={image}
           priority

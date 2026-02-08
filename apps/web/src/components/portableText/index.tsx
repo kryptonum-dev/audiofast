@@ -15,7 +15,6 @@ import { convertToSlug, portableTextToPlainString } from '@/global/utils';
 import { ArrowListComponent } from './ArrowList';
 import { ButtonPortableTextComponent } from './Button';
 import { CircleNumberedListComponent } from './CircleNumberedList';
-import { TwoColumnLineComponent } from './TwoColumnLine';
 import { CtaSectionComponent } from './CtaSection';
 import { FeaturedProductsComponent } from './FeaturedProducts';
 import { HeadingComponent } from './Heading';
@@ -27,6 +26,7 @@ import { PageBreakComponent } from './PageBreak';
 import { QuoteComponent } from './Quote';
 import { ReviewEmbedComponent } from './ReviewEmbed';
 import portableTextStyles from './styles.module.scss';
+import { TwoColumnLineComponent } from './TwoColumnLine';
 import { TwoColumnTableComponent } from './TwoColumnTable';
 import { VimeoVideoComponent } from './VimeoVideo';
 import { YoutubeVideoComponent } from './YouTubeVideo';
@@ -291,12 +291,13 @@ export function PortableTextRenderer({
         const openInNewTab = linkData?.openInNewTab;
 
         // Determine if it's an external link
-        const isExternal =
-          linkType === 'external' ||
-          openInNewTab ||
+        // Use the actual URL to decide, not the Sanity linkType field.
+        // Relative paths (e.g. /produkty/...) are always internal regardless of how they're stored.
+        const isExternalUrl =
           href.startsWith('http') ||
           href.startsWith('mailto:') ||
           href.startsWith('tel:');
+        const isExternal = isExternalUrl || openInNewTab;
 
         // For external links, use regular <a> tag
         if (isExternal) {

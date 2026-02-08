@@ -34,7 +34,11 @@ export default function LatestPublication({
   const TitleHeading = index === 0 ? 'h2' : 'h3';
 
   // Determine button text based on publication type
-  const buttonText = isProduct ? 'Zobacz produkt' : 'Przeczytaj recenzję';
+  const buttonText = isProduct
+    ? 'Zobacz produkt'
+    : _type === 'blog-article'
+      ? 'Czytaj artykuł'
+      : 'Przeczytaj recenzję';
 
   return (
     <section className={`${styles.latestPublication} max-width`}>
