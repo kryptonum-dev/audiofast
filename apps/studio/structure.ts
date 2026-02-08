@@ -23,7 +23,7 @@ import type {
   StructureBuilder,
   StructureResolverContext,
 } from "sanity/structure";
-import { createBulkActionsTable } from "sanity-plugin-bulk-actions-table";
+import { createBulkActionsTable } from "./plugins/bulk-actions-table";
 
 import { CustomFiltersConfigView } from "./components/custom-filters-config";
 import { ProductFiltersView } from "./components/product-filters-view";
@@ -172,6 +172,27 @@ export const structure = (
                 context: context as any,
                 title: "Tabela produktów",
                 icon: Table2,
+                filters: [
+                  {
+                    field: "isArchived",
+                    label: "Status",
+                    options: [
+                      { label: "Wszystkie", value: null },
+                      { label: "Aktywne", value: "isArchived != true" },
+                      { label: "Archiwalne", value: "isArchived == true" },
+                    ],
+                    defaultIndex: 0,
+                  },
+                ],
+                referenceFilters: [
+                  {
+                    referenceField: "brand._ref",
+                    referenceType: "brand",
+                    label: "Marka",
+                    groqProjection:
+                      '{ _id, name, "imageUrl": logo.asset->url }',
+                  },
+                ],
               }) as any,
               S.divider(),
               // Products grouped by brand

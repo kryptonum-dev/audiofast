@@ -4,7 +4,6 @@ import { visionTool } from "@sanity/vision";
 import { GitCompareArrows, Mail } from "lucide-react";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
-// import { bulkActionsTable } from 'sanity-plugin-bulk-actions-table';
 import { media } from "sanity-plugin-media";
 
 import { applyDenormToPublish, UnpublishAction } from "./actions";
@@ -33,7 +32,6 @@ export default defineConfig({
       structure,
       defaultDocumentNode,
     }),
-    // bulkActionsTable(),
     embeddingsIndexDashboard(),
     visionTool(),
     media(),
