@@ -111,6 +111,7 @@ async function getReferencingDocumentTags(
       switch (docType) {
         case 'product':
           tags.push(`product:${slug}`);
+          tags.push(`product-pricing:${slug}`);
           break;
         case 'blog-article':
           tags.push(`blog-article:${slug}`);

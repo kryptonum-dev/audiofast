@@ -38,7 +38,8 @@ export async function fetchProductPricing(
 ): Promise<CompletePricingData | null> {
   'use cache';
 
-  cacheTag('product-pricing');
+  // Specific tag for this product's pricing + broad tag for type
+  cacheTag('product-pricing', `product-pricing:${productSlug}`);
 
   if (process.env.NODE_ENV === 'development') {
     cacheLife('seconds');
