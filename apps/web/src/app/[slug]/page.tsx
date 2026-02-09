@@ -36,8 +36,8 @@ async function fetchPageData(slug: string) {
   return await sanityFetch<NonNullable<QueryPageBySlugResult>>({
     query: queryPageBySlug,
     params: { slug: sanitySlug },
-    // Specific tag for this page + broad tag for type
-    tags: ['page', `page:${slug}`],
+    // Only slug-specific tag — no broad 'page' tag to avoid invalidating all CMS pages
+    tags: [`page:${slug}`],
   });
 }
 
@@ -53,8 +53,8 @@ export async function generateMetadata({
   const seoData = await sanityFetch<QueryPageSeoBySlugResult>({
     query: queryPageSeoBySlug,
     params: { slug: sanitySlug },
-    // Specific tag for this page + broad tag for type
-    tags: ['page', `page:${slug}`],
+    // Only slug-specific tag — no broad 'page' tag
+    tags: [`page:${slug}`],
   });
 
   if (!seoData) return getSEOMetadata();

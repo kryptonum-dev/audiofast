@@ -155,7 +155,7 @@ export default async function ProductsListing({
       isCPO,
       embeddingResults: embeddingResults || [],
     },
-    tags: ['product'],
+    tags: ['products'],
   });
 
   if (!productsData) {

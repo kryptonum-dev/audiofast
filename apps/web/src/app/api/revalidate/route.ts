@@ -134,7 +134,7 @@ async function getReferencingDocumentTags(
         slug: string | null;
       }>
     >(
-      `*[references($id) && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
+      `*[references($id) && _type in ["product", "page", "homePage", "cpoPage", "review", "blog-article"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
       { id: docId },
     );
 
@@ -315,7 +315,7 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   blog: ['blog'],
   products: ['products'],
   brands: ['brands'],
-  page: ['page'],
+  page: [], // Slug-specific tag added dynamically above — no broad tag
 
   // ============================================================================
   // GLOBAL/LAYOUT TYPES
@@ -407,6 +407,18 @@ export async function POST(request: NextRequest) {
       // Add all transitive dependencies from the static map
       const transitiveDeps = getTransitiveDependencies(doc._type);
       transitiveDeps.forEach((tag) => addTag(tags, tag));
+
+      // =========================================================================
+      // Slug-specific CMS page tag
+      // =========================================================================
+      // When a CMS page is edited, add a slug-specific tag so only that
+      // page is invalidated instead of all CMS pages.
+      if (doc._type === 'page' && doc.slug) {
+        const pageSlug = extractSlug(doc.slug);
+        if (pageSlug) {
+          addTag(tags, `page:${pageSlug}`);
+        }
+      }
 
       // =========================================================================
       // Targeted brand lookup for product edits

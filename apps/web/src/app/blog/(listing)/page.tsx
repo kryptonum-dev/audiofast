@@ -28,7 +28,7 @@ type BlogPageProps = {
 async function getStaticPageData() {
   'use cache';
   cacheTag('blog');
-  cacheLife('hours');
+  cacheLife('weeks');
 
   return sanityFetch<QueryBlogPageContentResult>({
     query: queryBlogPageContent,

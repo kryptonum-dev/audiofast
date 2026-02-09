@@ -44,7 +44,7 @@ type CategoryContent = {
 async function getStaticBlogData() {
   'use cache';
   cacheTag('blog');
-  cacheLife('hours');
+  cacheLife('weeks');
 
   return sanityFetch<QueryBlogPageContentResult>({
     query: queryBlogPageContent,
@@ -57,7 +57,7 @@ async function getStaticBlogData() {
 async function getPageContent(categorySlug: string) {
   'use cache';
   cacheTag('blog', 'blog-category');
-  cacheLife('hours');
+  cacheLife('weeks');
 
   return sanityFetch<QueryBlogPageContentResult>({
     query: queryBlogPageContent,

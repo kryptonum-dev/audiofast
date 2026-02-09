@@ -82,7 +82,7 @@ type CategoryPageProps = {
 async function getStaticFilterMetadata() {
   'use cache';
   cacheTag('products', 'brands');
-  cacheLife('hours');
+  cacheLife('weeks');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
@@ -94,7 +94,7 @@ async function getStaticFilterMetadata() {
 async function getPageContent(categorySlug: string) {
   'use cache';
   cacheTag('products', 'productCategorySub');
-  cacheLife('hours');
+  cacheLife('weeks');
 
   return sanityFetch<QueryProductsPageContentResult>({
     query: queryProductsPageContent,
