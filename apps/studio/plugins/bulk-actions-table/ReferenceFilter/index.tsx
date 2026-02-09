@@ -96,8 +96,11 @@ function ReferenceFilterItem({
         const projection =
           config.groqProjection ||
           '{ _id, name }';
+        const extraFilter = config.groqFilter
+          ? ` && ${config.groqFilter}`
+          : '';
         const results = await client.fetch<ReferenceOption[]>(
-          `*[_type == $refType && !(_id in path("drafts.**"))] | order(name asc) ${projection}`,
+          `*[_type == $refType && !(_id in path("drafts.**"))${extraFilter}] | order(name asc) ${projection}`,
           { refType: config.referenceType },
         );
         if (!canceled) {
@@ -114,7 +117,7 @@ function ReferenceFilterItem({
     return () => {
       canceled = true;
     };
-  }, [client, config.referenceType, config.groqProjection]);
+  }, [client, config.referenceType, config.groqProjection, config.groqFilter]);
 
   const filteredOptions = useMemo(() => {
     if (!searchTerm) return options;

@@ -40,6 +40,8 @@ export interface ReferenceFilterConfig {
   label: string;
   /** GROQ projection for fetching options. Must include _id, name, and optionally imageUrl */
   groqProjection?: string;
+  /** Additional GROQ filter clause to narrow down which reference options are shown (e.g., 'doNotShowBrand != true') */
+  groqFilter?: string;
 }
 
 /**

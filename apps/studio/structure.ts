@@ -191,6 +191,7 @@ export const structure = (
                     label: "Marka",
                     groqProjection:
                       '{ _id, name, "imageUrl": logo.asset->url }',
+                    groqFilter: "doNotShowBrand != true",
                   },
                 ],
               }) as any,
