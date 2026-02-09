@@ -61,7 +61,7 @@ type BrandPageProps = {
 // Brand content (specific to each brand, but cacheable)
 async function getBrandContent(slug: string) {
   'use cache';
-  cacheTag('brand');
+  cacheTag('brand', `brand:${slug}`);
   cacheLife('weeks');
 
   return sanityFetch<QueryBrandBySlugResult>({
@@ -77,7 +77,7 @@ async function getBrandContent(slug: string) {
       customFilters: [],
       embeddingResults: [],
     },
-    tags: ['brand'],
+    tags: ['brand', `brand:${slug}`],
   });
 }
 
@@ -119,7 +119,7 @@ export async function generateMetadata({
   const seoData = await sanityFetch<QueryBrandSeoBySlugResult>({
     query: queryBrandSeoBySlug,
     params: { slug: `/marki/${slug}/` },
-    tags: ['brand'],
+    tags: ['brand', `brand:${slug}`],
   });
 
   if (!seoData) return getSEOMetadata();

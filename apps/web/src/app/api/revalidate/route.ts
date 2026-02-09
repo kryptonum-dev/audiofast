@@ -225,28 +225,59 @@ async function getProductsInCategoryTags(
 }
 
 /**
+ * When a product is edited, find its brand and return a slug-specific brand tag.
+ * This replaces the broad "brand" tag on product edits — only the product's
+ * own brand page gets invalidated instead of all ~30 brand pages.
+ */
+async function getProductBrandTag(productId: string): Promise<string[]> {
+  const client = getSanityClient();
+  if (!client) return [];
+
+  try {
+    const result = await client.fetch<{ brandSlug: string | null } | null>(
+      `*[_type == "product" && _id == $productId && !(_id in path("drafts.**"))][0]{
+        "brandSlug": brand->slug.current
+      }`,
+      { productId },
+    );
+
+    if (!result?.brandSlug) return [];
+
+    const slug = extractSlug(result.brandSlug);
+    if (slug) {
+      console.log(
+        `[BrandLookup] Product ${productId} belongs to brand "${slug}"`,
+      );
+      return [`brand:${slug}`];
+    }
+
+    return [];
+  } catch (error) {
+    console.error(
+      `[BrandLookup] Error querying brand for product ${productId}:`,
+      error,
+    );
+    return [];
+  }
+}
+
+/**
  * Static dependency map - defines which cache tags should be revalidated
  * when a document of a given type changes.
  *
- * SIMPLIFIED FOR ISR COST REDUCTION (Hybrid Approach):
- * - Product/brand edits only invalidate listings + all brand pages
- * - Home page, CMS pages, reviews, blog articles are NOT auto-invalidated
- * - Those will be handled by reverse lookup in the webhook handler (Phase 3)
- *
- * Why "brand" for all brand pages (hybrid approach)?
- * When a product's brand changes (e.g., from Suniata to Yamaha), we need to
- * invalidate BOTH the old and new brand pages. But the webhook only tells us
- * the NEW brand. By using a broad "brand" tag, all ~30 brand pages are invalidated,
- * ensuring correct data without needing to track the old brand.
+ * SIMPLIFIED FOR ISR COST REDUCTION:
+ * - Product edits invalidate listings + the specific brand page (via lookup)
+ * - Brand edits invalidate brand listings, product filters, and all brand pages
+ * - Home page, CMS pages, reviews, blog articles handled by reverse lookup
  */
 const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // ============================================================================
   // CORE CONTENT TYPES - Simplified for ISR cost reduction
   // ============================================================================
 
-  // Products: Only invalidate listings and ALL brand pages (hybrid approach)
-  // Home page, CMS pages, reviews, blog articles handled by reverse lookup (Phase 3)
-  product: ['products', 'brand'],
+  // Products: Only invalidate listings (brand page handled by targeted lookup below)
+  // Home page, CMS pages, reviews, blog articles handled by reverse lookup
+  product: ['products'],
 
   // Brands: Invalidate brand listings, product filters, and all brand pages
   brand: ['brands', 'products', 'brand'],
@@ -378,7 +409,16 @@ export async function POST(request: NextRequest) {
       transitiveDeps.forEach((tag) => addTag(tags, tag));
 
       // =========================================================================
-      // Reverse Lookup for precise invalidation (Phase 3)
+      // Targeted brand lookup for product edits
+      // =========================================================================
+      // When a product is edited, find its brand and invalidate only that
+      // brand page instead of all ~30 brand pages.
+      if (doc._id && doc._type === 'product') {
+        reverseLookupTasks.push(getProductBrandTag(doc._id));
+      }
+
+      // =========================================================================
+      // Reverse Lookup for precise invalidation
       // =========================================================================
       // For certain types, find documents that reference this document and
       // invalidate their specific cache tags instead of broad categories.
