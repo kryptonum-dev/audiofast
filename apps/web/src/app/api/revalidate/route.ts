@@ -63,7 +63,7 @@ const TAG_DENYLIST = new Set(['sanity.imageAsset', 'sanity.fileAsset']);
  *   "/kontakt/" -> "kontakt"
  */
 function extractSlug(fullSlug: string | null | undefined): string | null {
-  if (!fullSlug) return null;
+  if (!fullSlug || typeof fullSlug !== 'string') return null;
   // Remove leading path segment and trailing slash
   const slug = fullSlug.replace(/^\/[^/]+\//, '').replace(/\/$/, '');
   // Handle root-level pages like "/kontakt/" -> "kontakt"
