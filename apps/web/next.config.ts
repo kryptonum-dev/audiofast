@@ -4,6 +4,24 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   cacheComponents: true,
 
+  // Override default cache profiles to prevent 5-minute stale window.
+  // Default presets have stale: 300s (5 min) which causes every page to
+  // regenerate (ISR write) every 5 minutes when visited by bots/users.
+  // Since we use on-demand revalidation via Sanity webhooks, pages should
+  // stay fresh until explicitly invalidated — no time-based regeneration.
+  cacheLife: {
+    weeks: {
+      stale: 2592000, // 30 days
+      revalidate: 2592000, // 30 days
+      expire: 2592000, // 30 days
+    },
+    max: {
+      stale: 2592000, // 30 days
+      revalidate: 2592000, // 30 days
+      expire: 31536000, // 1 year
+    },
+  },
+
   experimental: {
     inlineCss: true,
   },
