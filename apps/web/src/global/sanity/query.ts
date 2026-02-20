@@ -188,7 +188,18 @@ const portableTextFragmentExtended = (
       review->{
         _id,
         ${portableTextFragment('title')},
-        "slug": slug.current,
+        "destinationType": coalesce(destinationType, "page"),
+        "slug": select(
+          coalesce(destinationType, "page") == "page" => slug.current,
+          destinationType == "pdf" => pdfSlug.current,
+          destinationType == "external" => externalUrl,
+          slug.current
+        ),
+        "openInNewTab": select(
+          destinationType == "external" => true,
+          destinationType == "pdf" => true,
+          false
+        ),
         ${imageFragment('image')},
         ${portableTextFragment('description')}
       }
@@ -240,7 +251,18 @@ const brandContentBlocksFragment = (
       review->{
         _id,
         ${portableTextFragment('title')},
-        "slug": slug.current,
+        "destinationType": coalesce(destinationType, "page"),
+        "slug": select(
+          coalesce(destinationType, "page") == "page" => slug.current,
+          destinationType == "pdf" => pdfSlug.current,
+          destinationType == "external" => externalUrl,
+          slug.current
+        ),
+        "openInNewTab": select(
+          destinationType == "external" => true,
+          destinationType == "pdf" => true,
+          false
+        ),
         ${imageFragment('image')},
         ${portableTextFragment('description')},
       }
