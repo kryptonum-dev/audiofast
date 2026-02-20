@@ -106,6 +106,7 @@ export default async function BlogListing({
                     headingLevel="h2"
                     publication={article}
                     layout="vertical"
+                    imageFit="contain"
                     imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"
                     priority={index === 0}
                     loading={index === 0 ? "eager" : "lazy"}

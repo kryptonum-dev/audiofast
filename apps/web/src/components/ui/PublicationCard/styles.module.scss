@@ -33,11 +33,14 @@
     .imageBox {
       overflow: hidden;
       border-radius: 0.5rem;
+      transition: background-color 240ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
       img {
         width: 100%;
-        max-height: 280px;
+        max-height: 17.5rem;
+        height: auto;
         object-fit: cover;
+        object-position: center;
         transition: transform 340ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
       }
     }
@@ -187,6 +190,21 @@
   .link:focus:not(:focus-visible) {
     border-color: var(--neutral-400);
     background-color: var(--neutral-200);
+  }
+
+  &[data-image-fit='contain'] {
+    .link {
+      .imageBox {
+        aspect-ratio: 4 / 3;
+
+        img {
+          width: 100%;
+          height: 100%;
+          max-height: none;
+          object-fit: contain;
+        }
+      }
+    }
   }
 }
 

@@ -1,30 +1,32 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import type { PublicationType as PublicationTypeProps } from "@/src/global/types";
-import { portableTextToPlainString } from "@/src/global/utils";
+import type { PublicationType as PublicationTypeProps } from '@/src/global/types';
+import { portableTextToPlainString } from '@/src/global/utils';
 
-import Image from "../../shared/Image";
-import Button from "../Button";
-import DateBox from "../DateBox";
-import PublicationType from "../PublicationType";
-import styles from "./styles.module.scss";
+import Image from '../../shared/Image';
+import Button from '../Button';
+import DateBox from '../DateBox';
+import PublicationType from '../PublicationType';
+import styles from './styles.module.scss';
 
 type PublicationCardProps = {
   publication: PublicationTypeProps;
-  layout?: "vertical" | "horizontal";
-  headingLevel?: "h2" | "h3";
+  layout?: 'vertical' | 'horizontal';
+  headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
+  imageFit?: 'cover' | 'contain';
   priority?: boolean;
-  loading?: "eager" | "lazy";
+  loading?: 'eager' | 'lazy';
 };
 
 export default function PublicationCard({
   publication,
-  layout = "vertical",
-  imageSizes = "400px",
-  headingLevel = "h3",
+  layout = 'vertical',
+  imageSizes = '400px',
+  imageFit = 'cover',
+  headingLevel = 'h3',
   priority = false,
-  loading = "lazy",
+  loading = 'lazy',
 }: PublicationCardProps) {
   const {
     _type,
@@ -41,18 +43,22 @@ export default function PublicationCard({
   const Heading = headingLevel;
 
   // Products use name field instead of portable text title
-  const isProduct = _type === "product";
+  const isProduct = _type === 'product';
   const displayTitle = isProduct ? name : portableTextToPlainString(title);
 
   // Determine button text based on publication type
-  const buttonText = isProduct ? "Zobacz produkt" : "Czytaj artykuł";
+  const buttonText = isProduct ? 'Zobacz produkt' : 'Czytaj artykuł';
 
   return (
-    <article className={styles.publicationCard} data-layout={layout}>
+    <article
+      className={styles.publicationCard}
+      data-layout={layout}
+      data-image-fit={imageFit}
+    >
       <Link
         href={slug!}
         className={styles.link}
-        {...(openInNewTab && { target: "_blank", rel: "noopener noreferrer" })}
+        {...(openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}
       >
         <div className={styles.imageBox}>
           <Image
@@ -66,7 +72,7 @@ export default function PublicationCard({
           <PublicationType publicationType={publicationType!} />
           <DateBox date={publishDate || _createdAt} />
           <Heading className={styles.title}>{displayTitle}</Heading>
-          {layout === "vertical" && (
+          {layout === 'vertical' && (
             <Button tabIndex={-1} text={buttonText} variant="primary" />
           )}
         </div>
