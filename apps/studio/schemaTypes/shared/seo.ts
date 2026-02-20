@@ -8,10 +8,13 @@ interface GetSEOFieldsOptions {
   exclude?: ExcludableFields[];
   /** If true, meta description is required. Default: false (optional, falls back to home page description) */
   descriptionRequired?: boolean;
+  /** If true, SEO title field is hidden and not required (useful for auto-generated titles). */
+  hideTitle?: boolean;
 }
 
 export function getSEOFields(options?: GetSEOFieldsOptions) {
-  const { exclude = [], descriptionRequired = false } = options || {};
+  const { exclude = [], descriptionRequired = false, hideTitle = false } =
+    options || {};
 
   const fields = [];
 
@@ -27,13 +30,19 @@ export function getSEOFields(options?: GetSEOFieldsOptions) {
         defineField({
           name: "title",
           title: "Meta tytuł SEO",
-          description:
-            "To nadpisze meta tytuł. Jeśli pozostanie puste, odziedziczy tytuł strony.",
+          description: hideTitle
+            ? "Tytuł SEO jest generowany automatycznie."
+            : "To nadpisze meta tytuł. Jeśli pozostanie puste, odziedziczy tytuł strony.",
           type: "string",
-          validation: (rule) => [
-            rule.required().error("Tytuł SEO jest wymagany"),
-            rule.max(70).warning("Nie więcej niż 70 znaków"),
-          ],
+          hidden: hideTitle,
+          readOnly: hideTitle,
+          validation: (rule) =>
+            hideTitle
+              ? [rule.max(70).warning("Nie więcej niż 70 znaków")]
+              : [
+                  rule.required().error("Tytuł SEO jest wymagany"),
+                  rule.max(70).warning("Nie więcej niż 70 znaków"),
+                ],
         }),
         defineField({
           name: "description",

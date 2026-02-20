@@ -770,7 +770,7 @@ export const product = defineType({
     // ----------------------------------------
     // SEO Fields (Always Last)
     // ----------------------------------------
-    ...getSEOFields({ exclude: ["hideFromList"] }),
+    ...getSEOFields({ exclude: ["hideFromList"], hideTitle: true }),
   ],
   preview: {
     select: {

@@ -2278,7 +2278,11 @@ export const queryProductSeoBySlug =
   defineQuery(`*[_type == "product" && slug.current == $slug][0]{
   "slug": slug.current,
   seo {
-    title,
+    "title": select(
+      defined(brand->name) && defined(name) => brand->name + " " + name,
+      defined(name) => name,
+      title
+    ),
     description
   },
   openGraph {
