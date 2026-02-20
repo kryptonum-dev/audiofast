@@ -1,5 +1,3 @@
-'use cache';
-
 import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 

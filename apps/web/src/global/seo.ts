@@ -1,18 +1,18 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import { capitalize } from "@/global/utils";
+import { capitalize } from '@/global/utils';
 
-import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from "./constants";
-import { sanityFetch } from "./sanity/fetch";
+import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
+import { sanityFetch } from './sanity/fetch';
 import {
   queryDefaultOGImage,
   queryHomePageSeoDescription,
   queryNotFoundPage,
-} from "./sanity/query";
+} from './sanity/query';
 import type {
   QueryHomePageSeoDescriptionResult,
   QueryNotFoundPageResult,
-} from "./sanity/sanity.types";
+} from './sanity/sanity.types';
 
 // Site-wide configuration interface
 interface SiteConfig {
@@ -23,7 +23,7 @@ interface SiteConfig {
 }
 
 // Page-specific SEO data interface
-interface PageSeoData extends Omit<Metadata, "openGraph"> {
+interface PageSeoData extends Omit<Metadata, 'openGraph'> {
   seo?: {
     title?: string | null;
     description?: string | null;
@@ -42,8 +42,8 @@ interface PageSeoData extends Omit<Metadata, "openGraph"> {
 const siteConfig: SiteConfig = {
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
-  twitterHandle: "@audiofast",
-  keywords: ["audiofast", "audio", "premium", "quality", "sound", "equipment"],
+  twitterHandle: '@audiofast',
+  keywords: ['audiofast', 'audio', 'premium', 'quality', 'sound', 'equipment'],
 };
 
 function buildPageUrl({
@@ -53,7 +53,7 @@ function buildPageUrl({
   baseUrl: string;
   slug: string;
 }): string {
-  const normalizedSlug = slug.startsWith("/") ? slug : `/${slug}`;
+  const normalizedSlug = slug.startsWith('/') ? slug : `/${slug}`;
   return `${baseUrl}${normalizedSlug}`;
 }
 
@@ -67,7 +67,7 @@ function extractTitle({
   siteTitle: string;
 }): string {
   if (pageTitle) return pageTitle;
-  if (slug && slug !== "/") return capitalize(slug.replace(/^\//, ""));
+  if (slug && slug !== '/') return capitalize(slug.replace(/^\//, ''));
   return siteTitle;
 }
 
@@ -80,12 +80,12 @@ export async function getSEOMetadata(
   if (!page.seo || Object.keys(page).length === 0) {
     const notFoundData = await sanityFetch<QueryNotFoundPageResult>({
       query: queryNotFoundPage,
-      tags: ["notFound"],
+      tags: ['notFound'],
     });
     if (notFoundData) {
       effectivePage = {
         seo: notFoundData.seo,
-        slug: "/404",
+        slug: '/404',
         openGraph: notFoundData.openGraph || undefined,
       };
     }
@@ -93,26 +93,26 @@ export async function getSEOMetadata(
 
   const {
     seo,
-    slug = "/",
+    slug = '/',
     keywords: pageKeywords = [],
     noNotIndex = false,
     openGraph,
     ...pageOverrides
   } = effectivePage;
 
-  const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug: slug || "" });
+  const pageUrl = buildPageUrl({ baseUrl: BASE_URL, slug: slug || '' });
 
   // Fetch default OG image and home page description in parallel
   const [ogImageData, homePageSeoData] = await Promise.all([
     sanityFetch<{ defaultOGImage: string | null }>({
       query: queryDefaultOGImage,
-      tags: ["settings"],
+      tags: ['settings'],
     }),
     // Fetch home page description for fallback (only if current page has no description)
     !seo?.description
       ? sanityFetch<QueryHomePageSeoDescriptionResult>({
           query: queryHomePageSeoDescription,
-          tags: ["homePage"],
+          tags: ['homePage'],
         })
       : Promise.resolve(null),
   ]);
@@ -122,7 +122,7 @@ export async function getSEOMetadata(
   // Build default metadata values
   const defaultTitle = extractTitle({
     pageTitle: seo?.title || undefined,
-    slug: slug || "",
+    slug: slug || '',
     siteTitle: siteConfig.title,
   });
   // Use page description, fallback to home page description, then site description
@@ -144,9 +144,9 @@ export async function getSEOMetadata(
     },
     applicationName: defaultTitle,
     keywords: allKeywords,
-    robots: noNotIndex ? "noindex, nofollow" : "index, follow",
+    robots: noNotIndex ? 'noindex, nofollow' : 'index, follow',
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       images: [ogImage!],
       creator: siteConfig.twitterHandle,
       title: openGraph?.title || defaultTitle,
@@ -156,8 +156,8 @@ export async function getSEOMetadata(
       canonical: pageUrl,
     },
     openGraph: {
-      type: "website",
-      countryName: "PL",
+      type: 'website',
+      countryName: 'PL',
       description: openGraph?.description || defaultDescription,
       title: openGraph?.title || defaultTitle,
       images: [

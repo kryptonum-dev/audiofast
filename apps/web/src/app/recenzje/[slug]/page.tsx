@@ -98,7 +98,7 @@ export default async function ReviewPage(props: ReviewPageProps) {
         />
       )}
       {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
-        <PageBuilder pageBuilder={pageData.pageBuilder} />
+        <PageBuilder pageBuilder={pageData.pageBuilder} indexOffset={1} />
       )}
     </main>
   );

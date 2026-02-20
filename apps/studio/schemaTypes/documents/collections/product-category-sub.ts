@@ -44,10 +44,10 @@ export const productCategorySub = defineType({
       group: GROUP.MAIN_CONTENT,
       optional: true,
       include: {
-        styles: ["normal"],
-        lists: [],
+        styles: ["normal", "h2"],
+        lists: ["bullet", "number"],
         decorators: ["strong"],
-        annotations: [],
+        annotations: ["customLink"],
       },
     }),
     customPortableText({
@@ -58,10 +58,10 @@ export const productCategorySub = defineType({
       group: GROUP.MAIN_CONTENT,
       optional: true,
       include: {
-        styles: ["normal"],
-        lists: [],
+        styles: ["normal", "h2"],
+        lists: ["bullet", "number"],
         decorators: ["strong", "em"],
-        annotations: [],
+        annotations: ["customLink"],
       },
     }),
     defineField({

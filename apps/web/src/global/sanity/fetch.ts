@@ -1,9 +1,9 @@
-import "server-only";
+import 'server-only';
 
-import { cacheLife, cacheTag } from "next/cache";
-import { type QueryParams } from "next-sanity";
+import { cacheLife, cacheTag } from 'next/cache';
+import { type QueryParams } from 'next-sanity';
 
-import { client } from "./client";
+import { client } from './client';
 
 /**
  * Enhanced fetch function with correct Next.js caching strategy
@@ -19,16 +19,16 @@ export async function sanityFetch<QueryResponse>({
   params?: QueryParams;
   tags?: string[];
 }): Promise<QueryResponse> {
-  "use cache";
+  'use cache';
 
   if (tags.length > 0) {
     cacheTag(...tags);
   }
 
-  if (process.env.NODE_ENV === "development") {
-    cacheLife("seconds");
+  if (process.env.NODE_ENV === 'development') {
+    cacheLife('seconds');
   } else {
-    cacheLife("weeks");
+    cacheLife('weeks');
   }
 
   return await client.fetch<QueryResponse>(query, params);

@@ -37,6 +37,37 @@
       font-size: var(--typography-body-m, 0.875rem);
       color: var(--neutral-white, #ffffff);
       max-width: 31.25rem;
+
+      :global(h2) {
+        font-size: var(--typography-body-xl, 1.125rem);
+        margin-top: 0.75rem;
+        margin-bottom: 0.5rem;
+        color: var(--neutral-white, #ffffff);
+        -webkit-text-stroke-width: 0;
+        -webkit-text-stroke-color: transparent;
+      }
+
+      :global(.link) {
+        color: var(--neutral-white, #ffffff);
+
+        strong {
+          color: var(--neutral-white, #ffffff);
+        }
+
+        &:hover {
+          color: var(--primary-red, #fe0140);
+
+          strong {
+            color: var(--primary-red, #fe0140);
+          }
+        }
+
+        &[target='_blank'] {
+          &::after {
+            content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'%3E%3Cg stroke='%23f7f3f3'%3E%3Cpath d='M11 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-5M10 14 20 4M15 4h5v5'/%3E%3C/g%3E%3C/svg%3E");
+          }
+        }
+      }
     }
 
     picture {

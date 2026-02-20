@@ -47,6 +47,7 @@ export interface PageBuilderProps {
   readonly pageBuilder?: PageBuilderBlock[];
   readonly searchParams?: SearchParams;
   readonly basePath?: string; // Current page path for ProductsListing block
+  readonly indexOffset?: number; // Offset for block index to prevent multiple H1s
 }
 
 type BlockType = PageBuilderBlock["_type"];
@@ -59,6 +60,7 @@ export function PageBuilder({
   pageBuilder: initialBlocks = [],
   searchParams,
   basePath,
+  indexOffset = 0,
 }: PageBuilderProps) {
   const blocks = initialBlocks;
 
@@ -69,13 +71,14 @@ export function PageBuilder({
   return (
     <>
       {blocks.map((block, index) => {
+        const effectiveIndex = index + indexOffset;
         switch (block._type as BlockType) {
           case "heroCarousel":
             return (
               <HeroCarousel
                 key={block._key}
                 {...(block as BlockByType<"heroCarousel">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "heroStatic":
@@ -83,7 +86,7 @@ export function PageBuilder({
               <HeroStatic
                 key={block._key}
                 {...(block as BlockByType<"heroStatic">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "latestPublication":
@@ -91,7 +94,7 @@ export function PageBuilder({
               <LatestPublication
                 key={block._key}
                 {...(block as BlockByType<"latestPublication">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "imageTextColumns":
@@ -99,7 +102,7 @@ export function PageBuilder({
               <ImageTextColumns
                 key={block._key}
                 {...(block as BlockByType<"imageTextColumns">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "blurLinesTextImage":
@@ -107,7 +110,7 @@ export function PageBuilder({
               <BlurLinesTextImage
                 key={block._key}
                 {...(block as BlockByType<"blurLinesTextImage">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "imageWithVideo":
@@ -115,7 +118,7 @@ export function PageBuilder({
               <ImageWithVideo
                 key={block._key}
                 {...(block as BlockByType<"imageWithVideo">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "imageWithTextBoxes":
@@ -123,7 +126,7 @@ export function PageBuilder({
               <ImageWithTextBoxes
                 key={block._key}
                 {...(block as BlockByType<"imageWithTextBoxes">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "featuredPublications":
@@ -131,7 +134,7 @@ export function PageBuilder({
               <FeaturedPublications
                 key={block._key}
                 {...(block as BlockByType<"featuredPublications">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "featuredProducts":
@@ -139,7 +142,7 @@ export function PageBuilder({
               <FeaturedProducts
                 key={block._key}
                 {...(block as BlockByType<"featuredProducts">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "productsCarousel":
@@ -147,7 +150,7 @@ export function PageBuilder({
               <ProductsCarousel
                 key={block._key}
                 {...(block as BlockByType<"productsCarousel">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "productsListing":
@@ -155,7 +158,7 @@ export function PageBuilder({
               <ProductsListing
                 key={block._key}
                 {...(block as BlockByType<"productsListing">)}
-                index={index}
+                index={effectiveIndex}
                 searchParams={searchParams}
                 basePath={basePath}
               />
@@ -165,7 +168,7 @@ export function PageBuilder({
               <BrandsMarquee
                 key={block._key}
                 {...(block as BlockByType<"brandsMarquee">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "brandsList":
@@ -173,7 +176,7 @@ export function PageBuilder({
               <BrandsList
                 key={block._key}
                 {...(block as BlockByType<"brandsList">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "brandsByCategoriesSection":
@@ -181,7 +184,7 @@ export function PageBuilder({
               <BrandsByCategoriesSection
                 key={block._key}
                 {...(block as BlockByType<"brandsByCategoriesSection">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "faqSection":
@@ -189,7 +192,7 @@ export function PageBuilder({
               <FaqSection
                 key={block._key}
                 {...(block as BlockByType<"faqSection">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "contactForm":
@@ -197,7 +200,7 @@ export function PageBuilder({
               <ContactForm
                 key={block._key}
                 {...(block as BlockByType<"contactForm">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "contactMap":
@@ -205,7 +208,7 @@ export function PageBuilder({
               <ContactMap
                 key={block._key}
                 {...(block as BlockByType<"contactMap">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "teamSection":
@@ -213,7 +216,7 @@ export function PageBuilder({
               <TeamSection
                 key={block._key}
                 {...(block as BlockByType<"teamSection">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "gallerySection":
@@ -221,7 +224,7 @@ export function PageBuilder({
               <GallerySection
                 key={block._key}
                 {...(block as BlockByType<"gallerySection">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "phoneImageCta":
@@ -229,7 +232,7 @@ export function PageBuilder({
               <PhoneImageCta
                 key={block._key}
                 {...(block as BlockByType<"phoneImageCta">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           case "stepList":
@@ -237,7 +240,7 @@ export function PageBuilder({
               <StepList
                 key={block._key}
                 {...(block as BlockByType<"stepList">)}
-                index={index}
+                index={effectiveIndex}
               />
             );
           default:

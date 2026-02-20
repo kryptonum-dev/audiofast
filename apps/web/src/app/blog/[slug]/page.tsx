@@ -1,5 +1,3 @@
-'use cache';
-
 import { notFound } from 'next/navigation';
 
 import { ArticleBody } from '@/src/components/blog/ArticleBody';
@@ -101,7 +99,7 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
       <Breadcrumbs data={breadcrumbsData} />
       <ArticleBody {...pageData} />
       {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
-        <PageBuilder pageBuilder={pageData.pageBuilder} />
+        <PageBuilder pageBuilder={pageData.pageBuilder} indexOffset={1} />
       )}
     </main>
   );

@@ -27,7 +27,6 @@ import type {
   QueryAllProductSlugsResult,
   QueryProductBySlugResult,
   QueryProductInquiryFormStateResult,
-  QueryProductSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import { fetchProductPricing } from '@/src/global/supabase/queries';
@@ -35,6 +34,21 @@ import type { BrandType, PortableTextProps } from '@/src/global/types';
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
+};
+
+type ProductSeoMetadataResult = {
+  slug?: string | null;
+  name?: string | null;
+  brand?: { name?: string | null } | null;
+  seo?: {
+    title?: string | null;
+    description?: string | null;
+  } | null;
+  openGraph?: {
+    title?: string | null;
+    description?: string | null;
+    seoImage?: string | null;
+  } | null;
 };
 
 // Fetch product data from Sanity and Supabase
@@ -74,7 +88,7 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetch<QueryProductSeoBySlugResult>({
+  const seoData = await sanityFetch<ProductSeoMetadataResult>({
     query: queryProductSeoBySlug,
     params: { slug: `/produkty/${slug}/` },
     // Specific tag for this product + broad tag for type
@@ -83,8 +97,16 @@ export async function generateMetadata({
 
   if (!seoData) return getSEOMetadata();
 
+  const forcedSeoTitle = [seoData.brand?.name, seoData.name]
+    .map((value) => value?.trim())
+    .filter(Boolean)
+    .join(' ');
+
   return getSEOMetadata({
-    seo: seoData.seo,
+    seo: {
+      title: forcedSeoTitle || undefined,
+      description: seoData.seo?.description,
+    },
     slug: seoData.slug,
     openGraph: seoData.openGraph,
   });
@@ -288,7 +310,9 @@ export default async function ProductPage(props: ProductPageProps) {
           customId="powiazane-produkty"
         />
       )}
-      {product.pageBuilder && <PageBuilder pageBuilder={product.pageBuilder} />}
+      {product.pageBuilder && (
+        <PageBuilder pageBuilder={product.pageBuilder} indexOffset={1} />
+      )}
     </main>
   );
 }
