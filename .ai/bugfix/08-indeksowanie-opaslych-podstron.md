@@ -18,6 +18,13 @@
 2. **Potential crawl waste on faceted/filter URLs** (query parameters).
 3. **Scanner warnings** interpreted as "menu problem".
 
+## Clarification to keep in project notes
+
+- Repeated internal links in global navigation/footer across subpages are **normal and correct**.
+- Linking to featured products from homepage is also **correct** and helps crawl + internal authority flow.
+- We should **not** add `noindex`/`nofollow` to global menu links on subpages.
+- Focus should stay on controlling low-value, parameterized/filter URL variants.
+
 ## Current code signals
 
 - Products/brand listing experiences use filtering and query params.
