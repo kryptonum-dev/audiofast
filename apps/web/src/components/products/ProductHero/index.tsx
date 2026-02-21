@@ -82,8 +82,9 @@ export default function ProductHero({
         </div>
         {subtitle && <span className={styles.prefix}>{subtitle}</span>}
         <h1 className={styles.heading}>
-          <span className={styles.brandName}>{brand!.name}</span>{' '}
-          <span className={styles.productName}>{name}</span>
+          {brand!.name}
+          <br />
+          {name}
         </h1>
       </header>
       {shortDescription && shortDescription.length > 0 && (
