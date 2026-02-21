@@ -50,6 +50,13 @@ export interface ReferenceFilterConfig {
  */
 export interface CreateBulkActionsTableConfig {
   /**
+   * Unique list item id for Structure Builder navigation.
+   * Use this when you render multiple table panes for related schema types.
+   * Defaults to the `type` value.
+   */
+  id?: string;
+
+  /**
    * The document schema type to display in the table
    * @example 'post', 'page', 'product'
    */

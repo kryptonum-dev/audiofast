@@ -23,11 +23,12 @@ import type {
   StructureBuilder,
   StructureResolverContext,
 } from "sanity/structure";
-import { createBulkActionsTable } from "./plugins/bulk-actions-table";
 
 import { CustomFiltersConfigView } from "./components/custom-filters-config";
 import { ProductFiltersView } from "./components/product-filters-view";
+import ReviewAuthorManager from "./components/review-author-manager";
 import { TechnicalDataView } from "./components/technical-data-table/technical-data-view";
+import { createBulkActionsTable } from "./plugins/bulk-actions-table";
 import type { SchemaType, SingletonType } from "./schemaTypes";
 import { schemaTypes } from "./schemaTypes";
 import { getTitleCase } from "./utils/helper";
@@ -449,6 +450,14 @@ export const structure = (
                 title: "Tabela recenzji",
                 icon: Table2,
               }) as any,
+              createBulkActionsTable({
+                id: "review-author-table",
+                type: "reviewAuthor",
+                S: S as any,
+                context: context as any,
+                title: "Tabela autorów",
+                icon: Table2,
+              }) as any,
               S.divider(),
               // Reviews grouped by author
               S.listItem()
@@ -459,8 +468,8 @@ export const structure = (
                   const authors = await context
                     .getClient({ apiVersion: "2024-01-01" })
                     .fetch<
-                      Array<{ _id: string; name: string }>
-                    >(`*[_type == "reviewAuthor" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name}`);
+                      Array<{ _id: string; name: string; reviewCount?: number }>
+                    >(`*[_type == "reviewAuthor" && !(_id in path("drafts.**"))] | order(coalesce(reviewCount, 0) desc, name asc) {_id, name, reviewCount}`);
 
                   return S.list()
                     .title("Recenzje według autorów")
@@ -482,7 +491,9 @@ export const structure = (
                       ...authors.map((author) =>
                         S.listItem()
                           .id(author._id)
-                          .title(author.name || "Bez nazwy")
+                          .title(
+                            `${author.name || "Bez nazwy"} (${author.reviewCount ?? 0})`,
+                          )
                           .icon(UserPen)
                           .child(
                             S.documentList()
@@ -504,7 +515,18 @@ export const structure = (
                 type: "reviewAuthor",
                 orderable: false,
                 title: "Lista autorów",
+                id: "review-author-list",
               }),
+              S.listItem()
+                .id("review-author-manager")
+                .title("Scalanie autorów recenzji")
+                .icon(Settings2)
+                .child(
+                  S.component()
+                    .id("review-author-manager-pane")
+                    .title("Scalanie autorów recenzji")
+                    .component(ReviewAuthorManager),
+                ),
             ]),
         ),
       S.listItem()

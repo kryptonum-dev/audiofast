@@ -28,6 +28,7 @@
     "@sanity/icons": "^3.7.4",
     "@sanity/orderable-document-list": "^1.4.0",
     "@sanity/portable-text-editor": "^3.48.1",
+    "@sanity/sdk-react": "^2.8.0",
     "@sanity/ui": "^3.1.11",
     "@sanity/vision": "^5.1.0",
     "classnames": "^2.5.1",

@@ -25,15 +25,14 @@ import get from 'lodash.get';
 import pluralize, { singular } from 'pluralize';
 import { useMemo, useRef } from 'react';
 import { Preview } from 'sanity';
-import { ListItem, usePaneRouter } from 'sanity/structure';
+import type { ListItem} from 'sanity/structure';
+import { usePaneRouter } from 'sanity/structure';
 
 import BulkActionsMenu from './BulkActionsMenu';
 import ColumnSelector from './ColumnSelector';
-import FilterDropdown from './FilterDropdown';
-import ReferenceFilter from './ReferenceFilter';
-import SearchField from './SearchField';
+import type {
+  Options} from './constants';
 import {
-  Options,
   defaultDatetimeFields,
   orderColumnDefault,
   rowsPerPage,
@@ -43,15 +42,19 @@ import {
   useBulkActionsTableContext,
 } from './context';
 import createEmitter from './createEmitter';
+import FilterDropdown from './FilterDropdown';
+import type {
+  SelectableField} from './helpers/getSelectableFields';
 import {
-  SelectableField,
-  getSelectableFields,
+  getSelectableFields
 } from './helpers/getSelectableFields';
+import ReferenceFilter from './ReferenceFilter';
+import SearchField from './SearchField';
 import {
-  COLUMN_SELECTOR_WIDTH,
   CheckboxCellTd,
   CheckboxCellTh,
   CheckboxFacade,
+  COLUMN_SELECTOR_WIDTH,
   ColumnSelectBodyCell,
   ColumnSelectHeadCell,
   Container,
@@ -63,13 +66,13 @@ import {
   TableWrapper,
 } from './styles';
 import Cell from './table/Cell';
-import { TableHeadCell } from './table/TableHeadCell';
 import {
   CellPrimitive,
   RowPrimitive,
   TableHeadPrimitive,
 } from './table/primitives';
-import { CreateBulkActionsTableConfig } from './types';
+import { TableHeadCell } from './table/TableHeadCell';
+import type { CreateBulkActionsTableConfig } from './types';
 
 function parentHasClass(el: HTMLElement | null, className: string): boolean {
   if (!el) return false;
@@ -619,6 +622,7 @@ function createBulkActionsTable(
   }
 
   const {
+    id,
     type,
     context,
     S,
@@ -630,11 +634,12 @@ function createBulkActionsTable(
   } = config;
   const { schema, getClient } = context;
   const client = getClient({ apiVersion });
+  const itemId = id || type;
 
   const refresh = createEmitter();
 
   return S.listItem()
-    .id(type)
+    .id(itemId)
     .title(title || type)
     .icon(icon || FolderIcon)
     .child(
@@ -642,7 +647,7 @@ function createBulkActionsTable(
         // Prevents the component from re-rendering when switching documents
         __preserveInstance: true,
         // Prevents the component from NOT re-rendering when switching listItems
-        key: type,
+        key: itemId,
         type: 'component',
         options: { type, client, schema, refresh, title, filters, referenceFilters },
         component: BulkActionsTableParent,

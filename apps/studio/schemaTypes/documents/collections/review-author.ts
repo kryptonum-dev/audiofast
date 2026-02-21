@@ -15,6 +15,11 @@ export const reviewAuthor = defineType({
   groups: GROUPS,
   orderings: [
     {
+      name: "reviewCountDesc",
+      title: "Liczba recenzji (malejąco)",
+      by: [{ field: "reviewCount", direction: "desc" }],
+    },
+    {
       name: "nameAsc",
       title: "Name (asc)",
       by: [{ field: "name", direction: "asc" }],
@@ -45,6 +50,18 @@ export const reviewAuthor = defineType({
         Rule.uri({
           scheme: ["http", "https"],
         }),
+    }),
+    defineField({
+      name: "reviewCount",
+      title: "Liczba recenzji",
+      type: "number",
+      description:
+        "Pole denormalizowane wykorzystywane do sortowania i szybkiego podglądu liczby recenzji przypisanych do autora.",
+      group: GROUP.MAIN_CONTENT,
+      initialValue: 0,
+      readOnly: true,
+      hidden: true,
+      validation: (Rule) => Rule.min(0),
     }),
   ],
   preview: {

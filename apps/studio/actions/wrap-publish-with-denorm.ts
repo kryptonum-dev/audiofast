@@ -1,8 +1,29 @@
+import { useCallback, useState } from "react";
 import type { DocumentActionComponent, DocumentActionsContext } from "sanity";
 import { useClient } from "sanity";
-import { useCallback, useState } from "react";
 
 import { computeDenormalizedFields } from "../utils/denormalize-product";
+import { fetchReviewAuthorCounts } from "../utils/review-author-counts";
+
+async function syncReviewAuthorCounts(
+  client: ReturnType<typeof useClient>,
+  authorIds: string[],
+) {
+  const rows = await fetchReviewAuthorCounts(client, authorIds);
+
+  if (!rows || rows.length === 0) return;
+
+  const tx = client.transaction();
+  for (const row of rows) {
+    tx.patch(row._id, {
+      set: {
+        reviewCount: row.reviewCount ?? 0,
+      },
+    });
+  }
+
+  await tx.commit({ visibility: "sync" });
+}
 
 /**
  * Wraps the default publish action to auto-sync denormalized fields before publishing.
@@ -12,15 +33,15 @@ export function wrapPublishWithDenorm(
   originalPublishAction: DocumentActionComponent,
 ): DocumentActionComponent {
   const WrappedAction: DocumentActionComponent = (props) => {
-    const { draft, id, type } = props;
+    const { draft, published, id, type } = props;
     const client = useClient({ apiVersion: "2024-01-01" });
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Get the original action result
     const originalResult = originalPublishAction(props);
 
-    // If the original action returns null or it's not a product, return as-is
-    if (!originalResult || type !== "product") {
+    // If the original action returns null, return as-is
+    if (!originalResult) {
       return originalResult;
     }
 
@@ -36,6 +57,35 @@ export function wrapPublishWithDenorm(
       setIsProcessing(true);
 
       try {
+        // Review publish flow: sync author counters after publish completes.
+        if (type === "review") {
+          const previousAuthorId = (published as any)?.author?._ref as
+            | string
+            | undefined;
+          const nextAuthorId = (draft as any)?.author?._ref as
+            | string
+            | undefined;
+          const affectedAuthorIds = [previousAuthorId, nextAuthorId].filter(
+            Boolean,
+          ) as string[];
+
+          originalOnHandle?.();
+
+          // Publish action is async in Studio internals; delay recount slightly.
+          setTimeout(() => {
+            void syncReviewAuthorCounts(client, affectedAuthorIds).catch((error) => {
+              console.error("Failed to sync reviewAuthor counts after publish:", error);
+            });
+          }, 800);
+
+          return;
+        }
+
+        if (type !== "product") {
+          originalOnHandle?.();
+          return;
+        }
+
         // Step 1: Compute denormalized fields from draft
         const denormalized = await computeDenormalizedFields(
           client,
@@ -60,7 +110,7 @@ export function wrapPublishWithDenorm(
       } finally {
         setIsProcessing(false);
       }
-    }, [client, id, draft, originalOnHandle]);
+    }, [client, draft, id, originalOnHandle, published, type]);
 
     return {
       ...originalResult,
@@ -81,8 +131,8 @@ export function applyDenormToPublish(
   actions: DocumentActionComponent[],
   context: DocumentActionsContext,
 ): DocumentActionComponent[] {
-  // Only wrap for product documents
-  if (context.schemaType !== "product") {
+  // Wrap for product and review documents.
+  if (!["product", "review"].includes(context.schemaType)) {
     return actions;
   }
 
