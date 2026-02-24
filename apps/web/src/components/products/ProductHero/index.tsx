@@ -82,7 +82,7 @@ export default function ProductHero({
         </div>
         {subtitle && <span className={styles.prefix}>{subtitle}</span>}
         <h1 className={styles.heading}>
-          {brand!.name}
+          {brand!.name && `${brand!.name} `}
           <br />
           {name}
         </h1>
