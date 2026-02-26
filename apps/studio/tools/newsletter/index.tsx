@@ -2,9 +2,25 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   ComposeSparklesIcon,
+  DragHandleIcon,
   RefreshIcon,
   SearchIcon,
 } from "@sanity/icons";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import {
   Box,
   Button,
@@ -24,7 +40,7 @@ import {
   ToastProvider,
   useToast,
 } from "@sanity/ui";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useClient } from "sanity";
 
 // Types matching our content structure
@@ -54,6 +70,12 @@ type GroupedContent = {
 };
 
 type ListKey = "reviews" | "articles" | "products";
+
+const SECTION_LABELS: Record<ListKey, string> = {
+  articles: "Artykuły Blogowe",
+  products: "Produkty",
+  reviews: "Recenzje",
+};
 
 // Hero configuration type
 type HeroConfig = {
@@ -112,6 +134,13 @@ export default function NewsletterTool() {
     articles: true,
     products: true,
   });
+
+  // Section order state (configurable by user)
+  const [sectionOrder, setSectionOrder] = useState<ListKey[]>([
+    "articles",
+    "products",
+    "reviews",
+  ]);
 
   // Hero configuration state
   const [heroConfig, setHeroConfig] = useState<HeroConfig>({
@@ -245,6 +274,22 @@ export default function NewsletterTool() {
       ...prev,
       [listKey]: !prev[listKey],
     }));
+  };
+
+  // Drag-and-drop sensors (require 8px movement to start dragging)
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  const handleSectionDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setSectionOrder((prev) => {
+        const oldIdx = prev.indexOf(active.id as ListKey);
+        const newIdx = prev.indexOf(over.id as ListKey);
+        return arrayMove(prev, oldIdx, newIdx);
+      });
+    }
   };
 
   // Debounce ref for search
@@ -395,6 +440,7 @@ export default function NewsletterTool() {
           endDate,
           content: payloadContent,
           hero: heroConfig,
+          sectionOrder,
         }),
       });
 
@@ -589,60 +635,47 @@ export default function NewsletterTool() {
           {/* Content List */}
           {hasItems ? (
             <Stack space={4}>
-              {/* Reviews - First */}
-              {content.reviews.length > 0 && (
-                <ContentGroup
-                  title="Recenzje"
-                  listKey="reviews"
-                  items={content.reviews}
-                  selectedIds={selectedIds}
-                  onToggle={toggleItem}
-                  isEnabled={listsEnabled.reviews}
-                  isExpanded={listsExpanded.reviews}
-                  onToggleEnabled={() => toggleListEnabled("reviews")}
-                  onToggleExpanded={() => toggleListExpanded("reviews")}
-                  selectedCount={getSelectedCount(content.reviews)}
-                />
-              )}
-
-              {/* Blog Articles - Second */}
-              {content.articles.length > 0 && (
-                <ContentGroup
-                  title="Artykuły Blogowe"
-                  listKey="articles"
-                  items={content.articles}
-                  selectedIds={selectedIds}
-                  onToggle={toggleItem}
-                  isEnabled={listsEnabled.articles}
-                  isExpanded={listsExpanded.articles}
-                  onToggleEnabled={() => toggleListEnabled("articles")}
-                  onToggleExpanded={() => toggleListExpanded("articles")}
-                  selectedCount={getSelectedCount(content.articles)}
-                />
-              )}
-
-              {/* Products - Third */}
-              {content.products.length > 0 && (
-                <ContentGroup
-                  title="Produkty"
-                  listKey="products"
-                  items={content.products}
-                  selectedIds={selectedIds}
-                  onToggle={toggleItem}
-                  isEnabled={listsEnabled.products}
-                  isExpanded={listsExpanded.products}
-                  onToggleEnabled={() => toggleListEnabled("products")}
-                  onToggleExpanded={() => toggleListExpanded("products")}
-                  selectedCount={getSelectedCount(content.products)}
-                />
-              )}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleSectionDragEnd}
+              >
+                <SortableContext
+                  items={sectionOrder}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <Stack space={3}>
+                    {sectionOrder.map((key) => {
+                      const items = content[key];
+                      if (items.length === 0) return null;
+                      return (
+                        <SortableContentGroup
+                          key={key}
+                          id={key}
+                          title={SECTION_LABELS[key]}
+                          listKey={key}
+                          items={items}
+                          selectedIds={selectedIds}
+                          onToggle={toggleItem}
+                          isEnabled={listsEnabled[key]}
+                          isExpanded={listsExpanded[key]}
+                          onToggleEnabled={() => toggleListEnabled(key)}
+                          onToggleExpanded={() => toggleListExpanded(key)}
+                          selectedCount={getSelectedCount(items)}
+                        />
+                      );
+                    })}
+                  </Stack>
+                </SortableContext>
+              </DndContext>
 
               {/* Actions */}
               <Card
                 padding={4}
                 radius={2}
                 border
-                style={{ position: "sticky", bottom: 0, background: "white" }}
+                tone="default"
+                style={{ position: "sticky", bottom: 0 }}
               >
                 <Flex gap={3} justify="space-between" align="center">
                   <Text size={1} muted>
@@ -793,6 +826,41 @@ export default function NewsletterTool() {
   );
 }
 
+// Sortable wrapper that wires dnd-kit into ContentGroup
+function SortableContentGroup(
+  props: Omit<Parameters<typeof ContentGroup>[0], "dragHandleProps"> & {
+    id: string;
+  },
+) {
+  const { id, ...rest } = props;
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+        position: "relative",
+        zIndex: isDragging ? 1 : undefined,
+      }}
+    >
+      <ContentGroup
+        {...rest}
+        dragHandleProps={{ ...attributes, ...listeners }}
+      />
+    </div>
+  );
+}
+
 // Helper Component for Collapsible List Groups
 function ContentGroup({
   title,
@@ -805,6 +873,7 @@ function ContentGroup({
   onToggleEnabled,
   onToggleExpanded,
   selectedCount,
+  dragHandleProps,
 }: {
   title: string;
   listKey: ListKey;
@@ -816,21 +885,39 @@ function ContentGroup({
   onToggleEnabled: () => void;
   onToggleExpanded: () => void;
   selectedCount: number;
+  dragHandleProps?: React.HTMLAttributes<HTMLElement>;
 }) {
   return (
     <Card border radius={2} overflow="hidden">
       {/* Header - Fixed height regardless of enabled state */}
+      <Card
+        tone={isEnabled ? "default" : "transparent"}
+        borderBottom={isEnabled && isExpanded}
+        padding={3}
+        radius={0}
+        style={{ opacity: isEnabled ? 1 : 0.7 }}
+      >
       <Flex
         align="center"
         justify="space-between"
-        padding={3}
-        style={{
-          backgroundColor: isEnabled ? "#f8f8f8" : "#f0f0f0",
-          borderBottom: isEnabled && isExpanded ? "1px solid #e6e8eb" : "none",
-          minHeight: "56px", // Fixed height to prevent layout shift
-        }}
+        style={{ minHeight: "32px" }}
       >
         <Flex align="center" gap={3}>
+          {/* Drag handle */}
+          <div
+            {...dragHandleProps}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              cursor: "grab",
+              color: "#c5c5c5",
+              touchAction: "none",
+              background: "none",
+            }}
+            title="Przeciągnij, aby zmienić kolejność"
+          >
+            <DragHandleIcon style={{ fontSize: "20px" }} />
+          </div>
           <Switch checked={isEnabled} onChange={onToggleEnabled} />
           <Box
             style={{
@@ -859,19 +946,20 @@ function ContentGroup({
           )}
         </Box>
       </Flex>
+      </Card>
 
       {/* Items */}
       {isEnabled && isExpanded && (
         <Box>
           {items.map((item, index) => (
-            <Flex
+            <Card
               key={item._id}
+              as={Flex as React.ElementType}
               align="center"
               padding={3}
-              style={{
-                borderBottom:
-                  index < items.length - 1 ? "1px solid #e6e8eb" : "none",
-              }}
+              radius={0}
+              borderBottom={index < items.length - 1}
+              tone="default"
               gap={3}
             >
               <Checkbox
@@ -904,11 +992,11 @@ function ContentGroup({
                     objectFit:
                       item.imageSource === "preview" ? "contain" : "cover",
                     borderRadius: 4,
-                    backgroundColor: "#f8f8f8",
+                    backgroundColor: "transparent",
                   }}
                 />
               )}
-            </Flex>
+            </Card>
           ))}
         </Box>
       )}

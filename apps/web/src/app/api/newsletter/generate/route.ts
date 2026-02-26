@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import type {
   HeroConfig,
   NewsletterContent,
+  SectionKey,
 } from "@/src/emails/newsletter-template";
 import NewsletterTemplate from "@/src/emails/newsletter-template";
 import { mailchimpClient } from "@/src/global/mailchimp/client";
@@ -18,6 +19,7 @@ interface GeneratePayload {
   endDate?: string;
   content: NewsletterContent;
   hero: HeroConfig;
+  sectionOrder?: SectionKey[];
   subject?: string; // Optional custom subject line
 }
 
@@ -47,7 +49,7 @@ export async function OPTIONS() {
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as GeneratePayload;
-    const { action, content, startDate, endDate, hero, subject } = body;
+    const { action, content, startDate, endDate, hero, sectionOrder, subject } = body;
 
     if (!content) {
       return NextResponse.json(
@@ -68,6 +70,7 @@ export async function POST(req: NextRequest) {
       NewsletterTemplate({
         content,
         hero,
+        sectionOrder,
       }),
     );
 

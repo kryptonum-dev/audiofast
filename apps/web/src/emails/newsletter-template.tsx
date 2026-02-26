@@ -52,19 +52,156 @@ export interface HeroConfig {
   text?: string;
 }
 
+export type SectionKey = 'articles' | 'products' | 'reviews';
+
+const DEFAULT_SECTION_ORDER: SectionKey[] = ['articles', 'products', 'reviews'];
+
 interface NewsletterTemplateProps {
   content: NewsletterContent;
   hero: HeroConfig;
+  sectionOrder?: SectionKey[];
 }
 
 export const NewsletterTemplate = ({
   content,
   hero,
+  sectionOrder = DEFAULT_SECTION_ORDER,
 }: NewsletterTemplateProps) => {
   const baseUrl = 'https://audiofast.pl';
   const { articles = [], reviews = [], products = [] } = content;
   const hasContent =
     articles.length > 0 || reviews.length > 0 || products.length > 0;
+
+  const sectionLabels: Record<SectionKey, string> = {
+    articles: 'Artykuły',
+    products: 'Produkty',
+    reviews: 'Recenzje',
+  };
+
+  const previewText = sectionOrder
+    .filter((key) => {
+      if (key === 'articles') return articles.length > 0;
+      if (key === 'products') return products.length > 0;
+      if (key === 'reviews') return reviews.length > 0;
+      return false;
+    })
+    .map((key) => sectionLabels[key])
+    .join(', ');
+
+  const renderArticles = () =>
+    articles.length > 0 ? (
+      <Section style={section}>
+        <Heading style={h2}>Nowe Artykuły</Heading>
+        {articles.map((item) => (
+          <Section key={item._id} style={itemContainer}>
+            {item.image && (
+              <Img
+                src={item.image}
+                alt={item.title}
+                style={itemImage}
+                width="600"
+                height="auto"
+              />
+            )}
+            <Heading style={h3}>
+              <Link href={`${baseUrl}${item.slug}`} style={linkTitle}>
+                {item.title}
+              </Link>
+            </Heading>
+            {item.description && (
+              <Text style={itemDescription}>{item.description}</Text>
+            )}
+            <Button href={`${baseUrl}${item.slug}`} style={button}>
+              Czytaj więcej
+            </Button>
+          </Section>
+        ))}
+      </Section>
+    ) : null;
+
+  const renderProducts = () =>
+    products.length > 0 ? (
+      <Section style={section}>
+        <Heading style={h2}>Nowości Produktowe</Heading>
+        {products.map((item) => (
+          <Section key={item._id} style={itemContainer}>
+            {item.image && (
+              <Img
+                src={item.image}
+                alt={item.name}
+                style={itemImage}
+                width="600"
+                height="auto"
+              />
+            )}
+            <Text style={metaText}>{item.brandName || 'Audiofast'}</Text>
+            <Heading style={h3}>
+              <Link href={`${baseUrl}${item.slug}`} style={linkTitle}>
+                {item.name}
+              </Link>
+            </Heading>
+            {item.subtitle && (
+              <Text style={subtitleText}>{item.subtitle}</Text>
+            )}
+            {item.shortDescription && (
+              <Text style={itemDescription}>{item.shortDescription}</Text>
+            )}
+            <Button href={`${baseUrl}${item.slug}`} style={button}>
+              Zobacz produkt
+            </Button>
+          </Section>
+        ))}
+      </Section>
+    ) : null;
+
+  const renderReviews = () =>
+    reviews.length > 0 ? (
+      <Section style={section}>
+        <Heading style={h2}>Najnowsze Recenzje</Heading>
+        {reviews.map((item) => {
+          const reviewUrl =
+            item.destinationType === 'external'
+              ? item.slug
+              : `${baseUrl}${item.slug}`;
+
+          return (
+            <Section key={item._id} style={itemContainer}>
+              {item.image && (
+                <Img
+                  src={item.image}
+                  alt={item.title}
+                  style={itemImage}
+                  width="600"
+                  height="auto"
+                />
+              )}
+              <Text style={metaText}>
+                {item.authorName ? `Autor: ${item.authorName}` : 'Recenzja'}
+                {item.destinationType === 'pdf' && ' • PDF'}
+                {item.destinationType === 'external' && ' • Link zewnętrzny'}
+              </Text>
+              <Heading style={h3}>
+                <Link href={reviewUrl} style={linkTitle}>
+                  {item.title}
+                </Link>
+              </Heading>
+              {item.description && (
+                <Text style={itemDescription}>{item.description}</Text>
+              )}
+              <Button href={reviewUrl} style={button}>
+                Zobacz recenzję
+              </Button>
+            </Section>
+          );
+        })}
+      </Section>
+    ) : null;
+
+  const sectionRenderers: Record<SectionKey, () => React.ReactNode> = {
+    articles: renderArticles,
+    products: renderProducts,
+    reviews: renderReviews,
+  };
 
   return (
     <Html>
@@ -73,13 +210,7 @@ export const NewsletterTemplate = ({
       </Head>
       <Preview>
         {hasContent
-          ? `Nowości w Audiofast: ${[
-              reviews.length > 0 ? 'Recenzje' : '',
-              articles.length > 0 ? 'Artykuły' : '',
-              products.length > 0 ? 'Produkty' : '',
-            ]
-              .filter(Boolean)
-              .join(', ')}`
+          ? `Nowości w Audiofast: ${previewText}`
           : 'Newsletter Audiofast'}
       </Preview>
       <Body style={main}>
@@ -100,118 +231,11 @@ export const NewsletterTemplate = ({
             )}
           </Section>
 
-          {/* Reviews - First */}
-          {reviews.length > 0 && (
-            <Section style={section}>
-              <Heading style={h2}>Najnowsze Recenzje</Heading>
-              {reviews.map((item) => {
-                // Determine the full URL based on review type
-                const reviewUrl =
-                  item.destinationType === 'external'
-                    ? item.slug // External URL is already full URL
-                    : `${baseUrl}${item.slug}`; // Internal page or PDF
-
-                return (
-                  <Section key={item._id} style={itemContainer}>
-                    {item.image && (
-                      <Img
-                        src={item.image}
-                        alt={item.title}
-                        style={itemImage}
-                        width="600"
-                        height="auto"
-                      />
-                    )}
-                    <Text style={metaText}>
-                      {item.authorName
-                        ? `Autor: ${item.authorName}`
-                        : 'Recenzja'}
-                      {item.destinationType === 'pdf' && ' • PDF'}
-                      {item.destinationType === 'external' &&
-                        ' • Link zewnętrzny'}
-                    </Text>
-                    <Heading style={h3}>
-                      <Link href={reviewUrl} style={linkTitle}>
-                        {item.title}
-                      </Link>
-                    </Heading>
-                    {item.description && (
-                      <Text style={itemDescription}>{item.description}</Text>
-                    )}
-                    <Button href={reviewUrl} style={button}>
-                      Zobacz recenzję
-                    </Button>
-                  </Section>
-                );
-              })}
-            </Section>
-          )}
-
-          {/* Articles - Second */}
-          {articles.length > 0 && (
-            <Section style={section}>
-              <Heading style={h2}>Nowe Artykuły</Heading>
-              {articles.map((item) => (
-                <Section key={item._id} style={itemContainer}>
-                  {item.image && (
-                    <Img
-                      src={item.image}
-                      alt={item.title}
-                      style={itemImage}
-                      width="600"
-                      height="auto"
-                    />
-                  )}
-                  <Heading style={h3}>
-                    <Link href={`${baseUrl}${item.slug}`} style={linkTitle}>
-                      {item.title}
-                    </Link>
-                  </Heading>
-                  {item.description && (
-                    <Text style={itemDescription}>{item.description}</Text>
-                  )}
-                  <Button href={`${baseUrl}${item.slug}`} style={button}>
-                    Czytaj więcej
-                  </Button>
-                </Section>
-              ))}
-            </Section>
-          )}
-
-          {/* Products - Third */}
-          {products.length > 0 && (
-            <Section style={section}>
-              <Heading style={h2}>Nowości Produktowe</Heading>
-              {products.map((item) => (
-                <Section key={item._id} style={itemContainer}>
-                  {item.image && (
-                    <Img
-                      src={item.image}
-                      alt={item.name}
-                      style={itemImage}
-                      width="600"
-                      height="auto"
-                    />
-                  )}
-                  <Text style={metaText}>{item.brandName || 'Audiofast'}</Text>
-                  <Heading style={h3}>
-                    <Link href={`${baseUrl}${item.slug}`} style={linkTitle}>
-                      {item.name}
-                    </Link>
-                  </Heading>
-                  {item.subtitle && (
-                    <Text style={subtitleText}>{item.subtitle}</Text>
-                  )}
-                  {item.shortDescription && (
-                    <Text style={itemDescription}>{item.shortDescription}</Text>
-                  )}
-                  <Button href={`${baseUrl}${item.slug}`} style={button}>
-                    Zobacz produkt
-                  </Button>
-                </Section>
-              ))}
-            </Section>
-          )}
+          {sectionOrder.map((key) => (
+            <React.Fragment key={key}>
+              {sectionRenderers[key]()}
+            </React.Fragment>
+          ))}
 
           {/* Footer */}
           <Section style={footer}>
