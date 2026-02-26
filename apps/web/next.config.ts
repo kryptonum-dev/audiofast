@@ -10,8 +10,6 @@ const nextConfig: NextConfig = {
   // Since we use on-demand revalidation via Sanity webhooks, pages should
   // stay fresh until explicitly invalidated — no time-based regeneration.
   cacheLife: {
-    // 'default' is used by cacheComponents: true (auto-wrapped components)
-    // and any 'use cache' without an explicit cacheLife() call.
     default: {
       stale: 2592000, // 30 days
       revalidate: 2592000, // 30 days
@@ -41,9 +39,6 @@ const nextConfig: NextConfig = {
 
   experimental: {
     inlineCss: true,
-  },
-  logging: {
-    fetches: {},
   },
   images: {
     minimumCacheTTL: 31536000,
