@@ -23,7 +23,7 @@ This folder contains one detailed analysis file per client-reported problem, in 
   - `apps/studio` (Sanity schema, desk structure, validation),
   - pricing pipeline docs/scripts (`.ai/office-scripts`, `.ai/vba-scripts`).
 - Used Supabase MCP (`execute_sql`) to validate current pricing rows for Stromtank issue.
-- Marked uncertain areas as hypotheses and added a verification procedure.
+- Marked uncertain areas as hypotheses and added a verification procedure
 
 ## Output format in each file
 
@@ -32,4 +32,3 @@ This folder contains one detailed analysis file per client-reported problem, in 
 - Detailed fix plan (step-by-step).
 - Acceptance criteria.
 - Risks and rollback notes.
-
