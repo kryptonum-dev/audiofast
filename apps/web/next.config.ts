@@ -37,6 +37,7 @@ const nextConfig: NextConfig = {
     },
   },
 
+  enablePrerenderSourceMaps: false,
   experimental: {
     inlineCss: true,
   },
