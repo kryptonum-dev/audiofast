@@ -24,7 +24,7 @@
    - Keep one clean H1 text stream: `"{brand} {product}"`.
    - Recommended:
      - render full string directly in H1 for crawl clarity.
-     - if split styling is needed, keep nested spans but use inline semantics.
+     - if split styling is needed, keep nested spans but use inline semantics
 
 2. **Adjust CSS**
    - Remove `display: block` from `.brandName` and `.productName` in heading.
@@ -57,4 +57,3 @@
 
 - **Risk:** visual typography regression in hero heading.
 - **Mitigation:** CSS-only rollback path is easy; keep change isolated to `ProductHero`.
-
