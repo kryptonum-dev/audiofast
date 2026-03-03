@@ -684,7 +684,7 @@ export default function PricingConfigurator({
           selection.variantId || '',
           pricingData.variants.map((variant) => ({
             id: variant.id,
-            name: `${variant.model || variant.product} (od ${formatPrice(variant.base_price_cents)})`,
+            name: `${variant.model || variant.product} (${formatPrice(variant.base_price_cents)})`,
           })),
           handleModelChange,
         )}
