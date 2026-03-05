@@ -48,7 +48,6 @@ async function geocodeAddress(address: {
 }): Promise<{ lat: number; lng: number } | null> {
   const cleanStreet = cleanStreetForGeocoding(address.street);
 
-  // Helper to make Nominatim request
   const fetchNominatim = async (
     params: URLSearchParams,
   ): Promise<{ lat: number; lng: number } | null> => {
@@ -57,6 +56,7 @@ async function geocodeAddress(address: {
         `https://nominatim.openstreetmap.org/search?${params.toString()}`,
         {
           cache: "force-cache",
+          signal: AbortSignal.timeout(5000),
           headers: {
             "User-Agent": "Audiofast-Website/1.0",
           },
@@ -173,35 +173,30 @@ export default async function StoreLocations({
     return null;
   }
 
-  // Geocode all stores on the server - stores without geocoding still appear in list
-  const allStoresWithLocation: StoreWithLocation[] = [];
+  const geocodeResults = await Promise.allSettled(
+    uniqueStores.filter(Boolean).map(async (store) => {
+      if (
+        store.address?.city &&
+        store.address?.street &&
+        store.address?.postalCode
+      ) {
+        const location = await geocodeAddress({
+          street: store.address.street,
+          city: store.address.city,
+          postalCode: store.address.postalCode,
+        });
+        return { ...store, location } as StoreWithLocation;
+      }
+      return { ...store, location: null } as StoreWithLocation;
+    }),
+  );
 
-  for (const store of uniqueStores) {
-    if (!store) continue;
-
-    // If store has complete address, try to geocode
-    if (
-      store.address?.city &&
-      store.address?.street &&
-      store.address?.postalCode
-    ) {
-      const location = await geocodeAddress({
-        street: store.address.street,
-        city: store.address.city,
-        postalCode: store.address.postalCode,
-      });
-      allStoresWithLocation.push({
-        ...store,
-        location, // null if geocoding failed
-      });
-    } else {
-      // Store without complete address - still show in list, no map pin
-      allStoresWithLocation.push({
-        ...store,
-        location: null,
-      });
-    }
-  }
+  const allStoresWithLocation = geocodeResults
+    .filter(
+      (r): r is PromiseFulfilledResult<StoreWithLocation> =>
+        r.status === "fulfilled",
+    )
+    .map((r) => r.value);
 
   if (allStoresWithLocation.length === 0) {
     return null;

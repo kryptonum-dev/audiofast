@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
   },
 
   enablePrerenderSourceMaps: false,
+  staticPageGenerationTimeout: 180,
   experimental: {
     inlineCss: true,
   },
