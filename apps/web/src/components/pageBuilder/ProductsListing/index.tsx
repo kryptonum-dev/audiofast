@@ -68,7 +68,10 @@ export default async function ProductsListing(props: ProductsListingProps) {
   const prices = productsMetadata
     .map((p) => p.basePriceCents)
     .filter((p): p is number => p !== null && p !== undefined);
-  const maxPrice = prices.length > 0 ? Math.max(...prices) : 100000;
+  const maxPrice =
+    prices.length > 0
+      ? Math.max(...prices)
+      : (filterMetadata.globalMaxPrice || 100000);
 
   // Convert searchParams to Promise for ProductsListingComponent
   // (PageBuilder already awaited it, so we wrap it back)

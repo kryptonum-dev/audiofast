@@ -166,7 +166,9 @@ export default async function BrandPage({
     .map((p) => p.basePriceCents)
     .filter((p): p is number => p !== null && p !== undefined);
   const brandMaxPrice =
-    brandPrices.length > 0 ? Math.max(...brandPrices) : 100000;
+    brandPrices.length > 0
+      ? Math.max(...brandPrices)
+      : (filterMetadata.globalMaxPrice || 100000);
 
   const breadcrumbsData = [
     {
