@@ -1,4 +1,19 @@
 import {
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
   ChevronDownIcon,
   ChevronUpIcon,
   ComposeSparklesIcon,
@@ -6,21 +21,6 @@ import {
   RefreshIcon,
   SearchIcon,
 } from "@sanity/icons";
-import {
-  DndContext,
-  PointerSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  arrayMove,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import {
   Box,
   Button,
@@ -35,12 +35,11 @@ import {
   Stack,
   Switch,
   Text,
-  TextArea,
   TextInput,
   ToastProvider,
   useToast,
 } from "@sanity/ui";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useClient } from "sanity";
 
 // Types matching our content structure
@@ -49,8 +48,10 @@ type ContentItem = {
   _type: "blog-article" | "review" | "product";
   title?: string; // articles/reviews
   name?: string; // products/reviews/articles
-  description?: string; // portable text blocks usually
-  shortDescription?: string; // products
+  description?: string; // plain text (for studio preview)
+  descriptionBlocks?: Record<string, unknown>[]; // raw Portable Text (for email HTML)
+  shortDescription?: string; // products plain text (for studio preview)
+  shortDescriptionBlocks?: Record<string, unknown>[]; // raw Portable Text (for email HTML)
   image?: string;
   imageSource?: "publication" | "preview" | "gallery" | "default";
   slug: string;
@@ -98,12 +99,401 @@ type SanityAsset = {
   _createdAt: string;
 };
 
-const NEWSLETTER_API_URL =
+const PRODUCTION_NEWSLETTER_API_URL =
   "https://audiofast.pl/api/newsletter/generate/";
+const LOCAL_NEWSLETTER_API_URL = "http://localhost:3000/api/newsletter/generate/";
+
+function resolveNewsletterApiUrl() {
+  // In local Studio development prefer local web API,
+  // so newsletter HTML generation uses current code changes.
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host === "localhost" || host === "127.0.0.1") {
+      return LOCAL_NEWSLETTER_API_URL;
+    }
+  }
+
+  return PRODUCTION_NEWSLETTER_API_URL;
+}
+
+// Toolbar preset colors matching the brand palette
+const TOOLBAR_COLORS = [
+  { hex: "#303030", label: "Ciemny" },
+  { hex: "#5b5a5a", label: "Szary" },
+  { hex: "#fe0140", label: "Czerwony (główny)" },
+  { hex: "#000000", label: "Czarny" },
+  { hex: "#ffffff", label: "Biały" },
+];
+
+type RichTextEditorProps = {
+  value: string;
+  onChange: (html: string) => void;
+  placeholder?: string;
+};
+
+function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const savedSelectionRef = useRef<Range | null>(null);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
+  const [isEmpty, setIsEmpty] = useState(!value);
+  const [blockType, setBlockType] = useState<"p" | "h2" | "h3">("p");
+
+  // Sync initial value into the contenteditable on mount only
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = value || "";
+      setIsEmpty(!value);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const exec = useCallback(
+    (command: string, val?: string) => {
+      editorRef.current?.focus();
+      document.execCommand(command, false, val);
+      const html = editorRef.current?.innerHTML ?? "";
+      setIsEmpty(!html || html === "<br>");
+      onChange(html);
+    },
+    [onChange],
+  );
+
+  const setBlockTag = useCallback(
+    (tag: "p" | "h2" | "h3") => {
+      editorRef.current?.focus();
+      document.execCommand("formatBlock", false, `<${tag}>`);
+      setBlockType(tag);
+      const html = editorRef.current?.innerHTML ?? "";
+      setIsEmpty(!html || html === "<br>");
+      onChange(html);
+    },
+    [onChange],
+  );
+
+  const handleInput = useCallback(() => {
+    const html = editorRef.current?.innerHTML ?? "";
+    setIsEmpty(!html || html === "<br>");
+    onChange(html);
+  }, [onChange]);
+
+  const saveSelection = useCallback(() => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      savedSelectionRef.current = sel.getRangeAt(0).cloneRange();
+    }
+  }, []);
+
+  const restoreSelection = useCallback(() => {
+    const sel = window.getSelection();
+    if (sel && savedSelectionRef.current) {
+      sel.removeAllRanges();
+      sel.addRange(savedSelectionRef.current);
+      editorRef.current?.focus();
+    }
+  }, []);
+
+  const handleInsertLink = useCallback(() => {
+    if (!linkUrl.trim()) return;
+    restoreSelection();
+    document.execCommand("createLink", false, linkUrl.trim());
+    // Force target="_blank" on newly created links
+    const anchors = editorRef.current?.querySelectorAll("a");
+    anchors?.forEach((a) => {
+      if (!a.getAttribute("target")) {
+        a.setAttribute("target", "_blank");
+        a.setAttribute("rel", "noopener noreferrer");
+      }
+    });
+    const html = editorRef.current?.innerHTML ?? "";
+    onChange(html);
+    setShowLinkDialog(false);
+    setLinkUrl("");
+  }, [linkUrl, onChange, restoreSelection]);
+
+  // Theme-neutral button style — inherits color from Card, transparent bg
+  const btnStyle: React.CSSProperties = {
+    background: "transparent",
+    border: "1px solid rgba(127,127,127,0.3)",
+    borderRadius: "3px",
+    cursor: "pointer",
+    padding: "0 6px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "inherit",
+    fontSize: "13px",
+    height: "26px",
+    minWidth: "26px",
+    lineHeight: 1,
+  };
+
+  const separator = (
+    <div
+      style={{
+        width: "1px",
+        height: "18px",
+        backgroundColor: "rgba(127,127,127,0.25)",
+        margin: "0 2px",
+        flexShrink: 0,
+      }}
+    />
+  );
+
+  return (
+    <Card border radius={1} style={{ overflow: "hidden" }}>
+      {/* Toolbar — Card tone="transparent" picks up the correct theme bg */}
+      <Card
+        tone="transparent"
+        borderBottom
+        radius={0}
+        padding={1}
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "3px",
+          alignItems: "center",
+        }}
+      >
+        {/* Block type selector */}
+        <select
+          value={blockType}
+          aria-label="Wybierz typ akapitu"
+          title="Typ tekstu"
+          onChange={(e) => setBlockTag(e.currentTarget.value as "p" | "h2" | "h3")}
+          style={{
+            ...btnStyle,
+            minWidth: "72px",
+            padding: "0 8px",
+            appearance: "auto",
+            WebkitAppearance: "menulist",
+            MozAppearance: "menulist",
+          }}
+        >
+          <option value="p">Akapit</option>
+          <option value="h2">Nagłówek 2</option>
+          <option value="h3">Nagłówek 3</option>
+        </select>
+
+        {separator}
+
+        {/* Bold */}
+        <button
+          type="button"
+          style={{ ...btnStyle, fontWeight: 700 }}
+          title="Pogrubienie"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            exec("bold");
+          }}
+        >
+          B
+        </button>
+
+        {/* Italic */}
+        <button
+          type="button"
+          style={{ ...btnStyle, fontStyle: "italic" }}
+          title="Kursywa"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            exec("italic");
+          }}
+        >
+          I
+        </button>
+
+        {/* Underline */}
+        <button
+          type="button"
+          style={{ ...btnStyle, textDecoration: "underline" }}
+          title="Podkreślenie"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            exec("underline");
+          }}
+        >
+          U
+        </button>
+
+        {separator}
+
+        {/* Align Left */}
+        <button
+          type="button"
+          style={{ ...btnStyle, fontSize: "11px" }}
+          title="Wyrównaj do lewej"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            exec("justifyLeft");
+          }}
+        >
+          ←≡
+        </button>
+
+        {/* Align Center */}
+        <button
+          type="button"
+          style={{ ...btnStyle, fontSize: "11px" }}
+          title="Wyśrodkuj"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            exec("justifyCenter");
+          }}
+        >
+          ↔≡
+        </button>
+
+        {/* Align Right */}
+        <button
+          type="button"
+          style={{ ...btnStyle, fontSize: "11px" }}
+          title="Wyrównaj do prawej"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            exec("justifyRight");
+          }}
+        >
+          →≡
+        </button>
+
+        {/* Align Justify */}
+        <button
+          type="button"
+          style={{ ...btnStyle, fontSize: "15px", letterSpacing: "-1px" }}
+          title="Wyjustuj"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            exec("justifyFull");
+          }}
+        >
+          ≡
+        </button>
+
+        {separator}
+
+        {/* Link */}
+        <button
+          type="button"
+          style={btnStyle}
+          title="Wstaw hyperlink"
+          onMouseDown={(e) => {
+            e.preventDefault();
+            saveSelection();
+            setShowLinkDialog(true);
+            setLinkUrl("");
+          }}
+        >
+          🔗
+        </button>
+
+        {separator}
+
+        {/* Color swatches */}
+        {TOOLBAR_COLORS.map(({ hex, label }) => (
+          <button
+            key={hex}
+            type="button"
+            title={`Kolor: ${label}`}
+            style={{
+              width: "18px",
+              height: "18px",
+              minWidth: "18px",
+              padding: 0,
+              border: "1px solid rgba(127,127,127,0.4)",
+              borderRadius: "50%",
+              cursor: "pointer",
+              backgroundColor: hex,
+              flexShrink: 0,
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              exec("foreColor", hex);
+            }}
+          />
+        ))}
+      </Card>
+
+      {/* Link dialog — uses Card so it inherits theme colors */}
+      {showLinkDialog && (
+        <Card borderBottom radius={0} padding={2}>
+          <Flex gap={2} align="center">
+            <Box flex={1}>
+              <TextInput
+                type="url"
+                autoFocus
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.currentTarget.value)}
+                placeholder="https://..."
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleInsertLink();
+                  }
+                  if (e.key === "Escape") setShowLinkDialog(false);
+                }}
+              />
+            </Box>
+            <Button
+              text="Wstaw"
+              tone="primary"
+              fontSize={1}
+              padding={2}
+              onClick={handleInsertLink}
+            />
+            <Button
+              text="Anuluj"
+              mode="ghost"
+              fontSize={1}
+              padding={2}
+              onClick={() => setShowLinkDialog(false)}
+            />
+          </Flex>
+        </Card>
+      )}
+
+      {/* Editor area — transparent bg, inherits text color from Card */}
+      <Box padding={3} style={{ position: "relative" }}>
+        <div
+          ref={editorRef}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={handleInput}
+          style={{
+            minHeight: "90px",
+            outline: "none",
+            fontSize: "14px",
+            lineHeight: "1.6",
+            color: "inherit",
+            backgroundColor: "transparent",
+          }}
+        />
+        {isEmpty && (
+          <div
+            style={{
+              position: "absolute",
+              top: "12px",
+              left: "12px",
+              opacity: 0.4,
+              color: "inherit",
+              pointerEvents: "none",
+              fontSize: "14px",
+              lineHeight: "1.6",
+              userSelect: "none",
+            }}
+          >
+            {placeholder}
+          </div>
+        )}
+      </Box>
+    </Card>
+  );
+}
 
 export default function NewsletterTool() {
   const client = useClient({ apiVersion: "2024-01-01" });
   const toast = useToast();
+  const newsletterApiUrl = useMemo(() => resolveNewsletterApiUrl(), []);
 
   // State
   const [startDate, setStartDate] = useState<string>(
@@ -148,6 +538,10 @@ export default function NewsletterTool() {
     text: "",
   });
 
+  const handleHeroTextChange = useCallback((html: string) => {
+    setHeroConfig((prev) => ({ ...prev, text: html }));
+  }, []);
+
   // Asset browser state
   const [isAssetBrowserOpen, setIsAssetBrowserOpen] = useState(false);
   const [assets, setAssets] = useState<SanityAsset[]>([]);
@@ -164,7 +558,9 @@ export default function NewsletterTool() {
         "title": pt::text(title),
         name,
         "description": pt::text(description),
+        "descriptionBlocks": description,
         "shortDescription": pt::text(shortDescription),
+        "shortDescriptionBlocks": shortDescription,
         "image": select(
           _type == "product" && defined(publicationImage) => publicationImage.asset->url,
           _type == "product" && defined(previewImage) => previewImage.asset->url,
@@ -431,7 +827,7 @@ export default function NewsletterTool() {
     }
 
     try {
-      const response = await fetch(NEWSLETTER_API_URL, {
+      const response = await fetch(newsletterApiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -549,12 +945,12 @@ export default function NewsletterTool() {
                 <Label>Obraz nagłówka (wymagany)</Label>
                 {heroConfig.imageUrl ? (
                   <Box>
-                    <Box
+                    <Card
+                      border
+                      radius={2}
+                      tone="transparent"
                       style={{
-                        position: "relative",
-                        borderRadius: "4px",
                         overflow: "hidden",
-                        border: "1px solid #e6e8eb",
                       }}
                     >
                       <img
@@ -565,10 +961,9 @@ export default function NewsletterTool() {
                           maxHeight: "300px",
                           objectFit: "contain",
                           display: "block",
-                          backgroundColor: "#f8f8f8",
                         }}
                       />
-                    </Box>
+                    </Card>
                     <Flex gap={2} marginTop={3}>
                       <Button
                         text="Zmień obraz"
@@ -590,15 +985,15 @@ export default function NewsletterTool() {
                     padding={5}
                     radius={2}
                     border
+                    tone="transparent"
                     style={{
                       textAlign: "center",
                       cursor: "pointer",
-                      backgroundColor: "#f8f8f8",
                     }}
                     onClick={() => setIsAssetBrowserOpen(true)}
                   >
                     <Stack space={3}>
-                      <Text size={4} style={{ color: "#c5c5c5" }}>
+                      <Text size={4} muted>
                         📷
                       </Text>
                       <Text muted>Kliknij, aby wybrać obraz z biblioteki</Text>
@@ -613,20 +1008,14 @@ export default function NewsletterTool() {
               {/* Hero Text */}
               <Stack space={2}>
                 <Label>Tekst nagłówka (opcjonalny)</Label>
-                <TextArea
+                <RichTextEditor
                   value={heroConfig.text}
-                  onChange={(e) => {
-                    const value = e.currentTarget?.value ?? "";
-                    setHeroConfig((prev) => ({
-                      ...prev,
-                      text: value,
-                    }));
-                  }}
+                  onChange={handleHeroTextChange}
                   placeholder="Opcjonalny tekst wyświetlany pod obrazem nagłówka..."
-                  rows={3}
                 />
                 <Text size={1} muted>
-                  Tekst wyświetlany pod obrazem. Pozostaw puste, aby nie wyświetlać.
+                  Tekst z formatowaniem wyświetlany pod obrazem. Pozostaw puste,
+                  aby nie wyświetlać.
                 </Text>
               </Stack>
             </Stack>
@@ -765,7 +1154,6 @@ export default function NewsletterTool() {
                           <Box
                             style={{
                               aspectRatio: "16/10",
-                              backgroundColor: "#f0f0f0",
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
@@ -910,7 +1298,8 @@ function ContentGroup({
               display: "flex",
               alignItems: "center",
               cursor: "grab",
-              color: "#c5c5c5",
+              opacity: 0.4,
+              color: "inherit",
               touchAction: "none",
               background: "none",
             }}
@@ -954,48 +1343,47 @@ function ContentGroup({
           {items.map((item, index) => (
             <Card
               key={item._id}
-              as={Flex as React.ElementType}
-              align="center"
               padding={3}
               radius={0}
               borderBottom={index < items.length - 1}
               tone="default"
-              gap={3}
             >
-              <Checkbox
-                checked={selectedIds.has(item._id)}
-                onChange={() => onToggle(item._id)}
-              />
-              <Box flex={1}>
-                <Text
-                  weight="semibold"
-                  size={1}
-                  style={{ marginBottom: "0.25rem" }}
-                >
-                  {item.title || item.name}
-                </Text>
-                <Text size={1} muted textOverflow="ellipsis">
-                  {new Date(item.publishDate).toLocaleDateString("pl-PL")}
-                  {item.authorName && ` • ${item.authorName}`}
-                  {item.brandName && ` • ${item.brandName}`}
-                  {(item.shortDescription || item.description) &&
-                    ` • ${(item.shortDescription || item.description)?.substring(0, 50)}...`}
-                </Text>
-              </Box>
-              {item.image && (
-                <img
-                  src={item.image}
-                  alt=""
-                  style={{
-                    width: 48,
-                    height: 48,
-                    objectFit:
-                      item.imageSource === "preview" ? "contain" : "cover",
-                    borderRadius: 4,
-                    backgroundColor: "transparent",
-                  }}
+              <Flex align="center" gap={3}>
+                <Checkbox
+                  checked={selectedIds.has(item._id)}
+                  onChange={() => onToggle(item._id)}
                 />
-              )}
+                <Box flex={1}>
+                  <Text
+                    weight="semibold"
+                    size={1}
+                    style={{ marginBottom: "0.25rem" }}
+                  >
+                    {item.title || item.name}
+                  </Text>
+                  <Text size={1} muted textOverflow="ellipsis">
+                    {new Date(item.publishDate).toLocaleDateString("pl-PL")}
+                    {item.authorName && ` • ${item.authorName}`}
+                    {item.brandName && ` • ${item.brandName}`}
+                    {(item.shortDescription || item.description) &&
+                      ` • ${(item.shortDescription || item.description)?.substring(0, 50)}...`}
+                  </Text>
+                </Box>
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt=""
+                    style={{
+                      width: 48,
+                      height: 48,
+                      objectFit:
+                        item.imageSource === "preview" ? "contain" : "cover",
+                      borderRadius: 4,
+                      backgroundColor: "transparent",
+                    }}
+                  />
+                )}
+              </Flex>
             </Card>
           ))}
         </Box>

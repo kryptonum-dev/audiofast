@@ -19,6 +19,7 @@ export interface NewsletterContent {
     _id: string;
     title: string;
     description?: string;
+    descriptionHtml?: string;
     image?: string;
     slug: string;
     _createdAt: string;
@@ -28,6 +29,7 @@ export interface NewsletterContent {
     title: string;
     name: string;
     description?: string;
+    descriptionHtml?: string;
     image?: string;
     slug: string;
     destinationType?: 'page' | 'pdf' | 'external';
@@ -40,6 +42,7 @@ export interface NewsletterContent {
     name: string;
     subtitle?: string;
     shortDescription?: string;
+    shortDescriptionHtml?: string;
     image?: string;
     slug: string;
     _createdAt: string;
@@ -91,7 +94,9 @@ export const NewsletterTemplate = ({
   const renderArticles = () =>
     articles.length > 0 ? (
       <Section style={section}>
-        <Heading style={h2}>Nowe Artykuły</Heading>
+        <Heading as="h2" style={h2}>
+          Nowe Artykuły
+        </Heading>
         {articles.map((item) => (
           <Section key={item._id} style={itemContainer}>
             {item.image && (
@@ -103,14 +108,19 @@ export const NewsletterTemplate = ({
                 height="auto"
               />
             )}
-            <Heading style={h3}>
+            <Heading as="h3" style={h3}>
               <Link href={`${baseUrl}${item.slug}`} style={linkTitle}>
                 {item.title}
               </Link>
             </Heading>
-            {item.description && (
+            {item.descriptionHtml ? (
+              <div
+                dangerouslySetInnerHTML={{ __html: item.descriptionHtml }}
+                style={itemDescriptionHtml}
+              />
+            ) : item.description ? (
               <Text style={itemDescription}>{item.description}</Text>
-            )}
+            ) : null}
             <Button href={`${baseUrl}${item.slug}`} style={button}>
               Czytaj więcej
             </Button>
@@ -122,7 +132,9 @@ export const NewsletterTemplate = ({
   const renderProducts = () =>
     products.length > 0 ? (
       <Section style={section}>
-        <Heading style={h2}>Nowości Produktowe</Heading>
+        <Heading as="h2" style={h2}>
+          Nowości Produktowe
+        </Heading>
         {products.map((item) => (
           <Section key={item._id} style={itemContainer}>
             {item.image && (
@@ -135,7 +147,7 @@ export const NewsletterTemplate = ({
               />
             )}
             <Text style={metaText}>{item.brandName || 'Audiofast'}</Text>
-            <Heading style={h3}>
+            <Heading as="h3" style={h3}>
               <Link href={`${baseUrl}${item.slug}`} style={linkTitle}>
                 {item.name}
               </Link>
@@ -143,9 +155,14 @@ export const NewsletterTemplate = ({
             {item.subtitle && (
               <Text style={subtitleText}>{item.subtitle}</Text>
             )}
-            {item.shortDescription && (
+            {item.shortDescriptionHtml ? (
+              <div
+                dangerouslySetInnerHTML={{ __html: item.shortDescriptionHtml }}
+                style={itemDescriptionHtml}
+              />
+            ) : item.shortDescription ? (
               <Text style={itemDescription}>{item.shortDescription}</Text>
-            )}
+            ) : null}
             <Button href={`${baseUrl}${item.slug}`} style={button}>
               Zobacz produkt
             </Button>
@@ -157,7 +174,9 @@ export const NewsletterTemplate = ({
   const renderReviews = () =>
     reviews.length > 0 ? (
       <Section style={section}>
-        <Heading style={h2}>Najnowsze Recenzje</Heading>
+        <Heading as="h2" style={h2}>
+          Najnowsze Recenzje
+        </Heading>
         {reviews.map((item) => {
           const reviewUrl =
             item.destinationType === 'external'
@@ -180,14 +199,19 @@ export const NewsletterTemplate = ({
                 {item.destinationType === 'pdf' && ' • PDF'}
                 {item.destinationType === 'external' && ' • Link zewnętrzny'}
               </Text>
-              <Heading style={h3}>
+              <Heading as="h3" style={h3}>
                 <Link href={reviewUrl} style={linkTitle}>
                   {item.title}
                 </Link>
               </Heading>
-              {item.description && (
+              {item.descriptionHtml ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: item.descriptionHtml }}
+                  style={itemDescriptionHtml}
+                />
+              ) : item.description ? (
                 <Text style={itemDescription}>{item.description}</Text>
-              )}
+              ) : null}
               <Button href={reviewUrl} style={button}>
                 Zobacz recenzję
               </Button>
@@ -226,7 +250,10 @@ export const NewsletterTemplate = ({
             />
             {hero.text && (
               <Section style={heroTextSection}>
-                <Text style={heroText}>{hero.text}</Text>
+                <div
+                  dangerouslySetInnerHTML={{ __html: hero.text }}
+                  style={heroText}
+                />
               </Section>
             )}
           </Section>
@@ -355,6 +382,13 @@ const linkTitle = {
 };
 
 const itemDescription = {
+  fontSize: '15px',
+  lineHeight: '1.6',
+  color: '#5b5a5a', // --neutral-600
+  margin: '0 0 20px',
+};
+
+const itemDescriptionHtml = {
   fontSize: '15px',
   lineHeight: '1.6',
   color: '#5b5a5a', // --neutral-600
