@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { DocumentActionComponent, DocumentActionsContext } from "sanity";
 import { useClient } from "sanity";
 
@@ -45,12 +45,16 @@ export function wrapPublishWithDenorm(
       return originalResult;
     }
 
-    const originalOnHandle = originalResult.onHandle;
+    // Keep a ref to the latest onHandle so the async callback always calls the
+    // most current version, even if a re-render (triggered by the pre-publish
+    // patch arriving via the realtime listener) has produced a new handler.
+    const originalOnHandleRef = useRef(originalResult.onHandle);
+    originalOnHandleRef.current = originalResult.onHandle;
 
     const wrappedOnHandle = useCallback(async () => {
       if (!draft) {
         // No draft, just run original
-        originalOnHandle?.();
+        originalOnHandleRef.current?.();
         return;
       }
 
@@ -69,7 +73,7 @@ export function wrapPublishWithDenorm(
             Boolean,
           ) as string[];
 
-          originalOnHandle?.();
+          originalOnHandleRef.current?.();
 
           // Publish action is async in Studio internals; delay recount slightly.
           setTimeout(() => {
@@ -82,7 +86,7 @@ export function wrapPublishWithDenorm(
         }
 
         if (type !== "product") {
-          originalOnHandle?.();
+          originalOnHandleRef.current?.();
           return;
         }
 
@@ -92,25 +96,27 @@ export function wrapPublishWithDenorm(
           draft as Parameters<typeof computeDenormalizedFields>[1],
         );
 
-        // Step 2: Patch the draft with denormalized fields
+        // Step 2: Patch the draft with denormalized fields.
+        // visibility: "sync" blocks until the mutation is confirmed applied,
+        // ensuring the Studio's realtime listener has received the updated draft
+        // (and thus originalOnHandleRef.current reflects the new _rev) before
+        // we trigger the publish.
         await client
           .patch(`drafts.${id}`)
           .set(denormalized)
-          .commit({ visibility: "async" });
+          .commit({ visibility: "sync" });
 
-        // Step 3: Small delay to ensure patch is committed
-        await new Promise((resolve) => setTimeout(resolve, 50));
-
-        // Step 4: Execute the original publish
-        originalOnHandle?.();
+        // Step 3: Execute the original publish using the latest handler, which
+        // now reflects the patched draft state received via the realtime listener.
+        originalOnHandleRef.current?.();
       } catch (error) {
         console.error("Failed to denormalize before publish:", error);
         // Still try to publish even if denormalization fails
-        originalOnHandle?.();
+        originalOnHandleRef.current?.();
       } finally {
         setIsProcessing(false);
       }
-    }, [client, draft, id, originalOnHandle, published, type]);
+    }, [client, draft, id, published, type]);
 
     return {
       ...originalResult,
