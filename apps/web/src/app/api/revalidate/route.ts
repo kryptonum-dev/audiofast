@@ -282,11 +282,11 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // Brands: Invalidate brand listings, product filters, and all brand pages
   brand: ['brands', 'products', 'brand'],
 
-  // Reviews: No automatic cascade - handled by reverse lookup
-  review: [],
+  // Reviews: Also invalidate homePage (latest/featured publication blocks use dynamic queries)
+  review: ['homePage'],
 
-  // Blog articles: Only blog listing
-  'blog-article': ['blog'],
+  // Blog articles: Blog listing + homePage (latest/featured publication blocks use dynamic queries)
+  'blog-article': ['blog', 'homePage'],
 
   // ============================================================================
   // CATEGORY & ORGANIZATION TYPES
