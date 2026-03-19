@@ -640,9 +640,8 @@ export const structure = (
                 .child(
                   S.documentList()
                     .title("Produkty CPO")
-                    .filter('_type == "product" && isCPO == true')
-                    .defaultOrdering(productDefaultOrdering)
-                    .menuItems(getProductOrderingMenuItems(S)),
+                    .filter('_type == "cpoProduct"')
+                    .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
                 ),
             ]),
         ),
@@ -697,6 +696,17 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
         .component(ProductFiltersView)
         .title("Filtry")
         .icon(FilterIcon),
+    ]);
+  }
+
+  // Add Technical Data view for cpoProduct documents (internal products)
+  if (schemaType === "cpoProduct") {
+    return S.document().views([
+      S.view.form().title("Zawartość").icon(EditIcon),
+      S.view
+        .component(TechnicalDataView)
+        .title("Dane techniczne")
+        .icon(BlockContentIcon),
     ]);
   }
 

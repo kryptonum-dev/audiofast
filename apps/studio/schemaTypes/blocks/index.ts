@@ -4,6 +4,7 @@ import { brandsList } from "./brands-list";
 import { brandsMarquee } from "./brands-marquee";
 import { contactForm } from "./contact-form";
 import { contactMap } from "./contact-map";
+import { cpoProductsListing } from "./cpo-products-listing";
 import { faqSection } from "./faq-section";
 import { featuredProducts } from "./featured-products";
 import { featuredPublications } from "./featured-publications";
@@ -16,7 +17,6 @@ import { imageWithVideo } from "./image-with-video";
 import { latestPublication } from "./latest-publication";
 import { phoneImageCta } from "./phone-image-cta";
 import { productsCarousel } from "./products-carousel";
-import { productsListing } from "./products-listing";
 import { stepList } from "./step-list";
 import { teamSection } from "./team-section";
 
@@ -41,5 +41,5 @@ export const pageBuilderBlocks = [
   phoneImageCta,
   stepList,
   productsCarousel,
-  productsListing,
+  cpoProductsListing,
 ];

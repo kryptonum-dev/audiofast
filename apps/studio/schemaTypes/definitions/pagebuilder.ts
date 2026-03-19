@@ -2,25 +2,25 @@ import { defineArrayMember, defineType } from "sanity";
 
 import { pageBuilderBlocks } from "../blocks";
 
-// All blocks EXCEPT productsListing (for regular pages)
-const pageBuilderBlocksWithoutProductsListing = pageBuilderBlocks.filter(
-  (block) => block.name !== "productsListing",
+// All blocks EXCEPT cpoProductsListing (for regular pages — CPO listing only on CPO page)
+const pageBuilderBlocksWithoutCpoProductsListing = pageBuilderBlocks.filter(
+  (block) => block.name !== "cpoProductsListing",
 );
 
-// All blocks INCLUDING productsListing (for CPO page only)
-const pageBuilderBlocksWithProductsListing = pageBuilderBlocks;
+// All blocks INCLUDING cpoProductsListing (for CPO page only)
+const pageBuilderBlocksWithCpoProductsListing = pageBuilderBlocks;
 
 export const pagebuilderBlockTypes =
-  pageBuilderBlocksWithoutProductsListing.map(({ name }) => ({
+  pageBuilderBlocksWithoutCpoProductsListing.map(({ name }) => ({
     type: name,
   }));
 
-export const pagebuilderBlockTypesWithProductsListing =
-  pageBuilderBlocksWithProductsListing.map(({ name }) => ({
+export const pagebuilderBlockTypesWithCpoProductsListing =
+  pageBuilderBlocksWithCpoProductsListing.map(({ name }) => ({
     type: name,
   }));
 
-// Standard pageBuilder (without productsListing)
+// Standard pageBuilder (without cpoProductsListing)
 export const pageBuilder = defineType({
   name: "pageBuilder",
   type: "array",
@@ -41,11 +41,11 @@ export const pageBuilder = defineType({
   },
 });
 
-// CPO-specific pageBuilder (with productsListing)
+// CPO-specific pageBuilder (with cpoProductsListing)
 export const cpoPageBuilder = defineType({
   name: "cpoPageBuilder",
   type: "array",
-  of: pagebuilderBlockTypesWithProductsListing.map((block) =>
+  of: pagebuilderBlockTypesWithCpoProductsListing.map((block) =>
     defineArrayMember(block),
   ),
   options: {
