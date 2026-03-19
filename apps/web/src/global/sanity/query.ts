@@ -382,6 +382,37 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   }
 `;
 
+// Reusable CPO product fragment for listing cards
+// Brand coalesced: Audiofast brand → full ref; external → name only from otherBrandName
+const cpoProductFragment = /* groq */ `
+  _id,
+  _createdAt,
+  "publishDate": coalesce(publishedDate, _createdAt),
+  "slug": slug.current,
+  name,
+  subtitle,
+  priceCents,
+  isArchived,
+  productType,
+  brandType,
+  "brand": select(
+    brandType == "audiofast" => brand->{
+      name,
+      "slug": slug.current,
+      ${imageFragment('logo')},
+    },
+    brandType == "external" => {
+      "name": otherBrandName,
+      "slug": null,
+      "logo": null
+    },
+    null
+  ),
+  externalUrl,
+  ${imageFragment('"mainImage": previewImage')},
+  ${portableTextFragment('shortDescription')},
+`;
+
 // Reusable FAQ fragment for FAQ documents
 const faqFragment = (name: string = 'faq') => /* groq */ `
   ${name} {
@@ -751,6 +782,17 @@ const productsListingBlock = /* groq */ `
   }
 `;
 
+const cpoProductsListingBlock = /* groq */ `
+  _type == "cpoProductsListing" => {
+    ...,
+    ${portableTextFragment('heading')},
+    "totalCount": count(*[
+      _type == "cpoProduct"
+      && isArchived != true
+    ])
+  }
+`;
+
 const brandsByCategoriesSectionBlock = /* groq */ `
   _type == "brandsByCategoriesSection" => {
     ...,
@@ -890,6 +932,7 @@ export const pageBuilderFragment = /* groq */ `
       ${brandsMarqueeBlock},
       ${brandsListBlock},
       ${productsListingBlock},
+      ${cpoProductsListingBlock},
       ${brandsByCategoriesSectionBlock},
       ${faqSectionBlock},
       ${contactFormBlock},
@@ -1061,6 +1104,76 @@ export const queryCpoPage = defineQuery(`*[_type == "cpoPage"][0]{
   },
   "firstBlockType": pageBuilder[0]._type,
   ${pageBuilderFragment}
+}`);
+
+export const queryCpoProductsListing = defineQuery(`*[
+  _type == "cpoProduct"
+  && isArchived != true
+] | order(coalesce(publishedDate, _createdAt) desc) [$offset...$limit] {
+  ${cpoProductFragment}
+}`);
+
+export const queryCpoProductsListingCount = defineQuery(`count(*[
+  _type == "cpoProduct"
+  && isArchived != true
+])`);
+
+export const queryCpoProductBySlug =
+  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal"][0] {
+  _id,
+  _type,
+  "slug": slug.current,
+  name,
+  subtitle,
+  priceCents,
+  productType,
+  brandType,
+  brand->{
+    name,
+    "slug": slug.current,
+    ${imageFragment('logo')},
+  },
+  otherBrandName,
+  ${imageFragment('previewImage')},
+  imageGallery[]{
+    ${imageFragment()}
+  },
+  ${portableTextFragment('shortDescription')},
+  details {
+    ${portableTextFragment('heading')},
+    ${portableTextFragment('productDetailContent')},
+  },
+  technicalData,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  },
+}`);
+
+export const queryAllCpoProductSlugs = defineQuery(`*[
+  _type == "cpoProduct"
+  && defined(slug.current)
+  && productType == "internal"
+  && isArchived != true
+] {
+  "slug": slug.current
+}`);
+
+export const queryCpoProductSeoBySlug =
+  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal"][0] {
+  "slug": slug.current,
+  name,
+  brandType,
+  brand->{ name },
+  otherBrandName,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  },
 }`);
 
 export const queryAllBlogPostSlugs =
