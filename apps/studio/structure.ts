@@ -634,6 +634,37 @@ export const structure = (
             .title("CPO - Certyfikowany sprzęt używany")
             .items([
               createSingleTon({ S, type: "cpoPage" }),
+              createBulkActionsTable({
+                type: "cpoProduct",
+                S: S as any,
+                context: context as any,
+                id: "cpo-products-table",
+                title: "Tabela produktów CPO",
+                icon: Table2,
+                filters: [
+                  {
+                    field: "isArchived",
+                    label: "Status",
+                    options: [
+                      { label: "Wszystkie", value: null },
+                      { label: "Aktywne", value: "isArchived != true" },
+                      { label: "Archiwalne", value: "isArchived == true" },
+                    ],
+                    defaultIndex: 0,
+                  },
+                ],
+                referenceFilters: [
+                  {
+                    referenceField: "brand._ref",
+                    referenceType: "brand",
+                    label: "Marka",
+                    groqProjection:
+                      '{ _id, name, "imageUrl": logo.asset->url }',
+                    groqFilter: "doNotShowBrand != true",
+                  },
+                ],
+              }) as any,
+              S.divider(),
               S.listItem()
                 .title("Produkty CPO")
                 .icon(Folder)

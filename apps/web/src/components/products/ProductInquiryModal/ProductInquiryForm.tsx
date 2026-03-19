@@ -132,7 +132,6 @@ export default function ProductInquiryForm({
 
     try {
       trackLead(data);
-
       const result = await sendContactForm({
         name: data.name,
         email: data.email,
@@ -141,6 +140,7 @@ export default function ProductInquiryForm({
         product: {
           name: product.name,
           brandName: product.brandName,
+          kind: product.kind,
           configuration: product.configurationOptions.map((opt) => ({
             label: opt.label,
             value: opt.value,
@@ -151,11 +151,9 @@ export default function ProductInquiryForm({
         },
       });
 
+      setFormState(result.success ? 'success' : 'error');
       if (result.success) {
-        setFormState('success');
         reset();
-      } else {
-        setFormState('error');
       }
     } catch {
       setFormState('error');

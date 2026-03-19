@@ -196,7 +196,6 @@ export default function ProductsAside({
       category: effectiveCategory,
       customFilters,
       rangeFilters,
-      isCPO: false,
     };
   }, [searchParams, currentCategory, filterDefinitions]);
 
@@ -230,7 +229,6 @@ export default function ProductsAside({
         category: optimisticCategory,
         customFilters: activeFilters.customFilters,
         rangeFilters: activeFilters.rangeFilters,
-        isCPO: false,
       };
     }
 

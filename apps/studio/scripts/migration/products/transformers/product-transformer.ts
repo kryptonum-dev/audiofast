@@ -351,7 +351,6 @@ export async function transformProduct(
       current: `/produkty/${source.slug.toLowerCase()}/`,
     },
     isArchived: source.isArchived,
-    isCPO: false, // Always false for migrated products
     doNotIndex: false,
     hideFromList: source.isHidden,
   };

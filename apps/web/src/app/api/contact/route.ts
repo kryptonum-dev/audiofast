@@ -23,10 +23,12 @@ import { ContactNotificationTemplate } from '@/src/emails/contact-notification-t
 // Reply-to address for confirmation emails
 const REPLY_TO_EMAIL =
   process.env.MS_GRAPH_REPLY_TO || process.env.MS_GRAPH_SENDER_EMAIL;
+const PRODUCT_INQUIRY_TEST_RECIPIENT = 'oliwier@kryptonum.eu';
 
 type ProductInquiryData = {
   name: string;
   brandName: string;
+  kind?: 'standard' | 'cpo';
   configuration: Array<{
     label: string;
     value: string;
@@ -160,7 +162,9 @@ export async function POST(request: NextRequest) {
 
   // Render internal notification email using React Email
   const internalSubject = body.product
-    ? `Zapytanie o produkt: ${body.product.brandName} ${body.product.name}`
+    ? body.product.kind === 'cpo'
+      ? `[CPO] Zapytanie o egzemplarz: ${body.product.brandName} ${body.product.name}`
+      : `Zapytanie o produkt: ${body.product.brandName} ${body.product.name}`
     : `Nowe zgłoszenie z formularza kontaktowego`;
   const internalEmailHtml = await render(
     ContactNotificationTemplate({
@@ -170,6 +174,11 @@ export async function POST(request: NextRequest) {
       product: body.product,
     }),
   );
+
+  // Temporary testing override: product inquiry notifications go only to Oliwier.
+  const internalNotificationRecipients = body.product
+    ? [PRODUCT_INQUIRY_TEST_RECIPIENT]
+    : emailConfig.supportEmails;
 
   // Render confirmation email using React Email
   const confirmationEmailHtml = await render(
@@ -186,7 +195,7 @@ export async function POST(request: NextRequest) {
   const emails: SendEmailOptions[] = [
     // Internal notification email (to support team)
     {
-      to: emailConfig.supportEmails.map((email) => ({ email })),
+      to: internalNotificationRecipients.map((email) => ({ email })),
       subject: internalSubject,
       htmlBody: internalEmailHtml,
       replyTo: body.email, // Reply goes to the person who submitted the form

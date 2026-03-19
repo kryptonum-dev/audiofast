@@ -390,7 +390,6 @@ const cpoProductFragment = /* groq */ `
   "publishDate": coalesce(publishedDate, _createdAt),
   "slug": slug.current,
   name,
-  ${portableTextFragment('subtitle')},
   priceCents,
   isArchived,
   productType,
@@ -766,7 +765,6 @@ const productsListingBlock = /* groq */ `
         && defined(slug.current)
         && isArchived != true
         && brand->doNotShowBrand != true
-        && (^.cpoOnly == false || isCPO == true)
         && count(categories) > 0
         && references(^._id)
       ])
@@ -776,7 +774,6 @@ const productsListingBlock = /* groq */ `
       && defined(slug.current)
       && isArchived != true
       && brand->doNotShowBrand != true
-      && (^.cpoOnly == false || isCPO == true)
       && count(categories) > 0
     ])
   }
@@ -1178,7 +1175,6 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
     "basePriceCents": priceCents,
     "categorySlug": null,
     "allCategorySlugs": [],
-    "isCPO": true,
     "customFilterValues": []
   },
   "brands": array::unique(*[
@@ -1214,26 +1210,63 @@ export const queryCpoProductBySlug =
   _type,
   "slug": slug.current,
   name,
-  subtitle,
   priceCents,
+  transparentBackground,
   productType,
   brandType,
-  brand->{
-    name,
-    "slug": slug.current,
-    ${imageFragment('logo')},
-  },
-  otherBrandName,
+  "brand": select(
+    brandType == "audiofast" => brand->{
+      name,
+      "slug": slug.current,
+      ${imageFragment('logo')},
+    },
+    brandType == "external" => {
+      "name": otherBrandName,
+      "slug": null,
+      "logo": null
+    },
+    null
+  ),
   ${imageFragment('previewImage')},
   imageGallery[]{
-    ${imageFragment()}
+    "id": asset._ref,
+    "preview": asset->metadata.lqip,
+    "alt": asset->altText,
+    "naturalWidth": asset->metadata.dimensions.width,
+    "naturalHeight": asset->metadata.dimensions.height,
+    hotspot {
+      x,
+      y,
+      width,
+      height
+    },
+    crop {
+      bottom,
+      left,
+      right,
+      top
+    }
   },
   ${portableTextFragment('shortDescription')},
   details {
     ${portableTextFragment('heading')},
     ${portableTextFragment('productDetailContent')},
   },
-  technicalData,
+  technicalData {
+    variants,
+    groups[] {
+      _key,
+      title,
+      rows[] {
+        _key,
+        title,
+        values[] {
+          _key,
+          ${portableTextFragment('content')}
+        }
+      }
+    }
+  },
   seo,
   openGraph{
     title,
@@ -1255,9 +1288,13 @@ export const queryCpoProductSeoBySlug =
   defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal"][0] {
   "slug": slug.current,
   name,
-  brandType,
-  brand->{ name },
-  otherBrandName,
+  "brand": select(
+    brandType == "audiofast" => brand->{ name },
+    brandType == "external" => {
+      "name": otherBrandName
+    },
+    null
+  ),
   seo,
   openGraph{
     title,
@@ -1672,7 +1709,6 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       "parentCategorySlug": denormParentCategorySlugs[0],
       "allCategorySlugs": denormCategorySlugs,
       basePriceCents,
-      isCPO,
       customFilterValues[]{
         filterName,
         value,
@@ -2056,10 +2092,7 @@ const productsFilterConditions = /* groq */ `
       )
     ])
   )
-  
-  // CPO filter - same as before
-  && ($isCPO == false || isCPO == true)
-  
+
   // Embeddings search - same as before
   && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
 `;
@@ -2128,8 +2161,6 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
 // - $rangeFilters: array of range filter objects (optional) - empty array [] for no range filters
 //   Format: [{filterName: "Impedancja", minValue: 4, maxValue: 12}, ...]
 //   Note: minValue/maxValue can be null for "no limit"
-// - $isCPO: boolean to filter CPO products only (optional) - false for all products
-
 // Static queries for each sort type (required for typegen)
 export const queryProductsListingNewest = defineQuery(
   productsListingFragment('coalesce(publishedDate, _createdAt) desc'),
@@ -2589,6 +2620,13 @@ export const queryAllBrandSlugsForSitemap = defineQuery(`
 
 export const queryAllProductSlugsForSitemap = defineQuery(`
   *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && isArchived != true] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllCpoProductSlugsForSitemap = defineQuery(`
+  *[_type == "cpoProduct" && defined(slug.current) && !(_id in path("drafts.**")) && productType == "internal" && isArchived != true] {
     "slug": slug.current,
     _updatedAt
   }

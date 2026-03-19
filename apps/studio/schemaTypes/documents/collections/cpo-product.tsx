@@ -268,20 +268,6 @@ export const cpoProduct = defineType({
           return true;
         }),
     }),
-    customPortableText({
-      name: "subtitle",
-      title: "Podtytuł (opcjonalny)",
-      description: "Np. „Stan: bardzo dobry”. Obsługuje pogrubienie i kursywę.",
-      group: GROUP.MAIN_CONTENT,
-      include: {
-        styles: ["normal"],
-        lists: [],
-        decorators: ["strong", "em"],
-        annotations: [],
-      },
-      hidden: ({ document }) => document?.productType === "external",
-    }),
-
     // ----------------------------------------
     // Always visible
     // ----------------------------------------
@@ -292,6 +278,9 @@ export const cpoProduct = defineType({
       description:
         "Główne zdjęcie wyświetlane na karcie produktu. Dla egzemplarzy wewnętrznych — także w sekcji hero na stronie szczegółowej.",
       group: GROUP.MAIN_CONTENT,
+      options: {
+        hotspot: true,
+      },
       validation: (Rule) =>
         Rule.required().error("Zdjęcie główne jest wymagane"),
     }),
@@ -311,6 +300,12 @@ export const cpoProduct = defineType({
       description:
         "Krótki opis egzemplarza. Może zawierać linki wewnętrzne lub zewnętrzne.",
       group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ["normal"],
+        lists: [],
+        decorators: ["strong", "em"],
+        annotations: ["customLink"],
+      },
     }),
     defineField({
       name: "priceCents",
@@ -490,17 +485,6 @@ export const cpoProduct = defineType({
           return true;
         }),
     }),
-    defineField({
-      name: "externalLinkLabel",
-      title: "Etykieta linku",
-      type: "string",
-      description:
-        "Tekst przycisku linku (np. „Zobacz na stronie producenta”). Domyślnie: „Zobacz opis produktu”.",
-      group: GROUP.MAIN_CONTENT,
-      initialValue: "Zobacz opis produktu",
-      hidden: ({ document }) => document?.productType !== "external",
-    }),
-
     // ----------------------------------------
     // Denormalized Fields (Computed, Hidden)
     // ----------------------------------------

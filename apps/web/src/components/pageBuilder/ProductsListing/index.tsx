@@ -19,7 +19,6 @@ type ProductsListingProps = {
   _type: 'productsListing';
   _key: string;
   heading?: PortableTextProps;
-  cpoOnly?: boolean;
   index: number;
   searchParams?: {
     page?: string;
@@ -44,7 +43,7 @@ async function getStaticFilterMetadata() {
 }
 
 export default async function ProductsListing(props: ProductsListingProps) {
-  const { heading, cpoOnly, searchParams, basePath = '/' } = props;
+  const { heading, searchParams, basePath = '/' } = props;
 
   // Fetch filter metadata (cached)
   const filterMetadata = await getStaticFilterMetadata();
@@ -53,10 +52,7 @@ export default async function ProductsListing(props: ProductsListingProps) {
     return null;
   }
 
-  // For CPO-only listings, filter products metadata
-  const productsMetadata = cpoOnly
-    ? filterMetadata.products?.filter((p) => p.isCPO === true) || []
-    : filterMetadata.products || [];
+  const productsMetadata = filterMetadata.products || [];
 
   // Don't render if no products available
   if (productsMetadata.length === 0) {
@@ -118,7 +114,6 @@ export default async function ProductsListing(props: ProductsListingProps) {
             <ProductsListingComponent
               searchParams={searchParamsPromise}
               basePath={basePath}
-              isCPO={cpoOnly}
               defaultSortBy="newest"
               scrollTargetId="products-listing"
             />

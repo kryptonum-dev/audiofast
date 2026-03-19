@@ -40,7 +40,6 @@ type ProductsListingProps = {
   basePath: string;
   category?: string;
   brandSlug?: string; // For brand pages - filter by this brand
-  isCPO?: boolean; // Filter for CPO products only
 
   // Custom filters configuration
   availableCustomFilters?: string[]; // Dropdown filter names for parsing
@@ -56,7 +55,6 @@ export default async function ProductsListing({
   basePath,
   category = '',
   brandSlug,
-  isCPO = false,
   availableCustomFilters = [],
   filterDefinitions = [],
   defaultSortBy = 'orderRank',
@@ -152,7 +150,6 @@ export default async function ProductsListing({
       maxPrice,
       customFilters, // Original format: [{filterName, value}]
       rangeFilters,
-      isCPO,
       embeddingResults: embeddingResults || [],
     },
     tags: ['products'],

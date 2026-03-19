@@ -21,6 +21,7 @@ export interface ProductContext {
   id: string;
   name: string;
   brandName: string;
+  kind?: 'standard' | 'cpo';
   brandLogo?: SanityRawImage;
   image: SanityRawImage;
   basePrice: number; // in cents
@@ -44,6 +45,7 @@ export default function ProductInquiryModal({
   const [isFormDirty, setIsFormDirty] = useState(false);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const layout = product.kind === 'cpo' ? 'cpo' : 'standard';
 
   // Handle mounting for portal
   useEffect(() => {
@@ -121,7 +123,11 @@ export default function ProductInquiryModal({
         aria-modal="true"
         aria-labelledby="product-inquiry-title"
       >
-        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div
+          className={styles.modal}
+          data-layout={layout}
+          onClick={(e) => e.stopPropagation()}
+        >
           <button
             type="button"
             className={styles.closeButton}
@@ -136,9 +142,9 @@ export default function ProductInquiryModal({
               Zapytaj o produkt
             </h2>
 
-            <div className={styles.columns}>
+            <div className={styles.columns} data-layout={layout}>
               <div className={styles.productColumn}>
-                <ProductSummary product={product} />
+                <ProductSummary product={product} layout={layout} />
               </div>
 
               <div className={styles.formColumn}>

@@ -1,5 +1,5 @@
 import { LayoutList } from "lucide-react";
-import { defineField, defineType } from "sanity";
+import { defineType } from "sanity";
 
 import { toPlainText } from "../../utils/helper";
 import { customPortableText } from "../portableText";
@@ -20,25 +20,15 @@ export const productsListing = defineType({
       description: "Główny nagłówek sekcji",
       type: "heading",
     }),
-    defineField({
-      name: "cpoOnly",
-      title: "Tylko produkty CPO",
-      type: "boolean",
-      description:
-        "Jeśli zaznaczone, wyświetlane będą tylko produkty certyfikowane (CPO)",
-      initialValue: false,
-    }),
   ],
   preview: {
     select: {
       heading: "heading",
-      cpoOnly: "cpoOnly",
     },
-    prepare: ({ heading, cpoOnly }) => {
-      const modeLabel = cpoOnly ? "Tylko produkty CPO" : "Wszystkie produkty";
+    prepare: ({ heading }) => {
       return {
         title,
-        subtitle: `${toPlainText(heading)} | ${modeLabel}`,
+        subtitle: toPlainText(heading) || "Lista produktów",
         media: LayoutList,
       };
     },

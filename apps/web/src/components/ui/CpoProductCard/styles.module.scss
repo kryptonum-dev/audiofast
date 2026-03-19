@@ -126,6 +126,11 @@
       flex-direction: column;
       align-items: flex-start;
       flex-grow: 1;
+      &[data-has-description='false'] {
+        .title {
+          margin-bottom: 1.5rem;
+        }
+      }
 
       .title {
         margin-bottom: 0.25rem;
@@ -138,18 +143,17 @@
         line-height: 1.16;
       }
 
-      .subtitle {
+      .shortDescription {
         line-height: 1.5;
         font-size: var(--typography-body-m, 0.875rem);
         color: var(--neutral-600, #5b5a5a);
         margin-bottom: 2rem;
         padding-right: 0.5rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        max-width: 100%;
+
+        :global(p) {
+          margin: 0;
+        }
 
         strong {
           font-weight: 500;
@@ -159,11 +163,10 @@
         em {
           font-style: italic;
         }
-      }
 
-      &:not(:has(.subtitle)) {
-        .title {
-          margin-bottom: 1.5rem;
+        :global(.link) {
+          color: var(--neutral-700, #303030);
+          display: inline;
         }
       }
 

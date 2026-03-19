@@ -80,6 +80,7 @@ function extractSlug(fullSlug: string | null | undefined): string | null {
  */
 const REVERSE_LOOKUP_TYPES = new Set([
   'product',
+  'cpoProduct',
   'review',
   'blog-article',
   'productCategorySub',
@@ -113,6 +114,9 @@ async function getReferencingDocumentTags(
           tags.push(`product:${slug}`);
           tags.push(`product-pricing:${slug}`);
           break;
+        case 'cpoProduct':
+          tags.push(`cpoProduct:${slug}`);
+          break;
         case 'blog-article':
           tags.push(`blog-article:${slug}`);
           break;
@@ -134,7 +138,7 @@ async function getReferencingDocumentTags(
         slug: string | null;
       }>
     >(
-      `*[references($id) && _type in ["product", "page", "homePage", "cpoPage", "review", "blog-article"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
+      `*[references($id) && _type in ["product", "cpoProduct", "page", "homePage", "cpoPage", "review", "blog-article"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
       { id: docId },
     );
 
@@ -156,6 +160,10 @@ async function getReferencingDocumentTags(
       switch (ref._type) {
         case 'product':
           tags.push(`product:${refSlug}`);
+          break;
+        case 'cpoProduct':
+          tags.push(`cpoProduct:${refSlug}`);
+          tags.push('cpoPage');
           break;
         case 'page':
           tags.push(`page:${refSlug}`);
@@ -312,6 +320,7 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
 
   homePage: ['homePage'],
   cpoPage: ['cpoPage'],
+  cpoProduct: ['cpoProduct', 'cpoPage'],
   blog: ['blog'],
   products: ['products'],
   brands: ['brands'],

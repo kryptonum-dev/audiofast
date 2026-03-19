@@ -5,6 +5,7 @@
 export type ProductInquiryData = {
   name: string;
   brandName: string;
+  kind?: 'standard' | 'cpo';
   configuration: Array<{
     label: string;
     value: string;
