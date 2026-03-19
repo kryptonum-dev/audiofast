@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import type { DocumentActionComponent, DocumentActionsContext } from "sanity";
 import { useClient } from "sanity";
 
+import { computeCpoDenormalizedFields } from "../utils/denormalize-cpo-product";
 import { computeDenormalizedFields } from "../utils/denormalize-product";
 import { fetchReviewAuthorCounts } from "../utils/review-author-counts";
 
@@ -85,6 +86,21 @@ export function wrapPublishWithDenorm(
           return;
         }
 
+        if (type === "cpoProduct") {
+          const denormalized = await computeCpoDenormalizedFields(
+            client,
+            draft as Parameters<typeof computeCpoDenormalizedFields>[1],
+          );
+
+          await client
+            .patch(`drafts.${id}`)
+            .set(denormalized)
+            .commit({ visibility: "sync" });
+
+          originalOnHandleRef.current?.();
+          return;
+        }
+
         if (type !== "product") {
           originalOnHandleRef.current?.();
           return;
@@ -137,8 +153,8 @@ export function applyDenormToPublish(
   actions: DocumentActionComponent[],
   context: DocumentActionsContext,
 ): DocumentActionComponent[] {
-  // Wrap for product and review documents.
-  if (!["product", "review"].includes(context.schemaType)) {
+  // Wrap for product, cpoProduct and review documents.
+  if (!["product", "cpoProduct", "review"].includes(context.schemaType)) {
     return actions;
   }
 

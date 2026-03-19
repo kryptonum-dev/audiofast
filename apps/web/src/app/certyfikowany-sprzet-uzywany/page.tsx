@@ -29,6 +29,10 @@ export default async function CpoPage({
     page?: string;
     category?: string;
     sortBy?: string | string[];
+    search?: string;
+    brands?: string | string[];
+    minPrice?: string;
+    maxPrice?: string;
   }>;
 }) {
   const searchParamsResult = await searchParams;

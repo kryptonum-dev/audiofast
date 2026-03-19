@@ -1,11 +1,11 @@
 import { cacheLife, cacheTag } from 'next/cache';
 import { Suspense } from 'react';
 
-import type { PageBuilderBlock } from '@/src/components/shared/PageBuilder';
 import { PRODUCT_SORT_OPTIONS } from '@/src/global/constants';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryAllProductsFilterMetadata } from '@/src/global/sanity/query';
 import type { QueryAllProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
+import type { PortableTextProps } from '@/src/global/types';
 
 import ProductsAside from '../../products/ProductsAside';
 import ProductsListingComponent from '../../products/ProductsListing';
@@ -15,12 +15,11 @@ import ProductsListingContainer from '../../products/ProductsListingContainer';
 import { ProductsLoadingProvider } from '../../products/ProductsLoadingContext';
 import SortDropdown from '../../products/SortDropdown';
 
-type ProductsListingBlockType = Extract<
-  PageBuilderBlock,
-  { _type: 'productsListing' }
->;
-
-type ProductsListingProps = ProductsListingBlockType & {
+type ProductsListingProps = {
+  _type: 'productsListing';
+  _key: string;
+  heading?: PortableTextProps;
+  cpoOnly?: boolean;
   index: number;
   searchParams?: {
     page?: string;

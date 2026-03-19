@@ -268,12 +268,17 @@ export const cpoProduct = defineType({
           return true;
         }),
     }),
-    defineField({
+    customPortableText({
       name: "subtitle",
       title: "Podtytuł (opcjonalny)",
-      type: "string",
-      description: "Np. „Stan: bardzo dobry”.",
+      description: "Np. „Stan: bardzo dobry”. Obsługuje pogrubienie i kursywę.",
       group: GROUP.MAIN_CONTENT,
+      include: {
+        styles: ["normal"],
+        lists: [],
+        decorators: ["strong", "em"],
+        annotations: [],
+      },
       hidden: ({ document }) => document?.productType === "external",
     }),
 
@@ -289,6 +294,15 @@ export const cpoProduct = defineType({
       group: GROUP.MAIN_CONTENT,
       validation: (Rule) =>
         Rule.required().error("Zdjęcie główne jest wymagane"),
+    }),
+    defineField({
+      name: "transparentBackground",
+      title: "Przezroczyste tło zdjęcia",
+      type: "boolean",
+      description:
+        "Zaznacz, jeśli zdjęcie ma przezroczyste tło.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
     }),
     customPortableText({
       name: "shortDescription",
@@ -488,6 +502,29 @@ export const cpoProduct = defineType({
     }),
 
     // ----------------------------------------
+    // Denormalized Fields (Computed, Hidden)
+    // ----------------------------------------
+    defineField({
+      name: "denormBrandSlug",
+      title: "Brand Slug (computed)",
+      type: "string",
+      description:
+        "Cleaned brand slug for filtering (e.g. 'aurender' or 'naim audio'). Auto-computed on publish.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "denormBrandName",
+      title: "Brand Name (computed)",
+      type: "string",
+      description: "Denormalized brand name for display. Auto-computed on publish.",
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+
+    // ----------------------------------------
     // SEO
     // ----------------------------------------
     ...getSEOFields({ exclude: ["hideFromList"], hideTitle: true }),
@@ -511,9 +548,7 @@ export const cpoProduct = defineType({
       media,
       isArchived,
     }) => ({
-      title: `${isArchived ? "[ARCHIWUM] " : ""}${
-        productType === "external" ? "[ZEW] " : ""
-      }${title}`,
+      title: `${isArchived ? "[ARCHIWUM] " : ""}${title}`,
       subtitle: brandType === "external" ? otherBrandName : brandName,
       media: media || Package,
     }),

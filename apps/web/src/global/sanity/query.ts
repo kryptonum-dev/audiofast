@@ -390,7 +390,7 @@ const cpoProductFragment = /* groq */ `
   "publishDate": coalesce(publishedDate, _createdAt),
   "slug": slug.current,
   name,
-  subtitle,
+  ${portableTextFragment('subtitle')},
   priceCents,
   isArchived,
   productType,
@@ -409,6 +409,7 @@ const cpoProductFragment = /* groq */ `
     null
   ),
   externalUrl,
+  transparentBackground,
   ${imageFragment('"mainImage": previewImage')},
   ${portableTextFragment('shortDescription')},
 `;
@@ -733,7 +734,6 @@ const brandsListBlock = /* groq */ `
     ${portableTextFragment('ctaText')},
     "brands": select(
       brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')},
-      brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
       brandsDisplayMode == "manual" => selectedBrands[]->[]{
         _id,
         _createdAt,
@@ -1106,17 +1106,107 @@ export const queryCpoPage = defineQuery(`*[_type == "cpoPage"][0]{
   ${pageBuilderFragment}
 }`);
 
-export const queryCpoProductsListing = defineQuery(`*[
+// Shared filter conditions for CPO product listing queries
+const cpoFilterConditions = /* groq */ `
   _type == "cpoProduct"
   && isArchived != true
-] | order(coalesce(publishedDate, _createdAt) desc) [$offset...$limit] {
-  ${cpoProductFragment}
-}`);
+  && (
+    $search == "" || name match $search + "*"
+  )
+  && (
+    count($brands) == 0
+    || denormBrandSlug in $brands
+  )
+  && ($minPrice == 0 || priceCents >= $minPrice)
+  && ($maxPrice == 0 || priceCents <= $maxPrice)
+`;
 
-export const queryCpoProductsListingCount = defineQuery(`count(*[
-  _type == "cpoProduct"
-  && isArchived != true
-])`);
+// Reusable fragment for CPO listing — swap in different order clauses
+const cpoListingFragment = (orderClause: string) => /* groq */ `
+  *[${cpoFilterConditions}] | order(${orderClause}) [$offset...$limit] {
+    ${cpoProductFragment}
+  }
+`;
+
+// Static queries per sort order (required for typegen)
+export const queryCpoProductsListingNewest = defineQuery(
+  cpoListingFragment('coalesce(publishedDate, _createdAt) desc'),
+);
+
+export const queryCpoProductsListingOldest = defineQuery(
+  cpoListingFragment('coalesce(publishedDate, _createdAt) asc'),
+);
+
+export const queryCpoProductsListingPriceAsc = defineQuery(
+  cpoListingFragment('coalesce(priceCents, 999999999) asc'),
+);
+
+export const queryCpoProductsListingPriceDesc = defineQuery(
+  cpoListingFragment('coalesce(priceCents, -1) desc'),
+);
+
+// Backward-compatible alias (newest first)
+export const queryCpoProductsListing = queryCpoProductsListingNewest;
+
+// Helper function to pick the right query based on sortBy param
+export function getCpoProductsListingQuery(sortBy: string = 'newest') {
+  switch (sortBy) {
+    case 'oldest':
+      return queryCpoProductsListingOldest;
+    case 'priceAsc':
+      return queryCpoProductsListingPriceAsc;
+    case 'priceDesc':
+      return queryCpoProductsListingPriceDesc;
+    case 'newest':
+    default:
+      return queryCpoProductsListingNewest;
+  }
+}
+
+export const queryCpoProductsListingCount = defineQuery(`count(*[${cpoFilterConditions}])`);
+
+export const queryCpoProductsFilterMetadata = defineQuery(`{
+  "products": *[
+    _type == "cpoProduct"
+    && isArchived != true
+    && defined(denormBrandSlug)
+  ] {
+    _id,
+    name,
+    "brandSlug": denormBrandSlug,
+    "brandName": denormBrandName,
+    "basePriceCents": priceCents,
+    "categorySlug": null,
+    "allCategorySlugs": [],
+    "isCPO": true,
+    "customFilterValues": []
+  },
+  "brands": array::unique(*[
+    _type == "cpoProduct"
+    && isArchived != true
+    && defined(denormBrandSlug)
+  ] {
+    "_id": denormBrandSlug,
+    "name": denormBrandName,
+    "slug": denormBrandSlug,
+    "logo": select(
+      brandType == "audiofast" => brand->{
+        ${imageFragment('logo')}
+      }.logo,
+      null
+    )
+  }),
+  "globalMaxPrice": math::max(*[
+    _type == "cpoProduct"
+    && isArchived != true
+    && defined(priceCents)
+  ].priceCents),
+  "globalMinPrice": math::min(*[
+    _type == "cpoProduct"
+    && isArchived != true
+    && defined(priceCents)
+  ].priceCents)
+}`);
 
 export const queryCpoProductBySlug =
   defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal"][0] {

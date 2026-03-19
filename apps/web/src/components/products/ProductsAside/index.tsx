@@ -414,7 +414,7 @@ export default function ProductsAside({
           _id: activeSlug,
           name: activeSlug.charAt(0).toUpperCase() + activeSlug.slice(1),
           slug: `/marki/${activeSlug}/`,
-          logo: null,
+          logo: null as unknown as BrandMetadata['logo'],
           count: 0,
         });
       }
