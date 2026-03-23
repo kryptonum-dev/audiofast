@@ -57,7 +57,7 @@ export async function generateMetadata({
 
   if (!seoData) return getSEOMetadata();
 
-  const forcedSeoTitle = [seoData.brand?.name, seoData.name]
+  const forcedSeoTitle = [seoData.brandName, seoData.name]
     .map((value) => value?.trim())
     .filter(Boolean)
     .join(' ');
@@ -96,6 +96,16 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
     notFound();
   }
 
+  const heroPreviewImage = (product.resolvedPreviewImage ??
+    product.previewImage) as SanityRawImage | null | undefined;
+
+  const useOwnGallery = product.useCustomGallery === true;
+  const galleryImages = (
+    useOwnGallery
+      ? product.imageGallery
+      : (product.internalProduct?.imageGallery ?? product.imageGallery)
+  ) as SanityRawImage[] | null | undefined;
+
   const breadcrumbsData = [
     {
       name: 'Certyfikowany sprzęt używany',
@@ -118,7 +128,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
     {
       id: 'galeria',
       label: 'Galeria',
-      visible: !!product.imageGallery && product.imageGallery.length > 0,
+      visible: !!galleryImages && galleryImages.length > 0,
     },
     {
       id: 'dane-techniczne',
@@ -135,8 +145,10 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
       <CpoProductHero
         productId={product._id}
         name={product.name || ''}
-        brand={product.brand}
-        previewImage={product.previewImage as SanityRawImage}
+        brand={
+          product.brandName ? { name: product.brandName, logo: null } : null
+        }
+        previewImage={heroPreviewImage}
         shortDescription={product.shortDescription as PortableTextProps}
         priceCents={product.priceCents}
         transparentBackground={product.transparentBackground}
@@ -163,7 +175,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         narrowContent
       />
       <CpoProductGallerySection
-        images={product.imageGallery as SanityRawImage[]}
+        images={galleryImages ?? []}
         customId="galeria"
         heading="Galeria egzemplarza"
       />

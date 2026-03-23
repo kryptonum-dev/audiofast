@@ -283,9 +283,9 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // CORE CONTENT TYPES - Simplified for ISR cost reduction
   // ============================================================================
 
-  // Products: Only invalidate listings (brand page handled by targeted lookup below)
-  // Home page, CMS pages, reviews, blog articles handled by reverse lookup
-  product: ['products'],
+  // Products: Invalidate listings + homePage (latest/featured publication blocks use dynamic queries)
+  // Brand page handled by targeted lookup below; CMS pages, reviews, blog articles handled by reverse lookup
+  product: ['products', 'homePage'],
 
   // Brands: Invalidate brand listings, product filters, and all brand pages
   brand: ['brands', 'products', 'brand'],

@@ -48,7 +48,7 @@ export default async function CpoProductsListingInner({
 
   const sortBy = params.sortBy || defaultSortBy;
   const searchTerm = params.search || '';
-  const brands = parseBrands(params.brands);
+  const brands = parseBrands(params.brands).map((b) => b.toLowerCase());
   const minPrice = parsePrice(params.minPrice, 0);
   const maxPrice = parsePrice(params.maxPrice, 0, 0);
 

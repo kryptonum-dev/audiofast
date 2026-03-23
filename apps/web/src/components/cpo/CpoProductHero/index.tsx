@@ -36,14 +36,15 @@ export default function CpoProductHero({
 }: CpoProductHeroProps) {
   const productName = name?.trim() || '';
   const hasBrandLogo = !!brand?.logo;
-  const hasShortDescription =
+  const hasPtShort =
     Array.isArray(shortDescription) && shortDescription.length > 0;
+  const hasDescriptionBlock = hasPtShort;
 
   return (
     <section
       className={`${productHeroStyles.productHero} ${styles.cpoProductHero} max-width`}
       id={customId}
-      data-has-description={hasShortDescription}
+      data-has-description={hasDescriptionBlock}
       data-has-awards={false}
     >
       {transparentBackground ? (
@@ -99,8 +100,8 @@ export default function CpoProductHero({
         </h1>
       </header>
 
-      {hasShortDescription && (
-        <ProductDescription shortDescription={shortDescription} />
+      {hasPtShort && (
+        <ProductDescription shortDescription={shortDescription!} />
       )}
 
       <CpoProductInquirySection

@@ -191,6 +191,18 @@ export const cpoProduct = defineType({
     "Egzemplarz produktu w programie Certyfikowany sprzęt używany (CPO). Każdy dokument reprezentuje konkretny egzemplarz używany.",
   fields: [
     // ----------------------------------------
+    // Brand first (Excel + manual)
+    // ----------------------------------------
+    defineField({
+      name: "brandName",
+      title: "Marka",
+      type: "string",
+      group: GROUP.MAIN_CONTENT,
+      description:
+        "Nazwa marki produktu CPO.",
+      validation: (Rule) => Rule.required().error("Nazwa marki jest wymagana"),
+    }),
+    // ----------------------------------------
     // Core: Name + Product Type Toggle
     // ----------------------------------------
     defineField({
@@ -225,6 +237,23 @@ export const cpoProduct = defineType({
       initialValue: "internal",
       validation: (Rule) =>
         Rule.required().error("Wybierz typ produktu (wewnętrzny lub zewnętrzny)"),
+    }),
+    defineField({
+      name: "externalUrl",
+      title: "Link zewnętrzny",
+      type: "url",
+      description:
+        "Adres strony producenta lub dystrybutora z opisem produktu. Widoczny tylko dla typu „Zewnętrzny”.",
+      group: GROUP.MAIN_CONTENT,
+      hidden: ({ document }) => document?.productType !== "external",
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const doc = context.document as { productType?: string } | undefined;
+          if (doc?.productType === "external" && !value) {
+            return "Link zewnętrzny jest wymagany dla produktów zewnętrznych";
+          }
+          return true;
+        }),
     }),
 
     // ----------------------------------------
@@ -282,7 +311,28 @@ export const cpoProduct = defineType({
         hotspot: true,
       },
       validation: (Rule) =>
-        Rule.required().error("Zdjęcie główne jest wymagane"),
+        Rule.custom((value, context) => {
+          const doc = context.document as {
+            internalProduct?: { _ref?: string };
+            productType?: string;
+          } | undefined;
+          // External: always need a card/hero image (no catalog to inherit from).
+          if (doc?.productType === "external") {
+            if (!value?.asset) {
+              return "Zdjęcie główne jest wymagane dla produktów zewnętrznych";
+            }
+            return true;
+          }
+          // Internal + catalog link: preview optional (inherit from catalog).
+          if (doc?.productType === "internal" && doc?.internalProduct?._ref) {
+            return true;
+          }
+          // Internal without catalog link: must provide a preview image.
+          if (doc?.productType === "internal" && !value?.asset) {
+            return "Zdjęcie główne jest wymagane, gdy nie ma powiązania z produktem z katalogu";
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "transparentBackground",
@@ -295,10 +345,10 @@ export const cpoProduct = defineType({
     }),
     customPortableText({
       name: "shortDescription",
-      title: "Krótki opis (opcjonalny)",
-      optional: true,
+      title: "Krótki opis",
+      optional: false,
       description:
-        "Krótki opis egzemplarza. Może zawierać linki wewnętrzne lub zewnętrzne.",
+        "Jedyny krótki opis na karcie i w hero. Wpisujesz w Sanity lub treść trafia z kolumny „Opis” w arkuszu CPO (synchronizacja cennika nadpisuje to pole treścią z Excela).",
       group: GROUP.MAIN_CONTENT,
       include: {
         styles: ["normal"],
@@ -339,65 +389,17 @@ export const cpoProduct = defineType({
     }),
 
     // ----------------------------------------
-    // Brand: Audiofast reference or external string
+    // Catalog link (Excel sync)
     // ----------------------------------------
     defineField({
-      name: "brandType",
-      title: "Źródło marki",
-      type: "string",
-      group: GROUP.MAIN_CONTENT,
-      description:
-        "Wybierz, czy produkt jest z marki z katalogu Audiofast, czy spoza dystrybucji.",
-      options: {
-        layout: "radio",
-        list: [
-          {
-            title: "Marka Audiofast",
-            value: "audiofast",
-          },
-          {
-            title: "Marka zewnętrzna",
-            value: "external",
-          },
-        ],
-      },
-      initialValue: "audiofast",
-      validation: (Rule) =>
-        Rule.required().error("Wybierz źródło marki"),
-    }),
-    defineField({
-      name: "brand",
-      title: "Marka",
+      name: "internalProduct",
+      title: "Produkt z katalogu Audiofast",
       type: "reference",
-      to: [{ type: "brand" }],
-      description: "Marka z katalogu Audiofast.",
-      group: GROUP.MAIN_CONTENT,
-      hidden: ({ document }) => document?.brandType !== "audiofast",
-      validation: (Rule) =>
-        Rule.custom((value, context) => {
-          const doc = context.document as { brandType?: string } | undefined;
-          if (doc?.brandType === "audiofast" && !value) {
-            return "Marka jest wymagana dla marek z katalogu Audiofast";
-          }
-          return true;
-        }),
-    }),
-    defineField({
-      name: "otherBrandName",
-      title: "Nazwa marki",
-      type: "string",
+      to: [{ type: "product" }],
       description:
-        "Nazwa marki spoza dystrybucji Audiofast (np. „Naim Audio”).",
+        "Opcjonalne powiązanie z katalogiem. Gdy ustawione: możesz zostawić puste własne zdjęcie główne (dziedziczone z katalogu) oraz wybrać galerię z katalogu zamiast własnej.",
       group: GROUP.MAIN_CONTENT,
-      hidden: ({ document }) => document?.brandType !== "external",
-      validation: (Rule) =>
-        Rule.custom((value, context) => {
-          const doc = context.document as { brandType?: string } | undefined;
-          if (doc?.brandType === "external" && !value?.trim()) {
-            return "Nazwa marki jest wymagana dla marek zewnętrznych";
-          }
-          return true;
-        }),
+      hidden: ({ document }) => document?.productType === "external",
     }),
 
     // ----------------------------------------
@@ -444,14 +446,35 @@ export const cpoProduct = defineType({
       ],
     }),
     defineField({
+      name: "useCustomGallery",
+      title: "Własna galeria zdjęć",
+      type: "boolean",
+      description:
+        "Wyłączone → w sekcji „Galeria” na stronie używana jest galeria z produktu katalogowego (wymaga powiązania z katalogiem). Włączone → używana jest galeria z tego dokumentu poniżej.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+      hidden: ({ document }) =>
+        document?.productType === "external" || !document?.internalProduct,
+    }),
+    defineField({
       name: "imageGallery",
       title: "Galeria zdjęć",
       type: "array",
       description:
-        "Zdjęcia konkretnego egzemplarza (stan, kąty, kontekst).",
+        "Zdjęcia konkretnego egzemplarza (stan, kąty, kontekst). Ukryte, gdy wybrano galerię z katalogu (wyłączona własna galeria przy ustawionym produkcie katalogowym).",
       of: [{ type: "image" }],
       group: GROUP.MAIN_CONTENT,
-      hidden: ({ document }) => document?.productType === "external",
+      hidden: ({ document }) => {
+        if (document?.productType === "external") return true;
+        const doc = document as {
+          internalProduct?: { _ref?: string };
+          useCustomGallery?: boolean;
+        } | null;
+        const hasCatalogRef = !!doc?.internalProduct?._ref;
+        const useOwnGallery = doc?.useCustomGallery === true;
+        if (hasCatalogRef && !useOwnGallery) return true;
+        return false;
+      },
     }),
     defineField({
       name: "technicalData",
@@ -466,74 +489,24 @@ export const cpoProduct = defineType({
     }),
 
     // ----------------------------------------
-    // External only (productType === "external")
-    // ----------------------------------------
-    defineField({
-      name: "externalUrl",
-      title: "Link zewnętrzny",
-      type: "url",
-      description:
-        "Adres strony producenta lub dystrybutora z opisem produktu.",
-      group: GROUP.MAIN_CONTENT,
-      hidden: ({ document }) => document?.productType !== "external",
-      validation: (Rule) =>
-        Rule.custom((value, context) => {
-          const doc = context.document as { productType?: string } | undefined;
-          if (doc?.productType === "external" && !value) {
-            return "Link zewnętrzny jest wymagany dla produktów zewnętrznych";
-          }
-          return true;
-        }),
-    }),
-    // ----------------------------------------
-    // Denormalized Fields (Computed, Hidden)
-    // ----------------------------------------
-    defineField({
-      name: "denormBrandSlug",
-      title: "Brand Slug (computed)",
-      type: "string",
-      description:
-        "Cleaned brand slug for filtering (e.g. 'aurender' or 'naim audio'). Auto-computed on publish.",
-      hidden: true,
-      readOnly: true,
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "denormBrandName",
-      title: "Brand Name (computed)",
-      type: "string",
-      description: "Denormalized brand name for display. Auto-computed on publish.",
-      hidden: true,
-      readOnly: true,
-      group: GROUP.MAIN_CONTENT,
-    }),
-
-    // ----------------------------------------
     // SEO
     // ----------------------------------------
-    ...getSEOFields({ exclude: ["hideFromList"], hideTitle: true }),
+    ...getSEOFields({
+      exclude: ["hideFromList", "doNotIndex"],
+      hideTitle: true,
+    }),
   ],
   preview: {
     select: {
       title: "name",
-      brandName: "brand.name",
-      otherBrandName: "otherBrandName",
-      brandType: "brandType",
+      brandName: "brandName",
       productType: "productType",
       media: "previewImage",
       isArchived: "isArchived",
     },
-    prepare: ({
-      title,
-      brandName,
-      otherBrandName,
-      brandType,
-      productType,
-      media,
-      isArchived,
-    }) => ({
-      title: `${isArchived ? "[ARCHIWUM] " : ""}${title}`,
-      subtitle: brandType === "external" ? otherBrandName : brandName,
+    prepare: ({ title, brandName, productType, media, isArchived }) => ({
+      title: `${isArchived ? "[ARCHIWUM] " : ""}${productType === "external" ? "[ZEW] " : ""}${title}`,
+      subtitle: brandName,
       media: media || Package,
     }),
   },

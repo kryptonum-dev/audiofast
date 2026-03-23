@@ -141,7 +141,7 @@ export default function CpoProductCard({
     name,
     shortDescription,
     priceCents,
-    brand,
+    brandName,
     mainImage,
     slug,
     productType,
@@ -152,7 +152,7 @@ export default function CpoProductCard({
   const Heading = headingLevel;
   const isExternal = productType === 'external';
   const href = isExternal ? (externalUrl ?? '#') : (slug ?? '#');
-  const brandLogo = brand && 'logo' in brand && brand.logo ? brand.logo : null;
+  const brandLogo = null;
   const isTransparent = transparentBackground === true;
   const shortDescriptionPreview = truncatePortableText(
     shortDescription as PortableTextProps | null | undefined,
@@ -183,7 +183,7 @@ export default function CpoProductCard({
         data-has-description={hasShortDescriptionPreview}
       >
         <Heading className={styles.title}>
-          {brand?.name && `${brand.name} `}
+          {brandName ? `${brandName} ` : null}
           {name}
         </Heading>
         {hasShortDescriptionPreview && (

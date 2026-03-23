@@ -382,8 +382,7 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   }
 `;
 
-// Reusable CPO product fragment for listing cards
-// Brand coalesced: Audiofast brand → full ref; external → name only from otherBrandName
+// Reusable CPO product fragment for listing cards (brandName from Excel; optional inherit images)
 const cpoProductFragment = /* groq */ `
   _id,
   _createdAt,
@@ -393,23 +392,12 @@ const cpoProductFragment = /* groq */ `
   priceCents,
   isArchived,
   productType,
-  brandType,
-  "brand": select(
-    brandType == "audiofast" => brand->{
-      name,
-      "slug": slug.current,
-      ${imageFragment('logo')},
-    },
-    brandType == "external" => {
-      "name": otherBrandName,
-      "slug": null,
-      "logo": null
-    },
-    null
-  ),
+  brandName,
   externalUrl,
   transparentBackground,
-  ${imageFragment('"mainImage": previewImage')},
+  useCustomGallery,
+  internalProduct,
+  ${imageFragment('"mainImage": select(defined(previewImage.asset) => previewImage, internalProduct->previewImage)')},
   ${portableTextFragment('shortDescription')},
 `;
 
@@ -1112,7 +1100,7 @@ const cpoFilterConditions = /* groq */ `
   )
   && (
     count($brands) == 0
-    || denormBrandSlug in $brands
+    || lower(brandName) in $brands
   )
   && ($minPrice == 0 || priceCents >= $minPrice)
   && ($maxPrice == 0 || priceCents <= $maxPrice)
@@ -1166,12 +1154,12 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
   "products": *[
     _type == "cpoProduct"
     && isArchived != true
-    && defined(denormBrandSlug)
+    && defined(brandName)
   ] {
     _id,
     name,
-    "brandSlug": denormBrandSlug,
-    "brandName": denormBrandName,
+    "brandSlug": lower(brandName),
+    "brandName": brandName,
     "basePriceCents": priceCents,
     "categorySlug": null,
     "allCategorySlugs": [],
@@ -1180,17 +1168,12 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
   "brands": array::unique(*[
     _type == "cpoProduct"
     && isArchived != true
-    && defined(denormBrandSlug)
+    && defined(brandName)
   ] {
-    "_id": denormBrandSlug,
-    "name": denormBrandName,
-    "slug": denormBrandSlug,
-    "logo": select(
-      brandType == "audiofast" => brand->{
-        ${imageFragment('logo')}
-      }.logo,
-      null
-    )
+    "_id": lower(brandName),
+    "name": brandName,
+    "slug": lower(brandName),
+    "logo": null
   }),
   "globalMaxPrice": math::max(*[
     _type == "cpoProduct"
@@ -1213,20 +1196,21 @@ export const queryCpoProductBySlug =
   priceCents,
   transparentBackground,
   productType,
-  brandType,
-  "brand": select(
-    brandType == "audiofast" => brand->{
+  brandName,
+  useCustomGallery,
+  internalProduct->{
+    _id,
+    name,
+    "slug": slug.current,
+    brand->{
       name,
       "slug": slug.current,
-      ${imageFragment('logo')},
     },
-    brandType == "external" => {
-      "name": otherBrandName,
-      "slug": null,
-      "logo": null
-    },
-    null
-  ),
+    ${imageFragment('previewImage')},
+    ${imageFragment('imageGallery[]')},
+    ${portableTextFragment('shortDescription')},
+  },
+  ${imageFragment('"resolvedPreviewImage": select(defined(previewImage.asset) => previewImage, internalProduct->previewImage)')},
   ${imageFragment('previewImage')},
   imageGallery[]{
     "id": asset._ref,
@@ -1288,13 +1272,7 @@ export const queryCpoProductSeoBySlug =
   defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal"][0] {
   "slug": slug.current,
   name,
-  "brand": select(
-    brandType == "audiofast" => brand->{ name },
-    brandType == "external" => {
-      "name": otherBrandName
-    },
-    null
-  ),
+  brandName,
   seo,
   openGraph{
     title,
