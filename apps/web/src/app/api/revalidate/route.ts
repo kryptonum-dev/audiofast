@@ -401,6 +401,7 @@ export async function POST(request: NextRequest) {
   const revalidatedTags: string[] = [];
   const revalidatedPaths: string[] = [];
   const tags = new Set<string>();
+  const paths = new Set<string>();
 
   // Track denormalization tasks to run in parallel
   const denormTasks: Promise<void>[] = [];
@@ -426,6 +427,24 @@ export async function POST(request: NextRequest) {
         const pageSlug = extractSlug(doc.slug);
         if (pageSlug) {
           addTag(tags, `page:${pageSlug}`);
+        }
+      }
+
+      // =========================================================================
+      // CPO path safety-net revalidation
+      // =========================================================================
+      // The CPO Excel sync uses the Sanity HTTP API. Tags are the primary mechanism,
+      // but we also explicitly revalidate the listing page and the touched detail
+      // path so the first visit after sync always reflects the latest state.
+      if (doc._type === 'cpoPage') {
+        addPath(paths, '/certyfikowany-sprzet-uzywany/');
+      }
+
+      if (doc._type === 'cpoProduct') {
+        addPath(paths, '/certyfikowany-sprzet-uzywany/');
+
+        if (doc.slug) {
+          addPath(paths, doc.slug);
         }
       }
 
@@ -485,10 +504,7 @@ export async function POST(request: NextRequest) {
     // =========================================================================
     if (doc.paths && Array.isArray(doc.paths)) {
       for (const path of doc.paths) {
-        if (typeof path === 'string' && path.startsWith('/')) {
-          revalidatePath(path);
-          revalidatedPaths.push(path);
-        }
+        addPath(paths, path);
       }
     }
   }
@@ -516,6 +532,11 @@ export async function POST(request: NextRequest) {
   for (const tag of tags) {
     revalidateTag(tag, { expire: 0 });
     revalidatedTags.push(tag);
+  }
+
+  for (const path of paths) {
+    revalidatePath(path);
+    revalidatedPaths.push(path);
   }
 
   // Wait for denormalization tasks to complete (fire-and-forget style)
@@ -613,6 +634,20 @@ function addTag(tagSet: Set<string>, tag?: string | null) {
   }
 
   tagSet.add(trimmed);
+}
+
+function addPath(pathSet: Set<string>, path?: string | null) {
+  if (!path || typeof path !== 'string') {
+    return;
+  }
+
+  const trimmed = path.trim();
+
+  if (trimmed.length === 0 || !trimmed.startsWith('/')) {
+    return;
+  }
+
+  pathSet.add(trimmed);
 }
 // ============================================================================
 // DENORMALIZATION FUNCTIONS
