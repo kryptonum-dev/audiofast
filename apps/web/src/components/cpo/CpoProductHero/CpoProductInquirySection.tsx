@@ -21,6 +21,10 @@ type CpoProductInquirySectionProps = {
   previewImage?: SanityRawImage | null;
   priceCents?: number | null;
   formStateData?: FormStateData | null;
+  originalProduct?: {
+    href: string;
+    name: string;
+  } | null;
 };
 
 export default function CpoProductInquirySection({
@@ -31,6 +35,7 @@ export default function CpoProductInquirySection({
   previewImage,
   priceCents,
   formStateData,
+  originalProduct,
 }: CpoProductInquirySectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const modalPreviewImage = previewImage ?? ({ id: null } as SanityRawImage);
@@ -67,6 +72,15 @@ export default function CpoProductInquirySection({
           onClick={() => setIsModalOpen(true)}
           className={productHeroStyles.inquiryButton}
         />
+        {originalProduct?.href && (
+          <Button
+            text="Zobacz produkt katalogowy"
+            variant="secondary"
+            href={originalProduct.href}
+            title={`Przejdź do produktu katalogowego: ${originalProduct.name}`}
+            className={productHeroStyles.inquiryButton}
+          />
+        )}
       </div>
 
       <ProductInquiryModal

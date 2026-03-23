@@ -105,6 +105,17 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
       ? product.imageGallery
       : (product.internalProduct?.imageGallery ?? product.imageGallery)
   ) as SanityRawImage[] | null | undefined;
+  const originalProduct =
+    product.internalProduct?.slug && product.internalProduct?.name
+      ? {
+          href: product.internalProduct.slug,
+          name: product.internalProduct.name,
+        }
+      : null;
+  const galleryHeading =
+    !useOwnGallery && product.internalProduct?.imageGallery?.length
+      ? 'Galeria produktu katalogowego'
+      : 'Galeria egzemplarza';
 
   const breadcrumbsData = [
     {
@@ -153,6 +164,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         priceCents={product.priceCents}
         transparentBackground={product.transparentBackground}
         formStateData={formStateData as FormStateData | null}
+        originalProduct={originalProduct}
       />
       {sections.length > 1 && (
         <PillsStickyNav
@@ -177,7 +189,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
       <CpoProductGallerySection
         images={galleryImages ?? []}
         customId="galeria"
-        heading="Galeria egzemplarza"
+        heading={galleryHeading}
       />
       {product.technicalData && (
         <TechnicalData
