@@ -1188,7 +1188,7 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
 }`);
 
 export const queryCpoProductBySlug =
-  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal"][0] {
+  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal" && isArchived != true][0] {
   _id,
   _type,
   "slug": slug.current,
@@ -1269,7 +1269,7 @@ export const queryAllCpoProductSlugs = defineQuery(`*[
 }`);
 
 export const queryCpoProductSeoBySlug =
-  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal"][0] {
+  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal" && isArchived != true][0] {
   "slug": slug.current,
   name,
   brandName,
