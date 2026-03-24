@@ -1,30 +1,30 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import type { ProductType } from "@/src/global/types";
+import type { ProductType } from '@/src/global/types';
 
-import Image from "../../shared/Image";
-import Button from "../Button";
-import AddToComparisonButton from "./AddToComparisonButton";
-import styles from "./styles.module.scss";
+import Image from '../../shared/Image';
+import Button from '../Button';
+import AddToComparisonButton from './AddToComparisonButton';
+import styles from './styles.module.scss';
 
 interface ProductCardProps {
   product: ProductType;
-  headingLevel?: "h2" | "h3";
+  headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
   showButton?: boolean;
-  layout?: "horizontal" | "vertical";
+  layout?: 'horizontal' | 'vertical';
   priority?: boolean;
-  loading?: "eager" | "lazy";
+  loading?: 'eager' | 'lazy';
 }
 
 export default function ProductCard({
   product,
-  layout = "horizontal",
-  imageSizes = "400px",
-  headingLevel = "h3",
+  layout = 'horizontal',
+  imageSizes = '400px',
+  headingLevel = 'h3',
   showButton = true,
   priority = false,
-  loading = "lazy",
+  loading = 'lazy',
 }: ProductCardProps) {
   const {
     slug,
@@ -41,11 +41,11 @@ export default function ProductCard({
 
   // Format price for display (converting cents to PLN)
   const formatPrice = (priceCents: number | null | undefined) => {
-    if (!priceCents || priceCents === 0) return "Brak ceny";
+    if (!priceCents || priceCents === 0) return 'Brak ceny';
     const priceInPLN = priceCents / 100;
-    return new Intl.NumberFormat("pl-PL", {
-      style: "currency",
-      currency: "PLN",
+    return new Intl.NumberFormat('pl-PL', {
+      style: 'currency',
+      currency: 'PLN',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(priceInPLN);
@@ -67,9 +67,9 @@ export default function ProductCard({
           )}
           <AddToComparisonButton
             productId={_id}
-            productName={name ?? ""}
-            categorySlug={categories?.[0]?.slug ?? ""}
-            categoryName={categories?.[0]?.name ?? categories?.[0]?.slug ?? ""}
+            productName={name ?? ''}
+            categorySlug={categories?.[0]?.slug ?? ''}
+            categoryName={categories?.[0]?.name ?? categories?.[0]?.slug ?? ''}
             productData={product}
           />
         </div>
@@ -81,7 +81,7 @@ export default function ProductCard({
           <p className={styles.subtitle}>{subtitle}</p>
           <div className={styles.priceContainer} data-layout={layout}>
             <span className={styles.price}>
-              {hasMultiplePrices ? "od " : ""}
+              {hasMultiplePrices ? 'od ' : ''}
               {formatPrice(basePriceCents)}
             </span>
             {showButton && (

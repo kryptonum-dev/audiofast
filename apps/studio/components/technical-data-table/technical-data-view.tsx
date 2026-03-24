@@ -47,6 +47,7 @@ import {
   createEmptyCellValue,
   createEmptyGroup,
   createEmptyRow,
+  extractPlainTextFromBlocks,
   generateKey,
   type TechnicalDataGroup,
   type TechnicalDataRow,
@@ -151,6 +152,146 @@ function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
       })}
     </div>
   );
+}
+
+function hasMeaningfulCellContent(blocks: PortableTextBlock[] | undefined): boolean {
+  return extractPlainTextFromBlocks(blocks || []).trim().length > 0;
+}
+
+function createTechnicalDataSnapshot(
+  value: TechnicalDataValue | undefined | null,
+): {
+  variants: string[];
+  groups: Array<{
+    title: string | null;
+    rows: Array<{
+      title: string;
+      values: PortableTextBlock[][];
+    }>;
+  }>;
+} | null {
+  if (!value) return null;
+
+  const variants = (value.variants || [])
+    .map((variant) => variant.trim())
+    .filter(Boolean);
+  const valueColumnCount = Math.max(1, variants.length || 1);
+
+  const groups = (value.groups || [])
+    .map((group) => {
+      const rows = (group.rows || [])
+        .map((row) => {
+          const title = row.title.trim();
+          const values = Array.from({ length: valueColumnCount }, (_, index) => {
+            const content = row.values[index]?.content || [];
+            return Array.isArray(content) ? content : [];
+          });
+          const hasAnyValue = values.some((content) =>
+            hasMeaningfulCellContent(content),
+          );
+
+          if (!title && !hasAnyValue) {
+            return null;
+          }
+
+          return {
+            title,
+            values,
+          };
+        })
+        .filter(Boolean) as Array<{
+        title: string;
+        values: PortableTextBlock[][];
+      }>;
+
+      if (rows.length === 0) {
+        return null;
+      }
+
+      return {
+        title: group.title?.trim() || null,
+        rows,
+      };
+    })
+    .filter(Boolean) as Array<{
+    title: string | null;
+    rows: Array<{
+      title: string;
+      values: PortableTextBlock[][];
+    }>;
+  }>;
+
+  if (groups.length === 0) {
+    return null;
+  }
+
+  return {
+    variants,
+    groups,
+  };
+}
+
+function normalizeTechnicalDataForSave(
+  variants: string[],
+  groups: TechnicalDataGroup[],
+): TechnicalDataValue {
+  const normalizedVariants = variants
+    .map((variant) => variant.trim())
+    .filter(Boolean);
+  const valueColumnCount = Math.max(1, normalizedVariants.length || 1);
+
+  const normalizedGroups = groups
+    .map((group) => {
+      const rows = group.rows
+        .map((row) => {
+          const title = row.title.trim();
+          const values = Array.from({ length: valueColumnCount }, (_, index) => {
+            const existingValue = row.values[index];
+            return {
+              _key: existingValue?._key || generateKey(),
+              content: Array.isArray(existingValue?.content)
+                ? existingValue.content
+                : [],
+            };
+          });
+          const hasAnyValue = values.some((value) =>
+            hasMeaningfulCellContent(value.content),
+          );
+
+          if (!title && !hasAnyValue) {
+            return null;
+          }
+
+          return {
+            ...row,
+            _key: row._key || generateKey(),
+            title,
+            values,
+          };
+        })
+        .filter(Boolean) as TechnicalDataRow[];
+
+      if (rows.length === 0) {
+        return null;
+      }
+
+      return {
+        ...group,
+        _key: group._key || generateKey(),
+        title: group.title?.trim() || null,
+        rows,
+      };
+    })
+    .filter(Boolean) as TechnicalDataGroup[];
+
+  if (normalizedGroups.length === 0) {
+    return null;
+  }
+
+  return {
+    variants: normalizedVariants.length > 0 ? normalizedVariants : null,
+    groups: normalizedGroups,
+  };
 }
 
 /**
@@ -390,6 +531,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
 
   // Get document info
   const documentId = document.displayed._id;
+  const documentType = document.displayed._type;
   const technicalData = document.displayed.technicalData as TechnicalDataValue;
 
   // Local state for editing
@@ -478,21 +620,19 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       const currentVariants = latestDataRef.current.variants;
       const currentGroups = latestDataRef.current.groups;
 
-      const newTechnicalData: TechnicalDataValue = {
-        variants: currentVariants.length > 0 ? currentVariants : null,
-        groups: currentGroups.map((group) => ({
-          ...group,
-          _key: group._key || generateKey(),
-          rows: group.rows.map((row) => ({
-            ...row,
-            _key: row._key || generateKey(),
-            values: row.values.map((val) => ({
-              ...val,
-              _key: val._key || generateKey(),
-            })),
-          })),
-        })),
-      };
+      const newTechnicalData = normalizeTechnicalDataForSave(
+        currentVariants,
+        currentGroups,
+      );
+      const currentSnapshot = createTechnicalDataSnapshot(
+        document.displayed.technicalData as TechnicalDataValue,
+      );
+      const nextSnapshot = createTechnicalDataSnapshot(newTechnicalData);
+
+      if (JSON.stringify(currentSnapshot) === JSON.stringify(nextSnapshot)) {
+        isDirty.current = false;
+        return;
+      }
 
       // Get the base document ID (without drafts. prefix)
       const baseId = documentId.startsWith("drafts.")
@@ -512,13 +652,16 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       transaction.createIfNotExists({
         ...restOfDocument,
         _id: draftId,
-        _type: "product",
+        _type: documentType,
       });
 
-      // Then patch the technical data
-      transaction.patch(draftId, (patch) =>
-        patch.set({ technicalData: newTechnicalData }),
-      );
+      if (newTechnicalData) {
+        transaction.patch(draftId, (patch) =>
+          patch.set({ technicalData: newTechnicalData }),
+        );
+      } else {
+        transaction.patch(draftId, (patch) => patch.unset(["technicalData"]));
+      }
 
       await transaction.commit();
 
@@ -535,7 +678,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
     } finally {
       setIsSaving(false);
     }
-  }, [client, documentId, document.displayed, toast]);
+  }, [client, documentId, document.displayed, documentType, toast]);
 
   // Flush any pending save immediately and wait for it to complete
   const flushSave = useCallback(async (): Promise<void> => {

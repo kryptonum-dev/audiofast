@@ -80,7 +80,8 @@ export default async function CpoProductsListingInner({
     notFound();
   }
 
-  const hasProducts = products && products.length > 0;
+  const listableProducts = products.filter((p) => p.mainImage?.id);
+  const hasProducts = listableProducts.length > 0;
 
   const paginationSearchParams = new URLSearchParams();
   if (searchTerm) paginationSearchParams.set('search', searchTerm);
@@ -108,7 +109,7 @@ export default async function CpoProductsListingInner({
             searchParams={paginationSearchParams}
           />
           <ul className={styles.productsGrid}>
-            {products.map((product, index) => {
+            {listableProducts.map((product, index) => {
               const row = Math.floor(index / ITEMS_PER_ROW);
               const delay = row * ROW_DELAY;
 

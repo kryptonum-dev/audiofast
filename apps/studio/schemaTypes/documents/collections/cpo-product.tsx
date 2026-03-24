@@ -302,10 +302,10 @@ export const cpoProduct = defineType({
     // ----------------------------------------
     defineField({
       name: "previewImage",
-      title: "Zdjęcie główne",
+      title: "Własne zdjęcie główne",
       type: "image",
       description:
-        "Główne zdjęcie wyświetlane na karcie produktu. Dla egzemplarzy wewnętrznych — także w sekcji hero na stronie szczegółowej.",
+        "Opcjonalnie nadpisuje zdjęcie z produktu katalogowego. Jeśli ustawiono powiązanie z katalogiem i nie dodasz tu własnego zdjęcia, jako podgląd CPO zostanie użyte zdjęcie główne z referencji. Gdy nie ma powiązania z katalogiem lub produkt jest zewnętrzny, własne zdjęcie główne jest wymagane.",
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,
@@ -397,7 +397,7 @@ export const cpoProduct = defineType({
       type: "reference",
       to: [{ type: "product" }],
       description:
-        "Opcjonalne powiązanie z katalogiem. Gdy ustawione: możesz zostawić puste własne zdjęcie główne (dziedziczone z katalogu) oraz wybrać galerię z katalogu zamiast własnej.",
+        "Opcjonalne powiązanie z katalogiem. Gdy ustawione: możesz zostawić puste własne zdjęcie główne, a podgląd CPO automatycznie użyje zdjęcia głównego z referencji. Możesz też wybrać galerię z katalogu zamiast własnej.",
       group: GROUP.MAIN_CONTENT,
       hidden: ({ document }) => document?.productType === "external",
     }),
@@ -500,14 +500,18 @@ export const cpoProduct = defineType({
     select: {
       title: "name",
       brandName: "brandName",
-      productType: "productType",
       media: "previewImage",
-      isArchived: "isArchived",
+      referenceMedia: "internalProduct.previewImage",
     },
-    prepare: ({ title, brandName, productType, media, isArchived }) => ({
-      title: `${isArchived ? "[ARCHIWUM] " : ""}${productType === "external" ? "[ZEW] " : ""}${title}`,
+    prepare: ({
+      title,
+      brandName,
+      media,
+      referenceMedia,
+    }) => ({
+      title,
       subtitle: brandName,
-      media: media || Package,
+      media: media || referenceMedia || Package,
     }),
   },
 });

@@ -149,10 +149,13 @@ export default function CpoProductCard({
     transparentBackground,
   } = product;
 
+  if (!mainImage?.id) {
+    return null;
+  }
+
   const Heading = headingLevel;
   const isExternal = productType === 'external';
   const href = isExternal ? (externalUrl ?? '#') : (slug ?? '#');
-  const brandLogo = null;
   const isTransparent = transparentBackground === true;
   const shortDescriptionPreview = truncatePortableText(
     shortDescription as PortableTextProps | null | undefined,
@@ -170,13 +173,6 @@ export default function CpoProductCard({
           priority={priority}
           loading={loading}
         />
-        {isTransparent && brandLogo && (
-          <>
-            <span className={styles.logoBg} aria-hidden="true" />
-            <Image image={brandLogo} sizes="90px" loading={loading} />
-          </>
-        )}
-        {isTransparent && <span className={styles.badge}>Używany</span>}
       </div>
       <div
         className={styles.container}

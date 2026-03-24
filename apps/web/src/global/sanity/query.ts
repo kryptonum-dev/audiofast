@@ -401,6 +401,12 @@ const cpoProductFragment = /* groq */ `
   ${portableTextFragment('shortDescription')},
 `;
 
+// Listing filters + filter metadata: must match cpoProductFragment mainImage resolution
+const cpoListablePreviewImageCondition = /* groq */ `(
+  defined(previewImage.asset)
+  || (defined(internalProduct) && defined(internalProduct->previewImage.asset))
+)`;
+
 // Reusable FAQ fragment for FAQ documents
 const faqFragment = (name: string = 'faq') => /* groq */ `
   ${name} {
@@ -774,6 +780,7 @@ const cpoProductsListingBlock = /* groq */ `
     "totalCount": count(*[
       _type == "cpoProduct"
       && isArchived != true
+      && ${cpoListablePreviewImageCondition}
     ])
   }
 `;
@@ -1095,6 +1102,7 @@ export const queryCpoPage = defineQuery(`*[_type == "cpoPage"][0]{
 const cpoFilterConditions = /* groq */ `
   _type == "cpoProduct"
   && isArchived != true
+  && ${cpoListablePreviewImageCondition}
   && (
     $search == "" || name match $search + "*"
   )
@@ -1148,13 +1156,16 @@ export function getCpoProductsListingQuery(sortBy: string = 'newest') {
   }
 }
 
-export const queryCpoProductsListingCount = defineQuery(`count(*[${cpoFilterConditions}])`);
+export const queryCpoProductsListingCount = defineQuery(
+  `count(*[${cpoFilterConditions}])`,
+);
 
 export const queryCpoProductsFilterMetadata = defineQuery(`{
   "products": *[
     _type == "cpoProduct"
     && isArchived != true
     && defined(brandName)
+    && ${cpoListablePreviewImageCondition}
   ] {
     _id,
     name,
@@ -1169,6 +1180,7 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
     _type == "cpoProduct"
     && isArchived != true
     && defined(brandName)
+    && ${cpoListablePreviewImageCondition}
   ] {
     "_id": lower(brandName),
     "name": brandName,
@@ -1178,11 +1190,13 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
   "globalMaxPrice": math::max(*[
     _type == "cpoProduct"
     && isArchived != true
+    && ${cpoListablePreviewImageCondition}
     && defined(priceCents)
   ].priceCents),
   "globalMinPrice": math::min(*[
     _type == "cpoProduct"
     && isArchived != true
+    && ${cpoListablePreviewImageCondition}
     && defined(priceCents)
   ].priceCents)
 }`);
@@ -1232,25 +1246,52 @@ export const queryCpoProductBySlug =
     }
   },
   ${portableTextFragment('shortDescription')},
-  details {
-    ${portableTextFragment('heading')},
-    ${portableTextFragment('productDetailContent')},
-  },
-  technicalData {
-    variants,
-    groups[] {
-      _key,
-      title,
-      rows[] {
+  "details": select(
+    defined(details.productDetailContent[0]) => details{
+      ${portableTextFragment('heading')},
+      ${brandContentBlocksFragment('content')},
+      ${portableTextFragmentExtended('productDetailContent')}
+    },
+    internalProduct->details{
+      ${portableTextFragment('heading')},
+      ${brandContentBlocksFragment('content')},
+      ${portableTextFragmentExtended('productDetailContent')}
+    }
+  ),
+  "technicalData": select(
+    count(technicalData.groups[].rows[
+      coalesce(title, "") != "" || count(values[defined(content[0])]) > 0
+    ]) > 0 => technicalData {
+      variants,
+      groups[] {
         _key,
         title,
-        values[] {
+        rows[] {
           _key,
-          ${portableTextFragment('content')}
+          title,
+          values[] {
+            _key,
+            ${portableTextFragment('content')}
+          }
+        }
+      }
+    },
+    internalProduct->technicalData {
+      variants,
+      groups[] {
+        _key,
+        title,
+        rows[] {
+          _key,
+          title,
+          values[] {
+            _key,
+            ${portableTextFragment('content')}
+          }
         }
       }
     }
-  },
+  ),
   seo,
   openGraph{
     title,

@@ -6,6 +6,7 @@ import CpoProductHero from '@/src/components/cpo/CpoProductHero';
 import TechnicalData from '@/src/components/products/TechnicalData';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import type { FormStateData } from '@/src/components/ui/FormStates';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
@@ -28,6 +29,32 @@ import type { PortableTextProps } from '@/src/global/types';
 type CpoProductPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+function hasTwoColumnPortableText(content: unknown) {
+  if (!content || !Array.isArray(content)) return false;
+
+  return content.some((item) => {
+    if (!item || typeof item !== 'object' || !('_type' in item)) return false;
+
+    const type = item._type;
+    return type === 'ptPageBreak' || type === 'ptTwoColumnLine';
+  });
+}
+
+function hasTwoColumnContentBlocks(blocks: unknown) {
+  if (!blocks || !Array.isArray(blocks)) return false;
+
+  return blocks.some((block) => {
+    if (!block || typeof block !== 'object' || !('_type' in block)) {
+      return false;
+    }
+    if (block._type !== 'contentBlockText' || !('content' in block)) {
+      return false;
+    }
+
+    return hasTwoColumnPortableText(block.content);
+  });
+}
 
 export async function generateStaticParams() {
   const products = await sanityFetch<QueryAllCpoProductSlugsResult>({
@@ -105,17 +132,6 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
       ? product.imageGallery
       : (product.internalProduct?.imageGallery ?? product.imageGallery)
   ) as SanityRawImage[] | null | undefined;
-  const originalProduct =
-    product.internalProduct?.slug && product.internalProduct?.name
-      ? {
-          href: product.internalProduct.slug,
-          name: product.internalProduct.name,
-        }
-      : null;
-  const galleryHeading =
-    !useOwnGallery && product.internalProduct?.imageGallery?.length
-      ? 'Galeria produktu katalogowego'
-      : 'Galeria egzemplarza';
 
   const breadcrumbsData = [
     {
@@ -128,13 +144,18 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
     },
   ];
 
+  const hasDetailedDescription =
+    (product.details?.productDetailContent?.length ?? 0) > 0 ||
+    (product.details?.content?.length ?? 0) > 0;
+  const hasTwoColumnDetails =
+    hasTwoColumnPortableText(product.details?.productDetailContent) ||
+    hasTwoColumnContentBlocks(product.details?.content);
+
   const sections = [
     {
       id: 'szczegoly',
       label: 'Szczegóły',
-      visible:
-        !!product.details?.productDetailContent &&
-        product.details.productDetailContent.length > 0,
+      visible: hasDetailedDescription,
     },
     {
       id: 'galeria',
@@ -164,7 +185,6 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         priceCents={product.priceCents}
         transparentBackground={product.transparentBackground}
         formStateData={formStateData as FormStateData | null}
-        originalProduct={originalProduct}
       />
       {sections.length > 1 && (
         <PillsStickyNav
@@ -177,6 +197,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         unifiedContent={
           product.details?.productDetailContent as PortableTextProps | undefined
         }
+        contentBlocks={product.details?.content as ContentBlock[] | null}
         heading={
           product.details?.heading
             ? (product.details.heading as PortableTextProps)
@@ -184,12 +205,12 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         }
         customId="szczegoly"
         className="margin-top-xms"
-        narrowContent
+        narrowContent={!hasTwoColumnDetails}
       />
       <CpoProductGallerySection
         images={galleryImages ?? []}
         customId="galeria"
-        heading={galleryHeading}
+        heading="Galeria egzemplarza"
       />
       {product.technicalData && (
         <TechnicalData

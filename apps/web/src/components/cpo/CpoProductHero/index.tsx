@@ -20,10 +20,6 @@ type CpoProductHeroProps = {
   priceCents?: number | null;
   transparentBackground?: boolean | null;
   formStateData?: FormStateData | null;
-  originalProduct?: {
-    href: string;
-    name: string;
-  } | null;
   customId?: string;
 };
 
@@ -36,7 +32,6 @@ export default function CpoProductHero({
   priceCents,
   transparentBackground,
   formStateData,
-  originalProduct,
   customId,
 }: CpoProductHeroProps) {
   const productName = name?.trim() || '';
@@ -117,7 +112,6 @@ export default function CpoProductHero({
         previewImage={previewImage}
         priceCents={priceCents}
         formStateData={formStateData}
-        originalProduct={originalProduct}
       />
     </section>
   );

@@ -10,16 +10,16 @@ Build a pipeline that lets the client manage CPO products **entirely from Excel*
 
 ### What Changes vs Phase 1
 
-| Aspect | Phase 1 (current) | Phase 2 (this plan) |
-|--------|-------------------|---------------------|
-| CPO product creation | Manual in Sanity Studio | Automated from Excel |
-| `priceCents` | Manually entered in Sanity | Synced from Excel |
-| Brand | `brandType` toggle + `brand` ref + `otherBrandName` + denorm fields | Single `brandName` string field. No reference, no toggle, no denormalization |
-| Preview image | Always on CPO doc | If `internalProduct` set: optional on CPO (inherit catalog preview when empty). If no ref or **external**: required on CPO. |
-| Short description | N/A | Single required portable-text **`shortDescription`**. Excel column **Opis** is synced by writing **plain text as one PT block** (same field); each sync **overwrites** that content. Editable in Studio between syncs. |
-| Gallery | On CPO doc | Optional CPO `imageGallery`. **`useCustomGallery`** boolean: `false` = show catalog product gallery (when `internalProduct` exists); `true` = show CPO `imageGallery` only. |
-| `internalProduct` ref | Planned but not implemented | Optional; auto-linked from Excel URL when internal |
-| Product lifecycle | Manual publish/archive in Studio | Excel-driven: add row = create, remove row = archive |
+| Aspect                | Phase 1 (current)                                                   | Phase 2 (this plan)                                                                                                                                                                                                    |
+| --------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CPO product creation  | Manual in Sanity Studio                                             | Automated from Excel                                                                                                                                                                                                   |
+| `priceCents`          | Manually entered in Sanity                                          | Synced from Excel                                                                                                                                                                                                      |
+| Brand                 | `brandType` toggle + `brand` ref + `otherBrandName` + denorm fields | Single `brandName` string field. No reference, no toggle, no denormalization                                                                                                                                           |
+| Preview image         | Always on CPO doc                                                   | If `internalProduct` set: optional on CPO (inherit catalog preview when empty). If no ref or **external**: required on CPO.                                                                                            |
+| Short description     | N/A                                                                 | Single required portable-text **`shortDescription`**. Excel column **Opis** is synced by writing **plain text as one PT block** (same field); each sync **overwrites** that content. Editable in Studio between syncs. |
+| Gallery               | On CPO doc                                                          | Optional CPO `imageGallery`. **`useCustomGallery`** boolean: `false` = show catalog product gallery (when `internalProduct` exists); `true` = show CPO `imageGallery` only.                                            |
+| `internalProduct` ref | Planned but not implemented                                         | Optional; auto-linked from Excel URL when internal                                                                                                                                                                     |
+| Product lifecycle     | Manual publish/archive in Studio                                    | Excel-driven: add row = create, remove row = archive                                                                                                                                                                   |
 
 ---
 
@@ -27,14 +27,14 @@ Build a pipeline that lets the client manage CPO products **entirely from Excel*
 
 A new sheet named **`CPO`** in the existing pricing workbook. Row 1 is the header, data starts at row 2.
 
-| Column | Header | Type | Required | Example | Description |
-|--------|--------|------|----------|---------|-------------|
-| A | Marka | Free text | Yes | `Artesania Audio` | Brand name — always stored as a string, never a reference |
-| B | Nazwa | Free text | Yes | `PRESTIGE rack - egz. demo` | Display name of the CPO specimen |
-| C | Klucz | Slug-like | Yes | `prestige-rack-demo` | **Stable sync identifier** + URL path. Must be unique per CPO product |
-| D | Cena | Price (PLN) | Yes | `12 000 zł` | Flat CPO price. Parsed to cents |
-| E | URL | URL/path | No | `artesania-audio/prestige` or `https://...` | Link to catalog product (internal) or external page |
-| F | Opis | Free text | Yes (for sync) | `Stan idealny, produkt podemonstracyjny` | Short description → synced into **`shortDescription`** (portable text: one simple block of text). Sync overwrites; editors can enrich formatting in Studio. |
+| Column | Header | Type        | Required       | Example                                     | Description                                                                                                                                                 |
+| ------ | ------ | ----------- | -------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A      | Marka  | Free text   | Yes            | `Artesania Audio`                           | Brand name — always stored as a string, never a reference                                                                                                   |
+| B      | Nazwa  | Free text   | Yes            | `PRESTIGE rack - egz. demo`                 | Display name of the CPO specimen                                                                                                                            |
+| C      | Klucz  | Slug-like   | Yes            | `prestige-rack-demo`                        | **Stable sync identifier** + URL path. Must be unique per CPO product                                                                                       |
+| D      | Cena   | Price (PLN) | Yes            | `12 000 zł`                                 | Flat CPO price. Parsed to cents                                                                                                                             |
+| E      | URL    | URL/path    | No             | `artesania-audio/prestige` or `https://...` | Link to catalog product (internal) or external page                                                                                                         |
+| F      | Opis   | Free text   | Yes (for sync) | `Stan idealny, produkt podemonstracyjny`    | Short description → synced into **`shortDescription`** (portable text: one simple block of text). Sync overwrites; editors can enrich formatting in Studio. |
 
 ### Column Details
 
@@ -59,11 +59,11 @@ function normalizeKey(raw: string): string {
 
 **URL (E)** — Determines the product type:
 
-| URL value | `productType` | Behavior |
-|-----------|---------------|----------|
-| Starts with `http` | `"external"` | No own page. Card links to external URL |
-| Non-empty, doesn't start with `http` | `"internal"` | Own CPO page. Linked to catalog product via `internalProduct` reference |
-| Empty | `"internal"` | Own CPO page. No catalog link. **Created as draft** (needs manual images in Studio) |
+| URL value                            | `productType` | Behavior                                                                            |
+| ------------------------------------ | ------------- | ----------------------------------------------------------------------------------- |
+| Starts with `http`                   | `"external"`  | No own page. Card links to external URL                                             |
+| Non-empty, doesn't start with `http` | `"internal"`  | Own CPO page. Linked to catalog product via `internalProduct` reference             |
+| Empty                                | `"internal"`  | Own CPO page. No catalog link. **Created as draft** (needs manual images in Studio) |
 
 For internal URLs, the format mirrors the existing `price_key` pattern: `brand-slug/product-slug`. The sync function extracts the product slug and matches it to a Sanity product document via `slug.current == "/produkty/{productSlug}/"`.
 
@@ -300,7 +300,7 @@ console.log(`CPO produkty: ${cpoProducts.length}`);
 const payload = {
   mode: 'replace',
   variants: variantsArray,
-  cpo_products: cpoProducts,  // included in the same payload
+  cpo_products: cpoProducts, // included in the same payload
 };
 ```
 
@@ -308,7 +308,9 @@ Update response parsing to show CPO results:
 
 ```typescript
 if (result.cpo) {
-  console.log(`CPO: ${result.cpo.created || 0} utworzonych, ${result.cpo.updated || 0} zaktualizowanych, ${result.cpo.archived || 0} zarchiwizowanych`);
+  console.log(
+    `CPO: ${result.cpo.created || 0} utworzonych, ${result.cpo.updated || 0} zaktualizowanych, ${result.cpo.archived || 0} zarchiwizowanych`,
+  );
 }
 ```
 
@@ -342,8 +344,10 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
     }
 
     const password = String(
-      settingsSheet.getRange(CONFIG.PASSWORD_CELL).getValue() || ''
-    ).trim().replace(/[^\x20-\x7E]/g, '');
+      settingsSheet.getRange(CONFIG.PASSWORD_CELL).getValue() || '',
+    )
+      .trim()
+      .replace(/[^\x20-\x7E]/g, '');
 
     if (!password || password.length < 8) {
       console.log('BŁĄD: Hasło musi mieć min. 8 znaków');
@@ -365,12 +369,12 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
       {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer ' + CONFIG.ANON_KEY,
+          Authorization: 'Bearer ' + CONFIG.ANON_KEY,
           'X-Excel-Token': password,
           'Content-Type': 'application/json; charset=utf-8',
         },
         body: JSON.stringify(payload),
-      }
+      },
     );
 
     const responseText = await response.text();
@@ -402,7 +406,9 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
       console.log(`Błędy: ${result.errors.join(', ')}`);
     }
   } catch (error) {
-    console.log(`BŁĄD: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+    console.log(
+      `BŁĄD: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+    );
   }
 }
 ```
@@ -484,7 +490,7 @@ For internal URLs (e.g., `artesania-audio/prestige`), find the matching catalog 
 ```typescript
 async function findCatalogProduct(
   url: string,
-  sanityConfig: SanityConfig
+  sanityConfig: SanityConfig,
 ): Promise<string | null> {
   if (!url || url.startsWith('http')) return null;
 
@@ -524,7 +530,7 @@ For each CPO product row, two mutations in a single transaction:
 function buildMutationsForProduct(
   product: CpoProductInput,
   catalogProductId: string | null,
-  productType: 'internal' | 'external'
+  productType: 'internal' | 'external',
 ): SanityMutation[] {
   const key = normalizeKey(product.key);
   const docId = keyToDocId(key);
@@ -564,7 +570,9 @@ function buildMutationsForProduct(
         name: product.name,
         priceCents: product.price_cents,
         brandName: product.brand,
-        shortDescription: opisExcelToShortDescription(product.description || ''),
+        shortDescription: opisExcelToShortDescription(
+          product.description || '',
+        ),
         productType: productType,
         isArchived: false,
         ...(productType === 'external' && product.url
@@ -596,7 +604,7 @@ After processing all rows:
 ```typescript
 async function archiveRemovedProducts(
   excelKeys: Set<string>,
-  sanityConfig: SanityConfig
+  sanityConfig: SanityConfig,
 ): Promise<number> {
   // Find all non-archived CPO products in Sanity
   const query = `*[_type == "cpoProduct" && isArchived != true] { _id, "slug": slug.current }`;
@@ -669,16 +677,16 @@ let cpoResult = null;
 if (body.cpo_products && body.cpo_products.length > 0) {
   try {
     const cpoResponse = await fetch(
-      `${Deno.env.get("SUPABASE_URL")}/functions/v1/cpo-product-sync`,
+      `${Deno.env.get('SUPABASE_URL')}/functions/v1/cpo-product-sync`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          Authorization: req.headers.get("authorization")!,
-          "X-Excel-Token": tokenHeader,
-          "Content-Type": "application/json",
+          Authorization: req.headers.get('authorization')!,
+          'X-Excel-Token': tokenHeader,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          mode: body.mode || "replace",
+          mode: body.mode || 'replace',
           products: body.cpo_products,
         }),
       },
@@ -821,6 +829,7 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
 ```
 
 Key changes:
+
 - `denormBrandSlug` → `lower(brandName)` (for filtering/matching)
 - `denormBrandName` → `brandName` (for display)
 - Brand logo is always `null` (no brand reference to dereference)
@@ -839,7 +848,7 @@ Prefer `resolvedPreviewImage` from GROQ (or compute the same `select` in one pla
 ```typescript
 const galleryImages = product.useCustomGallery
   ? product.imageGallery
-  : product.internalProduct?.imageGallery ?? product.imageGallery;
+  : (product.internalProduct?.imageGallery ?? product.imageGallery);
 ```
 
 ### Step 5.3: Short description (card + hero)
@@ -887,7 +896,7 @@ Two options:
 await fetch(`${NEXT_PUBLIC_URL}/api/revalidate`, {
   method: 'POST',
   headers: {
-    'Authorization': `Bearer ${NEXT_REVALIDATE_TOKEN}`,
+    Authorization: `Bearer ${NEXT_REVALIDATE_TOKEN}`,
     'Content-Type': 'application/json',
   },
   body: JSON.stringify({ tags: ['cpoProduct', 'cpoPage'] }),
@@ -934,30 +943,30 @@ Steps 2, 3, 4, 5 can be worked on in parallel after Step 1.
 
 ## Files to Create
 
-| File | Purpose |
-|------|---------|
+| File                                           | Purpose                                          |
+| ---------------------------------------------- | ------------------------------------------------ |
 | `supabase/functions/cpo-product-sync/index.ts` | Edge Function: Excel CPO data → Sanity mutations |
-| `.ai/office-scripts/SyncCpoToSupabase.ts` | Standalone Office Script: CPO-only sync |
+| `.ai/office-scripts/SyncCpoToSupabase.ts`      | Standalone Office Script: CPO-only sync          |
 
 ## Files to Modify
 
-| File | Change |
-|------|--------|
-| `apps/studio/schemaTypes/documents/collections/cpo-product.tsx` | `brandName` first, required PT `shortDescription`, optional `internalProduct`, `useCustomGallery`, preview rules |
-| `apps/studio/actions/wrap-publish-with-denorm.ts` | Remove `cpoProduct` branch from publish wrapper. Remove from `applyDenormToPublish` types list |
-| `.ai/office-scripts/SyncPricingToSupabase.ts` | Add `readCpo()`, include `cpo_products` in payload |
-| `supabase/functions/pricing-ingest/index.ts` | Chain to `cpo-product-sync` (if using server-side chaining) |
-| `apps/web/src/global/sanity/query.ts` | Update `cpoProductFragment`, `queryCpoProductBySlug`, `cpoFilterConditions`, `queryCpoProductsFilterMetadata`. Replace all `denormBrandSlug`/`denormBrandName`/`brandType`/`brand->` with `brandName` |
-| `apps/web/src/app/certyfikowany-sprzet-uzywany/[slug]/page.tsx` | Apply image/description resolution. Update brand display |
-| `apps/web/src/components/cpo/CpoProductHero/index.tsx` | Handle inherited images/description, show "original product" link. Use `brandName` string |
-| `apps/web/src/components/cpo/CpoProductHero/CpoProductInquirySection.tsx` | Accept resolved image data. Use `brandName` string |
-| `apps/web/src/components/ui/CpoProductCard/index.tsx` | Handle resolved image from GROQ. Use `brandName` string |
-| `apps/web/src/components/cpo/CpoProductGallerySection/index.tsx` | Accept resolved gallery data |
+| File                                                                      | Change                                                                                                                                                                                                |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/studio/schemaTypes/documents/collections/cpo-product.tsx`           | `brandName` first, required PT `shortDescription`, optional `internalProduct`, `useCustomGallery`, preview rules                                                                                      |
+| `apps/studio/actions/wrap-publish-with-denorm.ts`                         | Remove `cpoProduct` branch from publish wrapper. Remove from `applyDenormToPublish` types list                                                                                                        |
+| `.ai/office-scripts/SyncPricingToSupabase.ts`                             | Add `readCpo()`, include `cpo_products` in payload                                                                                                                                                    |
+| `supabase/functions/pricing-ingest/index.ts`                              | Chain to `cpo-product-sync` (if using server-side chaining)                                                                                                                                           |
+| `apps/web/src/global/sanity/query.ts`                                     | Update `cpoProductFragment`, `queryCpoProductBySlug`, `cpoFilterConditions`, `queryCpoProductsFilterMetadata`. Replace all `denormBrandSlug`/`denormBrandName`/`brandType`/`brand->` with `brandName` |
+| `apps/web/src/app/certyfikowany-sprzet-uzywany/[slug]/page.tsx`           | Apply image/description resolution. Update brand display                                                                                                                                              |
+| `apps/web/src/components/cpo/CpoProductHero/index.tsx`                    | Handle inherited images/description, show "original product" link. Use `brandName` string                                                                                                             |
+| `apps/web/src/components/cpo/CpoProductHero/CpoProductInquirySection.tsx` | Accept resolved image data. Use `brandName` string                                                                                                                                                    |
+| `apps/web/src/components/ui/CpoProductCard/index.tsx`                     | Handle resolved image from GROQ. Use `brandName` string                                                                                                                                               |
+| `apps/web/src/components/cpo/CpoProductGallerySection/index.tsx`          | Accept resolved gallery data                                                                                                                                                                          |
 
 ## Files to Delete
 
-| File | Reason |
-|------|--------|
+| File                                           | Reason                                                                        |
+| ---------------------------------------------- | ----------------------------------------------------------------------------- |
 | `apps/studio/utils/denormalize-cpo-product.ts` | Denormalization removed — brand is now a simple string, no computation needed |
 
 ---

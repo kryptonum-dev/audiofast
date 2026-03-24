@@ -41,6 +41,19 @@ function cellStr(row: (string | number | boolean)[], index: number): string {
   return val === null || val === undefined ? "" : String(val).trim();
 }
 
+/** Arkusz Excel: Klucz jako /segment/ — API dostaje sam segment */
+function normalizeCpoKey(raw: string): string {
+  return raw.trim().replace(/^\/+|\/+$/g, "");
+}
+
+/** URL wewnętrzny jako /marka/produkt/ — API dostaje marka/produkt; https bez zmian */
+function normalizeCpoUrl(raw: string): string {
+  const t = raw.trim();
+  if (!t) return "";
+  if (/^https?:\/\//i.test(t)) return t;
+  return t.replace(/^\/+|\/+$/g, "");
+}
+
 function readCpo(workbook: ExcelScript.Workbook): CpoProduct[] {
   const sheet = workbook.getWorksheet(CPO_SYNC_CONFIG.SHEET_CPO);
   if (!sheet) return [];
@@ -55,9 +68,9 @@ function readCpo(workbook: ExcelScript.Workbook): CpoProduct[] {
     const row = data[i];
     const brand = cellStr(row, 0);
     const name = cellStr(row, 1);
-    const key = cellStr(row, 2);
+    const key = normalizeCpoKey(cellStr(row, 2));
     const priceStr = cellStr(row, 3);
-    const url = cellStr(row, 4);
+    const url = normalizeCpoUrl(cellStr(row, 4));
     const description = cellStr(row, 5);
 
     if (!brand || !name || !key) continue;
