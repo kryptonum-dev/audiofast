@@ -47,6 +47,12 @@
         -webkit-text-stroke-color: transparent;
       }
 
+      // Default portable-text styles set strong to black for light UI; hero overlay is dark.
+      strong {
+        color: var(--neutral-white, #ffffff);
+        font-weight: 700;
+      }
+
       :global(.link) {
         color: var(--neutral-white, #ffffff);
 
