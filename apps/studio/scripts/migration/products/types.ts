@@ -299,7 +299,6 @@ export interface SanityProduct {
   shortDescription?: PortableTextBlock[]; // From ArticlePage.LeadingText
   publicationImage?: SanityImageRef; // From ArticlePage.LeadingImageID
   isArchived: boolean;
-  isCPO: boolean;
   brand?: SanityReference;
   categories?: SanityReference[];
   customFilterValues?: unknown[];

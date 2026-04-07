@@ -14,6 +14,7 @@ import * as React from 'react';
 type ProductInquiryData = {
   name: string;
   brandName: string;
+  kind?: 'standard' | 'cpo';
   configuration: Array<{
     label: string;
     value: string;
@@ -46,12 +47,17 @@ export const ContactNotificationTemplate = ({
   message,
   product,
 }: ContactNotificationTemplateProps) => {
+  const isCpoInquiry = product?.kind === 'cpo';
   const previewText = product
-    ? `Zapytanie o produkt: ${product.brandName} ${product.name}`
+    ? isCpoInquiry
+      ? `[CPO] Zapytanie o egzemplarz: ${product.brandName} ${product.name}`
+      : `Zapytanie o produkt: ${product.brandName} ${product.name}`
     : 'Nowe zgłoszenie z formularza kontaktowego';
 
   const headingText = product
-    ? 'Zapytanie o produkt'
+    ? isCpoInquiry
+      ? 'Zapytanie o egzemplarz CPO'
+      : 'Zapytanie o produkt'
     : 'Nowe zgłoszenie z formularza';
 
   // Calculate total additions for product
@@ -78,6 +84,11 @@ export const ContactNotificationTemplate = ({
             {/* Product Section - Only shown if product exists */}
             {product && (
               <Section style={productSection}>
+                {isCpoInquiry && (
+                  <Text style={productTypeBadge}>
+                    CPO | Certyfikowany sprzęt używany
+                  </Text>
+                )}
                 <Text style={productBrand}>{product.brandName}</Text>
                 <Text style={productName}>{product.name}</Text>
 
@@ -120,7 +131,9 @@ export const ContactNotificationTemplate = ({
                     </>
                   )}
                   <Section style={priceRow}>
-                    <Text style={priceTotalLabel}>Razem:</Text>
+                    <Text style={priceTotalLabel}>
+                      {isCpoInquiry ? 'Cena CPO:' : 'Razem:'}
+                    </Text>
                     <Text style={priceTotalValue}>
                       {formatPrice(product.totalPrice)}
                     </Text>
@@ -230,6 +243,20 @@ const productSection = {
   backgroundColor: '#f8f8f8', // --neutral-200
   borderRadius: '8px',
   borderLeft: '4px solid #fe0140', // --primary-red
+};
+
+const productTypeBadge = {
+  display: 'inline-block',
+  fontSize: '11px',
+  color: '#fe0140', // --primary-red
+  textTransform: 'uppercase' as const,
+  fontWeight: '600',
+  letterSpacing: '0.06em',
+  margin: '0 0 12px',
+  padding: '6px 10px',
+  borderRadius: '999px',
+  backgroundColor: '#ffffff',
+  border: '1px solid #ffd2dc',
 };
 
 const productBrand = {

@@ -18,7 +18,6 @@ function filterProducts(
     maxPrice?: number;
     customFilters?: CustomFilterValue[];
     rangeFilters?: ActiveRangeFilter[];
-    isCPO?: boolean;
     search?: string; // TEXT-ONLY: Filter by product name
   },
 ): ProductFilterMetadata[] {
@@ -128,11 +127,6 @@ function filterProducts(
     });
   }
 
-  // Apply CPO filter
-  if (options.isCPO) {
-    filtered = filtered.filter((p) => p.isCPO === true);
-  }
-
   return filtered;
 }
 
@@ -163,7 +157,6 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    isCPO: activeFilters.isCPO,
     search: activeFilters.search, // TEXT-ONLY: Filter brands by search
   });
 
@@ -184,7 +177,6 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    isCPO: activeFilters.isCPO,
     search: activeFilters.search, // TEXT-ONLY: Filter categories by search
   });
 
@@ -215,7 +207,6 @@ export function computeAvailableFilters(
     // maxPrice: EXCLUDED
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    isCPO: activeFilters.isCPO,
     search: activeFilters.search, // TEXT-ONLY: Filter price range by search
   });
 
@@ -234,7 +225,6 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    isCPO: activeFilters.isCPO,
     search: activeFilters.search, // TEXT-ONLY: Include search in total count
   });
 
@@ -249,7 +239,6 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     // customFilters: EXCLUDED - will be applied per-filter inside computeCustomFilterValues
     rangeFilters: activeFilters.rangeFilters,
-    isCPO: activeFilters.isCPO,
     search: activeFilters.search, // TEXT-ONLY: Filter dropdown options by search
   });
 
@@ -270,7 +259,6 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     // rangeFilters: EXCLUDED - will be applied per-filter inside computeRangeFilterBounds
-    isCPO: activeFilters.isCPO,
     search: activeFilters.search, // TEXT-ONLY: Filter range bounds by search
   });
 

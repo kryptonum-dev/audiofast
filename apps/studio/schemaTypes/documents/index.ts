@@ -2,6 +2,7 @@ import { award } from "./collections/award";
 import { blogArticle } from "./collections/blog-article";
 import { blogCategory } from "./collections/blog-category";
 import { brand } from "./collections/brand";
+import { cpoProduct } from "./collections/cpo-product";
 import { faq } from "./collections/faq";
 import { page } from "./collections/page";
 import { product } from "./collections/product";
@@ -51,6 +52,7 @@ export const collection = [
   review,
   reviewAuthor,
   product,
+  cpoProduct,
   productCategoryParent,
   productCategorySub,
   store,

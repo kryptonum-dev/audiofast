@@ -22,6 +22,7 @@ export interface TwoColumnContentProps {
   distributionYear?: NonNullable<QueryBrandBySlugResult>['distributionYear'];
   gallery?: SanityRawImage[];
   className?: string;
+  narrowContent?: boolean;
 }
 
 export default function TwoColumnContent({
@@ -33,6 +34,7 @@ export default function TwoColumnContent({
   distributionYear,
   gallery,
   className,
+  narrowContent = false,
 }: TwoColumnContentProps) {
   // Check content availability with priority order
   const hasUnifiedContent =
@@ -63,6 +65,7 @@ export default function TwoColumnContent({
     <section
       className={`max-width-block ${styles.twoColumnContent} ${className || ''}`}
       id={customId || undefined}
+      data-narrow-content={narrowContent}
     >
       <h2 className={styles.heading}>{renderHeading()}</h2>
 

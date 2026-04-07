@@ -45,7 +45,6 @@ export const brandsList = defineType({
       options: {
         list: [
           { title: "Wszystkie marki", value: "all" },
-          { title: "Tylko marki z produktami CPO", value: "cpoOnly" },
           { title: "Wybrane ręcznie marki", value: "manual" },
         ],
         layout: "radio",
@@ -100,9 +99,7 @@ export const brandsList = defineType({
       const modeLabel =
         brandsDisplayMode === "all"
           ? "Wszystkie marki"
-          : brandsDisplayMode === "cpoOnly"
-            ? "Marki CPO"
-            : `Wybrane ręcznie (${Array.isArray(selectedBrandsCount) ? selectedBrandsCount.length : 0})`;
+          : `Wybrane ręcznie (${Array.isArray(selectedBrandsCount) ? selectedBrandsCount.length : 0})`;
 
       return {
         title,

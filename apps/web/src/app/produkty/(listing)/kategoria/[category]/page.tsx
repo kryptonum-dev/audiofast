@@ -308,7 +308,6 @@ export default async function CategoryPage({
       value: f.value,
     })),
     rangeFilters: activeRangeFilters,
-    isCPO: false,
   };
 
   // Compute available filters (this gives us dropdown values and range bounds)

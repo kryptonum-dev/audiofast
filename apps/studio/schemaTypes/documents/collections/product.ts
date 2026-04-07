@@ -101,6 +101,9 @@ export const product = defineType({
       description:
         "Główne zdjęcie produktu używane w kartach produktów, listingach i sekcji hero na stronie produktu. Zalecane: zdjęcie na białym/czystym tle.",
       group: GROUP.MAIN_CONTENT,
+      options: {
+        hotspot: true,
+      },
       validation: (Rule) =>
         Rule.required().error("Zdjęcie główne produktu jest wymagane"),
     }),
@@ -382,14 +385,6 @@ export const product = defineType({
       type: "boolean",
       description:
         "Oznacz jako archiwalne, jeśli producent już nie produkuje tego produktu, ale Audiofast nadal ma go w sprzedaży.",
-      initialValue: false,
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "isCPO",
-      title: "Certyfikowany sprzęt używany (CPO)",
-      type: "boolean",
-      description: "Oznacz, jeśli produkt jest objęty w programie CPO.",
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
     }),

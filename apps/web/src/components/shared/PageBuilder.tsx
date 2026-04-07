@@ -3,6 +3,7 @@ import type {
   QueryHomePageResult,
 } from "../../global/sanity/sanity.types";
 import BlurLinesTextImage from "../pageBuilder/BlurLinesTextImage";
+import CpoProductsListing from "../pageBuilder/CpoProductsListing";
 import BrandsByCategoriesSection from "../pageBuilder/BrandsByCategoriesSection";
 import BrandsList from "../pageBuilder/BrandsList";
 import BrandsMarquee from "../pageBuilder/BrandsMarquee";
@@ -20,16 +21,15 @@ import ImageWithVideo from "../pageBuilder/ImageWithVideo";
 import LatestPublication from "../pageBuilder/LatestPublication";
 import PhoneImageCta from "../pageBuilder/PhoneImageCta";
 import ProductsCarousel from "../pageBuilder/ProductsCarousel";
-import ProductsListing from "../pageBuilder/ProductsListing";
 import StepList from "../pageBuilder/StepList";
 import TeamSection from "../pageBuilder/TeamSection";
 
-// Standard pageBuilder blocks (without productsListing)
+// Standard pageBuilder blocks
 type StandardPageBuilderBlock = NonNullable<
   NonNullable<QueryHomePageResult>["pageBuilder"]
 >[number];
 
-// CPO pageBuilder blocks (with productsListing)
+// CPO pageBuilder blocks (includes cpoProductsListing)
 type CpoPageBuilderBlock = NonNullable<
   NonNullable<QueryCpoPageResult>["pageBuilder"]
 >[number];
@@ -41,6 +41,10 @@ interface SearchParams {
   page?: string;
   category?: string;
   sortBy?: string | string[];
+  search?: string;
+  brands?: string | string[];
+  minPrice?: string;
+  maxPrice?: string;
 }
 
 export interface PageBuilderProps {
@@ -153,11 +157,11 @@ export function PageBuilder({
                 index={effectiveIndex}
               />
             );
-          case "productsListing":
+          case "cpoProductsListing":
             return (
-              <ProductsListing
+              <CpoProductsListing
                 key={block._key}
-                {...(block as BlockByType<"productsListing">)}
+                {...(block as BlockByType<"cpoProductsListing">)}
                 index={effectiveIndex}
                 searchParams={searchParams}
                 basePath={basePath}

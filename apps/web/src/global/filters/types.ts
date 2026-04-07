@@ -67,8 +67,6 @@ export type ActiveFilters = {
   customFilters: CustomFilterValue[];
   /** Category-specific range filters */
   rangeFilters: ActiveRangeFilter[];
-  /** CPO (Certified Pre-Owned) filter */
-  isCPO: boolean;
 };
 
 /**

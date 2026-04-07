@@ -196,7 +196,6 @@ export default function ProductsAside({
       category: effectiveCategory,
       customFilters,
       rangeFilters,
-      isCPO: false,
     };
   }, [searchParams, currentCategory, filterDefinitions]);
 
@@ -230,7 +229,6 @@ export default function ProductsAside({
         category: optimisticCategory,
         customFilters: activeFilters.customFilters,
         rangeFilters: activeFilters.rangeFilters,
-        isCPO: false,
       };
     }
 
@@ -414,7 +412,7 @@ export default function ProductsAside({
           _id: activeSlug,
           name: activeSlug.charAt(0).toUpperCase() + activeSlug.slice(1),
           slug: `/marki/${activeSlug}/`,
-          logo: null,
+          logo: null as unknown as BrandMetadata['logo'],
           count: 0,
         });
       }

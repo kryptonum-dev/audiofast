@@ -66,6 +66,14 @@ export const BLOG_ITEMS_PER_PAGE: number = 12;
 export const PRODUCTS_ITEMS_PER_PAGE: number = 12;
 
 /**
+ * Global declaration of the number of items per page for the CPO products listing.
+ * @constant
+ * @type {number}
+ */
+
+export const CPO_ITEMS_PER_PAGE: number = 12;
+
+/**
  * Sort options for product listings.
  * Note: 'relevance' is added dynamically when search is active
  * @constant

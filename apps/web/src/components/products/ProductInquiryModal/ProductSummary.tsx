@@ -6,23 +6,70 @@ import styles from './styles.module.scss';
 
 interface ProductSummaryProps {
   product: ProductContext;
+  layout?: 'standard' | 'cpo';
 }
 
-export default function ProductSummary({ product }: ProductSummaryProps) {
+export default function ProductSummary({
+  product,
+  layout = 'standard',
+}: ProductSummaryProps) {
   const { configurationOptions } = product;
-  
+
   // Calculate if there are any price additions
   const totalAdditions = configurationOptions.reduce(
     (sum, opt) => sum + opt.priceDelta,
-    0
+    0,
   );
 
   const hasConfiguration = configurationOptions.length > 0;
+  const isCpoLayout = layout === 'cpo' && !hasConfiguration;
+
+  if (isCpoLayout) {
+    return (
+      <div
+        className={styles.productSummary}
+        data-has-config={false}
+        data-layout="cpo"
+      >
+        <div className={styles.cpoSummaryRow}>
+          <div className={styles.productImage}>
+            <div className={styles.blurredBackground}>
+              <Image
+                image={product.image}
+                sizes="120px"
+                alt=""
+                aria-hidden="true"
+              />
+            </div>
+            <Image
+              image={product.image}
+              sizes="120px"
+              alt={`${product.brandName} ${product.name}`}
+              className={styles.cpoImage}
+            />
+          </div>
+          <div className={styles.cpoInfo}>
+            {product.brandName && (
+              <span className={styles.brandName}>{product.brandName}</span>
+            )}
+            <span className={styles.productName}>{product.name}</span>
+            <div className={styles.cpoPriceSection}>
+              <span className={styles.priceLabel}>Cena CPO</span>
+              <span className={styles.priceTotal}>
+                {formatPrice(product.totalPrice)}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div 
+    <div
       className={styles.productSummary}
       data-has-config={hasConfiguration}
+      data-layout={layout}
     >
       {/* Product Header */}
       <div className={styles.productHeader}>

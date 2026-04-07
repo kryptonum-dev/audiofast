@@ -6,6 +6,7 @@ import {
   queryAllBlogCategorySlugsForSitemap,
   queryAllBlogPostSlugsForSitemap,
   queryAllBrandSlugsForSitemap,
+  queryAllCpoProductSlugsForSitemap,
   queryAllPageSlugsForSitemap,
   queryAllProductCategorySlugsForSitemap,
   queryAllProductSlugsForSitemap,
@@ -22,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     pages,
     blogPosts,
     brands,
+    cpoProducts,
     products,
     reviews,
     blogCategories,
@@ -38,6 +40,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     sanityFetch<SitemapEntry[]>({
       query: queryAllBrandSlugsForSitemap,
       tags: ['brand'],
+    }),
+    sanityFetch<SitemapEntry[]>({
+      query: queryAllCpoProductSlugsForSitemap,
+      tags: ['cpoProduct'],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllProductSlugsForSitemap,
@@ -85,6 +91,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: entry._updatedAt,
     })),
     ...brands.map((entry) => ({
+      url: `${BASE_URL}${entry.slug}`,
+      lastModified: entry._updatedAt,
+    })),
+    ...cpoProducts.map((entry) => ({
       url: `${BASE_URL}${entry.slug}`,
       lastModified: entry._updatedAt,
     })),

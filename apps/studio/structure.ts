@@ -634,15 +634,45 @@ export const structure = (
             .title("CPO - Certyfikowany sprzęt używany")
             .items([
               createSingleTon({ S, type: "cpoPage" }),
+              createBulkActionsTable({
+                type: "cpoProduct",
+                S: S as any,
+                context: context as any,
+                id: "cpo-products-table",
+                title: "Tabela produktów CPO",
+                icon: Table2,
+                filters: [
+                  {
+                    field: "isArchived",
+                    label: "Status",
+                    options: [
+                      { label: "Wszystkie", value: null },
+                      { label: "Aktywne", value: "isArchived != true" },
+                      { label: "Archiwalne", value: "isArchived == true" },
+                    ],
+                    defaultIndex: 0,
+                  },
+                ],
+                referenceFilters: [
+                  {
+                    referenceField: "brand._ref",
+                    referenceType: "brand",
+                    label: "Marka",
+                    groqProjection:
+                      '{ _id, name, "imageUrl": logo.asset->url }',
+                    groqFilter: "doNotShowBrand != true",
+                  },
+                ],
+              }) as any,
+              S.divider(),
               S.listItem()
                 .title("Produkty CPO")
                 .icon(Folder)
                 .child(
                   S.documentList()
                     .title("Produkty CPO")
-                    .filter('_type == "product" && isCPO == true')
-                    .defaultOrdering(productDefaultOrdering)
-                    .menuItems(getProductOrderingMenuItems(S)),
+                    .filter('_type == "cpoProduct"')
+                    .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
                 ),
             ]),
         ),
@@ -697,6 +727,17 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
         .component(ProductFiltersView)
         .title("Filtry")
         .icon(FilterIcon),
+    ]);
+  }
+
+  // Add Technical Data view for cpoProduct documents (internal products)
+  if (schemaType === "cpoProduct") {
+    return S.document().views([
+      S.view.form().title("Zawartość").icon(EditIcon),
+      S.view
+        .component(TechnicalDataView)
+        .title("Dane techniczne")
+        .icon(BlockContentIcon),
     ]);
   }
 

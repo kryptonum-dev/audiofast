@@ -52,6 +52,7 @@ export default function PricingSection({
     id: product.id,
     name: product.name,
     brandName: product.brandName,
+    kind: 'standard',
     brandLogo: product.brandLogo,
     image: product.image,
     basePrice: configData.basePrice,

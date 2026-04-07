@@ -1,29 +1,36 @@
 import { cacheLife, cacheTag } from 'next/cache';
 import { Suspense } from 'react';
 
+import type { PageBuilderBlock } from '@/src/components/shared/PageBuilder';
 import { PRODUCT_SORT_OPTIONS } from '@/src/global/constants';
+import type { BrandMetadata, ProductFilterMetadata } from '@/src/global/filters';
 import { sanityFetch } from '@/src/global/sanity/fetch';
-import { queryAllProductsFilterMetadata } from '@/src/global/sanity/query';
-import type { QueryAllProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
-import type { PortableTextProps } from '@/src/global/types';
+import { queryCpoProductsFilterMetadata } from '@/src/global/sanity/query';
+import type { QueryCpoProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
 
 import ProductsAside from '../../products/ProductsAside';
-import ProductsListingComponent from '../../products/ProductsListing';
-import ProductsListingSkeleton from '../../products/ProductsListing/ProductsListingSkeleton';
-import styles from '../../products/ProductsListing/styles.module.scss';
 import ProductsListingContainer from '../../products/ProductsListingContainer';
 import { ProductsLoadingProvider } from '../../products/ProductsLoadingContext';
+import ProductsListingSkeleton from '../../products/ProductsListing/ProductsListingSkeleton';
+import styles from '../../products/ProductsListing/styles.module.scss';
 import SortDropdown from '../../products/SortDropdown';
+import CpoProductsListingInner from './CpoProductsListingInner';
 
-type ProductsListingProps = {
-  _type: 'productsListing';
-  _key: string;
-  heading?: PortableTextProps;
+type CpoProductsListingBlockType = Extract<
+  PageBuilderBlock,
+  { _type: 'cpoProductsListing' }
+>;
+
+type CpoProductsListingProps = CpoProductsListingBlockType & {
   index: number;
   searchParams?: {
     page?: string;
     category?: string;
     sortBy?: string | string[];
+    search?: string;
+    brands?: string | string[];
+    minPrice?: string;
+    maxPrice?: string;
   };
   basePath?: string;
 };
@@ -31,36 +38,29 @@ type ProductsListingProps = {
 // ----------------------------------------
 // Cached Static Data Fetcher
 // ----------------------------------------
-async function getStaticFilterMetadata() {
+async function getCpoFilterMetadata() {
   'use cache';
-  cacheTag('products', 'brands');
-  cacheLife('weeks');
+  cacheTag('cpoProduct');
+  cacheLife('hours');
 
-  return sanityFetch<QueryAllProductsFilterMetadataResult>({
-    query: queryAllProductsFilterMetadata,
-    tags: ['products'],
+  return sanityFetch<QueryCpoProductsFilterMetadataResult>({
+    query: queryCpoProductsFilterMetadata,
+    tags: ['cpoProduct'],
   });
 }
 
-export default async function ProductsListing(props: ProductsListingProps) {
+export default async function CpoProductsListing(
+  props: CpoProductsListingProps,
+) {
   const { heading, searchParams, basePath = '/' } = props;
 
-  // Fetch filter metadata (cached)
-  const filterMetadata = await getStaticFilterMetadata();
+  const filterMetadata = await getCpoFilterMetadata();
 
-  if (!filterMetadata) {
+  if (!filterMetadata || !filterMetadata.products?.length) {
     return null;
   }
 
-  const productsMetadata = filterMetadata.products || [];
-
-  // Don't render if no products available
-  if (productsMetadata.length === 0) {
-    return null;
-  }
-
-  // Calculate max price from filtered products
-  const prices = productsMetadata
+  const prices = filterMetadata.products
     .map((p) => p.basePriceCents)
     .filter((p): p is number => p !== null && p !== undefined);
   const maxPrice =
@@ -68,9 +68,6 @@ export default async function ProductsListing(props: ProductsListingProps) {
       ? Math.max(...prices)
       : (filterMetadata.globalMaxPrice || 100000);
 
-  // Convert searchParams to Promise for ProductsListingComponent
-  // (PageBuilder already awaited it, so we wrap it back)
-  // Normalize sortBy to string (it can be string[] from Next.js)
   const normalizedParams = {
     ...searchParams,
     sortBy: Array.isArray(searchParams?.sortBy)
@@ -82,22 +79,25 @@ export default async function ProductsListing(props: ProductsListingProps) {
   return (
     <ProductsLoadingProvider>
       <section
-        id="products-listing"
+        id="cpo-listing"
         className={`${styles.productsListing} max-width`}
       >
-        {/* Client-side computed sidebar */}
         <ProductsAside
-          allProductsMetadata={productsMetadata}
-          allCategories={filterMetadata.categories || []}
-          allBrands={filterMetadata.brands || []}
+          allProductsMetadata={
+            filterMetadata.products as unknown as ProductFilterMetadata[]
+          }
+          allCategories={[]}
+          allBrands={
+            filterMetadata.brands as unknown as BrandMetadata[]
+          }
           globalMaxPrice={maxPrice}
           basePath={basePath}
           heading={heading}
           visibleFilters={{
-            search: false,
-            categories: true,
-            brands: false,
-            priceRange: false,
+            search: true,
+            categories: false,
+            brands: true,
+            priceRange: true,
           }}
           headingLevel="h3"
         />
@@ -108,14 +108,13 @@ export default async function ProductsListing(props: ProductsListingProps) {
           defaultValue="newest"
         />
 
-        {/* Products listing - container shows overlay skeleton on filter changes */}
         <ProductsListingContainer>
           <Suspense fallback={<ProductsListingSkeleton />}>
-            <ProductsListingComponent
+            <CpoProductsListingInner
               searchParams={searchParamsPromise}
               basePath={basePath}
               defaultSortBy="newest"
-              scrollTargetId="products-listing"
+              scrollTargetId="cpo-listing"
             />
           </Suspense>
         </ProductsListingContainer>

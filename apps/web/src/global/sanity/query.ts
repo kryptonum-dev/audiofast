@@ -382,6 +382,31 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   }
 `;
 
+// Reusable CPO product fragment for listing cards (brandName from Excel; optional inherit images)
+const cpoProductFragment = /* groq */ `
+  _id,
+  _createdAt,
+  "publishDate": coalesce(publishedDate, _createdAt),
+  "slug": slug.current,
+  name,
+  priceCents,
+  isArchived,
+  productType,
+  brandName,
+  externalUrl,
+  transparentBackground,
+  useCustomGallery,
+  internalProduct,
+  ${imageFragment('"mainImage": select(defined(previewImage.asset) => previewImage, internalProduct->previewImage)')},
+  ${portableTextFragment('shortDescription')},
+`;
+
+// Listing filters + filter metadata: must match cpoProductFragment mainImage resolution
+const cpoListablePreviewImageCondition = /* groq */ `(
+  defined(previewImage.asset)
+  || (defined(internalProduct) && defined(internalProduct->previewImage.asset))
+)`;
+
 // Reusable FAQ fragment for FAQ documents
 const faqFragment = (name: string = 'faq') => /* groq */ `
   ${name} {
@@ -702,7 +727,6 @@ const brandsListBlock = /* groq */ `
     ${portableTextFragment('ctaText')},
     "brands": select(
       brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')},
-      brandsDisplayMode == "cpoOnly" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true && count(*[_type == "product" && isCPO == true && brand._ref == ^._id]) > 0] | order(orderRank)')},
       brandsDisplayMode == "manual" => selectedBrands[]->[]{
         _id,
         _createdAt,
@@ -735,7 +759,6 @@ const productsListingBlock = /* groq */ `
         && defined(slug.current)
         && isArchived != true
         && brand->doNotShowBrand != true
-        && (^.cpoOnly == false || isCPO == true)
         && count(categories) > 0
         && references(^._id)
       ])
@@ -745,8 +768,19 @@ const productsListingBlock = /* groq */ `
       && defined(slug.current)
       && isArchived != true
       && brand->doNotShowBrand != true
-      && (^.cpoOnly == false || isCPO == true)
       && count(categories) > 0
+    ])
+  }
+`;
+
+const cpoProductsListingBlock = /* groq */ `
+  _type == "cpoProductsListing" => {
+    ...,
+    ${portableTextFragment('heading')},
+    "totalCount": count(*[
+      _type == "cpoProduct"
+      && isArchived != true
+      && ${cpoListablePreviewImageCondition}
     ])
   }
 `;
@@ -890,6 +924,7 @@ export const pageBuilderFragment = /* groq */ `
       ${brandsMarqueeBlock},
       ${brandsListBlock},
       ${productsListingBlock},
+      ${cpoProductsListingBlock},
       ${brandsByCategoriesSectionBlock},
       ${faqSectionBlock},
       ${contactFormBlock},
@@ -1061,6 +1096,230 @@ export const queryCpoPage = defineQuery(`*[_type == "cpoPage"][0]{
   },
   "firstBlockType": pageBuilder[0]._type,
   ${pageBuilderFragment}
+}`);
+
+// Shared filter conditions for CPO product listing queries
+const cpoFilterConditions = /* groq */ `
+  _type == "cpoProduct"
+  && isArchived != true
+  && ${cpoListablePreviewImageCondition}
+  && (
+    $search == "" || name match $search + "*"
+  )
+  && (
+    count($brands) == 0
+    || lower(brandName) in $brands
+  )
+  && ($minPrice == 0 || priceCents >= $minPrice)
+  && ($maxPrice == 0 || priceCents <= $maxPrice)
+`;
+
+// Reusable fragment for CPO listing — swap in different order clauses
+const cpoListingFragment = (orderClause: string) => /* groq */ `
+  *[${cpoFilterConditions}] | order(${orderClause}) [$offset...$limit] {
+    ${cpoProductFragment}
+  }
+`;
+
+// Static queries per sort order (required for typegen)
+export const queryCpoProductsListingNewest = defineQuery(
+  cpoListingFragment('coalesce(publishedDate, _createdAt) desc'),
+);
+
+export const queryCpoProductsListingOldest = defineQuery(
+  cpoListingFragment('coalesce(publishedDate, _createdAt) asc'),
+);
+
+export const queryCpoProductsListingPriceAsc = defineQuery(
+  cpoListingFragment('coalesce(priceCents, 999999999) asc'),
+);
+
+export const queryCpoProductsListingPriceDesc = defineQuery(
+  cpoListingFragment('coalesce(priceCents, -1) desc'),
+);
+
+// Backward-compatible alias (newest first)
+export const queryCpoProductsListing = queryCpoProductsListingNewest;
+
+// Helper function to pick the right query based on sortBy param
+export function getCpoProductsListingQuery(sortBy: string = 'newest') {
+  switch (sortBy) {
+    case 'oldest':
+      return queryCpoProductsListingOldest;
+    case 'priceAsc':
+      return queryCpoProductsListingPriceAsc;
+    case 'priceDesc':
+      return queryCpoProductsListingPriceDesc;
+    case 'newest':
+    default:
+      return queryCpoProductsListingNewest;
+  }
+}
+
+export const queryCpoProductsListingCount = defineQuery(
+  `count(*[${cpoFilterConditions}])`,
+);
+
+export const queryCpoProductsFilterMetadata = defineQuery(`{
+  "products": *[
+    _type == "cpoProduct"
+    && isArchived != true
+    && defined(brandName)
+    && ${cpoListablePreviewImageCondition}
+  ] {
+    _id,
+    name,
+    "brandSlug": lower(brandName),
+    "brandName": brandName,
+    "basePriceCents": priceCents,
+    "categorySlug": null,
+    "allCategorySlugs": [],
+    "customFilterValues": []
+  },
+  "brands": array::unique(*[
+    _type == "cpoProduct"
+    && isArchived != true
+    && defined(brandName)
+    && ${cpoListablePreviewImageCondition}
+  ] {
+    "_id": lower(brandName),
+    "name": brandName,
+    "slug": lower(brandName),
+    "logo": null
+  }),
+  "globalMaxPrice": math::max(*[
+    _type == "cpoProduct"
+    && isArchived != true
+    && ${cpoListablePreviewImageCondition}
+    && defined(priceCents)
+  ].priceCents),
+  "globalMinPrice": math::min(*[
+    _type == "cpoProduct"
+    && isArchived != true
+    && ${cpoListablePreviewImageCondition}
+    && defined(priceCents)
+  ].priceCents)
+}`);
+
+export const queryCpoProductBySlug =
+  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal" && isArchived != true][0] {
+  _id,
+  _type,
+  "slug": slug.current,
+  name,
+  priceCents,
+  transparentBackground,
+  productType,
+  brandName,
+  useCustomGallery,
+  internalProduct->{
+    _id,
+    name,
+    "slug": slug.current,
+    brand->{
+      name,
+      "slug": slug.current,
+    },
+    ${imageFragment('previewImage')},
+    ${imageFragment('imageGallery[]')},
+    ${portableTextFragment('shortDescription')},
+  },
+  ${imageFragment('"resolvedPreviewImage": select(defined(previewImage.asset) => previewImage, internalProduct->previewImage)')},
+  ${imageFragment('previewImage')},
+  imageGallery[]{
+    "id": asset._ref,
+    "preview": asset->metadata.lqip,
+    "alt": asset->altText,
+    "naturalWidth": asset->metadata.dimensions.width,
+    "naturalHeight": asset->metadata.dimensions.height,
+    hotspot {
+      x,
+      y,
+      width,
+      height
+    },
+    crop {
+      bottom,
+      left,
+      right,
+      top
+    }
+  },
+  ${portableTextFragment('shortDescription')},
+  "details": select(
+    defined(details.productDetailContent[0]) => details{
+      ${portableTextFragment('heading')},
+      ${brandContentBlocksFragment('content')},
+      ${portableTextFragmentExtended('productDetailContent')}
+    },
+    internalProduct->details{
+      ${portableTextFragment('heading')},
+      ${brandContentBlocksFragment('content')},
+      ${portableTextFragmentExtended('productDetailContent')}
+    }
+  ),
+  "technicalData": select(
+    count(technicalData.groups[].rows[
+      coalesce(title, "") != "" || count(values[defined(content[0])]) > 0
+    ]) > 0 => technicalData {
+      variants,
+      groups[] {
+        _key,
+        title,
+        rows[] {
+          _key,
+          title,
+          values[] {
+            _key,
+            ${portableTextFragment('content')}
+          }
+        }
+      }
+    },
+    internalProduct->technicalData {
+      variants,
+      groups[] {
+        _key,
+        title,
+        rows[] {
+          _key,
+          title,
+          values[] {
+            _key,
+            ${portableTextFragment('content')}
+          }
+        }
+      }
+    }
+  ),
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  },
+}`);
+
+export const queryAllCpoProductSlugs = defineQuery(`*[
+  _type == "cpoProduct"
+  && defined(slug.current)
+  && productType == "internal"
+  && isArchived != true
+] {
+  "slug": slug.current
+}`);
+
+export const queryCpoProductSeoBySlug =
+  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal" && isArchived != true][0] {
+  "slug": slug.current,
+  name,
+  brandName,
+  seo,
+  openGraph{
+    title,
+    description,
+    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+  },
 }`);
 
 export const queryAllBlogPostSlugs =
@@ -1469,7 +1728,6 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       "parentCategorySlug": denormParentCategorySlugs[0],
       "allCategorySlugs": denormCategorySlugs,
       basePriceCents,
-      isCPO,
       customFilterValues[]{
         filterName,
         value,
@@ -1853,10 +2111,7 @@ const productsFilterConditions = /* groq */ `
       )
     ])
   )
-  
-  // CPO filter - same as before
-  && ($isCPO == false || isCPO == true)
-  
+
   // Embeddings search - same as before
   && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
 `;
@@ -1925,8 +2180,6 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
 // - $rangeFilters: array of range filter objects (optional) - empty array [] for no range filters
 //   Format: [{filterName: "Impedancja", minValue: 4, maxValue: 12}, ...]
 //   Note: minValue/maxValue can be null for "no limit"
-// - $isCPO: boolean to filter CPO products only (optional) - false for all products
-
 // Static queries for each sort type (required for typegen)
 export const queryProductsListingNewest = defineQuery(
   productsListingFragment('coalesce(publishedDate, _createdAt) desc'),
@@ -2386,6 +2639,13 @@ export const queryAllBrandSlugsForSitemap = defineQuery(`
 
 export const queryAllProductSlugsForSitemap = defineQuery(`
   *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && isArchived != true] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`);
+
+export const queryAllCpoProductSlugsForSitemap = defineQuery(`
+  *[_type == "cpoProduct" && defined(slug.current) && !(_id in path("drafts.**")) && productType == "internal" && isArchived != true] {
     "slug": slug.current,
     _updatedAt
   }

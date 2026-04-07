@@ -80,6 +80,7 @@ function extractSlug(fullSlug: string | null | undefined): string | null {
  */
 const REVERSE_LOOKUP_TYPES = new Set([
   'product',
+  'cpoProduct',
   'review',
   'blog-article',
   'productCategorySub',
@@ -113,6 +114,9 @@ async function getReferencingDocumentTags(
           tags.push(`product:${slug}`);
           tags.push(`product-pricing:${slug}`);
           break;
+        case 'cpoProduct':
+          tags.push(`cpoProduct:${slug}`);
+          break;
         case 'blog-article':
           tags.push(`blog-article:${slug}`);
           break;
@@ -134,7 +138,7 @@ async function getReferencingDocumentTags(
         slug: string | null;
       }>
     >(
-      `*[references($id) && _type in ["product", "page", "homePage", "cpoPage", "review", "blog-article"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
+      `*[references($id) && _type in ["product", "cpoProduct", "page", "homePage", "cpoPage", "review", "blog-article"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
       { id: docId },
     );
 
@@ -156,6 +160,10 @@ async function getReferencingDocumentTags(
       switch (ref._type) {
         case 'product':
           tags.push(`product:${refSlug}`);
+          break;
+        case 'cpoProduct':
+          tags.push(`cpoProduct:${refSlug}`);
+          tags.push('cpoPage');
           break;
         case 'page':
           tags.push(`page:${refSlug}`);
@@ -275,9 +283,9 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // CORE CONTENT TYPES - Simplified for ISR cost reduction
   // ============================================================================
 
-  // Products: Only invalidate listings (brand page handled by targeted lookup below)
-  // Home page, CMS pages, reviews, blog articles handled by reverse lookup
-  product: ['products'],
+  // Products: Invalidate listings + homePage (latest/featured publication blocks use dynamic queries)
+  // Brand page handled by targeted lookup below; CMS pages, reviews, blog articles handled by reverse lookup
+  product: ['products', 'homePage'],
 
   // Brands: Invalidate brand listings, product filters, and all brand pages
   brand: ['brands', 'products', 'brand'],
@@ -312,6 +320,7 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
 
   homePage: ['homePage'],
   cpoPage: ['cpoPage'],
+  cpoProduct: ['cpoProduct', 'cpoPage'],
   blog: ['blog'],
   products: ['products'],
   brands: ['brands'],
@@ -392,6 +401,7 @@ export async function POST(request: NextRequest) {
   const revalidatedTags: string[] = [];
   const revalidatedPaths: string[] = [];
   const tags = new Set<string>();
+  const paths = new Set<string>();
 
   // Track denormalization tasks to run in parallel
   const denormTasks: Promise<void>[] = [];
@@ -417,6 +427,24 @@ export async function POST(request: NextRequest) {
         const pageSlug = extractSlug(doc.slug);
         if (pageSlug) {
           addTag(tags, `page:${pageSlug}`);
+        }
+      }
+
+      // =========================================================================
+      // CPO path safety-net revalidation
+      // =========================================================================
+      // The CPO Excel sync uses the Sanity HTTP API. Tags are the primary mechanism,
+      // but we also explicitly revalidate the listing page and the touched detail
+      // path so the first visit after sync always reflects the latest state.
+      if (doc._type === 'cpoPage') {
+        addPath(paths, '/certyfikowany-sprzet-uzywany/');
+      }
+
+      if (doc._type === 'cpoProduct') {
+        addPath(paths, '/certyfikowany-sprzet-uzywany/');
+
+        if (doc.slug) {
+          addPath(paths, doc.slug);
         }
       }
 
@@ -476,10 +504,7 @@ export async function POST(request: NextRequest) {
     // =========================================================================
     if (doc.paths && Array.isArray(doc.paths)) {
       for (const path of doc.paths) {
-        if (typeof path === 'string' && path.startsWith('/')) {
-          revalidatePath(path);
-          revalidatedPaths.push(path);
-        }
+        addPath(paths, path);
       }
     }
   }
@@ -507,6 +532,11 @@ export async function POST(request: NextRequest) {
   for (const tag of tags) {
     revalidateTag(tag, { expire: 0 });
     revalidatedTags.push(tag);
+  }
+
+  for (const path of paths) {
+    revalidatePath(path);
+    revalidatedPaths.push(path);
   }
 
   // Wait for denormalization tasks to complete (fire-and-forget style)
@@ -604,6 +634,20 @@ function addTag(tagSet: Set<string>, tag?: string | null) {
   }
 
   tagSet.add(trimmed);
+}
+
+function addPath(pathSet: Set<string>, path?: string | null) {
+  if (!path || typeof path !== 'string') {
+    return;
+  }
+
+  const trimmed = path.trim();
+
+  if (trimmed.length === 0 || !trimmed.startsWith('/')) {
+    return;
+  }
+
+  pathSet.add(trimmed);
 }
 // ============================================================================
 // DENORMALIZATION FUNCTIONS
