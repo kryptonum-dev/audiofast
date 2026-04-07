@@ -38,6 +38,8 @@ export default function ProductCard({
     categories,
   } = product;
   const Heading = headingLevel;
+  const productHref = typeof slug === 'string' && slug.length > 0 ? slug : null;
+  const hasLink = productHref !== null;
 
   // Format price for display (converting cents to PLN)
   const formatPrice = (priceCents: number | null | undefined) => {
@@ -51,49 +53,57 @@ export default function ProductCard({
     }).format(priceInPLN);
   };
 
+  const cardContent = (
+    <>
+      <div className={styles.imgBox}>
+        <Image
+          image={mainImage}
+          sizes={imageSizes}
+          fill
+          priority={priority}
+          loading={loading}
+        />
+        {brand?.logo && <Image image={brand.logo} sizes="90px" loading={loading} />}
+        <AddToComparisonButton
+          productId={_id}
+          productName={name ?? ''}
+          categorySlug={categories?.[0]?.slug ?? ''}
+          categoryName={categories?.[0]?.name ?? categories?.[0]?.slug ?? ''}
+          productData={product}
+        />
+      </div>
+      <div className={styles.container}>
+        <Heading className={styles.title}>
+          {brand?.name && `${brand.name} `}
+          {name}
+        </Heading>
+        <p className={styles.subtitle}>{subtitle}</p>
+        <div className={styles.priceContainer} data-layout={layout}>
+          <span className={styles.price}>
+            {hasMultiplePrices ? 'od ' : ''}
+            {formatPrice(basePriceCents)}
+          </span>
+          {showButton && hasLink && (
+            <Button
+              tabIndex={-1}
+              text="Dowiedz się więcej"
+              variant="primary"
+            />
+          )}
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <article className={styles.productCard}>
-      <Link href={slug!} className={styles.link}>
-        <div className={styles.imgBox}>
-          <Image
-            image={mainImage}
-            sizes={imageSizes}
-            fill
-            priority={priority}
-            loading={loading}
-          />
-          {brand?.logo && (
-            <Image image={brand.logo} sizes="90px" loading={loading} />
-          )}
-          <AddToComparisonButton
-            productId={_id}
-            productName={name ?? ''}
-            categorySlug={categories?.[0]?.slug ?? ''}
-            categoryName={categories?.[0]?.name ?? categories?.[0]?.slug ?? ''}
-            productData={product}
-          />
-        </div>
-        <div className={styles.container}>
-          <Heading className={styles.title}>
-            {brand?.name && `${brand.name} `}
-            {name}
-          </Heading>
-          <p className={styles.subtitle}>{subtitle}</p>
-          <div className={styles.priceContainer} data-layout={layout}>
-            <span className={styles.price}>
-              {hasMultiplePrices ? 'od ' : ''}
-              {formatPrice(basePriceCents)}
-            </span>
-            {showButton && (
-              <Button
-                tabIndex={-1}
-                text="Dowiedz się więcej"
-                variant="primary"
-              />
-            )}
-          </div>
-        </div>
-      </Link>
+      {productHref ? (
+        <Link href={productHref} className={styles.link}>
+          {cardContent}
+        </Link>
+      ) : (
+        <div className={styles.link}>{cardContent}</div>
+      )}
     </article>
   );
 }
