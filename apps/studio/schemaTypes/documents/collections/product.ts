@@ -388,6 +388,24 @@ export const product = defineType({
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
     }),
+    defineField({
+      name: "isSellableOnline",
+      title: "Sprzedaż Online",
+      type: "boolean",
+      description:
+        "Określa, czy produkt może być kupowany online.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "isReturnable",
+      title: "Zwrot",
+      type: "boolean",
+      description:
+        "Określa, czy produkt jest zwrotny w modelu B2C.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
 
     // ----------------------------------------
     // 18-20: Pricing and Dates
@@ -437,7 +455,9 @@ export const product = defineType({
     // ----------------------------------------
     // System Fields (Order Rank)
     // ----------------------------------------
-    orderRankField({ type: "products" }),
+    // Temporary compatibility cast: this plugin currently resolves a nested Sanity type tree
+    // that conflicts with the root `sanity` package types used by this schema file.
+    orderRankField({ type: "products" }) as any,
 
     // ----------------------------------------
     // Denormalized Fields (Computed, Hidden)
@@ -762,9 +782,6 @@ export const product = defineType({
       ],
     }),
 
-    // ----------------------------------------
-    // SEO Fields (Always Last)
-    // ----------------------------------------
     ...getSEOFields({ exclude: ["hideFromList"], hideTitle: true }),
   ],
   preview: {

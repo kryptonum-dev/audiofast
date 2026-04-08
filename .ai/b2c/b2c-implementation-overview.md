@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-08
 Depends on: current discovery and planning discussions
 Related files: `README.md`, `scope.md`, `open-threads.md`, `testing-strategy.md`
 
@@ -175,11 +175,11 @@ After reading this file:
 
 ## Current Status
 
-The planning system now exists and the critical v1 threads have been closed.
+The planning system now exists, the critical v1 flow threads have been closed, and the Phase 03 business contract has been finalized.
 
 The most important next planning work is:
 
-- finalizing the Excel contract
-- finalizing ownership boundaries between Excel, Sanity, Supabase, and the application layer
-- locking how `CPO` products relate to the B2C order model and admin controls
-- expanding the architecture and data-model files into implementation-ready detail
+- expanding the commerce data model into concrete order-domain structure
+- finalizing order snapshots and order numbering
+- finalizing invoice/document linkage
+- translating the locked Phase 03 contract into Phase 04 backend-structure detail

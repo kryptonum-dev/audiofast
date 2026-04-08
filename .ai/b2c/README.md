@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: Oliwier / implementation planning
-Last updated: 2026-04-07
+Last updated: 2026-04-08
 Depends on: `b2c-implementation-overview.md`, `open-threads.md`
 Related files: all files in `.ai/b2c/`
 
@@ -95,11 +95,12 @@ Current status of the B2C planning system:
 - payment process model finalized
 - admin panel architecture finalized
 - root testing strategy created
+- phase 03 business contract finalized
 - no open planning threads remain
 
 ## Next Recommended Moves
 
-1. Finalize the Excel contract.
-2. Finalize data ownership boundaries.
-3. Expand architecture docs into implementation-ready planning.
-4. Translate phase-three outputs into commerce-foundation detail.
+1. Expand the commerce data model for orders, order items, payment attempts, and documents.
+2. Finalize order snapshot direction and order numbering.
+3. Finalize invoice/document linkage and remaining failure-path behavior.
+4. Translate phase-four outputs into implementation-ready backend and storefront tasks.

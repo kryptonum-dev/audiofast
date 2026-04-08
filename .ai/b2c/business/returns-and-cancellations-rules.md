@@ -23,7 +23,9 @@ This file defines the current working rules for cancellations and returns in the
 
 ### Returnability Source
 
-- product returnability is controlled in Excel
+- returnability is controlled by upstream Excel inputs
+- the runtime value used by the storefront is the synced result stored in `Sanity`
+- this applies to both standard products and `CPO` products
 
 ### Whole-Order Rule
 

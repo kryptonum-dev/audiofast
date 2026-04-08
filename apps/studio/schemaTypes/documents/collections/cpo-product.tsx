@@ -367,6 +367,24 @@ export const cpoProduct = defineType({
       validation: (Rule) => Rule.integer().min(0),
     }),
     defineField({
+      name: "isSellableOnline",
+      title: "Sprzedaż Online",
+      type: "boolean",
+      description:
+        "Określa, czy egzemplarz CPO może być kupowany online.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "isReturnable",
+      title: "Zwrot",
+      type: "boolean",
+      description:
+        "Określa, czy egzemplarz CPO jest zwrotny w modelu B2C.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: "publishedDate",
       title: "Data publikacji",
       type: "datetime",
@@ -386,6 +404,50 @@ export const cpoProduct = defineType({
         "Zaznacz, aby przenieść do archiwum. Nie usuwa dokumentu, tylko ukrywa go z listy.",
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "availabilityStatus",
+      title: "Status dostępności",
+      type: "string",
+      description:
+        "Operacyjny status dostępności egzemplarza CPO używany przez B2C. ",
+      initialValue: "available",
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        layout: "radio",
+        list: [
+          {
+            title: "Dostępny",
+            value: "available",
+          },
+          {
+            title: "Wstrzymany przez zamówienie",
+            value: "on_hold",
+          },
+          {
+            title: "Sprzedany",
+            value: "sold_out",
+          },
+          {
+            title: "Ręcznie niedostępny",
+            value: "manually_unavailable",
+          },
+        ],
+      },
+      validation: (Rule) => Rule.required().error("Status dostępności jest wymagany"),
+    }),
+    defineField({
+      name: "holdUntil",
+      title: "Rezerwacja do",
+      type: "datetime",
+      description:
+        "Opcjonalna data i godzina końca blokady egzemplarza, gdy status to „Wstrzymany przez zamówienie”.",
+      group: GROUP.MAIN_CONTENT,
+      hidden: ({ document }) => document?.availabilityStatus !== "on_hold",
+      options: {
+        dateFormat: "YYYY-MM-DD",
+        timeFormat: "HH:mm",
+      },
     }),
 
     // ----------------------------------------

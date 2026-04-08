@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning / execution
-Last updated: 2026-04-07
+Last updated: 2026-04-08
 Depends on: `../open-threads.md`, `../phases/phase-02-flow-and-operations-closure.md`
 Related files: `../milestones.md`, `../README.md`, `../testing-strategy.md`, `../phases/phase-03-business-data-contract.md`, `../phases/phase-04-commerce-foundation.md`
 
@@ -20,17 +20,17 @@ It should answer:
 
 ## Current Execution Snapshot
 
-- current active phase: `Phase 03 - Business Data Contract`
-- current working mode: planning / contract-definition
-- phase 02 has been closed
+- current active phase: `Phase 04 - Commerce Foundation`
+- current working mode: planning / backend-structure-definition
+- phase 03 has been closed
 
 ## Current Focus
 
-- finalize `../business/excel-contract.md`
-- finalize `../architecture/data-ownership.md`
-- define how `CPO` products fit the same cart, checkout, order, and admin model as standard products
-- define the dedicated `CPO` operator view inside the admin panel
-- prepare the remaining commerce-foundation inputs for phase 04
+- expand `../architecture/commerce-data-model.md`
+- finalize order snapshot direction for standard and `CPO` lines
+- finalize order-number direction
+- finalize payment-attempt / payment-state backend structure direction
+- finalize invoice/document linkage direction
 
 ## Recently Completed
 
@@ -43,19 +43,22 @@ It should answer:
 - admin panel architecture finalized
 - root testing strategy added for future implementation phases
 - phase roadmap expanded under `../phases/`
+- standard-product Excel flags locked
+- `CPO` Excel flags locked
+- ownership boundaries locked
+- `CPO` availability model locked
 
 ## Blocked / Waiting
 
-- deeper commerce-foundation modeling depends on phase 03 outputs
-- mixed standard + `CPO` commerce modeling still depends on final source-of-truth rules
-- implementation-heavy phases still depend on the final Excel/data-ownership contract
+- implementation-heavy phases still depend on final Phase 04 commerce-foundation outputs
+- order / invoice / coupon / customer-access implementation still depends on final entity structure
 
 ## Ready Next
 
-1. finalize the Excel contract
-2. finalize data ownership boundaries
-3. lock the `CPO` / B2C relation model
-4. expand the commerce foundation in `../phases/phase-04-commerce-foundation.md`
+1. finalize order snapshots and entity relationships
+2. finalize order numbering and payment-attempt structure
+3. finalize invoice/document linkage
+4. start implementation planning for phases 05 and 06 from the locked backend structure
 
 ## Phase Tracker
 
@@ -69,11 +72,11 @@ It should answer:
 
 ### Phase 03 - Business Data Contract
 
-- status: in progress
+- status: completed
 
 ### Phase 04 - Commerce Foundation
 
-- status: planned
+- status: in progress
 
 ### Phase 05 - Buyable PDP And Cart
 

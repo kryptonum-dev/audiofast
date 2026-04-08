@@ -1,8 +1,8 @@
 # Phase 03 - Business Data Contract
 
-Status: in progress
+Status: completed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-08
 Depends on: `phase-02-flow-and-operations-closure.md`
 Related files: `../business/excel-contract.md`, `../architecture/data-ownership.md`, `../business/product-buyability-rules.md`, `../business/returns-and-cancellations-rules.md`, `../architecture/cpo-and-b2c-relation.md`
 
@@ -12,9 +12,9 @@ Finalize the business-controlled source-of-truth contract for B2C product and cu
 
 ## Why This Phase Exists
 
-The B2C model depends on Excel remaining the source of truth for selected business flags.
+The B2C model depends on a clear upstream business contract before deeper commerce modeling can begin.
 
-Before implementation can go deep, the project needs clarity on:
+Before implementation can go deep, the project needed clarity on:
 
 - exact Excel fields
 - stable product matching
@@ -35,45 +35,73 @@ Before implementation can go deep, the project needs clarity on:
 - finalized Excel contract
 - documented source-of-truth rules
 - documented ownership boundaries between Excel, Sanity, Supabase, and Next.js
-- documented snapshot expectations for order-time data
 - documented rules for `CPO` operational availability and admin override
+- clear handoff into the Phase 04 commerce-foundation work
 
-## Work Included In This Phase
+## Completion Summary
 
-### 1. Finalize Excel Structure
+### 1. Standard Product Contract Locked
 
-- exact required columns
-- boolean/value encoding
-- matching key
-- empty-value behavior
-- distinction between standard-product flags and `CPO` specimen inputs
+- source sheet: `Produkty`
+- product identity key: `URL` / `price_key`
+- new columns: `Sprzedaż Online`, `Zwrot`
+- current business proposal for placement: columns `I` and `J`
+- flags are product-level even when repeated on variant rows
+- only `TAK` means true
+- empty or any other value means false
+- missing / invalid `URL` means non-sellable and non-returnable
+- implementation must update the Office Script because the current script reads fixed column indexes
 
-### 2. Finalize Sync Expectations
+### 2. `CPO` Contract Locked
 
-- direction of sync
-- frequency expectations
-- failure handling expectations
-- how `CPO` content sync and commerce-operational state avoid conflicting with each other
+- source sheet: `CPO`
+- one row represents one unique specimen
+- stable identity key: `Klucz`
+- existing columns `A-F` stay in place
+- new columns: `G` `Sprzedaż Online`, `H` `Zwrot`
+- only `TAK` means true
+- empty or any other value means false
+- sync-owned `CPO` business fields are overwritten by the next Excel sync
 
-### 3. Finalize Ownership Boundaries
+### 3. Ownership Model Locked
 
-- what stays authoritative in Excel
-- what is copied or derived into runtime data
-- what is frozen into order snapshots
-- what is operator-controlled in the admin panel for `CPO` sellability / availability
+- Excel is the upstream source for selected sync-owned business fields
+- `Sanity` stores runtime product/CPO state after sync
+- `Supabase` stores extended standard-product pricing plus order-domain data
+- `Next.js` reads runtime data from `Sanity` and `Supabase`, never directly from Excel
+- `CPO` operational availability lives in `Sanity` in v1
+
+### 4. `CPO` Operational Model Locked
+
+- archive state and availability state stay separate
+- v1 statuses: `available`, `on_hold`, `sold_out`, `manually_unavailable`
+- `manually_unavailable` blocks creation of new orders
+- archived products are not buyable for new customers
+- archived products do not block completion of an already-created valid awaiting-payment order
+
+## What Moves To Phase 04
+
+The detailed order-domain modeling now belongs to Phase 04, especially:
+
+- exact order / order-item snapshot shape
+- payment-attempt entity details
+- order numbering
+- invoice/document linkage
+- broader commerce entity relationships
 
 ## Not In Scope For This Phase
 
-- final storefront UI
-- final admin UI design
+- full storefront UI
+- full admin UI design
 - low-level payment provider implementation
+- full order-schema implementation
 - launch-readiness tasks
 
 ## Done Criteria
 
-Phase 03 can be considered complete when:
+Phase 03 is considered complete because:
 
 - `../business/excel-contract.md` is concrete enough for implementation planning
 - `../architecture/data-ownership.md` clearly assigns authority by domain
 - `CPO` business inputs and `CPO` commerce-operational state are clearly separated
-- source-of-truth ambiguity is no longer a blocker for commerce modeling
+- source-of-truth ambiguity no longer blocks commerce modeling

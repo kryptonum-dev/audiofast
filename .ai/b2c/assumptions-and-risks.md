@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-08
 Depends on: `b2c-implementation-overview.md`, `open-threads.md`
 Related files: `scope.md`, `business/excel-contract.md`
 
@@ -42,12 +42,12 @@ This file tracks the assumptions currently shaping the B2C plan and the risks th
 
 ### 1. Excel Contract Risk
 
-If the Excel structure is not finalized early, the whole buyability and returnability model can remain ambiguous and delay implementation.
+If Excel structure changes are not implemented carefully after the contract is finalized, the current Office Script may break because it reads fixed column positions.
 
 Mitigation:
 
-- define the Excel contract early
-- document required fields explicitly
+- keep the finalized Excel contract documented
+- implement sheet changes together with Office Script updates
 - validate ownership of each field
 
 ### 2. Customer Identity Sharing Risk
@@ -109,7 +109,6 @@ Mitigation:
 
 ## Blockers To Watch
 
-- missing Excel column contract
 - missing order number format
 
 ## Notes

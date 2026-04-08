@@ -183,9 +183,11 @@ Current direction:
 
 - this is not a general stock system
 - this exists only because a `CPO` item is a unique specimen
-- a minimal v1 state set may be enough, for example `available`, `locked_by_order`, `sold`, and `manually_unavailable`
-- the system may automatically move the item into `locked_by_order` when an order is created
+- in v1 this state is expected to live on the `CPO` document in `Sanity`, not in a separate `Supabase` table
+- a minimal v1 state set should be `available`, `on_hold`, `sold_out`, and `manually_unavailable`
+- the system may automatically move the item into `on_hold` when an order is created
 - the Audiofast operator may manually change the state in admin when needed
+- archive state stays separate from availability state
 
 ### Return Case
 
@@ -207,7 +209,7 @@ The return case should be able to exist without immediately changing the main or
 
 - exact coupon usage lifecycle
 - exact document storage linkage
-- exact `CPO` availability state list and audit shape
+- exact order snapshot fields for standard and `CPO` lines
 
 ## Proposed Future Sections
 

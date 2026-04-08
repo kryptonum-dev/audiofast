@@ -1,14 +1,14 @@
 # CPO And B2C Relation
 
-Status: draft
+Status: completed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-08
 Depends on: `data-ownership.md`, `cart-and-checkout-model.md`
 Related files: `commerce-data-model.md`, `admin-panel-sanity.md`, `../business/product-buyability-rules.md`
 
 ## Purpose
 
-This file explains how the existing `CPO` product domain should fit into the Audiofast B2C model.
+This file explains how the existing `CPO` product domain fits into the Audiofast B2C model.
 
 Its role is to make one point explicit:
 
@@ -17,12 +17,12 @@ Its role is to make one point explicit:
 
 ## Current Resolution
 
-The B2C system should support one shared commerce flow for two product variants:
+The B2C system uses one shared commerce flow for two product variants:
 
 - standard catalog products that the customer configures before adding to cart
 - `CPO` specimen products that already represent one defined item with fixed setup and price
 
-This means both variants should be able to use:
+This means both variants use:
 
 - the same cart
 - the same checkout
@@ -44,7 +44,7 @@ The standard product model remains:
 
 ### `CPO` Product
 
-The `CPO` product model should be treated as:
+The `CPO` product model is treated as:
 
 - a specific specimen rather than a generic configurable base product
 - added to cart as-is
@@ -54,15 +54,12 @@ The `CPO` product model should be treated as:
 
 ## Shared Cart And Checkout Model
 
-The cart and checkout should not split into separate flows.
+The cart and checkout do not split into separate flows.
 
-Instead, they should use one mixed line-item model with at least:
+Instead, they use one mixed line-item model with at least:
 
 - `standard` line type
 - `cpo` line type
-
-The key difference is not the checkout flow itself.
-The key difference is what each line stores and validates.
 
 For a standard line:
 
@@ -76,49 +73,107 @@ For a `CPO` line:
 - specimen reference
 - specimen snapshot
 - fixed price snapshot
-- current operational availability state
+- current known availability state
+
+Detailed purchase-time snapshot structure belongs to Phase 04.
+
+## `CPO` Business Contract
+
+The current `CPO` business feed comes from Excel and syncs into `Sanity`.
+
+Agreed business inputs include:
+
+- `Marka`
+- `Nazwa`
+- `Klucz`
+- `Cena`
+- `URL`
+- `Opis`
+- `Sprzedaż Online`
+- `Zwrot`
+
+One row represents one unique specimen.
 
 ## `CPO` Operational Availability
 
 `CPO` needs one lightweight operational layer because each specimen is unique.
 
-This should not become a full stock or reservation subsystem.
+This is intentionally not a full stock subsystem.
 
-Current direction:
+### Agreed v1 Status Set
 
-- a minimal v1 state set may be enough, for example `available`, `locked_by_order`, `sold`, and `manually_unavailable`
-- when an order is created with a `CPO` item, the system may automatically move that specimen into `locked_by_order`
-- if payment is confirmed, the specimen may move into a sold / unavailable state
-- the Audiofast operator may still manually change the availability state when needed
+- `available`
+- `on_hold`
+- `sold_out`
+- `manually_unavailable`
 
-This layer exists only to protect unique items and to give operators control.
+### Status Meanings
 
-## Admin Control Principle
+- `available`: eligible for purchase if all other business rules also allow it
+- `on_hold`: reserved by an existing order / awaiting-payment flow
+- `sold_out`: final sold state
+- `manually_unavailable`: manually blocked by the Audiofast team
 
-The Audiofast operator should retain manual power over `CPO` operational availability.
+### Automatic State Changes
 
-That means:
+- valid order creation may move `available` to `on_hold`
+- payment expiration may move `on_hold` back to `available`
+- payment success may move `on_hold` to `sold_out`
 
-- the system may set the default safe state automatically
-- the operator may manually override the `CPO` state in admin
-- the operator should be able to understand why the item is currently unavailable
+### Manual Override Principle
 
-At a minimum, the operator should be able to see:
+- the Audiofast operator may manually change availability in v1
+- v1 does not require strict restriction logic on manual transitions
+- however, `manually_unavailable` must block creation of new orders
 
-- current `CPO` availability state
-- whether the item is locked by an order
-- the linked order reference when relevant
+### Minimal v1 Metadata
+
+At minimum, the operational layer should preserve:
+
+- current availability status
+- `holdUntil`
+- optional linked order reference when relevant
+
+Reason / source tracking can remain optional for v1.
+
+## Archive And Availability Stay Separate
+
+Archive state and availability state must not be merged into one stored field.
+
+Instead:
+
+- archive / active-offer visibility represents whether the specimen belongs in the public offer
+- availability status represents the operational state of the specimen
+
+These are combined only in runtime logic.
+
+### Runtime Buyability Rule
+
+A `CPO` item is buyable only when all of these are true:
+
+- the row still exists in the business feed and the document is not archived
+- `Sprzedaż Online` is true
+- valid price exists
+- availability status is `available`
+
+### Archived Product Rule
+
+- archived `CPO` items are not buyable for new customers
+- archive does not cancel an already-created valid awaiting-payment order
+- if an archived specimen is still `on_hold`, the existing buyer may still complete payment
+- if that payment later expires, the specimen may become `available` internally again but still remains non-buyable because it is archived
 
 ## Data Ownership Direction
 
-The intended split is:
+The agreed split is:
 
-- Excel owns business-managed `CPO` inputs such as specimen presence in the offer, key, descriptive data, and price input
+- Excel owns upstream `CPO` business inputs
 - Sanity owns the public/editorial `CPO` document
-- Supabase owns commerce-operational truth for orders and `CPO` availability state
-- Next.js enforces buyability based on the combined result of these sources
+- Sanity also owns live `CPO` operational availability in v1
+- Supabase owns the orders that may trigger availability updates
+- Next.js updates `Sanity` availability based on order/payment events and reads `Sanity` for storefront buyability
 
-This prevents a normal Excel sync from accidentally reopening a `CPO` item that operations intentionally blocked.
+This prevents normal Excel sync from reopening or relisting a specimen that operations intentionally blocked.
 
 ## Admin Panel Implication
 
@@ -129,32 +184,22 @@ This is justified because `CPO` work is specimen-centric rather than order-centr
 The `CPO` area should help operators answer questions such as:
 
 - which `CPO` items currently exist in the active offer
-- which ones are `available`, `locked_by_order`, `sold`, or manually unavailable
-- which order is currently linked to a specimen
+- which ones are `available`, `on_hold`, `sold_out`, or `manually_unavailable`
+- which specimen is archived and therefore not part of the active offer
+- which order is currently linked to a specimen when relevant
 
 At the same time:
 
 - mixed orders should still clearly show when a line is `CPO`
 - order detail should still expose the relevant `CPO` availability context
-- manual override should be available in both the `CPO` operational workflow and the relevant order workflow when appropriate
-
-The existing `CPO` content area in Sanity can remain the place for content editing.
-The B2C admin surface should remain the place for commerce-operational decisions.
+- archived `CPO` items may still appear in order context when needed
 
 ## Phase 03 Implication
 
-This relation must be locked before deep commerce modeling because it affects:
+This relation had to be locked before deep commerce modeling because it affects:
 
 - Excel contract scope
 - data ownership boundaries
 - cart line structure
 - order item snapshots
 - admin control design
-
-Without this decision, Phase 04 would risk modeling standard products only and bolting `CPO` on afterward.
-
-## Open Questions To Carry Forward
-
-- what exact `CPO` availability states should exist in v1 beyond `locked_by_order`
-- how should a `CPO` item be shown publicly when it is visible but not currently buyable
-- how should operator override be audited in the final implementation

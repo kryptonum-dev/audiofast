@@ -1,8 +1,8 @@
 # Product Buyability Rules
 
-Status: draft
+Status: completed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-08
 Depends on: `excel-contract.md`
 Related files: `pricing-and-tax-rules.md`, `../architecture/cart-and-checkout-model.md`, `../architecture/cpo-and-b2c-relation.md`
 
@@ -10,7 +10,7 @@ Related files: `pricing-and-tax-rules.md`, `../architecture/cart-and-checkout-mo
 
 This file defines when a product can be purchased directly and how the storefront should behave based on that status.
 
-The B2C model now needs to cover two buyable product shapes:
+The B2C model covers two buyable product shapes:
 
 - standard configurable catalog products
 - fixed `CPO` specimen products
@@ -21,31 +21,46 @@ The B2C model now needs to cover two buyable product shapes:
 
 A standard catalog product is buyable only when:
 
-- it is marked as sellable in Excel
-- it has price data available
+- runtime `Sprzedaż Online` is true
+- valid price data is available
+
+The upstream source of the two business flags is Excel, but the runtime value used by the storefront is the synced result stored in `Sanity`.
 
 ### Non-Buyable Standard Product
 
 A standard catalog product is non-buyable when:
 
-- it is not marked as sellable in Excel
-- or it has no price
+- runtime `Sprzedaż Online` is false
+- or it has no valid price
+- or it has no valid product `URL` / `price_key` mapping
+
+### Standard Product Aggregation Rule
+
+The sellable and returnable flags are product-level, not model-level.
+
+Rules:
+
+- product identity is the `URL` / `price_key`
+- multiple pricing rows with the same `URL` are still one product
+- if at least one row for a given `URL` has `TAK`, the product gets that flag
 
 ### Buyable `CPO` Product
 
 A `CPO` specimen is buyable only when:
 
-- it exists in the current business-controlled `CPO` offer
-- it has price data available
-- its operational availability state allows purchase
+- it is not archived
+- runtime `Sprzedaż Online` is true
+- it has valid price data
+- its operational availability status is `available`
 
 ### Non-Buyable `CPO` Product
 
 A `CPO` specimen is non-buyable when:
 
-- it is no longer part of the intended `CPO` offer
+- it is archived
+- or runtime `Sprzedaż Online` is false
 - or it has no valid price
-- or its operational availability is not currently purchasable
+- or its operational availability is `on_hold`, `sold_out`, or `manually_unavailable`
 
 ## CTA Visibility Rules
 
@@ -76,47 +91,41 @@ For `CPO` products:
 - the product is treated as an already-defined specimen, not a configurable base product
 - the customer adds the item as-is
 - there is no option selection step
-- quantity should stay effectively limited to one specimen per line
-- cart reconfiguration should not exist for `CPO` items
+- quantity stays effectively limited to one specimen per line
+- cart reconfiguration does not exist for `CPO` items
 
 ## Operational Availability Rule For `CPO`
 
 The `CPO` buyability model needs one lightweight operational layer in addition to business-managed product data.
 
-Current direction:
+The agreed v1 statuses are:
 
-- the system may automatically move a `CPO` item into a non-buyable state such as `locked_by_order` when an order is created
-- the Audiofast operator may manually change the `CPO` availability state in admin
-- this operational state is separate from the business input contract and should not be overwritten by normal Excel sync
+- `available`
+- `on_hold`
+- `sold_out`
+- `manually_unavailable`
 
-## Questions Still To Finalize
+Rules:
 
-- how exactly is "missing price" detected in the current data layer?
-- how should price-hidden but inquiry-available products be presented visually?
-- what should happen if pricing data is temporarily unavailable due to a sync issue?
-- how should non-buyable `CPO` items be presented publicly when they still have a visible product page?
-- should every `CPO` row in the source sheet be treated as business-sellable by default, or is an explicit sellable flag needed later?
+- order creation may move `available` to `on_hold`
+- payment expiration may move `on_hold` back to `available`
+- payment success may move `on_hold` to `sold_out`
+- manual operator change may set `manually_unavailable`
+- `manually_unavailable` blocks new order creation
+- this operational state is stored in `Sanity` for v1 and must not be overwritten by normal Excel sync
 
-## Future Sections To Expand
+## Archived `CPO` Rule
 
-### Edge Cases
+- archive state and availability state are separate
+- archived `CPO` items are not buyable for new customers
+- archiving does not block completion of an already-created valid awaiting-payment order
+- if an archived `CPO` item later returns internally to `available`, it still remains non-buyable because it is archived
 
-- missing Excel row
-- missing sync result
-- stale pricing state
-- `CPO` item locked by order but manually reopened by operator
-- `CPO` item present in content but intentionally not purchasable
+## Runtime And Failure Rules
 
-### UI Interpretation
-
-- button disabled vs hidden
-- price hidden vs fallback text
-
-### Technical Enforcement Points
-
-- product page
-- cart entry point
-- checkout validation
+- `Next.js` never reads Excel directly for buyability
+- the storefront uses the last successfully persisted runtime values already stored in `Sanity` and `Supabase`
+- v1 does not require a special stale-sync UI
 
 ## Notes
 
