@@ -17507,6 +17507,20 @@
         },
         "optional": true
       },
+      "isSellableOnline": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "isReturnable": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "publishedDate": {
         "type": "objectAttribute",
         "value": {
@@ -17518,6 +17532,38 @@
         "type": "objectAttribute",
         "value": {
           "type": "boolean"
+        },
+        "optional": true
+      },
+      "availabilityStatus": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "available"
+            },
+            {
+              "type": "string",
+              "value": "on_hold"
+            },
+            {
+              "type": "string",
+              "value": "sold_out"
+            },
+            {
+              "type": "string",
+              "value": "manually_unavailable"
+            }
+          ]
+        },
+        "optional": true
+      },
+      "holdUntil": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },
@@ -19453,6 +19499,20 @@
         "optional": true
       },
       "isArchived": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "isSellableOnline": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
+      "isReturnable": {
         "type": "objectAttribute",
         "value": {
           "type": "boolean"

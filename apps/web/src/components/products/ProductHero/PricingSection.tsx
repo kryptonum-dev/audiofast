@@ -4,7 +4,10 @@ import { useCallback, useState } from 'react';
 
 import type { SanityRawImage } from '@/components/shared/Image';
 import type { FormStateData } from '@/src/components/ui/FormStates';
-import type { CompletePricingData, PricingSelection } from '@/src/global/supabase/types';
+import type {
+  CompletePricingData,
+  PricingSelection,
+} from '@/src/global/supabase/types';
 
 import Button from '../../ui/Button';
 import ProductInquiryModal, {
@@ -16,7 +19,8 @@ import PricingConfigurator, {
 import styles from './styles.module.scss';
 
 interface PricingSectionProps {
-  pricingData: CompletePricingData;
+  pricingData?: CompletePricingData | null;
+  isBuyable: boolean;
   product: {
     id: string;
     name: string;
@@ -25,18 +29,21 @@ interface PricingSectionProps {
     image: SanityRawImage;
   };
   formStateData?: FormStateData | null;
+  onAddToCart?: (product: ProductContext) => void;
 }
 
 export default function PricingSection({
   pricingData,
+  isBuyable,
   product,
   formStateData,
+  onAddToCart,
 }: PricingSectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [configData, setConfigData] = useState<ConfigurationData>({
-    basePrice: pricingData.lowestPrice,
+    basePrice: pricingData?.lowestPrice ?? 0,
     options: [],
-    totalPrice: pricingData.lowestPrice,
+    totalPrice: pricingData?.lowestPrice ?? 0,
   });
 
   // Handle selection changes from PricingConfigurator
@@ -44,7 +51,7 @@ export default function PricingSection({
     (_selection: PricingSelection, newConfigData: ConfigurationData) => {
       setConfigData(newConfigData);
     },
-    []
+    [],
   );
 
   // Build product context for the modal
@@ -72,21 +79,37 @@ export default function PricingSection({
     setIsModalOpen(false);
   };
 
+  const handleAddToCart = () => {
+    onAddToCart?.(productContext);
+  };
+
   return (
     <>
-      <PricingConfigurator
-        pricingData={pricingData}
-        onSelectionChange={handleSelectionChange}
-      />
+      {pricingData ? (
+        <PricingConfigurator
+          pricingData={pricingData}
+          onSelectionChange={handleSelectionChange}
+        />
+      ) : null}
+      <div className={styles.buttonsWrapper}>
+        {isBuyable ? (
+          <Button
+            text="Dodaj do koszyka"
+            variant="primary"
+            iconUsed="arrowRight"
+            onClick={handleAddToCart}
+            className={styles.inquiryButton}
+          />
+        ) : null}
 
-      <Button
-        text="Zapytaj o produkt"
-        variant="primary"
-        iconUsed="information"
-        onClick={handleOpenModal}
-        className={styles.inquiryButton}
-      />
-
+        <Button
+          text="Zapytaj o produkt"
+          variant={isBuyable ? 'secondary' : 'primary'}
+          iconUsed="information"
+          onClick={handleOpenModal}
+          className={styles.inquiryButton}
+        />
+      </div>
       <ProductInquiryModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}

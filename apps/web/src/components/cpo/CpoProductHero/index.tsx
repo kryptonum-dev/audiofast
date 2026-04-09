@@ -18,6 +18,7 @@ type CpoProductHeroProps = {
   previewImage?: SanityRawImage | null;
   shortDescription?: PortableTextProps | null;
   priceCents?: number | null;
+  isBuyable: boolean;
   transparentBackground?: boolean | null;
   formStateData?: FormStateData | null;
   customId?: string;
@@ -30,6 +31,7 @@ export default function CpoProductHero({
   previewImage,
   shortDescription,
   priceCents,
+  isBuyable,
   transparentBackground,
   formStateData,
   customId,
@@ -111,6 +113,7 @@ export default function CpoProductHero({
         brandLogo={brand?.logo || undefined}
         previewImage={previewImage}
         priceCents={priceCents}
+        isBuyable={isBuyable}
         formStateData={formStateData}
       />
     </section>

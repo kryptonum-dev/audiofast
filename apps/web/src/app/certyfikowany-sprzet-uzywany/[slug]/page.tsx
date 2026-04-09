@@ -10,6 +10,7 @@ import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import type { FormStateData } from '@/src/components/ui/FormStates';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
+import { getCpoProductBuyability } from '@/src/global/b2c/utils/buyability';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllCpoProductSlugs,
@@ -125,6 +126,12 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
 
   const heroPreviewImage = (product.resolvedPreviewImage ??
     product.previewImage) as SanityRawImage | null | undefined;
+  const productBuyability = getCpoProductBuyability({
+    isArchived: product.isArchived,
+    isSellableOnline: product.isSellableOnline,
+    priceCents: product.priceCents,
+    availabilityStatus: product.availabilityStatus,
+  });
 
   const useOwnGallery = product.useCustomGallery === true;
   const galleryImages = (
@@ -173,7 +180,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
 
   return (
     <main id="main" className="page-transition">
-      <Breadcrumbs data={breadcrumbsData} />
+      <Breadcrumbs data={breadcrumbsData} firstItemType="productPage" />
       <CpoProductHero
         productId={product._id}
         name={product.name || ''}
@@ -183,6 +190,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         previewImage={heroPreviewImage}
         shortDescription={product.shortDescription as PortableTextProps}
         priceCents={product.priceCents}
+        isBuyable={productBuyability.isBuyable}
         transparentBackground={product.transparentBackground}
         formStateData={formStateData as FormStateData | null}
       />

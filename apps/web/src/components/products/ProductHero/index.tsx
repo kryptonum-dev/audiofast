@@ -21,6 +21,7 @@ export interface ProductHeroProps {
   subtitle?: string;
   brand?: BrandType;
   pricingData?: CompletePricingData | null;
+  isBuyable: boolean;
   previewImage: SanityRawImage;
   shortDescription?: PortableTextProps;
   awards?: AwardType[];
@@ -36,6 +37,7 @@ export default function ProductHero({
   subtitle,
   brand,
   pricingData,
+  isBuyable,
   previewImage,
   shortDescription,
   awards,
@@ -91,21 +93,20 @@ export default function ProductHero({
         <ProductDescription shortDescription={shortDescription} />
       )}
       <div className={styles.priceWrapper}>
-        {pricingData ? (
-          <PricingSection
-            pricingData={pricingData}
-            product={{
-              id: productId || '',
-              name,
-              brandName: brand?.name || '',
-              brandLogo: brand?.logo || undefined,
-              image: previewImage,
-            }}
-            formStateData={formStateData}
-          />
-        ) : (
-          <span className={styles.price}>Brak ceny</span>
-        )}
+        {!pricingData ? <span className={styles.price}>Brak ceny</span> : null}
+
+        <PricingSection
+          pricingData={pricingData}
+          isBuyable={isBuyable}
+          product={{
+            id: productId || '',
+            name,
+            brandName: brand?.name || '',
+            brandLogo: brand?.logo || undefined,
+            image: previewImage,
+          }}
+          formStateData={formStateData}
+        />
 
         <AddToComparison
           productId={productId}

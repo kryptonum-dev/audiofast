@@ -2,12 +2,12 @@
 
 import { useMemo, useState } from 'react';
 
-import type { SanityRawImage } from '@/src/components/shared/Image';
 import ProductInquiryModal, {
   type ProductContext,
 } from '@/src/components/products/ProductInquiryModal';
-import type { FormStateData } from '@/src/components/ui/FormStates';
+import type { SanityRawImage } from '@/src/components/shared/Image';
 import Button from '@/src/components/ui/Button';
+import type { FormStateData } from '@/src/components/ui/FormStates';
 import { formatPrice } from '@/src/global/utils';
 
 import productHeroStyles from '../../products/ProductHero/styles.module.scss';
@@ -20,7 +20,9 @@ type CpoProductInquirySectionProps = {
   brandLogo?: SanityRawImage | null;
   previewImage?: SanityRawImage | null;
   priceCents?: number | null;
+  isBuyable: boolean;
   formStateData?: FormStateData | null;
+  onAddToCart?: (product: ProductContext) => void;
 };
 
 export default function CpoProductInquirySection({
@@ -30,17 +32,20 @@ export default function CpoProductInquirySection({
   brandLogo,
   previewImage,
   priceCents,
+  isBuyable,
   formStateData,
+  onAddToCart,
 }: CpoProductInquirySectionProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const modalPreviewImage = previewImage ?? ({ id: null } as SanityRawImage);
   const formattedPrice =
     typeof priceCents === 'number' && priceCents > 0
       ? formatPrice(priceCents)
       : 'Cena do ustalenia';
 
-  const productContext = useMemo<ProductContext>(
-    () => ({
+  const productContext = useMemo<ProductContext>(() => {
+    const modalPreviewImage = previewImage ?? ({ id: null } as SanityRawImage);
+
+    return {
       id: productId,
       name: productName,
       brandName: brandName || '',
@@ -50,22 +55,38 @@ export default function CpoProductInquirySection({
       basePrice: priceCents ?? 0,
       configurationOptions: [],
       totalPrice: priceCents ?? 0,
-    }),
-    [brandLogo, brandName, modalPreviewImage, priceCents, productId, productName],
-  );
+    };
+  }, [brandLogo, brandName, previewImage, priceCents, productId, productName]);
+
+  const handleAddToCart = () => {
+    onAddToCart?.(productContext);
+  };
 
   return (
     <>
-      <div className={`${productHeroStyles.priceWrapper} ${styles.priceWrapper}`}>
+      <div
+        className={`${productHeroStyles.priceWrapper} ${styles.priceWrapper}`}
+      >
         <span className={styles.priceLabel}>Cena CPO</span>
         <span className={productHeroStyles.price}>{formattedPrice}</span>
-        <Button
-          text="Zapytaj o ten egzemplarz"
-          variant="primary"
-          iconUsed="information"
-          onClick={() => setIsModalOpen(true)}
-          className={productHeroStyles.inquiryButton}
-        />
+        <div className={productHeroStyles.buttonsWrapper}>
+          {isBuyable ? (
+            <Button
+              text="Dodaj do koszyka"
+              variant="primary"
+              iconUsed="arrowRight"
+              onClick={handleAddToCart}
+              className={productHeroStyles.inquiryButton}
+            />
+          ) : null}
+          <Button
+            text="Zapytaj o ten egzemplarz"
+            variant={isBuyable ? 'secondary' : 'primary'}
+            iconUsed="information"
+            onClick={() => setIsModalOpen(true)}
+            className={productHeroStyles.inquiryButton}
+          />
+        </div>
       </div>
 
       <ProductInquiryModal
