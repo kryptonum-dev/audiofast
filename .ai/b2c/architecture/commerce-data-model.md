@@ -1,238 +1,166 @@
 # Commerce Data Model
 
-Status: draft
+Status: in progress
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: `data-ownership.md`, `../business/coupon-rules.md`
-Related files: `system-map.md`, `order-lifecycle.md`, `payment-process-model.md`, `cpo-and-b2c-relation.md`
+Related files: `system-map.md`, `order-lifecycle.md`, `payment-process-model.md`, `cpo-and-b2c-relation.md`, `commerce-table-model.md`
 
 ## Purpose
 
 This file defines the high-level operational entities needed for the B2C system.
 
-It is intentionally conceptual for now and should later evolve into a more detailed data-modeling document.
+It should stay conceptual enough to explain the domain clearly, while the exact table layout lives in:
 
-## Core Entity Candidates
+- `commerce-table-model.md`
+
+## Accepted Core Entities
 
 ### Order
 
-Represents a customer purchase attempt / transaction record.
+Represents one purchase attempt / transaction record.
 
-Likely concerns:
+The accepted v1 direction is:
 
-- internal order number
-- customer identity snapshot
-- address snapshot
-- order state
-- totals
-- coupon application summary
-- linkage to minimal internal payment-attempt tracking
+- one shared `orders` table for both standard and `CPO` purchases
+- order stores the main lifecycle status
+- order stores purchase-time snapshots and totals
+- order stores lightweight payment, shipment, invoice, and discount metadata
+- public order number format is `AF-YYYY-NNNNN`
 
-### Payment Attempt
+Key concerns:
 
-Represents one technical payment attempt for an order.
-
-This is intentionally:
-
-- an internal technical safety layer
-- not a separate business-facing order-status model
-
-Likely concerns:
-
-- order linkage
-- local attempt identifier / sequence
-- provider transaction/reference ID
-- created timestamp
-- confirmation / result timestamp
-- minimal reconciliation metadata needed for retry, webhook truth, and duplicate protection
+- internal ID plus public order number
+- customer linkage
+- current order status
+- status history
+- payment validity window
+- purchase-time customer/address snapshot
+- totals and discount result
 
 ### Order Item
 
-Represents a purchased item within an order.
+Represents one purchased line belonging to an order.
 
-Likely concerns:
+The accepted v1 direction is:
+
+- one shared `order_items` table for both standard and `CPO` lines
+- line stores quantity, price snapshot, discount effect, and returnability
+- line stores flexible product-specific detail in `item_snapshot`
+
+Key concerns:
 
 - line type (`standard` or `cpo`)
-- product / specimen identifier
-- product name snapshot
-- configuration snapshot where applicable
+- product/specimen key
+- product and brand snapshot
 - quantity
-- item price snapshot
-- returnability snapshot
+- line subtotal / line discount / line total
+- configuration snapshot for standard products
+- purchase-time `CPO` context for `CPO` lines
 
-The current direction should explicitly support two line variants:
+The accepted `item_snapshot` direction is:
 
-- standard configurable product lines
-- `CPO` specimen lines
+- standard products keep model plus rich selected-option context
+- `CPO` lines keep only minimal purchase-time `CPO` state context
 
-For `CPO` lines, the snapshot likely also needs:
+### Customer Profile
 
-- `CPO` specimen key
-- specimen-specific title / brand snapshot
-- fixed-price snapshot
-- no configuration snapshot
+Represents reusable customer defaults for future checkout and `Dane konta`.
 
-### Customer Identity
+The accepted v1 direction is:
 
-Represents the lightweight customer identity used for B2C order access.
+- customer auth/session is handled by `Supabase Auth`
+- reusable business defaults live in `customer_profiles`
+- profile is created only after the first successful paid order
+- profile changes affect future orders only
 
-Likely concerns:
+The accepted profile default shapes now include:
 
-- email
-- saved profile data
-- customer preferences needed for future checkout prefill
-
-Current rules:
-
-- email is the identity key for customer-panel access
-- the first order for a new email creates the initial reusable profile data
-- guest checkout for an existing email must not overwrite reusable profile defaults automatically
-- authenticated customers may update reusable profile defaults through `Dane konta` or explicit opt-in during checkout
-
-### Customer Access / OTP
-
-Represents temporary access or verification data for email-based customer panel entry.
-
-Likely concerns:
-
-- email identity linkage
-- code / token
-- expiration
-- attempt handling
-- verification result
-- resend throttling
-
-### Customer Session
-
-Represents authenticated browser/device access after OTP verification.
-
-Likely concerns:
-
-- customer identity linkage
-- session expiration
-- browser/device scope
-- logout / invalidation behavior
-
-### Post-Purchase Temporary Access
-
-Represents the short-lived single-order access granted immediately after guest checkout success.
-
-Likely concerns:
-
-- single-order linkage
-- expiration window
-- no full email-identity access
+- `default_shipping_address`
+- `default_invoice_data`
 
 ### Coupon
 
-Represents a discount rule managed internally.
+Represents one discount rule.
 
-Likely concerns:
+The accepted v1 direction is:
 
-- code
-- type
-- scope
-- value
-- active flag
-- expiration
-- global usage limit
+- one `coupons` table
+- no separate `scope_type`
+- one coupon max per order
+- product-specific coupons may reference multiple product keys
+- product-specific fixed discounts apply per eligible unit quantity
+- usage count increments only after payment success
 
-### Coupon Usage
+The accepted order-level discount snapshot now lives in:
 
-Tracks application or redemption of coupons against orders.
-
-### Shipment Metadata
-
-Represents manual shipment-related information.
-
-Likely concerns:
-
-- courier
-- tracking number
-- timestamps
-
-### Invoice Metadata
-
-Represents invoice document linkage and publication state.
-
-Likely concerns:
-
-- file reference
-- file name
-- added date
-- customer-visible state
-
-### Order Status History
-
-Tracks important order lifecycle changes over time.
-
-### `CPO` Operational Availability
-
-Represents the lightweight commerce-operational state of a unique `CPO` specimen.
-
-Likely concerns:
-
-- `CPO` specimen linkage
-- current availability state
-- optional linked order
-- reason / source of the current state
-- manual override information
-- last-updated timestamp
-
-Current direction:
-
-- this is not a general stock system
-- this exists only because a `CPO` item is a unique specimen
-- in v1 this state is expected to live on the `CPO` document in `Sanity`, not in a separate `Supabase` table
-- a minimal v1 state set should be `available`, `on_hold`, `sold_out`, and `manually_unavailable`
-- the system may automatically move the item into `on_hold` when an order is created
-- the Audiofast operator may manually change the state in admin when needed
-- archive state stays separate from availability state
+- `orders.used_discount`
 
 ### Return Case
 
-Represents the separate return-handling process attached to an order.
+Represents the separate return workflow attached to an order.
 
-Likely concerns:
+The accepted v1 direction is:
 
-- order linkage
-- creation source
-- current return-case state
-- optional customer reason
-- request timestamp
-- internal notes
-- closure without return vs completed return
+- one minimal `return_cases` table
+- whole-order return handling only
+- no partial-return tables in v1
+- at most one open return case per order at a time
 
-The return case should be able to exist without immediately changing the main order status to `returned`.
+### `CPO` Operational Availability
+
+Represents the lightweight operational state of a unique `CPO` specimen.
+
+The accepted v1 direction is:
+
+- stays on the `CPO` document in `Sanity`
+- does not get its own `Supabase` table
+- status set: `available`, `on_hold`, `sold_out`, `manually_unavailable`
+- archive state remains separate from availability state
+
+## Explicit V1 Non-Entities
+
+To keep the model lean, v1 intentionally does not introduce separate business tables for:
+
+- payment attempts
+- order status history
+- shipment metadata
+- invoice metadata
+- coupon usages
+- `CPO` availability
+
+Those concerns are handled through:
+
+- small scalar fields on `orders`
+- JSON fields on `orders`
+- or `Sanity` state in the case of `CPO`
+
+## Payment Model Direction
+
+The accepted v1 payment foundation is:
+
+- one short `awaiting_payment` window of `15 minutes`
+- no long-lived retry-on-same-order flow
+- no separate `payment_attempts` table
+- the provider confirmation/webhook is the source of truth
+- if the customer abandons the Przelewy24 page, they do not get a dedicated resume-payment flow in v1
+- if the payment window expires, the customer must start a new checkout / new order
+
+## Invoice / Document Direction
+
+The accepted v1 invoice direction is:
+
+- invoice PDF lives in private `Supabase Storage`
+- the order stores the invoice file reference and metadata in `invoice_data`
+- upload UI may still be implemented in the `Sanity App SDK` admin panel
 
 ## Questions Still To Resolve
 
-- exact coupon usage lifecycle
-- exact document storage linkage
-- exact order snapshot fields for standard and `CPO` lines
-
-## Proposed Future Sections
-
-### 1. Entity List
-
-### 2. Required Fields Per Entity
-
-### 3. Snapshot Rules
-
-### 4. Derived Fields
-
-### 5. Audit / History Needs
-
-### 6. Relationships Between Entities
-
-### 7. Customer Identity And Access Model
-
-### 8. Payment Attempt Model
-
-### 9. `CPO` Availability Model
-
-### 10. Return Case Model
+- exact admin/frontend query patterns
+- final migration definitions
 
 ## Notes
 
-The main design principle should be that orders preserve the truth of the transaction at the time it happened, even if source product data changes later.
+The main design principle is still:
+
+- orders preserve the truth of the transaction at the time it happened, even if source product data changes later

@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning / execution
-Last updated: 2026-04-08
+Last updated: 2026-04-09
 Depends on: `../open-threads.md`, `../phases/phase-02-flow-and-operations-closure.md`
 Related files: `../milestones.md`, `../README.md`, `../testing-strategy.md`, `../phases/phase-03-business-data-contract.md`, `../phases/phase-04-commerce-foundation.md`
 
@@ -20,17 +20,15 @@ It should answer:
 
 ## Current Execution Snapshot
 
-- current active phase: `Phase 04 - Commerce Foundation`
-- current working mode: planning / backend-structure-definition
-- phase 03 has been closed
+- current active phase: `Phase 05 - Buyable PDP And Cart`
+- current working mode: implementation planning / storefront commerce enablement
+- phase 04 has been closed
 
 ## Current Focus
 
-- expand `../architecture/commerce-data-model.md`
-- finalize order snapshot direction for standard and `CPO` lines
-- finalize order-number direction
-- finalize payment-attempt / payment-state backend structure direction
-- finalize invoice/document linkage direction
+- wire the accepted backend model into storefront buyability and cart work
+- connect the new `Sanity` business fields and accepted `Supabase` schema to the next implementation tasks
+- prepare the first implementation work for PDP/cart and checkout
 
 ## Recently Completed
 
@@ -47,18 +45,27 @@ It should answer:
 - `CPO` Excel flags locked
 - ownership boundaries locked
 - `CPO` availability model locked
+- accepted v1 table set locked
+- accepted v1 payment simplification locked (`15-minute` unpaid window, no separate payment-attempt table)
+- accepted Supabase Auth direction locked
+- accepted Supabase Storage invoice direction locked
+- accepted public order number format locked (`AF-YYYY-NNNNN`)
+- accepted JSON snapshot shapes locked
+- accepted minimal useful constraints and indexes locked
+- `Supabase` schema created for the accepted Phase 04 table model
+- private invoice storage bucket created
+- generated `database.types.ts` refreshed from the live schema
 
 ## Blocked / Waiting
 
-- implementation-heavy phases still depend on final Phase 04 commerce-foundation outputs
-- order / invoice / coupon / customer-access implementation still depends on final entity structure
+- implementation-heavy phases now depend on actual application wiring against the accepted backend model
 
 ## Ready Next
 
-1. finalize order snapshots and entity relationships
-2. finalize order numbering and payment-attempt structure
-3. finalize invoice/document linkage
-4. start implementation planning for phases 05 and 06 from the locked backend structure
+1. implement PDP buyability and cart flow against the accepted model
+2. wire checkout/order creation against the new schema
+3. define exact admin/frontend query patterns where implementation requires them
+4. keep the Phase 04 docs aligned if implementation reveals any missing schema details
 
 ## Phase Tracker
 
@@ -76,11 +83,11 @@ It should answer:
 
 ### Phase 04 - Commerce Foundation
 
-- status: in progress
+- status: completed
 
 ### Phase 05 - Buyable PDP And Cart
 
-- status: planned
+- status: in progress
 
 ### Phase 06 - Checkout And Payments
 

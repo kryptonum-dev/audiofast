@@ -53,6 +53,9 @@ Use the files in this order:
 - `testing-strategy.md`
   Cross-phase testing direction for the new B2C implementation work.
 
+- `architecture/commerce-table-model.md`
+  Accepted v1 table-level backend structure for orders, items, profiles, coupons, returns, auth direction, and invoice storage.
+
 ## Folder Structure
 
 ### `business/`
@@ -96,11 +99,5 @@ Current status of the B2C planning system:
 - admin panel architecture finalized
 - root testing strategy created
 - phase 03 business contract finalized
+- accepted v1 commerce table model added
 - no open planning threads remain
-
-## Next Recommended Moves
-
-1. Expand the commerce data model for orders, order items, payment attempts, and documents.
-2. Finalize order snapshot direction and order numbering.
-3. Finalize invoice/document linkage and remaining failure-path behavior.
-4. Translate phase-four outputs into implementation-ready backend and storefront tasks.

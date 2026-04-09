@@ -2,7 +2,7 @@
 
 Status: closed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: resolved customer-panel structure discussion
 Related files: `../open-threads.md`, `customer-auth-and-access.md`, `order-lifecycle.md`
 
@@ -74,7 +74,7 @@ At the structural level:
 - it lists all B2C orders associated with the authenticated email identity
 - clicking an order opens the order detail view
 - active `awaiting_payment` orders should appear in the main list while still within the active payment window
-- expired `awaiting_payment` orders should disappear from the customer list after the `24-hour` window
+- expired `awaiting_payment` orders should disappear from the customer list after the `15-minute` window
 
 Detailed list contents, sorting, and presentation can be finalized later during implementation planning.
 

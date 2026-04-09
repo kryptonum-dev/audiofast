@@ -1,10 +1,10 @@
 # Payment Process Model
 
-Status: closed
+Status: completed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: resolved payment-flow discussion
-Related files: `order-lifecycle.md`, `customer-auth-and-access.md`, `email-flow.md`, `system-map.md`, `commerce-data-model.md`, `customer-panel-ia.md`
+Related files: `order-lifecycle.md`, `customer-auth-and-access.md`, `email-flow.md`, `system-map.md`, `commerce-data-model.md`, `customer-panel-ia.md`, `commerce-table-model.md`
 
 ## Purpose
 
@@ -52,43 +52,23 @@ This means:
 - failed, cancelled, or abandoned payment outcomes do not introduce extra business-facing order statuses
 - the order remains `awaiting_payment` until payment is truly confirmed
 
-### 3. Internal Technical Payment Tracking
+### 3. Minimal Internal Payment Tracking
 
-Even though there is no separate business payment-state model, the implementation still requires minimal technical payment-attempt tracking for safety.
+The accepted v1 simplification is:
 
-This tracking is:
+- do not introduce a separate `payment_attempts` table
 
-- internal
-- not customer-facing
-- not a separate business-status layer
+Instead, keep only minimal payment tracking directly on the order, such as:
 
-At minimum, each payment attempt should preserve:
+- provider name
+- provider reference / transaction identifier when available
+- payment verification timestamp
 
-- order linkage
-- local payment-attempt identifier / sequence
-- provider transaction or reference ID
-- created timestamp
-- result / confirmation timestamp when known
-- enough provider linkage to reconcile callbacks and retries safely
+This is enough for v1 because:
 
-This tracking exists to support:
-
-- retry on the same order within the active window
-- webhook truth handling
-- duplicate-callback protection
-- redirect vs webhook mismatch handling
-
-### 4. Payment Attempts
-
-The system should allow:
-
-- multiple payment attempts on the same order while it is still within the active `24-hour` window
-
-Rules:
-
-- only one active payment attempt should exist at a time
-- retrying payment within the valid window should stay on the same order
-- once the order expires after `24 hours`, it becomes non-payable and requires a fresh checkout/new order
+- the unpaid window is intentionally short
+- there is no long-lived retry-on-same-order flow
+- provider webhook confirmation remains the source of truth
 
 ### 5. Source Of Truth
 
@@ -110,9 +90,10 @@ If the customer returns from `Przelewy24` before webhook confirmation arrives:
 - the site should not show final success yet
 - the page may perform short automatic polling/refresh to resolve into the confirmed state if possible
 
-If redirect reports failure/cancellation but the order is still active:
+If redirect reports failure/cancellation:
 
-- the page should offer a retry-payment path
+- the order may still remain `awaiting_payment` until the active window ends
+- v1 does not need a dedicated long-lived resume-payment path once the customer leaves the provider page
 
 If redirect appears successful but webhook never confirms:
 
@@ -162,29 +143,35 @@ If the customer is already authenticated during checkout:
 
 For active unpaid orders:
 
-- the customer panel should expose the order while the `24-hour` window is still active
-- the order detail should allow retry/resume payment
+- the order should remain pending only during the short active payment window
 
 For expired unpaid orders:
 
-- direct order-detail access should still be possible
-- the page should clearly show that the order is expired
-- repayment should no longer be possible
+- the order remains stored internally
+- it is no longer payable
+- it should not appear as a normal active order in the customer panel
 
 If the user starts OTP login from a direct order link:
 
 - successful login should return them to that exact order detail page
 
-### 9. Retry / Resume Surfaces
+### 9. Expiration Window
 
-The main retry-payment surfaces in v1 are:
+The accepted v1 payment window is:
 
-- the guest thank-you flow for short-lived single-order access
-- the authenticated order detail page for active unpaid orders
+- `15 minutes`
 
-Retry logic should remain available only while:
+This window represents:
 
-- the order is still within the active payment window
+- the time during which the original Przelewy24 payment attempt may still legitimately finish
+
+It does not mean:
+
+- a long-lived order-based recovery or retry feature
+
+If the customer abandons the Przelewy24 page and later wants to buy again after the window passes:
+
+- a new checkout / new order is required
 
 ### 10. Idempotency And Safety Rules
 
@@ -206,25 +193,21 @@ Rules:
 
 Customer-facing visibility should stay simple:
 
-- active unpaid orders are visible while still payable
+- active unpaid orders are visible only while still payable
 - expired unpaid orders stop appearing as normal active orders in the customer panel
-- expired unpaid orders may still be accessed directly and viewed as expired
 
 The customer does not need to see:
 
-- raw payment-attempt logs
 - provider callback history
 - technical payment metadata
 
 ### 12. Admin Visibility
 
-Detailed payment-attempt visibility in the admin panel is not mandatory for v1.
-
 The important v1 requirement is:
 
-- reliable internal payment handling
+- reliable internal payment handling with provider-confirmed truth
 
-Deeper admin payment-attempt inspection can remain an implementation/detail concern rather than a planning-level feature requirement.
+Expired unpaid orders should no longer appear in the normal active admin workflow list.
 
 ### 13. Email Rules
 
@@ -234,7 +217,6 @@ Payment-related email rules remain strict:
 - no customer email on redirect alone
 - the main order confirmation email sends only after real payment confirmation
 - `awaiting_payment` expiration remains silent in v1
-- if the customer retries payment on the same order and that payment later succeeds, the normal confirmation email should still send once at the first real successful confirmation
 
 ## Notes
 

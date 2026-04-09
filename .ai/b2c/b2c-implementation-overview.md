@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-08
+Last updated: 2026-04-09
 Depends on: current discovery and planning discussions
 Related files: `README.md`, `scope.md`, `open-threads.md`, `testing-strategy.md`
 
@@ -175,11 +175,10 @@ After reading this file:
 
 ## Current Status
 
-The planning system now exists, the critical v1 flow threads have been closed, and the Phase 03 business contract has been finalized.
+The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, and the accepted v1 table model is now documented.
 
 The most important next planning work is:
 
-- expanding the commerce data model into concrete order-domain structure
-- finalizing order snapshots and order numbering
-- finalizing invoice/document linkage
-- translating the locked Phase 03 contract into Phase 04 backend-structure detail
+- translating the accepted table model into schema and migration tasks
+- defining exact admin/frontend query patterns against the accepted backend model
+- using the locked backend structure to drive the implementation phases that follow

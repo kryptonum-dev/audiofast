@@ -1,10 +1,10 @@
 # Phase 04 - Commerce Foundation
 
-Status: in progress
+Status: completed
 Owner: planning
-Last updated: 2026-04-08
+Last updated: 2026-04-09
 Depends on: `phase-03-business-data-contract.md`
-Related files: `../architecture/commerce-data-model.md`, `../architecture/system-map.md`, `../architecture/order-lifecycle.md`, `../architecture/invoice-and-documents.md`, `../testing-strategy.md`
+Related files: `../architecture/commerce-data-model.md`, `../architecture/commerce-table-model.md`, `../architecture/system-map.md`, `../architecture/order-lifecycle.md`, `../architecture/invoice-and-documents.md`, `../testing-strategy.md`
 
 ## Objective
 
@@ -42,11 +42,13 @@ With the current interpretation of the roadmap, Phase 04 is where the backend st
 ## Main Deliverables
 
 - accepted high-level commerce data model
+- accepted v1 table model
 - clarified system map
 - resolved order number direction
 - resolved payment-state direction
 - resolved invoice/document linkage direction
 - order snapshot direction concrete enough for backend structure work
+- accepted JSON shapes, constraints, and minimal useful indexes for the v1 backend model
 
 ## Work Included In This Phase
 
@@ -57,6 +59,7 @@ With the current interpretation of the roadmap, Phase 04 is where the backend st
 - snapshot rules
 - audit/history needs
 - backend structure decisions for the order domain
+- accepted table-level structure for orders, items, profiles, coupons, returns, auth linkage, and invoice storage
 
 ### 2. Expand System Map
 
@@ -72,42 +75,35 @@ With the current interpretation of the roadmap, Phase 04 is where the backend st
 - invoice/document storage linkage direction
 - testing foundation direction for the implementation phases that follow
 
-## Questions To Resolve In This Phase
+## Completion Summary
 
-### 1. Order Snapshot Scope
+The accepted Phase 04 direction now includes:
 
-For standard-product order lines, Phase 04 should finalize which fields are preserved at purchase time, including at least:
+- `orders`, `order_items`, `customer_profiles`, `coupons`, and `return_cases` as the core v1 business tables
+- `Supabase Auth` for OTP identity/session handling
+- no separate custom OTP challenge table
+- no separate `payment_attempts` table in v1
+- `awaiting_payment` active window of `15 minutes`
+- invoice PDFs stored in private `Supabase Storage`
+- `CPO` availability remaining in `Sanity`
+- public order number format `AF-YYYY-NNNNN`
+- accepted JSON shapes for orders, items, and profile defaults
+- accepted minimal useful constraints and indexes
 
-- product name
-- product key / URL
-- selected model
-- selected configuration / options
-- final price
-- returnability at purchase time
+The commerce-foundation work is considered complete because:
 
-For `CPO` order lines, Phase 04 should finalize which fields are preserved at purchase time, including at least:
+- the accepted table model is documented in `../architecture/commerce-table-model.md`
+- the supporting architecture files have been aligned to the accepted model
+- the core `Supabase` schema has been created
+- the invoice storage bucket has been created
+- the generated database types have been refreshed
 
-- `Klucz`
-- specimen name
-- brand
-- final price
-- returnability at purchase time
-- relevant archived / availability context at purchase time
+### Work Carried Forward
 
-### 2. Order Immutability
+The next phase work should focus on:
 
-Phase 04 should explicitly lock that:
-
-- later Excel syncs do not mutate existing orders
-- later `Sanity` edits do not mutate existing orders
-- orders preserve purchase-time truth even if the product later becomes non-sellable, archived, or non-returnable
-
-### 3. Last-Good Sync Behavior
-
-Phase 04 should lock how the system behaves when sync fails or is stale:
-
-- the storefront should continue using the last successfully persisted values in `Sanity` and `Supabase`
-- v1 does not require a dedicated stale-sync UX unless a later implementation need appears
+- implementing the storefront/admin/customer flows that consume the accepted backend model
+- defining exact query patterns where they become necessary during implementation
 
 ## Not In Scope For This Phase
 
@@ -117,9 +113,9 @@ Phase 04 should lock how the system behaves when sync fails or is stale:
 
 ## Done Criteria
 
-Phase 04 can be considered complete when:
+Phase 04 is now considered complete because:
 
 - the commerce model is stable enough to support implementation tickets
+- the accepted table model is documented clearly enough to support schema work
 - the system map explains how the systems interact clearly enough for engineering work
-- the order-domain backend structure is clear enough to create implementation tasks
-- cross-cutting foundations no longer block PDP/cart, checkout, or admin implementation
+- the order-domain backend structure no longer blocks PDP/cart, checkout, or admin implementation

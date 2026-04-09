@@ -2,9 +2,9 @@
 
 Status: planned
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: `phase-05-buyable-pdp-and-cart.md`
-Related files: `../architecture/customer-auth-and-access.md`, `../architecture/payment-process-model.md`, `../architecture/email-flow.md`, `../testing-strategy.md`
+Related files: `../architecture/customer-auth-and-access.md`, `../architecture/payment-process-model.md`, `../architecture/email-flow.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
 ## Objective
 
@@ -51,7 +51,8 @@ It is where customer data capture, order persistence, payment initiation, provid
 
 - webhook truth handling
 - redirect recovery behavior
-- expiration / retry behavior at the agreed level
+- `15-minute` expiration behavior at the agreed level
+- no long-lived retry-on-same-order flow in v1
 
 ## Not In Scope For This Phase
 

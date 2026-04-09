@@ -2,9 +2,9 @@
 
 Status: planned
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: `phase-07-customer-panel.md`
-Related files: `../architecture/admin-panel-sanity.md`, `../architecture/invoice-and-documents.md`, `../business/coupon-rules.md`, `../testing-strategy.md`
+Related files: `../architecture/admin-panel-sanity.md`, `../architecture/invoice-and-documents.md`, `../business/coupon-rules.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
 ## Objective
 
@@ -45,7 +45,7 @@ This phase gives Audiofast the internal tools needed to manage orders, documents
 ### 2. Shipment And Documents
 
 - add courier and tracking information
-- attach/publish invoice PDFs
+- upload invoice PDFs into Supabase Storage and link them to orders
 
 ### 3. Promotions And Returns
 

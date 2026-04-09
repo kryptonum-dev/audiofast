@@ -1,10 +1,10 @@
 # Order Lifecycle
 
-Status: draft
+Status: completed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: current order-status decisions
-Related files: `commerce-data-model.md`, `../business/returns-and-cancellations-rules.md`
+Related files: `commerce-data-model.md`, `../business/returns-and-cancellations-rules.md`, `commerce-table-model.md`
 
 ## Purpose
 
@@ -102,8 +102,8 @@ The current v1 model does not introduce separate main statuses such as:
 
 It should also keep separate any `CPO` specimen availability states such as:
 
-- `locked_by_order`
-- `sold`
+- `on_hold`
+- `sold_out`
 - `manually_unavailable`
 
 Those are not main order statuses. They belong to the `CPO` operational availability layer.
@@ -115,20 +115,21 @@ Those are not main order statuses. They belong to the `CPO` operational availabi
 #### Order Creation
 
 - checkout submission creates the order as `awaiting_payment`
-- if the order contains a unique `CPO` specimen, the commerce layer may also move that specimen into a locked availability state
+- if the order contains a unique `CPO` specimen, the commerce layer may also move that specimen into an `on_hold` availability state
 
 #### Payment Confirmation
 
 - only provider confirmation can move the order from `awaiting_payment` to `paid`
 - browser redirect is not the source of truth
-- minimal technical payment-attempt tracking may exist internally without introducing extra main order statuses
-- if the order contains a `CPO` specimen, payment confirmation may also move that specimen into its final sold/unavailable state
+- payment reference data may still be stored on the order itself without introducing a separate business payment-status layer
+- if the order contains a `CPO` specimen, payment confirmation may also move that specimen into its final `sold_out` state
 
 #### Payment Expiration
 
-- `awaiting_payment` remains active for `24 hours`
+- `awaiting_payment` remains active for `15 minutes`
 - expiration is handled by timestamp / logic, not by a separate status
 - after expiration, the order is no longer payable and a fresh checkout/new order is required
+- expired unpaid orders remain stored internally but disappear from normal active customer/admin views
 
 ### Admin-Controlled Transitions
 
@@ -306,11 +307,11 @@ At the structural level, the customer should generally be able to see the order 
 
 `awaiting_payment` should be visible to the customer only while it is still active.
 
-After the `24-hour` payment window passes:
+After the `15-minute` payment window passes:
 
 - it should remain in the system
-- it should remain visible in admin
 - it should stop appearing as a normal active order in the customer panel
+- it should stop appearing in the normal active admin workflow list
 
 ### Customer History Expectation
 

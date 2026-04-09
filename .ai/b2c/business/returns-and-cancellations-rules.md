@@ -1,10 +1,10 @@
 # Returns And Cancellations Rules
 
-Status: draft
+Status: completed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: `excel-contract.md`
-Related files: `../architecture/order-lifecycle.md`
+Related files: `../architecture/order-lifecycle.md`, `../architecture/commerce-table-model.md`
 
 ## Purpose
 
@@ -77,6 +77,26 @@ Interpretation:
 - `open` means a return case exists and is being handled
 - `closed_without_return` means the return case was closed, but the order does not become `returned`
 - `completed` means the return case is finished and the main order can become `returned`
+
+### Return Case Table Direction
+
+The accepted minimal `return_cases` table should contain:
+
+- `id`
+- `order_id`
+- `status`
+- `reason`
+- `created_at`
+- `updated_at`
+- `closed_at`
+- `completed_at`
+
+Accepted constraints:
+
+- returns remain whole-order only in v1
+- no item-level return rows exist in v1
+- at most one open return case may exist per order at a time
+- historical closed/completed cases may still exist for the same order when business rules allow another request later
 
 ## Questions Still To Clarify Later
 

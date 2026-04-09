@@ -220,7 +220,7 @@ The final return-completion email is reserved only for:
 The following should remain silent in v1:
 
 - checkout handoff / `awaiting_payment`
-- `awaiting_payment` expiration after `24 hours`
+- `awaiting_payment` expiration after `15 minutes`
 - `completed`
 - same-status re-save actions
 

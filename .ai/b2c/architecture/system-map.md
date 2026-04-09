@@ -2,9 +2,9 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-08
+Last updated: 2026-04-09
 Depends on: `data-ownership.md`
-Related files: `commerce-data-model.md`, `../business/excel-contract.md`, `customer-auth-and-access.md`, `payment-process-model.md`, `cpo-and-b2c-relation.md`
+Related files: `commerce-data-model.md`, `../business/excel-contract.md`, `customer-auth-and-access.md`, `payment-process-model.md`, `cpo-and-b2c-relation.md`, `commerce-table-model.md`
 
 ## Purpose
 
@@ -31,6 +31,8 @@ This file explains the B2C system at a high level by showing how the main system
 - `Supabase` stores extended standard-product pricing/configuration data
 - `Supabase` stores commerce-operational order data
 - one shared orders model should cover both standard and `CPO` purchases
+- `Supabase Auth` stores verified customer identity and session state
+- `Supabase Storage` stores private invoice PDFs
 
 ### Application Layer
 
@@ -59,9 +61,9 @@ At a high level:
 9. `Przelewy24` redirect returns to the site, but webhook confirmation remains the source of truth.
 10. Webhook truth updates the order from `awaiting_payment` to `paid` when payment is confirmed.
 11. Payment confirmation may also move the `CPO` item from `on_hold` to `sold_out` in `Sanity`.
-12. If payment expires, the `CPO` item may return to `available`, but an archived item still remains non-buyable.
+12. If payment is not confirmed within the short active window, the order expires for payment purposes and the `CPO` item may return to `available`, while archived items still remain non-buyable.
 13. Next.js backend logic sends transactional emails through Microsoft Graph when lifecycle events require it.
-14. The customer later accesses their order through email OTP.
+14. The customer later accesses their order through Supabase-Auth-backed email OTP.
 15. The operator manages the order through the internal admin panel and may manually override `CPO` operational availability when needed.
 
 ## Agreed Runtime Principles
@@ -69,14 +71,16 @@ At a high level:
 - Excel is upstream business input, not runtime truth
 - `Sanity` is the storefront source for standard-product B2C flags and `CPO` state
 - `Supabase` is the structured source for pricing extensions and orders
+- `Supabase Auth` is the verified identity/session layer
+- `Supabase Storage` is the invoice file store
 - archive state and availability state stay separate for `CPO`
 - archiving blocks new purchases but does not block completion of an already-created valid awaiting-payment order
 
 ## Open Questions To Carry Forward
 
-- detailed order snapshot shape
-- detailed invoice/document storage and exposure
-- exact failure-path handling at the entity level
+- exact admin/frontend query patterns over the accepted backend model
+- exact Supabase Storage path convention and file-access strategy for invoice downloads
+- exact failure-path handling at the implementation level
 
 ## Notes
 

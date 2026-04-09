@@ -2,9 +2,9 @@
 
 Status: planned
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-09
 Depends on: `phase-06-checkout-and-payments.md`
-Related files: `../architecture/customer-panel-ia.md`, `../architecture/customer-auth-and-access.md`, `../architecture/order-lifecycle.md`, `../testing-strategy.md`
+Related files: `../architecture/customer-panel-ia.md`, `../architecture/customer-auth-and-access.md`, `../architecture/order-lifecycle.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
 ## Objective
 
@@ -26,7 +26,7 @@ This phase turns the resolved access model and panel IA into a usable customer e
 
 ## Main Deliverables
 
-- email + OTP access flow
+- Supabase-Auth-backed email + OTP access flow
 - order list view
 - order detail view
 - `Dane konta` view
