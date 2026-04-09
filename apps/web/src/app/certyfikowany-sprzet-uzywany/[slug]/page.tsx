@@ -88,10 +88,12 @@ export async function generateMetadata({
     .map((value) => value?.trim())
     .filter(Boolean)
     .join(' ');
+  const resolvedTitle =
+    forcedSeoTitle || seoData.seo?.title?.trim() || undefined;
 
   return getSEOMetadata({
     seo: {
-      title: forcedSeoTitle || undefined,
+      title: resolvedTitle,
       description: seoData.seo?.description,
     },
     slug: seoData.slug,
