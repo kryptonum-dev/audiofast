@@ -1,0 +1,29 @@
+---
+description: Testing structure and conventions for apps/web
+globs: apps/web/**.*
+alwaysApply: false
+---
+
+# Web Testing Conventions
+
+- Use `Vitest` for unit and component tests in `apps/web`.
+- Colocate `Vitest` test files with the code they cover, using `*.test.ts` or `*.test.tsx`.
+- Keep shared test infrastructure in `apps/web/src/test/`.
+- Keep shared network mocking in `apps/web/src/test/msw/`.
+- Add shared fixtures or reusable test helpers under `apps/web/src/test/` only when multiple areas need them.
+- Keep feature-specific test data or helpers close to the feature instead of centralizing everything too early.
+- Future `Playwright` tests should live in a separate browser test area such as `apps/web/tests/e2e/`, not next to components.
+- Prefer behavior-focused tests with `React Testing Library`; avoid low-value snapshot-heavy tests for mostly presentational UI.
+- Cover rule-heavy logic with focused tests in the same implementation phase.
+- After meaningful test-related or rule-related changes in `apps/web`, run `bun run test:run`.
+
+Example:
+
+```text
+src/components/cart/CartDrawer.tsx
+src/components/cart/CartDrawer.test.tsx
+src/lib/cart/merge-cart-lines.ts
+src/lib/cart/merge-cart-lines.test.ts
+src/test/msw/server.ts
+tests/e2e/cart-smoke.spec.ts
+```

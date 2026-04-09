@@ -10,7 +10,9 @@
     "lint": "bun run eslint .",
     "format": "bun run prettier --write .",
     "check-types": "bun run tsc --noEmit",
-    "generate:redirects": "bun run scripts/generate-redirects.ts"
+    "generate:redirects": "bun run scripts/generate-redirects.ts",
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "browserslist": {
     "production": [
@@ -56,6 +58,9 @@
     "sonner": "^2.0.7"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/leaflet": "^1.9.21",
     "@types/mailchimp__mailchimp_marketing": "^3.0.22",
     "@types/minimatch": "^6.0.0",
@@ -65,7 +70,11 @@
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
     "babel-plugin-react-compiler": "^19.1.0-rc.3",
-    "minimatch": "^10.1.1"
+    "jsdom": "^29.0.2",
+    "minimatch": "^10.1.1",
+    "msw": "^2.13.2",
+    "vite": "^8.0.8",
+    "vitest": "^4.1.4"
   },
   "overrides": {
     "@types/react": "19.2.2",
