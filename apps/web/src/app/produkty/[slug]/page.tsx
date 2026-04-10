@@ -216,6 +216,7 @@ export default async function ProductPage(props: ProductPageProps) {
         brand={product.brand as unknown as BrandType | undefined}
         pricingData={pricingData}
         isBuyable={productBuyability.isBuyable}
+        isReturnable={product.isReturnable ?? false}
         previewImage={product.previewImage as SanityRawImage}
         shortDescription={product.shortDescription}
         awards={product.awards as AwardType[]}

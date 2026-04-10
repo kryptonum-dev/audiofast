@@ -22,6 +22,7 @@ export interface ProductHeroProps {
   brand?: BrandType;
   pricingData?: CompletePricingData | null;
   isBuyable: boolean;
+  isReturnable: boolean;
   previewImage: SanityRawImage;
   shortDescription?: PortableTextProps;
   awards?: AwardType[];
@@ -38,6 +39,7 @@ export default function ProductHero({
   brand,
   pricingData,
   isBuyable,
+  isReturnable,
   previewImage,
   shortDescription,
   awards,
@@ -102,6 +104,7 @@ export default function ProductHero({
             id: productId || '',
             name,
             brandName: brand?.name || '',
+            isReturnable,
             brandLogo: brand?.logo || undefined,
             image: previewImage,
           }}

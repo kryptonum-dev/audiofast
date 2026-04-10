@@ -20,8 +20,8 @@ type ProductInquiryData = {
     value: string;
     priceDelta: number;
   }>;
-  basePrice: number;
-  totalPrice: number;
+  basePrice: number | null;
+  totalPrice: number | null;
 };
 
 interface ContactNotificationTemplateProps {
@@ -64,6 +64,10 @@ export const ContactNotificationTemplate = ({
   const totalAdditions = product
     ? product.configuration.reduce((sum, item) => sum + item.priceDelta, 0)
     : 0;
+  const hasVisiblePrice =
+    typeof product?.totalPrice === 'number' && product.totalPrice > 0;
+  const totalPrice = product?.totalPrice;
+  const basePrice = product?.basePrice;
 
   return (
     <Html>
@@ -112,33 +116,35 @@ export const ContactNotificationTemplate = ({
                   </Section>
                 )}
 
-                <Section style={priceSection}>
-                  {totalAdditions > 0 && (
-                    <>
-                      <Section style={priceRow}>
-                        <Text style={priceLabel}>Cena bazowa:</Text>
-                        <Text style={priceValue}>
-                          {formatPrice(product.basePrice)}
-                        </Text>
-                      </Section>
-                      <Section style={priceRow}>
-                        <Text style={priceLabel}>Dodatki:</Text>
-                        <Text style={priceValue}>
-                          +{formatPrice(totalAdditions)}
-                        </Text>
-                      </Section>
-                      <Hr style={priceDivider} />
-                    </>
-                  )}
-                  <Section style={priceRow}>
-                    <Text style={priceTotalLabel}>
-                      {isCpoInquiry ? 'Cena CPO:' : 'Razem:'}
-                    </Text>
-                    <Text style={priceTotalValue}>
-                      {formatPrice(product.totalPrice)}
-                    </Text>
+                {hasVisiblePrice ? (
+                  <Section style={priceSection}>
+                    {totalAdditions > 0 && typeof basePrice === 'number' ? (
+                      <>
+                        <Section style={priceRow}>
+                          <Text style={priceLabel}>Cena bazowa:</Text>
+                          <Text style={priceValue}>
+                            {formatPrice(basePrice)}
+                          </Text>
+                        </Section>
+                        <Section style={priceRow}>
+                          <Text style={priceLabel}>Dodatki:</Text>
+                          <Text style={priceValue}>
+                            +{formatPrice(totalAdditions)}
+                          </Text>
+                        </Section>
+                        <Hr style={priceDivider} />
+                      </>
+                    ) : null}
+                    <Section style={priceRow}>
+                      <Text style={priceTotalLabel}>
+                        {isCpoInquiry ? 'Cena CPO:' : 'Razem:'}
+                      </Text>
+                      <Text style={priceTotalValue}>
+                        {formatPrice(totalPrice!)}
+                      </Text>
+                    </Section>
                   </Section>
-                </Section>
+                ) : null}
               </Section>
             )}
 

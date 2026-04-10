@@ -27,7 +27,9 @@ function createIssue(
 }
 
 function removeManagedIssues(line: CartLine): CartLineIssue[] {
-  return line.issues.filter((issue) => !MANAGED_ISSUE_CODES.includes(issue.code));
+  return line.issues.filter(
+    (issue) => !MANAGED_ISSUE_CODES.includes(issue.code),
+  );
 }
 
 function applyRevalidationToLine(

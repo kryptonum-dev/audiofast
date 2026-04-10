@@ -15,10 +15,14 @@ export function getCartLineDiscountCents(
   return getLineDiscounts(state)[lineId] ?? 0;
 }
 
-export function getCartLineTotalCents(state: CartState, line: CartLine): number {
+export function getCartLineTotalCents(
+  state: CartState,
+  line: CartLine,
+): number {
   return Math.max(
     0,
-    getCartLineSubtotalCents(line) - getCartLineDiscountCents(state, line.lineId),
+    getCartLineSubtotalCents(line) -
+      getCartLineDiscountCents(state, line.lineId),
   );
 }
 
@@ -34,7 +38,10 @@ export function getCartDiscountTotalCents(state: CartState): number {
 }
 
 export function getCartGrandTotalCents(state: CartState): number {
-  return Math.max(0, getCartSubtotalCents(state) - getCartDiscountTotalCents(state));
+  return Math.max(
+    0,
+    getCartSubtotalCents(state) - getCartDiscountTotalCents(state),
+  );
 }
 
 export function getCartItemCount(state: CartState): number {

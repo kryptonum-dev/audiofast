@@ -185,6 +185,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
       <Breadcrumbs data={breadcrumbsData} firstItemType="productPage" />
       <CpoProductHero
         productId={product._id}
+        productKey={product.slug || product._id}
         name={product.name || ''}
         brand={
           product.brandName ? { name: product.brandName, logo: null } : null
@@ -193,6 +194,7 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         shortDescription={product.shortDescription as PortableTextProps}
         priceCents={product.priceCents}
         isBuyable={productBuyability.isBuyable}
+        isReturnable={product.isReturnable ?? false}
         transparentBackground={product.transparentBackground}
         formStateData={formStateData as FormStateData | null}
       />

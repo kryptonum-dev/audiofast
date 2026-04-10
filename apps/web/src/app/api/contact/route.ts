@@ -34,8 +34,8 @@ type ProductInquiryData = {
     value: string;
     priceDelta: number;
   }>;
-  basePrice: number;
-  totalPrice: number;
+  basePrice: number | null;
+  totalPrice: number | null;
 };
 
 type FormSubmission = {

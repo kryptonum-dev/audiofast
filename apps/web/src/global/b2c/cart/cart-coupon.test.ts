@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
+import {
+  applyCouponToCart,
+  clearCoupon,
+  syncCouponWithCart,
+} from './cart-coupon';
 import { createEmptyCart } from './cart-domain';
-import { applyCouponToCart, clearCoupon, syncCouponWithCart } from './cart-coupon';
 import { createCpoCartLine } from './cpo-cart-line';
 import { createStandardCartLine } from './standard-cart-line';
 import type { CartCouponDefinition } from './types';

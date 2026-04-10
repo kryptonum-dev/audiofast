@@ -1,0 +1,215 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(0.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+  animation: fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  .modal {
+    position: relative;
+    width: 100%;
+    max-width: 38rem;
+    background: var(--neutral-white, #ffffff);
+    border-radius: 1rem;
+    box-shadow:
+      0 0.25rem 1rem rgba(0, 0, 0, 0.08),
+      0 0.5rem 2rem rgba(0, 0, 0, 0.12);
+    padding: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    animation: slideUp 350ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    .closeButton {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: var(--neutral-200);
+      color: var(--neutral-600);
+      border-radius: 50%;
+      transition:
+        background-color 200ms,
+        color 200ms,
+        transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+
+      svg {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      &:hover {
+        background: var(--neutral-300);
+        color: var(--neutral-700);
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--neutral-700);
+        outline-offset: 2px;
+      }
+    }
+
+    .eyebrow {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--neutral-500, #808080);
+    }
+
+    .title {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      color: var(--neutral-black, #000000);
+    }
+
+    .productCard {
+      display: grid;
+      grid-template-columns: 6rem minmax(0, 1fr);
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: var(--neutral-200, #f8f8f8);
+      border-radius: 0.75rem;
+
+      .productImage {
+        width: 6rem;
+        height: 6rem;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        background: var(--neutral-white, #ffffff);
+        display: grid;
+        place-items: center;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+
+      .productInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .productBrand {
+          font-size: 0.6875rem;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: var(--neutral-500, #808080);
+        }
+
+        .productName {
+          font-size: 1rem;
+          font-weight: 500;
+          color: var(--neutral-700, #303030);
+        }
+
+        .productPrice {
+          margin-top: 0.375rem;
+          font-size: 1rem;
+          font-weight: 500;
+          color: var(--neutral-black, #000000);
+        }
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+
+      .actionButton {
+        width: 100%;
+        max-width: 100%;
+        flex: 1;
+      }
+    }
+  }
+
+  @media (max-width: 35.9375rem) {
+    align-items: flex-end;
+    padding: 0;
+
+    .modal {
+      max-width: 100%;
+      border-radius: 1rem 1rem 0 0;
+      padding: 1.5rem 1rem 2rem;
+
+      .productCard {
+        grid-template-columns: 5rem minmax(0, 1fr);
+
+        .productImage {
+          width: 5rem;
+          height: 5rem;
+        }
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+    }
+  }
+
+  @media (max-width: 27.4375rem) {
+    max-width: 100%;
+    height: 85vh;
+    max-height: 30rem;
+    border-radius: 1.25rem 1.25rem 0 0;
+    margin: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    animation: slideUpMobile 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpMobile {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

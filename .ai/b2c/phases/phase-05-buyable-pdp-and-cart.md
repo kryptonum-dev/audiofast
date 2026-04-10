@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-09
+Last updated: 2026-04-10
 Depends on: `phase-04-commerce-foundation.md`
 Related files: `../architecture/cart-and-checkout-model.md`, `../architecture/cpo-and-b2c-relation.md`, `../architecture/commerce-table-model.md`, `../business/product-buyability-rules.md`, `../business/pricing-and-tax-rules.md`, `../business/coupon-rules.md`, `../testing-strategy.md`
 
@@ -24,13 +24,15 @@ The current application already has:
 - `Supabase` pricing/configuration data for standard products
 - generated `Supabase` types for the new order-domain schema
 
-What it still does not have is:
+What it still does not have is the fully wired user-facing cart flow, especially:
 
-- runtime buyability enforcement in the storefront
-- dual CTA behavior on PDPs
-- cart persistence and cart UI
-- coupon application in the storefront
-- automated tests for the new B2C rule-heavy logic
+- real add-to-cart wiring from PDP into persistent cart state
+- cart page and cart entry in navigation
+- coupon application in the storefront UI
+- cart revalidation wired to live backend truth
+- cart-side reconfiguration UI
+- add-to-cart confirmation popup
+- browser-level cart journey coverage
 
 This phase exists to close that gap without yet implementing checkout, order creation, payment, customer access, or admin workflows.
 
@@ -73,6 +75,55 @@ The detailed implementation direction for Phase 05 is now:
 - cart revalidation / invalidation handling
 - minimal add-to-cart confirmation popup
 - minimal cart entry in the storefront navigation
+
+## Current Implementation Snapshot
+
+The Phase 05 work already completed in code includes:
+
+- `Vitest`, `React Testing Library`, `MSW`, and `jsdom` setup in `apps/web`
+- saved testing structure conventions for future implementation work
+- shared runtime buyability rules for standard and `CPO` products
+- storefront query/type alignment for the B2C buyability fields
+- PDP buyability enforcement for both standard and `CPO` product pages
+- dual CTA visibility on PDPs, with inquiry always preserved
+- initial cart domain structure under `src/global/b2c/cart/`
+- cart line builders for standard and `CPO` items
+- cart merge, quantity, reconfiguration, coupon, totals, and revalidation domain logic
+- unit and component coverage for the currently implemented rule-heavy slices
+
+At this point, the project has:
+
+- real buyability logic
+- real cart domain logic
+- real test foundation
+
+But it does not yet have:
+
+- a connected persistent cart runtime in the application layer
+- a usable cart UI flow
+- live cart revalidation integration
+- real checkout handoff from cart
+
+## Broad Remaining Backlog
+
+The broad remaining backlog for Phase 05 is now:
+
+1. connect the cart domain to browser-persisted application state
+2. connect the existing PDP `Add to cart` CTAs to the cart domain
+3. implement the minimal add-to-cart confirmation popup
+4. add minimal cart access in the storefront navigation
+5. build the first cart page with mixed standard + `CPO` line rendering
+6. expose quantity editing and line removal through the cart UI
+7. implement standard-product reconfiguration from the cart UI
+8. expose coupon entry and coupon feedback in the cart UI
+9. wire cart revalidation to live backend truth
+10. surface cart invalidation states cleanly and block checkout when needed
+11. add minimal commerce analytics for the cart actions
+12. add the first browser-level cart flow before closing the phase
+
+This backlog should stay intentionally broad.
+
+The next slices should be implemented step by step, but this file should continue describing the Phase 05 target at a high level rather than becoming a low-level ticket list.
 
 ## Work Included In This Phase
 
@@ -296,12 +347,10 @@ For `CPO` lines:
 
 The cart must not assume that the product state from the moment of add-to-cart is still valid later.
 
-Phase 05 should introduce soft cart revalidation at appropriate moments such as:
+Phase 05 should introduce soft cart revalidation at a small number of meaningful moments:
 
-- cart page entry
-- cart refresh
-- coupon apply/update
-- transition from cart toward checkout
+- when the cart page is opened
+- when the user tries to leave the cart for checkout
 
 Expected behavior:
 
@@ -312,7 +361,9 @@ Expected behavior:
 - if cart contains both valid and invalid lines, checkout remains blocked
 - the system must not silently auto-correct line configuration
 
-The hard final validation at order-creation time belongs to Phase 06, but Phase 05 must already establish the cart-side invalidation model.
+The hard final validation at order-creation time belongs to Phase 06 and should happen at checkout submit / buy.
+
+Phase 05 should establish the cart-side invalidation model and the earlier soft revalidation points, but it should not turn the cart into a constantly revalidating experience after every small edit.
 
 ### 12. Include Coupon Logic In The Cart
 
@@ -386,15 +437,16 @@ If the implementation naturally reaches the handoff into checkout entry, the eve
 3. extend queries and types to expose the required runtime fields
 4. implement standard PDP dual CTA behavior and add-to-cart
 5. implement `CPO` PDP dual CTA behavior and add-to-cart
-6. build browser cart persistence and mixed line model
-7. add minimal popup confirmation and cart navigation entry
-8. build cart page UI
-9. add standard reconfiguration flow
-10. add cart revalidation and invalid-state behavior
-11. add coupon validation and totals logic
-12. install `Playwright` once the first real cart flow is stable
-13. add the first critical browser flow(s)
-14. finish analytics and test coverage for the completed slice
+6. connect the cart domain to browser cart state and persistence
+7. wire real add-to-cart behavior from PDPs into that cart state
+8. add minimal popup confirmation and cart navigation entry
+9. build cart page UI
+10. add standard reconfiguration flow
+11. wire cart revalidation and invalid-state behavior against live data
+12. expose coupon behavior in cart UI
+13. add analytics and test coverage for the completed slice
+14. install `Playwright` once the first real cart flow is stable
+15. add the first critical browser flow(s)
 
 ## Expected Testing Work
 

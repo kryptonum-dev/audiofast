@@ -1,5 +1,5 @@
-import { CART_STORAGE_KEY, CART_STORAGE_VERSION } from './constants';
 import { createEmptyCart } from './cart-domain';
+import { CART_STORAGE_KEY, CART_STORAGE_VERSION } from './constants';
 import type { CartState, PersistedCartState } from './types';
 
 function isPersistedCartState(value: unknown): value is PersistedCartState {

@@ -154,7 +154,9 @@ function calculateLineDiscounts(
       return Object.fromEntries(
         eligibleLines.map((line) => [
           line.lineId,
-          Math.floor(getLineSubtotalCents(line) * ((coupon.discountPercent ?? 0) / 100)),
+          Math.floor(
+            getLineSubtotalCents(line) * ((coupon.discountPercent ?? 0) / 100),
+          ),
         ]),
       );
     }
@@ -169,7 +171,9 @@ function isCouponWithinWindow(
 ): boolean {
   const timestamp = now.getTime();
   const startsAt = coupon.startsAt ? new Date(coupon.startsAt).getTime() : null;
-  const expiresAt = coupon.expiresAt ? new Date(coupon.expiresAt).getTime() : null;
+  const expiresAt = coupon.expiresAt
+    ? new Date(coupon.expiresAt).getTime()
+    : null;
 
   if (startsAt && timestamp < startsAt) {
     return false;
@@ -269,7 +273,10 @@ export function applyCouponToCart(
   if (!coupon.isActive) {
     return {
       ...state,
-      coupon: createInvalidCouponState(coupon.code, 'Kod rabatowy jest nieaktywny.'),
+      coupon: createInvalidCouponState(
+        coupon.code,
+        'Kod rabatowy jest nieaktywny.',
+      ),
     };
   }
 

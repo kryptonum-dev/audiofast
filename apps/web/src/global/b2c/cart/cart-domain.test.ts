@@ -353,7 +353,9 @@ describe('cart-domain', () => {
     expect(nextState.lines).toHaveLength(1);
     expect(mergedLine?.quantity).toBe(3);
     expect(
-      mergedLine?.lineType === 'standard' ? mergedLine.configurationSummary : null,
+      mergedLine?.lineType === 'standard'
+        ? mergedLine.configurationSummary
+        : null,
     ).toEqual([
       {
         label: 'Model',

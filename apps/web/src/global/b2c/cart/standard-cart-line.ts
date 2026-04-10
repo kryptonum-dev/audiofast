@@ -1,8 +1,5 @@
 import { STANDARD_MIN_QUANTITY } from './constants';
-import type {
-  CartProductSnapshot,
-  StandardCartLine,
-} from './types';
+import type { CartProductSnapshot, StandardCartLine } from './types';
 
 export type StandardConfigurationSummaryItem = {
   label: string;
@@ -30,7 +27,9 @@ export function normalizeStandardConfigurationSummary(
   summary: StandardConfigurationSummaryItem[],
 ): StandardConfigurationSummaryItem[] {
   return [...summary].sort((left, right) =>
-    `${left.label}:${left.value}`.localeCompare(`${right.label}:${right.value}`),
+    `${left.label}:${left.value}`.localeCompare(
+      `${right.label}:${right.value}`,
+    ),
   );
 }
 
@@ -55,7 +54,8 @@ export function createStandardCartLine(
   input: CreateStandardCartLineInput,
 ): StandardCartLine {
   const configurationSummary =
-    input.configurationSummary ?? buildStandardConfigurationSummary(input.product);
+    input.configurationSummary ??
+    buildStandardConfigurationSummary(input.product);
 
   return {
     lineId: input.lineId ?? createLineId(),

@@ -14,6 +14,10 @@ export default function ProductSummary({
   layout = 'standard',
 }: ProductSummaryProps) {
   const { configurationOptions } = product;
+  const totalPrice = product.totalPrice;
+  const basePrice = product.basePrice;
+  const hasVisiblePrice =
+    typeof totalPrice === 'number' && totalPrice > 0;
 
   // Calculate if there are any price additions
   const totalAdditions = configurationOptions.reduce(
@@ -53,12 +57,14 @@ export default function ProductSummary({
               <span className={styles.brandName}>{product.brandName}</span>
             )}
             <span className={styles.productName}>{product.name}</span>
-            <div className={styles.cpoPriceSection}>
-              <span className={styles.priceLabel}>Cena CPO</span>
-              <span className={styles.priceTotal}>
-                {formatPrice(product.totalPrice)}
-              </span>
-            </div>
+            {hasVisiblePrice ? (
+              <div className={styles.cpoPriceSection}>
+                <span className={styles.priceLabel}>Cena CPO</span>
+                <span className={styles.priceTotal}>
+                  {formatPrice(totalPrice)}
+                </span>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -108,32 +114,29 @@ export default function ProductSummary({
         </div>
       )}
 
-      {/* Price Breakdown */}
-      <div className={styles.priceSection}>
-        {totalAdditions > 0 && (
-          <>
-            <div className={styles.priceRow}>
-              <span className={styles.priceLabel}>Cena bazowa</span>
-              <span className={styles.priceValue}>
-                {formatPrice(product.basePrice)}
-              </span>
-            </div>
-            <div className={styles.priceRow}>
-              <span className={styles.priceLabel}>Dodatki</span>
-              <span className={styles.priceValue}>
-                +{formatPrice(totalAdditions)}
-              </span>
-            </div>
-            <div className={styles.priceDivider} />
-          </>
-        )}
-        <div className={styles.priceRowTotal}>
-          <span className={styles.priceLabelTotal}>Razem</span>
-          <span className={styles.priceTotal}>
-            {formatPrice(product.totalPrice)}
-          </span>
+      {hasVisiblePrice ? (
+        <div className={styles.priceSection}>
+          {totalAdditions > 0 && typeof basePrice === 'number' ? (
+            <>
+              <div className={styles.priceRow}>
+                <span className={styles.priceLabel}>Cena bazowa</span>
+                <span className={styles.priceValue}>{formatPrice(basePrice)}</span>
+              </div>
+              <div className={styles.priceRow}>
+                <span className={styles.priceLabel}>Dodatki</span>
+                <span className={styles.priceValue}>
+                  +{formatPrice(totalAdditions)}
+                </span>
+              </div>
+              <div className={styles.priceDivider} />
+            </>
+          ) : null}
+          <div className={styles.priceRowTotal}>
+            <span className={styles.priceLabelTotal}>Razem</span>
+            <span className={styles.priceTotal}>{formatPrice(totalPrice)}</span>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }
