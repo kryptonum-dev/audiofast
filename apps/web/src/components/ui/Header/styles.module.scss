@@ -37,7 +37,6 @@
   top: 0;
   background-color: var(--neutral-black, #000);
   z-index: 1001;
-  min-height: 4.75rem;
 
   // Halo/shadow effect using pseudo-element
   &::before {
@@ -73,6 +72,14 @@
     }
   }
 
+  .contentArea {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    min-width: 0;
+  }
+
   // Desktop Navigation
   .nav {
     display: flex;
@@ -94,6 +101,13 @@
     gap: clamp(0.5rem, calc(0.75vw / 0.48), 1rem);
     flex: 1;
     min-width: 0;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+    transition:
+      opacity 320ms,
+      transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .utilityLinks {
@@ -204,38 +218,78 @@
     .cartUtilityLabel {
       display: none;
     }
-
-    .countBadge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 1.5rem;
-      height: 1.5rem;
-      padding: 0;
-      border-radius: 999rem;
-      background: color-mix(
-        in srgb,
-        var(--primary-red, #fe0140) 72%,
-        var(--neutral-black, #000)
-      );
-      color: var(--neutral-white, #fff);
-      font-size: 0.6875rem;
-      font-weight: 500;
-      line-height: 1;
-      position: absolute;
-      right: -0.375rem;
-      bottom: -0.3125rem;
-      box-shadow: 0 0 0 0.125rem var(--neutral-black, #000);
-      z-index: 2;
-      animation: countBadgeEnter 260ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
   }
 
   .cartUtilityLink {
     overflow: visible;
   }
 
+  .countBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    border-radius: 999rem;
+    background: color-mix(
+      in srgb,
+      var(--primary-red, #fe0140) 72%,
+      var(--neutral-black, #000)
+    );
+    color: var(--neutral-white, #fff);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1;
+    position: absolute;
+    right: -0.375rem;
+    bottom: -0.3125rem;
+    box-shadow: 0 0 0 0.125rem var(--neutral-black, #000);
+    z-index: 2;
+    animation: countBadgeEnter 260ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .contactUtilityLink {
+    min-width: 0;
+    max-width: 9rem;
+    overflow: hidden;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+    filter: blur(0);
+    transition:
+      color 320ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      opacity 220ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      filter 220ms cubic-bezier(0.4, 0, 0.2, 1),
+      max-width 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      padding-inline 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      gap 320ms cubic-bezier(0.16, 1, 0.3, 1),
+      visibility 0ms linear 0ms;
+  }
+
+  .contactUtilityLinkHidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-0.5rem);
+  }
+
+  &[data-mode='cart'] {
+    .primaryLinks {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(0.5rem);
+    }
+  }
+
   @media (max-width: 63.6875rem) {
+    &[data-mode='cart'] {
+      .nav {
+        display: none;
+      }
+    }
+
     .mobileMenuButton {
       display: flex;
     }
@@ -554,6 +608,12 @@
   .quickActions {
     display: none;
   }
+
+  .header[data-mode='cart'] {
+    .quickActions {
+      display: inline-flex;
+    }
+  }
 }
 
 // Mobile Menu Open State (triggered by global class)
@@ -633,6 +693,12 @@
 
 // Reduced motion support
 @media (prefers-reduced-motion: reduce) {
+  .primaryLinks,
+  .contactUtilityLink,
+  .contactUtilityLinkHidden {
+    transition: none;
+  }
+
   .skipLink {
     transition: none;
   }

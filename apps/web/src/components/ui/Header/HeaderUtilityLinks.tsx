@@ -16,6 +16,7 @@ type UtilityLink = {
 export default function HeaderUtilityLinks() {
   const pathname = usePathname();
   const { totals, isHydrated } = useCart();
+  const isCartMode = pathname?.startsWith('/koszyk') ?? false;
   const utilityLinks: UtilityLink[] = [
     {
       id: 'contact',
@@ -48,8 +49,14 @@ export default function HeaderUtilityLinks() {
           <Link
             key={link.id}
             href={link.href}
-            className={`${styles.navLink} ${styles.utilityLink} ${link.id === 'cart' ? styles.cartUtilityLink : ''} ${isActive ? styles.active : ''}`}
+            className={`${styles.navLink} ${styles.utilityLink} ${
+              link.id === 'contact' ? styles.contactUtilityLink : ''
+            } ${link.id === 'cart' ? styles.cartUtilityLink : ''} ${
+              link.id === 'contact' && isCartMode ? styles.contactUtilityLinkHidden : ''
+            } ${isActive ? styles.active : ''}`}
             aria-current={isActive ? 'page' : undefined}
+            aria-hidden={link.id === 'contact' && isCartMode}
+            tabIndex={link.id === 'contact' && isCartMode ? -1 : undefined}
           >
             <span className={styles.utilityIcon} aria-hidden="true">
               {getUtilityIcon(link.id)}
