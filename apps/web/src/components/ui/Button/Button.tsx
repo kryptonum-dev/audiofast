@@ -12,10 +12,12 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
     className?: string;
     href?: string | null;
     iconUsed?:
+      | 'addToCart'
       | 'arrowUp'
       | 'arrowDown'
       | 'arrowLeft'
       | 'arrowRight'
+      | 'removeFromCart'
       | 'refresh'
       | 'submit'
       | 'phone'
@@ -47,6 +49,8 @@ export default function Button({
 
   const icon = useMemo(() => {
     switch (iconUsed) {
+      case 'addToCart':
+        return <AddToCartIcon />;
       case 'arrowUp':
         return <ArrowUp />;
       case 'arrowDown':
@@ -55,6 +59,8 @@ export default function Button({
         return <ArrowLeft />;
       case 'arrowRight':
         return <ArrowRight />;
+      case 'removeFromCart':
+        return <RemoveFromCartIcon />;
       case 'refresh':
         return <RefreshIcon />;
       case 'submit':
@@ -79,10 +85,12 @@ export default function Button({
     <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
         {icon}
-        {iconUsed !== 'phone' &&
+        {iconUsed !== 'addToCart' &&
+          iconUsed !== 'phone' &&
           iconUsed !== 'clearFilters' &&
           iconUsed !== 'applyFilters' &&
           iconUsed !== 'information' &&
+          iconUsed !== 'removeFromCart' &&
           iconUsed !== 'trash' &&
           icon}
       </div>
@@ -112,6 +120,27 @@ const ArrowUp = () => (
   </svg>
 );
 
+const AddToCartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#add-to-cart-clip)"
+    >
+      <path d="M4 19a2 2 0 1 0 4 0 2 2 0 0 0-4 0M15 19a2 2 0 1 0 4 0 2 2 0 0 0-4 0" />
+      <path d="M17 17H6V3H4" />
+      <path d="m6.005 5 6 .429m7.138 6.573-.143 1H6M15 6h6m-3-3v6" />
+    </g>
+    <defs>
+      <clipPath id="add-to-cart-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
 const ArrowLeft = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
     <path
@@ -133,6 +162,26 @@ const ArrowRight = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
+  </svg>
+);
+
+const RemoveFromCartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#remove-from-cart-clip)"
+    >
+      <path d="M4 19a2 2 0 1 0 4 0 2 2 0 0 0-4 0M17 17a2 2 0 1 0 2 2" />
+      <path d="M17 17H6V6M9.239 5.231 20 6.001l-1 7h-2m-4 0H6M3 3l18 18" />
+    </g>
+    <defs>
+      <clipPath id="remove-from-cart-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
   </svg>
 );
 

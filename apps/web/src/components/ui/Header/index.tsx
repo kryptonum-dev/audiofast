@@ -1,17 +1,19 @@
-import { sanityFetch } from "@/global/sanity/fetch";
-import { queryNavbar } from "@/global/sanity/query";
-import type { QueryNavbarResult } from "@/global/sanity/sanity.types";
-import LogoLink from "@/src/components/ui/LogoLink";
+import { sanityFetch } from '@/global/sanity/fetch';
+import { queryNavbar } from '@/global/sanity/query';
+import type { QueryNavbarResult } from '@/global/sanity/sanity.types';
+import LogoLink from '@/src/components/ui/LogoLink';
 
-import HeaderLinks from "./HeaderLinks";
-import MobileNavToggle from "./MobileNavToggle";
-import styles from "./styles.module.scss";
+import HeaderLinks from './HeaderLinks';
+import HeaderQuickActions from './HeaderQuickActions';
+import HeaderUtilityLinks from './HeaderUtilityLinks';
+import MobileNavToggle from './MobileNavToggle';
+import styles from './styles.module.scss';
 
 export default async function Header() {
-  "use cache";
+  'use cache';
   const navbarData = await sanityFetch<QueryNavbarResult>({
     query: queryNavbar,
-    tags: ["navbar"],
+    tags: ['navbar'],
   });
 
   return (
@@ -22,6 +24,7 @@ export default async function Header() {
         <LogoLink />
 
         <div className={styles.navWrapper}>
+          <HeaderQuickActions />
           {/* Mobile Menu Toggle Component - first in tab order */}
           <MobileNavToggle />
 
@@ -31,7 +34,12 @@ export default async function Header() {
             id="main-navigation"
             aria-label="Główna nawigacja"
           >
-            <HeaderLinks buttons={navbarData?.buttons || []} />
+            <div className={styles.primaryLinks}>
+              <HeaderLinks buttons={navbarData?.buttons || []} />
+            </div>
+            <div className={styles.utilityLinks}>
+              <HeaderUtilityLinks />
+            </div>
           </nav>
         </div>
       </div>

@@ -222,7 +222,7 @@ export default function PricingSection({
           <Button
             text="Dodaj do koszyka"
             variant="primary"
-            iconUsed="arrowUp"
+            iconUsed="addToCart"
             onClick={handleAddToCart}
             className={styles.inquiryButton}
           />

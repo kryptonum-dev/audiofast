@@ -9,11 +9,18 @@ vi.mock('@/components/shared/Image', () => ({
 
 import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
+import { toast } from 'sonner';
 
 import CpoProductInquirySection from './CpoProductInquirySection';
 
 vi.mock('@/src/components/products/ProductInquiryModal', () => ({
   default: () => null,
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    info: vi.fn(),
+  },
 }));
 
 function CartStateProbe() {
@@ -120,11 +127,11 @@ describe('CpoProductInquirySection', () => {
     );
     expect(cartState.lines[0]?.quantity).toBe(1);
     expect(
-      screen.getByRole('button', { name: 'Produkt w koszyku' }),
-    ).toBeDisabled();
+      screen.getByRole('button', { name: 'Usuń z koszyka' }),
+    ).toBeInTheDocument();
   });
 
-  it('does not create duplicate cpo lines for the same specimen', async () => {
+  it('removes the cpo line when the toggle is clicked again', async () => {
     const user = userEvent.setup();
 
     renderWithCart(
@@ -147,12 +154,18 @@ describe('CpoProductInquirySection', () => {
 
     expect(screen.getByTestId('line-count')).toHaveTextContent('1');
     expect(screen.getByTestId('item-count')).toHaveTextContent('1');
+
+    await user.click(screen.getByRole('button', { name: 'Usuń z koszyka' }));
+
+    expect(screen.getByTestId('line-count')).toHaveTextContent('0');
+    expect(screen.getByTestId('item-count')).toHaveTextContent('0');
+    expect(toast.info).toHaveBeenCalledWith('Test CPO usunięty z koszyka');
     expect(
-      screen.getByRole('button', { name: 'Produkt w koszyku' }),
-    ).toBeDisabled();
+      screen.getByRole('button', { name: 'Dodaj do koszyka' }),
+    ).toBeInTheDocument();
   });
 
-  it('shows the disabled cart-aware state when the specimen is already in cart after hydration', async () => {
+  it('shows the remove CTA when the specimen is already in cart after hydration', async () => {
     localStorageMock.getItem.mockReturnValueOnce(
       JSON.stringify({
         version: 1,
@@ -202,8 +215,8 @@ describe('CpoProductInquirySection', () => {
     );
 
     expect(
-      screen.getByRole('button', { name: 'Produkt w koszyku' }),
-    ).toBeDisabled();
+      screen.getByRole('button', { name: 'Usuń z koszyka' }),
+    ).toBeInTheDocument();
   });
 
   it('opens the add-to-cart confirmation popup after successful add', async () => {

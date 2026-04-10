@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 import ProductInquiryModal, {
   type ProductContext,
@@ -45,16 +46,17 @@ export default function CpoProductInquirySection({
   onAddToCart,
   onGoToCart,
 }: CpoProductInquirySectionProps) {
-  const { addLine, cart } = useCart();
+  const { addLine, removeLine, cart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const formattedPrice =
     typeof priceCents === 'number' && priceCents > 0
       ? formatPrice(priceCents)
       : 'Cena do ustalenia';
-  const isAlreadyInCart = cart.lines.some(
+  const existingCpoLine = cart.lines.find(
     (line) => line.lineType === 'cpo' && line.productKey === productKey,
   );
+  const isAlreadyInCart = !!existingCpoLine;
 
   const productContext = useMemo<ProductContext>(() => {
     const modalPreviewImage = previewImage ?? ({ id: null } as SanityRawImage);
@@ -72,7 +74,15 @@ export default function CpoProductInquirySection({
     };
   }, [brandLogo, brandName, previewImage, priceCents, productId, productName]);
 
-  const handleAddToCart = () => {
+  const handleToggleCart = () => {
+    if (existingCpoLine) {
+      removeLine(existingCpoLine.lineId);
+      setIsConfirmationOpen(false);
+      toast.info(`${productName} usunięty z koszyka`);
+
+      return;
+    }
+
     const line = createCpoCartLine({
       productId,
       productKey,
@@ -112,11 +122,10 @@ export default function CpoProductInquirySection({
         <div className={productHeroStyles.buttonsWrapper}>
           {isBuyable ? (
             <Button
-              text={isAlreadyInCart ? 'Produkt w koszyku' : 'Dodaj do koszyka'}
+              text={isAlreadyInCart ? 'Usuń z koszyka' : 'Dodaj do koszyka'}
               variant="primary"
-              iconUsed="arrowUp"
-              onClick={handleAddToCart}
-              disabled={isAlreadyInCart}
+              iconUsed={isAlreadyInCart ? 'removeFromCart' : 'addToCart'}
+              onClick={handleToggleCart}
               className={productHeroStyles.inquiryButton}
             />
           ) : null}
