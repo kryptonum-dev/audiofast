@@ -240,6 +240,59 @@ describe('CartSidebar', () => {
     expect(toast.info).toHaveBeenCalledWith('Kod rabatowy został usunięty.');
   });
 
+  it('shows formatted coupon details on chip hover without using remove styling', async () => {
+    const user = userEvent.setup();
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine(), createCpoLine()],
+      coupon: {
+        code: 'PRODUCT15',
+        couponId: 'coupon-1',
+        discountType: 'percent_product' as const,
+        discountValueCents: null,
+        discountPercent: 15,
+        productKeys: ['/produkty/test', 'CPO-KEY-1'],
+        matchedProductKeys: ['/produkty/test', 'CPO-KEY-1'],
+        isValid: true,
+        message: null,
+        totalDiscountCents: 48_00,
+        lineDiscounts: {
+          'standard-line-1': 30_00,
+          'cpo-line-1': 18_00,
+        },
+      },
+    };
+
+    render(
+      <CartSidebar
+        cart={cart}
+        totals={getCartTotals(cart)}
+        supportCard={createSupportCard()}
+        onCheckout={vi.fn()}
+        onApplyCoupon={vi.fn(async () => {})}
+        onClearCoupon={vi.fn()}
+      />,
+    );
+
+    const tooltip = screen.getByRole('tooltip', { hidden: true });
+
+    expect(tooltip).toHaveAttribute('aria-hidden', 'true');
+
+    await user.hover(screen.getByText('PRODUCT15'));
+
+    expect(tooltip).toHaveAttribute('aria-hidden', 'false');
+    expect(
+      screen.getByText('Kupon procentowy na wybrane produkty'),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Produkty')).toBeInTheDocument();
+    expect(screen.getByText('Test product')).toBeInTheDocument();
+    expect(screen.getByText('Test CPO')).toBeInTheDocument();
+
+    await user.unhover(screen.getByText('PRODUCT15'));
+
+    expect(tooltip).toHaveAttribute('aria-hidden', 'true');
+  });
+
   it('renders support section with paragraph and phone link', () => {
     render(
       <CartSidebar

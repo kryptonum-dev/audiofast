@@ -52,7 +52,9 @@ export default function CartCouponCard({
   onInputChange,
 }: CartCouponCardProps) {
   const inputId = useId();
+  const couponDetailsId = useId();
   const [couponCode, setCouponCode] = useState('');
+  const [isCouponDetailsVisible, setIsCouponDetailsVisible] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const lastAppliedCouponCodeRef = useRef(
     cart.coupon?.isValid ? cart.coupon.code : null,
@@ -97,6 +99,7 @@ export default function CartCouponCard({
 
   const handleClearCoupon = () => {
     setCouponCode('');
+    setIsCouponDetailsVisible(false);
     setValidationError(null);
     onClearCoupon();
     toast.info('Kod rabatowy został usunięty.');
@@ -107,6 +110,40 @@ export default function CartCouponCard({
   const fallbackInvalidCouponMessage =
     cart.coupon && !cart.coupon.isValid ? cart.coupon.message : null;
   const activeCoupon = cart.coupon?.isValid ? cart.coupon : null;
+  const activeCouponSummaryLabel = (() => {
+    if (!activeCoupon) {
+      return null;
+    }
+
+    switch (activeCoupon.discountType) {
+      case 'percent_order':
+        return 'Kupon procentowy na całe zamówienie';
+      case 'fixed_order':
+        return 'Kupon kwotowy na całe zamówienie';
+      case 'percent_product':
+        return 'Kupon procentowy na wybrane produkty';
+      case 'fixed_product':
+        return 'Kupon kwotowy na wybrane produkty';
+      default:
+        return null;
+    }
+  })();
+  const activeCouponProductNames = activeCoupon?.productKeys
+    ? Array.from(
+        new Set(
+          cart.lines
+            .filter((line) =>
+              activeCoupon.productKeys?.includes(line.productKey),
+            )
+            .map((line) => line.productName),
+        ),
+      )
+    : [];
+  const visibleCouponProductNames = activeCouponProductNames.slice(0, 2);
+  const hiddenCouponProductCount = Math.max(
+    0,
+    activeCouponProductNames.length - visibleCouponProductNames.length,
+  );
 
   return (
     <section className={styles.sidebarCard}>
@@ -140,18 +177,74 @@ export default function CartCouponCard({
         </div>
 
         {activeCoupon ? (
-          <button
-            type="button"
-            className={styles.couponChip}
-            onClick={handleClearCoupon}
-            disabled={isCouponBusy}
-            aria-label={`Usuń kod rabatowy ${activeCoupon.code}`}
+          <div
+            className={styles.couponChipWrapper}
+            data-tooltip-visible={isCouponDetailsVisible}
+            onMouseLeave={() => setIsCouponDetailsVisible(false)}
           >
-            <span className={styles.couponChipCode}>{activeCoupon.code}</span>
-            <span className={styles.couponChipIcon}>
-              <CloseIcon />
-            </span>
-          </button>
+            <div className={styles.couponChip}>
+              <div
+                className={styles.couponChipInfo}
+                tabIndex={0}
+                aria-describedby={couponDetailsId}
+                onMouseEnter={() => setIsCouponDetailsVisible(true)}
+                onFocus={() => setIsCouponDetailsVisible(true)}
+                onBlur={() => setIsCouponDetailsVisible(false)}
+              >
+                <span className={styles.couponChipCode}>
+                  {activeCoupon.code}
+                </span>
+              </div>
+              <button
+                type="button"
+                className={styles.couponChipRemoveButton}
+                onClick={handleClearCoupon}
+                disabled={isCouponBusy}
+                aria-label={`Usuń kod rabatowy ${activeCoupon.code}`}
+              >
+                <CloseIcon />
+              </button>
+            </div>
+
+            <div
+              id={couponDetailsId}
+              role="tooltip"
+              className={styles.couponChipTooltip}
+              aria-hidden={!isCouponDetailsVisible}
+              onMouseEnter={() => setIsCouponDetailsVisible(true)}
+            >
+              {activeCouponSummaryLabel ? (
+                <p className={styles.couponChipTooltipHeading}>
+                  {activeCouponSummaryLabel}
+                </p>
+              ) : null}
+              {visibleCouponProductNames.length > 0 ? (
+                <div className={styles.couponChipTooltipProducts}>
+                  <span className={styles.couponChipTooltipLabel}>
+                    Produkty
+                  </span>
+                  <ul
+                    className={styles.couponChipTooltipList}
+                    aria-label={`Produkty objęte kodem ${activeCoupon.code}`}
+                  >
+                    {visibleCouponProductNames.map((productName) => (
+                      <li
+                        key={productName}
+                        className={styles.couponChipTooltipListItem}
+                      >
+                        {productName}
+                      </li>
+                    ))}
+                    {hiddenCouponProductCount > 0 ? (
+                      <li className={styles.couponChipTooltipListItem}>
+                        +{hiddenCouponProductCount}
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+          </div>
         ) : null}
 
         <div className={styles.couponActions}>
