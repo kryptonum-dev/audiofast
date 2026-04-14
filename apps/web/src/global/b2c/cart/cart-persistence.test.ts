@@ -72,4 +72,53 @@ describe('cart-persistence', () => {
 
     expect(loadCartFromStorage()).toEqual(state);
   });
+
+  it('drops invalid persisted coupons when loading from localStorage', () => {
+    const state = {
+      ...createEmptyCart(),
+      coupon: {
+        code: 'SAVE20',
+        couponId: null,
+        discountType: null,
+        discountValueCents: null,
+        discountPercent: null,
+        productKeys: null,
+        matchedProductKeys: [],
+        isValid: false,
+        message: 'Kod rabatowy nie istnieje.',
+        totalDiscountCents: 0,
+        lineDiscounts: {},
+      },
+    };
+
+    saveCartToStorage(state);
+
+    expect(loadCartFromStorage()).toEqual(createEmptyCart());
+  });
+
+  it('does not persist invalid coupons back into localStorage', () => {
+    const state = {
+      ...createEmptyCart(),
+      coupon: {
+        code: 'SAVE20',
+        couponId: null,
+        discountType: null,
+        discountValueCents: null,
+        discountPercent: null,
+        productKeys: null,
+        matchedProductKeys: [],
+        isValid: false,
+        message: 'Kod rabatowy nie istnieje.',
+        totalDiscountCents: 0,
+        lineDiscounts: {},
+      },
+    };
+
+    saveCartToStorage(state);
+
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      expect.any(String),
+      JSON.stringify(createEmptyCart()),
+    );
+  });
 });

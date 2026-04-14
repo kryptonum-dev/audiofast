@@ -130,4 +130,73 @@ describe('cartReducer', () => {
     expect(state.lines[0]?.lineType).toBe('cpo');
     expect(state.lines[0]?.quantity).toBe(1);
   });
+
+  it('applies, invalidates, and clears coupons through reducer actions', () => {
+    const line = createStandardCartLine({
+      lineId: 'line-1',
+      productId: 'product-1',
+      productKey: '/produkty/test',
+      productName: 'Test product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 100_00,
+      isReturnable: true,
+      configurationSummary: [],
+      product: {
+        id: 'product-1',
+        name: 'Test product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-1' },
+        basePrice: 100_00,
+        configurationOptions: [],
+        totalPrice: 100_00,
+      },
+    });
+
+    const appliedState = applyActions([
+      {
+        type: 'add-line',
+        payload: line,
+      },
+      {
+        type: 'apply-coupon',
+        payload: {
+          coupon: {
+            id: 'coupon-1',
+            code: 'SAVE20',
+            isActive: true,
+            discountType: 'fixed_order',
+            discountValueCents: 20_00,
+            discountPercent: null,
+            productKeys: null,
+            usageLimit: null,
+            usageCount: 0,
+            startsAt: null,
+            expiresAt: null,
+          },
+        },
+      },
+    ]);
+
+    expect(appliedState.coupon?.isValid).toBe(true);
+    expect(appliedState.coupon?.totalDiscountCents).toBe(20_00);
+
+    const invalidState = cartReducer(appliedState, {
+      type: 'apply-invalid-coupon',
+      payload: {
+        code: 'MISSING',
+        message: 'Kod rabatowy nie istnieje.',
+      },
+    });
+
+    expect(invalidState.coupon?.isValid).toBe(false);
+    expect(invalidState.coupon?.code).toBe('MISSING');
+
+    const clearedState = cartReducer(invalidState, {
+      type: 'clear-coupon',
+    });
+
+    expect(clearedState.coupon).toBeNull();
+  });
 });

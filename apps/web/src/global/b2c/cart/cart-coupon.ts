@@ -28,6 +28,10 @@ function createInvalidCouponState(
   };
 }
 
+function normalizeCouponCode(code: string): string {
+  return code.trim();
+}
+
 function getEligibleLines(
   lines: CartLine[],
   coupon: Pick<CartCouponDefinition, 'discountType' | 'productKeys'>,
@@ -224,6 +228,23 @@ export function clearCoupon(state: CartState): CartState {
   };
 }
 
+export function applyInvalidCouponToCart(
+  state: CartState,
+  code: string,
+  message: string,
+): CartState {
+  const normalizedCode = normalizeCouponCode(code);
+
+  if (!normalizedCode) {
+    return clearCoupon(state);
+  }
+
+  return {
+    ...state,
+    coupon: createInvalidCouponState(normalizedCode, message),
+  };
+}
+
 export function syncCouponWithCart(state: CartState): CartState {
   if (!state.coupon || !state.coupon.discountType) {
     return state;
@@ -250,13 +271,11 @@ export function syncCouponWithCart(state: CartState): CartState {
       snapshot.discountType === 'percent_product') &&
     Object.keys(lineDiscounts).length === 0
   ) {
-    return {
-      ...state,
-      coupon: createInvalidCouponState(
-        state.coupon.code,
-        'Kod rabatowy nie pasuje już do produktów w koszyku.',
-      ),
-    };
+    return applyInvalidCouponToCart(
+      state,
+      state.coupon.code,
+      'Kod rabatowy nie pasuje już do produktów w koszyku.',
+    );
   }
 
   return {
@@ -271,36 +290,30 @@ export function applyCouponToCart(
   now: Date = new Date(),
 ): CartState {
   if (!coupon.isActive) {
-    return {
-      ...state,
-      coupon: createInvalidCouponState(
-        coupon.code,
-        'Kod rabatowy jest nieaktywny.',
-      ),
-    };
+    return applyInvalidCouponToCart(
+      state,
+      coupon.code,
+      'Kod rabatowy jest nieaktywny.',
+    );
   }
 
   if (!isCouponWithinWindow(coupon, now)) {
-    return {
-      ...state,
-      coupon: createInvalidCouponState(
-        coupon.code,
-        'Kod rabatowy jest poza aktywnym oknem czasowym.',
-      ),
-    };
+    return applyInvalidCouponToCart(
+      state,
+      coupon.code,
+      'Kod rabatowy jest poza aktywnym oknem czasowym.',
+    );
   }
 
   if (
     typeof coupon.usageLimit === 'number' &&
     coupon.usageCount >= coupon.usageLimit
   ) {
-    return {
-      ...state,
-      coupon: createInvalidCouponState(
-        coupon.code,
-        'Kod rabatowy przekroczył limit użyć.',
-      ),
-    };
+    return applyInvalidCouponToCart(
+      state,
+      coupon.code,
+      'Kod rabatowy przekroczył limit użyć.',
+    );
   }
 
   const lineDiscounts = calculateLineDiscounts(state.lines, coupon);
@@ -310,13 +323,11 @@ export function applyCouponToCart(
       coupon.discountType === 'percent_product') &&
     Object.keys(lineDiscounts).length === 0
   ) {
-    return {
-      ...state,
-      coupon: createInvalidCouponState(
-        coupon.code,
-        'Kod rabatowy nie pasuje do żadnego produktu w koszyku.',
-      ),
-    };
+    return applyInvalidCouponToCart(
+      state,
+      coupon.code,
+      'Kod rabatowy nie pasuje do żadnego produktu w koszyku.',
+    );
   }
 
   return {

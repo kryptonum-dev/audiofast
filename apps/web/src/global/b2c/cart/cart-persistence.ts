@@ -14,6 +14,17 @@ function isPersistedCartState(value: unknown): value is PersistedCartState {
   );
 }
 
+function sanitizeCartForPersistence(state: CartState): CartState {
+  if (!state.coupon || state.coupon.isValid) {
+    return state;
+  }
+
+  return {
+    ...state,
+    coupon: null,
+  };
+}
+
 export function loadCartFromStorage(): CartState {
   if (typeof window === 'undefined') {
     return createEmptyCart();
@@ -27,7 +38,9 @@ export function loadCartFromStorage(): CartState {
 
   try {
     const parsed = JSON.parse(rawValue) as unknown;
-    return isPersistedCartState(parsed) ? parsed : createEmptyCart();
+    return isPersistedCartState(parsed)
+      ? sanitizeCartForPersistence(parsed)
+      : createEmptyCart();
   } catch {
     return createEmptyCart();
   }
@@ -36,7 +49,10 @@ export function loadCartFromStorage(): CartState {
 export function saveCartToStorage(state: CartState): void {
   if (typeof window === 'undefined') return;
 
-  window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+  window.localStorage.setItem(
+    CART_STORAGE_KEY,
+    JSON.stringify(sanitizeCartForPersistence(state)),
+  );
 }
 
 export function clearCartStorage(): void {

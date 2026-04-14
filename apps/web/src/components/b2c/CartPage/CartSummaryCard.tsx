@@ -35,10 +35,10 @@ export default function CartSummaryCard({
         </div>
 
         {totals.discountTotalCents > 0 ? (
-          <div className={styles.summaryRow}>
+          <div className={`${styles.summaryRow} ${styles.summaryRowDiscount}`}>
             <span className={styles.summaryLabel}>Rabat</span>
             <span className={styles.summaryValue}>
-              {renderPrice(totals.discountTotalCents)}
+              -{renderPrice(totals.discountTotalCents)}
             </span>
           </div>
         ) : null}

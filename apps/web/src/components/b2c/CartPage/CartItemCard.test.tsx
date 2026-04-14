@@ -123,6 +123,23 @@ describe('CartItemCard', () => {
     expect(onRemove).toHaveBeenCalledWith('standard-line-1');
   });
 
+  it('shows per-line coupon discount information below the current price when present', () => {
+    render(
+      <CartItemCard
+        line={createStandardLine()}
+        lineDiscountCents={15_00}
+        onRemove={vi.fn()}
+        onSetQuantity={vi.fn()}
+        onIncrementQuantity={vi.fn()}
+        onDecrementQuantity={vi.fn()}
+        onReconfigure={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('240 zł')).toBeInTheDocument();
+    expect(screen.getByText('Rabat: -15 zł')).toBeInTheDocument();
+  });
+
   it('allows entering the quantity manually from the keyboard', async () => {
     const user = userEvent.setup();
     const onSetQuantity = vi.fn();

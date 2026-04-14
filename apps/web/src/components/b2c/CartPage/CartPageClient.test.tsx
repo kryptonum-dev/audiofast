@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -36,12 +37,21 @@ function createUseCartValue(
     cart,
     totals: overrides.totals ?? getCartTotals(cart),
     isHydrated: overrides.isHydrated ?? true,
+    isApplyingCoupon: overrides.isApplyingCoupon ?? false,
+    isRevalidatingCoupon: overrides.isRevalidatingCoupon ?? false,
+    couponRequestError: overrides.couponRequestError ?? null,
+    couponRevalidationNotice: overrides.couponRevalidationNotice ?? null,
+    canRetryCouponRevalidation: overrides.canRetryCouponRevalidation ?? false,
     addLine: vi.fn(),
     removeLine: vi.fn(),
     setStandardLineQuantity: vi.fn(),
     incrementStandardLineQuantity: vi.fn(),
     decrementStandardLineQuantity: vi.fn(),
     replaceStandardLine: vi.fn(),
+    applyCoupon: vi.fn(),
+    clearCouponRequestError: vi.fn(),
+    retryCouponRevalidation: vi.fn(),
+    clearCoupon: vi.fn(),
     clearCart: vi.fn(),
     ...overrides,
   };
@@ -203,5 +213,124 @@ describe('CartPageClient', () => {
     expect(screen.getAllByTestId('cart-item-card')).toHaveLength(2);
     expect(screen.getByText('standard: Test product')).toBeInTheDocument();
     expect(screen.getByText('cpo: Test CPO')).toBeInTheDocument();
+  });
+
+  it('wires coupon submit and clear actions through the cart runtime', async () => {
+    const user = userEvent.setup();
+    const applyCoupon = vi.fn(async () => {});
+    const clearCouponRequestError = vi.fn();
+    const clearCoupon = vi.fn();
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+      coupon: {
+        code: 'SAVE20',
+        couponId: 'coupon-1',
+        discountType: 'fixed_order' as const,
+        discountValueCents: 20_00,
+        discountPercent: null,
+        productKeys: null,
+        matchedProductKeys: ['/produkty/test'],
+        isValid: true,
+        message: null,
+        totalDiscountCents: 20_00,
+        lineDiscounts: {
+          'standard-line-1': 20_00,
+        },
+      },
+    };
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        applyCoupon,
+        clearCouponRequestError,
+        clearCoupon,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    await user.clear(screen.getByPlaceholderText('Wpisz kod'));
+    await user.type(screen.getByPlaceholderText('Wpisz kod'), ' save20 ');
+    await user.click(screen.getByRole('button', { name: 'Zastosuj' }));
+    await user.click(screen.getByRole('button', { name: 'Usuń kod rabatowy' }));
+
+    expect(applyCoupon).toHaveBeenCalledWith('save20');
+    expect(clearCouponRequestError).toHaveBeenCalled();
+    expect(clearCoupon).toHaveBeenCalledTimes(1);
+  });
+
+  it('passes coupon pending and input error state into the rendered cart sidebar', () => {
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+    };
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        isApplyingCoupon: true,
+        couponRequestError:
+          'Nie udało się zweryfikować kodu rabatowego. Spróbuj ponownie.',
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Nie udało się zweryfikować kodu rabatowego. Spróbuj ponownie.',
+    );
+    expect(screen.getByPlaceholderText('Wpisz kod')).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Sprawdzanie...' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByText('Możesz użyć jednego kodu rabatowego na zamówienie.'),
+    ).toBeInTheDocument();
+  });
+
+  it('wires hydrated coupon revalidation retry through the cart runtime', async () => {
+    const user = userEvent.setup();
+    const retryCouponRevalidation = vi.fn(async () => {});
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+      coupon: {
+        code: 'SAVE20',
+        couponId: 'coupon-1',
+        discountType: 'fixed_order' as const,
+        discountValueCents: 20_00,
+        discountPercent: null,
+        productKeys: null,
+        matchedProductKeys: ['/produkty/test'],
+        isValid: true,
+        message: null,
+        totalDiscountCents: 20_00,
+        lineDiscounts: {
+          'standard-line-1': 20_00,
+        },
+      },
+    };
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        couponRevalidationNotice: {
+          title: 'Nie udało się odświeżyć kodu rabatowego.',
+          description:
+            'Zostawiliśmy obecny rabat w koszyku. Spróbuj ponownie, aby potwierdzić, czy kod nadal działa.',
+          tone: 'neutral',
+        },
+        canRetryCouponRevalidation: true,
+        retryCouponRevalidation,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    await user.click(screen.getByRole('button', { name: 'Spróbuj ponownie' }));
+
+    expect(retryCouponRevalidation).toHaveBeenCalledTimes(1);
   });
 });

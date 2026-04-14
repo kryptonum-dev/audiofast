@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 
+import { getCartLineDiscountCents } from '@/src/global/b2c/cart/cart-selectors';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
 
 import CartEmptyState from './CartEmptyState';
@@ -26,17 +27,31 @@ export default function CartPageClient({
     cart,
     isHydrated,
     totals,
+    isApplyingCoupon,
+    isRevalidatingCoupon,
+    couponRequestError,
+    couponRevalidationNotice,
+    canRetryCouponRevalidation,
     removeLine,
     setStandardLineQuantity,
     incrementStandardLineQuantity,
     decrementStandardLineQuantity,
+    applyCoupon,
+    clearCouponRequestError,
+    retryCouponRevalidation,
+    clearCoupon,
   } = useCart();
 
   const handleCheckout = useCallback(() => {}, []);
-  const handleApplyCoupon = useCallback((code: string) => {
-    void code;
-  }, []);
-  const handleClearCoupon = useCallback(() => {}, []);
+  const handleApplyCoupon = useCallback(
+    async (code: string) => {
+      await applyCoupon(code);
+    },
+    [applyCoupon],
+  );
+  const handleClearCoupon = useCallback(() => {
+    clearCoupon();
+  }, [clearCoupon]);
 
   const shouldShowLoadingState = previewState === 'loading' || !isHydrated;
   const shouldShowEmptyState =
@@ -65,6 +80,7 @@ export default function CartPageClient({
               <CartItemCard
                 key={line.lineId}
                 line={line}
+                lineDiscountCents={getCartLineDiscountCents(cart, line.lineId)}
                 onRemove={removeLine}
                 onSetQuantity={
                   line.lineType === 'standard'
@@ -92,6 +108,13 @@ export default function CartPageClient({
             onCheckout={handleCheckout}
             onApplyCoupon={handleApplyCoupon}
             onClearCoupon={handleClearCoupon}
+            isApplyingCoupon={isApplyingCoupon}
+            isRevalidatingCoupon={isRevalidatingCoupon}
+            couponRequestError={couponRequestError}
+            couponRevalidationNotice={couponRevalidationNotice}
+            canRetryCouponRevalidation={canRetryCouponRevalidation}
+            onRetryCouponRevalidation={retryCouponRevalidation}
+            onCouponInputChange={clearCouponRequestError}
           />
         </section>
       )}

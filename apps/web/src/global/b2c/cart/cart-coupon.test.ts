@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   applyCouponToCart,
+  applyInvalidCouponToCart,
   clearCoupon,
   syncCouponWithCart,
 } from './cart-coupon';
@@ -171,6 +172,105 @@ describe('cart-coupon', () => {
 
     expect(syncedState.coupon?.isValid).toBe(false);
     expect(syncedState.coupon?.code).toBe('PRODUCT10');
+  });
+
+  it('stores a trimmed invalid coupon state for later runtime handling', () => {
+    const state = applyInvalidCouponToCart(
+      createEmptyCart(),
+      '  save20  ',
+      'Kod rabatowy nie istnieje.',
+    );
+
+    expect(state.coupon).toEqual({
+      code: 'save20',
+      couponId: null,
+      discountType: null,
+      discountValueCents: null,
+      discountPercent: null,
+      productKeys: null,
+      matchedProductKeys: [],
+      isValid: false,
+      message: 'Kod rabatowy nie istnieje.',
+      totalDiscountCents: 0,
+      lineDiscounts: {},
+    });
+  });
+
+  it('clears coupon state instead of persisting an empty invalid code', () => {
+    const state = applyInvalidCouponToCart(
+      {
+        ...createEmptyCart(),
+        coupon: {
+          code: 'SAVE20',
+          couponId: 'coupon-1',
+          discountType: 'fixed_order',
+          discountValueCents: 20_00,
+          discountPercent: null,
+          productKeys: null,
+          matchedProductKeys: [],
+          isValid: true,
+          message: null,
+          totalDiscountCents: 20_00,
+          lineDiscounts: {},
+        },
+      },
+      '   ',
+      'Kod rabatowy nie istnieje.',
+    );
+
+    expect(state.coupon).toBeNull();
+  });
+
+  it('marks inactive coupons as invalid', () => {
+    const state = applyCouponToCart(createEmptyCart(), {
+      ...orderCoupon,
+      isActive: false,
+    });
+
+    expect(state.coupon?.isValid).toBe(false);
+    expect(state.coupon?.message).toBe('Kod rabatowy jest nieaktywny.');
+    expect(state.coupon?.code).toBe('SAVE20');
+  });
+
+  it('marks expired or not-yet-active coupons as invalid', () => {
+    const now = new Date('2026-04-14T10:00:00.000Z');
+
+    const expiredState = applyCouponToCart(
+      createEmptyCart(),
+      {
+        ...orderCoupon,
+        expiresAt: '2026-04-14T09:59:59.000Z',
+      },
+      now,
+    );
+    const futureState = applyCouponToCart(
+      createEmptyCart(),
+      {
+        ...orderCoupon,
+        startsAt: '2026-04-14T10:00:01.000Z',
+      },
+      now,
+    );
+
+    expect(expiredState.coupon?.isValid).toBe(false);
+    expect(expiredState.coupon?.message).toBe(
+      'Kod rabatowy jest poza aktywnym oknem czasowym.',
+    );
+    expect(futureState.coupon?.isValid).toBe(false);
+    expect(futureState.coupon?.message).toBe(
+      'Kod rabatowy jest poza aktywnym oknem czasowym.',
+    );
+  });
+
+  it('marks usage-limited coupons as invalid when the limit is reached', () => {
+    const state = applyCouponToCart(createEmptyCart(), {
+      ...orderCoupon,
+      usageLimit: 10,
+      usageCount: 10,
+    });
+
+    expect(state.coupon?.isValid).toBe(false);
+    expect(state.coupon?.message).toBe('Kod rabatowy przekroczył limit użyć.');
   });
 
   it('clears coupon state explicitly', () => {

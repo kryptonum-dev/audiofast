@@ -1,3 +1,4 @@
+import type { CartCouponRevalidationNotice } from '@/src/global/b2c/cart/cart-context';
 import type { CartState, CartTotals } from '@/src/global/b2c/cart/types';
 
 import CartCouponCard from './CartCouponCard';
@@ -11,8 +12,15 @@ export type CartSidebarProps = {
   totals: CartTotals;
   supportCard?: CartSupportCardData | null;
   onCheckout: () => void;
-  onApplyCoupon: (code: string) => void;
+  onApplyCoupon: (code: string) => Promise<void>;
   onClearCoupon: () => void;
+  isApplyingCoupon?: boolean;
+  isRevalidatingCoupon?: boolean;
+  couponRequestError?: string | null;
+  couponRevalidationNotice?: CartCouponRevalidationNotice | null;
+  canRetryCouponRevalidation?: boolean;
+  onRetryCouponRevalidation?: () => Promise<void>;
+  onCouponInputChange?: () => void;
 };
 
 export default function CartSidebar({
@@ -22,6 +30,13 @@ export default function CartSidebar({
   onCheckout,
   onApplyCoupon,
   onClearCoupon,
+  isApplyingCoupon = false,
+  isRevalidatingCoupon = false,
+  couponRequestError = null,
+  couponRevalidationNotice = null,
+  canRetryCouponRevalidation = false,
+  onRetryCouponRevalidation,
+  onCouponInputChange,
 }: CartSidebarProps) {
   return (
     <aside className={styles.sidebar} aria-label="Podsumowanie koszyka">
@@ -30,6 +45,13 @@ export default function CartSidebar({
         cart={cart}
         onApplyCoupon={onApplyCoupon}
         onClearCoupon={onClearCoupon}
+        isApplyingCoupon={isApplyingCoupon}
+        isRevalidatingCoupon={isRevalidatingCoupon}
+        inputError={couponRequestError}
+        statusNotice={couponRevalidationNotice}
+        canRetryStatus={canRetryCouponRevalidation}
+        onRetryStatus={onRetryCouponRevalidation}
+        onInputChange={onCouponInputChange}
       />
       <CartSupportCard supportCard={supportCard} />
     </aside>

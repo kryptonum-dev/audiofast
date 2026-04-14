@@ -148,6 +148,12 @@
         border-top: 1px solid var(--neutral-400, #e7e7e7);
       }
 
+      .summaryRowDiscount {
+        .summaryValue {
+          color: var(--neutral-600, #5b5a5a);
+        }
+      }
+
       .summaryLabel {
         color: var(--neutral-700, #303030);
         font-size: var(--typography-body-m, 0.875rem);
@@ -258,6 +264,59 @@
         gap: 0.75rem;
       }
 
+      .couponChip {
+        width: fit-content;
+        max-width: 100%;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid var(--neutral-400, #e7e7e7);
+        background: var(--neutral-white, #ffffff);
+        color: var(--neutral-700, #303030);
+        transition:
+          border-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+          background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+          color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover:not(:disabled),
+        &:focus-visible {
+          border-color: rgba(254, 1, 64, 0.3);
+          background: rgba(254, 1, 64, 0.06);
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--neutral-700, #303030);
+          outline-offset: 2px;
+        }
+
+        &:disabled {
+          opacity: 0.65;
+          cursor: default;
+        }
+      }
+
+      .couponChipCode {
+        min-width: 0;
+        font-size: var(--typography-body-s, 0.75rem);
+        font-weight: 500;
+        line-height: 1.4;
+        word-break: break-word;
+      }
+
+      .couponChipIcon {
+        flex-shrink: 0;
+        color: var(--primary-red, #fe0140);
+        margin-bottom: 2px;
+
+        svg {
+          display: block;
+          width: 0.875rem;
+          height: 0.875rem;
+        }
+      }
+
       .couponButton {
         width: 100%;
         max-width: 100%;
@@ -286,9 +345,46 @@
         margin-top: 1rem;
         font-size: var(--typography-body-m, 0.875rem);
         color: var(--neutral-600, #5b5a5a);
+      }
 
-        &[data-valid='true'] {
-          color: var(--primary-success, #009116);
+      .couponStatus {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.875rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 106, 0, 0.2);
+        background: rgba(255, 106, 0, 0.08);
+
+        &[data-tone='neutral'] {
+          border-color: rgba(48, 48, 48, 0.12);
+          background: rgba(48, 48, 48, 0.05);
+
+          .couponStatusTitle,
+          .couponStatusDescription,
+          .textAction {
+            color: var(--neutral-700, #303030);
+          }
+        }
+
+        .couponStatusTitle {
+          margin: 0;
+          font-size: var(--typography-body-m, 0.875rem);
+          font-weight: 500;
+          color: var(--primary-error, #ff6a00);
+        }
+
+        .couponStatusDescription {
+          margin: 0;
+          font-size: var(--typography-body-m, 0.875rem);
+          line-height: 1.5;
+          color: var(--primary-error, #ff6a00);
+        }
+
+        .textAction {
+          color: var(--primary-error, #ff6a00);
         }
       }
 
@@ -484,6 +580,13 @@
       color: var(--neutral-700, #303030);
       letter-spacing: -0.03em;
       line-height: 1.1;
+    }
+
+    .priceDiscount {
+      margin-top: 0.5rem;
+      color: var(--neutral-600, #5b5a5a);
+      font-size: var(--typography-body-m, 0.875rem);
+      line-height: 1.5;
     }
 
     .issuesList {

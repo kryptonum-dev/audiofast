@@ -14,6 +14,7 @@ import styles from './styles.module.scss';
 
 export type CartItemCardProps = {
   line: CartLine;
+  lineDiscountCents?: number;
   onRemove: (lineId: string) => void;
   onSetQuantity?: (lineId: string, quantity: number) => void;
   onIncrementQuantity?: (lineId: string) => void;
@@ -23,6 +24,7 @@ export type CartItemCardProps = {
 
 export default function CartItemCard({
   line,
+  lineDiscountCents = 0,
   onRemove,
   onSetQuantity,
   onIncrementQuantity,
@@ -89,6 +91,11 @@ export default function CartItemCard({
 
         <div className={styles.priceBlock}>
           <span className={styles.price}>{formatPrice(lineTotalCents)}</span>
+          {lineDiscountCents > 0 ? (
+            <p className={styles.priceDiscount}>
+              Rabat: -{formatPrice(lineDiscountCents)}
+            </p>
+          ) : null}
         </div>
 
         {line.issues.length > 0 ? (
