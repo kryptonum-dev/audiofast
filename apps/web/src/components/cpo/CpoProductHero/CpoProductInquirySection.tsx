@@ -29,7 +29,6 @@ type CpoProductInquirySectionProps = {
   isReturnable: boolean;
   formStateData?: FormStateData | null;
   onAddToCart?: (product: ReturnType<typeof createCpoCartLine>) => void;
-  onGoToCart?: () => void;
 };
 
 export default function CpoProductInquirySection({
@@ -44,7 +43,6 @@ export default function CpoProductInquirySection({
   isReturnable,
   formStateData,
   onAddToCart,
-  onGoToCart,
 }: CpoProductInquirySectionProps) {
   const { addLine, removeLine, cart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -107,11 +105,6 @@ export default function CpoProductInquirySection({
     setIsConfirmationOpen(false);
   };
 
-  const handleGoToCart = () => {
-    setIsConfirmationOpen(false);
-    onGoToCart?.();
-  };
-
   return (
     <>
       <div
@@ -154,7 +147,6 @@ export default function CpoProductInquirySection({
           totalPrice: productContext.totalPrice,
         }}
         onClose={handleCloseConfirmation}
-        onGoToCart={handleGoToCart}
       />
     </>
   );

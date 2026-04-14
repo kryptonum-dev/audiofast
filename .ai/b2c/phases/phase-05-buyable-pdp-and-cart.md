@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-10
+Last updated: 2026-04-14
 Depends on: `phase-04-commerce-foundation.md`
 Related files: `../architecture/cart-and-checkout-model.md`, `../architecture/cpo-and-b2c-relation.md`, `../architecture/commerce-table-model.md`, `../business/product-buyability-rules.md`, `../business/pricing-and-tax-rules.md`, `../business/coupon-rules.md`, `../testing-strategy.md`
 
@@ -26,12 +26,10 @@ The current application already has:
 
 What it still does not have is the fully wired user-facing cart flow, especially:
 
-- real add-to-cart wiring from PDP into persistent cart state
 - cart page and cart entry in navigation
 - coupon application in the storefront UI
 - cart revalidation wired to live backend truth
 - cart-side reconfiguration UI
-- add-to-cart confirmation popup
 - browser-level cart journey coverage
 
 This phase exists to close that gap without yet implementing checkout, order creation, payment, customer access, or admin workflows.
@@ -89,6 +87,18 @@ The Phase 05 work already completed in code includes:
 - initial cart domain structure under `src/global/b2c/cart/`
 - cart line builders for standard and `CPO` items
 - cart merge, quantity, reconfiguration, coupon, totals, and revalidation domain logic
+- browser cart runtime foundation with provider, reducer, context, and storage hydration
+- real standard-product add-to-cart wiring into the cart runtime
+- real `CPO` add-to-cart wiring into the cart runtime
+- `CPO` PDP cart-toggle behavior that now allows removing the specimen directly from the PDP
+- minimal add-to-cart confirmation popup for successful add actions
+- minimal storefront navigation update with cart / customer access and responsive mobile behavior
+- real `cart` route shell with breadcrumbs, checkout steps, and `noindex` metadata
+- real cart page UI with mixed standard + `CPO` line rendering
+- quantity editing, line removal, confirmation, and cart-side loading / empty states
+- cart sidebar with summary, coupon UI shell, and support card
+- server-side `Sanity` wiring for cart support content and empty-state content with code fallbacks
+- removal toast feedback for `CPO` cart removal from the PDP
 - unit and component coverage for the currently implemented rule-heavy slices
 
 At this point, the project has:
@@ -96,30 +106,36 @@ At this point, the project has:
 - real buyability logic
 - real cart domain logic
 - real test foundation
+- real browser cart runtime
+- real PDP add-to-cart behavior for standard and `CPO`
+- real confirmation feedback after successful add-to-cart
+- real storefront cart access in navigation
+- real first cart-route handoff from storefront CTAs and navigation
+- real cart management UI for mixed standard + `CPO` lines
+- real quantity editing and line-removal UX in the cart
+- real cart loading and empty-state UX
+- real server-driven cart support and empty-state content
 
 But it does not yet have:
 
-- a connected persistent cart runtime in the application layer
-- a usable cart UI flow
-- live cart revalidation integration
-- real checkout handoff from cart
+- coupon logic wired end to end from the cart UI into the shared cart runtime
+- standard-product reconfiguration wired from the cart UI into the live replace-line flow
+- live cart revalidation integration against backend truth
+- invalidation handling connected to real runtime refresh cycles
+- real checkout handoff from the cart page
+- browser-level cart journey coverage and final closure checks
 
 ## Broad Remaining Backlog
 
 The broad remaining backlog for Phase 05 is now:
 
-1. connect the cart domain to browser-persisted application state
-2. connect the existing PDP `Add to cart` CTAs to the cart domain
-3. implement the minimal add-to-cart confirmation popup
-4. add minimal cart access in the storefront navigation
-5. build the first cart page with mixed standard + `CPO` line rendering
-6. expose quantity editing and line removal through the cart UI
-7. implement standard-product reconfiguration from the cart UI
-8. expose coupon entry and coupon feedback in the cart UI
-9. wire cart revalidation to live backend truth
-10. surface cart invalidation states cleanly and block checkout when needed
-11. add minimal commerce analytics for the cart actions
-12. add the first browser-level cart flow before closing the phase
+1. wire coupon apply / clear actions from the cart UI into the shared cart runtime and validation source
+2. implement standard-product reconfiguration from the cart UI
+3. wire cart revalidation to live backend truth
+4. surface cart invalidation states cleanly and block checkout when needed
+5. connect the cart page to the first real checkout handoff
+6. add minimal commerce analytics for the cart actions
+7. add the first browser-level cart flow before closing the phase
 
 This backlog should stay intentionally broad.
 
@@ -439,14 +455,15 @@ If the implementation naturally reaches the handoff into checkout entry, the eve
 5. implement `CPO` PDP dual CTA behavior and add-to-cart
 6. connect the cart domain to browser cart state and persistence
 7. wire real add-to-cart behavior from PDPs into that cart state
-8. add minimal popup confirmation and cart navigation entry
-9. build cart page UI
-10. add standard reconfiguration flow
-11. wire cart revalidation and invalid-state behavior against live data
-12. expose coupon behavior in cart UI
-13. add analytics and test coverage for the completed slice
-14. install `Playwright` once the first real cart flow is stable
-15. add the first critical browser flow(s)
+8. add minimal popup confirmation
+9. add cart access in navigation
+10. build cart page UI
+11. add standard reconfiguration flow
+12. wire cart revalidation and invalid-state behavior against live data
+13. expose coupon behavior in cart UI
+14. add analytics and test coverage for the completed slice
+15. install `Playwright` once the first real cart flow is stable
+16. add the first critical browser flow(s)
 
 ## Expected Testing Work
 

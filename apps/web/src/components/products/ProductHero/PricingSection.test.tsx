@@ -278,4 +278,22 @@ describe('PricingSection', () => {
 
     expect(screen.queryByText('Dodano do koszyka')).not.toBeInTheDocument();
   });
+
+  it('renders a cart link inside the add-to-cart confirmation popup', async () => {
+    const user = userEvent.setup();
+
+    renderWithCart(
+      <PricingSection pricingData={pricingData} isBuyable product={product} />,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId('hydrated')).toHaveTextContent('yes'),
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Dodaj do koszyka' }));
+
+    expect(
+      screen.getByRole('link', { name: 'Przejdź do koszyka' }),
+    ).toHaveAttribute('href', '/koszyk');
+  });
 });

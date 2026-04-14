@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning / execution
-Last updated: 2026-04-09
+Last updated: 2026-04-14
 Depends on: `../open-threads.md`, `../phases/phase-02-flow-and-operations-closure.md`
 Related files: `../milestones.md`, `../README.md`, `../testing-strategy.md`, `../phases/phase-03-business-data-contract.md`, `../phases/phase-04-commerce-foundation.md`
 
@@ -26,9 +26,9 @@ It should answer:
 
 ## Current Focus
 
-- wire the accepted backend model into storefront buyability and cart work
-- connect the new `Sanity` business fields and accepted `Supabase` schema to the next implementation tasks
-- prepare the first implementation work for PDP/cart and checkout
+- wire coupon apply / clear actions from the storefront cart UI into the shared cart runtime
+- implement standard-product reconfiguration from the cart UI
+- connect cart revalidation and invalid-state handling to live backend truth
 
 ## Recently Completed
 
@@ -55,6 +55,22 @@ It should answer:
 - `Supabase` schema created for the accepted Phase 04 table model
 - private invoice storage bucket created
 - generated `database.types.ts` refreshed from the live schema
+- `Vitest`, `React Testing Library`, `MSW`, and `jsdom` setup added in `apps/web`
+- shared test-structure convention added for future `apps/web` work
+- runtime buyability rules implemented for standard and `CPO` storefront products
+- standard and `CPO` PDP buyability now drive dual CTA visibility in the storefront
+- initial cart domain implemented under `src/global/b2c/cart/`
+- browser cart runtime foundation implemented with provider, reducer, context, and persistence hydration
+- standard PDP `Add to cart` now writes real lines into the cart runtime
+- `CPO` PDP `Add to cart` now writes real specimen lines into the cart runtime
+- `CPO` duplicate-prevention UX added for specimens already in cart
+- minimal add-to-cart confirmation popup implemented
+- storefront cart access in navigation implemented
+- dedicated cart route implemented with breadcrumbs, checkout steps, and `noindex` metadata
+- mixed standard + `CPO` cart rendering implemented
+- quantity editing and line removal exposed in the cart UI
+- loading and empty cart states implemented
+- cart support card and empty-state copy now fetched from global `Sanity` settings
 
 ## Blocked / Waiting
 
@@ -62,10 +78,10 @@ It should answer:
 
 ## Ready Next
 
-1. implement PDP buyability and cart flow against the accepted model
-2. wire checkout/order creation against the new schema
-3. define exact admin/frontend query patterns where implementation requires them
-4. keep the Phase 04 docs aligned if implementation reveals any missing schema details
+1. wire coupon entry and feedback into the shared cart runtime
+2. expose standard reconfiguration from the live cart UI
+3. wire cart revalidation / invalidation against backend truth
+4. connect the cart page to the first checkout/order handoff
 
 ## Phase Tracker
 

@@ -1,30 +1,63 @@
-'use client';
+import type { Metadata } from 'next';
 
-import { useCart } from '@/src/global/b2c/cart/use-cart';
-import { formatPrice } from '@/src/global/utils';
+import CartPageClient from '@/src/components/b2c/CartPage/CartPageClient';
+import type {
+  CartEmptyStateData,
+  CartSupportCardData,
+} from '@/src/components/b2c/CartPage/types';
+import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
+import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import { sanityFetch } from '@/src/global/sanity/fetch';
+import {
+  queryCartEmptyState,
+  queryCartSupportCard,
+} from '@/src/global/sanity/query';
 
-export default function CartPage() {
-  const { cart, totals, isHydrated } = useCart();
+export const metadata: Metadata = {
+  title: 'Koszyk | Audiofast',
+  description:
+    'Koszyk zakupowy Audiofast dla wybranych produktów i egzemplarzy CPO.',
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
+
+const breadcrumbsData = [
+  {
+    name: 'Produkty',
+    path: '/produkty/',
+  },
+  {
+    name: 'Koszyk',
+    path: '/koszyk/',
+  },
+];
+
+export default async function CartPage() {
+  const [supportCard, emptyStateContent] = await Promise.all([
+    sanityFetch<CartSupportCardData | null>({
+      query: queryCartSupportCard,
+      tags: ['settings'],
+    }),
+    sanityFetch<CartEmptyStateData | null>({
+      query: queryCartEmptyState,
+      tags: ['settings'],
+    }),
+  ]);
 
   return (
-    <main
-      id="main"
-      className="max-width"
-      style={{ padding: '6rem 1rem 4rem', minHeight: '100dvh' }}
-    >
-      <h1>Koszyk</h1>
-      <p>
-        Pierwszy widok koszyka jest juz gotowy i podlaczony do runtime cart.
-      </p>
-      {isHydrated ? (
-        <>
-          <p>Liczba pozycji: {cart.lines.length}</p>
-          <p>Liczba produktow: {totals.itemCount}</p>
-          <p>Wartosc koszyka: {formatPrice(totals.grandTotalCents)}</p>
-        </>
-      ) : (
-        <p>Trwa ladowanie koszyka...</p>
-      )}
-    </main>
+    <>
+      <Breadcrumbs data={breadcrumbsData} firstItemType="cartPage" />
+      <CheckoutSteps currentStep="cart" />
+      <CartPageClient
+        supportCard={supportCard}
+        emptyStateContent={emptyStateContent}
+      />
+    </>
   );
 }

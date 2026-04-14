@@ -21,14 +21,12 @@ type AddToCartConfirmationModalProps = {
   isOpen: boolean;
   product: AddToCartConfirmationProduct;
   onClose: () => void;
-  onGoToCart: () => void;
 };
 
 export default function AddToCartConfirmationModal({
   isOpen,
   product,
   onClose,
-  onGoToCart,
 }: AddToCartConfirmationModalProps) {
   useEffect(() => {
     if (!isOpen) return;
@@ -104,10 +102,9 @@ export default function AddToCartConfirmationModal({
             Kontynuuj zakupy
           </Button>
           <Button
-            type="button"
+            href="/koszyk"
             variant="primary"
             iconUsed="arrowUp"
-            onClick={onGoToCart}
             className={styles.actionButton}
           >
             Przejdź do koszyka

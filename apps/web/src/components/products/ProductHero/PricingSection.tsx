@@ -34,7 +34,6 @@ interface PricingSectionProps {
   };
   formStateData?: FormStateData | null;
   onAddToCart?: (product: ReturnType<typeof createStandardCartLine>) => void;
-  onGoToCart?: () => void;
 }
 
 export default function PricingSection({
@@ -43,7 +42,6 @@ export default function PricingSection({
   product,
   formStateData,
   onAddToCart,
-  onGoToCart,
 }: PricingSectionProps) {
   const { addLine } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -204,11 +202,6 @@ export default function PricingSection({
     setIsConfirmationOpen(false);
   };
 
-  const handleGoToCart = () => {
-    setIsConfirmationOpen(false);
-    onGoToCart?.();
-  };
-
   return (
     <>
       {pricingData ? (
@@ -251,7 +244,6 @@ export default function PricingSection({
           totalPrice: productContext.totalPrice,
         }}
         onClose={handleCloseConfirmation}
-        onGoToCart={handleGoToCart}
       />
     </>
   );

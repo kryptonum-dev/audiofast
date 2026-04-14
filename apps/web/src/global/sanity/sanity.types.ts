@@ -2386,6 +2386,22 @@ export type Settings = {
     metaPixelId?: string;
     metaConversionToken?: string;
   };
+  cartEmptyState?: {
+    heading?: string;
+    description?: string;
+    buttonText?: string;
+  };
+  cartSupportCard?: {
+    paragraph?: string;
+    phoneNumber?: string;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+  };
   seo?: {
     img?: {
       asset?: SanityImageAssetReference;
@@ -39936,6 +39952,42 @@ export type QueryContactSettingsResult = {
 } | null;
 
 // Source: ../web/src/global/sanity/query.ts
+// Variable: queryCartSupportCard
+// Query: *[_type == "settings"][0].cartSupportCard {    paragraph,    phoneNumber,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  }
+export type QueryCartSupportCardResult = {
+  paragraph: string | null;
+  phoneNumber: string | null;
+  image: {
+    id: string | null;
+    preview: string | null;
+    alt: string | null;
+    naturalWidth: number | null;
+    naturalHeight: number | null;
+    hotspot: {
+      x: number | null;
+      y: number | null;
+      width: number | null;
+      height: number | null;
+    } | null;
+    crop: {
+      bottom: number | null;
+      left: number | null;
+      right: number | null;
+      top: number | null;
+    } | null;
+  } | null;
+} | null;
+
+// Source: ../web/src/global/sanity/query.ts
+// Variable: queryCartEmptyState
+// Query: *[_type == "settings"][0].cartEmptyState {    heading,    description,    buttonText  }
+export type QueryCartEmptyStateResult = {
+  heading: string | null;
+  description: string | null;
+  buttonText: string | null;
+} | null;
+
+// Source: ../web/src/global/sanity/query.ts
 // Variable: queryMailchimpSettings
 // Query: *[_type == "settings"][0].mailchimpAudienceId
 export type QueryMailchimpSettingsResult = string | null;
@@ -40246,6 +40298,8 @@ declare module "@sanity/client" {
     '\n  *[_type == "product" && _id in $productIds] {\n    _id,\n    name,\n    "slug": slug.current,\n    subtitle,\n    basePriceCents,\n    \n  "mainImage": previewImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    brand->{\n      _id,\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n    },\n    "categories": categories[]->{\n    "slug": slug.current,\n    name\n    }\n  }\n': QueryComparisonProductsMinimalResult;
     '{\n  "products": *[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && $categorySlug in categories[]->slug.current] | order(name asc) {\n    _id,\n    name,\n    "slug": slug.current,\n    subtitle,\n    basePriceCents,\n    \n  "mainImage": previewImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    brand->{\n      _id,\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n    },\n    technicalData {\n      variants,\n      groups[] {\n        _key,\n        title,\n        rows[] {\n          _key,\n          title,\n          values[] {\n            _key,\n            \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n          }\n        }\n      }\n    },\n    "categories": categories[]->{\n    "slug": slug.current,\n    name\n    }\n  },\n  "enabledParameters": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current == $categorySlug][0].enabledParameters[] {\n    name,\n    displayName\n  }\n}': QueryComparisonPageDataResult;
     '\n  *[_type == "settings"][0].contactSettings {\n    supportEmails,\n    confirmationEmail {\n      subject,\n      \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  } \n': QueryContactSettingsResult;
+    '\n  *[_type == "settings"][0].cartSupportCard {\n    paragraph,\n    phoneNumber,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n  }\n': QueryCartSupportCardResult;
+    '\n  *[_type == "settings"][0].cartEmptyState {\n    heading,\n    description,\n    buttonText\n  }\n': QueryCartEmptyStateResult;
     '\n  *[_type == "settings"][0].mailchimpAudienceId\n': QueryMailchimpSettingsResult;
     '\n  *[_type == "settings"][0].productInquiryFormState {\n    success {\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText\n    },\n    error {\n      withIcon,\n      \n  heading[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      \n  paragraph[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n,\n      refreshButton,\n      refreshButtonText\n    }\n  }\n': QueryProductInquiryFormStateResult;
     '*[_type == "review" && destinationType == "page" && slug.current == $slug][0]{\n  "slug": slug.current,\n  seo,\n  openGraph{\n    title,\n    description,\n    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",\n  }\n}': QueryReviewSeoBySlugResult;

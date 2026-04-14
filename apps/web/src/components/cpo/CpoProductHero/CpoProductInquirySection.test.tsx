@@ -244,4 +244,30 @@ describe('CpoProductInquirySection', () => {
     expect(screen.getByText('Produkt został dodany')).toBeInTheDocument();
     expect(screen.getByText('Test CPO')).toBeInTheDocument();
   });
+
+  it('renders a cart link inside the CPO add-to-cart confirmation popup', async () => {
+    const user = userEvent.setup();
+
+    renderWithCart(
+      <CpoProductInquirySection
+        productId="cpo-1"
+        productKey="/certyfikowany-sprzet-uzywany/test-cpo/"
+        productName="Test CPO"
+        brandName="Test brand"
+        priceCents={100_00}
+        isBuyable
+        isReturnable={false}
+      />,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId('hydrated')).toHaveTextContent('yes'),
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Dodaj do koszyka' }));
+
+    expect(
+      screen.getByRole('link', { name: 'Przejdź do koszyka' }),
+    ).toHaveAttribute('href', '/koszyk');
+  });
 });

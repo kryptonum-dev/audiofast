@@ -13,7 +13,6 @@ describe('AddToCartConfirmationModal', () => {
   it('renders product details and closes on continue', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    const onGoToCart = vi.fn();
 
     render(
       <AddToCartConfirmationModal
@@ -25,7 +24,6 @@ describe('AddToCartConfirmationModal', () => {
           totalPrice: 100_00,
         }}
         onClose={onClose}
-        onGoToCart={onGoToCart}
       />,
     );
 
@@ -37,14 +35,9 @@ describe('AddToCartConfirmationModal', () => {
     await user.click(screen.getByRole('button', { name: 'Kontynuuj zakupy' }));
 
     expect(onClose).toHaveBeenCalledTimes(1);
-    expect(onGoToCart).not.toHaveBeenCalled();
   });
 
-  it('calls the go-to-cart action when requested', async () => {
-    const user = userEvent.setup();
-    const onClose = vi.fn();
-    const onGoToCart = vi.fn();
-
+  it('renders the go-to-cart CTA as a cart link', () => {
     render(
       <AddToCartConfirmationModal
         isOpen
@@ -54,14 +47,13 @@ describe('AddToCartConfirmationModal', () => {
           image: { id: 'image-1' },
           totalPrice: 100_00,
         }}
-        onClose={onClose}
-        onGoToCart={onGoToCart}
+        onClose={() => {}}
       />,
     );
 
-    await user.click(screen.getByRole('button', { name: 'Przejdź do koszyka' }));
-
-    expect(onGoToCart).toHaveBeenCalledTimes(1);
+    expect(
+      screen.getByRole('link', { name: 'Przejdź do koszyka' }),
+    ).toHaveAttribute('href', '/koszyk');
   });
 
   it('hides the price row when price is missing', () => {
@@ -75,7 +67,6 @@ describe('AddToCartConfirmationModal', () => {
           totalPrice: null,
         }}
         onClose={() => {}}
-        onGoToCart={() => {}}
       />,
     );
 

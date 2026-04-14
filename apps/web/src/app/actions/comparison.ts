@@ -1,15 +1,15 @@
-"use server";
+'use server';
 
 import type {
   ComparisonProduct,
   EnabledParameter,
-} from "@/src/global/comparison/types";
-import { sanityFetch, sanityFetchDynamic } from "@/src/global/sanity/fetch";
+} from '@/src/global/comparison/types';
+import { sanityFetch, sanityFetchDynamic } from '@/src/global/sanity/fetch';
 import {
   queryComparisonPageData,
   queryComparisonProductsMinimal,
-} from "@/src/global/sanity/query";
-import type { ProductType } from "@/src/global/types";
+} from '@/src/global/sanity/query';
+import type { ProductType } from '@/src/global/types';
 
 /**
  * Combined response type for comparison page data
@@ -32,11 +32,11 @@ export async function fetchComparisonProducts(
     const result = await sanityFetch<ProductType[]>({
       query: queryComparisonProductsMinimal,
       params: { productIds },
-      tags: ["product"],
+      tags: ['product'],
     });
     return result;
   } catch (error) {
-    console.error("Error fetching comparison products:", error);
+    console.error('Error fetching comparison products:', error);
     return null;
   }
 }
@@ -70,7 +70,7 @@ export async function fetchComparisonPageData(
       enabledParameters: result?.enabledParameters || [],
     };
   } catch (error) {
-    console.error("Error fetching comparison page data:", error);
+    console.error('Error fetching comparison page data:', error);
     return {
       products: [],
       enabledParameters: [],

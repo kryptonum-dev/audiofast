@@ -1,9 +1,57 @@
+import {
+  BlockElementIcon,
+  ComposeIcon,
+  SearchIcon,
+  TrendUpwardIcon,
+  UsersIcon,
+} from "@sanity/icons";
 import { CogIcon } from "lucide-react";
-import { defineArrayMember, defineField, defineType } from "sanity";
+import {
+  defineArrayMember,
+  defineField,
+  defineType,
+  type FieldGroupDefinition,
+} from "sanity";
 
-import { GROUP, GROUPS } from "../../../utils/constant";
 import { formState } from "../../definitions/form-state";
 import { customPortableText } from "../../portableText";
+
+const SETTINGS_GROUP = {
+  CONTACT: "contact",
+  FORMS: "forms",
+  CART: "cart",
+  ANALYTICS: "analytics",
+  SEO: "seo",
+} as const;
+
+const SETTINGS_GROUPS: FieldGroupDefinition[] = [
+  {
+    name: SETTINGS_GROUP.CONTACT,
+    title: "Dane kontaktowe",
+    icon: UsersIcon,
+    default: true,
+  },
+  {
+    name: SETTINGS_GROUP.FORMS,
+    title: "Formularze i komunikacja",
+    icon: ComposeIcon,
+  },
+  {
+    name: SETTINGS_GROUP.CART,
+    title: "Koszyk B2C",
+    icon: BlockElementIcon,
+  },
+  {
+    name: SETTINGS_GROUP.ANALYTICS,
+    title: "Analityka",
+    icon: TrendUpwardIcon,
+  },
+  {
+    name: SETTINGS_GROUP.SEO,
+    title: "SEO i dane strukturalne",
+    icon: SearchIcon,
+  },
+];
 
 export const settings = defineType({
   name: "settings",
@@ -12,28 +60,30 @@ export const settings = defineType({
   description:
     "Globalne ustawienia i konfiguracja dla Twojej strony internetowej",
   icon: CogIcon,
-  groups: GROUPS,
+  groups: SETTINGS_GROUPS,
   fields: [
     defineField({
       name: "email",
       type: "string",
       title: "Email kontaktowy",
-      group: GROUP.CONTACT,
+      group: SETTINGS_GROUP.CONTACT,
       validation: (Rule) => Rule.required().email(),
     }),
     defineField({
       name: "tel",
       type: "string",
       title: "Telefon kontaktowy",
-      group: GROUP.CONTACT,
+      group: SETTINGS_GROUP.CONTACT,
       validation: (Rule) => Rule.required(),
     }),
+    
+    
     defineField({
       name: "address",
       type: "object",
       title: "Adres firmy",
       description: "Pełny adres firmy rozdzielony na komponenty",
-      group: GROUP.CONTACT,
+      group: SETTINGS_GROUP.CONTACT,
       options: {
         columns: 2,
       },
@@ -72,7 +122,7 @@ export const settings = defineType({
       title: "Ustawienia formularzy kontaktowych",
       description:
         "Konfiguracja automatycznego wysyłania e-maili z formularzy kontaktowych. Ustaw adresy odbiorców i szablon wiadomości potwierdzającej.",
-      group: GROUP.CONTACT,
+      group: SETTINGS_GROUP.FORMS,
       fields: [
         defineField({
           name: "supportEmails",
@@ -131,7 +181,7 @@ export const settings = defineType({
       title: "Formularz zapytania o produkt",
       description:
         "Teksty wyświetlane po wysłaniu formularza zapytania o produkt (sukces/błąd). Ten formularz pojawia się w pop-upie na stronie produktu po kliknięciu przycisku 'Zapytaj o produkt'.",
-      group: GROUP.CONTACT,
+      group: SETTINGS_GROUP.FORMS,
     },
     defineField({
       name: "mailchimpAudienceId",
@@ -139,7 +189,7 @@ export const settings = defineType({
       title: "Mailchimp Audience ID",
       description:
         'ID listy subskrybentów w Mailchimp dla newslettera (np. "abc123def4"). Znajdź w Mailchimp: Audience → Settings → Audience name and defaults. Double opt-in jest zawsze włączony dla zgodności z GDPR.',
-      group: GROUP.CONTACT,
+      group: SETTINGS_GROUP.FORMS,
       validation: (Rule) =>
         Rule.required().error("Mailchimp Audience ID jest wymagane"),
     }),
@@ -149,7 +199,7 @@ export const settings = defineType({
       title: "Analityka",
       description:
         "Konfiguruj analitykę strony. Pozostaw pola puste, aby wyłączyć śledzenie.",
-      group: GROUP.SEO,
+      group: SETTINGS_GROUP.ANALYTICS,
       fields: [
         defineField({
           name: "gtm_id",
@@ -204,10 +254,85 @@ export const settings = defineType({
       ],
     }),
     defineField({
+      name: "cartEmptyState",
+      type: "object",
+      title: "Pusty koszyk",
+      description:
+        "Treści wyświetlane po lewej stronie strony koszyka, gdy w koszyku nie ma jeszcze żadnych produktów.",
+      group: SETTINGS_GROUP.CART,
+      fields: [
+        defineField({
+          name: "heading",
+          type: "string",
+          title: "Nagłówek",
+          description: "Główny nagłówek pustego koszyka.",
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "description",
+          type: "text",
+          title: "Opis",
+          rows: 4,
+          description:
+            "Krótki opis zachęcający do dodania produktów do koszyka.",
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "buttonText",
+          type: "string",
+          title: "Tekst przycisku",
+          description:
+            "Tekst przycisku prowadzącego z pustego koszyka do listy produktów.",
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "cartSupportCard",
+      type: "object",
+      title: "Karta wsparcia koszyka",
+      description:
+        "Dane kontaktowe wyświetlane w sekcji wsparcia na stronie koszyka.",
+      group: SETTINGS_GROUP.CART,
+
+      fields: [
+        defineField({
+          name: "paragraph",
+          type: "text",
+          title: "Treść akapitu",
+          rows: 3,
+          description:
+            "Krótka wiadomość widoczna nad danymi kontaktowymi, np. Możemy pomóc. Skontaktuj się z nami.",
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "phoneNumber",
+          type: "string",
+          title: "Numer telefonu",
+          description:
+            "Numer telefonu widoczny i klikalny na karcie wsparcia koszyka.",
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "image",
+          type: "image",
+          title: "Zdjęcie kontaktowe",
+          description:
+            "Zdjęcie osoby lub grafika kontaktowej używane na karcie wsparcia koszyka.",
+          options: {
+            hotspot: true,
+          },
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "seo",
       type: "object",
       title: "SEO globalne",
-      group: GROUP.SEO,
+      group: SETTINGS_GROUP.SEO,
       fields: [
         defineField({
           name: "img",
@@ -226,7 +351,7 @@ export const settings = defineType({
       title: "Structured Data (Schema.org)",
       description:
         "Dane strukturalne dla lepszego SEO i widoczności w wyszukiwarkach",
-      group: GROUP.SEO,
+      group: SETTINGS_GROUP.SEO,
       fields: [
         defineField({
           name: "companyName",

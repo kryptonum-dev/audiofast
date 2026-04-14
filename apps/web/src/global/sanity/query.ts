@@ -2513,6 +2513,22 @@ export const queryContactSettings = defineQuery(/* groq */ `
   } 
 `);
 
+export const queryCartSupportCard = defineQuery(/* groq */ `
+  *[_type == "settings"][0].cartSupportCard {
+    paragraph,
+    phoneNumber,
+    ${imageFragment('image')}
+  }
+`);
+
+export const queryCartEmptyState = defineQuery(/* groq */ `
+  *[_type == "settings"][0].cartEmptyState {
+    heading,
+    description,
+    buttonText
+  }
+`);
+
 export const queryMailchimpSettings = defineQuery(/* groq */ `
   *[_type == "settings"][0].mailchimpAudienceId
 `);

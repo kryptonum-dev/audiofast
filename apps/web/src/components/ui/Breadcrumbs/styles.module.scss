@@ -128,4 +128,12 @@
   &[data-first-item-type='productPage'] {
     margin-top: 0.5rem;
   }
+
+  &[data-first-item-type='cartPage'] {
+    margin-top: 0.5rem;
+
+    @media (max-width: 56.1875rem) {
+      width: calc(100% - 2rem);
+    }
+  }
 }
