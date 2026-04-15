@@ -68,4 +68,42 @@ describe('createStandardCartLine', () => {
 
     expect(line.quantity).toBe(1);
   });
+
+  it('stores a minimal canonical configuration selection when provided', () => {
+    const line = createStandardCartLine({
+      lineId: 'line-1',
+      productId: 'product-1',
+      productKey: '/produkty/test',
+      productName: 'Test product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 100_00,
+      isReturnable: true,
+      configurationSelection: {
+        variantId: 'variant-1',
+        selectedOptions: {
+          groupA: 'value-1',
+          groupB: '2.5',
+        },
+      },
+      product: {
+        id: 'product-1',
+        name: 'Test product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-1' },
+        basePrice: 100_00,
+        configurationOptions: [],
+        totalPrice: 100_00,
+      },
+    });
+
+    expect(line.configurationSelection).toEqual({
+      variantId: 'variant-1',
+      selectedOptions: {
+        groupA: 'value-1',
+        groupB: '2.5',
+      },
+    });
+  });
 });

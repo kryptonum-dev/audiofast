@@ -211,6 +211,10 @@ describe('PricingSection', () => {
 
     expect(cartState.lines[0]?.lineType).toBe('standard');
     expect(cartState.lines[0]?.productKey).toBe('/produkty/test');
+    expect(cartState.lines[0]?.configurationSelection).toEqual({
+      variantId: 'variant-1',
+      selectedOptions: {},
+    });
   });
 
   it('merges the same standard configuration into one cart line', async () => {
@@ -232,6 +236,40 @@ describe('PricingSection', () => {
 
     expect(screen.getByTestId('line-count')).toHaveTextContent('1');
     expect(screen.getByTestId('item-count')).toHaveTextContent('2');
+  });
+
+  it('persists canonical selection data for a changed configurator choice', async () => {
+    const user = userEvent.setup();
+
+    renderWithCart(
+      <PricingSection pricingData={pricingData} isBuyable product={product} />,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByTestId('hydrated')).toHaveTextContent('yes'),
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: 'wybierz konfigurację alternatywną' }),
+    );
+    await user.click(screen.getByRole('button', { name: 'Dodaj do koszyka' }));
+
+    const cartState = JSON.parse(
+      screen.getByTestId('cart-state').textContent ?? '{}',
+    );
+
+    expect(cartState.lines[0]?.configurationSelection).toEqual({
+      variantId: 'variant-2',
+      selectedOptions: {
+        model: 'alt',
+      },
+    });
+    expect(cartState.lines[0]?.configurationSummary).toEqual([
+      {
+        label: 'Model',
+        value: 'Alt',
+      },
+    ]);
   });
 
   it('creates a separate line when the standard configuration changes', async () => {

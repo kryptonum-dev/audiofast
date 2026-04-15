@@ -180,12 +180,10 @@ export default function PricingSection({
       quantity: 1,
       unitPriceCents: productContext.totalPrice ?? 0,
       isReturnable: product.isReturnable,
-      configurationSummary: productContext.configurationOptions.map(
-        (option) => ({
-          label: option.label,
-          value: option.value,
-        }),
-      ),
+      configurationSelection: {
+        variantId: selection.variantId,
+        selectedOptions: selection.selectedOptions,
+      },
       product: {
         ...productContext,
         basePrice: configData.basePrice,

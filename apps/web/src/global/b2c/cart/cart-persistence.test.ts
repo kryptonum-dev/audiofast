@@ -54,6 +54,12 @@ describe('cart-persistence', () => {
         quantity: 1,
         unitPriceCents: 100_00,
         isReturnable: true,
+        configurationSelection: {
+          variantId: 'variant-1',
+          selectedOptions: {
+            model: 'default',
+          },
+        },
         configurationSummary: [],
         product: {
           id: 'product-1',
@@ -71,6 +77,14 @@ describe('cart-persistence', () => {
     saveCartToStorage(state);
 
     expect(loadCartFromStorage()).toEqual(state);
+    expect(loadCartFromStorage().lines[0]).toMatchObject({
+      configurationSelection: {
+        variantId: 'variant-1',
+        selectedOptions: {
+          model: 'default',
+        },
+      },
+    });
   });
 
   it('drops invalid persisted coupons when loading from localStorage', () => {

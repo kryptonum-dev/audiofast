@@ -61,6 +61,12 @@ describe('cart-domain', () => {
       quantity: 1,
       unitPriceCents: 100_00,
       isReturnable: true,
+      configurationSelection: {
+        variantId: 'variant-a',
+        selectedOptions: {
+          model: 'A',
+        },
+      },
       configurationSummary: [{ label: 'Model', value: 'A' }],
       product: {
         id: 'product-1',
@@ -83,6 +89,12 @@ describe('cart-domain', () => {
       quantity: 2,
       unitPriceCents: 100_00,
       isReturnable: true,
+      configurationSelection: {
+        variantId: 'variant-a',
+        selectedOptions: {
+          model: 'A',
+        },
+      },
       configurationSummary: [{ label: 'Model', value: 'A' }],
       product: {
         id: 'product-1',
@@ -103,6 +115,16 @@ describe('cart-domain', () => {
 
     expect(nextState.lines).toHaveLength(1);
     expect(nextState.lines[0]?.quantity).toBe(3);
+    expect(
+      nextState.lines[0]?.lineType === 'standard'
+        ? nextState.lines[0].configurationSelection
+        : null,
+    ).toEqual({
+      variantId: 'variant-a',
+      selectedOptions: {
+        model: 'A',
+      },
+    });
   });
 
   it('keeps differently configured standard lines separate', () => {
@@ -330,6 +352,12 @@ describe('cart-domain', () => {
       quantity: 1,
       unitPriceCents: 120_00,
       isReturnable: true,
+      configurationSelection: {
+        variantId: 'variant-b',
+        selectedOptions: {
+          model: 'B',
+        },
+      },
       configurationSummary: [{ label: 'Model', value: 'B' }],
       product: {
         id: 'product-1',
@@ -362,5 +390,15 @@ describe('cart-domain', () => {
         value: 'B',
       },
     ]);
+    expect(
+      mergedLine?.lineType === 'standard'
+        ? mergedLine.configurationSelection
+        : null,
+    ).toEqual({
+      variantId: 'variant-b',
+      selectedOptions: {
+        model: 'B',
+      },
+    });
   });
 });

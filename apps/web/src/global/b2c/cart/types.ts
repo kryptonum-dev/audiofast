@@ -1,4 +1,5 @@
 import type { SanityRawImage } from '@/src/components/shared/Image';
+import type { PricingSelection } from '@/src/global/supabase/types';
 
 export type CartLineType = 'standard' | 'cpo';
 
@@ -66,6 +67,11 @@ export type CartProductSnapshot = {
   totalPrice: number;
 };
 
+export type StandardCartConfigurationSelection = Pick<
+  PricingSelection,
+  'variantId' | 'selectedOptions'
+>;
+
 export type StandardCartLine = {
   lineId: string;
   lineType: 'standard';
@@ -76,6 +82,7 @@ export type StandardCartLine = {
   quantity: number;
   unitPriceCents: number;
   isReturnable: boolean;
+  configurationSelection?: StandardCartConfigurationSelection;
   configurationSummary: Array<{
     label: string;
     value: string;

@@ -52,6 +52,30 @@ function createStandardLine(quantity = 2) {
   });
 }
 
+function createStandardLineWithoutConfiguration() {
+  return createStandardCartLine({
+    lineId: 'standard-line-2',
+    productId: 'product-2',
+    productKey: '/produkty/no-config',
+    productName: 'Simple product',
+    brandName: 'Test brand',
+    quantity: 1,
+    unitPriceCents: 99_00,
+    isReturnable: true,
+    configurationSummary: [],
+    product: {
+      id: 'product-2',
+      name: 'Simple product',
+      brandName: 'Test brand',
+      kind: 'standard',
+      image: { id: 'image-3' },
+      basePrice: 99_00,
+      configurationOptions: [],
+      totalPrice: 99_00,
+    },
+  });
+}
+
 function createCpoLine() {
   return createCpoCartLine({
     lineId: 'cpo-line-1',
@@ -273,6 +297,23 @@ describe('CartItemCard', () => {
     await user.click(screen.getByRole('button', { name: 'Usuń z koszyka' }));
     await user.click(screen.getByRole('button', { name: 'Usuń produkt' }));
     expect(onRemove).toHaveBeenCalledWith('cpo-line-1');
+  });
+
+  it('does not render the reconfiguration action for standard lines without configuration rows', () => {
+    render(
+      <CartItemCard
+        line={createStandardLineWithoutConfiguration()}
+        onRemove={vi.fn()}
+        onSetQuantity={vi.fn()}
+        onIncrementQuantity={vi.fn()}
+        onDecrementQuantity={vi.fn()}
+        onReconfigure={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.queryByRole('button', { name: 'Edytuj konfigurację' }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders blocking line issue messaging for invalid standard items', () => {

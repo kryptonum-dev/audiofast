@@ -146,7 +146,7 @@ describe('CartSidebar', () => {
     expect(screen.getByText('Do zapłaty')).toBeInTheDocument();
     expect(getByExactText('400 zł')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Do kasy' }));
+    await user.click(screen.getByRole('button', { name: 'Dalej' }));
     expect(onCheckout).toHaveBeenCalledTimes(1);
   });
 
@@ -181,7 +181,7 @@ describe('CartSidebar', () => {
         'Koszyk zawiera pozycje wymagające poprawy przed przejściem dalej.',
       ),
     ).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Do kasy' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Dalej' })).toBeDisabled();
   });
 
   it('renders coupon section with active coupon state and allows clearing it', async () => {

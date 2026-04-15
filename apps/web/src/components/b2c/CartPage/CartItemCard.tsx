@@ -159,12 +159,14 @@ export default function CartItemCard({
           className={styles.actions}
           data-has-divider={hasConfigurationSection ? 'false' : 'true'}
         >
-          {line.lineType === 'standard' && onReconfigure ? (
+          {line.lineType === 'standard' &&
+          hasConfigurationSection &&
+          onReconfigure ? (
             <Button
               type="button"
               text="Edytuj konfigurację"
               variant="secondary"
-              iconUsed="refresh"
+              iconUsed="edit"
               onClick={() => onReconfigure(line.lineId)}
             />
           ) : null}

@@ -96,6 +96,8 @@ The Phase 05 work already completed in code includes:
 - real `cart` route shell with breadcrumbs, checkout steps, and `noindex` metadata
 - real cart page UI with mixed standard + `CPO` line rendering
 - quantity editing, line removal, confirmation, and cart-side loading / empty states
+- real cart coupon application / clear flow with validation, persistence rules, refresh-time revalidation messaging, and cart summary integration
+- full standard-product reconfiguration in cart with saved-selection preload, merge handling, guarded close behavior, and responsive modal UX
 - cart sidebar with summary, coupon UI shell, and support card
 - server-side `Sanity` wiring for cart support content and empty-state content with code fallbacks
 - removal toast feedback for `CPO` cart removal from the PDP
@@ -114,28 +116,27 @@ At this point, the project has:
 - real cart management UI for mixed standard + `CPO` lines
 - real quantity editing and line-removal UX in the cart
 - real cart loading and empty-state UX
+- real cart coupon logic wired end to end from the cart UI into the shared cart runtime
+- real full standard-product reconfiguration flow inside the cart
 - real server-driven cart support and empty-state content
 
 But it does not yet have:
 
-- coupon logic wired end to end from the cart UI into the shared cart runtime
-- standard-product reconfiguration wired from the cart UI into the live replace-line flow
 - live cart revalidation integration against backend truth
 - invalidation handling connected to real runtime refresh cycles
 - real checkout handoff from the cart page
+- minimal commerce analytics for the cart actions
 - browser-level cart journey coverage and final closure checks
 
 ## Broad Remaining Backlog
 
 The broad remaining backlog for Phase 05 is now:
 
-1. wire coupon apply / clear actions from the cart UI into the shared cart runtime and validation source
-2. implement standard-product reconfiguration from the cart UI
-3. wire cart revalidation to live backend truth
-4. surface cart invalidation states cleanly and block checkout when needed
-5. connect the cart page to the first real checkout handoff
-6. add minimal commerce analytics for the cart actions
-7. add the first browser-level cart flow before closing the phase
+1. wire cart revalidation to live backend truth
+2. surface cart invalidation states cleanly and block checkout when needed
+3. connect the cart page to the first real checkout handoff
+4. add minimal commerce analytics for the cart actions
+5. add the first browser-level cart flow before closing the phase
 
 This backlog should stay intentionally broad.
 

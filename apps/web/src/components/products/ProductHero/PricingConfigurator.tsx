@@ -9,7 +9,7 @@ import type {
 } from '@/src/global/supabase/types';
 import { formatPrice } from '@/src/global/utils';
 
-import styles from './styles.module.scss';
+import styles from './PricingConfigurator.module.scss';
 
 export interface ConfigurationOptionData {
   label: string;
@@ -25,10 +25,55 @@ export interface ConfigurationData {
 
 interface PricingConfiguratorProps {
   pricingData: CompletePricingData;
+  initialSelection?: Pick<
+    PricingSelection,
+    'variantId' | 'selectedOptions'
+  > | null;
+  showTotalPrice?: boolean;
   onSelectionChange?: (
     selection: PricingSelection,
     configData: ConfigurationData,
   ) => void;
+}
+
+function createConfiguratorSelectionState(
+  pricingData: CompletePricingData,
+  initialSelection?: Pick<
+    PricingSelection,
+    'variantId' | 'selectedOptions'
+  > | null,
+): PricingSelection {
+  const firstVariant = pricingData.variants[0];
+
+  if (!firstVariant) {
+    return {
+      variantId: null,
+      selectedOptions: {},
+      calculatedPrice: pricingData.lowestPrice,
+    };
+  }
+
+  const selectedVariant =
+    (initialSelection?.variantId
+      ? pricingData.variants.find(
+          (variant) => variant.id === initialSelection.variantId,
+        )
+      : null) ?? firstVariant;
+
+  const validGroupIds = new Set(
+    selectedVariant.groups.map((group) => group.id),
+  );
+  const selectedOptions = Object.fromEntries(
+    Object.entries(initialSelection?.selectedOptions ?? {}).filter(
+      ([groupId]) => validGroupIds.has(groupId),
+    ),
+  );
+
+  return {
+    variantId: selectedVariant.id,
+    selectedOptions,
+    calculatedPrice: selectedVariant.base_price_cents,
+  };
 }
 
 interface NumericOptionProps {
@@ -169,21 +214,39 @@ function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
 
 export default function PricingConfigurator({
   pricingData,
+  initialSelection = null,
+  showTotalPrice = true,
   onSelectionChange,
 }: PricingConfiguratorProps) {
-  // State for user selections - initialize with first variant immediately for SSR
-  const [selection, setSelection] = useState<PricingSelection>(() => {
-    const firstVariant = pricingData.variants[0];
-    return {
-      variantId: firstVariant?.id ?? null,
-      selectedOptions: {},
-      calculatedPrice: firstVariant?.base_price_cents ?? 0,
-    };
-  });
+  const initialSelectionVariantId = initialSelection?.variantId ?? null;
+  const initialSelectionOptionsKey = JSON.stringify(
+    initialSelection?.selectedOptions ?? {},
+  );
+  const resolvedInitialSelection = useMemo(
+    () =>
+      createConfiguratorSelectionState(pricingData, {
+        variantId: initialSelectionVariantId,
+        selectedOptions: JSON.parse(initialSelectionOptionsKey) as Record<
+          string,
+          string
+        >,
+      }),
+    [initialSelectionOptionsKey, initialSelectionVariantId, pricingData],
+  );
+
+  // State for user selections - supports both PDP default mode and cart edit mode
+  const [selection, setSelection] = useState<PricingSelection>(
+    resolvedInitialSelection,
+  );
 
   // State for dropdown management
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    setSelection(resolvedInitialSelection);
+    setOpenDropdown(null);
+  }, [resolvedInitialSelection]);
 
   // Close dropdown when clicking outside or tabbing out
   useEffect(() => {
@@ -697,12 +760,14 @@ export default function PricingConfigurator({
           }
           return null;
         })}
-      <div className={styles.priceDisplay}>
-        <span className={styles.priceLabel}>Cena całkowita:</span>
-        <span className={styles.price}>
-          {formatPrice(selection.calculatedPrice)}
-        </span>
-      </div>
+      {showTotalPrice ? (
+        <div className={styles.priceDisplay}>
+          <span className={styles.priceLabel}>Cena całkowita:</span>
+          <span className={styles.price}>
+            {formatPrice(selection.calculatedPrice)}
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }

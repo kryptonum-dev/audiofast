@@ -59,7 +59,7 @@ export default function CartSummaryCard({
 
       <Button
         type="button"
-        text="Do kasy"
+        text="Dalej"
         iconUsed="arrowRight"
         onClick={onCheckout}
         disabled={checkoutBlocked}

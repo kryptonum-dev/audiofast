@@ -77,7 +77,7 @@ export default function CartEmptyState({
 
           <Button
             type="button"
-            text="Do kasy"
+            text="Dalej"
             iconUsed="arrowRight"
             disabled
             className={styles.sidebarButton}

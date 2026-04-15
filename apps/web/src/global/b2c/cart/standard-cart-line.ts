@@ -1,5 +1,9 @@
 import { STANDARD_MIN_QUANTITY } from './constants';
-import type { CartProductSnapshot, StandardCartLine } from './types';
+import type {
+  CartProductSnapshot,
+  StandardCartConfigurationSelection,
+  StandardCartLine,
+} from './types';
 
 export type StandardConfigurationSummaryItem = {
   label: string;
@@ -15,6 +19,7 @@ export type CreateStandardCartLineInput = {
   quantity?: number;
   unitPriceCents: number;
   isReturnable: boolean;
+  configurationSelection?: StandardCartConfigurationSelection;
   configurationSummary?: StandardConfigurationSummaryItem[];
   product: CartProductSnapshot;
 };
@@ -67,6 +72,16 @@ export function createStandardCartLine(
     quantity: Math.max(STANDARD_MIN_QUANTITY, Math.floor(input.quantity ?? 1)),
     unitPriceCents: input.unitPriceCents,
     isReturnable: input.isReturnable,
+    ...(input.configurationSelection
+      ? {
+          configurationSelection: {
+            variantId: input.configurationSelection.variantId,
+            selectedOptions: {
+              ...input.configurationSelection.selectedOptions,
+            },
+          },
+        }
+      : {}),
     configurationSummary,
     configurationSignature:
       buildStandardConfigurationSignature(configurationSummary),
