@@ -27,6 +27,15 @@
     position: relative;
     z-index: 1;
 
+    .loadingSpinner {
+      width: 1rem;
+      height: 1rem;
+      border: 0.125rem solid rgb(255 255 255 / 0.3);
+      border-top-color: var(--neutral-white, #ffffff);
+      border-radius: 50%;
+      animation: buttonSpinner 800ms linear infinite;
+    }
+
     svg {
       width: 1.5rem;
       height: 1.5rem;
@@ -447,6 +456,30 @@
     }
   }
 
+  &[data-loading='true'] {
+    .iconContainer {
+      .loadingSpinner {
+        animation: buttonSpinner 800ms linear infinite;
+      }
+    }
+
+    .textContainer {
+      span {
+        transform: none !important;
+      }
+    }
+
+    &:hover,
+    &:focus-visible,
+    &:focus:hover {
+      .textContainer {
+        span {
+          transform: none !important;
+        }
+      }
+    }
+  }
+
   @keyframes informationPulse {
     0%,
     100% {
@@ -454,6 +487,16 @@
     }
     50% {
       transform: scale(1.05);
+    }
+  }
+
+  @keyframes buttonSpinner {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
     }
   }
 
@@ -504,6 +547,18 @@
     border-radius: 0.25rem;
   }
 
+  &[data-focus-outline='white'] {
+    &:focus-visible {
+      outline-color: var(--neutral-white, #ffffff);
+    }
+  }
+
+  &[data-focus-outline='black'] {
+    &:focus-visible {
+      outline-color: var(--neutral-700, #303030);
+    }
+  }
+
   &[data-variant='secondary'] {
     &::after {
       position: absolute;
@@ -538,7 +593,7 @@
     }
 
     &:focus-visible {
-      outline-color: var(--neutral-white, #ffffff);
+      outline-offset: 3px;
     }
   }
 }

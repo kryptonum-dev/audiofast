@@ -1,11 +1,17 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { SanityRawImage } from '@/components/shared/Image';
 import type { FormStateData } from '@/src/components/ui/FormStates';
 import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
+import {
+  buildStandardConfigurationData,
+  createStandardConfigurationSelectionState,
+  resolveStandardConfigurationVariant,
+  type StandardConfigurationData,
+} from '@/src/global/b2c/configuration/standard-configuration';
 import type {
   CompletePricingData,
   PricingSelection,
@@ -16,9 +22,7 @@ import Button from '../../ui/Button';
 import ProductInquiryModal, {
   type ProductContext,
 } from '../ProductInquiryModal';
-import PricingConfigurator, {
-  type ConfigurationData,
-} from './PricingConfigurator';
+import PricingConfigurator from './PricingConfigurator';
 import styles from './styles.module.scss';
 
 interface PricingSectionProps {
@@ -46,11 +50,27 @@ export default function PricingSection({
   const { addLine } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const [selection, setSelection] = useState<PricingSelection>({
-    variantId: pricingData?.variants[0]?.id ?? null,
-    selectedOptions: {},
-    calculatedPrice: pricingData?.lowestPrice ?? 0,
-  });
+  const [selection, setSelection] = useState<PricingSelection>(() =>
+    pricingData
+      ? createStandardConfigurationSelectionState(pricingData)
+      : {
+          variantId: null,
+          selectedOptions: {},
+          calculatedPrice: 0,
+        },
+  );
+
+  useEffect(() => {
+    setSelection(
+      pricingData
+        ? createStandardConfigurationSelectionState(pricingData)
+        : {
+            variantId: null,
+            selectedOptions: {},
+            calculatedPrice: 0,
+          },
+    );
+  }, [pricingData]);
 
   // Handle selection changes from PricingConfigurator
   const handleSelectionChange = useCallback(
@@ -62,87 +82,23 @@ export default function PricingSection({
 
   const selectedVariant = useMemo(
     () =>
-      pricingData?.variants.find(
-        (variant) => variant.id === selection.variantId,
-      ) ??
-      pricingData?.variants[0] ??
-      null,
+      pricingData
+        ? resolveStandardConfigurationVariant(pricingData, selection.variantId)
+        : null,
     [pricingData, selection.variantId],
   );
 
-  const configData = useMemo<ConfigurationData>(() => {
-    if (!selectedVariant) {
-      return {
-        basePrice: pricingData?.lowestPrice ?? 0,
-        options: [],
-        totalPrice: pricingData?.lowestPrice ?? 0,
-      };
-    }
-
-    const options = [];
-
-    if (pricingData?.hasMultipleModels && selectedVariant.model) {
-      options.push({
-        label: 'Model',
-        value: selectedVariant.model,
-        priceDelta: 0,
-      });
-    }
-
-    selectedVariant.groups.forEach((group) => {
-      const selectedValue = selection.selectedOptions[group.id];
-
-      if (!selectedValue) return;
-
-      if (group.input_type === 'select') {
-        const value = group.values.find((item) => item.id === selectedValue);
-
-        if (!value) return;
-
-        options.push({
-          label: group.name,
-          value: value.name,
-          priceDelta: value.price_delta_cents,
-        });
-
-        return;
-      }
-
-      if (group.input_type === 'numeric_step' && group.numeric_rule) {
-        const numericValue = Number.parseFloat(selectedValue);
-        let priceDelta = 0;
-
-        if (!Number.isNaN(numericValue)) {
-          const stepsAboveBase =
-            (numericValue - group.numeric_rule.base_included_value) /
-            group.numeric_rule.step_value;
-
-          if (stepsAboveBase > 0) {
-            priceDelta =
-              Math.ceil(stepsAboveBase) *
-              group.numeric_rule.price_per_step_cents;
-          }
-        }
-
-        options.push({
-          label: group.name,
-          value: `${selectedValue} ${group.unit || 'm'}`,
-          priceDelta,
-        });
-      }
-    });
-
-    return {
-      basePrice: selectedVariant.base_price_cents,
-      options,
-      totalPrice: selection.calculatedPrice,
-    };
-  }, [
-    pricingData?.hasMultipleModels,
-    pricingData?.lowestPrice,
-    selectedVariant,
-    selection,
-  ]);
+  const configData = useMemo<StandardConfigurationData>(
+    () =>
+      pricingData
+        ? buildStandardConfigurationData(pricingData, selection)
+        : {
+            basePrice: 0,
+            options: [],
+            totalPrice: 0,
+          },
+    [pricingData, selection],
+  );
 
   // Build product context for the modal
   const productContext: ProductContext = {

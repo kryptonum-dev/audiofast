@@ -1,4 +1,5 @@
 import { createEmptyCart } from './cart-domain';
+import { stripManagedCartLineIssues } from './cart-revalidation';
 import { CART_STORAGE_KEY, CART_STORAGE_VERSION } from './constants';
 import type { CartState, PersistedCartState } from './types';
 
@@ -15,12 +16,18 @@ function isPersistedCartState(value: unknown): value is PersistedCartState {
 }
 
 function sanitizeCartForPersistence(state: CartState): CartState {
+  const sanitizedLines = state.lines.map(stripManagedCartLineIssues);
+
   if (!state.coupon || state.coupon.isValid) {
-    return state;
+    return {
+      ...state,
+      lines: sanitizedLines,
+    };
   }
 
   return {
     ...state,
+    lines: sanitizedLines,
     coupon: null,
   };
 }

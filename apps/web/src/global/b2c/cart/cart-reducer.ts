@@ -13,9 +13,11 @@ import {
   replaceStandardCartLine,
   setStandardLineQuantity,
 } from './cart-domain';
+import { applyCartRevalidation } from './cart-revalidation';
 import type {
   CartCouponDefinition,
   CartLine,
+  CartLineRevalidation,
   CartState,
   StandardCartLine,
 } from './types';
@@ -59,6 +61,12 @@ export type CartAction =
       payload: {
         lineId: string;
         nextLine: StandardCartLine;
+      };
+    }
+  | {
+      type: 'apply-line-revalidation';
+      payload: {
+        results: CartLineRevalidation[];
       };
     }
   | {
@@ -110,6 +118,8 @@ export function cartReducer(
         action.payload.lineId,
         action.payload.nextLine,
       );
+    case 'apply-line-revalidation':
+      return applyCartRevalidation(currentState, action.payload.results);
     case 'apply-coupon':
       return applyCouponToCart(currentState, action.payload.coupon);
     case 'apply-invalid-coupon':

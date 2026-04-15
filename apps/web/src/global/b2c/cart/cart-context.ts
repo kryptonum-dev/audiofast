@@ -4,6 +4,7 @@ import { createContext } from 'react';
 
 import type {
   CartLine,
+  CartLineRevalidation,
   CartState,
   CartTotals,
   StandardCartLine,
@@ -30,7 +31,9 @@ export type CartContextValue = {
   incrementStandardLineQuantity: (lineId: string) => void;
   decrementStandardLineQuantity: (lineId: string) => void;
   replaceStandardLine: (lineId: string, nextLine: StandardCartLine) => void;
+  applyCartLineRevalidation: (results: CartLineRevalidation[]) => void;
   applyCoupon: (code: string) => Promise<void>;
+  revalidateHydratedCouponAfterInitialLoad: () => Promise<void>;
   clearCouponRequestError: () => void;
   retryCouponRevalidation: () => Promise<void>;
   clearCoupon: () => void;

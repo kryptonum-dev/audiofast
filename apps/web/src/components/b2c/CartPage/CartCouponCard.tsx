@@ -13,6 +13,7 @@ type CartCouponCardProps = {
   cart: CartState;
   onApplyCoupon: (code: string) => Promise<void>;
   onClearCoupon: () => void;
+  isCartRuntimeLoading?: boolean;
   isApplyingCoupon?: boolean;
   isRevalidatingCoupon?: boolean;
   inputError?: string | null;
@@ -43,6 +44,7 @@ export default function CartCouponCard({
   cart,
   onApplyCoupon,
   onClearCoupon,
+  isCartRuntimeLoading = false,
   isApplyingCoupon = false,
   isRevalidatingCoupon = false,
   inputError = null,
@@ -105,7 +107,8 @@ export default function CartCouponCard({
     toast.info('Kod rabatowy został usunięty.');
   };
 
-  const isCouponBusy = isApplyingCoupon || isRevalidatingCoupon;
+  const isCouponBusy =
+    isCartRuntimeLoading || isApplyingCoupon || isRevalidatingCoupon;
   const fieldError = validationError ?? inputError;
   const fallbackInvalidCouponMessage =
     cart.coupon && !cart.coupon.isValid ? cart.coupon.message : null;
@@ -128,12 +131,12 @@ export default function CartCouponCard({
         return null;
     }
   })();
-  const activeCouponProductNames = activeCoupon?.productKeys
+  const activeCouponProductNames = activeCoupon?.matchedProductKeys.length
     ? Array.from(
         new Set(
           cart.lines
             .filter((line) =>
-              activeCoupon.productKeys?.includes(line.productKey),
+              activeCoupon.matchedProductKeys.includes(line.productKey),
             )
             .map((line) => line.productName),
         ),
@@ -252,6 +255,7 @@ export default function CartCouponCard({
             type="submit"
             text={isCouponBusy ? 'Sprawdzanie...' : 'Zastosuj'}
             variant="secondary"
+            focusOutline="black"
             iconUsed="submit"
             className={styles.couponButton}
             disabled={isCouponBusy}

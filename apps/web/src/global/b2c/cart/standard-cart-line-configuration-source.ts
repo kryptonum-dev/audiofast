@@ -1,3 +1,7 @@
+import {
+  createStandardConfigurationSelectionState,
+  findStandardConfigurationVariant,
+} from '@/src/global/b2c/configuration/standard-configuration';
 import type { CompletePricingData } from '@/src/global/supabase/types';
 
 import type {
@@ -27,8 +31,9 @@ export function createStandardCartLineConfigurationSource(
     };
   }
 
-  const matchingVariant = pricingData.variants.find(
-    (variant) => variant.id === line.configurationSelection?.variantId,
+  const matchingVariant = findStandardConfigurationVariant(
+    pricingData,
+    line.configurationSelection.variantId,
   );
 
   if (!matchingVariant) {
@@ -37,11 +42,17 @@ export function createStandardCartLineConfigurationSource(
     };
   }
 
+  const { variantId, selectedOptions } =
+    createStandardConfigurationSelectionState(pricingData, {
+      variantId: line.configurationSelection.variantId,
+      selectedOptions: line.configurationSelection.selectedOptions,
+    });
+
   return {
     status: 'ready',
     initialSelection: {
-      variantId: line.configurationSelection.variantId,
-      selectedOptions: { ...line.configurationSelection.selectedOptions },
-    },
+      variantId,
+      selectedOptions,
+    } satisfies StandardCartConfigurationSelection,
   };
 }

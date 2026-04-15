@@ -14,6 +14,7 @@ export type CartSidebarProps = {
   onCheckout: () => void;
   onApplyCoupon: (code: string) => Promise<void>;
   onClearCoupon: () => void;
+  isCartRuntimeLoading?: boolean;
   isApplyingCoupon?: boolean;
   isRevalidatingCoupon?: boolean;
   couponRequestError?: string | null;
@@ -30,6 +31,7 @@ export default function CartSidebar({
   onCheckout,
   onApplyCoupon,
   onClearCoupon,
+  isCartRuntimeLoading = false,
   isApplyingCoupon = false,
   isRevalidatingCoupon = false,
   couponRequestError = null,
@@ -40,11 +42,17 @@ export default function CartSidebar({
 }: CartSidebarProps) {
   return (
     <aside className={styles.sidebar} aria-label="Podsumowanie koszyka">
-      <CartSummaryCard cart={cart} totals={totals} onCheckout={onCheckout} />
+      <CartSummaryCard
+        cart={cart}
+        totals={totals}
+        onCheckout={onCheckout}
+        isCartRuntimeLoading={isCartRuntimeLoading}
+      />
       <CartCouponCard
         cart={cart}
         onApplyCoupon={onApplyCoupon}
         onClearCoupon={onClearCoupon}
+        isCartRuntimeLoading={isCartRuntimeLoading}
         isApplyingCoupon={isApplyingCoupon}
         isRevalidatingCoupon={isRevalidatingCoupon}
         inputError={couponRequestError}

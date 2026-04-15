@@ -1,8 +1,8 @@
 # Phase 05 - Buyable PDP And Cart
 
-Status: in progress
+Status: completed
 Owner: planning
-Last updated: 2026-04-14
+Last updated: 2026-04-15
 Depends on: `phase-04-commerce-foundation.md`
 Related files: `../architecture/cart-and-checkout-model.md`, `../architecture/cpo-and-b2c-relation.md`, `../architecture/commerce-table-model.md`, `../business/product-buyability-rules.md`, `../business/pricing-and-tax-rules.md`, `../business/coupon-rules.md`, `../testing-strategy.md`
 
@@ -30,7 +30,7 @@ What it still does not have is the fully wired user-facing cart flow, especially
 - coupon application in the storefront UI
 - cart revalidation wired to live backend truth
 - cart-side reconfiguration UI
-- browser-level cart journey coverage
+- browser-level cart journey coverage, which is now intentionally deferred to `Phase 06`
 
 This phase exists to close that gap without yet implementing checkout, order creation, payment, customer access, or admin workflows.
 
@@ -42,7 +42,7 @@ The detailed implementation direction for Phase 05 is now:
 - coupon logic is included in this phase
 - coupon creation UI is not required yet; coupons may be created directly in `Supabase` for v1 implementation/testing
 - add-to-cart confirmation should use a minimal popup/modal, not the previously proposed right-side panel
-- `Playwright` may be deferred at the start of this phase, but it should be installed near the end of Phase 05 before the phase is closed
+- `Playwright` browser coverage is intentionally deferred to `Phase 06` so the first end-to-end flows can validate the real cart -> checkout path instead of a cart-only slice
 - the popup should stay intentionally simple and provide only:
   - `Continue buying`
   - `Go to cart`
@@ -101,6 +101,10 @@ The Phase 05 work already completed in code includes:
 - cart sidebar with summary, coupon UI shell, and support card
 - server-side `Sanity` wiring for cart support content and empty-state content with code fallbacks
 - removal toast feedback for `CPO` cart removal from the PDP
+- live cart revalidation wired to backend truth for both standard and `CPO` lines
+- invalid-state cart UX for unavailable, stale, and reconfiguration-required lines
+- checkout handoff from the cart page with second soft revalidation and pending-state handling
+- cart return-path handling after successful checkout handoff so client navigation does not preserve stale loading state
 - unit and component coverage for the currently implemented rule-heavy slices
 
 At this point, the project has:
@@ -120,27 +124,14 @@ At this point, the project has:
 - real full standard-product reconfiguration flow inside the cart
 - real server-driven cart support and empty-state content
 
-But it does not yet have:
+Phase 05 is now closed with the accepted scope complete.
 
-- live cart revalidation integration against backend truth
-- invalidation handling connected to real runtime refresh cycles
-- real checkout handoff from the cart page
-- minimal commerce analytics for the cart actions
-- browser-level cart journey coverage and final closure checks
+Work intentionally handed off to `Phase 06`:
 
-## Broad Remaining Backlog
+- full checkout data capture and order creation
+- hard validation at checkout submit / buy
+- browser-level cart -> checkout -> payment coverage in `Playwright`
 
-The broad remaining backlog for Phase 05 is now:
-
-1. wire cart revalidation to live backend truth
-2. surface cart invalidation states cleanly and block checkout when needed
-3. connect the cart page to the first real checkout handoff
-4. add minimal commerce analytics for the cart actions
-5. add the first browser-level cart flow before closing the phase
-
-This backlog should stay intentionally broad.
-
-The next slices should be implemented step by step, but this file should continue describing the Phase 05 target at a high level rather than becoming a low-level ticket list.
 
 ## Work Included In This Phase
 
@@ -158,8 +149,7 @@ Expected setup:
 
 Preferred additional setup:
 
-- defer `Playwright` until the first real cart flow exists, then install it before Phase 05 is closed
-- keep the initial `Playwright` setup intentionally small and limited to the first critical browser cart flow(s)
+- defer `Playwright` to `Phase 06`, where the first browser flows can exercise real pricing, checkout, and payment behavior together
 
 The point of this setup is not to backfill the whole site.
 
@@ -240,8 +230,6 @@ The standard add-to-cart flow must:
 - carry the exact selected model/options into the cart
 - carry the current known price into the cart
 - preserve a human-readable configuration snapshot for later cart rendering
-
-This phase should also add analytics for successful standard-product add-to-cart behavior.
 
 ### 5. Upgrade `CPO` PDPs Into Shared-Commerce PDPs
 
@@ -437,15 +425,15 @@ The cart calculation layer should be able to produce values compatible with:
 
 This reduces Phase 06 risk and avoids redesigning totals logic during checkout implementation.
 
-### 14. Add Minimal Commerce Analytics
+### 14. Hand Off Browser-Level Commerce Coverage To Phase 06
 
-The storefront should begin emitting the basic commerce analytics introduced by this phase, at minimum:
+Browser-level commerce coverage is no longer part of the accepted Phase 05 closure.
 
-- `add_to_cart`
-- `remove_from_cart`
-- `view_cart`
+Instead, `Phase 06` should own the first `Playwright` setup and flows so the browser suite can validate the real transactional path:
 
-If the implementation naturally reaches the handoff into checkout entry, the event structure should also be prepared for later `begin_checkout` tracking in Phase 06.
+- cart -> checkout handoff
+- pricing truth as it carries into checkout
+- successful checkout and the most important failure-path handling
 
 ## Recommended Implementation Order
 
@@ -462,9 +450,8 @@ If the implementation naturally reaches the handoff into checkout entry, the eve
 11. add standard reconfiguration flow
 12. wire cart revalidation and invalid-state behavior against live data
 13. expose coupon behavior in cart UI
-14. add analytics and test coverage for the completed slice
-15. install `Playwright` once the first real cart flow is stable
-16. add the first critical browser flow(s)
+14. add test coverage for the completed slice
+15. hand browser-level cart / checkout coverage to `Phase 06`
 
 ## Expected Testing Work
 
@@ -481,7 +468,6 @@ Expected test coverage includes:
 - standard-product reconfiguration tests
 - coupon validation and discount tests
 - cart invalidation / revalidation tests
-- after `Playwright` is installed near the end of the phase, one first browser flow covering PDP -> add to cart -> cart
 
 The testing goal is to protect new commerce rules, not to backfill the whole website.
 
@@ -513,9 +499,8 @@ Phase 05 can be considered complete when:
 - coupon application works in cart according to the accepted v1 rules
 - invalid or outdated lines stay visible but block checkout until fixed or removed
 - add-to-cart confirmation uses the minimal popup flow
-- `Playwright` has been installed before phase closure and covers at least the first critical browser cart flow
 - the new business rules introduced in this phase have automated protection
 
 ## Completion Note
 
-Phase 05 is complete only when the storefront truly supports the selective direct-purchase path for both accepted product shapes without breaking the existing inquiry-first product experience.
+Phase 05 is now complete. The storefront supports the selective direct-purchase path for both accepted product shapes, soft cart revalidation is live, checkout handoff exists, and browser-level end-to-end validation is intentionally deferred to `Phase 06`.

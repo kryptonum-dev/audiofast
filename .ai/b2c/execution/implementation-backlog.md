@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning / execution
-Last updated: 2026-04-14
+Last updated: 2026-04-15
 Depends on: `../open-threads.md`, `../phases/phase-02-flow-and-operations-closure.md`
 Related files: `../milestones.md`, `../README.md`, `../testing-strategy.md`, `../phases/phase-03-business-data-contract.md`, `../phases/phase-04-commerce-foundation.md`
 
@@ -20,15 +20,15 @@ It should answer:
 
 ## Current Execution Snapshot
 
-- current active phase: `Phase 05 - Buyable PDP And Cart`
-- current working mode: implementation planning / storefront commerce enablement
-- phase 04 has been closed
+- current active phase: `Phase 06 - Checkout And Payments`
+- current working mode: checkout implementation planning / transactional flow enablement
+- phase 05 has been closed
 
 ## Current Focus
 
-- wire coupon apply / clear actions from the storefront cart UI into the shared cart runtime
-- implement standard-product reconfiguration from the cart UI
-- connect cart revalidation and invalid-state handling to live backend truth
+- implement the real checkout form and customer-data flow
+- add hard validation before order creation / payment handoff
+- introduce browser-level `Playwright` coverage for pricing, checkout, and payment-critical flows
 
 ## Recently Completed
 
@@ -71,6 +71,11 @@ It should answer:
 - quantity editing and line removal exposed in the cart UI
 - loading and empty cart states implemented
 - cart support card and empty-state copy now fetched from global `Sanity` settings
+- cart revalidation and invalid-state handling now wired to live backend truth
+- cart coupon logic now stays in sync with blocked / valid line truth
+- cart totals and checkout handoff now reflect the accepted revalidation model
+- successful cart -> checkout handoff implemented with pending-state handling and back-navigation cleanup
+- `Phase 05 - Buyable PDP And Cart` completed
 
 ## Blocked / Waiting
 
@@ -78,10 +83,10 @@ It should answer:
 
 ## Ready Next
 
-1. wire coupon entry and feedback into the shared cart runtime
-2. expose standard reconfiguration from the live cart UI
-3. wire cart revalidation / invalidation against backend truth
-4. connect the cart page to the first checkout/order handoff
+1. implement checkout data capture and validation
+2. create orders from the accepted cart truth
+3. wire payment handoff and recovery behavior
+4. add the first browser-level cart -> checkout -> payment coverage in `Playwright`
 
 ## Phase Tracker
 
@@ -103,11 +108,11 @@ It should answer:
 
 ### Phase 05 - Buyable PDP And Cart
 
-- status: in progress
+- status: completed
 
 ### Phase 06 - Checkout And Payments
 
-- status: planned
+- status: in progress
 
 ### Phase 07 - Customer Panel
 

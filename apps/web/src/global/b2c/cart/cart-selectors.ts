@@ -15,6 +15,20 @@ export function getCartLineDiscountCents(
   return getLineDiscounts(state)[lineId] ?? 0;
 }
 
+export function getCartVisibleLineDiscountCents(
+  state: CartState,
+  lineId: string,
+): number {
+  if (
+    state.coupon?.discountType === 'fixed_order' ||
+    state.coupon?.discountType === 'percent_order'
+  ) {
+    return 0;
+  }
+
+  return getCartLineDiscountCents(state, lineId);
+}
+
 export function getCartLineTotalCents(
   state: CartState,
   line: CartLine,
@@ -52,16 +66,20 @@ export function getCartLineCount(state: CartState): number {
   return state.lines.length;
 }
 
+export function hasBlockingCartLineIssues(line: CartLine): boolean {
+  return line.issues.some((issue) => issue.blocking);
+}
+
+export function isCartLineDiscountEligible(line: CartLine): boolean {
+  return !hasBlockingCartLineIssues(line);
+}
+
 export function getInvalidCartLines(state: CartState): CartLine[] {
-  return state.lines.filter((line) =>
-    line.issues.some((issue) => issue.blocking),
-  );
+  return state.lines.filter(hasBlockingCartLineIssues);
 }
 
 export function getValidCartLines(state: CartState): CartLine[] {
-  return state.lines.filter(
-    (line) => !line.issues.some((issue) => issue.blocking),
-  );
+  return state.lines.filter(isCartLineDiscountEligible);
 }
 
 export function isCartCheckoutBlocked(state: CartState): boolean {
@@ -75,5 +93,23 @@ export function getCartTotals(state: CartState): CartTotals {
     grandTotalCents: getCartGrandTotalCents(state),
     itemCount: getCartItemCount(state),
     lineCount: getCartLineCount(state),
+  };
+}
+
+export function getCheckoutCartTotals(state: CartState): CartTotals {
+  const validLines = getValidCartLines(state);
+
+  return {
+    subtotalCents: validLines.reduce(
+      (total, line) => total + getCartLineSubtotalCents(line),
+      0,
+    ),
+    discountTotalCents: getCartDiscountTotalCents(state),
+    grandTotalCents: validLines.reduce(
+      (total, line) => total + getCartLineTotalCents(state, line),
+      0,
+    ),
+    itemCount: validLines.reduce((total, line) => total + line.quantity, 0),
+    lineCount: validLines.length,
   };
 }

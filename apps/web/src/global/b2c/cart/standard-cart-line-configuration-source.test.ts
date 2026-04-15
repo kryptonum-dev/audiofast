@@ -143,7 +143,43 @@ describe('createStandardCartLineConfigurationSource', () => {
         variantId: 'variant-1',
         selectedOptions: {
           finish: 'matte',
-          staleGroup: 'ignore-me',
+        },
+      },
+    });
+  });
+
+  it('builds default initial selections when a saved line has no options but the product now requires them', () => {
+    const line = createStandardCartLine({
+      lineId: 'line-1',
+      productId: 'product-1',
+      productKey: '/produkty/test',
+      productName: 'Test product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 100_00,
+      isReturnable: true,
+      configurationSelection: {
+        variantId: 'variant-1',
+        selectedOptions: {},
+      },
+      product: {
+        id: 'product-1',
+        name: 'Test product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-1' },
+        basePrice: 100_00,
+        configurationOptions: [],
+        totalPrice: 100_00,
+      },
+    });
+
+    expect(createStandardCartLineConfigurationSource(line, pricingData)).toEqual({
+      status: 'ready',
+      initialSelection: {
+        variantId: 'variant-1',
+        selectedOptions: {
+          finish: 'matte',
         },
       },
     });

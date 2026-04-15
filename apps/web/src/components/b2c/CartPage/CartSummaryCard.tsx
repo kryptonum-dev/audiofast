@@ -1,5 +1,8 @@
 import Button from '@/src/components/ui/Button';
-import { isCartCheckoutBlocked } from '@/src/global/b2c/cart/cart-selectors';
+import {
+  getCheckoutCartTotals,
+  isCartCheckoutBlocked,
+} from '@/src/global/b2c/cart/cart-selectors';
 import type { CartState, CartTotals } from '@/src/global/b2c/cart/types';
 import { formatPrice } from '@/src/global/utils';
 
@@ -9,14 +12,17 @@ type CartSummaryCardProps = {
   cart: CartState;
   totals: CartTotals;
   onCheckout: () => void;
+  isCartRuntimeLoading?: boolean;
 };
 
 export default function CartSummaryCard({
   cart,
-  totals,
   onCheckout,
+  isCartRuntimeLoading = false,
 }: CartSummaryCardProps) {
   const checkoutBlocked = isCartCheckoutBlocked(cart);
+  const checkoutDisabled = checkoutBlocked || isCartRuntimeLoading;
+  const totals = getCheckoutCartTotals(cart);
   const renderPrice = (priceCents: number) =>
     formatPrice(priceCents).replace(/\s+/g, ' ').trim();
 
@@ -52,19 +58,44 @@ export default function CartSummaryCard({
       </div>
 
       {checkoutBlocked ? (
-        <p className={styles.blockingMessage}>
-          Koszyk zawiera pozycje wymagające poprawy przed przejściem dalej.
-        </p>
+        <div className={styles.blockingMessage} role="alert">
+          <div className={styles.blockingMessageIcon} aria-hidden="true">
+            <AlertIcon />
+          </div>
+          <p className={styles.blockingMessageText}>
+            Koszyk zawiera pozycje wymagające poprawy przed przejściem dalej.
+          </p>
+        </div>
       ) : null}
 
       <Button
         type="button"
         text="Dalej"
         iconUsed="arrowRight"
+        isLoading={isCartRuntimeLoading}
         onClick={onCheckout}
-        disabled={checkoutBlocked}
+        disabled={checkoutDisabled}
         className={styles.sidebarButton}
       />
     </section>
   );
 }
+
+const AlertIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#cart-summary-alert-clip)"
+    >
+      <path d="M9.996 20.777a8.94 8.94 0 0 1-2.48-.97M14 3.223a9.003 9.003 0 0 1 0 17.554M4.579 17.093a8.963 8.963 0 0 1-1.227-2.592M3.125 10.5c.16-.95.468-1.85.9-2.675l.169-.305M6.906 4.579A8.954 8.954 0 0 1 10 3.223M12 8v4M12 16v.01" />
+    </g>
+    <defs>
+      <clipPath id="cart-summary-alert-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);

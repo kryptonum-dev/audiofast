@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: Oliwier / implementation planning
-Last updated: 2026-04-08
+Last updated: 2026-04-15
 Depends on: `b2c-implementation-overview.md`, `open-threads.md`
 Related files: all files in `.ai/b2c/`
 
@@ -100,4 +100,6 @@ Current status of the B2C planning system:
 - root testing strategy created
 - phase 03 business contract finalized
 - accepted v1 commerce table model added
+- `Phase 05 - Buyable PDP And Cart` completed
+- `Phase 06 - Checkout And Payments` is now the active implementation phase
 - no open planning threads remain

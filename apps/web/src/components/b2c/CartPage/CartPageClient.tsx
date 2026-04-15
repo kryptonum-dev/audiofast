@@ -1,11 +1,18 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { fetchCartLinePricing } from '@/src/app/actions/cart-pricing';
+import { loadCartPageRuntime } from '@/src/app/actions/cart-revalidation';
 import CartLineConfigurationModal from '@/src/components/b2c/CartLineConfigurationModal';
 import type { CartLinePricingCacheEntry } from '@/src/components/b2c/CartLineConfigurationModal/pricing-cache';
-import { getCartLineDiscountCents } from '@/src/global/b2c/cart/cart-selectors';
+import { getCartVisibleLineDiscountCents } from '@/src/global/b2c/cart/cart-selectors';
+import {
+  canKeepStandardLineWithoutOptions,
+  canReconfigureStandardLineWithAddedOptions,
+  createStandardCartLineWithoutOptions,
+} from '@/src/global/b2c/cart/standard-cart-line-option-recovery';
 import type { StandardCartLine } from '@/src/global/b2c/cart/types';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
 
@@ -26,11 +33,15 @@ const IDLE_PRICING_STATE: CartLinePricingCacheEntry = {
   status: 'idle',
 };
 
+const CHECKOUT_PATH = '/koszyk/twoje-dane';
+
 export default function CartPageClient({
   supportCard = null,
   emptyStateContent = null,
   previewState,
 }: CartPageClientProps) {
+  const pathname = usePathname();
+  const router = useRouter();
   const {
     cart,
     isHydrated,
@@ -45,7 +56,9 @@ export default function CartPageClient({
     incrementStandardLineQuantity,
     decrementStandardLineQuantity,
     replaceStandardLine,
+    applyCartLineRevalidation,
     applyCoupon,
+    revalidateHydratedCouponAfterInitialLoad,
     clearCouponRequestError,
     retryCouponRevalidation,
     clearCoupon,
@@ -56,10 +69,47 @@ export default function CartPageClient({
   const [pricingByProductKey, setPricingByProductKey] = useState<
     Record<string, CartLinePricingCacheEntry>
   >({});
+  const [isCartRuntimeLoading, setIsCartRuntimeLoading] = useState(false);
+  const [isCheckoutPending, setIsCheckoutPending] = useState(false);
   const pricingByProductKeyRef = useRef(pricingByProductKey);
   const pricingRequestsInFlightRef = useRef<Set<string>>(new Set());
+  const hasLoadedCartRuntimeRef = useRef(false);
+  const previousPathnameRef = useRef(pathname);
+  const isCartInteractionPending = isCartRuntimeLoading || isCheckoutPending;
 
-  const handleCheckout = useCallback(() => {}, []);
+  const handleCheckout = useCallback(async () => {
+    if (isCartInteractionPending || cart.lines.length === 0) {
+      return;
+    }
+
+    setIsCheckoutPending(true);
+
+    try {
+      const runtime = await loadCartPageRuntime(cart.lines);
+
+      applyCartLineRevalidation(runtime.revalidationResults);
+      setPricingByProductKey(runtime.standardPricingByProductKey);
+
+      const hasBlockingLine = runtime.revalidationResults.some((result) => {
+        if (result.lineType === 'standard') {
+          return !result.isBuyable || !result.isConfigurationValid;
+        }
+
+        return !result.isBuyable || result.availabilityStatus !== 'available';
+      });
+
+      if (hasBlockingLine) {
+        return;
+      }
+
+      setIsCheckoutPending(false);
+      router.push(CHECKOUT_PATH);
+    } catch (error) {
+      console.error('Unexpected checkout revalidation failure.', error);
+    } finally {
+      setIsCheckoutPending(false);
+    }
+  }, [applyCartLineRevalidation, cart.lines, isCartInteractionPending, router]);
   const handleApplyCoupon = useCallback(
     async (code: string) => {
       await applyCoupon(code);
@@ -81,18 +131,6 @@ export default function CartPageClient({
           cartLine.lineType === 'standard',
       ),
     [cart.lines],
-  );
-
-  const configurableProductKeys = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          standardLines
-            .filter((line) => line.configurationSummary.length > 0)
-            .map((line) => line.productKey),
-        ),
-      ),
-    [standardLines],
   );
 
   const loadPricingForProductKey = useCallback(
@@ -135,24 +173,59 @@ export default function CartPageClient({
     [],
   );
 
-  useEffect(() => {
+  const runCartRuntimeLoad = useCallback(async () => {
     if (
       previewState === 'loading' ||
       !isHydrated ||
-      configurableProductKeys.length === 0
+      hasLoadedCartRuntimeRef.current ||
+      cart.lines.length === 0
     ) {
       return;
     }
 
-    configurableProductKeys.forEach((productKey) => {
-      void loadPricingForProductKey(productKey);
-    });
+    hasLoadedCartRuntimeRef.current = true;
+    setIsCartRuntimeLoading(true);
+
+    try {
+      const runtime = await loadCartPageRuntime(cart.lines);
+
+      applyCartLineRevalidation(runtime.revalidationResults);
+      setPricingByProductKey(runtime.standardPricingByProductKey);
+    } catch (error) {
+      console.error('Unexpected cart runtime load failure.', error);
+    } finally {
+      setIsCartRuntimeLoading(false);
+      void revalidateHydratedCouponAfterInitialLoad();
+    }
   }, [
-    configurableProductKeys,
+    applyCartLineRevalidation,
+    cart.lines,
     isHydrated,
-    loadPricingForProductKey,
     previewState,
+    revalidateHydratedCouponAfterInitialLoad,
   ]);
+
+  useEffect(() => {
+    void runCartRuntimeLoad();
+  }, [runCartRuntimeLoad]);
+
+  useEffect(() => {
+    const previousPathname = previousPathnameRef.current;
+    previousPathnameRef.current = pathname;
+
+    if (pathname !== '/koszyk') {
+      return;
+    }
+
+    setIsCheckoutPending(false);
+
+    if (previousPathname === pathname) {
+      return;
+    }
+
+    hasLoadedCartRuntimeRef.current = false;
+    void runCartRuntimeLoad();
+  }, [pathname, runCartRuntimeLoad]);
 
   const activeConfigurationLine = useMemo<StandardCartLine | null>(() => {
     if (!activeConfigurationLineId) {
@@ -211,6 +284,34 @@ export default function CartPageClient({
     },
     [replaceStandardLine],
   );
+  const handleKeepWithoutOptions = useCallback(
+    (lineId: string) => {
+      const matchingLine = standardLines.find((line) => line.lineId === lineId);
+
+      if (!matchingLine) {
+        return;
+      }
+
+      const pricingState =
+        pricingByProductKeyRef.current[matchingLine.productKey];
+
+      if (pricingState?.status !== 'found') {
+        return;
+      }
+
+      const recoveredLine = createStandardCartLineWithoutOptions(
+        matchingLine,
+        pricingState.pricingData,
+      );
+
+      if (!recoveredLine) {
+        return;
+      }
+
+      replaceStandardLine(lineId, recoveredLine);
+    },
+    [replaceStandardLine, standardLines],
+  );
 
   const shouldShowLoadingState = previewState === 'loading' || !isHydrated;
   const shouldShowEmptyState =
@@ -239,35 +340,76 @@ export default function CartPageClient({
       ) : (
         <section className={styles.content}>
           <div className={styles.itemsColumn}>
-            {cart.lines.map((line) => (
-              <CartItemCard
-                key={line.lineId}
-                line={line}
-                lineDiscountCents={getCartLineDiscountCents(cart, line.lineId)}
-                onRemove={removeLine}
-                onSetQuantity={
-                  line.lineType === 'standard'
-                    ? setStandardLineQuantity
-                    : undefined
-                }
-                onIncrementQuantity={
-                  line.lineType === 'standard'
-                    ? incrementStandardLineQuantity
-                    : undefined
-                }
-                onDecrementQuantity={
-                  line.lineType === 'standard'
-                    ? decrementStandardLineQuantity
-                    : undefined
-                }
-                onReconfigure={
-                  line.lineType === 'standard' &&
-                  line.configurationSummary.length > 0
-                    ? handleOpenConfigurationEditor
-                    : undefined
-                }
-              />
-            ))}
+            {cart.lines.map((line) => {
+              const pricingState =
+                line.lineType === 'standard'
+                  ? (pricingByProductKey[line.productKey] ?? IDLE_PRICING_STATE)
+                  : IDLE_PRICING_STATE;
+              const hasBlockingConfigurationIssue = line.issues.some(
+                (issue) =>
+                  issue.blocking && issue.code === 'configuration_invalid',
+              );
+              const shouldOfferKeepWithoutOptions =
+                line.lineType === 'standard' &&
+                hasBlockingConfigurationIssue &&
+                !isCartInteractionPending &&
+                pricingState.status === 'found' &&
+                canKeepStandardLineWithoutOptions(
+                  line,
+                  pricingState.pricingData,
+                );
+              const shouldOfferReconfigureAddedOptions =
+                line.lineType === 'standard' &&
+                hasBlockingConfigurationIssue &&
+                !isCartInteractionPending &&
+                pricingState.status === 'found' &&
+                !shouldOfferKeepWithoutOptions &&
+                canReconfigureStandardLineWithAddedOptions(
+                  line,
+                  pricingState.pricingData,
+                );
+
+              return (
+                <CartItemCard
+                  key={line.lineId}
+                  line={line}
+                  lineDiscountCents={getCartVisibleLineDiscountCents(
+                    cart,
+                    line.lineId,
+                  )}
+                  isInteractionDisabled={isCartInteractionPending}
+                  onRemove={removeLine}
+                  onSetQuantity={
+                    line.lineType === 'standard'
+                      ? setStandardLineQuantity
+                      : undefined
+                  }
+                  onIncrementQuantity={
+                    line.lineType === 'standard'
+                      ? incrementStandardLineQuantity
+                      : undefined
+                  }
+                  onDecrementQuantity={
+                    line.lineType === 'standard'
+                      ? decrementStandardLineQuantity
+                      : undefined
+                  }
+                  onReconfigure={
+                    line.lineType === 'standard' &&
+                    (line.configurationSummary.length > 0 ||
+                      shouldOfferReconfigureAddedOptions) &&
+                    !shouldOfferKeepWithoutOptions
+                      ? handleOpenConfigurationEditor
+                      : undefined
+                  }
+                  onKeepWithoutOptions={
+                    shouldOfferKeepWithoutOptions
+                      ? handleKeepWithoutOptions
+                      : undefined
+                  }
+                />
+              );
+            })}
           </div>
 
           <CartSidebar
@@ -275,6 +417,7 @@ export default function CartPageClient({
             totals={totals}
             supportCard={supportCard}
             onCheckout={handleCheckout}
+            isCartRuntimeLoading={isCartInteractionPending}
             onApplyCoupon={handleApplyCoupon}
             onClearCoupon={handleClearCoupon}
             isApplyingCoupon={isApplyingCoupon}

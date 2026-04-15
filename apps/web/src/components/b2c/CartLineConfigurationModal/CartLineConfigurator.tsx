@@ -2,6 +2,18 @@
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 
+import {
+  buildStandardConfigurationData,
+  calculateStandardConfigurationNumericPriceDelta,
+  createStandardConfigurationSelectionState,
+  getStandardConfigurationChildGroups,
+  getStandardConfigurationTopLevelGroups,
+  resolveStandardConfigurationVariant,
+  settleStandardConfigurationSelection,
+  type StandardConfigurationData,
+  type StandardConfigurationOptionData,
+  type StandardConfigurationSelectionSeed,
+} from '@/src/global/b2c/configuration/standard-configuration';
 import type {
   CompletePricingData,
   PricingOptionGroupWithDetails,
@@ -11,23 +23,13 @@ import { formatPrice } from '@/src/global/utils';
 
 import styles from './CartLineConfigurator.module.scss';
 
-export interface ConfigurationOptionData {
-  label: string;
-  value: string;
-  priceDelta: number;
-}
+export type ConfigurationOptionData = StandardConfigurationOptionData;
 
-export interface ConfigurationData {
-  basePrice: number;
-  options: ConfigurationOptionData[];
-  totalPrice: number;
-}
-
-type SelectionSeed = Pick<PricingSelection, 'variantId' | 'selectedOptions'>;
+export type ConfigurationData = StandardConfigurationData;
 
 type CartLineConfiguratorProps = {
   pricingData: CompletePricingData;
-  initialSelection?: SelectionSeed | null;
+  initialSelection?: StandardConfigurationSelectionSeed | null;
   onSelectionChange?: (
     selection: PricingSelection,
     configData: ConfigurationData,
@@ -41,66 +43,6 @@ type SelectOption = {
   price?: number;
   triggerText?: string;
 };
-
-function createConfiguratorSelectionState(
-  pricingData: CompletePricingData,
-  initialSelection?: SelectionSeed | null,
-): PricingSelection {
-  const firstVariant = pricingData.variants[0];
-
-  if (!firstVariant) {
-    return {
-      variantId: null,
-      selectedOptions: {},
-      calculatedPrice: pricingData.lowestPrice,
-    };
-  }
-
-  const selectedVariant =
-    (initialSelection?.variantId
-      ? pricingData.variants.find(
-          (variant) => variant.id === initialSelection.variantId,
-        )
-      : null) ?? firstVariant;
-
-  const validGroupIds = new Set(
-    selectedVariant.groups.map((group) => group.id),
-  );
-  const selectedOptions = Object.fromEntries(
-    Object.entries(initialSelection?.selectedOptions ?? {}).filter(
-      ([groupId]) => validGroupIds.has(groupId),
-    ),
-  );
-
-  return {
-    variantId: selectedVariant.id,
-    selectedOptions,
-    calculatedPrice: selectedVariant.base_price_cents,
-  };
-}
-
-function calculateNumericPriceDelta(
-  group: PricingOptionGroupWithDetails & {
-    numeric_rule: NonNullable<PricingOptionGroupWithDetails['numeric_rule']>;
-  },
-  value: string,
-): number {
-  const numericValue = parseFloat(value);
-
-  if (Number.isNaN(numericValue)) {
-    return 0;
-  }
-
-  const stepsAboveBase =
-    (numericValue - group.numeric_rule.base_included_value) /
-    group.numeric_rule.step_value;
-
-  if (stepsAboveBase <= 0) {
-    return 0;
-  }
-
-  return Math.ceil(stepsAboveBase) * group.numeric_rule.price_per_step_cents;
-}
 
 interface NumericOptionEditorProps {
   group: PricingOptionGroupWithDetails & {
@@ -128,7 +70,7 @@ function NumericOptionEditor({
       (group.numeric_rule.max_value - group.numeric_rule.min_value)) *
     100;
 
-  const currentPriceDelta = calculateNumericPriceDelta(
+  const currentPriceDelta = calculateStandardConfigurationNumericPriceDelta(
     group,
     String(currentValue),
   );
@@ -263,7 +205,7 @@ export default function CartLineConfigurator({
   );
   const resolvedInitialSelection = useMemo(
     () =>
-      createConfiguratorSelectionState(pricingData, {
+      createStandardConfigurationSelectionState(pricingData, {
         variantId: initialSelectionVariantId,
         selectedOptions: JSON.parse(initialSelectionOptionsKey) as Record<
           string,
@@ -325,242 +267,50 @@ export default function CartLineConfigurator({
   }, [openSectionId]);
 
   const selectedVariant = useMemo(() => {
-    if (!selection.variantId) {
-      return null;
-    }
-
-    return (
-      pricingData.variants.find(
-        (variant) => variant.id === selection.variantId,
-      ) ?? null
+    return resolveStandardConfigurationVariant(
+      pricingData,
+      selection.variantId,
     );
-  }, [pricingData.variants, selection.variantId]);
+  }, [pricingData, selection.variantId]);
 
-  const calculatedPrice = useMemo(() => {
-    if (!selectedVariant) {
-      return pricingData.lowestPrice;
-    }
-
-    let totalPrice = selectedVariant.base_price_cents;
-
-    selectedVariant.groups.forEach((group) => {
-      const selectedValue = selection.selectedOptions[group.id];
-      if (!selectedValue) {
-        return;
-      }
-
-      if (group.input_type === 'select') {
-        const value = group.values.find(
-          (option) => option.id === selectedValue,
-        );
-
-        if (value) {
-          totalPrice += value.price_delta_cents;
-        }
-      } else if (group.input_type === 'numeric_step' && group.numeric_rule) {
-        totalPrice += calculateNumericPriceDelta(
-          group as PricingOptionGroupWithDetails & {
-            numeric_rule: NonNullable<
-              PricingOptionGroupWithDetails['numeric_rule']
-            >;
-          },
-          selectedValue,
-        );
-      }
-    });
-
-    return totalPrice;
-  }, [pricingData.lowestPrice, selectedVariant, selection.selectedOptions]);
-
-  useEffect(() => {
-    setSelection((previousSelection) => ({
-      ...previousSelection,
-      calculatedPrice,
-    }));
-  }, [calculatedPrice]);
-
-  const buildConfigurationData = (): ConfigurationData => {
-    if (!selectedVariant) {
-      return {
-        basePrice: pricingData.lowestPrice,
-        options: [],
-        totalPrice: pricingData.lowestPrice,
-      };
-    }
-
-    const options: ConfigurationOptionData[] = [];
-
-    if (pricingData.hasMultipleModels && selectedVariant.model) {
-      options.push({
-        label: 'Model',
-        value: selectedVariant.model,
-        priceDelta: 0,
-      });
-    }
-
-    selectedVariant.groups.forEach((group) => {
-      const selectedValue = selection.selectedOptions[group.id];
-      if (!selectedValue) {
-        return;
-      }
-
-      if (group.input_type === 'select') {
-        const value = group.values.find(
-          (option) => option.id === selectedValue,
-        );
-
-        if (value) {
-          options.push({
-            label: group.name,
-            value: value.name,
-            priceDelta: value.price_delta_cents,
-          });
-        }
-      } else if (group.input_type === 'numeric_step' && group.numeric_rule) {
-        options.push({
-          label: group.name,
-          value: `${selectedValue} ${group.unit || 'm'}`,
-          priceDelta: calculateNumericPriceDelta(
-            group as PricingOptionGroupWithDetails & {
-              numeric_rule: NonNullable<
-                PricingOptionGroupWithDetails['numeric_rule']
-              >;
-            },
-            selectedValue,
-          ),
-        });
-      }
-    });
-
-    return {
-      basePrice: selectedVariant.base_price_cents,
-      options,
-      totalPrice: calculatedPrice,
-    };
-  };
+  const configData = useMemo(
+    () => buildStandardConfigurationData(pricingData, selection),
+    [pricingData, selection],
+  );
 
   useEffect(() => {
     if (onSelectionChange && selection.variantId) {
-      onSelectionChange(
-        {
-          ...selection,
-          calculatedPrice,
-        },
-        buildConfigurationData(),
-      );
+      onSelectionChange(selection, configData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calculatedPrice, onSelectionChange, selection]);
-
-  useEffect(() => {
-    if (!selectedVariant) {
-      return;
-    }
-
-    const updates: Record<string, string> = {};
-    const removals: string[] = [];
-    let hasChanges = false;
-
-    selectedVariant.groups.forEach((group) => {
-      if (group.parent_value_id) {
-        const parentSelected = Object.values(
-          selection.selectedOptions,
-        ).includes(group.parent_value_id);
-
-        if (!parentSelected && selection.selectedOptions[group.id]) {
-          removals.push(group.id);
-          hasChanges = true;
-          return;
-        }
-
-        if (parentSelected && !selection.selectedOptions[group.id]) {
-          if (group.input_type === 'select' && group.values.length > 0) {
-            updates[group.id] = group.values[0]!.id;
-            hasChanges = true;
-          } else if (
-            group.input_type === 'numeric_step' &&
-            group.numeric_rule
-          ) {
-            updates[group.id] = String(group.numeric_rule.min_value);
-            hasChanges = true;
-          }
-        }
-
-        return;
-      }
-
-      if (
-        group.input_type === 'select' &&
-        group.values.length > 0 &&
-        !selection.selectedOptions[group.id]
-      ) {
-        updates[group.id] = group.values[0]!.id;
-        hasChanges = true;
-      } else if (
-        group.input_type === 'numeric_step' &&
-        group.numeric_rule &&
-        !selection.selectedOptions[group.id]
-      ) {
-        updates[group.id] = String(group.numeric_rule.min_value);
-        hasChanges = true;
-      }
-    });
-
-    if (hasChanges) {
-      setSelection((previousSelection) => {
-        const nextSelectedOptions = {
-          ...previousSelection.selectedOptions,
-          ...updates,
-        };
-
-        removals.forEach((key) => {
-          delete nextSelectedOptions[key];
-        });
-
-        return {
-          ...previousSelection,
-          selectedOptions: nextSelectedOptions,
-        };
-      });
-    }
-  }, [selectedVariant, selection.selectedOptions]);
+  }, [configData, onSelectionChange, selection]);
 
   const handleModelChange = (variantId: string) => {
-    setSelection({
-      variantId,
-      selectedOptions: {},
-      calculatedPrice:
-        pricingData.variants.find((variant) => variant.id === variantId)
-          ?.base_price_cents ?? pricingData.lowestPrice,
-    });
+    setSelection(
+      createStandardConfigurationSelectionState(pricingData, {
+        variantId,
+        selectedOptions: {},
+      }),
+    );
   };
 
   const handleOptionChange = (groupId: string, valueIdOrNumeric: string) => {
-    setSelection((previousSelection) => ({
-      ...previousSelection,
-      selectedOptions: {
-        ...previousSelection.selectedOptions,
-        [groupId]: valueIdOrNumeric,
-      },
-    }));
+    setSelection((previousSelection) =>
+      settleStandardConfigurationSelection(pricingData, {
+        variantId: previousSelection.variantId,
+        selectedOptions: {
+          ...previousSelection.selectedOptions,
+          [groupId]: valueIdOrNumeric,
+        },
+      }),
+    );
   };
 
   const topLevelGroups = useMemo(() => {
-    if (!selectedVariant) {
-      return [];
-    }
-
-    return selectedVariant.groups.filter((group) => !group.parent_value_id);
+    return getStandardConfigurationTopLevelGroups(selectedVariant);
   }, [selectedVariant]);
 
   const getChildGroups = (parentValueId: string) => {
-    if (!selectedVariant) {
-      return [];
-    }
-
-    return selectedVariant.groups.filter(
-      (group) => group.parent_value_id === parentValueId,
-    );
+    return getStandardConfigurationChildGroups(selectedVariant, parentValueId);
   };
 
   const renderSelectField = (

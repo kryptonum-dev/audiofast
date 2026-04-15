@@ -7,7 +7,9 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string | React.ReactNode;
     children?: React.ReactNode;
+    isLoading?: boolean;
     variant?: 'primary' | 'secondary' | null;
+    focusOutline?: 'black' | 'white' | null;
     openInNewTab?: boolean | null;
     className?: string;
     href?: string | null;
@@ -31,7 +33,9 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
 export default function Button({
   children,
   text,
+  isLoading = false,
   variant = 'primary',
+  focusOutline = null,
   openInNewTab = false,
   className,
   href,
@@ -39,11 +43,16 @@ export default function Button({
   ...props
 }: Props) {
   const Element = href ? Link : 'button';
+  const resolvedFocusOutline =
+    focusOutline ?? (variant === 'secondary' ? 'white' : 'black');
   const renderedProps = {
     ...(href && { href }),
     ...(openInNewTab && { target: '_blank', rel: 'noreferrer' }),
     'data-variant': variant,
+    'data-focus-outline': resolvedFocusOutline,
     'data-icon': iconUsed,
+    'data-loading': isLoading ? 'true' : 'false',
+    'aria-busy': isLoading || undefined,
     className: `${styles.Button}${className ? ` ${className}` : ''}`,
     ...props,
   };
@@ -87,15 +96,21 @@ export default function Button({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
-        {icon}
-        {iconUsed !== 'addToCart' &&
-          iconUsed !== 'phone' &&
-          iconUsed !== 'clearFilters' &&
-          iconUsed !== 'applyFilters' &&
-          iconUsed !== 'information' &&
-          iconUsed !== 'removeFromCart' &&
-          iconUsed !== 'trash' &&
-          icon}
+        {isLoading ? (
+          <span className={styles.loadingSpinner} aria-hidden="true" />
+        ) : (
+          <>
+            {icon}
+            {iconUsed !== 'addToCart' &&
+              iconUsed !== 'phone' &&
+              iconUsed !== 'clearFilters' &&
+              iconUsed !== 'applyFilters' &&
+              iconUsed !== 'information' &&
+              iconUsed !== 'removeFromCart' &&
+              iconUsed !== 'trash' &&
+              icon}
+          </>
+        )}
       </div>
       <div className={styles.textContainer}>
         <span>{text || children}</span>

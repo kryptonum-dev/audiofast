@@ -31,6 +31,7 @@ export type QuantityStepperProps = {
   className?: string;
   disableDecrement?: boolean;
   disableIncrement?: boolean;
+  disabled?: boolean;
 };
 
 export default function QuantityStepper({
@@ -47,6 +48,7 @@ export default function QuantityStepper({
   className,
   disableDecrement = false,
   disableIncrement = false,
+  disabled = false,
 }: QuantityStepperProps) {
   const [quantityInput, setQuantityInput] = useState(String(quantity));
 
@@ -55,7 +57,7 @@ export default function QuantityStepper({
   }, [quantity]);
 
   const commitQuantityInput = () => {
-    if (!onQuantityCommit) {
+    if (disabled || !onQuantityCommit) {
       return;
     }
 
@@ -130,7 +132,7 @@ export default function QuantityStepper({
         className={styles.button}
         aria-label={decrementAriaLabel}
         onClick={onDecrement}
-        disabled={disableDecrement}
+        disabled={disabled || disableDecrement}
       >
         -
       </button>
@@ -144,14 +146,15 @@ export default function QuantityStepper({
         onChange={handleQuantityInputChange}
         onBlur={commitQuantityInput}
         onKeyDown={handleQuantityInputKeyDown}
-        readOnly={!onQuantityCommit}
+        readOnly={disabled || !onQuantityCommit}
+        disabled={disabled}
       />
       <button
         type="button"
         className={styles.button}
         aria-label={incrementAriaLabel}
         onClick={onIncrement}
-        disabled={disableIncrement || quantity >= max}
+        disabled={disabled || disableIncrement || quantity >= max}
       >
         +
       </button>

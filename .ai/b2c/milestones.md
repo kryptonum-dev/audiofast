@@ -96,6 +96,7 @@ Success means:
 
 - key flows are tested
 - critical bugs are resolved
+- agreed v1 commerce analytics are wired for the final ecommerce funnel
 - content/legal/payment configuration is ready
 - production readiness checks are complete
 

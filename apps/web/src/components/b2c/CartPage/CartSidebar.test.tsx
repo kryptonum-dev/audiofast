@@ -181,7 +181,83 @@ describe('CartSidebar', () => {
         'Koszyk zawiera pozycje wymagające poprawy przed przejściem dalej.',
       ),
     ).toBeInTheDocument();
+    expect(screen.getByText('Produkty (0 szt.)')).toBeInTheDocument();
+    expect(screen.getAllByText((_, element) => element?.textContent === '0 zł')).toHaveLength(2);
+    expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Dalej' })).toBeDisabled();
+  });
+
+  it('shows only valid lines inside the pricing summary when the cart mixes valid and blocked items', () => {
+    const validLine = createStandardLine();
+    const blockedLine = createStandardLine();
+    blockedLine.lineId = 'standard-line-2';
+    blockedLine.quantity = 1;
+    blockedLine.unitPriceCents = 50_00;
+    blockedLine.productName = 'Blocked product';
+    blockedLine.product = {
+      ...blockedLine.product,
+      id: 'product-2',
+      name: 'Blocked product',
+      totalPrice: 50_00,
+      basePrice: 50_00,
+    };
+    blockedLine.issues = [
+      {
+        code: 'not_buyable',
+        blocking: true,
+        message: 'Produkt nie jest już dostępny do zakupu.',
+      },
+    ];
+
+    const cart = {
+      ...createEmptyCart(),
+      lines: [validLine, blockedLine],
+    };
+
+    render(
+      <CartSidebar
+        cart={cart}
+        totals={getCartTotals(cart)}
+        supportCard={createSupportCard()}
+        onCheckout={vi.fn()}
+        onApplyCoupon={vi.fn(async () => {})}
+        onClearCoupon={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Produkty (2 szt.)')).toBeInTheDocument();
+    expect(screen.getByText('Do zapłaty')).toBeInTheDocument();
+    expect(
+      screen.getAllByText((_, element) => element?.textContent === '200 zł'),
+    ).toHaveLength(2);
+  });
+
+  it('disables checkout and marks the button busy while cart revalidation is in progress', () => {
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+    };
+
+    render(
+      <CartSidebar
+        cart={cart}
+        totals={getCartTotals(cart)}
+        supportCard={createSupportCard()}
+        onCheckout={vi.fn()}
+        onApplyCoupon={vi.fn(async () => {})}
+        onClearCoupon={vi.fn()}
+        isCartRuntimeLoading
+      />,
+    );
+
+    expect(screen.queryByText(/pozycje wymagające poprawy/i)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Dalej' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Dalej' })).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
+    expect(screen.getByPlaceholderText('Wpisz kod')).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Sprawdzanie...' })).toBeDisabled();
   });
 
   it('renders coupon section with active coupon state and allows clearing it', async () => {

@@ -134,6 +134,168 @@ describe('cart-coupon', () => {
     expect(state.coupon?.lineDiscounts['line-2']).toBeUndefined();
   });
 
+  it('does not apply product-specific discounts to blocked cart lines', () => {
+    const blockedLine = createStandardCartLine({
+      lineId: 'line-1',
+      productId: 'product-1',
+      productKey: '/produkty/test',
+      productName: 'Test product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 50_00,
+      isReturnable: true,
+      configurationSummary: [],
+      product: {
+        id: 'product-1',
+        name: 'Test product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-1' },
+        basePrice: 50_00,
+        configurationOptions: [],
+        totalPrice: 50_00,
+      },
+    });
+
+    blockedLine.issues = [
+      {
+        code: 'configuration_invalid',
+        blocking: true,
+        message: 'Wybrana konfiguracja nie jest już dostępna.',
+      },
+    ];
+
+    const state = applyCouponToCart(
+      {
+        ...createEmptyCart(),
+        lines: [blockedLine],
+      },
+      productCoupon,
+    );
+
+    expect(state.coupon?.isValid).toBe(false);
+    expect(state.coupon?.message).toBe(
+      'Kod rabatowy nie pasuje do żadnego produktu w koszyku.',
+    );
+  });
+
+  it('distributes order-wide discounts only across discount-eligible lines', () => {
+    const validLine = createStandardCartLine({
+      lineId: 'line-1',
+      productId: 'product-1',
+      productKey: '/produkty/test',
+      productName: 'Valid product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 50_00,
+      isReturnable: true,
+      configurationSummary: [],
+      product: {
+        id: 'product-1',
+        name: 'Valid product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-1' },
+        basePrice: 50_00,
+        configurationOptions: [],
+        totalPrice: 50_00,
+      },
+    });
+    const blockedLine = createStandardCartLine({
+      lineId: 'line-2',
+      productId: 'product-2',
+      productKey: '/produkty/blocked',
+      productName: 'Blocked product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 80_00,
+      isReturnable: true,
+      configurationSummary: [],
+      product: {
+        id: 'product-2',
+        name: 'Blocked product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-2' },
+        basePrice: 80_00,
+        configurationOptions: [],
+        totalPrice: 80_00,
+      },
+    });
+
+    blockedLine.issues = [
+      {
+        code: 'not_buyable',
+        blocking: true,
+        message: 'Produkt nie jest już dostępny do zakupu.',
+      },
+    ];
+
+    const state = applyCouponToCart(
+      {
+        ...createEmptyCart(),
+        lines: [validLine, blockedLine],
+      },
+      orderCoupon,
+    );
+
+    expect(state.coupon?.isValid).toBe(true);
+    expect(state.coupon?.totalDiscountCents).toBe(20_00);
+    expect(state.coupon?.lineDiscounts['line-1']).toBe(20_00);
+    expect(state.coupon?.lineDiscounts['line-2']).toBeUndefined();
+    expect(state.coupon?.matchedProductKeys).toEqual(['/produkty/test']);
+  });
+
+  it('invalidates order-wide coupons when all cart lines are blocked', () => {
+    const blockedLine = createStandardCartLine({
+      lineId: 'line-1',
+      productId: 'product-1',
+      productKey: '/produkty/test',
+      productName: 'Blocked product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 50_00,
+      isReturnable: true,
+      configurationSummary: [],
+      product: {
+        id: 'product-1',
+        name: 'Blocked product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-1' },
+        basePrice: 50_00,
+        configurationOptions: [],
+        totalPrice: 50_00,
+      },
+    });
+
+    const appliedState = applyCouponToCart(
+      {
+        ...createEmptyCart(),
+        lines: [blockedLine],
+      },
+      orderCoupon,
+    );
+
+    blockedLine.issues = [
+      {
+        code: 'configuration_invalid',
+        blocking: true,
+        message: 'Wybrana konfiguracja nie jest już dostępna.',
+      },
+    ];
+
+    const syncedState = syncCouponWithCart({
+      ...appliedState,
+      lines: [blockedLine],
+    });
+
+    expect(syncedState.coupon?.isValid).toBe(false);
+    expect(syncedState.coupon?.message).toBe(
+      'Kod rabatowy nie pasuje już do produktów w koszyku.',
+    );
+  });
+
   it('preserves an invalid coupon when it no longer matches cart contents', () => {
     const standardLine = createStandardCartLine({
       lineId: 'line-1',

@@ -167,11 +167,36 @@
 
       .blockingMessage {
         margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
         padding: 0.75rem 1rem;
         border-radius: 0.5rem;
         background: rgba(255, 106, 0, 0.1);
         color: var(--primary-error, #ff6a00);
         font-size: var(--typography-body-m, 0.875rem);
+        animation: blockingMessageEnter 560ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .blockingMessageIcon {
+        width: 2rem;
+        height: 2rem;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.45);
+
+        svg {
+          width: 1rem;
+          height: 1rem;
+          color: var(--primary-error, #ff6a00);
+        }
+      }
+
+      .blockingMessageText {
+        margin: 0;
+        line-height: 1.5;
       }
 
       .sidebarButton {
@@ -601,14 +626,9 @@
     border-radius: 0.5rem;
     background: var(--neutral-white, #ffffff);
     align-items: start;
-
-    &[data-blocking='true'] {
-      background: linear-gradient(
-        180deg,
-        rgba(248, 248, 248, 0.98) 0%,
-        rgba(255, 255, 255, 1) 100%
-      );
-    }
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
 
     .media {
       border-radius: 0.5rem;
@@ -752,7 +772,6 @@
       color: var(--neutral-700, #303030);
       font-size: var(--typography-body-m, 0.875rem);
       font-weight: 400;
-      text-align: right;
     }
 
     .actions {
@@ -766,6 +785,75 @@
         margin-top: -0.5rem;
         border-top: 1px solid var(--neutral-400, #e7e7e7);
       }
+    }
+
+    .blockingOverlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: clamp(1rem, calc(2vw / 0.48), 1.5rem);
+      z-index: 2;
+      opacity: 0;
+      animation: blockingOverlayFadeIn 280ms forwards;
+      pointer-events: none;
+      backdrop-filter: blur(0.25rem);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.38) 0%,
+          rgba(255, 255, 255, 0.78) 100%
+        );
+      }
+    }
+
+    .blockingOverlayInner {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 28rem);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: clamp(1rem, calc(1.5vw / 0.48), 1.25rem);
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(0.625rem);
+      box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--neutral-300, #e7e7e7);
+      opacity: 0;
+      transform: translateY(-0.5rem);
+      animation: blockingOverlayPromptEnter 560ms cubic-bezier(0.16, 1, 0.3, 1)
+        30ms forwards;
+      pointer-events: auto;
+    }
+
+    .blockingOverlayTitle {
+      margin: 0;
+      color: var(--neutral-700, #303030);
+      font-size: clamp(1rem, calc(1.2vw / 0.48), 1.125rem);
+      font-family: var(--font-family-poppins);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+    }
+
+    .blockingOverlayDescription {
+      color: var(--neutral-600, #5b5a5a);
+      font-size: var(--typography-body-m, 0.875rem);
+      line-height: 1.5;
+      margin-bottom: 0.25rem;
+    }
+
+    .blockingOverlayActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      width: 100%;
     }
   }
 
@@ -856,6 +944,15 @@
           min-width: 0;
         }
       }
+
+      .blockingOverlayActions {
+        flex-direction: column;
+
+        > * {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
     }
 
     .sidebar {
@@ -868,6 +965,39 @@
         background-color: var(--neutral-white, #ffffff);
         border: 1px solid var(--neutral-300, #e7e7e7);
       }
+    }
+  }
+
+  @media (max-width: 29.3125rem) {
+    .cartItemCard {
+      grid-template-columns: 100px 1fr 1fr;
+      grid-template-areas:
+        'media identity identity'
+        'quantityControls quantityControls price'
+        'configuration configuration configuration'
+        'actions actions actions';
+
+      .media {
+        max-width: 100px;
+      }
+
+      .identity {
+        grid-column: 2 / -1;
+      }
+
+      &[data-line-type='cpo'] {
+        grid-template-columns: 100px 1fr;
+        grid-template-areas:
+          'media identity'
+          'quantityControls price'
+          'actions actions';
+      }
+    }
+  }
+
+  @media (max-width: 23.6875rem) {
+    .cartItemCard {
+      grid-template-columns: 80px 1fr 1fr;
     }
   }
 }
@@ -905,6 +1035,37 @@
   }
 }
 
+@keyframes blockingOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blockingOverlayPromptEnter {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blockingMessageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cartPage {
     .emptyStateLayout {
@@ -915,6 +1076,26 @@
       .emptyButton {
         animation: none;
         opacity: 1;
+      }
+    }
+
+    .cartItemCard {
+      .blockingOverlay,
+      .blockingOverlayInner {
+        animation: none;
+        opacity: 1;
+      }
+
+      .blockingOverlayInner {
+        transform: none;
+      }
+    }
+
+    .sidebar {
+      .sidebarCard {
+        .blockingMessage {
+          animation: none;
+        }
       }
     }
   }

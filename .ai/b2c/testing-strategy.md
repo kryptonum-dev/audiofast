@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-04-15
 Depends on: `b2c-implementation-overview.md`, `phases/phase-04-commerce-foundation.md`
 Related files: `execution/implementation-backlog.md`, `phases/phase-05-buyable-pdp-and-cart.md`, `phases/phase-06-checkout-and-payments.md`, `phases/phase-07-customer-panel.md`, `phases/phase-08-admin-operations.md`, `phases/phase-09-policy-flows.md`, `phases/phase-10-launch-readiness.md`
 
@@ -196,7 +196,6 @@ Expected testing work:
 
 - initial `Vitest` setup
 - initial `React Testing Library` setup
-- initial `Playwright` setup
 - initial `MSW` setup
 - shared factories or fixtures for standard products, `CPO` items, carts, and orders
 - first unit tests for the commerce model
@@ -214,7 +213,7 @@ Expected testing work:
 - cart line creation tests
 - standard-product reconfiguration tests
 - cart invalidation/revalidation tests
-- a first browser flow for add-to-cart and cart interaction
+- browser-level commerce coverage is intentionally deferred until `Phase 06`, when the real checkout flow exists
 
 ### Phase 06 - Checkout And Payments
 
@@ -224,11 +223,13 @@ Goal for testing in this phase:
 
 Expected testing work:
 
+- initial `Playwright` setup
 - checkout validation tests
 - order creation integration tests
 - payment initiation tests
 - webhook confirmation and idempotency tests
 - payment recovery behavior tests
+- browser tests for cart -> checkout pricing and handoff behavior
 - browser tests for successful checkout and core failure-path handling
 
 This is expected to be the most test-critical implementation phase.

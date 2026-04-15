@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-09
+Last updated: 2026-04-15
 Depends on: current discovery and planning discussions
 Related files: `README.md`, `scope.md`, `open-threads.md`, `testing-strategy.md`
 
@@ -175,10 +175,10 @@ After reading this file:
 
 ## Current Status
 
-The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, and the accepted v1 table model is now documented.
+The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, the accepted v1 table model is documented, and `Phase 05 - Buyable PDP And Cart` is now complete.
 
 The most important next planning work is:
 
-- translating the accepted table model into schema and migration tasks
-- defining exact admin/frontend query patterns against the accepted backend model
-- using the locked backend structure to drive the implementation phases that follow
+- implementing the real checkout flow, order creation, and payment handoff in `Phase 06`
+- adding hard final validation at checkout submit / buy
+- introducing browser-level coverage for pricing, checkout, and payment-critical journeys

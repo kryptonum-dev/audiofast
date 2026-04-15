@@ -34,6 +34,7 @@ This phase exists to turn implemented functionality into a releasable product.
 - tested key flows
 - resolved critical launch bugs
 - confirmed legal/content/payment readiness
+- launch-ready commerce analytics instrumentation and verification
 - production readiness checklist
 
 ## Work Included In This Phase
@@ -56,6 +57,27 @@ This phase exists to turn implemented functionality into a releasable product.
 - operational handoff readiness
 - final go-live decision support
 
+### 4. Commerce Analytics And Funnel Verification
+
+Commerce analytics should be finalized in this phase rather than earlier implementation phases.
+
+The reason is intentional: the event model should reflect the real end-to-end ecommerce funnel once cart, checkout, payment, and order creation are already stable.
+
+This phase should therefore cover:
+
+- final event map for the agreed v1 funnel
+- storefront instrumentation for the implemented ecommerce journey
+- validation that the emitted events match the final business flow
+- launch-readiness checks for whatever reporting or analytics surfaces are included in v1
+
+At minimum, the final agreed event set should cover the implemented commerce path where relevant, including:
+
+- `add_to_cart`
+- `remove_from_cart`
+- `view_cart`
+- `begin_checkout`
+- later checkout / payment / purchase events once those flows are live
+
 ## Not In Scope For This Phase
 
 - major feature expansion
@@ -67,4 +89,5 @@ Phase 10 can be considered complete when:
 
 - critical launch blockers are cleared
 - the business and technical sides are both ready to go live
+- agreed v1 commerce analytics are wired and verified against the final funnel
 - the first B2C release can ship with acceptable operational confidence

@@ -5,6 +5,7 @@ import {
   type CartAction,
   cartReducer,
 } from '@/src/global/b2c/cart/cart-reducer';
+import { applyCartRevalidation } from '@/src/global/b2c/cart/cart-revalidation';
 import { createCpoCartLine } from '@/src/global/b2c/cart/cpo-cart-line';
 import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
 
@@ -198,5 +199,69 @@ describe('cartReducer', () => {
     });
 
     expect(clearedState.coupon).toBeNull();
+  });
+
+  it('applies cart line revalidation results through the reducer', () => {
+    const line = createStandardCartLine({
+      lineId: 'line-1',
+      productId: 'product-1',
+      productKey: '/produkty/test',
+      productName: 'Test product',
+      brandName: 'Test brand',
+      quantity: 1,
+      unitPriceCents: 100_00,
+      isReturnable: true,
+      configurationSummary: [],
+      product: {
+        id: 'product-1',
+        name: 'Test product',
+        brandName: 'Test brand',
+        kind: 'standard',
+        image: { id: 'image-1' },
+        basePrice: 100_00,
+        configurationOptions: [],
+        totalPrice: 100_00,
+      },
+    });
+
+    const state = applyActions([
+      {
+        type: 'add-line',
+        payload: line,
+      },
+      {
+        type: 'apply-line-revalidation',
+        payload: {
+          results: [
+            {
+              lineId: 'line-1',
+              lineType: 'standard',
+              isBuyable: true,
+              isConfigurationValid: false,
+              unitPriceCents: 120_00,
+            },
+          ],
+        },
+      },
+    ]);
+
+    expect(state).toEqual(
+      applyCartRevalidation(
+        {
+          ...createEmptyCart(),
+          lines: [line],
+          coupon: null,
+        },
+        [
+          {
+            lineId: 'line-1',
+            lineType: 'standard',
+            isBuyable: true,
+            isConfigurationValid: false,
+            unitPriceCents: 120_00,
+          },
+        ],
+      ),
+    );
   });
 });

@@ -87,6 +87,46 @@ describe('cart-persistence', () => {
     });
   });
 
+  it('does not persist managed revalidation issues back into localStorage', () => {
+    const state = createEmptyCart();
+    state.lines = [
+      {
+        ...createStandardCartLine({
+          lineId: 'line-1',
+          productId: 'product-1',
+          productKey: '/produkty/test',
+          productName: 'Test product',
+          brandName: 'Test brand',
+          quantity: 1,
+          unitPriceCents: 100_00,
+          isReturnable: true,
+          configurationSummary: [],
+          product: {
+            id: 'product-1',
+            name: 'Test product',
+            brandName: 'Test brand',
+            kind: 'standard',
+            image: { id: 'image-1' },
+            basePrice: 100_00,
+            configurationOptions: [],
+            totalPrice: 100_00,
+          },
+        }),
+        issues: [
+          {
+            code: 'not_buyable',
+            blocking: true,
+            message: 'Produkt nie jest już dostępny do zakupu.',
+          },
+        ],
+      },
+    ];
+
+    saveCartToStorage(state);
+
+    expect(loadCartFromStorage().lines[0]?.issues).toEqual([]);
+  });
+
   it('drops invalid persisted coupons when loading from localStorage', () => {
     const state = {
       ...createEmptyCart(),

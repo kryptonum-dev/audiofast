@@ -32,6 +32,13 @@ function removeManagedIssues(line: CartLine): CartLineIssue[] {
   );
 }
 
+export function stripManagedCartLineIssues(line: CartLine): CartLine {
+  return {
+    ...line,
+    issues: removeManagedIssues(line),
+  };
+}
+
 function applyRevalidationToLine(
   line: CartLine,
   result: CartLineRevalidation,

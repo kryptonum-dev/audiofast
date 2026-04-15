@@ -1,8 +1,8 @@
 # Phase 06 - Checkout And Payments
 
-Status: planned
+Status: in progress
 Owner: planning
-Last updated: 2026-04-09
+Last updated: 2026-04-15
 Depends on: `phase-05-buyable-pdp-and-cart.md`
 Related files: `../architecture/customer-auth-and-access.md`, `../architecture/payment-process-model.md`, `../architecture/email-flow.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
@@ -21,17 +21,20 @@ It is where customer data capture, order persistence, payment initiation, provid
 - resolved cart and checkout model
 - resolved payment-process thread
 - finalized commerce foundation
+- accepted Phase 05 cart revalidation and cart-to-checkout handoff behavior
 - email-flow rules
 - `../testing-strategy.md`
 
 ## Main Deliverables
 
 - checkout data capture
+- hard final validation at checkout submit / buy
 - order creation in `awaiting_payment`
 - `Przelewy24` handoff and return handling
 - webhook-based payment confirmation
 - thank-you-page temporary access for guests
 - confirmation-email trigger on real payment success
+- first `Playwright` coverage for cart -> checkout -> payment behavior
 
 ## Work Included In This Phase
 
@@ -54,6 +57,13 @@ It is where customer data capture, order persistence, payment initiation, provid
 - `15-minute` expiration behavior at the agreed level
 - no long-lived retry-on-same-order flow in v1
 
+### 4. Browser-Level Coverage And Pricing Truth
+
+- install the first `Playwright` setup for the commerce flow
+- cover cart -> checkout handoff with real browser behavior
+- verify checkout pricing stays aligned with cart truth and hard validation rules
+- cover the successful checkout path and the most important failure-path handling
+
 ## Not In Scope For This Phase
 
 - customer-panel list/detail implementation
@@ -65,5 +75,7 @@ It is where customer data capture, order persistence, payment initiation, provid
 Phase 06 can be considered complete when:
 
 - checkout can create a valid order
+- hard final validation prevents stale or invalid cart truth from becoming an order
 - payment can be completed end to end through `Przelewy24`
 - the system behaves correctly even when redirect recovery is needed
+- `Playwright` is installed and covers the first critical cart -> checkout -> payment journeys

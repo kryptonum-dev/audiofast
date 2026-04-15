@@ -1,3 +1,4 @@
+import { isCartLineDiscountEligible } from './cart-selectors';
 import type {
   CartCouponDefinition,
   CartCouponState,
@@ -36,16 +37,20 @@ function getEligibleLines(
   lines: CartLine[],
   coupon: Pick<CartCouponDefinition, 'discountType' | 'productKeys'>,
 ): CartLine[] {
+  const discountEligibleLines = lines.filter(isCartLineDiscountEligible);
+
   if (
     coupon.discountType === 'fixed_order' ||
     coupon.discountType === 'percent_order'
   ) {
-    return lines;
+    return discountEligibleLines;
   }
 
   const productKeys = new Set(coupon.productKeys ?? []);
 
-  return lines.filter((line) => productKeys.has(line.productKey));
+  return discountEligibleLines.filter((line) =>
+    productKeys.has(line.productKey),
+  );
 }
 
 function distributeDiscountAcrossLines(
@@ -266,11 +271,7 @@ export function syncCouponWithCart(state: CartState): CartState {
 
   const lineDiscounts = calculateLineDiscounts(state.lines, snapshot);
 
-  if (
-    (snapshot.discountType === 'fixed_product' ||
-      snapshot.discountType === 'percent_product') &&
-    Object.keys(lineDiscounts).length === 0
-  ) {
+  if (Object.keys(lineDiscounts).length === 0) {
     return applyInvalidCouponToCart(
       state,
       state.coupon.code,
@@ -318,11 +319,7 @@ export function applyCouponToCart(
 
   const lineDiscounts = calculateLineDiscounts(state.lines, coupon);
 
-  if (
-    (coupon.discountType === 'fixed_product' ||
-      coupon.discountType === 'percent_product') &&
-    Object.keys(lineDiscounts).length === 0
-  ) {
+  if (Object.keys(lineDiscounts).length === 0) {
     return applyInvalidCouponToCart(
       state,
       coupon.code,

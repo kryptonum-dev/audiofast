@@ -27,6 +27,7 @@ function CartTestConsumer() {
     canRetryCouponRevalidation,
     addLine,
     applyCoupon,
+    revalidateHydratedCouponAfterInitialLoad,
     retryCouponRevalidation,
     clearCoupon,
     clearCart,
@@ -98,6 +99,12 @@ function CartTestConsumer() {
       </button>
       <button type="button" onClick={() => void retryCouponRevalidation()}>
         retry-revalidation
+      </button>
+      <button
+        type="button"
+        onClick={() => void revalidateHydratedCouponAfterInitialLoad()}
+      >
+        revalidate-after-load
       </button>
       <button type="button" onClick={() => clearCart()}>
         clear
@@ -203,6 +210,8 @@ describe('CartProvider', () => {
   });
 
   it('revalidates a hydrated coupon and removes it when it is no longer available', async () => {
+    const user = userEvent.setup();
+
     localStorageMock.getItem.mockReturnValueOnce(
       JSON.stringify({
         version: 1,
@@ -261,6 +270,10 @@ describe('CartProvider', () => {
 
     await waitFor(() =>
       expect(screen.getByTestId('hydrated')).toHaveTextContent('yes'),
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: 'revalidate-after-load' }),
     );
 
     await waitFor(() =>
@@ -362,6 +375,10 @@ describe('CartProvider', () => {
 
     await waitFor(() =>
       expect(screen.getByTestId('hydrated')).toHaveTextContent('yes'),
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: 'revalidate-after-load' }),
     );
 
     await waitFor(() =>

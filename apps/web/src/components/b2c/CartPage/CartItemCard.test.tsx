@@ -316,7 +316,9 @@ describe('CartItemCard', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('renders blocking line issue messaging for invalid standard items', () => {
+  it('keeps confirmation modal for invalid standard items that can still be reconfigured', async () => {
+    const user = userEvent.setup();
+    const onRemove = vi.fn();
     const line = createStandardLine();
 
     line.issues = [
@@ -330,7 +332,7 @@ describe('CartItemCard', () => {
     render(
       <CartItemCard
         line={line}
-        onRemove={vi.fn()}
+        onRemove={onRemove}
         onIncrementQuantity={vi.fn()}
         onDecrementQuantity={vi.fn()}
         onReconfigure={vi.fn()}
@@ -338,13 +340,259 @@ describe('CartItemCard', () => {
     );
 
     expect(
-      screen.getByText('Wybrana konfiguracja nie jest już dostępna.'),
+      screen.getByText('Konfiguracja wymaga ponownego ustawienia.'),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Wybrana konfiguracja nie jest już dostępna. Skonfiguruj produkt ponownie albo usuń go z koszyka.',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Skonfiguruj ponownie' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Usuń produkt' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Skonfiguruj ponownie' }),
+    ).toHaveAttribute('data-variant', 'primary');
+    expect(
+      screen.getByRole('button', { name: 'Usuń produkt' }),
+    ).toHaveAttribute('data-variant', 'secondary');
+    const hiddenButtons = screen.getAllByRole('button', { hidden: true });
+    const hiddenEditButton = hiddenButtons.find((button) =>
+      button.textContent?.includes('Edytuj konfigurację'),
+    );
+    const hiddenRemoveButton = hiddenButtons.find((button) =>
+      button.textContent?.includes('Usuń z koszyka'),
+    );
+
+    expect(hiddenEditButton).toBeTruthy();
+    expect(hiddenEditButton).toBeDisabled();
+    expect(hiddenEditButton).toHaveAttribute('aria-hidden', 'true');
+    expect(hiddenRemoveButton).toBeTruthy();
+    expect(hiddenRemoveButton).toBeDisabled();
+    expect(hiddenRemoveButton).toHaveAttribute('aria-hidden', 'true');
+    expect(
+      screen.queryByText('Wybrana konfiguracja nie jest już dostępna.'),
+    ).not.toBeInTheDocument();
+    expect(
+      document.querySelector('button[aria-label="Zwiększ ilość"]'),
+    ).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: 'Usuń produkt' }));
+
+    expect(
+      screen.getByRole('heading', { name: 'Usunąć produkt z koszyka?' }),
+    ).toBeInTheDocument();
+    expect(onRemove).not.toHaveBeenCalled();
+  });
+
+  it('offers keeping the product without options when the current product became optionless', async () => {
+    const user = userEvent.setup();
+    const onRemove = vi.fn();
+    const onKeepWithoutOptions = vi.fn();
+    const line = createStandardLine();
+
+    line.issues = [
+      {
+        code: 'configuration_invalid',
+        blocking: true,
+        message: 'Wybrana konfiguracja nie jest już dostępna.',
+      },
+    ];
+
+    render(
+      <CartItemCard
+        line={line}
+        onRemove={onRemove}
+        onIncrementQuantity={vi.fn()}
+        onDecrementQuantity={vi.fn()}
+        onKeepWithoutOptions={onKeepWithoutOptions}
+      />,
+    );
+
+    expect(
+      screen.getByText('Wybrane opcje nie są już dostępne.'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Ten produkt można dalej kupić, ale bez wcześniej zapisanych opcji. Możesz zostawić go w koszyku bez opcji albo usunąć go całkowicie.',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', {
+        name: 'Zachowaj produkt',
+      }),
+    ).toHaveAttribute('data-variant', 'primary');
+    expect(
+      screen.getByRole('button', { name: 'Usuń produkt' }),
+    ).toHaveAttribute('data-variant', 'secondary');
+    expect(
+      screen.queryByRole('button', { name: 'Skonfiguruj ponownie' }),
+    ).not.toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Zachowaj produkt',
+      }),
+    );
+
+    expect(onKeepWithoutOptions).toHaveBeenCalledWith('standard-line-1');
+    expect(
+      screen.queryByRole('heading', { name: 'Usunąć produkt z koszyka?' }),
+    ).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Usuń produkt' }));
+
+    expect(
+      screen.getByRole('heading', { name: 'Usunąć produkt z koszyka?' }),
+    ).toBeInTheDocument();
+    expect(onRemove).not.toHaveBeenCalled();
+  });
+
+  it('offers reconfiguration when the product gained new required options after being added optionless', async () => {
+    const user = userEvent.setup();
+    const onRemove = vi.fn();
+    const onReconfigure = vi.fn();
+    const line = createStandardLineWithoutConfiguration();
+
+    line.issues = [
+      {
+        code: 'configuration_invalid',
+        blocking: true,
+        message: 'Produkt wymaga nowej konfiguracji.',
+      },
+    ];
+
+    render(
+      <CartItemCard
+        line={line}
+        onRemove={onRemove}
+        onIncrementQuantity={vi.fn()}
+        onDecrementQuantity={vi.fn()}
+        onReconfigure={onReconfigure}
+      />,
+    );
+
+    expect(
+      screen.getByText('Produkt wymaga nowej konfiguracji.'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Od czasu dodania do koszyka ten produkt otrzymał nowe opcje konfiguracji. Skonfiguruj produkt ponownie albo usuń go z koszyka.',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Skonfiguruj ponownie' }),
+    ).toHaveAttribute('data-variant', 'primary');
+    expect(
+      screen.getByRole('button', { name: 'Usuń produkt' }),
+    ).toHaveAttribute('data-variant', 'secondary');
+
+    await user.click(
+      screen.getByRole('button', { name: 'Skonfiguruj ponownie' }),
+    );
+
+    expect(onReconfigure).toHaveBeenCalledWith('standard-line-2');
+
+    await user.click(screen.getByRole('button', { name: 'Usuń produkt' }));
+
+    expect(
+      screen.getByRole('heading', { name: 'Usunąć produkt z koszyka?' }),
+    ).toBeInTheDocument();
+    expect(onRemove).not.toHaveBeenCalled();
+  });
+
+  it('removes unavailable items immediately without showing the confirmation modal', async () => {
+    const user = userEvent.setup();
+    const onRemove = vi.fn();
+    const line = createStandardLine();
+
+    line.issues = [
+      {
+        code: 'not_buyable',
+        blocking: true,
+        message: 'Produkt nie jest już dostępny online.',
+      },
+    ];
+
+    render(<CartItemCard line={line} onRemove={onRemove} />);
+
+    expect(
+      screen.getByText('Produkt nie jest już dostępny online.'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Produkt nie może zostać obecnie zamówiony online. Usuń go z koszyka, aby kontynuować.',
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Usuń niedostępny produkt' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Usuń niedostępny produkt' }),
+    ).toHaveAttribute('data-variant', 'primary');
+    const hiddenRemoveButton = screen
+      .getAllByRole('button', { hidden: true })
+      .find((button) => button.textContent?.includes('Usuń z koszyka'));
+
+    expect(hiddenRemoveButton).toBeTruthy();
+    expect(hiddenRemoveButton).toBeDisabled();
+    expect(hiddenRemoveButton).toHaveAttribute('aria-hidden', 'true');
+    await user.click(
+      screen.getByRole('button', { name: 'Usuń niedostępny produkt' }),
+    );
+
+    expect(onRemove).toHaveBeenCalledWith('standard-line-1');
+    expect(
+      screen.queryByRole('heading', { name: 'Usunąć produkt z koszyka?' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('disables cart interactions while cart runtime revalidation is in progress', async () => {
+    const user = userEvent.setup();
+    const onRemove = vi.fn();
+    const onSetQuantity = vi.fn();
+    const onIncrementQuantity = vi.fn();
+    const onDecrementQuantity = vi.fn();
+    const onReconfigure = vi.fn();
+
+    render(
+      <CartItemCard
+        line={createStandardLine()}
+        isInteractionDisabled
+        onRemove={onRemove}
+        onSetQuantity={onSetQuantity}
+        onIncrementQuantity={onIncrementQuantity}
+        onDecrementQuantity={onDecrementQuantity}
+        onReconfigure={onReconfigure}
+      />,
+    );
+
+    expect(
+      screen.getByRole('button', { name: 'Zwiększ ilość' }),
+    ).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Zmniejsz ilość' }),
+    ).toBeDisabled();
+    expect(screen.getByRole('textbox', { name: 'Ilość' })).toBeDisabled();
     expect(
       screen.getByRole('button', { name: 'Edytuj konfigurację' }),
-    ).toBeInTheDocument();
+    ).toBeDisabled();
     expect(
       screen.getByRole('button', { name: 'Usuń z koszyka' }),
-    ).toBeInTheDocument();
+    ).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: 'Usuń z koszyka' }));
+
+    expect(
+      screen.queryByRole('heading', { name: 'Usunąć produkt z koszyka?' }),
+    ).not.toBeInTheDocument();
+    expect(onRemove).not.toHaveBeenCalled();
+    expect(onSetQuantity).not.toHaveBeenCalled();
+    expect(onIncrementQuantity).not.toHaveBeenCalled();
+    expect(onDecrementQuantity).not.toHaveBeenCalled();
+    expect(onReconfigure).not.toHaveBeenCalled();
   });
 });

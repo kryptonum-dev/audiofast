@@ -4,6 +4,7 @@ import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchCartLinePricing } from '@/src/app/actions/cart-pricing';
+import { loadCartPageRuntime } from '@/src/app/actions/cart-revalidation';
 import type { CartContextValue } from '@/src/global/b2c/cart/cart-context';
 import { createEmptyCart } from '@/src/global/b2c/cart/cart-domain';
 import { getCartTotals } from '@/src/global/b2c/cart/cart-selectors';
@@ -13,12 +14,26 @@ import { useCart } from '@/src/global/b2c/cart/use-cart';
 
 import CartPageClient from './CartPageClient';
 
+const pushMock = vi.fn();
+let pathnameMock = '/koszyk';
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: pushMock,
+  }),
+  usePathname: () => pathnameMock,
+}));
+
 vi.mock('@/src/global/b2c/cart/use-cart', () => ({
   useCart: vi.fn(),
 }));
 
 vi.mock('@/src/app/actions/cart-pricing', () => ({
   fetchCartLinePricing: vi.fn(),
+}));
+
+vi.mock('@/src/app/actions/cart-revalidation', () => ({
+  loadCartPageRuntime: vi.fn(),
 }));
 
 vi.mock('@/components/shared/Image', () => ({
@@ -29,16 +44,25 @@ vi.mock('./CartItemCard', () => ({
   default: ({
     line,
     onReconfigure,
+    isInteractionDisabled,
   }: {
     line: { lineType: string; productName: string; lineId: string };
     onReconfigure?: (lineId: string) => void;
+    isInteractionDisabled?: boolean;
   }) => (
-    <div data-testid="cart-item-card">
+    <div
+      data-testid="cart-item-card"
+      data-interaction-disabled={isInteractionDisabled ? 'true' : 'false'}
+    >
       <span>
         {line.lineType}: {line.productName}
       </span>
       {onReconfigure ? (
-        <button type="button" onClick={() => onReconfigure(line.lineId)}>
+        <button
+          type="button"
+          disabled={isInteractionDisabled}
+          onClick={() => onReconfigure(line.lineId)}
+        >
           Edytuj konfigurację testowo
         </button>
       ) : null}
@@ -69,6 +93,18 @@ vi.mock('@/src/components/b2c/CartLineConfigurationModal', () => ({
     ) : null,
 }));
 
+function createDeferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason?: unknown) => void;
+
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  return { promise, resolve, reject };
+}
+
 function createUseCartValue(
   overrides: Partial<CartContextValue> = {},
 ): CartContextValue {
@@ -89,7 +125,9 @@ function createUseCartValue(
     incrementStandardLineQuantity: vi.fn(),
     decrementStandardLineQuantity: vi.fn(),
     replaceStandardLine: vi.fn(),
+    applyCartLineRevalidation: vi.fn(),
     applyCoupon: vi.fn(),
+    revalidateHydratedCouponAfterInitialLoad: vi.fn(),
     clearCouponRequestError: vi.fn(),
     retryCouponRevalidation: vi.fn(),
     clearCoupon: vi.fn(),
@@ -127,6 +165,44 @@ function createStandardLine() {
   });
 }
 
+function createOptionlessSavedStandardLine() {
+  const line = createStandardCartLine({
+    lineId: 'standard-line-2',
+    productId: 'product-2',
+    productKey: '/produkty/test',
+    productName: 'Legacy optionless product',
+    brandName: 'Test brand',
+    quantity: 1,
+    unitPriceCents: 100_00,
+    isReturnable: true,
+    configurationSelection: {
+      variantId: 'variant-1',
+      selectedOptions: {},
+    },
+    configurationSummary: [],
+    product: {
+      id: 'product-2',
+      name: 'Legacy optionless product',
+      brandName: 'Test brand',
+      kind: 'standard',
+      image: { id: 'image-3' },
+      basePrice: 100_00,
+      configurationOptions: [],
+      totalPrice: 100_00,
+    },
+  });
+
+  line.issues = [
+    {
+      code: 'configuration_invalid',
+      blocking: true,
+      message: 'Produkt wymaga nowej konfiguracji.',
+    },
+  ];
+
+  return line;
+}
+
 function createCpoLine() {
   return createCpoCartLine({
     lineId: 'cpo-line-1',
@@ -152,6 +228,21 @@ function createCpoLine() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  pushMock.mockReset();
+  pathnameMock = '/koszyk';
+  vi.mocked(loadCartPageRuntime).mockResolvedValue({
+    revalidationResults: [],
+    standardPricingByProductKey: {
+      '/produkty/test': {
+        status: 'found',
+        pricingData: {
+          variants: [],
+          hasMultipleModels: false,
+          lowestPrice: 0,
+        },
+      },
+    },
+  });
   vi.mocked(fetchCartLinePricing).mockResolvedValue({
     status: 'found',
     pricingData: {
@@ -263,9 +354,321 @@ describe('CartPageClient', () => {
 
     render(<CartPageClient />);
 
-    expect(screen.getAllByTestId('cart-item-card')).toHaveLength(2);
-    expect(screen.getByText('standard: Test product')).toBeInTheDocument();
-    expect(screen.getByText('cpo: Test CPO')).toBeInTheDocument();
+    return waitFor(() => {
+      expect(screen.getAllByTestId('cart-item-card')).toHaveLength(2);
+      expect(screen.getByText('standard: Test product')).toBeInTheDocument();
+      expect(screen.getByText('cpo: Test CPO')).toBeInTheDocument();
+    });
+  });
+
+  it('revalidates again on checkout click, keeps the button pending, and redirects on success', async () => {
+    const user = userEvent.setup();
+    const applyCartLineRevalidation = vi.fn();
+    const deferredCheckoutRuntime =
+      createDeferred<Awaited<ReturnType<typeof loadCartPageRuntime>>>();
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+    };
+    const checkoutResults = [
+      {
+        lineId: 'standard-line-1',
+        lineType: 'standard' as const,
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 120_00,
+      },
+    ];
+
+    vi.mocked(loadCartPageRuntime)
+      .mockResolvedValueOnce({
+        revalidationResults: [],
+        standardPricingByProductKey: {
+          '/produkty/test': {
+            status: 'found',
+            pricingData: {
+              variants: [],
+              hasMultipleModels: false,
+              lowestPrice: 0,
+            },
+          },
+        },
+      })
+      .mockReturnValueOnce(deferredCheckoutRuntime.promise);
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        applyCartLineRevalidation,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    await waitFor(() =>
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
+    );
+    applyCartLineRevalidation.mockClear();
+
+    await user.click(screen.getByRole('button', { name: 'Dalej' }));
+
+    expect(screen.getByRole('button', { name: 'Dalej' })).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
+    expect(screen.getByTestId('cart-item-card')).toHaveAttribute(
+      'data-interaction-disabled',
+      'true',
+    );
+
+    deferredCheckoutRuntime.resolve({
+      revalidationResults: checkoutResults,
+      standardPricingByProductKey: {
+        '/produkty/test': {
+          status: 'found',
+          pricingData: {
+            variants: [],
+            hasMultipleModels: false,
+            lowestPrice: 0,
+          },
+        },
+      },
+    });
+
+    await waitFor(() =>
+      expect(applyCartLineRevalidation).toHaveBeenCalledWith(checkoutResults),
+    );
+    await waitFor(() =>
+      expect(pushMock).toHaveBeenCalledWith('/koszyk/twoje-dane'),
+    );
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Dalej' })).not.toHaveAttribute(
+        'aria-busy',
+      ),
+    );
+  });
+
+  it('clears checkout pending and reruns cart runtime loading after navigating back to the cart', async () => {
+    const user = userEvent.setup();
+    const applyCartLineRevalidation = vi.fn();
+    const deferredCheckoutRuntime =
+      createDeferred<Awaited<ReturnType<typeof loadCartPageRuntime>>>();
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+    };
+    const checkoutResults = [
+      {
+        lineId: 'standard-line-1',
+        lineType: 'standard' as const,
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 120_00,
+      },
+    ];
+
+    vi.mocked(loadCartPageRuntime)
+      .mockResolvedValueOnce({
+        revalidationResults: [],
+        standardPricingByProductKey: {
+          '/produkty/test': {
+            status: 'found',
+            pricingData: {
+              variants: [],
+              hasMultipleModels: false,
+              lowestPrice: 0,
+            },
+          },
+        },
+      })
+      .mockReturnValueOnce(deferredCheckoutRuntime.promise)
+      .mockResolvedValueOnce({
+        revalidationResults: [],
+        standardPricingByProductKey: {
+          '/produkty/test': {
+            status: 'found',
+            pricingData: {
+              variants: [],
+              hasMultipleModels: false,
+              lowestPrice: 0,
+            },
+          },
+        },
+      });
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        applyCartLineRevalidation,
+      }),
+    );
+
+    const { rerender } = render(<CartPageClient />);
+
+    await waitFor(() =>
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
+    );
+    applyCartLineRevalidation.mockClear();
+
+    await user.click(screen.getByRole('button', { name: 'Dalej' }));
+
+    deferredCheckoutRuntime.resolve({
+      revalidationResults: checkoutResults,
+      standardPricingByProductKey: {
+        '/produkty/test': {
+          status: 'found',
+          pricingData: {
+            variants: [],
+            hasMultipleModels: false,
+            lowestPrice: 0,
+          },
+        },
+      },
+    });
+
+    await waitFor(() =>
+      expect(pushMock).toHaveBeenCalledWith('/koszyk/twoje-dane'),
+    );
+
+    pathnameMock = '/koszyk/twoje-dane';
+    rerender(<CartPageClient />);
+
+    pathnameMock = '/koszyk';
+    rerender(<CartPageClient />);
+
+    await waitFor(() => expect(loadCartPageRuntime).toHaveBeenCalledTimes(3));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Dalej' })).not.toBeDisabled(),
+    );
+  });
+
+  it('applies checkout revalidation results and stays on the cart when checkout revalidation fails', async () => {
+    const user = userEvent.setup();
+    const applyCartLineRevalidation = vi.fn();
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+    };
+    const checkoutResults = [
+      {
+        lineId: 'standard-line-1',
+        lineType: 'standard' as const,
+        isBuyable: true,
+        isConfigurationValid: false,
+        unitPriceCents: null,
+      },
+    ];
+
+    vi.mocked(loadCartPageRuntime)
+      .mockResolvedValueOnce({
+        revalidationResults: [],
+        standardPricingByProductKey: {
+          '/produkty/test': {
+            status: 'found',
+            pricingData: {
+              variants: [],
+              hasMultipleModels: false,
+              lowestPrice: 0,
+            },
+          },
+        },
+      })
+      .mockResolvedValueOnce({
+        revalidationResults: checkoutResults,
+        standardPricingByProductKey: {
+          '/produkty/test': {
+            status: 'found',
+            pricingData: {
+              variants: [],
+              hasMultipleModels: false,
+              lowestPrice: 0,
+            },
+          },
+        },
+      });
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        applyCartLineRevalidation,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    await waitFor(() =>
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
+    );
+    applyCartLineRevalidation.mockClear();
+
+    await user.click(screen.getByRole('button', { name: 'Dalej' }));
+
+    await waitFor(() =>
+      expect(applyCartLineRevalidation).toHaveBeenCalledWith(checkoutResults),
+    );
+    expect(pushMock).not.toHaveBeenCalled();
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Dalej' })).not.toBeDisabled(),
+    );
+  });
+
+  it('defers hydrated coupon revalidation until the initial cart runtime load finishes', async () => {
+    const deferredRuntime =
+      createDeferred<Awaited<ReturnType<typeof loadCartPageRuntime>>>();
+    const revalidateHydratedCouponAfterInitialLoad = vi.fn(async () => {});
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+      coupon: {
+        code: 'SAVE20',
+        couponId: 'coupon-1',
+        discountType: 'fixed_order' as const,
+        discountValueCents: 20_00,
+        discountPercent: null,
+        productKeys: null,
+        matchedProductKeys: ['/produkty/test'],
+        isValid: true,
+        message: null,
+        totalDiscountCents: 20_00,
+        lineDiscounts: {
+          'standard-line-1': 20_00,
+        },
+      },
+    };
+
+    vi.mocked(loadCartPageRuntime).mockReturnValueOnce(deferredRuntime.promise);
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        revalidateHydratedCouponAfterInitialLoad,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    expect(screen.getByPlaceholderText('Wpisz kod')).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Sprawdzanie...' }),
+    ).toBeDisabled();
+    expect(revalidateHydratedCouponAfterInitialLoad).not.toHaveBeenCalled();
+
+    deferredRuntime.resolve({
+      revalidationResults: [],
+      standardPricingByProductKey: {
+        '/produkty/test': {
+          status: 'found',
+          pricingData: {
+            variants: [],
+            hasMultipleModels: false,
+            lowestPrice: 0,
+          },
+        },
+      },
+    });
+
+    await waitFor(() =>
+      expect(revalidateHydratedCouponAfterInitialLoad).toHaveBeenCalledTimes(1),
+    );
   });
 
   it('wires coupon submit and clear actions through the cart runtime', async () => {
@@ -304,8 +707,10 @@ describe('CartPageClient', () => {
 
     render(<CartPageClient />);
 
-    await user.clear(screen.getByPlaceholderText('Wpisz kod'));
-    await user.type(screen.getByPlaceholderText('Wpisz kod'), ' save20 ');
+    const couponInput = await screen.findByPlaceholderText('Wpisz kod');
+
+    await user.clear(couponInput);
+    await user.type(couponInput, ' save20 ');
     await user.click(screen.getByRole('button', { name: 'Zastosuj' }));
     await user.click(
       screen.getByRole('button', { name: 'Usuń kod rabatowy SAVE20' }),
@@ -316,7 +721,7 @@ describe('CartPageClient', () => {
     expect(clearCoupon).toHaveBeenCalledTimes(1);
   });
 
-  it('passes coupon pending and input error state into the rendered cart sidebar', () => {
+  it('passes coupon pending and input error state into the rendered cart sidebar', async () => {
     const cart = {
       ...createEmptyCart(),
       lines: [createStandardLine()],
@@ -333,7 +738,7 @@ describe('CartPageClient', () => {
 
     render(<CartPageClient />);
 
-    expect(screen.getByRole('alert')).toHaveTextContent(
+    expect(await screen.findByRole('alert')).toHaveTextContent(
       'Nie udało się zweryfikować kodu rabatowego. Spróbuj ponownie.',
     );
     expect(screen.getByPlaceholderText('Wpisz kod')).toBeDisabled();
@@ -341,7 +746,9 @@ describe('CartPageClient', () => {
       screen.getByRole('button', { name: 'Sprawdzanie...' }),
     ).toBeDisabled();
     expect(
-      screen.getByText('Możesz użyć jednego kodu rabatowego na zamówienie.'),
+      await screen.findByText(
+        'Możesz użyć jednego kodu rabatowego na zamówienie.',
+      ),
     ).toBeInTheDocument();
   });
 
@@ -384,7 +791,9 @@ describe('CartPageClient', () => {
 
     render(<CartPageClient />);
 
-    await user.click(screen.getByRole('button', { name: 'Spróbuj ponownie' }));
+    await user.click(
+      await screen.findByRole('button', { name: 'Spróbuj ponownie' }),
+    );
 
     expect(retryCouponRevalidation).toHaveBeenCalledTimes(1);
   });
@@ -392,6 +801,7 @@ describe('CartPageClient', () => {
   it('opens the cart configurator modal from a standard line and saves via replaceStandardLine', async () => {
     const user = userEvent.setup();
     const replaceStandardLine = vi.fn();
+    const applyCartLineRevalidation = vi.fn();
     const line = createStandardLine();
     const cart = {
       ...createEmptyCart(),
@@ -402,10 +812,15 @@ describe('CartPageClient', () => {
       createUseCartValue({
         cart,
         replaceStandardLine,
+        applyCartLineRevalidation,
       }),
     );
 
     render(<CartPageClient />);
+
+    await waitFor(() =>
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
+    );
 
     await user.click(
       screen.getByRole('button', { name: 'Edytuj konfigurację testowo' }),
@@ -421,9 +836,178 @@ describe('CartPageClient', () => {
     );
 
     expect(replaceStandardLine).toHaveBeenCalledWith('standard-line-1', line);
+    expect(applyCartLineRevalidation).toHaveBeenCalledWith([]);
   });
 
-  it('prefetches cart configurator pricing once per unique product key after hydration', async () => {
+  it('exposes the configurator action for blocked optionless lines when pricing shows newly added options', async () => {
+    const user = userEvent.setup();
+    const line = createOptionlessSavedStandardLine();
+    const cart = {
+      ...createEmptyCart(),
+      lines: [line],
+    };
+
+    vi.mocked(loadCartPageRuntime).mockResolvedValue({
+      revalidationResults: [],
+      standardPricingByProductKey: {
+        '/produkty/test': {
+          status: 'found',
+          pricingData: {
+            variants: [
+              {
+                id: 'variant-1',
+                price_key: '/produkty/test',
+                brand: 'Brand',
+                product: 'Product',
+                model: 'Default',
+                base_price_cents: 100_00,
+                currency: 'PLN',
+                created_at: '2026-01-01T00:00:00.000Z',
+                updated_at: '2026-01-01T00:00:00.000Z',
+                groups: [
+                  {
+                    id: 'finish',
+                    variant_id: 'variant-1',
+                    name: 'Finish',
+                    input_type: 'select',
+                    unit: null,
+                    required: true,
+                    position: 0,
+                    parent_value_id: null,
+                    created_at: '2026-01-01T00:00:00.000Z',
+                    updated_at: '2026-01-01T00:00:00.000Z',
+                    values: [
+                      {
+                        id: 'matte',
+                        group_id: 'finish',
+                        name: 'Matte',
+                        price_delta_cents: 0,
+                        position: 0,
+                        created_at: '2026-01-01T00:00:00.000Z',
+                        updated_at: '2026-01-01T00:00:00.000Z',
+                      },
+                    ],
+                    numeric_rule: null,
+                  },
+                ],
+              },
+            ],
+            hasMultipleModels: false,
+            lowestPrice: 100_00,
+          },
+        },
+      },
+    });
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    await waitFor(() =>
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole('button', { name: 'Edytuj konfigurację testowo' }),
+      ).toBeInTheDocument(),
+    );
+
+    await user.click(
+      screen.getByRole('button', { name: 'Edytuj konfigurację testowo' }),
+    );
+
+    expect(
+      screen.getByTestId('cart-line-configuration-modal'),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Legacy optionless product')).toBeInTheDocument();
+  });
+
+  it('does not expose the configurator action for optionless lines until revalidation marks them invalid', async () => {
+    const line = createOptionlessSavedStandardLine();
+    line.issues = [];
+    const cart = {
+      ...createEmptyCart(),
+      lines: [line],
+    };
+
+    vi.mocked(loadCartPageRuntime).mockResolvedValue({
+      revalidationResults: [],
+      standardPricingByProductKey: {
+        '/produkty/no-config': {
+          status: 'found',
+          pricingData: {
+            variants: [
+              {
+                id: 'variant-1',
+                price_key: '/produkty/no-config',
+                brand: 'Brand',
+                product: 'Product',
+                model: 'Default',
+                base_price_cents: 99_00,
+                currency: 'PLN',
+                created_at: '2026-01-01T00:00:00.000Z',
+                updated_at: '2026-01-01T00:00:00.000Z',
+                groups: [
+                  {
+                    id: 'finish',
+                    variant_id: 'variant-1',
+                    name: 'Finish',
+                    input_type: 'select',
+                    unit: null,
+                    required: true,
+                    position: 0,
+                    parent_value_id: null,
+                    created_at: '2026-01-01T00:00:00.000Z',
+                    updated_at: '2026-01-01T00:00:00.000Z',
+                    values: [
+                      {
+                        id: 'matte',
+                        group_id: 'finish',
+                        name: 'Matte',
+                        price_delta_cents: 0,
+                        position: 0,
+                        created_at: '2026-01-01T00:00:00.000Z',
+                        updated_at: '2026-01-01T00:00:00.000Z',
+                      },
+                    ],
+                    numeric_rule: null,
+                  },
+                ],
+              },
+            ],
+            hasMultipleModels: false,
+            lowestPrice: 99_00,
+          },
+        },
+      },
+    });
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    await waitFor(() =>
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
+    );
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('button', { name: 'Edytuj konfigurację testowo' }),
+      ).not.toBeInTheDocument(),
+    );
+  });
+
+  it('loads cart runtime once after hydration and applies revalidation plus pricing cache', async () => {
+    const applyCartLineRevalidation = vi.fn();
     const cart = {
       ...createEmptyCart(),
       lines: [
@@ -460,15 +1044,71 @@ describe('CartPageClient', () => {
     vi.mocked(useCart).mockReturnValue(
       createUseCartValue({
         cart,
+        applyCartLineRevalidation,
       }),
     );
 
     render(<CartPageClient />);
 
     await waitFor(() =>
-      expect(fetchCartLinePricing).toHaveBeenCalledWith('/produkty/test'),
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
     );
-    expect(fetchCartLinePricing).toHaveBeenCalledTimes(1);
+    expect(loadCartPageRuntime).toHaveBeenCalledTimes(1);
+    expect(applyCartLineRevalidation).toHaveBeenCalledWith([]);
+    expect(fetchCartLinePricing).not.toHaveBeenCalled();
+  });
+
+  it('renders cart lines immediately and keeps checkout busy while initial revalidation is in progress', async () => {
+    const deferred =
+      createDeferred<Awaited<ReturnType<typeof loadCartPageRuntime>>>();
+    const cart = {
+      ...createEmptyCart(),
+      lines: [createStandardLine()],
+    };
+
+    vi.mocked(loadCartPageRuntime).mockReturnValue(deferred.promise);
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    expect(screen.getByTestId('cart-item-card')).toBeInTheDocument();
+    expect(screen.getByTestId('cart-item-card')).toHaveAttribute(
+      'data-interaction-disabled',
+      'true',
+    );
+    expect(screen.getByRole('button', { name: 'Dalej' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Dalej' })).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
+
+    deferred.resolve({
+      revalidationResults: [],
+      standardPricingByProductKey: {
+        '/produkty/test': {
+          status: 'found',
+          pricingData: {
+            variants: [],
+            hasMultipleModels: false,
+            lowestPrice: 0,
+          },
+        },
+      },
+    });
+
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Dalej' })).not.toHaveAttribute(
+        'aria-busy',
+      ),
+    );
+    expect(screen.getByTestId('cart-item-card')).toHaveAttribute(
+      'data-interaction-disabled',
+      'false',
+    );
   });
 
   it('opens the configuration modal with cached pricing state', async () => {
@@ -488,7 +1128,7 @@ describe('CartPageClient', () => {
     render(<CartPageClient />);
 
     await waitFor(() =>
-      expect(fetchCartLinePricing).toHaveBeenCalledWith('/produkty/test'),
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
     );
 
     await user.click(
@@ -496,6 +1136,6 @@ describe('CartPageClient', () => {
     );
 
     expect(screen.getByText('pricing-state: found')).toBeInTheDocument();
-    expect(fetchCartLinePricing).toHaveBeenCalledTimes(1);
+    expect(fetchCartLinePricing).not.toHaveBeenCalled();
   });
 });

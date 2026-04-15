@@ -17,7 +17,7 @@ It defines:
 - the role of the `CPO` operational list
 - the structure of the order detail page
 - where shipment, invoice, return, and coupon work should live
-- the small v1 analytics area
+- the small v1 analytics area, which is intentionally deferred to `Phase 10 - Launch Readiness`
 
 ## Final Resolution
 
@@ -35,7 +35,7 @@ Rules:
 - `Orders` is the main operational area
 - `CPO` is a separate specimen-centric operational area for understanding the current `CPO` offer and its live availability state
 - `Coupons` is a separate management area, not mixed into order detail
-- `Analytics` exists as a very small top-level area in v1 so the structure can grow later
+- `Analytics` exists as a very small top-level area in v1 so the structure can grow later, but its implementation is deferred to `Phase 10 - Launch Readiness`
 - no separate dashboard is needed beyond these destinations
 - no extra top-level settings, finance, or returns areas are needed in v1
 

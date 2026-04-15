@@ -102,6 +102,7 @@ export default function CartEmptyState({
               type="button"
               text="Zastosuj"
               variant="secondary"
+              focusOutline="black"
               iconUsed="submit"
               disabled
               className={styles.couponButton}

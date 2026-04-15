@@ -17,7 +17,7 @@ import { createEmptyCart } from './cart-domain';
 import { loadCartFromStorage, saveCartToStorage } from './cart-persistence';
 import { cartReducer } from './cart-reducer';
 import { getCartTotals } from './cart-selectors';
-import type { CartLine, StandardCartLine } from './types';
+import type { CartLine, CartLineRevalidation, StandardCartLine } from './types';
 
 type CartProviderProps = {
   children: React.ReactNode;
@@ -194,26 +194,6 @@ export function CartProvider({ children }: CartProviderProps) {
     [clearCouponFeedback],
   );
 
-  useEffect(() => {
-    if (!isHydrated || !hydratedCouponCodeToVerify) {
-      return;
-    }
-
-    const currentCoupon = cart.coupon;
-
-    if (
-      !currentCoupon ||
-      !currentCoupon.isValid ||
-      currentCoupon.code !== hydratedCouponCodeToVerify
-    ) {
-      setHydratedCouponCodeToVerify(null);
-      return;
-    }
-
-    setHydratedCouponCodeToVerify(null);
-    void revalidateCoupon(hydratedCouponCodeToVerify);
-  }, [cart.coupon, hydratedCouponCodeToVerify, isHydrated, revalidateCoupon]);
-
   const addLine = useCallback((line: CartLine) => {
     dispatch({
       type: 'add-line',
@@ -261,6 +241,40 @@ export function CartProvider({ children }: CartProviderProps) {
     },
     [],
   );
+
+  const applyCartLineRevalidation = useCallback(
+    (results: CartLineRevalidation[]) => {
+      dispatch({
+        type: 'apply-line-revalidation',
+        payload: {
+          results,
+        },
+      });
+    },
+    [],
+  );
+
+  const revalidateHydratedCouponAfterInitialLoad = useCallback(async () => {
+    const hydratedCouponCode = hydratedCouponCodeToVerify?.trim();
+
+    if (!hydratedCouponCode) {
+      return;
+    }
+
+    setHydratedCouponCodeToVerify(null);
+
+    const currentCoupon = cartRef.current.coupon;
+
+    if (
+      !currentCoupon ||
+      !currentCoupon.isValid ||
+      currentCoupon.code !== hydratedCouponCode
+    ) {
+      return;
+    }
+
+    await revalidateCoupon(hydratedCouponCode);
+  }, [hydratedCouponCodeToVerify, revalidateCoupon]);
 
   const applyCoupon = useCallback(
     async (code: string) => {
@@ -360,7 +374,9 @@ export function CartProvider({ children }: CartProviderProps) {
       incrementStandardLineQuantity,
       decrementStandardLineQuantity,
       replaceStandardLine,
+      applyCartLineRevalidation,
       applyCoupon,
+      revalidateHydratedCouponAfterInitialLoad,
       clearCouponRequestError,
       retryCouponRevalidation,
       clearCoupon,
@@ -383,7 +399,9 @@ export function CartProvider({ children }: CartProviderProps) {
       isRevalidatingCoupon,
       removeLine,
       replaceStandardLine,
+      applyCartLineRevalidation,
       retryCouponRevalidation,
+      revalidateHydratedCouponAfterInitialLoad,
       setStandardLineQuantity,
     ],
   );

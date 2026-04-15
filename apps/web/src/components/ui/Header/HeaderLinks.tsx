@@ -13,6 +13,7 @@ type HeaderLinksProps = {
 
 export default function HeaderLinks({ buttons }: HeaderLinksProps) {
   const pathname = usePathname();
+  const isCartMode = pathname?.startsWith('/koszyk') ?? false;
 
   return (
     <>
@@ -27,6 +28,7 @@ export default function HeaderLinks({ buttons }: HeaderLinksProps) {
             key={button._key}
             href={href}
             className={`${styles.navLink} ${isActive ? styles.active : ''}`}
+            tabIndex={isCartMode ? -1 : undefined}
             {...(button.openInNewTab && {
               target: '_blank',
               rel: 'noreferrer',
