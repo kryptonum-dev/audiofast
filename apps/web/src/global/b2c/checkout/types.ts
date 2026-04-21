@@ -15,7 +15,9 @@ export type CheckoutContactInput = {
 };
 
 export type CheckoutAddress = {
-  street: string;
+  streetName: string;
+  buildingNumber: string;
+  apartmentNumber: string | null;
   postalCode: string;
   city: string;
   country: CheckoutCountryCode;

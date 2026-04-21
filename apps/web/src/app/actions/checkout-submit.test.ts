@@ -77,13 +77,15 @@ function createValidInput(): CheckoutSubmitInput {
       email: 'jan@example.com',
       firstName: 'Jan',
       lastName: 'Kowalski',
-      phone: '+48123123123',
+      phone: '123123123',
     },
     shippingAddress: {
       firstName: 'Jan',
       lastName: 'Kowalski',
-      phone: '+48123123123',
-      street: 'Testowa 1',
+      phone: '123123123',
+      streetName: 'Testowa',
+      buildingNumber: '1',
+      apartmentNumber: null,
       postalCode: '00-001',
       city: 'Warszawa',
       country: 'PL',
@@ -153,7 +155,7 @@ describe('submitCheckout', () => {
     expect(persistCheckoutOrder).not.toHaveBeenCalled();
   });
 
-  it('returns a cart_stale failure when live cart truth changes during submit', async () => {
+  it('returns a cart_price_updated failure when only unit prices drifted during submit', async () => {
     const cart = createValidCart();
 
     vi.mocked(revalidateCartLines).mockResolvedValue([
@@ -169,10 +171,74 @@ describe('submitCheckout', () => {
     const result = await submitCheckout(createValidInput(), cart);
 
     expect(result.ok).toBe(false);
-    expect(result.ok ? null : result.error.code).toBe('cart_stale');
-    expect(result.ok ? null : result.revalidatedCart?.lines[0]?.unitPriceCents).toBe(
-      199_00,
+    expect(result.ok ? null : result.error.code).toBe('cart_price_updated');
+    expect(
+      result.ok ? null : result.revalidatedCart?.lines[0]?.unitPriceCents,
+    ).toBe(199_00);
+    expect(result.ok ? null : result.revalidationResults).toHaveLength(1);
+    expect(persistCheckoutOrder).not.toHaveBeenCalled();
+  });
+
+  it('accepts a resubmit with a lingering client-side price_changed issue once the price matches the refreshed one', async () => {
+    // Simulate the client state right after a soft failure: the reducer has
+    // already applied the revalidation results, so the line now carries a
+    // managed `price_changed` issue AND the refreshed unit price. The next
+    // submit must succeed (not loop on another cart_price_updated).
+    const cart = createValidCart();
+    const firstLine = cart.lines[0]!;
+    (firstLine as { unitPriceCents: number }).unitPriceCents = 199_00;
+    firstLine.issues = [
+      {
+        code: 'price_changed',
+        blocking: false,
+        message: 'Cena produktu została zaktualizowana.',
+      },
+    ];
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 199_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00010',
     );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-10',
+      orderNumber: args.orderNumber,
+      createdAt: '2026-04-20T10:10:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+
+    const result = await submitCheckout(createValidInput(), cart);
+
+    expect(result.ok).toBe(true);
+    expect(result.ok ? result.value.orderNumber : null).toBe('AF-2026-00010');
+  });
+
+  it('returns a cart_invalid failure (hard block) when a line becomes unbuyable, even if the price also drifted', async () => {
+    const cart = createValidCart();
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: false,
+        isConfigurationValid: true,
+        unitPriceCents: 199_00,
+      },
+    ]);
+
+    const result = await submitCheckout(createValidInput(), cart);
+
+    expect(result.ok).toBe(false);
+    expect(result.ok ? null : result.error.code).toBe('cart_invalid');
+    expect(result.ok ? null : result.revalidationResults).toHaveLength(1);
     expect(persistCheckoutOrder).not.toHaveBeenCalled();
   });
 

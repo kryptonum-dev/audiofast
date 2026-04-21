@@ -5,7 +5,7 @@ export type CheckoutDomainErrorCode =
   | 'form_invalid'
   | 'cart_invalid'
   | 'cart_empty'
-  | 'cart_stale'
+  | 'cart_price_updated'
   | 'email_locked_mismatch'
   | 'order_draft_invalid'
   | 'payment_registration_failed'
@@ -29,7 +29,7 @@ export type CheckoutDomainError =
       message: string;
     }
   | {
-      code: 'cart_stale';
+      code: 'cart_price_updated';
       message: string;
     }
   | {
@@ -71,9 +71,7 @@ export type CheckoutDomainResult<T> =
   | CheckoutDomainSuccess<T>
   | CheckoutDomainFailure;
 
-export function createCheckoutSuccess<T>(
-  value: T,
-): CheckoutDomainSuccess<T> {
+export function createCheckoutSuccess<T>(value: T): CheckoutDomainSuccess<T> {
   return {
     ok: true,
     value,
@@ -117,11 +115,11 @@ export function createCheckoutCartEmptyError(): CheckoutDomainError {
   };
 }
 
-export function createCheckoutCartStaleError(): CheckoutDomainError {
+export function createCheckoutCartPriceUpdatedError(): CheckoutDomainError {
   return {
-    code: 'cart_stale',
+    code: 'cart_price_updated',
     message:
-      'Dane koszyka są nieaktualne. Odśwież koszyk i spróbuj ponownie.',
+      'Ceny w koszyku zostały zaktualizowane. Sprawdź nową łączną kwotę i potwierdź zamówienie ponownie.',
   };
 }
 
@@ -144,24 +142,21 @@ export function createCheckoutOrderDraftInvalidError(): CheckoutDomainError {
 export function createCheckoutPaymentRegistrationFailedError(): CheckoutDomainError {
   return {
     code: 'payment_registration_failed',
-    message:
-      'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
+    message: 'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
   };
 }
 
 export function createCheckoutPaymentNotificationInvalidError(): CheckoutDomainError {
   return {
     code: 'payment_notification_invalid',
-    message:
-      'Odebrano nieprawidłowe potwierdzenie płatności.',
+    message: 'Odebrano nieprawidłowe potwierdzenie płatności.',
   };
 }
 
 export function createCheckoutPaymentVerificationFailedError(): CheckoutDomainError {
   return {
     code: 'payment_verification_failed',
-    message:
-      'Nie udało się potwierdzić płatności. Spróbuj ponownie za chwilę.',
+    message: 'Nie udało się potwierdzić płatności. Spróbuj ponownie za chwilę.',
   };
 }
 

@@ -1,4 +1,4 @@
-import type { CartState } from '../../cart/types';
+import type { CartLineRevalidation, CartState } from '../../cart/types';
 import type { CheckoutDomainError, CheckoutDomainResult } from '../errors';
 import type { CheckoutOrderDraft } from '../order-draft';
 import type { P24TransactionRegistrationInput } from '../payment-contracts';
@@ -44,6 +44,7 @@ export type CheckoutSubmitFailure = {
   ok: false;
   error: CheckoutDomainError;
   revalidatedCart: CartState | null;
+  revalidationResults: CartLineRevalidation[] | null;
 };
 
 export type CheckoutSubmitSuccess = {
@@ -58,10 +59,12 @@ export type CheckoutSubmitResult =
 export function createCheckoutSubmitFailure(
   error: CheckoutDomainError,
   revalidatedCart: CartState | null = null,
+  revalidationResults: CartLineRevalidation[] | null = null,
 ): CheckoutSubmitFailure {
   return {
     ok: false,
     error,
     revalidatedCart,
+    revalidationResults,
   };
 }

@@ -44,17 +44,21 @@ function parseCheckoutInvoiceAddress(
     return null;
   }
 
-  const street = getNullableString(value.street);
+  const streetName = getNullableString(value.streetName);
+  const buildingNumber = getNullableString(value.buildingNumber);
+  const apartmentNumber = getNullableString(value.apartmentNumber);
   const postalCode = getNullableString(value.postalCode);
   const city = getNullableString(value.city);
   const country = getNullableString(value.country);
 
-  if (!street || !postalCode || !city || country !== 'PL') {
+  if (!streetName || !buildingNumber || !postalCode || !city || country !== 'PL') {
     return null;
   }
 
   return {
-    street,
+    streetName,
+    buildingNumber,
+    apartmentNumber,
     postalCode,
     city,
     country: 'PL',
@@ -70,12 +74,21 @@ function parseCheckoutProfileShippingDefaults(
 
   const firstName = getNullableString(value.firstName);
   const lastName = getNullableString(value.lastName);
-  const street = getNullableString(value.street);
+  const streetName = getNullableString(value.streetName);
+  const buildingNumber = getNullableString(value.buildingNumber);
+  const apartmentNumber = getNullableString(value.apartmentNumber);
   const postalCode = getNullableString(value.postalCode);
   const city = getNullableString(value.city);
   const country = getNullableString(value.country);
 
-  if (!firstName || !lastName || !street || !postalCode || !city) {
+  if (
+    !firstName ||
+    !lastName ||
+    !streetName ||
+    !buildingNumber ||
+    !postalCode ||
+    !city
+  ) {
     return null;
   }
 
@@ -87,7 +100,9 @@ function parseCheckoutProfileShippingDefaults(
     firstName,
     lastName,
     phone: getNullableString(value.phone),
-    street,
+    streetName,
+    buildingNumber,
+    apartmentNumber,
     postalCode,
     city,
     country: 'PL',

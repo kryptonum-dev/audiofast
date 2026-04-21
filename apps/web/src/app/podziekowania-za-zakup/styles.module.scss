@@ -1,0 +1,106 @@
+.thankYouPage {
+  display: flex;
+  justify-content: center;
+  padding-block: clamp(2rem, calc(3vw / 0.48), 4rem);
+}
+
+.card {
+  max-width: 36rem;
+  width: 100%;
+  background: var(--neutral-white, #ffffff);
+  border: 1px solid var(--neutral-400, #e7e7e7);
+  border-radius: 0.75rem;
+  padding: clamp(1.5rem, calc(2.5vw / 0.48), 2.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  box-shadow: 0 24px 48px -24px rgba(20, 20, 20, 0.18);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: rgba(254, 1, 64, 0.1);
+  color: var(--primary-red, #fe0140);
+}
+
+.heading {
+  font-size: var(--typography-header-l, 2rem);
+  color: var(--neutral-800, #141414);
+  margin: 0;
+}
+
+.orderNumber {
+  font-size: var(--typography-body-m, 0.875rem);
+  color: var(--neutral-700, #303030);
+  margin: 0;
+}
+
+.orderNumberValue {
+  color: var(--neutral-800, #141414);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.description {
+  font-size: var(--typography-body-m, 0.875rem);
+  line-height: 1.55;
+  color: var(--neutral-700, #303030);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.primaryCta,
+.secondaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: var(--typography-body-m, 0.875rem);
+  font-weight: 500;
+  text-decoration: none;
+  transition: filter 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+
+.primaryCta {
+  background: var(--primary-red, #fe0140);
+  color: var(--neutral-white, #ffffff);
+
+  &:hover,
+  &:focus-visible {
+    filter: brightness(0.9);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary-red, #fe0140);
+    outline-offset: 2px;
+  }
+}
+
+.secondaryCta {
+  background: transparent;
+  border: 1px solid var(--neutral-400, #e7e7e7);
+  color: var(--neutral-800, #141414);
+
+  &:hover,
+  &:focus-visible {
+    background: var(--neutral-100, #fafafa);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary-red, #fe0140);
+    outline-offset: 2px;
+  }
+}

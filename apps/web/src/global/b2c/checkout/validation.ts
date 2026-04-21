@@ -31,8 +31,7 @@ export type CheckoutInvoiceErrors = Omit<
   invoiceAddress?: CheckoutInvoiceAddressErrors;
 };
 
-export type CheckoutConsentsErrors =
-  ValidationErrorMap<CheckoutConsentsInput>;
+export type CheckoutConsentsErrors = ValidationErrorMap<CheckoutConsentsInput>;
 
 export type CheckoutSubmitErrors = {
   contact?: CheckoutContactErrors;
@@ -59,75 +58,99 @@ export type CheckoutValidationResult<T> =
   | CheckoutValidationFailure;
 
 const PHONE_SANITIZE_PATTERN = /[\s()-]/g;
-const PHONE_ALLOWED_PATTERN = /^\+?[0-9]{6,15}$/;
+const PHONE_PL_PREFIX_PATTERN = /^(\+48|0048|48)/;
+const PHONE_NATIONAL_PATTERN = /^\d{9}$/;
 const TAX_ID_SANITIZE_PATTERN = /[^0-9]/g;
 const POSTAL_CODE_PATTERN = /^\d{2}-\d{3}$/;
 const POLAND_COUNTRY_CODE = 'PL';
 
+/**
+ * Normalizes any reasonable Polish phone input to the canonical 9-digit form.
+ * Strips whitespace/parens/dashes and a leading `+48`, `0048`, or `48`.
+ * Returns `null` if the remaining value is not exactly 9 digits.
+ */
+export function normalizePolishPhoneNumber(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const stripped = value.replace(PHONE_SANITIZE_PATTERN, '');
+  const withoutPrefix = stripped.replace(PHONE_PL_PREFIX_PATTERN, '');
+
+  if (!PHONE_NATIONAL_PATTERN.test(withoutPrefix)) {
+    return null;
+  }
+
+  return withoutPrefix;
+}
+
 const trimmedRequiredString = (message: string) =>
   z.string().trim().min(1, message);
 
-const nullableTrimmedString = z.preprocess(
-  (value) => {
-    if (value === null) {
-      return null;
-    }
+const nullableTrimmedString = z.preprocess((value) => {
+  if (value === null) {
+    return null;
+  }
 
-    if (typeof value !== 'string') {
-      return value;
-    }
+  if (typeof value !== 'string') {
+    return value;
+  }
 
-    const normalized = value.trim();
+  const normalized = value.trim();
 
-    return normalized.length > 0 ? normalized : null;
-  },
-  z.string().nullable(),
+  return normalized.length > 0 ? normalized : null;
+}, z.string().nullable());
+
+const createRequiredPolishPhoneSchema = (
+  requiredMessage: string,
+  invalidMessage: string,
+) =>
+  z.preprocess(
+    (value) => {
+      if (value === null || value === undefined) {
+        return '';
+      }
+
+      if (typeof value !== 'string') {
+        return value;
+      }
+
+      const trimmed = value.trim();
+
+      if (trimmed.length === 0) {
+        return '';
+      }
+
+      return normalizePolishPhoneNumber(trimmed) ?? trimmed;
+    },
+    z
+      .string()
+      .min(1, requiredMessage)
+      .regex(PHONE_NATIONAL_PATTERN, invalidMessage),
+  );
+
+const requiredPhoneString = createRequiredPolishPhoneSchema(
+  'Podaj numer telefonu.',
+  'Podaj poprawny numer telefonu.',
 );
 
-const nullablePhoneString = z.preprocess(
-  (value) => {
-    if (value === null) {
-      return null;
-    }
+const nullableTaxIdString = z.preprocess((value) => {
+  if (value === null) {
+    return null;
+  }
 
-    if (typeof value !== 'string') {
-      return value;
-    }
+  if (typeof value !== 'string') {
+    return value;
+  }
 
-    const normalized = value.trim();
+  const normalized = value.trim();
 
-    if (normalized.length === 0) {
-      return null;
-    }
+  if (normalized.length === 0) {
+    return null;
+  }
 
-    return normalized.replace(PHONE_SANITIZE_PATTERN, '');
-  },
-  z
-    .string()
-    .regex(PHONE_ALLOWED_PATTERN, 'Podaj poprawny numer telefonu.')
-    .nullable(),
-);
-
-const nullableTaxIdString = z.preprocess(
-  (value) => {
-    if (value === null) {
-      return null;
-    }
-
-    if (typeof value !== 'string') {
-      return value;
-    }
-
-    const normalized = value.trim();
-
-    if (normalized.length === 0) {
-      return null;
-    }
-
-    return normalized.replace(TAX_ID_SANITIZE_PATTERN, '');
-  },
-  z.string().length(10, 'Podaj poprawny numer NIP.').nullable(),
-);
+  return normalized.replace(TAX_ID_SANITIZE_PATTERN, '');
+}, z.string().length(10, 'Podaj poprawny numer NIP.').nullable());
 
 const countrySchema = z.custom<typeof POLAND_COUNTRY_CODE>(
   (value) => value === POLAND_COUNTRY_CODE,
@@ -137,12 +160,17 @@ const countrySchema = z.custom<typeof POLAND_COUNTRY_CODE>(
 );
 
 const checkoutAddressObjectSchema = z.object({
-  street: trimmedRequiredString('Podaj ulicę i numer adresu.'),
+  streetName: trimmedRequiredString('Podaj nazwę ulicy.'),
+  buildingNumber: trimmedRequiredString('Podaj numer domu.'),
+  apartmentNumber: nullableTrimmedString,
   postalCode: z
     .string()
     .trim()
     .min(1, 'Podaj kod pocztowy.')
-    .regex(POSTAL_CODE_PATTERN, 'Podaj poprawny kod pocztowy w formacie 00-000.'),
+    .regex(
+      POSTAL_CODE_PATTERN,
+      'Podaj poprawny kod pocztowy w formacie 00-000.',
+    ),
   city: trimmedRequiredString('Podaj miejscowość.'),
   country: countrySchema,
 });
@@ -159,35 +187,16 @@ export const checkoutContactSchema: z.ZodType<CheckoutContactInput> = z.object({
     .transform((value) => value.toLowerCase()),
   firstName: trimmedRequiredString('Podaj imię.'),
   lastName: trimmedRequiredString('Podaj nazwisko.'),
-  phone: nullablePhoneString,
+  phone: requiredPhoneString,
 });
 
 export const checkoutShippingAddressSchema: z.ZodType<CheckoutShippingAddressInput> =
   checkoutAddressObjectSchema.extend({
     firstName: trimmedRequiredString('Podaj imię odbiorcy.'),
     lastName: trimmedRequiredString('Podaj nazwisko odbiorcy.'),
-    phone: z.preprocess(
-      (value) => {
-        if (value === null) {
-          return null;
-        }
-
-        if (typeof value !== 'string') {
-          return value;
-        }
-
-        const normalized = value.trim();
-
-        if (normalized.length === 0) {
-          return null;
-        }
-
-        return normalized.replace(PHONE_SANITIZE_PATTERN, '');
-      },
-      z
-        .string()
-        .regex(PHONE_ALLOWED_PATTERN, 'Podaj poprawny numer telefonu odbiorcy.')
-        .nullable(),
+    phone: createRequiredPolishPhoneSchema(
+      'Podaj numer telefonu odbiorcy.',
+      'Podaj poprawny numer telefonu odbiorcy.',
     ),
   });
 
@@ -227,7 +236,7 @@ export const checkoutInvoiceSchema: z.ZodType<CheckoutInvoiceInput> = z
     if (!value.invoiceAddress) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['invoiceAddress', 'street'],
+        path: ['invoiceAddress', 'streetName'],
         message: 'Podaj adres do faktury.',
       });
     }
@@ -243,14 +252,15 @@ export const checkoutInvoiceSchema: z.ZodType<CheckoutInvoiceInput> = z
       : value,
   );
 
-export const checkoutConsentsSchema: z.ZodType<CheckoutConsentsInput> = z.object({
-  termsAccepted: z.literal(true, {
-    error: 'Zaakceptuj regulamin, aby przejść dalej.',
-  }),
-  privacyPolicyAccepted: z.literal(true, {
-    error: 'Zaakceptuj politykę prywatności, aby przejść dalej.',
-  }),
-});
+export const checkoutConsentsSchema: z.ZodType<CheckoutConsentsInput> =
+  z.object({
+    termsAccepted: z.literal(true, {
+      error: 'Zaakceptuj regulamin, aby przejść dalej.',
+    }),
+    privacyPolicyAccepted: z.literal(true, {
+      error: 'Zaakceptuj politykę prywatności, aby przejść dalej.',
+    }),
+  });
 
 export const checkoutSubmitSchema: z.ZodType<CheckoutSubmitInput> = z.object({
   contact: checkoutContactSchema,
@@ -316,9 +326,8 @@ function mapZodIssuesToSubmitErrors(
       if (
         !errors.shippingAddress[field as keyof CheckoutShippingAddressErrors]
       ) {
-        errors.shippingAddress[
-          field as keyof CheckoutShippingAddressErrors
-        ] = issue.message;
+        errors.shippingAddress[field as keyof CheckoutShippingAddressErrors] =
+          issue.message;
       }
 
       return;
@@ -625,7 +634,9 @@ export function createEmptyCheckoutDraft(): CheckoutDraft {
       firstName: '',
       lastName: '',
       phone: null,
-      street: '',
+      streetName: '',
+      buildingNumber: '',
+      apartmentNumber: null,
       postalCode: '',
       city: '',
       country: POLAND_COUNTRY_CODE,

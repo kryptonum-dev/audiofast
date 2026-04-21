@@ -22,13 +22,15 @@ function createOrderDraft(): CheckoutOrderDraft {
       firstName: 'Jan',
       lastName: 'Kowalski',
       email: 'jan@example.com',
-      phone: '+48123123123',
+      phone: '123123123',
     },
     shippingAddressSnapshot: {
       firstName: 'Jan',
       lastName: 'Kowalski',
-      phone: '+48123123123',
-      street: 'Testowa 1',
+      phone: '123123123',
+      streetName: 'Testowa',
+      buildingNumber: '1',
+      apartmentNumber: null,
       postalCode: '00-001',
       city: 'Warszawa',
       country: 'PL',
@@ -114,7 +116,8 @@ describe('checkout persistence', () => {
         lastName: 'Kowalski',
       },
       shipping_address_snapshot: {
-        street: 'Testowa 1',
+        streetName: 'Testowa',
+        buildingNumber: '1',
       },
       created_at: '2026-04-20T10:00:00.000Z',
     });
