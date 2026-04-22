@@ -1,36 +1,39 @@
+import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
 
-import styles from './styles.module.scss';
-import type { CartSupportCardData } from './types';
+import styles from './SupportCard.module.scss';
 
-type CartSupportCardProps = {
-  supportCard?: CartSupportCardData | null;
+export type SupportCardData = {
+  paragraph?: string | null;
+  phoneNumber?: string | null;
+  image?: SanityRawImage | null;
 };
 
-export default function CartSupportCard({ supportCard }: CartSupportCardProps) {
-  const hasSupportCard = Boolean(
-    supportCard?.paragraph || supportCard?.phoneNumber || supportCard?.image,
-  );
+type SupportCardProps = {
+  supportCard?: SupportCardData | null;
+};
+
+export default function SupportCard({ supportCard }: SupportCardProps) {
+  const paragraph = supportCard?.paragraph?.trim() || null;
+  const phoneNumber = supportCard?.phoneNumber?.trim() || null;
+  const image = supportCard?.image ?? null;
+  const hasSupportCard = Boolean(paragraph || phoneNumber || image);
 
   if (!hasSupportCard) {
     return null;
   }
 
-  const phoneNumber = supportCard?.phoneNumber ?? '';
   const href = phoneNumber ? `tel:${phoneNumber.replace(/\s/g, '')}` : null;
 
   return (
-    <section className={styles.sidebarCard} aria-label="Wsparcie">
+    <section className={styles.supportCardSection} aria-label="Wsparcie">
       {href ? (
         <a
           href={href}
           className={styles.supportCardLink}
-          aria-label={phoneNumber}
+          aria-label={phoneNumber ?? ''}
         >
-          <div className={styles.supportImage}>
-            <Image image={supportCard!.image!} sizes="64px" />
-          </div>
-          <p className={styles.supportParagraph}>{supportCard!.paragraph}</p>
+          <SupportCardContent image={image} paragraph={paragraph} />
           <div className={styles.supportPhone}>
             <div className={styles.supportPhoneIcon} aria-hidden="true">
               <PhoneIcon />
@@ -40,13 +43,31 @@ export default function CartSupportCard({ supportCard }: CartSupportCardProps) {
         </a>
       ) : (
         <div className={styles.supportCard}>
-          <div className={styles.supportImage}>
-            <Image image={supportCard!.image!} sizes="64px" />
-          </div>
-          <p className={styles.supportParagraph}>{supportCard!.paragraph}</p>
+          <SupportCardContent image={image} paragraph={paragraph} />
         </div>
       )}
     </section>
+  );
+}
+
+function SupportCardContent({
+  image,
+  paragraph,
+}: {
+  image: SanityRawImage | null;
+  paragraph: string | null;
+}) {
+  return (
+    <>
+      {image ? (
+        <div className={styles.supportImage}>
+          <Image image={image} sizes="64px" />
+        </div>
+      ) : null}
+      {paragraph ? (
+        <p className={styles.supportParagraph}>{paragraph}</p>
+      ) : null}
+    </>
   );
 }
 

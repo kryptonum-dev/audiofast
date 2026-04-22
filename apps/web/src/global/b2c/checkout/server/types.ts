@@ -27,8 +27,6 @@ export type LoadCheckoutPageData = {
   canPrefillFromProfile: boolean;
 };
 
-export type LoadCheckoutPageResult = CheckoutDomainResult<LoadCheckoutPageData>;
-
 export type PersistCheckoutOrderResult = {
   orderId: string;
   orderNumber: string;

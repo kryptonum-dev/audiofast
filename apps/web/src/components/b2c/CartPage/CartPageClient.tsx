@@ -21,10 +21,10 @@ import CartItemCard from './CartItemCard';
 import CartLoadingSkeleton from './CartLoadingSkeleton';
 import CartSidebar from './CartSidebar';
 import styles from './styles.module.scss';
-import type { CartEmptyStateData, CartSupportCardData } from './types';
+import type { CartEmptyStateData, SupportCardData } from './types';
 
 type CartPageClientProps = {
-  supportCard?: CartSupportCardData | null;
+  supportCard?: SupportCardData | null;
   emptyStateContent?: CartEmptyStateData | null;
   previewState?: 'loading' | 'empty' | 'content';
 };

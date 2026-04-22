@@ -4,13 +4,13 @@ import React from 'react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { SupportCardData } from '@/src/components/b2c/shared/SupportCard';
 import { createEmptyCart } from '@/src/global/b2c/cart/cart-domain';
 import { getCartTotals } from '@/src/global/b2c/cart/cart-selectors';
 import { createCpoCartLine } from '@/src/global/b2c/cart/cpo-cart-line';
 import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
 
 import CartSidebar from './CartSidebar';
-import type { CartSupportCardData } from './types';
 
 vi.mock('@/components/shared/Image', () => ({
   default: () => <div data-testid="mock-image" />,
@@ -79,7 +79,7 @@ function createCpoLine() {
   });
 }
 
-function createSupportCard(): CartSupportCardData {
+function createSupportCard(): SupportCardData {
   return {
     paragraph: 'Mozemy pomoc. Skontaktuj sie z nami tutaj.',
     phoneNumber: '+48 555 555 555',

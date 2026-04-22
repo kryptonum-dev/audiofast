@@ -111,14 +111,17 @@ export function canPrefillOrderFormFromProfile(
     sessionContext.isAuthenticated &&
       sessionContext.authenticatedEmail &&
       profile &&
-      profile.email.toLowerCase() === sessionContext.authenticatedEmail.toLowerCase(),
+      profile.email.toLowerCase() ===
+        sessionContext.authenticatedEmail.toLowerCase(),
   );
 }
 
 export function shouldLockOrderFormEmail(
   sessionContext: CheckoutSessionContext,
 ): boolean {
-  return sessionContext.isAuthenticated && Boolean(sessionContext.authenticatedEmail);
+  return (
+    sessionContext.isAuthenticated && Boolean(sessionContext.authenticatedEmail)
+  );
 }
 
 export function decideCheckoutProfilePersistence(

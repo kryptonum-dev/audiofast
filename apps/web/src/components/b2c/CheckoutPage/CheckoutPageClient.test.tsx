@@ -216,8 +216,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={{
           paragraph: 'Masz pytania o zamówienie? Chętnie pomożemy.',
           phoneNumber: '855 855 855',
@@ -263,6 +261,30 @@ describe('CheckoutPageClient', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders a checkout skeleton while the cart is still hydrating', () => {
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        isHydrated: false,
+      }),
+    );
+
+    render(
+      <CheckoutPageClient
+        initialDraft={createInitialDraft()}
+        isEmailLocked={false}
+        sessionContext={{
+          isAuthenticated: false,
+          authUserId: null,
+          authenticatedEmail: null,
+          customerProfileId: null,
+        }}
+        supportCard={null}
+      />,
+    );
+
+    expect(screen.getByTestId('checkout-loading-state')).toBeInTheDocument();
+  });
+
   it('locks the email field for authenticated customers and shows save-to-profile checkbox', () => {
     render(
       <CheckoutPageClient
@@ -274,8 +296,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: 'jan@example.com',
           customerProfileId: 'profile-1',
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -301,8 +321,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -335,8 +353,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -413,8 +429,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -466,8 +480,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -521,8 +533,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -554,8 +564,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -612,8 +620,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -684,8 +690,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );
@@ -732,8 +736,6 @@ describe('CheckoutPageClient', () => {
           authenticatedEmail: null,
           customerProfileId: null,
         }}
-        customerProfile={null}
-        canPrefillFromProfile={false}
         supportCard={null}
       />,
     );

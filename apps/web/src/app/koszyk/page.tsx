@@ -1,10 +1,8 @@
 import type { Metadata } from 'next';
 
 import CartPageClient from '@/src/components/b2c/CartPage/CartPageClient';
-import type {
-  CartEmptyStateData,
-  CartSupportCardData,
-} from '@/src/components/b2c/CartPage/types';
+import type { CartEmptyStateData } from '@/src/components/b2c/CartPage/types';
+import type { SupportCardData } from '@/src/components/b2c/shared/SupportCard';
 import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { sanityFetch } from '@/src/global/sanity/fetch';
@@ -40,7 +38,7 @@ const breadcrumbsData = [
 
 export default async function CartPage() {
   const [supportCard, emptyStateContent] = await Promise.all([
-    sanityFetch<CartSupportCardData | null>({
+    sanityFetch<SupportCardData | null>({
       query: queryCartSupportCard,
       tags: ['settings'],
     }),

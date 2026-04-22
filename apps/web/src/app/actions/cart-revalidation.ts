@@ -1,5 +1,12 @@
 'use server';
 
+import {
+  loadCartPageRuntime as loadCartPageRuntimeUseCase,
+  type LoadCartPageRuntimeResult,
+  revalidateCartLines as revalidateCartLinesUseCase,
+  revalidateCpoCartLines as revalidateCpoCartLinesUseCase,
+  revalidateStandardCartLines as revalidateStandardCartLinesUseCase,
+} from '@/src/global/b2c/cart/server/revalidation';
 import type {
   CartLine,
   CartLineRevalidation,
@@ -8,13 +15,6 @@ import type {
   StandardCartLine,
   StandardLineRevalidation,
 } from '@/src/global/b2c/cart/types';
-import {
-  loadCartPageRuntime as loadCartPageRuntimeUseCase,
-  revalidateCartLines as revalidateCartLinesUseCase,
-  revalidateCpoCartLines as revalidateCpoCartLinesUseCase,
-  revalidateStandardCartLines as revalidateStandardCartLinesUseCase,
-  type LoadCartPageRuntimeResult,
-} from '@/src/global/b2c/cart/server/revalidation';
 
 export async function revalidateStandardCartLines(
   lines: StandardCartLine[],

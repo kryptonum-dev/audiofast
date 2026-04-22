@@ -1,14 +1,16 @@
 'use client';
 
 import Button from '@/src/components/ui/Button';
+import SupportCard, {
+  type SupportCardData,
+} from '@/src/components/b2c/shared/SupportCard';
 import { formatPrice } from '@/src/global/utils';
 
-import CartSupportCard from './CartSupportCard';
 import styles from './styles.module.scss';
-import type { CartEmptyStateData, CartSupportCardData } from './types';
+import type { CartEmptyStateData } from './types';
 
 type CartEmptyStateProps = {
-  supportCard?: CartSupportCardData | null;
+  supportCard?: SupportCardData | null;
   emptyStateContent?: CartEmptyStateData | null;
 };
 
@@ -115,7 +117,7 @@ export default function CartEmptyState({
         </section>
 
         {supportCard ? (
-          <CartSupportCard supportCard={supportCard} />
+          <SupportCard supportCard={supportCard} />
         ) : (
           <section className={styles.sidebarCard} aria-label="Wsparcie">
             <p className={styles.supportFallback}>

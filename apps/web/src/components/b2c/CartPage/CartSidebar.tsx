@@ -1,16 +1,17 @@
+import SupportCard, {
+  type SupportCardData,
+} from '@/src/components/b2c/shared/SupportCard';
 import type { CartCouponRevalidationNotice } from '@/src/global/b2c/cart/cart-context';
 import type { CartState, CartTotals } from '@/src/global/b2c/cart/types';
 
 import CartCouponCard from './CartCouponCard';
 import CartSummaryCard from './CartSummaryCard';
-import CartSupportCard from './CartSupportCard';
 import styles from './styles.module.scss';
-import type { CartSupportCardData } from './types';
 
 export type CartSidebarProps = {
   cart: CartState;
   totals: CartTotals;
-  supportCard?: CartSupportCardData | null;
+  supportCard?: SupportCardData | null;
   onCheckout: () => void;
   onApplyCoupon: (code: string) => Promise<void>;
   onClearCoupon: () => void;
@@ -61,7 +62,9 @@ export default function CartSidebar({
         onRetryStatus={onRetryCouponRevalidation}
         onInputChange={onCouponInputChange}
       />
-      <CartSupportCard supportCard={supportCard} />
+      <div className={styles.sidebarSupport}>
+        <SupportCard supportCard={supportCard} />
+      </div>
     </aside>
   );
 }
