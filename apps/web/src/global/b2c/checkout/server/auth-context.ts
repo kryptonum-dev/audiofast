@@ -1,6 +1,13 @@
 import type { User } from '@supabase/supabase-js';
 
-import { canPrefillOrderFormFromProfile, shouldLockOrderFormEmail } from '../profile';
+import { createAdminClient } from '@/src/global/supabase/admin';
+import type { Database, Json } from '@/src/global/supabase/database.types';
+import { createAuthServerClient } from '@/src/global/supabase/server-auth';
+
+import {
+  canPrefillOrderFormFromProfile,
+  shouldLockOrderFormEmail,
+} from '../profile';
 import type {
   CheckoutInvoiceAddressInput,
   CheckoutProfileDefaults,
@@ -8,13 +15,10 @@ import type {
   CheckoutProfileShippingDefaults,
   CheckoutSessionContext,
 } from '../types';
-import type { Database, Json } from '@/src/global/supabase/database.types';
-import { createAdminClient } from '@/src/global/supabase/admin';
-import { createAuthServerClient } from '@/src/global/supabase/server-auth';
-
 import type { CheckoutAuthContext } from './types';
 
-type CustomerProfileRow = Database['public']['Tables']['customer_profiles']['Row'];
+type CustomerProfileRow =
+  Database['public']['Tables']['customer_profiles']['Row'];
 
 function createGuestCheckoutSessionContext(): CheckoutSessionContext {
   return {
@@ -31,9 +35,7 @@ function isRecord(
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 }
 
-function getNullableString(
-  value: Json | undefined,
-): string | null {
+function getNullableString(value: Json | undefined): string | null {
   return typeof value === 'string' ? value : null;
 }
 
@@ -51,7 +53,13 @@ function parseCheckoutInvoiceAddress(
   const city = getNullableString(value.city);
   const country = getNullableString(value.country);
 
-  if (!streetName || !buildingNumber || !postalCode || !city || country !== 'PL') {
+  if (
+    !streetName ||
+    !buildingNumber ||
+    !postalCode ||
+    !city ||
+    country !== 'PL'
+  ) {
     return null;
   }
 

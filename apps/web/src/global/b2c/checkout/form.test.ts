@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { buildCheckoutFormValues, buildCheckoutSubmitInput } from './form';
 import type { CheckoutDraft } from './types';
-import {
-  buildCheckoutFormValues,
-  buildCheckoutSubmitInput,
-} from './form';
 
 function createDraft(overrides?: Partial<CheckoutDraft>): CheckoutDraft {
   return {
@@ -35,6 +32,7 @@ function createDraft(overrides?: Partial<CheckoutDraft>): CheckoutDraft {
       termsAccepted: false,
       privacyPolicyAccepted: false,
     },
+    newsletterOptIn: false,
     saveToProfile: false,
     updatedAt: null,
     ...overrides,
@@ -169,5 +167,6 @@ describe('checkout form helpers', () => {
       termsAccepted: true,
       privacyPolicyAccepted: true,
     });
+    expect(input.newsletterOptIn).toBe(true);
   });
 });

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm, type UseFormRegisterReturn, useWatch } from 'react-hook-form';
 
 import Image from '@/components/shared/Image';
 import { submitCheckout } from '@/src/app/actions/checkout-submit';
@@ -20,12 +20,16 @@ import {
   buildCheckoutSubmitInput,
   type CheckoutFormValues,
 } from '@/src/global/b2c/checkout/form';
+import { MOCK_P24_SCENARIO_OPTIONS } from '@/src/global/b2c/checkout/mock-payment-scenarios';
 import type {
   CheckoutDraft,
   CheckoutProfileDefaults,
   CheckoutSessionContext,
 } from '@/src/global/b2c/checkout/types';
-import { normalizePolishPhoneNumber } from '@/src/global/b2c/checkout/validation';
+import {
+  normalizePolishPhoneNumber,
+  normalizePolishPostalCode,
+} from '@/src/global/b2c/checkout/validation';
 import { formatPrice } from '@/src/global/utils';
 
 import CheckoutSummaryCard from './CheckoutSummaryCard';
@@ -46,10 +50,27 @@ type FeedbackState = {
 } | null;
 
 const CHECKOUT_FORM_ID = 'checkout-details-form';
+const SHOW_MOCK_PAYMENT_SCENARIO_SELECTOR =
+  process.env.NODE_ENV !== 'production';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const POSTAL_CODE_PATTERN = /^\d{2}-\d{3}$/;
 const TAX_ID_DIGITS_PATTERN = /^\d{10}$/;
+const POSTAL_CODE_NON_DIGITS_PATTERN = /\D/g;
+
+/**
+ * Progressive formatter used on every keystroke in a postal-code input.
+ * Strips non-digits, caps at 5 digits, and injects the dash after the 2nd digit
+ * so `05200` becomes `05-200` while the user is still typing.
+ */
+function formatPolishPostalCodeInput(value: string): string {
+  const digits = value.replace(POSTAL_CODE_NON_DIGITS_PATTERN, '').slice(0, 5);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+}
 
 const validateRequiredPhone =
   (
@@ -90,9 +111,14 @@ const CHECKOUT_RULES = {
   },
   postalCode: {
     required: 'Podaj kod pocztowy.',
-    pattern: {
-      value: POSTAL_CODE_PATTERN,
-      message: 'Podaj poprawny kod pocztowy (00-000).',
+    validate: (value: string) => {
+      if (typeof value !== 'string' || value.trim().length === 0) {
+        return 'Podaj kod pocztowy.';
+      }
+      return (
+        normalizePolishPostalCode(value) !== null ||
+        'Podaj poprawny kod pocztowy (00-000).'
+      );
     },
   },
   city: requiredString('Podaj miejscowość.'),
@@ -113,6 +139,28 @@ const CHECKOUT_RULES = {
       value === true || 'Musisz zaakceptować regulamin i politykę prywatności.',
   },
 } as const;
+
+/**
+ * Wraps a `react-hook-form` registration so the postal-code input auto-inserts
+ * the dash after the 2nd digit. Keeps the original `onChange` wired into RHF
+ * so form state stays in sync with what the user actually sees.
+ */
+function withPostalCodeFormatting(
+  registration: UseFormRegisterReturn,
+): UseFormRegisterReturn {
+  const originalOnChange = registration.onChange;
+  return {
+    ...registration,
+    onChange: (event) => {
+      const target = event.target as HTMLInputElement;
+      const formatted = formatPolishPostalCodeInput(target.value);
+      if (target.value !== formatted) {
+        target.value = formatted;
+      }
+      return originalOnChange(event);
+    },
+  };
+}
 
 function renderPrice(priceCents: number) {
   return formatPrice(priceCents).replace(/\s+/g, ' ').trim();
@@ -404,11 +452,7 @@ export default function CheckoutPageClient({
       return;
     }
 
-    // Mock success path: payment integration is not wired yet, so we route
-    // the customer to a temporary thank-you page. The cart is intentionally
-    // kept intact to make manual checkout re-runs easier during development.
-    const orderNumber = encodeURIComponent(result.value.orderNumber);
-    router.push(`/podziekowania-za-zakup/?order=${orderNumber}`);
+    router.push(result.value.redirectUrl);
   };
 
   if (!isHydrated) {
@@ -642,14 +686,19 @@ export default function CheckoutPageClient({
                         <div className={styles.fieldGridTwoCompact}>
                           <Input
                             label="Kod pocztowy"
-                            register={register(
-                              'invoiceAddress.postalCode',
-                              CHECKOUT_RULES.postalCode,
+                            register={withPostalCodeFormatting(
+                              register(
+                                'invoiceAddress.postalCode',
+                                CHECKOUT_RULES.postalCode,
+                              ),
                             )}
                             errors={
                               errors.invoiceAddress?.postalCode?.message ?? ''
                             }
                             placeholder="00-000"
+                            inputMode="numeric"
+                            autoComplete="postal-code"
+                            maxLength={6}
                           />
                           <Input
                             label="Miejscowość"
@@ -709,12 +758,17 @@ export default function CheckoutPageClient({
                 <div className={styles.fieldGridTwoCompact}>
                   <Input
                     label="Kod pocztowy"
-                    register={register(
-                      'shippingAddress.postalCode',
-                      CHECKOUT_RULES.postalCode,
+                    register={withPostalCodeFormatting(
+                      register(
+                        'shippingAddress.postalCode',
+                        CHECKOUT_RULES.postalCode,
+                      ),
                     )}
                     errors={errors.shippingAddress?.postalCode?.message ?? ''}
                     placeholder="00-000"
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    maxLength={6}
                   />
                   <Input
                     label="Miejscowość"
@@ -896,6 +950,39 @@ export default function CheckoutPageClient({
                     />
                   ) : null}
                 </div>
+
+                {SHOW_MOCK_PAYMENT_SCENARIO_SELECTOR ? (
+                  <div className={styles.mockScenarioPanel}>
+                    <label
+                      className={styles.mockScenarioLabel}
+                      htmlFor="mock-payment-scenario"
+                    >
+                      Scenariusz płatności (mock, tylko dev)
+                    </label>
+                    <select
+                      id="mock-payment-scenario"
+                      className={styles.mockScenarioSelect}
+                      aria-describedby="mock-payment-scenario-help"
+                      {...register('mockPaymentScenarioId', {
+                        setValueAs: (value) => value || null,
+                      })}
+                    >
+                      <option value="">Domyślny scenariusz</option>
+                      {MOCK_P24_SCENARIO_OPTIONS.map((scenario) => (
+                        <option key={scenario.id} value={scenario.id}>
+                          {scenario.label}
+                        </option>
+                      ))}
+                    </select>
+                    <p
+                      id="mock-payment-scenario-help"
+                      className={styles.mockScenarioHelp}
+                    >
+                      Wersja deweloperska: wybrany scenariusz zostanie zamrożony
+                      po stronie serwera w momencie startu płatności.
+                    </p>
+                  </div>
+                ) : null}
 
                 <Error withIcon>{errors.root?.message ?? ''}</Error>
               </CheckoutSection>

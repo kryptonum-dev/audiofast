@@ -54,6 +54,13 @@
   margin: 0;
 }
 
+.supportNote {
+  font-size: var(--typography-body-s, 0.8125rem);
+  line-height: 1.55;
+  color: var(--neutral-700, #303030);
+  margin: 0;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

@@ -1,7 +1,10 @@
 import type { CartLineRevalidation, CartState } from '../../cart/types';
 import type { CheckoutDomainError, CheckoutDomainResult } from '../errors';
 import type { CheckoutOrderDraft } from '../order-draft';
-import type { P24TransactionRegistrationInput } from '../payment-contracts';
+import type {
+  P24TransactionRegistrationInput,
+  P24TransactionRegistrationResult,
+} from '../payment-contracts';
 import type {
   CheckoutDraft,
   CheckoutProfileDefaults,
@@ -39,6 +42,17 @@ export type CheckoutSubmitSuccessValue = PersistCheckoutOrderResult & {
   revalidatedCart: CartState;
   paymentRegistrationInput: P24TransactionRegistrationInput;
 };
+
+export type StartCheckoutPaymentData = {
+  orderId: string;
+  orderNumber: string;
+  redirectUrl: string;
+  registration: P24TransactionRegistrationResult;
+  wasAlreadyPaid: boolean;
+};
+
+export type StartCheckoutPaymentResult =
+  CheckoutDomainResult<StartCheckoutPaymentData>;
 
 export type CheckoutSubmitFailure = {
   ok: false;

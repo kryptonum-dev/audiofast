@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { loadCheckoutPage } from './checkout-load';
 import { loadCheckoutAuthContext } from '@/src/global/b2c/checkout/server/auth-context';
+
+import { loadCheckoutPage } from './checkout-load';
 
 vi.mock('@/src/global/b2c/checkout/server/auth-context', () => ({
   loadCheckoutAuthContext: vi.fn(),
@@ -58,6 +59,7 @@ describe('loadCheckoutPage', () => {
             termsAccepted: false,
             privacyPolicyAccepted: false,
           },
+          newsletterOptIn: false,
           saveToProfile: false,
           updatedAt: null,
         },
@@ -156,6 +158,7 @@ describe('loadCheckoutPage', () => {
             termsAccepted: false,
             privacyPolicyAccepted: false,
           },
+          newsletterOptIn: false,
           saveToProfile: false,
           updatedAt: null,
         },

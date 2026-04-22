@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { MOCK_P24_SCENARIO_IDS } from './mock-payment-scenarios';
 import type {
   CheckoutAddress,
   CheckoutConsentsInput,
@@ -62,6 +63,8 @@ const PHONE_PL_PREFIX_PATTERN = /^(\+48|0048|48)/;
 const PHONE_NATIONAL_PATTERN = /^\d{9}$/;
 const TAX_ID_SANITIZE_PATTERN = /[^0-9]/g;
 const POSTAL_CODE_PATTERN = /^\d{2}-\d{3}$/;
+const POSTAL_CODE_DIGITS_PATTERN = /^\d{5}$/;
+const POSTAL_CODE_NON_DIGIT_PATTERN = /\D/g;
 const POLAND_COUNTRY_CODE = 'PL';
 
 /**
@@ -82,6 +85,25 @@ export function normalizePolishPhoneNumber(value: unknown): string | null {
   }
 
   return withoutPrefix;
+}
+
+/**
+ * Normalizes any reasonable Polish postal-code input to the canonical `00-000` form.
+ * Strips every non-digit, keeps the first 5 digits, and re-inserts the dash.
+ * Returns `null` when the stripped input does not contain exactly 5 digits.
+ */
+export function normalizePolishPostalCode(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const digits = value.replace(POSTAL_CODE_NON_DIGIT_PATTERN, '');
+
+  if (!POSTAL_CODE_DIGITS_PATTERN.test(digits)) {
+    return null;
+  }
+
+  return `${digits.slice(0, 2)}-${digits.slice(2)}`;
 }
 
 const trimmedRequiredString = (message: string) =>
@@ -163,14 +185,32 @@ const checkoutAddressObjectSchema = z.object({
   streetName: trimmedRequiredString('Podaj nazwę ulicy.'),
   buildingNumber: trimmedRequiredString('Podaj numer domu.'),
   apartmentNumber: nullableTrimmedString,
-  postalCode: z
-    .string()
-    .trim()
-    .min(1, 'Podaj kod pocztowy.')
-    .regex(
-      POSTAL_CODE_PATTERN,
-      'Podaj poprawny kod pocztowy w formacie 00-000.',
-    ),
+  postalCode: z.preprocess(
+    (value) => {
+      if (value === null || value === undefined) {
+        return '';
+      }
+
+      if (typeof value !== 'string') {
+        return value;
+      }
+
+      const trimmed = value.trim();
+
+      if (trimmed.length === 0) {
+        return '';
+      }
+
+      return normalizePolishPostalCode(trimmed) ?? trimmed;
+    },
+    z
+      .string()
+      .min(1, 'Podaj kod pocztowy.')
+      .regex(
+        POSTAL_CODE_PATTERN,
+        'Podaj poprawny kod pocztowy w formacie 00-000.',
+      ),
+  ),
   city: trimmedRequiredString('Podaj miejscowość.'),
   country: countrySchema,
 });
@@ -267,7 +307,14 @@ export const checkoutSubmitSchema: z.ZodType<CheckoutSubmitInput> = z.object({
   shippingAddress: checkoutShippingAddressSchema,
   invoice: checkoutInvoiceSchema,
   consents: checkoutConsentsSchema,
+  newsletterOptIn: z.boolean(),
   saveToProfile: z.boolean(),
+  mockPaymentScenarioId: z
+    .preprocess(
+      (value) => (value === '' || value === undefined ? null : value),
+      z.enum(MOCK_P24_SCENARIO_IDS).nullable(),
+    )
+    .optional(),
 });
 
 function createEmptySubmitErrors(): CheckoutSubmitErrors {
@@ -616,7 +663,9 @@ export function validateCheckoutSubmitInput(
       shippingAddress: shippingResult.value,
       invoice: invoiceResult.value,
       consents: consentsResult.value,
+      newsletterOptIn: input.newsletterOptIn,
       saveToProfile: input.saveToProfile,
+      mockPaymentScenarioId: input.mockPaymentScenarioId ?? null,
     },
     errors,
   };
@@ -651,7 +700,9 @@ export function createEmptyCheckoutDraft(): CheckoutDraft {
       termsAccepted: false,
       privacyPolicyAccepted: false,
     },
+    newsletterOptIn: false,
     saveToProfile: false,
+    mockPaymentScenarioId: null,
     updatedAt: null,
   };
 }

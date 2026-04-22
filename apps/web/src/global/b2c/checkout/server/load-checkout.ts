@@ -5,7 +5,6 @@ import {
 } from '../errors';
 import { buildCheckoutDraftFromProfile } from '../profile';
 import { createEmptyCheckoutDraft } from '../validation';
-
 import { loadCheckoutAuthContext } from './auth-context';
 import type { LoadCheckoutPageResult } from './types';
 

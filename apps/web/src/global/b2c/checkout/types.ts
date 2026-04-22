@@ -1,7 +1,5 @@
-import type {
-  CartCouponDiscountType,
-  CartLineType,
-} from '../cart/types';
+import type { CartCouponDiscountType, CartLineType } from '../cart/types';
+import type { MockP24ScenarioId } from './mock-payment-scenarios';
 
 export type CheckoutCountryCode = 'PL';
 
@@ -48,7 +46,9 @@ export type CheckoutSubmitInput = {
   shippingAddress: CheckoutShippingAddressInput;
   invoice: CheckoutInvoiceInput;
   consents: CheckoutConsentsInput;
+  newsletterOptIn: boolean;
   saveToProfile: boolean;
+  mockPaymentScenarioId?: MockP24ScenarioId | null;
 };
 
 export type CheckoutDraft = CheckoutSubmitInput & {

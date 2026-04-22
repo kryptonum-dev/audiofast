@@ -1,3 +1,4 @@
+import type { CheckoutProfilePersistenceDecision } from './profile';
 import type {
   CheckoutCustomerSnapshot,
   CheckoutInvoiceDataSnapshot,
@@ -7,9 +8,8 @@ import type {
   CheckoutShippingAddressSnapshot,
   CheckoutSubmitInput,
 } from './types';
-import type { CheckoutProfilePersistenceDecision } from './profile';
 
-export type CheckoutOrderStatus = 'awaiting_payment';
+export type CheckoutOrderStatus = 'awaiting_payment' | 'paid';
 
 export type CheckoutStatusHistoryEntry = {
   status: CheckoutOrderStatus;
@@ -93,6 +93,21 @@ export function buildInitialCheckoutStatusHistory(
     {
       status: 'awaiting_payment',
       changedAt: createdAt,
+      source: 'system',
+    },
+  ];
+}
+
+export function appendCheckoutStatusHistoryEntry(args: {
+  history: CheckoutStatusHistoryEntry[];
+  status: CheckoutOrderStatus;
+  changedAt: string;
+}): CheckoutStatusHistoryEntry[] {
+  return [
+    ...args.history,
+    {
+      status: args.status,
+      changedAt: args.changedAt,
       source: 'system',
     },
   ];

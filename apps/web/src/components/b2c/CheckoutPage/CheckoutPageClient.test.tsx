@@ -149,6 +149,7 @@ function createInitialDraft(overrides?: Partial<CheckoutDraft>): CheckoutDraft {
       termsAccepted: false,
       privacyPolicyAccepted: false,
     },
+    newsletterOptIn: false,
     saveToProfile: false,
     updatedAt: null,
     ...overrides,
@@ -185,71 +186,21 @@ describe('CheckoutPageClient', () => {
       value: {
         orderId: 'order-1',
         orderNumber: 'AF-2026-00001',
-        createdAt: '2026-04-20T10:00:00.000Z',
-        orderDraft: {
-          customerEmail: 'jan@example.com',
-          customerProfileId: null,
-          customerSnapshot: {
-            firstName: 'Jan',
-            lastName: 'Kowalski',
-            email: 'jan@example.com',
-            phone: '123123123',
-          },
-          shippingAddressSnapshot: {
-            firstName: 'Jan',
-            lastName: 'Kowalski',
-            phone: '123123123',
-            streetName: 'Testowa',
-            buildingNumber: '1',
-            apartmentNumber: null,
-            postalCode: '00-001',
-            city: 'Warszawa',
-            country: 'PL',
-          },
-          invoiceData: null,
-          subtotalCents: 240_00,
-          discountTotalCents: 10_00,
-          grandTotalCents: 230_00,
-          usedDiscount: null,
-          currentStatus: 'awaiting_payment',
-          statusHistory: [],
-          paymentProvider: 'przelewy24',
-          paymentReference: null,
-          paymentVerifiedAt: null,
-          payableUntil: '2026-04-20T10:15:00.000Z',
-          paidAt: null,
-          shipmentData: null,
-          items: [],
-          sessionContext: {
-            isAuthenticated: false,
-            authUserId: null,
-            authenticatedEmail: null,
-            customerProfileId: null,
-          },
-          profilePersistence: {
-            shouldEnsureProfileAfterSuccessfulPayment: true,
-            shouldStoreCheckoutDefaultsAfterSuccessfulPayment: false,
-            reason: 'create_profile_without_defaults',
-          },
-        },
-        insertedItemCount: 1,
-        input: createInitialDraft(),
-        revalidatedCart: createUseCartValue().cart,
-        paymentRegistrationInput: {
+        redirectUrl:
+          'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
+        registration: {
           provider: 'przelewy24',
+          merchantId: 999999,
+          posId: 999999,
           sessionId: 'AF-2026-00001',
-          amountCents: 230_00,
-          currency: 'PLN',
-          description: 'Zamówienie AF-2026-00001',
-          customerEmail: 'jan@example.com',
-          customerName: 'Jan Kowalski',
-          country: 'PL',
-          language: 'pl',
-          urlReturn: 'http://localhost:3000/podziekowania-za-zakup/',
-          urlStatus: 'http://localhost:3000/api/platnosci/przelewy24/status/',
-          orderNumber: 'AF-2026-00001',
-          orderId: 'order-1',
+          responseCode: 0,
+          token: 'mock-p24-token-af202600001',
+          redirectUrl:
+            'https://sandbox.przelewy24.pl/trnRequest/mock-p24-token-af202600001',
+          providerOrderId: 202600001,
+          providerReference: null,
         },
+        wasAlreadyPaid: false,
       },
     } as never);
   });
@@ -293,6 +244,9 @@ describe('CheckoutPageClient', () => {
     ).not.toBeChecked();
     expect(
       screen.getByRole('heading', { name: 'Zgody i finalizacja' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Scenariusz płatności (mock, tylko dev)'),
     ).toBeInTheDocument();
     expect(
       screen.getByRole('heading', { name: 'Podsumowanie' }),
@@ -405,6 +359,11 @@ describe('CheckoutPageClient', () => {
       }),
     );
     await user.click(
+      screen.getByRole('checkbox', {
+        name: /Wyrażam zgodę na przetwarzanie moich danych osobowych przez Audiofast/i,
+      }),
+    );
+    await user.click(
       screen.getByRole('button', { name: 'Przejdź do płatności' }),
     );
 
@@ -427,6 +386,8 @@ describe('CheckoutPageClient', () => {
             country: 'PL',
           },
         },
+        newsletterOptIn: true,
+        mockPaymentScenarioId: null,
       }),
       expect.objectContaining({
         lines: expect.any(Array),
@@ -434,9 +395,98 @@ describe('CheckoutPageClient', () => {
     );
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith(
-        '/podziekowania-za-zakup/?order=AF-2026-00001',
+        'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
       );
     });
+  });
+
+  it('passes the selected mock payment scenario into checkout submit', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <CheckoutPageClient
+        initialDraft={createInitialDraft()}
+        isEmailLocked={false}
+        sessionContext={{
+          isAuthenticated: false,
+          authUserId: null,
+          authenticatedEmail: null,
+          customerProfileId: null,
+        }}
+        customerProfile={null}
+        canPrefillFromProfile={false}
+        supportCard={null}
+      />,
+    );
+
+    await user.selectOptions(
+      screen.getByLabelText('Scenariusz płatności (mock, tylko dev)'),
+      'success_return_before_status',
+    );
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /Akceptuję regulamin i politykę prywatności/,
+      }),
+    );
+    await user.click(
+      screen.getByRole('button', { name: 'Przejdź do płatności' }),
+    );
+
+    await waitFor(() => {
+      expect(submitCheckout).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mockPaymentScenarioId: 'success_return_before_status',
+        }),
+        expect.any(Object),
+      );
+    });
+  });
+
+  it('shows a payment error when checkout succeeds but payment start fails', async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(submitCheckout).mockResolvedValueOnce({
+      ok: false,
+      error: {
+        code: 'payment_registration_failed',
+        message:
+          'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
+      },
+      revalidatedCart: null,
+      revalidationResults: null,
+    } as never);
+
+    render(
+      <CheckoutPageClient
+        initialDraft={createInitialDraft()}
+        isEmailLocked={false}
+        sessionContext={{
+          isAuthenticated: false,
+          authUserId: null,
+          authenticatedEmail: null,
+          customerProfileId: null,
+        }}
+        customerProfile={null}
+        canPrefillFromProfile={false}
+        supportCard={null}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /Akceptuję regulamin i politykę prywatności/,
+      }),
+    );
+    await user.click(
+      screen.getByRole('button', { name: 'Przejdź do płatności' }),
+    );
+
+    expect(
+      await screen.findByText(
+        'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
+      ),
+    ).toBeInTheDocument();
+    expect(pushMock).not.toHaveBeenCalled();
   });
 
   it('shows server-side field errors returned by checkout submit', async () => {

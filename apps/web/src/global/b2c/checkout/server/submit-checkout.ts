@@ -9,6 +9,7 @@ import type {
   CartState,
 } from '@/src/global/b2c/cart/types';
 import { BASE_URL } from '@/src/global/constants';
+import { subscribeToNewsletter } from '@/src/global/mailchimp/subscribe';
 
 import { validateCheckoutCart } from '../cart';
 import {
@@ -35,7 +36,7 @@ import {
 } from './types';
 
 const CHECKOUT_P24_RETURN_PATH = '/podziekowania-za-zakup/';
-const CHECKOUT_P24_STATUS_PATH = '/api/platnosci/przelewy24/status/';
+const CHECKOUT_P24_STATUS_PATH = '/api/payment/status/';
 const ORDER_NUMBER_RETRY_LIMIT = 3;
 
 function serializeLineIssues(issues: CartLineIssue[]) {
@@ -260,7 +261,32 @@ export async function submitCheckoutOrder(args: {
       orderDraft,
       urlReturn: paymentUrls.urlReturn,
       urlStatus: paymentUrls.urlStatus,
+      mockScenarioId: validationResult.value.mockPaymentScenarioId ?? null,
     });
+
+    if (validationResult.value.newsletterOptIn) {
+      try {
+        const newsletterResult = await subscribeToNewsletter(
+          validationResult.value.contact.email,
+        );
+
+        if (!newsletterResult.success) {
+          console.error('Checkout newsletter subscription failed.', {
+            orderId: persistedOrder.orderId,
+            orderNumber: persistedOrder.orderNumber,
+            email: validationResult.value.contact.email,
+            reason: newsletterResult.message,
+          });
+        }
+      } catch (error) {
+        console.error('Checkout newsletter subscription threw unexpectedly.', {
+          orderId: persistedOrder.orderId,
+          orderNumber: persistedOrder.orderNumber,
+          email: validationResult.value.contact.email,
+          error,
+        });
+      }
+    }
 
     return {
       ok: true,

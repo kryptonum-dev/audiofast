@@ -1,16 +1,19 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { submitCheckout } from './checkout-submit';
+import { revalidateCartLines } from '@/src/global/b2c/cart/server/revalidation';
+import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
+import type { CartState } from '@/src/global/b2c/cart/types';
 import { loadCheckoutAuthContext } from '@/src/global/b2c/checkout/server/auth-context';
 import { generateNextCheckoutOrderNumber } from '@/src/global/b2c/checkout/server/order-number';
 import {
   CheckoutPersistenceError,
   persistCheckoutOrder,
 } from '@/src/global/b2c/checkout/server/persistence';
-import { revalidateCartLines } from '@/src/global/b2c/cart/server/revalidation';
-import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
-import type { CartState } from '@/src/global/b2c/cart/types';
+import { startCheckoutPayment } from '@/src/global/b2c/checkout/server/start-payment';
 import type { CheckoutSubmitInput } from '@/src/global/b2c/checkout/types';
+import { subscribeToNewsletter } from '@/src/global/mailchimp/subscribe';
+
+import { submitCheckout } from './checkout-submit';
 
 vi.mock('@/src/global/b2c/checkout/server/auth-context', () => ({
   loadCheckoutAuthContext: vi.fn(),
@@ -21,9 +24,9 @@ vi.mock('@/src/global/b2c/checkout/server/order-number', () => ({
 }));
 
 vi.mock('@/src/global/b2c/checkout/server/persistence', async () => {
-  const actual = await vi.importActual<
-    typeof import('@/src/global/b2c/checkout/server/persistence')
-  >('@/src/global/b2c/checkout/server/persistence');
+  const actual = await vi.importActual(
+    '@/src/global/b2c/checkout/server/persistence',
+  );
 
   return {
     ...actual,
@@ -33,6 +36,14 @@ vi.mock('@/src/global/b2c/checkout/server/persistence', async () => {
 
 vi.mock('@/src/global/b2c/cart/server/revalidation', () => ({
   revalidateCartLines: vi.fn(),
+}));
+
+vi.mock('@/src/global/mailchimp/subscribe', () => ({
+  subscribeToNewsletter: vi.fn(),
+}));
+
+vi.mock('@/src/global/b2c/checkout/server/start-payment', () => ({
+  startCheckoutPayment: vi.fn(),
 }));
 
 function createValidCart(): CartState {
@@ -100,7 +111,9 @@ function createValidInput(): CheckoutSubmitInput {
       termsAccepted: true,
       privacyPolicyAccepted: true,
     },
+    newsletterOptIn: false,
     saveToProfile: false,
+    mockPaymentScenarioId: null,
   };
 }
 
@@ -119,6 +132,35 @@ describe('submitCheckout', () => {
       canPrefillFromProfile: false,
       isEmailLocked: false,
     });
+    vi.mocked(subscribeToNewsletter).mockResolvedValue({
+      success: true,
+      needsConfirmation: true,
+      message: 'Please check your email to confirm subscription',
+    });
+    vi.mocked(startCheckoutPayment).mockImplementation(
+      async ({ paymentRegistrationInput }) => ({
+        ok: true,
+        value: {
+          orderId: paymentRegistrationInput.checkoutOrderId,
+          orderNumber: paymentRegistrationInput.orderNumber,
+          redirectUrl: `${paymentRegistrationInput.urlReturn}?order=${paymentRegistrationInput.orderNumber}`,
+          registration: {
+            provider: 'przelewy24',
+            merchantId: paymentRegistrationInput.merchantId,
+            posId: paymentRegistrationInput.posId,
+            sessionId: paymentRegistrationInput.sessionId,
+            responseCode: 0,
+            token: `mock-p24-token-${paymentRegistrationInput.orderNumber}`,
+            redirectUrl: `https://sandbox.przelewy24.pl/trnRequest/mock-p24-token-${paymentRegistrationInput.orderNumber}`,
+            providerOrderId: Number(
+              paymentRegistrationInput.orderNumber.replace(/\D/g, '').slice(-9),
+            ),
+            providerReference: null,
+          },
+          wasAlreadyPaid: false,
+        },
+      }),
+    );
   });
 
   it('returns a form_invalid failure when the submitted checkout data is invalid', async () => {
@@ -153,6 +195,7 @@ describe('submitCheckout', () => {
     expect(result.ok ? null : result.error.code).toBe('form_invalid');
     expect(generateNextCheckoutOrderNumber).not.toHaveBeenCalled();
     expect(persistCheckoutOrder).not.toHaveBeenCalled();
+    expect(startCheckoutPayment).not.toHaveBeenCalled();
   });
 
   it('returns a cart_price_updated failure when only unit prices drifted during submit', async () => {
@@ -177,6 +220,7 @@ describe('submitCheckout', () => {
     ).toBe(199_00);
     expect(result.ok ? null : result.revalidationResults).toHaveLength(1);
     expect(persistCheckoutOrder).not.toHaveBeenCalled();
+    expect(startCheckoutPayment).not.toHaveBeenCalled();
   });
 
   it('accepts a resubmit with a lingering client-side price_changed issue once the price matches the refreshed one', async () => {
@@ -219,6 +263,7 @@ describe('submitCheckout', () => {
 
     expect(result.ok).toBe(true);
     expect(result.ok ? result.value.orderNumber : null).toBe('AF-2026-00010');
+    expect(startCheckoutPayment).toHaveBeenCalledTimes(1);
   });
 
   it('returns a cart_invalid failure (hard block) when a line becomes unbuyable, even if the price also drifted', async () => {
@@ -240,9 +285,10 @@ describe('submitCheckout', () => {
     expect(result.ok ? null : result.error.code).toBe('cart_invalid');
     expect(result.ok ? null : result.revalidationResults).toHaveLength(1);
     expect(persistCheckoutOrder).not.toHaveBeenCalled();
+    expect(startCheckoutPayment).not.toHaveBeenCalled();
   });
 
-  it('creates an awaiting_payment order and returns payment registration input on success', async () => {
+  it('creates an awaiting_payment order and returns the final payment redirect on success', async () => {
     const cart = createValidCart();
 
     vi.mocked(revalidateCartLines).mockResolvedValue([
@@ -274,22 +320,175 @@ describe('submitCheckout', () => {
 
     expect(result.value.orderId).toBe('order-1');
     expect(result.value.orderNumber).toBe('AF-2026-00001');
-    expect(result.value.orderDraft.currentStatus).toBe('awaiting_payment');
-    expect(result.value.orderDraft.paymentProvider).toBe('przelewy24');
-    expect(result.value.orderDraft.items).toHaveLength(1);
-    expect(result.value.paymentRegistrationInput).toMatchObject({
-      provider: 'przelewy24',
-      orderId: 'order-1',
-      orderNumber: 'AF-2026-00001',
-      amountCents: 150_00,
-      currency: 'PLN',
-      customerEmail: 'jan@example.com',
-    });
-    expect(result.value.paymentRegistrationInput.urlReturn).toContain(
-      '/podziekowania-za-zakup/',
+    expect(result.value.redirectUrl).toBe(
+      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
     );
-    expect(result.value.paymentRegistrationInput.urlStatus).toContain(
-      '/api/platnosci/przelewy24/status/',
+    expect(startCheckoutPayment).toHaveBeenCalledWith({
+      paymentRegistrationInput: expect.objectContaining({
+        provider: 'przelewy24',
+        checkoutOrderId: 'order-1',
+        orderNumber: 'AF-2026-00001',
+        amount: 150_00,
+        currency: 'PLN',
+        email: 'jan@example.com',
+        mockScenarioId: null,
+      }),
+    });
+    expect(subscribeToNewsletter).not.toHaveBeenCalled();
+  });
+
+  it('freezes the selected mock payment scenario into the payment registration input', async () => {
+    const cart = createValidCart();
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 150_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00004',
+    );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-4',
+      orderNumber: args.orderNumber,
+      createdAt: '2026-04-20T10:08:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+
+    const result = await submitCheckout(
+      {
+        ...createValidInput(),
+        mockPaymentScenarioId: 'success_return_before_status',
+      },
+      cart,
+    );
+
+    expect(result.ok).toBe(true);
+    expect(startCheckoutPayment).toHaveBeenCalledWith({
+      paymentRegistrationInput: expect.objectContaining({
+        orderNumber: 'AF-2026-00004',
+        mockScenarioId: 'success_return_before_status',
+      }),
+    });
+  });
+
+  it('subscribes the submitted email when newsletter opt-in is enabled', async () => {
+    const cart = createValidCart();
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 150_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00003',
+    );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-3',
+      orderNumber: args.orderNumber,
+      createdAt: '2026-04-20T10:06:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+
+    const result = await submitCheckout(
+      {
+        ...createValidInput(),
+        newsletterOptIn: true,
+      },
+      cart,
+    );
+
+    expect(result.ok).toBe(true);
+    expect(subscribeToNewsletter).toHaveBeenCalledWith('jan@example.com');
+    expect(startCheckoutPayment).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps checkout successful when newsletter subscription fails', async () => {
+    const cart = createValidCart();
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 150_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00004',
+    );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-4',
+      orderNumber: args.orderNumber,
+      createdAt: '2026-04-20T10:07:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+    vi.mocked(subscribeToNewsletter).mockResolvedValueOnce({
+      success: false,
+      message: 'Newsletter service not available',
+    });
+
+    const result = await submitCheckout(
+      {
+        ...createValidInput(),
+        newsletterOptIn: true,
+      },
+      cart,
+    );
+
+    expect(result.ok).toBe(true);
+    expect(subscribeToNewsletter).toHaveBeenCalledWith('jan@example.com');
+    expect(startCheckoutPayment).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns a payment error when the payment start step fails after order creation', async () => {
+    const cart = createValidCart();
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 150_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00005',
+    );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-5',
+      orderNumber: args.orderNumber,
+      createdAt: '2026-04-20T10:08:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+    vi.mocked(startCheckoutPayment).mockResolvedValueOnce({
+      ok: false,
+      error: {
+        code: 'payment_registration_failed',
+        message:
+          'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
+      },
+    });
+
+    const result = await submitCheckout(createValidInput(), cart);
+
+    expect(result.ok).toBe(false);
+    expect(result.ok ? null : result.error.code).toBe(
+      'payment_registration_failed',
     );
   });
 
@@ -310,10 +509,7 @@ describe('submitCheckout', () => {
       .mockResolvedValueOnce('AF-2026-00002');
     vi.mocked(persistCheckoutOrder)
       .mockRejectedValueOnce(
-        new CheckoutPersistenceError(
-          'duplicate',
-          'duplicate_order_number',
-        ),
+        new CheckoutPersistenceError('duplicate', 'duplicate_order_number'),
       )
       .mockImplementationOnce(async (args) => ({
         orderId: 'order-2',
@@ -329,5 +525,6 @@ describe('submitCheckout', () => {
     expect(generateNextCheckoutOrderNumber).toHaveBeenCalledTimes(2);
     expect(persistCheckoutOrder).toHaveBeenCalledTimes(2);
     expect(result.ok ? result.value.orderNumber : null).toBe('AF-2026-00002');
+    expect(startCheckoutPayment).toHaveBeenCalledTimes(1);
   });
 });
