@@ -11,14 +11,19 @@ import type {
   P24VerificationInput,
 } from '../payment-contracts';
 import { buildP24VerificationSign } from '../payment-contracts';
+import {
+  type PaymentConfirmationEmailOrderData,
+  sendCheckoutPaymentConfirmationEmail,
+} from './payment-confirmation-email';
 import { persistPaidCheckoutOrderProfile } from './payment-profile-persistence';
 import { getCheckoutPaymentProviderAdapter } from './payment-provider';
 import { confirmCheckoutOrderPayment } from './payment-update';
 
 type OrderStatusNotificationRow = Pick<
   Database['public']['Tables']['orders']['Row'],
-  'id' | 'order_number' | 'current_status' | 'grand_total_cents'
->;
+  'current_status'
+> &
+  PaymentConfirmationEmailOrderData;
 
 const MOCK_P24_CRC = 'mock-p24-crc';
 const P24_CURRENCY: P24Currency = 'PLN';
@@ -39,7 +44,9 @@ async function loadOrderForPaymentStatus(
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('orders')
-    .select('id, order_number, current_status, grand_total_cents')
+    .select(
+      'customer_email, customer_snapshot, current_status, discount_total_cents, grand_total_cents, id, invoice_data, order_number, shipping_address_snapshot, subtotal_cents',
+    )
     .eq('order_number', orderNumber)
     .maybeSingle();
 
@@ -128,6 +135,23 @@ export async function handleCheckoutPaymentStatusNotification(args: {
       verification.providerReference ?? args.notification.result.paymentId,
     verifiedAt: verification.verifiedAt,
   });
+
+  if (!paymentUpdate.wasAlreadyPaid) {
+    try {
+      await sendCheckoutPaymentConfirmationEmail({
+        order,
+      });
+    } catch (error) {
+      console.error(
+        'Failed to send checkout payment confirmation email after payment confirmation.',
+        {
+          orderId: paymentUpdate.orderId,
+          orderNumber: paymentUpdate.orderNumber,
+          error,
+        },
+      );
+    }
+  }
 
   try {
     await persistPaidCheckoutOrderProfile({

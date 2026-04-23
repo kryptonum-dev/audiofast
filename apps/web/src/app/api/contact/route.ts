@@ -1,4 +1,3 @@
-import { render } from '@react-email/render';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -7,11 +6,7 @@ import {
   FALLBACK_EMAIL_SUBJECT,
   FALLBACK_SUPPORT_EMAIL,
 } from '@/global/constants';
-import {
-  isGraphConfigured,
-  type SendEmailOptions,
-  sendEmails,
-} from '@/global/microsoft-graph/client';
+import { isGraphConfigured } from '@/global/microsoft-graph/client';
 import { sanityFetch } from '@/global/sanity/fetch';
 import { queryContactSettings } from '@/global/sanity/query';
 import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
@@ -19,6 +14,10 @@ import type { PortableTextProps } from '@/global/types';
 import { portableTextToHtml } from '@/global/utils';
 import { ContactConfirmationTemplate } from '@/src/emails/contact-confirmation-template';
 import { ContactNotificationTemplate } from '@/src/emails/contact-notification-template';
+import {
+  sendTransactionalEmails,
+  type TransactionalEmailInput,
+} from '@/src/global/email/service';
 
 // Reply-to address for confirmation emails
 const REPLY_TO_EMAIL =
@@ -160,60 +159,47 @@ export async function POST(request: NextRequest) {
     variables,
   );
 
-  // Render internal notification email using React Email
   const internalSubject = body.product
     ? body.product.kind === 'cpo'
       ? `[CPO] Zapytanie o egzemplarz: ${body.product.brandName} ${body.product.name}`
       : `Zapytanie o produkt: ${body.product.brandName} ${body.product.name}`
     : `Nowe zgłoszenie z formularza kontaktowego`;
-  const internalEmailHtml = await render(
-    ContactNotificationTemplate({
-      name: body.name,
-      email: body.email,
-      message: body.message,
-      product: body.product,
-    }),
-  );
 
   // Temporary testing override: product inquiry notifications go only to Oliwier.
   const internalNotificationRecipients = body.product
     ? [PRODUCT_INQUIRY_TEST_RECIPIENT]
     : emailConfig.supportEmails;
 
-  // Render confirmation email using React Email
-  const confirmationEmailHtml = await render(
-    ContactConfirmationTemplate({
-      name: body.name,
-      email: body.email,
-      message: body.message,
-      subject: confirmationSubject,
-      htmlContent: confirmationContentHtml,
-    }),
-  );
-
-  // Prepare email payloads
-  const emails: SendEmailOptions[] = [
-    // Internal notification email (to support team)
+  const emails: TransactionalEmailInput[] = [
     {
       to: internalNotificationRecipients.map((email) => ({ email })),
       subject: internalSubject,
-      htmlBody: internalEmailHtml,
-      replyTo: body.email, // Reply goes to the person who submitted the form
+      react: ContactNotificationTemplate({
+        name: body.name,
+        email: body.email,
+        message: body.message,
+        product: body.product,
+      }),
+      replyTo: body.email,
       saveToSentItems: true,
     },
-    // Confirmation email (to the user)
     {
       to: { email: body.email, name: body.name },
       subject: confirmationSubject,
-      htmlBody: confirmationEmailHtml,
+      react: ContactConfirmationTemplate({
+        name: body.name,
+        email: body.email,
+        message: body.message,
+        subject: confirmationSubject,
+        htmlContent: confirmationContentHtml,
+      }),
       replyTo: REPLY_TO_EMAIL,
       saveToSentItems: true,
     },
   ];
 
-  // Send emails concurrently
   try {
-    const results = await sendEmails(emails);
+    const results = await sendTransactionalEmails(emails);
     const [internalResult, confirmationResult] = results;
 
     // Check if internal email succeeded (required)

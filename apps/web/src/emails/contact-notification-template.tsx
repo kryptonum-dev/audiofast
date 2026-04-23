@@ -1,15 +1,12 @@
 import {
-  Body,
-  Container,
-  Head,
   Heading,
   Hr,
-  Html,
-  Preview,
   Section,
   Text,
 } from '@react-email/components';
 import * as React from 'react';
+
+import { EmailLayout } from './components/EmailLayout';
 
 type ProductInquiryData = {
   name: string;
@@ -70,161 +67,101 @@ export const ContactNotificationTemplate = ({
   const basePrice = product?.basePrice;
 
   return (
-    <Html>
-      <Head />
-      <Preview>{previewText}</Preview>
-      <Body style={main}>
-        <Container style={container}>
-          {/* Header Section */}
-          <Section style={headerSection}>
-            <Heading style={h1}>Audiofast</Heading>
-            <Text style={headerSubtitle}>Panel administracyjny</Text>
-          </Section>
+    <EmailLayout
+      previewText={previewText}
+      headerSubtitle="Panel administracyjny"
+      footerNote="Ten e-mail został wygenerowany automatycznie przez system formularzy Audiofast."
+    >
+      <Section style={section}>
+        <Heading style={h2}>{headingText}</Heading>
 
-          {/* Content Section */}
-          <Section style={section}>
-            <Heading style={h2}>{headingText}</Heading>
+        {product && (
+          <Section style={productSection}>
+            {isCpoInquiry && (
+              <Text style={productTypeBadge}>
+                CPO | Certyfikowany sprzęt używany
+              </Text>
+            )}
+            <Text style={productBrand}>{product.brandName}</Text>
+            <Text style={productName}>{product.name}</Text>
 
-            {/* Product Section - Only shown if product exists */}
-            {product && (
-              <Section style={productSection}>
-                {isCpoInquiry && (
-                  <Text style={productTypeBadge}>
-                    CPO | Certyfikowany sprzęt używany
-                  </Text>
-                )}
-                <Text style={productBrand}>{product.brandName}</Text>
-                <Text style={productName}>{product.name}</Text>
-
-                {product.configuration.length > 0 && (
-                  <Section style={configSection}>
-                    <Text style={configHeading}>Wybrana konfiguracja:</Text>
-                    {product.configuration.map((item, index) => (
-                      <Section key={index} style={configRow}>
-                        <Text style={configLabel}>{item.label}:</Text>
-                        <Text style={configValue}>
-                          {item.value}
-                          {item.priceDelta > 0 && (
-                            <span style={configPrice}>
-                              {' '}
-                              (+{formatPrice(item.priceDelta)})
-                            </span>
-                          )}
-                        </Text>
-                      </Section>
-                    ))}
+            {product.configuration.length > 0 && (
+              <Section style={configSection}>
+                <Text style={configHeading}>Wybrana konfiguracja:</Text>
+                {product.configuration.map((item, index) => (
+                  <Section key={index} style={configRow}>
+                    <Text style={configLabel}>{item.label}:</Text>
+                    <Text style={configValue}>
+                      {item.value}
+                      {item.priceDelta > 0 ? (
+                        <span style={configPrice}>
+                          {' '}
+                          (+{formatPrice(item.priceDelta)})
+                        </span>
+                      ) : null}
+                    </Text>
                   </Section>
-                )}
-
-                {hasVisiblePrice ? (
-                  <Section style={priceSection}>
-                    {totalAdditions > 0 && typeof basePrice === 'number' ? (
-                      <>
-                        <Section style={priceRow}>
-                          <Text style={priceLabel}>Cena bazowa:</Text>
-                          <Text style={priceValue}>
-                            {formatPrice(basePrice)}
-                          </Text>
-                        </Section>
-                        <Section style={priceRow}>
-                          <Text style={priceLabel}>Dodatki:</Text>
-                          <Text style={priceValue}>
-                            +{formatPrice(totalAdditions)}
-                          </Text>
-                        </Section>
-                        <Hr style={priceDivider} />
-                      </>
-                    ) : null}
-                    <Section style={priceRow}>
-                      <Text style={priceTotalLabel}>
-                        {isCpoInquiry ? 'Cena CPO:' : 'Razem:'}
-                      </Text>
-                      <Text style={priceTotalValue}>
-                        {formatPrice(totalPrice!)}
-                      </Text>
-                    </Section>
-                  </Section>
-                ) : null}
+                ))}
               </Section>
             )}
 
-            {/* Contact Info Section */}
-            <Section style={infoSection}>
-              {name && (
-                <Section style={infoRow}>
-                  <Text style={infoLabel}>Imię i nazwisko:</Text>
-                  <Text style={infoValue}>{name}</Text>
+            {hasVisiblePrice ? (
+              <Section style={priceSection}>
+                {totalAdditions > 0 && typeof basePrice === 'number' ? (
+                  <>
+                    <Section style={priceRow}>
+                      <Text style={priceLabel}>Cena bazowa:</Text>
+                      <Text style={priceValue}>{formatPrice(basePrice)}</Text>
+                    </Section>
+                    <Section style={priceRow}>
+                      <Text style={priceLabel}>Dodatki:</Text>
+                      <Text style={priceValue}>
+                        +{formatPrice(totalAdditions)}
+                      </Text>
+                    </Section>
+                    <Hr style={priceDivider} />
+                  </>
+                ) : null}
+                <Section style={priceRow}>
+                  <Text style={priceTotalLabel}>
+                    {isCpoInquiry ? 'Cena CPO:' : 'Razem:'}
+                  </Text>
+                  <Text style={priceTotalValue}>
+                    {formatPrice(totalPrice!)}
+                  </Text>
                 </Section>
-              )}
-
-              <Section style={infoRow}>
-                <Text style={infoLabel}>E-mail:</Text>
-                <Text style={infoValue}>
-                  <a href={`mailto:${email}`} style={emailLink}>
-                    {email}
-                  </a>
-                </Text>
               </Section>
-
-              {message && (
-                <Section style={infoRow}>
-                  <Text style={infoLabel}>Wiadomość:</Text>
-                  <Text style={messageValue}>{message}</Text>
-                </Section>
-              )}
-            </Section>
+            ) : null}
           </Section>
+        )}
 
-          {/* Footer */}
-          <Section style={footer}>
-            <Hr style={hr} />
-            <Text style={footerText}>
-              Ten e-mail został wygenerowany automatycznie przez system
-              formularzy Audiofast.
+        <Section style={infoSection}>
+          {name ? (
+            <Section style={infoRow}>
+              <Text style={infoLabel}>Imię i nazwisko:</Text>
+              <Text style={infoValue}>{name}</Text>
+            </Section>
+          ) : null}
+
+          <Section style={infoRow}>
+            <Text style={infoLabel}>E-mail:</Text>
+            <Text style={infoValue}>
+              <a href={`mailto:${email}`} style={emailLink}>
+                {email}
+              </a>
             </Text>
           </Section>
-        </Container>
-      </Body>
-    </Html>
+
+          {message ? (
+            <Section style={infoRow}>
+              <Text style={infoLabel}>Wiadomość:</Text>
+              <Text style={messageValue}>{message}</Text>
+            </Section>
+          ) : null}
+        </Section>
+      </Section>
+    </EmailLayout>
   );
-};
-
-// Styles - Colors matching global.scss and newsletter template
-const main = {
-  backgroundColor: '#f8f8f8', // --neutral-200
-  fontFamily: 'Arial, Helvetica, sans-serif',
-  color: '#5b5a5a', // --neutral-600
-};
-
-const container = {
-  margin: '0 auto',
-  padding: '0 0 48px',
-  maxWidth: '600px',
-  backgroundColor: '#ffffff', // --neutral-white
-};
-
-const headerSection = {
-  padding: '32px 20px',
-  textAlign: 'center' as const,
-  borderBottom: '2px solid #fe0140', // --primary-red
-  backgroundColor: '#f7f3f3', // --neutral-300
-};
-
-const h1 = {
-  color: '#303030', // --neutral-700
-  fontSize: '24px',
-  fontWeight: '500',
-  margin: '0 0 8px',
-  fontFamily: 'Arial, Helvetica, sans-serif',
-};
-
-const headerSubtitle = {
-  fontSize: '12px',
-  color: '#c5c5c5', // --neutral-500
-  textTransform: 'uppercase' as const,
-  fontWeight: '500',
-  letterSpacing: '0.05em',
-  margin: '0',
 };
 
 const section = {
@@ -406,23 +343,6 @@ const messageValue = {
 const emailLink = {
   color: '#fe0140', // --primary-red
   textDecoration: 'none',
-};
-
-const hr = {
-  borderColor: '#e7e7e7', // --neutral-400
-  margin: '20px 0',
-};
-
-const footer = {
-  padding: '0 20px',
-  textAlign: 'center' as const,
-};
-
-const footerText = {
-  fontSize: '12px',
-  color: '#c5c5c5', // --neutral-500
-  lineHeight: '1.5',
-  margin: '0',
 };
 
 export default ContactNotificationTemplate;
