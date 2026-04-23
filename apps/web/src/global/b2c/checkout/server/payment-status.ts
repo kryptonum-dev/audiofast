@@ -11,6 +11,7 @@ import type {
   P24VerificationInput,
 } from '../payment-contracts';
 import { buildP24VerificationSign } from '../payment-contracts';
+import { persistPaidCheckoutOrderProfile } from './payment-profile-persistence';
 import { getCheckoutPaymentProviderAdapter } from './payment-provider';
 import { confirmCheckoutOrderPayment } from './payment-update';
 
@@ -127,6 +128,22 @@ export async function handleCheckoutPaymentStatusNotification(args: {
       verification.providerReference ?? args.notification.result.paymentId,
     verifiedAt: verification.verifiedAt,
   });
+
+  try {
+    await persistPaidCheckoutOrderProfile({
+      orderId: paymentUpdate.orderId,
+    });
+  } catch (error) {
+    console.error(
+      'Failed to persist checkout customer profile data after payment confirmation.',
+      {
+        orderId: paymentUpdate.orderId,
+        orderNumber: paymentUpdate.orderNumber,
+        wasAlreadyPaid: paymentUpdate.wasAlreadyPaid,
+        error,
+      },
+    );
+  }
 
   return {
     orderId: paymentUpdate.orderId,

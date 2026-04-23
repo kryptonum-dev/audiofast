@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createEmptyCart } from './cart-domain';
 import {
   buildCheckoutCartFingerprint,
   CHECKOUT_CART_CLEANUP_STORAGE_KEY,
@@ -8,6 +7,7 @@ import {
   persistPendingCheckoutCartCleanup,
   removePendingCheckoutCartCleanup,
 } from './cart-checkout-cleanup';
+import { createEmptyCart } from './cart-domain';
 import { createStandardCartLine } from './standard-cart-line';
 
 describe('cart-checkout-cleanup', () => {

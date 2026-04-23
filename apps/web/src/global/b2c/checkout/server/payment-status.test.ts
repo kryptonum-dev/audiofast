@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createAdminClient } from '@/src/global/supabase/admin';
 
+import { persistPaidCheckoutOrderProfile } from './payment-profile-persistence';
 import { getCheckoutPaymentProviderAdapter } from './payment-provider';
 import { handleCheckoutPaymentStatusNotification } from './payment-status';
 import { confirmCheckoutOrderPayment } from './payment-update';
@@ -12,6 +13,10 @@ vi.mock('@/src/global/supabase/admin', () => ({
 
 vi.mock('./payment-provider', () => ({
   getCheckoutPaymentProviderAdapter: vi.fn(),
+}));
+
+vi.mock('./payment-profile-persistence', () => ({
+  persistPaidCheckoutOrderProfile: vi.fn(),
 }));
 
 vi.mock('./payment-update', () => ({
@@ -43,6 +48,16 @@ describe('handleCheckoutPaymentStatusNotification', () => {
     vi.mocked(getCheckoutPaymentProviderAdapter).mockReturnValue(
       providerAdapter as never,
     );
+    vi.mocked(persistPaidCheckoutOrderProfile).mockResolvedValue({
+      orderId: 'order-1',
+      orderNumber: 'AF-2026-00001',
+      profileId: 'profile-1',
+      createdProfile: false,
+      updatedProfile: false,
+      linkedAuthUser: false,
+      linkedOrderToProfile: false,
+      skippedReason: null,
+    });
   });
 
   it('confirms the order when the provider sends a done notification', async () => {
@@ -111,6 +126,9 @@ describe('handleCheckoutPaymentStatusNotification', () => {
       paymentReference: 'mock-p24-payment-af202600001',
       verifiedAt: '2026-04-21T10:00:00.000Z',
     });
+    expect(persistPaidCheckoutOrderProfile).toHaveBeenCalledWith({
+      orderId: 'order-1',
+    });
     expect(result).toEqual({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
@@ -152,6 +170,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
 
     expect(providerAdapter.verifyTransaction).not.toHaveBeenCalled();
     expect(confirmCheckoutOrderPayment).not.toHaveBeenCalled();
+    expect(persistPaidCheckoutOrderProfile).not.toHaveBeenCalled();
     expect(result).toEqual({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
@@ -159,6 +178,69 @@ describe('handleCheckoutPaymentStatusNotification', () => {
       currentStatus: 'awaiting_payment',
       wasConfirmed: false,
       wasAlreadyPaid: false,
+    });
+  });
+
+  it('keeps payment confirmation successful when profile persistence fails', async () => {
+    maybeSingleMock.mockResolvedValueOnce({
+      data: {
+        id: 'order-1',
+        order_number: 'AF-2026-00001',
+        current_status: 'awaiting_payment',
+        grand_total_cents: 230_00,
+      },
+      error: null,
+    });
+    vi.mocked(providerAdapter.verifyTransaction).mockResolvedValueOnce({
+      provider: 'przelewy24',
+      orderId: 202600001,
+      responseCode: 0,
+      data: {
+        status: 'success',
+      },
+      isVerified: true,
+      verifiedAt: '2026-04-21T10:00:00.000Z',
+      providerReference: 'mock-p24-payment-af202600001',
+    });
+    vi.mocked(confirmCheckoutOrderPayment).mockResolvedValueOnce({
+      orderId: 'order-1',
+      orderNumber: 'AF-2026-00001',
+      currentStatus: 'paid',
+      statusHistory: [],
+      paymentReference: 'mock-p24-payment-af202600001',
+      paymentVerifiedAt: '2026-04-21T10:00:00.000Z',
+      paidAt: '2026-04-21T10:00:00.000Z',
+      wasAlreadyPaid: true,
+    });
+    vi.mocked(persistPaidCheckoutOrderProfile).mockRejectedValueOnce(
+      new Error('boom'),
+    );
+
+    const result = await handleCheckoutPaymentStatusNotification({
+      notification: {
+        provider: 'przelewy24',
+        checkoutOrderId: 'order-1',
+        orderNumber: 'AF-2026-00001',
+        merchantId: 999999,
+        posId: 999999,
+        orderId: 202600001,
+        sessionId: 'AF-2026-00001',
+        method: 0,
+        result: {
+          generalStatus: 'done',
+          detailedStatus: 'Payment has been confirmed.',
+          paymentId: 'mock-p24-payment-af202600001',
+        },
+      },
+    });
+
+    expect(result).toEqual({
+      orderId: 'order-1',
+      orderNumber: 'AF-2026-00001',
+      providerStatus: 'done',
+      currentStatus: 'paid',
+      wasConfirmed: true,
+      wasAlreadyPaid: true,
     });
   });
 });

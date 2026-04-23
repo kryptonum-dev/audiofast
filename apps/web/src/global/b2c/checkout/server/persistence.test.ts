@@ -84,6 +84,7 @@ function createOrderDraft(): CheckoutOrderDraft {
     profilePersistence: {
       shouldEnsureProfileAfterSuccessfulPayment: true,
       shouldStoreCheckoutDefaultsAfterSuccessfulPayment: false,
+      authUserIdAtCheckout: 'user-1',
       reason: 'update_profile_without_defaults',
     },
   };
@@ -111,6 +112,12 @@ describe('checkout persistence', () => {
       payable_until: '2026-04-20T10:15:00.000Z',
       subtotal_cents: 150_00,
       grand_total_cents: 150_00,
+      profile_persistence: {
+        shouldEnsureProfileAfterSuccessfulPayment: true,
+        shouldStoreCheckoutDefaultsAfterSuccessfulPayment: false,
+        authUserIdAtCheckout: 'user-1',
+        reason: 'update_profile_without_defaults',
+      },
       customer_snapshot: {
         firstName: 'Jan',
         lastName: 'Kowalski',

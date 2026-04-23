@@ -123,7 +123,10 @@ export function buildCheckoutOrderTotals(
       (total, line) => total + line.lineDiscountTotalCents,
       0,
     ),
-    grandTotalCents: lines.reduce((total, line) => total + line.lineTotalCents, 0),
+    grandTotalCents: lines.reduce(
+      (total, line) => total + line.lineTotalCents,
+      0,
+    ),
     itemCount: lines.reduce((total, line) => total + line.quantity, 0),
     lineCount: lines.length,
   };

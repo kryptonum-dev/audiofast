@@ -1,10 +1,9 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 
-import type { Database } from '@/src/global/supabase/database.types';
 import { createAdminClient } from '@/src/global/supabase/admin';
+import type { Database } from '@/src/global/supabase/database.types';
 
 import type { CheckoutOrderDraft } from '../order-draft';
-
 import type { PersistCheckoutOrderResult } from './types';
 
 type OrdersInsert = Database['public']['Tables']['orders']['Insert'];
@@ -45,6 +44,7 @@ export function mapCheckoutOrderDraftToOrdersInsert(args: {
     payment_provider: args.orderDraft.paymentProvider,
     payment_reference: args.orderDraft.paymentReference,
     payment_verified_at: args.orderDraft.paymentVerifiedAt,
+    profile_persistence: args.orderDraft.profilePersistence,
     customer_snapshot: args.orderDraft.customerSnapshot,
     shipping_address_snapshot: args.orderDraft.shippingAddressSnapshot,
     subtotal_cents: args.orderDraft.subtotalCents,

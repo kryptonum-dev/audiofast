@@ -182,7 +182,7 @@ describe('startCheckoutPayment', () => {
       },
     });
     expect(result.value.redirectUrl).toBe(
-      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001&status=success',
+      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
     );
   });
 
@@ -227,7 +227,7 @@ describe('startCheckoutPayment', () => {
     expect(result.ok).toBe(true);
     expect(handleCheckoutPaymentStatusNotification).not.toHaveBeenCalled();
     expect(result.ok ? result.value.redirectUrl : null).toBe(
-      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001&status=success&scenario=success_return_before_status',
+      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001&scenario=success_return_before_status',
     );
   });
 

@@ -20,7 +20,6 @@ function buildCheckoutPaymentRedirectUrl(args: {
 }): string {
   const redirectUrl = new URL(args.registrationInput.urlReturn);
   redirectUrl.searchParams.set('order', args.returnState.orderNumber);
-  redirectUrl.searchParams.set('status', args.returnState.status);
 
   if (args.returnState.mockScenarioId) {
     redirectUrl.searchParams.set('scenario', args.returnState.mockScenarioId);

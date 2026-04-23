@@ -4,7 +4,6 @@ import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database } from '@/src/global/supabase/database.types';
 
 import type { MockP24ScenarioId } from '../mock-payment-scenarios';
-import type { P24ReturnStatus } from '../payment-contracts';
 import { buildMockP24StatusNotificationPayloadForOrder } from './payment-mock';
 import { getMockP24Scenario } from './payment-mock-scenarios';
 import { handleCheckoutPaymentStatusNotification } from './payment-status';
@@ -21,14 +20,12 @@ type ThankYouOrderRow = Pick<
 
 export type LoadThankYouPageInput = {
   order?: string;
-  status?: string;
   scenario?: string;
   refresh?: string;
 };
 
 export type LoadThankYouPageData = {
   orderNumber: string | null;
-  returnStatus: P24ReturnStatus | null;
   mockScenarioId: MockP24ScenarioId | null;
   state: CheckoutThankYouStateDefinition;
 };
@@ -40,21 +37,6 @@ function normalizeOrderNumber(value: string | undefined): string | null {
 
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
-}
-
-function normalizeReturnStatus(
-  value: string | undefined,
-): P24ReturnStatus | null {
-  switch (value) {
-    case 'success':
-    case 'failure':
-    case 'cancel':
-    case 'pending':
-    case 'unknown':
-      return value;
-    default:
-      return null;
-  }
 }
 
 function normalizeScenarioId(
@@ -146,20 +128,17 @@ export async function loadThankYouPageData(
   input: LoadThankYouPageInput,
 ): Promise<LoadThankYouPageData> {
   const orderNumber = normalizeOrderNumber(input.order);
-  const returnStatus = normalizeReturnStatus(input.status);
   const mockScenarioId = normalizeScenarioId(input.scenario);
   const refreshRequested = input.refresh === '1';
 
   if (orderNumber === null) {
     return {
       orderNumber: null,
-      returnStatus,
       mockScenarioId,
       state: resolveCheckoutThankYouState({
         hasOrderAccess: false,
         currentOrderStatus: null,
         payableUntil: null,
-        returnStatus,
       }),
     };
   }
@@ -170,13 +149,11 @@ export async function loadThankYouPageData(
     if (order === null) {
       return {
         orderNumber,
-        returnStatus,
         mockScenarioId,
         state: resolveCheckoutThankYouState({
           hasOrderAccess: false,
           currentOrderStatus: null,
           payableUntil: null,
-          returnStatus,
         }),
       };
     }
@@ -192,7 +169,6 @@ export async function loadThankYouPageData(
 
     return {
       orderNumber: currentOrder?.order_number ?? order.order_number,
-      returnStatus,
       mockScenarioId,
       state: resolveCheckoutThankYouState({
         hasOrderAccess: true,
@@ -200,7 +176,6 @@ export async function loadThankYouPageData(
           (currentOrder ?? order).current_status,
         ),
         payableUntil: (currentOrder ?? order).payable_until,
-        returnStatus,
       }),
     };
   } catch (error) {
@@ -211,13 +186,11 @@ export async function loadThankYouPageData(
 
     return {
       orderNumber,
-      returnStatus,
       mockScenarioId,
       state: resolveCheckoutThankYouState({
         hasOrderAccess: false,
         currentOrderStatus: null,
         payableUntil: null,
-        returnStatus,
       }),
     };
   }

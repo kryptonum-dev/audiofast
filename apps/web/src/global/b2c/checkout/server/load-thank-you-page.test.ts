@@ -55,11 +55,9 @@ describe('loadThankYouPageData', () => {
 
     const result = await loadThankYouPageData({
       order: 'AF-2026-00001',
-      status: 'success',
     });
 
     expect(result.orderNumber).toBe('AF-2026-00001');
-    expect(result.returnStatus).toBe('success');
     expect(result.mockScenarioId).toBeNull();
     expect(result.state.id).toBe('awaiting_payment');
     expect(result.state.shouldPoll).toBe(true);
@@ -78,7 +76,6 @@ describe('loadThankYouPageData', () => {
 
     const result = await loadThankYouPageData({
       order: 'AF-2026-00001',
-      status: 'failure',
     });
 
     expect(result.state.id).toBe('paid');
@@ -130,7 +127,6 @@ describe('loadThankYouPageData', () => {
 
     const result = await loadThankYouPageData({
       order: 'AF-2026-00001',
-      status: 'success',
       scenario: 'success_return_before_status',
       refresh: '1',
     });

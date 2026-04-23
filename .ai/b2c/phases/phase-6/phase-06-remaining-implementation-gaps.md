@@ -52,6 +52,8 @@ But it does **not** yet:
 - ensure the customer profile exists after a paid order
 - store checkout defaults after payment when `saveToProfile` is checked
 - update an existing profile with the latest defaults after payment when the rules allow it
+- document clearly how customer profile creation differs from authenticated identity creation
+- define the checkout -> login -> checkout return behavior around later authenticated prefill
 
 ### Current Source Files
 
@@ -62,6 +64,125 @@ But it does **not** yet:
 - `apps/web/src/global/b2c/checkout/server/payment-update.ts`
 - `apps/web/src/global/b2c/checkout/server/auth-context.ts`
 
+### Important Distinction: Profile Row vs Auth Identity
+
+This implementation must keep two layers separate:
+
+- `customer_profiles` is the reusable business/customer defaults layer
+- `Supabase Auth` is the verified login/session identity layer
+
+For Phase 06 the accepted rule should be:
+
+- do **not** create or mutate reusable customer data when the order is merely created in `awaiting_payment`
+- create or update the lightweight `customer_profiles` row only after verified paid success
+- do **not** require password-based registration to make this work
+
+The current architecture direction elsewhere in the B2C docs is:
+
+- passwordless email-based auth through `Supabase Auth`
+- currently documented as OTP / one-time code rather than password login
+- `customer_profiles.auth_user_id` is linked later to the verified auth identity
+
+This means Phase 06 should treat checkout profile persistence as a **commerce-side profile concern**, not as a full auth-account-creation concern.
+
+### Scenario Rules To Implement
+
+#### 1. Guest checkout, email has no existing profile
+
+After verified paid success:
+
+- create a lightweight `customer_profiles` row for that email
+- link the paid order to that profile
+- do not require the customer to be logged in at purchase time
+- do not create a password-based account flow
+
+The thank-you page remains guest-facing and can tell the customer they can later access the order through the customer-panel login entry.
+
+#### 2. Guest checkout, email already belongs to an existing profile
+
+After verified paid success:
+
+- link the paid order to the existing `customer_profiles` row
+- do **not** overwrite saved reusable defaults because the customer was not authenticated
+- keep the thank-you page guest-facing
+
+Important protection rule:
+
+- guest checkout must remain guest-like even when the email already exists
+- the flow must not reveal reusable saved-data existence through checkout behavior
+
+#### 3. Authenticated checkout, no data changes
+
+After verified paid success:
+
+- link the paid order to the authenticated customer profile
+- no profile update is needed
+
+#### 4. Authenticated checkout, data changed, `saveToProfile = false`
+
+After verified paid success:
+
+- preserve the changed order snapshot inside the order itself
+- do **not** update reusable profile defaults
+
+This keeps order truth and reusable future defaults separate.
+
+#### 5. Authenticated checkout, data changed, `saveToProfile = true`
+
+After verified paid success:
+
+- preserve the changed order snapshot inside the order
+- update reusable profile defaults for future checkout use
+
+This should reuse the existing checkbox already present in checkout. No extra popup is required.
+
+### Rules That Must Stay True
+
+- profile/default writes happen only after `paid`, never on order creation
+- guest checkout must never overwrite existing reusable defaults
+- authenticated changes affect reusable defaults only when `saveToProfile` is checked
+- order snapshots always preserve purchase-time truth even when profile defaults are not updated
+- repeated payment notifications must not duplicate profile creation or apply conflicting updates
+
+### Checkout -> Login -> Checkout Behavior
+
+This follow-up implementation should also preserve the accepted guest-first login behavior:
+
+- checkout includes a login CTA for returning customers
+- if the guest starts auth from checkout, successful auth should return them to checkout, not to the customer panel landing page
+- after returning authenticated:
+  - the cart should still be present
+  - checkout should reload with authenticated prefill
+  - the checkout email should become locked
+
+Important v1 limitation:
+
+- unsaved guest-typed form data does not need to survive that auth roundtrip
+- server-side profile prefill remains the only accepted source for returning authenticated defaults
+
+### Auth UX Direction For Later Customer Access
+
+The later customer access flow should rely on email-based passwordless auth rather than classic password registration.
+
+Current accepted direction in the architecture docs:
+
+- email OTP / one-time code through `Supabase Auth`
+- no custom password-first registration step required
+
+If this direction later changes to magic-link email instead of OTP code, the profile-linking model below still remains valid:
+
+1. checkout creates/updates only the commerce-side `customer_profiles` row after paid success
+2. later customer-panel auth verifies email ownership through `Supabase Auth`
+3. after successful verification, the system links `customer_profiles.auth_user_id` to that verified identity
+4. future protected customer-panel access uses the verified auth session, not checkout-only data
+
+So the profile model is compatible with both:
+
+- OTP code email auth
+- magic-link email auth
+
+What matters is that verified email ownership is established later by `Supabase Auth`, not by checkout submission itself.
+
 ### Missing Implementation Shape
 
 Add a dedicated post-payment profile persistence path that runs only after payment is verified and the order is confirmed as paid.
@@ -70,15 +191,22 @@ Preferred direction:
 
 1. load the paid order after `confirmCheckoutOrderPayment(...)`
 2. inspect the stored `profilePersistence` decision from the order snapshot/draft data
-3. ensure a `customer_profiles` row exists
-4. only write checkout defaults when `shouldStoreCheckoutDefaultsAfterSuccessfulPayment === true`
-5. keep this side effect non-destructive and idempotent
+3. normalize the customer email and look up an existing `customer_profiles` row
+4. if no profile exists, create a lightweight profile row after paid success
+5. if a profile already exists and the order came from a guest flow, link the order but do not overwrite reusable defaults
+6. if the customer was authenticated, allow default updates only when `shouldStoreCheckoutDefaultsAfterSuccessfulPayment === true`
+7. keep the whole side effect non-destructive and idempotent
+8. keep future auth linkage (`auth_user_id`) compatible with passwordless email auth
 
 ### Acceptance Criteria
 
 - guest paid order can create a lightweight customer profile when required
-- authenticated paid order can update the linked profile
+- guest paid order using an email that already exists links to the existing profile without changing saved defaults
+- authenticated paid order can update the linked profile only after verified payment success
 - `saveToProfile` controls default-address/default-invoice storage, not whether account existence is ensured
+- no profile/default writes happen for unpaid, failed, abandoned, or expired orders
+- checkout login CTA can return the customer to checkout with authenticated prefill and locked email
+- the model remains compatible with passwordless email auth through `Supabase Auth`
 - repeated payment notifications do not duplicate or corrupt profile writes
 
 ## 2. Confirmation Email After Verified Payment Success

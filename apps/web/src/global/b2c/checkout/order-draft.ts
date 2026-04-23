@@ -1,4 +1,8 @@
-import type { CheckoutProfilePersistenceDecision } from './profile';
+import {
+  buildCheckoutOrderProfilePersistence,
+  type CheckoutOrderProfilePersistence,
+  type CheckoutProfilePersistenceDecision,
+} from './profile';
 import type {
   CheckoutCustomerSnapshot,
   CheckoutInvoiceDataSnapshot,
@@ -37,7 +41,7 @@ export type CheckoutOrderDraft = {
   shipmentData: null;
   items: CheckoutOrderLineDraft[];
   sessionContext: CheckoutSessionContext;
-  profilePersistence: CheckoutProfilePersistenceDecision;
+  profilePersistence: CheckoutOrderProfilePersistence;
 };
 
 export const CHECKOUT_PAYMENT_WINDOW_MINUTES = 15;
@@ -127,7 +131,7 @@ export function buildCheckoutOrderDraft(args: {
   input: CheckoutSubmitInput;
   summary: CheckoutOrderSummary;
   sessionContext: CheckoutSessionContext;
-  profilePersistence: CheckoutProfilePersistenceDecision;
+  profilePersistenceDecision: CheckoutProfilePersistenceDecision;
   createdAt?: string;
 }): CheckoutOrderDraft {
   const createdAt = args.createdAt ?? new Date().toISOString();
@@ -152,6 +156,9 @@ export function buildCheckoutOrderDraft(args: {
     shipmentData: null,
     items: args.summary.lines,
     sessionContext: args.sessionContext,
-    profilePersistence: args.profilePersistence,
+    profilePersistence: buildCheckoutOrderProfilePersistence(
+      args.sessionContext,
+      args.profilePersistenceDecision,
+    ),
   };
 }

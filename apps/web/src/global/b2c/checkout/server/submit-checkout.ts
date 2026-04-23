@@ -198,7 +198,7 @@ export async function submitCheckoutOrder(args: {
       revalidatedCart,
       cartValidation.validLines,
     );
-    const profilePersistence = decideCheckoutProfilePersistence(
+    const profilePersistenceDecision = decideCheckoutProfilePersistence(
       authContext.sessionContext,
       authContext.customerProfile,
       validationResult.value,
@@ -208,7 +208,7 @@ export async function submitCheckoutOrder(args: {
       input: validationResult.value,
       summary,
       sessionContext: authContext.sessionContext,
-      profilePersistence,
+      profilePersistenceDecision,
       createdAt,
     });
 

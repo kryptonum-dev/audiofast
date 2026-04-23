@@ -1,6 +1,5 @@
 import type { MockP24ScenarioId } from '../mock-payment-scenarios';
 import type { CheckoutOrderStatus } from '../order-draft';
-import type { P24ReturnStatus } from '../payment-contracts';
 
 export type CheckoutThankYouStateId =
   | 'awaiting_payment'
@@ -35,9 +34,9 @@ const CHECKOUT_THANK_YOU_STATE_DEFINITIONS: Record<
   },
   paid: {
     id: 'paid',
-    title: 'Dziękujemy za zamówienie',
+    title: 'Dziękujemy za złożenie zamówienia',
     description:
-      'Płatność została potwierdzona, a zamówienie jest już zapisane jako opłacone.',
+      'Zamówienie zostało potwierdzone w naszym systemie. O kolejnych etapach jego realizacji będziemy informować Cię mailowo.',
     shouldPoll: false,
     showSupportContact: false,
   },
@@ -91,11 +90,16 @@ export function getCheckoutThankYouStateDefinition(
   return CHECKOUT_THANK_YOU_STATE_DEFINITIONS[stateId];
 }
 
+export function shouldRenderCheckoutConfirmationPage(
+  stateId: CheckoutThankYouStateId,
+): boolean {
+  return stateId === 'awaiting_payment' || stateId === 'paid';
+}
+
 export function resolveCheckoutThankYouState(args: {
   hasOrderAccess: boolean;
   currentOrderStatus: CheckoutThankYouResolvableOrderStatus | null;
   payableUntil: string | null;
-  returnStatus: P24ReturnStatus | null;
   now?: string;
 }): CheckoutThankYouStateDefinition {
   if (!args.hasOrderAccess || args.currentOrderStatus === null) {
@@ -111,8 +115,6 @@ export function resolveCheckoutThankYouState(args: {
   if (isExpired({ payableUntil: args.payableUntil, now })) {
     return getCheckoutThankYouStateDefinition('expired');
   }
-
-  void args.returnStatus;
 
   return getCheckoutThankYouStateDefinition('awaiting_payment');
 }
