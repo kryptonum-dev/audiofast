@@ -29,18 +29,13 @@ type CheckoutPageClientProps = {
   supportCard?: SupportCardData | null;
 };
 
-type FeedbackState = {
-  message: string;
-} | null;
-
 export default function CheckoutPageClient({
   initialDraft,
   isEmailLocked,
   sessionContext,
   supportCard = null,
 }: CheckoutPageClientProps) {
-  const { cart, isHydrated, applyCartLineRevalidation } = useCart();
-  const [feedback, setFeedback] = useState<FeedbackState>(null);
+  const { cart, isHydrated, applyCartLineRevalidation, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCartBlockingOverlayOpen, setIsCartBlockingOverlayOpen] =
     useState(false);
@@ -52,6 +47,9 @@ export default function CheckoutPageClient({
   );
   const openCartBlockingOverlay = useCallback(() => {
     setIsCartBlockingOverlayOpen(true);
+  }, []);
+  const closeCartBlockingOverlay = useCallback(() => {
+    setIsCartBlockingOverlayOpen(false);
   }, []);
 
   if (!isHydrated) {
@@ -83,12 +81,6 @@ export default function CheckoutPageClient({
               </div>
             ) : null}
 
-            {feedback ? (
-              <div className={styles.feedbackBanner} role="status">
-                {feedback.message}
-              </div>
-            ) : null}
-
             <CheckoutOrderPreview cart={cartState} />
 
             <CheckoutForm
@@ -97,7 +89,7 @@ export default function CheckoutPageClient({
               sessionContext={sessionContext}
               cart={cartState}
               applyCartLineRevalidation={applyCartLineRevalidation}
-              onFeedbackChange={setFeedback}
+              onCartEmpty={clearCart}
               onPriceChangeNoticeChange={setShowPriceChangeNotice}
               onCartBlockingOverlayOpen={openCartBlockingOverlay}
               onSubmittingChange={setIsSubmitting}
@@ -115,7 +107,10 @@ export default function CheckoutPageClient({
         </div>
 
         {isCartBlockingOverlayOpen ? (
-          <CheckoutBlockingOverlay blockingLines={blockingCartLines} />
+          <CheckoutBlockingOverlay
+            blockingLines={blockingCartLines}
+            onClose={closeCartBlockingOverlay}
+          />
         ) : null}
       </section>
     </main>

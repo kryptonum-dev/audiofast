@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
+import { toast } from 'sonner';
 
 import { submitCheckout } from '@/src/app/actions/checkout-submit';
 import Checkbox from '@/src/components/ui/Checkbox';
@@ -37,7 +38,7 @@ type CheckoutFormProps = {
   sessionContext: CheckoutSessionContext;
   cart: CartState;
   applyCartLineRevalidation: CartContextValue['applyCartLineRevalidation'];
-  onFeedbackChange: (feedback: { message: string } | null) => void;
+  onCartEmpty: () => void;
   onPriceChangeNoticeChange: (visible: boolean) => void;
   onCartBlockingOverlayOpen: () => void;
   onSubmittingChange: (isSubmitting: boolean) => void;
@@ -49,7 +50,7 @@ export default function CheckoutForm({
   sessionContext,
   cart,
   applyCartLineRevalidation,
-  onFeedbackChange,
+  onCartEmpty,
   onPriceChangeNoticeChange,
   onCartBlockingOverlayOpen,
   onSubmittingChange,
@@ -102,7 +103,6 @@ export default function CheckoutForm({
 
   const onSubmit = async (values: CheckoutFormValues) => {
     clearErrors();
-    onFeedbackChange(null);
     onPriceChangeNoticeChange(false);
 
     const result = await submitCheckout(
@@ -119,6 +119,11 @@ export default function CheckoutForm({
         applyCartLineRevalidation(result.revalidationResults);
       }
 
+      if (result.error.code === 'cart_empty') {
+        onCartEmpty();
+        return;
+      }
+
       if (result.error.code === 'cart_invalid') {
         onCartBlockingOverlayOpen();
         return;
@@ -130,9 +135,7 @@ export default function CheckoutForm({
       }
 
       mapServerFieldErrors(setError, result.error);
-      onFeedbackChange({
-        message: result.error.message,
-      });
+      toast.error(result.error.message);
       return;
     }
 

@@ -39,16 +39,6 @@
   color: var(--neutral-700, #303030);
 }
 
-.feedbackBanner {
-  padding: 1rem 1.125rem;
-  border-radius: 0.5rem;
-  font-size: var(--typography-body-m, 0.875rem);
-  line-height: 1.5;
-  background: rgba(255, 106, 0, 0.08);
-  color: var(--primary-error, #ff6a00);
-  border: 1px solid rgba(255, 106, 0, 0.2);
-}
-
 .sectionCard,
 .orderPreviewCard,
 .sidebarCard {
@@ -508,11 +498,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
-  background: rgba(20, 20, 20, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  animation: checkout-blocking-fade-in 160ms ease forwards;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
+  animation: checkout-blocking-fade-in 250ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes checkout-blocking-fade-in {
@@ -525,80 +515,160 @@
 }
 
 .blockingOverlayCard {
-  max-width: 32rem;
   width: 100%;
+  max-width: clamp(26rem, calc(32vw / 0.48), 32rem);
   background: var(--neutral-white, #ffffff);
-  border: 1px solid var(--neutral-400, #e7e7e7);
-  border-radius: 0.75rem;
-  padding: clamp(1.25rem, calc(2vw / 0.48), 2rem);
+  border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-  box-shadow: 0 24px 48px -16px rgba(20, 20, 20, 0.25);
+  align-items: center;
+  gap: 0;
+  padding: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+  text-align: center;
+  max-height: calc(100dvh - 4rem);
+  box-shadow:
+    0 0.25rem 1rem rgba(0, 0, 0, 0.08),
+    0 0.5rem 2rem rgba(0, 0, 0, 0.12);
+  animation: checkout-blocking-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blockingOverlayIconWrapper {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.03);
+  flex-shrink: 0;
+
+  svg {
+    width: 1.625rem;
+    height: 1.625rem;
+    color: rgba(0, 0, 0, 0.35);
+  }
 }
 
 .blockingOverlayHeading {
-  font-size: var(--typography-header-m, 1.5rem);
-  color: var(--neutral-800, #1a1a1a);
+  margin: 0 0 0.625rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  color: var(--neutral-black, #000000);
+  letter-spacing: -0.025em;
 }
 
 .blockingOverlayDescription {
-  font-size: var(--typography-body-m, 0.875rem);
+  margin: 0 0 clamp(1.25rem, calc(1.75vw / 0.48), 1.75rem);
+  max-width: 26rem;
+  font-size: 0.9375rem;
+  font-weight: 400;
   line-height: 1.5;
-  color: var(--neutral-700, #303030);
+  color: rgba(0, 0, 0, 0.65);
 }
 
 .blockingOverlayList {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  width: 100%;
+  margin: 0 0 clamp(1.5rem, calc(1.75vw / 0.48), 2rem);
+  padding: 0.875rem 1rem;
   border-radius: 0.5rem;
   background: rgba(254, 1, 64, 0.06);
   border: 1px solid rgba(254, 1, 64, 0.2);
   list-style: none;
-  margin: 0;
+  text-align: left;
+  overflow-y: auto;
 }
 
 .blockingOverlayListItem {
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
-  font-size: var(--typography-body-m, 0.875rem);
+  font-size: 0.9375rem;
   line-height: 1.4;
 }
 
 .blockingOverlayProductName {
+  margin: 0;
   font-weight: 600;
-  color: var(--neutral-800, #1a1a1a);
+  color: var(--neutral-black, #000000);
 }
 
 .blockingOverlayIssue {
   color: var(--primary-red, #fe0140);
 }
 
-.blockingOverlayCta {
-  align-self: flex-start;
-  margin-top: 0.5rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.5rem;
-  background: var(--primary-red, #fe0140);
-  color: var(--neutral-white, #ffffff);
-  font-size: var(--typography-body-m, 0.875rem);
-  font-weight: 500;
-  text-decoration: none;
-  transition: filter 160ms ease;
+.blockingOverlayActions {
+  display: flex;
+  gap: clamp(0.75rem, calc(1vw / 0.48), 1rem);
+  width: 100%;
 
-  &:hover,
-  &:focus-visible {
-    filter: brightness(0.9);
+  :global(a),
+  :global(button) {
+    flex: 1;
+    width: 100%;
+    min-height: 2.5rem;
+    max-width: 100%;
+    white-space: nowrap;
+  }
+}
+
+.blockingOverlayCancelButton,
+.blockingOverlayConfirmButton {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (max-width: 27.4375rem) {
+  .blockingOverlay {
+    align-items: flex-end;
+    padding: 0;
   }
 
-  &:focus-visible {
-    outline: 2px solid var(--primary-red, #fe0140);
-    outline-offset: 2px;
+  .blockingOverlayCard {
+    max-width: 100%;
+    border-radius: 0.75rem 0.75rem 0 0;
+    padding: 2rem 1rem;
+    animation: checkout-blocking-slide-up-mobile 350ms
+      cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .blockingOverlayActions {
+    flex-direction: column;
+  }
+}
+
+@media (max-height: 23.6875rem) {
+  .blockingOverlayHeading {
+    margin-bottom: 2rem;
+  }
+
+  .blockingOverlayDescription {
+    display: none;
+  }
+}
+
+@keyframes checkout-blocking-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes checkout-blocking-slide-up-mobile {
+  from {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

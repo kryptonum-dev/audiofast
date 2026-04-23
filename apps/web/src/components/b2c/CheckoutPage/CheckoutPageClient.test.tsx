@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { submitCheckout } from '@/src/app/actions/checkout-submit';
@@ -36,6 +37,12 @@ vi.mock('@/src/app/actions/checkout-submit', () => ({
 
 vi.mock('@/components/shared/Image', () => ({
   default: () => <div data-testid="mock-image" />,
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    error: vi.fn(),
+  },
 }));
 
 function createStandardLine() {
@@ -493,11 +500,11 @@ describe('CheckoutPageClient', () => {
       screen.getByRole('button', { name: 'Przejdź do płatności' }),
     );
 
-    expect(
-      await screen.findByText(
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
         'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
-      ),
-    ).toBeInTheDocument();
+      );
+    });
     expect(pushMock).not.toHaveBeenCalled();
   });
 
@@ -549,6 +556,9 @@ describe('CheckoutPageClient', () => {
     expect(
       await screen.findByText('Ten adres e-mail jest już w użyciu.'),
     ).toBeInTheDocument();
+    expect(toast.error).toHaveBeenCalledWith(
+      'Nie udało się przejść dalej, ponieważ formularz zawiera błędy.',
+    );
   });
 
   it('renders nested consent checkboxes with a select-all control', async () => {
@@ -649,8 +659,15 @@ describe('CheckoutPageClient', () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole('link', { name: 'Wróć do koszyka' }).length,
-    ).toBeGreaterThan(0);
+      screen.getByRole('link', { name: 'Przejdź do koszyka' }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Zamknij' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Zamknij' }));
+
+    expect(
+      screen.queryByRole('heading', { name: 'Koszyk wymaga aktualizacji' }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows the price-change notice and keeps the form usable when submit returns cart_price_updated', async () => {
@@ -716,6 +733,51 @@ describe('CheckoutPageClient', () => {
     expect(
       screen.getByRole('button', { name: 'Przejdź do płatności' }),
     ).toBeEnabled();
+  });
+
+  it('clears the cart when submit returns cart_empty', async () => {
+    const user = userEvent.setup();
+    const clearCart = vi.fn();
+
+    vi.mocked(useCart).mockReturnValue(createUseCartValue({ clearCart }));
+
+    vi.mocked(submitCheckout).mockResolvedValueOnce({
+      ok: false,
+      error: {
+        code: 'cart_empty',
+        message: 'Koszyk jest pusty.',
+      },
+      revalidatedCart: createEmptyCart(),
+      revalidationResults: [],
+    } as never);
+
+    render(
+      <CheckoutPageClient
+        initialDraft={createInitialDraft()}
+        isEmailLocked={false}
+        sessionContext={{
+          isAuthenticated: false,
+          authUserId: null,
+          authenticatedEmail: null,
+          customerProfileId: null,
+        }}
+        supportCard={null}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /Akceptuję regulamin i politykę prywatności/,
+      }),
+    );
+    await user.click(
+      screen.getByRole('button', { name: 'Przejdź do płatności' }),
+    );
+
+    await waitFor(() => {
+      expect(clearCart).toHaveBeenCalledTimes(1);
+    });
+    expect(screen.queryByText('Koszyk jest pusty.')).not.toBeInTheDocument();
   });
 
   it('renders an empty-cart guard when checkout is opened without lines', () => {
