@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { submitCheckout } from '@/src/app/actions/checkout-submit';
+import { CHECKOUT_CART_CLEANUP_STORAGE_KEY } from '@/src/global/b2c/cart/cart-checkout-cleanup';
 import type { CartContextValue } from '@/src/global/b2c/cart/cart-context';
 import { createEmptyCart } from '@/src/global/b2c/cart/cart-domain';
 import { getCartTotals } from '@/src/global/b2c/cart/cart-selectors';
@@ -415,6 +416,10 @@ describe('CheckoutPageClient', () => {
       expect.objectContaining({
         lines: expect.any(Array),
       }),
+    );
+    expect(localStorageMock.setItem).toHaveBeenCalledWith(
+      CHECKOUT_CART_CLEANUP_STORAGE_KEY,
+      expect.stringContaining('"orderNumber":"AF-2026-00001"'),
     );
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith(

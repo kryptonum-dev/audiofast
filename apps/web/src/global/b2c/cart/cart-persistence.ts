@@ -32,6 +32,10 @@ function sanitizeCartForPersistence(state: CartState): CartState {
   };
 }
 
+export function serializeCartForStorage(state: CartState): string {
+  return JSON.stringify(sanitizeCartForPersistence(state));
+}
+
 export function loadCartFromStorage(): CartState {
   if (typeof window === 'undefined') {
     return createEmptyCart();
@@ -56,10 +60,7 @@ export function loadCartFromStorage(): CartState {
 export function saveCartToStorage(state: CartState): void {
   if (typeof window === 'undefined') return;
 
-  window.localStorage.setItem(
-    CART_STORAGE_KEY,
-    JSON.stringify(sanitizeCartForPersistence(state)),
-  );
+  window.localStorage.setItem(CART_STORAGE_KEY, serializeCartForStorage(state));
 }
 
 export function clearCartStorage(): void {

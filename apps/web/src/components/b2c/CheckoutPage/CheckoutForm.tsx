@@ -8,6 +8,10 @@ import { submitCheckout } from '@/src/app/actions/checkout-submit';
 import Checkbox from '@/src/components/ui/Checkbox';
 import Error from '@/src/components/ui/Error';
 import Input from '@/src/components/ui/Input';
+import {
+  buildCheckoutCartFingerprint,
+  persistPendingCheckoutCartCleanup,
+} from '@/src/global/b2c/cart/cart-checkout-cleanup';
 import type { CartContextValue } from '@/src/global/b2c/cart/cart-context';
 import type { CartState } from '@/src/global/b2c/cart/types';
 import {
@@ -139,6 +143,12 @@ export default function CheckoutForm({
       return;
     }
 
+    persistPendingCheckoutCartCleanup({
+      orderId: result.value.orderId,
+      orderNumber: result.value.orderNumber,
+      startedAt: new Date().toISOString(),
+      cartFingerprint: buildCheckoutCartFingerprint(cart),
+    });
     router.push(result.value.redirectUrl);
   };
 

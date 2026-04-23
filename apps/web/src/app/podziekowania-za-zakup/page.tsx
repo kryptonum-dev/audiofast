@@ -5,6 +5,7 @@ import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
 import { loadThankYouPageData } from '@/src/global/b2c/checkout/server/load-thank-you-page';
 
 import styles from './styles.module.scss';
+import ThankYouCartCleanup from './ThankYouCartCleanup';
 
 export const metadata: Metadata = {
   title: 'Dziękujemy za zakup | Audiofast',
@@ -103,6 +104,10 @@ export default async function ThankYouPage({
 
   return (
     <>
+      <ThankYouCartCleanup
+        stateId={thankYouPageData.state.id}
+        orderNumber={thankYouPageData.orderNumber}
+      />
       <CheckoutSteps currentStep="confirmation" />
       <main id="main" className="max-width">
         <section
