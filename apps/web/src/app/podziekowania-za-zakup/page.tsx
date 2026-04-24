@@ -29,14 +29,12 @@ export const metadata: Metadata = {
 type ThankYouPageProps = {
   searchParams: Promise<{
     order?: string;
-    scenario?: string;
     refresh?: string;
   }>;
 };
 
 function buildRefreshHref(args: {
   orderNumber: string | null;
-  mockScenarioId: string | null;
   refreshRequested?: boolean;
 }): string {
   if (args.orderNumber === null) {
@@ -45,10 +43,6 @@ function buildRefreshHref(args: {
 
   const url = new URL('/podziekowania-za-zakup/', 'http://localhost');
   url.searchParams.set('order', args.orderNumber);
-
-  if (args.mockScenarioId) {
-    url.searchParams.set('scenario', args.mockScenarioId);
-  }
 
   if (args.refreshRequested) {
     url.searchParams.set('refresh', '1');
@@ -177,7 +171,6 @@ export default async function ThankYouPage({
 
   const refreshHref = buildRefreshHref({
     orderNumber: thankYouPageData.orderNumber,
-    mockScenarioId: thankYouPageData.mockScenarioId,
     refreshRequested: true,
   });
   const actions = getThankYouActions({
@@ -190,7 +183,6 @@ export default async function ThankYouPage({
   const thankYouRenderKey = [
     thankYouPageData.state.id,
     thankYouPageData.orderNumber ?? 'no-order',
-    thankYouPageData.mockScenarioId ?? 'no-scenario',
     resolvedSearchParams.refresh ?? 'no-refresh',
   ].join(':');
 

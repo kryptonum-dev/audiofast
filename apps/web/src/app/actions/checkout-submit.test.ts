@@ -113,7 +113,6 @@ function createValidInput(): CheckoutSubmitInput {
     },
     newsletterOptIn: false,
     saveToProfile: false,
-    mockPaymentScenarioId: null,
   };
 }
 
@@ -331,50 +330,9 @@ describe('submitCheckout', () => {
         amount: 150_00,
         currency: 'PLN',
         email: 'jan@example.com',
-        mockScenarioId: null,
       }),
     });
     expect(subscribeToNewsletter).not.toHaveBeenCalled();
-  });
-
-  it('freezes the selected mock payment scenario into the payment registration input', async () => {
-    const cart = createValidCart();
-
-    vi.mocked(revalidateCartLines).mockResolvedValue([
-      {
-        lineId: 'line-1',
-        lineType: 'standard',
-        isBuyable: true,
-        isConfigurationValid: true,
-        unitPriceCents: 150_00,
-      },
-    ]);
-    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
-      'AF-2026-00004',
-    );
-    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
-      orderId: 'order-4',
-      orderNumber: args.orderNumber,
-      createdAt: '2026-04-20T10:08:00.000Z',
-      orderDraft: args.orderDraft,
-      insertedItemCount: args.orderDraft.items.length,
-    }));
-
-    const result = await submitCheckout(
-      {
-        ...createValidInput(),
-        mockPaymentScenarioId: 'success_return_before_status',
-      },
-      cart,
-    );
-
-    expect(result.ok).toBe(true);
-    expect(startCheckoutPayment).toHaveBeenCalledWith({
-      paymentRegistrationInput: expect.objectContaining({
-        orderNumber: 'AF-2026-00004',
-        mockScenarioId: 'success_return_before_status',
-      }),
-    });
   });
 
   it('subscribes the submitted email when newsletter opt-in is enabled', async () => {

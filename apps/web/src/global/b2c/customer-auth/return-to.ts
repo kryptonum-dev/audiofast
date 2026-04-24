@@ -1,4 +1,12 @@
 const DEFAULT_CUSTOMER_ACCOUNT_RETURN_TO = '/konto-klienta/zamowienia/';
+const CHECKOUT_RETURN_TO_PATH = '/koszyk/twoje-dane/';
+
+function isAllowedCustomerAccountReturnTo(pathname: string): boolean {
+  return (
+    pathname.startsWith('/konto-klienta/') ||
+    pathname === CHECKOUT_RETURN_TO_PATH
+  );
+}
 
 function normalizeReturnToValue(value: string): string | null {
   if (!value.startsWith('/') || value.startsWith('//')) {
@@ -11,7 +19,7 @@ function normalizeReturnToValue(value: string): string | null {
       ? url.pathname
       : `${url.pathname}/`;
 
-    if (!normalizedPathname.startsWith('/konto-klienta/')) {
+    if (!isAllowedCustomerAccountReturnTo(normalizedPathname)) {
       return null;
     }
 

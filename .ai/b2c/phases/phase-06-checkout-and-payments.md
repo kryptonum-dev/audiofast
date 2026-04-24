@@ -1,8 +1,8 @@
 # Phase 06 - Checkout And Payments
 
-Status: in progress
+Status: complete
 Owner: planning
-Last updated: 2026-04-20
+Last updated: 2026-04-23
 Depends on: `phase-05-buyable-pdp-and-cart.md`
 Related files: `../architecture/customer-auth-and-access.md`, `../architecture/payment-process-model.md`, `../architecture/email-flow.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
@@ -59,8 +59,8 @@ This means the thank-you redirect should not become the source of truth for paym
 - local mock for the external `Przelewy24` boundary during implementation
 - local mock return and status-notification flow that exercises the real internal confirmation path
 - thank-you-page temporary access for guests
+- post-payment profile persistence for guest and authenticated flows
 - confirmation-email trigger on real payment success
-- first `Playwright` coverage for cart -> checkout -> payment behavior
 - implementation-ready seam for later live `Przelewy24` credential wiring
 
 ## Accepted Direction For This Phase
@@ -75,7 +75,8 @@ The detailed implementation direction for Phase 06 is now:
 - make the future live `Przelewy24` integration a bounded replacement of mocked external calls rather than a rewrite of checkout or payment-state handling
 - keep customer-panel list/detail work in `Phase 07`
 - keep admin order-management work in `Phase 08`
-- add `Playwright` in this phase because the first full transaction path now exists
+- keep browser-level `Playwright` coverage for a post-`Phase 07` follow-up step (`7.5`) once the customer-panel flow exists
+- keep commerce analytics instrumentation for a late pre-launch follow-up step after admin operations rather than treating it as a checkout/payment blocker
 
 ## Work Included In This Phase
 
@@ -596,7 +597,7 @@ Step 3 does not implement:
 - real `Przelewy24` transaction registration (Step 4)
 - `urlReturn` / `urlStatus` / confirmation logic (Step 5)
 - cart clearing on real payment success (Step 6)
-- `Playwright` coverage (Step 7)
+- browser-level `Playwright` coverage (moved to follow-up step `7.5`)
 
 The mock thank-you page is a v1-only placeholder that will be replaced by the payment confirmation and order-status surface in Step 5.
 
@@ -693,43 +694,25 @@ Expected work:
 - clear the cart only after real payment success
 - preserve safe recovery when the customer navigates back and forth
 - add any required route metadata, navigation states, and loading behavior
-- wire key analytics events for the commerce funnel where appropriate, such as:
-  - begin checkout
-  - payment start
-  - purchase confirmed
-  - payment failure / expiration where useful
 
 This step should stay thin and should not become a second place where business rules are reimplemented.
 
-### 7. Browser-Level Coverage And Transaction Hardening
+## Completion Note
 
-This step should add the first browser-level safety net for the full B2C transaction path.
+Phase 06 is now considered closed from an implementation perspective.
 
-The goal is to prove that the implemented checkout and payment architecture behaves correctly in the most critical journeys.
+The checkout and payment flow is complete enough to move on to the next product phases without treating analytics instrumentation or browser-level end-to-end coverage as Phase 06 blockers.
 
-Expected work:
+Those two workstreams are intentionally deferred:
 
-- install the first `Playwright` setup for the commerce flow
-- cover standard configurable product -> cart -> checkout -> mock payment success
-- cover `CPO` product -> cart -> checkout -> lock behavior
-- cover mixed cart -> checkout
-- verify checkout pricing stays aligned with cart truth and hard validation rules
-- cover `urlReturn` recovery and pending-verification behavior
-- cover asynchronous status-notification behavior
-- cover expired unpaid-order behavior at the accepted v1 level
-- add integration tests for:
-  - checkout validation
-  - order creation
-  - transaction registration
-  - notification handling
-  - verification handling
-  - idempotency
+- `Playwright` moves to a post-`Phase 07` customer-panel follow-up step (`7.5`)
+- commerce analytics moves to a post-`Phase 08` late implementation / pre-launch follow-up step (`8.5`)
 
-This step should remain small but critical-path focused rather than broad.
+The accepted meaning of `7.5` is not only "some browser coverage later", but specifically the first full mocked browser journeys that combine checkout, the local payment mock, `Supabase` OTP auth/session behavior, protected-route recovery, and post-purchase customer access in one runtime path.
 
 ## Recommended Implementation Sequence
 
-The preferred implementation order inside Phase 06 is:
+The implemented order inside Phase 06 is:
 
 1. checkout domain and contracts
 2. checkout server layer
@@ -737,14 +720,13 @@ The preferred implementation order inside Phase 06 is:
 4. `Przelewy24` integration shell and local external mock
 5. payment confirmation, recovery, and thank-you flow
 6. shell-level application wiring
-7. browser-level coverage and transaction hardening
 
 This sequence keeps the architecture stable:
 
 - the domain comes before page complexity
 - order safety comes before provider polish
 - the local mock exercises the real `Przelewy24` transaction shape
-- `Playwright` validates the full journey only after the path is genuinely usable
+- browser-level validation comes later, once the customer-panel flow is implemented too
 
 ## Not In Scope For This Phase
 
@@ -752,7 +734,11 @@ This sequence keeps the architecture stable:
 - admin order-management UI
 - advanced shipping or stock logic
 - final live `Przelewy24` credential integration if account access is still unavailable
+- browser-level `Playwright` coverage (moved to post-`Phase 07` step `7.5`)
+- late commerce analytics instrumentation (moved to post-`Phase 08` step `8.5`)
 - browser / local-storage persistence of in-progress checkout form input; v1 intentionally does not preserve unsaved form values when the customer navigates back to the cart and returns (server-side prefill from the customer profile remains the only source for returning authenticated users)
+
+The mocked auth-aware integration journeys that would otherwise require heavy cross-system test setup are intentionally included in that later `7.5` `Playwright` step instead of being treated as a blocker for `Phase 06`.
 
 ## Future Live Wiring Note
 
@@ -776,4 +762,4 @@ Phase 06 can be considered complete when:
 - the system behaves correctly even when redirect recovery is needed
 - the system treats verified backend confirmation rather than browser redirect as payment truth
 - the codebase is ready for later live `Przelewy24` credential wiring without a checkout rewrite
-- `Playwright` is installed and covers the first critical cart -> checkout -> payment journeys
+- the remaining deferred work is explicitly limited to later-phase customer-panel, admin-panel, analytics, and browser-level coverage follow-ups

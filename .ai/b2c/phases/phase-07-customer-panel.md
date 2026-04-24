@@ -117,12 +117,17 @@ Expected work:
 - ensure a new order created during authenticated checkout is linked to the authenticated customer identity according to the accepted rules
 - support the guest -> login -> return-to-checkout behavior from the checkout login CTA
 - keep the cart intact across the auth roundtrip in the same browser
+- keep the authenticated checkout consent area minimal:
+  - one flat required checkbox for `regulamin` + `polityka prywatności`
+  - one flat checkbox for saving / updating reusable customer data
+  - no newsletter / marketing checkbox in authenticated checkout
 - ensure logout returns checkout behavior to guest mode where appropriate
 - verify that post-payment profile persistence still behaves correctly for guest and authenticated flows
 
 Important rule:
 
 - this step is integration and correctness work, not the place to design the main customer-panel views
+- mocked cross-system journey coverage that depends on real auth/session behavior plus the local payment mock should live in follow-up step `7.5`, not inside Step 3 Vitest work
 
 ### 4. Orders Area
 
@@ -155,6 +160,7 @@ Expected work:
 - build `konto-klienta/dane-konta`
 - load the current reusable customer defaults from `customer_profiles`
 - support editing of reusable contact, shipping, and billing / invoice defaults for future checkout use
+- support managing newsletter / marketing consent from `konto-klienta/dane-konta` instead of repeating that consent inside authenticated checkout
 - preserve the accepted v1 rule that email is the identity key and is not self-service editable in the panel
 - ensure profile edits affect future checkout defaults only
 - ensure historical orders continue to show their original order-time snapshots
@@ -193,6 +199,21 @@ This is intentionally sequenced after `Phase 07`, not inside it, because the cri
 - protected-route redirect behavior
 - post-purchase order access inside the panel
 - reusable customer-data behavior where it matters most
+
+This is also the right place for the mocked integration cases that are too cross-system for comfortable `Vitest` ownership.
+
+In practice, Step `7.5` should own:
+
+- the local mock-payment browser journey from checkout submit to paid confirmation
+- the guest -> OTP login -> return-to-checkout roundtrip
+- the guest purchase -> thank-you -> customer-panel access roundtrip
+- the authenticated checkout prefill / locked-email regression in a real browser session
+- the Supabase-backed OTP session / redirect / protected-route behavior with the local payment mock acting as the external provider boundary
+
+Important rule:
+
+- keep pure domain, mapper, validation, and small server-action protection in `Vitest`
+- move browser-level mocked auth + checkout + payment journeys into `Playwright` step `7.5` so they are exercised once as a full path instead of duplicated as awkward integration-style mocks in earlier steps
 
 This step should stay focused on the most important end-to-end journeys rather than broad UI exhaustiveness.
 

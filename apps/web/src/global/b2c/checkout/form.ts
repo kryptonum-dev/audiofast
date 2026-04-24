@@ -1,4 +1,3 @@
-import type { MockP24ScenarioId } from './mock-payment-scenarios';
 import type {
   CheckoutAddress,
   CheckoutDraft,
@@ -19,7 +18,6 @@ export type CheckoutFormValues = {
   acceptRequiredConsents: boolean;
   newsletterOptIn: boolean;
   saveToProfile: boolean;
-  mockPaymentScenarioId: MockP24ScenarioId | null;
 };
 
 export const CHECKOUT_DEFAULT_COUNTRY: CheckoutAddress['country'] = 'PL';
@@ -59,7 +57,6 @@ export function buildCheckoutFormValues(
       draft.consents.termsAccepted && draft.consents.privacyPolicyAccepted,
     newsletterOptIn: draft.newsletterOptIn,
     saveToProfile: draft.saveToProfile,
-    mockPaymentScenarioId: draft.mockPaymentScenarioId ?? null,
   };
 }
 
@@ -111,6 +108,5 @@ export function buildCheckoutSubmitInput(
     },
     newsletterOptIn: values.newsletterOptIn,
     saveToProfile: values.saveToProfile,
-    mockPaymentScenarioId: values.mockPaymentScenarioId ?? null,
   };
 }

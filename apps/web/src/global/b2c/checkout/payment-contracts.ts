@@ -1,6 +1,5 @@
 import { createHash } from 'node:crypto';
 
-import type { MockP24ScenarioId } from './mock-payment-scenarios';
 import {
   CHECKOUT_PAYMENT_WINDOW_MINUTES,
   type CheckoutOrderDraft,
@@ -30,7 +29,6 @@ export type P24TransactionNotificationStatus =
 
 export type P24TransactionRegistrationInput = {
   provider: CheckoutPaymentProvider;
-  mockScenarioId?: MockP24ScenarioId | null;
   checkoutOrderId: string;
   merchantId: number;
   posId: number;
@@ -77,7 +75,6 @@ export type P24ReturnStatus =
 
 export type P24ReturnState = {
   provider: CheckoutPaymentProvider;
-  mockScenarioId: MockP24ScenarioId | null;
   checkoutOrderId: string;
   orderNumber: string;
   providerOrderId: number | null;
@@ -230,7 +227,6 @@ export function buildP24TransactionRegistrationInput(args: {
   orderDraft: CheckoutOrderDraft;
   urlReturn: string;
   urlStatus: string;
-  mockScenarioId?: MockP24ScenarioId | null;
 }): P24TransactionRegistrationInput {
   const merchantId = MOCK_P24_MERCHANT_ID;
   const posId = MOCK_P24_POS_ID;
@@ -240,7 +236,6 @@ export function buildP24TransactionRegistrationInput(args: {
 
   return {
     provider: 'przelewy24',
-    mockScenarioId: args.mockScenarioId ?? null,
     checkoutOrderId: args.orderId,
     merchantId,
     posId,

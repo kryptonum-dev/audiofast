@@ -1,28 +1,27 @@
 # Phase 06 Remaining Implementation Gaps
 
-Status: active follow-up
-Scope: work still remaining after removing the temporary checkout debug hook and restoring cart clearing on confirmed paid success
-Last updated: 2026-04-22
+Status: closed / archived
+Scope: historical note for the Phase 06 gaps that were either completed or intentionally moved into later phases
+Last updated: 2026-04-23
 
 ## What This File Covers
 
-This note tracks the Phase 06 work that still remains after the recent cleanup:
+This note originally tracked the Phase 06 work that still remained after the checkout/payment cleanup cycle.
 
-- removed temporary forced invalid-cart debug behavior in checkout submit
-- restored cart clearing on confirmed paid thank-you resolution
+That follow-up is now closed.
 
-The items below are the higher-value remaining gaps that still matter before Phase 06 can be considered fully complete, assuming the live `Przelewy24` provider swap will happen separately in the next few days.
+The important outcome is:
 
-This note intentionally focuses only on the still-open points:
+- post-payment account/profile persistence was completed
+- confirmation email after verified paid success was completed
+- shell-level checkout/payment runtime wiring is complete enough for Phase 06 closure
+- analytics and browser-level Playwright coverage were intentionally moved out of Phase 06
 
-1. post-payment account/profile persistence
-2. confirmation email after verified payment success
-3. shell-level wiring still missing from the storefront journey
-4. browser-level transaction coverage and hardening
+Phase 06 therefore no longer has blocking implementation gaps.
 
 ## Current Practical Position
 
-The current implementation already covers the most important internal architecture:
+The current implementation already covers the full checkout/payment scope that Phase 06 needed to deliver:
 
 - checkout form capture and validation
 - authenticated prefill and email locking
@@ -32,8 +31,51 @@ The current implementation already covers the most important internal architectu
 - backend-first payment confirmation path
 - thank-you state resolution for `awaiting_payment`, `paid`, `expired`, and `invalid_access`
 - idempotent payment confirmation updates
+- post-payment profile persistence
+- confirmation email after verified payment success
 
-The remaining work is therefore mostly about **post-success side effects and finish-line integration polish**, not about redesigning the checkout or payment core.
+The remaining work is therefore no longer Phase-06-core work.
+
+It is follow-up work that belongs to later milestones.
+
+## Where The Deferred Items Moved
+
+### 7.5 - Playwright After The Customer Panel
+
+Browser-level end-to-end coverage should land only after `Phase 07` is complete.
+
+The reason is practical: once the customer panel exists, the first critical browser suite can validate the broader post-purchase journey instead of only the checkout slice in isolation.
+
+This follow-up step should also absorb the mocked integration journeys that depend on both real `Supabase` auth/session behavior and the local payment mock.
+
+That means the accepted `7.5` ownership includes:
+
+- checkout -> local mock payment -> thank-you happy path
+- thank-you -> OTP login -> protected order access recovery
+- checkout login CTA -> OTP login -> return-to-checkout roundtrip
+- authenticated checkout prefill / locked-email behavior in a real browser session
+
+Those cases are better treated as one `Playwright` path with the real browser/runtime state than as scattered mock-heavy integration tests in earlier implementation steps.
+
+So the accepted sequencing is now:
+
+1. complete `Phase 07` customer-panel implementation
+2. add `Playwright` as a follow-up step `7.5`
+
+### 8.5 - Analytics After Admin Operations
+
+Commerce analytics should be treated as a late implementation / pre-launch step after `Phase 08` admin operations are in place.
+
+The reason is similar: the analytics model should reflect the real final funnel rather than an intermediate implementation state.
+
+So the accepted sequencing is now:
+
+1. complete `Phase 08` admin operations
+2. add commerce analytics instrumentation as a follow-up step `8.5`
+
+## Historical Gap Notes
+
+The sections below are kept only as historical planning context for work that was open during the implementation cycle.
 
 ## 1. Post-Payment Account / Profile Persistence
 
@@ -321,21 +363,17 @@ At minimum the first browser suite should cover:
 - at least the critical cart -> checkout -> payment success path is covered
 - delayed confirmation and thank-you recovery have browser-level proof
 
-## Recommended Remaining Order
+## Archived Outcome
 
-If the live provider replacement is about to begin, the best practical order is:
+This remaining-work order was superseded by the completed implementation.
 
-1. post-payment profile/default persistence
-2. confirmation email on verified paid success
-3. shell-level analytics wiring
-4. Playwright critical-path coverage
+The accepted current sequence is now:
 
-## Definition Of "Phase 06 Fully Complete" After These Items
+1. `Phase 06` is closed
+2. `Phase 07` customer panel
+3. follow-up step `7.5` for browser-level `Playwright`
+4. `Phase 08` admin operations
+5. follow-up step `8.5` for commerce analytics
+6. later live `Przelewy24` replacement and launch-readiness verification
 
-After the items in this file are complete, Phase 06 should be considered finished enough that the remaining future work is only:
-
-- live `Przelewy24` provider replacement
-- customer panel (`Phase 07`)
-- admin panel (`Phase 08`)
-
-At that point the mock implementation would no longer be the limiting factor for the B2C checkout flow.
+So this file should now be read only as historical implementation context, not as an active gap list.

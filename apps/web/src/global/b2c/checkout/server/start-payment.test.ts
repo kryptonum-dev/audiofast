@@ -97,7 +97,6 @@ describe('startCheckoutPayment', () => {
     });
     vi.mocked(providerAdapter.buildReturnState).mockReturnValue({
       provider: 'przelewy24',
-      mockScenarioId: null,
       checkoutOrderId: 'order-1',
       orderNumber: 'AF-2026-00001',
       providerOrderId: 202600001,
@@ -200,35 +199,6 @@ describe('startCheckoutPayment', () => {
       'payment_registration_failed',
     );
     expect(handleCheckoutPaymentStatusNotification).not.toHaveBeenCalled();
-  });
-
-  it('defers status processing for return-before-status scenarios and keeps the scenario in the redirect url', async () => {
-    const input = {
-      ...createPaymentRegistrationInput(),
-      mockScenarioId: 'success_return_before_status' as const,
-    };
-
-    vi.mocked(providerAdapter.buildReturnState).mockReturnValueOnce({
-      provider: 'przelewy24',
-      mockScenarioId: 'success_return_before_status',
-      checkoutOrderId: 'order-1',
-      orderNumber: 'AF-2026-00001',
-      providerOrderId: 202600001,
-      sessionId: 'AF-2026-00001',
-      token: 'mock-p24-token-af202600001',
-      status: 'success',
-      providerReference: 'mock-p24-payment-af202600001',
-    });
-
-    const result = await startCheckoutPayment({
-      paymentRegistrationInput: input,
-    });
-
-    expect(result.ok).toBe(true);
-    expect(handleCheckoutPaymentStatusNotification).not.toHaveBeenCalled();
-    expect(result.ok ? result.value.redirectUrl : null).toBe(
-      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001&scenario=success_return_before_status',
-    );
   });
 
   it('returns payment_verification_failed when status processing throws', async () => {

@@ -87,7 +87,6 @@ describe('getCheckoutPaymentProviderAdapter', () => {
 
     expect(returnState).toEqual({
       provider: 'przelewy24',
-      mockScenarioId: null,
       checkoutOrderId: 'order-1',
       orderNumber: 'AF-2026-00001',
       providerOrderId: 202600001,
@@ -134,29 +133,5 @@ describe('getCheckoutPaymentProviderAdapter', () => {
     expect(verification.isVerified).toBe(true);
     expect(verification.providerReference).toBe('mock-p24-payment-af202600001');
     expect(verification.verifiedAt).toEqual(expect.any(String));
-  });
-
-  it('freezes the delayed success scenario into the provider return and status payloads', async () => {
-    const adapter = getCheckoutPaymentProviderAdapter('przelewy24');
-    const registrationInput = createPaymentRegistrationInput({
-      mockScenarioId: 'success_return_before_status',
-    });
-    const registration = await adapter.registerTransaction(registrationInput);
-
-    const returnState = adapter.buildReturnState({
-      registrationInput,
-      registrationResult: registration,
-    });
-    const notification = adapter.buildStatusNotificationPayload({
-      registrationInput,
-      registrationResult: registration,
-    });
-
-    expect(returnState.status).toBe('success');
-    expect(returnState.mockScenarioId).toBe('success_return_before_status');
-    expect(notification.result.generalStatus).toBe('done');
-    expect(notification.result.detailedStatus).toBe(
-      'Browser returns first, but backend confirmation arrives later and wins.',
-    );
   });
 });

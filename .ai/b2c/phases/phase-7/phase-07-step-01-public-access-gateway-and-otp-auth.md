@@ -447,7 +447,7 @@ The recommended implementation order inside Step 01 is:
 8. add SSR session refresh plumbing
 9. add logout
 10. reconfirm checkout compatibility
-11. add focused test coverage
+11. add focused code-level test coverage
 
 This sequence keeps the architecture stable:
 
@@ -456,6 +456,7 @@ This sequence keeps the architecture stable:
 - verified identity linkage is treated as a core correctness step, not an afterthought
 - session plumbing lands before later protected routes depend on it
 - broader panel UI remains deferred until the later `Phase 07` steps
+- mocked browser journeys that depend on real `Supabase` auth/session state plus checkout/payment behavior are deferred to follow-up step `7.5` in `Playwright`
 
 ## Done Criteria
 
@@ -469,4 +470,5 @@ Step 01 can be considered complete when:
 - verified auth identity is linked safely to `customer_profiles.auth_user_id`
 - logout works correctly
 - the existing checkout auth assumptions remain valid after login
-- the step has focused automated protection for the critical auth and linkage rules
+- the step has focused code-level automated protection for the critical auth and linkage rules
+- broader mocked auth + checkout + payment journey coverage is tracked in follow-up step `7.5` rather than being forced into Step 01

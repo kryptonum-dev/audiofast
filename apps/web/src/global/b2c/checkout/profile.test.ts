@@ -58,7 +58,6 @@ function createSubmitInput(): CheckoutSubmitInput {
     },
     newsletterOptIn: false,
     saveToProfile: true,
-    mockPaymentScenarioId: null,
   };
 }
 

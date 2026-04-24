@@ -3,10 +3,6 @@ import 'server-only';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database } from '@/src/global/supabase/database.types';
 
-import type { MockP24ScenarioId } from '../mock-payment-scenarios';
-import { buildMockP24StatusNotificationPayloadForOrder } from './payment-mock';
-import { getMockP24Scenario } from './payment-mock-scenarios';
-import { handleCheckoutPaymentStatusNotification } from './payment-status';
 import {
   type CheckoutThankYouResolvableOrderStatus,
   type CheckoutThankYouStateDefinition,
@@ -20,13 +16,11 @@ type ThankYouOrderRow = Pick<
 
 export type LoadThankYouPageInput = {
   order?: string;
-  scenario?: string;
   refresh?: string;
 };
 
 export type LoadThankYouPageData = {
   orderNumber: string | null;
-  mockScenarioId: MockP24ScenarioId | null;
   state: CheckoutThankYouStateDefinition;
 };
 
@@ -37,18 +31,6 @@ function normalizeOrderNumber(value: string | undefined): string | null {
 
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
-}
-
-function normalizeScenarioId(
-  value: string | undefined,
-): MockP24ScenarioId | null {
-  switch (value) {
-    case 'success_status_before_return':
-    case 'success_return_before_status':
-      return value;
-    default:
-      return null;
-  }
 }
 
 function normalizeResolvableOrderStatus(
@@ -77,64 +59,15 @@ async function loadOrderByNumber(
 
   return data;
 }
-
-function shouldAdvanceScenarioAfterReturn(args: {
-  scenarioId: MockP24ScenarioId | null;
-  refreshRequested: boolean;
-}): boolean {
-  if (!args.refreshRequested || args.scenarioId === null) {
-    return false;
-  }
-
-  const scenario = getMockP24Scenario(args.scenarioId);
-
-  return scenario.eventOrder === 'return_before_status';
-}
-
-async function maybeAdvanceMockScenarioAfterReturn(args: {
-  order: ThankYouOrderRow;
-  scenarioId: MockP24ScenarioId | null;
-  refreshRequested: boolean;
-}) {
-  if (args.order.current_status === 'paid') {
-    return;
-  }
-
-  if (
-    !shouldAdvanceScenarioAfterReturn({
-      scenarioId: args.scenarioId,
-      refreshRequested: args.refreshRequested,
-    })
-  ) {
-    return;
-  }
-
-  const notification = buildMockP24StatusNotificationPayloadForOrder({
-    checkoutOrderId: args.order.id,
-    orderNumber: args.order.order_number,
-    scenarioId: args.scenarioId,
-  });
-
-  if (notification === null) {
-    return;
-  }
-
-  await handleCheckoutPaymentStatusNotification({
-    notification,
-  });
-}
-
 export async function loadThankYouPageData(
   input: LoadThankYouPageInput,
 ): Promise<LoadThankYouPageData> {
   const orderNumber = normalizeOrderNumber(input.order);
-  const mockScenarioId = normalizeScenarioId(input.scenario);
   const refreshRequested = input.refresh === '1';
 
   if (orderNumber === null) {
     return {
       orderNumber: null,
-      mockScenarioId,
       state: resolveCheckoutThankYouState({
         hasOrderAccess: false,
         currentOrderStatus: null,
@@ -149,7 +82,6 @@ export async function loadThankYouPageData(
     if (order === null) {
       return {
         orderNumber,
-        mockScenarioId,
         state: resolveCheckoutThankYouState({
           hasOrderAccess: false,
           currentOrderStatus: null,
@@ -158,18 +90,12 @@ export async function loadThankYouPageData(
       };
     }
 
-    await maybeAdvanceMockScenarioAfterReturn({
-      order,
-      scenarioId: mockScenarioId,
-      refreshRequested,
-    });
     const currentOrder = refreshRequested
       ? await loadOrderByNumber(orderNumber)
       : order;
 
     return {
       orderNumber: currentOrder?.order_number ?? order.order_number,
-      mockScenarioId,
       state: resolveCheckoutThankYouState({
         hasOrderAccess: true,
         currentOrderStatus: normalizeResolvableOrderStatus(
@@ -186,7 +112,6 @@ export async function loadThankYouPageData(
 
     return {
       orderNumber,
-      mockScenarioId,
       state: resolveCheckoutThankYouState({
         hasOrderAccess: false,
         currentOrderStatus: null,

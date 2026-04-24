@@ -19,16 +19,13 @@ import {
   buildCheckoutSubmitInput,
   type CheckoutFormValues,
 } from '@/src/global/b2c/checkout/form';
-import { MOCK_P24_SCENARIO_OPTIONS } from '@/src/global/b2c/checkout/mock-payment-scenarios';
 import type {
   CheckoutDraft,
   CheckoutSessionContext,
 } from '@/src/global/b2c/checkout/types';
+import { buildCustomerAccountGatewayHref } from '@/src/global/b2c/customer-auth/return-to';
 
-import {
-  CHECKOUT_FORM_ID,
-  SHOW_MOCK_PAYMENT_SCENARIO_SELECTOR,
-} from './constants';
+import { CHECKOUT_FORM_ID } from './constants';
 import {
   CHECKOUT_RULES,
   mapServerFieldErrors,
@@ -83,11 +80,6 @@ export default function CheckoutForm({
   });
 
   const buyerType = useWatch({ control, name: 'buyerType' });
-  const acceptRequiredConsents = useWatch({
-    control,
-    name: 'acceptRequiredConsents',
-  });
-  const newsletterOptIn = useWatch({ control, name: 'newsletterOptIn' });
   const isCompanyInvoice = buyerType === 'company';
 
   useEffect(() => {
@@ -163,7 +155,10 @@ export default function CheckoutForm({
         title="Kontakt"
         headerAction={
           !sessionContext.isAuthenticated ? (
-            <Link href="/konto-klienta/" className={styles.loginHintLink}>
+            <Link
+              href={buildCustomerAccountGatewayHref('/koszyk/twoje-dane/')}
+              className={styles.loginHintLink}
+            >
               <LoginHintIcon />
               <span>
                 Masz już konto?{' '}
@@ -444,52 +439,30 @@ export default function CheckoutForm({
       <CheckoutSection title="Zgody i finalizacja">
         <div className={styles.consentsGroup}>
           <Checkbox
-            register={{
-              name: 'selectAllConsents',
-              checked: acceptRequiredConsents && newsletterOptIn,
-              onChange: (event) => {
-                const checked = (event.target as HTMLInputElement).checked;
-
-                setValue('acceptRequiredConsents', checked, {
-                  shouldDirty: true,
-                });
-                setValue('newsletterOptIn', checked, {
-                  shouldDirty: true,
-                });
-              },
-            }}
-            errors=""
-            label="Zaznacz wszystkie"
+            register={register(
+              'acceptRequiredConsents',
+              CHECKOUT_RULES.acceptRequiredConsents,
+            )}
+            errors={errors.acceptRequiredConsents?.message ?? ''}
+            label={
+              <>
+                Akceptuję{' '}
+                <Link href="/regulamin/" target="_blank" className="link">
+                  regulamin
+                </Link>{' '}
+                i{' '}
+                <Link
+                  href="/polityka-prywatnosci/"
+                  target="_blank"
+                  className="link"
+                >
+                  politykę prywatności
+                </Link>
+              </>
+            }
           />
 
-          <div className={styles.consentsNested}>
-            <Checkbox
-              register={register(
-                'acceptRequiredConsents',
-                CHECKOUT_RULES.acceptRequiredConsents,
-              )}
-              errors={errors.acceptRequiredConsents?.message ?? ''}
-              label={
-                <>
-                  <span aria-hidden="true" className={styles.consentAsterisk}>
-                    *
-                  </span>
-                  Akceptuję{' '}
-                  <Link href="/regulamin/" target="_blank" className="link">
-                    regulamin
-                  </Link>{' '}
-                  i{' '}
-                  <Link
-                    href="/polityka-prywatnosci/"
-                    target="_blank"
-                    className="link"
-                  >
-                    politykę prywatności
-                  </Link>
-                </>
-              }
-            />
-
+          {!sessionContext.isAuthenticated ? (
             <Checkbox
               register={register('newsletterOptIn')}
               errors=""
@@ -501,7 +474,7 @@ export default function CheckoutForm({
                 </>
               }
             />
-          </div>
+          ) : null}
 
           {sessionContext.isAuthenticated ? (
             <Checkbox
@@ -511,39 +484,6 @@ export default function CheckoutForm({
             />
           ) : null}
         </div>
-
-        {SHOW_MOCK_PAYMENT_SCENARIO_SELECTOR ? (
-          <div className={styles.mockScenarioPanel}>
-            <label
-              className={styles.mockScenarioLabel}
-              htmlFor="mock-payment-scenario"
-            >
-              Scenariusz płatności (mock, tylko dev)
-            </label>
-            <select
-              id="mock-payment-scenario"
-              className={styles.mockScenarioSelect}
-              aria-describedby="mock-payment-scenario-help"
-              {...register('mockPaymentScenarioId', {
-                setValueAs: (value) => value || null,
-              })}
-            >
-              <option value="">Domyślny scenariusz</option>
-              {MOCK_P24_SCENARIO_OPTIONS.map((scenario) => (
-                <option key={scenario.id} value={scenario.id}>
-                  {scenario.label}
-                </option>
-              ))}
-            </select>
-            <p
-              id="mock-payment-scenario-help"
-              className={styles.mockScenarioHelp}
-            >
-              Wersja deweloperska: wybrany scenariusz zostanie zamrożony po
-              stronie serwera w momencie startu płatności.
-            </p>
-          </div>
-        ) : null}
 
         <Error withIcon>{errors.root?.message ?? ''}</Error>
       </CheckoutSection>

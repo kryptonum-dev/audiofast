@@ -252,9 +252,6 @@ describe('CheckoutPageClient', () => {
       screen.getByRole('heading', { name: 'Zgody i finalizacja' }),
     ).toBeInTheDocument();
     expect(
-      screen.getByLabelText('Scenariusz płatności (mock, tylko dev)'),
-    ).toBeInTheDocument();
-    expect(
       screen.getByRole('heading', { name: 'Podsumowanie' }),
     ).toBeInTheDocument();
     expect(screen.getByText('Kod rabatowy (WIOSNA10)')).toBeInTheDocument();
@@ -267,6 +264,12 @@ describe('CheckoutPageClient', () => {
     expect(
       screen.getByRole('link', { name: '855 855 855' }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /Masz już konto\? Zaloguj się/i }),
+    ).toHaveAttribute(
+      'href',
+      '/konto-klienta?returnTo=%2Fkoszyk%2Ftwoje-dane%2F',
+    );
   });
 
   it('renders a checkout skeleton while the cart is still hydrating', () => {
@@ -293,7 +296,7 @@ describe('CheckoutPageClient', () => {
     expect(screen.getByTestId('checkout-loading-state')).toBeInTheDocument();
   });
 
-  it('locks the email field for authenticated customers and shows save-to-profile checkbox', () => {
+  it('locks the email field for authenticated customers and shows only the flat checkout consents', () => {
     render(
       <CheckoutPageClient
         initialDraft={createInitialDraft()}
@@ -314,6 +317,22 @@ describe('CheckoutPageClient', () => {
     expect(
       screen.getByLabelText('Zapisz te dane do kolejnych zamówień'),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('checkbox', {
+        name: /Akceptuję regulamin i politykę prywatności/,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('checkbox', {
+        name: /Wyrażam zgodę na przetwarzanie moich danych osobowych przez Audiofast/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText('Zaznacz wszystkie'),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: /Masz już konto\? Zaloguj się/i }),
+    ).not.toBeInTheDocument();
   });
 
   it('keeps a separate delivery recipient optional and reveals it with a checkbox', async () => {
@@ -411,7 +430,6 @@ describe('CheckoutPageClient', () => {
           },
         },
         newsletterOptIn: true,
-        mockPaymentScenarioId: null,
       }),
       expect.objectContaining({
         lines: expect.any(Array),
@@ -424,46 +442,6 @@ describe('CheckoutPageClient', () => {
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith(
         'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
-      );
-    });
-  });
-
-  it('passes the selected mock payment scenario into checkout submit', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <CheckoutPageClient
-        initialDraft={createInitialDraft()}
-        isEmailLocked={false}
-        sessionContext={{
-          isAuthenticated: false,
-          authUserId: null,
-          authenticatedEmail: null,
-          customerProfileId: null,
-        }}
-        supportCard={null}
-      />,
-    );
-
-    await user.selectOptions(
-      screen.getByLabelText('Scenariusz płatności (mock, tylko dev)'),
-      'success_return_before_status',
-    );
-    await user.click(
-      screen.getByRole('checkbox', {
-        name: /Akceptuję regulamin i politykę prywatności/,
-      }),
-    );
-    await user.click(
-      screen.getByRole('button', { name: 'Przejdź do płatności' }),
-    );
-
-    await waitFor(() => {
-      expect(submitCheckout).toHaveBeenCalledWith(
-        expect.objectContaining({
-          mockPaymentScenarioId: 'success_return_before_status',
-        }),
-        expect.any(Object),
       );
     });
   });
@@ -566,7 +544,83 @@ describe('CheckoutPageClient', () => {
     );
   });
 
-  it('renders nested consent checkboxes with a select-all control', async () => {
+  it('renders flat guest checkout consents without the old select-all control', () => {
+    render(
+      <CheckoutPageClient
+        initialDraft={createInitialDraft()}
+        isEmailLocked={false}
+        sessionContext={{
+          isAuthenticated: false,
+          authUserId: null,
+          authenticatedEmail: null,
+          customerProfileId: null,
+        }}
+        supportCard={null}
+      />,
+    );
+
+    expect(
+      screen.getByRole('checkbox', {
+        name: /Akceptuję regulamin i politykę prywatności/,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('checkbox', {
+        name: /Wyrażam zgodę na przetwarzanie moich danych osobowych przez Audiofast/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText('Zaznacz wszystkie'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not send newsletter consent from authenticated checkout when the checkbox is hidden', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <CheckoutPageClient
+        initialDraft={createInitialDraft()}
+        isEmailLocked
+        sessionContext={{
+          isAuthenticated: true,
+          authUserId: 'user-1',
+          authenticatedEmail: 'jan@example.com',
+          customerProfileId: 'profile-1',
+        }}
+        supportCard={null}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /Akceptuję regulamin i politykę prywatności/,
+      }),
+    );
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: 'Zapisz te dane do kolejnych zamówień',
+      }),
+    );
+    await user.click(
+      screen.getByRole('button', { name: 'Przejdź do płatności' }),
+    );
+
+    await waitFor(() => {
+      expect(submitCheckout).toHaveBeenCalledTimes(1);
+    });
+
+    expect(submitCheckout).toHaveBeenCalledWith(
+      expect.objectContaining({
+        newsletterOptIn: false,
+        saveToProfile: true,
+      }),
+      expect.objectContaining({
+        lines: expect.any(Array),
+      }),
+    );
+  });
+
+  it('keeps the guest newsletter checkbox opt-in separate from required consent', async () => {
     const user = userEvent.setup();
 
     render(
@@ -583,7 +637,6 @@ describe('CheckoutPageClient', () => {
       />,
     );
 
-    const selectAll = screen.getByLabelText('Zaznacz wszystkie');
     const requiredConsent = screen.getByRole('checkbox', {
       name: /Akceptuję regulamin i politykę prywatności/,
     });
@@ -591,10 +644,10 @@ describe('CheckoutPageClient', () => {
       name: /Wyrażam zgodę na przetwarzanie moich danych osobowych przez Audiofast/i,
     });
 
-    await user.click(selectAll);
+    await user.click(requiredConsent);
 
     expect(requiredConsent).toBeChecked();
-    expect(newsletterConsent).toBeChecked();
+    expect(newsletterConsent).not.toBeChecked();
   });
 
   it('shows the blur overlay and dispatches revalidation when submit returns cart_invalid', async () => {

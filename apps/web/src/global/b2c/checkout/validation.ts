@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { MOCK_P24_SCENARIO_IDS } from './mock-payment-scenarios';
 import type {
   CheckoutAddress,
   CheckoutConsentsInput,
@@ -309,12 +308,6 @@ export const checkoutSubmitSchema: z.ZodType<CheckoutSubmitInput> = z.object({
   consents: checkoutConsentsSchema,
   newsletterOptIn: z.boolean(),
   saveToProfile: z.boolean(),
-  mockPaymentScenarioId: z
-    .preprocess(
-      (value) => (value === '' || value === undefined ? null : value),
-      z.enum(MOCK_P24_SCENARIO_IDS).nullable(),
-    )
-    .optional(),
 });
 
 function createEmptySubmitErrors(): CheckoutSubmitErrors {
@@ -665,7 +658,6 @@ export function validateCheckoutSubmitInput(
       consents: consentsResult.value,
       newsletterOptIn: input.newsletterOptIn,
       saveToProfile: input.saveToProfile,
-      mockPaymentScenarioId: input.mockPaymentScenarioId ?? null,
     },
     errors,
   };
@@ -702,7 +694,6 @@ export function createEmptyCheckoutDraft(): CheckoutDraft {
     },
     newsletterOptIn: false,
     saveToProfile: false,
-    mockPaymentScenarioId: null,
     updatedAt: null,
   };
 }

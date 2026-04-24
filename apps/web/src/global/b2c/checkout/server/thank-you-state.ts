@@ -1,4 +1,3 @@
-import type { MockP24ScenarioId } from '../mock-payment-scenarios';
 import type { CheckoutOrderStatus } from '../order-draft';
 
 export type CheckoutThankYouStateId =
@@ -58,14 +57,6 @@ const CHECKOUT_THANK_YOU_STATE_DEFINITIONS: Record<
   },
 };
 
-export const MOCK_P24_SCENARIO_TO_THANK_YOU_STATE: Record<
-  MockP24ScenarioId,
-  CheckoutThankYouStateId
-> = {
-  success_status_before_return: 'paid',
-  success_return_before_status: 'paid',
-};
-
 function isExpired(args: {
   payableUntil: string | null;
   now: string;
@@ -117,12 +108,4 @@ export function resolveCheckoutThankYouState(args: {
   }
 
   return getCheckoutThankYouStateDefinition('awaiting_payment');
-}
-
-export function mapMockP24ScenarioToThankYouState(
-  scenarioId: MockP24ScenarioId,
-): CheckoutThankYouStateDefinition {
-  return getCheckoutThankYouStateDefinition(
-    MOCK_P24_SCENARIO_TO_THANK_YOU_STATE[scenarioId],
-  );
 }

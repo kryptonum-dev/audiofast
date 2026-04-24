@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import {
   getCheckoutThankYouStateDefinition,
-  mapMockP24ScenarioToThankYouState,
   resolveCheckoutThankYouState,
   shouldRenderCheckoutConfirmationPage,
 } from './thank-you-state';
@@ -80,20 +79,9 @@ describe('thank-you-state', () => {
     expect(state.showSupportContact).toBe(true);
   });
 
-  it('maps mock scenarios into the accepted thank-you state model', () => {
-    expect(
-      mapMockP24ScenarioToThankYouState('success_return_before_status').id,
-    ).toBe('paid');
-    expect(
-      mapMockP24ScenarioToThankYouState('success_status_before_return').id,
-    ).toBe('paid');
-  });
-
   it('allows only paid and active awaiting_payment states to render confirmation UI', () => {
     expect(shouldRenderCheckoutConfirmationPage('paid')).toBe(true);
-    expect(shouldRenderCheckoutConfirmationPage('awaiting_payment')).toBe(
-      true,
-    );
+    expect(shouldRenderCheckoutConfirmationPage('awaiting_payment')).toBe(true);
     expect(shouldRenderCheckoutConfirmationPage('expired')).toBe(false);
     expect(shouldRenderCheckoutConfirmationPage('invalid_access')).toBe(false);
   });

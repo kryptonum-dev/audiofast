@@ -261,7 +261,6 @@ export async function submitCheckoutOrder(args: {
       orderDraft,
       urlReturn: paymentUrls.urlReturn,
       urlStatus: paymentUrls.urlStatus,
-      mockScenarioId: validationResult.value.mockPaymentScenarioId ?? null,
     });
 
     if (validationResult.value.newsletterOptIn) {
