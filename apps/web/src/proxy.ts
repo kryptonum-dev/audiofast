@@ -1,49 +1,73 @@
+import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { redirectsMap } from './generated/redirects';
 
-/**
- * Proxy for handling legacy URL redirects.
- *
- * Uses a pre-built Map for O(1) lookup performance.
- * Regenerate from Sanity using: bun run generate:redirects
- * Only runs on initial page loads, not client-side navigations.
- */
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+function shouldRefreshSupabaseSession(pathname: string) {
+  return (
+    pathname === '/konto-klienta' ||
+    pathname.startsWith('/konto-klienta/') ||
+    pathname.startsWith('/koszyk/')
+  );
+}
 
-  // Check if this path needs to be redirected
-  // Try both with and without trailing slash to handle inconsistent data
-  const redirect =
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const redirectMatch =
     redirectsMap.get(pathname) ||
     redirectsMap.get(
       pathname.endsWith('/') ? pathname.slice(0, -1) : `${pathname}/`,
     );
 
-  if (redirect) {
+  if (redirectMatch) {
     const url = request.nextUrl.clone();
-    url.pathname = redirect.destination;
+    url.pathname = redirectMatch.destination;
 
-    // Use 308 for permanent (cacheable) or 307 for temporary
-    return NextResponse.redirect(url, redirect.permanent ? 308 : 307);
+    return NextResponse.redirect(url, redirectMatch.permanent ? 308 : 307);
   }
 
-  // No redirect needed, continue to the app
-  return NextResponse.next();
+  if (!shouldRefreshSupabaseSession(pathname)) {
+    return NextResponse.next({
+      request,
+    });
+  }
+
+  let response = NextResponse.next({
+    request,
+  });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value);
+          });
+
+          response = NextResponse.next({
+            request,
+          });
+
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    },
+  );
+
+  // Do not insert additional auth-dependent logic between client creation
+  // and getUser(), otherwise refreshed cookies can drift from the request.
+  await supabase.auth.getUser();
+
+  return response;
 }
 
-/**
- * Matcher config: Only run proxy on paths that could be legacy URLs.
- * This prevents proxy from running on static assets, API routes, etc.
- */
 export const config = {
-  matcher: [
-    /*
-     * Match all paths except:
-     * - _next (Next.js internals)
-     * - api (API routes)
-     * - static files with extensions (.ico, .svg, .png, .jpg, .jpeg, .gif, .webp, .css, .js, .woff, .woff2)
-     */
-    '/((?!_next|api|.*\\.[a-zA-Z0-9]+$).*)',
-  ],
+  matcher: ['/((?!_next|api|.*\\.[a-zA-Z0-9]+$).*)'],
 };

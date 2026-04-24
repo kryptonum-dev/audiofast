@@ -2,23 +2,32 @@
 
 Status: planned
 Owner: planning
-Last updated: 2026-04-09
+Last updated: 2026-04-24
 Depends on: `phase-06-checkout-and-payments.md`
 Related files: `../architecture/customer-panel-ia.md`, `../architecture/customer-auth-and-access.md`, `../architecture/order-lifecycle.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
 ## Objective
 
-Implement the lightweight OTP-based customer panel for post-purchase order access.
+Implement the lightweight OTP-based customer-access system and customer panel for post-purchase order access, reusable customer data, and eligible self-service order actions.
 
 ## Why This Phase Exists
 
-The B2C model does not use classic accounts, so the customer panel is the main self-service post-purchase surface.
+The B2C model does not use classic password-based accounts.
 
-This phase turns the resolved access model and panel IA into a usable customer experience.
+That means the customer panel is the main self-service surface after purchase, and the auth model must stay aligned with the guest-first checkout flow that was already established in `Phase 06`.
+
+This phase exists to turn the resolved customer-auth and customer-panel IA documents into a real runtime system with:
+
+- passwordless email + OTP access
+- protected customer routes
+- checkout behavior that respects authenticated customer identity
+- order list and order detail access
+- reusable `Dane konta` profile editing
 
 ## Inputs
 
 - customer-panel IA
+- customer auth and access model
 - checkout/auth model
 - order-lifecycle model
 - invoice/document direction
@@ -26,33 +35,166 @@ This phase turns the resolved access model and panel IA into a usable customer e
 
 ## Main Deliverables
 
-- Supabase-Auth-backed email + OTP access flow
+- `Supabase Auth`-backed email + OTP access flow at `konto-klienta`
+- protected customer-panel routing with intended-destination return behavior
+- authenticated checkout behavior aligned with the accepted identity rules
 - order list view
 - order detail view
 - `Dane konta` view
-- status history visibility
-- eligible cancellation and return entry points
+- status-history visibility
+- eligible cancellation and return entry points on order detail
+
+## Accepted Direction For This Phase
+
+The accepted implementation direction for `Phase 07` is now:
+
+- implement auth and session behavior first
+- keep early steps focused on identity, routing, and checkout integration rather than broader customer-panel UI design
+- treat `konto-klienta` as the only public customer-access gateway
+- use `Supabase Auth` for OTP verification and session handling
+- keep `customer_profiles` as the reusable commerce/profile layer rather than treating it as the auth account itself
+- treat `konto-klienta/zamowienia` as the first real authenticated panel view
+- add the broader authenticated panel UI only when the order views and `Dane konta` view are being implemented
+- keep `Playwright` browser coverage as follow-up step `7.5` after the panel is implemented
 
 ## Work Included In This Phase
 
-### 1. Access Flow
+### 1. Public Access Gateway And OTP Auth
 
-- email entry
-- OTP verification
-- redirect-to-intended-page behavior
+This step should implement the real customer access entry at `konto-klienta`.
 
-### 2. Authenticated Panel Views
+The goal is to make email-based OTP authentication real before any protected panel views are built.
 
-- `Zamowienia`
-- order detail
-- `Dane konta`
-- logout action
+Expected work:
 
-### 3. Order Actions
+- build the public `konto-klienta` page as the email + OTP gateway
+- implement email-entry and OTP-entry states on the same route
+- use `Supabase Auth` for OTP send and verification behavior
+- return a generic success response for unknown email addresses
+- enforce the accepted resend / retry limits in the application flow where required
+- create the authenticated session after successful OTP verification
+- support first successful verified login for an email that already has eligible B2C orders
+- link `customer_profiles.auth_user_id` to the verified auth identity when the accepted rules allow it
+- implement logout behavior at the session level
 
-- invoice visibility/download when available
-- customer cancellation where eligible
-- customer return request where eligible
+Important rule:
+
+- this step should not yet introduce the broader authenticated customer-panel design
+- the only customer-facing surface here is the public access gateway needed to authenticate
+
+### 2. Protected Routing And Return Behavior
+
+This step should implement the routing and authorization behavior needed by the future panel routes.
+
+The goal is to make the protected route model correct before the real panel views are built.
+
+Expected work:
+
+- protect:
+  - `konto-klienta/zamowienia`
+  - `konto-klienta/zamowienia/[orderNumber]`
+  - `konto-klienta/dane-konta`
+- preserve the intended destination when an unauthenticated customer attempts to open a protected route
+- return the customer to that intended destination after successful OTP verification
+- if a customer with a valid session enters `konto-klienta`, redirect them to `konto-klienta/zamowienia`
+- ensure route protection is based on verified authenticated identity, not only on guest checkout email usage
+
+Important rule:
+
+- this step is routing and session behavior only
+- it should not yet commit to the broader authenticated panel UI composition
+
+### 3. Logged-In Checkout Integration
+
+This step should connect the new customer-auth system back into the already completed checkout flow.
+
+The goal is to prove that `Phase 06` and `Phase 07` work together correctly for returning customers.
+
+Expected work:
+
+- ensure authenticated checkout prefill continues to work from reusable customer data
+- ensure the checkout email stays locked for authenticated customers
+- ensure a new order created during authenticated checkout is linked to the authenticated customer identity according to the accepted rules
+- support the guest -> login -> return-to-checkout behavior from the checkout login CTA
+- keep the cart intact across the auth roundtrip in the same browser
+- ensure logout returns checkout behavior to guest mode where appropriate
+- verify that post-payment profile persistence still behaves correctly for guest and authenticated flows
+
+Important rule:
+
+- this step is integration and correctness work, not the place to design the main customer-panel views
+
+### 4. Orders Area
+
+This step should introduce the first real authenticated customer-panel views.
+
+The goal is to make order access the main post-login customer experience.
+
+Expected work:
+
+- build `konto-klienta/zamowienia` as the default authenticated landing page
+- list all eligible B2C orders associated with the authenticated email identity
+- include active `awaiting_payment` orders while they are still inside the valid payment window
+- exclude expired `awaiting_payment` orders from the main list according to the accepted IA rules
+- build `konto-klienta/zamowienia/[orderNumber]` using the public order number rather than the internal database ID
+- show current status and full status history
+- show order-time snapshots rather than current profile defaults
+- include invoice visibility / download handling when available
+- place eligible cancellation and return entry points on the order detail page only
+
+This step is also the right place to introduce the first broader authenticated panel UI composition because the first real authenticated destination now exists.
+
+### 5. `Dane Konta`
+
+This step should implement the reusable customer-data view.
+
+The goal is to make the lightweight profile model editable without turning the panel into a classic account-management system.
+
+Expected work:
+
+- build `konto-klienta/dane-konta`
+- load the current reusable customer defaults from `customer_profiles`
+- support editing of reusable contact, shipping, and billing / invoice defaults for future checkout use
+- preserve the accepted v1 rule that email is the identity key and is not self-service editable in the panel
+- ensure profile edits affect future checkout defaults only
+- ensure historical orders continue to show their original order-time snapshots
+
+This step should stay narrowly focused on reusable customer data.
+
+It should not expand into classic account settings, password management, or broad profile features outside the accepted v1 scope.
+
+## Expected Implementation Sequence
+
+The implementation order inside `Phase 07` should be:
+
+1. public access gateway and OTP auth
+2. protected routing and return behavior
+3. logged-in checkout integration
+4. orders area
+5. `Dane konta`
+
+This sequence keeps the architecture stable:
+
+- verified identity comes before protected views
+- route and redirect correctness comes before panel UI
+- checkout integration is proven before broader panel work expands
+- the first real authenticated destination is the order area defined by the IA
+- reusable customer-data editing lands after the main post-purchase order surface exists
+
+## Follow-Up Step 7.5 - Playwright Coverage
+
+After the customer-panel implementation is complete, the next follow-up step should add the first browser-level `Playwright` coverage for the real B2C journey.
+
+This is intentionally sequenced after `Phase 07`, not inside it, because the critical browser path should validate:
+
+- storefront purchase
+- thank-you recovery states
+- customer login / OTP flow
+- protected-route redirect behavior
+- post-purchase order access inside the panel
+- reusable customer-data behavior where it matters most
+
+This step should stay focused on the most important end-to-end journeys rather than broad UI exhaustiveness.
 
 ## Not In Scope For This Phase
 
@@ -60,11 +202,21 @@ This phase turns the resolved access model and panel IA into a usable customer e
 - password management
 - historical order migration
 - advanced profile functionality
+- a separate public login route outside `konto-klienta`
+- broader authenticated panel UI work before the order area or `Dane konta` views actually land
 
 ## Done Criteria
 
 Phase 07 can be considered complete when:
 
-- customers can authenticate by OTP
-- customers can view eligible orders and order details
-- the customer panel reflects the agreed v1 structure and action rules
+- customers can authenticate through email + OTP at `konto-klienta`
+- successful OTP verification creates a real session and supports the accepted profile-linking behavior
+- protected customer routes preserve the intended destination and return the customer there after auth
+- authenticated checkout works correctly with prefill, locked email, and identity-aware order linkage
+- customers can view eligible orders in `konto-klienta/zamowienia`
+- customers can open order details through `konto-klienta/zamowienia/[orderNumber]`
+- the order detail page shows current status, status history, and order snapshots correctly
+- eligible invoice, cancellation, and return entry points exist in the right place
+- customers can use `konto-klienta/dane-konta` to edit reusable future-checkout defaults
+- historical orders remain immutable snapshots even after profile edits
+- the customer panel reflects the agreed v1 structure and access rules
