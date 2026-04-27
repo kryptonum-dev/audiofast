@@ -41,7 +41,7 @@ export default async function CustomerAccountPage({
   }
 
   return (
-    <main id="main" className="page-transition">
+    <main id="main">
       <CustomerAccountGateway returnTo={returnTo} />
     </main>
   );

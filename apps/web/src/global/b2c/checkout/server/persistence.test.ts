@@ -72,6 +72,7 @@ function createOrderDraft(): CheckoutOrderDraft {
         itemSnapshot: {
           model: 'Reference',
           selectedOptions: [],
+          productImage: null,
         },
       },
     ],
@@ -150,6 +151,7 @@ describe('checkout persistence', () => {
         item_snapshot: {
           model: 'Reference',
           selectedOptions: [],
+          productImage: null,
         },
         is_returnable: true,
         created_at: '2026-04-20T10:00:00.000Z',

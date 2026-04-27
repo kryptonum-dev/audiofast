@@ -59,6 +59,7 @@ function buildStandardItemSnapshot(
   return {
     model: modelEntry?.value ?? null,
     selectedOptions,
+    productImage: line.product.image ?? null,
   };
 }
 
@@ -66,6 +67,7 @@ function buildCpoItemSnapshot(line: CpoCartLine): CheckoutCpoItemSnapshot {
   return {
     availabilityStatusAtPurchase: line.availabilityStatus,
     archivedAtPurchase: null,
+    productImage: line.product.image ?? null,
   };
 }
 

@@ -1,3 +1,5 @@
+import type { SanityRawImage } from '@/src/components/shared/Image';
+
 import type { CartCouponDiscountType, CartLineType } from '../cart/types';
 
 export type CheckoutCountryCode = 'PL';
@@ -111,12 +113,22 @@ export type CheckoutStandardItemOptionSnapshot = {
   parentValueName: string | null;
 };
 
-export type CheckoutStandardItemSnapshot = {
+/**
+ * Display fields preserved on every order item at purchase time.
+ * Kept in `order_items.item_snapshot` so the customer panel can render
+ * a faithful product card without round-tripping to Sanity for orders
+ * whose source product may have been renamed, replaced, or unpublished.
+ */
+export type CheckoutItemDisplaySnapshot = {
+  productImage: SanityRawImage | null;
+};
+
+export type CheckoutStandardItemSnapshot = CheckoutItemDisplaySnapshot & {
   model: string | null;
   selectedOptions: CheckoutStandardItemOptionSnapshot[];
 };
 
-export type CheckoutCpoItemSnapshot = {
+export type CheckoutCpoItemSnapshot = CheckoutItemDisplaySnapshot & {
   availabilityStatusAtPurchase: string | null;
   archivedAtPurchase: boolean | null;
 };

@@ -1,0 +1,183 @@
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+
+  .skeletonCard {
+    display: grid;
+    grid-template-columns: clamp(7.5rem, 12vw, 10rem) minmax(0, 1fr) auto;
+    align-items: stretch;
+    gap: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+    padding: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+    background: var(--neutral-white, #ffffff);
+    border: 1px solid var(--neutral-400, #e7e7e7);
+    border-radius: 0.75rem;
+    box-shadow: 0 0.75rem 2rem -1.75rem rgba(20, 20, 20, 0.08);
+    width: 100%;
+  }
+
+  .skeletonImage,
+  .skeletonEyebrow,
+  .skeletonTitle,
+  .skeletonMeta,
+  .skeletonStatus,
+  .skeletonButton {
+    background: linear-gradient(
+      90deg,
+      var(--neutral-200, #f8f8f8) 25%,
+      var(--neutral-300, #f0f0f0) 50%,
+      var(--neutral-200, #f8f8f8) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1500ms infinite;
+  }
+
+  .skeletonImage {
+    align-self: center;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 0.5rem;
+  }
+
+  .skeletonBody {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .skeletonEyebrow {
+    width: 11rem;
+    height: 0.75rem;
+    border-radius: 999px;
+  }
+
+  .skeletonTitle {
+    width: min(100%, 15rem);
+    height: 1.25rem;
+    border-radius: 999px;
+  }
+
+  .skeletonMetaRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: auto;
+  }
+
+  .skeletonMeta {
+    width: min(100%, 7rem);
+    height: 2rem;
+    border-radius: 0.5rem;
+  }
+
+  .skeletonActions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .skeletonStatus {
+    width: 4.5rem;
+    height: 2rem;
+    border-radius: 999px;
+  }
+
+  .skeletonButton {
+    width: 10rem;
+    height: 2.25rem;
+    border-radius: 0.25rem;
+  }
+
+  @media (max-width: 45.5625rem) {
+    .skeletonCard {
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        'image body'
+        'image actions';
+    }
+
+    .skeletonImage {
+      grid-area: image;
+      width: 10rem;
+    }
+
+    .skeletonBody {
+      grid-area: body;
+    }
+
+    .skeletonActions {
+      grid-area: actions;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 34.3125rem) {
+    .skeletonCard {
+      grid-template-areas:
+        'image body'
+        'actions actions';
+    }
+
+    .skeletonImage {
+      width: 7rem;
+    }
+  }
+
+  @media (max-width: 28.0625rem) {
+    .skeletonCard {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        'image'
+        'body'
+        'actions';
+      position: relative;
+    }
+
+    .skeletonImage {
+      width: 100%;
+    }
+
+    .skeletonActions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .skeletonStatus {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      border-radius: 0.45rem;
+    }
+
+    .skeletonButton {
+      width: 100%;
+    }
+  }
+}
+
+.topPaginationSkeleton {
+  justify-self: end;
+}
+
+.bottomPaginationSkeleton {
+  justify-self: end;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

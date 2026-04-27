@@ -1,12 +1,14 @@
 .customerPanelShell {
   padding: clamp(2.5rem, calc(4vw / 0.48), 5rem) 0;
   display: grid;
-  grid-template-columns: minmax(15rem, 17rem) minmax(0, 1fr);
+  grid-template-columns: minmax(16rem, 17rem) minmax(0, 1fr);
   align-items: start;
   gap: clamp(1.25rem, calc(2vw / 0.48), 2rem);
+  min-height: calc(100svh - var(--site-header-height, 4.75rem));
 
   .panelContent {
     min-width: 0;
+    width: 100%;
   }
 
   @media (max-width: 63.6875rem) {
@@ -17,8 +19,8 @@
 
   @media (max-width: 37.4375rem) {
     width: calc(100% - var(--pageMargin) * 2);
-    padding-bottom: 0rem;
     display: flex;
+    padding-bottom: 1rem;
     flex-direction: column;
 
     .panelContent {

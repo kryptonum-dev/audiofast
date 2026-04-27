@@ -1,0 +1,87 @@
+import type { CustomerOrdersListItem } from './server/orders';
+
+export type CustomerOrderStatusTone = 'success' | 'warning' | 'neutral';
+
+const ORDER_STATUS_LABELS: Record<string, string> = {
+  paid: 'Opłacone',
+  processing: 'W realizacji',
+  shipped: 'Wysłane',
+  completed: 'Zrealizowane',
+  cancelled: 'Anulowane',
+  returned: 'Zwrócone',
+  awaiting_payment: 'Oczekuje na płatność',
+};
+
+/**
+ * Resolve a Polish label for an order list item. Uses `accessKind` so that
+ * `awaiting_payment_active` is shown distinctly from raw DB status; falls
+ * back to the raw status when no translation is mapped.
+ */
+export function getCustomerOrderStatusLabel(
+  order: Pick<CustomerOrdersListItem, 'currentStatus' | 'accessKind'>,
+): string {
+  const statusKey =
+    order.accessKind === 'awaiting_payment_active'
+      ? 'awaiting_payment'
+      : order.currentStatus;
+
+  return ORDER_STATUS_LABELS[statusKey] ?? order.currentStatus;
+}
+
+/**
+ * Tone classification used by the status pill. Active payments need a
+ * "warning" treatment (deadline-bound action), happy-path lifecycle
+ * statuses are "success", and terminal non-success states stay neutral
+ * to avoid alarming the customer.
+ */
+export function getCustomerOrderStatusTone(
+  order: Pick<CustomerOrdersListItem, 'currentStatus' | 'accessKind'>,
+): CustomerOrderStatusTone {
+  if (order.accessKind === 'awaiting_payment_active') {
+    return 'warning';
+  }
+
+  switch (order.currentStatus) {
+    case 'paid':
+    case 'processing':
+    case 'shipped':
+    case 'completed':
+      return 'success';
+    default:
+      return 'neutral';
+  }
+}
+
+const ORDER_DATE_FORMATTER = new Intl.DateTimeFormat('pl-PL', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
+const ORDER_DATETIME_FORMATTER = new Intl.DateTimeFormat('pl-PL', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+export function formatCustomerOrderDate(iso: string): string {
+  const timestamp = Date.parse(iso);
+
+  if (Number.isNaN(timestamp)) {
+    return iso;
+  }
+
+  return ORDER_DATE_FORMATTER.format(new Date(timestamp));
+}
+
+export function formatCustomerOrderDateTime(iso: string): string {
+  const timestamp = Date.parse(iso);
+
+  if (Number.isNaN(timestamp)) {
+    return iso;
+  }
+
+  return ORDER_DATETIME_FORMATTER.format(new Date(timestamp));
+}

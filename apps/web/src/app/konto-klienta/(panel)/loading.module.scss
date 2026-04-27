@@ -1,41 +1,13 @@
 .loadingPanel {
   width: 100%;
+  align-self: stretch;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .loadingCard {
-    width: min(100%, 44rem);
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: clamp(1.75rem, calc(2.5vw / 0.48), 2.5rem);
-    background: var(--neutral-white, #ffffff);
-    border: 0.0625rem solid var(--neutral-300, #f7f3f3);
-    border-radius: 1rem;
-  }
-
-  .loadingLine {
-    display: block;
-    height: 0.875rem;
-    max-width: 100%;
-    border-radius: 999px;
-    background: var(--neutral-300, #f7f3f3);
-
-    &:first-child {
-      width: 45%;
-    }
-
-    &:nth-child(2) {
-      width: 72%;
-    }
-
-    &:last-child {
-      width: 58%;
-    }
-  }
-
-  @media (max-width: 56.1875rem) {
-    .loadingCard {
-      padding: 1.5rem;
-      border-radius: 0.875rem;
-    }
+  @media (max-width: 37.4375rem) {
+    min-height: calc(100svh - var(--site-header-height, 4.75rem));
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
   }
 }
