@@ -3,6 +3,15 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 import { redirectsMap } from './generated/redirects';
 
+function isProtectedCustomerPanelPath(pathname: string) {
+  return (
+    pathname === '/konto-klienta/zamowienia' ||
+    pathname.startsWith('/konto-klienta/zamowienia/') ||
+    pathname === '/konto-klienta/dane-konta' ||
+    pathname.startsWith('/konto-klienta/dane-konta/')
+  );
+}
+
 function shouldRefreshSupabaseSession(pathname: string) {
   return (
     pathname === '/konto-klienta' ||
@@ -61,9 +70,19 @@ export async function proxy(request: NextRequest) {
     },
   );
 
-  // Do not insert additional auth-dependent logic between client creation
-  // and getUser(), otherwise refreshed cookies can drift from the request.
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user && isProtectedCustomerPanelPath(pathname)) {
+    const url = request.nextUrl.clone();
+    const returnTo = `${request.nextUrl.pathname}${request.nextUrl.search}${request.nextUrl.hash}`;
+
+    url.pathname = '/konto-klienta/';
+    url.search = `?returnTo=${encodeURIComponent(returnTo)}`;
+
+    return NextResponse.redirect(url);
+  }
 
   return response;
 }

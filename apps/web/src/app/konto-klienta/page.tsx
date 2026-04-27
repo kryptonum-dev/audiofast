@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
+import CustomerAccountGateway from '@/src/components/b2c/CustomerAccountGateway';
 import { resolveCustomerAccountReturnTo } from '@/src/global/b2c/customer-auth/return-to';
 import { loadCustomerAuthSession } from '@/src/global/b2c/customer-auth/server/session';
-
-import CustomerAccountGateway from './customer-account-gateway';
 
 export const metadata: Metadata = {
   title: 'Konto klienta | Audiofast',

@@ -2,8 +2,9 @@
 
 import { type ComponentProps, useState } from 'react';
 
-import CustomerAuthEmailStep from './CustomerAuthEmailStep';
-import CustomerAuthOtpStep from './CustomerAuthOtpStep';
+import CustomerAuthEmailStep from '@/src/components/b2c/CustomerAccountGateway/CustomerAuthEmailStep';
+import CustomerAuthOtpStep from '@/src/components/b2c/CustomerAccountGateway/CustomerAuthOtpStep';
+
 import styles from './styles.module.scss';
 
 type CustomerAccountGatewayState =

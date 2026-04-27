@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
-import CustomerPanelPlaceholder from '@/src/app/konto-klienta/CustomerPanelPlaceholder';
-import { buildCustomerAccountGatewayHref } from '@/src/global/b2c/customer-auth/return-to';
-import { loadCustomerAuthSession } from '@/src/global/b2c/customer-auth/server/session';
+import CustomerPanelPlaceholder from '@/src/components/b2c/CustomerPanel/CustomerPanelPlaceholder';
 
 export const metadata: Metadata = {
   title: 'Dane konta | Konto klienta | Audiofast',
@@ -19,13 +16,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function CustomerAccountDetailsPage() {
-  const session = await loadCustomerAuthSession();
-
-  if (!session.isAuthenticated) {
-    redirect(buildCustomerAccountGatewayHref('/konto-klienta/dane-konta/'));
-  }
-
+export default function CustomerAccountDetailsPage() {
   return (
     <CustomerPanelPlaceholder
       eyebrow="Konto klienta"

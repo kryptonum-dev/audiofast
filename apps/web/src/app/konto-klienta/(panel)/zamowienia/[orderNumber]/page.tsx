@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
-import CustomerPanelPlaceholder from '@/src/app/konto-klienta/CustomerPanelPlaceholder';
-import { buildCustomerAccountGatewayHref } from '@/src/global/b2c/customer-auth/return-to';
-import { loadCustomerAuthSession } from '@/src/global/b2c/customer-auth/server/session';
+import CustomerPanelPlaceholder from '@/src/components/b2c/CustomerPanel/CustomerPanelPlaceholder';
 
 type CustomerOrderDetailsPageProps = {
   params: Promise<{
@@ -34,15 +31,7 @@ export async function generateMetadata({
 export default async function CustomerOrderDetailsPage({
   params,
 }: CustomerOrderDetailsPageProps) {
-  const [{ orderNumber }, session] = await Promise.all([
-    params,
-    loadCustomerAuthSession(),
-  ]);
-  const orderDetailsHref = `/konto-klienta/zamowienia/${orderNumber}/`;
-
-  if (!session.isAuthenticated) {
-    redirect(buildCustomerAccountGatewayHref(orderDetailsHref));
-  }
+  const { orderNumber } = await params;
 
   return (
     <CustomerPanelPlaceholder
