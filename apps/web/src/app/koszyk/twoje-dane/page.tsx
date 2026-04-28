@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
+import CheckoutLoadingSkeleton from '@/src/components/b2c/CheckoutPage/CheckoutLoadingSkeleton';
 import CheckoutPageClient from '@/src/components/b2c/CheckoutPage/CheckoutPageClient';
 import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
 import type { SupportCardData } from '@/src/components/b2c/shared/SupportCard';
@@ -37,6 +39,10 @@ const breadcrumbsData = [
   },
 ];
 
+type CheckoutDetailsContentProps = {
+  supportCard: SupportCardData | null;
+};
+
 async function loadCheckoutSupportCard(): Promise<SupportCardData | null> {
   try {
     return await sanityFetch<SupportCardData | null>({
@@ -50,21 +56,30 @@ async function loadCheckoutSupportCard(): Promise<SupportCardData | null> {
 }
 
 export default async function CheckoutDetailsPage() {
-  const [checkoutPageData, supportCard] = await Promise.all([
-    loadCheckoutPageData(),
-    loadCheckoutSupportCard(),
-  ]);
+  const supportCard = await loadCheckoutSupportCard();
 
   return (
     <>
       <Breadcrumbs data={breadcrumbsData} firstItemType="cartPage" />
       <CheckoutSteps currentStep="checkout" />
-      <CheckoutPageClient
-        initialDraft={checkoutPageData.initialDraft}
-        isEmailLocked={checkoutPageData.isEmailLocked}
-        sessionContext={checkoutPageData.sessionContext}
-        supportCard={supportCard}
-      />
+      <Suspense fallback={<CheckoutLoadingSkeleton />}>
+        <CheckoutDetailsContent supportCard={supportCard} />
+      </Suspense>
     </>
+  );
+}
+
+async function CheckoutDetailsContent({
+  supportCard,
+}: CheckoutDetailsContentProps) {
+  const checkoutPageData = await loadCheckoutPageData();
+
+  return (
+    <CheckoutPageClient
+      initialDraft={checkoutPageData.initialDraft}
+      isEmailLocked={checkoutPageData.isEmailLocked}
+      sessionContext={checkoutPageData.sessionContext}
+      supportCard={supportCard}
+    />
   );
 }

@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 import CustomerOrdersStateCard from '@/src/components/b2c/CustomerPanel/CustomerOrders/CustomerOrdersStateCard';
 import CustomerOrderDetails from '@/src/components/b2c/CustomerPanel/OrderDetails';
+import OrderDetailsSkeleton from '@/src/components/b2c/CustomerPanel/OrderDetails/OrderDetailsSkeleton';
 import { buildCustomerAccountGatewayHref } from '@/src/global/b2c/customer-auth/return-to';
 import { loadCustomerOrderForPanel } from '@/src/global/b2c/customer-auth/server/order-detail';
 import { loadCustomerAuthSession } from '@/src/global/b2c/customer-auth/server/session';
@@ -33,7 +35,17 @@ export async function generateMetadata({
   };
 }
 
-export default async function CustomerOrderDetailsPage({
+export default function CustomerOrderDetailsPage({
+  params,
+}: CustomerOrderDetailsPageProps) {
+  return (
+    <Suspense fallback={<OrderDetailsSkeleton />}>
+      <AuthenticatedCustomerOrderDetails params={params} />
+    </Suspense>
+  );
+}
+
+async function AuthenticatedCustomerOrderDetails({
   params,
 }: CustomerOrderDetailsPageProps) {
   const { orderNumber } = await params;

@@ -1,5 +1,6 @@
 import '../global/global.scss';
 
+import { Suspense } from 'react';
 import { preconnect, prefetchDNS } from 'react-dom';
 import { Toaster } from 'sonner';
 
@@ -50,7 +51,9 @@ export default async function RootLayout({
       </head>
       <body>
         <CartProvider>
-          <Header />
+          <Suspense fallback={null}>
+            <Header />
+          </Suspense>
           {children}
           <Footer />
           {settings && <OrganizationSchema settings={settings} />}
@@ -61,7 +64,9 @@ export default async function RootLayout({
               <Analytics />
             </>
           )}
-          <FloatingComparisonBox />
+          <Suspense fallback={null}>
+            <FloatingComparisonBox />
+          </Suspense>
           <Toaster position="bottom-center" richColors />
         </CartProvider>
       </body>

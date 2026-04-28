@@ -1,9 +1,11 @@
 import { redirect } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { type ReactNode, Suspense } from 'react';
 
 import CustomerPanelShell from '@/src/components/b2c/CustomerPanel/CustomerPanelShell';
 import { buildCustomerAccountGatewayHref } from '@/src/global/b2c/customer-auth/return-to';
 import { loadCustomerAuthSession } from '@/src/global/b2c/customer-auth/server/session';
+
+import CustomerPanelLoading from './loading';
 
 type CustomerPanelLayoutProps = {
   children: ReactNode;
@@ -33,7 +35,19 @@ function resolveCustomerDisplayName(
   return profileName || maskCustomerEmail(session.normalizedEmail);
 }
 
-export default async function CustomerPanelLayout({
+export default function CustomerPanelLayout({
+  children,
+}: CustomerPanelLayoutProps) {
+  return (
+    <Suspense fallback={<CustomerPanelLoading />}>
+      <AuthenticatedCustomerPanelLayout>
+        {children}
+      </AuthenticatedCustomerPanelLayout>
+    </Suspense>
+  );
+}
+
+async function AuthenticatedCustomerPanelLayout({
   children,
 }: CustomerPanelLayoutProps) {
   const session = await loadCustomerAuthSession();

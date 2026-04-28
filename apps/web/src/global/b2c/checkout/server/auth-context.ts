@@ -1,4 +1,5 @@
 import type { User } from '@supabase/supabase-js';
+import { unstable_rethrow } from 'next/navigation';
 
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database } from '@/src/global/supabase/database.types';
@@ -95,6 +96,7 @@ export async function loadCheckoutAuthContext(): Promise<CheckoutAuthContext> {
       isEmailLocked: shouldLockOrderFormEmail(sessionContext),
     };
   } catch (error) {
+    unstable_rethrow(error);
     console.error('Failed to load checkout auth context.', error);
 
     return {

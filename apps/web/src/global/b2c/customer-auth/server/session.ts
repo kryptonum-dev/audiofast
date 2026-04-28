@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { unstable_rethrow } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { cache } from 'react';
 
@@ -117,6 +118,7 @@ export async function loadCustomerAuthSessionUncached(): Promise<CustomerAuthSes
         : null,
     };
   } catch (error) {
+    unstable_rethrow(error);
     console.error('Failed to load customer auth session.', error);
 
     return {

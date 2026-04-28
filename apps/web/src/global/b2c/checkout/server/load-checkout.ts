@@ -1,3 +1,5 @@
+import { unstable_rethrow } from 'next/navigation';
+
 import { buildCheckoutDraftFromProfile } from '../profile';
 import { createEmptyCheckoutDraft } from '../validation';
 import { loadCheckoutAuthContext } from './auth-context';
@@ -39,6 +41,7 @@ export async function loadCheckoutPageData(): Promise<LoadCheckoutPageData> {
 
     return buildCheckoutPageData(authContext);
   } catch (error) {
+    unstable_rethrow(error);
     console.error('Failed to load checkout page data.', error);
 
     return createFallbackCheckoutPageData();
