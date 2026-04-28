@@ -195,6 +195,26 @@
           color: var(--primary-error, #ff6a00);
           background: rgba(255, 106, 0, 0.1);
         }
+
+        &[data-tone='processing'] {
+          color: #0b6bcb;
+          background: rgba(11, 107, 203, 0.08);
+        }
+
+        &[data-tone='shipped'] {
+          color: #7c3aed;
+          background: rgba(124, 58, 237, 0.08);
+        }
+
+        &[data-tone='destructive'] {
+          color: var(--primary-red, #fe0140);
+          background: rgba(254, 1, 64, 0.08);
+        }
+
+        &[data-tone='returned'] {
+          color: var(--primary-error, #ff6a00);
+          background: rgba(255, 106, 0, 0.1);
+        }
       }
 
       .cta {

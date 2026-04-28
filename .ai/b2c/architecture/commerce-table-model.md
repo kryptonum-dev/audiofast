@@ -287,6 +287,7 @@ The accepted v1 shape is:
 
 - `carrier`
 - `trackingNumber`
+- `trackingUrl` nullable
 - `shippedAt`
 
 #### `invoice_data`

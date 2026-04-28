@@ -1,6 +1,13 @@
 import type { CustomerOrdersListItem } from './server/orders';
 
-export type CustomerOrderStatusTone = 'success' | 'warning' | 'neutral';
+export type CustomerOrderStatusTone =
+  | 'success'
+  | 'warning'
+  | 'processing'
+  | 'shipped'
+  | 'destructive'
+  | 'returned'
+  | 'neutral';
 
 const ORDER_STATUS_LABELS: Record<string, string> = {
   paid: 'Opłacone',
@@ -30,9 +37,8 @@ export function getCustomerOrderStatusLabel(
 
 /**
  * Tone classification used by the status pill. Active payments need a
- * "warning" treatment (deadline-bound action), happy-path lifecycle
- * statuses are "success", and terminal non-success states stay neutral
- * to avoid alarming the customer.
+ * "warning" treatment (deadline-bound action). Fulfillment statuses use
+ * distinct tones so the order list can be scanned quickly.
  */
 export function getCustomerOrderStatusTone(
   order: Pick<CustomerOrdersListItem, 'currentStatus' | 'accessKind'>,
@@ -43,10 +49,16 @@ export function getCustomerOrderStatusTone(
 
   switch (order.currentStatus) {
     case 'paid':
-    case 'processing':
-    case 'shipped':
     case 'completed':
       return 'success';
+    case 'processing':
+      return 'processing';
+    case 'shipped':
+      return 'shipped';
+    case 'cancelled':
+      return 'destructive';
+    case 'returned':
+      return 'returned';
     default:
       return 'neutral';
   }

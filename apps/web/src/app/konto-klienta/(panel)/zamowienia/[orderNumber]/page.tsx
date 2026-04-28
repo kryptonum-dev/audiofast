@@ -1,6 +1,11 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
-import CustomerPanelPlaceholder from '@/src/components/b2c/CustomerPanel/CustomerPanelPlaceholder';
+import CustomerOrdersStateCard from '@/src/components/b2c/CustomerPanel/CustomerOrders/CustomerOrdersStateCard';
+import CustomerOrderDetails from '@/src/components/b2c/CustomerPanel/OrderDetails';
+import { buildCustomerAccountGatewayHref } from '@/src/global/b2c/customer-auth/return-to';
+import { loadCustomerOrderForPanel } from '@/src/global/b2c/customer-auth/server/order-detail';
+import { loadCustomerAuthSession } from '@/src/global/b2c/customer-auth/server/session';
 
 type CustomerOrderDetailsPageProps = {
   params: Promise<{
@@ -16,7 +21,7 @@ export async function generateMetadata({
   return {
     title: `${orderNumber} | Zamówienie | Konto klienta | Audiofast`,
     description:
-      'Miejsce na przyszły widok szczegółów zamówienia w panelu klienta Audiofast.',
+      'Szczegóły zamówienia dostępne po zalogowaniu do konta klienta Audiofast.',
     robots: {
       index: false,
       follow: false,
@@ -32,20 +37,35 @@ export default async function CustomerOrderDetailsPage({
   params,
 }: CustomerOrderDetailsPageProps) {
   const { orderNumber } = await params;
+  const detailPath = `/konto-klienta/zamowienia/${orderNumber}/`;
+  const session = await loadCustomerAuthSession();
 
-  return (
-    <CustomerPanelPlaceholder
-      eyebrow="Szczegóły zamówienia"
-      heading={`Zamówienie ${orderNumber}`}
-      description="Ta trasa jest już chroniona i gotowa na kolejny etap prac. W następnym kroku podłączymy tutaj pełny widok zamówienia, historię statusów oraz wszystkie dane zapisane w momencie zakupu."
-      actions={[
-        {
-          href: '/konto-klienta/zamowienia/',
-          label: 'Wróć do zamówień',
-          iconUsed: 'arrowLeft',
-          variant: 'secondary',
-        },
-      ]}
-    />
-  );
+  if (!session.isAuthenticated) {
+    redirect(buildCustomerAccountGatewayHref(detailPath));
+  }
+
+  const result = await loadCustomerOrderForPanel({
+    orderNumber,
+    normalizedEmail: session.normalizedEmail,
+  });
+
+  if (result.kind === 'not_found') {
+    return (
+      <CustomerOrdersStateCard
+        live
+        heading="Nie możemy pokazać tego zamówienia"
+        description="Zamówienie nie istnieje, nie należy do zalogowanego adresu e-mail albo nie jest już dostępne w panelu klienta."
+        actions={[
+          {
+            href: '/konto-klienta/zamowienia/',
+            label: 'Wróć do zamówień',
+            iconUsed: 'arrowLeft',
+            variant: 'secondary',
+          },
+        ]}
+      />
+    );
+  }
+
+  return <CustomerOrderDetails order={result.order} />;
 }

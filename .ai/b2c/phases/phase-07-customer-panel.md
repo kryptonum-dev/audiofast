@@ -1,8 +1,8 @@
 # Phase 07 - Customer Panel
 
-Status: planned
+Status: in progress
 Owner: planning
-Last updated: 2026-04-24
+Last updated: 2026-04-28
 Depends on: `phase-06-checkout-and-payments.md`
 Related files: `../architecture/customer-panel-ia.md`, `../architecture/customer-auth-and-access.md`, `../architecture/order-lifecycle.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
@@ -43,6 +43,23 @@ This phase exists to turn the resolved customer-auth and customer-panel IA docum
 - `Dane konta` view
 - status-history visibility
 - eligible cancellation and return entry points on order detail
+
+## Current Implementation Status
+
+Step 04, `Orders Area`, is complete as of 2026-04-28.
+
+The implemented order area includes:
+
+- authenticated order list access at `konto-klienta/zamowienia`
+- protected order detail access by public `order_number`
+- order-time snapshot rendering for customer, shipping, invoice, discount, shipment, and line-item data
+- customer-readable status history
+- private invoice download handling through the application layer
+- cancellation and return entry points on the detail page with server-side eligibility checks
+- responsive detail loading skeletons
+- focused Vitest coverage for detail access, visibility, parsing, invoice access, cancellation, and return rules
+
+Phase 07 itself remains in progress until Step 05, `Dane konta`, is completed. Browser-level mocked auth / checkout / payment coverage remains intentionally tracked as follow-up Step `7.5`.
 
 ## Accepted Direction For This Phase
 

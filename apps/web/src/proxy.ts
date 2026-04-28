@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { redirectsMap } from './generated/redirects';
+import { resolveCustomerAccountReturnTo } from './global/b2c/customer-auth/return-to';
 
 function isProtectedCustomerPanelPath(pathname: string) {
   return (
@@ -12,12 +13,38 @@ function isProtectedCustomerPanelPath(pathname: string) {
   );
 }
 
-function shouldRefreshSupabaseSession(pathname: string) {
+function isCustomerAccountGatewayPath(pathname: string) {
+  return pathname === '/konto-klienta' || pathname === '/konto-klienta/';
+}
+
+function isCheckoutCustomerAuthPath(pathname: string) {
   return (
-    pathname === '/konto-klienta' ||
-    pathname.startsWith('/konto-klienta/') ||
-    pathname.startsWith('/koszyk/')
+    pathname === '/koszyk/twoje-dane' || pathname === '/koszyk/twoje-dane/'
   );
+}
+
+function shouldHandleSupabaseSession(pathname: string) {
+  return (
+    isCustomerAccountGatewayPath(pathname) ||
+    isProtectedCustomerPanelPath(pathname) ||
+    isCheckoutCustomerAuthPath(pathname)
+  );
+}
+
+function resolveReturnToFromRequest(request: NextRequest) {
+  const returnToValues = request.nextUrl.searchParams.getAll('returnTo');
+
+  return resolveCustomerAccountReturnTo(
+    returnToValues.length > 1 ? returnToValues : returnToValues[0],
+  );
+}
+
+function copySessionCookies(source: NextResponse, target: NextResponse) {
+  source.cookies.getAll().forEach((cookie) => {
+    target.cookies.set(cookie);
+  });
+
+  return target;
 }
 
 export async function proxy(request: NextRequest) {
@@ -35,7 +62,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url, redirectMatch.permanent ? 308 : 307);
   }
 
-  if (!shouldRefreshSupabaseSession(pathname)) {
+  if (!shouldHandleSupabaseSession(pathname)) {
     return NextResponse.next({
       request,
     });
@@ -73,6 +100,14 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (user && isCustomerAccountGatewayPath(pathname)) {
+    const redirectUrl = new URL(
+      resolveReturnToFromRequest(request),
+      request.url,
+    );
+    return copySessionCookies(response, NextResponse.redirect(redirectUrl));
+  }
 
   if (!user && isProtectedCustomerPanelPath(pathname)) {
     const url = request.nextUrl.clone();

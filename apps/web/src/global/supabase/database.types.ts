@@ -101,6 +101,59 @@ export type Database = {
         };
         Relationships: [];
       };
+      order_cancellation_requests: {
+        Row: {
+          admin_note: string | null;
+          created_at: string;
+          customer_email: string;
+          customer_message: string | null;
+          id: string;
+          order_id: string;
+          reason: string | null;
+          requested_at: string;
+          resolved_at: string | null;
+          resolved_by: string | null;
+          status: string;
+          updated_at: string;
+        };
+        Insert: {
+          admin_note?: string | null;
+          created_at?: string;
+          customer_email: string;
+          customer_message?: string | null;
+          id?: string;
+          order_id: string;
+          reason?: string | null;
+          requested_at?: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Update: {
+          admin_note?: string | null;
+          created_at?: string;
+          customer_email?: string;
+          customer_message?: string | null;
+          id?: string;
+          order_id?: string;
+          reason?: string | null;
+          requested_at?: string;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          status?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'order_cancellation_requests_order_id_fkey';
+            columns: ['order_id'];
+            isOneToOne: false;
+            referencedRelation: 'orders';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       order_items: {
         Row: {
           brand_name: string;

@@ -1,6 +1,8 @@
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 import type { CustomerOrdersSearchParams } from '@/src/global/b2c/customer-auth/orders-listing-query';
+import { loadCustomerOrdersPageData } from '@/src/global/b2c/customer-auth/server/orders-page';
 
 import CustomerOrdersListing from '../CustomerOrdersListing';
 import CustomerOrdersListingSkeleton from '../CustomerOrdersListingSkeleton';
@@ -11,12 +13,10 @@ const CUSTOMER_ORDERS_BASE_PATH = '/konto-klienta/zamowienia/';
 const CUSTOMER_ORDERS_LISTING_ID = 'customer-orders-listing';
 
 type CustomerOrdersPageContentProps = {
-  normalizedEmail: string;
   searchParams: Promise<CustomerOrdersSearchParams>;
 };
 
 export default function CustomerOrdersPageContent({
-  normalizedEmail,
   searchParams,
 }: CustomerOrdersPageContentProps) {
   return (
@@ -31,14 +31,28 @@ export default function CustomerOrdersPageContent({
         </header>
 
         <Suspense fallback={<CustomerOrdersListingSkeleton />}>
-          <CustomerOrdersListing
-            normalizedEmail={normalizedEmail}
-            searchParams={searchParams}
-            basePath={CUSTOMER_ORDERS_BASE_PATH}
-            scrollTargetId={CUSTOMER_ORDERS_LISTING_ID}
-          />
+          <AuthenticatedCustomerOrdersListing searchParams={searchParams} />
         </Suspense>
       </section>
     </CustomerOrdersLoadingProvider>
+  );
+}
+
+async function AuthenticatedCustomerOrdersListing({
+  searchParams,
+}: CustomerOrdersPageContentProps) {
+  const pageData = await loadCustomerOrdersPageData();
+
+  if (pageData.kind === 'unauthenticated') {
+    redirect(pageData.redirectTo);
+  }
+
+  return (
+    <CustomerOrdersListing
+      normalizedEmail={pageData.normalizedEmail}
+      searchParams={searchParams}
+      basePath={CUSTOMER_ORDERS_BASE_PATH}
+      scrollTargetId={CUSTOMER_ORDERS_LISTING_ID}
+    />
   );
 }

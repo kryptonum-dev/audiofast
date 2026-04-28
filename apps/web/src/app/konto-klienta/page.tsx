@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
 import CustomerAccountGateway from '@/src/components/b2c/CustomerAccountGateway';
 import { resolveCustomerAccountReturnTo } from '@/src/global/b2c/customer-auth/return-to';
-import { loadCustomerAuthSession } from '@/src/global/b2c/customer-auth/server/session';
 
 export const metadata: Metadata = {
   title: 'Konto klienta | Audiofast',
@@ -28,17 +26,10 @@ type CustomerAccountPageProps = {
 export default async function CustomerAccountPage({
   searchParams,
 }: CustomerAccountPageProps) {
-  const [resolvedSearchParams, session] = await Promise.all([
-    searchParams,
-    loadCustomerAuthSession(),
-  ]);
+  const resolvedSearchParams = await searchParams;
   const returnTo = resolveCustomerAccountReturnTo(
     resolvedSearchParams.returnTo,
   );
-
-  if (session.isAuthenticated) {
-    redirect(returnTo);
-  }
 
   return (
     <main id="main">

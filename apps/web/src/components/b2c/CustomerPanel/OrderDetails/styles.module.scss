@@ -1,0 +1,37 @@
+.orderDetailPage {
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+
+  .actionsRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(16rem, 1fr));
+    gap: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+    margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
+    align-items: start;
+
+    &[data-single-action='true'] {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    > section {
+      min-width: 0;
+      margin-bottom: 0;
+      padding: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+      border: 1px solid var(--neutral-400, #e7e7e7);
+      border-radius: 0.75rem;
+      background: var(--neutral-200, #f8f8f8);
+    }
+  }
+
+  @media (max-width: 63.6875rem) {
+    max-width: 52rem;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 56.1875rem) {
+    .actionsRow {
+      grid-template-columns: 1fr;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import 'server-only';
 
 import type { User } from '@supabase/supabase-js';
+import { cache } from 'react';
 
 import { createAdminClient } from '@/src/global/supabase/admin';
 import { createAuthServerClient } from '@/src/global/supabase/server-auth';
@@ -88,7 +89,7 @@ async function loadCustomerProfileByEmail(
   return (data ?? null) as CustomerProfileRow | null;
 }
 
-export async function loadCustomerAuthSession(): Promise<CustomerAuthSessionResult> {
+export async function loadCustomerAuthSessionUncached(): Promise<CustomerAuthSessionResult> {
   try {
     const supabase = await createAuthServerClient();
     const { data, error } = await supabase.auth.getUser();
@@ -126,3 +127,5 @@ export async function loadCustomerAuthSession(): Promise<CustomerAuthSessionResu
     };
   }
 }
+
+export const loadCustomerAuthSession = cache(loadCustomerAuthSessionUncached);
