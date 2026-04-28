@@ -10,6 +10,10 @@ type CustomerOrderInvoiceRouteContext = {
   }>;
 };
 
+function buildInvoiceFilename(orderNumber: string) {
+  return `faktura-${orderNumber}.pdf`;
+}
+
 export async function GET(
   request: Request,
   { params }: CustomerOrderInvoiceRouteContext,
@@ -39,5 +43,36 @@ export async function GET(
     );
   }
 
-  return NextResponse.redirect(signedUrl);
+  const invoiceResponse = await fetch(signedUrl, {
+    cache: 'no-store',
+  });
+
+  if (!invoiceResponse.ok || !invoiceResponse.body) {
+    return NextResponse.json(
+      { message: 'Invoice document could not be downloaded.' },
+      { status: 502 },
+    );
+  }
+
+  const filename = buildInvoiceFilename(orderNumber);
+  const headers = new Headers();
+  headers.set(
+    'content-type',
+    invoiceResponse.headers.get('content-type') ?? 'application/pdf',
+  );
+  headers.set(
+    'content-disposition',
+    `inline; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+  );
+  headers.set('cache-control', 'private, no-store');
+
+  const contentLength = invoiceResponse.headers.get('content-length');
+  if (contentLength) {
+    headers.set('content-length', contentLength);
+  }
+
+  return new Response(invoiceResponse.body, {
+    status: 200,
+    headers,
+  });
 }
