@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-15
+Last updated: 2026-04-28
 Depends on: current discovery and planning discussions
 Related files: `README.md`, `scope.md`, `open-threads.md`, `testing-strategy.md`
 
@@ -69,21 +69,18 @@ This means the B2C initiative does not start from zero. It starts from an alread
 
 ## What The Platform Still Lacks
 
-The current platform is not yet a full transactional commerce system.
+The platform now has the core customer-facing transactional path in place: cart, checkout, mock payment handling, order persistence, customer order access, invoice download access, and lightweight customer profile editing.
 
-The missing layer is the operational commerce layer, especially:
+The remaining v1 gaps are mostly operational and launch-readiness work, especially:
 
-- cart
-- checkout
-- order persistence
-- payment integration and payment-state handling
-- customer order access
 - operator order management
-- invoice publication flow
-- coupon handling
-- returns and cancellation workflows
+- admin-side invoice publication and shipment handling
+- coupon operations
+- operator handling for cancellation and return requests
+- browser-level end-to-end coverage for the full customer journey
+- launch hardening and production-readiness checks
 
-This is the main gap the B2C project is intended to fill.
+These are the main gaps the remaining B2C phases are intended to close.
 
 ## Core Goal For V1
 
@@ -175,10 +172,18 @@ After reading this file:
 
 ## Current Status
 
-The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, the accepted v1 table model is documented, and `Phase 05 - Buyable PDP And Cart` is now complete.
+The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, the accepted v1 table model is documented, and `Phase 05 - Buyable PDP And Cart`, `Phase 06 - Checkout And Payments`, and `Phase 07 - Customer Panel` are now complete.
+
+The completed customer-facing B2C path now includes:
+
+- selective direct purchase and cart behavior for standard and `CPO` products
+- checkout, order creation, local mock payment handling, and paid-order recovery
+- OTP-based customer access at `konto-klienta`
+- protected customer-panel routes with return-to behavior
+- customer order list, order detail, invoice access, cancellation / return entry points, and `Dane konta`
 
 The most important next planning work is:
 
-- implementing the real checkout flow, order creation, and payment handoff in `Phase 06`
-- adding hard final validation at checkout submit / buy
-- introducing browser-level coverage for pricing, checkout, and payment-critical journeys
+- adding browser-level coverage in follow-up Step `7.5`
+- implementing `Phase 08 - Admin Operations`
+- continuing the remaining policy-flow and launch-readiness work

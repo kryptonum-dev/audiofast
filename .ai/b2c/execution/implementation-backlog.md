@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning / execution
-Last updated: 2026-04-15
+Last updated: 2026-04-28
 Depends on: `../open-threads.md`, `../phases/phase-02-flow-and-operations-closure.md`
 Related files: `../milestones.md`, `../README.md`, `../testing-strategy.md`, `../phases/phase-03-business-data-contract.md`, `../phases/phase-04-commerce-foundation.md`
 
@@ -20,15 +20,16 @@ It should answer:
 
 ## Current Execution Snapshot
 
-- current active phase: `Phase 06 - Checkout And Payments`
-- current working mode: checkout implementation planning / transactional flow enablement
-- phase 05 has been closed
+- current active phase: `Phase 08 - Admin Operations`
+- current working mode: admin operations planning / implementation readiness
+- phase 07 has been closed
+- follow-up Step `7.5` browser coverage is queued after the completed customer-panel implementation
 
 ## Current Focus
 
-- implement the real checkout form and customer-data flow
-- add hard validation before order creation / payment handoff
-- introduce browser-level `Playwright` coverage for pricing, checkout, and payment-critical flows
+- start `Phase 08 - Admin Operations`
+- add follow-up Step `7.5` browser coverage for the customer auth, checkout, payment, and panel roundtrips
+- keep launch-readiness documentation aligned with the completed customer-facing flow
 
 ## Recently Completed
 
@@ -76,17 +77,20 @@ It should answer:
 - cart totals and checkout handoff now reflect the accepted revalidation model
 - successful cart -> checkout handoff implemented with pending-state handling and back-navigation cleanup
 - `Phase 05 - Buyable PDP And Cart` completed
+- `Phase 06 - Checkout And Payments` completed with checkout, order creation, mock payment handling, recovery states, and paid-order profile persistence
+- `Phase 07 - Customer Panel` completed with OTP access, protected routes, checkout auth integration, orders list/detail, invoice access, cancellation / return entry points, and `Dane konta`
 
 ## Blocked / Waiting
 
-- implementation-heavy phases now depend on actual application wiring against the accepted backend model
+- no current planning blocker is recorded for `Phase 08`
+- Step `7.5` depends on browser-level coverage being wired against the local auth, checkout, and payment mock runtime
 
 ## Ready Next
 
-1. implement checkout data capture and validation
-2. create orders from the accepted cart truth
-3. wire payment handoff and recovery behavior
-4. add the first browser-level cart -> checkout -> payment coverage in `Playwright`
+1. add follow-up Step `7.5` browser coverage for the full B2C customer journey
+2. implement `Phase 08 - Admin Operations`
+3. continue `Phase 09 - Policy Flows`
+4. complete `Phase 10 - Launch Readiness`
 
 ## Phase Tracker
 
@@ -112,15 +116,15 @@ It should answer:
 
 ### Phase 06 - Checkout And Payments
 
-- status: in progress
+- status: completed
 
 ### Phase 07 - Customer Panel
 
-- status: planned
+- status: completed
 
 ### Phase 08 - Admin Operations
 
-- status: planned
+- status: in progress
 
 ### Phase 09 - Policy Flows
 

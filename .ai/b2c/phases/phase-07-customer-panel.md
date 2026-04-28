@@ -1,6 +1,6 @@
 # Phase 07 - Customer Panel
 
-Status: in progress
+Status: completed
 Owner: planning
 Last updated: 2026-04-28
 Depends on: `phase-06-checkout-and-payments.md`
@@ -46,20 +46,25 @@ This phase exists to turn the resolved customer-auth and customer-panel IA docum
 
 ## Current Implementation Status
 
-Step 04, `Orders Area`, is complete as of 2026-04-28.
+Phase 07 is complete as of 2026-04-28.
 
-The implemented order area includes:
+The completed implementation includes:
 
+- `Supabase Auth` email + OTP access at `konto-klienta`
+- protected customer routes with intended-destination return behavior
+- authenticated checkout prefill, locked-email behavior, and identity-aware profile persistence
+- shared authenticated customer-panel shell and navigation
 - authenticated order list access at `konto-klienta/zamowienia`
 - protected order detail access by public `order_number`
 - order-time snapshot rendering for customer, shipping, invoice, discount, shipment, and line-item data
 - customer-readable status history
 - private invoice download handling through the application layer
 - cancellation and return entry points on the detail page with server-side eligibility checks
-- responsive detail loading skeletons
-- focused Vitest coverage for detail access, visibility, parsing, invoice access, cancellation, and return rules
+- reusable `Dane konta` editing for future-checkout contact, shipping, and invoice defaults
+- loading, empty, not-found, and error states for the main panel surfaces
+- focused `Vitest` coverage for OTP, return-to behavior, checkout auth integration, order list/detail access, invoice access, cancellation, return rules, and account-profile editing
 
-Phase 07 itself remains in progress until Step 05, `Dane konta`, is completed. Browser-level mocked auth / checkout / payment coverage remains intentionally tracked as follow-up Step `7.5`.
+Browser-level mocked auth / checkout / payment coverage remains intentionally tracked as follow-up Step `7.5`, after Phase 07 core implementation.
 
 ## Accepted Direction For This Phase
 
@@ -189,7 +194,7 @@ Newsletter / marketing consent remains outside `Dane konta` for v1. If checkout 
 
 ## Expected Implementation Sequence
 
-The implementation order inside `Phase 07` should be:
+The implementation order inside `Phase 07` was:
 
 1. public access gateway and OTP auth
 2. protected routing and return behavior
@@ -197,7 +202,7 @@ The implementation order inside `Phase 07` should be:
 4. orders area
 5. `Dane konta`
 
-This sequence keeps the architecture stable:
+This sequence kept the architecture stable:
 
 - verified identity comes before protected views
 - route and redirect correctness comes before panel UI
@@ -242,11 +247,11 @@ This step should stay focused on the most important end-to-end journeys rather t
 - historical order migration
 - advanced profile functionality
 - a separate public login route outside `konto-klienta`
-- broader authenticated panel UI work before the order area or `Dane konta` views actually land
+- broader authenticated panel UI work beyond the agreed order area and `Dane konta` v1 surfaces
 
 ## Done Criteria
 
-Phase 07 can be considered complete when:
+Phase 07 is considered complete because the implementation satisfies the accepted criteria:
 
 - customers can authenticate through email + OTP at `konto-klienta`
 - successful OTP verification creates a real session and supports the accepted profile-linking behavior

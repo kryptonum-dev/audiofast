@@ -52,6 +52,19 @@ This phase gives Audiofast the internal tools needed to manage orders, documents
 - create/edit/deactivate coupons
 - handle return cases and manual return creation
 
+## Follow-Up Step 8.5 - Commerce Analytics
+
+After the admin operations surface is complete, the next late implementation step should add the final commerce analytics instrumentation for the v1 funnel.
+
+This is intentionally deferred until after the customer-facing checkout, customer panel, and admin operating model are all stable.
+
+That step should cover:
+
+- final event map for the implemented funnel
+- storefront and checkout/payment instrumentation
+- thank-you / order-confirmation events where relevant
+- verification that emitted analytics match the real production journey rather than an intermediate build state
+
 ## Not In Scope For This Phase
 
 - multi-role permissions beyond the agreed v1 simplification

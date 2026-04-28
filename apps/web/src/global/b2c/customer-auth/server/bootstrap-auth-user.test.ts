@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createAdminClient } from '@/src/global/supabase/admin';
-import type { CustomerAuthEligibilityResult } from '../eligibility';
 
+import type { CustomerAuthEligibilityResult } from '../eligibility';
 import {
   CustomerAuthBootstrapError,
   ensureCustomerAuthUserBootstrap,
@@ -39,16 +39,14 @@ function createAdminClientMock(args: {
   args.listUsersResults.forEach((result) => {
     listUsersMock.mockResolvedValueOnce(result);
   });
-  const createUserMock = vi
-    .fn()
-    .mockResolvedValue(
-      args.createUserResult ?? {
-        data: {
-          user: null,
-        },
-        error: null,
+  const createUserMock = vi.fn().mockResolvedValue(
+    args.createUserResult ?? {
+      data: {
+        user: null,
       },
-    );
+      error: null,
+    },
+  );
 
   return {
     auth: {

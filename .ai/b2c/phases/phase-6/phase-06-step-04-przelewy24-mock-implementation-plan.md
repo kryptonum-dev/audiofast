@@ -153,7 +153,7 @@ The accepted thank-you state set is intentionally minimalist:
 - `invalid_access`
   - the route cannot safely resolve which order/status to show
 
-Scenario-to-state expectations should be frozen as well:
+Scenario-to-state expectations should be f en as well:
 
 - `success_status_before_return` -> `paid`
 - `success_return_before_status` -> `paid`

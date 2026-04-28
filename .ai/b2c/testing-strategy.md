@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: planning
-Last updated: 2026-04-15
+Last updated: 2026-04-28
 Depends on: `b2c-implementation-overview.md`, `phases/phase-04-commerce-foundation.md`
 Related files: `execution/implementation-backlog.md`, `phases/phase-05-buyable-pdp-and-cart.md`, `phases/phase-06-checkout-and-payments.md`, `phases/phase-07-customer-panel.md`, `phases/phase-08-admin-operations.md`, `phases/phase-09-policy-flows.md`, `phases/phase-10-launch-readiness.md`
 
@@ -223,14 +223,13 @@ Goal for testing in this phase:
 
 Expected testing work:
 
-- initial `Playwright` setup
 - checkout validation tests
 - order creation integration tests
 - payment initiation tests
 - webhook confirmation and idempotency tests
 - payment recovery behavior tests
-- browser tests for cart -> checkout pricing and handoff behavior
-- browser tests for successful checkout and core failure-path handling
+- focused domain and server-action coverage for checkout, order creation, payment initiation, webhook confirmation, idempotency, and recovery behavior
+- browser-level checkout / payment journeys are intentionally deferred to follow-up Step `7.5`, after the customer panel exists
 
 This is expected to be the most test-critical implementation phase.
 
@@ -246,7 +245,8 @@ Expected testing work:
 - customer-session tests
 - order access control tests
 - order list/detail rendering tests for mixed orders
-- browser tests for login and order-detail access
+- account-profile editing tests
+- browser tests for login, checkout auth roundtrips, and order-detail access in follow-up Step `7.5`
 
 ### Phase 08 - Admin Operations
 
