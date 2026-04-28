@@ -149,9 +149,6 @@ async function geocodeAddress(address: {
   result = await fetchNominatim(postalFallbackParams);
   if (result) return result;
 
-  console.error(
-    `Could not geocode address: ${cleanStreet}, ${address.postalCode} ${address.city}`,
-  );
   return null;
 }
 
