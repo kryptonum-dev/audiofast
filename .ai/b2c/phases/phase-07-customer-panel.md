@@ -177,14 +177,15 @@ Expected work:
 - build `konto-klienta/dane-konta`
 - load the current reusable customer defaults from `customer_profiles`
 - support editing of reusable contact, shipping, and billing / invoice defaults for future checkout use
-- support managing newsletter / marketing consent from `konto-klienta/dane-konta` instead of repeating that consent inside authenticated checkout
 - preserve the accepted v1 rule that email is the identity key and is not self-service editable in the panel
 - ensure profile edits affect future checkout defaults only
 - ensure historical orders continue to show their original order-time snapshots
 
 This step should stay narrowly focused on reusable customer data.
 
-It should not expand into classic account settings, password management, or broad profile features outside the accepted v1 scope.
+It should not expand into classic account settings, password management, newsletter / marketing consent management, or broad profile features outside the accepted v1 scope.
+
+Newsletter / marketing consent remains outside `Dane konta` for v1. If checkout offers newsletter opt-in, checkout remains the only in-app capture point; the account details page should not mention subscribing, unsubscribing, provider status, or marketing preferences.
 
 ## Expected Implementation Sequence
 

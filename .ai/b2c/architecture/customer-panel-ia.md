@@ -190,6 +190,7 @@ It is not:
 
 - a classic account-management area
 - a password/security settings area
+- a newsletter or marketing-preferences area
 - a historical-order editor
 
 ### 12. Reusable Data And Order Snapshot Rules

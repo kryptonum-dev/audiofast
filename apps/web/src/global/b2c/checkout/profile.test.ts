@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
   buildCheckoutProfileDefaultsFromOrder,
+  type CheckoutCustomerProfileDefaultsRow,
   decideCheckoutProfilePersistence,
+  mapCheckoutCustomerProfileRowToDefaults,
 } from './profile';
 import type { CheckoutSessionContext, CheckoutSubmitInput } from './types';
 
@@ -58,6 +60,42 @@ function createSubmitInput(): CheckoutSubmitInput {
     },
     newsletterOptIn: false,
     saveToProfile: true,
+  };
+}
+
+function createCustomerProfileDefaultsRow(
+  overrides: Partial<CheckoutCustomerProfileDefaultsRow> = {},
+): CheckoutCustomerProfileDefaultsRow {
+  return {
+    email: 'jan@example.com',
+    first_name: 'Jan',
+    last_name: 'Kowalski',
+    phone: '123123123',
+    default_shipping_address: {
+      firstName: 'Jan',
+      lastName: 'Kowalski',
+      phone: '123123123',
+      streetName: 'Testowa',
+      buildingNumber: '1',
+      apartmentNumber: null,
+      postalCode: '00-001',
+      city: 'Warszawa',
+      country: 'PL',
+    },
+    default_invoice_data: {
+      recipientType: 'company',
+      companyName: 'Audiofast',
+      taxId: '1234567890',
+      invoiceAddress: {
+        streetName: 'Firmowa',
+        buildingNumber: '2',
+        apartmentNumber: null,
+        postalCode: '00-002',
+        city: 'Warszawa',
+        country: 'PL',
+      },
+    },
+    ...overrides,
   };
 }
 
@@ -175,6 +213,85 @@ describe('buildCheckoutProfileDefaultsFromOrder', () => {
           country: 'PL',
         },
       },
+    });
+  });
+});
+
+describe('mapCheckoutCustomerProfileRowToDefaults', () => {
+  it('maps customer_profiles reusable JSON into checkout profile defaults', () => {
+    const result = mapCheckoutCustomerProfileRowToDefaults(
+      createCustomerProfileDefaultsRow(),
+    );
+
+    expect(result).toEqual({
+      email: 'jan@example.com',
+      firstName: 'Jan',
+      lastName: 'Kowalski',
+      phone: '123123123',
+      defaultShippingAddress: {
+        firstName: 'Jan',
+        lastName: 'Kowalski',
+        phone: '123123123',
+        streetName: 'Testowa',
+        buildingNumber: '1',
+        apartmentNumber: null,
+        postalCode: '00-001',
+        city: 'Warszawa',
+        country: 'PL',
+      },
+      defaultInvoiceData: {
+        recipientType: 'company',
+        companyName: 'Audiofast',
+        taxId: '1234567890',
+        invoiceAddress: {
+          streetName: 'Firmowa',
+          buildingNumber: '2',
+          apartmentNumber: null,
+          postalCode: '00-002',
+          city: 'Warszawa',
+          country: 'PL',
+        },
+      },
+    });
+  });
+
+  it('returns null when stored shipping defaults are not usable', () => {
+    expect(
+      mapCheckoutCustomerProfileRowToDefaults(
+        createCustomerProfileDefaultsRow({
+          default_shipping_address: {
+            firstName: 'Jan',
+            country: 'PL',
+          },
+        }),
+      ),
+    ).toBeNull();
+  });
+
+  it('normalizes private invoice defaults to null invoice details', () => {
+    const result = mapCheckoutCustomerProfileRowToDefaults(
+      createCustomerProfileDefaultsRow({
+        default_invoice_data: {
+          recipientType: 'private',
+          companyName: 'Should be ignored',
+          taxId: '1234567890',
+          invoiceAddress: {
+            streetName: 'Firmowa',
+            buildingNumber: '2',
+            apartmentNumber: null,
+            postalCode: '00-002',
+            city: 'Warszawa',
+            country: 'PL',
+          },
+        },
+      }),
+    );
+
+    expect(result?.defaultInvoiceData).toEqual({
+      recipientType: 'private',
+      companyName: null,
+      taxId: null,
+      invoiceAddress: null,
     });
   });
 });

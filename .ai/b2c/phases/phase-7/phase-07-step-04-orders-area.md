@@ -133,7 +133,7 @@ It should not expand into editable profile data, full admin operations, automate
 This step should intentionally defer the following:
 
 - editing reusable customer data in `Dane konta`
-- newsletter / marketing consent management
+- newsletter / marketing consent management in the account panel
 - customer email change behavior
 - full cancellation processing
 - full return-request processing across customer, admin, and email
@@ -144,7 +144,7 @@ This step should intentionally defer the following:
 - automated refunds
 - Playwright coverage for the full guest / checkout / OTP / payment journey
 
-Those belong to Step 05, Phase 08, Phase 09, or follow-up Step `7.5`.
+Editing reusable customer data belongs to Step 05. Newsletter / marketing consent management is intentionally out of the account panel v1 scope and remains checkout-only where offered. The remaining items belong to Phase 08, Phase 09, or follow-up Step `7.5`.
 
 ## Current Code Snapshot
 

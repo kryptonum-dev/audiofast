@@ -1,0 +1,188 @@
+.accountDetailsSkeleton {
+  display: flex;
+  flex-direction: column;
+
+  .skeletonLine,
+  .toggleBox {
+    display: block;
+    overflow: hidden;
+    background: linear-gradient(
+      90deg,
+      var(--neutral-200, #f8f8f8) 25%,
+      var(--neutral-300, #f7f3f3) 50%,
+      var(--neutral-200, #f8f8f8) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1500ms infinite;
+  }
+
+  .skeletonLine {
+    border-radius: 999rem;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, calc(2vw / 0.48), 2rem);
+    max-width: 55rem;
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.875rem, calc(1vw / 0.48), 1.25rem);
+    padding: 1.5rem;
+    background-color: var(--neutral-200, #f8f8f8);
+    border: 1px solid var(--neutral-400, #e7e7e7);
+    border-radius: 0.875rem;
+  }
+
+  .sectionHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    max-width: 42rem;
+
+    .sectionTitle {
+      width: min(100%, 11rem);
+      height: 1.125rem;
+    }
+
+    .sectionDescription {
+      width: min(100%, 36rem);
+      height: 0.875rem;
+    }
+  }
+
+  .fieldGridTwo,
+  .fieldGridTwoCompact {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.875rem;
+  }
+
+  .fieldGridTwoCompact {
+    grid-template-columns: minmax(9rem, 0.45fr) minmax(0, 1fr);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+
+    .fieldLabel {
+      width: 6.5rem;
+      height: 0.875rem;
+    }
+
+    .fieldInput {
+      width: 100%;
+      height: 2.75rem;
+      border-radius: 0.5rem;
+    }
+
+    .fieldInputWide {
+      width: 100%;
+    }
+  }
+
+  .toggleRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+
+    .toggleBox {
+      width: 1.125rem;
+      height: 1.125rem;
+      border-radius: 0.25rem;
+    }
+
+    .toggleLabel {
+      width: min(100%, 18rem);
+      height: 0.875rem;
+    }
+  }
+
+  .segmentedControl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--neutral-400, #e7e7e7);
+
+    .segmentOption {
+      width: min(9rem, 80%);
+      height: 0.875rem;
+      margin: 0 auto;
+    }
+  }
+
+  .footerBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+    background: var(--neutral-800, #141414);
+    border-radius: 1rem;
+
+    .footerCopy {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .footerTitle {
+      width: min(100%, 18rem);
+      height: 0.875rem;
+      background: var(--neutral-700, #303030);
+      animation: none;
+    }
+
+    .footerText {
+      width: min(100%, 24rem);
+      height: 0.75rem;
+      background: var(--neutral-700, #303030);
+      animation: none;
+    }
+
+    .footerButton {
+      flex: 0 0 auto;
+      width: 13rem;
+      height: 2.75rem;
+      border-radius: 0.35rem;
+      background: var(--neutral-700, #303030);
+      animation: none;
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    .fieldGridTwo,
+    .fieldGridTwoCompact,
+    .segmentedControl {
+      grid-template-columns: 1fr;
+    }
+
+    .footerBar {
+      align-items: stretch;
+      flex-direction: column;
+
+      .footerButton {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
