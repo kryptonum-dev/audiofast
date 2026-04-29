@@ -161,8 +161,25 @@ export default async function ThankYouPageContent({
     order: resolvedParams.orderNumber,
     refresh: resolvedSearchParams.refresh,
   });
+  const shouldRender = shouldRenderCheckoutConfirmationPage(
+    thankYouPageData.state.id,
+  );
 
-  if (!shouldRenderCheckoutConfirmationPage(thankYouPageData.state.id)) {
+  console.log('[thank-you] page decision', {
+    routeOrderNumber: resolvedParams.orderNumber,
+    refresh: resolvedSearchParams.refresh,
+    loadedOrderNumber: thankYouPageData.orderNumber,
+    stateId: thankYouPageData.state.id,
+    shouldRender,
+  });
+
+  if (!shouldRender) {
+    console.warn('[thank-you] rendering not-found', {
+      routeOrderNumber: resolvedParams.orderNumber,
+      loadedOrderNumber: thankYouPageData.orderNumber,
+      stateId: thankYouPageData.state.id,
+    });
+
     notFound();
   }
 
