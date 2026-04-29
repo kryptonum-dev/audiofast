@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { headers } from 'next/headers';
 
 import { revalidateCartLines } from '@/src/global/b2c/cart/server/revalidation';
 import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
@@ -14,6 +15,10 @@ import type { CheckoutSubmitInput } from '@/src/global/b2c/checkout/types';
 import { subscribeToNewsletter } from '@/src/global/mailchimp/subscribe';
 
 import { submitCheckout } from './checkout-submit';
+
+vi.mock('next/headers', () => ({
+  headers: vi.fn(),
+}));
 
 vi.mock('@/src/global/b2c/checkout/server/auth-context', () => ({
   loadCheckoutAuthContext: vi.fn(),
@@ -120,6 +125,12 @@ describe('submitCheckout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    vi.mocked(headers).mockResolvedValue(
+      new Headers({
+        host: 'localhost:3000',
+        'x-forwarded-proto': 'http',
+      }),
+    );
     vi.mocked(loadCheckoutAuthContext).mockResolvedValue({
       sessionContext: {
         isAuthenticated: false,
@@ -333,6 +344,53 @@ describe('submitCheckout', () => {
       }),
     });
     expect(subscribeToNewsletter).not.toHaveBeenCalled();
+  });
+
+  it('uses the current request origin for checkout payment return URLs', async () => {
+    const cart = createValidCart();
+
+    vi.mocked(headers).mockResolvedValueOnce(
+      new Headers({
+        origin: 'https://audiofast-git-b2c-kryptonum.vercel.app',
+        host: 'audiofast-mh1hjwxzh-kryptonum.vercel.app',
+        'x-forwarded-host': 'audiofast-other-internal-host.vercel.app',
+        'x-forwarded-proto': 'https',
+      }),
+    );
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 150_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00011',
+    );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-11',
+      orderNumber: args.orderNumber,
+      createdAt: '2026-04-20T10:00:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+
+    const result = await submitCheckout(createValidInput(), cart);
+
+    expect(result.ok).toBe(true);
+    expect(result.ok ? result.value.redirectUrl : null).toBe(
+      'https://audiofast-git-b2c-kryptonum.vercel.app/podziekowania-za-zakup/?order=AF-2026-00011',
+    );
+    expect(startCheckoutPayment).toHaveBeenCalledWith({
+      paymentRegistrationInput: expect.objectContaining({
+        urlReturn:
+          'https://audiofast-git-b2c-kryptonum.vercel.app/podziekowania-za-zakup/',
+        urlStatus:
+          'https://audiofast-git-b2c-kryptonum.vercel.app/api/payment/status/',
+      }),
+    });
   });
 
   it('subscribes the submitted email when newsletter opt-in is enabled', async () => {

@@ -109,16 +109,19 @@ function didCartTruthChange(original: CartState, next: CartState): boolean {
   return didCouponStateChange(original.coupon, next.coupon);
 }
 
-function buildCheckoutPaymentUrls() {
+function buildCheckoutPaymentUrls(origin?: string | null) {
+  const baseUrl = origin ?? BASE_URL;
+
   return {
-    urlReturn: new URL(CHECKOUT_P24_RETURN_PATH, BASE_URL).toString(),
-    urlStatus: new URL(CHECKOUT_P24_STATUS_PATH, BASE_URL).toString(),
+    urlReturn: new URL(CHECKOUT_P24_RETURN_PATH, baseUrl).toString(),
+    urlStatus: new URL(CHECKOUT_P24_STATUS_PATH, baseUrl).toString(),
   };
 }
 
 export async function submitCheckoutOrder(args: {
   input: CheckoutSubmitInput;
   cart: CartState;
+  requestOrigin?: string | null;
 }): Promise<CheckoutSubmitResult> {
   const authContext = await loadCheckoutAuthContext();
 
@@ -254,7 +257,7 @@ export async function submitCheckoutOrder(args: {
       );
     }
 
-    const paymentUrls = buildCheckoutPaymentUrls();
+    const paymentUrls = buildCheckoutPaymentUrls(args.requestOrigin);
     const paymentRegistrationInput = buildP24TransactionRegistrationInput({
       orderId: persistedOrder.orderId,
       orderNumber: persistedOrder.orderNumber,
