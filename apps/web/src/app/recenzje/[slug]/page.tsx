@@ -5,6 +5,7 @@ import ArticleSchema from '@/src/components/schema/ArticleSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import ProductGallery from '@/src/components/ui/ProductGallery';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
@@ -38,9 +39,11 @@ export async function generateStaticParams() {
     tags: ['review'],
   });
 
-  return reviews.map((review) => ({
-    slug: review.slug!.replace('/recenzje/', '').replace(/\/$/, ''),
-  }));
+  return limitBuildTimeStaticParams(
+    reviews.map((review) => ({
+      slug: review.slug!.replace('/recenzje/', '').replace(/\/$/, ''),
+    })),
+  );
 }
 
 export async function generateMetadata(props: ReviewPageProps) {

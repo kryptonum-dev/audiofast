@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllPageSlugs,
@@ -21,11 +22,13 @@ export async function generateStaticParams() {
     tags: ['page'],
   });
 
-  return pages
-    .filter((page) => page.slug)
-    .map((page) => ({
-      slug: page.slug.replace(/^\//, '').replace(/\/$/, ''),
-    }));
+  return limitBuildTimeStaticParams(
+    pages
+      .filter((page) => page.slug)
+      .map((page) => ({
+        slug: page.slug.replace(/^\//, '').replace(/\/$/, ''),
+      })),
+  );
 }
 
 async function fetchPageData(slug: string) {

@@ -4,6 +4,7 @@ import { ArticleBody } from '@/src/components/blog/ArticleBody';
 import BlogPostSchema from '@/src/components/schema/BlogPostSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
@@ -39,9 +40,11 @@ export async function generateStaticParams() {
     tags: ['blog-article'],
   });
 
-  return posts.map((post) => ({
-    slug: post.slug!.replace('/blog/', '').replace(/\/$/, ''),
-  }));
+  return limitBuildTimeStaticParams(
+    posts.map((post) => ({
+      slug: post.slug!.replace('/blog/', '').replace(/\/$/, ''),
+    })),
+  );
 }
 
 export async function generateMetadata(props: BlogPostPageProps) {

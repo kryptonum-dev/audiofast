@@ -10,6 +10,7 @@ import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryBlogPageContent } from '@/src/global/sanity/query';
@@ -69,13 +70,13 @@ async function getPageContent(categorySlug: string) {
 export async function generateStaticParams() {
   const blogData = await getStaticBlogData();
 
-  return (
+  return limitBuildTimeStaticParams(
     blogData?.categories
       ?.filter((cat) => cat.count > 0)
       .map((cat) => ({
         category:
           cat.slug?.replace('/blog/kategoria/', '').replace('/', '') || '',
-      })) || []
+      })) || [],
   );
 }
 

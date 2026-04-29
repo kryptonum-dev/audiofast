@@ -16,6 +16,7 @@ import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { getStandardProductBuyability } from '@/src/global/b2c/utils/buyability';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
@@ -77,11 +78,13 @@ export async function generateStaticParams() {
     tags: ['product'],
   });
 
-  return products
-    .filter((product) => product.slug)
-    .map((product) => ({
-      slug: product.slug!.replace('/produkty/', '').replace(/\/$/, ''),
-    }));
+  return limitBuildTimeStaticParams(
+    products
+      .filter((product) => product.slug)
+      .map((product) => ({
+        slug: product.slug!.replace('/produkty/', '').replace(/\/$/, ''),
+      })),
+  );
 }
 
 export async function generateMetadata({

@@ -11,6 +11,7 @@ import type { FormStateData } from '@/src/components/ui/FormStates';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import { getCpoProductBuyability } from '@/src/global/b2c/utils/buyability';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllCpoProductSlugs,
@@ -63,13 +64,15 @@ export async function generateStaticParams() {
     tags: ['cpoProduct'],
   });
 
-  return products
-    .filter((product) => product.slug)
-    .map((product) => ({
-      slug: product
-        .slug!.replace('/certyfikowany-sprzet-uzywany/', '')
-        .replace(/\/$/, ''),
-    }));
+  return limitBuildTimeStaticParams(
+    products
+      .filter((product) => product.slug)
+      .map((product) => ({
+        slug: product
+          .slug!.replace('/certyfikowany-sprzet-uzywany/', '')
+          .replace(/\/$/, ''),
+      })),
+  );
 }
 
 export async function generateMetadata({
