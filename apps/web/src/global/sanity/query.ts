@@ -846,6 +846,14 @@ const contactFormBlock = /* groq */ `
       ${portableTextFragment('heading')},
       accountDetails,
     },
+    "companyRegistration": *[_type == "settings"][0].companyRegistration {
+      companyName,
+      krs,
+      nip,
+      regon,
+      registryCourt,
+      shareCapital
+    },
     ${formStateFragment('formState')},
     "newsletterSettings": *[_type == "newsletterSettings"][0] {
       supportEmails,

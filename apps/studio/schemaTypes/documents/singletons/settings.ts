@@ -76,8 +76,63 @@ export const settings = defineType({
       group: SETTINGS_GROUP.CONTACT,
       validation: (Rule) => Rule.required(),
     }),
-    
-    
+    defineField({
+      name: "companyRegistration",
+      type: "object",
+      title: "Dane rejestrowe firmy",
+      description:
+        "Dane identyfikacyjne i rejestrowe spółki widoczne na stronie kontaktowej lub w stopce.",
+      group: SETTINGS_GROUP.CONTACT,
+      fields: [
+        defineField({
+          name: "companyName",
+          type: "string",
+          title: "Pełna nazwa firmy",
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "krs",
+          type: "string",
+          title: "KRS",
+          validation: (Rule) =>
+            Rule.required()
+              .regex(/^\d{10}$/, { name: "KRS" })
+              .error("KRS powinien zawierać 10 cyfr"),
+        }),
+        defineField({
+          name: "nip",
+          type: "string",
+          title: "NIP",
+          validation: (Rule) =>
+            Rule.required()
+              .regex(/^\d{10}$/, { name: "NIP" })
+              .error("NIP powinien zawierać 10 cyfr"),
+        }),
+        defineField({
+          name: "regon",
+          type: "string",
+          title: "REGON",
+          validation: (Rule) =>
+            Rule.required()
+              .regex(/^\d{9}(\d{5})?$/, { name: "REGON" })
+              .error("REGON powinien zawierać 9 albo 14 cyfr"),
+        }),
+        defineField({
+          name: "registryCourt",
+          type: "string",
+          title: "Sąd rejestrowy",
+          validation: (Rule) => Rule.required(),
+        }),
+        defineField({
+          name: "shareCapital",
+          type: "string",
+          title: "Kapitał zakładowy",
+          description: 'Kwota wraz z walutą, np. "300 000,00 zł".',
+          validation: (Rule) => Rule.required(),
+        }),
+      ],
+      validation: (Rule) => Rule.required(),
+    }),
     defineField({
       name: "address",
       type: "object",
