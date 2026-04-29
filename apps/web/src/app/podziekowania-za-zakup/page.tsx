@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_noStore as noStore } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import type { ComponentProps } from 'react';
@@ -13,8 +14,6 @@ import {
 
 import styles from './styles.module.scss';
 import ThankYouCartCleanup from './ThankYouCartCleanup';
-
-export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Dziękujemy za zakup | Audiofast',
@@ -165,6 +164,7 @@ function getThankYouActions(args: {
 export default async function ThankYouPage({
   searchParams,
 }: ThankYouPageProps) {
+  noStore();
   await connection();
 
   const resolvedSearchParams = await searchParams;
