@@ -75,6 +75,43 @@ describe('loadThankYouPageData', () => {
     expect(result.state.shouldPoll).toBe(false);
   });
 
+  it('resolves expired when an unpaid order is past the payment window', async () => {
+    maybeSingleMock.mockResolvedValueOnce({
+      data: {
+        id: 'order-1',
+        order_number: 'AF-2026-00001',
+        current_status: 'awaiting_payment',
+        payable_until: '2020-04-23T10:15:00.000Z',
+      },
+      error: null,
+    });
+
+    const result = await loadThankYouPageData({
+      order: 'AF-2026-00001',
+    });
+
+    expect(result.state.id).toBe('expired');
+    expect(result.state.shouldPoll).toBe(false);
+  });
+
+  it('falls back to invalid_access for unsupported persisted statuses', async () => {
+    maybeSingleMock.mockResolvedValueOnce({
+      data: {
+        id: 'order-1',
+        order_number: 'AF-2026-00001',
+        current_status: 'cancelled',
+        payable_until: '2099-04-23T10:15:00.000Z',
+      },
+      error: null,
+    });
+
+    const result = await loadThankYouPageData({
+      order: 'AF-2026-00001',
+    });
+
+    expect(result.state.id).toBe('invalid_access');
+  });
+
   it('falls back to invalid_access when the order cannot be found', async () => {
     maybeSingleMock.mockResolvedValueOnce({
       data: null,

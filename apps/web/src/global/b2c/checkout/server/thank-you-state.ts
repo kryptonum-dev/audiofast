@@ -1,5 +1,3 @@
-import type { CheckoutOrderStatus } from '../order-draft';
-
 export type CheckoutThankYouStateId =
   | 'awaiting_payment'
   | 'paid'
@@ -13,11 +11,6 @@ export type CheckoutThankYouStateDefinition = {
   shouldPoll: boolean;
   showSupportContact: boolean;
 };
-
-export type CheckoutThankYouResolvableOrderStatus = Extract<
-  CheckoutOrderStatus,
-  'awaiting_payment' | 'paid'
->;
 
 const CHECKOUT_THANK_YOU_STATE_DEFINITIONS: Record<
   CheckoutThankYouStateId,
@@ -57,24 +50,6 @@ const CHECKOUT_THANK_YOU_STATE_DEFINITIONS: Record<
   },
 };
 
-function isExpired(args: {
-  payableUntil: string | null;
-  now: string;
-}): boolean {
-  if (args.payableUntil === null) {
-    return false;
-  }
-
-  const payableUntilTime = Date.parse(args.payableUntil);
-  const nowTime = Date.parse(args.now);
-
-  if (Number.isNaN(payableUntilTime) || Number.isNaN(nowTime)) {
-    return false;
-  }
-
-  return nowTime > payableUntilTime;
-}
-
 export function getCheckoutThankYouStateDefinition(
   stateId: CheckoutThankYouStateId,
 ): CheckoutThankYouStateDefinition {
@@ -85,27 +60,4 @@ export function shouldRenderCheckoutConfirmationPage(
   stateId: CheckoutThankYouStateId,
 ): boolean {
   return stateId === 'awaiting_payment' || stateId === 'paid';
-}
-
-export function resolveCheckoutThankYouState(args: {
-  hasOrderAccess: boolean;
-  currentOrderStatus: CheckoutThankYouResolvableOrderStatus | null;
-  payableUntil: string | null;
-  now?: string;
-}): CheckoutThankYouStateDefinition {
-  if (!args.hasOrderAccess || args.currentOrderStatus === null) {
-    return getCheckoutThankYouStateDefinition('invalid_access');
-  }
-
-  if (args.currentOrderStatus === 'paid') {
-    return getCheckoutThankYouStateDefinition('paid');
-  }
-
-  const now = args.now ?? new Date().toISOString();
-
-  if (isExpired({ payableUntil: args.payableUntil, now })) {
-    return getCheckoutThankYouStateDefinition('expired');
-  }
-
-  return getCheckoutThankYouStateDefinition('awaiting_payment');
 }

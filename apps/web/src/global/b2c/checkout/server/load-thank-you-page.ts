@@ -3,15 +3,20 @@ import 'server-only';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database } from '@/src/global/supabase/database.types';
 
+import type { CheckoutOrderStatus } from '../order-draft';
 import {
-  type CheckoutThankYouResolvableOrderStatus,
   type CheckoutThankYouStateDefinition,
-  resolveCheckoutThankYouState,
+  getCheckoutThankYouStateDefinition,
 } from './thank-you-state';
 
 type ThankYouOrderRow = Pick<
   Database['public']['Tables']['orders']['Row'],
   'id' | 'order_number' | 'current_status' | 'payable_until'
+>;
+
+type CheckoutThankYouResolvableOrderStatus = Extract<
+  CheckoutOrderStatus,
+  'awaiting_payment' | 'paid'
 >;
 
 export type LoadThankYouPageInput = {
@@ -41,6 +46,105 @@ function normalizeResolvableOrderStatus(
   }
 
   return null;
+}
+
+function getStatusCharCodes(value: string): number[] {
+  return Array.from(value).map((character) => character.charCodeAt(0));
+}
+
+function isExpired(args: {
+  payableUntil: string | null;
+  now: string;
+}): boolean {
+  if (args.payableUntil === null) {
+    return false;
+  }
+
+  const payableUntilTime = Date.parse(args.payableUntil);
+  const nowTime = Date.parse(args.now);
+
+  if (Number.isNaN(payableUntilTime) || Number.isNaN(nowTime)) {
+    return false;
+  }
+
+  return nowTime > payableUntilTime;
+}
+
+function resolveInvalidAccessState(args: {
+  reason: string;
+  orderNumber: string | null;
+  currentStatus?: string | null;
+  normalizedStatus?: CheckoutThankYouResolvableOrderStatus | null;
+}) {
+  console.warn('[thank-you] selected invalid_access state', args);
+
+  return getCheckoutThankYouStateDefinition('invalid_access');
+}
+
+function resolvePersistedOrderState(
+  order: ThankYouOrderRow,
+): CheckoutThankYouStateDefinition {
+  const normalizedStatus = normalizeResolvableOrderStatus(order.current_status);
+  const now = new Date().toISOString();
+  const expired = isExpired({
+    payableUntil: order.payable_until,
+    now,
+  });
+
+  console.log('[thank-you] resolving persisted order state', {
+    orderNumber: order.order_number,
+    currentStatus: order.current_status,
+    currentStatusType: typeof order.current_status,
+    currentStatusJson: JSON.stringify(order.current_status),
+    currentStatusCharCodes: getStatusCharCodes(order.current_status),
+    normalizedStatus,
+    isPaidStatus: normalizedStatus === 'paid',
+    isAwaitingPaymentStatus: normalizedStatus === 'awaiting_payment',
+    payableUntil: order.payable_until,
+    now,
+    expired,
+  });
+
+  if (normalizedStatus === 'paid') {
+    console.log('[thank-you] selected paid state', {
+      orderNumber: order.order_number,
+      currentStatus: order.current_status,
+      normalizedStatus,
+    });
+
+    return getCheckoutThankYouStateDefinition('paid');
+  }
+
+  if (normalizedStatus !== 'awaiting_payment') {
+    return resolveInvalidAccessState({
+      reason: 'unsupported_order_status',
+      orderNumber: order.order_number,
+      currentStatus: order.current_status,
+      normalizedStatus,
+    });
+  }
+
+  if (expired) {
+    console.warn('[thank-you] selected expired state', {
+      orderNumber: order.order_number,
+      currentStatus: order.current_status,
+      normalizedStatus,
+      payableUntil: order.payable_until,
+      now,
+    });
+
+    return getCheckoutThankYouStateDefinition('expired');
+  }
+
+  console.log('[thank-you] selected awaiting_payment state', {
+    orderNumber: order.order_number,
+    currentStatus: order.current_status,
+    normalizedStatus,
+    payableUntil: order.payable_until,
+    now,
+  });
+
+  return getCheckoutThankYouStateDefinition('awaiting_payment');
 }
 
 function getSupabaseKeyRole(): string | null {
@@ -121,10 +225,9 @@ export async function loadThankYouPageData(
 
     return {
       orderNumber: null,
-      state: resolveCheckoutThankYouState({
-        hasOrderAccess: false,
-        currentOrderStatus: null,
-        payableUntil: null,
+      state: resolveInvalidAccessState({
+        reason: 'missing_order_number',
+        orderNumber: null,
       }),
     };
   }
@@ -139,10 +242,9 @@ export async function loadThankYouPageData(
 
       return {
         orderNumber,
-        state: resolveCheckoutThankYouState({
-          hasOrderAccess: false,
-          currentOrderStatus: null,
-          payableUntil: null,
+        state: resolveInvalidAccessState({
+          reason: 'order_not_found_or_not_visible',
+          orderNumber,
         }),
       };
     }
@@ -151,19 +253,11 @@ export async function loadThankYouPageData(
       ? await loadOrderByNumber(orderNumber)
       : order;
     const resolvedOrder = currentOrder ?? order;
-    const normalizedStatus = normalizeResolvableOrderStatus(
-      resolvedOrder.current_status,
-    );
-    const state = resolveCheckoutThankYouState({
-      hasOrderAccess: true,
-      currentOrderStatus: normalizedStatus,
-      payableUntil: resolvedOrder.payable_until,
-    });
+    const state = resolvePersistedOrderState(resolvedOrder);
 
     console.log('[thank-you] resolved order state', {
       orderNumber: resolvedOrder.order_number,
       currentStatus: resolvedOrder.current_status,
-      normalizedStatus,
       payableUntil: resolvedOrder.payable_until,
       stateId: state.id,
     });
@@ -180,10 +274,9 @@ export async function loadThankYouPageData(
 
     return {
       orderNumber,
-      state: resolveCheckoutThankYouState({
-        hasOrderAccess: false,
-        currentOrderStatus: null,
-        payableUntil: null,
+      state: resolveInvalidAccessState({
+        reason: 'loader_exception',
+        orderNumber,
       }),
     };
   }
