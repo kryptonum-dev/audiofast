@@ -32,7 +32,7 @@ function createPaymentRegistrationInput(): P24TransactionRegistrationInput {
     country: 'PL',
     phone: '48123123123',
     language: 'pl',
-    urlReturn: 'http://localhost:3000/podziekowania-za-zakup/',
+    urlReturn: 'http://localhost:3000/podziekowania-za-zakup/AF-2026-00001/',
     urlStatus: 'http://localhost:3000/api/payment/status/',
     timeLimit: 15,
     channel: 1,
@@ -181,7 +181,7 @@ describe('startCheckoutPayment', () => {
       },
     });
     expect(result.value.redirectUrl).toBe(
-      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
+      'http://localhost:3000/podziekowania-za-zakup/AF-2026-00001/',
     );
   });
 

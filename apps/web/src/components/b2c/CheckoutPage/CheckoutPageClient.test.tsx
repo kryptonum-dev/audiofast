@@ -195,7 +195,7 @@ describe('CheckoutPageClient', () => {
         orderId: 'order-1',
         orderNumber: 'AF-2026-00001',
         redirectUrl:
-          'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
+          'http://localhost:3000/podziekowania-za-zakup/AF-2026-00001/',
         registration: {
           provider: 'przelewy24',
           merchantId: 999999,
@@ -441,7 +441,7 @@ describe('CheckoutPageClient', () => {
     );
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith(
-        'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
+        'http://localhost:3000/podziekowania-za-zakup/AF-2026-00001/',
       );
     });
   });

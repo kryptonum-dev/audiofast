@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
+
+import ThankYouPageContent, {
+  type ThankYouPageContentProps,
+} from '../ThankYouPageContent';
 
 export const metadata: Metadata = {
   title: 'Dziękujemy za zakup | Audiofast',
@@ -14,6 +17,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ThankYouPage() {
-  redirect('/konto-klienta/');
+export default async function ThankYouOrderPage(
+  props: ThankYouPageContentProps,
+) {
+  return <ThankYouPageContent {...props} />;
 }

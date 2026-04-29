@@ -39,6 +39,10 @@ const CHECKOUT_P24_RETURN_PATH = '/podziekowania-za-zakup/';
 const CHECKOUT_P24_STATUS_PATH = '/api/payment/status/';
 const ORDER_NUMBER_RETRY_LIMIT = 3;
 
+function buildCheckoutReturnPath(orderNumber: string): string {
+  return `${CHECKOUT_P24_RETURN_PATH}${encodeURIComponent(orderNumber)}/`;
+}
+
 function serializeLineIssues(issues: CartLineIssue[]) {
   return issues.map((issue) => ({
     code: issue.code,
@@ -109,11 +113,14 @@ function didCartTruthChange(original: CartState, next: CartState): boolean {
   return didCouponStateChange(original.coupon, next.coupon);
 }
 
-function buildCheckoutPaymentUrls(origin?: string | null) {
-  const baseUrl = origin ?? BASE_URL;
+function buildCheckoutPaymentUrls(args: {
+  origin?: string | null;
+  orderNumber: string;
+}) {
+  const baseUrl = args.origin ?? BASE_URL;
 
   return {
-    urlReturn: new URL(CHECKOUT_P24_RETURN_PATH, baseUrl).toString(),
+    urlReturn: new URL(buildCheckoutReturnPath(args.orderNumber), baseUrl).toString(),
     urlStatus: new URL(CHECKOUT_P24_STATUS_PATH, baseUrl).toString(),
   };
 }
@@ -257,7 +264,10 @@ export async function submitCheckoutOrder(args: {
       );
     }
 
-    const paymentUrls = buildCheckoutPaymentUrls(args.requestOrigin);
+    const paymentUrls = buildCheckoutPaymentUrls({
+      origin: args.requestOrigin,
+      orderNumber: persistedOrder.orderNumber,
+    });
     const paymentRegistrationInput = buildP24TransactionRegistrationInput({
       orderId: persistedOrder.orderId,
       orderNumber: persistedOrder.orderNumber,

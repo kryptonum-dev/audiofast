@@ -23,6 +23,13 @@ function isCheckoutCustomerAuthPath(pathname: string) {
   );
 }
 
+function isLegacyThankYouReturnPath(pathname: string) {
+  return (
+    pathname === '/podziekowania-za-zakup' ||
+    pathname === '/podziekowania-za-zakup/'
+  );
+}
+
 function shouldHandleSupabaseSession(pathname: string) {
   return (
     isCustomerAccountGatewayPath(pathname) ||
@@ -49,6 +56,16 @@ function copySessionCookies(source: NextResponse, target: NextResponse) {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const legacyThankYouOrder = request.nextUrl.searchParams.get('order')?.trim();
+
+  if (isLegacyThankYouReturnPath(pathname) && legacyThankYouOrder) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/podziekowania-za-zakup/${encodeURIComponent(legacyThankYouOrder)}/`;
+    url.searchParams.delete('order');
+
+    return NextResponse.redirect(url, 307);
+  }
+
   const redirectMatch =
     redirectsMap.get(pathname) ||
     redirectsMap.get(

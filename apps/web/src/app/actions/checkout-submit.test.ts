@@ -153,7 +153,7 @@ describe('submitCheckout', () => {
         value: {
           orderId: paymentRegistrationInput.checkoutOrderId,
           orderNumber: paymentRegistrationInput.orderNumber,
-          redirectUrl: `${paymentRegistrationInput.urlReturn}?order=${paymentRegistrationInput.orderNumber}`,
+          redirectUrl: paymentRegistrationInput.urlReturn,
           registration: {
             provider: 'przelewy24',
             merchantId: paymentRegistrationInput.merchantId,
@@ -331,7 +331,7 @@ describe('submitCheckout', () => {
     expect(result.value.orderId).toBe('order-1');
     expect(result.value.orderNumber).toBe('AF-2026-00001');
     expect(result.value.redirectUrl).toBe(
-      'http://localhost:3000/podziekowania-za-zakup/?order=AF-2026-00001',
+      'http://localhost:3000/podziekowania-za-zakup/AF-2026-00001/',
     );
     expect(startCheckoutPayment).toHaveBeenCalledWith({
       paymentRegistrationInput: expect.objectContaining({
@@ -381,12 +381,12 @@ describe('submitCheckout', () => {
 
     expect(result.ok).toBe(true);
     expect(result.ok ? result.value.redirectUrl : null).toBe(
-      'https://audiofast-git-b2c-kryptonum.vercel.app/podziekowania-za-zakup/?order=AF-2026-00011',
+      'https://audiofast-git-b2c-kryptonum.vercel.app/podziekowania-za-zakup/AF-2026-00011/',
     );
     expect(startCheckoutPayment).toHaveBeenCalledWith({
       paymentRegistrationInput: expect.objectContaining({
         urlReturn:
-          'https://audiofast-git-b2c-kryptonum.vercel.app/podziekowania-za-zakup/',
+          'https://audiofast-git-b2c-kryptonum.vercel.app/podziekowania-za-zakup/AF-2026-00011/',
         urlStatus:
           'https://audiofast-git-b2c-kryptonum.vercel.app/api/payment/status/',
       }),
