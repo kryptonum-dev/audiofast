@@ -3,7 +3,7 @@
  * Generated from Sanity CMS redirects document.
  *
  * DO NOT EDIT MANUALLY - regenerate using: bun run generate:redirects
- * Generated at: 2026-04-15T10:11:35.205Z
+ * Generated at: 2026-04-28T14:47:02.495Z
  */
 
 export interface RedirectEntry {
