@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
-import type { ComponentProps } from 'react';
+import { type ComponentProps, Suspense } from 'react';
 
 import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
 import Button from '@/src/components/ui/Button';
@@ -160,9 +160,15 @@ function getThankYouActions(args: {
   };
 }
 
-export default async function ThankYouPage({
-  searchParams,
-}: ThankYouPageProps) {
+export default function ThankYouPage({ searchParams }: ThankYouPageProps) {
+  return (
+    <Suspense fallback={null}>
+      <ThankYouPageContent searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+async function ThankYouPageContent({ searchParams }: ThankYouPageProps) {
   await connection();
 
   const resolvedSearchParams = await searchParams;
