@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { headers } from 'next/headers';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { revalidateCartLines } from '@/src/global/b2c/cart/server/revalidation';
 import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
 import type { ComponentProps } from 'react';
 
 import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
@@ -162,6 +163,8 @@ function getThankYouActions(args: {
 export default async function ThankYouPage({
   searchParams,
 }: ThankYouPageProps) {
+  await connection();
+
   const resolvedSearchParams = await searchParams;
   const thankYouPageData = await loadThankYouPageData(resolvedSearchParams);
 
