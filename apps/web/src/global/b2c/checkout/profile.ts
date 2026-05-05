@@ -194,14 +194,6 @@ function isCheckoutProfilePersistenceReason(
   );
 }
 
-export function createCheckoutProfileShippingDefaults(
-  input: CheckoutSubmitInput,
-): CheckoutProfileShippingDefaults {
-  return createCheckoutProfileShippingDefaultsFromAddress(
-    input.shippingAddress,
-  );
-}
-
 export function createCheckoutProfileShippingDefaultsFromAddress(
   shippingAddress: CheckoutShippingAddressSnapshot,
 ): CheckoutProfileShippingDefaults {
@@ -218,12 +210,6 @@ export function createCheckoutProfileShippingDefaultsFromAddress(
   };
 }
 
-export function createCheckoutProfileInvoiceDefaults(
-  input: CheckoutSubmitInput,
-): CheckoutProfileInvoiceDefaults | null {
-  return createCheckoutProfileInvoiceDefaultsFromInvoice(input.invoice);
-}
-
 export function createCheckoutProfileInvoiceDefaultsFromInvoice(
   invoice: CheckoutInvoiceInput,
 ): CheckoutProfileInvoiceDefaults | null {
@@ -236,19 +222,6 @@ export function createCheckoutProfileInvoiceDefaultsFromInvoice(
     companyName: invoice.companyName,
     taxId: invoice.taxId,
     invoiceAddress: invoice.invoiceAddress,
-  };
-}
-
-export function buildCheckoutProfileDefaultsFromSubmit(
-  input: CheckoutSubmitInput,
-): CheckoutProfileDefaults {
-  return {
-    email: input.contact.email,
-    firstName: input.contact.firstName,
-    lastName: input.contact.lastName,
-    phone: input.contact.phone,
-    defaultShippingAddress: createCheckoutProfileShippingDefaults(input),
-    defaultInvoiceData: createCheckoutProfileInvoiceDefaults(input),
   };
 }
 

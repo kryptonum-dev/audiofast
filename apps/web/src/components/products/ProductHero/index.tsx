@@ -16,7 +16,7 @@ export type AwardType = {
   logo?: SanityRawImage | null;
 };
 
-export interface ProductHeroProps {
+interface ProductHeroProps {
   name: string;
   subtitle?: string;
   brand?: BrandType;

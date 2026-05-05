@@ -11,7 +11,6 @@ import {
   resolveStandardConfigurationVariant,
   settleStandardConfigurationSelection,
   type StandardConfigurationData,
-  type StandardConfigurationOptionData,
   type StandardConfigurationSelectionSeed,
 } from '@/src/global/b2c/configuration/standard-configuration';
 import type {
@@ -22,8 +21,6 @@ import type {
 import { formatPrice } from '@/src/global/utils';
 
 import styles from './CartLineConfigurator.module.scss';
-
-export type ConfigurationOptionData = StandardConfigurationOptionData;
 
 export type ConfigurationData = StandardConfigurationData;
 

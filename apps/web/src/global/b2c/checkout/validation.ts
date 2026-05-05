@@ -14,8 +14,6 @@ import type {
 
 type ValidationErrorMap<T> = Partial<Record<keyof T, string>>;
 
-export type CheckoutAddressErrors = ValidationErrorMap<CheckoutAddress>;
-
 export type CheckoutContactErrors = ValidationErrorMap<CheckoutContactInput>;
 
 export type CheckoutShippingAddressErrors =
@@ -301,15 +299,6 @@ export const checkoutConsentsSchema: z.ZodType<CheckoutConsentsInput> =
     }),
   });
 
-export const checkoutSubmitSchema: z.ZodType<CheckoutSubmitInput> = z.object({
-  contact: checkoutContactSchema,
-  shippingAddress: checkoutShippingAddressSchema,
-  invoice: checkoutInvoiceSchema,
-  consents: checkoutConsentsSchema,
-  newsletterOptIn: z.boolean(),
-  saveToProfile: z.boolean(),
-});
-
 function createEmptySubmitErrors(): CheckoutSubmitErrors {
   return {
     formErrors: [],
@@ -520,25 +509,6 @@ export function validateCheckoutContact(
   };
 }
 
-export function validateCheckoutAddress(
-  input: CheckoutAddress,
-): CheckoutValidationResult<CheckoutAddress> {
-  const result = checkoutAddressSchema.safeParse(input);
-
-  if (!result.success) {
-    return createValidationFailure<CheckoutAddress>(
-      result.error.issues,
-      'shippingAddress',
-    );
-  }
-
-  return {
-    isValid: true,
-    value: result.data,
-    errors: createEmptySubmitErrors(),
-  };
-}
-
 export function validateCheckoutShippingAddress(
   input: CheckoutShippingAddressInput,
 ): CheckoutValidationResult<CheckoutShippingAddressInput> {
@@ -548,25 +518,6 @@ export function validateCheckoutShippingAddress(
     return createValidationFailure<CheckoutShippingAddressInput>(
       result.error.issues,
       'shippingAddress',
-    );
-  }
-
-  return {
-    isValid: true,
-    value: result.data,
-    errors: createEmptySubmitErrors(),
-  };
-}
-
-export function validateCheckoutInvoiceAddress(
-  input: CheckoutInvoiceAddressInput,
-): CheckoutValidationResult<CheckoutInvoiceAddressInput> {
-  const result = checkoutInvoiceAddressSchema.safeParse(input);
-
-  if (!result.success) {
-    return createValidationFailure<CheckoutInvoiceAddressInput>(
-      result.error.issues,
-      'invoice',
     );
   }
 

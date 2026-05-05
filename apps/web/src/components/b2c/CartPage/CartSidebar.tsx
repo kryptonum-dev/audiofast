@@ -8,7 +8,7 @@ import CartCouponCard from './CartCouponCard';
 import CartSummaryCard from './CartSummaryCard';
 import styles from './styles.module.scss';
 
-export type CartSidebarProps = {
+type CartSidebarProps = {
   cart: CartState;
   totals: CartTotals;
   supportCard?: SupportCardData | null;

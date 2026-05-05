@@ -8,7 +8,7 @@ import type { QueryNavbarResult } from '@/global/sanity/sanity.types';
 import styles from './styles.module.scss';
 
 type HeaderLinksProps = {
-  buttons: NonNullable<QueryNavbarResult>['buttons'];
+  buttons: NonNullable<NonNullable<QueryNavbarResult>['buttons']>;
 };
 
 export default function HeaderLinks({ buttons }: HeaderLinksProps) {
@@ -17,7 +17,7 @@ export default function HeaderLinks({ buttons }: HeaderLinksProps) {
 
   return (
     <>
-      {buttons?.map((button) => {
+      {buttons.map((button) => {
         const href = button.href || '';
         const isActive =
           href === '/'

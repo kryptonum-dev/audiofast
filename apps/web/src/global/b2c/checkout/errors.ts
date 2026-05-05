@@ -1,18 +1,6 @@
 import type { CheckoutCartBlockingReasonCode } from './cart';
 import type { CheckoutSubmitErrors } from './validation';
 
-export type CheckoutDomainErrorCode =
-  | 'form_invalid'
-  | 'cart_invalid'
-  | 'cart_empty'
-  | 'cart_price_updated'
-  | 'email_locked_mismatch'
-  | 'order_draft_invalid'
-  | 'payment_registration_failed'
-  | 'payment_notification_invalid'
-  | 'payment_verification_failed'
-  | 'internal_error';
-
 export type CheckoutDomainError =
   | {
       code: 'form_invalid';
@@ -143,13 +131,6 @@ export function createCheckoutPaymentRegistrationFailedError(): CheckoutDomainEr
   return {
     code: 'payment_registration_failed',
     message: 'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
-  };
-}
-
-export function createCheckoutPaymentNotificationInvalidError(): CheckoutDomainError {
-  return {
-    code: 'payment_notification_invalid',
-    message: 'Odebrano nieprawidłowe potwierdzenie płatności.',
   };
 }
 

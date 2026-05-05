@@ -12,7 +12,7 @@ import MobileNavToggle from './MobileNavToggle';
 import styles from './styles.module.scss';
 
 type HeaderShellProps = {
-  buttons: NonNullable<QueryNavbarResult>['buttons'];
+  buttons: NonNullable<NonNullable<QueryNavbarResult>['buttons']>;
 };
 
 export default function HeaderShell({ buttons }: HeaderShellProps) {
@@ -38,7 +38,7 @@ export default function HeaderShell({ buttons }: HeaderShellProps) {
               aria-label="Główna nawigacja"
             >
               <div className={styles.primaryLinks} aria-hidden={isCartMode}>
-                <HeaderLinks buttons={buttons || []} />
+                <HeaderLinks buttons={buttons} />
               </div>
               <div className={styles.utilityLinks}>
                 <HeaderUtilityLinks />

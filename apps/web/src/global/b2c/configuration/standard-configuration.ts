@@ -147,27 +147,6 @@ export function resolveStandardConfigurationVariant(
   );
 }
 
-export function areStandardConfigurationSelectionsEqual(
-  left: PricingSelection,
-  right: PricingSelection,
-): boolean {
-  if (
-    left.variantId !== right.variantId ||
-    left.calculatedPrice !== right.calculatedPrice
-  ) {
-    return false;
-  }
-
-  const leftEntries = Object.entries(left.selectedOptions);
-  const rightEntries = Object.entries(right.selectedOptions);
-
-  if (leftEntries.length !== rightEntries.length) {
-    return false;
-  }
-
-  return leftEntries.every(([groupId, value]) => right.selectedOptions[groupId] === value);
-}
-
 export function getStandardConfigurationTopLevelGroups(
   variant: PricingVariantWithOptions | null,
 ): PricingOptionGroupWithDetails[] {

@@ -12,7 +12,7 @@ import { formatPrice } from '@/src/global/utils';
 
 import styles from './styles.module.scss';
 
-export type CartItemCardProps = {
+type CartItemCardProps = {
   line: CartLine;
   lineDiscountCents?: number;
   isInteractionDisabled?: boolean;
@@ -35,7 +35,6 @@ type BlockingOverlayContent = {
 };
 
 function getBlockingOverlayContent(
-  line: CartLine,
   issues: CartLineIssue[],
   options?: {
     allowKeepWithoutOptions?: boolean;
@@ -130,7 +129,6 @@ export default function CartItemCard({
     Boolean(onReconfigure) &&
     hasConfigurationSection;
   const blockingOverlayContent = getBlockingOverlayContent(
-    line,
     blockingIssues,
     {
       allowKeepWithoutOptions: shouldShowKeepWithoutOptionsAction,

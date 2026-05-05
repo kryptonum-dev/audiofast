@@ -13,7 +13,7 @@ import { submitCheckoutOrder } from '@/src/global/b2c/checkout/server/submit-che
 import { createCheckoutSubmitFailure } from '@/src/global/b2c/checkout/server/types';
 import type { CheckoutSubmitInput } from '@/src/global/b2c/checkout/types';
 
-export type CheckoutSubmitActionSuccessValue = {
+type CheckoutSubmitActionSuccessValue = {
   orderId: string;
   orderNumber: string;
   redirectUrl: string;
@@ -21,14 +21,14 @@ export type CheckoutSubmitActionSuccessValue = {
   wasAlreadyPaid: boolean;
 };
 
-export type CheckoutSubmitActionFailure = {
+type CheckoutSubmitActionFailure = {
   ok: false;
   error: CheckoutDomainError;
   revalidatedCart: CartState | null;
   revalidationResults: CartLineRevalidation[] | null;
 };
 
-export type CheckoutSubmitActionResult =
+type CheckoutSubmitActionResult =
   | {
       ok: true;
       value: CheckoutSubmitActionSuccessValue;

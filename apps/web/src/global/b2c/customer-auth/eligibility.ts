@@ -88,9 +88,3 @@ export function isEligibleCustomerAuthOrderAccessKind(
     accessKind === 'awaiting_payment_active'
   );
 }
-
-export function isEligibleCustomerAuthResult(
-  result: CustomerAuthEligibilityResult,
-): boolean {
-  return result.isEligible;
-}

@@ -97,10 +97,6 @@ export function getCheckoutBlockingReasonCodes(
   return reasonCodes;
 }
 
-export function canEnterOrderForm(state: CartState): boolean {
-  return getCheckoutBlockingReasonCodes(state).length === 0;
-}
-
 export function validateCheckoutCart(
   state: CartState,
 ): CheckoutCartValidationResult {

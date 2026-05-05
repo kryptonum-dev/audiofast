@@ -10,7 +10,6 @@ import {
   resolveStandardConfigurationVariant,
   settleStandardConfigurationSelection,
   type StandardConfigurationData,
-  type StandardConfigurationOptionData,
 } from '@/src/global/b2c/configuration/standard-configuration';
 import type {
   CompletePricingData,
@@ -20,8 +19,6 @@ import type {
 import { formatPrice } from '@/src/global/utils';
 
 import styles from './PricingConfigurator.module.scss';
-
-export type ConfigurationOptionData = StandardConfigurationOptionData;
 
 export type ConfigurationData = StandardConfigurationData;
 
