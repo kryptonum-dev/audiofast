@@ -536,6 +536,19 @@ export async function POST(req: NextRequest) {
     // ACTION: Create Mailchimp Draft
     // -------------------------------------------------------------------------
     if (action === 'create-mailchimp-draft') {
+      if (process.env.E2E_MOCK_MAILCHIMP === '1') {
+        return NextResponse.json(
+          {
+            success: true,
+            mocked: true,
+            campaignId: 'e2e-mock-mailchimp-campaign',
+            webUrl: null,
+            message: 'Draft campaign creation skipped in E2E.',
+          },
+          { headers: corsHeaders },
+        );
+      }
+
       if (!process.env.MAILCHIMP_API_KEY) {
         return NextResponse.json(
           { error: 'Mailchimp API key not configured' },

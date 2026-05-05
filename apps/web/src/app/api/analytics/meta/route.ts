@@ -36,6 +36,7 @@ type MetaAnalyticsConfig = {
 };
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+const E2E_DISABLE_ANALYTICS = process.env.E2E_DISABLE_ANALYTICS === "1";
 
 function getCookie(headers: Headers, name: string): string | null {
   const cookieHeader = headers.get("cookie");
@@ -108,6 +109,26 @@ async function postWithRetry(url: string, body: unknown, maxRetries = 2) {
 }
 
 export async function POST(request: NextRequest) {
+  if (E2E_DISABLE_ANALYTICS) {
+    let body: Partial<MetaRequestBody> = {};
+
+    try {
+      body = (await request.json()) as Partial<MetaRequestBody>;
+    } catch {
+      // Analytics is disabled for E2E, so malformed tracking payloads should
+      // not fail customer journeys.
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        mocked: true,
+        event_id: body.event_id || randomUUID(),
+      },
+      { status: 200 },
+    );
+  }
+
   let config: MetaAnalyticsConfig;
   try {
     config =

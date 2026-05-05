@@ -4,7 +4,7 @@ Status: completed
 Owner: planning
 Last updated: 2026-04-28
 Depends on: `phase-06-checkout-and-payments.md`
-Related files: `../architecture/customer-panel-ia.md`, `../architecture/customer-auth-and-access.md`, `../architecture/order-lifecycle.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
+Related files: `../architecture/customer-panel-ia.md`, `../architecture/customer-auth-and-access.md`, `../architecture/order-lifecycle.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`, `phase-7/phase-07-step-7-5-playwright-e2e-coverage.md`
 
 ## Objective
 
@@ -65,6 +65,8 @@ The completed implementation includes:
 - focused `Vitest` coverage for OTP, return-to behavior, checkout auth integration, order list/detail access, invoice access, cancellation, return rules, and account-profile editing
 
 Browser-level mocked auth / checkout / payment coverage remains intentionally tracked as follow-up Step `7.5`, after Phase 07 core implementation.
+
+The detailed Step `7.5` Playwright strategy now lives in `phase-7/phase-07-step-7-5-playwright-e2e-coverage.md`.
 
 ## Accepted Direction For This Phase
 

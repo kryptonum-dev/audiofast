@@ -13,9 +13,14 @@ const AZURE_TENANT_ID = process.env.AZURE_TENANT_ID;
 const AZURE_CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const AZURE_CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
 const MS_GRAPH_SENDER_EMAIL = process.env.MS_GRAPH_SENDER_EMAIL;
+const E2E_MOCK_EMAILS = process.env.E2E_MOCK_EMAILS === '1';
 
 // Validate configuration
 export function isGraphConfigured(): boolean {
+  if (E2E_MOCK_EMAILS) {
+    return true;
+  }
+
   return !!(
     AZURE_TENANT_ID &&
     AZURE_CLIENT_ID &&
@@ -92,6 +97,17 @@ export type SendEmailResult = {
 export async function sendEmail(
   options: SendEmailOptions,
 ): Promise<SendEmailResult> {
+  if (E2E_MOCK_EMAILS) {
+    const recipients = Array.isArray(options.to) ? options.to : [options.to];
+
+    console.info('[MS Graph] E2E mock email send skipped.', {
+      recipientCount: recipients.length,
+      subject: options.subject,
+    });
+
+    return { success: true };
+  }
+
   try {
     const client = getGraphClient();
     const recipients = Array.isArray(options.to) ? options.to : [options.to];

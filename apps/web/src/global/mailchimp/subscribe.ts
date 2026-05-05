@@ -22,6 +22,16 @@ export type SubscribeResult = {
 export async function subscribeToNewsletter(
   email: string,
 ): Promise<SubscribeResult> {
+  if (process.env.E2E_MOCK_MAILCHIMP === '1') {
+    console.info('[Mailchimp] E2E mock subscription skipped.', { email });
+
+    return {
+      success: true,
+      needsConfirmation: true,
+      message: 'Please check your email to confirm subscription',
+    };
+  }
+
   if (!mailchimpClient) {
     console.error('[Mailchimp] Client not configured');
     return {
