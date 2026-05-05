@@ -11,7 +11,19 @@ import type { StartCheckoutPaymentResult } from './types';
 
 function buildCheckoutPaymentRedirectUrl(args: {
   registrationInput: P24TransactionRegistrationInput;
+  registrationResult: Awaited<
+    ReturnType<
+      ReturnType<
+        typeof getCheckoutPaymentProviderAdapter
+      >['registerTransaction']
+    >
+  >;
+  shouldUseProviderRedirect: boolean;
 }): string {
+  if (args.shouldUseProviderRedirect) {
+    return args.registrationResult.redirectUrl;
+  }
+
   return args.registrationInput.urlReturn;
 }
 
@@ -45,6 +57,20 @@ export async function startCheckoutPayment(args: {
   }
 
   try {
+    if (!providerAdapter.autoConfirmPaymentOnStart) {
+      return createCheckoutSuccess({
+        orderId: args.paymentRegistrationInput.checkoutOrderId,
+        orderNumber: args.paymentRegistrationInput.orderNumber,
+        redirectUrl: buildCheckoutPaymentRedirectUrl({
+          registrationInput: args.paymentRegistrationInput,
+          registrationResult: registration,
+          shouldUseProviderRedirect: true,
+        }),
+        registration,
+        wasAlreadyPaid: false,
+      });
+    }
+
     const notification = providerAdapter.buildStatusNotificationPayload({
       registrationInput: args.paymentRegistrationInput,
       registrationResult: registration,
@@ -58,6 +84,8 @@ export async function startCheckoutPayment(args: {
       orderNumber: args.paymentRegistrationInput.orderNumber,
       redirectUrl: buildCheckoutPaymentRedirectUrl({
         registrationInput: args.paymentRegistrationInput,
+        registrationResult: registration,
+        shouldUseProviderRedirect: false,
       }),
       registration,
       wasAlreadyPaid: paymentStatus.wasAlreadyPaid,

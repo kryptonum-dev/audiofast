@@ -10,12 +10,13 @@ import type {
   P24TransactionNotificationStatus,
   P24VerificationInput,
 } from '../payment-contracts';
-import { buildP24VerificationSign } from '../payment-contracts';
 import {
   type PaymentConfirmationEmailOrderData,
   sendCheckoutPaymentConfirmationEmail,
 } from './payment-confirmation-email';
 import { persistPaidCheckoutOrderProfile } from './payment-profile-persistence';
+import { getP24Mode, loadP24Config } from './p24-config';
+import { buildP24VerificationSign } from './p24-sign';
 import { getCheckoutPaymentProviderAdapter } from './payment-provider';
 import { confirmCheckoutOrderPayment } from './payment-update';
 
@@ -27,6 +28,10 @@ type OrderStatusNotificationRow = Pick<
 
 const MOCK_P24_CRC = 'mock-p24-crc';
 const P24_CURRENCY: P24Currency = 'PLN';
+
+function getP24VerificationCrc(): string {
+  return getP24Mode() === 'mock' ? MOCK_P24_CRC : loadP24Config().crc;
+}
 
 function normalizeOrderStatus(value: string): CheckoutOrderStatus {
   return value === 'paid' ? 'paid' : 'awaiting_payment';
@@ -76,7 +81,7 @@ function buildVerificationInputFromNotification(args: {
       orderId: args.notification.orderId,
       amount: args.order.grand_total_cents,
       currency: P24_CURRENCY,
-      crc: MOCK_P24_CRC,
+      crc: getP24VerificationCrc(),
     }),
     paymentId: args.notification.result.paymentId,
   };

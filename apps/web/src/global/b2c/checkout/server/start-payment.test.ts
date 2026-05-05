@@ -55,6 +55,7 @@ function createPaymentRegistrationInput(): P24TransactionRegistrationInput {
 describe('startCheckoutPayment', () => {
   const providerAdapter: CheckoutPaymentProviderAdapter = {
     provider: 'przelewy24',
+    autoConfirmPaymentOnStart: true,
     registerTransaction: vi.fn(),
     buildStatusNotificationPayload: vi.fn(),
     buildReturnState: vi.fn(),
@@ -64,6 +65,7 @@ describe('startCheckoutPayment', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    providerAdapter.autoConfirmPaymentOnStart = true;
 
     vi.mocked(getCheckoutPaymentProviderAdapter).mockReturnValue(
       providerAdapter,
@@ -214,5 +216,27 @@ describe('startCheckoutPayment', () => {
     expect(result.ok ? null : result.error.code).toBe(
       'payment_verification_failed',
     );
+  });
+
+  it('returns the provider redirect without confirming payment when the adapter is live', async () => {
+    providerAdapter.autoConfirmPaymentOnStart = false;
+
+    const result = await startCheckoutPayment({
+      paymentRegistrationInput: createPaymentRegistrationInput(),
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(
+      providerAdapter.buildStatusNotificationPayload,
+    ).not.toHaveBeenCalled();
+    expect(handleCheckoutPaymentStatusNotification).not.toHaveBeenCalled();
+    expect(result.value.redirectUrl).toBe(
+      'https://sandbox.przelewy24.pl/trnRequest/mock-p24-token-af202600001',
+    );
+    expect(result.value.wasAlreadyPaid).toBe(false);
   });
 });

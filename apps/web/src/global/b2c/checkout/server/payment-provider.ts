@@ -8,9 +8,12 @@ import type {
   P24VerificationResult,
 } from '../payment-contracts';
 import { mockPrzelewy24PaymentProviderAdapter } from './payment-mock';
+import { isP24LiveMode } from './p24-config';
+import { livePrzelewy24PaymentProviderAdapter } from './payment-przelewy24';
 
 export type CheckoutPaymentProviderAdapter = {
   provider: CheckoutPaymentProvider;
+  autoConfirmPaymentOnStart: boolean;
   registerTransaction(
     input: P24TransactionRegistrationInput,
   ): Promise<P24TransactionRegistrationResult>;
@@ -35,7 +38,9 @@ const checkoutPaymentProviderRegistry: Record<
   CheckoutPaymentProvider,
   CheckoutPaymentProviderAdapter
 > = {
-  przelewy24: mockPrzelewy24PaymentProviderAdapter,
+  przelewy24: isP24LiveMode()
+    ? livePrzelewy24PaymentProviderAdapter
+    : mockPrzelewy24PaymentProviderAdapter,
 };
 
 export function getCheckoutPaymentProviderAdapter(

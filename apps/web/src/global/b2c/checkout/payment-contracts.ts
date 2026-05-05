@@ -62,7 +62,7 @@ export type P24TransactionRegistrationResult = {
   responseCode: number;
   token: string;
   redirectUrl: string;
-  providerOrderId: number;
+  providerOrderId: number | null;
   providerReference: string | null;
 };
 

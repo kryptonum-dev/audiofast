@@ -45,6 +45,10 @@ export function buildMockP24StatusNotificationPayload(args: {
   registrationInput: P24TransactionRegistrationInput;
   registrationResult: P24TransactionRegistrationResult;
 }): P24StatusNotificationPayload {
+  if (args.registrationResult.providerOrderId === null) {
+    throw new Error('Mock Przelewy24 registration is missing providerOrderId.');
+  }
+
   return {
     provider: 'przelewy24',
     checkoutOrderId: args.registrationInput.checkoutOrderId,
@@ -102,6 +106,7 @@ export async function verifyMockP24Transaction(
 export const mockPrzelewy24PaymentProviderAdapter: CheckoutPaymentProviderAdapter =
   {
     provider: 'przelewy24',
+    autoConfirmPaymentOnStart: true,
     registerTransaction: registerMockP24Transaction,
     buildStatusNotificationPayload: ({
       registrationInput,
