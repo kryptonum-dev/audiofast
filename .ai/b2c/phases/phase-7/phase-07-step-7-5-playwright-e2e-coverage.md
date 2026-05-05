@@ -1,6 +1,6 @@
 # Phase 07 Step 7.5 - Playwright E2E Coverage
 
-Status: P1 customer-only coverage complete locally
+Status: Completed for v1
 Owner: planning
 Last updated: 2026-05-05
 Depends on: `../phase-07-customer-panel.md`, `../../testing-strategy.md`, `phase-07-step-01-public-access-gateway-and-otp-auth.md`, `phase-07-step-04-orders-area.md`
@@ -30,7 +30,7 @@ Phase 07 only provides the customer panel. The admin panel belongs to Phase 08, 
 
 ## Current Setup
 
-The initial Playwright setup has been added to the web app.
+The v1 Playwright setup has been added to the web app and Phase 7.5 is complete for the current thin B2C shop scope.
 
 Current local setup:
 
@@ -558,9 +558,10 @@ Current local verification:
 - `bun --env-file=.env.e2e.local playwright test` passes locally with 12 passed and 1 skipped CPO content gate
 - `bun run check-types` passes
 
-Remaining follow-up:
+Deferred follow-up:
 
-- CI is intentionally not configured yet. Return to CI after local P0 coverage is accepted and the team decides where the E2E Supabase credentials should live.
+- CI is intentionally not configured for v1. This project is currently developed by a single developer, and local Playwright execution is the accepted quality gate for Phase 7.5.
+- Return to CI when production launch risk, repeated deployments, or team collaboration makes automated GitHub checks worth the extra secret-management and infrastructure cost.
 
 ## Not In Scope
 
@@ -579,11 +580,10 @@ Step 7.5 should not attempt to:
 - cover full Phase 09 policy operations beyond customer entry points
 - introduce broad visual regression testing before the core commerce journey is stable
 
-## Open Decisions
+## Deferred Decisions
 
-- OTP strategy for E2E needs a final implementation choice.
+- CI secret storage for `audiofast-test` must be configured before GitHub Actions runs are enabled.
 - Sanity test content strategy currently uses production Sanity content for `/produkty/prestige/`; dedicated test content can be revisited if this becomes unstable.
-- CI is deferred. Before GitHub Actions runs are enabled, CI secret storage for `audiofast-test` must be configured.
 - Parallel execution should remain disabled until seed isolation is proven.
-- Browser matrix should remain Chromium-only until P0 journeys are stable.
+- Browser matrix should remain Chromium-only for v1.
 - Future Phase `8.5` should be created after Phase 08 to cover admin-to-customer lifecycle journeys.
