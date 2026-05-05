@@ -26,7 +26,7 @@ function createPaymentRegistrationInput(
     urlReturn: 'http://localhost:3000/podziekowania-za-zakup/',
     urlStatus: 'http://localhost:3000/api/payment/status/',
     timeLimit: 15,
-    channel: 1,
+    channel: 16,
     transferLabel: 'AF-2026-00001',
     sign: 'mock-registration-sign',
     cart: [

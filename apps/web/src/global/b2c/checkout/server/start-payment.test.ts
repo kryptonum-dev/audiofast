@@ -35,7 +35,7 @@ function createPaymentRegistrationInput(): P24TransactionRegistrationInput {
     urlReturn: 'http://localhost:3000/podziekowania-za-zakup/AF-2026-00001/',
     urlStatus: 'http://localhost:3000/api/payment/status/',
     timeLimit: 15,
-    channel: 1,
+    channel: 16,
     transferLabel: 'AF-2026-00001',
     sign: 'mock-registration-sign',
     cart: [

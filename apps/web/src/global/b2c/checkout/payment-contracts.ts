@@ -136,7 +136,7 @@ export type P24VerificationResult = {
 const MOCK_P24_MERCHANT_ID = 999999;
 const MOCK_P24_POS_ID = 999999;
 const MOCK_P24_CRC = 'mock-p24-crc';
-const DEFAULT_P24_CHANNEL = 1;
+const DEFAULT_P24_CHANNEL = 16;
 
 function createSha384Hex(value: string): string {
   return createHash('sha384').update(value).digest('hex');

@@ -45,7 +45,7 @@ function createRegistrationInput(): P24TransactionRegistrationInput {
     urlStatus:
       'https://audiofast-git-b2c-kryptonum.vercel.app/api/payment/status/',
     timeLimit: 15,
-    channel: 1,
+    channel: 16,
     transferLabel: 'AF-2026-00001',
     sign: 'mock-sign',
     cart: [],
