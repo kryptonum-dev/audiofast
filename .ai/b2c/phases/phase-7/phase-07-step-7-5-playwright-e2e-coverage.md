@@ -1,6 +1,6 @@
 # Phase 07 Step 7.5 - Playwright E2E Coverage
 
-Status: in progress
+Status: P0 complete locally
 Owner: planning
 Last updated: 2026-05-05
 Depends on: `../phase-07-customer-panel.md`, `../../testing-strategy.md`, `phase-07-step-01-public-access-gateway-and-otp-auth.md`, `phase-07-step-04-orders-area.md`
@@ -37,16 +37,20 @@ Current local setup:
 - `@playwright/test` is installed in `apps/web`
 - browser binaries are installed locally for Chromium, Firefox, and WebKit
 - `apps/web/playwright.config.ts` starts the Next.js app automatically on `127.0.0.1:3100`
-- the initial project list runs only `chromium`
+- the project list uses `auth.setup`, `chromium`, and `chromium-authenticated`
+- both browser projects depend on `auth.setup` so seeded authenticated data exists before P0 specs run
 - E2E environment variables live in `apps/web/.env.e2e.local`
 - `apps/web/.env.e2e.example` documents the required E2E variables
 - `audiofast-test` is the dedicated Supabase E2E project
 - `audiofast-test` has the copied database structure
 - `audiofast-test` has the `prestige` pricing/configuration seed required by the first checkout test
-- `apps/web/e2e/guest-checkout.spec.ts` covers the first guest PDP-to-paid-thank-you journey
+- `apps/web/e2e/guest-checkout.spec.ts` covers the guest PDP-to-paid-thank-you journey
 - `apps/web/e2e/guest-checkout-validation.spec.ts` covers incomplete-checkout validation and verifies no order is created
-- authenticated customer-panel tests use `apps/web/e2e/auth.setup.ts` and Playwright `storageState`
-- `apps/web/e2e/customer-authenticated-panel.spec.ts` verifies the stored Supabase session can open the customer orders page
+- `apps/web/e2e/auth.setup.ts` cleans and seeds a deterministic paid order for `e2e+customer-auth@audiofast.test`, then creates Playwright `storageState`
+- `apps/web/e2e/checkout-auth-roundtrip.spec.ts` covers protected return-to and checkout login/cart preservation
+- `apps/web/e2e/customer-authenticated-panel.spec.ts` verifies seeded order list and detail access
+- `apps/web/e2e/customer-authenticated-checkout.spec.ts` verifies authenticated checkout prefill and save-to-profile persistence
+- `apps/web/e2e/utils.ts` owns shared cart, checkout, auth, seed, cleanup, and Supabase assertion helpers
 
 Important setup rule:
 
@@ -203,9 +207,11 @@ Current Phase 7.5 decision:
 
 ### P0 - First Must-Have Journeys
 
-These are required before Step 7.5 can be considered useful.
+These are required before Step 7.5 can be considered useful. They are now covered locally by the Chromium Playwright suite.
 
 #### 1. Guest Standard Product Purchase
+
+Status: covered by `apps/web/e2e/guest-checkout.spec.ts`.
 
 Journey:
 
@@ -233,6 +239,10 @@ Protects:
 
 #### 2. Guest Purchase To Customer Panel Access
 
+Status: covered through the deterministic authenticated-customer seed in `apps/web/e2e/auth.setup.ts` plus `apps/web/e2e/customer-authenticated-panel.spec.ts`.
+
+Note: the real user-facing OTP email entry remains covered at the component/server level for now. Browser tests use the guarded E2E auth helper so the panel journey can stay deterministic without reading real email.
+
 Journey:
 
 1. complete a guest purchase
@@ -254,6 +264,8 @@ Protects:
 
 #### 3. Protected Route Return-To Behavior
 
+Status: covered by `apps/web/e2e/checkout-auth-roundtrip.spec.ts`.
+
 Journey:
 
 1. open `konto-klienta/zamowienia/[orderNumber]` while logged out
@@ -270,6 +282,8 @@ Protects:
 - detail route ownership enforcement after login
 
 #### 4. Checkout Login Roundtrip With Cart Preservation
+
+Status: covered by `apps/web/e2e/checkout-auth-roundtrip.spec.ts`.
 
 Journey:
 
@@ -291,6 +305,8 @@ Protects:
 - reusable profile prefill surface
 
 #### 5. Authenticated Checkout Profile Persistence
+
+Status: covered by `apps/web/e2e/customer-authenticated-checkout.spec.ts`.
 
 Journey:
 
@@ -518,6 +534,15 @@ Step 7.5 is complete when:
 - no production customer data is used
 - no real payment provider is called
 - no real marketing/email side effects are required for passing tests
+
+Current local verification:
+
+- `bun --env-file=.env.e2e.local playwright test` passes all 7 tests locally
+- `bun run check-types` passes
+
+Remaining follow-up:
+
+- CI is intentionally not configured yet. Return to CI after local P0 coverage is accepted and the team decides where the E2E Supabase credentials should live.
 
 ## Not In Scope
 

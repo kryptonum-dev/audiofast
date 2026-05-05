@@ -48,10 +48,16 @@ Mailchimp, or dispatching Meta Conversion API events.
 The app server is started automatically by `playwright.config.ts` on
 `http://127.0.0.1:3100` unless `PLAYWRIGHT_PORT` or `PLAYWRIGHT_BASE_URL` is set.
 
-## Initial Scope
+## Scope
 
-Start with `chromium` only. After the seed data and first purchase/customer-panel
-flow are stable, add Firefox/WebKit projects to broaden browser coverage.
+The suite currently runs Chromium only. After local P0 coverage stays stable,
+add Firefox/WebKit projects to broaden browser coverage.
+
+Playwright projects:
+
+- `auth.setup` seeds and authenticates the reusable customer.
+- `chromium` runs unauthenticated/guest browser flows.
+- `chromium-authenticated` starts with the stored customer session.
 
 ## Current Tests
 
@@ -82,19 +88,37 @@ only rows owned by that email from `orders`, `order_items`,
 Shared E2E helpers live next to the specs:
 
 - `constants.ts` stores stable E2E values such as email prefixes
-- `utils.ts` stores helper functions for test emails, Supabase admin access, and
-  targeted cleanup
+- `utils.ts` stores helper functions for test emails, Supabase admin access,
+  targeted cleanup, seeded orders, auth helper login, cart setup, checkout form
+  filling, and DB assertions
 
 ## Authenticated Customer Tests
 
 Authenticated customer-panel specs use Playwright `storageState`.
 
-`auth.setup.ts` logs in the reusable E2E customer through the protected
-`/api/e2e/customer-auth/` helper, verifies the orders page, and writes the
-browser state to `e2e/.auth/customer.json`.
+`auth.setup.ts` cleans the reusable customer email, seeds a deterministic paid
+order, logs in through the protected `/api/e2e/customer-auth/` helper, verifies
+the orders page, and writes the browser state to `e2e/.auth/customer.json`.
 
 `customer-authenticated-panel.spec.ts` then starts with that stored state and
-verifies that `/konto-klienta/zamowienia/` opens as an authenticated customer.
+verifies that the seeded order appears in `/konto-klienta/zamowienia/` and opens
+its detail page.
+
+`checkout-auth-roundtrip.spec.ts` verifies:
+
+1. a logged-out customer is redirected from a protected order-detail URL to the
+   login gateway with `returnTo`
+2. the E2E auth helper returns that customer to the original order detail
+3. a guest cart survives the checkout login CTA roundtrip
+4. authenticated checkout locks the email field and renders authenticated
+   consent/profile UI
+
+`customer-authenticated-checkout.spec.ts` verifies:
+
+1. seeded profile defaults prefill checkout
+2. the customer can save updated future-order data during checkout
+3. Supabase `customer_profiles` receives the updated defaults
+4. a later checkout preloads those updated defaults
 
 The E2E auth helper is guarded by:
 
