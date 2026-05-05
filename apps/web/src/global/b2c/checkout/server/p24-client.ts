@@ -27,6 +27,7 @@ export type P24TransactionRegisterRequest = {
   transferLabel?: string;
   cart?: Array<{
     sellerId: string;
+    sellerCategory: string;
     name: string;
     description: string;
     quantity: number;
@@ -69,6 +70,7 @@ export class P24ClientError extends Error {
       | 'p24_error',
     public readonly status: number | null = null,
     public readonly responseCode: number | null = null,
+    public readonly responseBody: unknown = null,
   ) {
     super(message);
     this.name = 'P24ClientError';
@@ -123,6 +125,7 @@ function assertSuccessfulP24Response(args: {
       'http_error',
       args.response.status,
       responseCode,
+      args.body,
     );
   }
 
@@ -132,6 +135,7 @@ function assertSuccessfulP24Response(args: {
       'p24_error',
       args.response.status,
       responseCode,
+      args.body,
     );
   }
 }

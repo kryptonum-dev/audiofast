@@ -41,6 +41,7 @@ function createPaymentRegistrationInput(): P24TransactionRegistrationInput {
     cart: [
       {
         sellerId: 'Test brand',
+        sellerCategory: '/produkty/test/',
         name: 'Test product',
         description: 'Test brand / /produkty/test/',
         quantity: 1,

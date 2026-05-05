@@ -5,6 +5,7 @@ import {
   createCheckoutSuccess,
 } from '../errors';
 import type { P24TransactionRegistrationInput } from '../payment-contracts';
+import { P24ClientError } from './p24-client';
 import { getCheckoutPaymentProviderAdapter } from './payment-provider';
 import { handleCheckoutPaymentStatusNotification } from './payment-status';
 import type { StartCheckoutPaymentResult } from './types';
@@ -50,7 +51,22 @@ export async function startCheckoutPayment(args: {
       registrationResult: registration,
     });
   } catch (error) {
-    console.error('Failed to register checkout payment.', error);
+    if (error instanceof P24ClientError) {
+      console.error('Failed to register checkout payment.', {
+        provider: providerAdapter.provider,
+        orderId: args.paymentRegistrationInput.checkoutOrderId,
+        orderNumber: args.paymentRegistrationInput.orderNumber,
+        sessionId: args.paymentRegistrationInput.sessionId,
+        code: error.code,
+        status: error.status,
+        responseCode: error.responseCode,
+        responseBody: error.responseBody,
+        message: error.message,
+      });
+    } else {
+      console.error('Failed to register checkout payment.', error);
+    }
+
     return createCheckoutFailure(
       createCheckoutPaymentRegistrationFailedError(),
     );

@@ -151,6 +151,9 @@ describe('P24Client', () => {
     await expect(new P24Client(CONFIG).testAccess()).rejects.toMatchObject({
       code: 'http_error',
       status: 401,
+      responseBody: {
+        responseCode: 0,
+      },
     });
   });
 

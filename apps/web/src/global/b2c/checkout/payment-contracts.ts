@@ -12,6 +12,7 @@ export type P24Language = 'pl';
 
 export type P24TransactionRegisterCartItem = {
   sellerId: string;
+  sellerCategory: string;
   name: string;
   description: string;
   quantity: number;
@@ -213,6 +214,7 @@ function buildP24CartItems(
 ): P24TransactionRegisterCartItem[] {
   return orderDraft.items.map((item) => ({
     sellerId: item.brandName,
+    sellerCategory: item.productKey,
     name: item.productName,
     description: `${item.brandName} / ${item.productKey}`,
     quantity: item.quantity,
