@@ -5,6 +5,7 @@ import {
   preparePrestigeCheckout,
   readCustomerAuthSeedMetadata,
   readCustomerProfileByEmail,
+  resetCustomerProfileFromSeed,
   submitCheckoutPayment,
 } from "./utils";
 
@@ -24,6 +25,8 @@ test.describe("authenticated checkout", () => {
       buildingNumber: "12",
       apartmentNumber: "8",
     };
+
+    await resetCustomerProfileFromSeed(seededOrder);
 
     await test.step("open checkout as the authenticated seeded customer", async () => {
       await preparePrestigeCheckout(page);

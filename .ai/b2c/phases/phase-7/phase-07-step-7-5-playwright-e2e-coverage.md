@@ -1,6 +1,6 @@
 # Phase 07 Step 7.5 - Playwright E2E Coverage
 
-Status: P0 complete locally
+Status: P1 customer-only coverage complete locally
 Owner: planning
 Last updated: 2026-05-05
 Depends on: `../phase-07-customer-panel.md`, `../../testing-strategy.md`, `phase-07-step-01-public-access-gateway-and-otp-auth.md`, `phase-07-step-04-orders-area.md`
@@ -50,6 +50,11 @@ Current local setup:
 - `apps/web/e2e/checkout-auth-roundtrip.spec.ts` covers protected return-to and checkout login/cart preservation
 - `apps/web/e2e/customer-authenticated-panel.spec.ts` verifies seeded order list and detail access
 - `apps/web/e2e/customer-authenticated-checkout.spec.ts` verifies authenticated checkout prefill and save-to-profile persistence
+- `apps/web/e2e/cart-revalidation-drift.spec.ts` verifies stale cart pricing is blocked before order creation and accepted only after the refreshed totals are submitted
+- `apps/web/e2e/coupon.spec.ts` verifies valid coupon persistence and invalidated coupon removal
+- `apps/web/e2e/customer-authenticated-account.spec.ts` verifies account defaults flow into future checkout while historical order snapshots stay unchanged
+- `apps/web/e2e/customer-authenticated-cancellation.spec.ts` verifies the customer-side cancellation request entry point and duplicate request prevention
+- `apps/web/e2e/cpo-purchase.spec.ts` contains the CPO purchase path and currently skips itself when Sanity has no buyable CPO item
 - `apps/web/e2e/utils.ts` owns shared cart, checkout, auth, seed, cleanup, and Supabase assertion helpers
 
 Important setup rule:
@@ -330,6 +335,10 @@ These should be added after the P0 suite is stable.
 
 #### 6. CPO Purchase Path
 
+Status: conditionally covered by `apps/web/e2e/cpo-purchase.spec.ts`.
+
+Current blocker: the production Sanity dataset used by local E2E currently has no CPO product that is simultaneously `isSellableOnline == true`, `availabilityStatus == "available"`, and `priceCents > 0`. The spec therefore skips itself with an explicit reason until a buyable CPO product exists.
+
 Journey:
 
 1. open an available CPO product page
@@ -345,6 +354,8 @@ Protects:
 - checkout compatibility with CPO items
 
 #### 7. Cart Revalidation Drift
+
+Status: covered by `apps/web/e2e/cart-revalidation-drift.spec.ts`.
 
 Journey:
 
@@ -362,6 +373,8 @@ Protects:
 
 #### 8. Coupon Happy Path And Invalidated Coupon
 
+Status: covered by `apps/web/e2e/coupon.spec.ts`.
+
 Journey:
 
 1. seed a valid coupon
@@ -377,6 +390,8 @@ Protects:
 - coupon invalidation during cart lifecycle
 
 #### 9. Account Details Edit To Future Checkout Prefill
+
+Status: covered by `apps/web/e2e/customer-authenticated-account.spec.ts`.
 
 Journey:
 
@@ -394,6 +409,8 @@ Protects:
 - historical snapshot immutability
 
 #### 10. Order Detail Cancellation Request Entry Point
+
+Status: covered by `apps/web/e2e/customer-authenticated-cancellation.spec.ts`.
 
 Journey:
 
@@ -529,6 +546,7 @@ Step 7.5 is complete when:
 - `audiofast-test` is used instead of production Supabase
 - seed and cleanup helpers exist
 - all P0 journeys are automated and passing locally
+- P1 customer-only journeys are automated and passing locally where current content permits them
 - the suite can run from one command
 - failures produce usable traces/screenshots/videos
 - no production customer data is used
@@ -537,7 +555,7 @@ Step 7.5 is complete when:
 
 Current local verification:
 
-- `bun --env-file=.env.e2e.local playwright test` passes all 7 tests locally
+- `bun --env-file=.env.e2e.local playwright test` passes locally with 12 passed and 1 skipped CPO content gate
 - `bun run check-types` passes
 
 Remaining follow-up:

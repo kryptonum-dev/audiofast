@@ -1,8 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
-import { expect, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 
+import { expect, type Page } from "@playwright/test";
+import { createClient } from "@supabase/supabase-js";
+
 import { E2E_CUSTOMER_AUTH_SEED_PATH, E2E_EMAIL_DOMAIN } from "./constants";
+
+const E2E_CART_STORAGE_KEY = "audiofast:b2c-cart";
 
 type CheckoutDetails = {
   email: string;
@@ -16,7 +19,7 @@ type CheckoutDetails = {
   apartmentNumber?: string;
 };
 
-export type SeededCustomerOrder = {
+type SeededCustomerOrder = {
   email: string;
   orderId: string;
   orderNumber: string;
@@ -37,7 +40,24 @@ export type SeededCustomerOrder = {
   };
 };
 
-export function createSupabaseAdminClient() {
+type StoredCartLine = {
+  lineId: string;
+  lineType: string;
+  productKey: string;
+  productName: string;
+  unitPriceCents: number;
+  configurationSelection?: {
+    variantId?: string;
+  };
+};
+
+type StoredCart = {
+  version: number;
+  lines: StoredCartLine[];
+  coupon: unknown;
+};
+
+function createSupabaseAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -67,7 +87,7 @@ function assertSupabaseOk(error: unknown, context: string) {
   }
 }
 
-export async function cleanupOrdersForEmail(email: string) {
+async function cleanupOrdersForEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   const { data: orders, error: ordersError } = await supabase
     .from("orders")
@@ -107,7 +127,7 @@ export async function cleanupOrdersForEmail(email: string) {
   }
 }
 
-export async function cleanupCustomerProfileByEmail(email: string) {
+async function cleanupCustomerProfileByEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   assertSupabaseOk(
     (await supabase.from("customer_profiles").delete().eq("email", email))
@@ -272,6 +292,25 @@ export async function readCustomerAuthSeedMetadata() {
   ) as SeededCustomerOrder;
 }
 
+export async function resetCustomerProfileFromSeed(seed: SeededCustomerOrder) {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from("customer_profiles")
+    .update({
+      first_name: seed.firstName,
+      last_name: seed.lastName,
+      phone: seed.phone,
+      default_shipping_address: seed.shippingAddress,
+      default_invoice_data: null,
+    })
+    .eq("email", seed.email);
+
+  assertSupabaseOk(
+    error,
+    `Failed to reset customer_profile defaults for ${seed.email}`,
+  );
+}
+
 export async function authenticateE2eCustomer(
   page: Page,
   args: { email: string; returnTo: string },
@@ -295,15 +334,20 @@ export async function authenticateE2eCustomer(
   await page.goto(`${authUrl.pathname}${authUrl.search}`);
 }
 
-export async function addPrestigeProductToCart(page: Page) {
+async function addPrestigeProductToCart(page: Page) {
   await page.goto("/produkty/prestige/");
 
-  await expect(
-    page.getByRole("heading", {
-      name: "Artesania Audio Prestige",
-      exact: true,
-    }),
-  ).toBeVisible();
+  const prestigeHeading = page.getByRole("heading", {
+    name: "Artesania Audio Prestige",
+    exact: true,
+  });
+
+  try {
+    await expect(prestigeHeading).toBeVisible();
+  } catch {
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expect(prestigeHeading).toBeVisible();
+  }
 
   await page.getByRole("button", { name: "Dodaj do koszyka" }).click();
   await expect(
@@ -376,6 +420,131 @@ export async function submitCheckoutPayment(page: Page) {
   await page.getByRole("button", { name: "Przejdź do płatności" }).click();
 }
 
+async function readStoredCart(page: Page) {
+  return page.evaluate((storageKey) => {
+    const rawCart = window.localStorage.getItem(storageKey);
+
+    if (!rawCart) {
+      throw new Error(`Missing persisted E2E cart at ${storageKey}.`);
+    }
+
+    return JSON.parse(rawCart) as StoredCart;
+  }, E2E_CART_STORAGE_KEY);
+}
+
+export async function readSingleStoredCartLine(page: Page) {
+  const cart = await readStoredCart(page);
+
+  expect(cart.lines).toHaveLength(1);
+
+  const line = cart.lines[0];
+
+  if (!line) {
+    throw new Error("Missing single persisted E2E cart line.");
+  }
+
+  return line;
+}
+
+export async function updatePricingVariantBasePrice(
+  variantId: string,
+  basePriceCents: number,
+) {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from("pricing_variants")
+    .update({ base_price_cents: basePriceCents })
+    .eq("id", variantId);
+
+  assertSupabaseOk(
+    error,
+    `Failed to update pricing_variant ${variantId} base price`,
+  );
+}
+
+export async function cleanupCouponByCode(code: string) {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase.from("coupons").delete().ilike("code", code);
+
+  assertSupabaseOk(error, `Failed to cleanup coupon ${code}`);
+}
+
+export async function seedFixedOrderCoupon(args: {
+  code: string;
+  discountValueCents: number;
+}) {
+  await cleanupCouponByCode(args.code);
+
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("coupons")
+    .insert({
+      code: args.code.toUpperCase(),
+      discount_type: "fixed_order",
+      discount_value_cents: args.discountValueCents,
+      discount_percent: null,
+      product_keys: null,
+      is_active: true,
+      usage_count: 0,
+      usage_limit: null,
+      starts_at: null,
+      expires_at: null,
+    })
+    .select("id, code")
+    .single();
+
+  assertSupabaseOk(error, `Failed to seed coupon ${args.code}`);
+
+  if (!data) {
+    throw new Error(`Failed to seed coupon ${args.code}: no row.`);
+  }
+
+  return data;
+}
+
+export async function setCouponActive(code: string, isActive: boolean) {
+  const supabase = createSupabaseAdminClient();
+  const { error } = await supabase
+    .from("coupons")
+    .update({ is_active: isActive })
+    .ilike("code", code);
+
+  assertSupabaseOk(error, `Failed to update coupon ${code}`);
+}
+
+export async function readLatestOrderByEmail(email: string) {
+  const supabase = createSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("orders")
+    .select(
+      "id, order_number, current_status, customer_email, discount_total_cents, grand_total_cents, used_discount",
+    )
+    .eq("customer_email", email)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function countCancellationRequestsByOrderId(orderId: string) {
+  const supabase = createSupabaseAdminClient();
+  const { count, error } = await supabase
+    .from("order_cancellation_requests")
+    .select("id", { count: "exact", head: true })
+    .eq("order_id", orderId);
+
+  if (error) {
+    throw error;
+  }
+
+  return count ?? 0;
+}
+
 export async function assertPaidOrderByEmail(email: string) {
   const supabase = createSupabaseAdminClient();
 
@@ -416,7 +585,9 @@ export async function readCustomerProfileByEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
     .from("customer_profiles")
-    .select("email, first_name, last_name, phone, default_shipping_address")
+    .select(
+      "email, first_name, last_name, phone, default_shipping_address, default_invoice_data",
+    )
     .eq("email", email)
     .single();
 

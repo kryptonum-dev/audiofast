@@ -120,6 +120,33 @@ its detail page.
 3. Supabase `customer_profiles` receives the updated defaults
 4. a later checkout preloads those updated defaults
 
+## P1 Customer Journey Tests
+
+`cart-revalidation-drift.spec.ts` verifies that checkout stops the first payment
+submit when the browser cart has stale pricing, shows the customer a price
+refresh warning, and only creates the paid order after the refreshed totals are
+accepted.
+
+`coupon.spec.ts` verifies two coupon paths:
+
+1. a valid fixed-order coupon can be applied in cart, remains visible in
+   checkout, and is persisted on the paid order in Supabase
+2. a coupon that becomes inactive after being stored in the cart is removed on
+   cart reload with a visible warning
+
+`customer-authenticated-account.spec.ts` verifies that the customer can edit
+account defaults, that future checkout uses the changed defaults, and that
+historical order snapshots still render the original order-time data.
+
+`customer-authenticated-cancellation.spec.ts` verifies the customer-side order
+cancellation entry point: the request modal opens, the request is submitted, the
+detail page moves into pending state, and duplicate request entry is removed.
+
+`cpo-purchase.spec.ts` contains the P1 CPO purchase journey. It currently skips
+itself when Sanity has no CPO product with `isSellableOnline == true`,
+`availabilityStatus == "available"`, and `priceCents > 0`. Once that content
+exists, the same spec will run the CPO add/remove/cart/checkout path.
+
 The E2E auth helper is guarded by:
 
 - `E2E_AUTH_HELPER=1`
