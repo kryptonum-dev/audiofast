@@ -35,7 +35,8 @@
     "P24_PANEL_BASE_URL",
     "P24_STATUS_ALLOWED_IPS",
     "P24_REQUEST_TIMEOUT_MS",
-    "P24_FORCE_MOCK"
+    "P24_FORCE_MOCK",
+    "P24_MODE"
   ],
   "tasks": {
     "build": {
