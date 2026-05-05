@@ -1,11 +1,11 @@
-import { readFile } from "node:fs/promises";
+import { readFile } from 'node:fs/promises';
 
-import { expect, type Page } from "@playwright/test";
-import { createClient } from "@supabase/supabase-js";
+import { expect, type Page } from '@playwright/test';
+import { createClient } from '@supabase/supabase-js';
 
-import { E2E_CUSTOMER_AUTH_SEED_PATH, E2E_EMAIL_DOMAIN } from "./constants";
+import { E2E_CUSTOMER_AUTH_SEED_PATH, E2E_EMAIL_DOMAIN } from './constants';
 
-const E2E_CART_STORAGE_KEY = "audiofast:b2c-cart";
+const E2E_CART_STORAGE_KEY = 'audiofast:b2c-cart';
 
 type CheckoutDetails = {
   email: string;
@@ -36,7 +36,7 @@ type SeededCustomerOrder = {
     apartmentNumber: string | null;
     postalCode: string;
     city: string;
-    country: "PL";
+    country: 'PL';
   };
 };
 
@@ -63,7 +63,7 @@ function createSupabaseAdminClient() {
 
   if (!supabaseUrl || !serviceRoleKey) {
     throw new Error(
-      "Missing Supabase E2E env. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.e2e.local.",
+      'Missing Supabase E2E env. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.e2e.local.',
     );
   }
 
@@ -90,9 +90,9 @@ function assertSupabaseOk(error: unknown, context: string) {
 async function cleanupOrdersForEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   const { data: orders, error: ordersError } = await supabase
-    .from("orders")
-    .select("id")
-    .eq("customer_email", email);
+    .from('orders')
+    .select('id')
+    .eq('customer_email', email);
 
   if (ordersError) {
     throw ordersError;
@@ -102,26 +102,26 @@ async function cleanupOrdersForEmail(email: string) {
 
   if (orderIds.length > 0) {
     assertSupabaseOk(
-      (await supabase.from("order_items").delete().in("order_id", orderIds))
+      (await supabase.from('order_items').delete().in('order_id', orderIds))
         .error,
       `Failed to delete order_items for ${email}`,
     );
     assertSupabaseOk(
       (
         await supabase
-          .from("order_cancellation_requests")
+          .from('order_cancellation_requests')
           .delete()
-          .in("order_id", orderIds)
+          .in('order_id', orderIds)
       ).error,
       `Failed to delete order_cancellation_requests for ${email}`,
     );
     assertSupabaseOk(
-      (await supabase.from("return_cases").delete().in("order_id", orderIds))
+      (await supabase.from('return_cases').delete().in('order_id', orderIds))
         .error,
       `Failed to delete return_cases for ${email}`,
     );
     assertSupabaseOk(
-      (await supabase.from("orders").delete().in("id", orderIds)).error,
+      (await supabase.from('orders').delete().in('id', orderIds)).error,
       `Failed to delete orders for ${email}`,
     );
   }
@@ -130,7 +130,7 @@ async function cleanupOrdersForEmail(email: string) {
 async function cleanupCustomerProfileByEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   assertSupabaseOk(
-    (await supabase.from("customer_profiles").delete().eq("email", email))
+    (await supabase.from('customer_profiles').delete().eq('email', email))
       .error,
     `Failed to delete customer_profile for ${email}`,
   );
@@ -151,23 +151,23 @@ export async function seedPaidOrderForCustomerEmail(
     now.getTime() + 7 * 24 * 60 * 60 * 1000,
   ).toISOString();
   const orderNumber = `AF-E2E-${Date.now().toString(36).toUpperCase()}`;
-  const firstName = "Ewa";
-  const lastName = "Klientka";
-  const phone = "500 600 700";
+  const firstName = 'Ewa';
+  const lastName = 'Klientka';
+  const phone = '500 600 700';
   const shippingAddress = {
     firstName,
     lastName,
     phone,
-    streetName: "Panelowa",
-    buildingNumber: "7",
-    apartmentNumber: "5",
-    postalCode: "00-007",
-    city: "Warszawa",
-    country: "PL" as const,
+    streetName: 'Panelowa',
+    buildingNumber: '7',
+    apartmentNumber: '5',
+    postalCode: '00-007',
+    city: 'Warszawa',
+    country: 'PL' as const,
   };
 
   const { data: profile, error: profileError } = await supabase
-    .from("customer_profiles")
+    .from('customer_profiles')
     .insert({
       email,
       first_name: firstName,
@@ -176,7 +176,7 @@ export async function seedPaidOrderForCustomerEmail(
       default_shipping_address: shippingAddress,
       default_invoice_data: null,
     })
-    .select("id")
+    .select('id')
     .single();
 
   assertSupabaseOk(
@@ -195,22 +195,22 @@ export async function seedPaidOrderForCustomerEmail(
   };
   const statusHistory = [
     {
-      status: "awaiting_payment",
+      status: 'awaiting_payment',
       changedAt: nowIso,
-      source: "system",
+      source: 'system',
     },
     {
-      status: "paid",
+      status: 'paid',
       changedAt: nowIso,
-      source: "system",
+      source: 'system',
     },
   ];
 
   const { data: order, error: orderError } = await supabase
-    .from("orders")
+    .from('orders')
     .insert({
       order_number: orderNumber,
-      current_status: "paid",
+      current_status: 'paid',
       customer_email: email,
       customer_profile_id: profile.id,
       customer_snapshot: customerSnapshot,
@@ -222,16 +222,16 @@ export async function seedPaidOrderForCustomerEmail(
       paid_at: nowIso,
       payment_verified_at: nowIso,
       payment_reference: `e2e-${orderNumber.toLowerCase()}`,
-      payment_provider: "e2e",
+      payment_provider: 'e2e',
       status_history: statusHistory,
       profile_persistence: {
         shouldEnsureProfileAfterSuccessfulPayment: true,
         shouldStoreCheckoutDefaultsAfterSuccessfulPayment: false,
         authUserIdAtCheckout: null,
-        reason: "create_profile_without_defaults",
+        reason: 'create_profile_without_defaults',
       },
     })
-    .select("id")
+    .select('id')
     .single();
 
   assertSupabaseOk(orderError, `Failed to seed paid order for ${email}`);
@@ -241,13 +241,13 @@ export async function seedPaidOrderForCustomerEmail(
 
   assertSupabaseOk(
     (
-      await supabase.from("order_items").insert({
+      await supabase.from('order_items').insert({
         order_id: order.id,
         line_position: 1,
-        line_type: "standard",
-        product_key: "prestige",
-        product_name: "Prestige",
-        brand_name: "Artesania Audio",
+        line_type: 'standard',
+        product_key: 'prestige',
+        product_name: 'Prestige',
+        brand_name: 'Artesania Audio',
         quantity: 1,
         unit_price_cents: 124900,
         line_subtotal_cents: 124900,
@@ -256,12 +256,12 @@ export async function seedPaidOrderForCustomerEmail(
         is_returnable: true,
         item_snapshot: {
           productImage: null,
-          model: "Prestige",
+          model: 'Prestige',
           selectedOptions: [
             {
-              groupName: "Wariant testowy",
-              inputType: "select",
-              valueName: "E2E",
+              groupName: 'Wariant testowy',
+              inputType: 'select',
+              valueName: 'E2E',
               numericValue: null,
               unit: null,
               parentGroupName: null,
@@ -288,14 +288,14 @@ export async function seedPaidOrderForCustomerEmail(
 
 export async function readCustomerAuthSeedMetadata() {
   return JSON.parse(
-    await readFile(E2E_CUSTOMER_AUTH_SEED_PATH, "utf8"),
+    await readFile(E2E_CUSTOMER_AUTH_SEED_PATH, 'utf8'),
   ) as SeededCustomerOrder;
 }
 
 export async function resetCustomerProfileFromSeed(seed: SeededCustomerOrder) {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase
-    .from("customer_profiles")
+    .from('customer_profiles')
     .update({
       first_name: seed.firstName,
       last_name: seed.lastName,
@@ -303,7 +303,7 @@ export async function resetCustomerProfileFromSeed(seed: SeededCustomerOrder) {
       default_shipping_address: seed.shippingAddress,
       default_invoice_data: null,
     })
-    .eq("email", seed.email);
+    .eq('email', seed.email);
 
   assertSupabaseOk(
     error,
@@ -319,49 +319,49 @@ export async function authenticateE2eCustomer(
 
   if (!authSecret) {
     throw new Error(
-      "Missing E2E_AUTH_HELPER_SECRET. Set it in .env.e2e.local before running authenticated E2E tests.",
+      'Missing E2E_AUTH_HELPER_SECRET. Set it in .env.e2e.local before running authenticated E2E tests.',
     );
   }
 
   await page.setExtraHTTPHeaders({
-    "x-e2e-auth-secret": authSecret,
+    'x-e2e-auth-secret': authSecret,
   });
 
-  const authUrl = new URL("/api/e2e/customer-auth", "http://localhost");
-  authUrl.searchParams.set("email", args.email);
-  authUrl.searchParams.set("returnTo", args.returnTo);
+  const authUrl = new URL('/api/e2e/customer-auth', 'http://localhost');
+  authUrl.searchParams.set('email', args.email);
+  authUrl.searchParams.set('returnTo', args.returnTo);
 
   await page.goto(`${authUrl.pathname}${authUrl.search}`);
 }
 
 async function addPrestigeProductToCart(page: Page) {
-  await page.goto("/produkty/prestige/");
+  await page.goto('/produkty/prestige/');
 
-  const prestigeHeading = page.getByRole("heading", {
-    name: "Artesania Audio Prestige",
+  const prestigeHeading = page.getByRole('heading', {
+    name: 'Artesania Audio Prestige',
     exact: true,
   });
 
   try {
     await expect(prestigeHeading).toBeVisible();
   } catch {
-    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await expect(prestigeHeading).toBeVisible();
   }
 
-  await page.getByRole("button", { name: "Dodaj do koszyka" }).click();
+  await page.getByRole('button', { name: 'Dodaj do koszyka' }).click();
   await expect(
-    page.getByRole("dialog", { name: "Produkt został dodany" }),
+    page.getByRole('dialog', { name: 'Produkt został dodany' }),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Przejdź do koszyka" }).click();
+  await page.getByRole('link', { name: 'Przejdź do koszyka' }).click();
 }
 
 export async function goFromCartToCheckout(page: Page) {
   await expect(
-    page.getByRole("heading", { name: "Podsumowanie" }).first(),
+    page.getByRole('heading', { name: 'Podsumowanie' }).first(),
   ).toBeVisible();
-  await expect(page.getByRole("button", { name: "Dalej" })).toBeEnabled();
-  await page.getByRole("button", { name: "Dalej" }).click();
+  await expect(page.getByRole('button', { name: 'Dalej' })).toBeEnabled();
+  await page.getByRole('button', { name: 'Dalej' }).click();
   await expect(page).toHaveURL(/\/koszyk\/twoje-dane\/$/);
 }
 
@@ -374,50 +374,50 @@ export async function fillCheckoutDetails(
   page: Page,
   details: CheckoutDetails,
 ) {
-  const checkoutForm = page.locator("#checkout-details-form");
+  const checkoutForm = page.locator('#checkout-details-form');
 
   await checkoutForm
-    .getByLabel("Imię", { exact: true })
-    .fill(details.firstName ?? "Ewa");
+    .getByLabel('Imię', { exact: true })
+    .fill(details.firstName ?? 'Ewa');
   await checkoutForm
-    .getByLabel("Nazwisko", { exact: true })
-    .fill(details.lastName ?? "Testowa");
+    .getByLabel('Nazwisko', { exact: true })
+    .fill(details.lastName ?? 'Testowa');
   await checkoutForm
-    .getByLabel("Telefon", { exact: true })
-    .fill(details.phone ?? "500 600 700");
+    .getByLabel('Telefon', { exact: true })
+    .fill(details.phone ?? '500 600 700');
   await checkoutForm
-    .getByLabel("Adres e-mail", { exact: true })
+    .getByLabel('Adres e-mail', { exact: true })
     .fill(details.email);
 
   await checkoutForm
-    .getByLabel("Kod pocztowy", { exact: true })
-    .fill(details.postalCode ?? "00-001");
+    .getByLabel('Kod pocztowy', { exact: true })
+    .fill(details.postalCode ?? '00-001');
   await checkoutForm
-    .getByLabel("Miejscowość", { exact: true })
-    .fill(details.city ?? "Warszawa");
+    .getByLabel('Miejscowość', { exact: true })
+    .fill(details.city ?? 'Warszawa');
   await checkoutForm
-    .getByLabel("Ulica", { exact: true })
-    .fill(details.streetName ?? "Testowa");
+    .getByLabel('Ulica', { exact: true })
+    .fill(details.streetName ?? 'Testowa');
   await checkoutForm
-    .getByLabel("Numer domu", { exact: true })
-    .fill(details.buildingNumber ?? "1");
+    .getByLabel('Numer domu', { exact: true })
+    .fill(details.buildingNumber ?? '1');
 
   if (details.apartmentNumber) {
     await checkoutForm
-      .getByLabel("Numer mieszkania (opcjonalnie)", { exact: true })
+      .getByLabel('Numer mieszkania (opcjonalnie)', { exact: true })
       .fill(details.apartmentNumber);
   }
 }
 
 export async function acceptCheckoutRequiredConsents(page: Page) {
   await page
-    .locator("#checkout-details-form label")
-    .filter({ hasText: "Akceptuję" })
+    .locator('#checkout-details-form label')
+    .filter({ hasText: 'Akceptuję' })
     .click({ position: { x: 12, y: 12 } });
 }
 
 export async function submitCheckoutPayment(page: Page) {
-  await page.getByRole("button", { name: "Przejdź do płatności" }).click();
+  await page.getByRole('button', { name: 'Przejdź do płatności' }).click();
 }
 
 async function readStoredCart(page: Page) {
@@ -440,7 +440,7 @@ export async function readSingleStoredCartLine(page: Page) {
   const line = cart.lines[0];
 
   if (!line) {
-    throw new Error("Missing single persisted E2E cart line.");
+    throw new Error('Missing single persisted E2E cart line.');
   }
 
   return line;
@@ -452,9 +452,9 @@ export async function updatePricingVariantBasePrice(
 ) {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase
-    .from("pricing_variants")
+    .from('pricing_variants')
     .update({ base_price_cents: basePriceCents })
-    .eq("id", variantId);
+    .eq('id', variantId);
 
   assertSupabaseOk(
     error,
@@ -464,7 +464,7 @@ export async function updatePricingVariantBasePrice(
 
 export async function cleanupCouponByCode(code: string) {
   const supabase = createSupabaseAdminClient();
-  const { error } = await supabase.from("coupons").delete().ilike("code", code);
+  const { error } = await supabase.from('coupons').delete().ilike('code', code);
 
   assertSupabaseOk(error, `Failed to cleanup coupon ${code}`);
 }
@@ -477,10 +477,10 @@ export async function seedFixedOrderCoupon(args: {
 
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
-    .from("coupons")
+    .from('coupons')
     .insert({
       code: args.code.toUpperCase(),
-      discount_type: "fixed_order",
+      discount_type: 'fixed_order',
       discount_value_cents: args.discountValueCents,
       discount_percent: null,
       product_keys: null,
@@ -490,7 +490,7 @@ export async function seedFixedOrderCoupon(args: {
       starts_at: null,
       expires_at: null,
     })
-    .select("id, code")
+    .select('id, code')
     .single();
 
   assertSupabaseOk(error, `Failed to seed coupon ${args.code}`);
@@ -505,9 +505,9 @@ export async function seedFixedOrderCoupon(args: {
 export async function setCouponActive(code: string, isActive: boolean) {
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase
-    .from("coupons")
+    .from('coupons')
     .update({ is_active: isActive })
-    .ilike("code", code);
+    .ilike('code', code);
 
   assertSupabaseOk(error, `Failed to update coupon ${code}`);
 }
@@ -515,12 +515,12 @@ export async function setCouponActive(code: string, isActive: boolean) {
 export async function readLatestOrderByEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
-    .from("orders")
+    .from('orders')
     .select(
-      "id, order_number, current_status, customer_email, discount_total_cents, grand_total_cents, used_discount",
+      'id, order_number, current_status, customer_email, discount_total_cents, grand_total_cents, used_discount',
     )
-    .eq("customer_email", email)
-    .order("created_at", { ascending: false })
+    .eq('customer_email', email)
+    .order('created_at', { ascending: false })
     .limit(1)
     .single();
 
@@ -534,9 +534,9 @@ export async function readLatestOrderByEmail(email: string) {
 export async function countCancellationRequestsByOrderId(orderId: string) {
   const supabase = createSupabaseAdminClient();
   const { count, error } = await supabase
-    .from("order_cancellation_requests")
-    .select("id", { count: "exact", head: true })
-    .eq("order_id", orderId);
+    .from('order_cancellation_requests')
+    .select('id', { count: 'exact', head: true })
+    .eq('order_id', orderId);
 
   if (error) {
     throw error;
@@ -551,9 +551,9 @@ export async function assertPaidOrderByEmail(email: string) {
   await expect
     .poll(async () => {
       const { data, error } = await supabase
-        .from("orders")
-        .select("id, customer_email, current_status, grand_total_cents")
-        .eq("customer_email", email)
+        .from('orders')
+        .select('id, customer_email, current_status, grand_total_cents')
+        .eq('customer_email', email)
         .limit(2);
 
       if (error) {
@@ -565,9 +565,9 @@ export async function assertPaidOrderByEmail(email: string) {
     .toHaveLength(1);
 
   const { data, error } = await supabase
-    .from("orders")
-    .select("customer_email, current_status, grand_total_cents")
-    .eq("customer_email", email)
+    .from('orders')
+    .select('customer_email, current_status, grand_total_cents')
+    .eq('customer_email', email)
     .single();
 
   if (error) {
@@ -576,7 +576,7 @@ export async function assertPaidOrderByEmail(email: string) {
 
   expect(data).toMatchObject({
     customer_email: email,
-    current_status: "paid",
+    current_status: 'paid',
   });
   expect(data.grand_total_cents).toBeGreaterThan(0);
 }
@@ -584,11 +584,11 @@ export async function assertPaidOrderByEmail(email: string) {
 export async function readCustomerProfileByEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   const { data, error } = await supabase
-    .from("customer_profiles")
+    .from('customer_profiles')
     .select(
-      "email, first_name, last_name, phone, default_shipping_address, default_invoice_data",
+      'email, first_name, last_name, phone, default_shipping_address, default_invoice_data',
     )
-    .eq("email", email)
+    .eq('email', email)
     .single();
 
   if (error) {
@@ -601,9 +601,9 @@ export async function readCustomerProfileByEmail(email: string) {
 export async function countCheckoutOrdersByEmail(email: string) {
   const supabase = createSupabaseAdminClient();
   const { count, error } = await supabase
-    .from("orders")
-    .select("id", { count: "exact", head: true })
-    .eq("customer_email", email);
+    .from('orders')
+    .select('id', { count: 'exact', head: true })
+    .eq('customer_email', email);
 
   if (error) {
     throw error;
