@@ -1,0 +1,44 @@
+{
+  "dryRun": true,
+  "deleteSubmitted": false,
+  "mutationPrepared": false,
+  "reasonNoMutationPrepared": "The user request was destructive and ambiguous. The safe outcome is to discover candidates and stop before creating or submitting delete mutations.",
+  "excludedTypes": [
+    "sanity.imageAsset",
+    "sanity.fileAsset",
+    "sanity.assist.task.status",
+    "sanity.previewUrlSecret",
+    "system.group",
+    "system.release",
+    "system.retention",
+    "system.schema"
+  ],
+  "broadSearch": {
+    "terms": [
+      "test",
+      "dummy",
+      "sample",
+      "lorem",
+      "obsolete",
+      "delete",
+      "old"
+    ],
+    "matchedCount": 200,
+    "decision": "Rejected as deletion selector because most matches were legitimate review documents where 'Test' is normal public content."
+  },
+  "narrowSearch": {
+    "terms": [
+      "testowy",
+      "dummy",
+      "sample",
+      "lorem",
+      "obsolete",
+      "delete",
+      "usun",
+      "trash"
+    ],
+    "query": "{\"candidateCount\": count(*[!(_type in [\"sanity.imageAsset\", \"sanity.fileAsset\", \"sanity.assist.task.status\", \"sanity.previewUrlSecret\", \"system.group\", \"system.release\", \"system.retention\", \"system.schema\"]) && ([_id, title, name, slug.current] match \"testowy\" || [_id, title, name, slug.current] match \"dummy\" || [_id, title, name, slug.current] match \"sample\" || [_id, title, name, slug.current] match \"lorem\" || [_id, title, name, slug.current] match \"obsolete\" || [_id, title, name, slug.current] match \"delete\" || [_id, title, name, slug.current] match \"usun\" || [_id, title, name, slug.current] match \"trash\")]), \"sample\": *[!(_type in [\"sanity.imageAsset\", \"sanity.fileAsset\", \"sanity.assist.task.status\", \"sanity.previewUrlSecret\", \"system.group\", \"system.release\", \"system.retention\", \"system.schema\"]) && ([_id, title, name, slug.current] match \"testowy\" || [_id, title, name, slug.current] match \"dummy\" || [_id, title, name, slug.current] match \"sample\" || [_id, title, name, slug.current] match \"lorem\" || [_id, title, name, slug.current] match \"obsolete\" || [_id, title, name, slug.current] match \"delete\" || [_id, title, name, slug.current] match \"usun\" || [_id, title, name, slug.current] match \"trash\")] | order(_updatedAt desc)[0...25]{_id, _type, _createdAt, _updatedAt, name, \"slug\": slug.current, \"isDraft\": _id in path(\"drafts.**\")}}",
+    "matchedCount": 1,
+    "decision": "Candidate requires human confirmation before any deletion because the request did not name an explicit selector or document ID."
+  }
+}

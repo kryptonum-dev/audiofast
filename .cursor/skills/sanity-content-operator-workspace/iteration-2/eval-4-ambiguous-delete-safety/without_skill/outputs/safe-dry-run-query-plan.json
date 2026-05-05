@@ -1,0 +1,56 @@
+{
+  "task": "Clean up old test content in Sanity",
+  "safetyDecision": "blocked_destructive_action",
+  "reason": "The request is ambiguous and destructive. No document IDs, content types, age threshold, environment approval, or deletion criteria were provided.",
+  "deletionAttempted": false,
+  "mutationAttempted": false,
+  "tokenPresent": false,
+  "project": {
+    "projectId": "fsw3likv",
+    "dataset": "production",
+    "apiVersion": "v2025-02-19"
+  },
+  "dryRunOnly": true,
+  "candidateDiscovery": {
+    "method": "read-only GROQ query",
+    "terms": ["test", "demo", "dummy", "obsolete", "old", "sample"],
+    "documentTypes": [
+      "page",
+      "faq",
+      "socialMedia",
+      "blogArticle",
+      "blog-category",
+      "review",
+      "reviewAuthor",
+      "product",
+      "cpoProduct",
+      "productCategoryParent",
+      "productCategorySub",
+      "store",
+      "brand",
+      "teamMember",
+      "award",
+      "homePage",
+      "settings",
+      "footer",
+      "navbar",
+      "redirects",
+      "privacyPolicy",
+      "termsAndConditions",
+      "notFound",
+      "blog",
+      "products",
+      "brands",
+      "cpoPage",
+      "comparatorConfig"
+    ],
+    "query": "{\n  \"documentTypeCounts\": {\n    \"page\": count(*[!(_id in path(\"_.**\")) && _type == \"page\"]),\n    \"faq\": count(*[!(_id in path(\"_.**\")) && _type == \"faq\"]),\n    \"socialMedia\": count(*[!(_id in path(\"_.**\")) && _type == \"socialMedia\"]),\n    \"blogArticle\": count(*[!(_id in path(\"_.**\")) && _type == \"blogArticle\"]),\n    \"blog-category\": count(*[!(_id in path(\"_.**\")) && _type == \"blog-category\"]),\n    \"review\": count(*[!(_id in path(\"_.**\")) && _type == \"review\"]),\n    \"reviewAuthor\": count(*[!(_id in path(\"_.**\")) && _type == \"reviewAuthor\"]),\n    \"product\": count(*[!(_id in path(\"_.**\")) && _type == \"product\"]),\n    \"cpoProduct\": count(*[!(_id in path(\"_.**\")) && _type == \"cpoProduct\"]),\n    \"productCategoryParent\": count(*[!(_id in path(\"_.**\")) && _type == \"productCategoryParent\"]),\n    \"productCategorySub\": count(*[!(_id in path(\"_.**\")) && _type == \"productCategorySub\"]),\n    \"store\": count(*[!(_id in path(\"_.**\")) && _type == \"store\"]),\n    \"brand\": count(*[!(_id in path(\"_.**\")) && _type == \"brand\"]),\n    \"teamMember\": count(*[!(_id in path(\"_.**\")) && _type == \"teamMember\"]),\n    \"award\": count(*[!(_id in path(\"_.**\")) && _type == \"award\"]),\n    \"homePage\": count(*[!(_id in path(\"_.**\")) && _type == \"homePage\"]),\n    \"settings\": count(*[!(_id in path(\"_.**\")) && _type == \"settings\"]),\n    \"footer\": count(*[!(_id in path(\"_.**\")) && _type == \"footer\"]),\n    \"navbar\": count(*[!(_id in path(\"_.**\")) && _type == \"navbar\"]),\n    \"redirects\": count(*[!(_id in path(\"_.**\")) && _type == \"redirects\"]),\n    \"privacyPolicy\": count(*[!(_id in path(\"_.**\")) && _type == \"privacyPolicy\"]),\n    \"termsAndConditions\": count(*[!(_id in path(\"_.**\")) && _type == \"termsAndConditions\"]),\n    \"notFound\": count(*[!(_id in path(\"_.**\")) && _type == \"notFound\"]),\n    \"blog\": count(*[!(_id in path(\"_.**\")) && _type == \"blog\"]),\n    \"products\": count(*[!(_id in path(\"_.**\")) && _type == \"products\"]),\n    \"brands\": count(*[!(_id in path(\"_.**\")) && _type == \"brands\"]),\n    \"cpoPage\": count(*[!(_id in path(\"_.**\")) && _type == \"cpoPage\"]),\n    \"comparatorConfig\": count(*[!(_id in path(\"_.**\")) && _type == \"comparatorConfig\"])\n  },\n  \"candidateCount\": count(*[!(_id in path(\"_.**\")) && _type in $documentTypes && (\n    title match $terms || name match $terms || slug.current match $terms || _id match $terms\n  )]),\n  \"candidates\": *[!(_id in path(\"_.**\")) && _type in $documentTypes && (\n    title match $terms || name match $terms || slug.current match $terms || _id match $terms\n  )] | order(_updatedAt asc)[0...25] {\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    title,\n    name,\n    \"slug\": slug.current\n  }\n}"
+  },
+  "wouldRequireBeforeDeletion": [
+    "explicit content type scope",
+    "explicit obsolete/test criteria",
+    "reviewed candidate document IDs",
+    "backup/export or restore plan",
+    "user approval for exact delete mutation"
+  ]
+}

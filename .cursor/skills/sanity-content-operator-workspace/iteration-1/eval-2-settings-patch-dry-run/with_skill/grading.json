@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "The output first discovers or queries the settings document instead of assuming a hardcoded ID.",
+      "passed": true,
+      "evidence": "Report shows query for *[_type == \"settings\"] and found _id settings."
+    },
+    {
+      "text": "The output produces a targeted patch payload for announcement.enabled and announcement.text.",
+      "passed": true,
+      "evidence": "Report lists only announcement.enabled and announcement.text as patch targets and saved mutation artifacts."
+    },
+    {
+      "text": "The output clearly states that no mutation was submitted and does not execute a write.",
+      "passed": true,
+      "evidence": "Report states no mutation was submitted and dry-run helper ran without --execute."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 2501
+  },
+  "timing": {
+    "total_duration_seconds": 0
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  }
+}

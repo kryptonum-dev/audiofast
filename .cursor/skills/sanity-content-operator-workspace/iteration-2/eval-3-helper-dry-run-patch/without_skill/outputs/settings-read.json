@@ -1,0 +1,18 @@
+{
+  "sanity": {
+    "projectId": "fsw3likv",
+    "dataset": "production",
+    "apiVersion": "2025-02-10",
+    "tokenPresent": true
+  },
+  "query": "*[_type == \"settings\"][0]{_id,_type,_rev,_updatedAt,_createdAt,announcement}",
+  "params": {},
+  "result": {
+    "_createdAt": "2025-08-19T07:22:08Z",
+    "_id": "settings",
+    "_rev": "70dHOGscnIYmrjTPueQcgB",
+    "_type": "settings",
+    "_updatedAt": "2026-04-29T05:51:26Z",
+    "announcement": null
+  }
+}

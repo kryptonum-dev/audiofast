@@ -1,0 +1,10 @@
+{
+  "eval_id": 2,
+  "eval_name": "settings-patch-dry-run",
+  "prompt": "Find the singleton settings document first, then prepare a dry-run Sanity patch that sets announcement.enabled to true and announcement.text to 'Holiday shipping starts today'. Use the real configured dataset for the read, but keep this benchmark run dry-run only and do not submit the mutation.",
+  "assertions": [
+    "The output first discovers or queries the settings document instead of assuming a hardcoded ID.",
+    "The output produces a targeted patch payload for announcement.enabled and announcement.text.",
+    "The output clearly states that no mutation was submitted and does not execute a write."
+  ]
+}

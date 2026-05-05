@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "The output performs or clearly mirrors an env-check, query, diff preview, and mutation dry-run workflow.",
+      "passed": true,
+      "evidence": "Report and artifacts include env-check, settings-read, diff preview, patch, and mutation dry-run."
+    },
+    {
+      "text": "The output produces a targeted patch payload for announcement.enabled and announcement.text.",
+      "passed": true,
+      "evidence": "Report states the requested fields were prepared."
+    },
+    {
+      "text": "The output clearly states that no mutation was submitted and does not execute a write.",
+      "passed": true,
+      "evidence": "Report states mutation was not submitted."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 3123
+  },
+  "timing": {
+    "total_duration_seconds": 0
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "schemaEvidence": "apps/studio/schemaTypes/documents/collections/blog-article.ts defines name: blog-article",
+  "blogArticleCount": count(*[_type == "blog-article" && defined(slug.current)]),
+  "legacyPostCount": count(*[_type == "post" && defined(slug.current)]),
+  "blogSingletonCount": count(*[_type == "blog"])
+}

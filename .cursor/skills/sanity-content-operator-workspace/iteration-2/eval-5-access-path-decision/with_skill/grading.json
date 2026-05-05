@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "The output explains when to use CLI/helper scripts, the Sanity SDK, and direct HTTP/API calls.",
+      "passed": true,
+      "evidence": "Report distinguishes one-off count, reusable migration, and app/server implementation paths, including helper vs CLI."
+    },
+    {
+      "text": "The output runs only a safe read-only document-count query for this repo.",
+      "passed": true,
+      "evidence": "Report ran count(*) and returned 9823; no mutation executed."
+    },
+    {
+      "text": "The output avoids external documentation and does not reveal secret values.",
+      "passed": true,
+      "evidence": "Report says external docs none and no token value printed/copied/saved."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 2844
+  },
+  "timing": {
+    "total_duration_seconds": 0
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  }
+}

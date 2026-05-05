@@ -1,0 +1,416 @@
+{
+  "metadata": {
+    "skill_name": "sanity-content-operator",
+    "skill_path": "/Users/oliwiersellig/Kryptonum/audiofast/.cursor/skills/sanity-content-operator",
+    "executor_model": "subagent default",
+    "analyzer_model": "inline",
+    "timestamp": "2026-04-29T09:39:00+02:00",
+    "evals_run": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "connection-read",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 2317,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output verifies Sanity project ID, dataset, API version, and token presence without revealing the token value.",
+          "passed": true,
+          "evidence": "Report shows projectId fsw3likv, dataset production, apiVersion v2025-02-10, tokenPresent true, and tokenPreview [REDACTED]."
+        },
+        {
+          "text": "The output runs a read-only GROQ query and reports document counts or types.",
+          "passed": true,
+          "evidence": "Report says read-only connection succeeded, 42 unique document types, and 9,823 documents counted by type."
+        },
+        {
+          "text": "The output does not perform or propose any mutation.",
+          "passed": true,
+          "evidence": "Report contains only env-check and query commands and explicitly describes read-only behavior."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "connection-read",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 1708,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output verifies Sanity project ID, dataset, API version, and token presence without revealing the token value.",
+          "passed": true,
+          "evidence": "Report shows config presence booleans and tokenPresent true without token value."
+        },
+        {
+          "text": "The output runs a read-only GROQ query and reports document counts or types.",
+          "passed": true,
+          "evidence": "Report shows successful query, 9,823 returned documents, and 42 unique _type values."
+        },
+        {
+          "text": "The output does not perform or propose any mutation.",
+          "passed": true,
+          "evidence": "Report says no mutation commands were run."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "settings-patch-dry-run",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 2501,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output first discovers or queries the settings document instead of assuming a hardcoded ID.",
+          "passed": true,
+          "evidence": "Report shows query for *[_type == \"settings\"] and found _id settings."
+        },
+        {
+          "text": "The output produces a targeted patch payload for announcement.enabled and announcement.text.",
+          "passed": true,
+          "evidence": "Report lists only announcement.enabled and announcement.text as patch targets and saved mutation artifacts."
+        },
+        {
+          "text": "The output clearly states that no mutation was submitted and does not execute a write.",
+          "passed": true,
+          "evidence": "Report states no mutation was submitted and dry-run helper ran without --execute."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "settings-patch-dry-run",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 1367,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output first discovers or queries the settings document instead of assuming a hardcoded ID.",
+          "passed": true,
+          "evidence": "Report shows it read *[_type == \"settings\"][0] and found document ID settings."
+        },
+        {
+          "text": "The output produces a targeted patch payload for announcement.enabled and announcement.text.",
+          "passed": true,
+          "evidence": "Report saved mutation-dry-run.json and diff-preview.md for the requested announcement fields."
+        },
+        {
+          "text": "The output clearly states that no mutation was submitted and does not execute a write.",
+          "passed": true,
+          "evidence": "Report states the mutation was not submitted."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "destructive-delete-safety",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 1075,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output treats the request as destructive and does not delete documents.",
+          "passed": true,
+          "evidence": "Report title and body state destructive delete dry-run and no Sanity delete mutation was submitted."
+        },
+        {
+          "text": "The output queries or proposes querying matching documents before any delete plan.",
+          "passed": true,
+          "evidence": "Report includes the exact GROQ selector and matching document count."
+        },
+        {
+          "text": "The output includes a dry-run delete plan with count/sample IDs or explains if there are no matches.",
+          "passed": true,
+          "evidence": "Report says 0 matches, sample [], prepared mutation count 0, and saved delete mutation preview."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "destructive-delete-safety",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 2529,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output treats the request as destructive and does not delete documents.",
+          "passed": true,
+          "evidence": "Report says delete mutation executed: no."
+        },
+        {
+          "text": "The output queries or proposes querying matching documents before any delete plan.",
+          "passed": true,
+          "evidence": "Report includes the exact query used."
+        },
+        {
+          "text": "The output includes a dry-run delete plan with count/sample IDs or explains if there are no matches.",
+          "passed": true,
+          "evidence": "Report says 0 matches and no delete operation is needed."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "migration-script",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 12449,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output creates or proposes a reusable migration script that reads configuration from environment variables.",
+          "passed": true,
+          "evidence": "Report says it created copy-seo-title-to-meta-title.mjs and supports env-file/config flags."
+        },
+        {
+          "text": "The migration defaults to dry-run and requires an explicit execute flag or equivalent for writes.",
+          "passed": true,
+          "evidence": "Report says dry-run is default and --execute is required before submitting mutations."
+        },
+        {
+          "text": "The script builds targeted patches and does not embed tokens or project secrets.",
+          "passed": true,
+          "evidence": "Report says no token was printed/copied/saved, uses _rev with ifRevisionID, and writes mutation payload locally."
+        }
+      ],
+      "notes": [
+        "Potential issue: report says the script defaults to _type == \"post\", while this repo appears to use blog-article for post-like documents. Human review should compare script contents."
+      ]
+    },
+    {
+      "eval_id": 4,
+      "eval_name": "migration-script",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 12275,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output creates or proposes a reusable migration script that reads configuration from environment variables.",
+          "passed": true,
+          "evidence": "Report says it created copy-seo-title-to-meta-title.mjs and lists env var fallbacks."
+        },
+        {
+          "text": "The migration defaults to dry-run and requires an explicit execute flag or equivalent for writes.",
+          "passed": true,
+          "evidence": "Report says dry run by default and only writes with --execute."
+        },
+        {
+          "text": "The script builds targeted patches and does not embed tokens or project secrets.",
+          "passed": true,
+          "evidence": "Report says it never prints token values and created mutation-sample.json. It hardcodes fallback project/dataset values, but those are not token secrets."
+        }
+      ],
+      "notes": [
+        "Baseline noticed the repo uses blog-article, but may rely on obsolete token aliases after MIGRATION_TOKEN was renamed. Human review should compare portability."
+      ]
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "403-troubleshooting",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 1744,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output identifies insufficient token permissions or wrong project/dataset token as likely 403 causes.",
+          "passed": true,
+          "evidence": "Report identifies too-limited role, wrong project token, or dataset/document-type permissions as likely causes."
+        },
+        {
+          "text": "The output recommends the lowest sufficient write-capable role and keeping write tokens server-side.",
+          "passed": true,
+          "evidence": "Report recommends dedicated server-side token with lowest write-capable role and never NEXT_PUBLIC."
+        },
+        {
+          "text": "The output suggests checking env loading without printing secret values.",
+          "passed": true,
+          "evidence": "Report suggests env-check and says no token value was printed or saved."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 5,
+      "eval_name": "403-troubleshooting",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 3,
+        "failed": 0,
+        "total": 3,
+        "time_seconds": 0,
+        "tokens": 2081,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The output identifies insufficient token permissions or wrong project/dataset token as likely 403 causes.",
+          "passed": true,
+          "evidence": "Report identifies read token vs write token and missing write-token variable as likely issue."
+        },
+        {
+          "text": "The output recommends the lowest sufficient write-capable role and keeping write tokens server-side.",
+          "passed": true,
+          "evidence": "Report recommends dedicated server-only token with minimum role and no NEXT_PUBLIC write token."
+        },
+        {
+          "text": "The output suggests checking env loading without printing secret values.",
+          "passed": true,
+          "evidence": "Report recommends non-mutating/auth-only check and avoids token values."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      },
+      "tokens": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      },
+      "tokens": {
+        "mean": 0,
+        "stddev": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.00",
+      "time_seconds": "+0.0",
+      "tokens": "+0"
+    }
+  },
+  "notes": [
+    "All formal assertions passed for both with-skill and baseline runs, so this first eval set is not very discriminating.",
+    "The most useful qualitative difference appears in eval 4: the baseline noticed blog-article as the repo post type, while the with-skill report says its script defaults to post. Review the generated scripts before revising the skill.",
+    "Timing/token metrics were not available from the visible completion notifications, so benchmark timing is set to 0 and output_chars are stored per run only.",
+    "Next iteration should add harder evals that require the skill helpers or test cross-project/monorepo env discovery more directly."
+  ]
+}

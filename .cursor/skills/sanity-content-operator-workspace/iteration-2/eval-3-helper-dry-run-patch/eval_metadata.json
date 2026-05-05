@@ -1,0 +1,10 @@
+{
+  "eval_id": 3,
+  "eval_name": "helper-dry-run-patch",
+  "prompt": "Use the standardized local Sanity workflow to prepare a dry-run patch on the singleton settings document: set announcement.enabled to false and announcement.text to 'Maintenance window tonight'. Use helper-style env checking, query, diff preview, and mutation dry-run artifacts where available. Do not submit the mutation.",
+  "assertions": [
+    "The output performs or clearly mirrors an env-check, query, diff preview, and mutation dry-run workflow.",
+    "The output produces a targeted patch payload for announcement.enabled and announcement.text.",
+    "The output clearly states that no mutation was submitted and does not execute a write."
+  ]
+}

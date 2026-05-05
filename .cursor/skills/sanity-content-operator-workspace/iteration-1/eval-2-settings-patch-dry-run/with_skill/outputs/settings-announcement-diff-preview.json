@@ -1,0 +1,20 @@
+{
+  "dryRun": true,
+  "id": "settings",
+  "revision": "70dHOGscnIYmrjTPueQcgB",
+  "changes": [
+    {
+      "operation": "set",
+      "path": "announcement.enabled",
+      "before": null,
+      "after": true
+    },
+    {
+      "operation": "set",
+      "path": "announcement.text",
+      "before": null,
+      "after": "Holiday shipping starts today"
+    }
+  ],
+  "note": "Full document output omitted to keep the dry-run preview scoped to the requested fields."
+}

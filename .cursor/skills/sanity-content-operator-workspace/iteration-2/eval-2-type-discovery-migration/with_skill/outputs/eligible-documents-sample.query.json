@@ -1,0 +1,61 @@
+{
+  "query": {
+    "counts": "{\"targetType\": \"blog-article\", \"publishedTotal\": count(*[_type == \"blog-article\" && !(_id in path(\"drafts.**\"))]), \"eligiblePublished\": count(*[_type == \"blog-article\" && !(_id in path(\"drafts.**\")) && defined(seo.title) && !defined(metaTitle)]), \"eligibleIncludingDrafts\": count(*[_type == \"blog-article\" && defined(seo.title) && !defined(metaTitle)]), \"missingSeoTitle\": count(*[_type == \"blog-article\" && !defined(seo.title)]), \"alreadyHasMetaTitle\": count(*[_type == \"blog-article\" && defined(metaTitle)])}",
+    "sample": "*[_type == \"blog-article\" && !(_id in path(\"drafts.**\")) && defined(seo.title) && !defined(metaTitle)][0..4]{_id,_rev,_type,name,\"slug\": slug.current,\"seoTitle\": seo.title,\"hasMetaTitle\": defined(metaTitle)}"
+  },
+  "counts": {
+    "alreadyHasMetaTitle": 0,
+    "eligibleIncludingDrafts": 21,
+    "eligiblePublished": 19,
+    "missingSeoTitle": 0,
+    "publishedTotal": 19,
+    "targetType": "blog-article"
+  },
+  "sample": [
+    {
+      "_id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+      "_rev": "EHaCND9v0u9aDEC8clqSFf",
+      "_type": "blog-article",
+      "hasMetaTitle": false,
+      "name": "Audio-Video nagrody 2025/2026",
+      "seoTitle": "Nagroda Audio Video 2025/2026",
+      "slug": "/blog/audio-video-nagrody-2025-2026/"
+    },
+    {
+      "_id": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+      "_rev": "S7EzD6YvAFaHfF1WtfV7nx",
+      "_type": "blog-article",
+      "hasMetaTitle": false,
+      "name": "STROMTANK w ofercie AUDIFOAST",
+      "seoTitle": "STROMTANK",
+      "slug": "/blog/nowosc-stromtank/"
+    },
+    {
+      "_id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+      "_rev": "nAV4qXHh8dkOPAgWgyL19F",
+      "_type": "blog-article",
+      "hasMetaTitle": false,
+      "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2",
+      "seoTitle": "Nagroda Roku 2026 Urządzenie cyfrowe - Hifi i Muzyka dla Grimm Audio MU2",
+      "slug": "/blog/nagroda-roku-2026-hifi-i-muzyka-dla-grimm-audio-mu2/"
+    },
+    {
+      "_id": "9304f107-721b-4196-b3e9-32fbd254e207",
+      "_rev": "Rmx4g0JhDPOVeIQajH1gOB",
+      "_type": "blog-article",
+      "hasMetaTitle": false,
+      "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane",
+      "seoTitle": "Rogue Audio Sphinx V3 Magnum – Wyróżnienie Roku 2026 | Hi-Fi i Muzyka",
+      "slug": "/blog/rogue-audio-sphinx-v3-magnum-wyroznienia-roku-2026-wzmacniacze-zintegrowane/"
+    },
+    {
+      "_id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+      "_rev": "s7x3ao9lUCHAJRA4IExHg0",
+      "_type": "blog-article",
+      "hasMetaTitle": false,
+      "name": "Pendulum z certyfikatem Roon Ready",
+      "seoTitle": "Pendulum z certyfikatem Roon Ready",
+      "slug": "/blog/pendulum-z-certyfikatem-roon-ready/"
+    }
+  ]
+}

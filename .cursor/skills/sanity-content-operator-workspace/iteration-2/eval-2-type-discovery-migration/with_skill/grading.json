@@ -1,0 +1,42 @@
+{
+  "expectations": [
+    {
+      "text": "The output discovers candidate _type values and selects the actual blog post type instead of assuming post.",
+      "passed": true,
+      "evidence": "Report confirms blog-article, not post, with schema/query and dataset evidence."
+    },
+    {
+      "text": "The output creates or proposes a reusable migration script that defaults to dry-run and requires an explicit execute flag for writes.",
+      "passed": true,
+      "evidence": "Report says reusable script rejects/does not execute writes and produces dry-run artifacts."
+    },
+    {
+      "text": "The script reads configuration from env or explicit env-file and does not embed token values.",
+      "passed": true,
+      "evidence": "Report says env check used apps/web/.env.local and no token value was printed or saved."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 13631
+  },
+  "timing": {
+    "total_duration_seconds": 0
+  },
+  "user_notes_summary": {
+    "uncertainties": [
+      "Improvement from iteration 1: with-skill now discovers blog-article and avoids assuming post."
+    ],
+    "needs_review": [],
+    "workarounds": []
+  }
+}

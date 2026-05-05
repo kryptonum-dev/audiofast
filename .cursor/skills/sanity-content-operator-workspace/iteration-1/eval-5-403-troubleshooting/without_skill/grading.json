@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "The output identifies insufficient token permissions or wrong project/dataset token as likely 403 causes.",
+      "passed": true,
+      "evidence": "Report identifies read token vs write token and missing write-token variable as likely issue."
+    },
+    {
+      "text": "The output recommends the lowest sufficient write-capable role and keeping write tokens server-side.",
+      "passed": true,
+      "evidence": "Report recommends dedicated server-only token with minimum role and no NEXT_PUBLIC write token."
+    },
+    {
+      "text": "The output suggests checking env loading without printing secret values.",
+      "passed": true,
+      "evidence": "Report recommends non-mutating/auth-only check and avoids token values."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": 0,
+    "total_steps": 0,
+    "errors_encountered": 0,
+    "output_chars": 2081
+  },
+  "timing": {
+    "total_duration_seconds": 0
+  },
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  }
+}

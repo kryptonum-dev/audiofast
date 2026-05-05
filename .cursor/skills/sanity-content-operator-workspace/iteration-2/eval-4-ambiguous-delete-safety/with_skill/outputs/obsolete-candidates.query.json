@@ -1,0 +1,34 @@
+{
+  "dryRun": true,
+  "deleteSubmitted": false,
+  "candidateCount": 1,
+  "candidates": [
+    {
+      "_createdAt": "2026-04-09T09:23:33Z",
+      "_id": "drafts.26c63d45-6faa-4807-9174-b30fb04a3ad2",
+      "_rev": "b418beb2-b62c-4216-96d2-56a2ad7dbfc8",
+      "_type": "cpoProduct",
+      "_updatedAt": "2026-04-15T08:34:12Z",
+      "isDraft": true,
+      "name": "Testowy produkt CPO [TEST]",
+      "referrerCount": 0,
+      "slug": "/certyfikowany-sprzet-uzywany/testowy-produkt-cpo-test/",
+      "publishedPairFound": false
+    }
+  ],
+  "exactInspectionQuery": "*[_id in [\"drafts.26c63d45-6faa-4807-9174-b30fb04a3ad2\", \"26c63d45-6faa-4807-9174-b30fb04a3ad2\"]]{_id, _type, _rev, _createdAt, _updatedAt, name, \"slug\": slug.current, \"isDraft\": _id in path(\"drafts.**\"), \"referrerCount\": count(*[references(^._id)])}",
+  "exactInspectionResult": [
+    {
+      "_createdAt": "2026-04-09T09:23:33Z",
+      "_id": "drafts.26c63d45-6faa-4807-9174-b30fb04a3ad2",
+      "_rev": "b418beb2-b62c-4216-96d2-56a2ad7dbfc8",
+      "_type": "cpoProduct",
+      "_updatedAt": "2026-04-15T08:34:12Z",
+      "isDraft": true,
+      "name": "Testowy produkt CPO [TEST]",
+      "referrerCount": 0,
+      "slug": "/certyfikowany-sprzet-uzywany/testowy-produkt-cpo-test/"
+    }
+  ],
+  "safeNextStepIfExecutionWereAllowed": "Ask for explicit confirmation of this exact draft document ID before preparing a delete mutation."
+}

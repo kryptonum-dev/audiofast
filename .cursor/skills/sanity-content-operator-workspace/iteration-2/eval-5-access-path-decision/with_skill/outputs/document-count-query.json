@@ -1,0 +1,22 @@
+{
+  "operation": "read",
+  "query": "count(*)",
+  "result": 9823,
+  "env": {
+    "loadedEnvFiles": [
+      "/Users/oliwiersellig/Kryptonum/audiofast/apps/web/.env.local"
+    ],
+    "sources": {
+      "projectId": "NEXT_PUBLIC_SANITY_PROJECT_ID",
+      "dataset": "NEXT_PUBLIC_SANITY_DATASET",
+      "apiVersion": "NEXT_PUBLIC_SANITY_API_VERSION",
+      "token": "SANITY_AUTH_TOKEN"
+    },
+    "projectIdPresent": true,
+    "datasetPresent": true,
+    "apiVersionPresent": true,
+    "tokenPresent": true
+  },
+  "helper": ".cursor/skills/sanity-content-operator/scripts/sanity-query.mjs",
+  "mutationExecuted": false
+}

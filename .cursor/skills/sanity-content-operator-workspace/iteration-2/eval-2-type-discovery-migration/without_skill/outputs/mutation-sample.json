@@ -1,0 +1,160 @@
+{
+  "dryRun": true,
+  "mutationExecuted": false,
+  "documentType": "blog-article",
+  "candidateCount": 19,
+  "patches": [
+    {
+      "patch": {
+        "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+        "setIfMissing": {
+          "metaTitle": "Rogue Audio Sphinx V3 Magnum – Wyróżnienie Roku 2026 | Hi-Fi i Muzyka"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+        "setIfMissing": {
+          "metaTitle": "Oladra – referencyjne źródła cyfrowe hi-end | Presence i Sentia"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+        "setIfMissing": {
+          "metaTitle": "Nagroda Roku 2026 Urządzenie cyfrowe - Hifi i Muzyka dla Grimm Audio MU2"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "b75dbd72-8202-4fdf-a04d-0cac0bb9cd4a",
+        "setIfMissing": {
+          "metaTitle": "Usher Diamond SD-500 - Wyróżnienia roku 2026"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+        "setIfMissing": {
+          "metaTitle": "STROMTANK"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-1435",
+        "setIfMissing": {
+          "metaTitle": "AudioShow 2019"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-1680",
+        "setIfMissing": {
+          "metaTitle": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-1709",
+        "setIfMissing": {
+          "metaTitle": "Październik z Gryphon Audio Designs"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-1737",
+        "setIfMissing": {
+          "metaTitle": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-2571",
+        "setIfMissing": {
+          "metaTitle": "Nagrody Stereophile Recommended Components 2024"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-2689",
+        "setIfMissing": {
+          "metaTitle": "Nagrody The Absolute Sound - Product of the Year 2025"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-392",
+        "setIfMissing": {
+          "metaTitle": "AudioShow 2018"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+        "setIfMissing": {
+          "metaTitle": "Nagroda Audio Video 2025/2026"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-1968",
+        "setIfMissing": {
+          "metaTitle": "Porady na temat doboru bezpieczników Synergistic Research"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-2078",
+        "setIfMissing": {
+          "metaTitle": "Refleksje po Audio Video Show 2022"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+        "setIfMissing": {
+          "metaTitle": "Pendulum z certyfikatem Roon Ready"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-2796",
+        "setIfMissing": {
+          "metaTitle": "Nagrody Golden Ear 2024 The Absolute Sound"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "blog-article-2748",
+        "setIfMissing": {
+          "metaTitle": "Nagrody The Absolute Sound - Editors Choice 2025"
+        }
+      }
+    },
+    {
+      "patch": {
+        "id": "bced065c-4774-469d-975e-e441f64b300c",
+        "setIfMissing": {
+          "metaTitle": "Lorem Ipsum "
+        }
+      }
+    }
+  ]
+}

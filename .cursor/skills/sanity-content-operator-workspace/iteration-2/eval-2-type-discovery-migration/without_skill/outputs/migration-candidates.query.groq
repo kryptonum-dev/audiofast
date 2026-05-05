@@ -1,0 +1,14 @@
+*[
+  _type == $blogType
+  && defined(seo.title)
+  && !defined(metaTitle) && !(_id in path("drafts.**"))
+] | order(_updatedAt desc) [0...$limit]{
+  _id,
+  _type,
+  _rev,
+  _updatedAt,
+  name,
+  "slug": slug.current,
+  "seoTitle": seo.title,
+  "hasMetaTitle": defined(metaTitle)
+}

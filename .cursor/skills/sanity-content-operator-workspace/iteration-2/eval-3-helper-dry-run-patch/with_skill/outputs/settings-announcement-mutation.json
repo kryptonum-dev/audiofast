@@ -1,0 +1,14 @@
+{
+  "mutations": [
+    {
+      "patch": {
+        "id": "settings",
+        "ifRevisionID": "70dHOGscnIYmrjTPueQcgB",
+        "set": {
+          "announcement.enabled": false,
+          "announcement.text": "Maintenance window tonight"
+        }
+      }
+    }
+  ]
+}

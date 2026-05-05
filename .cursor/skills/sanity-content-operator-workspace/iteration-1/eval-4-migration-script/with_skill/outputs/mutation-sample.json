@@ -1,0 +1,13 @@
+{
+  "mutations": [
+    {
+      "patch": {
+        "id": "post-example-id",
+        "ifRevisionID": "example-revision-id",
+        "set": {
+          "metaTitle": "Example SEO title copied from seo.title"
+        }
+      }
+    }
+  ]
+}

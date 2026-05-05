@@ -1,0 +1,22 @@
+{
+  "dryRun": true,
+  "executed": false,
+  "projectId": "fsw3likv",
+  "dataset": "production",
+  "apiVersion": "v2025-02-10",
+  "tokenPresent": true,
+  "selection": {
+    "type": "landingPage",
+    "slugPrefix": "test-",
+    "groqFilter": "_type == \"landingPage\" && defined(slug.current) && string::startsWith(slug.current, \"test-\")"
+  },
+  "matchingDocumentCount": 0,
+  "deleteDocumentIds": [],
+  "mutations": [],
+  "safetyPlan": [
+    "No delete mutation was sent.",
+    "Because the dry-run count is 0, no live mutation should be run for this dataset state.",
+    "If documents appear later, rerun the dry-run query, review the exact IDs, and require explicit confirmation before executing deletes."
+  ],
+  "generatedAt": "2026-04-29T07:37:20.000Z"
+}

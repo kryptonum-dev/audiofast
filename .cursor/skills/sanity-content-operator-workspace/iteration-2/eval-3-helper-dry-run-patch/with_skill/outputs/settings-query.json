@@ -1,0 +1,10 @@
+{
+  "query": "*[_type == \"settings\"] | order(_updatedAt desc)[0]{_id,_type,_rev,_updatedAt,announcement}",
+  "result": {
+    "_id": "settings",
+    "_rev": "70dHOGscnIYmrjTPueQcgB",
+    "_type": "settings",
+    "_updatedAt": "2026-04-29T05:51:26Z",
+    "announcement": null
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "dryRun": true,
+  "projectId": "fsw3likv",
+  "dataset": "production",
+  "apiVersion": "v2025-02-10",
+  "tokenPresent": true,
+  "envSourcesRead": [
+    "apps/web/.env.local",
+    "apps/studio/.env"
+  ],
+  "filter": "_type == \"landingPage\" && defined(slug.current) && string::startsWith(slug.current, \"test-\")",
+  "queries": {
+    "countQuery": "count(*[_type == \"landingPage\" && defined(slug.current) && string::startsWith(slug.current, \"test-\")])",
+    "sampleQuery": "*[_type == \"landingPage\" && defined(slug.current) && string::startsWith(slug.current, \"test-\")] | order(slug.current asc)[0...10]{_id,_type,\"slug\":slug.current,title,_createdAt,_updatedAt}",
+    "allQuery": "*[_type == \"landingPage\" && defined(slug.current) && string::startsWith(slug.current, \"test-\")] | order(slug.current asc){_id,_type,\"slug\":slug.current,title,_createdAt,_updatedAt}"
+  },
+  "count": 0,
+  "sample": [],
+  "allMatches": [],
+  "generatedAt": "2026-04-29T07:37:20.000Z"
+}

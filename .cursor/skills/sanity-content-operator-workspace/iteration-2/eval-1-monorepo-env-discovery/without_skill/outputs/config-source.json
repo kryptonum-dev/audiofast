@@ -1,0 +1,50 @@
+{
+  "selectedSource": "repo configuration and app defaults",
+  "workingDirectory": "/Users/oliwiersellig/Kryptonum/audiofast",
+  "externalDocsUsed": false,
+  "sanityOperatorSkillUsed": false,
+  "secretValuesPrintedOrSaved": false,
+  "envDiscovery": {
+    "committedWebEnvFile": "apps/web/.env.example",
+    "committedStudioEnvFile": "apps/studio/.env.example",
+    "runtimeEnvPresence": {
+      "NEXT_PUBLIC_SANITY_PROJECT_ID": false,
+      "NEXT_PUBLIC_SANITY_DATASET": false,
+      "NEXT_PUBLIC_SANITY_API_READ_TOKEN": false,
+      "NEXT_PUBLIC_SANITY_API_VERSION": false,
+      "SANITY_STUDIO_PROJECT_ID": false,
+      "SANITY_STUDIO_DATASET": false,
+      "SANITY_API_TOKEN": false,
+      "SANITY_TOKEN": false,
+      "SANITY_PROJECT_ID": false,
+      "SANITY_DATASET": false
+    }
+  },
+  "selectionEvidence": [
+    {
+      "path": "apps/web/src/global/sanity/client.ts",
+      "evidence": "The web app reads NEXT_PUBLIC_SANITY_PROJECT_ID, defaults NEXT_PUBLIC_SANITY_DATASET to production, and defaults NEXT_PUBLIC_SANITY_API_VERSION to 2025-02-10."
+    },
+    {
+      "path": "apps/studio/sanity.config.ts",
+      "evidence": "The Studio reads SANITY_STUDIO_PROJECT_ID and defaults SANITY_STUDIO_DATASET to production."
+    },
+    {
+      "path": "apps/studio/scripts/migration/**",
+      "evidence": "Multiple local migration utilities use fsw3likv as the default project ID and production as the default dataset."
+    }
+  ],
+  "selectedConfig": {
+    "projectId": "fsw3likv",
+    "dataset": "production",
+    "apiVersion": "2025-02-10",
+    "tokenPresent": false,
+    "tokenSource": null
+  },
+  "safeVerification": {
+    "method": "GET request to Sanity data query endpoint",
+    "readOnly": true,
+    "mutationAttempted": false,
+    "responseStatus": 200
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "eval_id": 5,
+  "eval_name": "403-troubleshooting",
+  "prompt": "Sanity mutations are failing with 403 in Cursor even though reads work. Diagnose the likely cause and tell me the safest fix.",
+  "assertions": [
+    "The output identifies insufficient token permissions or wrong project/dataset token as likely 403 causes.",
+    "The output recommends the lowest sufficient write-capable role and keeping write tokens server-side.",
+    "The output suggests checking env loading without printing secret values."
+  ]
+}
