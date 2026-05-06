@@ -84,6 +84,7 @@ describe('admin order helpers', () => {
       id: 'order-id',
       invoice_data: {
         attachedAt: '2026-05-06T09:00:00.000Z',
+        filename: 'audiofast-invoice.pdf',
         recipientType: 'company',
         storagePath: 'orders/AF-2026-00001/invoice.pdf',
       },
@@ -137,6 +138,7 @@ describe('admin order helpers', () => {
         },
         invoice: {
           attachedAt: '2026-05-06T09:00:00.000Z',
+          filename: 'audiofast-invoice.pdf',
           hasInvoice: true,
           recipientType: 'company',
         },

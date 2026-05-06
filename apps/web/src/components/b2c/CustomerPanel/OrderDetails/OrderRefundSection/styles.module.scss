@@ -31,6 +31,13 @@
   width: 100%;
 }
 
+.returnCases {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  width: 100%;
+}
+
 .returnStatus {
   display: flex;
   align-items: center;
@@ -40,13 +47,13 @@
   border-radius: 0.75rem;
   background: var(--neutral-100, #ffffff);
 
-  &[data-tone='pending'] {
+  &[data-tone="pending"] {
     .returnStatusIcon {
       color: var(--primary-red, #fe0140);
     }
   }
 
-  &[data-tone='accepted'] {
+  &[data-tone="accepted"] {
     background: rgba(0, 145, 22, 0.08);
 
     .returnStatusIcon {
@@ -56,6 +63,15 @@
 
     strong {
       color: var(--primary-success, #009116);
+    }
+  }
+
+  &[data-tone="denied"] {
+    background: rgba(91, 90, 90, 0.08);
+
+    .returnStatusIcon {
+      color: var(--neutral-700, #5b5a5a);
+      background: rgba(91, 90, 90, 0.1);
     }
   }
 

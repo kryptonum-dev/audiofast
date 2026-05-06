@@ -6,10 +6,11 @@ import type { AdminOrderListItem } from "../types.js";
 import { OrderStatusBadge } from "./OrderStatusBadge.js";
 
 type OrdersTableProps = {
+  onOpenOrder?: (orderNumber: string) => void;
   orders: AdminOrderListItem[];
 };
 
-export function OrdersTable({ orders }: OrdersTableProps) {
+export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
   return (
     <Box paddingX={3}>
       <Card border radius={2}>
@@ -28,7 +29,24 @@ export function OrdersTable({ orders }: OrdersTableProps) {
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order.id}>
+                <tr
+                  key={order.id}
+                  aria-label={`Otwórz zamówienie ${order.orderNumber}`}
+                  className={onOpenOrder ? "ordersTableRowClickable" : undefined}
+                  onKeyDown={(event) => {
+                    if (!onOpenOrder) {
+                      return;
+                    }
+
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      onOpenOrder(order.orderNumber);
+                    }
+                  }}
+                  onClick={() => onOpenOrder?.(order.orderNumber)}
+                  role={onOpenOrder ? "button" : undefined}
+                  tabIndex={onOpenOrder ? 0 : undefined}
+                >
                   <td>
                     <Inline space={3}>
                       <OrderLeadImage order={order} />

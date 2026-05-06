@@ -33,6 +33,21 @@ export function getAdminAllowedNextOrderStatuses(
   return isB2cOrderStatus(status) ? ADMIN_ORDER_TRANSITIONS[status] : [];
 }
 
+export function getAdminAllowedNextOrderStatusesForOrder(args: {
+  currentStatus: string;
+  now: Date;
+  shippedAt: string | null;
+}): B2cOrderStatus[] {
+  return getAdminAllowedNextOrderStatuses(args.currentStatus).filter(
+    (status) =>
+      status !== 'returned' ||
+      isWithinReturnWindow({
+        now: args.now,
+        shippedAt: args.shippedAt,
+      }),
+  );
+}
+
 export function isCancellableOrderStatus(status: string): boolean {
   return status === 'paid' || status === 'processing';
 }

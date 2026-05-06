@@ -88,6 +88,12 @@ function normalizeTrackingUrl(value: string | null): string | null {
   }
 }
 
+function buildApaczkaTrackingUrl(trackingNumber: string) {
+  const url = new URL('https://www.apaczka.pl/sledz-przesylke/');
+  url.searchParams.set('trackingNumber', trackingNumber);
+  return url.toString();
+}
+
 export function buildAdminOrderShipmentPayload(args: {
   input: AdminOrderShipmentInput;
   now: Date;
@@ -96,9 +102,6 @@ export function buildAdminOrderShipmentPayload(args: {
 }): OrdersUpdate {
   const carrier = normalizeOptionalText(args.input.carrier);
   const trackingNumber = normalizeOptionalText(args.input.trackingNumber);
-  const trackingUrl = normalizeTrackingUrl(
-    normalizeOptionalText(args.input.trackingUrl),
-  );
   const previousShipment = parseOrderShipmentData(
     args.previousShipmentData,
     args.previousShippedAt,
@@ -108,9 +111,9 @@ export function buildAdminOrderShipmentPayload(args: {
     previousShipment?.shippedAt ??
     args.previousShippedAt;
 
-  if (!carrier || !trackingNumber) {
+  if (!trackingNumber) {
     throw new AdminOrderShipmentError(
-      'carrier and trackingNumber are required.',
+      'trackingNumber is required.',
       'invalid_shipment_payload',
       400,
     );
@@ -121,9 +124,9 @@ export function buildAdminOrderShipmentPayload(args: {
       carrier,
       shippedAt,
       trackingNumber,
-      trackingUrl,
+      trackingUrl: buildApaczkaTrackingUrl(trackingNumber),
     },
-    shipped_at: shippedAt,
+    shipped_at: shippedAt ?? null,
     updated_at: args.now.toISOString(),
   };
 }

@@ -5,6 +5,7 @@ import {
 import {
   AdminOrderInvoiceError,
   attachAdminOrderInvoice,
+  removeAdminOrderInvoice,
 } from '@/src/global/b2c/admin/server/order-invoice';
 import { withAdminRoute } from '@/src/global/b2c/admin/server/route';
 
@@ -51,6 +52,27 @@ export async function POST(
         actor: verified.operator,
         attachedAt: getOptionalFormString(formData, 'attachedAt'),
         file: getInvoiceFile(formData),
+        orderNumber: decodeURIComponent(routeParams.orderNumber),
+      });
+
+      return adminJson(request, {
+        ok: true,
+        data: result,
+      });
+    },
+  });
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: AdminOrderInvoiceRouteContext,
+) {
+  return withAdminRoute(request, {
+    errorCode: 'admin_order_invoice_remove_failed',
+    errorMessage: 'Could not remove the B2C order invoice.',
+    params,
+    handler: async ({ params: routeParams }) => {
+      const result = await removeAdminOrderInvoice({
         orderNumber: decodeURIComponent(routeParams.orderNumber),
       });
 

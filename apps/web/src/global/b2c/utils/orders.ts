@@ -1,17 +1,20 @@
-import type { Json } from '@/src/global/supabase/database.types';
+import type { Json } from "@/src/global/supabase/database.types";
 
 export type OrderAddressBlock = {
+  companyName: string | null;
   recipientName: string | null;
   phone: string | null;
+  taxId: string | null;
   lines: string[];
 };
 
 export type ParsedOrderInvoiceData = {
-  recipientType: 'private' | 'company' | 'unknown';
+  recipientType: "private" | "company" | "unknown";
   companyName: string | null;
   taxId: string | null;
   invoiceAddress: OrderAddressBlock | null;
   storagePath: string | null;
+  filename: string | null;
   attachedAt: string | null;
 };
 
@@ -45,6 +48,9 @@ export type ParsedOrderTimelineEntry = {
   source: string | null;
   previousStatus: string | null;
   actor: string | null;
+  actorEmail: string | null;
+  actorImage: string | null;
+  actorName: string | null;
   note: string | null;
 };
 
@@ -61,28 +67,28 @@ export type OrderStatusTimelineSource = {
 };
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export function getString(value: unknown): string | null {
-  return typeof value === 'string' && value.trim().length > 0
+  return typeof value === "string" && value.trim().length > 0
     ? value.trim()
     : null;
 }
 
 export function getNumber(value: unknown): number | null {
-  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
 
 export function getBoolean(value: unknown): boolean | null {
-  return typeof value === 'boolean' ? value : null;
+  return typeof value === "boolean" ? value : null;
 }
 
 export function formatPersonName(
   firstName: string | null,
   lastName: string | null,
 ) {
-  const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
+  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
   return fullName.length > 0 ? fullName : null;
 }
 
@@ -99,9 +105,9 @@ export function formatOrderAddressLine(
 
   const numberPart = [buildingNumber, apartmentNumber]
     .filter(Boolean)
-    .join('/');
+    .join("/");
 
-  return [streetName, numberPart].filter(Boolean).join(' ');
+  return [streetName, numberPart].filter(Boolean).join(" ");
 }
 
 export function formatOrderCityLine(
@@ -109,7 +115,7 @@ export function formatOrderCityLine(
 ): string | null {
   const postalCode = getString(record.postalCode);
   const city = getString(record.city);
-  return [postalCode, city].filter(Boolean).join(' ') || null;
+  return [postalCode, city].filter(Boolean).join(" ") || null;
 }
 
 export function parseOrderAddressBlock(
@@ -128,8 +134,10 @@ export function parseOrderAddressBlock(
   const country = getString(value.country);
 
   return {
+    companyName: getString(value.companyName),
     recipientName,
     phone: getString(value.phone),
+    taxId: getString(value.taxId),
     lines: [addressLine, cityLine, country].filter(Boolean) as string[],
   };
 }
@@ -139,8 +147,10 @@ export function parseOrderShippingAddressSnapshot(
 ): OrderAddressBlock {
   return (
     parseOrderAddressBlock(value, { includeRecipient: true }) ?? {
+      companyName: null,
       recipientName: null,
       phone: null,
+      taxId: null,
       lines: [],
     }
   );
@@ -151,20 +161,21 @@ export function parseOrderInvoiceData(
 ): ParsedOrderInvoiceData {
   if (!isRecord(value)) {
     return {
-      recipientType: 'private',
+      recipientType: "private",
       companyName: null,
       taxId: null,
       invoiceAddress: null,
       storagePath: null,
+      filename: null,
       attachedAt: null,
     };
   }
 
   const rawRecipientType = getString(value.recipientType);
   const recipientType =
-    rawRecipientType === 'private' || rawRecipientType === 'company'
+    rawRecipientType === "private" || rawRecipientType === "company"
       ? rawRecipientType
-      : 'unknown';
+      : "unknown";
 
   return {
     recipientType,
@@ -175,13 +186,14 @@ export function parseOrderInvoiceData(
       { includeRecipient: false },
     ),
     storagePath: getString(value.storagePath),
+    filename: getString(value.filename),
     attachedAt: getString(value.attachedAt),
   };
 }
 
 export function getOrderInvoiceRecipientType(
   value: Json | null,
-): ParsedOrderInvoiceData['recipientType'] {
+): ParsedOrderInvoiceData["recipientType"] {
   return parseOrderInvoiceData(value).recipientType;
 }
 
@@ -231,7 +243,7 @@ export function formatOrderSelectedOption(option: unknown): string | null {
   const parentValueName = getString(option.parentValueName);
   const resolvedValue =
     valueName ??
-    (numericValue !== null ? `${numericValue}${unit ?? ''}` : null);
+    (numericValue !== null ? `${numericValue}${unit ?? ""}` : null);
 
   if (!groupName || !resolvedValue) {
     return null;
@@ -240,7 +252,7 @@ export function formatOrderSelectedOption(option: unknown): string | null {
   const prefix =
     parentGroupName && parentValueName
       ? `${parentGroupName}: ${parentValueName} / `
-      : '';
+      : "";
 
   return `${prefix}${groupName}: ${resolvedValue}`;
 }
@@ -250,7 +262,7 @@ export function parseOrderItemSnapshot(
   lineType: string,
 ): ParsedOrderItemSnapshot {
   const details: string[] = [];
-  let cpoContext: ParsedOrderItemSnapshot['cpoContext'] = null;
+  let cpoContext: ParsedOrderItemSnapshot["cpoContext"] = null;
 
   if (isRecord(value)) {
     const model = getString(value.model);
@@ -269,7 +281,7 @@ export function parseOrderItemSnapshot(
       }
     }
 
-    if (lineType === 'cpo') {
+    if (lineType === "cpo") {
       cpoContext = {
         availabilityStatusAtPurchase: getString(
           value.availabilityStatusAtPurchase,
@@ -313,7 +325,16 @@ export function parseOrderTimelineEntry(
     changedAt,
     source: getString(entry.source),
     previousStatus: getString(entry.previousStatus),
-    actor: getString(entry.actor) ?? getString(entry.actorEmail),
+    actor:
+      getString(entry.actor) ??
+      getString(entry.actorName) ??
+      getString(entry.actorEmail),
+    actorEmail: getString(entry.actorEmail),
+    actorImage:
+      getString(entry.actorImage) ??
+      getString(entry.actorProfileImage) ??
+      getString(entry.profileImage),
+    actorName: getString(entry.actorName),
     note: getString(entry.note),
   };
 }
@@ -335,8 +356,31 @@ export function appendOrderTimelineTimestampEntry(
     source,
     previousStatus: null,
     actor: null,
+    actorEmail: null,
+    actorImage: null,
+    actorName: null,
     note: null,
   });
+}
+
+function shouldIncludeTimestampStatus(currentStatus: string, status: string) {
+  const statusOrder = [
+    "awaiting_payment",
+    "paid",
+    "processing",
+    "shipped",
+    "completed",
+    "cancelled",
+    "returned",
+  ];
+  const currentIndex = statusOrder.indexOf(currentStatus);
+  const statusIndex = statusOrder.indexOf(status);
+
+  if (currentIndex === -1 || statusIndex === -1) {
+    return true;
+  }
+
+  return statusIndex <= currentIndex;
 }
 
 export function buildOrderStatusTimeline(
@@ -355,39 +399,43 @@ export function buildOrderStatusTimeline(
 
   appendOrderTimelineTimestampEntry(
     entries,
-    'awaiting_payment',
+    "awaiting_payment",
     row.created_at,
-    fallbackSource('awaiting_payment'),
+    fallbackSource("awaiting_payment"),
   );
   appendOrderTimelineTimestampEntry(
     entries,
-    'paid',
+    "paid",
     row.paid_at,
-    fallbackSource('paid'),
+    fallbackSource("paid"),
   );
+  if (shouldIncludeTimestampStatus(row.current_status, "shipped")) {
+    appendOrderTimelineTimestampEntry(
+      entries,
+      "shipped",
+      row.shipped_at,
+      fallbackSource("shipped"),
+    );
+  }
+  if (shouldIncludeTimestampStatus(row.current_status, "completed")) {
+    appendOrderTimelineTimestampEntry(
+      entries,
+      "completed",
+      row.completed_at,
+      fallbackSource("completed"),
+    );
+  }
   appendOrderTimelineTimestampEntry(
     entries,
-    'shipped',
-    row.shipped_at,
-    fallbackSource('shipped'),
-  );
-  appendOrderTimelineTimestampEntry(
-    entries,
-    'completed',
-    row.completed_at,
-    fallbackSource('completed'),
-  );
-  appendOrderTimelineTimestampEntry(
-    entries,
-    'cancelled',
+    "cancelled",
     row.cancelled_at,
-    fallbackSource('cancelled'),
+    fallbackSource("cancelled"),
   );
   appendOrderTimelineTimestampEntry(
     entries,
-    'returned',
+    "returned",
     row.returned_at,
-    fallbackSource('returned'),
+    fallbackSource("returned"),
   );
   appendOrderTimelineTimestampEntry(
     entries,

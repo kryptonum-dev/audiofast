@@ -15,16 +15,56 @@ export default function InvoiceDownloadButton({
 }: InvoiceDownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
+  async function downloadInvoice() {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(href, {
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        window.location.href = href;
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+
+      link.href = url;
+      link.download = getInvoiceFilename(response, href);
+      document.body.append(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <Button
-      href={href}
       variant="primary"
       iconUsed="arrowRight"
       className={className}
       isLoading={isLoading}
-      onClick={() => setIsLoading(true)}
+      onClick={downloadInvoice}
+      type="button"
     >
       {isLoading ? 'Przygotowujemy fakturę' : 'Pobierz fakturę'}
     </Button>
   );
+}
+
+function getInvoiceFilename(response: Response, href: string) {
+  const disposition = response.headers.get('content-disposition');
+  const filenameMatch = disposition?.match(/filename\*?=(?:UTF-8''|")?([^";]+)/i);
+
+  if (filenameMatch?.[1]) {
+    return decodeURIComponent(filenameMatch[1].replaceAll('"', ''));
+  }
+
+  const orderNumber = href.split('/').filter(Boolean).at(-2);
+  return `faktura-${orderNumber ?? 'zamowienie'}.pdf`;
 }

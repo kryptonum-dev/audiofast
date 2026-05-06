@@ -43,6 +43,12 @@ export type AdminInvoiceUploadResult = {
   customerEmail: AdminInvoiceEmailStatus;
 };
 
+export type AdminInvoiceRemovalResult = {
+  orderId: string;
+  orderNumber: string;
+  removedAt: string;
+};
+
 export type AdminInvoiceDocument = {
   body: Blob;
   contentType: string;
@@ -100,6 +106,7 @@ function normalizeAttachedAt(value: string | null, now: Date) {
 export function buildAdminInvoiceDataPayload(args: {
   attachedAt: string;
   currentInvoiceData: Json | null;
+  filename: string;
   storagePath: string;
   updatedAt: string;
 }): OrdersUpdate {
@@ -111,6 +118,7 @@ export function buildAdminInvoiceDataPayload(args: {
     invoice_data: {
       ...currentInvoice,
       attachedAt: args.attachedAt,
+      filename: args.filename,
       storagePath: args.storagePath,
     },
     updated_at: args.updatedAt,
@@ -196,6 +204,22 @@ async function updateOrderInvoice(args: {
   }
 
   return data as OrderInvoiceRow;
+}
+
+async function removeInvoiceFile(storagePath: string) {
+  const supabase = createAdminClient();
+  const { error } = await supabase.storage
+    .from(INVOICE_BUCKET)
+    .remove([storagePath]);
+
+  if (error) {
+    throw new AdminOrderInvoiceError(
+      'Failed to remove the B2C order invoice document.',
+      'storage_error',
+      500,
+      error,
+    );
+  }
 }
 
 function validateInvoiceFile(file: File) {
@@ -312,6 +336,7 @@ export async function attachAdminOrderInvoice(args: {
     payload: buildAdminInvoiceDataPayload({
       attachedAt,
       currentInvoiceData: order.invoice_data,
+      filename: args.file.name,
       storagePath,
       updatedAt,
     }),
@@ -362,5 +387,43 @@ export async function loadAdminOrderInvoiceDocument(args: {
     body: data,
     contentType: data.type || 'application/pdf',
     filename: buildInvoiceFilename(order.order_number),
+  };
+}
+
+export async function removeAdminOrderInvoice(args: {
+  now?: Date;
+  orderNumber: string;
+}): Promise<AdminInvoiceRemovalResult> {
+  const removedAt = (args.now ?? new Date()).toISOString();
+  const order = await loadOrderInvoiceRow(args.orderNumber);
+  const invoice = parseOrderInvoiceData(order.invoice_data);
+
+  if (!invoice.storagePath) {
+    throw new AdminOrderInvoiceError(
+      'Invoice document is not available for this order.',
+      'invoice_not_available',
+      404,
+    );
+  }
+
+  await removeInvoiceFile(invoice.storagePath);
+  const currentInvoice = isRecord(order.invoice_data) ? order.invoice_data : {};
+  const updatedOrder = await updateOrderInvoice({
+    orderId: order.id,
+    payload: {
+      invoice_data: {
+        ...currentInvoice,
+        attachedAt: null,
+        filename: null,
+        storagePath: null,
+      },
+      updated_at: removedAt,
+    },
+  });
+
+  return {
+    orderId: updatedOrder.id,
+    orderNumber: updatedOrder.order_number,
+    removedAt,
   };
 }

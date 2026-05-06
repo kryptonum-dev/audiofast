@@ -10,10 +10,7 @@ describe('admin order shipment helpers', () => {
     expect(
       buildAdminOrderShipmentPayload({
         input: {
-          carrier: ' DHL ',
-          shippedAt: '2026-05-06T08:00:00.000Z',
           trackingNumber: ' TRACK123 ',
-          trackingUrl: 'https://tracking.example.com/parcel/TRACK123',
         },
         now: new Date('2026-05-06T09:00:00.000Z'),
         previousShipmentData: null,
@@ -21,12 +18,13 @@ describe('admin order shipment helpers', () => {
       }),
     ).toEqual({
       shipment_data: {
-        carrier: 'DHL',
-        shippedAt: '2026-05-06T08:00:00.000Z',
+        carrier: null,
+        shippedAt: null,
         trackingNumber: 'TRACK123',
-        trackingUrl: 'https://tracking.example.com/parcel/TRACK123',
+        trackingUrl:
+          'https://www.apaczka.pl/sledz-przesylke/?trackingNumber=TRACK123',
       },
-      shipped_at: '2026-05-06T08:00:00.000Z',
+      shipped_at: null,
       updated_at: '2026-05-06T09:00:00.000Z',
     });
   });
@@ -35,7 +33,6 @@ describe('admin order shipment helpers', () => {
     expect(
       buildAdminOrderShipmentPayload({
         input: {
-          carrier: 'InPost',
           trackingNumber: 'ABC',
         },
         now: new Date('2026-05-06T09:00:00.000Z'),
@@ -45,12 +42,34 @@ describe('admin order shipment helpers', () => {
     ).toEqual(
       expect.objectContaining({
         shipment_data: {
-          carrier: 'InPost',
+          carrier: null,
           shippedAt: '2026-05-05T08:00:00.000Z',
           trackingNumber: 'ABC',
-          trackingUrl: null,
+          trackingUrl:
+            'https://www.apaczka.pl/sledz-przesylke/?trackingNumber=ABC',
         },
         shipped_at: '2026-05-05T08:00:00.000Z',
+      }),
+    );
+  });
+
+  it('stores an optional carrier when provided', () => {
+    expect(
+      buildAdminOrderShipmentPayload({
+        input: {
+          carrier: ' DHL ',
+          trackingNumber: ' TRACK123 ',
+        },
+        now: new Date('2026-05-06T09:00:00.000Z'),
+        previousShipmentData: null,
+        previousShippedAt: null,
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        shipment_data: expect.objectContaining({
+          carrier: 'DHL',
+          trackingNumber: 'TRACK123',
+        }),
       }),
     );
   });
@@ -59,7 +78,6 @@ describe('admin order shipment helpers', () => {
     expect(() =>
       buildAdminOrderShipmentPayload({
         input: {
-          carrier: 'DHL',
           trackingNumber: '',
         },
         now: new Date('2026-05-06T09:00:00.000Z'),
@@ -71,7 +89,6 @@ describe('admin order shipment helpers', () => {
     expect(() =>
       buildAdminOrderShipmentPayload({
         input: {
-          carrier: 'DHL',
           shippedAt: 'not-a-date',
           trackingNumber: 'TRACK123',
         },

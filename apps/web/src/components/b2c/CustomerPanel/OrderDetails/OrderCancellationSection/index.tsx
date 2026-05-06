@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useState, useTransition } from 'react';
-import { toast } from 'sonner';
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import {
   requestCustomerOrderCancellationAction,
   type RequestCustomerOrderCancellationActionResult,
-} from '@/src/app/actions/customer-order-cancellation';
-import Button from '@/src/components/ui/Button';
-import ConfirmationModal from '@/src/components/ui/ConfirmationModal';
-import type { CustomerOrderDetail } from '@/src/global/b2c/customer-auth/server/order-detail';
+} from "@/src/app/actions/customer-order-cancellation";
+import Button from "@/src/components/ui/Button";
+import Input from "@/src/components/ui/Input";
+import { formatCustomerOrderDateTime } from "@/src/global/b2c/customer-auth/orders-formatting";
+import type { CustomerOrderDetail } from "@/src/global/b2c/customer-auth/server/order-detail";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type OrderCancellationSectionProps = {
   order: CustomerOrderDetail;
@@ -22,15 +24,15 @@ function getActionErrorMessage(
   result: Extract<RequestCustomerOrderCancellationActionResult, { ok: false }>,
 ): string {
   switch (result.error.kind) {
-    case 'not_eligible':
-      return 'Nie można już poprosić o anulowanie tego zamówienia. Status zamówienia zmienił się od czasu załadowania strony.';
-    case 'not_found':
-      return 'Nie możemy odnaleźć tego zamówienia dla zalogowanego adresu e-mail.';
-    case 'unauthenticated':
-      return 'Sesja wygasła. Zaloguj się ponownie, aby poprosić o anulowanie zamówienia.';
-    case 'unexpected_error':
+    case "not_eligible":
+      return "Nie można już poprosić o anulowanie tego zamówienia. Status zamówienia zmienił się od czasu załadowania strony.";
+    case "not_found":
+      return "Nie możemy odnaleźć tego zamówienia dla zalogowanego adresu e-mail.";
+    case "unauthenticated":
+      return "Sesja wygasła. Zaloguj się ponownie, aby poprosić o anulowanie zamówienia.";
+    case "unexpected_error":
     default:
-      return 'Nie udało się wysłać prośby o anulowanie. Spróbuj ponownie za chwilę.';
+      return "Nie udało się wysłać prośby o anulowanie. Spróbuj ponownie za chwilę.";
   }
 }
 
@@ -93,30 +95,146 @@ function CancelledIcon() {
 }
 
 function getRequestStatusCopy(status: string | null) {
-  if (status === 'open') {
+  if (status === "open") {
     return {
       icon: <ClockIcon />,
-      label: 'Status prośby',
-      value: 'Oczekuje na decyzję Audiofast',
-      tone: 'pending',
+      label: "Status prośby",
+      value: "Oczekuje na decyzję Audiofast",
+      tone: "pending",
     };
   }
 
-  if (status === 'rejected') {
+  if (status === "rejected" || status === "declined") {
     return {
       icon: <CancelledIcon />,
-      label: 'Status prośby',
-      value: 'Odrzucona',
-      tone: 'cancelled',
+      label: "Status prośby",
+      value: "Odrzucona",
+      tone: "cancelled",
     };
   }
 
   return {
     icon: <CancelledIcon />,
-    label: 'Status prośby',
-    value: 'Zaakceptowana',
-    tone: 'accepted',
+    label: "Status prośby",
+    value: "Zaakceptowana",
+    tone: "accepted",
   };
+}
+
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string | null | undefined;
+}) {
+  return (
+    <div className={styles.detailRow}>
+      <dt>{label}</dt>
+      <dd>{value && value.trim().length > 0 ? value : "Brak danych"}</dd>
+    </div>
+  );
+}
+
+function CancellationRequestModal({
+  isOpen,
+  isPending,
+  onClose,
+  onSubmit,
+}: {
+  isOpen: boolean;
+  isPending: boolean;
+  onClose: () => void;
+  onSubmit: (reason: string) => void;
+}) {
+  const { handleSubmit, register, reset } = useForm<{ reason: string }>({
+    defaultValues: {
+      reason: "",
+    },
+  });
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen && !isPending) {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [isOpen, isPending, onClose]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
+
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div
+      className={styles.modalOverlay}
+      onClick={isPending ? undefined : onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cancellation-request-title"
+      aria-describedby="cancellation-request-description"
+    >
+      <form
+        className={styles.cancellationModal}
+        onClick={(event) => event.stopPropagation()}
+        onSubmit={handleSubmit((data) => onSubmit(data.reason))}
+      >
+        <div className={styles.modalIconWrapper}>
+          <ClockIcon />
+        </div>
+        <h2 className={styles.modalTitle} id="cancellation-request-title">
+          Poprosić o anulowanie zamówienia?
+        </h2>
+        <p
+          className={styles.modalMessage}
+          id="cancellation-request-description"
+        >
+          Możesz dodać krótki powód anulowania. Audiofast potwierdzi, czy
+          zamówienie można jeszcze zatrzymać.
+        </p>
+        <div className={styles.modalField}>
+          <Input
+            textarea
+            label="Powód anulowania (opcjonalnie)"
+            register={register("reason")}
+            errors=""
+            placeholder="Np. zamówiłem przez pomyłkę lub chcę zmienić model."
+            rows={4}
+            disabled={isPending}
+          />
+        </div>
+        <div className={styles.modalActions}>
+          <Button
+            className={styles.cancelButton}
+            onClick={onClose}
+            type="button"
+            variant="secondary"
+            disabled={isPending}
+          >
+            Wróć
+          </Button>
+          <Button
+            className={styles.confirmButton}
+            type="submit"
+            iconUsed="trash"
+            isLoading={isPending}
+            disabled={isPending}
+          >
+            Wyślij prośbę
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default function OrderCancellationSection({
@@ -125,23 +243,21 @@ export default function OrderCancellationSection({
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const requestStatus = order.cancellationRequest?.status ?? null;
-  const statusCopy = getRequestStatusCopy(requestStatus);
   const canRequestCancellation = order.actions.canCancel && !isPending;
 
-  const handleConfirm = () => {
-    setIsModalOpen(false);
-
+  const handleSubmitCancellation = (reason: string) => {
     startTransition(async () => {
       const result = await requestCustomerOrderCancellationAction({
         orderNumber: order.orderNumber,
+        reason,
       });
 
       if (result.ok) {
+        setIsModalOpen(false);
         toast.success(
-          result.value.kind === 'already_requested'
-            ? 'Prośba o anulowanie była już wysłana. Odświeżamy status zamówienia.'
-            : 'Prośba o anulowanie została wysłana do Audiofast.',
+          result.value.kind === "already_requested"
+            ? "Prośba o anulowanie była już wysłana. Odświeżamy status zamówienia."
+            : "Prośba o anulowanie została wysłana do Audiofast.",
         );
         router.refresh();
         return;
@@ -158,13 +274,45 @@ export default function OrderCancellationSection({
       <div className={styles.actionItem}>
         <p>{order.actions.cancelMessage}</p>
 
-        {order.cancellationRequest ? (
-          <div className={styles.requestStatus} data-tone={statusCopy.tone}>
-            <span className={styles.requestStatusIcon}>{statusCopy.icon}</span>
-            <div>
-              <span>{statusCopy.label}</span>
-              <strong>{statusCopy.value}</strong>
-            </div>
+        {order.cancellationRequests.length > 0 ? (
+          <div className={styles.requestList}>
+            {order.cancellationRequests.map((request) => {
+              const statusCopy = getRequestStatusCopy(request.status);
+              const dateValue = request.resolvedAt ?? request.requestedAt;
+
+              return (
+                <div
+                  className={styles.requestCase}
+                  key={`${request.requestedAt}-${request.status}`}
+                >
+                  <div
+                    className={styles.requestStatus}
+                    data-tone={statusCopy.tone}
+                  >
+                    <span className={styles.requestStatusIcon}>
+                      {statusCopy.icon}
+                    </span>
+                    <div>
+                      <span>{statusCopy.label}</span>
+                      <strong>{statusCopy.value}</strong>
+                    </div>
+                  </div>
+                  <dl className={styles.inlineDetails}>
+                    <DetailRow label="Powód" value={request.reason} />
+                    <DetailRow
+                      label={request.resolvedAt ? "Zamknięto" : "Zgłoszono"}
+                      value={formatCustomerOrderDateTime(dateValue)}
+                    />
+                    {request.adminNote ? (
+                      <DetailRow
+                        label="Informacja od Audiofast"
+                        value={request.adminNote}
+                      />
+                    ) : null}
+                  </dl>
+                </div>
+              );
+            })}
           </div>
         ) : null}
 
@@ -183,14 +331,11 @@ export default function OrderCancellationSection({
         ) : null}
       </div>
 
-      <ConfirmationModal
+      <CancellationRequestModal
         isOpen={isModalOpen}
+        isPending={isPending}
         onClose={() => setIsModalOpen(false)}
-        onConfirm={handleConfirm}
-        title="Poprosić o anulowanie zamówienia?"
-        message="Sprawdzimy, czy zamówienie można jeszcze zatrzymać. Do czasu potwierdzenia status zamówienia nie zostanie zmieniony."
-        confirmText="Wyślij prośbę"
-        cancelText="Wróć"
+        onSubmit={handleSubmitCancellation}
       />
     </section>
   );

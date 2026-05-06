@@ -24,6 +24,7 @@ describe('admin order status transitions', () => {
         currentStatus: 'paid',
         nextStatus: 'shipped',
         note: 'Nadane kurierem',
+        shippedAt: null,
         statusHistory: [
           {
             changedAt: '2026-05-06T07:00:00.000Z',
@@ -44,6 +45,7 @@ describe('admin order status transitions', () => {
         {
           actorEmail: 'operator@example.com',
           actorId: 'operator-id',
+          actorImage: null,
           actorName: 'Operator',
           changedAt: '2026-05-06T08:00:00.000Z',
           note: 'Nadane kurierem',
@@ -64,6 +66,7 @@ describe('admin order status transitions', () => {
         currentStatus: 'processing',
         nextStatus: 'cancelled',
         note: null,
+        shippedAt: null,
         statusHistory: [],
       }),
     ).toEqual(
@@ -77,9 +80,10 @@ describe('admin order status transitions', () => {
   it('rejects backward, same-state, system-owned, and terminal transitions', () => {
     const baseInput = {
       actor: OPERATOR,
-      changedAt: '2026-05-06T08:00:00.000Z',
-      note: null,
-      statusHistory: [],
+        changedAt: '2026-05-06T08:00:00.000Z',
+        note: null,
+        shippedAt: '2026-05-01T08:00:00.000Z',
+        statusHistory: [],
     };
 
     expect(() =>
@@ -111,6 +115,20 @@ describe('admin order status transitions', () => {
         ...baseInput,
         currentStatus: 'returned',
         nextStatus: 'completed',
+      }),
+    ).toThrow(AdminOrderStatusError);
+  });
+
+  it('rejects manual return transitions after the return window expires', () => {
+    expect(() =>
+      buildAdminOrderStatusUpdatePayload({
+        actor: OPERATOR,
+        changedAt: '2026-05-20T08:00:00.000Z',
+        currentStatus: 'completed',
+        nextStatus: 'returned',
+        note: null,
+        shippedAt: '2026-05-01T08:00:00.000Z',
+        statusHistory: [],
       }),
     ).toThrow(AdminOrderStatusError);
   });

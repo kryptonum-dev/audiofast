@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   getAdminAllowedNextOrderStatuses,
+  getAdminAllowedNextOrderStatusesForOrder,
   getReturnDeadline,
   isB2cOrderStatus,
   isCancellableOrderStatus,
@@ -29,6 +30,24 @@ describe('B2C status utilities', () => {
     ]);
     expect(getAdminAllowedNextOrderStatuses('awaiting_payment')).toEqual([]);
     expect(getAdminAllowedNextOrderStatuses('returned')).toEqual([]);
+  });
+
+  it('removes returned from admin transitions outside the return window', () => {
+    expect(
+      getAdminAllowedNextOrderStatusesForOrder({
+        currentStatus: 'completed',
+        now: new Date('2026-05-10T08:00:00.000Z'),
+        shippedAt: '2026-05-01T08:00:00.000Z',
+      }),
+    ).toEqual(['returned']);
+
+    expect(
+      getAdminAllowedNextOrderStatusesForOrder({
+        currentStatus: 'completed',
+        now: new Date('2026-05-20T08:00:00.000Z'),
+        shippedAt: '2026-05-01T08:00:00.000Z',
+      }),
+    ).toEqual([]);
   });
 
   it('checks cancellation and return eligible statuses', () => {

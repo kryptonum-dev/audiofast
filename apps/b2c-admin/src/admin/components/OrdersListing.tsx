@@ -33,7 +33,11 @@ type OrdersState =
       error: string;
     };
 
-export function OrdersListing() {
+type OrdersListingProps = {
+  onOpenOrder: (orderNumber: string) => void;
+};
+
+export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
   const authToken = useAuthToken();
   const [filters, setFilters] = useState<OrdersFilters>(DEFAULT_ORDERS_FILTERS);
   const [page, setPage] = useState(1);
@@ -181,7 +185,10 @@ export function OrdersListing() {
 
       {ordersState.status !== "loading" && data && data.orders.length > 0 ? (
         <>
-          <OrdersTable orders={data.orders} />
+          <OrdersTable
+            orders={data.orders}
+            onOpenOrder={onOpenOrder}
+          />
           <OrdersPagination
             pagination={data.pagination}
             onPageChange={setPage}

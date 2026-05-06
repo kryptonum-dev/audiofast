@@ -12,6 +12,7 @@ describe('admin order invoice helpers', () => {
           recipientType: 'company',
           taxId: '1234567890',
         },
+        filename: 'audiofast-invoice.pdf',
         storagePath: 'orders/AF-2026-00001/invoice.pdf',
         updatedAt: '2026-05-06T09:00:00.000Z',
       }),
@@ -19,6 +20,7 @@ describe('admin order invoice helpers', () => {
       invoice_data: {
         attachedAt: '2026-05-06T08:00:00.000Z',
         companyName: 'Audiofast Sp. z o.o.',
+        filename: 'audiofast-invoice.pdf',
         recipientType: 'company',
         storagePath: 'orders/AF-2026-00001/invoice.pdf',
         taxId: '1234567890',

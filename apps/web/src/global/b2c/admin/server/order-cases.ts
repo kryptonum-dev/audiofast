@@ -257,6 +257,10 @@ function buildActorPayload(actor: VerifiedAdminOperator): Json {
   };
 }
 
+function getCancellationResolvedBy(): null {
+  return null;
+}
+
 async function buildOrderStatusResultFromAtomicMutation(args: {
   changedAt: string;
   order: AdminOrderStatusRow;
@@ -290,7 +294,7 @@ async function acceptCancellationRequestAtomically(args: {
       p_order_number: args.orderNumber,
       p_request_id: args.requestId,
       p_resolved_at: args.resolvedAt,
-      p_resolved_by: args.actor.email,
+      p_resolved_by: getCancellationResolvedBy(),
     },
   );
 
@@ -445,8 +449,8 @@ async function resolveCancellationRequest(args: {
   adminNote: string | null;
   requestId: string;
   resolvedAt: string;
-  resolvedBy: string;
-  status: 'accepted' | 'declined';
+  resolvedBy: string | null;
+  status: 'accepted' | 'rejected';
 }): Promise<CancellationRequestRow> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
@@ -665,8 +669,8 @@ export async function resolveAdminOrderCancellation(args: {
       adminNote,
       requestId,
       resolvedAt,
-      resolvedBy: args.actor.email,
-      status: 'declined',
+      resolvedBy: getCancellationResolvedBy(),
+      status: 'rejected',
     });
 
     return {

@@ -552,7 +552,7 @@ export type Database = {
           p_order_number: string;
           p_request_id: string;
           p_resolved_at: string;
-          p_resolved_by: string;
+          p_resolved_by: string | null;
         };
         Returns: Json;
       };

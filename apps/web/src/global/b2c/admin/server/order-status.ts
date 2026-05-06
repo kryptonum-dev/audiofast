@@ -5,7 +5,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import type { VerifiedAdminOperator } from '@/src/global/b2c/admin/server/auth';
 import {
   type B2cOrderStatus,
-  getAdminAllowedNextOrderStatuses,
+  getAdminAllowedNextOrderStatusesForOrder,
   isB2cOrderStatus,
 } from '@/src/global/b2c/utils/statuses';
 import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
@@ -107,6 +107,7 @@ export function buildAdminStatusHistoryEntry(args: {
   return {
     actorEmail: args.actor.email,
     actorId: args.actor.id,
+    actorImage: args.actor.profileImage,
     actorName: args.actor.name,
     changedAt: args.changedAt,
     note: args.note,
@@ -122,11 +123,14 @@ export function buildAdminOrderStatusUpdatePayload(args: {
   currentStatus: string;
   nextStatus: B2cOrderStatus;
   note: string | null;
+  shippedAt: string | null;
   statusHistory: Json;
 }): OrdersUpdate {
-  const allowedNextStatuses = getAdminAllowedNextOrderStatuses(
-    args.currentStatus,
-  );
+  const allowedNextStatuses = getAdminAllowedNextOrderStatusesForOrder({
+    currentStatus: args.currentStatus,
+    now: new Date(args.changedAt),
+    shippedAt: args.shippedAt,
+  });
 
   if (!allowedNextStatuses.includes(args.nextStatus)) {
     throw new AdminOrderStatusError(
@@ -315,6 +319,7 @@ export async function updateAdminOrderStatus(args: {
     currentStatus: currentRow.current_status,
     nextStatus,
     note,
+    shippedAt: currentRow.shipped_at,
     statusHistory: currentRow.status_history,
   });
   const updatedRow = await updateOrderStatus({

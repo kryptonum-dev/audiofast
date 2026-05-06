@@ -46,7 +46,7 @@ const ADMIN_AREAS: {
 
 export function AdminShell({ activeArea, children }: AdminShellProps) {
   return (
-    <Card className="adminAppRoot" height="fill" tone="default">
+    <Card className="adminAppRoot" tone="default">
       <Container width={4}>
         <Box paddingX={[3, 4, 5]} paddingY={[3, 4]} className="adminAppFrame">
           <Stack space={5}>

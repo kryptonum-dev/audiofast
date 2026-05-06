@@ -62,7 +62,7 @@ export async function GET(
   );
   headers.set(
     'content-disposition',
-    `inline; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
+    `attachment; filename="${filename}"; filename*=UTF-8''${encodeURIComponent(filename)}`,
   );
   headers.set('cache-control', 'private, no-store');
 

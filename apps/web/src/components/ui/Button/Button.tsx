@@ -12,6 +12,7 @@ export type Props = React.HTMLAttributes<HTMLAnchorElement> &
     focusOutline?: 'black' | 'white' | null;
     openInNewTab?: boolean | null;
     className?: string;
+    download?: boolean | string;
     href?: string | null;
     iconUsed?:
       | 'addToCart'

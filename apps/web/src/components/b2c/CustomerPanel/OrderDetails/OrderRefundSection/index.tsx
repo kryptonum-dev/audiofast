@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useState, useTransition } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 import {
   requestCustomerOrderReturnAction,
   type RequestCustomerOrderReturnActionResult,
-} from '@/src/app/actions/customer-order-return';
-import Button from '@/src/components/ui/Button';
-import Input from '@/src/components/ui/Input';
-import { formatCustomerOrderDateTime } from '@/src/global/b2c/customer-auth/orders-formatting';
-import type { CustomerOrderDetail } from '@/src/global/b2c/customer-auth/server/order-detail';
+} from "@/src/app/actions/customer-order-return";
+import Button from "@/src/components/ui/Button";
+import Input from "@/src/components/ui/Input";
+import { formatCustomerOrderDateTime } from "@/src/global/b2c/customer-auth/orders-formatting";
+import type { CustomerOrderDetail } from "@/src/global/b2c/customer-auth/server/order-detail";
 
-import styles from './styles.module.scss';
+import styles from "./styles.module.scss";
 
 type OrderRefundSectionProps = {
   order: CustomerOrderDetail;
@@ -24,20 +24,20 @@ function getActionErrorMessage(
   result: Extract<RequestCustomerOrderReturnActionResult, { ok: false }>,
 ): string {
   switch (result.error.kind) {
-    case 'not_eligible':
-      return 'Nie można już poprosić o zwrot tego zamówienia. Status lub warunki zwrotu zmieniły się od czasu załadowania strony.';
-    case 'not_found':
-      return 'Nie możemy odnaleźć tego zamówienia dla zalogowanego adresu e-mail.';
-    case 'unauthenticated':
-      return 'Sesja wygasła. Zaloguj się ponownie, aby poprosić o zwrot zamówienia.';
-    case 'unexpected_error':
+    case "not_eligible":
+      return "Nie można już poprosić o zwrot tego zamówienia. Status lub warunki zwrotu zmieniły się od czasu załadowania strony.";
+    case "not_found":
+      return "Nie możemy odnaleźć tego zamówienia dla zalogowanego adresu e-mail.";
+    case "unauthenticated":
+      return "Sesja wygasła. Zaloguj się ponownie, aby poprosić o zwrot zamówienia.";
+    case "unexpected_error":
     default:
-      return 'Nie udało się wysłać prośby o zwrot. Spróbuj ponownie za chwilę.';
+      return "Nie udało się wysłać prośby o zwrot. Spróbuj ponownie za chwilę.";
   }
 }
 
 function renderOptionalValue(value: string | null | undefined): string {
-  return value && value.trim().length > 0 ? value : 'Brak danych';
+  return value && value.trim().length > 0 ? value : "Brak danych";
 }
 
 function DetailRow({
@@ -112,21 +112,59 @@ function ReturnCompletedIcon() {
   );
 }
 
+function ReturnClosedIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      fill="none"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        clipPath="url(#return-closed-icon)"
+      >
+        <path d="M5 5l14 14M19 5 5 19" />
+        <path d="M3 12a9 9 0 1 0 18.001 0A9 9 0 0 0 3 12" />
+      </g>
+      <defs>
+        <clipPath id="return-closed-icon">
+          <path fill="#fff" d="M0 0h24v24H0z" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
 function getReturnStatusCopy(status: string | null) {
-  if (status === 'completed') {
+  if (status === "completed") {
     return {
       icon: <ReturnCompletedIcon />,
-      label: 'Status zwrotu',
-      tone: 'accepted',
-      value: 'Zwrot potwierdzony',
+      label: "Status zwrotu",
+      tone: "accepted",
+      value: "Zwrot potwierdzony",
+    };
+  }
+
+  if (status === "closed_without_return") {
+    return {
+      icon: <ReturnClosedIcon />,
+      label: "Status zwrotu",
+      tone: "denied",
+      value: "Zgłoszenie zamknięte",
     };
   }
 
   return {
     icon: <ClockIcon />,
-    label: 'Status zwrotu',
-    tone: 'pending',
-    value: 'Oczekuje na obsługę Audiofast',
+    label: "Status zwrotu",
+    tone: "pending",
+    value: "Oczekuje na obsługę Audiofast",
   };
 }
 
@@ -143,19 +181,19 @@ function ReturnRequestModal({
 }) {
   const { handleSubmit, register, reset } = useForm<{ reason: string }>({
     defaultValues: {
-      reason: '',
+      reason: "",
     },
   });
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen && !isPending) {
+      if (event.key === "Escape" && isOpen && !isPending) {
         onClose();
       }
     };
 
-    window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [isOpen, isPending, onClose]);
 
   useEffect(() => {
@@ -202,7 +240,7 @@ function ReturnRequestModal({
           <Input
             textarea
             label="Powód zwrotu (opcjonalnie)"
-            register={register('reason')}
+            register={register("reason")}
             errors=""
             placeholder="Np. produkt nie spełnia oczekiwań lub zamówiłem inny model."
             rows={4}
@@ -235,24 +273,37 @@ function ReturnRequestModal({
   );
 }
 
+function getReturnDateCopy(
+  returnCase: CustomerOrderDetail["returnCases"][number],
+) {
+  if (returnCase.status === "completed") {
+    return {
+      label: "Potwierdzono",
+      value:
+        returnCase.completedAt ?? returnCase.updatedAt ?? returnCase.createdAt,
+    };
+  }
+
+  if (returnCase.status === "closed_without_return") {
+    return {
+      label: "Zamknięto",
+      value:
+        returnCase.closedAt ?? returnCase.updatedAt ?? returnCase.createdAt,
+    };
+  }
+
+  return {
+    label: "Zgłoszono",
+    value: returnCase.createdAt,
+  };
+}
+
 export default function OrderRefundSection({ order }: OrderRefundSectionProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const canRequestReturn = order.actions.canRequestReturn && !isPending;
-  const returnStatusCopy = getReturnStatusCopy(
-    order.activeReturnCase?.status ?? null,
-  );
-  const returnDateLabel =
-    order.activeReturnCase?.status === 'completed'
-      ? 'Potwierdzono'
-      : 'Zgłoszono';
-  const returnDateValue =
-    order.activeReturnCase?.status === 'completed'
-      ? (order.activeReturnCase.completedAt ??
-        order.activeReturnCase.updatedAt ??
-        order.activeReturnCase.createdAt)
-      : order.activeReturnCase?.createdAt;
+  const hasReturnCases = order.returnCases.length > 0;
 
   const handleSubmitReturn = (reason: string) => {
     startTransition(async () => {
@@ -264,9 +315,9 @@ export default function OrderRefundSection({ order }: OrderRefundSectionProps) {
       if (result.ok) {
         setIsModalOpen(false);
         toast.success(
-          result.value.kind === 'already_requested'
-            ? 'Prośba o zwrot była już wysłana. Odświeżamy status zamówienia.'
-            : 'Prośba o zwrot została wysłana do Audiofast.',
+          result.value.kind === "already_requested"
+            ? "Prośba o zwrot była już wysłana. Odświeżamy status zamówienia."
+            : "Prośba o zwrot została wysłana do Audiofast.",
         );
         router.refresh();
         return;
@@ -281,31 +332,40 @@ export default function OrderRefundSection({ order }: OrderRefundSectionProps) {
     <section className={styles.section}>
       <h2>Zwrot zamówienia</h2>
 
-      {order.activeReturnCase ? (
-        <div className={styles.returnCase} data-tone="pending">
-          <div
-            className={styles.returnStatus}
-            data-tone={returnStatusCopy.tone}
-          >
-            <span className={styles.returnStatusIcon}>
-              {returnStatusCopy.icon}
-            </span>
-            <div>
-              <span>{returnStatusCopy.label}</span>
-              <strong>{returnStatusCopy.value}</strong>
-            </div>
-          </div>
-          <dl className={styles.inlineDetails}>
-            <DetailRow label="Powód" value={order.activeReturnCase.reason} />
-            <DetailRow
-              label={returnDateLabel}
-              value={
-                returnDateValue
-                  ? formatCustomerOrderDateTime(returnDateValue)
-                  : null
-              }
-            />
-          </dl>
+      {hasReturnCases ? (
+        <div className={styles.returnCases}>
+          {order.returnCases.map((returnCase) => {
+            const returnStatusCopy = getReturnStatusCopy(returnCase.status);
+            const returnDateCopy = getReturnDateCopy(returnCase);
+
+            return (
+              <div
+                className={styles.returnCase}
+                data-tone={returnStatusCopy.tone}
+                key={`${returnCase.createdAt}-${returnCase.status}`}
+              >
+                <div
+                  className={styles.returnStatus}
+                  data-tone={returnStatusCopy.tone}
+                >
+                  <span className={styles.returnStatusIcon}>
+                    {returnStatusCopy.icon}
+                  </span>
+                  <div>
+                    <span>{returnStatusCopy.label}</span>
+                    <strong>{returnStatusCopy.value}</strong>
+                  </div>
+                </div>
+                <dl className={styles.inlineDetails}>
+                  <DetailRow label="Powód" value={returnCase.reason} />
+                  <DetailRow
+                    label={returnDateCopy.label}
+                    value={formatCustomerOrderDateTime(returnDateCopy.value)}
+                  />
+                </dl>
+              </div>
+            );
+          })}
         </div>
       ) : null}
 

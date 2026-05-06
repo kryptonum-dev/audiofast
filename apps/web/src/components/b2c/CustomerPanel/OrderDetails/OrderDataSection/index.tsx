@@ -20,13 +20,12 @@ function renderOptionalValue(value: string | null | undefined): string {
 function getShipmentTrackingHref(
   shipment: CustomerOrderShipmentSnapshot,
 ): string {
-  if (shipment.trackingUrl) {
-    return shipment.trackingUrl;
-  }
-
-  return shipment.carrier?.toLowerCase().includes('dhl')
-    ? 'https://www.apaczka.pl/sledz-przesylke/dhl/'
-    : 'https://www.apaczka.pl/sledz-przesylke';
+  return (
+    shipment.trackingUrl ??
+    `https://www.apaczka.pl/sledz-przesylke/?trackingNumber=${encodeURIComponent(
+      shipment.trackingNumber ?? '',
+    )}`
+  );
 }
 
 function DetailRow({
@@ -219,9 +218,7 @@ function InvoiceDetails({ order }: { order: CustomerOrderDetail }) {
 
 export default function OrderDataSection({ order }: OrderDataSectionProps) {
   const shipment = order.shipment;
-  const hasShipmentDetails = Boolean(
-    shipment?.carrier || shipment?.trackingNumber,
-  );
+  const hasShipmentDetails = Boolean(shipment?.trackingNumber);
 
   return (
     <section className={`${styles.section} ${styles.orderDataSection}`}>
@@ -254,7 +251,9 @@ export default function OrderDataSection({ order }: OrderDataSectionProps) {
             <h3>Przesyłka</h3>
             <div className={styles.shipmentDetails}>
               <dl className={styles.inlineDetails}>
-                <DetailRow label="Kurier" value={shipment.carrier} />
+                {shipment.carrier ? (
+                  <DetailRow label="Kurier" value={shipment.carrier} />
+                ) : null}
                 <DetailRow
                   label="Numer listu przewozowego"
                   value={shipment.trackingNumber}
