@@ -75,7 +75,14 @@ export type EmailRecipient = {
   name?: string;
 };
 
+export type EmailAttachment = {
+  contentBytes: string;
+  contentType: string;
+  name: string;
+};
+
 export type SendEmailOptions = {
+  attachments?: EmailAttachment[];
   to: EmailRecipient | EmailRecipient[];
   subject: string;
   htmlBody: string;
@@ -126,6 +133,15 @@ export async function sendEmail(
         },
       })),
     };
+
+    if (options.attachments?.length) {
+      message.attachments = options.attachments.map((attachment) => ({
+        '@odata.type': '#microsoft.graph.fileAttachment',
+        contentBytes: attachment.contentBytes,
+        contentType: attachment.contentType,
+        name: attachment.name,
+      }));
+    }
 
     // Add reply-to if specified
     if (options.replyTo) {

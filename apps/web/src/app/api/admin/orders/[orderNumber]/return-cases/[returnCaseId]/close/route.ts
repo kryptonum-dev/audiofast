@@ -1,0 +1,40 @@
+import {
+  adminJson,
+  adminOptions,
+} from '@/src/global/b2c/admin/server/http';
+import { closeAdminOrderReturnCase } from '@/src/global/b2c/admin/server/order-cases';
+import { withAdminRoute } from '@/src/global/b2c/admin/server/route';
+
+type AdminOrderReturnCaseCloseRouteContext = {
+  params: Promise<{
+    orderNumber: string;
+    returnCaseId: string;
+  }>;
+};
+
+export async function OPTIONS(request: Request) {
+  return adminOptions(request);
+}
+
+export async function POST(
+  request: Request,
+  { params }: AdminOrderReturnCaseCloseRouteContext,
+) {
+  return withAdminRoute(request, {
+    errorCode: 'admin_order_return_case_close_failed',
+    errorMessage: 'Could not close the B2C return case.',
+    params,
+    handler: async ({ params: routeParams }) => {
+      const result = await closeAdminOrderReturnCase({
+        input: await request.json(),
+        orderNumber: decodeURIComponent(routeParams.orderNumber),
+        returnCaseId: decodeURIComponent(routeParams.returnCaseId),
+      });
+
+      return adminJson(request, {
+        ok: true,
+        data: result,
+      });
+    },
+  });
+}

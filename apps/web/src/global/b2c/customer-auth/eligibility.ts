@@ -1,11 +1,12 @@
-export const CUSTOMER_AUTH_VISIBLE_ORDER_STATUSES = [
-  'paid',
-  'processing',
-  'shipped',
-  'completed',
-  'cancelled',
-  'returned',
-] as const;
+import {
+  B2C_ORDER_STATUSES,
+  type B2cOrderStatus,
+} from '@/src/global/b2c/utils/statuses';
+
+export const CUSTOMER_AUTH_VISIBLE_ORDER_STATUSES = B2C_ORDER_STATUSES.filter(
+  (status): status is Exclude<B2cOrderStatus, 'awaiting_payment'> =>
+    status !== 'awaiting_payment',
+);
 
 const CUSTOMER_AUTH_VISIBLE_ORDER_STATUS_SET = new Set<string>(
   CUSTOMER_AUTH_VISIBLE_ORDER_STATUSES,

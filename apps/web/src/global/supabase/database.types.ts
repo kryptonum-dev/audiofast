@@ -545,6 +545,27 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      admin_accept_order_cancellation: {
+        Args: {
+          p_actor: Json;
+          p_admin_note: string | null;
+          p_order_number: string;
+          p_request_id: string;
+          p_resolved_at: string;
+          p_resolved_by: string;
+        };
+        Returns: Json;
+      };
+      admin_complete_order_return_case: {
+        Args: {
+          p_actor: Json;
+          p_admin_note: string | null;
+          p_completed_at: string;
+          p_order_number: string;
+          p_return_case_id: string;
+        };
+        Returns: Json;
+      };
       ingest_pricing_json: {
         Args: { p_mode: string; p_variants: Json };
         Returns: Json;

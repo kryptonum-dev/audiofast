@@ -41,4 +41,8 @@ npm-debug.log*
 
 # Data files
 *.sql
+!supabase/migrations/*.sql
 *.csv
+
+# Supabase local CLI state
+supabase/.temp/

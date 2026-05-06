@@ -1,6 +1,24 @@
 import 'server-only';
 
 import type { SanityRawImage } from '@/src/components/shared/Image';
+import {
+  buildOrderStatusTimeline,
+  formatPersonName,
+  getString,
+  isRecord,
+  parseOrderDiscountData,
+  parseOrderInvoiceData,
+  parseOrderItemSnapshot,
+  parseOrderShipmentData,
+  parseOrderShippingAddressSnapshot,
+  type OrderAddressBlock,
+  type ParsedOrderInvoiceData,
+} from '@/src/global/b2c/utils/orders';
+import {
+  isCancellableOrderStatus,
+  isReturnEligibleOrderStatus,
+  isWithinReturnWindow,
+} from '@/src/global/b2c/utils/statuses';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
@@ -43,11 +61,7 @@ type CustomerOrderDetailRow = Pick<
   | 'updated_at'
 >;
 
-export type CustomerOrderAddressBlock = {
-  recipientName: string | null;
-  phone: string | null;
-  lines: string[];
-};
+export type CustomerOrderAddressBlock = OrderAddressBlock;
 
 export type CustomerOrderContactSnapshot = {
   fullName: string | null;
@@ -168,14 +182,7 @@ export type LoadCustomerOrderForPanelResult =
       kind: 'not_found';
     };
 
-type ParsedInvoiceData = {
-  recipientType: 'private' | 'company' | 'unknown';
-  companyName: string | null;
-  taxId: string | null;
-  invoiceAddress: CustomerOrderAddressBlock | null;
-  storagePath: string | null;
-  attachedAt: string | null;
-};
+type ParsedInvoiceData = ParsedOrderInvoiceData;
 
 const CUSTOMER_ORDER_DETAIL_SELECT =
   'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, used_discount, updated_at';
@@ -183,73 +190,6 @@ const CUSTOMER_ORDER_DETAIL_SELECT =
 const INVOICE_SIGNED_URL_TTL_SECONDS = 60;
 const INVOICE_STORAGE_BUCKET =
   process.env.SUPABASE_ORDER_INVOICES_BUCKET ?? 'order-invoices';
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function getString(value: unknown): string | null {
-  return typeof value === 'string' && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
-
-function getNumber(value: unknown): number | null {
-  return typeof value === 'number' && Number.isFinite(value) ? value : null;
-}
-
-function getBoolean(value: unknown): boolean | null {
-  return typeof value === 'boolean' ? value : null;
-}
-
-function formatPersonName(firstName: string | null, lastName: string | null) {
-  const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
-  return fullName.length > 0 ? fullName : null;
-}
-
-function formatAddressLine(record: Record<string, unknown>): string | null {
-  const streetName = getString(record.streetName) ?? getString(record.street);
-  const buildingNumber = getString(record.buildingNumber);
-  const apartmentNumber = getString(record.apartmentNumber);
-
-  if (!streetName) {
-    return null;
-  }
-
-  const numberPart = [buildingNumber, apartmentNumber]
-    .filter(Boolean)
-    .join('/');
-
-  return [streetName, numberPart].filter(Boolean).join(' ');
-}
-
-function formatCityLine(record: Record<string, unknown>): string | null {
-  const postalCode = getString(record.postalCode);
-  const city = getString(record.city);
-  return [postalCode, city].filter(Boolean).join(' ') || null;
-}
-
-function parseAddressBlock(
-  value: Json | null,
-  options: { includeRecipient: boolean },
-): CustomerOrderAddressBlock | null {
-  if (!isRecord(value)) {
-    return null;
-  }
-
-  const recipientName = options.includeRecipient
-    ? formatPersonName(getString(value.firstName), getString(value.lastName))
-    : null;
-  const addressLine = formatAddressLine(value);
-  const cityLine = formatCityLine(value);
-  const country = getString(value.country);
-
-  return {
-    recipientName,
-    phone: getString(value.phone),
-    lines: [addressLine, cityLine, country].filter(Boolean) as string[],
-  };
-}
 
 function parseCustomerSnapshot(value: Json): CustomerOrderContactSnapshot {
   if (!isRecord(value)) {
@@ -267,47 +207,6 @@ function parseCustomerSnapshot(value: Json): CustomerOrderContactSnapshot {
     ),
     email: getString(value.email),
     phone: getString(value.phone),
-  };
-}
-
-function parseShippingAddressSnapshot(value: Json): CustomerOrderAddressBlock {
-  return (
-    parseAddressBlock(value, { includeRecipient: true }) ?? {
-      recipientName: null,
-      phone: null,
-      lines: [],
-    }
-  );
-}
-
-function parseInvoiceData(value: Json | null): ParsedInvoiceData {
-  if (!isRecord(value)) {
-    return {
-      recipientType: 'private',
-      companyName: null,
-      taxId: null,
-      invoiceAddress: null,
-      storagePath: null,
-      attachedAt: null,
-    };
-  }
-
-  const rawRecipientType = getString(value.recipientType);
-  const recipientType =
-    rawRecipientType === 'private' || rawRecipientType === 'company'
-      ? rawRecipientType
-      : 'unknown';
-
-  return {
-    recipientType,
-    companyName: getString(value.companyName),
-    taxId: getString(value.taxId),
-    invoiceAddress: parseAddressBlock(
-      (value.invoiceAddress ?? null) as Json | null,
-      { includeRecipient: false },
-    ),
-    storagePath: getString(value.storagePath),
-    attachedAt: getString(value.attachedAt),
   };
 }
 
@@ -333,42 +232,24 @@ function mapInvoiceData(
 function parseDiscountData(
   value: Json | null,
 ): CustomerOrderDiscountSnapshot | null {
-  if (!isRecord(value)) {
+  const discount = parseOrderDiscountData(value);
+
+  if (!discount) {
     return null;
   }
 
-  const totalDiscountCents = getNumber(value.totalDiscountCents) ?? 0;
-  const discountValueCents = getNumber(value.discountValueCents);
-  const discountPercent = getNumber(value.discountPercent);
   const discountValueLabel =
-    discountValueCents !== null
-      ? `${Math.round(discountValueCents / 100)} PLN`
-      : discountPercent !== null
-        ? `${discountPercent}%`
+    discount.discountValueCents !== null
+      ? `${Math.round(discount.discountValueCents / 100)} PLN`
+      : discount.discountPercent !== null
+        ? `${discount.discountPercent}%`
         : null;
 
   return {
-    couponCode: getString(value.couponCode),
-    discountType: getString(value.discountType),
+    couponCode: discount.couponCode,
+    discountType: discount.discountType,
     discountValueLabel,
-    totalDiscountCents,
-  };
-}
-
-function parseShipmentData(
-  value: Json | null,
-  shippedAt: string | null,
-): CustomerOrderShipmentSnapshot | null {
-  if (!isRecord(value) && !shippedAt) {
-    return null;
-  }
-
-  const record = isRecord(value) ? value : {};
-  return {
-    carrier: getString(record.carrier),
-    trackingNumber: getString(record.trackingNumber),
-    trackingUrl: getString(record.trackingUrl),
-    shippedAt: getString(record.shippedAt) ?? shippedAt,
+    totalDiscountCents: discount.totalDiscountCents,
   };
 }
 
@@ -390,61 +271,17 @@ function extractProductImage(snapshot: Json): SanityRawImage | null {
   return candidate as unknown as SanityRawImage;
 }
 
-function formatSelectedOption(option: unknown): string | null {
-  if (!isRecord(option)) {
-    return null;
-  }
-
-  const groupName = getString(option.groupName);
-  const valueName = getString(option.valueName);
-  const numericValue = getNumber(option.numericValue);
-  const unit = getString(option.unit);
-  const parentGroupName = getString(option.parentGroupName);
-  const parentValueName = getString(option.parentValueName);
-  const resolvedValue =
-    valueName ??
-    (numericValue !== null ? `${numericValue}${unit ?? ''}` : null);
-
-  if (!groupName || !resolvedValue) {
-    return null;
-  }
-
-  const prefix =
-    parentGroupName && parentValueName
-      ? `${parentGroupName}: ${parentValueName} / `
-      : '';
-
-  return `${prefix}${groupName}: ${resolvedValue}`;
-}
-
 function mapOrderItem(row: OrderItemRow): CustomerOrderDetailItem {
-  const details: string[] = [];
+  const snapshot = parseOrderItemSnapshot(row.item_snapshot, row.line_type);
   let cpoContext: string | null = null;
 
-  if (isRecord(row.item_snapshot)) {
-    const model = getString(row.item_snapshot.model);
-    if (model) {
-      details.push(`Model: ${model}`);
-    }
-
-    const selectedOptions = row.item_snapshot.selectedOptions;
-    if (Array.isArray(selectedOptions)) {
-      for (const option of selectedOptions) {
-        const label = formatSelectedOption(option);
-        if (label) {
-          details.push(label);
-        }
-      }
-    }
-
-    const availabilityStatus = getString(
-      row.item_snapshot.availabilityStatusAtPurchase,
-    );
-    const archivedAtPurchase = getBoolean(row.item_snapshot.archivedAtPurchase);
+  if (snapshot.cpoContext) {
     const cpoDetails = [
-      availabilityStatus ? `Status CPO: ${availabilityStatus}` : null,
-      archivedAtPurchase !== null
-        ? archivedAtPurchase
+      snapshot.cpoContext.availabilityStatusAtPurchase
+        ? `Status CPO: ${snapshot.cpoContext.availabilityStatusAtPurchase}`
+        : null,
+      snapshot.cpoContext.archivedAtPurchase !== null
+        ? snapshot.cpoContext.archivedAtPurchase
           ? 'Archiwalne w momencie zakupu'
           : 'Aktywne w momencie zakupu'
         : null,
@@ -467,7 +304,7 @@ function mapOrderItem(row: OrderItemRow): CustomerOrderDetailItem {
     lineTotalCents: row.line_total_cents,
     isReturnable: row.is_returnable,
     productImage: extractProductImage(row.item_snapshot),
-    details,
+    details: snapshot.details,
     cpoContext,
   };
 }
@@ -482,84 +319,18 @@ function resolveTimelineSourceLabel(source: unknown): string {
   return 'Audiofast';
 }
 
-function parseTimelineEntry(
-  entry: unknown,
-  index: number,
-): CustomerOrderTimelineEntry | null {
-  if (!isRecord(entry)) {
-    return null;
-  }
-
-  const status =
-    getString(entry.status) ??
-    getString(entry.newStatus) ??
-    getString(entry.currentStatus);
-  const changedAt =
-    getString(entry.changedAt) ??
-    getString(entry.changed_at) ??
-    getString(entry.createdAt) ??
-    getString(entry.at);
-
-  if (!status || !changedAt) {
-    return null;
-  }
-
-  return {
-    id: `${status}-${changedAt}-${index}`,
-    status,
-    changedAt,
-    sourceLabel: resolveTimelineSourceLabel(entry.source),
-  };
-}
-
-function appendTimestampEntry(
-  entries: CustomerOrderTimelineEntry[],
-  status: string,
-  changedAt: string | null,
-  sourceLabel = 'Audiofast',
-) {
-  if (!changedAt || entries.some((entry) => entry.status === status)) {
-    return;
-  }
-
-  entries.push({
-    id: `${status}-${changedAt}-fallback`,
-    status,
-    changedAt,
-    sourceLabel,
-  });
-}
-
 function buildStatusTimeline(
   row: CustomerOrderDetailRow,
 ): CustomerOrderTimelineEntry[] {
-  const parsedEntries = Array.isArray(row.status_history)
-    ? row.status_history.flatMap((entry, index) => {
-        const parsed = parseTimelineEntry(entry, index);
-        return parsed ? [parsed] : [];
-      })
-    : [];
-
-  appendTimestampEntry(
-    parsedEntries,
-    'awaiting_payment',
-    row.created_at,
-    'System Audiofast',
-  );
-  appendTimestampEntry(parsedEntries, 'paid', row.paid_at, 'System Audiofast');
-  appendTimestampEntry(parsedEntries, 'shipped', row.shipped_at);
-  appendTimestampEntry(parsedEntries, 'completed', row.completed_at);
-  appendTimestampEntry(parsedEntries, 'cancelled', row.cancelled_at);
-  appendTimestampEntry(parsedEntries, 'returned', row.returned_at);
-  appendTimestampEntry(
-    parsedEntries,
-    row.current_status,
-    row.updated_at ?? row.created_at,
-  );
-
-  return parsedEntries.sort(
-    (left, right) => Date.parse(left.changedAt) - Date.parse(right.changedAt),
-  );
+  return buildOrderStatusTimeline(row, {
+    fallbackSource: (status) =>
+      status === 'awaiting_payment' || status === 'paid' ? 'system' : null,
+  }).map((entry) => ({
+    id: entry.id,
+    status: entry.status,
+    changedAt: entry.changedAt,
+    sourceLabel: resolveTimelineSourceLabel(entry.source),
+  }));
 }
 
 function mapActiveReturnCase(
@@ -604,27 +375,22 @@ function buildActionEligibility(args: {
   now: Date;
 }): CustomerOrderActionEligibility {
   const canCancel =
-    (args.row.current_status === 'paid' ||
-      args.row.current_status === 'processing') &&
+    isCancellableOrderStatus(args.row.current_status) &&
     args.cancellationRequest === null;
   const allItemsReturnable =
     args.items.length > 0 && args.items.every((item) => item.isReturnable);
-  const returnStatusEligible =
-    args.row.current_status === 'shipped' ||
-    args.row.current_status === 'completed';
-  const shippedTimestamp = args.row.shipped_at
-    ? Date.parse(args.row.shipped_at)
-    : Number.NaN;
-  const returnDeadline = Number.isNaN(shippedTimestamp)
-    ? Number.NaN
-    : shippedTimestamp + 14 * 24 * 60 * 60 * 1000;
-  const isWithinReturnWindow =
-    !Number.isNaN(returnDeadline) && args.now.getTime() <= returnDeadline;
+  const returnStatusEligible = isReturnEligibleOrderStatus(
+    args.row.current_status,
+  );
+  const withinReturnWindow = isWithinReturnWindow({
+    now: args.now,
+    shippedAt: args.row.shipped_at,
+  });
   const isCompanyInvoice = args.invoice.recipientType === 'company';
   const canRequestReturn =
     returnStatusEligible &&
     allItemsReturnable &&
-    isWithinReturnWindow &&
+    withinReturnWindow &&
     !isCompanyInvoice &&
     args.activeReturnCase === null;
 
@@ -643,7 +409,7 @@ function buildActionEligibility(args: {
   } else if (isCompanyInvoice) {
     returnMessage =
       'Zakup z danymi firmowymi może wyłączać samoobsługowy zwrot w panelu.';
-  } else if (!isWithinReturnWindow) {
+  } else if (!withinReturnWindow) {
     returnMessage = 'Okno zwrotu dla tego zamówienia nie jest już aktywne.';
   } else if (canRequestReturn) {
     returnMessage =
@@ -682,7 +448,7 @@ function mapCustomerOrderDetail(args: {
   now: Date;
 }): CustomerOrderDetail {
   const accessKind = classifyCustomerAuthOrderAccess(args.row, args.now);
-  const invoiceData = parseInvoiceData(args.row.invoice_data);
+  const invoiceData = parseOrderInvoiceData(args.row.invoice_data);
   const items = args.items
     .map(mapOrderItem)
     .sort((left, right) => left.linePosition - right.linePosition);
@@ -703,12 +469,15 @@ function mapCustomerOrderDetail(args: {
     discountTotalCents: args.row.discount_total_cents,
     grandTotalCents: args.row.grand_total_cents,
     customer: parseCustomerSnapshot(args.row.customer_snapshot),
-    shippingAddress: parseShippingAddressSnapshot(
+    shippingAddress: parseOrderShippingAddressSnapshot(
       args.row.shipping_address_snapshot,
     ),
     invoice: mapInvoiceData(args.row.order_number, invoiceData),
     discount: parseDiscountData(args.row.used_discount),
-    shipment: parseShipmentData(args.row.shipment_data, args.row.shipped_at),
+    shipment: parseOrderShipmentData(
+      args.row.shipment_data,
+      args.row.shipped_at,
+    ),
     items,
     timeline: buildStatusTimeline(args.row),
     activeReturnCase,
@@ -850,7 +619,7 @@ export async function createCustomerOrderInvoiceSignedUrl(
     return null;
   }
 
-  const invoiceData = parseInvoiceData(row.invoice_data);
+  const invoiceData = parseOrderInvoiceData(row.invoice_data);
 
   if (!invoiceData.storagePath) {
     return null;

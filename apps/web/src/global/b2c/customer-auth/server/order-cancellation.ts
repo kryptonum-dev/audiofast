@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { isCancellableOrderStatus } from '@/src/global/b2c/utils/statuses';
+import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database } from '@/src/global/supabase/database.types';
 
@@ -43,16 +45,8 @@ export type RequestCustomerOrderCancellationResult =
       kind: 'not_found';
     };
 
-const CANCELLATION_ELIGIBLE_STATUSES = new Set(['paid', 'processing']);
 const CANCELLATION_REQUEST_SELECT =
   'id, status, reason, customer_message, requested_at';
-
-function normalizeOptionalText(
-  value: string | null | undefined,
-): string | null {
-  const normalized = value?.trim();
-  return normalized && normalized.length > 0 ? normalized : null;
-}
 
 function mapCancellationRequest(
   request: Pick<
@@ -122,7 +116,7 @@ export async function requestCustomerOrderCancellation({
     return { kind: 'not_found' };
   }
 
-  if (!CANCELLATION_ELIGIBLE_STATUSES.has(order.current_status)) {
+  if (!isCancellableOrderStatus(order.current_status)) {
     return {
       kind: 'not_eligible',
       currentStatus: order.current_status,

@@ -31,6 +31,7 @@ export async function sendTransactionalEmail(
     to: email.to,
     subject: email.subject,
     htmlBody,
+    attachments: email.attachments,
     replyTo: email.replyTo,
     saveToSentItems: email.saveToSentItems,
   });
@@ -41,6 +42,7 @@ export async function sendTransactionalEmails(
 ): Promise<SendEmailResult[]> {
   const renderedEmails = await Promise.all(
     emails.map(async (email) => ({
+      attachments: email.attachments,
       to: email.to,
       subject: email.subject,
       htmlBody: await renderTransactionalEmail(email.react),

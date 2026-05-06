@@ -1,7 +1,13 @@
 import 'server-only';
 
+import { getOrderInvoiceRecipientType } from '@/src/global/b2c/utils/orders';
+import {
+  isReturnEligibleOrderStatus,
+  isWithinReturnWindow,
+} from '@/src/global/b2c/utils/statuses';
+import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
 import { createAdminClient } from '@/src/global/supabase/admin';
-import type { Database, Json } from '@/src/global/supabase/database.types';
+import type { Database } from '@/src/global/supabase/database.types';
 
 type OrderRow = Pick<
   Database['public']['Tables']['orders']['Row'],
@@ -56,39 +62,7 @@ export type RequestCustomerOrderReturnResult =
       kind: 'not_found';
     };
 
-const RETURN_ELIGIBLE_STATUSES = new Set(['shipped', 'completed']);
 const RETURN_CASE_SELECT = 'id, status, reason, created_at';
-const RETURN_WINDOW_DAYS = 14;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
-function getString(value: unknown): string | null {
-  return typeof value === 'string' && value.trim().length > 0
-    ? value.trim()
-    : null;
-}
-
-function normalizeOptionalText(
-  value: string | null | undefined,
-): string | null {
-  const normalized = value?.trim();
-  return normalized && normalized.length > 0 ? normalized : null;
-}
-
-function getInvoiceRecipientType(
-  invoiceData: Json | null,
-): 'private' | 'company' | 'unknown' {
-  if (!isRecord(invoiceData)) {
-    return 'private';
-  }
-
-  const rawRecipientType = getString(invoiceData.recipientType);
-  return rawRecipientType === 'private' || rawRecipientType === 'company'
-    ? rawRecipientType
-    : 'unknown';
-}
 
 function mapReturnCase(
   returnCase: Pick<ReturnCaseRow, 'created_at' | 'id' | 'reason' | 'status'>,
@@ -110,7 +84,7 @@ function getReturnIneligibilityReason({
   now: Date;
   order: OrderRow;
 }): CustomerOrderReturnIneligibilityReason | null {
-  if (!RETURN_ELIGIBLE_STATUSES.has(order.current_status)) {
+  if (!isReturnEligibleOrderStatus(order.current_status)) {
     return 'status';
   }
 
@@ -118,18 +92,11 @@ function getReturnIneligibilityReason({
     return 'non_returnable_item';
   }
 
-  if (getInvoiceRecipientType(order.invoice_data) === 'company') {
+  if (getOrderInvoiceRecipientType(order.invoice_data) === 'company') {
     return 'company_invoice';
   }
 
-  const shippedTimestamp = order.shipped_at
-    ? Date.parse(order.shipped_at)
-    : Number.NaN;
-  const returnDeadline = Number.isNaN(shippedTimestamp)
-    ? Number.NaN
-    : shippedTimestamp + RETURN_WINDOW_DAYS * 24 * 60 * 60 * 1000;
-
-  if (Number.isNaN(returnDeadline) || now.getTime() > returnDeadline) {
+  if (!isWithinReturnWindow({ now, shippedAt: order.shipped_at })) {
     return 'return_window_expired';
   }
 

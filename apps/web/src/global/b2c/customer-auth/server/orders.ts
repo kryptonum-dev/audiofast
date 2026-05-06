@@ -5,6 +5,7 @@ import {
   CUSTOMER_ORDERS_ITEMS_PER_PAGE,
   type CustomerOrdersSortBy,
 } from '@/src/global/b2c/customer-auth/orders-listing-query';
+import { isRecord } from '@/src/global/b2c/utils/orders';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
@@ -79,18 +80,14 @@ const CUSTOMER_ORDERS_VISIBLE_STATUS_FILTER = [
   'and(current_status.eq.awaiting_payment,payable_until.gt.__NOW__)',
 ].join(',');
 
-function isPlainRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
-}
-
 function extractProductImage(snapshot: Json | null): SanityRawImage | null {
-  if (!isPlainRecord(snapshot)) {
+  if (!isRecord(snapshot)) {
     return null;
   }
 
   const candidate = snapshot.productImage;
 
-  if (!isPlainRecord(candidate)) {
+  if (!isRecord(candidate)) {
     return null;
   }
 

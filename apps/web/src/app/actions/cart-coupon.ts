@@ -2,8 +2,12 @@
 
 import type {
   CartCouponDefinition,
-  CartCouponDiscountType,
 } from '@/src/global/b2c/cart/types';
+import {
+  mapCouponRowToDefinition,
+  normalizeCouponCode,
+  type CouponDefinitionRow,
+} from '@/src/global/b2c/utils/coupons';
 import type { Database } from '@/src/global/supabase/database.types';
 import { createClient as createServerClient } from '@/src/global/supabase/server';
 
@@ -20,7 +24,8 @@ type CouponRow = Pick<
   | 'usage_count'
   | 'starts_at'
   | 'expires_at'
->;
+> &
+  CouponDefinitionRow;
 
 export type LookupCouponDefinitionResult =
   | {
@@ -40,63 +45,6 @@ export type LookupCouponDefinitionResult =
 
 const COUPON_LOOKUP_ERROR_MESSAGE =
   'Nie udało się zweryfikować kodu rabatowego. Spróbuj ponownie.';
-const SUPPORTED_DISCOUNT_TYPES: CartCouponDiscountType[] = [
-  'fixed_order',
-  'fixed_product',
-  'percent_order',
-  'percent_product',
-];
-
-function normalizeCouponCode(code: string): string {
-  return code.trim().toUpperCase();
-}
-
-function isSupportedDiscountType(
-  discountType: string,
-): discountType is CartCouponDiscountType {
-  return SUPPORTED_DISCOUNT_TYPES.includes(
-    discountType as CartCouponDiscountType,
-  );
-}
-
-function mapCouponRowToDefinition(
-  row: CouponRow,
-  normalizedCode: string,
-): CartCouponDefinition | null {
-  if (!isSupportedDiscountType(row.discount_type)) {
-    return null;
-  }
-
-  const isFixedDiscount =
-    row.discount_type === 'fixed_order' ||
-    row.discount_type === 'fixed_product';
-  const isPercentDiscount =
-    row.discount_type === 'percent_order' ||
-    row.discount_type === 'percent_product';
-
-  if (isFixedDiscount && typeof row.discount_value_cents !== 'number') {
-    return null;
-  }
-
-  if (isPercentDiscount && typeof row.discount_percent !== 'number') {
-    return null;
-  }
-
-  return {
-    id: row.id,
-    code: normalizedCode,
-    isActive: row.is_active,
-    discountType: row.discount_type,
-    discountValueCents: row.discount_value_cents,
-    discountPercent: row.discount_percent,
-    productKeys: row.product_keys,
-    usageLimit: row.usage_limit,
-    usageCount: row.usage_count,
-    startsAt: row.starts_at,
-    expiresAt: row.expires_at,
-  };
-}
-
 export async function lookupCouponDefinition(
   code: string,
 ): Promise<LookupCouponDefinitionResult> {
