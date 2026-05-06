@@ -23,7 +23,10 @@ import {
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
-import { type AdminPagination, parseAdminPagination } from './pagination';
+import {
+  type AdminPagePagination,
+  parseAdminPagePagination,
+} from './pagination';
 
 type OrderRow = Database['public']['Tables']['orders']['Row'];
 type OrderItemRow = Database['public']['Tables']['order_items']['Row'];
@@ -51,6 +54,7 @@ type AdminOrderListRow = Pick<
     | Pick<
         OrderItemRow,
         | 'brand_name'
+        | 'item_snapshot'
         | 'line_position'
         | 'line_type'
         | 'product_name'
@@ -119,6 +123,13 @@ export type AdminOrderListItemSummary = {
   leadItem: {
     brandName: string;
     productName: string;
+    productImage: {
+      id?: string | null;
+      preview?: string | null;
+      alt?: string | null;
+      naturalWidth?: number | null;
+      naturalHeight?: number | null;
+    } | null;
   } | null;
 };
 
@@ -154,8 +165,12 @@ export type AdminOrderListItem = {
 
 export type AdminOrderListResult = {
   orders: AdminOrderListItem[];
-  pagination: AdminPagination & {
-    nextCursor: string | null;
+  pagination: AdminPagePagination & {
+    currentPage: number;
+    pageSize: number;
+    totalPages: number;
+    previousPage: number | null;
+    nextPage: number | null;
     totalCount: number;
   };
   filters: AdminOrderListFilters;
@@ -282,7 +297,7 @@ export class AdminOrderQueryError extends Error {
 }
 
 const ADMIN_ORDER_LIST_SELECT =
-  'id, order_number, current_status, payable_until, created_at, paid_at, customer_email, customer_snapshot, grand_total_cents, discount_total_cents, invoice_data, shipment_data, shipped_at, order_items(line_position, line_type, product_name, brand_name, quantity), order_cancellation_requests(id, status), return_cases(id, status)';
+  'id, order_number, current_status, payable_until, created_at, paid_at, customer_email, customer_snapshot, grand_total_cents, discount_total_cents, invoice_data, shipment_data, shipped_at, order_items(line_position, line_type, product_name, brand_name, quantity, item_snapshot), order_cancellation_requests(id, status), return_cases(id, status)';
 const ADMIN_ORDER_DETAIL_SELECT =
   'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_provider, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, updated_at, used_discount';
 const ADMIN_ORDER_STATUSES: AdminOrderStatus[] = [...B2C_ORDER_STATUSES];
@@ -328,6 +343,31 @@ function parseCustomerSnapshot(
     email: getString(value.email) ?? fallbackEmail,
     phone: getString(value.phone),
   };
+}
+
+function normalizeSearchValue(value: string): string {
+  return value
+    .replace(/[łŁ]/g, (letter) => (letter === 'Ł' ? 'L' : 'l'))
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+}
+
+function customerSnapshotMatchesName(value: Json, query: string): boolean {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const queryValue = normalizeSearchValue(query);
+  const names = [
+    formatPersonName(getString(value.firstName), getString(value.lastName)),
+    formatPersonName(getString(value.first_name), getString(value.last_name)),
+    getString(value.name),
+    getString(value.fullName),
+    getString(value.full_name),
+  ].filter(Boolean) as string[];
+
+  return names.some((name) => normalizeSearchValue(name).includes(queryValue));
 }
 
 function parseInvoiceData(value: Json | null): AdminOrderDetail['invoice'] {
@@ -378,6 +418,33 @@ function parseDiscountData(value: Json | null): AdminOrderDetail['discount'] {
   return parseOrderDiscountData(value);
 }
 
+function extractProductImage(
+  value: Json,
+): NonNullable<
+  NonNullable<AdminOrderListItemSummary['leadItem']>['productImage']
+> | null {
+  if (!isRecord(value) || !isRecord(value.productImage)) {
+    return null;
+  }
+
+  const image = value.productImage;
+  const id = getString(image.id);
+
+  if (!id) {
+    return null;
+  }
+
+  return {
+    id,
+    preview: getString(image.preview),
+    alt: getString(image.alt),
+    naturalWidth:
+      typeof image.naturalWidth === 'number' ? image.naturalWidth : null,
+    naturalHeight:
+      typeof image.naturalHeight === 'number' ? image.naturalHeight : null,
+  };
+}
+
 function mapOrderItem(row: OrderItemRow): AdminOrderItem {
   const snapshot = parseOrderItemSnapshot(row.item_snapshot, row.line_type);
 
@@ -418,6 +485,7 @@ function mapItemSummary(
       ? {
           brandName: leadItem.brand_name,
           productName: leadItem.product_name,
+          productImage: extractProductImage(leadItem.item_snapshot),
         }
       : null,
   };
@@ -692,6 +760,27 @@ async function resolveOpenRelatedOrderIds(args: {
   return new Set([...args.allOrderIds].filter((id) => !openOrderIds.has(id)));
 }
 
+async function resolveCustomerNameOrderIds(
+  query: string,
+): Promise<Set<string>> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('orders')
+    .select('id, customer_snapshot');
+
+  if (error) {
+    throw error;
+  }
+
+  return new Set(
+    (data ?? [])
+      .filter((row) =>
+        customerSnapshotMatchesName(row.customer_snapshot, query),
+      )
+      .map((row) => row.id),
+  );
+}
+
 async function resolveAdminOrderIdPreFilter(
   filters: AdminOrderListFilters,
 ): Promise<Set<string> | null> {
@@ -904,11 +993,10 @@ export async function loadAdminOrders(input: {
   now?: Date;
 }): Promise<AdminOrderListResult> {
   const now = input.now ?? new Date();
-  const pagination = parseAdminPagination(input.searchParams);
+  const pagination = parseAdminPagePagination(input.searchParams);
   const filters = parseAdminOrderListFilters(input.searchParams);
   const filteredOrderIds = await resolveAdminOrderIdPreFilter(filters);
-  const offset = Number.parseInt(pagination.cursor ?? '0', 10);
-  const safeOffset = Number.isFinite(offset) && offset > 0 ? offset : 0;
+  const safeOffset = (pagination.page - 1) * pagination.limit;
   const rangeEnd = safeOffset + pagination.limit - 1;
 
   if (filteredOrderIds && filteredOrderIds.size === 0) {
@@ -916,8 +1004,11 @@ export async function loadAdminOrders(input: {
       orders: [],
       pagination: {
         ...pagination,
-        cursor: String(safeOffset),
-        nextCursor: null,
+        currentPage: pagination.page,
+        pageSize: pagination.limit,
+        totalPages: 0,
+        previousPage: pagination.page > 1 ? pagination.page - 1 : null,
+        nextPage: null,
         totalCount: 0,
       },
       filters,
@@ -935,9 +1026,16 @@ export async function loadAdminOrders(input: {
   }
 
   if (filters.q) {
-    query = query.or(
-      `order_number.ilike.%${filters.q}%,customer_email.ilike.%${filters.q}%`,
-    );
+    const customerNameOrderIds = await resolveCustomerNameOrderIds(filters.q);
+    const searchFilters = [
+      `order_number.ilike.%${filters.q}%`,
+      `customer_email.ilike.%${filters.q}%`,
+      customerNameOrderIds.size > 0
+        ? `id.in.(${[...customerNameOrderIds].join(',')})`
+        : null,
+    ].filter(Boolean);
+
+    query = query.or(searchFilters.join(','));
   }
 
   const visibleStatusFilter = buildVisibleStatusFilter(filters, now);
@@ -967,17 +1065,19 @@ export async function loadAdminOrders(input: {
   const orders = ((data ?? []) as unknown as AdminOrderListRow[]).map(
     mapAdminOrderListRow,
   );
+  const totalCount = count ?? orders.length;
+  const totalPages = Math.ceil(totalCount / pagination.limit);
 
   return {
     orders,
     pagination: {
       ...pagination,
-      cursor: String(safeOffset),
-      nextCursor:
-        (data ?? []).length === pagination.limit
-          ? String(safeOffset + pagination.limit)
-          : null,
-      totalCount: count ?? orders.length,
+      currentPage: pagination.page,
+      pageSize: pagination.limit,
+      totalPages,
+      previousPage: pagination.page > 1 ? pagination.page - 1 : null,
+      nextPage: pagination.page < totalPages ? pagination.page + 1 : null,
+      totalCount,
     },
     filters,
   };
@@ -1071,6 +1171,7 @@ export async function loadAdminOrderDetail(input: {
 }
 
 export const adminOrderTesting = {
+  customerSnapshotMatchesName,
   getAllowedNextStatuses: getAdminAllowedNextStatuses,
   mapAdminOrderListRow,
   parseAdminOrderListFilters,

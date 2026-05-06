@@ -38,6 +38,36 @@ describe('admin order helpers', () => {
     ).toThrow(AdminOrderQueryError);
   });
 
+  it('matches customer names from snapshots for admin search', () => {
+    expect(
+      adminOrderTesting.customerSnapshotMatchesName(
+        {
+          firstName: 'Łukasz',
+          lastName: 'Kamiński',
+        },
+        'lukasz kaminski',
+      ),
+    ).toBe(true);
+    expect(
+      adminOrderTesting.customerSnapshotMatchesName(
+        {
+          first_name: 'Anna',
+          last_name: 'Nowak',
+        },
+        'nowak',
+      ),
+    ).toBe(true);
+    expect(
+      adminOrderTesting.customerSnapshotMatchesName(
+        {
+          firstName: 'Piotr',
+          lastName: 'Wiśniewski',
+        },
+        'zielinska',
+      ),
+    ).toBe(false);
+  });
+
   it('maps order list rows into narrow admin DTOs', () => {
     const order = adminOrderTesting.mapAdminOrderListRow({
       created_at: '2026-05-06T08:00:00.000Z',
@@ -61,6 +91,7 @@ describe('admin order helpers', () => {
       order_items: [
         {
           brand_name: 'Brand A',
+          item_snapshot: { productImage: null },
           line_position: 2,
           line_type: 'cpo',
           product_name: 'CPO Item',
@@ -68,6 +99,15 @@ describe('admin order helpers', () => {
         },
         {
           brand_name: 'Brand B',
+          item_snapshot: {
+            productImage: {
+              id: 'image-abc-100x100-webp',
+              preview: 'data:image/png;base64,xyz',
+              alt: 'Standard Item',
+              naturalWidth: 100,
+              naturalHeight: 100,
+            },
+          },
           line_position: 1,
           line_type: 'standard',
           product_name: 'Standard Item',
@@ -115,6 +155,13 @@ describe('admin order helpers', () => {
       leadItem: {
         brandName: 'Brand B',
         productName: 'Standard Item',
+        productImage: {
+          alt: 'Standard Item',
+          id: 'image-abc-100x100-webp',
+          naturalHeight: 100,
+          naturalWidth: 100,
+          preview: 'data:image/png;base64,xyz',
+        },
       },
       lineTypes: ['cpo', 'standard'],
       totalItemCount: 3,
@@ -128,9 +175,9 @@ describe('admin order helpers', () => {
       'completed',
       'cancelled',
     ]);
-    expect(adminOrderTesting.getAllowedNextStatuses('awaiting_payment')).toEqual(
-      [],
-    );
+    expect(
+      adminOrderTesting.getAllowedNextStatuses('awaiting_payment'),
+    ).toEqual([]);
     expect(adminOrderTesting.getAllowedNextStatuses('returned')).toEqual([]);
   });
 });

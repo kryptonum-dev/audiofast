@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseAdminPagination } from './pagination';
+import { parseAdminPagePagination, parseAdminPagination } from './pagination';
 
 describe('parseAdminPagination', () => {
   it('returns default pagination when no params are set', () => {
@@ -27,5 +27,38 @@ describe('parseAdminPagination', () => {
     expect(parseAdminPagination(new URLSearchParams('limit=abc')).limit).toBe(
       25,
     );
+  });
+});
+
+describe('parseAdminPagePagination', () => {
+  it('returns default page pagination when no params are set', () => {
+    expect(parseAdminPagePagination(new URLSearchParams())).toEqual({
+      page: 1,
+      limit: 25,
+    });
+  });
+
+  it('parses page and limit params', () => {
+    expect(
+      parseAdminPagePagination(new URLSearchParams('page=3&limit=50')),
+    ).toEqual({
+      page: 3,
+      limit: 50,
+    });
+  });
+
+  it('clamps invalid and out-of-range values', () => {
+    expect(parseAdminPagePagination(new URLSearchParams('page=0')).page).toBe(
+      1,
+    );
+    expect(
+      parseAdminPagePagination(new URLSearchParams('limit=500')).limit,
+    ).toBe(100);
+    expect(
+      parseAdminPagePagination(new URLSearchParams('page=abc&limit=abc')),
+    ).toEqual({
+      page: 1,
+      limit: 25,
+    });
   });
 });
