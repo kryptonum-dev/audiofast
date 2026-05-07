@@ -6,6 +6,9 @@ export type AdminRoute =
       screen: "coupons";
     }
   | {
+      screen: "couponCreate";
+    }
+  | {
       orderNumber: string;
       screen: "orderDetail";
     };
@@ -26,6 +29,12 @@ export function parseAdminRoute(
   }
 
   if (parts[0] === "coupons") {
+    if (parts[1] === "new") {
+      return {
+        screen: "couponCreate",
+      };
+    }
+
     return {
       screen: "coupons",
     };
@@ -42,6 +51,10 @@ export function getOrdersPath() {
 
 export function getCouponsPath() {
   return COUPONS_PATH;
+}
+
+export function getCouponCreatePath() {
+  return `${COUPONS_PATH}/new`;
 }
 
 export function getOrderDetailPath(orderNumber: string) {

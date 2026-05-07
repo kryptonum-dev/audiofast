@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import {
+  getCouponCreatePath,
   getCouponsPath,
   getOrderDetailPath,
   getOrdersPath,
@@ -8,6 +9,7 @@ import {
   type AdminRoute,
 } from "./router.js";
 import { AdminShell } from "./components/AdminShell.js";
+import { CouponCreateView } from "./components/CouponCreateView.js";
 import { CouponsListing } from "./components/CouponsListing.js";
 import { OrderDetailView } from "./components/OrderDetailView.js";
 import { OrdersListing } from "./components/OrdersListing.js";
@@ -47,12 +49,19 @@ export function AdminApp() {
     }
   }
 
-  const activeArea = route.screen === "coupons" ? "coupons" : "orders";
+  const activeArea =
+    route.screen === "coupons" || route.screen === "couponCreate"
+      ? "coupons"
+      : "orders";
 
   return (
     <AdminShell activeArea={activeArea} onAreaChange={navigateArea}>
-      {route.screen === "coupons" ? (
-        <CouponsListing />
+      {route.screen === "couponCreate" ? (
+        <CouponCreateView onBack={() => navigate(getCouponsPath())} />
+      ) : route.screen === "coupons" ? (
+        <CouponsListing
+          onCreateCoupon={() => navigate(getCouponCreatePath())}
+        />
       ) : route.screen === "orderDetail" ? (
         <OrderDetailView
           orderNumber={route.orderNumber}

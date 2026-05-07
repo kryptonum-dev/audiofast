@@ -1,6 +1,9 @@
 import { sanityAppConfig } from "../config.js";
 import type {
   AdminApiEnvelope,
+  AdminCoupon,
+  AdminCouponMutationInput,
+  AdminCouponProductsResult,
   AdminCouponsResult,
   AdminOrderStatus,
   AdminOrderDetail,
@@ -149,6 +152,52 @@ export async function fetchAdminCoupons(args: {
       totalPages,
     },
   };
+}
+
+export async function createAdminCoupon(args: {
+  authToken: string;
+  input: AdminCouponMutationInput;
+}): Promise<AdminCoupon> {
+  const response = await fetch(
+    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/`,
+    {
+      body: JSON.stringify(args.input),
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    },
+  );
+  const payload = (await response.json()) as AdminApiEnvelope<AdminCoupon>;
+
+  if (!response.ok || !payload.ok) {
+    throw new AdminApiError(
+      payload.ok === false ? payload.message : "Nie udało się utworzyć kuponu.",
+    );
+  }
+
+  return payload.data;
+}
+
+export async function fetchAdminCouponProducts(args: {
+  authToken: string;
+  signal?: AbortSignal;
+}): Promise<AdminCouponProductsResult> {
+  const response = await fetch(
+    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/products/`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      signal: args.signal,
+    },
+  );
+
+  return readAdminEnvelope<AdminCouponProductsResult>(
+    response,
+    "Nie udało się załadować produktów do kuponu.",
+  );
 }
 
 export async function fetchAdminOrderDetail(args: {

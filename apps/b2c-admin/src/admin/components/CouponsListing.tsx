@@ -33,7 +33,11 @@ type CouponsState =
       error: string;
     };
 
-export function CouponsListing() {
+type CouponsListingProps = {
+  onCreateCoupon: () => void;
+};
+
+export function CouponsListing({ onCreateCoupon }: CouponsListingProps) {
   const authToken = useAuthToken();
   const [filters, setFilters] = useState<CouponsFilters>(
     DEFAULT_COUPONS_FILTERS,
@@ -135,12 +139,11 @@ export function CouponsListing() {
           </Text>
           <Flex gap={2} wrap="wrap">
             <Button
-              disabled
               icon={AddIcon}
               mode="ghost"
+              onClick={onCreateCoupon}
               padding={2}
               text="Nowy kupon"
-              title="Tworzenie kuponów będzie obsłużone w kolejnym kroku."
               type="button"
             />
             <Button

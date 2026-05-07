@@ -174,15 +174,35 @@ Build the `Coupons` listing experience.
 
 The list should let operators review existing coupons, understand their basic operational state, and navigate to individual coupon details.
 
-Status: next.
+Status: implemented for the current v1 listing surface.
+
+Implemented scope:
+
+- coupons tab and `/coupons` route in the App SDK admin shell
+- code search, status filter, and discount type filter
+- 15-item pagination matching the orders listing density
+- derived status display for active, inactive, scheduled, expired, and usage-limit-reached coupons
+- coupon amount/percent, product-scope summary, usage, active window, and created date columns
+- "New coupon" entry point into the create flow
 
 ### Step 7 - Coupon Detail Page
 
-Build the coupon detail page.
+Build the coupon create/detail page.
 
 This page should support the v1 coupon operations: create, edit, deactivate, and review one coupon without becoming a full promotion engine.
 
-Status: not started.
+Status: create view implemented; existing coupon detail/edit/deactivate remains next.
+
+Implemented create scope:
+
+- `/coupons/new` route and "back to coupons" navigation
+- coupon code, discount type, fixed amount/percent value, usage limit, optional active-from and expiry dates, and active flag
+- date constraints that block selecting dates before the current day and require start before expiry
+- dirty-form confirmation modal before discarding a partially filled coupon
+- product-scoped coupon picker for `fixed_product` and `percent_product` coupons
+- picker loads eligible published Sanity standard products and viable internal `CPO` products through the admin API
+- standard product selections save all matching Supabase pricing `price_key` values so coupon matching works against cart `line.productKey`
+- product thumbnails and hosted Sanity Studio edit-intent links for normal and `CPO` products
 
 ### Step 8 - Simple Analytics
 

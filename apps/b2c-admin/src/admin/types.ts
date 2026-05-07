@@ -36,6 +36,39 @@ export type AdminCoupon = {
   derivedStatus: AdminCouponDerivedStatus | string;
 };
 
+export type AdminCouponMutationInput = {
+  code: string;
+  discountType: AdminCouponDiscountType;
+  discountValueCents: number | null;
+  discountPercent: number | null;
+  productKeys: string[];
+  usageLimit: number | null;
+  startsAt: string | null;
+  expiresAt: string | null;
+  isActive: boolean;
+};
+
+export type AdminCouponProductOption = {
+  id: string;
+  lineType: "standard" | "cpo";
+  productName: string;
+  brandName: string | null;
+  productKey: string;
+  productKeys: string[];
+  priceCents: number | null;
+  image: {
+    id?: string | null;
+    preview?: string | null;
+    alt?: string | null;
+    naturalWidth?: number | null;
+    naturalHeight?: number | null;
+  } | null;
+};
+
+export type AdminCouponProductsResult = {
+  products: AdminCouponProductOption[];
+};
+
 export type AdminCouponsPagination = {
   cursor: string | null;
   limit: number;

@@ -32,13 +32,14 @@ This phase gives Audiofast the internal tools needed to manage orders, documents
 - status update workflow - implemented
 - manual shipment metadata entry - implemented
 - invoice upload/publication workflow - implemented
-- coupon management workflow
+- coupon listing and coupon creation workflow - implemented
+- coupon detail/edit/deactivate workflow
 - return-case handling workflow - implemented for order details
 - cancellation handling workflow - implemented for order details
 
 ## Current Implementation State
 
-Phase 08 is currently implemented through the `Orders` area.
+Phase 08 is currently implemented through the `Orders` area and the first `Coupons` workflows.
 
 Completed so far:
 
@@ -52,6 +53,9 @@ Completed so far:
 - customer, company, invoice, and delivery data rendering for operational review
 - product and product-option visibility for fulfillment decisions
 - cancellation and return case handling from the admin order detail page
+- coupon listing with search, status/type filters, derived status, and 15-item pagination
+- coupon creation with v1 validation, dirty-form discard confirmation, and server-side Supabase persistence
+- product-scoped coupon creation with an eligible Sanity/Supabase product picker for standard and `CPO` products
 - supporting customer-panel refinements for invoice download, shipment display, and cancellation/return history visibility
 
 Current local architecture note:
@@ -62,7 +66,7 @@ Current local architecture note:
 
 Next step:
 
-- implement the `Coupons` area, starting with `Step 6 - Coupons Listing`
+- implement existing coupon detail/edit/deactivate view
 
 ## Work Included In This Phase
 

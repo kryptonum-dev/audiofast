@@ -186,6 +186,7 @@ The planned Phase 08 admin route inventory is:
 - `POST /api/admin/orders/[orderNumber]/return-cases/[returnCaseId]/complete`
 - `GET /api/admin/coupons`
 - `POST /api/admin/coupons`
+- `GET /api/admin/coupons/products`
 - `GET /api/admin/coupons/[couponId]`
 - `PATCH /api/admin/coupons/[couponId]`
 - `GET /api/admin/analytics`
@@ -606,6 +607,33 @@ Must enforce:
 - order-wide coupons may have empty `productKeys`
 - product-specific coupons must have at least one product key
 - usage limit cannot be lower than current usage count
+
+### `GET /api/admin/coupons/products`
+
+Purpose:
+
+- Load selectable products for product-scoped coupon creation.
+
+Returns:
+
+- product id
+- line type: `standard` or `cpo`
+- product name
+- brand name when available
+- representative product key
+- full `productKeys` array to save into `coupons.product_keys`
+- price in cents when available
+- Sanity image reference for admin thumbnails
+
+Must include:
+
+- published normal Sanity products that are sellable online and have at least one valid Supabase `pricing_variants.price_key`
+- published internal `CPO` products that are sellable online, not archived, have `availabilityStatus = available`, and have a valid price
+
+Important matching rule:
+
+- standard products use Supabase `pricing_variants.price_key` values as coupon product keys because the cart stores selected standard variants in `line.productKey`
+- `CPO` products use their Sanity slug as the coupon product key because the CPO cart line stores the CPO product route slug
 
 ### `GET /api/admin/coupons/[couponId]`
 
