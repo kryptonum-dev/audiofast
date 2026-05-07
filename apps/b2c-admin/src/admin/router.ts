@@ -3,6 +3,9 @@ export type AdminRoute =
       screen: "orders";
     }
   | {
+      screen: "analytics";
+    }
+  | {
       screen: "coupons";
     }
   | {
@@ -19,6 +22,7 @@ export type AdminRoute =
 
 const ORDERS_PATH = "/orders";
 const COUPONS_PATH = "/coupons";
+const ANALYTICS_PATH = "/analytics";
 
 export function parseAdminRoute(
   pathname = window.location.pathname,
@@ -51,6 +55,12 @@ export function parseAdminRoute(
     };
   }
 
+  if (parts[0] === "analytics") {
+    return {
+      screen: "analytics",
+    };
+  }
+
   return {
     screen: "orders",
   };
@@ -62,6 +72,10 @@ export function getOrdersPath() {
 
 export function getCouponsPath() {
   return COUPONS_PATH;
+}
+
+export function getAnalyticsPath() {
+  return ANALYTICS_PATH;
 }
 
 export function getCouponCreatePath() {

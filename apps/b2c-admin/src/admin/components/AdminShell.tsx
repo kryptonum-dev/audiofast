@@ -40,7 +40,6 @@ const ADMIN_AREAS: {
     id: "analytics",
     label: "Analityka",
     icon: BarChartIcon,
-    disabled: true,
   },
 ];
 

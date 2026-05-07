@@ -1,5 +1,6 @@
 import { sanityAppConfig } from "../config.js";
 import type {
+  AdminAnalyticsResult,
   AdminApiEnvelope,
   AdminCoupon,
   AdminCouponMutationInput,
@@ -8,6 +9,7 @@ import type {
   AdminOrderStatus,
   AdminOrderDetail,
   AdminOrdersResult,
+  AnalyticsFilters,
   CouponsFilters,
   OrdersFilters,
 } from "./types.js";
@@ -87,6 +89,45 @@ export async function fetchAdminOrders(args: {
   }
 
   return payload.data;
+}
+
+export async function fetchAdminAnalytics(args: {
+  authToken: string;
+  filters: AnalyticsFilters;
+  signal?: AbortSignal;
+}): Promise<AdminAnalyticsResult> {
+  const params = new URLSearchParams({
+    groupBy: args.filters.groupBy,
+  });
+
+  if (args.filters.dateRange.from) {
+    params.set(
+      "from",
+      new Date(`${args.filters.dateRange.from}T00:00:00`).toISOString(),
+    );
+  }
+
+  if (args.filters.dateRange.to) {
+    params.set(
+      "to",
+      new Date(`${args.filters.dateRange.to}T23:59:59.999`).toISOString(),
+    );
+  }
+
+  const response = await fetch(
+    `${sanityAppConfig.adminApiBaseUrl}/api/admin/analytics/?${params.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      signal: args.signal,
+    },
+  );
+
+  return readAdminEnvelope<AdminAnalyticsResult>(
+    response,
+    "Nie udało się załadować analityki.",
+  );
 }
 
 export async function fetchAdminCoupons(args: {

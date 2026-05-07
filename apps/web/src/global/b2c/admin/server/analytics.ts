@@ -16,13 +16,19 @@ type AnalyticsOrderRow = Pick<
   | 'grand_total_cents'
   | 'id'
   | 'paid_at'
->;
+> & {
+  order_items?: Array<
+    Pick<Database['public']['Tables']['order_items']['Row'], 'quantity'>
+  > | null;
+};
 
-export type AdminAnalyticsGroupBy = 'day' | 'none' | 'week';
+export type AdminAnalyticsGroupBy = 'day' | 'month' | 'none' | 'week';
 
 export type AdminAnalyticsSeriesPoint = {
+  digitalSalesCount: number;
   label: string;
   paidOrderCount: number;
+  grossPaidRevenueCents: number;
   revenueCents: number;
   discountTotalCents: number;
 };
@@ -66,12 +72,12 @@ function parseGroupBy(value: string | null): AdminAnalyticsGroupBy {
     return 'none';
   }
 
-  if (value === 'day' || value === 'week') {
+  if (value === 'day' || value === 'month' || value === 'week') {
     return value;
   }
 
   throw new AdminAnalyticsError(
-    'groupBy must be day, week, or none.',
+    'groupBy must be day, week, month, or none.',
     'invalid_analytics_query',
     400,
   );
@@ -84,6 +90,12 @@ function getSeriesLabel(date: Date, groupBy: AdminAnalyticsGroupBy): string {
 
   if (groupBy === 'day') {
     return date.toISOString().slice(0, 10);
+  }
+
+  if (groupBy === 'month') {
+    return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1))
+      .toISOString()
+      .slice(0, 10);
   }
 
   const weekStart = new Date(
@@ -123,6 +135,9 @@ export function aggregateAdminAnalyticsRows(args: {
       continue;
     }
 
+    const digitalSalesCount =
+      row.order_items?.reduce((total, item) => total + item.quantity, 0) ?? 0;
+
     revenueOrderCount += 1;
     revenueCents += row.grand_total_cents;
     discountTotalCents += row.discount_total_cents;
@@ -133,11 +148,15 @@ export function aggregateAdminAnalyticsRows(args: {
         series.get(label) ??
         ({
           discountTotalCents: 0,
+          digitalSalesCount: 0,
+          grossPaidRevenueCents: 0,
           label,
           paidOrderCount: 0,
           revenueCents: 0,
         } satisfies AdminAnalyticsSeriesPoint);
 
+      existing.digitalSalesCount += digitalSalesCount;
+      existing.grossPaidRevenueCents += row.grand_total_cents;
       existing.paidOrderCount += 1;
       existing.revenueCents += row.grand_total_cents;
       existing.discountTotalCents += row.discount_total_cents;
@@ -183,7 +202,9 @@ export async function loadAdminAnalytics(args: {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('orders')
-    .select('current_status, discount_total_cents, grand_total_cents, id, paid_at')
+    .select(
+      'current_status, discount_total_cents, grand_total_cents, id, paid_at, order_items(quantity)',
+    )
     .not('paid_at', 'is', null)
     .gte('paid_at', range.fromIso)
     .lte('paid_at', range.toIso);

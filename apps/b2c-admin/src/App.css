@@ -208,6 +208,27 @@ body,
   min-height: 594px;
 }
 
+.analyticsChartFrame {
+  width: 100%;
+  min-height: 360px;
+}
+
+.analyticsChartFrame .recharts-wrapper,
+.analyticsChartFrame .recharts-surface {
+  outline: none;
+}
+
+.analyticsChartFrame .recharts-line-dot,
+.analyticsChartFrame .recharts-active-dot {
+  fill: var(--card-bg-color, #101112);
+  stroke: var(--card-focus-ring-color, #556bff);
+}
+
+.analyticsChartTooltip {
+  min-width: 220px;
+  border: 1px solid var(--card-border-color, rgba(127, 127, 127, 0.24));
+}
+
 .adminAppRoot [data-ui='TextInput']:has(.couponDiscountInputSuffix) {
   align-items: stretch;
 }

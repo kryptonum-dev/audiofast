@@ -104,6 +104,44 @@ export type AdminDateRangeFilter = {
   to: string;
 };
 
+export type AdminAnalyticsGroupBy = "day" | "month" | "week";
+
+export type AnalyticsFilters = {
+  dateRange: AdminDateRangeFilter;
+  groupBy: AdminAnalyticsGroupBy;
+};
+
+export type AdminAnalyticsSeriesPoint = {
+  digitalSalesCount?: number;
+  grossPaidRevenueCents?: number;
+  label: string;
+  paidOrderCount: number;
+  revenueCents: number;
+  discountTotalCents: number;
+};
+
+export type AdminAnalyticsResult = {
+  period: {
+    from: string;
+    to: string;
+    groupBy: AdminAnalyticsGroupBy | "none";
+  };
+  revenue: {
+    countingMode: "paid_orders_excluding_cancelled_and_returned" | string;
+    paidOrderCount: number;
+    revenueOrderCount: number;
+    grossPaidRevenueCents: number;
+    revenueCents: number;
+    averageOrderValueCents: number;
+    discountTotalCents: number;
+  };
+  statusCounts: Array<{
+    status: string;
+    count: number;
+  }>;
+  series: AdminAnalyticsSeriesPoint[];
+};
+
 export type OrdersFilters = {
   search: string;
   status: AdminOrderStatus | "all";

@@ -15,6 +15,7 @@
     "@sanity/ui": "^3.1.11",
     "react": "^19.2.2",
     "react-dom": "^19.2.2",
+    "recharts": "^3.8.1",
     "sanity": "^5.1.0",
     "styled-components": "^6.1.15"
   },

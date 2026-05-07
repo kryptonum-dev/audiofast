@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import {
+  getAnalyticsPath,
   getCouponCreatePath,
   getCouponEditPath,
   getCouponsPath,
@@ -16,6 +17,7 @@ import { CouponsListing } from "./components/CouponsListing.js";
 import { OrderDetailView } from "./components/OrderDetailView.js";
 import { OrdersListing } from "./components/OrdersListing.js";
 import type { AdminArea } from "./types.js";
+import { AnalyticsView } from "./components/AnalyticsView.js";
 
 export function AdminApp() {
   const [route, setRoute] = useState<AdminRoute>(() => parseAdminRoute());
@@ -41,6 +43,11 @@ export function AdminApp() {
   }
 
   function navigateArea(area: AdminArea) {
+    if (area === "analytics") {
+      navigate(getAnalyticsPath());
+      return;
+    }
+
     if (area === "coupons") {
       navigate(getCouponsPath());
       return;
@@ -56,12 +63,16 @@ export function AdminApp() {
     route.screen === "couponCreate" ||
     route.screen === "couponEdit"
       ? "coupons"
+      : route.screen === "analytics"
+        ? "analytics"
       : "orders";
 
   return (
     <AdminShell activeArea={activeArea} onAreaChange={navigateArea}>
       {route.screen === "couponCreate" ? (
         <CouponCreateView onBack={() => navigate(getCouponsPath())} />
+      ) : route.screen === "analytics" ? (
+        <AnalyticsView />
       ) : route.screen === "couponEdit" ? (
         <CouponEditView
           couponId={route.couponId}
