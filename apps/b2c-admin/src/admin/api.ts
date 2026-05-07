@@ -1,9 +1,11 @@
 import { sanityAppConfig } from "../config.js";
 import type {
   AdminApiEnvelope,
+  AdminCouponsResult,
   AdminOrderStatus,
   AdminOrderDetail,
   AdminOrdersResult,
+  CouponsFilters,
   OrdersFilters,
 } from "./types.js";
 
@@ -82,6 +84,71 @@ export async function fetchAdminOrders(args: {
   }
 
   return payload.data;
+}
+
+export async function fetchAdminCoupons(args: {
+  authToken: string;
+  filters: CouponsFilters;
+  page: number;
+  limit: number;
+  signal?: AbortSignal;
+}): Promise<AdminCouponsResult> {
+  const offset = Math.max(args.page - 1, 0) * args.limit;
+  const params = new URLSearchParams({
+    limit: String(args.limit),
+  });
+  const search = args.filters.search.trim();
+
+  if (offset > 0) {
+    params.set("cursor", String(offset));
+  }
+
+  if (search) {
+    params.set("q", search);
+  }
+
+  if (args.filters.status !== "all") {
+    params.set("derivedStatus", args.filters.status);
+  }
+
+  if (args.filters.discountType !== "all") {
+    params.set("discountType", args.filters.discountType);
+  }
+
+  const response = await fetch(
+    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/?${params.toString()}`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      signal: args.signal,
+    },
+  );
+  const payload =
+    (await response.json()) as AdminApiEnvelope<AdminCouponsResult>;
+
+  if (!response.ok || !payload.ok) {
+    throw new AdminApiError(
+      payload.ok === false
+        ? payload.message
+        : "Nie udało się załadować kuponów.",
+    );
+  }
+
+  const totalCount = payload.data.pagination.total;
+  const pageSize = payload.data.pagination.limit;
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+
+  return {
+    ...payload.data,
+    pagination: {
+      ...payload.data.pagination,
+      currentPage: args.page,
+      pageSize,
+      totalCount,
+      totalPages,
+    },
+  };
 }
 
 export async function fetchAdminOrderDetail(args: {

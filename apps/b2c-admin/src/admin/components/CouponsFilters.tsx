@@ -2,32 +2,26 @@ import { ResetIcon, SearchIcon } from "@sanity/icons";
 import { Box, Button, Card, Flex, Grid, Label, TextInput } from "@sanity/ui";
 import { useEffect, useState } from "react";
 
-import type { OrdersFilters as OrdersFiltersValue } from "../types.js";
+import type { CouponsFilters as CouponsFiltersValue } from "../types.js";
 import { AdminFilterSelect } from "./AdminFilterSelect.js";
-import { DateRangePicker } from "./DateRangePicker.js";
 
-type OrdersFiltersProps = {
-  filters: OrdersFiltersValue;
-  onChange: (filters: OrdersFiltersValue) => void;
+type CouponsFiltersProps = {
+  filters: CouponsFiltersValue;
+  onChange: (filters: CouponsFiltersValue) => void;
   onReset: () => void;
 };
 
-export const DEFAULT_ORDERS_FILTERS: OrdersFiltersValue = {
+export const DEFAULT_COUPONS_FILTERS: CouponsFiltersValue = {
   search: "",
   status: "all",
-  lineType: "all",
-  dateRange: {
-    from: "",
-    to: "",
-  },
-  operations: "all",
+  discountType: "all",
 };
 
-export function OrdersFilters({
+export function CouponsFilters({
   filters,
   onChange,
   onReset,
-}: OrdersFiltersProps) {
+}: CouponsFiltersProps) {
   const [searchDraft, setSearchDraft] = useState(filters.search);
 
   useEffect(() => {
@@ -50,21 +44,21 @@ export function OrdersFilters({
     <Box paddingX={3} paddingBottom={3}>
       <Card border radius={2}>
         <Box padding={3}>
-          <Grid columns={[1, 1, 7]} gap={3}>
+          <Grid columns={[1, 1, 5]} gap={3}>
             <Box column={[1, 1, 2]}>
               <Label muted size={1}>
                 Szukaj
               </Label>
               <Box marginTop={2}>
                 <TextInput
-                  aria-label="Szukaj zamówień"
+                  aria-label="Szukaj kuponów"
                   fontSize={1}
                   icon={SearchIcon}
                   onChange={(event) =>
                     setSearchDraft(event.currentTarget.value)
                   }
                   padding={3}
-                  placeholder="Nr zamówienia, klient, e-mail"
+                  placeholder="Kod kuponu"
                   radius={2}
                   value={searchDraft}
                 />
@@ -77,57 +71,35 @@ export function OrdersFilters({
               onChange={(value) =>
                 onChange({
                   ...filters,
-                  status: value as OrdersFiltersValue["status"],
+                  status: value as CouponsFiltersValue["status"],
                 })
               }
               options={[
                 ["all", "Wszystkie"],
-                ["awaiting_payment", "Oczekuje na płatność"],
-                ["paid", "Opłacone"],
-                ["processing", "W realizacji"],
-                ["shipped", "Wysłane"],
-                ["completed", "Zakończone"],
-                ["cancelled", "Anulowane"],
-                ["returned", "Zwrócone"],
+                ["active", "Aktywne"],
+                ["inactive", "Nieaktywne"],
+                ["scheduled", "Zaplanowane"],
+                ["expired", "Wygasłe"],
+                ["usage_limit_reached", "Limit osiągnięty"],
               ]}
             />
 
             <AdminFilterSelect
-              label="Typ"
-              value={filters.lineType}
+              label="Typ rabatu"
+              value={filters.discountType}
               onChange={(value) =>
                 onChange({
                   ...filters,
-                  lineType: value as OrdersFiltersValue["lineType"],
+                  discountType: value as CouponsFiltersValue["discountType"],
                 })
               }
               options={[
                 ["all", "Wszystkie"],
-                ["standard", "Katalogowe"],
-                ["cpo", "CPO"],
-                ["mixed", "Mieszane"],
+                ["fixed_order", "Kwota na koszyk"],
+                ["fixed_product", "Kwota na produkty"],
+                ["percent_order", "% na koszyk"],
+                ["percent_product", "% na produkty"],
               ]}
-            />
-
-            <AdminFilterSelect
-              label="Operacje"
-              value={filters.operations}
-              onChange={(value) =>
-                onChange({
-                  ...filters,
-                  operations: value as OrdersFiltersValue["operations"],
-                })
-              }
-              options={[
-                ["all", "Wszystkie"],
-                ["cancellation", "Anulowanie"],
-                ["return", "Zwrot"],
-              ]}
-            />
-
-            <DateRangePicker
-              value={filters.dateRange}
-              onChange={(dateRange) => onChange({ ...filters, dateRange })}
             />
 
             <Flex align="flex-end" gap={3}>

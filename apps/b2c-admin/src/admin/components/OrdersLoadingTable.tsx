@@ -1,13 +1,5 @@
-import { Box, Card, Spinner } from "@sanity/ui";
+import { AdminLoadingTable } from "./AdminLoadingTable.js";
 
 export function OrdersLoadingTable() {
-  return (
-    <Box paddingX={3}>
-      <Card border radius={2}>
-        <div className="ordersLoadingTableFrame">
-          <Spinner muted />
-        </div>
-      </Card>
-    </Box>
-  );
+  return <AdminLoadingTable />;
 }

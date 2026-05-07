@@ -11,7 +11,12 @@ import {
   isSupportedCouponDiscountType,
   normalizeCouponCode,
 } from '@/src/global/b2c/utils/coupons';
-import { getBoolean, getNumber, getString, isRecord } from '@/src/global/b2c/utils/orders';
+import {
+  getBoolean,
+  getNumber,
+  getString,
+  isRecord,
+} from '@/src/global/b2c/utils/orders';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database } from '@/src/global/supabase/database.types';
 
@@ -25,6 +30,14 @@ export type AdminCouponDerivedStatus =
   | 'inactive'
   | 'scheduled'
   | 'usage_limit_reached';
+
+const ADMIN_COUPON_DERIVED_STATUSES: AdminCouponDerivedStatus[] = [
+  'active',
+  'expired',
+  'inactive',
+  'scheduled',
+  'usage_limit_reached',
+];
 
 export type AdminCouponDto = {
   id: string;
@@ -210,7 +223,10 @@ function getCouponDraft(args: {
       : (existing?.starts_at ?? null);
   const expiresAt =
     'expiresAt' in args.input || 'expires_at' in args.input
-      ? normalizeDate(args.input.expiresAt ?? args.input.expires_at, 'expiresAt')
+      ? normalizeDate(
+          args.input.expiresAt ?? args.input.expires_at,
+          'expiresAt',
+        )
       : (existing?.expires_at ?? null);
   const isActive =
     getBoolean(args.input.isActive) ??
@@ -227,7 +243,11 @@ function getCouponDraft(args: {
         400,
       );
     }
-  } else if (discountPercent === null || discountPercent <= 0 || discountPercent > 100) {
+  } else if (
+    discountPercent === null ||
+    discountPercent <= 0 ||
+    discountPercent > 100
+  ) {
     throw new AdminCouponError(
       'Percent coupons require discountPercent between 1 and 100.',
       'invalid_coupon_payload',
@@ -235,7 +255,10 @@ function getCouponDraft(args: {
     );
   }
 
-  if (isProductScopedCouponDiscountType(discountType) && productKeys.length === 0) {
+  if (
+    isProductScopedCouponDiscountType(discountType) &&
+    productKeys.length === 0
+  ) {
     throw new AdminCouponError(
       'Product-scoped coupons require at least one product key.',
       'invalid_coupon_payload',
@@ -390,12 +413,26 @@ export async function loadAdminCoupons(args: {
   const q = getString(args.searchParams.get('q'));
   const isActive = args.searchParams.get('isActive');
   const discountType = getString(args.searchParams.get('discountType'));
+  const derivedStatus = getString(args.searchParams.get('derivedStatus'));
+
+  if (
+    derivedStatus &&
+    !ADMIN_COUPON_DERIVED_STATUSES.includes(
+      derivedStatus as AdminCouponDerivedStatus,
+    )
+  ) {
+    throw new AdminCouponError(
+      'Unknown coupon derivedStatus filter.',
+      'invalid_coupon_payload',
+      400,
+    );
+  }
+
   const supabase = createAdminClient();
   let query = supabase
     .from('coupons')
     .select(COUPON_SELECT, { count: 'exact' })
-    .order('created_at', { ascending: false })
-    .range(safeOffset, rangeEnd);
+    .order('created_at', { ascending: false });
 
   if (q) {
     query = query.ilike('code', `%${normalizeCouponCode(q)}%`);
@@ -419,6 +456,10 @@ export async function loadAdminCoupons(args: {
     query = query.eq('discount_type', discountType);
   }
 
+  if (!derivedStatus) {
+    query = query.range(safeOffset, rangeEnd);
+  }
+
   const { data, error, count } = await query;
 
   if (error) {
@@ -430,10 +471,18 @@ export async function loadAdminCoupons(args: {
     );
   }
 
-  const coupons = ((data ?? []) as CouponRow[]).map((row) =>
+  const mappedCoupons = ((data ?? []) as CouponRow[]).map((row) =>
     mapCoupon(row, now),
   );
-  const total = count ?? coupons.length;
+  const filteredCoupons = derivedStatus
+    ? mappedCoupons.filter((coupon) => coupon.derivedStatus === derivedStatus)
+    : mappedCoupons;
+  const coupons = derivedStatus
+    ? filteredCoupons.slice(safeOffset, rangeEnd + 1)
+    : filteredCoupons;
+  const total = derivedStatus
+    ? filteredCoupons.length
+    : (count ?? coupons.length);
   const nextOffset = safeOffset + coupons.length;
 
   return {

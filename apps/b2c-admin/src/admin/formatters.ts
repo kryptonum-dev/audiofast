@@ -1,4 +1,7 @@
 import type {
+  AdminCoupon,
+  AdminCouponDerivedStatus,
+  AdminCouponDiscountType,
   AdminOrderLineType,
   AdminOrderStatus,
 } from "./types.js";
@@ -45,6 +48,35 @@ export const ORDER_LINE_TYPE_LABELS: Record<AdminOrderLineType, string> = {
   mixed: "Mieszane",
 };
 
+export const COUPON_STATUS_LABELS: Record<AdminCouponDerivedStatus, string> = {
+  active: "Aktywny",
+  expired: "Wygasły",
+  inactive: "Nieaktywny",
+  scheduled: "Zaplanowany",
+  usage_limit_reached: "Limit osiągnięty",
+};
+
+export const COUPON_STATUS_TONES: Record<
+  AdminCouponDerivedStatus,
+  "default" | "primary" | "positive" | "caution" | "critical"
+> = {
+  active: "positive",
+  expired: "critical",
+  inactive: "default",
+  scheduled: "primary",
+  usage_limit_reached: "caution",
+};
+
+export const COUPON_DISCOUNT_TYPE_LABELS: Record<
+  AdminCouponDiscountType,
+  string
+> = {
+  fixed_order: "Kwota na koszyk",
+  fixed_product: "Kwota na produkty",
+  percent_order: "% na koszyk",
+  percent_product: "% na produkty",
+};
+
 export function formatOrderStatus(status: string): string {
   return ORDER_STATUS_LABELS[status as AdminOrderStatus] ?? status;
 }
@@ -73,6 +105,59 @@ export function formatDateTime(value: string): string {
   return DATE_TIME_FORMATTER.format(date);
 }
 
+export function formatOptionalDate(value: string | null): string {
+  if (!value) {
+    return "";
+  }
+
+  const formatted = formatDateTime(value);
+
+  return formatted.split(",")[0] ?? formatted;
+}
+
 export function formatMoney(cents: number): string {
   return CURRENCY_FORMATTER.format(cents / 100);
+}
+
+export function formatCouponStatus(status: string): string {
+  return COUPON_STATUS_LABELS[status as AdminCouponDerivedStatus] ?? status;
+}
+
+export function formatCouponDiscount(coupon: AdminCoupon): string {
+  if (coupon.discountType.startsWith("fixed")) {
+    return coupon.discountValueCents === null
+      ? "Nie ustawiono"
+      : formatMoney(coupon.discountValueCents);
+  }
+
+  return coupon.discountPercent === null
+    ? "Nie ustawiono"
+    : `${coupon.discountPercent}%`;
+}
+
+export function formatCouponScope(coupon: AdminCoupon): string {
+  if (coupon.discountType.endsWith("_product")) {
+    return "Wybrane produkty";
+  }
+
+  return "Cały koszyk";
+}
+
+export function formatCouponActivityWindow(coupon: AdminCoupon): string {
+  const from = formatOptionalDate(coupon.startsAt);
+  const to = formatOptionalDate(coupon.expiresAt);
+
+  if (from && to) {
+    return `${from} - ${to}`;
+  }
+
+  if (from) {
+    return `Od ${from}`;
+  }
+
+  if (to) {
+    return `Do ${to}`;
+  }
+
+  return "Bez terminu";
 }

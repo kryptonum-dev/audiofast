@@ -1,5 +1,57 @@
 export type AdminArea = "orders" | "coupons" | "analytics";
 
+export type AdminCouponDerivedStatus =
+  | "active"
+  | "expired"
+  | "inactive"
+  | "scheduled"
+  | "usage_limit_reached";
+
+export type AdminCouponDiscountType =
+  | "fixed_order"
+  | "fixed_product"
+  | "percent_order"
+  | "percent_product";
+
+export type CouponsFilters = {
+  search: string;
+  status: AdminCouponDerivedStatus | "all";
+  discountType: AdminCouponDiscountType | "all";
+};
+
+export type AdminCoupon = {
+  id: string;
+  code: string;
+  isActive: boolean;
+  discountType: AdminCouponDiscountType | string;
+  discountValueCents: number | null;
+  discountPercent: number | null;
+  productKeys: string[];
+  usageLimit: number | null;
+  usageCount: number;
+  startsAt: string | null;
+  expiresAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  derivedStatus: AdminCouponDerivedStatus | string;
+};
+
+export type AdminCouponsPagination = {
+  cursor: string | null;
+  limit: number;
+  nextCursor: string | null;
+  total: number;
+  currentPage: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+};
+
+export type AdminCouponsResult = {
+  coupons: AdminCoupon[];
+  pagination: AdminCouponsPagination;
+};
+
 export type AdminOrderStatus =
   | "awaiting_payment"
   | "paid"

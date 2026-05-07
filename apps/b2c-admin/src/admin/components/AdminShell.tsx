@@ -17,6 +17,7 @@ import type { AdminArea } from "../types.js";
 type AdminShellProps = {
   activeArea: AdminArea;
   children: ReactNode;
+  onAreaChange: (area: AdminArea) => void;
 };
 
 const ADMIN_AREAS: {
@@ -34,7 +35,6 @@ const ADMIN_AREAS: {
     id: "coupons",
     label: "Kupony",
     icon: TagsIcon,
-    disabled: true,
   },
   {
     id: "analytics",
@@ -44,7 +44,17 @@ const ADMIN_AREAS: {
   },
 ];
 
-export function AdminShell({ activeArea, children }: AdminShellProps) {
+const ADMIN_AREA_TITLES: Record<AdminArea, string> = {
+  orders: "Zamówienia",
+  coupons: "Kupony",
+  analytics: "Analityka",
+};
+
+export function AdminShell({
+  activeArea,
+  children,
+  onAreaChange,
+}: AdminShellProps) {
   return (
     <Card className="adminAppRoot" tone="default">
       <Container width={4}>
@@ -60,6 +70,7 @@ export function AdminShell({ activeArea, children }: AdminShellProps) {
                     icon={area.icon}
                     id={`${area.id}-tab`}
                     label={area.label}
+                    onClick={() => onAreaChange(area.id)}
                     selected={activeArea === area.id}
                   />
                 ))}
@@ -73,7 +84,7 @@ export function AdminShell({ activeArea, children }: AdminShellProps) {
               <Box padding={3} paddingTop={2} paddingBottom={4}>
                 <Flex align="center" justify="space-between" wrap="wrap">
                   <Heading as="h1" size={3}>
-                    Zamówienia
+                    {ADMIN_AREA_TITLES[activeArea]}
                   </Heading>
                 </Flex>
               </Box>

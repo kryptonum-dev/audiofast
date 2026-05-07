@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 
 import {
+  getCouponsPath,
   getOrderDetailPath,
   getOrdersPath,
   parseAdminRoute,
   type AdminRoute,
 } from "./router.js";
 import { AdminShell } from "./components/AdminShell.js";
+import { CouponsListing } from "./components/CouponsListing.js";
 import { OrderDetailView } from "./components/OrderDetailView.js";
 import { OrdersListing } from "./components/OrdersListing.js";
+import type { AdminArea } from "./types.js";
 
 export function AdminApp() {
   const [route, setRoute] = useState<AdminRoute>(() => parseAdminRoute());
@@ -33,9 +36,24 @@ export function AdminApp() {
     setRoute(parseAdminRoute(path));
   }
 
+  function navigateArea(area: AdminArea) {
+    if (area === "coupons") {
+      navigate(getCouponsPath());
+      return;
+    }
+
+    if (area === "orders") {
+      navigate(getOrdersPath());
+    }
+  }
+
+  const activeArea = route.screen === "coupons" ? "coupons" : "orders";
+
   return (
-    <AdminShell activeArea="orders">
-      {route.screen === "orderDetail" ? (
+    <AdminShell activeArea={activeArea} onAreaChange={navigateArea}>
+      {route.screen === "coupons" ? (
+        <CouponsListing />
+      ) : route.screen === "orderDetail" ? (
         <OrderDetailView
           orderNumber={route.orderNumber}
           onBack={() => navigate(getOrdersPath())}
