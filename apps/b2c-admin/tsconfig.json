@@ -3,8 +3,8 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["node"]
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src", "sanity.cli.ts"],
+  "include": ["src", "sanity.cli.ts", "vitest.config.ts"],
   "exclude": ["node_modules", "dist"]
 }

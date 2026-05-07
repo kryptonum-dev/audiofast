@@ -21,6 +21,13 @@ export class AdminApiError extends Error {
   }
 }
 
+function adminApiUrl(path: string): string {
+  const baseUrl = sanityAppConfig.adminApiBaseUrl.replace(/\/+$/, "");
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  return `${baseUrl}${normalizedPath}`;
+}
+
 export async function fetchAdminOrders(args: {
   authToken: string;
   filters: OrdersFilters;
@@ -68,15 +75,12 @@ export async function fetchAdminOrders(args: {
     );
   }
 
-  const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/orders/?${params.toString()}`,
-    {
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-      },
-      signal: args.signal,
+  const response = await fetch(adminApiUrl(`/api/admin/orders/?${params}`), {
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
     },
-  );
+    signal: args.signal,
+  });
   const payload =
     (await response.json()) as AdminApiEnvelope<AdminOrdersResult>;
 
@@ -114,15 +118,12 @@ export async function fetchAdminAnalytics(args: {
     );
   }
 
-  const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/analytics/?${params.toString()}`,
-    {
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-      },
-      signal: args.signal,
+  const response = await fetch(adminApiUrl(`/api/admin/analytics/?${params}`), {
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
     },
-  );
+    signal: args.signal,
+  });
 
   return readAdminEnvelope<AdminAnalyticsResult>(
     response,
@@ -159,15 +160,12 @@ export async function fetchAdminCoupons(args: {
     params.set("discountType", args.filters.discountType);
   }
 
-  const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/?${params.toString()}`,
-    {
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-      },
-      signal: args.signal,
+  const response = await fetch(adminApiUrl(`/api/admin/coupons/?${params}`), {
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
     },
-  );
+    signal: args.signal,
+  });
   const payload =
     (await response.json()) as AdminApiEnvelope<AdminCouponsResult>;
 
@@ -199,17 +197,14 @@ export async function createAdminCoupon(args: {
   authToken: string;
   input: AdminCouponMutationInput;
 }): Promise<AdminCoupon> {
-  const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/`,
-    {
-      body: JSON.stringify(args.input),
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-        "Content-Type": "application/json",
-      },
-      method: "POST",
+  const response = await fetch(adminApiUrl("/api/admin/coupons/"), {
+    body: JSON.stringify(args.input),
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
+      "Content-Type": "application/json",
     },
-  );
+    method: "POST",
+  });
   const payload = (await response.json()) as AdminApiEnvelope<AdminCoupon>;
 
   if (!response.ok || !payload.ok) {
@@ -227,9 +222,7 @@ export async function fetchAdminCoupon(args: {
   signal?: AbortSignal;
 }): Promise<AdminCoupon> {
   const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/${encodeURIComponent(
-      args.couponId,
-    )}/`,
+    adminApiUrl(`/api/admin/coupons/${encodeURIComponent(args.couponId)}/`),
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -250,9 +243,7 @@ export async function updateAdminCoupon(args: {
   input: AdminCouponMutationInput;
 }): Promise<AdminCoupon> {
   const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/${encodeURIComponent(
-      args.couponId,
-    )}/`,
+    adminApiUrl(`/api/admin/coupons/${encodeURIComponent(args.couponId)}/`),
     {
       body: JSON.stringify(args.input),
       headers: {
@@ -274,9 +265,7 @@ export async function archiveAdminCoupon(args: {
   couponId: string;
 }): Promise<AdminCoupon> {
   const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/${encodeURIComponent(
-      args.couponId,
-    )}/`,
+    adminApiUrl(`/api/admin/coupons/${encodeURIComponent(args.couponId)}/`),
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -295,15 +284,12 @@ export async function fetchAdminCouponProducts(args: {
   authToken: string;
   signal?: AbortSignal;
 }): Promise<AdminCouponProductsResult> {
-  const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/products/`,
-    {
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-      },
-      signal: args.signal,
+  const response = await fetch(adminApiUrl("/api/admin/coupons/products/"), {
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
     },
-  );
+    signal: args.signal,
+  });
 
   return readAdminEnvelope<AdminCouponProductsResult>(
     response,
@@ -317,9 +303,7 @@ export async function fetchAdminOrderDetail(args: {
   signal?: AbortSignal;
 }): Promise<AdminOrderDetail> {
   const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}/api/admin/orders/${encodeURIComponent(
-      args.orderNumber,
-    )}/`,
+    adminApiUrl(`/api/admin/orders/${encodeURIComponent(args.orderNumber)}/`),
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -362,17 +346,14 @@ async function adminJsonMutation<TData>(args: {
   method: "POST" | "PUT";
   path: string;
 }): Promise<TData> {
-  const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}${args.path}`,
-    {
-      body: JSON.stringify(args.body),
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-        "Content-Type": "application/json",
-      },
-      method: args.method,
+  const response = await fetch(adminApiUrl(args.path), {
+    body: JSON.stringify(args.body),
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
+      "Content-Type": "application/json",
     },
-  );
+    method: args.method,
+  });
 
   return readAdminEnvelope<TData>(response, args.fallbackMessage);
 }
@@ -426,7 +407,7 @@ export async function attachAdminOrderInvoice(args: {
   formData.set("file", args.file);
 
   const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}${orderPath(args.orderNumber, "/invoice/")}`,
+    adminApiUrl(orderPath(args.orderNumber, "/invoice/")),
     {
       body: formData,
       headers: {
@@ -444,10 +425,7 @@ export async function downloadAdminOrderInvoice(args: {
   orderNumber: string;
 }) {
   const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}${orderPath(
-      args.orderNumber,
-      "/invoice/download/",
-    )}`,
+    adminApiUrl(orderPath(args.orderNumber, "/invoice/download/")),
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -476,7 +454,7 @@ export async function removeAdminOrderInvoice(args: {
   orderNumber: string;
 }) {
   const response = await fetch(
-    `${sanityAppConfig.adminApiBaseUrl}${orderPath(args.orderNumber, "/invoice/")}`,
+    adminApiUrl(orderPath(args.orderNumber, "/invoice/")),
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,

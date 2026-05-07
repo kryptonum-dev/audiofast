@@ -4,5 +4,5 @@ export const sanityAppConfig = {
   dataset: "production",
   studioUrl:
     "https://www.sanity.io/@o5BEPFjvf/studio/dlwt2zhgkk7rjx6dj8rdyjfz/default",
-  adminApiBaseUrl: "http://localhost:3000",
+  adminApiBaseUrl: "https://audiofast-git-b2c-kryptonum.vercel.app/",
 } as const;
