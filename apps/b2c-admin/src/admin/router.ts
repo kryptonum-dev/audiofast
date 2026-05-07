@@ -9,6 +9,10 @@ export type AdminRoute =
       screen: "couponCreate";
     }
   | {
+      couponId: string;
+      screen: "couponEdit";
+    }
+  | {
       orderNumber: string;
       screen: "orderDetail";
     };
@@ -35,6 +39,13 @@ export function parseAdminRoute(
       };
     }
 
+    if (parts[1]) {
+      return {
+        couponId: decodeURIComponent(parts[1]),
+        screen: "couponEdit",
+      };
+    }
+
     return {
       screen: "coupons",
     };
@@ -55,6 +66,10 @@ export function getCouponsPath() {
 
 export function getCouponCreatePath() {
   return `${COUPONS_PATH}/new`;
+}
+
+export function getCouponEditPath(couponId: string) {
+  return `${COUPONS_PATH}/${encodeURIComponent(couponId)}`;
 }
 
 export function getOrderDetailPath(orderNumber: string) {

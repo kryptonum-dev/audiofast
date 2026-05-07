@@ -8,8 +8,17 @@ vi.mock('@/src/global/supabase/server', () => ({
 }));
 
 const maybeSingleMock = vi.fn();
-const ilikeMock = vi.fn(() => ({
+const limitMock = vi.fn(() => ({
   maybeSingle: maybeSingleMock,
+}));
+const orderMock = vi.fn(() => ({
+  limit: limitMock,
+}));
+const isMock = vi.fn(() => ({
+  order: orderMock,
+}));
+const ilikeMock = vi.fn(() => ({
+  is: isMock,
 }));
 const selectMock = vi.fn(() => ({
   ilike: ilikeMock,
@@ -67,6 +76,11 @@ describe('lookupCouponDefinition', () => {
     });
     expect(fromMock).toHaveBeenCalledWith('coupons');
     expect(ilikeMock).toHaveBeenCalledWith('code', 'SAVE20');
+    expect(isMock).toHaveBeenCalledWith('archived_at', null);
+    expect(orderMock).toHaveBeenCalledWith('created_at', {
+      ascending: false,
+    });
+    expect(limitMock).toHaveBeenCalledWith(1);
   });
 
   it('returns a typed not-found result for missing coupons', async () => {

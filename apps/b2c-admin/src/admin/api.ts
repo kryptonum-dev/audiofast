@@ -180,6 +180,76 @@ export async function createAdminCoupon(args: {
   return payload.data;
 }
 
+export async function fetchAdminCoupon(args: {
+  authToken: string;
+  couponId: string;
+  signal?: AbortSignal;
+}): Promise<AdminCoupon> {
+  const response = await fetch(
+    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/${encodeURIComponent(
+      args.couponId,
+    )}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      signal: args.signal,
+    },
+  );
+
+  return readAdminEnvelope<AdminCoupon>(
+    response,
+    "Nie udało się załadować kuponu.",
+  );
+}
+
+export async function updateAdminCoupon(args: {
+  authToken: string;
+  couponId: string;
+  input: AdminCouponMutationInput;
+}): Promise<AdminCoupon> {
+  const response = await fetch(
+    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/${encodeURIComponent(
+      args.couponId,
+    )}/`,
+    {
+      body: JSON.stringify(args.input),
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
+    },
+  );
+
+  return readAdminEnvelope<AdminCoupon>(
+    response,
+    "Nie udało się zapisać kuponu.",
+  );
+}
+
+export async function archiveAdminCoupon(args: {
+  authToken: string;
+  couponId: string;
+}): Promise<AdminCoupon> {
+  const response = await fetch(
+    `${sanityAppConfig.adminApiBaseUrl}/api/admin/coupons/${encodeURIComponent(
+      args.couponId,
+    )}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      method: "DELETE",
+    },
+  );
+
+  return readAdminEnvelope<AdminCoupon>(
+    response,
+    "Nie udało się usunąć kuponu.",
+  );
+}
+
 export async function fetchAdminCouponProducts(args: {
   authToken: string;
   signal?: AbortSignal;

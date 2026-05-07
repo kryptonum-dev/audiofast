@@ -40,6 +40,7 @@ const ADMIN_COUPON_DERIVED_STATUSES: AdminCouponDerivedStatus[] = [
 ];
 
 export type AdminCouponDto = {
+  archivedAt: string | null;
   id: string;
   code: string;
   isActive: boolean;
@@ -83,7 +84,7 @@ export class AdminCouponError extends Error {
 }
 
 const COUPON_SELECT =
-  'code, created_at, discount_percent, discount_type, discount_value_cents, expires_at, id, is_active, product_keys, starts_at, updated_at, usage_count, usage_limit';
+  'archived_at, code, created_at, discount_percent, discount_type, discount_value_cents, expires_at, id, is_active, product_keys, starts_at, updated_at, usage_count, usage_limit';
 
 function normalizeInteger(value: unknown, fieldName: string): number | null {
   if (value === null || value === undefined || value === '') {
@@ -327,6 +328,7 @@ export function getAdminCouponDerivedStatus(
 
 function mapCoupon(row: CouponRow, now: Date): AdminCouponDto {
   return {
+    archivedAt: row.archived_at,
     id: row.id,
     code: row.code,
     isActive: row.is_active,
@@ -353,6 +355,7 @@ async function ensureCouponCodeAvailable(args: {
     .from('coupons')
     .select('id')
     .ilike('code', args.code)
+    .is('archived_at', null)
     .maybeSingle();
 
   if (error) {
@@ -432,6 +435,7 @@ export async function loadAdminCoupons(args: {
   let query = supabase
     .from('coupons')
     .select(COUPON_SELECT, { count: 'exact' })
+    .is('archived_at', null)
     .order('created_at', { ascending: false });
 
   if (q) {
@@ -573,6 +577,37 @@ export async function updateAdminCoupon(args: {
   if (error) {
     throw new AdminCouponError(
       'Failed to update the B2C coupon.',
+      'database_error',
+      500,
+      error,
+    );
+  }
+
+  return mapCoupon(data as CouponRow, now);
+}
+
+export async function archiveAdminCoupon(args: {
+  couponId: string;
+  now?: Date;
+}): Promise<AdminCouponDto> {
+  const now = args.now ?? new Date();
+  await loadCouponRow(args.couponId);
+
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('coupons')
+    .update({
+      archived_at: now.toISOString(),
+      is_active: false,
+      updated_at: now.toISOString(),
+    } satisfies CouponUpdate)
+    .eq('id', args.couponId)
+    .select(COUPON_SELECT)
+    .single();
+
+  if (error) {
+    throw new AdminCouponError(
+      'Failed to archive the B2C coupon.',
       'database_error',
       500,
       error,

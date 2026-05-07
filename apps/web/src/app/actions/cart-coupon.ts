@@ -78,6 +78,9 @@ export async function lookupCouponDefinition(
         `,
       )
       .ilike('code', normalizedCode)
+      .is('archived_at', null)
+      .order('created_at', { ascending: false })
+      .limit(1)
       .maybeSingle();
 
     if (error) {

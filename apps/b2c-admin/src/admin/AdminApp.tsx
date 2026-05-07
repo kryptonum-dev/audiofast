@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import {
   getCouponCreatePath,
+  getCouponEditPath,
   getCouponsPath,
   getOrderDetailPath,
   getOrdersPath,
@@ -10,6 +11,7 @@ import {
 } from "./router.js";
 import { AdminShell } from "./components/AdminShell.js";
 import { CouponCreateView } from "./components/CouponCreateView.js";
+import { CouponEditView } from "./components/CouponEditView.js";
 import { CouponsListing } from "./components/CouponsListing.js";
 import { OrderDetailView } from "./components/OrderDetailView.js";
 import { OrdersListing } from "./components/OrdersListing.js";
@@ -50,7 +52,9 @@ export function AdminApp() {
   }
 
   const activeArea =
-    route.screen === "coupons" || route.screen === "couponCreate"
+    route.screen === "coupons" ||
+    route.screen === "couponCreate" ||
+    route.screen === "couponEdit"
       ? "coupons"
       : "orders";
 
@@ -58,9 +62,15 @@ export function AdminApp() {
     <AdminShell activeArea={activeArea} onAreaChange={navigateArea}>
       {route.screen === "couponCreate" ? (
         <CouponCreateView onBack={() => navigate(getCouponsPath())} />
+      ) : route.screen === "couponEdit" ? (
+        <CouponEditView
+          couponId={route.couponId}
+          onBack={() => navigate(getCouponsPath())}
+        />
       ) : route.screen === "coupons" ? (
         <CouponsListing
           onCreateCoupon={() => navigate(getCouponCreatePath())}
+          onOpenCoupon={(couponId) => navigate(getCouponEditPath(couponId))}
         />
       ) : route.screen === "orderDetail" ? (
         <OrderDetailView

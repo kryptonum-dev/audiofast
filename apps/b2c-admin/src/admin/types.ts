@@ -20,6 +20,7 @@ export type CouponsFilters = {
 };
 
 export type AdminCoupon = {
+  archivedAt?: string | null;
   id: string;
   code: string;
   isActive: boolean;

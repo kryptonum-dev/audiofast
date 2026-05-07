@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       coupons: {
         Row: {
+          archived_at: string | null;
           code: string;
           created_at: string;
           discount_percent: number | null;
@@ -31,6 +32,7 @@ export type Database = {
           usage_limit: number | null;
         };
         Insert: {
+          archived_at?: string | null;
           code: string;
           created_at?: string;
           discount_percent?: number | null;
@@ -46,6 +48,7 @@ export type Database = {
           usage_limit?: number | null;
         };
         Update: {
+          archived_at?: string | null;
           code?: string;
           created_at?: string;
           discount_percent?: number | null;

@@ -127,6 +127,34 @@ body,
   cursor: pointer;
 }
 
+.couponTableCheckboxControl {
+  display: inline-grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.couponTableCheckboxControl:hover {
+  border-color: rgba(127, 127, 127, 0.28);
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.couponTableCheckboxControl:focus-within {
+  border-color: var(--card-focus-ring-color, #556bff);
+  background: rgba(85, 107, 255, 0.14);
+}
+
+.adminAppRoot .couponTableCheckboxControl,
+.adminAppRoot .couponTableCheckboxControl input,
+.adminAppRoot .couponTableCheckboxControl input:not([readonly]):not(:disabled),
+.adminAppRoot .couponTableCheckboxControl [data-ui='Checkbox'],
+.adminAppRoot .couponTableCheckboxControl [data-ui='Checkbox'] * {
+  cursor: pointer;
+}
+
 .orderLeadImage,
 .orderLeadImagePlaceholder {
   display: block;

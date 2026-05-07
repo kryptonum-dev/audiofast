@@ -1,10 +1,18 @@
 import { AddIcon, RefreshIcon } from "@sanity/icons";
-import { Box, Button, Flex, Text } from "@sanity/ui";
+import { Box, Button, Dialog, Flex, Inline, Text } from "@sanity/ui";
 import { useAuthToken } from "@sanity/sdk-react";
 import { useEffect, useState } from "react";
 
-import { AdminApiError, fetchAdminCoupons } from "../api.js";
-import type { AdminCouponsResult, CouponsFilters } from "../types.js";
+import {
+  AdminApiError,
+  archiveAdminCoupon,
+  fetchAdminCoupons,
+} from "../api.js";
+import type {
+  AdminCoupon,
+  AdminCouponsResult,
+  CouponsFilters,
+} from "../types.js";
 import { AdminLoadingTable } from "./AdminLoadingTable.js";
 import { AdminPagination } from "./AdminPagination.js";
 import { AdminStateCard } from "./AdminStateCard.js";
@@ -35,15 +43,35 @@ type CouponsState =
 
 type CouponsListingProps = {
   onCreateCoupon: () => void;
+  onOpenCoupon: (couponId: string) => void;
 };
 
-export function CouponsListing({ onCreateCoupon }: CouponsListingProps) {
+export function CouponsListing({
+  onCreateCoupon,
+  onOpenCoupon,
+}: CouponsListingProps) {
   const authToken = useAuthToken();
   const [filters, setFilters] = useState<CouponsFilters>(
     DEFAULT_COUPONS_FILTERS,
   );
   const [page, setPage] = useState(1);
   const [refreshToken, setRefreshToken] = useState(0);
+  const [couponToArchive, setCouponToArchive] = useState<AdminCoupon | null>(
+    null,
+  );
+  const [couponsToBulkArchive, setCouponsToBulkArchive] = useState<
+    AdminCoupon[]
+  >([]);
+  const [selectedCouponIds, setSelectedCouponIds] = useState<string[]>([]);
+  const [archiveState, setArchiveState] = useState<{
+    bulk: boolean;
+    couponId: string | null;
+    error: string | null;
+  }>({
+    bulk: false,
+    couponId: null,
+    error: null,
+  });
   const [couponsState, setCouponsState] = useState<CouponsState>({
     status: "idle",
     data: null,
@@ -100,6 +128,16 @@ export function CouponsListing({ onCreateCoupon }: CouponsListingProps) {
     return () => controller.abort();
   }, [authToken, filters, page, refreshToken]);
 
+  useEffect(() => {
+    const visibleCouponIds = new Set(
+      couponsState.data?.coupons.map((coupon) => coupon.id) ?? [],
+    );
+
+    setSelectedCouponIds((current) =>
+      current.filter((couponId) => visibleCouponIds.has(couponId)),
+    );
+  }, [couponsState.data]);
+
   function updateFilters(nextFilters: CouponsFilters) {
     setFilters(nextFilters);
     setPage(1);
@@ -108,6 +146,143 @@ export function CouponsListing({ onCreateCoupon }: CouponsListingProps) {
   function resetFilters() {
     setFilters(DEFAULT_COUPONS_FILTERS);
     setPage(1);
+  }
+
+  function selectCoupon(couponId: string, selected: boolean) {
+    setSelectedCouponIds((current) => {
+      if (selected) {
+        return current.includes(couponId) ? current : [...current, couponId];
+      }
+
+      return current.filter((selectedCouponId) => selectedCouponId !== couponId);
+    });
+  }
+
+  function selectVisibleCoupons(selected: boolean) {
+    const visibleCouponIds =
+      couponsState.data?.coupons.map((coupon) => coupon.id) ?? [];
+
+    setSelectedCouponIds((current) => {
+      if (!selected) {
+        return current.filter(
+          (couponId) => !visibleCouponIds.includes(couponId),
+        );
+      }
+
+      return Array.from(new Set([...current, ...visibleCouponIds]));
+    });
+  }
+
+  function requestBulkArchiveCoupons() {
+    const selectedCouponIdSet = new Set(selectedCouponIds);
+    const coupons =
+      couponsState.data?.coupons.filter((coupon) =>
+        selectedCouponIdSet.has(coupon.id),
+      ) ?? [];
+
+    if (coupons.length === 0) {
+      return;
+    }
+
+    setCouponsToBulkArchive(coupons);
+    setArchiveState({
+      bulk: false,
+      couponId: null,
+      error: null,
+    });
+  }
+
+  async function confirmArchiveCoupon() {
+    if (!authToken || !couponToArchive) {
+      return;
+    }
+
+    setArchiveState({
+      bulk: false,
+      couponId: couponToArchive.id,
+      error: null,
+    });
+
+    try {
+      await archiveAdminCoupon({
+        authToken,
+        couponId: couponToArchive.id,
+      });
+
+      setCouponToArchive(null);
+      setArchiveState({
+        bulk: false,
+        couponId: null,
+        error: null,
+      });
+
+      if (couponsState.data?.coupons.length === 1 && page > 1) {
+        setPage((currentPage) => Math.max(currentPage - 1, 1));
+        return;
+      }
+
+      setRefreshToken((value) => value + 1);
+    } catch (error: unknown) {
+      setArchiveState({
+        bulk: false,
+        couponId: couponToArchive.id,
+        error:
+          error instanceof AdminApiError || error instanceof Error
+            ? error.message
+            : "Nie udało się usunąć kuponu.",
+      });
+    }
+  }
+
+  async function confirmBulkArchiveCoupons() {
+    if (!authToken || couponsToBulkArchive.length === 0) {
+      return;
+    }
+
+    setArchiveState({
+      bulk: true,
+      couponId: null,
+      error: null,
+    });
+
+    try {
+      await Promise.all(
+        couponsToBulkArchive.map((coupon) =>
+          archiveAdminCoupon({
+            authToken,
+            couponId: coupon.id,
+          }),
+        ),
+      );
+
+      setCouponsToBulkArchive([]);
+      setSelectedCouponIds([]);
+      setArchiveState({
+        bulk: false,
+        couponId: null,
+        error: null,
+      });
+
+      if (
+        couponsState.data &&
+        couponsToBulkArchive.length >= couponsState.data.coupons.length &&
+        page > 1
+      ) {
+        setPage((currentPage) => Math.max(currentPage - 1, 1));
+        return;
+      }
+
+      setRefreshToken((value) => value + 1);
+    } catch (error: unknown) {
+      setArchiveState({
+        bulk: false,
+        couponId: null,
+        error:
+          error instanceof AdminApiError || error instanceof Error
+            ? error.message
+            : "Nie udało się usunąć zaznaczonych kuponów.",
+      });
+    }
   }
 
   if (!authToken) {
@@ -124,6 +299,128 @@ export function CouponsListing({ onCreateCoupon }: CouponsListingProps) {
 
   return (
     <Box>
+      {couponToArchive ? (
+        <Dialog
+          id="archive-coupon-dialog"
+          header="Usunąć kupon?"
+          onClose={() => {
+            if (!archiveState.couponId) {
+              setCouponToArchive(null);
+              setArchiveState({
+                bulk: false,
+                couponId: null,
+                error: null,
+              });
+            }
+          }}
+          width={1}
+          footer={
+            <Box paddingX={4} paddingBottom={4}>
+              <Inline space={3}>
+                <Button
+                  disabled={archiveState.couponId !== null}
+                  mode="ghost"
+                  onClick={() => {
+                    setCouponToArchive(null);
+                    setArchiveState({
+                      bulk: false,
+                      couponId: null,
+                      error: null,
+                    });
+                  }}
+                  text="Anuluj"
+                  type="button"
+                />
+                <Button
+                  disabled={archiveState.couponId !== null}
+                  onClick={confirmArchiveCoupon}
+                  text={
+                    archiveState.couponId === couponToArchive.id
+                      ? "Usuwanie..."
+                      : "Usuń kupon"
+                  }
+                  tone="critical"
+                  type="button"
+                />
+              </Inline>
+            </Box>
+          }
+        >
+          <Box paddingX={4} paddingTop={4} paddingBottom={5}>
+            <Text size={1}>
+              Kupon {couponToArchive.code} zostanie zarchiwizowany i nie będzie
+              dostępny dla klientów. Historia użycia pozostanie w systemie.
+            </Text>
+            {archiveState.error ? (
+              <Box marginTop={4}>
+                <Text size={1}>{archiveState.error}</Text>
+              </Box>
+            ) : null}
+          </Box>
+        </Dialog>
+      ) : null}
+
+      {couponsToBulkArchive.length > 0 ? (
+        <Dialog
+          id="bulk-archive-coupons-dialog"
+          header="Usunąć zaznaczone kupony?"
+          onClose={() => {
+            if (!archiveState.bulk) {
+              setCouponsToBulkArchive([]);
+              setArchiveState({
+                bulk: false,
+                couponId: null,
+                error: null,
+              });
+            }
+          }}
+          width={1}
+          footer={
+            <Box paddingX={4} paddingBottom={4}>
+              <Inline space={3}>
+                <Button
+                  disabled={archiveState.bulk}
+                  mode="ghost"
+                  onClick={() => {
+                    setCouponsToBulkArchive([]);
+                    setArchiveState({
+                      bulk: false,
+                      couponId: null,
+                      error: null,
+                    });
+                  }}
+                  text="Anuluj"
+                  type="button"
+                />
+                <Button
+                  disabled={archiveState.bulk}
+                  onClick={confirmBulkArchiveCoupons}
+                  text={
+                    archiveState.bulk
+                      ? "Usuwanie..."
+                      : `Usuń ${couponsToBulkArchive.length} kuponów`
+                  }
+                  tone="critical"
+                  type="button"
+                />
+              </Inline>
+            </Box>
+          }
+        >
+          <Box paddingX={4} paddingTop={4} paddingBottom={5}>
+            <Text size={1}>
+              Zaznaczone kupony zostaną zarchiwizowane i nie będą dostępne dla
+              klientów. Historia użycia pozostanie w systemie.
+            </Text>
+            {archiveState.error ? (
+              <Box marginTop={4}>
+                <Text size={1}>{archiveState.error}</Text>
+              </Box>
+            ) : null}
+          </Box>
+        </Dialog>
+      ) : null}
+
       <CouponsFiltersControls
         filters={filters}
         onChange={updateFilters}
@@ -138,6 +435,15 @@ export function CouponsListing({ onCreateCoupon }: CouponsListingProps) {
               : "Lista kuponów"}
           </Text>
           <Flex gap={2} wrap="wrap">
+            <Button
+              disabled={selectedCouponIds.length === 0 || archiveState.bulk}
+              mode="ghost"
+              onClick={requestBulkArchiveCoupons}
+              padding={2}
+              text={`Usuń zaznaczone (${selectedCouponIds.length})`}
+              tone="critical"
+              type="button"
+            />
             <Button
               icon={AddIcon}
               mode="ghost"
@@ -200,7 +506,16 @@ export function CouponsListing({ onCreateCoupon }: CouponsListingProps) {
 
       {couponsState.status !== "loading" && data && data.coupons.length > 0 ? (
         <>
-          <CouponsTable coupons={data.coupons} />
+          <CouponsTable
+            archivingCouponId={archiveState.couponId}
+            bulkArchiving={archiveState.bulk}
+            coupons={data.coupons}
+            onOpenCoupon={onOpenCoupon}
+            onRequestArchiveCoupon={setCouponToArchive}
+            onSelectCoupon={selectCoupon}
+            onSelectVisibleCoupons={selectVisibleCoupons}
+            selectedCouponIds={selectedCouponIds}
+          />
           <AdminPagination
             itemLabel="kuponów"
             pagination={data.pagination}

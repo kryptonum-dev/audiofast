@@ -14,6 +14,7 @@ import {
 import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 
 import type {
+  AdminCoupon,
   AdminCouponDiscountType,
   AdminCouponMutationInput,
   AdminCouponProductOption,
@@ -34,11 +35,13 @@ export type CouponFormValues = {
 
 type CouponFormProps = {
   disabled?: boolean;
+  enforceFutureDates?: boolean;
   initialValues?: CouponFormValues;
   productOptions: AdminCouponProductOption[];
   productOptionsError?: string | null;
   productOptionsLoading?: boolean;
   submitText: string;
+  usageLimitMinimum?: number;
   onDirtyChange?: (isDirty: boolean) => void;
   onSubmit: (input: AdminCouponMutationInput) => void;
 };
@@ -55,8 +58,40 @@ const DEFAULT_FORM_VALUES: CouponFormValues = {
   isActive: true,
 };
 
+const COUPON_DISCOUNT_TYPES: AdminCouponDiscountType[] = [
+  "fixed_order",
+  "fixed_product",
+  "percent_order",
+  "percent_product",
+];
+
+export function getCouponFormValues(coupon: AdminCoupon): CouponFormValues {
+  const discountType = COUPON_DISCOUNT_TYPES.includes(
+    coupon.discountType as AdminCouponDiscountType,
+  )
+    ? (coupon.discountType as AdminCouponDiscountType)
+    : "fixed_order";
+
+  return {
+    code: coupon.code,
+    discountType,
+    discountValuePln:
+      coupon.discountValueCents === null
+        ? ""
+        : formatCentsInput(coupon.discountValueCents),
+    discountPercent:
+      coupon.discountPercent === null ? "" : String(coupon.discountPercent),
+    selectedProductKeys: coupon.productKeys,
+    usageLimit: coupon.usageLimit === null ? "" : String(coupon.usageLimit),
+    startsAt: formatDateTimeInputValue(coupon.startsAt),
+    expiresAt: formatDateTimeInputValue(coupon.expiresAt),
+    isActive: coupon.isActive,
+  };
+}
+
 export function CouponForm({
   disabled = false,
+  enforceFutureDates = true,
   initialValues = DEFAULT_FORM_VALUES,
   onDirtyChange,
   onSubmit,
@@ -64,13 +99,21 @@ export function CouponForm({
   productOptionsError = null,
   productOptionsLoading = false,
   submitText,
+  usageLimitMinimum = 1,
 }: CouponFormProps) {
   const [values, setValues] = useState<CouponFormValues>(initialValues);
   const [error, setError] = useState<string | null>(null);
   const isFixedDiscount = values.discountType.startsWith("fixed");
   const isProductScoped = values.discountType.endsWith("_product");
-  const earliestDateTime = getTodayDateTimeInputMin();
+  const earliestDateTime = enforceFutureDates
+    ? getTodayDateTimeInputMin()
+    : undefined;
   const expiryDateTimeMin = values.startsAt || earliestDateTime;
+
+  useEffect(() => {
+    setValues(initialValues);
+    setError(null);
+  }, [initialValues]);
 
   useEffect(() => {
     onDirtyChange?.(!areCouponFormValuesEqual(values, initialValues));
@@ -90,7 +133,10 @@ export function CouponForm({
     event.preventDefault();
 
     try {
-      const input = buildCouponInput(values);
+      const input = buildCouponInput(values, {
+        enforceFutureDates,
+        usageLimitMinimum,
+      });
 
       setError(null);
       onSubmit(input);
@@ -192,7 +238,7 @@ export function CouponForm({
                 <TextInput
                   disabled={disabled}
                   fontSize={1}
-                  min={1}
+                  min={usageLimitMinimum}
                   onChange={(event) =>
                     updateValue("usageLimit", event.currentTarget.value)
                   }
@@ -301,7 +347,13 @@ function InputSuffix({ label }: { label: string }) {
   return <span className="couponDiscountInputSuffix">{label}</span>;
 }
 
-function buildCouponInput(values: CouponFormValues): AdminCouponMutationInput {
+function buildCouponInput(
+  values: CouponFormValues,
+  options: {
+    enforceFutureDates: boolean;
+    usageLimitMinimum: number;
+  },
+): AdminCouponMutationInput {
   const code = values.code.trim();
   const isProductScoped = values.discountType.endsWith("_product");
   const productKeys = isProductScoped
@@ -327,16 +379,30 @@ function buildCouponInput(values: CouponFormValues): AdminCouponMutationInput {
     );
   }
 
-  if (startsAt && Date.parse(startsAt) < todayStart.getTime()) {
+  if (
+    options.enforceFutureDates &&
+    startsAt &&
+    Date.parse(startsAt) < todayStart.getTime()
+  ) {
     throw new Error("Data startu nie może być wcześniejsza niż dzisiaj.");
   }
 
-  if (expiresAt && Date.parse(expiresAt) < todayStart.getTime()) {
+  if (
+    options.enforceFutureDates &&
+    expiresAt &&
+    Date.parse(expiresAt) < todayStart.getTime()
+  ) {
     throw new Error("Data wygaśnięcia nie może być wcześniejsza niż dzisiaj.");
   }
 
   if (startsAt && expiresAt && Date.parse(startsAt) >= Date.parse(expiresAt)) {
     throw new Error("Data startu musi być wcześniejsza niż data wygaśnięcia.");
+  }
+
+  if (usageLimit !== null && usageLimit < options.usageLimitMinimum) {
+    throw new Error(
+      `Limit użyć nie może być mniejszy niż ${options.usageLimitMinimum}.`,
+    );
   }
 
   if (values.discountType.startsWith("fixed")) {
@@ -433,6 +499,26 @@ function getTodayDateTimeInputMin(): string {
   const day = String(today.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}T00:00`;
+}
+
+function formatCentsInput(cents: number): string {
+  return (cents / 100).toFixed(2);
+}
+
+function formatDateTimeInputValue(value: string | null): string {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+  return localDate.toISOString().slice(0, 16);
 }
 
 function areCouponFormValuesEqual(
