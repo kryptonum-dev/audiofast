@@ -4,7 +4,7 @@ import { useAuthToken } from "@sanity/sdk-react";
 import { useEffect, useState } from "react";
 
 import {
-  AdminApiError,
+  getAdminErrorMessage,
   archiveAdminCoupon,
   fetchAdminCoupons,
 } from "../api.js";
@@ -118,10 +118,10 @@ export function CouponsListing({
         setCouponsState((current) => ({
           status: "error",
           data: current.data,
-          error:
-            error instanceof AdminApiError || error instanceof Error
-              ? error.message
-              : "Nie udało się załadować kuponów.",
+          error: getAdminErrorMessage(
+            error,
+            "Nie udało się załadować kuponów.",
+          ),
         }));
       });
 
@@ -154,7 +154,9 @@ export function CouponsListing({
         return current.includes(couponId) ? current : [...current, couponId];
       }
 
-      return current.filter((selectedCouponId) => selectedCouponId !== couponId);
+      return current.filter(
+        (selectedCouponId) => selectedCouponId !== couponId,
+      );
     });
   }
 
@@ -226,10 +228,7 @@ export function CouponsListing({
       setArchiveState({
         bulk: false,
         couponId: couponToArchive.id,
-        error:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się usunąć kuponu.",
+        error: getAdminErrorMessage(error, "Nie udało się usunąć kuponu."),
       });
     }
   }
@@ -277,10 +276,10 @@ export function CouponsListing({
       setArchiveState({
         bulk: false,
         couponId: null,
-        error:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się usunąć zaznaczonych kuponów.",
+        error: getAdminErrorMessage(
+          error,
+          "Nie udało się usunąć zaznaczonych kuponów.",
+        ),
       });
     }
   }

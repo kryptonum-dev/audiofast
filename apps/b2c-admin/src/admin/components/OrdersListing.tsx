@@ -3,7 +3,7 @@ import { Box, Button, Flex, Text } from "@sanity/ui";
 import { useAuthToken } from "@sanity/sdk-react";
 import { useEffect, useState } from "react";
 
-import { AdminApiError, fetchAdminOrders } from "../api.js";
+import { getAdminErrorMessage, fetchAdminOrders } from "../api.js";
 import type { AdminOrdersResult, OrdersFilters } from "../types.js";
 import { AdminStateCard } from "./AdminStateCard.js";
 import {
@@ -88,10 +88,10 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
         setOrdersState((current) => ({
           status: "error",
           data: current.data,
-          error:
-            error instanceof AdminApiError || error instanceof Error
-              ? error.message
-              : "Nie udało się załadować zamówień.",
+          error: getAdminErrorMessage(
+            error,
+            "Nie udało się załadować zamówień.",
+          ),
         }));
       });
 
@@ -185,10 +185,7 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
 
       {ordersState.status !== "loading" && data && data.orders.length > 0 ? (
         <>
-          <OrdersTable
-            orders={data.orders}
-            onOpenOrder={onOpenOrder}
-          />
+          <OrdersTable orders={data.orders} onOpenOrder={onOpenOrder} />
           <OrdersPagination
             pagination={data.pagination}
             onPageChange={setPage}

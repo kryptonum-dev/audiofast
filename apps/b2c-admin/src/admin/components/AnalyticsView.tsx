@@ -22,7 +22,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { AdminApiError, fetchAdminAnalytics } from "../api.js";
+import { getAdminErrorMessage, fetchAdminAnalytics } from "../api.js";
 import { formatMoney, formatOptionalDate } from "../formatters.js";
 import type {
   AdminAnalyticsResult,
@@ -111,10 +111,10 @@ export function AnalyticsView() {
         setAnalyticsState((current) => ({
           status: "error",
           data: current.data,
-          error:
-            error instanceof AdminApiError || error instanceof Error
-              ? error.message
-              : "Nie udało się załadować analityki.",
+          error: getAdminErrorMessage(
+            error,
+            "Nie udało się załadować analityki.",
+          ),
         }));
       });
 
@@ -309,7 +309,12 @@ function RevenueChartCard(props: {
       <Card border radius={2}>
         <Box padding={4}>
           <Stack space={4}>
-            <Flex align="flex-start" justify="space-between" gap={3} wrap="wrap">
+            <Flex
+              align="flex-start"
+              justify="space-between"
+              gap={3}
+              wrap="wrap"
+            >
               <Stack space={2}>
                 <Flex align="center" gap={2}>
                   <Heading as="h2" size={1}>
@@ -446,11 +451,11 @@ function AnalyticsChartTooltip(props: {
             label="Sprzedaże cyfrowe"
             value={String(point.digitalSalesCount)}
           />
+          <TooltipRow label="Zamówienia" value={String(point.paidOrderCount)} />
           <TooltipRow
-            label="Zamówienia"
-            value={String(point.paidOrderCount)}
+            label="Rabaty"
+            value={formatMoney(point.discountTotalCents)}
           />
-          <TooltipRow label="Rabaty" value={formatMoney(point.discountTotalCents)} />
         </Stack>
       </Stack>
     </Card>
@@ -495,7 +500,8 @@ function buildChartData(
     return {
       digitalSalesCount: point?.digitalSalesCount ?? paidOrderCount,
       discountTotalCents: point?.discountTotalCents ?? 0,
-      grossPaidRevenueCents: point?.grossPaidRevenueCents ?? point?.revenueCents ?? 0,
+      grossPaidRevenueCents:
+        point?.grossPaidRevenueCents ?? point?.revenueCents ?? 0,
       label,
       paidOrderCount,
       revenueCents: point?.revenueCents ?? 0,

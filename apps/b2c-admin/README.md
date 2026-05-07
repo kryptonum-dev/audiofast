@@ -10,9 +10,11 @@ Privileged Supabase reads and writes must not happen directly in this browser ap
 
 ## Environment
 
-This scaffold does not use local environment variables. The current App SDK identifiers are public configuration values, not secrets, so they live in `src/config.ts`.
+The App SDK identifiers are public configuration values, not secrets, so they live in `src/config.ts`.
 
-Fill in `organizationId`, `projectId`, and `dataset` there when the real Sanity app details are known. `deploymentAppId` can stay empty until the first successful `sanity deploy` assigns an app id.
+`VITE_B2C_ADMIN_API_BASE_URL` can override the deployed Audiofast Web/API origin at build time. If it is unset, the app falls back to the current preview API origin in `src/config.ts`.
+
+The matching Web/API deployment must include the App SDK origin in `B2C_ADMIN_ALLOWED_ORIGINS`; otherwise browser CORS will fail before the app can read the API error envelope.
 
 ## Local Development
 

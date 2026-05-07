@@ -277,4 +277,29 @@ describe("admin API client", () => {
       }),
     ).rejects.toEqual(new AdminApiError("Operator nie ma dostępu."));
   });
+
+  it("normalizes browser-level fetch failures", async () => {
+    const mock = fetchMock();
+
+    mock.mockRejectedValueOnce(new TypeError("Failed to fetch"));
+
+    await expect(
+      fetchAdminOrders({
+        authToken: "token-1",
+        filters: {
+          dateRange: { from: "", to: "" },
+          lineType: "all",
+          operations: "all",
+          search: "",
+          status: "all",
+        },
+        limit: 15,
+        page: 1,
+      }),
+    ).rejects.toEqual(
+      new AdminApiError(
+        "Nie udało się połączyć z API zamówień. Spróbuj ponownie za chwilę.",
+      ),
+    );
+  });
 });

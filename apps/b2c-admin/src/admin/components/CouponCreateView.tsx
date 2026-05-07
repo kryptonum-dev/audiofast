@@ -14,7 +14,7 @@ import { useAuthToken } from "@sanity/sdk-react";
 import { useEffect, useState } from "react";
 
 import {
-  AdminApiError,
+  getAdminErrorMessage,
   createAdminCoupon,
   fetchAdminCouponProducts,
 } from "../api.js";
@@ -117,10 +117,10 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
         setProductOptionsState((current) => ({
           status: "error",
           products: current.products,
-          error:
-            error instanceof AdminApiError || error instanceof Error
-              ? error.message
-              : "Nie udało się załadować produktów do kuponu.",
+          error: getAdminErrorMessage(
+            error,
+            "Nie udało się załadować produktów do kuponu.",
+          ),
         }));
       });
 
@@ -162,10 +162,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
       setState({
         status: "error",
         coupon: null,
-        error:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się utworzyć kuponu.",
+        error: getAdminErrorMessage(error, "Nie udało się utworzyć kuponu."),
       });
     }
   }

@@ -130,4 +130,16 @@ describe("OrdersListing", () => {
 
     expect(await screen.findByText("Brak zamówień")).toBeInTheDocument();
   });
+
+  it("does not show raw browser fetch errors", async () => {
+    mocks.useAuthToken.mockReturnValue("sanity-token");
+    mocks.fetchAdminOrders.mockRejectedValueOnce(new Error("Failed to fetch"));
+
+    render(<OrdersListing onOpenOrder={vi.fn()} />);
+
+    expect(
+      await screen.findByText("Nie udało się załadować zamówień."),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Failed to fetch")).not.toBeInTheDocument();
+  });
 });

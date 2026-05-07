@@ -26,7 +26,7 @@ import { useAuthToken } from "@sanity/sdk-react";
 import { type FormEvent, type ReactNode, useEffect, useState } from "react";
 
 import {
-  AdminApiError,
+  getAdminErrorMessage,
   attachAdminOrderInvoice,
   closeAdminOrderReturnCase,
   completeAdminOrderReturnCase,
@@ -135,10 +135,10 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
         setState((current) => ({
           status: "error",
           order: current.order,
-          error:
-            error instanceof AdminApiError || error instanceof Error
-              ? error.message
-              : "Nie udało się załadować szczegółów zamówienia.",
+          error: getAdminErrorMessage(
+            error,
+            "Nie udało się załadować szczegółów zamówienia.",
+          ),
         }));
       });
 
@@ -349,10 +349,10 @@ function StatusActionsSection({
     } catch (error) {
       setActionState({
         status: "error",
-        message:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się zmienić statusu zamówienia.",
+        message: getAdminErrorMessage(
+          error,
+          "Nie udało się zmienić statusu zamówienia.",
+        ),
       });
     }
   }
@@ -648,10 +648,10 @@ function ShipmentSection({
     } catch (error) {
       setActionState({
         status: "error",
-        message:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się zapisać danych wysyłki.",
+        message: getAdminErrorMessage(
+          error,
+          "Nie udało się zapisać danych wysyłki.",
+        ),
       });
     }
   }
@@ -810,10 +810,7 @@ function InvoiceSection({
     } catch (error) {
       setActionState({
         status: "error",
-        message:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się dodać faktury.",
+        message: getAdminErrorMessage(error, "Nie udało się dodać faktury."),
       });
     }
   }
@@ -830,10 +827,7 @@ function InvoiceSection({
     } catch (error) {
       setActionState({
         status: "error",
-        message:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się pobrać faktury.",
+        message: getAdminErrorMessage(error, "Nie udało się pobrać faktury."),
       });
     }
   }
@@ -855,10 +849,7 @@ function InvoiceSection({
     } catch (error) {
       setActionState({
         status: "error",
-        message:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się usunąć faktury.",
+        message: getAdminErrorMessage(error, "Nie udało się usunąć faktury."),
       });
     }
   }
@@ -1047,8 +1038,7 @@ function CancellationPanel({
     }
 
     setActionState({ status: "loading" });
-    const resolvedAdminNote =
-      resolution === "cancel_order" ? adminNote : "";
+    const resolvedAdminNote = resolution === "cancel_order" ? adminNote : "";
 
     try {
       await resolveAdminOrderCancellation({
@@ -1068,10 +1058,10 @@ function CancellationPanel({
     } catch (error) {
       setActionState({
         status: "error",
-        message:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się obsłużyć anulowania.",
+        message: getAdminErrorMessage(
+          error,
+          "Nie udało się obsłużyć anulowania.",
+        ),
       });
     }
   }
@@ -1306,10 +1296,10 @@ function ReturnsPanel({
     } catch (error) {
       setActionState({
         status: "error",
-        message:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się zaktualizować sprawy zwrotu.",
+        message: getAdminErrorMessage(
+          error,
+          "Nie udało się zaktualizować sprawy zwrotu.",
+        ),
       });
     }
   }
@@ -1497,10 +1487,7 @@ function getTimelineActorInitials(entry: AdminOrderTimelineEntry) {
   }
 
   const name = getTimelineActorName(entry);
-  const parts = name
-    .replace(/@.*/, "")
-    .split(/\s+/)
-    .filter(Boolean);
+  const parts = name.replace(/@.*/, "").split(/\s+/).filter(Boolean);
   const initials = parts
     .slice(0, 2)
     .map((part) => part[0])
@@ -1570,7 +1557,12 @@ function TimelineSection({ order }: { order: AdminOrderDetail }) {
             padding={4}
             radius={2}
           >
-            <Flex align="flex-start" gap={4} justify="space-between" wrap="wrap">
+            <Flex
+              align="flex-start"
+              gap={4}
+              justify="space-between"
+              wrap="wrap"
+            >
               <Stack flex={1} space={3}>
                 <Flex align="center" gap={2} wrap="wrap">
                   <span

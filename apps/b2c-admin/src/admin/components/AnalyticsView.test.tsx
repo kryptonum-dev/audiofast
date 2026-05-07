@@ -3,6 +3,7 @@ import { userEvent } from "@testing-library/user-event";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
+import { AdminApiError } from "../api.js";
 import { AnalyticsView } from "./AnalyticsView.js";
 import type { AdminAnalyticsResult } from "../types.js";
 
@@ -132,7 +133,7 @@ describe("AnalyticsView", () => {
   it("shows the route error and keeps a retry action", async () => {
     mocks.useAuthToken.mockReturnValue("sanity-token");
     mocks.fetchAdminAnalytics.mockRejectedValueOnce(
-      new Error("Could not load B2C operational analytics."),
+      new AdminApiError("Could not load B2C operational analytics."),
     );
 
     render(<AnalyticsView />);

@@ -14,7 +14,7 @@ import { useAuthToken } from "@sanity/sdk-react";
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  AdminApiError,
+  getAdminErrorMessage,
   archiveAdminCoupon,
   fetchAdminCoupon,
   fetchAdminCouponProducts,
@@ -155,10 +155,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
         setCouponState((current) => ({
           status: "error",
           coupon: current.coupon,
-          error:
-            error instanceof AdminApiError || error instanceof Error
-              ? error.message
-              : "Nie udało się załadować kuponu.",
+          error: getAdminErrorMessage(error, "Nie udało się załadować kuponu."),
         }));
       });
 
@@ -202,10 +199,10 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
         setProductOptionsState((current) => ({
           status: "error",
           products: current.products,
-          error:
-            error instanceof AdminApiError || error instanceof Error
-              ? error.message
-              : "Nie udało się załadować produktów do kuponu.",
+          error: getAdminErrorMessage(
+            error,
+            "Nie udało się załadować produktów do kuponu.",
+          ),
         }));
       });
 
@@ -258,10 +255,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     } catch (error: unknown) {
       setSaveState({
         status: "error",
-        error:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się zapisać kuponu.",
+        error: getAdminErrorMessage(error, "Nie udało się zapisać kuponu."),
       });
     }
   }
@@ -286,10 +280,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     } catch (error: unknown) {
       setArchiveState({
         status: "error",
-        error:
-          error instanceof AdminApiError || error instanceof Error
-            ? error.message
-            : "Nie udało się usunąć kuponu.",
+        error: getAdminErrorMessage(error, "Nie udało się usunąć kuponu."),
       });
     }
   }
@@ -442,7 +433,9 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
             <Heading as="h2" size={2}>
               {coupon ? `Edytuj kupon ${coupon.code}` : "Edytuj kupon"}
             </Heading>
-            {coupon ? <CouponStatusBadge status={coupon.derivedStatus} /> : null}
+            {coupon ? (
+              <CouponStatusBadge status={coupon.derivedStatus} />
+            ) : null}
           </Flex>
         </Card>
 

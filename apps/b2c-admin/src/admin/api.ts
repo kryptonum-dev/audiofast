@@ -21,11 +21,41 @@ export class AdminApiError extends Error {
   }
 }
 
+export function getAdminErrorMessage(
+  error: unknown,
+  fallbackMessage: string,
+): string {
+  return error instanceof AdminApiError ? error.message : fallbackMessage;
+}
+
+const ADMIN_NETWORK_ERROR_MESSAGE =
+  "Nie udało się połączyć z API admina. Spróbuj ponownie za chwilę.";
+
 function adminApiUrl(path: string): string {
   const baseUrl = sanityAppConfig.adminApiBaseUrl.replace(/\/+$/, "");
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
 
   return `${baseUrl}${normalizedPath}`;
+}
+
+async function adminFetch(
+  path: string,
+  init: RequestInit,
+  fallbackMessage = ADMIN_NETWORK_ERROR_MESSAGE,
+): Promise<Response> {
+  try {
+    return await fetch(adminApiUrl(path), init);
+  } catch (error) {
+    if (isAbortError(error)) {
+      throw error;
+    }
+
+    throw new AdminApiError(fallbackMessage);
+  }
+}
+
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === "AbortError";
 }
 
 export async function fetchAdminOrders(args: {
@@ -75,24 +105,21 @@ export async function fetchAdminOrders(args: {
     );
   }
 
-  const response = await fetch(adminApiUrl(`/api/admin/orders/?${params}`), {
-    headers: {
-      Authorization: `Bearer ${args.authToken}`,
+  const response = await adminFetch(
+    `/api/admin/orders/?${params}`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      signal: args.signal,
     },
-    signal: args.signal,
-  });
-  const payload =
-    (await response.json()) as AdminApiEnvelope<AdminOrdersResult>;
+    "Nie udało się połączyć z API zamówień. Spróbuj ponownie za chwilę.",
+  );
 
-  if (!response.ok || !payload.ok) {
-    throw new AdminApiError(
-      payload.ok === false
-        ? payload.message
-        : "Nie udało się załadować zamówień.",
-    );
-  }
-
-  return payload.data;
+  return readAdminEnvelope<AdminOrdersResult>(
+    response,
+    "Nie udało się załadować zamówień.",
+  );
 }
 
 export async function fetchAdminAnalytics(args: {
@@ -118,12 +145,16 @@ export async function fetchAdminAnalytics(args: {
     );
   }
 
-  const response = await fetch(adminApiUrl(`/api/admin/analytics/?${params}`), {
-    headers: {
-      Authorization: `Bearer ${args.authToken}`,
+  const response = await adminFetch(
+    `/api/admin/analytics/?${params}`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      signal: args.signal,
     },
-    signal: args.signal,
-  });
+    "Nie udało się połączyć z API analityki. Spróbuj ponownie za chwilę.",
+  );
 
   return readAdminEnvelope<AdminAnalyticsResult>(
     response,
@@ -160,31 +191,29 @@ export async function fetchAdminCoupons(args: {
     params.set("discountType", args.filters.discountType);
   }
 
-  const response = await fetch(adminApiUrl(`/api/admin/coupons/?${params}`), {
-    headers: {
-      Authorization: `Bearer ${args.authToken}`,
+  const response = await adminFetch(
+    `/api/admin/coupons/?${params}`,
+    {
+      headers: {
+        Authorization: `Bearer ${args.authToken}`,
+      },
+      signal: args.signal,
     },
-    signal: args.signal,
-  });
-  const payload =
-    (await response.json()) as AdminApiEnvelope<AdminCouponsResult>;
+    "Nie udało się połączyć z API kuponów. Spróbuj ponownie za chwilę.",
+  );
+  const data = await readAdminEnvelope<AdminCouponsResult>(
+    response,
+    "Nie udało się załadować kuponów.",
+  );
 
-  if (!response.ok || !payload.ok) {
-    throw new AdminApiError(
-      payload.ok === false
-        ? payload.message
-        : "Nie udało się załadować kuponów.",
-    );
-  }
-
-  const totalCount = payload.data.pagination.total;
-  const pageSize = payload.data.pagination.limit;
+  const totalCount = data.pagination.total;
+  const pageSize = data.pagination.limit;
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
   return {
-    ...payload.data,
+    ...data,
     pagination: {
-      ...payload.data.pagination,
+      ...data.pagination,
       currentPage: args.page,
       pageSize,
       totalCount,
@@ -197,7 +226,7 @@ export async function createAdminCoupon(args: {
   authToken: string;
   input: AdminCouponMutationInput;
 }): Promise<AdminCoupon> {
-  const response = await fetch(adminApiUrl("/api/admin/coupons/"), {
+  const response = await adminFetch("/api/admin/coupons/", {
     body: JSON.stringify(args.input),
     headers: {
       Authorization: `Bearer ${args.authToken}`,
@@ -205,15 +234,11 @@ export async function createAdminCoupon(args: {
     },
     method: "POST",
   });
-  const payload = (await response.json()) as AdminApiEnvelope<AdminCoupon>;
 
-  if (!response.ok || !payload.ok) {
-    throw new AdminApiError(
-      payload.ok === false ? payload.message : "Nie udało się utworzyć kuponu.",
-    );
-  }
-
-  return payload.data;
+  return readAdminEnvelope<AdminCoupon>(
+    response,
+    "Nie udało się utworzyć kuponu.",
+  );
 }
 
 export async function fetchAdminCoupon(args: {
@@ -221,8 +246,8 @@ export async function fetchAdminCoupon(args: {
   couponId: string;
   signal?: AbortSignal;
 }): Promise<AdminCoupon> {
-  const response = await fetch(
-    adminApiUrl(`/api/admin/coupons/${encodeURIComponent(args.couponId)}/`),
+  const response = await adminFetch(
+    `/api/admin/coupons/${encodeURIComponent(args.couponId)}/`,
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -242,8 +267,8 @@ export async function updateAdminCoupon(args: {
   couponId: string;
   input: AdminCouponMutationInput;
 }): Promise<AdminCoupon> {
-  const response = await fetch(
-    adminApiUrl(`/api/admin/coupons/${encodeURIComponent(args.couponId)}/`),
+  const response = await adminFetch(
+    `/api/admin/coupons/${encodeURIComponent(args.couponId)}/`,
     {
       body: JSON.stringify(args.input),
       headers: {
@@ -264,8 +289,8 @@ export async function archiveAdminCoupon(args: {
   authToken: string;
   couponId: string;
 }): Promise<AdminCoupon> {
-  const response = await fetch(
-    adminApiUrl(`/api/admin/coupons/${encodeURIComponent(args.couponId)}/`),
+  const response = await adminFetch(
+    `/api/admin/coupons/${encodeURIComponent(args.couponId)}/`,
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -284,7 +309,7 @@ export async function fetchAdminCouponProducts(args: {
   authToken: string;
   signal?: AbortSignal;
 }): Promise<AdminCouponProductsResult> {
-  const response = await fetch(adminApiUrl("/api/admin/coupons/products/"), {
+  const response = await adminFetch("/api/admin/coupons/products/", {
     headers: {
       Authorization: `Bearer ${args.authToken}`,
     },
@@ -302,8 +327,8 @@ export async function fetchAdminOrderDetail(args: {
   orderNumber: string;
   signal?: AbortSignal;
 }): Promise<AdminOrderDetail> {
-  const response = await fetch(
-    adminApiUrl(`/api/admin/orders/${encodeURIComponent(args.orderNumber)}/`),
+  const response = await adminFetch(
+    `/api/admin/orders/${encodeURIComponent(args.orderNumber)}/`,
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -311,24 +336,24 @@ export async function fetchAdminOrderDetail(args: {
       signal: args.signal,
     },
   );
-  const payload = (await response.json()) as AdminApiEnvelope<AdminOrderDetail>;
 
-  if (!response.ok || !payload.ok) {
-    throw new AdminApiError(
-      payload.ok === false
-        ? payload.message
-        : "Nie udało się załadować szczegółów zamówienia.",
-    );
-  }
-
-  return payload.data;
+  return readAdminEnvelope<AdminOrderDetail>(
+    response,
+    "Nie udało się załadować szczegółów zamówienia.",
+  );
 }
 
 async function readAdminEnvelope<TData>(
   response: Response,
   fallbackMessage: string,
 ): Promise<TData> {
-  const payload = (await response.json()) as AdminApiEnvelope<TData>;
+  let payload: AdminApiEnvelope<TData>;
+
+  try {
+    payload = (await response.json()) as AdminApiEnvelope<TData>;
+  } catch {
+    throw new AdminApiError(fallbackMessage);
+  }
 
   if (!response.ok || !payload.ok) {
     throw new AdminApiError(
@@ -346,7 +371,7 @@ async function adminJsonMutation<TData>(args: {
   method: "POST" | "PUT";
   path: string;
 }): Promise<TData> {
-  const response = await fetch(adminApiUrl(args.path), {
+  const response = await adminFetch(args.path, {
     body: JSON.stringify(args.body),
     headers: {
       Authorization: `Bearer ${args.authToken}`,
@@ -406,16 +431,13 @@ export async function attachAdminOrderInvoice(args: {
   const formData = new FormData();
   formData.set("file", args.file);
 
-  const response = await fetch(
-    adminApiUrl(orderPath(args.orderNumber, "/invoice/")),
-    {
-      body: formData,
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-      },
-      method: "POST",
+  const response = await adminFetch(orderPath(args.orderNumber, "/invoice/"), {
+    body: formData,
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
     },
-  );
+    method: "POST",
+  });
 
   return readAdminEnvelope(response, "Nie udało się dodać faktury.");
 }
@@ -424,8 +446,8 @@ export async function downloadAdminOrderInvoice(args: {
   authToken: string;
   orderNumber: string;
 }) {
-  const response = await fetch(
-    adminApiUrl(orderPath(args.orderNumber, "/invoice/download/")),
+  const response = await adminFetch(
+    orderPath(args.orderNumber, "/invoice/download/"),
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -453,15 +475,12 @@ export async function removeAdminOrderInvoice(args: {
   authToken: string;
   orderNumber: string;
 }) {
-  const response = await fetch(
-    adminApiUrl(orderPath(args.orderNumber, "/invoice/")),
-    {
-      headers: {
-        Authorization: `Bearer ${args.authToken}`,
-      },
-      method: "DELETE",
+  const response = await adminFetch(orderPath(args.orderNumber, "/invoice/"), {
+    headers: {
+      Authorization: `Bearer ${args.authToken}`,
     },
-  );
+    method: "DELETE",
+  });
 
   return readAdminEnvelope(response, "Nie udało się usunąć faktury.");
 }
