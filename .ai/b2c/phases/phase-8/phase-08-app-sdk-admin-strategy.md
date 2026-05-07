@@ -210,7 +210,19 @@ Add very simple analytics after the core operational workflows exist.
 
 This should stay intentionally small and should not block order operations.
 
-Status: not started.
+Status: implemented for the current v1 operational analytics surface.
+
+Implemented scope:
+
+- analytics tab and `/analytics` route in the App SDK admin shell
+- date range filter shared with the order listing/admin filter pattern
+- day, week, and month revenue grouping
+- KPI cards for revenue, order count, average order value, and discounts
+- full-width interactive revenue chart using `recharts`
+- zero-filled day/week/month buckets so no-sale periods render on the baseline instead of disappearing
+- hover tooltip with gross volume, digital sales count, order count, and discount total for the selected bucket
+- week and month labels rendered as concrete date ranges
+- stale-response-safe chart rendering so changing grouping does not briefly render old series data with the new grouping
 
 ### Step 9 - Readiness Check
 

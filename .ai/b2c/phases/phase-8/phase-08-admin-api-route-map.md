@@ -679,7 +679,7 @@ Query params:
 
 - `from`
 - `to`
-- optional `groupBy` with values such as `day`, `week`, or `none`
+- optional `groupBy` with values `day`, `week`, `month`, or `none`
 
 Returns:
 
@@ -690,11 +690,41 @@ Returns:
 - counts by current order status
 - optional revenue series when `groupBy` is not `none`
 
+Current v1 response shape:
+
+- `period.from`, `period.to`, and `period.groupBy`
+- `revenue.countingMode`
+- `revenue.paidOrderCount`
+- `revenue.revenueOrderCount`
+- `revenue.grossPaidRevenueCents`
+- `revenue.revenueCents`
+- `revenue.averageOrderValueCents`
+- `revenue.discountTotalCents`
+- `statusCounts[]`
+- `series[]` with `label`, `paidOrderCount`, `digitalSalesCount`, `grossPaidRevenueCents`, `revenueCents`, and `discountTotalCents`
+
+Series grouping rules:
+
+- `day` labels are `YYYY-MM-DD`
+- `week` labels are ISO week start dates as `YYYY-MM-DD`
+- `month` labels are month start dates as `YYYY-MM-DD`
+- `none` returns no series buckets
+
 Counting rules:
 
 - revenue should be based on paid/provider-confirmed orders, not abandoned `awaiting_payment` orders
-- cancelled and returned orders need an explicit implementation decision before being included or excluded from revenue totals
-- the response should label the chosen counting mode clearly
+- current implementation excludes cancelled and returned orders from `revenueCents`, `revenueOrderCount`, discounts, and series buckets
+- `grossPaidRevenueCents` counts all paid/provider-confirmed rows in the selected period before the cancelled/returned revenue exclusion
+- `paidOrderCount` counts all paid/provider-confirmed rows returned for the selected period
+- `revenueOrderCount` counts only paid/provider-confirmed rows that remain eligible for revenue after cancelled/returned exclusion
+- the response labels this with `countingMode: paid_orders_excluding_cancelled_and_returned`
+
+Admin UI behavior:
+
+- `/analytics` consumes this route from the App SDK admin shell
+- the chart fills missing day/week/month buckets with zero on the client so no-sale periods stay visible
+- the chart tooltip shows gross volume, digital sales count, order count, and discount total for the hovered bucket
+- the chart should use the grouping returned in `period.groupBy`, not only the currently selected filter, so stale responses do not render with mismatched grouping while a new request is in flight
 
 Out of scope:
 
@@ -849,6 +879,7 @@ Acceptance target:
 Implement:
 
 - `GET /api/admin/analytics`
+- App SDK `/analytics` view
 
 Keep it small and tied to purchase/order data only.
 
@@ -856,6 +887,8 @@ Acceptance target:
 
 - admin panel can show revenue/order-count visibility for a selected period
 - response clearly documents whether cancelled/returned orders are included or excluded
+- admin panel can group the revenue chart by day, week, or month
+- no-sale day/week/month buckets are represented as zero in the chart
 - no Google Analytics, Meta Pixel, or storefront funnel instrumentation is mixed into this route
 
 ### 9. Hardening And Readiness
@@ -897,6 +930,5 @@ Step 3 is complete when:
 
 - Should invoice replacement always resend the invoice email, or only first attachment?
 - Should manual admin-created return cases use the same 14-day eligibility window as customer-created cases?
-- How should cancelled or returned orders be counted in admin revenue analytics?
 - Should status transition requests include an operator-visible note even though `orders.status_history` is currently JSON and no separate audit table exists?
 - Should shipment metadata entry optionally trigger a status transition to `shipped`, or should the UI always call the status route separately?
