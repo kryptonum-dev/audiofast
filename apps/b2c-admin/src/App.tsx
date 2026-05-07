@@ -30,9 +30,11 @@ export default function App() {
 
   return (
     <ThemeProvider scheme={scheme} theme={theme}>
-      <SanityApp config={sanityConfig} fallback={<AppFallback />}>
-        <AdminApp />
-      </SanityApp>
+      <div className="adminThemeRoot">
+        <SanityApp config={sanityConfig} fallback={<AppFallback />}>
+          <AdminApp />
+        </SanityApp>
+      </div>
     </ThemeProvider>
   );
 }

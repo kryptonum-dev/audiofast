@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning / execution
-Last updated: 2026-04-28
+Last updated: 2026-05-07
 Depends on: `../open-threads.md`, `../phases/phase-02-flow-and-operations-closure.md`
 Related files: `../milestones.md`, `../README.md`, `../testing-strategy.md`, `../phases/phase-03-business-data-contract.md`, `../phases/phase-04-commerce-foundation.md`
 
@@ -21,13 +21,15 @@ It should answer:
 ## Current Execution Snapshot
 
 - current active phase: `Phase 08 - Admin Operations`
-- current working mode: admin operations planning / implementation readiness
+- current working mode: Sanity App SDK admin implementation
 - phase 07 has been closed
 - follow-up Step `7.5` browser coverage is queued after the completed customer-panel implementation
+- Phase 08 Steps `1-5` are implemented through the order listing and single order details workspace
+- the next Phase 08 implementation step is `Step 6 - Coupons Listing`
 
 ## Current Focus
 
-- start `Phase 08 - Admin Operations`
+- continue `Phase 08 - Admin Operations` with the coupons area
 - add follow-up Step `7.5` browser coverage for the customer auth, checkout, payment, and panel roundtrips
 - keep launch-readiness documentation aligned with the completed customer-facing flow
 
@@ -79,6 +81,10 @@ It should answer:
 - `Phase 05 - Buyable PDP And Cart` completed
 - `Phase 06 - Checkout And Payments` completed with checkout, order creation, mock payment handling, recovery states, and paid-order profile persistence
 - `Phase 07 - Customer Panel` completed with OTP access, protected routes, checkout auth integration, orders list/detail, invoice access, cancellation / return entry points, and `Dane konta`
+- `Phase 08` App SDK foundation, secure backend bridge, and order API/UI path implemented through order listing and order details
+- admin orders listing now supports search, status/type/operation/date filters, page-based pagination, product images, multi-item summaries, and standard/CPO visibility without a separate CPO area
+- admin order details now supports status transitions, shipment metadata, invoice upload/download/removal, customer/company/shipping data visibility, product option visibility, cancellations, returns, and status history
+- customer-panel order detail support was tightened for invoice download, shipment courier display, cancellation/return histories, and repeated denied/accepted case visibility
 
 ## Blocked / Waiting
 
@@ -87,10 +93,11 @@ It should answer:
 
 ## Ready Next
 
-1. add follow-up Step `7.5` browser coverage for the full B2C customer journey
-2. implement `Phase 08 - Admin Operations`
-3. continue `Phase 09 - Policy Flows`
-4. complete `Phase 10 - Launch Readiness`
+1. implement `Phase 08` Step `6 - Coupons Listing`
+2. implement `Phase 08` Step `7 - Coupon Detail Page`
+3. add follow-up Step `7.5` browser coverage for the full B2C customer journey
+4. continue `Phase 09 - Policy Flows`
+5. complete `Phase 10 - Launch Readiness`
 
 ## Phase Tracker
 

@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: planning
-Last updated: 2026-04-28
+Last updated: 2026-05-07
 Depends on: current discovery and planning discussions
 Related files: `README.md`, `scope.md`, `open-threads.md`, `testing-strategy.md`
 
@@ -71,12 +71,13 @@ This means the B2C initiative does not start from zero. It starts from an alread
 
 The platform now has the core customer-facing transactional path in place: cart, checkout, mock payment handling, order persistence, customer order access, invoice download access, and lightweight customer profile editing.
 
+Phase 08 has also moved from planning into implementation. The Sanity App SDK admin app now has the `Orders` area implemented through the order listing and single order details workspace.
+
 The remaining v1 gaps are mostly operational and launch-readiness work, especially:
 
-- operator order management
-- admin-side invoice publication and shipment handling
 - coupon operations
-- operator handling for cancellation and return requests
+- the remaining admin coupon UI
+- simple admin analytics if still required for v1
 - browser-level end-to-end coverage for the full customer journey
 - launch hardening and production-readiness checks
 
@@ -97,7 +98,7 @@ At a high level, v1 should allow Audiofast to:
 - deliver invoice PDFs
 - apply simple coupons
 - support simple cancellation and return rules
-- give Audiofast a dedicated `CPO` operational area in the admin panel
+- give Audiofast a shared order operations area that handles both standard catalog and `CPO` orders
 
 ## Guiding Principles
 
@@ -174,6 +175,8 @@ After reading this file:
 
 The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, the accepted v1 table model is documented, and `Phase 05 - Buyable PDP And Cart`, `Phase 06 - Checkout And Payments`, and `Phase 07 - Customer Panel` are now complete.
 
+`Phase 08 - Admin Operations` is now active and implemented through the order listing and order details steps.
+
 The completed customer-facing B2C path now includes:
 
 - selective direct purchase and cart behavior for standard and `CPO` products
@@ -182,8 +185,15 @@ The completed customer-facing B2C path now includes:
 - protected customer-panel routes with return-to behavior
 - customer order list, order detail, invoice access, cancellation / return entry points, and `Dane konta`
 
+The completed admin operations path now includes:
+
+- Sanity App SDK shell with light/dark theme alignment
+- secure local bridge from the App SDK app to the `apps/web` admin API
+- order listing with search, filters, page-based pagination, product images, and `Katalogowe`/`CPO` visibility
+- order detail workspace with status updates, shipment data, invoice handling, cancellation handling, return handling, product options, company data, and status history
+
 The most important next planning work is:
 
+- implementing the `Coupons` area in Phase 08, starting with the coupons listing
 - adding browser-level coverage in follow-up Step `7.5`
-- implementing `Phase 08 - Admin Operations`
 - continuing the remaining policy-flow and launch-readiness work

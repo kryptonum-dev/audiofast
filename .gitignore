@@ -43,6 +43,7 @@ npm-debug.log*
 *.sql
 !supabase/migrations/*.sql
 *.csv
+.ai/b2c/phases/phase-8/assets/
 
 # Supabase local CLI state
 supabase/.temp/

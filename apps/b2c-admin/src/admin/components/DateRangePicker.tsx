@@ -33,34 +33,41 @@ const DISPLAY_DATE_FORMATTER = new Intl.DateTimeFormat("pl-PL", {
 });
 
 export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
+  const today = useMemo(() => toDateValue(new Date()), []);
   const [open, setOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(() =>
-    value.from ? parseDate(value.from) : startOfMonth(new Date()),
+    value.from ? parseDate(clampDateValue(value.from, today)) : startOfMonth(new Date()),
   );
   const calendarDays = useMemo(
     () => buildCalendarDays(visibleMonth),
     [visibleMonth],
   );
-  const label = formatRangeLabel(value);
+  const sanitizedValue = sanitizeDateRange(value, today);
+  const label = formatRangeLabel(sanitizedValue);
+  const canShowNextMonth =
+    toDateValue(addMonths(visibleMonth, 1)) <=
+    toDateValue(startOfMonth(parseDate(today)));
 
   function selectDate(dateValue: string) {
-    if (!value.from || value.to) {
+    const safeDateValue = clampDateValue(dateValue, today);
+
+    if (!sanitizedValue.from || sanitizedValue.to) {
       onChange({
-        from: dateValue,
+        from: safeDateValue,
         to: "",
       });
       return;
     }
 
-    if (dateValue < value.from) {
+    if (safeDateValue < sanitizedValue.from) {
       onChange({
-        from: dateValue,
-        to: value.from,
+        from: safeDateValue,
+        to: sanitizedValue.from,
       });
     } else {
       onChange({
-        from: value.from,
-        to: dateValue,
+        from: sanitizedValue.from,
+        to: safeDateValue,
       });
     }
 
@@ -93,6 +100,7 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
                   </Text>
                   <Button
                     aria-label="Następny miesiąc"
+                    disabled={!canShowNextMonth}
                     icon={ChevronRightIcon}
                     mode="bleed"
                     onClick={() => setVisibleMonth(addMonths(visibleMonth, 1))}
@@ -110,12 +118,18 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
                   {calendarDays.map((day, index) =>
                     day ? (
                       <Button
+                        disabled={day.value > today}
                         key={day.value}
-                        mode={dayInRange(day.value, value) ? "default" : "bleed"}
+                        mode={
+                          dayInRange(day.value, sanitizedValue)
+                            ? "default"
+                            : "bleed"
+                        }
                         onClick={() => selectDate(day.value)}
                         padding={2}
                         selected={
-                          day.value === value.from || day.value === value.to
+                          day.value === sanitizedValue.from ||
+                          day.value === sanitizedValue.to
                         }
                         text={String(day.date.getDate())}
                         type="button"
@@ -166,6 +180,20 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
       </Box>
     </Box>
   );
+}
+
+function clampDateValue(value: string, maxValue: string): string {
+  return value && value > maxValue ? maxValue : value;
+}
+
+function sanitizeDateRange(
+  range: AdminDateRangeFilter,
+  maxValue: string,
+): AdminDateRangeFilter {
+  return {
+    from: clampDateValue(range.from, maxValue),
+    to: clampDateValue(range.to, maxValue),
+  };
 }
 
 function startOfMonth(date: Date): Date {

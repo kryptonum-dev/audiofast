@@ -1,8 +1,8 @@
 # Phase 08 - App SDK Admin Strategy
 
-Status: planning
-Owner: planning
-Last updated: 2026-05-06
+Status: in progress
+Owner: planning / implementation
+Last updated: 2026-05-07
 Depends on: `../phase-08-admin-operations.md`
 Related files: `../phase-08-admin-operations.md`, `../../architecture/admin-panel-sanity.md`, `../../architecture/commerce-table-model.md`, `../../architecture/invoice-and-documents.md`, `../../business/coupon-rules.md`, `../../business/returns-and-cancellations-rules.md`
 
@@ -102,11 +102,15 @@ Establish the Sanity App SDK application shape, deployment model, environment mo
 
 The goal of this step is only to prove that the admin app can exist as a separate operator surface.
 
+Status: implemented.
+
 ### Step 2 - Secure Backend Bridge
 
 Prove that the App SDK app can call Audiofast backend admin APIs and that the backend can verify the current operator before using privileged Supabase access.
 
 This is the most important architectural foundation for the whole admin panel.
+
+Status: implemented for the current local development setup. The App SDK calls the `apps/web` admin API through `http://localhost:3000`; this must be switched to the deployed WebApp/API origin before deployment.
 
 ### Step 3 - Overall Backend Implementation
 
@@ -116,11 +120,29 @@ This should be a large backend-focused step. It should identify the admin calls 
 
 The goal is for later UI steps to call already-defined backend routes rather than inventing API behavior screen by screen.
 
+Status: implemented for the order operations surface and supporting mutation flows used by the order listing/detail UI. Coupon backend routes exist as part of the planned API surface and should be consumed by the next coupon UI steps.
+
 ### Step 4 - Orders Listing
 
 Build the `Orders` listing experience.
 
 The list should let operators scan, browse, and find orders across both standard-product and `CPO` purchases in one workflow.
+
+Status: implemented.
+
+Implemented scope:
+
+- orders tab and listing shell
+- search by order/customer/e-mail
+- status, type, operation, and date filters
+- date picker that prevents future dates
+- page-based pagination
+- loading state sized to avoid layout jumps
+- product thumbnails
+- lead product plus additional-item summaries
+- `Katalogowe`/`CPO`/mixed type visibility
+- Sanity light/dark theme alignment
+- full-height App SDK shell and loading state
 
 ### Step 5 - Single Order Details Page
 
@@ -128,11 +150,31 @@ Build the single order detail page as the main operational workspace for one ord
 
 This page should cover order review and the broad operational actions such as status updates, shipment metadata, invoice handling, cancellation handling, return handling, and relevant `CPO` context.
 
+Status: implemented.
+
+Implemented scope:
+
+- normal route shape at `/orders/[orderNumber]`
+- order summary header with status and totals
+- status transition workflow with optional operator note
+- status history with structured actor/source/note/date rendering
+- customer, company, invoice, and delivery data rendering
+- product list with images, totals, and prominent product options
+- shipment tracking number and optional courier editing
+- invoice add/change/download/remove flow with confirmation modal
+- cancellation requests with accept/reject flows and repeated request history
+- return cases with customer reason, admin completion flow, and closed-case history
+- return-window enforcement for admin return status transitions
+- hiding shipment/invoice sections for awaiting-payment orders
+- no separate top-level `CPO` area; CPO context stays inside the shared order workflow
+
 ### Step 6 - Coupons Listing
 
 Build the `Coupons` listing experience.
 
 The list should let operators review existing coupons, understand their basic operational state, and navigate to individual coupon details.
+
+Status: next.
 
 ### Step 7 - Coupon Detail Page
 
@@ -140,17 +182,23 @@ Build the coupon detail page.
 
 This page should support the v1 coupon operations: create, edit, deactivate, and review one coupon without becoming a full promotion engine.
 
+Status: not started.
+
 ### Step 8 - Simple Analytics
 
 Add very simple analytics after the core operational workflows exist.
 
 This should stay intentionally small and should not block order operations.
 
+Status: not started.
+
 ### Step 9 - Readiness Check
 
 Add focused tests and operational readiness checks for the admin app.
 
 This should verify the critical admin flows, the backend security boundary, and the most important order / coupon operations.
+
+Status: not started as a dedicated step. Focused typechecks and targeted unit tests were run during the order listing/detail implementation.
 
 ## Security Principles
 

@@ -2,7 +2,7 @@
 
 Status: in progress
 Owner: Oliwier / implementation planning
-Last updated: 2026-04-15
+Last updated: 2026-05-07
 Depends on: `b2c-implementation-overview.md`, `open-threads.md`
 Related files: all files in `.ai/b2c/`
 
@@ -101,5 +101,9 @@ Current status of the B2C planning system:
 - phase 03 business contract finalized
 - accepted v1 commerce table model added
 - `Phase 05 - Buyable PDP And Cart` completed
-- `Phase 06 - Checkout And Payments` is now the active implementation phase
+- `Phase 06 - Checkout And Payments` completed
+- `Phase 07 - Customer Panel` completed
+- `Phase 08 - Admin Operations` is now the active implementation phase
+- Phase 08 is implemented through the Sanity App SDK order listing and single order details workspace
+- next implementation step is Phase 08 `Step 6 - Coupons Listing`
 - no open planning threads remain

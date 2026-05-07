@@ -1,8 +1,8 @@
 # Phase 08 - Admin Operations
 
-Status: planned
-Owner: planning
-Last updated: 2026-04-09
+Status: in progress
+Owner: planning / implementation
+Last updated: 2026-05-07
 Depends on: `phase-07-customer-panel.md`
 Related files: `../architecture/admin-panel-sanity.md`, `../architecture/invoice-and-documents.md`, `../business/coupon-rules.md`, `../testing-strategy.md`, `../architecture/commerce-table-model.md`
 
@@ -27,13 +27,42 @@ This phase gives Audiofast the internal tools needed to manage orders, documents
 
 ## Main Deliverables
 
-- admin order list
-- admin order detail
-- status update workflow
-- manual shipment metadata entry
-- invoice upload/publication workflow
+- admin order list - implemented
+- admin order detail - implemented
+- status update workflow - implemented
+- manual shipment metadata entry - implemented
+- invoice upload/publication workflow - implemented
 - coupon management workflow
-- return-case handling workflow
+- return-case handling workflow - implemented for order details
+- cancellation handling workflow - implemented for order details
+
+## Current Implementation State
+
+Phase 08 is currently implemented through the `Orders` area.
+
+Completed so far:
+
+- Sanity App SDK admin shell and local development workflow
+- secure backend bridge from the App SDK browser app to `apps/web` admin API routes
+- order listing with search, filters, page-based pagination, product thumbnails, and multi-item summaries
+- single order detail route/workspace at `/orders/[orderNumber]`
+- status transitions with operator notes and clearer status-history rendering
+- shipment metadata editing with tracking number and optional courier
+- invoice upload, replacement, download, and removal
+- customer, company, invoice, and delivery data rendering for operational review
+- product and product-option visibility for fulfillment decisions
+- cancellation and return case handling from the admin order detail page
+- supporting customer-panel refinements for invoice download, shipment display, and cancellation/return history visibility
+
+Current local architecture note:
+
+- the App SDK client currently calls the local Next.js admin API at `http://localhost:3000`
+- this is acceptable for local development
+- before deployment, the admin API base URL and allowed origins must be moved to the deployed WebApp/API origin
+
+Next step:
+
+- implement the `Coupons` area, starting with `Step 6 - Coupons Listing`
 
 ## Work Included In This Phase
 
@@ -50,7 +79,7 @@ This phase gives Audiofast the internal tools needed to manage orders, documents
 ### 3. Promotions And Returns
 
 - create/edit/deactivate coupons
-- handle return cases and manual return creation
+- handle return cases and cancellation requests
 
 ## Follow-Up Step 8.5 - Commerce Analytics
 
