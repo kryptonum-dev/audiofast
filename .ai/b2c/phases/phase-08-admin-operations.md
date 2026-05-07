@@ -1,6 +1,6 @@
 # Phase 08 - Admin Operations
 
-Status: in progress
+Status: completed
 Owner: planning / implementation
 Last updated: 2026-05-07
 Depends on: `phase-07-customer-panel.md`
@@ -33,13 +33,13 @@ This phase gives Audiofast the internal tools needed to manage orders, documents
 - manual shipment metadata entry - implemented
 - invoice upload/publication workflow - implemented
 - coupon listing and coupon creation workflow - implemented
-- coupon detail/edit/deactivate workflow
+- coupon detail/edit/deactivate workflow - implemented
 - return-case handling workflow - implemented for order details
 - cancellation handling workflow - implemented for order details
 
 ## Current Implementation State
 
-Phase 08 is currently implemented through the `Orders` area and the first `Coupons` workflows.
+Phase 08 is complete for the v1 B2C admin scope.
 
 Completed so far:
 
@@ -56,17 +56,23 @@ Completed so far:
 - coupon listing with search, status/type filters, derived status, and 15-item pagination
 - coupon creation with v1 validation, dirty-form discard confirmation, and server-side Supabase persistence
 - product-scoped coupon creation with an eligible Sanity/Supabase product picker for standard and `CPO` products
+- coupon detail/edit workflow with existing coupon loading, v1 validation, dirty-form discard confirmation, and product-scope editing
+- coupon deactivation/archive workflow through the coupon detail page and admin coupon API
+- simple operational analytics with KPI cards, date range filtering, day/week/month grouping, zero-filled chart buckets, and revenue/status visibility
+- focused admin backend tests for order DTOs, status transitions, shipment metadata, invoice metadata, cancellation/return handling, coupon validation/archive behavior, pagination/date parsing, and analytics counting rules
+- focused App SDK admin tests for routing, API client URL/envelope handling, listings, coupon form behavior, analytics UI, date range picker, and formatters
 - supporting customer-panel refinements for invoice download, shipment display, and cancellation/return history visibility
 
-Current local architecture note:
+Current architecture note:
 
-- the App SDK client currently calls the local Next.js admin API at `http://localhost:3000`
-- this is acceptable for local development
-- before deployment, the admin API base URL and allowed origins must be moved to the deployed WebApp/API origin
+- the App SDK client calls the deployed WebApp/API origin through `https://audiofast-git-b2c-kryptonum.vercel.app/`
+- local development can still point at local APIs by changing the client configuration when needed
+- privileged Supabase work remains server-side in `apps/web` admin API routes
 
-Next step:
+Readiness note:
 
-- implement existing coupon detail/edit/deactivate view
+- browser E2E for the App SDK admin panel is intentionally not part of Phase 08 completion because App SDK apps run inside the Sanity Dashboard authentication/runtime model rather than as standalone local pages
+- Phase 08 readiness is covered by focused unit/integration tests, type checks, and the App SDK build
 
 ## Work Included In This Phase
 
@@ -111,3 +117,5 @@ Phase 08 can be considered complete when:
 - operators can manage orders end to end in the agreed v1 admin surface
 - invoice and shipment flows are operational
 - coupon and return-case handling are usable in daily operations
+
+Status: complete for v1.

@@ -20,17 +20,16 @@ It should answer:
 
 ## Current Execution Snapshot
 
-- current active phase: `Phase 08 - Admin Operations`
-- current working mode: Sanity App SDK admin implementation
+- current active phase: post-Phase 08 readiness
+- current working mode: customer E2E planning, Supabase query review, and launch hardening
 - phase 07 has been closed
 - follow-up Step `7.5` browser coverage is queued after the completed customer-panel implementation
-- Phase 08 Steps `1-5` are implemented through the order listing and single order details workspace
-- the next Phase 08 implementation step is `Step 6 - Coupons Listing`
+- Phase 08 has been closed for the v1 Sanity App SDK admin scope
 
 ## Current Focus
 
-- continue `Phase 08 - Admin Operations` with the coupons area
 - add follow-up Step `7.5` browser coverage for the customer auth, checkout, payment, and panel roundtrips
+- review Supabase query/index performance for the B2C runtime paths
 - keep launch-readiness documentation aligned with the completed customer-facing flow
 
 ## Recently Completed
@@ -84,20 +83,22 @@ It should answer:
 - `Phase 08` App SDK foundation, secure backend bridge, and order API/UI path implemented through order listing and order details
 - admin orders listing now supports search, status/type/operation/date filters, page-based pagination, product images, multi-item summaries, and standard/CPO visibility without a separate CPO area
 - admin order details now supports status transitions, shipment metadata, invoice upload/download/removal, customer/company/shipping data visibility, product option visibility, cancellations, returns, and status history
+- admin coupons now support listing, search, filters, creation, product scoping, edit, activation/deactivation, and archive handling
+- admin analytics now supports simple operational KPIs, date range filtering, grouped chart buckets, and status breakdowns
+- Phase 08 readiness is covered by focused App SDK admin tests, backend admin tests, App SDK typecheck, and App SDK build verification
 - customer-panel order detail support was tightened for invoice download, shipment courier display, cancellation/return histories, and repeated denied/accepted case visibility
 
 ## Blocked / Waiting
 
-- no current planning blocker is recorded for `Phase 08`
 - Step `7.5` depends on browser-level coverage being wired against the local auth, checkout, and payment mock runtime
+- no current planning blocker is recorded for the post-Phase 08 readiness work
 
 ## Ready Next
 
-1. implement `Phase 08` Step `6 - Coupons Listing`
-2. implement `Phase 08` Step `7 - Coupon Detail Page`
-3. add follow-up Step `7.5` browser coverage for the full B2C customer journey
-4. continue `Phase 09 - Policy Flows`
-5. complete `Phase 10 - Launch Readiness`
+1. add follow-up Step `7.5` browser coverage for the full B2C customer journey
+2. review Supabase query/index performance for the B2C runtime paths
+3. continue `Phase 09 - Policy Flows`
+4. complete `Phase 10 - Launch Readiness`
 
 ## Phase Tracker
 
@@ -131,7 +132,7 @@ It should answer:
 
 ### Phase 08 - Admin Operations
 
-- status: in progress
+- status: completed for v1
 
 ### Phase 09 - Policy Flows
 

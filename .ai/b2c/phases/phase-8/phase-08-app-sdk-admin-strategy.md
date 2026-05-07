@@ -1,6 +1,6 @@
 # Phase 08 - App SDK Admin Strategy
 
-Status: in progress
+Status: completed
 Owner: planning / implementation
 Last updated: 2026-05-07
 Depends on: `../phase-08-admin-operations.md`
@@ -110,7 +110,7 @@ Prove that the App SDK app can call Audiofast backend admin APIs and that the ba
 
 This is the most important architectural foundation for the whole admin panel.
 
-Status: implemented for the current local development setup. The App SDK calls the `apps/web` admin API through `http://localhost:3000`; this must be switched to the deployed WebApp/API origin before deployment.
+Status: implemented. The App SDK calls the deployed WebApp/API origin through `https://audiofast-git-b2c-kryptonum.vercel.app/`.
 
 ### Step 3 - Overall Backend Implementation
 
@@ -120,7 +120,7 @@ This should be a large backend-focused step. It should identify the admin calls 
 
 The goal is for later UI steps to call already-defined backend routes rather than inventing API behavior screen by screen.
 
-Status: implemented for the order operations surface and supporting mutation flows used by the order listing/detail UI. Coupon backend routes exist as part of the planned API surface and should be consumed by the next coupon UI steps.
+Status: implemented for the v1 route surface used by orders, coupons, and operational analytics.
 
 ### Step 4 - Orders Listing
 
@@ -191,9 +191,9 @@ Build the coupon create/detail page.
 
 This page should support the v1 coupon operations: create, edit, deactivate, and review one coupon without becoming a full promotion engine.
 
-Status: create view implemented; existing coupon detail/edit/deactivate remains next.
+Status: implemented.
 
-Implemented create scope:
+Implemented scope:
 
 - `/coupons/new` route and "back to coupons" navigation
 - coupon code, discount type, fixed amount/percent value, usage limit, optional active-from and expiry dates, and active flag
@@ -203,6 +203,11 @@ Implemented create scope:
 - picker loads eligible published Sanity standard products and viable internal `CPO` products through the admin API
 - standard product selections save all matching Supabase pricing `price_key` values so coupon matching works against cart `line.productKey`
 - product thumbnails and hosted Sanity Studio edit-intent links for normal and `CPO` products
+- `/coupons/[couponId]` route for existing coupon detail/edit
+- existing coupon loading and form hydration
+- edit/save flow through `PATCH /api/admin/coupons/[couponId]`
+- activation/deactivation through the editable `isActive` field
+- archive/deactivate confirmation flow through the coupon detail page
 
 ### Step 8 - Simple Analytics
 
@@ -230,7 +235,14 @@ Add focused tests and operational readiness checks for the admin app.
 
 This should verify the critical admin flows, the backend security boundary, and the most important order / coupon operations.
 
-Status: not started as a dedicated step. Focused typechecks and targeted unit tests were run during the order listing/detail implementation.
+Status: implemented for v1 without browser E2E.
+
+Implemented readiness scope:
+
+- App SDK admin unit/component tests for routing, API client behavior, listing views, coupon form behavior, analytics UI, date range handling, and formatters
+- backend admin tests for pagination, date ranges, order DTO helpers, status transitions, shipment metadata, invoice metadata, cancellation/return handling, coupon validation/archive behavior, and analytics counting rules
+- App SDK admin typecheck and build verification
+- browser E2E intentionally excluded because Sanity App SDK apps run through the Sanity Dashboard authentication/runtime model rather than as standalone local pages
 
 ## Security Principles
 
@@ -258,15 +270,15 @@ This strategy file intentionally does not define:
 - warehouse integrations
 - a full analytics or reporting system
 
-Those details should be planned in later Phase 08 implementation notes after this broad direction is accepted.
+Those details remain out of scope for the completed v1 admin surface.
 
 ## Done Criteria
 
-This strategy is useful when it gives the Phase 08 implementation a clear direction:
+Phase 08 is complete for v1 when:
 
 - use `Sanity App SDK`, not a normal Studio tool
 - keep the admin app lightweight for v1
 - use three admin areas: `Orders`, `Coupons`, and simple `Analytics`
 - handle standard-product and `CPO` orders together in `Orders`
 - protect privileged Supabase access behind Audiofast backend APIs
-- defer detailed implementation decisions to later Phase 08 planning files
+- expose order operations, coupon operations, and simple operational analytics through a tested App SDK admin panel

@@ -106,9 +106,9 @@ It may verify browser journeys that a customer can complete with the current app
 - account-details editing
 - customer-submitted cancellation request where the order is already eligible
 
-It should not include full browser journeys that require an admin/operator surface, because that surface does not exist until Phase 08.
+It should not include full browser journeys that require an admin/operator surface. Phase 08 implemented the admin panel as a Sanity App SDK app, which runs inside the Sanity Dashboard runtime rather than as a normal standalone local browser app.
 
-Admin-dependent journeys should move to a future Phase `8.5` Playwright step.
+Admin-dependent journeys should be revisited only if a stable Sanity Dashboard/App SDK browser harness becomes worth the added complexity.
 
 Examples of admin-dependent journeys:
 
@@ -444,9 +444,9 @@ These are valuable but should not block the first E2E milestone.
 - Firefox/WebKit projects
 - visual regression testing for selected stable surfaces
 
-## Deferred To Future Phase 8.5
+## Deferred Beyond Customer E2E
 
-The following Playwright journeys should be tracked after Phase 08 admin operations exist.
+The following journeys were deferred out of the customer-only Step 7.5 scope. They should not become a Phase 08 completion blocker because the Sanity App SDK admin panel runs inside the Sanity Dashboard authentication/runtime model.
 
 ### Invoice Lifecycle
 
@@ -586,4 +586,4 @@ Step 7.5 should not attempt to:
 - Sanity test content strategy currently uses production Sanity content for `/produkty/prestige/`; dedicated test content can be revisited if this becomes unstable.
 - Parallel execution should remain disabled until seed isolation is proven.
 - Browser matrix should remain Chromium-only for v1.
-- Future Phase `8.5` should be created after Phase 08 to cover admin-to-customer lifecycle journeys.
+- Admin-to-customer lifecycle E2E should be revisited only if a stable Sanity Dashboard/App SDK browser harness becomes worth the operational complexity.

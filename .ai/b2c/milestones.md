@@ -81,6 +81,8 @@ Success means:
 - operator can add courier / tracking info
 - operator can attach invoice PDFs
 - operator can manage coupons
+- operator can review simple operational analytics
+- focused admin tests cover the critical order, coupon, and analytics behavior
 
 ### Milestone 9. Policy Flows Working
 

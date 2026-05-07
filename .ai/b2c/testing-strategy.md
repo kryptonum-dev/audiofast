@@ -259,9 +259,11 @@ Expected testing work:
 - admin order status action tests
 - invoice/shipment workflow tests
 - coupon-management tests
-- `CPO` top-level view tests
-- manual `CPO` availability override tests
-- browser tests for the most important operator journeys
+- simple operational analytics tests
+- shared standard-product / `CPO` order visibility tests inside the `Orders` workflow
+- App SDK admin unit and integration tests for route, API-client, listing, form, analytics, and formatter behavior
+
+Browser E2E is intentionally not required for Phase 08 v1 because the Sanity App SDK app runs inside the Sanity Dashboard authentication/runtime model rather than as a standalone local app.
 
 ### Phase 09 - Policy Flows
 

@@ -2,7 +2,7 @@
 
 Status: closed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-05-07
 Depends on: resolved admin-panel architecture discussion
 Related files: `../business/coupon-rules.md`, `invoice-and-documents.md`, `order-lifecycle.md`, `email-flow.md`, `cpo-and-b2c-relation.md`
 
@@ -14,28 +14,27 @@ It defines:
 
 - the top-level admin navigation
 - the role of the order list
-- the role of the `CPO` operational list
+- how `CPO` operational context appears inside the shared order workflow
 - the structure of the order detail page
 - where shipment, invoice, return, and coupon work should live
-- the small v1 analytics area, which is intentionally deferred to `Phase 10 - Launch Readiness`
+- the small v1 analytics area
 
 ## Final Resolution
 
 ### 1. Top-Level Navigation
 
-The v1 admin panel should have four top-level destinations:
+The completed v1 admin panel has three top-level destinations:
 
 - `Orders`
-- `CPO`
 - `Coupons`
 - `Analytics`
 
 Rules:
 
 - `Orders` is the main operational area
-- `CPO` is a separate specimen-centric operational area for understanding the current `CPO` offer and its live availability state
+- standard-product and `CPO` order context is handled together inside `Orders`; there is no separate top-level `CPO` area in v1
 - `Coupons` is a separate management area, not mixed into order detail
-- `Analytics` exists as a very small top-level area in v1 so the structure can grow later, but its implementation is deferred to `Phase 10 - Launch Readiness`
+- `Analytics` exists as a very small top-level area in v1 so the structure can grow later
 - no separate dashboard is needed beyond these destinations
 - no extra top-level settings, finance, or returns areas are needed in v1
 
@@ -51,26 +50,16 @@ This first screen should help the operator:
 - recognize what needs attention
 - open the correct order detail page
 
-### 3. `CPO` List View
+### 3. `CPO` Context
 
-The `CPO` area should exist because `CPO` work is specimen-centric rather than order-centric.
+The original planning direction considered a separate `CPO` area. Phase 08 implementation intentionally kept the v1 panel smaller: `CPO` information appears where it is operationally needed, inside order listing/detail and coupon product selection.
 
-Its role is to help the operator:
+This keeps operators in one shared order workflow while still helping them:
 
-- understand which `CPO` specimens currently exist in the active offer
-- understand the live state of each specimen without opening individual orders
-- manually change operational availability when needed
-- jump to the related order or content entry when relevant
-
-At a broad level, the `CPO` list should support:
-
-- current availability state
-- linked order visibility where relevant
-- manual availability override
-- navigation to the related order
-- navigation to the related `CPO` content entry if useful
-
-This should remain a lightweight operational list rather than a second full order-management system.
+- recognize `CPO` order lines
+- see `CPO` product context inside order detail
+- use normal order operations for status, shipment, invoice, cancellation, and return work
+- choose eligible `CPO` products when creating product-scoped coupons
 
 ### 4. Order List View
 
@@ -165,7 +154,7 @@ This means:
 - shipment entry is handled in the shipment section
 - invoice upload/publication is handled in the invoice section
 - return handling is handled in the return section
-- `CPO` availability override may still appear in order detail when relevant, but the main scanning view for specimen status should live in the top-level `CPO` area
+- `CPO` context should appear in order detail when relevant, but there is no separate top-level `CPO` area in v1
 
 ### 9. Return Case Placement
 
@@ -214,7 +203,6 @@ This exists mainly to establish the architecture for future analytics growth.
 The panel should follow this clear responsibility split:
 
 - order list = scan, recognize, navigate
-- `CPO` list = understand specimen status, override availability, navigate
 - order detail = do the actual order work
 
 The operator should not need to leave the order detail page to handle normal order operations such as:
@@ -223,13 +211,7 @@ The operator should not need to leave the order detail page to handle normal ord
 - shipment data
 - invoice work
 - return handling
-- `CPO` availability override when the order contains a unique specimen item
-
-The operator should also not need to search through orders one by one to answer a different question:
-
-- which `CPO` items currently exist and what is the state of each one
-
-That question belongs to the top-level `CPO` area, not to the order list.
+- `CPO` context review when the order contains a unique specimen item
 
 ### 13. Customer-Facing Side Effects
 
@@ -245,6 +227,6 @@ Detailed customer-facing trigger rules belong in the domain files, not here.
 
 ## Notes
 
-This file resolves the v1 admin-panel information architecture.
+This file records the v1 admin-panel information architecture as completed in Phase 08.
 
-Detailed row contents, field lists, filters, and component-level UI can still be refined later during implementation planning.
+Future row contents, field lists, filters, and component-level UI changes should be treated as follow-up refinements rather than Phase 08 blockers.

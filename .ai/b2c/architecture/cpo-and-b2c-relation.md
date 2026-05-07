@@ -177,11 +177,9 @@ This prevents normal Excel sync from reopening or relisting a specimen that oper
 
 ## Admin Panel Implication
 
-The B2C admin panel should include a dedicated top-level `CPO` area in v1.
+The earlier planning direction considered a dedicated top-level `CPO` area for v1. Phase 08 intentionally completed a smaller admin surface: `CPO` context is handled inside the shared `Orders` workflow and the coupon product picker, without a separate top-level `CPO` destination.
 
-This is justified because `CPO` work is specimen-centric rather than order-centric.
-
-The `CPO` area should help operators answer questions such as:
+The admin surface should still help operators answer questions such as:
 
 - which `CPO` items currently exist in the active offer
 - which ones are `available`, `on_hold`, `sold_out`, or `manually_unavailable`

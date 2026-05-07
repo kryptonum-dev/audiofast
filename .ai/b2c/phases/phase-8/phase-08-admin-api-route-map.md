@@ -1,8 +1,8 @@
 # Phase 08 - Admin API Route Map
 
-Status: planning
+Status: completed
 Owner: planning
-Last updated: 2026-05-06
+Last updated: 2026-05-07
 Depends on: `phase-08-app-sdk-admin-strategy.md`, `../phase-08-admin-operations.md`
 Related files: `phase-08-app-sdk-admin-strategy.md`, `../phase-08-admin-operations.md`, `../../architecture/admin-panel-sanity.md`, `../../architecture/commerce-table-model.md`, `../../architecture/invoice-and-documents.md`, `../../architecture/order-lifecycle.md`, `../../architecture/email-flow.md`, `../../business/coupon-rules.md`, `../../business/returns-and-cancellations-rules.md`
 
@@ -24,7 +24,7 @@ The later UI steps should be able to call this route surface for:
 - coupon management
 - simple purchase/order analytics
 
-This file is not an implementation file. It should be used as the planning source for the route handlers that will be implemented under the Next.js app.
+This file started as the planning source for the Phase 08 admin route handlers. The v1 route surface described here has now been implemented under the Next.js app, with the `/api/admin/b2c/me` diagnostic route retained as the bootstrap bridge route.
 
 ## Base Route Decision
 
@@ -874,6 +874,8 @@ Acceptance target:
 - operator can activate/deactivate coupons through `PATCH`
 - usage count remains server-owned
 
+Status: implemented. The v1 API also supports archiving/deactivating coupons through `DELETE /api/admin/coupons/[couponId]`, which sets `archived_at` and `is_active = false`.
+
 ### 8. Operational Analytics
 
 Implement:
@@ -890,6 +892,8 @@ Acceptance target:
 - admin panel can group the revenue chart by day, week, or month
 - no-sale day/week/month buckets are represented as zero in the chart
 - no Google Analytics, Meta Pixel, or storefront funnel instrumentation is mixed into this route
+
+Status: implemented for the v1 App SDK operational analytics surface.
 
 ### 9. Hardening And Readiness
 
@@ -911,9 +915,11 @@ Acceptance target:
 - the backend route surface is stable enough for the App SDK UI steps to build against
 - the security boundary is tested at least once per route family
 
+Status: implemented through focused backend tests and App SDK admin tests. Browser E2E is intentionally excluded from Phase 08 because the App SDK app runs inside the Sanity Dashboard authentication/runtime model.
+
 ## Done Criteria For Step 3
 
-Step 3 is complete when:
+Step 3 is complete for v1:
 
 - all routes in this file have implemented route handlers or a documented intentional deferral
 - every route verifies the Sanity operator through the shared admin boundary
@@ -926,9 +932,9 @@ Step 3 is complete when:
 - simple purchase/order analytics are available from the API layer
 - tests cover the security boundary and the highest-risk business mutations
 
-## Open Questions To Resolve During Implementation
+## Implementation Decisions
 
-- Should invoice replacement always resend the invoice email, or only first attachment?
-- Should manual admin-created return cases use the same 14-day eligibility window as customer-created cases?
-- Should status transition requests include an operator-visible note even though `orders.status_history` is currently JSON and no separate audit table exists?
-- Should shipment metadata entry optionally trigger a status transition to `shipped`, or should the UI always call the status route separately?
+- Invoice replacement preserves recipient metadata and uses the admin invoice route/storage workflow; broader email policy remains governed by `email-flow.md`.
+- Admin-created return cases enforce the v1 return eligibility rules implemented in the admin return-case helpers.
+- Status transition requests support optional operator notes and append structured status-history metadata.
+- Shipment metadata is saved separately from status transitions. The UI may explicitly call the status route when the operator chooses to mark an order as shipped.

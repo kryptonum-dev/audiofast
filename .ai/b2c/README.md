@@ -103,7 +103,7 @@ Current status of the B2C planning system:
 - `Phase 05 - Buyable PDP And Cart` completed
 - `Phase 06 - Checkout And Payments` completed
 - `Phase 07 - Customer Panel` completed
-- `Phase 08 - Admin Operations` is now the active implementation phase
-- Phase 08 is implemented through the Sanity App SDK order listing and single order details workspace
-- next implementation step is Phase 08 `Step 6 - Coupons Listing`
+- `Phase 08 - Admin Operations` completed for the v1 admin scope
+- Phase 08 now includes the Sanity App SDK `Orders`, `Coupons`, and simple `Analytics` areas
+- focused App SDK admin tests and backend admin tests cover the v1 admin surface
 - no open planning threads remain

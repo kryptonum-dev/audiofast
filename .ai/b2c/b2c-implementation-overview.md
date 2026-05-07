@@ -71,15 +71,13 @@ This means the B2C initiative does not start from zero. It starts from an alread
 
 The platform now has the core customer-facing transactional path in place: cart, checkout, mock payment handling, order persistence, customer order access, invoice download access, and lightweight customer profile editing.
 
-Phase 08 has also moved from planning into implementation. The Sanity App SDK admin app now has the `Orders` area implemented through the order listing and single order details workspace.
+Phase 08 is now complete for the v1 admin scope. The Sanity App SDK admin app covers the agreed lightweight operator surface: `Orders`, `Coupons`, and simple operational `Analytics`.
 
-The remaining v1 gaps are mostly operational and launch-readiness work, especially:
+The remaining v1 gaps are mostly launch-readiness and policy hardening work, especially:
 
-- coupon operations
-- the remaining admin coupon UI
-- simple admin analytics if still required for v1
-- browser-level end-to-end coverage for the full customer journey
-- launch hardening and production-readiness checks
+- browser-level end-to-end coverage for the customer storefront and account journeys
+- Supabase query and index review for the B2C runtime paths
+- final launch hardening and production-readiness checks
 
 These are the main gaps the remaining B2C phases are intended to close.
 
@@ -173,9 +171,9 @@ After reading this file:
 
 ## Current Status
 
-The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, the accepted v1 table model is documented, and `Phase 05 - Buyable PDP And Cart`, `Phase 06 - Checkout And Payments`, and `Phase 07 - Customer Panel` are now complete.
+The planning system now exists, the critical v1 flow threads have been closed, the Phase 03 business contract has been finalized, the accepted v1 table model is documented, and `Phase 05 - Buyable PDP And Cart`, `Phase 06 - Checkout And Payments`, `Phase 07 - Customer Panel`, and `Phase 08 - Admin Operations` are now complete for v1.
 
-`Phase 08 - Admin Operations` is now active and implemented through the order listing and order details steps.
+The current remaining work should move toward customer E2E coverage, Supabase query optimization, policy-flow hardening, and launch readiness.
 
 The completed customer-facing B2C path now includes:
 
@@ -188,12 +186,15 @@ The completed customer-facing B2C path now includes:
 The completed admin operations path now includes:
 
 - Sanity App SDK shell with light/dark theme alignment
-- secure local bridge from the App SDK app to the `apps/web` admin API
+- secure bridge from the App SDK app to the deployed `apps/web` admin API origin
 - order listing with search, filters, page-based pagination, product images, and `Katalogowe`/`CPO` visibility
 - order detail workspace with status updates, shipment data, invoice handling, cancellation handling, return handling, product options, company data, and status history
+- coupon listing, creation, edit, product scoping, activation/deactivation, and archive handling
+- simple operational analytics with KPI cards, date range filtering, grouped revenue/order charts, and status breakdowns
+- focused App SDK admin tests, backend admin tests, typecheck, and build verification
 
 The most important next planning work is:
 
-- implementing the `Coupons` area in Phase 08, starting with the coupons listing
 - adding browser-level coverage in follow-up Step `7.5`
+- reviewing Supabase query/index performance for the B2C runtime paths
 - continuing the remaining policy-flow and launch-readiness work
