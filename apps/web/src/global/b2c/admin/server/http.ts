@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 export type AdminErrorResponse = {
   ok: false;
@@ -7,37 +7,96 @@ export type AdminErrorResponse = {
 };
 
 function parseCsvEnv(value: string | undefined): string[] {
-  return (value ?? '')
-    .split(',')
+  return (value ?? "")
+    .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
 }
 
-function getAllowedOrigins(): Set<string> | null {
+function getAllowedOriginRules(): string[] | null {
   const allowedOrigins = parseCsvEnv(process.env.B2C_ADMIN_ALLOWED_ORIGINS);
 
-  return allowedOrigins.length > 0 ? new Set(allowedOrigins) : null;
+  return allowedOrigins.length > 0 ? allowedOrigins : null;
 }
 
 export function hasAdminAllowedOrigins(): boolean {
-  return getAllowedOrigins() !== null;
+  return getAllowedOriginRules() !== null;
+}
+
+function isOriginAllowed(
+  origin: string,
+  allowedOriginRules: string[],
+): boolean {
+  if (allowedOriginRules.includes(origin)) {
+    return true;
+  }
+
+  let parsedOrigin: URL;
+
+  try {
+    parsedOrigin = new URL(origin);
+  } catch {
+    return false;
+  }
+
+  return allowedOriginRules.some((rule) =>
+    matchesWildcardOriginRule(parsedOrigin, rule),
+  );
+}
+
+function matchesWildcardOriginRule(origin: URL, rule: string): boolean {
+  if (!rule.includes("*")) {
+    return false;
+  }
+
+  let parsedRule: URL;
+
+  try {
+    parsedRule = new URL(rule);
+  } catch {
+    return false;
+  }
+
+  const wildcardPrefix = "*.";
+
+  if (
+    parsedRule.protocol !== origin.protocol ||
+    !parsedRule.hostname.startsWith(wildcardPrefix) ||
+    parsedRule.pathname !== "/" ||
+    parsedRule.search ||
+    parsedRule.hash
+  ) {
+    return false;
+  }
+
+  const domainSuffix = parsedRule.hostname.slice(wildcardPrefix.length);
+
+  return (
+    origin.hostname !== domainSuffix &&
+    origin.hostname.endsWith(`.${domainSuffix}`) &&
+    origin.port === parsedRule.port
+  );
 }
 
 export function getAdminCorsHeaders(request: Request): HeadersInit {
-  const origin = request.headers.get('origin');
-  const allowedOrigins = getAllowedOrigins();
+  const origin = request.headers.get("origin");
+  const allowedOriginRules = getAllowedOriginRules();
 
-  if (!origin || !allowedOrigins?.has(origin)) {
+  if (
+    !origin ||
+    !allowedOriginRules ||
+    !isOriginAllowed(origin, allowedOriginRules)
+  ) {
     return {
-      Vary: 'Origin',
+      Vary: "Origin",
     };
   }
 
   return {
-    'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Authorization, Content-Type',
-    Vary: 'Origin',
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Authorization, Content-Type",
+    Vary: "Origin",
   };
 }
 
@@ -70,23 +129,23 @@ export function adminErrorJson(
 }
 
 export function adminOptions(request: Request): Response {
-  const origin = request.headers.get('origin');
-  const allowedOrigins = getAllowedOrigins();
+  const origin = request.headers.get("origin");
+  const allowedOriginRules = getAllowedOriginRules();
 
-  if (!allowedOrigins) {
+  if (!allowedOriginRules) {
     return adminErrorJson(
       request,
-      'admin_cors_config_missing',
-      'B2C admin allowed origins are not configured.',
+      "admin_cors_config_missing",
+      "B2C admin allowed origins are not configured.",
       500,
     );
   }
 
-  if (origin && !allowedOrigins.has(origin)) {
+  if (origin && !isOriginAllowed(origin, allowedOriginRules)) {
     return adminErrorJson(
       request,
-      'origin_not_allowed',
-      'This origin is not allowed to call the B2C admin API.',
+      "origin_not_allowed",
+      "This origin is not allowed to call the B2C admin API.",
       403,
     );
   }
