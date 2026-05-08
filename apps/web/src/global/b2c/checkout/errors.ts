@@ -1,4 +1,5 @@
 import type { CheckoutCartBlockingReasonCode } from './cart';
+import { ONLINE_PAYMENT_LIMIT_MESSAGE } from './payment-limit';
 import type { CheckoutSubmitErrors } from './validation';
 
 export type CheckoutDomainError =
@@ -30,6 +31,10 @@ export type CheckoutDomainError =
     }
   | {
       code: 'payment_registration_failed';
+      message: string;
+    }
+  | {
+      code: 'payment_amount_too_high';
       message: string;
     }
   | {
@@ -131,6 +136,13 @@ export function createCheckoutPaymentRegistrationFailedError(): CheckoutDomainEr
   return {
     code: 'payment_registration_failed',
     message: 'Nie udało się rozpocząć płatności. Spróbuj ponownie za chwilę.',
+  };
+}
+
+export function createCheckoutPaymentAmountTooHighError(): CheckoutDomainError {
+  return {
+    code: 'payment_amount_too_high',
+    message: ONLINE_PAYMENT_LIMIT_MESSAGE,
   };
 }
 

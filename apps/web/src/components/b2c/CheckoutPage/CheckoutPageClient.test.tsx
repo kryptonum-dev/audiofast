@@ -491,6 +491,52 @@ describe('CheckoutPageClient', () => {
     expect(pushMock).not.toHaveBeenCalled();
   });
 
+  it('shows a payment-limit toast when checkout submit is blocked by the server', async () => {
+    const user = userEvent.setup();
+
+    vi.mocked(submitCheckout).mockResolvedValueOnce({
+      ok: false,
+      error: {
+        code: 'payment_amount_too_high',
+        message:
+          'Wartość zamówienia przekracza limit płatności online 50 000 zł. Skontaktuj się z Audiofast, aby sfinalizować zakup indywidualnie.',
+      },
+      revalidatedCart: createUseCartValue().cart,
+      revalidationResults: [],
+    } as never);
+
+    render(
+      <CheckoutPageClient
+        initialDraft={createInitialDraft()}
+        isEmailLocked={false}
+        sessionContext={{
+          isAuthenticated: false,
+          authUserId: null,
+          authenticatedEmail: null,
+          customerProfileId: null,
+        }}
+        supportCard={null}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole('checkbox', {
+        name: /Akceptuję regulamin i politykę prywatności/,
+      }),
+    );
+    await user.click(
+      screen.getByRole('button', { name: 'Przejdź do płatności' }),
+    );
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'Wartość zamówienia przekracza limit płatności online 50 000 zł. Skontaktuj się z Audiofast, aby sfinalizować zakup indywidualnie.',
+      );
+    });
+    expect(pushMock).not.toHaveBeenCalled();
+  });
+
+
   it('shows server-side field errors returned by checkout submit', async () => {
     const user = userEvent.setup();
 

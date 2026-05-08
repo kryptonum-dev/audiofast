@@ -204,6 +204,22 @@ describe('startCheckoutPayment', () => {
     expect(handleCheckoutPaymentStatusNotification).not.toHaveBeenCalled();
   });
 
+  it('blocks provider registration when the online payment amount is too high', async () => {
+    const result = await startCheckoutPayment({
+      paymentRegistrationInput: {
+        ...createPaymentRegistrationInput(),
+        amount: 50_001_00,
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.ok ? null : result.error.code).toBe(
+      'payment_amount_too_high',
+    );
+    expect(getCheckoutPaymentProviderAdapter).not.toHaveBeenCalled();
+    expect(providerAdapter.registerTransaction).not.toHaveBeenCalled();
+  });
+
   it('returns payment_verification_failed when status processing throws', async () => {
     vi.mocked(handleCheckoutPaymentStatusNotification).mockRejectedValueOnce(
       new Error('boom'),

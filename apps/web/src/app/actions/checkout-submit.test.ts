@@ -346,6 +346,37 @@ describe('submitCheckout', () => {
     expect(subscribeToNewsletter).not.toHaveBeenCalled();
   });
 
+  it('blocks checkout before order creation when the online payment amount is too high', async () => {
+    const cart = createValidCart();
+    const line = cart.lines[0]!;
+    line.unitPriceCents = 50_001_00;
+    line.product = {
+      ...line.product,
+      basePrice: 50_001_00,
+      totalPrice: 50_001_00,
+    };
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 50_001_00,
+      },
+    ]);
+
+    const result = await submitCheckout(createValidInput(), cart);
+
+    expect(result.ok).toBe(false);
+    expect(result.ok ? null : result.error.code).toBe(
+      'payment_amount_too_high',
+    );
+    expect(generateNextCheckoutOrderNumber).not.toHaveBeenCalled();
+    expect(persistCheckoutOrder).not.toHaveBeenCalled();
+    expect(startCheckoutPayment).not.toHaveBeenCalled();
+  });
+
   it('uses the current request origin for checkout payment return URLs', async () => {
     const cart = createValidCart();
 

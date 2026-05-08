@@ -2,12 +2,17 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 import { fetchCartLinePricing } from '@/src/app/actions/cart-pricing';
 import { loadCartPageRuntime } from '@/src/app/actions/cart-revalidation';
 import CartLineConfigurationModal from '@/src/components/b2c/CartLineConfigurationModal';
 import type { CartLinePricingCacheEntry } from '@/src/components/b2c/CartLineConfigurationModal/pricing-cache';
-import { getCartVisibleLineDiscountCents } from '@/src/global/b2c/cart/cart-selectors';
+import { applyCartRevalidation as applyCartRevalidationToState } from '@/src/global/b2c/cart/cart-revalidation';
+import {
+  getCartVisibleLineDiscountCents,
+  getCheckoutCartTotals,
+} from '@/src/global/b2c/cart/cart-selectors';
 import {
   canKeepStandardLineWithoutOptions,
   canReconfigureStandardLineWithAddedOptions,
@@ -15,6 +20,10 @@ import {
 } from '@/src/global/b2c/cart/standard-cart-line-option-recovery';
 import type { StandardCartLine } from '@/src/global/b2c/cart/types';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
+import {
+  isOnlinePaymentAmountOverLimit,
+  ONLINE_PAYMENT_LIMIT_MESSAGE,
+} from '@/src/global/b2c/checkout/payment-limit';
 
 import CartEmptyState from './CartEmptyState';
 import CartItemCard from './CartItemCard';
@@ -86,6 +95,10 @@ export default function CartPageClient({
 
     try {
       const runtime = await loadCartPageRuntime(cart.lines);
+      const revalidatedCart = applyCartRevalidationToState(
+        cart,
+        runtime.revalidationResults,
+      );
 
       applyCartLineRevalidation(runtime.revalidationResults);
       setPricingByProductKey(runtime.standardPricingByProductKey);
@@ -102,6 +115,15 @@ export default function CartPageClient({
         return;
       }
 
+      if (
+        isOnlinePaymentAmountOverLimit(
+          getCheckoutCartTotals(revalidatedCart).grandTotalCents,
+        )
+      ) {
+        toast.error(ONLINE_PAYMENT_LIMIT_MESSAGE);
+        return;
+      }
+
       setIsCheckoutPending(false);
       router.push(CHECKOUT_PATH);
     } catch (error) {
@@ -109,7 +131,7 @@ export default function CartPageClient({
     } finally {
       setIsCheckoutPending(false);
     }
-  }, [applyCartLineRevalidation, cart.lines, isCartInteractionPending, router]);
+  }, [applyCartLineRevalidation, cart, isCartInteractionPending, router]);
   const handleApplyCoupon = useCallback(
     async (code: string) => {
       await applyCoupon(code);

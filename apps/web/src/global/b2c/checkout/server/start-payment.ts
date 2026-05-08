@@ -1,10 +1,12 @@
 import {
   createCheckoutFailure,
+  createCheckoutPaymentAmountTooHighError,
   createCheckoutPaymentRegistrationFailedError,
   createCheckoutPaymentVerificationFailedError,
   createCheckoutSuccess,
 } from '../errors';
 import type { P24TransactionRegistrationInput } from '../payment-contracts';
+import { isOnlinePaymentAmountOverLimit } from '../payment-limit';
 import { P24ClientError } from './p24-client';
 import { getCheckoutPaymentProviderAdapter } from './payment-provider';
 import { handleCheckoutPaymentStatusNotification } from './payment-status';
@@ -31,6 +33,10 @@ function buildCheckoutPaymentRedirectUrl(args: {
 export async function startCheckoutPayment(args: {
   paymentRegistrationInput: P24TransactionRegistrationInput;
 }): Promise<StartCheckoutPaymentResult> {
+  if (isOnlinePaymentAmountOverLimit(args.paymentRegistrationInput.amount)) {
+    return createCheckoutFailure(createCheckoutPaymentAmountTooHighError());
+  }
+
   let registration: Awaited<
     ReturnType<
       ReturnType<

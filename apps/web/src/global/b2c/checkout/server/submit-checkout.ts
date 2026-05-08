@@ -20,9 +20,11 @@ import {
   createCheckoutFormInvalidError,
   createCheckoutInternalError,
   createCheckoutOrderDraftInvalidError,
+  createCheckoutPaymentAmountTooHighError,
 } from '../errors';
 import { buildCheckoutOrderDraft } from '../order-draft';
 import { buildP24TransactionRegistrationInput } from '../payment-contracts';
+import { isOnlinePaymentAmountOverLimit } from '../payment-limit';
 import { decideCheckoutProfilePersistence } from '../profile';
 import { buildCheckoutOrderSummary } from '../summary';
 import type { CheckoutSubmitInput } from '../types';
@@ -208,6 +210,15 @@ export async function submitCheckoutOrder(args: {
       revalidatedCart,
       cartValidation.validLines,
     );
+
+    if (isOnlinePaymentAmountOverLimit(summary.grandTotalCents)) {
+      return createCheckoutSubmitFailure(
+        createCheckoutPaymentAmountTooHighError(),
+        revalidatedCart,
+        revalidationResults,
+      );
+    }
+
     const profilePersistenceDecision = decideCheckoutProfilePersistence(
       authContext.sessionContext,
       authContext.customerProfile,

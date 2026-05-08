@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchCartLinePricing } from '@/src/app/actions/cart-pricing';
@@ -34,6 +35,14 @@ vi.mock('@/src/app/actions/cart-pricing', () => ({
 
 vi.mock('@/src/app/actions/cart-revalidation', () => ({
   loadCartPageRuntime: vi.fn(),
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    error: vi.fn(),
+    info: vi.fn(),
+    success: vi.fn(),
+  },
 }));
 
 vi.mock('@/components/shared/Image', () => ({
@@ -447,6 +456,65 @@ describe('CartPageClient', () => {
       ),
     );
   });
+
+  it('keeps the customer on the cart and shows a toast when the online payment amount is too high', async () => {
+    const user = userEvent.setup();
+    const applyCartLineRevalidation = vi.fn();
+    const overLimitLine = createStandardLine();
+    overLimitLine.unitPriceCents = 50_001_00;
+    overLimitLine.product = {
+      ...overLimitLine.product,
+      basePrice: 50_001_00,
+      totalPrice: 50_001_00,
+    };
+    const cart = {
+      ...createEmptyCart(),
+      lines: [overLimitLine],
+    };
+    const checkoutResults = [
+      {
+        lineId: 'standard-line-1',
+        lineType: 'standard' as const,
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 50_001_00,
+      },
+    ];
+
+    vi.mocked(loadCartPageRuntime)
+      .mockResolvedValueOnce({
+        revalidationResults: [],
+        standardPricingByProductKey: {},
+      })
+      .mockResolvedValueOnce({
+        revalidationResults: checkoutResults,
+        standardPricingByProductKey: {},
+      });
+
+    vi.mocked(useCart).mockReturnValue(
+      createUseCartValue({
+        cart,
+        applyCartLineRevalidation,
+      }),
+    );
+
+    render(<CartPageClient />);
+
+    await waitFor(() =>
+      expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Dalej' }));
+
+    await waitFor(() =>
+      expect(applyCartLineRevalidation).toHaveBeenCalledWith(checkoutResults),
+    );
+    expect(toast.error).toHaveBeenCalledWith(
+      'Wartość zamówienia przekracza limit płatności online 50 000 zł. Skontaktuj się z Audiofast, aby sfinalizować zakup indywidualnie.',
+    );
+    expect(pushMock).not.toHaveBeenCalled();
+  });
+
 
   it('clears checkout pending and reruns cart runtime loading after navigating back to the cart', async () => {
     const user = userEvent.setup();
