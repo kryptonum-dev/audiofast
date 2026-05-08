@@ -7,11 +7,16 @@ vi.mock('@/components/shared/Image', () => ({
   default: () => <div data-testid="mock-image" />,
 }));
 
+import { trackAddToCart } from '@/src/global/b2c/analytics/commerce-events';
 import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
 import type { CompletePricingData } from '@/src/global/supabase/types';
 
 import PricingSection from './PricingSection';
+
+vi.mock('@/src/global/b2c/analytics/commerce-events', () => ({
+  trackAddToCart: vi.fn(),
+}));
 
 vi.mock('../ProductInquiryModal', () => ({
   default: () => null,
@@ -215,6 +220,15 @@ describe('PricingSection', () => {
       variantId: 'variant-1',
       selectedOptions: {},
     });
+    expect(trackAddToCart).toHaveBeenCalledWith(
+      expect.objectContaining({
+        lineType: 'standard',
+        productKey: '/produkty/test',
+        productName: 'Test product',
+        quantity: 1,
+        unitPriceCents: 100_00,
+      }),
+    );
   });
 
   it('merges the same standard configuration into one cart line', async () => {

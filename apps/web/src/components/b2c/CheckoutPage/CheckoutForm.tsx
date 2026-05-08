@@ -8,6 +8,7 @@ import { submitCheckout } from '@/src/app/actions/checkout-submit';
 import Checkbox from '@/src/components/ui/Checkbox';
 import Error from '@/src/components/ui/Error';
 import Input from '@/src/components/ui/Input';
+import { trackAddPaymentInfo } from '@/src/global/b2c/analytics/commerce-events';
 import {
   buildCheckoutCartFingerprint,
   persistPendingCheckoutCartCleanup,
@@ -101,14 +102,13 @@ export default function CheckoutForm({
     clearErrors();
     onPriceChangeNoticeChange(false);
 
-    const result = await submitCheckout(
-      buildCheckoutSubmitInput({
-        ...values,
-        provideSeparateBillingAddress,
-        shippingRecipientDiffers,
-      }),
-      cart,
-    );
+    const checkoutInput = buildCheckoutSubmitInput({
+      ...values,
+      provideSeparateBillingAddress,
+      shippingRecipientDiffers,
+    });
+
+    const result = await submitCheckout(checkoutInput, cart);
 
     if (!result.ok) {
       if (result.revalidationResults) {
@@ -140,6 +140,12 @@ export default function CheckoutForm({
       orderNumber: result.value.orderNumber,
       startedAt: new Date().toISOString(),
       cartFingerprint: buildCheckoutCartFingerprint(cart),
+    });
+    trackAddPaymentInfo({
+      cart,
+      orderNumber: result.value.orderNumber,
+      paymentType: 'przelewy24',
+      checkoutInput,
     });
     router.push(result.value.redirectUrl);
   };

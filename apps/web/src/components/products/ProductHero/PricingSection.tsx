@@ -1,9 +1,17 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import type { SanityRawImage } from '@/components/shared/Image';
 import type { FormStateData } from '@/src/components/ui/FormStates';
+import { trackAddToCart } from '@/src/global/b2c/analytics/commerce-events';
 import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
 import {
@@ -50,6 +58,8 @@ export default function PricingSection({
   const { addLine } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const isConfirmationOpenRef = useRef(isConfirmationOpen);
+  const shouldCloseConfirmationOnRestoreRef = useRef(false);
   const [selection, setSelection] = useState<PricingSelection>(() =>
     pricingData
       ? createStandardConfigurationSelectionState(pricingData)
@@ -71,6 +81,22 @@ export default function PricingSection({
           },
     );
   }, [pricingData]);
+
+  useLayoutEffect(() => {
+    isConfirmationOpenRef.current = isConfirmationOpen;
+  }, [isConfirmationOpen]);
+
+  useLayoutEffect(() => {
+    if (shouldCloseConfirmationOnRestoreRef.current) {
+      shouldCloseConfirmationOnRestoreRef.current = false;
+      setIsConfirmationOpen(false);
+    }
+
+    return () => {
+      shouldCloseConfirmationOnRestoreRef.current =
+        isConfirmationOpenRef.current;
+    };
+  }, []);
 
   // Handle selection changes from PricingConfigurator
   const handleSelectionChange = useCallback(
@@ -148,6 +174,7 @@ export default function PricingSection({
     });
 
     addLine(line);
+    trackAddToCart(line);
     onAddToCart?.(line);
     setIsConfirmationOpen(true);
   };

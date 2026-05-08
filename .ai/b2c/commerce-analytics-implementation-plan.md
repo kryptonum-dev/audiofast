@@ -2,7 +2,7 @@
 
 Status: draft
 Owner: planning / execution
-Last updated: 2026-05-07
+Last updated: 2026-05-08
 Depends on: `phases/phase-08-admin-operations.md`, `phases/phase-10-launch-readiness.md`, `things-left-before-client-preview.md`
 Related files: `../apps/web/src/global/analytics/track-event.ts`, `../apps/web/src/global/analytics/analytics-user-storage.ts`, `../apps/web/src/app/api/analytics/meta/route.ts`, `../apps/web/src/global/b2c/cart/`, `../apps/web/src/global/b2c/checkout/`
 
@@ -13,6 +13,39 @@ This file defines the implementation plan for adding commerce analytics to the B
 The admin panel already has simple operational analytics based on persisted orders. This plan is about customer-facing ecommerce instrumentation: cart, checkout, payment handoff, purchase confirmation, and related B2C events.
 
 The goal is to use the existing analytics infrastructure rather than introducing a second tracking system.
+
+## V1 Scope Decision
+
+Audiofast B2C v1 should stay intentionally minimal. Expected purchase volume is low enough that broad, fine-grained event coverage would create more complexity and noise than value.
+
+The v1 ecommerce analytics funnel is:
+
+1. `ViewContent` / `view_item`
+2. `AddToCart` / `add_to_cart`
+3. `ViewCart` / `view_cart`
+4. `InitiateCheckout` / `begin_checkout`
+5. `AddPaymentInfo` / `add_payment_info`
+6. `Purchase` / `purchase`
+
+These events answer the core launch questions:
+
+- which products get attention
+- which products create cart intent
+- whether users reach cart
+- whether users pass cart validation into checkout
+- whether users reach payment handoff
+- which orders actually become paid purchases
+
+The following events are deferred beyond v1 unless a concrete launch issue requires them:
+
+- cart quantity increment/decrement analytics
+- `RemoveFromCart` / `remove_from_cart`
+- standalone coupon-applied events
+- checkout submit attempt
+- checkout submit failure
+- payment pending / expired / failed events
+
+Coupon and discount data should still be included inside the in-scope funnel events where relevant, especially `view_cart`, `begin_checkout`, `add_payment_info`, and `purchase`.
 
 ## Current Analytics Architecture
 
@@ -168,11 +201,11 @@ This module should own:
 Client UI events should track user intent:
 
 - add to cart
-- remove from cart
 - view cart
 - begin checkout
 - add payment info / payment handoff
-- checkout submit failure
+
+For v1, avoid granular intent events such as remove-from-cart, quantity deltas, and checkout diagnostics unless they are needed to debug a real launch problem.
 
 Purchase should track authoritative paid outcome:
 
@@ -251,13 +284,11 @@ Trigger:
 
 - user adds a standard product to cart
 - user adds a `CPO` product to cart
-- quantity increase in cart can optionally be modeled as incremental `add_to_cart`
 
 Primary touchpoints:
 
 - `PricingSection.tsx` in `handleAddToCart`
 - `CpoProductInquirySection.tsx` in the add branch of `handleToggleCart`
-- `CartItemCard.tsx` for quantity increment if tracked
 
 Payload:
 
@@ -295,6 +326,7 @@ Notes:
 - standard add-to-cart has selected variant/configuration available at the PDP.
 - `CPO` add-to-cart has fixed quantity and fixed price.
 - Do not track failed add attempts as `AddToCart`.
+- Cart quantity increases are deferred beyond v1. If implemented later, track only the delta quantity, not the full line quantity.
 
 ### Event 3 - Remove From Cart
 
@@ -319,6 +351,12 @@ Notes:
 - `CartItemCard` is the best cart-page insertion point because it still has the full `line` before calling `onRemove(line.lineId)`.
 - For a standard line whose quantity is reduced but not removed, send only the delta quantity if tracked.
 
+V1 decision:
+
+- defer beyond v1
+- do not make this a launch acceptance criterion
+- revisit only if cart abandonment diagnosis becomes important enough to justify the extra event volume
+
 ### Event 4 - View Cart
 
 Trigger:
@@ -341,7 +379,7 @@ Payload:
 
 Notes:
 
-- current `trackEvent` treats `ViewCart` as `trackCustom` because `META_STANDARD_EVENTS` does not include it. Confirm whether to add `ViewCart` and `RemoveFromCart` to `META_STANDARD_EVENTS` before implementation.
+- current `trackEvent` treats `ViewCart` as `trackCustom` because `META_STANDARD_EVENTS` does not include it. Confirm whether to add `ViewCart` to `META_STANDARD_EVENTS` before implementing the v1 cart-view event.
 
 ### Event 5 - Coupon Applied
 
@@ -362,6 +400,7 @@ For v1 minimum:
 
 - do not make coupon events a launch blocker
 - include coupon fields in `view_cart`, `begin_checkout`, `add_payment_info`, and `purchase`
+- do not emit a standalone coupon event in v1
 
 Notes:
 
@@ -439,7 +478,7 @@ Payload:
 
 Decision:
 
-- optional for v1.
+- deferred beyond v1.
 - Useful for funnel diagnosis but not required for core ad-platform ecommerce reporting.
 
 ### Event 8 - Checkout Submit Failure
@@ -467,7 +506,7 @@ Payload:
 
 Decision:
 
-- optional for launch analytics.
+- deferred beyond v1.
 - Useful for diagnosing friction such as `cart_price_updated`, `cart_invalid`, and form validation errors.
 
 ### Event 9 - Add Payment Info / Payment Handoff
@@ -632,7 +671,6 @@ export function buildMetaCartParams(
 ): Record<string, unknown>;
 
 export function trackB2cAddToCart(line: CartLine): string;
-export function trackB2cRemoveFromCart(line: CartLine, quantity?: number): string;
 export function trackB2cViewCart(cart: CartState): string;
 export function trackB2cBeginCheckout(cart: CartState): string;
 export function trackB2cAddPaymentInfo(args: {
@@ -641,6 +679,9 @@ export function trackB2cAddPaymentInfo(args: {
   paymentType: "przelewy24";
 }): string;
 export function trackB2cPurchase(payload: B2cPurchaseAnalyticsPayload): string;
+
+// Later, if needed beyond v1:
+export function trackB2cRemoveFromCart(line: CartLine, quantity?: number): string;
 ```
 
 The exact API can be adjusted during implementation, but the key rule is that components should call semantic helpers rather than assemble raw `trackEvent` payloads.
@@ -655,7 +696,7 @@ For cart lines:
 - `item_category`: `line.lineType`
 - `item_variant`: standard configuration signature or `CPO`
 - `price`: unit price in PLN
-- `quantity`: line quantity or delta quantity
+- `quantity`: line quantity for v1 events; delta quantity only if later quantity-change events are added
 - `discount`: line discount in PLN, when available
 
 For purchase order items:
@@ -713,12 +754,13 @@ Current type union includes commerce events, but `META_STANDARD_EVENTS` currentl
 - `Purchase`
 - `CompleteRegistration`
 
-Before adding commerce tracking, decide whether to add:
+Before adding v1 cart-view tracking, decide whether to add:
 
-- `RemoveFromCart`
 - `ViewCart`
 
-If not added, they will use `trackCustom` instead of Meta standard `track`.
+If not added, `ViewCart` will use `trackCustom` instead of Meta standard `track`.
+
+`RemoveFromCart` is deferred beyond v1, so it does not need a launch-blocking decision.
 
 ### GA4 Custom Events
 
@@ -769,27 +811,24 @@ Acceptance:
 - standard and `CPO` PDPs both emit product view events
 - `CPO` price is included when `priceCents` is valid
 
-### Step 3 - Track Add And Remove From Cart
+### Step 3 - Track Add To Cart
 
 Files:
 
 - `apps/web/src/components/products/ProductHero/PricingSection.tsx`
 - `apps/web/src/components/cpo/CpoProductHero/CpoProductInquirySection.tsx`
-- `apps/web/src/components/b2c/CartPage/CartItemCard.tsx`
 
 Add:
 
 - `trackB2cAddToCart(line)` after line creation/add
-- `trackB2cRemoveFromCart(line)` before or after remove
-- optional quantity delta events
 
 Acceptance:
 
 - standard add emits one `add_to_cart`
 - `CPO` add emits one `add_to_cart`
-- cart page remove emits one `remove_from_cart`
-- `CPO` PDP toggle removal emits one `remove_from_cart`
 - no events are emitted for blocked or failed add attempts
+- cart quantity increases do not emit events in v1
+- remove actions do not emit events in v1
 
 ### Step 4 - Track View Cart
 
@@ -912,16 +951,21 @@ Acceptance:
 - manual refresh does not emit duplicate purchase
 - second distinct order can emit purchase
 
-### Step 9 - Optional Diagnostic Events
+### Step 9 - Deferred Events
 
 Optional files:
 
+- `CartItemCard.tsx`
+- `CpoProductInquirySection.tsx`
 - `CheckoutForm.tsx`
 - `load-thank-you-page.ts`
 - `payment-status.ts`
 
 Optional events:
 
+- remove from cart
+- cart quantity increment/decrement
+- coupon applied
 - checkout submit attempt
 - checkout error
 - payment pending
@@ -952,9 +996,8 @@ Add tests for:
 Update or add focused tests for:
 
 - `PricingSection` calls add-to-cart tracker
-- `CpoProductInquirySection` calls add/remove tracker
+- `CpoProductInquirySection` calls add-to-cart tracker
 - `CartPageClient` calls view-cart and begin-checkout tracker
-- `CartItemCard` calls remove tracker
 - `CheckoutForm` calls add-payment-info tracker on success
 - `ThankYouPurchaseTracker` dedupes purchase per order number
 
@@ -982,12 +1025,11 @@ On a preview/production-like deployment:
 2. open a standard PDP and verify `view_item`
 3. add standard product and verify `add_to_cart`
 4. open cart and verify `view_cart`
-5. remove item and verify `remove_from_cart`
-6. repeat with `CPO` if buyable CPO content exists
-7. go from cart to checkout and verify `begin_checkout`
-8. submit checkout and verify `add_payment_info`
-9. complete payment and verify `purchase`
-10. refresh thank-you page and verify no duplicate purchase
+5. repeat product view/add-to-cart with `CPO` if buyable CPO content exists
+6. go from cart to checkout and verify `begin_checkout`
+7. submit checkout and verify `add_payment_info`
+8. complete payment and verify `purchase`
+9. refresh thank-you page and verify no duplicate purchase
 
 ## Acceptance Criteria
 
@@ -996,7 +1038,6 @@ The commerce analytics implementation is complete for v1 when:
 - standard and `CPO` product views are covered
 - standard and `CPO` add-to-cart events are covered
 - cart view is covered
-- remove-from-cart is covered
 - begin-checkout is covered only after valid cart revalidation
 - payment handoff is covered only after successful order persistence and payment registration
 - purchase is emitted only for paid orders
@@ -1007,6 +1048,7 @@ The commerce analytics implementation is complete for v1 when:
 - existing consent behavior remains centralized in `trackEvent`
 - E2E remains isolated from external analytics providers
 - tests cover the mapper and key emitting components
+- remove-from-cart, quantity delta, coupon-applied, checkout diagnostic, and payment diagnostic events remain deferred beyond v1
 
 ## Not In Scope For First Slice
 
@@ -1047,9 +1089,11 @@ Before passing full checkout identity into `trackEvent`, confirm:
 
 ### Meta Standard Events
 
-Confirm whether `ViewCart` and `RemoveFromCart` should be added to `META_STANDARD_EVENTS`.
+Confirm whether `ViewCart` should be added to `META_STANDARD_EVENTS`.
 
-If they are not added, current `trackEvent` will send them as `trackCustom`.
+If it is not added, current `trackEvent` will send it as `trackCustom`.
+
+`RemoveFromCart` can be reviewed later if that deferred event is implemented.
 
 ### Expired And Failed Payment Analytics
 
@@ -1069,7 +1113,7 @@ Full `CPO` analytics manual/E2E verification depends on having a buyable `CPO` p
 
 1. Add commerce analytics mapper and tests.
 2. Add `CPO` product view tracking.
-3. Add add/remove cart tracking.
+3. Add add-to-cart tracking.
 4. Add view-cart tracking.
 5. Add begin-checkout tracking.
 6. Add add-payment-info tracking.
@@ -1092,5 +1136,6 @@ The missing work is mostly structured instrumentation:
 - focused tests
 - manual preview verification
 
-This should be implemented as follow-up Step `8.5` after Phase 08, then verified as part of Phase 10 launch readiness.
+The v1 launch version should stay limited to the six agreed funnel events. More granular events can be added later if the business needs deeper diagnostics after real traffic exists.
 
+This should be implemented as follow-up Step `8.5` after Phase 08, then verified as part of Phase 10 launch readiness.

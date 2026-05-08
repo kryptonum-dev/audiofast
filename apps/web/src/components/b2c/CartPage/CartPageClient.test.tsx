@@ -6,6 +6,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchCartLinePricing } from '@/src/app/actions/cart-pricing';
 import { loadCartPageRuntime } from '@/src/app/actions/cart-revalidation';
+import {
+  trackBeginCheckout,
+  trackViewCart,
+} from '@/src/global/b2c/analytics/commerce-events';
 import type { CartContextValue } from '@/src/global/b2c/cart/cart-context';
 import { createEmptyCart } from '@/src/global/b2c/cart/cart-domain';
 import { getCartTotals } from '@/src/global/b2c/cart/cart-selectors';
@@ -27,6 +31,11 @@ vi.mock('next/navigation', () => ({
 
 vi.mock('@/src/global/b2c/cart/use-cart', () => ({
   useCart: vi.fn(),
+}));
+
+vi.mock('@/src/global/b2c/analytics/commerce-events', () => ({
+  trackBeginCheckout: vi.fn(),
+  trackViewCart: vi.fn(),
 }));
 
 vi.mock('@/src/app/actions/cart-pricing', () => ({
@@ -370,7 +379,7 @@ describe('CartPageClient', () => {
     });
   });
 
-  it('revalidates again on checkout click, keeps the button pending, and redirects on success', async () => {
+  it('revalidates again on checkout click, keeps the button pending through redirect, and redirects on success', async () => {
     const user = userEvent.setup();
     const applyCartLineRevalidation = vi.fn();
     const deferredCheckoutRuntime =
@@ -417,6 +426,16 @@ describe('CartPageClient', () => {
     await waitFor(() =>
       expect(loadCartPageRuntime).toHaveBeenCalledWith(cart.lines),
     );
+    expect(trackViewCart).toHaveBeenCalledWith(
+      expect.objectContaining({
+        lines: [
+          expect.objectContaining({
+            lineId: 'standard-line-1',
+            productKey: '/produkty/test',
+          }),
+        ],
+      }),
+    );
     applyCartLineRevalidation.mockClear();
 
     await user.click(screen.getByRole('button', { name: 'Dalej' }));
@@ -450,10 +469,19 @@ describe('CartPageClient', () => {
     await waitFor(() =>
       expect(pushMock).toHaveBeenCalledWith('/koszyk/twoje-dane'),
     );
-    await waitFor(() =>
-      expect(screen.getByRole('button', { name: 'Dalej' })).not.toHaveAttribute(
-        'aria-busy',
-      ),
+    expect(trackBeginCheckout).toHaveBeenCalledWith(
+      expect.objectContaining({
+        lines: [
+          expect.objectContaining({
+            lineId: 'standard-line-1',
+            productKey: '/produkty/test',
+          }),
+        ],
+      }),
+    );
+    expect(screen.getByRole('button', { name: 'Dalej' })).toHaveAttribute(
+      'aria-busy',
+      'true',
     );
   });
 
@@ -512,9 +540,9 @@ describe('CartPageClient', () => {
     expect(toast.error).toHaveBeenCalledWith(
       'Wartość zamówienia przekracza limit płatności online 50 000 zł. Skontaktuj się z Audiofast, aby sfinalizować zakup indywidualnie.',
     );
+    expect(trackBeginCheckout).not.toHaveBeenCalled();
     expect(pushMock).not.toHaveBeenCalled();
   });
-
 
   it('clears checkout pending and reruns cart runtime loading after navigating back to the cart', async () => {
     const user = userEvent.setup();

@@ -11,6 +11,7 @@ import {
 
 import styles from './styles.module.scss';
 import ThankYouCartCleanup from './ThankYouCartCleanup';
+import ThankYouPurchaseTracker from './ThankYouPurchaseTracker';
 
 export type ThankYouPageContentProps = {
   params: Promise<{
@@ -206,6 +207,9 @@ export default async function ThankYouPageContent({
         stateId={thankYouPageData.state.id}
         orderNumber={thankYouPageData.orderNumber}
       />
+      {thankYouPageData.analytics ? (
+        <ThankYouPurchaseTracker payload={thankYouPageData.analytics} />
+      ) : null}
       <CheckoutSteps currentStep="confirmation" />
       <main id="main" className="max-width">
         <section

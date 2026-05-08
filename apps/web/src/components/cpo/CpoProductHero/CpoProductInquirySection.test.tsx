@@ -7,11 +7,17 @@ vi.mock('@/components/shared/Image', () => ({
   default: () => <div data-testid="mock-image" />,
 }));
 
-import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
-import { useCart } from '@/src/global/b2c/cart/use-cart';
 import { toast } from 'sonner';
 
+import { trackAddToCart } from '@/src/global/b2c/analytics/commerce-events';
+import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
+import { useCart } from '@/src/global/b2c/cart/use-cart';
+
 import CpoProductInquirySection from './CpoProductInquirySection';
+
+vi.mock('@/src/global/b2c/analytics/commerce-events', () => ({
+  trackAddToCart: vi.fn(),
+}));
 
 vi.mock('@/src/components/products/ProductInquiryModal', () => ({
   default: () => null,
@@ -126,6 +132,15 @@ describe('CpoProductInquirySection', () => {
       '/certyfikowany-sprzet-uzywany/test-cpo/',
     );
     expect(cartState.lines[0]?.quantity).toBe(1);
+    expect(trackAddToCart).toHaveBeenCalledWith(
+      expect.objectContaining({
+        lineType: 'cpo',
+        productKey: '/certyfikowany-sprzet-uzywany/test-cpo/',
+        productName: 'Test CPO',
+        quantity: 1,
+        unitPriceCents: 100_00,
+      }),
+    );
     expect(
       screen.getByRole('button', { name: 'Usuń z koszyka' }),
     ).toBeInTheDocument();
@@ -159,6 +174,7 @@ describe('CpoProductInquirySection', () => {
 
     expect(screen.getByTestId('line-count')).toHaveTextContent('0');
     expect(screen.getByTestId('item-count')).toHaveTextContent('0');
+    expect(trackAddToCart).toHaveBeenCalledTimes(1);
     expect(toast.info).toHaveBeenCalledWith('Test CPO usunięty z koszyka');
     expect(
       screen.getByRole('button', { name: 'Dodaj do koszyka' }),

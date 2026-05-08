@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import CpoProductGallerySection from '@/src/components/cpo/CpoProductGallerySection';
 import CpoProductHero from '@/src/components/cpo/CpoProductHero';
 import TechnicalData from '@/src/components/products/TechnicalData';
+import ProductViewTracker from '@/src/components/shared/analytics/ProductViewTracker';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
@@ -137,6 +138,10 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
     priceCents: product.priceCents,
     availabilityStatus: product.availabilityStatus,
   });
+  const pricePLN =
+    typeof product.priceCents === 'number'
+      ? Math.round(product.priceCents) / 100
+      : null;
 
   const useOwnGallery = product.useCustomGallery === true;
   const galleryImages = (
@@ -185,6 +190,13 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
 
   return (
     <main id="main" className="page-transition">
+      <ProductViewTracker
+        productId={product._id}
+        productName={product.name ?? ''}
+        pricePLN={pricePLN}
+        brand={{ name: product.brandName ?? undefined }}
+        categories={['cpo']}
+      />
       <Breadcrumbs data={breadcrumbsData} firstItemType="productPage" />
       <CpoProductHero
         productId={product._id}

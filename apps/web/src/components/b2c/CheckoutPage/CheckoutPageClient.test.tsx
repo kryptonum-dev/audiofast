@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { submitCheckout } from '@/src/app/actions/checkout-submit';
+import { trackAddPaymentInfo } from '@/src/global/b2c/analytics/commerce-events';
 import { CHECKOUT_CART_CLEANUP_STORAGE_KEY } from '@/src/global/b2c/cart/cart-checkout-cleanup';
 import type { CartContextValue } from '@/src/global/b2c/cart/cart-context';
 import { createEmptyCart } from '@/src/global/b2c/cart/cart-domain';
@@ -16,6 +17,7 @@ import type { CheckoutDraft } from '@/src/global/b2c/checkout/types';
 import CheckoutPageClient from './CheckoutPageClient';
 
 const pushMock = vi.fn();
+const refreshMock = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -24,7 +26,7 @@ vi.mock('next/navigation', () => ({
     prefetch: vi.fn(),
     back: vi.fn(),
     forward: vi.fn(),
-    refresh: vi.fn(),
+    refresh: refreshMock,
   }),
 }));
 
@@ -34,6 +36,10 @@ vi.mock('@/src/global/b2c/cart/use-cart', () => ({
 
 vi.mock('@/src/app/actions/checkout-submit', () => ({
   submitCheckout: vi.fn(),
+}));
+
+vi.mock('@/src/global/b2c/analytics/commerce-events', () => ({
+  trackAddPaymentInfo: vi.fn(),
 }));
 
 vi.mock('@/components/shared/Image', () => ({
@@ -335,6 +341,67 @@ describe('CheckoutPageClient', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('remounts the checkout form when the auth-backed checkout draft changes', async () => {
+    const user = userEvent.setup();
+    const guestDraft = createInitialDraft({
+      contact: {
+        email: '',
+        firstName: '',
+        lastName: '',
+        phone: '',
+      },
+    });
+    const authenticatedDraft = createInitialDraft({
+      contact: {
+        email: 'oliwier@kryptonum.eu',
+        firstName: 'Oliwier',
+        lastName: 'Sellig',
+        phone: '123323223',
+      },
+    });
+
+    const { rerender } = render(
+      <CheckoutPageClient
+        initialDraft={guestDraft}
+        isEmailLocked={false}
+        sessionContext={{
+          isAuthenticated: false,
+          authUserId: null,
+          authenticatedEmail: null,
+          customerProfileId: null,
+        }}
+        supportCard={null}
+      />,
+    );
+
+    await user.type(screen.getByLabelText('Imię'), 'Guest draft');
+
+    expect(screen.getByLabelText('Imię')).toHaveValue('Guest draft');
+
+    rerender(
+      <CheckoutPageClient
+        initialDraft={authenticatedDraft}
+        isEmailLocked
+        sessionContext={{
+          isAuthenticated: true,
+          authUserId: 'auth-user-1',
+          authenticatedEmail: 'oliwier@kryptonum.eu',
+          customerProfileId: 'profile-1',
+        }}
+        supportCard={null}
+      />,
+    );
+
+    expect(screen.getByLabelText('Imię')).toHaveValue('Oliwier');
+    expect(screen.getByLabelText('Adres e-mail')).toHaveValue(
+      'oliwier@kryptonum.eu',
+    );
+    expect(screen.getByLabelText('Adres e-mail')).toHaveAttribute('readonly');
+    expect(
+      screen.queryByRole('link', { name: /Masz już konto\? Zaloguj się/i }),
+    ).not.toBeInTheDocument();
+  });
+
   it('keeps a separate delivery recipient optional and reveals it with a checkbox', async () => {
     const user = userEvent.setup();
 
@@ -439,6 +506,20 @@ describe('CheckoutPageClient', () => {
       CHECKOUT_CART_CLEANUP_STORAGE_KEY,
       expect.stringContaining('"orderNumber":"AF-2026-00001"'),
     );
+    expect(trackAddPaymentInfo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orderNumber: 'AF-2026-00001',
+        paymentType: 'przelewy24',
+        cart: expect.objectContaining({
+          lines: expect.any(Array),
+        }),
+        checkoutInput: expect.objectContaining({
+          contact: expect.objectContaining({
+            email: 'jan@example.com',
+          }),
+        }),
+      }),
+    );
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith(
         'http://localhost:3000/podziekowania-za-zakup/AF-2026-00001/',
@@ -535,7 +616,6 @@ describe('CheckoutPageClient', () => {
     });
     expect(pushMock).not.toHaveBeenCalled();
   });
-
 
   it('shows server-side field errors returned by checkout submit', async () => {
     const user = userEvent.setup();

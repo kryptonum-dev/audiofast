@@ -1,13 +1,24 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { toast } from 'sonner';
 
 import { fetchCartLinePricing } from '@/src/app/actions/cart-pricing';
 import { loadCartPageRuntime } from '@/src/app/actions/cart-revalidation';
 import CartLineConfigurationModal from '@/src/components/b2c/CartLineConfigurationModal';
 import type { CartLinePricingCacheEntry } from '@/src/components/b2c/CartLineConfigurationModal/pricing-cache';
+import {
+  trackBeginCheckout,
+  trackViewCart,
+} from '@/src/global/b2c/analytics/commerce-events';
 import { applyCartRevalidation as applyCartRevalidationToState } from '@/src/global/b2c/cart/cart-revalidation';
 import {
   getCartVisibleLineDiscountCents,
@@ -18,7 +29,7 @@ import {
   canReconfigureStandardLineWithAddedOptions,
   createStandardCartLineWithoutOptions,
 } from '@/src/global/b2c/cart/standard-cart-line-option-recovery';
-import type { StandardCartLine } from '@/src/global/b2c/cart/types';
+import type { CartState, StandardCartLine } from '@/src/global/b2c/cart/types';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
 import {
   isOnlinePaymentAmountOverLimit,
@@ -43,6 +54,34 @@ const IDLE_PRICING_STATE: CartLinePricingCacheEntry = {
 };
 
 const CHECKOUT_PATH = '/koszyk/twoje-dane';
+
+function normalizePathname(pathname: string) {
+  if (pathname.length > 1 && pathname.endsWith('/')) {
+    return pathname.slice(0, -1);
+  }
+
+  return pathname;
+}
+
+function buildCartAnalyticsFingerprint(cart: CartState) {
+  return JSON.stringify({
+    lines: cart.lines.map((line) => ({
+      id: line.lineId,
+      type: line.lineType,
+      key: line.productKey,
+      quantity: line.quantity,
+      unitPriceCents: line.unitPriceCents,
+      issues: line.issues.map((issue) => issue.code),
+    })),
+    coupon: cart.coupon
+      ? {
+          code: cart.coupon.code,
+          isValid: cart.coupon.isValid,
+          totalDiscountCents: cart.coupon.totalDiscountCents,
+        }
+      : null,
+  });
+}
 
 export default function CartPageClient({
   supportCard = null,
@@ -84,6 +123,10 @@ export default function CartPageClient({
   const pricingRequestsInFlightRef = useRef<Set<string>>(new Set());
   const hasLoadedCartRuntimeRef = useRef(false);
   const previousPathnameRef = useRef(pathname);
+  const isCheckoutPendingRef = useRef(isCheckoutPending);
+  const shouldReloadCartOnRestoreRef = useRef(false);
+  const runCartRuntimeLoadRef = useRef<(() => Promise<void>) | null>(null);
+  const viewedCartAnalyticsFingerprintRef = useRef<string | null>(null);
   const isCartInteractionPending = isCartRuntimeLoading || isCheckoutPending;
 
   const handleCheckout = useCallback(async () => {
@@ -112,6 +155,7 @@ export default function CartPageClient({
       });
 
       if (hasBlockingLine) {
+        setIsCheckoutPending(false);
         return;
       }
 
@@ -121,14 +165,14 @@ export default function CartPageClient({
         )
       ) {
         toast.error(ONLINE_PAYMENT_LIMIT_MESSAGE);
+        setIsCheckoutPending(false);
         return;
       }
 
-      setIsCheckoutPending(false);
+      trackBeginCheckout(revalidatedCart);
       router.push(CHECKOUT_PATH);
     } catch (error) {
       console.error('Unexpected checkout revalidation failure.', error);
-    } finally {
       setIsCheckoutPending(false);
     }
   }, [applyCartLineRevalidation, cart, isCartInteractionPending, router]);
@@ -145,6 +189,10 @@ export default function CartPageClient({
   useEffect(() => {
     pricingByProductKeyRef.current = pricingByProductKey;
   }, [pricingByProductKey]);
+
+  useLayoutEffect(() => {
+    isCheckoutPendingRef.current = isCheckoutPending;
+  }, [isCheckoutPending]);
 
   const standardLines = useMemo(
     () =>
@@ -210,9 +258,20 @@ export default function CartPageClient({
 
     try {
       const runtime = await loadCartPageRuntime(cart.lines);
+      const revalidatedCart = applyCartRevalidationToState(
+        cart,
+        runtime.revalidationResults,
+      );
 
       applyCartLineRevalidation(runtime.revalidationResults);
       setPricingByProductKey(runtime.standardPricingByProductKey);
+      const analyticsFingerprint =
+        buildCartAnalyticsFingerprint(revalidatedCart);
+
+      if (viewedCartAnalyticsFingerprintRef.current !== analyticsFingerprint) {
+        trackViewCart(revalidatedCart);
+        viewedCartAnalyticsFingerprintRef.current = analyticsFingerprint;
+      }
     } catch (error) {
       console.error('Unexpected cart runtime load failure.', error);
     } finally {
@@ -221,7 +280,7 @@ export default function CartPageClient({
     }
   }, [
     applyCartLineRevalidation,
-    cart.lines,
+    cart,
     isHydrated,
     previewState,
     revalidateHydratedCouponAfterInitialLoad,
@@ -231,20 +290,38 @@ export default function CartPageClient({
     void runCartRuntimeLoad();
   }, [runCartRuntimeLoad]);
 
+  useLayoutEffect(() => {
+    runCartRuntimeLoadRef.current = runCartRuntimeLoad;
+  }, [runCartRuntimeLoad]);
+
+  useLayoutEffect(() => {
+    if (shouldReloadCartOnRestoreRef.current) {
+      shouldReloadCartOnRestoreRef.current = false;
+      setIsCheckoutPending(false);
+      hasLoadedCartRuntimeRef.current = false;
+      void runCartRuntimeLoadRef.current?.();
+    }
+
+    return () => {
+      shouldReloadCartOnRestoreRef.current = isCheckoutPendingRef.current;
+    };
+  }, []);
+
   useEffect(() => {
     const previousPathname = previousPathnameRef.current;
     previousPathnameRef.current = pathname;
+    const normalizedPreviousPathname = normalizePathname(previousPathname);
+    const normalizedPathname = normalizePathname(pathname);
 
-    if (pathname !== '/koszyk') {
+    if (normalizedPathname !== '/koszyk') {
+      return;
+    }
+
+    if (normalizedPreviousPathname === normalizedPathname) {
       return;
     }
 
     setIsCheckoutPending(false);
-
-    if (previousPathname === pathname) {
-      return;
-    }
-
     hasLoadedCartRuntimeRef.current = false;
     void runCartRuntimeLoad();
   }, [pathname, runCartRuntimeLoad]);

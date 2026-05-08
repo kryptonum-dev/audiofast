@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import ProductInquiryModal, {
@@ -10,6 +10,7 @@ import type { SanityRawImage } from '@/src/components/shared/Image';
 import AddToCartConfirmationModal from '@/src/components/ui/AddToCartConfirmationModal';
 import Button from '@/src/components/ui/Button';
 import type { FormStateData } from '@/src/components/ui/FormStates';
+import { trackAddToCart } from '@/src/global/b2c/analytics/commerce-events';
 import { createCpoCartLine } from '@/src/global/b2c/cart/cpo-cart-line';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
 import { formatPrice } from '@/src/global/utils';
@@ -47,6 +48,8 @@ export default function CpoProductInquirySection({
   const { addLine, removeLine, cart } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const isConfirmationOpenRef = useRef(isConfirmationOpen);
+  const shouldCloseConfirmationOnRestoreRef = useRef(false);
   const formattedPrice =
     typeof priceCents === 'number' && priceCents > 0
       ? formatPrice(priceCents)
@@ -55,6 +58,22 @@ export default function CpoProductInquirySection({
     (line) => line.lineType === 'cpo' && line.productKey === productKey,
   );
   const isAlreadyInCart = !!existingCpoLine;
+
+  useLayoutEffect(() => {
+    isConfirmationOpenRef.current = isConfirmationOpen;
+  }, [isConfirmationOpen]);
+
+  useLayoutEffect(() => {
+    if (shouldCloseConfirmationOnRestoreRef.current) {
+      shouldCloseConfirmationOnRestoreRef.current = false;
+      setIsConfirmationOpen(false);
+    }
+
+    return () => {
+      shouldCloseConfirmationOnRestoreRef.current =
+        isConfirmationOpenRef.current;
+    };
+  }, []);
 
   const productContext = useMemo<ProductContext>(() => {
     const modalPreviewImage = previewImage ?? ({ id: null } as SanityRawImage);
@@ -97,6 +116,7 @@ export default function CpoProductInquirySection({
     });
 
     addLine(line);
+    trackAddToCart(line);
     onAddToCart?.(line);
     setIsConfirmationOpen(true);
   };
