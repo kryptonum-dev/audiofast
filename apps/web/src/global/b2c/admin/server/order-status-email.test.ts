@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getAdminOrderStatusEmailStatus } from './order-status-email';
+import { getAdminOrderStatusEmailStatus } from '../order-status-email-content';
 
 describe('getAdminOrderStatusEmailStatus', () => {
   it('requires email for customer-facing admin statuses', () => {

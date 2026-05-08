@@ -8,6 +8,7 @@ import type {
   OrderConfirmationInvoiceBlock,
 } from '@/src/emails/order-confirmation-template';
 import { OrderConfirmationTemplate } from '@/src/emails/order-confirmation-template';
+import { buildB2cOrderDetailEmailUrl } from '@/src/global/b2c/email-urls';
 import {
   getTransactionalReplyToEmail,
   sendTransactionalEmail,
@@ -281,7 +282,7 @@ export async function sendCheckoutPaymentConfirmationEmail(args: {
         order.shipping_address_snapshot,
       ),
       invoiceDetails: buildInvoiceBlock(order.invoice_data),
-      loginUrl: 'https://audiofast.pl/konto-klienta/',
+      loginUrl: buildB2cOrderDetailEmailUrl(order.order_number),
     }),
   });
 

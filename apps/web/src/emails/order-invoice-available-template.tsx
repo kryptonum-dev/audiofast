@@ -1,9 +1,4 @@
-import {
-  Heading,
-  Hr,
-  Section,
-  Text,
-} from '@react-email/components';
+import { Section, Text } from '@react-email/components';
 
 import { EmailLayout } from './components/EmailLayout';
 
@@ -24,50 +19,52 @@ export function OrderInvoiceAvailableTemplate({
       showFooterLogo={false}
       showHeaderLogo={false}
     >
-      <Section style={container}>
-        <Heading style={heading}>Faktura do zamówienia</Heading>
-        <Text style={paragraph}>
-          Do zamówienia <strong>{orderNumber}</strong> została dodana faktura.
+      <Section style={heroSection}>
+        <Text style={heroHeading}>Faktura do zamówienia</Text>
+        <Text style={heroText}>
+          Do zamówienia <strong style={strongText}>{orderNumber}</strong>{' '}
+          została dodana faktura.
         </Text>
-        <Text style={paragraph}>
+        <Text style={heroText}>
           Dokument PDF znajdziesz w załączniku do tej wiadomości.
         </Text>
-        <Hr style={divider} />
-        <Text style={footer}>
-          Jeżeli masz pytania dotyczące dokumentu, odpowiedz na tę wiadomość lub
-          skontaktuj się z zespołem Audiofast.
+        <Text style={heroMeta}>
+          Jeżeli masz pytania dotyczące dokumentu, skontaktuj się z zespołem
+          Audiofast.
         </Text>
       </Section>
     </EmailLayout>
   );
 }
 
-const container = {
-  margin: '0',
+const heroSection = {
+  padding: '48px 32px',
 };
 
-const heading = {
-  color: '#111111',
-  fontSize: '24px',
-  lineHeight: '32px',
-  margin: '0 0 16px',
+const heroHeading = {
+  fontSize: '30px',
+  lineHeight: '1.12',
+  color: '#141414',
+  fontWeight: '600',
+  letterSpacing: '-0.03em',
+  margin: '0 0 18px',
+  fontFamily: '"Switzer", "Poppins", Arial, Helvetica, sans-serif',
 };
 
-const paragraph = {
-  color: '#333333',
-  fontSize: '16px',
-  lineHeight: '24px',
-  margin: '0 0 16px',
+const heroText = {
+  fontSize: '15px',
+  lineHeight: '1.7',
+  color: '#5b5a5a',
+  margin: '0 0 14px',
 };
 
-const divider = {
-  borderColor: '#e5e5e5',
-  margin: '24px 0',
+const strongText = {
+  color: '#000000',
 };
 
-const footer = {
-  color: '#666666',
+const heroMeta = {
   fontSize: '14px',
-  lineHeight: '21px',
+  lineHeight: '1.6',
+  color: '#303030',
   margin: '0',
 };

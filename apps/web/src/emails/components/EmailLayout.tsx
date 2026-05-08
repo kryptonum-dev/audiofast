@@ -12,6 +12,11 @@ import {
 import type { ReactNode } from 'react';
 import * as React from 'react';
 
+import {
+  buildB2cEmailUrl,
+  getB2cEmailBaseUrl,
+} from '@/src/global/b2c/email-urls';
+
 type EmailLayoutProps = {
   previewText: string;
   headerTitle?: string;
@@ -31,6 +36,8 @@ export function EmailLayout({
   showFooterLogo = true,
   children,
 }: EmailLayoutProps) {
+  const siteBaseUrl = getB2cEmailBaseUrl();
+
   return (
     <Html>
       <Head />
@@ -59,13 +66,13 @@ export function EmailLayout({
             ) : null}
             <Text style={footerBrand}>Audiofast</Text>
             <Text style={footerLinkGroup}>
-              <Link href="https://audiofast.pl/produkty/" style={footerNavLink}>
+              <Link href={buildB2cEmailUrl('/produkty/')} style={footerNavLink}>
                 Produkty
               </Link>
-              <Link href="https://audiofast.pl/serwis/" style={footerNavLink}>
+              <Link href={buildB2cEmailUrl('/serwis/')} style={footerNavLink}>
                 Serwis
               </Link>
-              <Link href="https://audiofast.pl/kontakt/" style={footerNavLink}>
+              <Link href={buildB2cEmailUrl('/kontakt/')} style={footerNavLink}>
                 Kontakt
               </Link>
             </Text>
@@ -77,7 +84,7 @@ export function EmailLayout({
               ul. Romankowska 55E, 91-174 Łódź
             </Text>
             <Text style={footerText}>
-              <Link href="https://audiofast.pl" style={footerLink}>
+              <Link href={siteBaseUrl} style={footerLink}>
                 www.audiofast.pl
               </Link>
             </Text>

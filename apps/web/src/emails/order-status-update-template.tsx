@@ -22,11 +22,13 @@ export function OrderStatusUpdateTemplate({
   trackingUrl,
   loginUrl,
 }: OrderStatusUpdateTemplateProps) {
+  const trackingBaseUrl = trackingUrl ? getTrackingBaseUrl(trackingUrl) : null;
+
   return (
     <EmailLayout
       previewText={`Aktualizacja zamówienia ${orderNumber}`}
       headerSubtitle="Aktualizacja zamówienia"
-      footerNote="To jest automatyczna wiadomość dotycząca statusu zamówienia. W razie pytań odpowiedz na tę wiadomość lub skontaktuj się z zespołem Audiofast."
+      footerNote="To jest automatyczna wiadomość dotycząca statusu zamówienia. W razie pytań skontaktuj się z zespołem Audiofast."
       showHeaderLogo={false}
       showFooterLogo={false}
     >
@@ -34,28 +36,39 @@ export function OrderStatusUpdateTemplate({
         <Text style={heroHeading}>Status zamówienia został zaktualizowany</Text>
         <Text style={heroText}>
           Witaj {customerFirstName}, status zamówienia{' '}
-          <strong>{orderNumber}</strong> zmienił się na{' '}
-          <strong>{statusLabel}</strong>.
+          <strong style={strongText}>{orderNumber}</strong> zmienił się na{' '}
+          <strong style={strongText}>{statusLabel}</strong>.
         </Text>
         <Text style={heroText}>{message}</Text>
         {trackingNumber ? (
           <Text style={heroMeta}>
-            Numer śledzenia: <strong>{trackingNumber}</strong>
-          </Text>
-        ) : null}
-        {trackingUrl ? (
-          <Text style={heroMeta}>
-            Link do śledzenia: <a href={trackingUrl}>{trackingUrl}</a>
+            Numer śledzenia: <strong style={strongText}>{trackingNumber}</strong>
           </Text>
         ) : null}
         <Section style={ctaRow}>
           <Button href={loginUrl} style={primaryButton}>
             <span style={buttonLabelCell}>Zobacz zamówienie</span>
           </Button>
+          {trackingBaseUrl ? (
+            <Button href={trackingBaseUrl} style={secondaryButton}>
+              <span style={secondaryButtonLabelCell}>Śledź przesyłkę</span>
+            </Button>
+          ) : null}
         </Section>
       </Section>
     </EmailLayout>
   );
+}
+
+function getTrackingBaseUrl(trackingUrl: string): string | null {
+  try {
+    const url = new URL(trackingUrl);
+    url.search = '';
+    url.hash = '';
+    return url.toString();
+  } catch {
+    return null;
+  }
 }
 
 const heroSection = {
@@ -79,6 +92,10 @@ const heroText = {
   margin: '0 0 14px',
 };
 
+const strongText = {
+  color: '#000000',
+};
+
 const heroMeta = {
   fontSize: '14px',
   lineHeight: '1.6',
@@ -99,9 +116,28 @@ const primaryButton = {
   padding: '13px 20px',
 };
 
+const secondaryButton = {
+  backgroundColor: '#ffffff',
+  border: '1px solid #d8d8d8',
+  borderRadius: '8px',
+  color: '#141414',
+  textDecoration: 'none',
+  display: 'inline-block',
+  marginLeft: '10px',
+  padding: '12px 18px',
+};
+
 const buttonLabelCell = {
   display: 'inline-block',
   color: '#ffffff',
+  fontSize: '14px',
+  fontWeight: '500',
+  letterSpacing: '-0.02em',
+};
+
+const secondaryButtonLabelCell = {
+  display: 'inline-block',
+  color: '#141414',
   fontSize: '14px',
   fontWeight: '500',
   letterSpacing: '-0.02em',

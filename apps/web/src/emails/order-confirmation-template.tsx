@@ -48,7 +48,7 @@ export function OrderConfirmationTemplate({
     <EmailLayout
       previewText={previewText}
       headerSubtitle="Potwierdzenie zamówienia"
-      footerNote="To jest automatyczne potwierdzenie opłaconego zamówienia. W razie pytań odpowiedz na tę wiadomość lub skontaktuj się z zespołem Audiofast."
+      footerNote="To jest automatyczne potwierdzenie opłaconego zamówienia. W razie pytań skontaktuj się z zespołem Audiofast."
       showHeaderLogo={false}
       showFooterLogo={false}
     >
@@ -56,12 +56,13 @@ export function OrderConfirmationTemplate({
         <Text style={heroHeading}>Dziękujemy za złożenie zamówienia</Text>
         <Text style={heroText}>
           Witaj {customerFirstName}, płatność za zamówienie{' '}
-          <strong>{orderNumber}</strong> została zweryfikowana. O kolejnych
-          etapach realizacji będziemy informować Cię mailowo.
+          <strong style={strongText}>{orderNumber}</strong> została
+          zweryfikowana. O kolejnych etapach realizacji będziemy informować Cię
+          mailowo.
         </Text>
         <Text style={heroMeta}>
           Dostęp do twojego zamówienia jest przypisany do adresu{' '}
-          <strong>{customerEmail}</strong>.
+          <strong style={strongText}>{customerEmail}</strong>.
         </Text>
         <Section style={ctaRow}>
           <Button href={loginUrl} style={primaryButton}>
@@ -139,6 +140,10 @@ const heroText = {
   lineHeight: '1.7',
   color: '#5b5a5a',
   margin: '0 0 14px',
+};
+
+const strongText = {
+  color: '#000000',
 };
 
 const heroMeta = {

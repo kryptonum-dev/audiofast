@@ -22,6 +22,7 @@ type ReactEmailCall = {
         companyName: string;
         taxId: string | null;
       } | null;
+      loginUrl: string;
       items: Array<{
         id: string;
         brandName: string;
@@ -162,6 +163,8 @@ describe('sendCheckoutPaymentConfirmationEmail', () => {
         companyName: 'Audiofast Pro',
         taxId: '1234567890',
       },
+      loginUrl:
+        'https://audiofast-git-b2c-kryptonum.vercel.app/konto-klienta/zamowienia/AF-2026-00001/',
     });
     expect(renderedEmail?.react.props.items).toEqual([
       {

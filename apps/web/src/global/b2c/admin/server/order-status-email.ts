@@ -9,10 +9,19 @@ import {
   parseOrderShipmentData,
 } from '@/src/global/b2c/utils/orders';
 import {
+  STATUS_EMAIL_CONTENT,
+  getAdminOrderStatusEmailStatus,
+  type AdminOrderStatusEmailStatus,
+} from '@/src/global/b2c/admin/order-status-email-content';
+import { buildB2cOrderDetailEmailUrl } from '@/src/global/b2c/email-urls';
+import {
   getTransactionalReplyToEmail,
   sendTransactionalEmail,
 } from '@/src/global/email/service';
 import type { Database } from '@/src/global/supabase/database.types';
+
+export { getAdminOrderStatusEmailStatus };
+export type { AdminOrderStatusEmailStatus };
 
 type OrderStatusEmailRow = Pick<
   Database['public']['Tables']['orders']['Row'],
@@ -22,58 +31,6 @@ type OrderStatusEmailRow = Pick<
   | 'shipment_data'
   | 'shipped_at'
 >;
-
-export type AdminOrderStatusEmailStatus =
-  | 'processing'
-  | 'shipped'
-  | 'cancelled'
-  | 'returned';
-
-const STATUS_EMAIL_CONTENT: Record<
-  AdminOrderStatusEmailStatus,
-  {
-    label: string;
-    message: string;
-    subject: (orderNumber: string) => string;
-  }
-> = {
-  processing: {
-    label: 'w realizacji',
-    message:
-      'Zespół Audiofast rozpoczął obsługę zamówienia. Poinformujemy Cię, gdy przesyłka zostanie nadana.',
-    subject: (orderNumber) => `Zamówienie ${orderNumber} jest w realizacji`,
-  },
-  shipped: {
-    label: 'wysłane',
-    message:
-      'Zamówienie zostało wysłane. Jeżeli numer śledzenia jest już dostępny, znajdziesz go poniżej.',
-    subject: (orderNumber) => `Zamówienie ${orderNumber} zostało wysłane`,
-  },
-  cancelled: {
-    label: 'anulowane',
-    message:
-      'Zamówienie zostało anulowane. W razie pytań odpowiedz na tę wiadomość lub skontaktuj się z zespołem Audiofast.',
-    subject: (orderNumber) => `Zamówienie ${orderNumber} zostało anulowane`,
-  },
-  returned: {
-    label: 'zwrócone',
-    message:
-      'Obsługa zwrotu została zakończona po stronie Audiofast. W razie pytań odpowiedz na tę wiadomość.',
-    subject: (orderNumber) =>
-      `Zwrot zamówienia ${orderNumber} został zakończony`,
-  },
-};
-
-export function getAdminOrderStatusEmailStatus(
-  status: string,
-): AdminOrderStatusEmailStatus | null {
-  return status === 'processing' ||
-    status === 'shipped' ||
-    status === 'cancelled' ||
-    status === 'returned'
-    ? status
-    : null;
-}
 
 function getCustomerFirstName(customerSnapshot: unknown): string {
   if (!isRecord(customerSnapshot)) {
@@ -102,7 +59,7 @@ export async function sendAdminOrderStatusUpdateEmail(args: {
     saveToSentItems: true,
     react: createElement(OrderStatusUpdateTemplate, {
       customerFirstName: getCustomerFirstName(args.order.customer_snapshot),
-      loginUrl: '/konto-klienta/',
+      loginUrl: buildB2cOrderDetailEmailUrl(args.order.order_number),
       message: content.message,
       orderNumber: args.order.order_number,
       statusLabel: content.label,
