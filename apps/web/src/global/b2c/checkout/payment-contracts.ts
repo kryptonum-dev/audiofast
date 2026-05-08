@@ -209,18 +209,21 @@ function normalizePolishPhoneForP24(raw: string | null): string | null {
   return digits;
 }
 
-function buildP24CartItems(
-  orderDraft: CheckoutOrderDraft,
-): P24TransactionRegisterCartItem[] {
-  return orderDraft.items.map((item) => ({
-    sellerId: item.brandName,
-    sellerCategory: item.productKey,
-    name: item.productName,
-    description: `${item.brandName} / ${item.productKey}`,
-    quantity: item.quantity,
-    price: item.unitPriceCents,
-    number: item.productId,
-  }));
+function buildP24CartItems(args: {
+  orderDraft: CheckoutOrderDraft;
+  orderNumber: string;
+}): P24TransactionRegisterCartItem[] {
+  return [
+    {
+      sellerId: 'Audiofast',
+      sellerCategory: 'b2c-order',
+      name: `Zamówienie ${args.orderNumber}`,
+      description: `Audiofast ${args.orderNumber}`,
+      quantity: 1,
+      price: args.orderDraft.grandTotalCents,
+      number: args.orderNumber,
+    },
+  ];
 }
 
 export function buildP24TransactionRegistrationInput(args: {
@@ -267,7 +270,10 @@ export function buildP24TransactionRegistrationInput(args: {
       currency,
       crc: MOCK_P24_CRC,
     }),
-    cart: buildP24CartItems(args.orderDraft),
+    cart: buildP24CartItems({
+      orderDraft: args.orderDraft,
+      orderNumber: args.orderNumber,
+    }),
     orderNumber: args.orderNumber,
   };
 }
