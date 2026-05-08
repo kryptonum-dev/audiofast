@@ -8,8 +8,8 @@ import {
   normalizeCouponCode,
   type CouponDefinitionRow,
 } from '@/src/global/b2c/utils/coupons';
+import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database } from '@/src/global/supabase/database.types';
-import { createClient as createServerClient } from '@/src/global/supabase/server';
 
 type CouponRow = Pick<
   Database['public']['Tables']['coupons']['Row'],
@@ -59,7 +59,7 @@ export async function lookupCouponDefinition(
   }
 
   try {
-    const supabase = createServerClient();
+    const supabase = createAdminClient();
     const { data, error } = await supabase
       .from('coupons')
       .select(

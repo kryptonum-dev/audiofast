@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { lookupCouponDefinition } from '@/src/app/actions/cart-coupon';
-import { createClient as createServerClient } from '@/src/global/supabase/server';
+import { createAdminClient } from '@/src/global/supabase/admin';
 
-vi.mock('@/src/global/supabase/server', () => ({
-  createClient: vi.fn(),
+vi.mock('server-only', () => ({}));
+
+vi.mock('@/src/global/supabase/admin', () => ({
+  createAdminClient: vi.fn(),
 }));
 
 const maybeSingleMock = vi.fn();
@@ -31,7 +33,7 @@ describe('lookupCouponDefinition', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(createServerClient).mockReturnValue({
+    vi.mocked(createAdminClient).mockReturnValue({
       from: fromMock,
     } as never);
   });

@@ -5,7 +5,7 @@
  *
  * This suite is intentionally opt-in: it runs against the real Supabase
  * project and creates / deletes real rows (auth users, customer profiles,
- * orders, order items, return cases). It will silently skip unless all
+ * orders, order items, return/cancellation cases). It will silently skip unless all
  * three credentials are present in the environment:
  *
  *   - NEXT_PUBLIC_SUPABASE_URL
@@ -49,6 +49,7 @@ type Fixture = {
   orderId: string;
   orderItemId: string;
   returnCaseId: string;
+  cancellationRequestId: string;
   orderNumber: string;
   email: string;
   accessToken: string;
@@ -62,6 +63,7 @@ describe.skipIf(!hasCredentials)('Supabase RLS (integration)', () => {
   // Registry of every resource we successfully created, tracked AT THE MOMENT
   // of creation (before any subsequent step can throw). `afterAll` drains this
   // in FK-safe reverse order so a partial-failure fixture cannot orphan rows.
+  const createdCancellationRequestIds: string[] = [];
   const createdReturnCaseIds: string[] = [];
   const createdOrderItemIds: string[] = [];
   const createdOrderIds: string[] = [];
@@ -200,7 +202,26 @@ describe.skipIf(!hasCredentials)('Supabase RLS (integration)', () => {
     }
     createdReturnCaseIds.push(returnCase.id);
 
-    // 6. Sign in as this user with the anon key so we get a real access token.
+    // 6. Create a cancellation request row so we can test that scope too.
+    const { data: cancellationRequest, error: cancellationRequestError } =
+      await admin
+        .from('order_cancellation_requests')
+        .insert({
+          order_id: order.id,
+          customer_email: email,
+          status: 'open',
+          reason: `${testRunId}-cancellation-${label}`,
+        })
+        .select('id')
+        .single();
+    if (cancellationRequestError || !cancellationRequest) {
+      throw new Error(
+        `Failed to create order_cancellation_requests for ${label}: ${cancellationRequestError?.message ?? 'no row returned'}`,
+      );
+    }
+    createdCancellationRequestIds.push(cancellationRequest.id);
+
+    // 7. Sign in as this user with the anon key so we get a real access token.
     const anonClient = createClient<Database>(supabaseUrl!, supabaseAnonKey!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
@@ -218,6 +239,7 @@ describe.skipIf(!hasCredentials)('Supabase RLS (integration)', () => {
       orderId: order.id,
       orderItemId: orderItem.id,
       returnCaseId: returnCase.id,
+      cancellationRequestId: cancellationRequest.id,
       orderNumber,
       email,
       accessToken: session.session.access_token,
@@ -266,6 +288,14 @@ describe.skipIf(!hasCredentials)('Supabase RLS (integration)', () => {
     //    during this run, regardless of whether `createUserFixture` later
     //    threw. `.in(...)` with an empty array is a no-op, so empty registries
     //    are safe.
+    if (createdCancellationRequestIds.length > 0) {
+      await runStep('order_cancellation_requests', () =>
+        admin
+          .from('order_cancellation_requests')
+          .delete()
+          .in('id', createdCancellationRequestIds),
+      );
+    }
     if (createdReturnCaseIds.length > 0) {
       await runStep('return_cases', () =>
         admin.from('return_cases').delete().in('id', createdReturnCaseIds),
@@ -303,6 +333,12 @@ describe.skipIf(!hasCredentials)('Supabase RLS (integration)', () => {
         .from('return_cases')
         .delete()
         .like('reason', `${testRunId}-return-%`),
+    );
+    await runStep('sweep:order_cancellation_requests', () =>
+      admin
+        .from('order_cancellation_requests')
+        .delete()
+        .like('reason', `${testRunId}-cancellation-%`),
     );
     await runStep('sweep:order_items', () =>
       admin
@@ -369,6 +405,16 @@ describe.skipIf(!hasCredentials)('Supabase RLS (integration)', () => {
         .from('return_cases')
         .select('id')
         .in('id', [alice.returnCaseId, bob.returnCaseId]);
+      expect(error).toBeNull();
+      expect(data ?? []).toEqual([]);
+    });
+
+    it('cannot read any order_cancellation_requests', async () => {
+      const anon = createAnonClient();
+      const { data, error } = await anon
+        .from('order_cancellation_requests')
+        .select('id')
+        .in('id', [alice.cancellationRequestId, bob.cancellationRequestId]);
       expect(error).toBeNull();
       expect(data ?? []).toEqual([]);
     });
@@ -440,6 +486,18 @@ describe.skipIf(!hasCredentials)('Supabase RLS (integration)', () => {
       expect(error).toBeNull();
       expect(data ?? []).toHaveLength(1);
       expect((data ?? [])[0]!.id).toBe(alice.returnCaseId);
+    });
+
+    it('sees exactly her own order_cancellation_requests and not Bob`s', async () => {
+      const aliceClient = createUserScopedClient(alice.accessToken);
+      const { data, error } = await aliceClient
+        .from('order_cancellation_requests')
+        .select('id, order_id')
+        .in('id', [alice.cancellationRequestId, bob.cancellationRequestId]);
+      expect(error).toBeNull();
+      expect(data ?? []).toHaveLength(1);
+      expect((data ?? [])[0]!.id).toBe(alice.cancellationRequestId);
+      expect((data ?? [])[0]!.order_id).toBe(alice.orderId);
     });
 
     it('cannot INSERT into orders (authenticated write grant revoked)', async () => {
