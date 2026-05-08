@@ -182,7 +182,9 @@ describe('CartSidebar', () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getByText('Produkty (0 szt.)')).toBeInTheDocument();
-    expect(screen.getAllByText((_, element) => element?.textContent === '0 zł')).toHaveLength(2);
+    expect(
+      screen.getAllByText((_, element) => element?.textContent === '0 zł'),
+    ).toHaveLength(2);
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Dalej' })).toBeDisabled();
   });
@@ -250,14 +252,18 @@ describe('CartSidebar', () => {
       />,
     );
 
-    expect(screen.queryByText(/pozycje wymagające poprawy/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/pozycje wymagające poprawy/i),
+    ).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Dalej' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Dalej' })).toHaveAttribute(
       'aria-busy',
       'true',
     );
     expect(screen.getByPlaceholderText('Wpisz kod')).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Sprawdzanie...' })).toBeDisabled();
+    expect(
+      screen.getByRole('button', { name: 'Sprawdzanie...' }),
+    ).toBeDisabled();
   });
 
   it('renders coupon section with active coupon state and allows clearing it', async () => {

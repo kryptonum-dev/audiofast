@@ -1,6 +1,13 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import SupportCard, {
   type SupportCardData,
@@ -35,12 +42,29 @@ export default function CheckoutPageClient({
   sessionContext,
   supportCard = null,
 }: CheckoutPageClientProps) {
+  const router = useRouter();
   const { cart, isHydrated, applyCartLineRevalidation, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCartBlockingOverlayOpen, setIsCartBlockingOverlayOpen] =
     useState(false);
   const [showPriceChangeNotice, setShowPriceChangeNotice] = useState(false);
+  const shouldRefreshCheckoutOnRestoreRef = useRef(false);
+  const routerRefreshRef = useRef(router.refresh);
   const cartState = cart as CartState;
+  const checkoutFormKey = useMemo(
+    () =>
+      JSON.stringify({
+        auth: {
+          isAuthenticated: sessionContext.isAuthenticated,
+          authUserId: sessionContext.authUserId,
+          authenticatedEmail: sessionContext.authenticatedEmail,
+          customerProfileId: sessionContext.customerProfileId,
+        },
+        draft: initialDraft,
+        isEmailLocked,
+      }),
+    [initialDraft, isEmailLocked, sessionContext],
+  );
   const blockingCartLines = useMemo(
     () => getInvalidCartLines(cartState),
     [cartState],
@@ -50,6 +74,21 @@ export default function CheckoutPageClient({
   }, []);
   const closeCartBlockingOverlay = useCallback(() => {
     setIsCartBlockingOverlayOpen(false);
+  }, []);
+
+  useLayoutEffect(() => {
+    routerRefreshRef.current = router.refresh;
+  }, [router.refresh]);
+
+  useLayoutEffect(() => {
+    if (shouldRefreshCheckoutOnRestoreRef.current) {
+      shouldRefreshCheckoutOnRestoreRef.current = false;
+      routerRefreshRef.current();
+    }
+
+    return () => {
+      shouldRefreshCheckoutOnRestoreRef.current = true;
+    };
   }, []);
 
   if (!isHydrated) {
@@ -84,6 +123,7 @@ export default function CheckoutPageClient({
             <CheckoutOrderPreview cart={cartState} />
 
             <CheckoutForm
+              key={checkoutFormKey}
               initialDraft={initialDraft}
               isEmailLocked={isEmailLocked}
               sessionContext={sessionContext}

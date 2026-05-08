@@ -122,7 +122,10 @@ function buildCheckoutPaymentUrls(args: {
   const baseUrl = args.origin ?? BASE_URL;
 
   return {
-    urlReturn: new URL(buildCheckoutReturnPath(args.orderNumber), baseUrl).toString(),
+    urlReturn: new URL(
+      buildCheckoutReturnPath(args.orderNumber),
+      baseUrl,
+    ).toString(),
     urlStatus: new URL(CHECKOUT_P24_STATUS_PATH, baseUrl).toString(),
   };
 }

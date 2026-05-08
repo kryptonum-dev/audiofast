@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ComponentProps, CSSProperties, ReactElement } from 'react';
 import { useEffect, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 
 import { logoutCustomerAuthAction } from '@/src/app/actions/customer-auth-logout';
 
@@ -102,13 +103,31 @@ export default function CustomerPanelNav({
         <span className={styles.sessionLabel}>Zalogowano jako</span>
         <strong className={styles.sessionName}>{customerDisplayName}</strong>
         <form action={logoutCustomerAuthAction} className={styles.logoutForm}>
-          <button type="submit" className={styles.logoutButton}>
-            <LogoutIcon />
-            <span>Wyloguj się</span>
-          </button>
+          <LogoutSubmitButton />
         </form>
       </div>
     </aside>
+  );
+}
+
+function LogoutSubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      type="submit"
+      className={styles.logoutButton}
+      disabled={pending}
+      aria-busy={pending || undefined}
+      data-pending={pending ? 'true' : 'false'}
+    >
+      {pending ? (
+        <span className={styles.logoutSpinner} aria-hidden="true" />
+      ) : (
+        <LogoutIcon />
+      )}
+      <span>{pending ? 'Wylogowywanie...' : 'Wyloguj się'}</span>
+    </button>
   );
 }
 

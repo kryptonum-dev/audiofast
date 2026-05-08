@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { createAuthServerClient } from '@/src/global/supabase/server-auth';
@@ -16,5 +17,7 @@ export async function logoutCustomerAuthAction() {
     console.error('Unexpected customer auth logout failure.', error);
   }
 
+  revalidatePath('/koszyk/twoje-dane');
+  revalidatePath('/konto-klienta');
   redirect('/konto-klienta/');
 }

@@ -5,7 +5,7 @@
   "main": "package.json",
   "license": "UNLICENSED",
   "scripts": {
-    "dev": "bun run sanity dev",
+    "dev": "bun run sanity dev --port 3333",
     "format": "bun run prettier --write .",
     "start": "bun run sanity start",
     "lint": "bun run eslint .",

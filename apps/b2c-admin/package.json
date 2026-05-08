@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "sanity dev",
+    "dev": "sanity dev --port 3334",
     "build": "sanity build",
     "deploy": "sanity deploy",
     "check-types": "tsc --noEmit",

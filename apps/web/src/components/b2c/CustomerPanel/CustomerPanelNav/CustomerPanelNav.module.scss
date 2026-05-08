@@ -136,6 +136,26 @@
       outline: 0.125rem solid var(--neutral-white, #ffffff);
       outline-offset: 0.125rem;
     }
+
+    &:disabled {
+      cursor: wait;
+    }
+
+    &[data-pending='true'] {
+      color: var(--neutral-white, #ffffff);
+      pointer-events: none;
+      opacity: 0.8;
+    }
+  }
+
+  .logoutSpinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 0.125rem solid currentColor;
+    border-top-color: transparent;
+    border-radius: 999rem;
+    animation: logoutSpin 800ms linear infinite;
+    flex-shrink: 0;
   }
 
   @media (max-width: 63.6875rem) {
@@ -241,7 +261,8 @@
       text-align: center;
     }
 
-    .logoutButton svg {
+    .logoutButton svg,
+    .logoutSpinner {
       flex-shrink: 0;
     }
 
@@ -283,10 +304,20 @@
   }
 }
 
+@keyframes logoutSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .panelSidebar {
     @media (max-width: 37.4375rem) {
       animation: none;
+    }
+
+    .logoutSpinner {
+      animation-duration: 1.4s;
     }
   }
 }

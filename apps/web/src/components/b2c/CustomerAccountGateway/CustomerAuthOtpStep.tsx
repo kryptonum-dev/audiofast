@@ -91,6 +91,7 @@ export default function CustomerAuthOtpStep({
         });
 
         if (result.status === 'verified') {
+          router.refresh();
           router.replace(returnTo);
           return;
         }

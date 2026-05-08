@@ -102,7 +102,7 @@ export default function AddToCartConfirmationModal({
             Kontynuuj zakupy
           </Button>
           <Button
-            href="/koszyk"
+            href="/koszyk/"
             variant="primary"
             iconUsed="arrowUp"
             className={styles.actionButton}

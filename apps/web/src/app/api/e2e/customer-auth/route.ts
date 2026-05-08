@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import type { EmailOtpType } from '@supabase/supabase-js';
-import { NextResponse, type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { normalizeCustomerAuthEmail } from '@/src/global/b2c/customer-auth/email';
 import { resolveCustomerAccountReturnTo } from '@/src/global/b2c/customer-auth/return-to';
@@ -38,9 +38,10 @@ function getSafeRedirectUrl(request: NextRequest) {
     request.nextUrl.searchParams.get('returnTo'),
   );
   const host = request.headers.get('host') ?? request.nextUrl.host;
-  const protocol = host.startsWith('localhost') || host.startsWith('127.0.0.1')
-    ? 'http'
-    : request.nextUrl.protocol.replace(':', '');
+  const protocol =
+    host.startsWith('localhost') || host.startsWith('127.0.0.1')
+      ? 'http'
+      : request.nextUrl.protocol.replace(':', '');
 
   return new URL(returnTo, `${protocol}://${host}`);
 }
