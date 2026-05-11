@@ -100,6 +100,9 @@ describe('live Przelewy24 adapter helpers', () => {
         sign: expect.any(String),
       }),
     );
+    expect(registerTransactionMock.mock.calls[0]?.[0]).not.toHaveProperty(
+      'cart',
+    );
     expect(result).toEqual({
       provider: 'przelewy24',
       merchantId: 392337,

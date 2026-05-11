@@ -45,7 +45,6 @@ function buildP24TransactionRequest(
     channel: input.channel,
     transferLabel: input.transferLabel,
     sign,
-    cart: input.cart,
   };
 }
 
