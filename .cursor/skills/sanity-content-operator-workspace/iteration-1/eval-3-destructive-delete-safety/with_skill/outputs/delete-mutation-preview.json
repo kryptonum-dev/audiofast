@@ -1,9 +1,0 @@
-{
-  "dryRun": true,
-  "message": "No mutation was submitted. Re-run with --execute to commit.",
-  "endpoint": "https://fsw3likv.api.sanity.io/v2025-02-10/data/mutate/production?returnIds=true&returnDocuments=true&visibility=sync",
-  "mutationCount": 0,
-  "payload": {
-    "mutations": []
-  }
-}

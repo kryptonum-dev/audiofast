@@ -1,6 +1,0 @@
-{
-  "blogArticleCount": 21,
-  "blogSingletonCount": 1,
-  "legacyPostCount": 0,
-  "schemaEvidence": "apps/studio/schemaTypes/documents/collections/blog-article.ts defines name: blog-article"
-}

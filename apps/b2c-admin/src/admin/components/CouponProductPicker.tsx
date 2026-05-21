@@ -16,8 +16,8 @@ import {
 import { type KeyboardEvent, useMemo, useState } from "react";
 
 import { sanityAppConfig } from "../../config.js";
-import { buildSanityImageUrl } from "../image.js";
 import type { AdminCouponProductOption } from "../types.js";
+import { SanityThumbnail } from "./SanityThumbnail.js";
 
 type CouponProductPickerProps = {
   disabled?: boolean;
@@ -149,7 +149,6 @@ export function CouponProductPicker({
                 const isSelected = product.productKeys.every((productKey) =>
                   selectedKeys.has(productKey),
                 );
-                const imageUrl = buildSanityImageUrl(product.image);
                 const productLabel = product.brandName
                   ? `${product.brandName} ${product.productName}`
                   : product.productName;
@@ -183,19 +182,14 @@ export function CouponProductPicker({
                   >
                     <Flex align="center" gap={3}>
                       <Checkbox checked={isSelected} readOnly />
-                      {imageUrl ? (
-                        <img
-                          alt={product.image?.alt ?? productLabel}
-                          className="couponProductPickerImage"
-                          loading="lazy"
-                          src={imageUrl}
-                        />
-                      ) : (
-                        <div
-                          aria-hidden="true"
-                          className="couponProductPickerImagePlaceholder"
-                        />
-                      )}
+                      <SanityThumbnail
+                        alt={product.image?.alt ?? productLabel}
+                        className="couponProductPickerImage"
+                        height={44}
+                        image={product.image}
+                        placeholderClassName="couponProductPickerImagePlaceholder"
+                        width={44}
+                      />
                       <Stack space={2} flex={1}>
                         <Flex align="center" gap={2} wrap="wrap">
                           <Text size={1} weight="medium">

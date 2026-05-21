@@ -1,9 +1,9 @@
 import { Badge, Box, Card, Inline, Stack, Text } from "@sanity/ui";
 
 import { formatDateTime, formatLineType, formatMoney } from "../formatters.js";
-import { buildSanityImageUrl } from "../image.js";
 import type { AdminOrderListItem } from "../types.js";
 import { OrderStatusBadge } from "./OrderStatusBadge.js";
+import { SanityThumbnail } from "./SanityThumbnail.js";
 
 type OrdersTableProps = {
   onOpenOrder?: (orderNumber: string) => void;
@@ -121,18 +121,20 @@ export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
 
 function OrderLeadImage({ order }: { order: AdminOrderListItem }) {
   const image = order.itemSummary.leadItem?.productImage ?? null;
-  const imageUrl = buildSanityImageUrl(image);
   const alt =
     image?.alt ??
     order.itemSummary.leadItem?.productName ??
     `Produkt z zamówienia ${order.orderNumber}`;
 
-  if (!imageUrl) {
-    return <div className="orderLeadImagePlaceholder" aria-hidden="true" />;
-  }
-
   return (
-    <img alt={alt} className="orderLeadImage" loading="lazy" src={imageUrl} />
+    <SanityThumbnail
+      alt={alt}
+      className="orderLeadImage"
+      height={44}
+      image={image}
+      placeholderClassName="orderLeadImagePlaceholder"
+      width={44}
+    />
   );
 }
 
