@@ -53,6 +53,15 @@
     }
   }
 
+  &[data-tone="awaitingGoods"] {
+    background: rgba(254, 1, 64, 0.08);
+
+    .returnStatusIcon {
+      color: var(--primary-red, #fe0140);
+      background: rgba(254, 1, 64, 0.1);
+    }
+  }
+
   &[data-tone="accepted"] {
     background: rgba(0, 145, 22, 0.08);
 

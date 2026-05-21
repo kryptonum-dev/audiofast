@@ -135,6 +135,9 @@ export type CustomerOrderReturnCaseSummary = {
   reason: string | null;
   createdAt: string;
   updatedAt: string;
+  awaitingGoodsAt: string | null;
+  acknowledgmentSentAt: string | null;
+  instructionsSentAt: string | null;
   completedAt: string | null;
   closedAt: string | null;
 };
@@ -366,6 +369,9 @@ function mapReturnCase(row: ReturnCaseRow): CustomerOrderReturnCaseSummary {
     reason: row.reason,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    awaitingGoodsAt: row.awaiting_goods_at,
+    acknowledgmentSentAt: row.acknowledgment_sent_at,
+    instructionsSentAt: row.instructions_sent_at,
     completedAt: row.completed_at,
     closedAt: row.closed_at,
   };
@@ -375,7 +381,7 @@ function findActiveReturnCase(
   rows: ReturnCaseRow[],
 ): CustomerOrderReturnCaseSummary | null {
   const activeCase = rows.find(
-    (row) => row.status === 'open' || row.status === 'completed',
+    (row) => row.status === 'open' || row.status === 'awaiting_goods',
   );
 
   return activeCase ? mapReturnCase(activeCase) : null;
@@ -426,7 +432,9 @@ function buildActionEligibility(args: {
 
   if (args.activeReturnCase) {
     returnMessage =
-      'Zgłoszenie zwrotu zostało wysłane. Audiofast poprowadzi dalszą obsługę poza głównym statusem zamówienia.';
+      args.activeReturnCase.status === 'awaiting_goods'
+        ? 'Audiofast potwierdził zwrot. Sprawdź wiadomość e-mail z instrukcją odesłania towaru.'
+        : 'Zgłoszenie zwrotu zostało wysłane. Audiofast sprawdzi je i wyśle dalsze instrukcje po potwierdzeniu.';
   } else if (!returnStatusEligible) {
     returnMessage =
       'Zwrot można rozpocząć po wysyłce lub zakończeniu realizacji zamówienia.';

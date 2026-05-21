@@ -20,6 +20,16 @@ const previewLinks = [
     title: 'Faktura dostępna',
     description: 'Wysyłany po dodaniu faktury PDF przez admina.',
   },
+  {
+    href: '/podglad/email/zwrot-potwierdzenie/',
+    title: 'Potwierdzenie zgłoszenia zwrotu',
+    description: 'Wysyłany od razu po zgłoszeniu zwrotu przez klienta.',
+  },
+  {
+    href: '/podglad/email/zwrot-instrukcja/',
+    title: 'Instrukcja zwrotu',
+    description: 'Wysyłany po potwierdzeniu zwrotu przez admina.',
+  },
   ...statusEmailPreviews.map((preview) => ({
     href: `/podglad/email/${preview.path}/`,
     title: preview.title,

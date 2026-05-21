@@ -32,6 +32,7 @@ import {
   completeAdminOrderReturnCase,
   downloadAdminOrderInvoice,
   fetchAdminOrderDetail,
+  markAdminOrderReturnCaseAwaitingGoods,
   removeAdminOrderInvoice,
   resolveAdminOrderCancellation,
   updateAdminOrderDeliveryEstimate,
@@ -45,6 +46,7 @@ import {
   formatMoney,
   formatOrderStatus,
   formatPaymentStatus,
+  formatReturnCaseStatus,
 } from "../formatters.js";
 import type {
   AdminOrderAddressBlock,
@@ -1534,12 +1536,26 @@ function ReturnsPanel({
 
   async function updateReturnCase(
     returnCase: AdminOrderReturnCase,
-    action: "close" | "complete",
+    action: "await_goods" | "close" | "complete",
   ) {
     setActionState({ status: "loading" });
 
     try {
-      if (action === "complete") {
+      if (action === "await_goods") {
+        const result = await markAdminOrderReturnCaseAwaitingGoods({
+          authToken,
+          orderNumber: order.orderNumber,
+          returnCaseId: returnCase.id,
+        });
+        setActionState({
+          status:
+            result.customerEmail?.status === "failed" ? "error" : "success",
+          message:
+            result.customerEmail?.status === "failed"
+              ? "Zwrot został potwierdzony, ale nie udało się wysłać instrukcji do klienta. Sprawdź konfigurację treści w CMS."
+              : "Zwrot został potwierdzony, a instrukcja została wysłana do klienta.",
+        });
+      } else if (action === "complete") {
         await completeAdminOrderReturnCase({
           adminNote,
           authToken,
@@ -1556,10 +1572,12 @@ function ReturnsPanel({
 
       setAdminNote("");
       setReturnToComplete(null);
-      setActionState({
-        status: "success",
-        message: "Sprawa zwrotu została zaktualizowana.",
-      });
+      if (action !== "await_goods") {
+        setActionState({
+          status: "success",
+          message: "Sprawa zwrotu została zaktualizowana.",
+        });
+      }
       onChanged();
     } catch (error) {
       setActionState({
@@ -1642,6 +1660,8 @@ function ReturnsPanel({
         <Stack space={2}>
           {order.returnCases.map((returnCase) => {
             const isOpen = returnCase.status === "open";
+            const isAwaitingGoods = returnCase.status === "awaiting_goods";
+            const isActive = isOpen || isAwaitingGoods;
 
             return (
               <Card
@@ -1649,25 +1669,28 @@ function ReturnsPanel({
                 key={returnCase.id}
                 padding={3}
                 radius={2}
-                shadow={isOpen ? 1 : 0}
-                style={{ opacity: isOpen ? 1 : 0.66 }}
-                tone={isOpen ? "primary" : "transparent"}
+                shadow={isActive ? 1 : 0}
+                style={{ opacity: isActive ? 1 : 0.66 }}
+                tone={isActive ? "primary" : "transparent"}
               >
                 <Stack space={3}>
                   <Flex align="center" justify="space-between">
                     <Text size={1} weight="semibold">
-                      {isOpen ? "Aktualna sprawa zwrotu" : "Historia zwrotu"}
+                      {isActive ? "Aktualna sprawa zwrotu" : "Historia zwrotu"}
                     </Text>
                     <Badge
                       fontSize={1}
                       padding={2}
-                      tone={isOpen ? "primary" : "default"}
+                      tone={isActive ? "primary" : "default"}
                     >
-                      {isOpen ? "Aktywna" : "Zamknięta"}
+                      {isActive ? "Aktywna" : "Zamknięta"}
                     </Badge>
                   </Flex>
                   <Grid columns={[1, 1, 2]} gap={3}>
-                    <KeyValue label="Status" value={returnCase.status} />
+                    <KeyValue
+                      label="Status"
+                      value={formatReturnCaseStatus(returnCase.status)}
+                    />
                     <KeyValue
                       label="Utworzono"
                       value={formatDateTime(returnCase.createdAt)}
@@ -1677,26 +1700,39 @@ function ReturnsPanel({
                       value={returnCase.reason ?? "Brak"}
                     />
                     <KeyValue
-                      label="Zamknięto"
+                      label="Instrukcję wysłano"
                       value={
-                        returnCase.closedAt
-                          ? formatDateTime(returnCase.closedAt)
+                        returnCase.instructionsSentAt
+                          ? formatDateTime(returnCase.instructionsSentAt)
                           : "Nie"
                       }
                     />
                   </Grid>
-                  {isOpen ? (
+                  {isActive ? (
                     <Inline space={3}>
-                      <Button
-                        disabled={actionState.status === "loading"}
-                        onClick={() => {
-                          setAdminNote("");
-                          setReturnToComplete(returnCase);
-                        }}
-                        text="Oznacz jako zwrócone"
-                        tone="primary"
-                        type="button"
-                      />
+                      {isOpen ? (
+                        <Button
+                          disabled={actionState.status === "loading"}
+                          onClick={() =>
+                            updateReturnCase(returnCase, "await_goods")
+                          }
+                          text="Potwierdź zwrot i wyślij instrukcje"
+                          tone="primary"
+                          type="button"
+                        />
+                      ) : null}
+                      {isAwaitingGoods ? (
+                        <Button
+                          disabled={actionState.status === "loading"}
+                          onClick={() => {
+                            setAdminNote("");
+                            setReturnToComplete(returnCase);
+                          }}
+                          text="Oznacz jako zwrócone"
+                          tone="primary"
+                          type="button"
+                        />
+                      ) : null}
                       <Button
                         disabled={actionState.status === "loading"}
                         mode="ghost"

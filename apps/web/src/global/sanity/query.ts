@@ -2542,6 +2542,12 @@ export const queryB2cWithdrawalForm = defineQuery(/* groq */ `
   }
 `);
 
+export const queryB2cReturnInstructionsEmail = defineQuery(/* groq */ `
+  *[_type == "settings"][0] {
+    ${portableTextFragment('b2cReturnInstructionsEmail')}
+  }
+`);
+
 export const queryCartSupportCard = defineQuery(/* groq */ `
   *[_type == "settings"][0].cartSupportCard {
     paragraph,

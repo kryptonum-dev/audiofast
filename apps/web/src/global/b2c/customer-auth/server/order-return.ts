@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { sendReturnRequestAcknowledgmentEmail } from '@/src/global/b2c/return-emails';
 import { getOrderInvoiceRecipientType } from '@/src/global/b2c/utils/orders';
 import {
   isReturnEligibleOrderStatus,
@@ -7,12 +8,13 @@ import {
 } from '@/src/global/b2c/utils/statuses';
 import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
 import { createAdminClient } from '@/src/global/supabase/admin';
-import type { Database } from '@/src/global/supabase/database.types';
+import type { Database, Json } from '@/src/global/supabase/database.types';
 
 type OrderRow = Pick<
   Database['public']['Tables']['orders']['Row'],
   | 'current_status'
   | 'customer_email'
+  | 'customer_snapshot'
   | 'id'
   | 'invoice_data'
   | 'order_number'
@@ -63,6 +65,7 @@ export type RequestCustomerOrderReturnResult =
     };
 
 const RETURN_CASE_SELECT = 'id, status, reason, created_at';
+const ACTIVE_RETURN_CASE_STATUSES = ['open', 'awaiting_goods'];
 
 function mapReturnCase(
   returnCase: Pick<ReturnCaseRow, 'created_at' | 'id' | 'reason' | 'status'>,
@@ -111,7 +114,9 @@ async function loadOpenReturnCase(
     .from('return_cases')
     .select(RETURN_CASE_SELECT)
     .eq('order_id', orderId)
-    .eq('status', 'open')
+    .in('status', ACTIVE_RETURN_CASE_STATUSES)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   if (error) {
@@ -132,7 +137,7 @@ async function loadOwnedOrder({
   const { data, error } = await supabase
     .from('orders')
     .select(
-      'id, order_number, current_status, customer_email, shipped_at, invoice_data',
+      'id, order_number, current_status, customer_email, customer_snapshot, shipped_at, invoice_data',
     )
     .eq('order_number', orderNumber)
     .ilike('customer_email', normalizedEmail)
@@ -159,6 +164,36 @@ async function loadOrderReturnability(
   }
 
   return data ?? [];
+}
+
+function getCustomerFirstName(snapshot: Json): string {
+  if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot)) {
+    return 'Kliencie';
+  }
+
+  const firstName = snapshot.firstName;
+
+  return typeof firstName === 'string' && firstName.trim()
+    ? firstName.trim()
+    : 'Kliencie';
+}
+
+async function markReturnAcknowledgmentSent(
+  returnCaseId: string,
+  sentAt: string,
+) {
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from('return_cases')
+    .update({
+      acknowledgment_sent_at: sentAt,
+      updated_at: sentAt,
+    })
+    .eq('id', returnCaseId);
+
+  if (error) {
+    throw error;
+  }
 }
 
 export async function requestCustomerOrderReturn({
@@ -229,8 +264,35 @@ export async function requestCustomerOrderReturn({
     throw error;
   }
 
+  const returnCase = mapReturnCase(data);
+
+  try {
+    const emailResult = await sendReturnRequestAcknowledgmentEmail({
+      customerEmail: order.customer_email,
+      customerFirstName: getCustomerFirstName(order.customer_snapshot),
+      orderNumber: order.order_number,
+    });
+
+    if (emailResult.success) {
+      await markReturnAcknowledgmentSent(
+        returnCase.id,
+        new Date().toISOString(),
+      );
+    } else {
+      console.error(
+        '[B2C Returns] Failed to send return request acknowledgment email.',
+        emailResult.error,
+      );
+    }
+  } catch (error) {
+    console.error(
+      '[B2C Returns] Failed to send return request acknowledgment email.',
+      error,
+    );
+  }
+
   return {
     kind: 'created',
-    returnCase: mapReturnCase(data),
+    returnCase,
   };
 }

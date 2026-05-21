@@ -25,6 +25,7 @@ type OrderCaseRow = Pick<
   Database['public']['Tables']['orders']['Row'],
   | 'current_status'
   | 'customer_email'
+  | 'customer_snapshot'
   | 'id'
   | 'invoice_data'
   | 'order_number'
@@ -43,6 +44,7 @@ type AtomicCaseMutationResult = {
   request?: CancellationRequestRow;
   returnCase?: ReturnCaseRow;
 };
+const ACTIVE_RETURN_CASE_STATUSES = ['open', 'awaiting_goods'];
 
 export type AdminCancellationResolution = 'cancel_order' | 'decline_request';
 
@@ -70,6 +72,9 @@ export type AdminReturnCaseSummary = {
   reason: string | null;
   createdAt: string;
   updatedAt: string;
+  awaitingGoodsAt: string | null;
+  acknowledgmentSentAt: string | null;
+  instructionsSentAt: string | null;
   closedAt: string | null;
   completedAt: string | null;
 };
@@ -90,6 +95,10 @@ export type AdminReturnCaseResult = {
   orderNumber: string;
   returnCase: AdminReturnCaseSummary;
   orderStatus: AdminOrderStatusTransitionResult | null;
+  customerEmail?: {
+    attempted: boolean;
+    status: 'sent' | 'failed' | 'not_required';
+  };
 };
 
 export class AdminOrderCaseError extends Error {
@@ -149,6 +158,9 @@ function mapReturnCase(row: ReturnCaseRow): AdminReturnCaseSummary {
     reason: row.reason,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    awaitingGoodsAt: row.awaiting_goods_at,
+    acknowledgmentSentAt: row.acknowledgment_sent_at,
+    instructionsSentAt: row.instructions_sent_at,
     closedAt: row.closed_at,
     completedAt: row.completed_at,
   };
@@ -182,7 +194,7 @@ function getAtomicCaseMutationError(error: string): {
     case 'case_not_open':
       return {
         code: 'case_not_open',
-        message: 'Only open cases can be completed through this operation.',
+        message: 'This case is not in the expected state for this operation.',
         status: 409,
       };
     case 'cancellation_not_eligible':
@@ -341,6 +353,47 @@ async function completeReturnCaseAtomically(args: {
   return parseAtomicCaseMutationResult(data, 'returnCase');
 }
 
+async function markReturnCaseAwaitingGoodsAtomically(args: {
+  awaitingGoodsAt: string;
+  orderNumber: string;
+  returnCaseId: string;
+}): Promise<ReturnCaseRow> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc(
+    'admin_mark_return_case_awaiting_goods',
+    {
+      p_awaiting_goods_at: args.awaitingGoodsAt,
+      p_order_number: args.orderNumber,
+      p_return_case_id: args.returnCaseId,
+    },
+  );
+
+  if (error) {
+    throw new AdminOrderCaseError(
+      'Failed to mark the B2C return case as awaiting goods.',
+      'database_error',
+      500,
+      error,
+    );
+  }
+
+  if (!isRecord(data)) {
+    throwAtomicCaseMutationError('database_error');
+  }
+
+  if (data.ok !== true) {
+    throwAtomicCaseMutationError(
+      typeof data.error === 'string' ? data.error : 'database_error',
+    );
+  }
+
+  if (!isRecord(data.returnCase)) {
+    throwAtomicCaseMutationError('database_error');
+  }
+
+  return data.returnCase as unknown as ReturnCaseRow;
+}
+
 export function getAdminReturnIneligibilityReason(args: {
   hasOpenReturnCase: boolean;
   itemRows: OrderItemReturnabilityRow[];
@@ -386,7 +439,7 @@ async function loadOrderCaseRow(orderNumber: string): Promise<OrderCaseRow> {
   const { data, error } = await supabase
     .from('orders')
     .select(
-      'current_status, customer_email, id, invoice_data, order_number, shipped_at',
+      'current_status, customer_email, customer_snapshot, id, invoice_data, order_number, shipped_at',
     )
     .eq('order_number', orderNumber)
     .maybeSingle();
@@ -508,10 +561,12 @@ async function loadOpenReturnCase(
   const { data, error } = await supabase
     .from('return_cases')
     .select(
-      'closed_at, completed_at, created_at, id, order_id, reason, status, updated_at',
+      'acknowledgment_sent_at, awaiting_goods_at, closed_at, completed_at, created_at, id, instructions_sent_at, order_id, reason, status, updated_at',
     )
     .eq('order_id', orderId)
-    .eq('status', 'open')
+    .in('status', ACTIVE_RETURN_CASE_STATUSES)
+    .order('created_at', { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   if (error) {
@@ -534,7 +589,7 @@ async function loadReturnCase(args: {
   const { data, error } = await supabase
     .from('return_cases')
     .select(
-      'closed_at, completed_at, created_at, id, order_id, reason, status, updated_at',
+      'acknowledgment_sent_at, awaiting_goods_at, closed_at, completed_at, created_at, id, instructions_sent_at, order_id, reason, status, updated_at',
     )
     .eq('id', args.returnCaseId)
     .eq('order_id', args.orderId)
@@ -576,7 +631,7 @@ async function createReturnCase(args: {
       updated_at: args.createdAt,
     })
     .select(
-      'closed_at, completed_at, created_at, id, order_id, reason, status, updated_at',
+      'acknowledgment_sent_at, awaiting_goods_at, closed_at, completed_at, created_at, id, instructions_sent_at, order_id, reason, status, updated_at',
     )
     .single();
 
@@ -615,13 +670,54 @@ async function updateReturnCase(args: {
     .update(update)
     .eq('id', args.returnCaseId)
     .select(
-      'closed_at, completed_at, created_at, id, order_id, reason, status, updated_at',
+      'acknowledgment_sent_at, awaiting_goods_at, closed_at, completed_at, created_at, id, instructions_sent_at, order_id, reason, status, updated_at',
     )
     .single();
 
   if (error) {
     throw new AdminOrderCaseError(
       'Failed to update the B2C return case.',
+      'database_error',
+      500,
+      error,
+    );
+  }
+
+  return data as ReturnCaseRow;
+}
+
+function getCustomerFirstName(snapshot: Json): string {
+  if (!isRecord(snapshot)) {
+    return 'Kliencie';
+  }
+
+  const firstName = snapshot.firstName;
+
+  return typeof firstName === 'string' && firstName.trim()
+    ? firstName.trim()
+    : 'Kliencie';
+}
+
+async function markReturnInstructionsSent(
+  returnCaseId: string,
+  sentAt: string,
+): Promise<ReturnCaseRow> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('return_cases')
+    .update({
+      instructions_sent_at: sentAt,
+      updated_at: sentAt,
+    })
+    .eq('id', returnCaseId)
+    .select(
+      'acknowledgment_sent_at, awaiting_goods_at, closed_at, completed_at, created_at, id, instructions_sent_at, order_id, reason, status, updated_at',
+    )
+    .single();
+
+  if (error) {
+    throw new AdminOrderCaseError(
+      'Failed to mark the return instructions email as sent.',
       'database_error',
       500,
       error,
@@ -757,9 +853,9 @@ export async function closeAdminOrderReturnCase(args: {
     returnCaseId: args.returnCaseId,
   });
 
-  if (returnCase.status !== 'open') {
+  if (returnCase.status !== 'open' && returnCase.status !== 'awaiting_goods') {
     throw new AdminOrderCaseError(
-      'Only open return cases can be closed.',
+      'Only active return cases can be closed.',
       'case_not_open',
       409,
     );
@@ -779,6 +875,65 @@ export async function closeAdminOrderReturnCase(args: {
   };
 }
 
+export async function markAdminOrderReturnCaseAwaitingGoods(args: {
+  now?: Date;
+  orderNumber: string;
+  returnCaseId: string;
+}): Promise<AdminReturnCaseResult> {
+  const now = args.now ?? new Date();
+  const awaitingGoodsAt = now.toISOString();
+  const order = await loadOrderCaseRow(args.orderNumber);
+  const existingReturnCase = await loadReturnCase({
+    orderId: order.id,
+    returnCaseId: args.returnCaseId,
+  });
+
+  if (existingReturnCase.status !== 'open') {
+    throw new AdminOrderCaseError(
+      'Only open return cases can move to awaiting goods.',
+      'case_not_open',
+      409,
+    );
+  }
+
+  let returnCase = await markReturnCaseAwaitingGoodsAtomically({
+    awaitingGoodsAt,
+    orderNumber: args.orderNumber,
+    returnCaseId: existingReturnCase.id,
+  });
+  const { sendReturnInstructionsEmail } = await import(
+    '@/src/global/b2c/return-emails'
+  );
+  const emailResult = await sendReturnInstructionsEmail({
+    customerEmail: order.customer_email,
+    customerFirstName: getCustomerFirstName(order.customer_snapshot),
+    orderNumber: order.order_number,
+  });
+
+  if (emailResult.success) {
+    returnCase = await markReturnInstructionsSent(
+      returnCase.id,
+      new Date().toISOString(),
+    );
+  } else {
+    console.error(
+      '[B2C Returns] Failed to send return instructions email.',
+      emailResult.error,
+    );
+  }
+
+  return {
+    orderId: order.id,
+    orderNumber: order.order_number,
+    returnCase: mapReturnCase(returnCase),
+    orderStatus: null,
+    customerEmail: {
+      attempted: true,
+      status: emailResult.success ? 'sent' : 'failed',
+    },
+  };
+}
+
 export async function completeAdminOrderReturnCase(args: {
   actor: VerifiedAdminOperator;
   input: AdminReturnCaseInput;
@@ -793,9 +948,9 @@ export async function completeAdminOrderReturnCase(args: {
     returnCaseId: args.returnCaseId,
   });
 
-  if (returnCase.status !== 'open') {
+  if (returnCase.status !== 'awaiting_goods') {
     throw new AdminOrderCaseError(
-      'Only open return cases can be completed.',
+      'Only return cases awaiting goods can be completed.',
       'case_not_open',
       409,
     );

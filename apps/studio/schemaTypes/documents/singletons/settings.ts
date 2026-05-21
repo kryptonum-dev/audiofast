@@ -267,6 +267,18 @@ export const settings = defineType({
         accept: ".pdf",
       },
     }),
+    customPortableText({
+      name: "b2cReturnInstructionsEmail",
+      title: "Instrukcja zwrotu - treść e-maila",
+      description:
+        "Pełna treść wiadomości wysyłanej klientowi po potwierdzeniu zwrotu i zmianie sprawy na oczekiwanie na zwrot towaru.",
+      group: SETTINGS_GROUP.FORMS,
+      include: {
+        styles: ["normal"],
+        decorators: ["strong"],
+      },
+      maxLength: 4000,
+    }),
     defineField({
       name: "mailchimpAudienceId",
       type: "string",

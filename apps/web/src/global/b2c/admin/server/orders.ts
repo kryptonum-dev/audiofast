@@ -36,6 +36,7 @@ type OrderItemRow = Database['public']['Tables']['order_items']['Row'];
 type ReturnCaseRow = Database['public']['Tables']['return_cases']['Row'];
 type CancellationRequestRow =
   Database['public']['Tables']['order_cancellation_requests']['Row'];
+const ACTIVE_RETURN_CASE_STATUSES = ['open', 'awaiting_goods'];
 
 type AdminOrderListRow = Pick<
   OrderRow,
@@ -232,6 +233,9 @@ export type AdminOrderReturnCase = {
   reason: string | null;
   createdAt: string;
   updatedAt: string;
+  awaitingGoodsAt: string | null;
+  acknowledgmentSentAt: string | null;
+  instructionsSentAt: string | null;
   closedAt: string | null;
   completedAt: string | null;
 };
@@ -524,6 +528,14 @@ function hasOpenRelatedRows(
   return (rows ?? []).some((row) => row.status === 'open');
 }
 
+function hasActiveReturnCaseRows(
+  rows: Pick<ReturnCaseRow, 'id' | 'status'>[] | null | undefined,
+) {
+  return (rows ?? []).some((row) =>
+    ACTIVE_RETURN_CASE_STATUSES.includes(row.status),
+  );
+}
+
 export function mapAdminOrderListRow(
   row: AdminOrderListRow,
 ): AdminOrderListItem {
@@ -550,7 +562,7 @@ export function mapAdminOrderListRow(
     hasOpenCancellationRequest: hasOpenRelatedRows(
       row.order_cancellation_requests,
     ),
-    hasOpenReturnCase: hasOpenRelatedRows(row.return_cases),
+    hasOpenReturnCase: hasActiveReturnCaseRows(row.return_cases),
   };
 }
 
@@ -765,10 +777,16 @@ async function resolveOpenRelatedOrderIds(args: {
   table: 'order_cancellation_requests' | 'return_cases';
 }): Promise<Set<string>> {
   const supabase = createAdminClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from(args.table)
-    .select('order_id')
-    .eq('status', 'open');
+    .select('order_id');
+
+  query =
+    args.table === 'return_cases'
+      ? query.in('status', ACTIVE_RETURN_CASE_STATUSES)
+      : query.eq('status', 'open');
+
+  const { data, error } = await query;
 
   if (error) {
     throw error;
@@ -888,6 +906,9 @@ function mapReturnCase(row: ReturnCaseRow): AdminOrderReturnCase {
     reason: row.reason,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
+    awaitingGoodsAt: row.awaiting_goods_at,
+    acknowledgmentSentAt: row.acknowledgment_sent_at,
+    instructionsSentAt: row.instructions_sent_at,
     closedAt: row.closed_at,
     completedAt: row.completed_at,
   };
@@ -919,14 +940,14 @@ function canCreateReturnCase(args: {
   );
   const allItemsReturnable =
     args.items.length > 0 && args.items.every((item) => item.isReturnable);
-  const hasOpenReturnCase = args.returnCases.some(
-    (returnCase) => returnCase.status === 'open',
+  const hasActiveReturnCase = args.returnCases.some((returnCase) =>
+    ACTIVE_RETURN_CASE_STATUSES.includes(returnCase.status),
   );
 
   return (
     returnStatusEligible &&
     allItemsReturnable &&
-    !hasOpenReturnCase &&
+    !hasActiveReturnCase &&
     args.invoice.recipientType !== 'company' &&
     isWithinReturnWindow({
       now: args.now,
@@ -1017,7 +1038,13 @@ function mapAdminOrderDetail(args: {
         currentStatus: args.row.current_status,
         now: args.now,
         shippedAt: args.row.shipped_at,
-      }),
+      }).filter(
+        (status) =>
+          status !== 'returned' ||
+          !returnCases.some((returnCase) =>
+            ACTIVE_RETURN_CASE_STATUSES.includes(returnCase.status),
+          ),
+      ),
       canEditDeliveryEstimate: canEditDeliveryEstimate(args.row.current_status),
       canEditShipment:
         args.row.current_status !== 'cancelled' &&

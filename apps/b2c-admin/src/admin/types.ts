@@ -268,6 +268,9 @@ export type AdminOrderReturnCase = {
   reason: string | null;
   createdAt: string;
   updatedAt: string;
+  awaitingGoodsAt: string | null;
+  acknowledgmentSentAt: string | null;
+  instructionsSentAt: string | null;
   closedAt: string | null;
   completedAt: string | null;
 };
@@ -299,6 +302,17 @@ export type AdminInvoiceUploadResult = {
   invoice: AdminOrderListItem["invoice"];
   updatedAt: string;
   customerEmail: AdminInvoiceEmailStatus;
+};
+
+export type AdminReturnCaseMutationResult = {
+  orderId: string;
+  orderNumber: string;
+  returnCase: AdminOrderReturnCase;
+  orderStatus: unknown | null;
+  customerEmail?: {
+    attempted: boolean;
+    status: "sent" | "failed" | "not_required";
+  };
 };
 
 export type AdminOrderDetail = {

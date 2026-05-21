@@ -8,9 +8,19 @@ vi.mock('@/src/global/supabase/admin', () => ({
   createAdminClient: vi.fn(),
 }));
 
+vi.mock('@/src/global/b2c/return-emails', () => ({
+  sendReturnRequestAcknowledgmentEmail: vi.fn().mockResolvedValue({
+    error: 'Email disabled in tests.',
+    success: false,
+  }),
+}));
+
 const BASE_ORDER_ROW = {
   current_status: 'shipped',
   customer_email: 'jan@example.com',
+  customer_snapshot: {
+    firstName: 'Jan',
+  },
   id: 'order-1',
   invoice_data: {
     recipientType: 'private',
@@ -50,11 +60,17 @@ function setupSupabaseMock(args: {
     data: args.openReturnCaseRow ?? null,
     error: null,
   });
-  const returnCaseStatusEqMock = vi.fn(() => ({
+  const returnCaseLimitMock = vi.fn(() => ({
     maybeSingle: returnCaseMaybeSingleMock,
   }));
+  const returnCaseOrderMock = vi.fn(() => ({
+    limit: returnCaseLimitMock,
+  }));
+  const returnCaseInMock = vi.fn(() => ({
+    order: returnCaseOrderMock,
+  }));
   const returnCaseOrderEqMock = vi.fn(() => ({
-    eq: returnCaseStatusEqMock,
+    in: returnCaseInMock,
   }));
   const returnCasesSelectMock = vi.fn(() => ({
     eq: returnCaseOrderEqMock,

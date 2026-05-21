@@ -83,6 +83,21 @@ export function formatOrderStatus(status: string): string {
   return ORDER_STATUS_LABELS[status as AdminOrderStatus] ?? status;
 }
 
+export function formatReturnCaseStatus(status: string): string {
+  switch (status) {
+    case "open":
+      return "Oczekiwanie na potwierdzenie";
+    case "awaiting_goods":
+      return "Oczekiwanie na zwrot towaru";
+    case "completed":
+      return "Towar zwrócony";
+    case "closed_without_return":
+      return "Zamknięte bez zwrotu";
+    default:
+      return status;
+  }
+}
+
 export function formatPaymentStatus(args: {
   currentStatus: string;
   paidAt: string | null;

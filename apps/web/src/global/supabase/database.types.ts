@@ -513,30 +513,39 @@ export type Database = {
       };
       return_cases: {
         Row: {
+          acknowledgment_sent_at: string | null;
+          awaiting_goods_at: string | null;
           closed_at: string | null;
           completed_at: string | null;
           created_at: string;
           id: string;
+          instructions_sent_at: string | null;
           order_id: string;
           reason: string | null;
           status: string;
           updated_at: string;
         };
         Insert: {
+          acknowledgment_sent_at?: string | null;
+          awaiting_goods_at?: string | null;
           closed_at?: string | null;
           completed_at?: string | null;
           created_at?: string;
           id?: string;
+          instructions_sent_at?: string | null;
           order_id: string;
           reason?: string | null;
           status: string;
           updated_at?: string;
         };
         Update: {
+          acknowledgment_sent_at?: string | null;
+          awaiting_goods_at?: string | null;
           closed_at?: string | null;
           completed_at?: string | null;
           created_at?: string;
           id?: string;
+          instructions_sent_at?: string | null;
           order_id?: string;
           reason?: string | null;
           status?: string;
@@ -573,6 +582,14 @@ export type Database = {
           p_actor: Json;
           p_admin_note: string | null;
           p_completed_at: string;
+          p_order_number: string;
+          p_return_case_id: string;
+        };
+        Returns: Json;
+      };
+      admin_mark_return_case_awaiting_goods: {
+        Args: {
+          p_awaiting_goods_at: string;
           p_order_number: string;
           p_return_case_id: string;
         };

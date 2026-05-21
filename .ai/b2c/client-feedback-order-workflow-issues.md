@@ -738,14 +738,19 @@ Possible return case flow:
 
 Open design questions:
 
-- Is customer return request automatically accepted, or does admin need to approve it first?
-- Should `Oczekiwanie na zwrot towaru` be a main order status or return-case status?
-- What is the exact return address and packaging instruction content?
-- Should the return instruction content be CMS-editable?
-- How should the statutory deadline be calculated and displayed?
-- Does the deadline count from withdrawal notice or from delivery/receipt?
+- Decision: Audiofast manually approves the return request first.
+- Decision: `Oczekiwanie na zwrot towaru` is a return-case status (`awaiting_goods`), not a main order status.
+- Decision: return instruction content is CMS-editable in Sanity settings as one Portable Text field.
+- Pending content: Audiofast should provide/review the exact return address, packaging instructions, and deadline wording in Sanity.
 - Should the admin record "goods received" separately before marking the return completed?
 - How does refund confirmation fit into the final `returned` email?
+
+Implementation notes:
+
+- Added the `awaiting_goods` return-case status and timestamps for acknowledgment/instruction email sending.
+- Customer return requests remain `open` and send a simple acknowledgment email.
+- Admin approval moves the case to `awaiting_goods` and sends the Portable Text return instruction email.
+- Final completion still moves the order to `returned` only after Audiofast marks the goods as returned.
 
 Likely affected areas:
 

@@ -8,6 +8,7 @@ import type {
   AdminCouponsResult,
   AdminInvoiceUploadResult,
   AdminOrderStatus,
+  AdminReturnCaseMutationResult,
   AdminOrderDetail,
   AdminOrdersResult,
   AnalyticsFilters,
@@ -549,7 +550,7 @@ export async function createAdminOrderReturnCase(args: {
   orderNumber: string;
   reason?: string;
 }) {
-  return adminJsonMutation({
+  return adminJsonMutation<AdminReturnCaseMutationResult>({
     authToken: args.authToken,
     body: {
       reason: args.reason || null,
@@ -565,7 +566,7 @@ export async function closeAdminOrderReturnCase(args: {
   orderNumber: string;
   returnCaseId: string;
 }) {
-  return adminJsonMutation({
+  return adminJsonMutation<AdminReturnCaseMutationResult>({
     authToken: args.authToken,
     body: {},
     fallbackMessage: "Nie udało się zamknąć sprawy zwrotu.",
@@ -577,13 +578,30 @@ export async function closeAdminOrderReturnCase(args: {
   });
 }
 
+export async function markAdminOrderReturnCaseAwaitingGoods(args: {
+  authToken: string;
+  orderNumber: string;
+  returnCaseId: string;
+}) {
+  return adminJsonMutation<AdminReturnCaseMutationResult>({
+    authToken: args.authToken,
+    body: {},
+    fallbackMessage: "Nie udało się potwierdzić zwrotu.",
+    method: "POST",
+    path: orderPath(
+      args.orderNumber,
+      `/return-cases/${encodeURIComponent(args.returnCaseId)}/await-goods/`,
+    ),
+  });
+}
+
 export async function completeAdminOrderReturnCase(args: {
   adminNote?: string;
   authToken: string;
   orderNumber: string;
   returnCaseId: string;
 }) {
-  return adminJsonMutation({
+  return adminJsonMutation<AdminReturnCaseMutationResult>({
     authToken: args.authToken,
     body: {
       adminNote: args.adminNote || null,

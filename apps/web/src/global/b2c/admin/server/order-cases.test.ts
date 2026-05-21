@@ -1,9 +1,21 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   AdminOrderCaseError,
   getAdminReturnIneligibilityReason,
 } from './order-cases';
+
+vi.mock('@/src/global/b2c/admin/server/order-status', () => ({
+  mapAdminOrderStatusTransitionResult: vi.fn(),
+  sendAdminOrderStatusCustomerEmail: vi.fn(),
+}));
+
+vi.mock('@/src/global/b2c/return-emails', () => ({
+  sendReturnInstructionsEmail: vi.fn().mockResolvedValue({
+    error: 'Email disabled in tests.',
+    success: false,
+  }),
+}));
 
 describe('admin order case helpers', () => {
   const baseOrder = {

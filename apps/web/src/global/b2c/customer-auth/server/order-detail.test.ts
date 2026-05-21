@@ -465,25 +465,21 @@ describe("loadCustomerOrderForPanel", () => {
     }
 
     expect(result.order.currentStatus).toBe("shipped");
-    expect(result.order.activeReturnCase).toEqual({
-      closedAt: null,
-      completedAt: "2026-04-28T08:00:00.000Z",
-      createdAt: "2026-04-27T08:00:00.000Z",
-      reason: "Za duże.",
-      status: "completed",
-      updatedAt: "2026-04-28T08:00:00.000Z",
-    });
+    expect(result.order.activeReturnCase).toBeNull();
     expect(result.order.returnCases).toEqual([
       {
+        acknowledgmentSentAt: undefined,
+        awaitingGoodsAt: undefined,
         closedAt: null,
         completedAt: "2026-04-28T08:00:00.000Z",
         createdAt: "2026-04-27T08:00:00.000Z",
+        instructionsSentAt: undefined,
         reason: "Za duże.",
         status: "completed",
         updatedAt: "2026-04-28T08:00:00.000Z",
       },
     ]);
-    expect(result.order.actions.canRequestReturn).toBe(false);
+    expect(result.order.actions.canRequestReturn).toBe(true);
   });
 
   it("keeps closed return cases visible without blocking a new eligible request", async () => {
@@ -522,9 +518,12 @@ describe("loadCustomerOrderForPanel", () => {
     expect(result.order.activeReturnCase).toBeNull();
     expect(result.order.returnCases).toEqual([
       {
+        acknowledgmentSentAt: undefined,
+        awaitingGoodsAt: undefined,
         closedAt: "2026-04-28T08:00:00.000Z",
         completedAt: null,
         createdAt: "2026-04-27T08:00:00.000Z",
+        instructionsSentAt: undefined,
         reason: "Nie pasuje.",
         status: "closed_without_return",
         updatedAt: "2026-04-28T08:00:00.000Z",

@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { OrderInvoiceAvailableTemplate } from '@/src/emails/order-invoice-available-template';
+import { OrderReturnInstructionsTemplate } from '@/src/emails/order-return-instructions-template';
+import { OrderReturnRequestAcknowledgmentTemplate } from '@/src/emails/order-return-request-acknowledgment-template';
 import { OrderStatusUpdateTemplate } from '@/src/emails/order-status-update-template';
+import { buildB2cOrderDetailEmailUrl } from '@/src/global/b2c/email-urls';
 
 import {
   createEmailPreviewMetadata,
@@ -28,11 +31,23 @@ const otpPreview = {
   description:
     'Informacyjny podgląd domeny OTP. Dokładny szablon jest zarządzany w Supabase Auth.',
 };
+const returnAcknowledgmentPreview = {
+  path: 'zwrot-potwierdzenie',
+  title: 'Potwierdzenie zgłoszenia zwrotu',
+  description: 'Wewnętrzny podgląd maila z potwierdzeniem zgłoszenia zwrotu.',
+};
+const returnInstructionsPreview = {
+  path: 'zwrot-instrukcja',
+  title: 'Instrukcja zwrotu',
+  description: 'Wewnętrzny podgląd maila z instrukcją odesłania towaru.',
+};
 
 export function generateStaticParams() {
   return [
     { preview: invoicePreview.path },
     { preview: otpPreview.path },
+    { preview: returnAcknowledgmentPreview.path },
+    { preview: returnInstructionsPreview.path },
     ...statusEmailPreviews.map((preview) => ({ preview: preview.path })),
   ];
 }
@@ -56,6 +71,20 @@ export async function generateMetadata({
     return createEmailPreviewMetadata({
       title: `Podgląd maila | ${otpPreview.title}`,
       description: otpPreview.description,
+    });
+  }
+
+  if (preview === returnAcknowledgmentPreview.path) {
+    return createEmailPreviewMetadata({
+      title: `Podgląd maila | ${returnAcknowledgmentPreview.title}`,
+      description: returnAcknowledgmentPreview.description,
+    });
+  }
+
+  if (preview === returnInstructionsPreview.path) {
+    return createEmailPreviewMetadata({
+      title: `Podgląd maila | ${returnInstructionsPreview.title}`,
+      description: returnInstructionsPreview.description,
     });
   }
 
@@ -96,6 +125,34 @@ export default async function EmailPreviewPage({
       <EmailPreviewFrame
         ariaLabel={`Podgląd maila aktualizacji statusu: ${statusPreview.title}`}
         email={OrderStatusUpdateTemplate(statusPreview.props)}
+      />
+    );
+  }
+
+  if (preview === returnAcknowledgmentPreview.path) {
+    return (
+      <EmailPreviewFrame
+        ariaLabel="Podgląd maila z potwierdzeniem zgłoszenia zwrotu"
+        email={OrderReturnRequestAcknowledgmentTemplate({
+          customerFirstName: 'Jan',
+          loginUrl: buildB2cOrderDetailEmailUrl('AF-2026-00007'),
+          orderNumber: 'AF-2026-00007',
+        })}
+      />
+    );
+  }
+
+  if (preview === returnInstructionsPreview.path) {
+    return (
+      <EmailPreviewFrame
+        ariaLabel="Podgląd maila z instrukcją zwrotu"
+        email={OrderReturnInstructionsTemplate({
+          customerFirstName: 'Jan',
+          instructionsHtml:
+            '<p>Odeślij produkt na adres wskazany przez Audiofast. Zabezpiecz towar w oryginalnym opakowaniu lub w innym opakowaniu chroniącym sprzęt w transporcie.</p><ul><li>Dołącz numer zamówienia.</li><li>Nie naklejaj etykiety bezpośrednio na pudełko produktu.</li></ul><p>Termin odesłania towaru zostanie potwierdzony zgodnie z obowiązującymi zasadami zwrotu.</p>',
+          loginUrl: buildB2cOrderDetailEmailUrl('AF-2026-00007'),
+          orderNumber: 'AF-2026-00007',
+        })}
       />
     );
   }

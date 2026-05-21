@@ -142,12 +142,21 @@ function ReturnClosedIcon() {
 }
 
 function getReturnStatusCopy(status: string | null) {
+  if (status === "awaiting_goods") {
+    return {
+      icon: <ClockIcon />,
+      label: "Status zwrotu",
+      tone: "awaitingGoods",
+      value: "Oczekiwanie na zwrot towaru",
+    };
+  }
+
   if (status === "completed") {
     return {
       icon: <ReturnCompletedIcon />,
       label: "Status zwrotu",
       tone: "accepted",
-      value: "Zwrot potwierdzony",
+      value: "Towar zwrócony",
     };
   }
 
@@ -164,7 +173,7 @@ function getReturnStatusCopy(status: string | null) {
     icon: <ClockIcon />,
     label: "Status zwrotu",
     tone: "pending",
-    value: "Oczekuje na obsługę Audiofast",
+    value: "Oczekiwanie na potwierdzenie",
   };
 }
 
@@ -281,6 +290,14 @@ function getReturnDateCopy(
       label: "Potwierdzono",
       value:
         returnCase.completedAt ?? returnCase.updatedAt ?? returnCase.createdAt,
+    };
+  }
+
+  if (returnCase.status === "awaiting_goods") {
+    return {
+      label: "Potwierdzono",
+      value:
+        returnCase.awaitingGoodsAt ?? returnCase.updatedAt ?? returnCase.createdAt,
     };
   }
 
