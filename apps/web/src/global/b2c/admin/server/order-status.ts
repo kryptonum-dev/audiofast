@@ -13,6 +13,10 @@ import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
 import {
+  buildAdminOrderDeliveryEstimatePayload,
+  type AdminOrderDeliveryEstimateInput,
+} from './order-delivery-estimate';
+import {
   getAdminOrderStatusEmailStatus,
   sendAdminOrderStatusUpdateEmail,
 } from './order-status-email';
@@ -25,6 +29,8 @@ export type AdminOrderStatusRow = Pick<
   | 'current_status'
   | 'customer_email'
   | 'customer_snapshot'
+  | 'expected_delivery_from'
+  | 'expected_delivery_to'
   | 'id'
   | 'order_number'
   | 'paid_at'
@@ -38,6 +44,7 @@ export type AdminOrderStatusRow = Pick<
 type OrdersUpdate = Database['public']['Tables']['orders']['Update'];
 
 export type AdminOrderStatusTransitionInput = {
+  deliveryEstimate?: AdminOrderDeliveryEstimateInput | null;
   note?: string | null;
   status: string;
 };
@@ -123,6 +130,7 @@ export function buildAdminOrderStatusUpdatePayload(args: {
   currentStatus: string;
   nextStatus: B2cOrderStatus;
   note: string | null;
+  deliveryEstimate?: AdminOrderDeliveryEstimateInput | null;
   shippedAt: string | null;
   statusHistory: Json;
 }): OrdersUpdate {
@@ -171,6 +179,16 @@ export function buildAdminOrderStatusUpdatePayload(args: {
       break;
   }
 
+  if (args.deliveryEstimate !== undefined) {
+    Object.assign(
+      payload,
+      buildAdminOrderDeliveryEstimatePayload({
+        input: args.deliveryEstimate ?? {},
+        now: new Date(args.changedAt),
+      }),
+    );
+  }
+
   return payload;
 }
 
@@ -181,7 +199,7 @@ async function loadOrderStatusRow(
   const { data, error } = await supabase
     .from('orders')
     .select(
-      'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, id, order_number, paid_at, returned_at, shipment_data, shipped_at, status_history, updated_at',
+      'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, expected_delivery_from, expected_delivery_to, id, order_number, paid_at, returned_at, shipment_data, shipped_at, status_history, updated_at',
     )
     .eq('order_number', orderNumber)
     .maybeSingle();
@@ -218,7 +236,7 @@ async function updateOrderStatus(args: {
     .eq('id', args.orderId)
     .eq('current_status', args.expectedCurrentStatus)
     .select(
-      'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, id, order_number, paid_at, returned_at, shipment_data, shipped_at, status_history, updated_at',
+      'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, expected_delivery_from, expected_delivery_to, id, order_number, paid_at, returned_at, shipment_data, shipped_at, status_history, updated_at',
     )
     .single();
 
@@ -319,6 +337,7 @@ export async function updateAdminOrderStatus(args: {
     currentStatus: currentRow.current_status,
     nextStatus,
     note,
+    deliveryEstimate: args.input.deliveryEstimate,
     shippedAt: currentRow.shipped_at,
     statusHistory: currentRow.status_history,
   });

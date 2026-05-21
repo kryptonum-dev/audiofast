@@ -6,8 +6,10 @@ import {
   fetchAdminAnalytics,
   fetchAdminCoupons,
   fetchAdminOrders,
+  updateAdminOrderDeliveryEstimate,
   updateAdminOrderStatus,
 } from "./api.js";
+import { sanityAppConfig } from "../config.js";
 import type {
   AdminAnalyticsResult,
   AdminCoupon,
@@ -15,7 +17,7 @@ import type {
   AdminOrdersResult,
 } from "./types.js";
 
-const API_ORIGIN = "https://audiofast-git-b2c-kryptonum.vercel.app";
+const API_ORIGIN = new URL(sanityAppConfig.adminApiBaseUrl).origin;
 
 function okResponse<TData>(data: TData) {
   return new Response(JSON.stringify({ ok: true, data }), { status: 200 });
@@ -217,6 +219,7 @@ describe("admin API client", () => {
 
     mock
       .mockResolvedValueOnce(okResponse(coupon))
+      .mockResolvedValueOnce(okResponse({ orderNumber: "AF-2026/00001" }))
       .mockResolvedValueOnce(okResponse({ orderNumber: "AF-2026/00001" }));
 
     await createAdminCoupon({
@@ -238,10 +241,24 @@ describe("admin API client", () => {
       orderNumber: "AF-2026/00001",
       status: "processing",
       note: "Pakowanie",
+      deliveryEstimate: {
+        expectedDeliveryFrom: "2026-05-20",
+        expectedDeliveryTo: "2026-05-27",
+      },
+    });
+    await updateAdminOrderDeliveryEstimate({
+      authToken: "order-token",
+      expectedDeliveryFrom: "2026-06-01",
+      expectedDeliveryTo: null,
+      orderNumber: "AF-2026/00001",
     });
 
     const [, createInit] = mock.mock.calls[0] as [string, RequestInit];
     const [statusUrl, statusInit] = mock.mock.calls[1] as [string, RequestInit];
+    const [deliveryUrl, deliveryInit] = mock.mock.calls[2] as [
+      string,
+      RequestInit,
+    ];
 
     expect(createInit.method).toBe("POST");
     expect(createInit.headers).toEqual({
@@ -257,8 +274,20 @@ describe("admin API client", () => {
     );
     expect(statusInit.method).toBe("POST");
     expect(JSON.parse(statusInit.body as string)).toEqual({
+      deliveryEstimate: {
+        expectedDeliveryFrom: "2026-05-20",
+        expectedDeliveryTo: "2026-05-27",
+      },
       note: "Pakowanie",
       status: "processing",
+    });
+    expect(new URL(deliveryUrl).pathname).toBe(
+      "/api/admin/orders/AF-2026%2F00001/delivery-estimate/",
+    );
+    expect(deliveryInit.method).toBe("PUT");
+    expect(JSON.parse(deliveryInit.body as string)).toEqual({
+      expectedDeliveryFrom: "2026-06-01",
+      expectedDeliveryTo: null,
     });
   });
 

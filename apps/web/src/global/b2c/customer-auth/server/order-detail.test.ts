@@ -24,6 +24,8 @@ const BASE_ORDER_ROW = {
     phone: "+48123123123",
   },
   discount_total_cents: 30_00,
+  expected_delivery_from: "2026-05-20",
+  expected_delivery_to: "2026-05-27",
   grand_total_cents: 200_00,
   id: "order-1",
   invoice_data: {
@@ -297,6 +299,10 @@ describe("loadCustomerOrderForPanel", () => {
     ]);
     expect(result.order.items[0]?.details).toContain("Model: Reference");
     expect(result.order.discount?.couponCode).toBe("AUDIO30");
+    expect(result.order.deliveryEstimate).toEqual({
+      from: "2026-05-20",
+      to: "2026-05-27",
+    });
     expect(result.order.actions.canCancel).toBe(true);
   });
 

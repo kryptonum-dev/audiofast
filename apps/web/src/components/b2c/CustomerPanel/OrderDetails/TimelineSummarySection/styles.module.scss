@@ -1,8 +1,14 @@
+.timelineSummaryGroup {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, calc(1.5vw / 0.48), 1.5rem);
+  margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
+}
+
 .twoColumnRow {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
-  margin-bottom: clamp(1.5rem, calc(2vw / 0.48), 2.5rem);
 }
 
 .equalSection {
@@ -205,6 +211,61 @@
   color: var(--neutral-600, #5b5a5a);
   font-size: var(--typography-body-s, 0.75rem);
   line-height: 1.5;
+}
+
+.deliveryEstimateCard {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.875rem, calc(1vw / 0.48), 1.25rem);
+  padding: clamp(0.875rem, calc(1.25vw / 0.48), 1.25rem);
+  border: 1px solid var(--neutral-400, #e7e7e7);
+  border-radius: 0.75rem;
+  background: var(--neutral-white, #ffffff);
+
+  .deliveryEstimateIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid var(--neutral-400, #e7e7e7);
+    border-radius: 999rem;
+    color: var(--neutral-800, #141414);
+    background: var(--neutral-200, #f8f8f8);
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  .deliveryEstimateContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1875rem;
+    min-width: 0;
+  }
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  h2 {
+    color: var(--neutral-800, #141414);
+    font-family: var(--font-family-poppins);
+    font-size: var(--typography-body-xl, 0.875rem);
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  p {
+    color: var(--neutral-700, #5b5a5a);
+    font-size: var(--typography-body-m, 0.875rem);
+    line-height: 1.5;
+    font-weight: 500;
+  }
 }
 
 @media (max-width: 56.1875rem) {

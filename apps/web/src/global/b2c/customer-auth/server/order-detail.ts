@@ -7,8 +7,10 @@ import {
   getString,
   isRecord,
   type OrderAddressBlock,
+  type ParsedOrderExpectedDeliveryEstimate,
   type ParsedOrderInvoiceData,
   parseOrderDiscountData,
+  parseOrderExpectedDeliveryEstimate,
   parseOrderInvoiceData,
   parseOrderItemSnapshot,
   parseOrderShipmentData,
@@ -43,6 +45,8 @@ type CustomerOrderDetailRow = Pick<
   | 'customer_email'
   | 'customer_snapshot'
   | 'discount_total_cents'
+  | 'expected_delivery_from'
+  | 'expected_delivery_to'
   | 'grand_total_cents'
   | 'id'
   | 'invoice_data'
@@ -92,6 +96,8 @@ export type CustomerOrderShipmentSnapshot = {
   trackingUrl: string | null;
   shippedAt: string | null;
 };
+
+export type CustomerOrderDeliveryEstimate = ParsedOrderExpectedDeliveryEstimate;
 
 export type CustomerOrderDetailItem = {
   id: string;
@@ -159,6 +165,7 @@ export type CustomerOrderDetail = {
   shippingAddress: CustomerOrderAddressBlock;
   invoice: CustomerOrderInvoiceSnapshot;
   discount: CustomerOrderDiscountSnapshot | null;
+  deliveryEstimate: CustomerOrderDeliveryEstimate | null;
   shipment: CustomerOrderShipmentSnapshot | null;
   items: CustomerOrderDetailItem[];
   timeline: CustomerOrderTimelineEntry[];
@@ -187,7 +194,7 @@ export type LoadCustomerOrderForPanelResult =
 type ParsedInvoiceData = ParsedOrderInvoiceData;
 
 const CUSTOMER_ORDER_DETAIL_SELECT =
-  'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, used_discount, updated_at';
+  'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, expected_delivery_from, expected_delivery_to, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, used_discount, updated_at';
 
 const INVOICE_SIGNED_URL_TTL_SECONDS = 60;
 const INVOICE_STORAGE_BUCKET =
@@ -490,6 +497,10 @@ function mapCustomerOrderDetail(args: {
     ),
     invoice: mapInvoiceData(args.row.order_number, invoiceData),
     discount: parseDiscountData(args.row.used_discount),
+    deliveryEstimate: parseOrderExpectedDeliveryEstimate(
+      args.row.expected_delivery_from,
+      args.row.expected_delivery_to,
+    ),
     shipment: parseOrderShipmentData(
       args.row.shipment_data,
       args.row.shipped_at,

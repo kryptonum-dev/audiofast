@@ -4,8 +4,10 @@ import { createElement } from 'react';
 
 import { OrderStatusUpdateTemplate } from '@/src/emails/order-status-update-template';
 import {
+  formatOrderExpectedDeliveryEstimate,
   getString,
   isRecord,
+  parseOrderExpectedDeliveryEstimate,
   parseOrderShipmentData,
 } from '@/src/global/b2c/utils/orders';
 import {
@@ -27,6 +29,8 @@ type OrderStatusEmailRow = Pick<
   Database['public']['Tables']['orders']['Row'],
   | 'customer_email'
   | 'customer_snapshot'
+  | 'expected_delivery_from'
+  | 'expected_delivery_to'
   | 'order_number'
   | 'shipment_data'
   | 'shipped_at'
@@ -49,6 +53,14 @@ export async function sendAdminOrderStatusUpdateEmail(args: {
     args.order.shipment_data,
     args.order.shipped_at,
   );
+  const deliveryEstimate = parseOrderExpectedDeliveryEstimate(
+    args.order.expected_delivery_from,
+    args.order.expected_delivery_to,
+  );
+  const deliveryEstimateLabel =
+    args.status === 'processing' || args.status === 'shipped'
+      ? formatOrderExpectedDeliveryEstimate(deliveryEstimate)
+      : null;
 
   await sendTransactionalEmail({
     to: {
@@ -63,6 +75,7 @@ export async function sendAdminOrderStatusUpdateEmail(args: {
       message: content.message,
       orderNumber: args.order.order_number,
       statusLabel: content.label,
+      deliveryEstimateLabel,
       trackingNumber:
         args.status === 'shipped' ? (shipment?.trackingNumber ?? null) : null,
       trackingUrl:

@@ -34,11 +34,13 @@ import {
   fetchAdminOrderDetail,
   removeAdminOrderInvoice,
   resolveAdminOrderCancellation,
+  updateAdminOrderDeliveryEstimate,
   updateAdminOrderShipment,
   updateAdminOrderStatus,
 } from "../api.js";
 import {
   formatDateTime,
+  formatDeliveryEstimate,
   formatLineType,
   formatMoney,
   formatOrderStatus,
@@ -232,6 +234,11 @@ function OrderDetailContent({
         onChanged={onChanged}
         order={order}
       />
+      <DeliveryEstimateSection
+        authToken={authToken}
+        onChanged={onChanged}
+        order={order}
+      />
       <CustomerSection order={order} />
       <ItemsSection order={order} />
       {order.currentStatus !== "awaiting_payment" ? (
@@ -347,13 +354,27 @@ function StatusActionsSection({
   const [selectedStatus, setSelectedStatus] = useState<AdminOrderStatus | "">(
     order.actions.allowedNextStatuses[0] ?? "",
   );
+  const [expectedDeliveryFrom, setExpectedDeliveryFrom] = useState(
+    order.deliveryEstimate?.from ?? "",
+  );
+  const [expectedDeliveryTo, setExpectedDeliveryTo] = useState(
+    order.deliveryEstimate?.to ?? "",
+  );
   const [actionState, setActionState] = useState<ActionState>({
     status: "idle",
   });
+  const shouldShowStatusDeliveryEstimate =
+    (selectedStatus === "processing" || selectedStatus === "shipped") &&
+    order.actions.canEditDeliveryEstimate;
 
   useEffect(() => {
     setSelectedStatus(order.actions.allowedNextStatuses[0] ?? "");
   }, [order.actions.allowedNextStatuses, order.currentStatus]);
+
+  useEffect(() => {
+    setExpectedDeliveryFrom(order.deliveryEstimate?.from ?? "");
+    setExpectedDeliveryTo(order.deliveryEstimate?.to ?? "");
+  }, [order.deliveryEstimate?.from, order.deliveryEstimate?.to]);
 
   async function submitStatus(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -367,6 +388,12 @@ function StatusActionsSection({
     try {
       await updateAdminOrderStatus({
         authToken,
+        deliveryEstimate: shouldShowStatusDeliveryEstimate
+          ? {
+              expectedDeliveryFrom,
+              expectedDeliveryTo,
+            }
+          : undefined,
         note,
         orderNumber: order.orderNumber,
         status: selectedStatus,
@@ -442,9 +469,57 @@ function StatusActionsSection({
                 />
               </Stack>
             </Grid>
+            {shouldShowStatusDeliveryEstimate ? (
+              <Stack space={3}>
+                <Text size={1} weight="semibold">
+                  Przewidywana dostawa do wiadomości o statusie
+                </Text>
+                <Grid columns={[1, 1, 2]} gap={3}>
+                  <Stack space={2}>
+                    <Text muted size={1}>
+                      Od
+                    </Text>
+                    <TextInput
+                      disabled={actionState.status === "loading"}
+                      onChange={(event) =>
+                        setExpectedDeliveryFrom(event.currentTarget.value)
+                      }
+                      type="date"
+                      value={expectedDeliveryFrom}
+                    />
+                  </Stack>
+                  <Stack space={2}>
+                    <Text muted size={1}>
+                      Do
+                    </Text>
+                    <TextInput
+                      disabled={actionState.status === "loading"}
+                      min={expectedDeliveryFrom || undefined}
+                      onChange={(event) =>
+                        setExpectedDeliveryTo(event.currentTarget.value)
+                      }
+                      type="date"
+                      value={expectedDeliveryTo}
+                    />
+                  </Stack>
+                </Grid>
+                <Text muted size={1}>
+                  Te daty zostaną zapisane razem ze zmianą statusu, żeby e-mail
+                  do klienta użył aktualnego terminu.
+                </Text>
+              </Stack>
+            ) : null}
             <Inline space={3}>
               <Button
-                disabled={actionState.status === "loading" || !selectedStatus}
+                disabled={
+                  actionState.status === "loading" ||
+                  !selectedStatus ||
+                  Boolean(
+                    shouldShowStatusDeliveryEstimate &&
+                      expectedDeliveryTo &&
+                      !expectedDeliveryFrom,
+                  )
+                }
                 text={
                   actionState.status === "loading"
                     ? "Zapisywanie"
@@ -458,6 +533,155 @@ function StatusActionsSection({
           </Stack>
         </form>
       ) : null}
+    </DetailSection>
+  );
+}
+
+function DeliveryEstimateSection({
+  authToken,
+  onChanged,
+  order,
+}: {
+  authToken: string;
+  onChanged: () => void;
+  order: AdminOrderDetail;
+}) {
+  const [expectedDeliveryFrom, setExpectedDeliveryFrom] = useState(
+    order.deliveryEstimate?.from ?? "",
+  );
+  const [expectedDeliveryTo, setExpectedDeliveryTo] = useState(
+    order.deliveryEstimate?.to ?? "",
+  );
+  const [actionState, setActionState] = useState<ActionState>({
+    status: "idle",
+  });
+
+  useEffect(() => {
+    setExpectedDeliveryFrom(order.deliveryEstimate?.from ?? "");
+    setExpectedDeliveryTo(order.deliveryEstimate?.to ?? "");
+  }, [order.deliveryEstimate?.from, order.deliveryEstimate?.to]);
+
+  async function submitDeliveryEstimate(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await saveDeliveryEstimate({
+      expectedDeliveryFrom,
+      expectedDeliveryTo,
+    });
+  }
+
+  async function clearDeliveryEstimate() {
+    setExpectedDeliveryFrom("");
+    setExpectedDeliveryTo("");
+    await saveDeliveryEstimate({
+      expectedDeliveryFrom: "",
+      expectedDeliveryTo: "",
+    });
+  }
+
+  async function saveDeliveryEstimate(input: {
+    expectedDeliveryFrom: string;
+    expectedDeliveryTo: string;
+  }) {
+    setActionState({ status: "loading" });
+
+    try {
+      await updateAdminOrderDeliveryEstimate({
+        authToken,
+        expectedDeliveryFrom: input.expectedDeliveryFrom,
+        expectedDeliveryTo: input.expectedDeliveryTo,
+        orderNumber: order.orderNumber,
+      });
+      setActionState({
+        status: "success",
+        message: "Przewidywana dostawa została zapisana.",
+      });
+      onChanged();
+    } catch (error) {
+      setActionState({
+        status: "error",
+        message: getAdminErrorMessage(
+          error,
+          "Nie udało się zapisać przewidywanej dostawy.",
+        ),
+      });
+    }
+  }
+
+  return (
+    <DetailSection title="Przewidywana dostawa">
+      <Grid columns={[1, 1, 2]} gap={3}>
+        <KeyValue
+          label="Aktualny termin"
+          value={formatDeliveryEstimate(order.deliveryEstimate)}
+        />
+        
+      </Grid>
+      {order.actions.canEditDeliveryEstimate ? (
+        <form onSubmit={submitDeliveryEstimate}>
+          <Stack space={3}>
+            <Grid columns={[1, 1, 2]} gap={3}>
+              <Stack space={2}>
+                <Text muted size={1}>
+                  Od
+                </Text>
+                <TextInput
+                  disabled={actionState.status === "loading"}
+                  onChange={(event) =>
+                    setExpectedDeliveryFrom(event.currentTarget.value)
+                  }
+                  type="date"
+                  value={expectedDeliveryFrom}
+                />
+              </Stack>
+              <Stack space={2}>
+                <Text muted size={1}>
+                  Do
+                </Text>
+                <TextInput
+                  disabled={actionState.status === "loading"}
+                  min={expectedDeliveryFrom || undefined}
+                  onChange={(event) =>
+                    setExpectedDeliveryTo(event.currentTarget.value)
+                  }
+                  type="date"
+                  value={expectedDeliveryTo}
+                />
+              </Stack>
+            </Grid>
+            <Inline space={3}>
+              <Button
+                disabled={
+                  actionState.status === "loading" ||
+                  Boolean(expectedDeliveryTo && !expectedDeliveryFrom)
+                }
+                text={
+                  actionState.status === "loading"
+                    ? "Zapisywanie"
+                    : "Zapisz termin"
+                }
+                tone="primary"
+                type="submit"
+              />
+              <Button
+                disabled={
+                  actionState.status === "loading" ||
+                  (!expectedDeliveryFrom && !expectedDeliveryTo)
+                }
+                mode="ghost"
+                onClick={clearDeliveryEstimate}
+                text="Wyczyść"
+                type="button"
+              />
+              <ActionMessage state={actionState} />
+            </Inline>
+          </Stack>
+        </form>
+      ) : (
+        <Text muted size={1}>
+          Termin dostawy można edytować dla zamówień oczekujących na
+          potwierdzenie, opłaconych, w realizacji lub wysłanych.
+        </Text>
+      )}
     </DetailSection>
   );
 }

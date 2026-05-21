@@ -133,6 +133,23 @@ export function formatOptionalDate(value: string | null): string {
   return formatted.split(",")[0] ?? formatted;
 }
 
+export function formatDeliveryEstimate(
+  estimate: { from: string; to: string | null } | null,
+): string {
+  if (!estimate) {
+    return "Brak terminu";
+  }
+
+  const from = formatOptionalDate(estimate.from);
+  const to = formatOptionalDate(estimate.to);
+
+  if (!to || to === from) {
+    return from || "Brak terminu";
+  }
+
+  return `${from} - ${to}`;
+}
+
 export function formatMoney(cents: number): string {
   return CURRENCY_FORMATTER.format(cents / 100);
 }

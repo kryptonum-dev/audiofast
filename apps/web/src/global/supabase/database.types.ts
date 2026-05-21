@@ -232,6 +232,8 @@ export type Database = {
           customer_profile_id: string | null;
           customer_snapshot: Json;
           discount_total_cents: number;
+          expected_delivery_from: string | null;
+          expected_delivery_to: string | null;
           grand_total_cents: number;
           id: string;
           invoice_data: Json | null;
@@ -261,6 +263,8 @@ export type Database = {
           customer_profile_id?: string | null;
           customer_snapshot: Json;
           discount_total_cents?: number;
+          expected_delivery_from?: string | null;
+          expected_delivery_to?: string | null;
           grand_total_cents: number;
           id?: string;
           invoice_data?: Json | null;
@@ -290,6 +294,8 @@ export type Database = {
           customer_profile_id?: string | null;
           customer_snapshot?: Json;
           discount_total_cents?: number;
+          expected_delivery_from?: string | null;
+          expected_delivery_to?: string | null;
           grand_total_cents?: number;
           id?: string;
           invoice_data?: Json | null;

@@ -8,6 +8,7 @@ export type OrderStatusUpdateTemplateProps = {
   orderNumber: string;
   statusLabel: string;
   message: string;
+  deliveryEstimateLabel: string | null;
   trackingNumber: string | null;
   trackingUrl: string | null;
   loginUrl: string;
@@ -18,6 +19,7 @@ export function OrderStatusUpdateTemplate({
   orderNumber,
   statusLabel,
   message,
+  deliveryEstimateLabel,
   trackingNumber,
   trackingUrl,
   loginUrl,
@@ -40,6 +42,12 @@ export function OrderStatusUpdateTemplate({
           <strong style={strongText}>{statusLabel}</strong>.
         </Text>
         <Text style={heroText}>{message}</Text>
+        {deliveryEstimateLabel ? (
+          <Text style={heroMeta}>
+            Przewidywana dostawa:{' '}
+            <strong style={strongText}>{deliveryEstimateLabel}</strong>
+          </Text>
+        ) : null}
         {trackingNumber ? (
           <Text style={heroMeta}>
             Numer śledzenia: <strong style={strongText}>{trackingNumber}</strong>

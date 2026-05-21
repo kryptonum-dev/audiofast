@@ -282,6 +282,11 @@ export type AdminOrderCancellationRequest = {
   resolvedBy: string | null;
 };
 
+export type AdminOrderDeliveryEstimate = {
+  from: string;
+  to: string | null;
+};
+
 export type AdminOrderDetail = {
   id: string;
   orderNumber: string;
@@ -311,6 +316,7 @@ export type AdminOrderDetail = {
     discountPercent: number | null;
     totalDiscountCents: number;
   } | null;
+  deliveryEstimate: AdminOrderDeliveryEstimate | null;
   invoice: AdminOrderListItem["invoice"] & {
     companyName: string | null;
     taxId: string | null;
@@ -324,6 +330,7 @@ export type AdminOrderDetail = {
   timeline: AdminOrderTimelineEntry[];
   actions: {
     allowedNextStatuses: AdminOrderStatus[];
+    canEditDeliveryEstimate: boolean;
     canEditShipment: boolean;
     canAttachInvoice: boolean;
     canResolveCancellationRequest: boolean;

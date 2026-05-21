@@ -1,3 +1,7 @@
+import {
+  formatOrderExpectedDeliveryEstimate,
+  type ParsedOrderExpectedDeliveryEstimate,
+} from '../utils/orders';
 import type { CustomerOrdersListItem } from './server/orders';
 
 export type CustomerOrderStatusTone =
@@ -122,4 +126,10 @@ export function formatCustomerOrderDateTime(iso: string): string {
   }
 
   return ORDER_DATETIME_FORMATTER.format(new Date(timestamp));
+}
+
+export function formatCustomerDeliveryEstimate(
+  estimate: ParsedOrderExpectedDeliveryEstimate | null,
+): string | null {
+  return formatOrderExpectedDeliveryEstimate(estimate);
 }

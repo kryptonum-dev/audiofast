@@ -5,6 +5,7 @@ import {
   getCustomerOrderStatusTone,
   getCustomerPaymentStatusLabel,
   getCustomerTimelineStatusLabel,
+  formatCustomerDeliveryEstimate,
 } from './orders-formatting';
 
 describe('customer order formatting', () => {
@@ -42,5 +43,15 @@ describe('customer order formatting', () => {
     expect(getCustomerTimelineStatusLabel('awaiting_confirmation')).toBe(
       'Oczekiwanie na potwierdzenie',
     );
+  });
+
+  it('formats expected delivery dates for customer display', () => {
+    expect(
+      formatCustomerDeliveryEstimate({
+        from: '2026-05-20',
+        to: '2026-05-27',
+      }),
+    ).toBe('20-27 maja 2026');
+    expect(formatCustomerDeliveryEstimate(null)).toBeNull();
   });
 });

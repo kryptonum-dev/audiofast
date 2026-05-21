@@ -6,7 +6,9 @@ import {
   getString,
   isRecord,
   type OrderAddressBlock,
+  type ParsedOrderExpectedDeliveryEstimate,
   parseOrderDiscountData,
+  parseOrderExpectedDeliveryEstimate,
   parseOrderInvoiceData,
   parseOrderItemSnapshot,
   parseOrderShipmentData,
@@ -23,6 +25,7 @@ import {
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
+import { canEditDeliveryEstimate } from './order-delivery-estimate';
 import {
   type AdminPagePagination,
   parseAdminPagePagination,
@@ -74,6 +77,8 @@ type AdminOrderDetailRow = Pick<
   | 'customer_email'
   | 'customer_snapshot'
   | 'discount_total_cents'
+  | 'expected_delivery_from'
+  | 'expected_delivery_to'
   | 'grand_total_cents'
   | 'id'
   | 'invoice_data'
@@ -146,6 +151,8 @@ export type AdminOrderShipmentSummary = {
   trackingNumber: string | null;
   shippedAt: string | null;
 };
+
+export type AdminOrderDeliveryEstimate = ParsedOrderExpectedDeliveryEstimate;
 
 export type AdminOrderListItem = {
   id: string;
@@ -268,6 +275,7 @@ export type AdminOrderDetail = {
     discountPercent: number | null;
     totalDiscountCents: number;
   } | null;
+  deliveryEstimate: AdminOrderDeliveryEstimate | null;
   invoice: AdminOrderInvoiceSummary & {
     companyName: string | null;
     taxId: string | null;
@@ -281,6 +289,7 @@ export type AdminOrderDetail = {
   timeline: AdminOrderTimelineEntry[];
   actions: {
     allowedNextStatuses: AdminOrderStatus[];
+    canEditDeliveryEstimate: boolean;
     canEditShipment: boolean;
     canAttachInvoice: boolean;
     canResolveCancellationRequest: boolean;
@@ -310,7 +319,7 @@ export class AdminOrderQueryError extends Error {
 const ADMIN_ORDER_LIST_SELECT =
   'id, order_number, current_status, payable_until, created_at, paid_at, customer_email, customer_snapshot, grand_total_cents, discount_total_cents, invoice_data, shipment_data, shipped_at, order_items(line_position, line_type, product_name, brand_name, quantity, item_snapshot), order_cancellation_requests(id, status), return_cases(id, status)';
 const ADMIN_ORDER_DETAIL_SELECT =
-  'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_provider, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, updated_at, used_discount';
+  'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, expected_delivery_from, expected_delivery_to, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_provider, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, updated_at, used_discount';
 const ADMIN_ORDER_STATUSES: AdminOrderStatus[] = [...B2C_ORDER_STATUSES];
 const ADMIN_ORDER_LINE_TYPE_FILTER_SET = new Set<string>([
   'standard',
@@ -987,6 +996,10 @@ function mapAdminOrderDetail(args: {
     discountTotalCents: args.row.discount_total_cents,
     grandTotalCents: args.row.grand_total_cents,
     discount: parseDiscountData(args.row.used_discount),
+    deliveryEstimate: parseOrderExpectedDeliveryEstimate(
+      args.row.expected_delivery_from,
+      args.row.expected_delivery_to,
+    ),
     invoice,
     shipment,
     items,
@@ -1005,6 +1018,7 @@ function mapAdminOrderDetail(args: {
         now: args.now,
         shippedAt: args.row.shipped_at,
       }),
+      canEditDeliveryEstimate: canEditDeliveryEstimate(args.row.current_status),
       canEditShipment:
         args.row.current_status !== 'cancelled' &&
         args.row.current_status !== 'returned',

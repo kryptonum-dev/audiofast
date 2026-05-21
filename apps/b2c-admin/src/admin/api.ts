@@ -389,16 +389,33 @@ function orderPath(orderNumber: string, suffix: string) {
 
 export async function updateAdminOrderStatus(args: {
   authToken: string;
+  deliveryEstimate?: {
+    expectedDeliveryFrom?: string | null;
+    expectedDeliveryTo?: string | null;
+  };
   note?: string;
   orderNumber: string;
   status: AdminOrderStatus;
 }) {
+  const body: {
+    deliveryEstimate?: {
+      expectedDeliveryFrom?: string | null;
+      expectedDeliveryTo?: string | null;
+    };
+    note: string | null;
+    status: AdminOrderStatus;
+  } = {
+    note: args.note || null,
+    status: args.status,
+  };
+
+  if (args.deliveryEstimate !== undefined) {
+    body.deliveryEstimate = args.deliveryEstimate;
+  }
+
   return adminJsonMutation({
     authToken: args.authToken,
-    body: {
-      note: args.note || null,
-      status: args.status,
-    },
+    body,
     fallbackMessage: "Nie udało się zmienić statusu zamówienia.",
     method: "POST",
     path: orderPath(args.orderNumber, "/status/"),
@@ -420,6 +437,24 @@ export async function updateAdminOrderShipment(args: {
     fallbackMessage: "Nie udało się zapisać danych wysyłki.",
     method: "PUT",
     path: orderPath(args.orderNumber, "/shipment/"),
+  });
+}
+
+export async function updateAdminOrderDeliveryEstimate(args: {
+  authToken: string;
+  expectedDeliveryFrom?: string | null;
+  expectedDeliveryTo?: string | null;
+  orderNumber: string;
+}) {
+  return adminJsonMutation({
+    authToken: args.authToken,
+    body: {
+      expectedDeliveryFrom: args.expectedDeliveryFrom || null,
+      expectedDeliveryTo: args.expectedDeliveryTo || null,
+    },
+    fallbackMessage: "Nie udało się zapisać przewidywanej dostawy.",
+    method: "PUT",
+    path: orderPath(args.orderNumber, "/delivery-estimate/"),
   });
 }
 

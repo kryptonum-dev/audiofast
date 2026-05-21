@@ -14,6 +14,7 @@ export type StatusEmailPreview = {
 function createStatusPreview(
   status: AdminOrderStatusEmailStatus,
   overrides: {
+    deliveryEstimateLabel?: string;
     path: string;
     title: string;
     trackingNumber?: string;
@@ -30,6 +31,7 @@ function createStatusPreview(
       orderNumber: 'AF-2026-00007',
       statusLabel: content.label,
       message: content.message,
+      deliveryEstimateLabel: overrides.deliveryEstimateLabel ?? null,
       trackingNumber: overrides.trackingNumber ?? null,
       trackingUrl: overrides.trackingUrl ?? null,
       loginUrl: buildB2cOrderDetailEmailUrl('AF-2026-00007'),
@@ -39,6 +41,7 @@ function createStatusPreview(
 
 export const statusEmailPreviews: StatusEmailPreview[] = [
   createStatusPreview('processing', {
+    deliveryEstimateLabel: '20-27 maja 2026',
     path: 'status-realizacja',
     title: 'Status: w realizacji',
   }),

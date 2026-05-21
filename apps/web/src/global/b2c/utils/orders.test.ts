@@ -2,10 +2,13 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildOrderStatusTimeline,
+  formatOrderExpectedDeliveryEstimate,
   formatOrderSelectedOption,
   getOrderInvoiceRecipientType,
+  isOrderDateOnlyString,
   parseOrderAddressBlock,
   parseOrderDiscountData,
+  parseOrderExpectedDeliveryEstimate,
   parseOrderInvoiceData,
   parseOrderItemSnapshot,
   parseOrderShipmentData,
@@ -116,6 +119,48 @@ describe("B2C order utilities", () => {
       discountPercent: 10,
       totalDiscountCents: 1500,
     });
+  });
+
+  it("parses and formats expected delivery estimates", () => {
+    expect(isOrderDateOnlyString("2026-05-20")).toBe(true);
+    expect(isOrderDateOnlyString("2026-02-31")).toBe(false);
+
+    expect(parseOrderExpectedDeliveryEstimate("2026-05-20", null)).toEqual({
+      from: "2026-05-20",
+      to: null,
+    });
+    expect(
+      parseOrderExpectedDeliveryEstimate("2026-05-20", "2026-05-27"),
+    ).toEqual({
+      from: "2026-05-20",
+      to: "2026-05-27",
+    });
+    expect(
+      parseOrderExpectedDeliveryEstimate("2026-05-20", "2026-05-19"),
+    ).toEqual({
+      from: "2026-05-20",
+      to: null,
+    });
+    expect(parseOrderExpectedDeliveryEstimate(null, "2026-05-27")).toBeNull();
+
+    expect(
+      formatOrderExpectedDeliveryEstimate({
+        from: "2026-05-20",
+        to: null,
+      }),
+    ).toBe("20 maja 2026");
+    expect(
+      formatOrderExpectedDeliveryEstimate({
+        from: "2026-05-20",
+        to: "2026-05-27",
+      }),
+    ).toBe("20-27 maja 2026");
+    expect(
+      formatOrderExpectedDeliveryEstimate({
+        from: "2026-05-20",
+        to: "2026-06-03",
+      }),
+    ).toBe("20 maja - 3 czerwca 2026");
   });
 
   it("formats selected options and item snapshots", () => {

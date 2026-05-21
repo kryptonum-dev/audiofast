@@ -77,6 +77,57 @@ describe('admin order status transitions', () => {
     );
   });
 
+  it('can save a delivery estimate with the status transition', () => {
+    expect(
+      buildAdminOrderStatusUpdatePayload({
+        actor: OPERATOR,
+        changedAt: '2026-05-06T08:00:00.000Z',
+        currentStatus: 'awaiting_confirmation',
+        deliveryEstimate: {
+          expectedDeliveryFrom: '2026-05-20',
+          expectedDeliveryTo: '2026-05-27',
+        },
+        nextStatus: 'processing',
+        note: null,
+        shippedAt: null,
+        statusHistory: [],
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        current_status: 'processing',
+        expected_delivery_from: '2026-05-20',
+        expected_delivery_to: '2026-05-27',
+        updated_at: '2026-05-06T08:00:00.000Z',
+      }),
+    );
+  });
+
+  it('can update the delivery estimate when marking an order as shipped', () => {
+    expect(
+      buildAdminOrderStatusUpdatePayload({
+        actor: OPERATOR,
+        changedAt: '2026-05-06T08:00:00.000Z',
+        currentStatus: 'processing',
+        deliveryEstimate: {
+          expectedDeliveryFrom: '2026-05-22',
+          expectedDeliveryTo: '2026-05-24',
+        },
+        nextStatus: 'shipped',
+        note: 'Nadane kurierem',
+        shippedAt: null,
+        statusHistory: [],
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        current_status: 'shipped',
+        expected_delivery_from: '2026-05-22',
+        expected_delivery_to: '2026-05-24',
+        shipped_at: '2026-05-06T08:00:00.000Z',
+        updated_at: '2026-05-06T08:00:00.000Z',
+      }),
+    );
+  });
+
   it('rejects backward, same-state, system-owned, and terminal transitions', () => {
     const baseInput = {
       actor: OPERATOR,

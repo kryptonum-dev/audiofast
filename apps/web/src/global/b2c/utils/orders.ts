@@ -25,6 +25,11 @@ export type ParsedOrderShipmentData = {
   shippedAt: string | null;
 };
 
+export type ParsedOrderExpectedDeliveryEstimate = {
+  from: string;
+  to: string | null;
+};
+
 export type ParsedOrderDiscountData = {
   couponCode: string | null;
   discountType: string | null;
@@ -212,6 +217,101 @@ export function parseOrderShipmentData(
     trackingUrl: getString(record.trackingUrl),
     shippedAt: getString(record.shippedAt) ?? shippedAt,
   };
+}
+
+const ORDER_DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
+const ORDER_DATE_FORMATTER = new Intl.DateTimeFormat('pl-PL', {
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'UTC',
+  year: 'numeric',
+});
+const ORDER_DAY_FORMATTER = new Intl.DateTimeFormat('pl-PL', {
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+const ORDER_DAY_MONTH_FORMATTER = new Intl.DateTimeFormat('pl-PL', {
+  day: 'numeric',
+  month: 'long',
+  timeZone: 'UTC',
+});
+
+export function isOrderDateOnlyString(value: string): boolean {
+  if (!ORDER_DATE_ONLY_RE.test(value)) {
+    return false;
+  }
+
+  const parsed = new Date(`${value}T00:00:00.000Z`);
+  return (
+    !Number.isNaN(parsed.getTime()) &&
+    parsed.toISOString().slice(0, 10) === value
+  );
+}
+
+export function compareOrderDateOnlyStrings(
+  left: string,
+  right: string,
+): number {
+  return left.localeCompare(right);
+}
+
+export function parseOrderExpectedDeliveryEstimate(
+  from: unknown,
+  to: unknown,
+): ParsedOrderExpectedDeliveryEstimate | null {
+  const fromDate = getString(from);
+
+  if (!fromDate || !isOrderDateOnlyString(fromDate)) {
+    return null;
+  }
+
+  const toDate = getString(to);
+  const normalizedTo =
+    toDate &&
+    isOrderDateOnlyString(toDate) &&
+    compareOrderDateOnlyStrings(toDate, fromDate) >= 0
+      ? toDate
+      : null;
+
+  return {
+    from: fromDate,
+    to: normalizedTo,
+  };
+}
+
+function getUtcDateParts(value: string) {
+  const date = new Date(`${value}T00:00:00.000Z`);
+
+  return {
+    date,
+    month: date.getUTCMonth(),
+    year: date.getUTCFullYear(),
+  };
+}
+
+export function formatOrderExpectedDeliveryEstimate(
+  estimate: ParsedOrderExpectedDeliveryEstimate | null,
+): string | null {
+  if (!estimate) {
+    return null;
+  }
+
+  const fromParts = getUtcDateParts(estimate.from);
+  const toParts = estimate.to ? getUtcDateParts(estimate.to) : null;
+
+  if (!toParts || estimate.to === estimate.from) {
+    return ORDER_DATE_FORMATTER.format(fromParts.date);
+  }
+
+  if (fromParts.year === toParts.year && fromParts.month === toParts.month) {
+    return `${ORDER_DAY_FORMATTER.format(fromParts.date)}-${ORDER_DATE_FORMATTER.format(toParts.date)}`;
+  }
+
+  if (fromParts.year === toParts.year) {
+    return `${ORDER_DAY_MONTH_FORMATTER.format(fromParts.date)} - ${ORDER_DATE_FORMATTER.format(toParts.date)}`;
+  }
+
+  return `${ORDER_DATE_FORMATTER.format(fromParts.date)} - ${ORDER_DATE_FORMATTER.format(toParts.date)}`;
 }
 
 export function parseOrderDiscountData(
