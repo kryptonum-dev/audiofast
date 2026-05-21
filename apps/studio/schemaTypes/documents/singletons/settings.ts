@@ -239,6 +239,24 @@ export const settings = defineType({
       group: SETTINGS_GROUP.FORMS,
     },
     defineField({
+      name: "b2cTransactionalEmailCopyRecipients",
+      type: "array",
+      title: "Kopie e-maili transakcyjnych B2C",
+      description:
+        "Opcjonalne adresy e-mail, które otrzymają ukryte kopie wiadomości transakcyjnych wysyłanych do klientów B2C, np. potwierdzeń zamówień, zmian statusu i faktur. Nadawcą pozostaje adres skonfigurowany w środowisku.",
+      group: SETTINGS_GROUP.FORMS,
+      of: [
+        defineArrayMember({
+          type: "string",
+          validation: (Rule) => Rule.email().required(),
+        }),
+      ],
+      validation: (Rule) =>
+        Rule.max(5)
+          .unique()
+          .error("Możesz dodać maksymalnie 5 unikalnych adresów e-mail"),
+    }),
+    defineField({
       name: "mailchimpAudienceId",
       type: "string",
       title: "Mailchimp Audience ID",

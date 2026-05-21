@@ -83,6 +83,8 @@ export type EmailAttachment = {
 
 export type SendEmailOptions = {
   attachments?: EmailAttachment[];
+  bcc?: EmailRecipient | EmailRecipient[];
+  cc?: EmailRecipient | EmailRecipient[];
   to: EmailRecipient | EmailRecipient[];
   subject: string;
   htmlBody: string;
@@ -106,8 +108,14 @@ export async function sendEmail(
 ): Promise<SendEmailResult> {
   if (E2E_MOCK_EMAILS) {
     const recipients = Array.isArray(options.to) ? options.to : [options.to];
+    const bccRecipients = options.bcc
+      ? Array.isArray(options.bcc)
+        ? options.bcc
+        : [options.bcc]
+      : [];
 
     console.info('[MS Graph] E2E mock email send skipped.', {
+      bccRecipientCount: bccRecipients.length,
       recipientCount: recipients.length,
       subject: options.subject,
     });
@@ -118,6 +126,16 @@ export async function sendEmail(
   try {
     const client = getGraphClient();
     const recipients = Array.isArray(options.to) ? options.to : [options.to];
+    const ccRecipients = options.cc
+      ? Array.isArray(options.cc)
+        ? options.cc
+        : [options.cc]
+      : [];
+    const bccRecipients = options.bcc
+      ? Array.isArray(options.bcc)
+        ? options.bcc
+        : [options.bcc]
+      : [];
 
     // Build the email message object
     const message: Record<string, unknown> = {
@@ -133,6 +151,24 @@ export async function sendEmail(
         },
       })),
     };
+
+    if (ccRecipients.length > 0) {
+      message.ccRecipients = ccRecipients.map((r) => ({
+        emailAddress: {
+          address: r.email,
+          name: r.name,
+        },
+      }));
+    }
+
+    if (bccRecipients.length > 0) {
+      message.bccRecipients = bccRecipients.map((r) => ({
+        emailAddress: {
+          address: r.email,
+          name: r.name,
+        },
+      }));
+    }
 
     if (options.attachments?.length) {
       message.attachments = options.attachments.map((attachment) => ({

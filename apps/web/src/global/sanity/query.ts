@@ -2521,6 +2521,10 @@ export const queryContactSettings = defineQuery(/* groq */ `
   } 
 `);
 
+export const queryB2cTransactionalEmailCopyRecipients = defineQuery(/* groq */ `
+  *[_type == "settings"][0].b2cTransactionalEmailCopyRecipients
+`);
+
 export const queryCartSupportCard = defineQuery(/* groq */ `
   *[_type == "settings"][0].cartSupportCard {
     paragraph,

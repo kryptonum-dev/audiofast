@@ -11,8 +11,8 @@ import { OrderConfirmationTemplate } from '@/src/emails/order-confirmation-templ
 import { buildB2cOrderDetailEmailUrl } from '@/src/global/b2c/email-urls';
 import {
   getTransactionalReplyToEmail,
-  sendTransactionalEmail,
 } from '@/src/global/email/service';
+import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
@@ -262,7 +262,7 @@ export async function sendCheckoutPaymentConfirmationEmail(args: {
   const items = await loadPaidOrderEmailItems(order.id);
   const recipient = buildRecipientName(order.customer_snapshot);
   const subject = `Audiofast | Potwierdzenie zamówienia ${order.order_number}`;
-  const emailResult = await sendTransactionalEmail({
+  const emailResult = await sendB2cCustomerTransactionalEmail({
     to: {
       email: order.customer_email,
       name: recipient.fullName ?? undefined,

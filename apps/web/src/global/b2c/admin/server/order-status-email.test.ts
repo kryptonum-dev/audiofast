@@ -5,10 +5,15 @@ import { sendAdminOrderStatusUpdateEmail } from './order-status-email';
 
 vi.mock('@/src/global/email/service', () => ({
   getTransactionalReplyToEmail: vi.fn(() => 'sklep@example.com'),
-  sendTransactionalEmail: vi.fn(),
 }));
 
-const { sendTransactionalEmail } = await import('@/src/global/email/service');
+vi.mock('@/src/global/b2c/customer-transactional-email', () => ({
+  sendB2cCustomerTransactionalEmail: vi.fn(),
+}));
+
+const { sendB2cCustomerTransactionalEmail } = await import(
+  '@/src/global/b2c/customer-transactional-email'
+);
 
 describe('getAdminOrderStatusEmailStatus', () => {
   beforeEach(() => {
@@ -45,7 +50,7 @@ describe('getAdminOrderStatusEmailStatus', () => {
       status: 'processing',
     });
 
-    expect(sendTransactionalEmail).toHaveBeenCalledWith(
+    expect(sendB2cCustomerTransactionalEmail).toHaveBeenCalledWith(
       expect.objectContaining({
         react: expect.objectContaining({
           props: expect.objectContaining({

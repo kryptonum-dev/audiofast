@@ -28,12 +28,14 @@ export async function sendTransactionalEmail(
   const htmlBody = await renderTransactionalEmail(email.react);
 
   return sendEmail({
-    to: email.to,
-    subject: email.subject,
-    htmlBody,
     attachments: email.attachments,
+    bcc: email.bcc,
+    cc: email.cc,
+    htmlBody,
     replyTo: email.replyTo,
     saveToSentItems: email.saveToSentItems,
+    subject: email.subject,
+    to: email.to,
   });
 }
 
@@ -43,11 +45,13 @@ export async function sendTransactionalEmails(
   const renderedEmails = await Promise.all(
     emails.map(async (email) => ({
       attachments: email.attachments,
-      to: email.to,
-      subject: email.subject,
+      bcc: email.bcc,
+      cc: email.cc,
       htmlBody: await renderTransactionalEmail(email.react),
       replyTo: email.replyTo,
       saveToSentItems: email.saveToSentItems,
+      subject: email.subject,
+      to: email.to,
     })),
   );
 

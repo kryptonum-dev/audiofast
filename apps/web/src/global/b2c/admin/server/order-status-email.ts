@@ -18,8 +18,8 @@ import {
 import { buildB2cOrderDetailEmailUrl } from '@/src/global/b2c/email-urls';
 import {
   getTransactionalReplyToEmail,
-  sendTransactionalEmail,
 } from '@/src/global/email/service';
+import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
 import type { Database } from '@/src/global/supabase/database.types';
 
 export { getAdminOrderStatusEmailStatus };
@@ -62,7 +62,7 @@ export async function sendAdminOrderStatusUpdateEmail(args: {
       ? formatOrderExpectedDeliveryEstimate(deliveryEstimate)
       : null;
 
-  await sendTransactionalEmail({
+  await sendB2cCustomerTransactionalEmail({
     to: {
       email: args.order.customer_email,
     },

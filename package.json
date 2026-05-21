@@ -10,7 +10,7 @@
     "lint": "bun run turbo lint",
     "check-types": "bun run turbo check-types",
     "format": "bun run prettier --write \"**/*.{ts,tsx,md}\"",
-    "typegen": "cd apps/studio && bunx sanity schema extract && bunx sanity typegen generate --enforce-required-fields"
+    "typegen": "cd apps/studio && bunx sanity schema extract && bunx sanity typegen generate"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

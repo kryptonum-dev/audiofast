@@ -13,8 +13,8 @@ import {
 import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
 import {
   getTransactionalReplyToEmail,
-  sendTransactionalEmail,
 } from '@/src/global/email/service';
+import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
@@ -260,7 +260,7 @@ async function sendInvoiceEmail(args: {
   order: OrderInvoiceRow;
 }): Promise<AdminInvoiceEmailStatus> {
   try {
-    await sendTransactionalEmail({
+    await sendB2cCustomerTransactionalEmail({
       attachments: [
         {
           contentBytes: args.fileBase64,

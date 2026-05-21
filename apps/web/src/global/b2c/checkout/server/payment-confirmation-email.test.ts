@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createAdminClient } from '@/src/global/supabase/admin';
-import { sendTransactionalEmail } from '@/src/global/email/service';
+import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
 
 import { sendCheckoutPaymentConfirmationEmail } from './payment-confirmation-email';
 
@@ -41,13 +41,16 @@ vi.mock('@/src/global/supabase/admin', () => ({
 
 vi.mock('@/src/global/email/service', () => ({
   getTransactionalReplyToEmail: vi.fn(() => 'www@audiofast.pl'),
-  sendTransactionalEmail: vi.fn(),
+}));
+
+vi.mock('@/src/global/b2c/customer-transactional-email', () => ({
+  sendB2cCustomerTransactionalEmail: vi.fn(),
 }));
 
 describe('sendCheckoutPaymentConfirmationEmail', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(sendTransactionalEmail).mockResolvedValue({
+    vi.mocked(sendB2cCustomerTransactionalEmail).mockResolvedValue({
       success: true,
     });
   });
@@ -134,8 +137,8 @@ describe('sendCheckoutPaymentConfirmationEmail', () => {
       },
     });
 
-    expect(sendTransactionalEmail).toHaveBeenCalledTimes(1);
-    expect(sendTransactionalEmail).toHaveBeenCalledWith(
+    expect(sendB2cCustomerTransactionalEmail).toHaveBeenCalledTimes(1);
+    expect(sendB2cCustomerTransactionalEmail).toHaveBeenCalledWith(
       expect.objectContaining({
         to: {
           email: 'jan@example.com',
@@ -146,7 +149,7 @@ describe('sendCheckoutPaymentConfirmationEmail', () => {
       }),
     );
 
-    const renderedEmail = vi.mocked(sendTransactionalEmail).mock
+    const renderedEmail = vi.mocked(sendB2cCustomerTransactionalEmail).mock
       .calls[0]?.[0] as ReactEmailCall | undefined;
     expect(renderedEmail?.react.props).toMatchObject({
       customerFirstName: 'Jan',
@@ -201,7 +204,7 @@ describe('sendCheckoutPaymentConfirmationEmail', () => {
         throw new Error(`Unexpected table ${table}.`);
       }),
     } as never);
-    vi.mocked(sendTransactionalEmail).mockResolvedValueOnce({
+    vi.mocked(sendB2cCustomerTransactionalEmail).mockResolvedValueOnce({
       success: false,
       error: 'boom',
     });

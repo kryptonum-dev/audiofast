@@ -313,15 +313,20 @@ It is unclear whether OTP login emails should also be copied. From a privacy/sec
 
 ### Initial Direction
 
-Add configurable BCC/CC support to the shared Microsoft Graph email layer and apply it to B2C transactional emails.
+Keep `www@audiofast.pl` as the sender configured by `MS_GRAPH_SENDER_EMAIL`. Because Microsoft Graph sends with `saveToSentItems: true`, the shared mailbox already has a sent-mail record of customer emails and attachments.
+
+Add optional Sanity-managed BCC recipients for additional operational copies.
 
 Recommended direction:
 
+- keep sender/reply-to addresses in environment variables
+- keep `saveToSentItems: true` as the default mailbox audit trail
 - use BCC by default, not CC, so customers do not see internal recipients
-- configure recipients via environment variable, for example `B2C_TRANSACTIONAL_EMAIL_BCC`
-- support multiple recipients
+- configure optional extra copy recipients in the Sanity global settings singleton
+- allow zero recipients and cap the list at five recipients
+- support multiple recipients, for example `zamowienia@audiofast.pl`
 - exclude OTP emails unless explicitly approved
-- keep `saveToSentItems: true` as a secondary audit trail, not as the only copy mechanism
+- if Sanity settings cannot be loaded, still send the customer email and log the missing copy-recipient lookup
 
 Open design questions:
 
@@ -335,9 +340,12 @@ Likely affected areas:
 
 - `apps/web/src/global/microsoft-graph/client.ts`
 - `apps/web/src/global/email/service.ts`
+- `apps/studio/schemaTypes/documents/singletons/settings.ts`
+- dedicated Sanity query for B2C transactional email copy recipients
+- B2C customer transactional email wrapper
 - every B2C transactional email sender
 - email tests and previews
-- environment variable documentation
+- Sanity generated types
 
 ## Issue 4 - Invoice Email Should Include Withdrawal Form When Return Is Available
 
@@ -374,35 +382,204 @@ When a return/withdrawal right applies, the customer should receive a withdrawal
 
 The form should be manageable from CMS/admin, not hardcoded into the codebase.
 
-### Initial Direction
+Refined gaps from code research:
 
-Model this as an order-document/email enhancement rather than a status change.
+- no global withdrawal-form asset exists in Sanity/settings
+- no shared `evaluateOrderWithdrawalFormEligibility()` or equivalent exists for invoice emails
+- return eligibility is duplicated across customer return, admin return case, customer order detail, and admin order detail logic
+- `apps/web/src/global/b2c/admin/server/order-invoice.ts` currently loads only invoice/email fields and sends exactly one attachment
+- `apps/web/src/emails/order-invoice-available-template.tsx` says only that a single PDF is attached
+- admin upload UI does not surface whether the customer email was sent, failed, or sent with extra documents
+- planning docs `architecture/invoice-and-documents.md` and `architecture/email-flow.md` describe invoice PDFs only, not conditional legal-document attachments
 
-Possible implementation shape:
+### Recommended Product Decision
 
-- add a CMS/admin-managed "withdrawal form" document setting
-- store the current form PDF in Sanity asset, Supabase Storage, or another agreed document storage location
-- evaluate return eligibility when sending the invoice email
-- attach invoice PDF always
-- attach withdrawal form only if the order is returnable
-- show in admin whether the form was attached/sent
+Treat this as an **order documents + transactional email** enhancement, not as an order-status change.
 
-Open design questions:
+Recommended behavior:
 
-- Where should the legal form live: Sanity settings, Supabase Storage, or static project asset?
-- Should there be one global form or versioned forms?
-- Should company-invoice orders receive the form if returns are disabled for them?
-- Should non-returnable products suppress the form for the whole order under the current whole-order rule?
-- If the invoice already exists, does replacing it resend both invoice and form?
-- Should admin have a separate "send invoice/documents" button independent of upload?
+- attach the CMS-managed `formularz odstapienia od umowy` to the existing invoice availability email
+- keep invoice delivery separate from status emails such as `processing` or `shipped`
+- attach the invoice PDF always
+- attach the withdrawal form only when the order is eligible for return/withdrawal under the agreed v1 rules
+- if the form is not attached, still send the invoice email and expose the skip reason in admin
+- store the withdrawal form as one global PDF in Sanity `settings`, not in per-order Supabase invoice storage
+- keep per-order invoices in private Supabase Storage, because they are order-bound and customer-specific
+- send through `sendB2cCustomerTransactionalEmail` so Issue 3 BCC/copy behavior applies to both attachments
+
+Recommended v1 eligibility should mirror the current self-service return rules:
+
+- order status is `shipped` or `completed`
+- order is within the 14-day return window from `shipped_at`
+- every `order_items.is_returnable` value is true, because v1 uses whole-order returns
+- `invoice_data.recipientType` is not `company`
+- missing `shipped_at` means the form is not attached
+
+Open policy decision:
+
+- decide whether an existing open return case should suppress the attachment. For invoice-time legal documents, it probably should **not** suppress the form by itself; for self-service return creation, it should continue to block duplicate cases.
+
+### Timing Note
+
+The client appears to expect invoices to be sent when goods are dispatched. Current code allows invoice upload after payment and before shipment:
+
+- invoice upload is blocked only for `awaiting_payment`
+- upload from `paid`, `awaiting_confirmation`, or `processing` currently sends the invoice email immediately
+- return eligibility currently starts only at `shipped` / `completed`
+
+This creates the main workflow risk: if the operator uploads the invoice before shipment, the withdrawal form will be skipped under the recommended v1 rules.
+
+Recommended handling:
+
+- evaluate the form attachment at email-send time
+- show the admin why the form was omitted
+- consider restricting invoice upload to `shipped` / `completed` later if Audiofast confirms invoices are only issued at dispatch
+- optionally add a manual "send documents again" action so the admin can send invoice + withdrawal form after shipment without re-uploading the invoice
+
+### CMS / Storage Direction
+
+Best fit: Sanity `settings`.
+
+Reasoning:
+
+- the withdrawal form is a global legal/customer document, not an order-specific private document
+- Sanity already has a `Formularze i komunikacja` settings group and B2C transactional email copy recipients
+- product schemas already use Sanity file assets for PDF downloads
+- legal/ops staff can update the form without a deploy
+- Issue 6 can later store return-instruction content in the same settings area
+
+Suggested Sanity fields:
+
+- `b2cWithdrawalForm.file` as PDF file asset
+- optional `b2cWithdrawalForm.enabled`
+- optional `b2cWithdrawalForm.attachmentFilename`, defaulting to `formularz-odstapienia-od-umowy.pdf`
+- optional internal label or notes for editors
+
+Avoid for v1:
+
+- static project PDF, because updates would require deploys
+- order invoice bucket for the global form, because that bucket is for private per-order invoice PDFs
+- per-order copies of the form, unless legal requires versioned evidence of exactly which form was sent
+
+### Implementation Plan
+
+1. Add the global withdrawal form to Sanity settings:
+   - `apps/studio/schemaTypes/documents/singletons/settings.ts`
+   - add PDF validation and editor-facing copy in the existing forms/communication group
+
+2. Add Sanity query and server loader:
+   - `apps/web/src/global/sanity/query.ts`
+   - return asset URL, original filename, and configured attachment filename
+   - fetch bytes server-side when the invoice email is being built
+   - use dynamic or explicitly revalidated settings fetches so legal-document updates are not stale for too long
+
+3. Extract shared eligibility logic:
+   - create a focused helper such as `evaluateOrderWithdrawalFormEligibility()`
+   - base it on existing `isReturnEligibleOrderStatus`, `isWithinReturnWindow`, `getOrderInvoiceRecipientType`, and `order_items.is_returnable`
+   - reuse or refactor the current admin/customer return eligibility logic to avoid future drift
+   - keep self-service duplicate-return-case checks separate from legal-document attachment policy
+
+4. Extend invoice email pipeline:
+   - update `loadOrderInvoiceRow()` in `order-invoice.ts` to include `shipped_at`
+   - load order item returnability for the invoice order
+   - evaluate eligibility after the invoice metadata is saved
+   - build attachments as invoice first, withdrawal form second when eligible and present
+   - keep email failures non-blocking for invoice storage, matching current behavior
+
+5. Extend email template:
+   - add `includesWithdrawalForm` prop to `OrderInvoiceAvailableTemplate`
+   - mention one attachment when only the invoice is attached
+   - mention invoice + withdrawal form when both PDFs are attached
+
+6. Extend API result and admin UI:
+   - add `withdrawalFormAttached: boolean`
+   - add `withdrawalFormSkipReason` for status, company invoice, non-returnable item, expired window, missing `shipped_at`, missing CMS form, or fetch failure
+   - show the result in `InvoiceSection` after upload
+   - optionally add a separate resend endpoint/action later: `POST .../invoice/resend`
+
+7. Update planning docs:
+   - `architecture/invoice-and-documents.md`: per-order invoice vs global legal form storage
+   - `architecture/email-flow.md`: conditional second invoice-email attachment
+   - cross-link Issue 6 so withdrawal form and return shipping instructions stay separate
+
+### Legal / Operational Distinction From Issue 6
+
+Issue 4 and Issue 6 should share CMS/legal-document infrastructure but remain separate customer communications.
+
+- Issue 4: withdrawal form sent proactively with invoice when return/withdrawal applies
+- Issue 6: practical return instructions sent when a return case enters `Oczekiwanie na zwrot towaru`
+
+The withdrawal form is not the same as return shipping instructions. It should not replace the later email that tells the customer where to send goods, how to protect them, and by when.
+
+### Open Design Questions
+
+Updated decisions still needed:
+
+- Confirm that the withdrawal-form attachment should use the same rules as self-service returns.
+- Confirm whether company-invoice orders should never receive the form under v1 rules.
+- Confirm whether one non-returnable product suppresses the form for the whole order, matching the current whole-order return model.
+- Decide whether invoice upload should remain allowed before shipment or be restricted to `shipped` / `completed`.
+- Decide what happens if the order is eligible but the Sanity form is missing: send invoice only with warning, or block upload/email.
+- Decide whether replacing an invoice should always resend invoice + form, or whether resend should become explicit.
+- Decide whether customers should also see a download link for the withdrawal form in the customer panel.
+- Decide whether legal requires versioning/audit of which form version was sent.
+
+### Acceptance Criteria
+
+CMS:
+
+- operator can upload or replace the global withdrawal-form PDF in Sanity settings
+- invalid or non-PDF form uploads are rejected by Studio validation
+- server can load the current form and attachment filename for invoice emails
+
+Eligibility:
+
+- shipped/completed private-customer orders within the return window and with all returnable items get the form attached
+- company-invoice orders do not get the form
+- orders with any non-returnable item do not get the form
+- orders outside the return window do not get the form
+- pre-shipment orders do not get the form unless the policy is intentionally changed
+- invoice email still sends with invoice only when the form is skipped
+
+Email:
+
+- invoice PDF is always attached
+- withdrawal form PDF is attached only when eligible and available
+- email copy reflects one vs two attachments
+- email continues through `sendB2cCustomerTransactionalEmail`
+- internal BCC/copy recipients receive the same attachments once Issue 3 behavior is active
+
+Admin:
+
+- invoice upload result shows whether customer email was sent
+- invoice upload result shows whether withdrawal form was attached or why it was skipped
+- replacing an invoice re-evaluates eligibility at send time
+- removing an invoice does not send a customer email
+
+Docs:
+
+- `invoice-and-documents.md` explains per-order invoice storage versus global withdrawal-form storage
+- `email-flow.md` explains conditional invoice-email attachments
+- Issue 6 remains documented as a separate return-instructions workflow
+
+### Tests To Add
+
+- eligibility helper tests for status, window edge, missing `shipped_at`, company invoice, all-returnable items, and mixed/non-returnable items
+- `order-invoice.test.ts` cases for eligible order sending two attachments
+- `order-invoice.test.ts` cases for ineligible orders sending invoice only with a skip reason
+- missing-CMS-form test based on the chosen fallback policy
+- template render/snapshot tests for invoice-only versus invoice + withdrawal form copy
+- admin API/client tests for the extended `customerEmail` / withdrawal-form status payload
+- regression test that invoice storage succeeds even if customer email fails, matching current behavior
 
 Likely affected areas:
 
 - invoice upload/email logic in `apps/web/src/global/b2c/admin/server/order-invoice.ts`
 - invoice email template in `apps/web/src/emails`
 - return eligibility helpers and order read model
-- Sanity settings/schema or admin document upload UI
-- Supabase storage policies if the form is stored outside Sanity
+- Sanity settings schema and GROQ query
+- admin invoice UI status messages
+- planning docs for invoices, emails, and returns
 
 ## Issue 5 - Apaczka Integration Is Unclear / Not Really Implemented
 
@@ -574,6 +751,8 @@ Several feedback points are connected and should probably be designed together:
 - `Oczekiwanie na potwierdzenie` and expected delivery date belong to the same pre-fulfillment confirmation workflow.
 - Email BCC/CC applies to all new emails added for delivery estimates, invoice/forms, and returns.
 - The withdrawal form, return instructions, and return eligibility rules should use one consistent source of truth.
+- Issue 4's withdrawal form should be bundled with the invoice email, while Issue 6's return instructions should remain a separate return-case email.
+- Issue 4 should inherit Issue 3's BCC/copy path so internal copies include both invoice and withdrawal-form attachments.
 - Apaczka affects shipment tracking, shipped email content, and customer panel display.
 - Returns need both operational state and legal/customer communication state; the existing simplified return case model is the right foundation but needs more detail.
 
