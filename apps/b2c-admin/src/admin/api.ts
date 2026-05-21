@@ -6,6 +6,7 @@ import type {
   AdminCouponMutationInput,
   AdminCouponProductsResult,
   AdminCouponsResult,
+  AdminInvoiceUploadResult,
   AdminOrderStatus,
   AdminOrderDetail,
   AdminOrdersResult,
@@ -474,7 +475,10 @@ export async function attachAdminOrderInvoice(args: {
     method: "POST",
   });
 
-  return readAdminEnvelope(response, "Nie udało się dodać faktury.");
+  return readAdminEnvelope<AdminInvoiceUploadResult>(
+    response,
+    "Nie udało się dodać faktury.",
+  );
 }
 
 export async function downloadAdminOrderInvoice(args: {

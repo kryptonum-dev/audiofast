@@ -257,6 +257,17 @@ export const settings = defineType({
           .error("Możesz dodać maksymalnie 5 unikalnych adresów e-mail"),
     }),
     defineField({
+      name: "b2cWithdrawalForm",
+      type: "file",
+      title: "Formularz odstąpienia od umowy",
+      description:
+        "Opcjonalny PDF wysyłany klientom B2C razem z fakturą i widoczny do pobrania w szczegółach zamówienia.",
+      group: SETTINGS_GROUP.FORMS,
+      options: {
+        accept: ".pdf",
+      },
+    }),
+    defineField({
       name: "mailchimpAudienceId",
       type: "string",
       title: "Mailchimp Audience ID",

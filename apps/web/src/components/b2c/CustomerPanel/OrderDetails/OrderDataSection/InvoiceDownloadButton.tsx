@@ -7,11 +7,17 @@ import Button from '@/src/components/ui/Button';
 type InvoiceDownloadButtonProps = {
   href: string;
   className?: string;
+  isWithdrawalForm?: boolean;
+  label?: string;
+  loadingLabel?: string;
 };
 
 export default function InvoiceDownloadButton({
   className,
   href,
+  label = 'Pobierz fakturę',
+  loadingLabel = 'Przygotowujemy fakturę',
+  isWithdrawalForm = false,
 }: InvoiceDownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,21 +51,23 @@ export default function InvoiceDownloadButton({
 
   return (
     <Button
-      variant="primary"
+      variant={isWithdrawalForm ? 'secondary' : 'primary'}
       iconUsed="arrowRight"
       className={className}
       isLoading={isLoading}
       onClick={downloadInvoice}
       type="button"
     >
-      {isLoading ? 'Przygotowujemy fakturę' : 'Pobierz fakturę'}
+      {isLoading ? loadingLabel : label}
     </Button>
   );
 }
 
 function getInvoiceFilename(response: Response, href: string) {
   const disposition = response.headers.get('content-disposition');
-  const filenameMatch = disposition?.match(/filename\*?=(?:UTF-8''|")?([^";]+)/i);
+  const filenameMatch = disposition?.match(
+    /filename\*?=(?:UTF-8''|")?([^";]+)/i,
+  );
 
   if (filenameMatch?.[1]) {
     return decodeURIComponent(filenameMatch[1].replaceAll('"', ''));

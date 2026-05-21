@@ -132,6 +132,9 @@ function InvoiceDetails({ order }: { order: CustomerOrderDetail }) {
   const documentCopy = invoice.hasDocument
     ? 'Faktura została dołączona do zamówienia.'
     : 'Faktura nie została jeszcze dołączona do zamówienia.';
+  const invoiceAttachedCopy = invoice.attachedAt
+    ? `Dodano ${formatCustomerOrderDate(invoice.attachedAt)}`
+    : null;
 
   if (isCompany) {
     return (
@@ -157,28 +160,26 @@ function InvoiceDetails({ order }: { order: CustomerOrderDetail }) {
             </p>
           )}
 
-          <div className={styles.invoiceDocumentInline}>
-            <div className={styles.invoiceColumnHeader}>
-              <span className={styles.invoiceIcon}>
-                <InvoiceDocumentIcon />
-              </span>
-              <div>
-                <h3>Faktura</h3>
-                <p>{documentCopy}</p>
-              </div>
-            </div>
-            <div className={styles.invoiceDocumentAction}>
-              {invoice.attachedAt ? (
-                <span>
-                  Dodano {formatCustomerOrderDate(invoice.attachedAt)}
+          <div className={styles.invoiceDocumentsList}>
+            <div className={styles.invoiceDocumentRow}>
+              <div className={styles.invoiceColumnHeader}>
+                <span className={styles.invoiceIcon}>
+                  <InvoiceDocumentIcon />
                 </span>
-              ) : null}
-              {invoice.downloadHref ? (
-                <InvoiceDownloadButton
-                  href={invoice.downloadHref}
-                  className={styles.documentButton}
-                />
-              ) : null}
+                <div>
+                  <h3>Faktura</h3>
+                  <p>{documentCopy}</p>
+                </div>
+              </div>
+              <div className={styles.invoiceDocumentAction}>
+                {invoiceAttachedCopy ? <span>{invoiceAttachedCopy}</span> : null}
+                {invoice.downloadHref ? (
+                  <InvoiceDownloadButton
+                    href={invoice.downloadHref}
+                    className={styles.documentButton}
+                  />
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
@@ -189,27 +190,53 @@ function InvoiceDetails({ order }: { order: CustomerOrderDetail }) {
   return (
     <div className={`${styles.invoiceGrid} ${styles.invoiceGridSingle}`}>
       <div className={`${styles.invoiceColumn} ${styles.invoiceDocumentCard}`}>
-        <div className={styles.invoiceDocumentInline}>
-          <div className={styles.invoiceColumnHeader}>
-            <span className={styles.invoiceIcon}>
-              <InvoiceDocumentIcon />
-            </span>
-            <div>
-              <h3>Faktura</h3>
-              <p>{documentCopy}</p>
+        <div className={styles.invoiceDocumentsList}>
+          <div className={styles.invoiceDocumentRow}>
+            <div className={styles.invoiceColumnHeader}>
+              <span className={styles.invoiceIcon}>
+                <InvoiceDocumentIcon />
+              </span>
+              <div>
+                <h3>Faktura</h3>
+                <p>{documentCopy}</p>
+              </div>
+            </div>
+            <div className={styles.invoiceDocumentAction}>
+              {invoiceAttachedCopy ? <span>{invoiceAttachedCopy}</span> : null}
+              {invoice.downloadHref ? (
+                <InvoiceDownloadButton
+                  href={invoice.downloadHref}
+                  className={styles.documentButton}
+                />
+              ) : null}
             </div>
           </div>
-          <div className={styles.invoiceDocumentAction}>
-            {invoice.attachedAt ? (
-              <span>Dodano {formatCustomerOrderDate(invoice.attachedAt)}</span>
-            ) : null}
-            {invoice.downloadHref ? (
-              <InvoiceDownloadButton
-                href={invoice.downloadHref}
-                className={styles.documentButton}
-              />
-            ) : null}
-          </div>
+
+          {invoice.withdrawalFormDownloadHref ? (
+            <div className={styles.invoiceDocumentRow}>
+              <div className={styles.invoiceColumnHeader}>
+                <span className={styles.invoiceIcon}>
+                  <InvoiceDocumentIcon />
+                </span>
+                <div>
+                  <h3>Formularz odstąpienia</h3>
+                  <p>
+                    Wzór dokumentu do pobrania i wypełnienia. Pobranie
+                    formularza nie rozpoczyna zwrotu automatycznie.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.invoiceDocumentAction}>
+                <InvoiceDownloadButton
+                  href={invoice.withdrawalFormDownloadHref}
+                  className={styles.documentButton}
+                  label="Pobierz formularz odstąpienia"
+                  loadingLabel="Przygotowujemy formularz"
+                  isWithdrawalForm
+                />
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>

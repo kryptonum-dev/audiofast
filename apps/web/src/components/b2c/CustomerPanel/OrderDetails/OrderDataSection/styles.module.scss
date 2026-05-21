@@ -181,22 +181,33 @@
     }
   }
 
-  .invoiceDocumentInline {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
+  .invoiceDocumentsList {
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
     margin-top: 0.5rem;
     padding-top: clamp(1rem, calc(1.25vw / 0.48), 1.5rem);
     border-top: 1px solid var(--neutral-400, #e7e7e7);
 
-    .invoiceColumnHeader {
-      margin-bottom: 0;
+    .invoiceDocumentRow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 1rem;
+
+      & + .invoiceDocumentRow {
+        padding-top: 1rem;
+        border-top: 1px solid var(--neutral-300, #f1f1f1);
+      }
+
+      .invoiceColumnHeader {
+        margin-bottom: 0;
+      }
     }
   }
 
   .invoiceDocumentCard {
-    .invoiceDocumentInline {
+    .invoiceDocumentsList {
       margin-top: 0;
       padding-top: 0;
       border-top: none;
@@ -250,12 +261,14 @@
   }
 
   @media (max-width: 36.1875rem) {
-    .invoiceDocumentInline {
-      grid-template-columns: 1fr;
-      justify-items: start;
+    .invoiceDocumentsList {
+      .invoiceDocumentRow {
+        grid-template-columns: 1fr;
+        justify-items: start;
 
-      .invoiceDocumentAction {
-        align-items: flex-start;
+        .invoiceDocumentAction {
+          align-items: flex-start;
+        }
       }
     }
   }

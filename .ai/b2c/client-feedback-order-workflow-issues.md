@@ -401,23 +401,27 @@ Recommended behavior:
 - attach the CMS-managed `formularz odstapienia od umowy` to the existing invoice availability email
 - keep invoice delivery separate from status emails such as `processing` or `shipped`
 - attach the invoice PDF always
-- attach the withdrawal form only when the order is eligible for return/withdrawal under the agreed v1 rules
+- attach the withdrawal form for B2C/customer purchases only
 - if the form is not attached, still send the invoice email and expose the skip reason in admin
 - store the withdrawal form as one global PDF in Sanity `settings`, not in per-order Supabase invoice storage
 - keep per-order invoices in private Supabase Storage, because they are order-bound and customer-specific
 - send through `sendB2cCustomerTransactionalEmail` so Issue 3 BCC/copy behavior applies to both attachments
+- expose the same global withdrawal-form PDF for download in the customer order-detail view when the order has an invoice and the purchase is B2C/customer-owned
 
-Recommended v1 eligibility should mirror the current self-service return rules:
+Revised v1 attachment rule:
 
-- order status is `shipped` or `completed`
-- order is within the 14-day return window from `shipped_at`
-- every `order_items.is_returnable` value is true, because v1 uses whole-order returns
-- `invoice_data.recipientType` is not `company`
-- missing `shipped_at` means the form is not attached
+- send the form for consumer/B2C purchases
+- do not send the form for company/B2B purchases
+- do not require the order to already be `shipped` or `completed`
+- do not tie the attachment to the 14-day return window at invoice-send time
+- do not treat the form as proof that a return case is already open or accepted
 
-Open policy decision:
+Reasoning:
 
-- decide whether an existing open return case should suppress the attachment. For invoice-time legal documents, it probably should **not** suppress the form by itself; for self-service return creation, it should continue to block duplicate cases.
+- the withdrawal form is a legal/convenience document for consumer withdrawal, not an interactive return request
+- the client asked for the form to travel with the invoice when return rights apply
+- operational return eligibility, return-window enforcement, and return-case creation should still be handled by the return workflow
+- attaching the form does not mean Audiofast has accepted a return; it only gives the customer the standard document they may use
 
 ### Timing Note
 
@@ -427,13 +431,13 @@ The client appears to expect invoices to be sent when goods are dispatched. Curr
 - upload from `paid`, `awaiting_confirmation`, or `processing` currently sends the invoice email immediately
 - return eligibility currently starts only at `shipped` / `completed`
 
-This creates the main workflow risk: if the operator uploads the invoice before shipment, the withdrawal form will be skipped under the recommended v1 rules.
+Under the revised rule, early invoice upload is less risky: if the purchase is B2C/customer-owned, the form can be attached even before shipment. The actual ability to open or complete a return still remains governed by the return workflow and business rules.
 
 Recommended handling:
 
 - evaluate the form attachment at email-send time
 - show the admin why the form was omitted
-- consider restricting invoice upload to `shipped` / `completed` later if Audiofast confirms invoices are only issued at dispatch
+- consider restricting invoice upload to `shipped` / `completed` later only if Audiofast confirms invoices are operationally issued at dispatch
 - optionally add a manual "send documents again" action so the admin can send invoice + withdrawal form after shipment without re-uploading the invoice
 
 ### CMS / Storage Direction
@@ -451,9 +455,8 @@ Reasoning:
 Suggested Sanity fields:
 
 - `b2cWithdrawalForm.file` as PDF file asset
-- optional `b2cWithdrawalForm.enabled`
-- optional `b2cWithdrawalForm.attachmentFilename`, defaulting to `formularz-odstapienia-od-umowy.pdf`
-- optional internal label or notes for editors
+- no separate enabled toggle; missing file means the form is disabled/skipped
+- no custom attachment filename; use the uploaded PDF file name
 
 Avoid for v1:
 
@@ -474,15 +477,14 @@ Avoid for v1:
    - use dynamic or explicitly revalidated settings fetches so legal-document updates are not stale for too long
 
 3. Extract shared eligibility logic:
-   - create a focused helper such as `evaluateOrderWithdrawalFormEligibility()`
-   - base it on existing `isReturnEligibleOrderStatus`, `isWithinReturnWindow`, `getOrderInvoiceRecipientType`, and `order_items.is_returnable`
-   - reuse or refactor the current admin/customer return eligibility logic to avoid future drift
-   - keep self-service duplicate-return-case checks separate from legal-document attachment policy
+   - create a focused helper such as `evaluateOrderWithdrawalFormAttachment()`
+   - base the v1 rule primarily on whether the order is a B2C/customer purchase versus company/B2B purchase
+   - use `getOrderInvoiceRecipientType` or a clearer future buyer-type field as the current data source
+   - keep self-service return eligibility separate from legal-document attachment policy
+   - do not use open return cases, return-window checks, or return-case status to decide whether the form is attached
 
 4. Extend invoice email pipeline:
-   - update `loadOrderInvoiceRow()` in `order-invoice.ts` to include `shipped_at`
-   - load order item returnability for the invoice order
-   - evaluate eligibility after the invoice metadata is saved
+   - evaluate the B2C/customer attachment rule after the invoice metadata is saved
    - build attachments as invoice first, withdrawal form second when eligible and present
    - keep email failures non-blocking for invoice storage, matching current behavior
 
@@ -493,11 +495,16 @@ Avoid for v1:
 
 6. Extend API result and admin UI:
    - add `withdrawalFormAttached: boolean`
-   - add `withdrawalFormSkipReason` for status, company invoice, non-returnable item, expired window, missing `shipped_at`, missing CMS form, or fetch failure
    - show the result in `InvoiceSection` after upload
    - optionally add a separate resend endpoint/action later: `POST .../invoice/resend`
 
-7. Update planning docs:
+7. Extend customer order detail:
+   - show a withdrawal-form download link in the customer order-detail view when the order has an invoice and the purchase is B2C/customer-owned
+   - serve the global form through an application route or controlled Sanity asset URL
+   - label it clearly as `Formularz odstapienia od umowy`
+   - do not imply that downloading the form starts a return request
+
+8. Update planning docs:
    - `architecture/invoice-and-documents.md`: per-order invoice vs global legal form storage
    - `architecture/email-flow.md`: conditional second invoice-email attachment
    - cross-link Issue 6 so withdrawal form and return shipping instructions stay separate
@@ -515,13 +522,12 @@ The withdrawal form is not the same as return shipping instructions. It should n
 
 Updated decisions still needed:
 
-- Confirm that the withdrawal-form attachment should use the same rules as self-service returns.
-- Confirm whether company-invoice orders should never receive the form under v1 rules.
-- Confirm whether one non-returnable product suppresses the form for the whole order, matching the current whole-order return model.
+- Confirm the exact data source for B2C/customer versus company/B2B classification.
+- Confirm whether `invoice_data.recipientType === 'company'` is sufficient for v1 or whether a clearer buyer-type field is needed.
+- Confirm whether non-returnable product categories should ever suppress the form, or only suppress the actual return request later.
 - Decide whether invoice upload should remain allowed before shipment or be restricted to `shipped` / `completed`.
 - Decide what happens if the order is eligible but the Sanity form is missing: send invoice only with warning, or block upload/email.
 - Decide whether replacing an invoice should always resend invoice + form, or whether resend should become explicit.
-- Decide whether customers should also see a download link for the withdrawal form in the customer panel.
 - Decide whether legal requires versioning/audit of which form version was sent.
 
 ### Acceptance Criteria
@@ -534,11 +540,11 @@ CMS:
 
 Eligibility:
 
-- shipped/completed private-customer orders within the return window and with all returnable items get the form attached
-- company-invoice orders do not get the form
-- orders with any non-returnable item do not get the form
-- orders outside the return window do not get the form
-- pre-shipment orders do not get the form unless the policy is intentionally changed
+- B2C/customer purchases get the form attached with the invoice email
+- company/B2B purchases do not get the form
+- pre-shipment B2C invoice uploads still get the form unless Audiofast later restricts invoice timing
+- return-window checks do not control invoice-email attachment
+- open return cases do not control invoice-email attachment
 - invoice email still sends with invoice only when the form is skipped
 
 Email:
@@ -553,8 +559,14 @@ Admin:
 
 - invoice upload result shows whether customer email was sent
 - invoice upload result shows whether withdrawal form was attached or why it was skipped
-- replacing an invoice re-evaluates eligibility at send time
+- replacing an invoice re-evaluates the B2C/customer attachment rule at send time
 - removing an invoice does not send a customer email
+
+Customer panel:
+
+- order detail shows invoice download unchanged
+- order detail shows withdrawal-form download when the order has an invoice and the purchase is B2C/customer-owned
+- download/copy makes clear that this is a document template, not an online return request
 
 Docs:
 
@@ -564,21 +576,23 @@ Docs:
 
 ### Tests To Add
 
-- eligibility helper tests for status, window edge, missing `shipped_at`, company invoice, all-returnable items, and mixed/non-returnable items
-- `order-invoice.test.ts` cases for eligible order sending two attachments
-- `order-invoice.test.ts` cases for ineligible orders sending invoice only with a skip reason
+- attachment-rule helper tests for B2C/customer versus company/B2B purchases
+- `order-invoice.test.ts` cases for B2C order sending two attachments
+- `order-invoice.test.ts` cases for company/B2B order sending invoice only with a skip reason
 - missing-CMS-form test based on the chosen fallback policy
 - template render/snapshot tests for invoice-only versus invoice + withdrawal form copy
 - admin API/client tests for the extended `customerEmail` / withdrawal-form status payload
+- customer order-detail tests for showing/hiding the withdrawal-form download link
 - regression test that invoice storage succeeds even if customer email fails, matching current behavior
 
 Likely affected areas:
 
 - invoice upload/email logic in `apps/web/src/global/b2c/admin/server/order-invoice.ts`
 - invoice email template in `apps/web/src/emails`
-- return eligibility helpers and order read model
+- withdrawal-form attachment helper and order read models
 - Sanity settings schema and GROQ query
 - admin invoice UI status messages
+- customer order-detail read model and UI
 - planning docs for invoices, emails, and returns
 
 ## Issue 5 - Apaczka Integration Is Unclear / Not Really Implemented

@@ -4,17 +4,16 @@ import type { PostgrestError } from '@supabase/supabase-js';
 
 import { OrderInvoiceAvailableTemplate } from '@/src/emails/order-invoice-available-template';
 import type { VerifiedAdminOperator } from '@/src/global/b2c/admin/server/auth';
+import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
+import { buildB2cWithdrawalFormEmailAttachment } from '@/src/global/b2c/legal-documents/withdrawal-form';
 import {
   getString,
   isRecord,
-  parseOrderInvoiceData,
   type ParsedOrderInvoiceData,
+  parseOrderInvoiceData,
 } from '@/src/global/b2c/utils/orders';
 import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
-import {
-  getTransactionalReplyToEmail,
-} from '@/src/global/email/service';
-import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
+import { getTransactionalReplyToEmail } from '@/src/global/email/service';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
@@ -33,6 +32,7 @@ type OrdersUpdate = Database['public']['Tables']['orders']['Update'];
 export type AdminInvoiceEmailStatus = {
   attempted: boolean;
   status: 'sent' | 'failed' | 'not_required';
+  withdrawalFormAttached: boolean;
 };
 
 export type AdminInvoiceUploadResult = {
@@ -259,16 +259,27 @@ async function sendInvoiceEmail(args: {
   fileBase64: string;
   order: OrderInvoiceRow;
 }): Promise<AdminInvoiceEmailStatus> {
+  const invoice = parseOrderInvoiceData(args.order.invoice_data);
+  const withdrawalForm = await buildB2cWithdrawalFormEmailAttachment({
+    invoice,
+  });
+  const attachments = [
+    {
+      contentBytes: args.fileBase64,
+      contentType: 'application/pdf',
+      name: buildInvoiceFilename(args.order.order_number),
+    },
+  ];
+
+  if (withdrawalForm) {
+    attachments.push(withdrawalForm);
+  }
+
   try {
     await sendB2cCustomerTransactionalEmail({
-      attachments: [
-        {
-          contentBytes: args.fileBase64,
-          contentType: 'application/pdf',
-          name: buildInvoiceFilename(args.order.order_number),
-        },
-      ],
+      attachments,
       react: OrderInvoiceAvailableTemplate({
+        includesWithdrawalForm: withdrawalForm !== null,
         orderNumber: args.order.order_number,
       }),
       replyTo: getTransactionalReplyToEmail(),
@@ -282,6 +293,7 @@ async function sendInvoiceEmail(args: {
     return {
       attempted: true,
       status: 'sent',
+      withdrawalFormAttached: withdrawalForm !== null,
     };
   } catch (error) {
     console.error('Failed to send B2C order invoice email.', {
@@ -293,6 +305,7 @@ async function sendInvoiceEmail(args: {
     return {
       attempted: true,
       status: 'failed',
+      withdrawalFormAttached: withdrawalForm !== null,
     };
   }
 }

@@ -2,6 +2,11 @@ import 'server-only';
 
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import {
+  canReceiveB2cWithdrawalForm,
+  hasB2cWithdrawalFormDocument,
+  loadB2cWithdrawalFormDocument,
+} from '@/src/global/b2c/legal-documents/withdrawal-form';
+import {
   buildOrderStatusTimeline,
   formatPersonName,
   getString,
@@ -81,6 +86,7 @@ export type CustomerOrderInvoiceSnapshot = {
   hasDocument: boolean;
   attachedAt: string | null;
   downloadHref: string | null;
+  withdrawalFormDownloadHref: string | null;
 };
 
 export type CustomerOrderDiscountSnapshot = {
@@ -222,8 +228,13 @@ function parseCustomerSnapshot(value: Json): CustomerOrderContactSnapshot {
 function mapInvoiceData(
   orderNumber: string,
   invoiceData: ParsedInvoiceData,
+  hasWithdrawalFormDocument: boolean,
 ): CustomerOrderInvoiceSnapshot {
   const hasDocument = invoiceData.storagePath !== null;
+  const canDownloadWithdrawalForm =
+    hasDocument &&
+    hasWithdrawalFormDocument &&
+    canReceiveB2cWithdrawalForm(invoiceData);
 
   return {
     recipientType: invoiceData.recipientType,
@@ -234,6 +245,9 @@ function mapInvoiceData(
     attachedAt: invoiceData.attachedAt,
     downloadHref: hasDocument
       ? `/konto-klienta/zamowienia/${orderNumber}/faktura/`
+      : null,
+    withdrawalFormDownloadHref: canDownloadWithdrawalForm
+      ? `/konto-klienta/zamowienia/${orderNumber}/formularz-odstapienia/`
       : null,
   };
 }
@@ -457,6 +471,7 @@ function buildActionEligibility(args: {
 }
 
 function mapCustomerOrderDetail(args: {
+  hasWithdrawalFormDocument: boolean;
   row: CustomerOrderDetailRow;
   items: OrderItemRow[];
   returnCases: ReturnCaseRow[];
@@ -495,7 +510,11 @@ function mapCustomerOrderDetail(args: {
     shippingAddress: parseOrderShippingAddressSnapshot(
       args.row.shipping_address_snapshot,
     ),
-    invoice: mapInvoiceData(args.row.order_number, invoiceData),
+    invoice: mapInvoiceData(
+      args.row.order_number,
+      invoiceData,
+      args.hasWithdrawalFormDocument,
+    ),
     discount: parseDiscountData(args.row.used_discount),
     deliveryEstimate: parseOrderExpectedDeliveryEstimate(
       args.row.expected_delivery_from,
@@ -610,15 +629,30 @@ export async function loadCustomerOrderForPanel(
     return { kind: 'not_found' };
   }
 
-  const [items, returnCases, cancellationRequests] = await Promise.all([
-    loadOrderItems(row.id),
-    loadReturnCases(row.id),
-    loadCancellationRequests(row.id),
-  ]);
+  const invoiceData = parseOrderInvoiceData(row.invoice_data);
+  const shouldCheckWithdrawalForm =
+    invoiceData.storagePath !== null &&
+    canReceiveB2cWithdrawalForm(invoiceData);
+  const [items, returnCases, cancellationRequests, hasWithdrawalForm] =
+    await Promise.all([
+      loadOrderItems(row.id),
+      loadReturnCases(row.id),
+      loadCancellationRequests(row.id),
+      shouldCheckWithdrawalForm
+        ? hasB2cWithdrawalFormDocument().catch((error) => {
+            console.error(
+              '[B2C Documents] Failed to check withdrawal form availability.',
+              error,
+            );
+            return false;
+          })
+        : Promise.resolve(false),
+    ]);
 
   return {
     kind: 'found',
     order: mapCustomerOrderDetail({
+      hasWithdrawalFormDocument: hasWithdrawalForm,
       row,
       items,
       returnCases,
@@ -658,4 +692,27 @@ export async function createCustomerOrderInvoiceSignedUrl(
   }
 
   return data.signedUrl;
+}
+
+export async function loadCustomerOrderWithdrawalFormDocument(
+  input: LoadCustomerOrderForPanelInput,
+) {
+  const now = input.now ?? new Date();
+  const row = await loadOwnedVisibleOrderRow({
+    orderNumber: input.orderNumber,
+    normalizedEmail: input.normalizedEmail,
+    now,
+  });
+
+  if (!row) {
+    return null;
+  }
+
+  const invoiceData = parseOrderInvoiceData(row.invoice_data);
+
+  if (!invoiceData.storagePath || !canReceiveB2cWithdrawalForm(invoiceData)) {
+    return null;
+  }
+
+  return loadB2cWithdrawalFormDocument();
 }

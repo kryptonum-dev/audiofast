@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { hasB2cWithdrawalFormDocument } from "@/src/global/b2c/legal-documents/withdrawal-form";
 import { createAdminClient } from "@/src/global/supabase/admin";
 
 import {
@@ -9,6 +10,14 @@ import {
 
 vi.mock("@/src/global/supabase/admin", () => ({
   createAdminClient: vi.fn(),
+}));
+
+vi.mock("@/src/global/b2c/legal-documents/withdrawal-form", () => ({
+  canReceiveB2cWithdrawalForm: vi.fn(
+    (invoice: { recipientType: string }) => invoice.recipientType !== "company",
+  ),
+  hasB2cWithdrawalFormDocument: vi.fn(),
+  loadB2cWithdrawalFormDocument: vi.fn(),
 }));
 
 const BASE_ORDER_ROW = {
@@ -256,6 +265,7 @@ function setupSupabaseMock(args: {
 describe("loadCustomerOrderForPanel", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(hasB2cWithdrawalFormDocument).mockResolvedValue(false);
   });
 
   it("loads an owned order detail using order-time snapshots", async () => {
@@ -293,6 +303,7 @@ describe("loadCustomerOrderForPanel", () => {
     expect(result.order.invoice.downloadHref).toBe(
       "/konto-klienta/zamowienia/AF-2026-00001/faktura/",
     );
+    expect(result.order.invoice.withdrawalFormDownloadHref).toBeNull();
     expect(result.order.items.map((item) => item.id)).toEqual([
       "item-1",
       "item-2",
@@ -304,6 +315,35 @@ describe("loadCustomerOrderForPanel", () => {
       to: "2026-05-27",
     });
     expect(result.order.actions.canCancel).toBe(true);
+  });
+
+  it("shows the withdrawal form download for private orders with an invoice and configured CMS form", async () => {
+    vi.mocked(hasB2cWithdrawalFormDocument).mockResolvedValue(true);
+    setupSupabaseMock({
+      orderRow: {
+        ...BASE_ORDER_ROW,
+        invoice_data: {
+          ...BASE_ORDER_ROW.invoice_data,
+          recipientType: "private",
+        },
+      },
+    });
+
+    const result = await loadCustomerOrderForPanel({
+      orderNumber: "AF-2026-00001",
+      normalizedEmail: "jan@example.com",
+      now: new Date("2026-04-24T11:00:00.000Z"),
+    });
+
+    expect(result.kind).toBe("found");
+
+    if (result.kind !== "found") {
+      throw new Error("Expected order detail to be found.");
+    }
+
+    expect(result.order.invoice.withdrawalFormDownloadHref).toBe(
+      "/konto-klienta/zamowienia/AF-2026-00001/formularz-odstapienia/",
+    );
   });
 
   it("hides missing or non-owned order details without loading related rows", async () => {

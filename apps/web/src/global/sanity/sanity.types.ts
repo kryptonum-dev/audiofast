@@ -2344,6 +2344,13 @@ export type Footer = {
   };
 };
 
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+};
+
 export type Settings = {
   _id: string;
   _type: "settings";
@@ -2395,6 +2402,11 @@ export type Settings = {
     error?: Error;
   };
   b2cTransactionalEmailCopyRecipients?: Array<string>;
+  b2cWithdrawalForm?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
+  };
   mailchimpAudienceId?: string;
   analytics?: {
     gtm_id?: string;
@@ -2776,13 +2788,6 @@ export type CpoProduct = {
       _type: "image";
     };
   };
-};
-
-export type SanityFileAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
 };
 
 export type Product = {
@@ -3955,6 +3960,7 @@ export type AllSanitySchemaTypes =
   | Navbar
   | SocialMediaReference
   | Footer
+  | SanityFileAssetReference
   | Settings
   | HomePage
   | Award
@@ -3963,7 +3969,6 @@ export type AllSanitySchemaTypes =
   | ProductCategorySub
   | ProductCategoryParent
   | CpoProduct
-  | SanityFileAssetReference
   | Product
   | Brand
   | ReviewAuthorReference
@@ -40070,6 +40075,15 @@ export type QueryB2cTransactionalEmailCopyRecipientsResult =
   Array<string> | null;
 
 // Source: ../web/src/global/sanity/query.ts
+// Variable: queryB2cWithdrawalForm
+// Query: *[_type == "settings"][0] {    "assetUrl": coalesce(      b2cWithdrawalForm.asset->url,      b2cLegalDocuments.withdrawalForm.file.asset->url    ),    "originalFilename": coalesce(      b2cWithdrawalForm.asset->originalFilename,      b2cLegalDocuments.withdrawalForm.file.asset->originalFilename    ),    "mimeType": coalesce(      b2cWithdrawalForm.asset->mimeType,      b2cLegalDocuments.withdrawalForm.file.asset->mimeType    )  }
+export type QueryB2cWithdrawalFormResult = {
+  assetUrl: string | null;
+  originalFilename: string | null;
+  mimeType: string | null;
+} | null;
+
+// Source: ../web/src/global/sanity/query.ts
 // Variable: queryCartSupportCard
 // Query: *[_type == "settings"][0].cartSupportCard {    paragraph,    phoneNumber,      image {    "id": asset._ref,    "preview": asset->metadata.lqip,    "alt": asset->altText,    "naturalWidth": asset->metadata.dimensions.width,    "naturalHeight": asset->metadata.dimensions.height,    hotspot {      x,      y,      width,      height    },    crop {      bottom,      left,      right,      top    }  }  }
 export type QueryCartSupportCardResult = {
@@ -40417,6 +40431,7 @@ declare module "@sanity/client" {
     '{\n  "products": *[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && $categorySlug in categories[]->slug.current] | order(name asc) {\n    _id,\n    name,\n    "slug": slug.current,\n    subtitle,\n    basePriceCents,\n    \n  "mainImage": previewImage {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n,\n    brand->{\n      _id,\n      name,\n      "slug": slug.current,\n      \n  logo {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n    },\n    technicalData {\n      variants,\n      groups[] {\n        _key,\n        title,\n        rows[] {\n          _key,\n          title,\n          values[] {\n            _key,\n            \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n          }\n        }\n      }\n    },\n    "categories": categories[]->{\n    "slug": slug.current,\n    name\n    }\n  },\n  "enabledParameters": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current == $categorySlug][0].enabledParameters[] {\n    name,\n    displayName\n  }\n}': QueryComparisonPageDataResult;
     '\n  *[_type == "settings"][0].contactSettings {\n    supportEmails,\n    confirmationEmail {\n      subject,\n      \n  content[]{\n    ...,\n    _type == "block" => {\n      ...,\n      \n  markDefs[]{\n    ...,\n    _type == "customLink" => {\n    ...,\n    customLink{\n      type,\n      openInNewTab,\n      external,\n      "href": select(\n        type == "internal" => internal->slug.current,\n        type == "external" => external,\n        "#"\n      ),\n      "internalSlug": internal->slug.current\n    }\n  }\n  }\n\n    },\n  }\n\n    }\n  } \n': QueryContactSettingsResult;
     '\n  *[_type == "settings"][0].b2cTransactionalEmailCopyRecipients\n': QueryB2cTransactionalEmailCopyRecipientsResult;
+    '\n  *[_type == "settings"][0] {\n    "assetUrl": coalesce(\n      b2cWithdrawalForm.asset->url,\n      b2cLegalDocuments.withdrawalForm.file.asset->url\n    ),\n    "originalFilename": coalesce(\n      b2cWithdrawalForm.asset->originalFilename,\n      b2cLegalDocuments.withdrawalForm.file.asset->originalFilename\n    ),\n    "mimeType": coalesce(\n      b2cWithdrawalForm.asset->mimeType,\n      b2cLegalDocuments.withdrawalForm.file.asset->mimeType\n    )\n  }\n': QueryB2cWithdrawalFormResult;
     '\n  *[_type == "settings"][0].cartSupportCard {\n    paragraph,\n    phoneNumber,\n    \n  image {\n    "id": asset._ref,\n    "preview": asset->metadata.lqip,\n    "alt": asset->altText,\n    "naturalWidth": asset->metadata.dimensions.width,\n    "naturalHeight": asset->metadata.dimensions.height,\n    hotspot {\n      x,\n      y,\n      width,\n      height\n    },\n    crop {\n      bottom,\n      left,\n      right,\n      top\n    }\n  }\n\n  }\n': QueryCartSupportCardResult;
     '\n  *[_type == "settings"][0].cartEmptyState {\n    heading,\n    description,\n    buttonText\n  }\n': QueryCartEmptyStateResult;
     '\n  *[_type == "settings"][0].mailchimpAudienceId\n': QueryMailchimpSettingsResult;

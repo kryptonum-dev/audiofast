@@ -287,6 +287,20 @@ export type AdminOrderDeliveryEstimate = {
   to: string | null;
 };
 
+export type AdminInvoiceEmailStatus = {
+  attempted: boolean;
+  status: "sent" | "failed" | "not_required";
+  withdrawalFormAttached: boolean;
+};
+
+export type AdminInvoiceUploadResult = {
+  orderId: string;
+  orderNumber: string;
+  invoice: AdminOrderListItem["invoice"];
+  updatedAt: string;
+  customerEmail: AdminInvoiceEmailStatus;
+};
+
 export type AdminOrderDetail = {
   id: string;
   orderNumber: string;

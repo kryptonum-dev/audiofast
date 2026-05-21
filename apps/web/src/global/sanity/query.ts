@@ -2525,6 +2525,23 @@ export const queryB2cTransactionalEmailCopyRecipients = defineQuery(/* groq */ `
   *[_type == "settings"][0].b2cTransactionalEmailCopyRecipients
 `);
 
+export const queryB2cWithdrawalForm = defineQuery(/* groq */ `
+  *[_type == "settings"][0] {
+    "assetUrl": coalesce(
+      b2cWithdrawalForm.asset->url,
+      b2cLegalDocuments.withdrawalForm.file.asset->url
+    ),
+    "originalFilename": coalesce(
+      b2cWithdrawalForm.asset->originalFilename,
+      b2cLegalDocuments.withdrawalForm.file.asset->originalFilename
+    ),
+    "mimeType": coalesce(
+      b2cWithdrawalForm.asset->mimeType,
+      b2cLegalDocuments.withdrawalForm.file.asset->mimeType
+    )
+  }
+`);
+
 export const queryCartSupportCard = defineQuery(/* groq */ `
   *[_type == "settings"][0].cartSupportCard {
     paragraph,

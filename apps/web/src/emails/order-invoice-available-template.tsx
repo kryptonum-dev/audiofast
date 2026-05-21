@@ -3,10 +3,12 @@ import { Section, Text } from '@react-email/components';
 import { EmailLayout } from './components/EmailLayout';
 
 export type OrderInvoiceAvailableTemplateProps = {
+  includesWithdrawalForm?: boolean;
   orderNumber: string;
 };
 
 export function OrderInvoiceAvailableTemplate({
+  includesWithdrawalForm = false,
   orderNumber,
 }: OrderInvoiceAvailableTemplateProps) {
   const preview = `Faktura do zamówienia ${orderNumber} jest dostępna.`;
@@ -26,10 +28,19 @@ export function OrderInvoiceAvailableTemplate({
           została dodana faktura.
         </Text>
         <Text style={heroText}>
-          Dokument PDF znajdziesz w załączniku do tej wiadomości.
+          {includesWithdrawalForm
+            ? 'Fakturę oraz formularz odstąpienia od umowy znajdziesz w załącznikach do tej wiadomości.'
+            : 'Dokument PDF znajdziesz w załączniku do tej wiadomości.'}
         </Text>
+        {includesWithdrawalForm ? (
+          <Text style={heroText}>
+            Formularz odstąpienia jest wzorem dokumentu do pobrania i
+            wypełnienia. Samo otrzymanie formularza nie rozpoczyna procesu
+            zwrotu.
+          </Text>
+        ) : null}
         <Text style={heroMeta}>
-          Jeżeli masz pytania dotyczące dokumentu, skontaktuj się z zespołem
+          Jeżeli masz pytania dotyczące dokumentów, skontaktuj się z zespołem
           Audiofast.
         </Text>
       </Section>

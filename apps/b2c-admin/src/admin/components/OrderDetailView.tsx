@@ -1043,6 +1043,20 @@ function InvoiceSection({
     ? (order.invoice.filename ?? `faktura-${order.orderNumber}.pdf`)
     : null;
 
+  function getInvoiceUploadSuccessMessage(result: Awaited<
+    ReturnType<typeof attachAdminOrderInvoice>
+  >) {
+    if (result.customerEmail.status === "failed") {
+      return "Faktura została dodana, ale nie udało się wysłać maila do klienta.";
+    }
+
+    if (result.customerEmail.withdrawalFormAttached) {
+      return "Faktura została dodana. Mail do klienta zawiera fakturę i formularz odstąpienia od umowy.";
+    }
+
+    return "Faktura została dodana. Mail do klienta wysłano bez formularza odstąpienia.";
+  }
+
   async function uploadInvoice(file: File | null) {
     if (!file || actionState.status === "loading") {
       return;
@@ -1051,12 +1065,15 @@ function InvoiceSection({
     setActionState({ status: "loading" });
 
     try {
-      await attachAdminOrderInvoice({
+      const result = await attachAdminOrderInvoice({
         authToken,
         file,
         orderNumber: order.orderNumber,
       });
-      setActionState({ status: "success", message: "Faktura została dodana." });
+      setActionState({
+        status: "success",
+        message: getInvoiceUploadSuccessMessage(result),
+      });
       onChanged();
     } catch (error) {
       setActionState({
