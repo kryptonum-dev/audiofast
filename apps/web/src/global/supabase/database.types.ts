@@ -240,6 +240,7 @@ export type Database = {
           payable_until: string;
           payment_provider: string;
           payment_reference: string | null;
+          payment_session_id: string | null;
           payment_verified_at: string | null;
           profile_persistence: Json | null;
           returned_at: string | null;
@@ -268,6 +269,7 @@ export type Database = {
           payable_until: string;
           payment_provider?: string;
           payment_reference?: string | null;
+          payment_session_id?: string | null;
           payment_verified_at?: string | null;
           profile_persistence?: Json | null;
           returned_at?: string | null;
@@ -296,6 +298,7 @@ export type Database = {
           payable_until?: string;
           payment_provider?: string;
           payment_reference?: string | null;
+          payment_session_id?: string | null;
           payment_verified_at?: string | null;
           profile_persistence?: Json | null;
           returned_at?: string | null;

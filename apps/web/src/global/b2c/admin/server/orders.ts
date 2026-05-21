@@ -1,4 +1,4 @@
-import "server-only";
+import 'server-only';
 
 import {
   buildOrderStatusTimeline,
@@ -11,7 +11,7 @@ import {
   parseOrderItemSnapshot,
   parseOrderShipmentData,
   parseOrderShippingAddressSnapshot,
-} from "@/src/global/b2c/utils/orders";
+} from '@/src/global/b2c/utils/orders';
 import {
   B2C_ORDER_STATUSES,
   type B2cOrderStatus,
@@ -19,83 +19,83 @@ import {
   isB2cOrderStatus,
   isReturnEligibleOrderStatus,
   isWithinReturnWindow,
-} from "@/src/global/b2c/utils/statuses";
-import { createAdminClient } from "@/src/global/supabase/admin";
-import type { Database, Json } from "@/src/global/supabase/database.types";
+} from '@/src/global/b2c/utils/statuses';
+import { createAdminClient } from '@/src/global/supabase/admin';
+import type { Database, Json } from '@/src/global/supabase/database.types';
 
 import {
   type AdminPagePagination,
   parseAdminPagePagination,
-} from "./pagination";
+} from './pagination';
 
-type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
-type OrderItemRow = Database["public"]["Tables"]["order_items"]["Row"];
-type ReturnCaseRow = Database["public"]["Tables"]["return_cases"]["Row"];
+type OrderRow = Database['public']['Tables']['orders']['Row'];
+type OrderItemRow = Database['public']['Tables']['order_items']['Row'];
+type ReturnCaseRow = Database['public']['Tables']['return_cases']['Row'];
 type CancellationRequestRow =
-  Database["public"]["Tables"]["order_cancellation_requests"]["Row"];
+  Database['public']['Tables']['order_cancellation_requests']['Row'];
 
 type AdminOrderListRow = Pick<
   OrderRow,
-  | "created_at"
-  | "current_status"
-  | "customer_email"
-  | "customer_snapshot"
-  | "discount_total_cents"
-  | "grand_total_cents"
-  | "id"
-  | "invoice_data"
-  | "order_number"
-  | "paid_at"
-  | "payable_until"
-  | "shipment_data"
-  | "shipped_at"
+  | 'created_at'
+  | 'current_status'
+  | 'customer_email'
+  | 'customer_snapshot'
+  | 'discount_total_cents'
+  | 'grand_total_cents'
+  | 'id'
+  | 'invoice_data'
+  | 'order_number'
+  | 'paid_at'
+  | 'payable_until'
+  | 'shipment_data'
+  | 'shipped_at'
 > & {
   order_items?:
     | Pick<
         OrderItemRow,
-        | "brand_name"
-        | "item_snapshot"
-        | "line_position"
-        | "line_type"
-        | "product_name"
-        | "quantity"
+        | 'brand_name'
+        | 'item_snapshot'
+        | 'line_position'
+        | 'line_type'
+        | 'product_name'
+        | 'quantity'
       >[]
     | null;
-  order_cancellation_requests?: Pick<CancellationRequestRow, "id" | "status">[];
-  return_cases?: Pick<ReturnCaseRow, "id" | "status">[];
+  order_cancellation_requests?: Pick<CancellationRequestRow, 'id' | 'status'>[];
+  return_cases?: Pick<ReturnCaseRow, 'id' | 'status'>[];
 };
 
 type AdminOrderDetailRow = Pick<
   OrderRow,
-  | "cancelled_at"
-  | "completed_at"
-  | "created_at"
-  | "current_status"
-  | "customer_email"
-  | "customer_snapshot"
-  | "discount_total_cents"
-  | "grand_total_cents"
-  | "id"
-  | "invoice_data"
-  | "order_number"
-  | "paid_at"
-  | "payable_until"
-  | "payment_provider"
-  | "payment_reference"
-  | "payment_verified_at"
-  | "returned_at"
-  | "shipment_data"
-  | "shipped_at"
-  | "shipping_address_snapshot"
-  | "status_history"
-  | "subtotal_cents"
-  | "updated_at"
-  | "used_discount"
+  | 'cancelled_at'
+  | 'completed_at'
+  | 'created_at'
+  | 'current_status'
+  | 'customer_email'
+  | 'customer_snapshot'
+  | 'discount_total_cents'
+  | 'grand_total_cents'
+  | 'id'
+  | 'invoice_data'
+  | 'order_number'
+  | 'paid_at'
+  | 'payable_until'
+  | 'payment_provider'
+  | 'payment_reference'
+  | 'payment_verified_at'
+  | 'returned_at'
+  | 'shipment_data'
+  | 'shipped_at'
+  | 'shipping_address_snapshot'
+  | 'status_history'
+  | 'subtotal_cents'
+  | 'updated_at'
+  | 'used_discount'
 >;
 
 export type AdminOrderStatus = B2cOrderStatus;
 
-export type AdminOrderLineTypeFilter = "standard" | "cpo" | "mixed";
+export type AdminOrderLineTypeFilter = 'standard' | 'cpo' | 'mixed';
 
 export type AdminOrderListFilters = {
   q: string | null;
@@ -137,7 +137,7 @@ export type AdminOrderInvoiceSummary = {
   hasInvoice: boolean;
   filename: string | null;
   attachedAt: string | null;
-  recipientType: "private" | "company" | "unknown";
+  recipientType: 'private' | 'company' | 'unknown';
 };
 
 export type AdminOrderShipmentSummary = {
@@ -290,32 +290,32 @@ export type AdminOrderDetail = {
 
 export type LoadAdminOrderDetailResult =
   | {
-      kind: "found";
+      kind: 'found';
       order: AdminOrderDetail;
     }
   | {
-      kind: "not_found";
+      kind: 'not_found';
     };
 
 export class AdminOrderQueryError extends Error {
-  readonly code = "invalid_admin_order_query";
+  readonly code = 'invalid_admin_order_query';
   readonly status = 400;
 
   constructor(message: string) {
     super(message);
-    this.name = "AdminOrderQueryError";
+    this.name = 'AdminOrderQueryError';
   }
 }
 
 const ADMIN_ORDER_LIST_SELECT =
-  "id, order_number, current_status, payable_until, created_at, paid_at, customer_email, customer_snapshot, grand_total_cents, discount_total_cents, invoice_data, shipment_data, shipped_at, order_items(line_position, line_type, product_name, brand_name, quantity, item_snapshot), order_cancellation_requests(id, status), return_cases(id, status)";
+  'id, order_number, current_status, payable_until, created_at, paid_at, customer_email, customer_snapshot, grand_total_cents, discount_total_cents, invoice_data, shipment_data, shipped_at, order_items(line_position, line_type, product_name, brand_name, quantity, item_snapshot), order_cancellation_requests(id, status), return_cases(id, status)';
 const ADMIN_ORDER_DETAIL_SELECT =
-  "cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_provider, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, updated_at, used_discount";
+  'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_provider, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, updated_at, used_discount';
 const ADMIN_ORDER_STATUSES: AdminOrderStatus[] = [...B2C_ORDER_STATUSES];
 const ADMIN_ORDER_LINE_TYPE_FILTER_SET = new Set<string>([
-  "standard",
-  "cpo",
-  "mixed",
+  'standard',
+  'cpo',
+  'mixed',
 ]);
 
 function getBooleanSearchParam(value: string | null): boolean | null {
@@ -323,11 +323,11 @@ function getBooleanSearchParam(value: string | null): boolean | null {
     return null;
   }
 
-  if (value === "true" || value === "1") {
+  if (value === 'true' || value === '1') {
     return true;
   }
 
-  if (value === "false" || value === "0") {
+  if (value === 'false' || value === '0') {
     return false;
   }
 
@@ -358,9 +358,9 @@ function parseCustomerSnapshot(
 
 function normalizeSearchValue(value: string): string {
   return value
-    .replace(/[łŁ]/g, (letter) => (letter === "Ł" ? "L" : "l"))
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[łŁ]/g, (letter) => (letter === 'Ł' ? 'L' : 'l'))
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 }
 
@@ -381,7 +381,7 @@ function customerSnapshotMatchesName(value: Json, query: string): boolean {
   return names.some((name) => normalizeSearchValue(name).includes(queryValue));
 }
 
-function parseInvoiceData(value: Json | null): AdminOrderDetail["invoice"] {
+function parseInvoiceData(value: Json | null): AdminOrderDetail['invoice'] {
   const invoice = parseOrderInvoiceData(value);
 
   return {
@@ -427,14 +427,14 @@ function parseShipmentData(
   };
 }
 
-function parseDiscountData(value: Json | null): AdminOrderDetail["discount"] {
+function parseDiscountData(value: Json | null): AdminOrderDetail['discount'] {
   return parseOrderDiscountData(value);
 }
 
 function extractProductImage(
   value: Json,
 ): NonNullable<
-  NonNullable<AdminOrderListItemSummary["leadItem"]>["productImage"]
+  NonNullable<AdminOrderListItemSummary['leadItem']>['productImage']
 > | null {
   if (!isRecord(value) || !isRecord(value.productImage)) {
     return null;
@@ -452,9 +452,9 @@ function extractProductImage(
     preview: getString(image.preview),
     alt: getString(image.alt),
     naturalWidth:
-      typeof image.naturalWidth === "number" ? image.naturalWidth : null,
+      typeof image.naturalWidth === 'number' ? image.naturalWidth : null,
     naturalHeight:
-      typeof image.naturalHeight === "number" ? image.naturalHeight : null,
+      typeof image.naturalHeight === 'number' ? image.naturalHeight : null,
   };
 }
 
@@ -481,7 +481,7 @@ function mapOrderItem(row: OrderItemRow): AdminOrderItem {
 }
 
 function mapItemSummary(
-  items: AdminOrderListRow["order_items"],
+  items: AdminOrderListRow['order_items'],
 ): AdminOrderListItemSummary {
   const sortedItems = [...(items ?? [])].sort(
     (left, right) => left.line_position - right.line_position,
@@ -494,7 +494,7 @@ function mapItemSummary(
   return {
     totalItemCount: sortedItems.reduce((sum, item) => sum + item.quantity, 0),
     lineTypes,
-    containsCpo: lineTypes.includes("cpo"),
+    containsCpo: lineTypes.includes('cpo'),
     leadItem: leadItem
       ? {
           brandName: leadItem.brand_name,
@@ -507,12 +507,12 @@ function mapItemSummary(
 
 function hasOpenRelatedRows(
   rows:
-    | Pick<ReturnCaseRow, "id" | "status">[]
-    | Pick<CancellationRequestRow, "id" | "status">[]
+    | Pick<ReturnCaseRow, 'id' | 'status'>[]
+    | Pick<CancellationRequestRow, 'id' | 'status'>[]
     | null
     | undefined,
 ) {
-  return (rows ?? []).some((row) => row.status === "open");
+  return (rows ?? []).some((row) => row.status === 'open');
 }
 
 export function mapAdminOrderListRow(
@@ -547,8 +547,8 @@ export function mapAdminOrderListRow(
 
 function parseStatuses(searchParams: URLSearchParams): AdminOrderStatus[] {
   const values = searchParams
-    .getAll("status")
-    .flatMap((value) => value.split(","))
+    .getAll('status')
+    .flatMap((value) => value.split(','))
     .map((value) => value.trim())
     .filter(Boolean);
 
@@ -568,7 +568,7 @@ function parseStatuses(searchParams: URLSearchParams): AdminOrderStatus[] {
 function parseLineType(
   searchParams: URLSearchParams,
 ): AdminOrderLineTypeFilter | null {
-  const value = searchParams.get("lineType")?.trim() ?? null;
+  const value = searchParams.get('lineType')?.trim() ?? null;
 
   if (!value) {
     return null;
@@ -585,22 +585,22 @@ export function parseAdminOrderListFilters(
   searchParams: URLSearchParams,
 ): AdminOrderListFilters {
   return {
-    q: searchParams.get("q")?.trim() || null,
+    q: searchParams.get('q')?.trim() || null,
     statuses: parseStatuses(searchParams),
     lineType: parseLineType(searchParams),
-    hasInvoice: getBooleanSearchParam(searchParams.get("hasInvoice")),
-    hasShipment: getBooleanSearchParam(searchParams.get("hasShipment")),
+    hasInvoice: getBooleanSearchParam(searchParams.get('hasInvoice')),
+    hasShipment: getBooleanSearchParam(searchParams.get('hasShipment')),
     hasOpenCancellationRequest: getBooleanSearchParam(
-      searchParams.get("hasOpenCancellationRequest"),
+      searchParams.get('hasOpenCancellationRequest'),
     ),
     hasOpenReturnCase: getBooleanSearchParam(
-      searchParams.get("hasOpenReturnCase"),
+      searchParams.get('hasOpenReturnCase'),
     ),
-    createdFrom: searchParams.get("createdFrom")?.trim() || null,
-    createdTo: searchParams.get("createdTo")?.trim() || null,
+    createdFrom: searchParams.get('createdFrom')?.trim() || null,
+    createdTo: searchParams.get('createdTo')?.trim() || null,
     includeExpiredAwaitingPayment:
       getBooleanSearchParam(
-        searchParams.get("includeExpiredAwaitingPayment"),
+        searchParams.get('includeExpiredAwaitingPayment'),
       ) ?? false,
   };
 }
@@ -616,9 +616,9 @@ function buildVisibleStatusFilter(
   const requestedStatuses =
     filters.statuses.length > 0 ? filters.statuses : ADMIN_ORDER_STATUSES;
   const includesAwaitingPayment =
-    requestedStatuses.includes("awaiting_payment");
+    requestedStatuses.includes('awaiting_payment');
   const nonAwaitingStatuses = requestedStatuses.filter(
-    (status) => status !== "awaiting_payment",
+    (status) => status !== 'awaiting_payment',
   );
 
   if (!includesAwaitingPayment) {
@@ -627,12 +627,12 @@ function buildVisibleStatusFilter(
 
   const statusFilters = [
     nonAwaitingStatuses.length > 0
-      ? `current_status.in.(${nonAwaitingStatuses.join(",")})`
+      ? `current_status.in.(${nonAwaitingStatuses.join(',')})`
       : null,
     `and(current_status.eq.awaiting_payment,payable_until.gt.${now.toISOString()})`,
   ].filter(Boolean);
 
-  return statusFilters.join(",");
+  return statusFilters.join(',');
 }
 
 function hasOrderIdPreFilters(filters: AdminOrderListFilters): boolean {
@@ -658,7 +658,7 @@ function intersectOrderIds(
 
 async function loadAllOrderIds(): Promise<Set<string>> {
   const supabase = createAdminClient();
-  const { data, error } = await supabase.from("orders").select("id");
+  const { data, error } = await supabase.from('orders').select('id');
 
   if (error) {
     throw error;
@@ -672,8 +672,8 @@ async function resolveLineTypeOrderIds(
 ): Promise<Set<string>> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("order_items")
-    .select("order_id, line_type");
+    .from('order_items')
+    .select('order_id, line_type');
 
   if (error) {
     throw error;
@@ -692,21 +692,21 @@ async function resolveLineTypeOrderIds(
 
   for (const [orderId, lineTypes] of lineTypesByOrderId.entries()) {
     if (
-      lineType === "standard" &&
+      lineType === 'standard' &&
       lineTypes.size === 1 &&
-      lineTypes.has("standard")
+      lineTypes.has('standard')
     ) {
       matchingIds.add(orderId);
     }
 
-    if (lineType === "cpo" && lineTypes.size === 1 && lineTypes.has("cpo")) {
+    if (lineType === 'cpo' && lineTypes.size === 1 && lineTypes.has('cpo')) {
       matchingIds.add(orderId);
     }
 
     if (
-      lineType === "mixed" &&
-      lineTypes.has("standard") &&
-      lineTypes.has("cpo")
+      lineType === 'mixed' &&
+      lineTypes.has('standard') &&
+      lineTypes.has('cpo')
     ) {
       matchingIds.add(orderId);
     }
@@ -725,8 +725,8 @@ async function resolveInvoiceAndShipmentOrderIds(args: {
 
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("orders")
-    .select("id, invoice_data, shipment_data, shipped_at");
+    .from('orders')
+    .select('id, invoice_data, shipment_data, shipped_at');
 
   if (error) {
     throw error;
@@ -753,13 +753,13 @@ async function resolveInvoiceAndShipmentOrderIds(args: {
 async function resolveOpenRelatedOrderIds(args: {
   allOrderIds: Set<string>;
   expected: boolean;
-  table: "order_cancellation_requests" | "return_cases";
+  table: 'order_cancellation_requests' | 'return_cases';
 }): Promise<Set<string>> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from(args.table)
-    .select("order_id")
-    .eq("status", "open");
+    .select('order_id')
+    .eq('status', 'open');
 
   if (error) {
     throw error;
@@ -779,8 +779,8 @@ async function resolveCustomerNameOrderIds(
 ): Promise<Set<string>> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("orders")
-    .select("id, customer_snapshot");
+    .from('orders')
+    .select('id, customer_snapshot');
 
   if (error) {
     throw error;
@@ -828,7 +828,7 @@ async function resolveAdminOrderIdPreFilter(
       await resolveOpenRelatedOrderIds({
         allOrderIds,
         expected: filters.hasOpenCancellationRequest,
-        table: "order_cancellation_requests",
+        table: 'order_cancellation_requests',
       }),
     );
   }
@@ -840,7 +840,7 @@ async function resolveAdminOrderIdPreFilter(
       await resolveOpenRelatedOrderIds({
         allOrderIds,
         expected: filters.hasOpenReturnCase,
-        table: "return_cases",
+        table: 'return_cases',
       }),
     );
   }
@@ -861,10 +861,14 @@ function buildStatusTimeline(
 ): AdminOrderTimelineEntry[] {
   return buildOrderStatusTimeline(row, {
     fallbackSource: (status) =>
-      status === "awaiting_payment" || status === "paid" ? "system" : "admin",
+      status === 'awaiting_payment' ||
+      status === 'awaiting_confirmation' ||
+      status === 'paid'
+        ? 'system'
+        : 'admin',
   }).map((entry) => ({
     ...entry,
-    source: entry.source ?? "unknown",
+    source: entry.source ?? 'unknown',
   }));
 }
 
@@ -897,7 +901,7 @@ function mapCancellationRequest(
 function canCreateReturnCase(args: {
   order: AdminOrderDetailRow;
   items: AdminOrderItem[];
-  invoice: AdminOrderDetail["invoice"];
+  invoice: AdminOrderDetail['invoice'];
   returnCases: AdminOrderReturnCase[];
   now: Date;
 }) {
@@ -907,14 +911,14 @@ function canCreateReturnCase(args: {
   const allItemsReturnable =
     args.items.length > 0 && args.items.every((item) => item.isReturnable);
   const hasOpenReturnCase = args.returnCases.some(
-    (returnCase) => returnCase.status === "open",
+    (returnCase) => returnCase.status === 'open',
   );
 
   return (
     returnStatusEligible &&
     allItemsReturnable &&
     !hasOpenReturnCase &&
-    args.invoice.recipientType !== "company" &&
+    args.invoice.recipientType !== 'company' &&
     isWithinReturnWindow({
       now: args.now,
       shippedAt: args.order.shipped_at,
@@ -1002,11 +1006,11 @@ function mapAdminOrderDetail(args: {
         shippedAt: args.row.shipped_at,
       }),
       canEditShipment:
-        args.row.current_status !== "cancelled" &&
-        args.row.current_status !== "returned",
-      canAttachInvoice: args.row.current_status !== "awaiting_payment",
+        args.row.current_status !== 'cancelled' &&
+        args.row.current_status !== 'returned',
+      canAttachInvoice: args.row.current_status !== 'awaiting_payment',
       canResolveCancellationRequest:
-        latestCancellationRequest?.status === "open",
+        latestCancellationRequest?.status === 'open',
       canCreateReturnCase: canCreateReturnCase({
         order: args.row,
         items,
@@ -1047,12 +1051,12 @@ export async function loadAdminOrders(input: {
 
   const supabase = createAdminClient();
   let query = supabase
-    .from("orders")
-    .select(ADMIN_ORDER_LIST_SELECT, { count: "exact" })
-    .order("created_at", { ascending: false });
+    .from('orders')
+    .select(ADMIN_ORDER_LIST_SELECT, { count: 'exact' })
+    .order('created_at', { ascending: false });
 
   if (filteredOrderIds) {
-    query = query.in("id", [...filteredOrderIds]);
+    query = query.in('id', [...filteredOrderIds]);
   }
 
   if (filters.q) {
@@ -1061,11 +1065,11 @@ export async function loadAdminOrders(input: {
       `order_number.ilike.%${filters.q}%`,
       `customer_email.ilike.%${filters.q}%`,
       customerNameOrderIds.size > 0
-        ? `id.in.(${[...customerNameOrderIds].join(",")})`
+        ? `id.in.(${[...customerNameOrderIds].join(',')})`
         : null,
     ].filter(Boolean);
 
-    query = query.or(searchFilters.join(","));
+    query = query.or(searchFilters.join(','));
   }
 
   const visibleStatusFilter = buildVisibleStatusFilter(filters, now);
@@ -1073,15 +1077,15 @@ export async function loadAdminOrders(input: {
   if (visibleStatusFilter) {
     query = query.or(visibleStatusFilter);
   } else if (filters.statuses.length > 0) {
-    query = query.in("current_status", filters.statuses);
+    query = query.in('current_status', filters.statuses);
   }
 
   if (filters.createdFrom) {
-    query = query.gte("created_at", filters.createdFrom);
+    query = query.gte('created_at', filters.createdFrom);
   }
 
   if (filters.createdTo) {
-    query = query.lte("created_at", filters.createdTo);
+    query = query.lte('created_at', filters.createdTo);
   }
 
   query = query.range(safeOffset, rangeEnd);
@@ -1116,10 +1120,10 @@ export async function loadAdminOrders(input: {
 async function loadOrderItems(orderId: string): Promise<OrderItemRow[]> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("order_items")
-    .select("*")
-    .eq("order_id", orderId)
-    .order("line_position", { ascending: true });
+    .from('order_items')
+    .select('*')
+    .eq('order_id', orderId)
+    .order('line_position', { ascending: true });
 
   if (error) {
     throw error;
@@ -1131,10 +1135,10 @@ async function loadOrderItems(orderId: string): Promise<OrderItemRow[]> {
 async function loadReturnCases(orderId: string): Promise<ReturnCaseRow[]> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("return_cases")
-    .select("*")
-    .eq("order_id", orderId)
-    .order("created_at", { ascending: false });
+    .from('return_cases')
+    .select('*')
+    .eq('order_id', orderId)
+    .order('created_at', { ascending: false });
 
   if (error) {
     throw error;
@@ -1148,10 +1152,10 @@ async function loadCancellationRequests(
 ): Promise<CancellationRequestRow[]> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("order_cancellation_requests")
-    .select("*")
-    .eq("order_id", orderId)
-    .order("requested_at", { ascending: false });
+    .from('order_cancellation_requests')
+    .select('*')
+    .eq('order_id', orderId)
+    .order('requested_at', { ascending: false });
 
   if (error) {
     throw error;
@@ -1167,9 +1171,9 @@ export async function loadAdminOrderDetail(input: {
   const now = input.now ?? new Date();
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("orders")
+    .from('orders')
     .select(ADMIN_ORDER_DETAIL_SELECT)
-    .eq("order_number", input.orderNumber)
+    .eq('order_number', input.orderNumber)
     .maybeSingle();
 
   if (error) {
@@ -1179,7 +1183,7 @@ export async function loadAdminOrderDetail(input: {
   const row = data as AdminOrderDetailRow | null;
 
   if (!row) {
-    return { kind: "not_found" };
+    return { kind: 'not_found' };
   }
 
   const [items, returnCases, cancellationRequests] = await Promise.all([
@@ -1189,7 +1193,7 @@ export async function loadAdminOrderDetail(input: {
   ]);
 
   return {
-    kind: "found",
+    kind: 'found',
     order: mapAdminOrderDetail({
       row,
       items,
@@ -1205,8 +1209,8 @@ export const adminOrderTesting = {
   getAllowedNextStatuses: (status: string) =>
     getAdminAllowedNextStatuses({
       currentStatus: status,
-      now: new Date("2026-05-06T08:00:00.000Z"),
-      shippedAt: "2026-05-01T08:00:00.000Z",
+      now: new Date('2026-05-06T08:00:00.000Z'),
+      shippedAt: '2026-05-01T08:00:00.000Z',
     }),
   getAllowedNextStatusesForOrder: getAdminAllowedNextStatuses,
   mapAdminOrderListRow,

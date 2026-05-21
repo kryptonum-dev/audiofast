@@ -155,7 +155,7 @@ function mapRawP24NotificationPayload(
   return {
     provider: 'przelewy24',
     checkoutOrderId: '',
-    orderNumber: payload.sessionId,
+    orderNumber: payload.statement,
     merchantId: payload.merchantId,
     posId: payload.posId,
     orderId: payload.orderId,

@@ -28,7 +28,7 @@ const CHECKOUT_THANK_YOU_STATE_DEFINITIONS: Record<
     id: 'paid',
     title: 'Dziękujemy za złożenie zamówienia',
     description:
-      'Zamówienie zostało potwierdzone w naszym systemie. O kolejnych etapach jego realizacji będziemy informować Cię mailowo.',
+      'Płatność została potwierdzona. Zamówienie oczekuje teraz na potwierdzenie realizacji przez Audiofast, a o kolejnych etapach będziemy informować Cię mailowo.',
     shouldPoll: false,
     showSupportContact: false,
   },

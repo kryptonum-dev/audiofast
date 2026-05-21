@@ -12,16 +12,19 @@ import {
 
 describe('B2C status utilities', () => {
   it('recognizes accepted order statuses', () => {
+    expect(isB2cOrderStatus('awaiting_confirmation')).toBe(true);
     expect(isB2cOrderStatus('paid')).toBe(true);
     expect(isB2cOrderStatus('processing')).toBe(true);
     expect(isB2cOrderStatus('unknown')).toBe(false);
   });
 
   it('returns admin forward transitions', () => {
+    expect(getAdminAllowedNextOrderStatuses('awaiting_confirmation')).toEqual([
+      'processing',
+      'cancelled',
+    ]);
     expect(getAdminAllowedNextOrderStatuses('paid')).toEqual([
       'processing',
-      'shipped',
-      'completed',
       'cancelled',
     ]);
     expect(getAdminAllowedNextOrderStatuses('shipped')).toEqual([
@@ -51,6 +54,7 @@ describe('B2C status utilities', () => {
   });
 
   it('checks cancellation and return eligible statuses', () => {
+    expect(isCancellableOrderStatus('awaiting_confirmation')).toBe(true);
     expect(isCancellableOrderStatus('paid')).toBe(true);
     expect(isCancellableOrderStatus('processing')).toBe(true);
     expect(isCancellableOrderStatus('shipped')).toBe(false);

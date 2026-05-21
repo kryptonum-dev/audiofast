@@ -99,7 +99,7 @@ function createPaidOrderRow(overrides: Record<string, unknown> = {}) {
   return {
     id: 'order-1',
     order_number: 'AF-2026-00001',
-    current_status: 'paid',
+    current_status: 'awaiting_confirmation',
     customer_email: 'Jan@Example.com',
     customer_profile_id: null,
     customer_snapshot: {
@@ -134,6 +134,7 @@ function createPaidOrderRow(overrides: Record<string, unknown> = {}) {
       storagePath: null,
       attachedAt: null,
     },
+    paid_at: '2026-04-22T10:00:00.000Z',
     profile_persistence: {
       shouldEnsureProfileAfterSuccessfulPayment: true,
       shouldStoreCheckoutDefaultsAfterSuccessfulPayment: true,

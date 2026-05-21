@@ -57,8 +57,8 @@ export function OrderConfirmationTemplate({
         <Text style={heroText}>
           Witaj {customerFirstName}, płatność za zamówienie{' '}
           <strong style={strongText}>{orderNumber}</strong> została
-          zweryfikowana. O kolejnych etapach realizacji będziemy informować Cię
-          mailowo.
+          zweryfikowana. Zamówienie oczekuje teraz na potwierdzenie realizacji
+          przez Audiofast. O kolejnych etapach będziemy informować Cię mailowo.
         </Text>
         <Text style={heroMeta}>
           Dostęp do twojego zamówienia jest przypisany do adresu{' '}

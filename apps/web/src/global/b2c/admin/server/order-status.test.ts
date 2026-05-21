@@ -21,7 +21,7 @@ describe('admin order status transitions', () => {
       buildAdminOrderStatusUpdatePayload({
         actor: OPERATOR,
         changedAt: '2026-05-06T08:00:00.000Z',
-        currentStatus: 'paid',
+        currentStatus: 'processing',
         nextStatus: 'shipped',
         note: 'Nadane kurierem',
         shippedAt: null,
@@ -29,7 +29,7 @@ describe('admin order status transitions', () => {
           {
             changedAt: '2026-05-06T07:00:00.000Z',
             source: 'system',
-            status: 'paid',
+            status: 'processing',
           },
         ],
       }),
@@ -40,7 +40,7 @@ describe('admin order status transitions', () => {
         {
           changedAt: '2026-05-06T07:00:00.000Z',
           source: 'system',
-          status: 'paid',
+          status: 'processing',
         },
         {
           actorEmail: 'operator@example.com',
@@ -49,7 +49,7 @@ describe('admin order status transitions', () => {
           actorName: 'Operator',
           changedAt: '2026-05-06T08:00:00.000Z',
           note: 'Nadane kurierem',
-          previousStatus: 'paid',
+          previousStatus: 'processing',
           source: 'admin',
           status: 'shipped',
         },

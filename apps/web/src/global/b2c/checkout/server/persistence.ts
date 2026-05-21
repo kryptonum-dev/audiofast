@@ -30,6 +30,7 @@ function getCheckoutOrderCreatedAt(orderDraft: CheckoutOrderDraft): string {
 
 export function mapCheckoutOrderDraftToOrdersInsert(args: {
   orderNumber: string;
+  paymentSessionId: string;
   orderDraft: CheckoutOrderDraft;
 }): OrdersInsert {
   const createdAt = getCheckoutOrderCreatedAt(args.orderDraft);
@@ -42,6 +43,7 @@ export function mapCheckoutOrderDraftToOrdersInsert(args: {
     status_history: args.orderDraft.statusHistory,
     payable_until: args.orderDraft.payableUntil,
     payment_provider: args.orderDraft.paymentProvider,
+    payment_session_id: args.paymentSessionId,
     payment_reference: args.orderDraft.paymentReference,
     payment_verified_at: args.orderDraft.paymentVerifiedAt,
     profile_persistence: args.orderDraft.profilePersistence,
@@ -102,6 +104,7 @@ async function cleanupFailedOrderInsert(orderId: string): Promise<void> {
 
 export async function persistCheckoutOrder(args: {
   orderNumber: string;
+  paymentSessionId: string;
   orderDraft: CheckoutOrderDraft;
 }): Promise<PersistCheckoutOrderResult> {
   const supabase = createAdminClient();
@@ -146,6 +149,7 @@ export async function persistCheckoutOrder(args: {
   return {
     orderId: orderRow.id,
     orderNumber: orderRow.order_number,
+    paymentSessionId: args.paymentSessionId,
     createdAt: orderRow.created_at,
     orderDraft: args.orderDraft,
     insertedItemCount: orderItems?.length ?? orderItemsInsert.length,

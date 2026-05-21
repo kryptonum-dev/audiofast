@@ -1,5 +1,6 @@
 export const B2C_ORDER_STATUSES = [
   'awaiting_payment',
+  'awaiting_confirmation',
   'paid',
   'processing',
   'shipped',
@@ -15,7 +16,8 @@ export const B2C_RETURN_WINDOW_DAYS = 14;
 const B2C_ORDER_STATUS_SET = new Set<string>(B2C_ORDER_STATUSES);
 const ADMIN_ORDER_TRANSITIONS: Record<B2cOrderStatus, B2cOrderStatus[]> = {
   awaiting_payment: [],
-  paid: ['processing', 'shipped', 'completed', 'cancelled'],
+  awaiting_confirmation: ['processing', 'cancelled'],
+  paid: ['processing', 'cancelled'],
   processing: ['shipped', 'completed', 'cancelled'],
   shipped: ['completed', 'returned'],
   completed: ['returned'],
@@ -49,7 +51,11 @@ export function getAdminAllowedNextOrderStatusesForOrder(args: {
 }
 
 export function isCancellableOrderStatus(status: string): boolean {
-  return status === 'paid' || status === 'processing';
+  return (
+    status === 'awaiting_confirmation' ||
+    status === 'paid' ||
+    status === 'processing'
+  );
 }
 
 export function isReturnEligibleOrderStatus(status: string): boolean {

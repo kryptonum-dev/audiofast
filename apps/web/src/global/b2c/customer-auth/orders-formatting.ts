@@ -10,6 +10,7 @@ export type CustomerOrderStatusTone =
   | 'neutral';
 
 const ORDER_STATUS_LABELS: Record<string, string> = {
+  awaiting_confirmation: 'Oczekiwanie na potwierdzenie',
   paid: 'Opłacone',
   processing: 'W realizacji',
   shipped: 'Wysłane',
@@ -48,6 +49,7 @@ export function getCustomerOrderStatusTone(
   }
 
   switch (order.currentStatus) {
+    case 'awaiting_confirmation':
     case 'paid':
     case 'completed':
       return 'success';
@@ -62,6 +64,30 @@ export function getCustomerOrderStatusTone(
     default:
       return 'neutral';
   }
+}
+
+export function getCustomerPaymentStatusLabel(
+  order: Pick<CustomerOrdersListItem, 'currentStatus' | 'accessKind'> & {
+    paidAt?: string | null;
+    paymentVerifiedAt?: string | null;
+  },
+): string {
+  if (order.paidAt || order.paymentVerifiedAt) {
+    return 'Opłacone';
+  }
+
+  if (
+    order.accessKind === 'awaiting_payment_active' ||
+    order.currentStatus === 'awaiting_payment'
+  ) {
+    return 'Oczekuje na płatność';
+  }
+
+  return 'Brak potwierdzenia płatności';
+}
+
+export function getCustomerTimelineStatusLabel(status: string): string {
+  return ORDER_STATUS_LABELS[status] ?? status;
 }
 
 const ORDER_DATE_FORMATTER = new Intl.DateTimeFormat('pl-PL', {

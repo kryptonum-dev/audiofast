@@ -13,7 +13,10 @@ import type {
   CheckoutSubmitInput,
 } from './types';
 
-export type CheckoutOrderStatus = 'awaiting_payment' | 'paid';
+export type CheckoutOrderStatus =
+  | 'awaiting_payment'
+  | 'awaiting_confirmation'
+  | 'paid';
 
 export type CheckoutStatusHistoryEntry = {
   status: CheckoutOrderStatus;

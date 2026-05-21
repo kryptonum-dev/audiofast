@@ -1,6 +1,6 @@
 import {
   formatCustomerOrderDateTime,
-  getCustomerOrderStatusLabel,
+  getCustomerTimelineStatusLabel,
 } from "@/src/global/b2c/customer-auth/orders-formatting";
 import type { CustomerOrderDetail } from "@/src/global/b2c/customer-auth/server/order-detail";
 import { formatPrice } from "@/src/global/utils";
@@ -24,13 +24,7 @@ export default function TimelineSummarySection({
               <span className={styles.timelineMarker} aria-hidden="true" />
               <div className={styles.timelineContent}>
                 <strong>
-                  {getCustomerOrderStatusLabel({
-                    currentStatus: entry.status,
-                    accessKind:
-                      entry.status === "awaiting_payment"
-                        ? "awaiting_payment_active"
-                        : "customer_visible",
-                  })}
+                  {getCustomerTimelineStatusLabel(entry.status)}
                 </strong>
                 <span>{formatCustomerOrderDateTime(entry.changedAt)}</span>
               </div>

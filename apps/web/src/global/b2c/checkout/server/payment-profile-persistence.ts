@@ -26,6 +26,7 @@ type PaidOrderProfilePersistenceRow = Pick<
   | 'id'
   | 'invoice_data'
   | 'order_number'
+  | 'paid_at'
   | 'profile_persistence'
   | 'shipping_address_snapshot'
 >;
@@ -298,7 +299,7 @@ async function loadPaidOrderProfilePersistenceData(
   const { data, error } = await supabase
     .from('orders')
     .select(
-      'current_status, customer_email, customer_profile_id, customer_snapshot, id, invoice_data, order_number, profile_persistence, shipping_address_snapshot',
+      'current_status, customer_email, customer_profile_id, customer_snapshot, id, invoice_data, order_number, paid_at, profile_persistence, shipping_address_snapshot',
     )
     .eq('id', orderId)
     .single();
@@ -486,6 +487,7 @@ async function createOrResolveCustomerProfile(args: {
           id: 'recovery',
           invoice_data: null,
           order_number: 'recovery',
+          paid_at: new Date(0).toISOString(),
           profile_persistence: null,
           shipping_address_snapshot: {},
         },
@@ -681,9 +683,9 @@ export async function persistPaidCheckoutOrderProfile(args: {
 }): Promise<PersistPaidOrderProfileResult> {
   const order = await loadPaidOrderProfilePersistenceData(args.orderId);
 
-  if (order.current_status !== 'paid') {
+  if (order.paid_at === null) {
     throw new CheckoutPaymentProfilePersistenceError(
-      `Checkout order ${order.order_number} is not in paid state.`,
+      `Checkout order ${order.order_number} has no confirmed payment timestamp.`,
       'invalid_order_state',
     );
   }

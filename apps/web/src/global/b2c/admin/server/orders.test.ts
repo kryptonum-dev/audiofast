@@ -171,10 +171,12 @@ describe('admin order helpers', () => {
   });
 
   it('returns allowed admin status transitions', () => {
+    expect(adminOrderTesting.getAllowedNextStatuses('awaiting_confirmation')).toEqual([
+      'processing',
+      'cancelled',
+    ]);
     expect(adminOrderTesting.getAllowedNextStatuses('paid')).toEqual([
       'processing',
-      'shipped',
-      'completed',
       'cancelled',
     ]);
     expect(

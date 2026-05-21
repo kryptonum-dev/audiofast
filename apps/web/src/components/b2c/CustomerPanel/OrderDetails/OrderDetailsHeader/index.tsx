@@ -76,10 +76,7 @@ export default function OrderDetailsHeader({ order }: OrderDetailsHeaderProps) {
             label="Liczba produktów"
             value={renderLineCount(order.items)}
           />
-          <DetailRow
-            label="Status płatności"
-            value={isAwaitingPayment ? 'Oczekuje na płatność' : statusLabel}
-          />
+          <DetailRow label="Status zamówienia" value={statusLabel} />
           <DetailRow
             label="Data zamówienia"
             value={formatCustomerOrderDateTime(order.createdAt)}

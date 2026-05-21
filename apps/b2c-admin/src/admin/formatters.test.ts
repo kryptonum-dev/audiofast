@@ -6,6 +6,7 @@ import {
   formatCouponScope,
   formatLineType,
   formatOrderStatus,
+  formatPaymentStatus,
 } from "./formatters.js";
 import type { AdminCoupon } from "./types.js";
 
@@ -28,8 +29,28 @@ const BASE_COUPON: AdminCoupon = {
 
 describe("admin formatters", () => {
   it("formats known and unknown order statuses", () => {
+    expect(formatOrderStatus("awaiting_confirmation")).toBe(
+      "Oczekiwanie na potwierdzenie",
+    );
     expect(formatOrderStatus("paid")).toBe("Opłacone");
     expect(formatOrderStatus("custom_status")).toBe("custom_status");
+  });
+
+  it("formats payment status separately from order lifecycle status", () => {
+    expect(
+      formatPaymentStatus({
+        currentStatus: "awaiting_confirmation",
+        paidAt: "2026-05-21T05:00:00.000Z",
+        verifiedAt: null,
+      }),
+    ).toBe("Opłacone");
+    expect(
+      formatPaymentStatus({
+        currentStatus: "awaiting_payment",
+        paidAt: null,
+        verifiedAt: null,
+      }),
+    ).toBe("Oczekuje na płatność");
   });
 
   it("formats order line-type combinations", () => {

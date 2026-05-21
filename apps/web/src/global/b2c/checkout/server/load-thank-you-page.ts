@@ -33,7 +33,7 @@ type ThankYouOrderItemRow = Database['public']['Tables']['order_items']['Row'];
 
 type CheckoutThankYouResolvableOrderStatus = Extract<
   CheckoutOrderStatus,
-  'awaiting_payment' | 'paid'
+  'awaiting_payment' | 'awaiting_confirmation' | 'paid'
 >;
 
 export type LoadThankYouPageInput = {
@@ -122,7 +122,11 @@ function buildPurchaseAnalyticsPayload(args: {
 function normalizeResolvableOrderStatus(
   value: string,
 ): CheckoutThankYouResolvableOrderStatus | null {
-  if (value === 'awaiting_payment' || value === 'paid') {
+  if (
+    value === 'awaiting_payment' ||
+    value === 'awaiting_confirmation' ||
+    value === 'paid'
+  ) {
     return value;
   }
 
@@ -179,14 +183,19 @@ function resolvePersistedOrderState(
     currentStatusJson: JSON.stringify(order.current_status),
     currentStatusCharCodes: getStatusCharCodes(order.current_status),
     normalizedStatus,
-    isPaidStatus: normalizedStatus === 'paid',
+    isPaidStatus:
+      normalizedStatus === 'awaiting_confirmation' ||
+      normalizedStatus === 'paid',
     isAwaitingPaymentStatus: normalizedStatus === 'awaiting_payment',
     payableUntil: order.payable_until,
     now,
     expired,
   });
 
-  if (normalizedStatus === 'paid') {
+  if (
+    normalizedStatus === 'awaiting_confirmation' ||
+    normalizedStatus === 'paid'
+  ) {
     console.log('[thank-you] selected paid state', {
       orderNumber: order.order_number,
       currentStatus: order.current_status,

@@ -30,6 +30,7 @@ export type LoadCheckoutPageData = {
 export type PersistCheckoutOrderResult = {
   orderId: string;
   orderNumber: string;
+  paymentSessionId: string;
   createdAt: string;
   orderDraft: CheckoutOrderDraft;
   insertedItemCount: number;

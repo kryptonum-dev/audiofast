@@ -71,6 +71,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
       data: {
         id: 'order-1',
         order_number: 'AF-2026-00001',
+        payment_session_id: 'AF-2026-00001-session123',
         current_status: 'awaiting_payment',
         customer_email: 'jan@example.com',
         customer_snapshot: {
@@ -109,7 +110,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
     vi.mocked(confirmCheckoutOrderPayment).mockResolvedValueOnce({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       statusHistory: [],
       paymentReference: 'mock-p24-payment-af202600001',
       paymentVerifiedAt: '2026-04-21T10:00:00.000Z',
@@ -125,7 +126,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
         merchantId: 999999,
         posId: 999999,
         orderId: 202600001,
-        sessionId: 'AF-2026-00001',
+        sessionId: 'AF-2026-00001-session123',
         method: 0,
         result: {
           generalStatus: 'done',
@@ -143,6 +144,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
         amount: 230_00,
         currency: 'PLN',
         orderId: 202600001,
+        sessionId: 'AF-2026-00001-session123',
         paymentId: 'mock-p24-payment-af202600001',
       }),
     );
@@ -165,7 +167,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
       providerStatus: 'done',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       wasConfirmed: true,
       wasAlreadyPaid: false,
     });
@@ -250,7 +252,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
     vi.mocked(confirmCheckoutOrderPayment).mockResolvedValueOnce({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       statusHistory: [],
       paymentReference: 'mock-p24-payment-af202600001',
       paymentVerifiedAt: '2026-04-21T10:00:00.000Z',
@@ -283,7 +285,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
       providerStatus: 'done',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       wasConfirmed: true,
       wasAlreadyPaid: true,
     });
@@ -294,7 +296,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
       data: {
         id: 'order-1',
         order_number: 'AF-2026-00001',
-        current_status: 'paid',
+        current_status: 'awaiting_confirmation',
         customer_email: 'jan@example.com',
         customer_snapshot: {},
         discount_total_cents: 0,
@@ -319,7 +321,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
     vi.mocked(confirmCheckoutOrderPayment).mockResolvedValueOnce({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       statusHistory: [],
       paymentReference: 'mock-p24-payment-af202600001',
       paymentVerifiedAt: '2026-04-21T10:00:00.000Z',
@@ -381,7 +383,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
     vi.mocked(confirmCheckoutOrderPayment).mockResolvedValueOnce({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       statusHistory: [],
       paymentReference: 'mock-p24-payment-af202600001',
       paymentVerifiedAt: '2026-04-21T10:00:00.000Z',
@@ -414,7 +416,7 @@ describe('handleCheckoutPaymentStatusNotification', () => {
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
       providerStatus: 'done',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       wasConfirmed: true,
       wasAlreadyPaid: false,
     });

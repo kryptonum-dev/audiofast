@@ -23,7 +23,10 @@ import {
   createCheckoutPaymentAmountTooHighError,
 } from '../errors';
 import { buildCheckoutOrderDraft } from '../order-draft';
-import { buildP24TransactionRegistrationInput } from '../payment-contracts';
+import {
+  buildP24PaymentSessionId,
+  buildP24TransactionRegistrationInput,
+} from '../payment-contracts';
 import { isOnlinePaymentAmountOverLimit } from '../payment-limit';
 import { decideCheckoutProfilePersistence } from '../profile';
 import { buildCheckoutOrderSummary } from '../summary';
@@ -31,6 +34,7 @@ import type { CheckoutSubmitInput } from '../types';
 import { validateCheckoutSubmitInput } from '../validation';
 import { loadCheckoutAuthContext } from './auth-context';
 import { generateNextCheckoutOrderNumber } from './order-number';
+import { getP24Mode } from './p24-config';
 import { CheckoutPersistenceError, persistCheckoutOrder } from './persistence';
 import {
   type CheckoutSubmitResult,
@@ -40,6 +44,7 @@ import {
 const CHECKOUT_P24_RETURN_PATH = '/podziekowania-za-zakup/';
 const CHECKOUT_P24_STATUS_PATH = '/api/payment/status/';
 const ORDER_NUMBER_RETRY_LIMIT = 3;
+const P24_STATUS_CALLBACK_BASE_URL_ENV = 'P24_STATUS_CALLBACK_BASE_URL';
 
 function buildCheckoutReturnPath(orderNumber: string): string {
   return `${CHECKOUT_P24_RETURN_PATH}${encodeURIComponent(orderNumber)}/`;
@@ -51,6 +56,36 @@ function serializeLineIssues(issues: CartLineIssue[]) {
     blocking: issue.blocking,
     message: issue.message,
   }));
+}
+
+function isLocalhostOrigin(origin: string): boolean {
+  try {
+    const hostname = new URL(origin).hostname;
+
+    return hostname === 'localhost' || hostname === '127.0.0.1';
+  } catch {
+    return false;
+  }
+}
+
+function resolveP24StatusCallbackBaseUrl(fallbackBaseUrl: string): string {
+  const configuredBaseUrl =
+    process.env[P24_STATUS_CALLBACK_BASE_URL_ENV]?.trim();
+
+  if (configuredBaseUrl) {
+    return configuredBaseUrl;
+  }
+
+  if (getP24Mode() !== 'mock' && isLocalhostOrigin(fallbackBaseUrl)) {
+    console.warn('P24 status callback URL is using localhost.', {
+      urlStatus: new URL(CHECKOUT_P24_STATUS_PATH, fallbackBaseUrl).toString(),
+      expectedEnv: P24_STATUS_CALLBACK_BASE_URL_ENV,
+      reason:
+        'Przelewy24 server callbacks cannot reach localhost. Use an HTTPS tunnel or deployed URL for local sandbox testing.',
+    });
+  }
+
+  return fallbackBaseUrl;
 }
 
 function didCartLineChange(
@@ -120,13 +155,14 @@ function buildCheckoutPaymentUrls(args: {
   orderNumber: string;
 }) {
   const baseUrl = args.origin ?? BASE_URL;
+  const statusBaseUrl = resolveP24StatusCallbackBaseUrl(baseUrl);
 
   return {
     urlReturn: new URL(
       buildCheckoutReturnPath(args.orderNumber),
       baseUrl,
     ).toString(),
-    urlStatus: new URL(CHECKOUT_P24_STATUS_PATH, baseUrl).toString(),
+    urlStatus: new URL(CHECKOUT_P24_STATUS_PATH, statusBaseUrl).toString(),
   };
 }
 
@@ -250,10 +286,12 @@ export async function submitCheckoutOrder(args: {
       const orderNumber = await generateNextCheckoutOrderNumber(
         new Date(createdAt),
       );
+      const paymentSessionId = buildP24PaymentSessionId(orderNumber);
 
       try {
         persistedOrder = await persistCheckoutOrder({
           orderNumber,
+          paymentSessionId,
           orderDraft,
         });
         break;
@@ -285,6 +323,7 @@ export async function submitCheckoutOrder(args: {
     const paymentRegistrationInput = buildP24TransactionRegistrationInput({
       orderId: persistedOrder.orderId,
       orderNumber: persistedOrder.orderNumber,
+      paymentSessionId: persistedOrder.paymentSessionId,
       orderDraft,
       urlReturn: paymentUrls.urlReturn,
       urlStatus: paymentUrls.urlStatus,

@@ -88,6 +88,7 @@ export type AdminCouponsResult = {
 
 export type AdminOrderStatus =
   | "awaiting_payment"
+  | "awaiting_confirmation"
   | "paid"
   | "processing"
   | "shipped"

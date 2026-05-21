@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildP24PaymentSessionId,
   buildP24TransactionRegistrationInput,
   type P24TransactionRegisterCartItem,
 } from './payment-contracts';
@@ -99,15 +100,26 @@ function getP24CartTotal(cart: P24TransactionRegisterCartItem[]): number {
 }
 
 describe('buildP24TransactionRegistrationInput', () => {
+  it('builds a unique P24 payment session id from the order number', () => {
+    expect(
+      buildP24PaymentSessionId(
+        'AF-2026-00033',
+        '12345678-90ab-cdef-1234-567890abcdef',
+      ),
+    ).toBe('AF-2026-00033-1234567890ab');
+  });
+
   it('keeps the P24 cart total equal to the discounted transaction amount', () => {
     const registrationInput = buildP24TransactionRegistrationInput({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00033',
+      paymentSessionId: 'AF-2026-00033-session123',
       orderDraft: createOrderDraft(),
       urlReturn: 'https://audiofast.pl/podziekowania-za-zakup/AF-2026-00033/',
       urlStatus: 'https://audiofast.pl/api/payment/status/',
     });
 
+    expect(registrationInput.sessionId).toBe('AF-2026-00033-session123');
     expect(registrationInput.amount).toBe(400_00);
     expect(getP24CartTotal(registrationInput.cart)).toBe(
       registrationInput.amount,

@@ -124,6 +124,7 @@ function createValidInput(): CheckoutSubmitInput {
 describe('submitCheckout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.unstubAllEnvs();
 
     vi.mocked(headers).mockResolvedValue(
       new Headers({
@@ -264,6 +265,7 @@ describe('submitCheckout', () => {
     vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
       orderId: 'order-10',
       orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
       createdAt: '2026-04-20T10:10:00.000Z',
       orderDraft: args.orderDraft,
       insertedItemCount: args.orderDraft.items.length,
@@ -316,6 +318,7 @@ describe('submitCheckout', () => {
     vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
       orderId: 'order-1',
       orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
       createdAt: '2026-04-20T10:00:00.000Z',
       orderDraft: args.orderDraft,
       insertedItemCount: args.orderDraft.items.length,
@@ -338,6 +341,7 @@ describe('submitCheckout', () => {
         provider: 'przelewy24',
         checkoutOrderId: 'order-1',
         orderNumber: 'AF-2026-00001',
+        sessionId: expect.stringMatching(/^AF-2026-00001-[a-f0-9]{12}$/),
         amount: 150_00,
         currency: 'PLN',
         email: 'jan@example.com',
@@ -403,6 +407,7 @@ describe('submitCheckout', () => {
     vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
       orderId: 'order-11',
       orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
       createdAt: '2026-04-20T10:00:00.000Z',
       orderDraft: args.orderDraft,
       insertedItemCount: args.orderDraft.items.length,
@@ -420,6 +425,49 @@ describe('submitCheckout', () => {
           'https://audiofast-git-b2c-kryptonum.vercel.app/podziekowania-za-zakup/AF-2026-00011/',
         urlStatus:
           'https://audiofast-git-b2c-kryptonum.vercel.app/api/payment/status/',
+      }),
+    });
+  });
+
+  it('uses a configured public base URL for P24 status callbacks', async () => {
+    const cart = createValidCart();
+
+    vi.stubEnv(
+      'P24_STATUS_CALLBACK_BASE_URL',
+      'https://checkout-callback.example.com',
+    );
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 150_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00012',
+    );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-12',
+      orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
+      createdAt: '2026-04-20T10:00:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+
+    const result = await submitCheckout(createValidInput(), cart);
+
+    expect(result.ok).toBe(true);
+    expect(result.ok ? result.value.redirectUrl : null).toBe(
+      'http://localhost:3000/podziekowania-za-zakup/AF-2026-00012/',
+    );
+    expect(startCheckoutPayment).toHaveBeenCalledWith({
+      paymentRegistrationInput: expect.objectContaining({
+        urlReturn:
+          'http://localhost:3000/podziekowania-za-zakup/AF-2026-00012/',
+        urlStatus: 'https://checkout-callback.example.com/api/payment/status/',
       }),
     });
   });
@@ -442,6 +490,7 @@ describe('submitCheckout', () => {
     vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
       orderId: 'order-3',
       orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
       createdAt: '2026-04-20T10:06:00.000Z',
       orderDraft: args.orderDraft,
       insertedItemCount: args.orderDraft.items.length,
@@ -478,6 +527,7 @@ describe('submitCheckout', () => {
     vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
       orderId: 'order-4',
       orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
       createdAt: '2026-04-20T10:07:00.000Z',
       orderDraft: args.orderDraft,
       insertedItemCount: args.orderDraft.items.length,
@@ -518,6 +568,7 @@ describe('submitCheckout', () => {
     vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
       orderId: 'order-5',
       orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
       createdAt: '2026-04-20T10:08:00.000Z',
       orderDraft: args.orderDraft,
       insertedItemCount: args.orderDraft.items.length,
@@ -561,6 +612,7 @@ describe('submitCheckout', () => {
       .mockImplementationOnce(async (args) => ({
         orderId: 'order-2',
         orderNumber: args.orderNumber,
+        paymentSessionId: args.paymentSessionId,
         createdAt: '2026-04-20T10:05:00.000Z',
         orderDraft: args.orderDraft,
         insertedItemCount: args.orderDraft.items.length,

@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 
 import {
   CHECKOUT_PAYMENT_WINDOW_MINUTES,
@@ -226,16 +226,26 @@ function buildP24CartItems(args: {
   ];
 }
 
+export function buildP24PaymentSessionId(
+  orderNumber: string,
+  randomValue: string = randomUUID(),
+): string {
+  const suffix = randomValue.replace(/-/g, '').slice(0, 12);
+
+  return `${orderNumber}-${suffix}`;
+}
+
 export function buildP24TransactionRegistrationInput(args: {
   orderId: string;
   orderNumber: string;
+  paymentSessionId: string;
   orderDraft: CheckoutOrderDraft;
   urlReturn: string;
   urlStatus: string;
 }): P24TransactionRegistrationInput {
   const merchantId = MOCK_P24_MERCHANT_ID;
   const posId = MOCK_P24_POS_ID;
-  const sessionId = args.orderNumber;
+  const sessionId = args.paymentSessionId;
   const amount = args.orderDraft.grandTotalCents;
   const currency: P24Currency = 'PLN';
 

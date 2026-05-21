@@ -1,64 +1,64 @@
-import "server-only";
+import 'server-only';
 
-import type { SanityRawImage } from "@/src/components/shared/Image";
+import type { SanityRawImage } from '@/src/components/shared/Image';
 import {
   buildOrderStatusTimeline,
   formatPersonName,
   getString,
   isRecord,
+  type OrderAddressBlock,
+  type ParsedOrderInvoiceData,
   parseOrderDiscountData,
   parseOrderInvoiceData,
   parseOrderItemSnapshot,
   parseOrderShipmentData,
   parseOrderShippingAddressSnapshot,
-  type OrderAddressBlock,
-  type ParsedOrderInvoiceData,
-} from "@/src/global/b2c/utils/orders";
+} from '@/src/global/b2c/utils/orders';
 import {
   isCancellableOrderStatus,
   isReturnEligibleOrderStatus,
   isWithinReturnWindow,
-} from "@/src/global/b2c/utils/statuses";
-import { createAdminClient } from "@/src/global/supabase/admin";
-import type { Database, Json } from "@/src/global/supabase/database.types";
+} from '@/src/global/b2c/utils/statuses';
+import { createAdminClient } from '@/src/global/supabase/admin';
+import type { Database, Json } from '@/src/global/supabase/database.types';
 
 import {
   classifyCustomerAuthOrderAccess,
   type CustomerAuthOrderAccessKind,
   isEligibleCustomerAuthOrderAccessKind,
-} from "../eligibility";
+} from '../eligibility';
 
-type OrderRow = Database["public"]["Tables"]["orders"]["Row"];
-type OrderItemRow = Database["public"]["Tables"]["order_items"]["Row"];
-type ReturnCaseRow = Database["public"]["Tables"]["return_cases"]["Row"];
+type OrderRow = Database['public']['Tables']['orders']['Row'];
+type OrderItemRow = Database['public']['Tables']['order_items']['Row'];
+type ReturnCaseRow = Database['public']['Tables']['return_cases']['Row'];
 type CancellationRequestRow =
-  Database["public"]["Tables"]["order_cancellation_requests"]["Row"];
+  Database['public']['Tables']['order_cancellation_requests']['Row'];
 
 type CustomerOrderDetailRow = Pick<
   OrderRow,
-  | "cancelled_at"
-  | "completed_at"
-  | "created_at"
-  | "current_status"
-  | "customer_email"
-  | "customer_snapshot"
-  | "discount_total_cents"
-  | "grand_total_cents"
-  | "id"
-  | "invoice_data"
-  | "order_number"
-  | "paid_at"
-  | "payable_until"
-  | "payment_reference"
-  | "payment_verified_at"
-  | "returned_at"
-  | "shipment_data"
-  | "shipped_at"
-  | "shipping_address_snapshot"
-  | "status_history"
-  | "subtotal_cents"
-  | "used_discount"
-  | "updated_at"
+  | 'cancelled_at'
+  | 'completed_at'
+  | 'created_at'
+  | 'current_status'
+  | 'customer_email'
+  | 'customer_snapshot'
+  | 'discount_total_cents'
+  | 'grand_total_cents'
+  | 'id'
+  | 'invoice_data'
+  | 'order_number'
+  | 'paid_at'
+  | 'payable_until'
+  | 'payment_reference'
+  | 'payment_verified_at'
+  | 'returned_at'
+  | 'shipment_data'
+  | 'shipped_at'
+  | 'shipping_address_snapshot'
+  | 'status_history'
+  | 'subtotal_cents'
+  | 'used_discount'
+  | 'updated_at'
 >;
 
 export type CustomerOrderAddressBlock = OrderAddressBlock;
@@ -70,7 +70,7 @@ export type CustomerOrderContactSnapshot = {
 };
 
 export type CustomerOrderInvoiceSnapshot = {
-  recipientType: "private" | "company" | "unknown";
+  recipientType: 'private' | 'company' | 'unknown';
   companyName: string | null;
   taxId: string | null;
   address: CustomerOrderAddressBlock | null;
@@ -177,21 +177,21 @@ export type LoadCustomerOrderForPanelInput = {
 
 export type LoadCustomerOrderForPanelResult =
   | {
-      kind: "found";
+      kind: 'found';
       order: CustomerOrderDetail;
     }
   | {
-      kind: "not_found";
+      kind: 'not_found';
     };
 
 type ParsedInvoiceData = ParsedOrderInvoiceData;
 
 const CUSTOMER_ORDER_DETAIL_SELECT =
-  "cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, used_discount, updated_at";
+  'cancelled_at, completed_at, created_at, current_status, customer_email, customer_snapshot, discount_total_cents, grand_total_cents, id, invoice_data, order_number, paid_at, payable_until, payment_reference, payment_verified_at, returned_at, shipment_data, shipped_at, shipping_address_snapshot, status_history, subtotal_cents, used_discount, updated_at';
 
 const INVOICE_SIGNED_URL_TTL_SECONDS = 60;
 const INVOICE_STORAGE_BUCKET =
-  process.env.SUPABASE_ORDER_INVOICES_BUCKET ?? "order-invoices";
+  process.env.SUPABASE_ORDER_INVOICES_BUCKET ?? 'order-invoices';
 
 function parseCustomerSnapshot(value: Json): CustomerOrderContactSnapshot {
   if (!isRecord(value)) {
@@ -266,7 +266,7 @@ function extractProductImage(snapshot: Json): SanityRawImage | null {
     return null;
   }
 
-  if (typeof candidate.id !== "string" || candidate.id.length === 0) {
+  if (typeof candidate.id !== 'string' || candidate.id.length === 0) {
     return null;
   }
 
@@ -284,12 +284,12 @@ function mapOrderItem(row: OrderItemRow): CustomerOrderDetailItem {
         : null,
       snapshot.cpoContext.archivedAtPurchase !== null
         ? snapshot.cpoContext.archivedAtPurchase
-          ? "Archiwalne w momencie zakupu"
-          : "Aktywne w momencie zakupu"
+          ? 'Archiwalne w momencie zakupu'
+          : 'Aktywne w momencie zakupu'
         : null,
     ].filter(Boolean);
 
-    cpoContext = cpoDetails.length > 0 ? cpoDetails.join(" / ") : null;
+    cpoContext = cpoDetails.length > 0 ? cpoDetails.join(' / ') : null;
   }
 
   return {
@@ -312,13 +312,13 @@ function mapOrderItem(row: OrderItemRow): CustomerOrderDetailItem {
 }
 
 function resolveTimelineSourceLabel(source: unknown): string {
-  if (source === "system") {
-    return "System Audiofast";
+  if (source === 'system') {
+    return 'System Audiofast';
   }
-  if (source === "admin" || source === "operator") {
-    return "Aktualizacja Audiofast";
+  if (source === 'admin' || source === 'operator') {
+    return 'Aktualizacja Audiofast';
   }
-  return "Audiofast";
+  return 'Audiofast';
 }
 
 function buildStatusTimeline(
@@ -326,7 +326,11 @@ function buildStatusTimeline(
 ): CustomerOrderTimelineEntry[] {
   return buildOrderStatusTimeline(row, {
     fallbackSource: (status) =>
-      status === "awaiting_payment" || status === "paid" ? "system" : null,
+      status === 'awaiting_payment' ||
+      status === 'awaiting_confirmation' ||
+      status === 'paid'
+        ? 'system'
+        : null,
   }).map((entry) => ({
     id: entry.id,
     status: entry.status,
@@ -350,7 +354,7 @@ function findActiveReturnCase(
   rows: ReturnCaseRow[],
 ): CustomerOrderReturnCaseSummary | null {
   const activeCase = rows.find(
-    (row) => row.status === "open" || row.status === "completed",
+    (row) => row.status === 'open' || row.status === 'completed',
   );
 
   return activeCase ? mapReturnCase(activeCase) : null;
@@ -378,7 +382,7 @@ function buildActionEligibility(args: {
 }): CustomerOrderActionEligibility {
   const canCancel =
     isCancellableOrderStatus(args.row.current_status) &&
-    args.cancellationRequest?.status !== "open";
+    args.cancellationRequest?.status !== 'open';
   const allItemsReturnable =
     args.items.length > 0 && args.items.every((item) => item.isReturnable);
   const returnStatusEligible = isReturnEligibleOrderStatus(
@@ -388,7 +392,7 @@ function buildActionEligibility(args: {
     now: args.now,
     shippedAt: args.row.shipped_at,
   });
-  const isCompanyInvoice = args.invoice.recipientType === "company";
+  const isCompanyInvoice = args.invoice.recipientType === 'company';
   const canRequestReturn =
     returnStatusEligible &&
     allItemsReturnable &&
@@ -397,44 +401,44 @@ function buildActionEligibility(args: {
     args.activeReturnCase === null;
 
   let returnMessage =
-    "Zwrot będzie możliwy po wysyłce, jeżeli zamówienie spełnia warunki zwrotu.";
+    'Zwrot będzie możliwy po wysyłce, jeżeli zamówienie spełnia warunki zwrotu.';
 
   if (args.activeReturnCase) {
     returnMessage =
-      "Zgłoszenie zwrotu zostało wysłane. Audiofast poprowadzi dalszą obsługę poza głównym statusem zamówienia.";
+      'Zgłoszenie zwrotu zostało wysłane. Audiofast poprowadzi dalszą obsługę poza głównym statusem zamówienia.';
   } else if (!returnStatusEligible) {
     returnMessage =
-      "Zwrot można rozpocząć po wysyłce lub zakończeniu realizacji zamówienia.";
+      'Zwrot można rozpocząć po wysyłce lub zakończeniu realizacji zamówienia.';
   } else if (!allItemsReturnable) {
     returnMessage =
-      "To zamówienie zawiera produkt bez prawa zwrotu, dlatego samoobsługowy zwrot jest niedostępny.";
+      'To zamówienie zawiera produkt bez prawa zwrotu, dlatego samoobsługowy zwrot jest niedostępny.';
   } else if (isCompanyInvoice) {
     returnMessage =
-      "Zakup z danymi firmowymi może wyłączać samoobsługowy zwrot w panelu.";
+      'Zakup z danymi firmowymi może wyłączać samoobsługowy zwrot w panelu.';
   } else if (!withinReturnWindow) {
-    returnMessage = "Okno zwrotu dla tego zamówienia nie jest już aktywne.";
+    returnMessage = 'Okno zwrotu dla tego zamówienia nie jest już aktywne.';
   } else if (canRequestReturn) {
     returnMessage =
-      "Zamówienie mieści się w oknie zwrotu. Możesz wysłać prośbę o rozpoczęcie obsługi zwrotu.";
+      'Zamówienie mieści się w oknie zwrotu. Możesz wysłać prośbę o rozpoczęcie obsługi zwrotu.';
   }
 
   let cancelMessage =
-    "Anulowanie jest dostępne tylko dla zamówień opłaconych lub w realizacji, przed wysyłką.";
+    'Anulowanie jest dostępne tylko dla zamówień opłaconych lub w realizacji, przed wysyłką.';
 
-  if (args.cancellationRequest?.status === "open") {
+  if (args.cancellationRequest?.status === 'open') {
     cancelMessage =
-      "Prośba o anulowanie została wysłana. Audiofast sprawdzi, czy zamówienie można jeszcze zatrzymać.";
+      'Prośba o anulowanie została wysłana. Audiofast sprawdzi, czy zamówienie można jeszcze zatrzymać.';
   } else if (
-    args.cancellationRequest?.status === "rejected" ||
-    args.cancellationRequest?.status === "declined"
+    args.cancellationRequest?.status === 'rejected' ||
+    args.cancellationRequest?.status === 'declined'
   ) {
     cancelMessage =
-      "Audiofast odrzucił prośbę o anulowanie. Zamówienie pozostaje w realizacji.";
-  } else if (args.row.current_status === "cancelled") {
-    cancelMessage = "Zamówienie zostało anulowane.";
+      'Audiofast odrzucił prośbę o anulowanie. Zamówienie pozostaje w realizacji.';
+  } else if (args.row.current_status === 'cancelled') {
+    cancelMessage = 'Zamówienie zostało anulowane.';
   } else if (canCancel) {
     cancelMessage =
-      "Możesz poprosić o anulowanie zamówienia przed wysyłką. Audiofast potwierdzi, czy anulowanie jest jeszcze możliwe.";
+      'Możesz poprosić o anulowanie zamówienia przed wysyłką. Audiofast potwierdzi, czy anulowanie jest jeszcze możliwe.';
   }
 
   return {
@@ -463,7 +467,7 @@ function mapCustomerOrderDetail(args: {
     mapCancellationRequest,
   );
   const activeCancellationRequest =
-    cancellationRequests.find((request) => request.status === "open") ??
+    cancellationRequests.find((request) => request.status === 'open') ??
     cancellationRequests[0] ??
     null;
 
@@ -514,10 +518,10 @@ async function loadOwnedVisibleOrderRow(args: {
 }): Promise<CustomerOrderDetailRow | null> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("orders")
+    .from('orders')
     .select(CUSTOMER_ORDER_DETAIL_SELECT)
-    .eq("order_number", args.orderNumber)
-    .ilike("customer_email", args.normalizedEmail)
+    .eq('order_number', args.orderNumber)
+    .ilike('customer_email', args.normalizedEmail)
     .maybeSingle();
 
   if (error) {
@@ -537,10 +541,10 @@ async function loadOwnedVisibleOrderRow(args: {
 async function loadOrderItems(orderId: string): Promise<OrderItemRow[]> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("order_items")
-    .select("*")
-    .eq("order_id", orderId)
-    .order("line_position", { ascending: true });
+    .from('order_items')
+    .select('*')
+    .eq('order_id', orderId)
+    .order('line_position', { ascending: true });
 
   if (error) {
     throw error;
@@ -552,10 +556,10 @@ async function loadOrderItems(orderId: string): Promise<OrderItemRow[]> {
 async function loadReturnCases(orderId: string): Promise<ReturnCaseRow[]> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("return_cases")
-    .select("*")
-    .eq("order_id", orderId)
-    .order("created_at", { ascending: false });
+    .from('return_cases')
+    .select('*')
+    .eq('order_id', orderId)
+    .order('created_at', { ascending: false });
 
   if (error) {
     throw error;
@@ -569,10 +573,10 @@ async function loadCancellationRequests(
 ): Promise<CancellationRequestRow[]> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("order_cancellation_requests")
-    .select("*")
-    .eq("order_id", orderId)
-    .order("requested_at", { ascending: false });
+    .from('order_cancellation_requests')
+    .select('*')
+    .eq('order_id', orderId)
+    .order('requested_at', { ascending: false });
 
   if (error) {
     throw error;
@@ -592,7 +596,7 @@ export async function loadCustomerOrderForPanel(
   });
 
   if (!row) {
-    return { kind: "not_found" };
+    return { kind: 'not_found' };
   }
 
   const [items, returnCases, cancellationRequests] = await Promise.all([
@@ -602,7 +606,7 @@ export async function loadCustomerOrderForPanel(
   ]);
 
   return {
-    kind: "found",
+    kind: 'found',
     order: mapCustomerOrderDetail({
       row,
       items,

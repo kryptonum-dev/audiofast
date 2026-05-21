@@ -64,7 +64,7 @@ describe('confirmCheckoutOrderPayment', () => {
     vi.clearAllMocks();
   });
 
-  it('moves an awaiting_payment order to paid and appends status history', async () => {
+  it('moves an awaiting_payment order to awaiting_confirmation and appends status history', async () => {
     const initialSelectChain = createSelectChain(
       Promise.resolve({
         data: {
@@ -94,7 +94,7 @@ describe('confirmCheckoutOrderPayment', () => {
           created_at: '2026-04-21T09:55:00.000Z',
           id: 'order-1',
           order_number: 'AF-2026-00001',
-          current_status: 'paid',
+          current_status: 'awaiting_confirmation',
           payable_until: '2026-04-21T10:10:00.000Z',
           payment_provider: 'przelewy24',
           status_history: [
@@ -104,7 +104,7 @@ describe('confirmCheckoutOrderPayment', () => {
               source: 'system',
             },
             {
-              status: 'paid',
+              status: 'awaiting_confirmation',
               changedAt: '2026-04-21T10:00:00.000Z',
               source: 'system',
             },
@@ -134,14 +134,14 @@ describe('confirmCheckoutOrderPayment', () => {
     expect(result).toMatchObject({
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       paymentReference: 'mock-p24-ref-af202600001',
       paymentVerifiedAt: '2026-04-21T10:00:00.000Z',
       paidAt: '2026-04-21T10:00:00.000Z',
       wasAlreadyPaid: false,
     });
     expect(updateChain.update).toHaveBeenCalledWith({
-      current_status: 'paid',
+      current_status: 'awaiting_confirmation',
       status_history: [
         {
           status: 'awaiting_payment',
@@ -149,7 +149,7 @@ describe('confirmCheckoutOrderPayment', () => {
           source: 'system',
         },
         {
-          status: 'paid',
+          status: 'awaiting_confirmation',
           changedAt: '2026-04-21T10:00:00.000Z',
           source: 'system',
         },
@@ -161,14 +161,14 @@ describe('confirmCheckoutOrderPayment', () => {
     });
   });
 
-  it('treats an already paid order as an idempotent success', async () => {
+  it('treats an already confirmed order as an idempotent success', async () => {
     const initialSelectChain = createSelectChain(
       Promise.resolve({
         data: {
           created_at: '2026-04-21T09:55:00.000Z',
           id: 'order-1',
           order_number: 'AF-2026-00001',
-          current_status: 'paid',
+          current_status: 'awaiting_confirmation',
           payable_until: '2026-04-21T10:10:00.000Z',
           payment_provider: 'przelewy24',
           status_history: [
@@ -178,7 +178,7 @@ describe('confirmCheckoutOrderPayment', () => {
               source: 'system',
             },
             {
-              status: 'paid',
+              status: 'awaiting_confirmation',
               changedAt: '2026-04-21T10:00:00.000Z',
               source: 'system',
             },
@@ -207,7 +207,7 @@ describe('confirmCheckoutOrderPayment', () => {
     });
 
     expect(result.wasAlreadyPaid).toBe(true);
-    expect(result.currentStatus).toBe('paid');
+    expect(result.currentStatus).toBe('awaiting_confirmation');
     expect(updateMock).not.toHaveBeenCalled();
   });
 
@@ -319,14 +319,14 @@ describe('confirmCheckoutOrderPayment', () => {
     ).rejects.toBeInstanceOf(CheckoutPaymentUpdateError);
   });
 
-  it('repairs an already paid order when metadata is incomplete', async () => {
+  it('repairs an already confirmed order when metadata is incomplete', async () => {
     const initialSelectChain = createSelectChain(
       Promise.resolve({
         data: {
           created_at: '2026-04-21T09:55:00.000Z',
           id: 'order-1',
           order_number: 'AF-2026-00001',
-          current_status: 'paid',
+          current_status: 'awaiting_confirmation',
           payable_until: '2026-04-21T10:10:00.000Z',
           payment_provider: 'przelewy24',
           status_history: [],
@@ -343,7 +343,7 @@ describe('confirmCheckoutOrderPayment', () => {
           created_at: '2026-04-21T09:55:00.000Z',
           id: 'order-1',
           order_number: 'AF-2026-00001',
-          current_status: 'paid',
+          current_status: 'awaiting_confirmation',
           payable_until: '2026-04-21T10:10:00.000Z',
           payment_provider: 'przelewy24',
           status_history: [
@@ -353,7 +353,7 @@ describe('confirmCheckoutOrderPayment', () => {
               source: 'system',
             },
             {
-              status: 'paid',
+              status: 'awaiting_confirmation',
               changedAt: '2026-04-21T10:05:00.000Z',
               source: 'system',
             },
@@ -390,7 +390,7 @@ describe('confirmCheckoutOrderPayment', () => {
           source: 'system',
         },
         {
-          status: 'paid',
+          status: 'awaiting_confirmation',
           changedAt: '2026-04-21T10:05:00.000Z',
           source: 'system',
         },

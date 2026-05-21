@@ -83,10 +83,10 @@ describe('loadThankYouPageData', () => {
     expect(result.state.shouldPoll).toBe(true);
   });
 
-  it('loads a paid order and resolves the paid state', async () => {
+  it('loads an awaiting confirmation order and resolves the paid thank-you state', async () => {
     maybeSingleMock.mockResolvedValueOnce({
       data: createOrder({
-        current_status: 'paid',
+        current_status: 'awaiting_confirmation',
         payable_until: '2026-04-23T10:15:00.000Z',
         customer_profile_id: 'profile-1',
         used_discount: {

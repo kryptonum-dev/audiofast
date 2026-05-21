@@ -12,6 +12,7 @@ describe('getAdminOrderStatusEmailStatus', () => {
 
   it('does not require email for silent statuses', () => {
     expect(getAdminOrderStatusEmailStatus('completed')).toBeNull();
+    expect(getAdminOrderStatusEmailStatus('awaiting_confirmation')).toBeNull();
     expect(getAdminOrderStatusEmailStatus('paid')).toBeNull();
     expect(getAdminOrderStatusEmailStatus('awaiting_payment')).toBeNull();
   });

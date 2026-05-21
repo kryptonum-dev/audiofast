@@ -83,7 +83,7 @@ export function OrdersFilters({
               options={[
                 ["all", "Wszystkie"],
                 ["awaiting_payment", "Oczekuje na płatność"],
-                ["paid", "Opłacone"],
+                ["awaiting_confirmation", "Oczekiwanie na potwierdzenie"],
                 ["processing", "W realizacji"],
                 ["shipped", "Wysłane"],
                 ["completed", "Zakończone"],

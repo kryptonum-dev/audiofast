@@ -51,7 +51,11 @@ export type ConfirmCheckoutPaymentResult = {
 };
 
 function isCheckoutOrderStatus(value: unknown): value is CheckoutOrderStatus {
-  return value === 'awaiting_payment' || value === 'paid';
+  return (
+    value === 'awaiting_payment' ||
+    value === 'awaiting_confirmation' ||
+    value === 'paid'
+  );
 }
 
 function normalizePaymentReference(value: string | null): string | null {
@@ -157,7 +161,7 @@ function ensureAwaitingPaymentHistory(args: {
   return [createAwaitingPaymentHistoryEntry(args.createdAt), ...args.history];
 }
 
-function ensurePaidHistory(args: {
+function ensureAwaitingConfirmationHistory(args: {
   history: CheckoutStatusHistoryEntry[];
   createdAt: string;
   paidAt: string;
@@ -167,15 +171,25 @@ function ensurePaidHistory(args: {
     createdAt: args.createdAt,
   });
 
-  if (historyWithAwaiting.some((entry) => entry.status === 'paid')) {
+  if (
+    historyWithAwaiting.some(
+      (entry) => entry.status === 'awaiting_confirmation',
+    )
+  ) {
     return historyWithAwaiting;
   }
 
   return appendCheckoutStatusHistoryEntry({
     history: historyWithAwaiting,
-    status: 'paid',
+    status: 'awaiting_confirmation',
     changedAt: args.paidAt,
   });
+}
+
+function isPostPaymentConfirmationStatus(
+  status: string,
+): status is Extract<CheckoutOrderStatus, 'awaiting_confirmation' | 'paid'> {
+  return status === 'awaiting_confirmation' || status === 'paid';
 }
 
 function areStatusHistoriesEqual(
@@ -274,11 +288,11 @@ export async function confirmCheckoutOrderPayment(args: {
   const currentState = await loadOrderPaymentState(args.orderId);
   assertPaymentProvider(currentState);
 
-  if (currentState.current_status === 'paid') {
+  if (isPostPaymentConfirmationStatus(currentState.current_status)) {
     const currentHistory = normalizeCheckoutStatusHistory(
       currentState.status_history,
     );
-    const repairedHistory = ensurePaidHistory({
+    const repairedHistory = ensureAwaitingConfirmationHistory({
       history: currentHistory,
       createdAt: currentState.created_at,
       paidAt:
@@ -307,7 +321,7 @@ export async function confirmCheckoutOrderPayment(args: {
 
     const repairedState = await updateOrderPaymentState({
       orderId: args.orderId,
-      expectedCurrentStatus: 'paid',
+      expectedCurrentStatus: currentState.current_status,
       payload: repairedPayload,
     });
 
@@ -329,7 +343,12 @@ export async function confirmCheckoutOrderPayment(args: {
     currentState.status_history,
   );
 
-  if (currentHistory.some((entry) => entry.status === 'paid')) {
+  if (
+    currentHistory.some(
+      (entry) =>
+        entry.status === 'awaiting_confirmation' || entry.status === 'paid',
+    )
+  ) {
     throw new CheckoutPaymentUpdateError(
       'Checkout order history is inconsistent with its awaiting_payment state.',
       'invalid_order_state',
@@ -341,12 +360,12 @@ export async function confirmCheckoutOrderPayment(args: {
       history: currentHistory,
       createdAt: currentState.created_at,
     }),
-    status: 'paid',
+    status: 'awaiting_confirmation',
     changedAt: verifiedAt,
   });
 
   const updatePayload: OrdersUpdate = {
-    current_status: 'paid',
+    current_status: 'awaiting_confirmation',
     status_history: nextStatusHistory,
     payment_reference: paymentReference,
     payment_verified_at: verifiedAt,
@@ -367,7 +386,7 @@ export async function confirmCheckoutOrderPayment(args: {
   const reloadedState = await loadOrderPaymentState(args.orderId);
   assertPaymentProvider(reloadedState);
 
-  if (reloadedState.current_status === 'paid') {
+  if (isPostPaymentConfirmationStatus(reloadedState.current_status)) {
     return mapOrderPaymentStateRow(reloadedState, true);
   }
 

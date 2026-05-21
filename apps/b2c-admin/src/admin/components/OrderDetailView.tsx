@@ -42,8 +42,8 @@ import {
   formatLineType,
   formatMoney,
   formatOrderStatus,
+  formatPaymentStatus,
 } from "../formatters.js";
-import { buildSanityImageUrl } from "../image.js";
 import type {
   AdminOrderAddressBlock,
   AdminOrderCancellationRequest,
@@ -55,6 +55,7 @@ import type {
 } from "../types.js";
 import { AdminStateCard } from "./AdminStateCard.js";
 import { OrderStatusBadge } from "./OrderStatusBadge.js";
+import { SanityThumbnail } from "./SanityThumbnail.js";
 
 type OrderDetailViewProps = {
   orderNumber: string;
@@ -225,6 +226,7 @@ function OrderDetailContent({
   return (
     <Stack space={4}>
       <OrderSummarySection order={order} />
+      <PaymentSection order={order} />
       <StatusActionsSection
         authToken={authToken}
         onChanged={onChanged}
@@ -300,6 +302,35 @@ function OrderSummarySection({ order }: { order: AdminOrderDetail }) {
         </Stack>
       </Flex>
     </Card>
+  );
+}
+
+function PaymentSection({ order }: { order: AdminOrderDetail }) {
+  return (
+    <DetailSection title="Płatność">
+      <Grid columns={[1, 1, 3]} gap={3}>
+        <KeyValue
+          label="Status płatności"
+          value={formatPaymentStatus({
+            currentStatus: order.currentStatus,
+            paidAt: order.paidAt,
+            verifiedAt: order.payment.verifiedAt,
+          })}
+        />
+        <KeyValue
+          label="Potwierdzono"
+          value={
+            order.payment.verifiedAt
+              ? formatDateTime(order.payment.verifiedAt)
+              : "Brak"
+          }
+        />
+        <KeyValue
+          label="Identyfikator płatności"
+          value={order.payment.reference ?? "Brak"}
+        />
+      </Grid>
+    </DetailSection>
   );
 }
 
@@ -533,21 +564,17 @@ function ItemsSection({ order }: { order: AdminOrderDetail }) {
 }
 
 function OrderItemRow({ item }: { item: AdminOrderItem }) {
-  const imageUrl = buildSanityImageUrl(item.productImage);
-
   return (
     <Card border padding={3} radius={2}>
       <Flex align="center" gap={3}>
-        {imageUrl ? (
-          <img
-            alt={item.productImage?.alt ?? item.productName}
-            className="orderDetailItemImage"
-            loading="lazy"
-            src={imageUrl}
-          />
-        ) : (
-          <div className="orderDetailItemImagePlaceholder" aria-hidden="true" />
-        )}
+        <SanityThumbnail
+          alt={item.productImage?.alt ?? item.productName}
+          className="orderDetailItemImage"
+          height={56}
+          image={item.productImage}
+          placeholderClassName="orderDetailItemImagePlaceholder"
+          width={56}
+        />
         <Stack flex={1} space={3}>
           <Text size={2} weight="medium">
             {item.brandName} {item.productName}
@@ -1527,6 +1554,7 @@ function TimelineActor({ entry }: { entry: AdminOrderTimelineEntry }) {
 
 function getTimelineStatusTone(status: string) {
   switch (status) {
+    case "awaiting_confirmation":
     case "paid":
     case "completed":
       return "success";
@@ -1722,7 +1750,7 @@ function ActionMessage({ state }: { state: ActionState }) {
 
 function shouldConfirmShippedStatus(order: AdminOrderDetail) {
   return (
-    (order.currentStatus === "paid" || order.currentStatus === "processing") &&
+    order.currentStatus === "processing" &&
     order.actions.allowedNextStatuses.includes("shipped")
   );
 }

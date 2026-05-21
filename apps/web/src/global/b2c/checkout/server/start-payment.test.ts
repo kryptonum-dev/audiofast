@@ -112,7 +112,7 @@ describe('startCheckoutPayment', () => {
       orderId: 'order-1',
       orderNumber: 'AF-2026-00001',
       providerStatus: 'done',
-      currentStatus: 'paid',
+      currentStatus: 'awaiting_confirmation',
       wasConfirmed: true,
       wasAlreadyPaid: false,
     });

@@ -15,7 +15,7 @@ function createRawNotification(overrides: Record<string, unknown> = {}) {
   const payload = {
     merchantId: 392337,
     posId: 392337,
-    sessionId: 'AF-2026-00001',
+    sessionId: 'AF-2026-00001-session123',
     amount: 230_00,
     originAmount: 230_00,
     currency: 'PLN',
@@ -86,7 +86,7 @@ describe('parseP24PaymentStatusNotification', () => {
       merchantId: 392337,
       posId: 392337,
       orderId: 123456789,
-      sessionId: 'AF-2026-00001',
+      sessionId: 'AF-2026-00001-session123',
       method: 241,
       result: {
         generalStatus: 'done',

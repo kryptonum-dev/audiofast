@@ -202,7 +202,9 @@ describe('loadCustomerOrdersForPanel', () => {
       'jan@example.com',
     );
     expect(ordersSelect.orMock).toHaveBeenCalledWith(
-      expect.stringContaining('current_status.in.(paid,processing,shipped'),
+      expect.stringContaining(
+        'current_status.in.(awaiting_confirmation,paid,processing,shipped',
+      ),
     );
     expect(ordersSelect.orMock).toHaveBeenCalledWith(
       expect.stringContaining('payable_until.gt.2026-04-24T11:00:00.000Z'),

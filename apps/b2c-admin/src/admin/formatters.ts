@@ -21,6 +21,7 @@ const CURRENCY_FORMATTER = new Intl.NumberFormat("pl-PL", {
 
 export const ORDER_STATUS_LABELS: Record<AdminOrderStatus, string> = {
   awaiting_payment: "Oczekuje na płatność",
+  awaiting_confirmation: "Oczekiwanie na potwierdzenie",
   paid: "Opłacone",
   processing: "W realizacji",
   shipped: "Wysłane",
@@ -34,6 +35,7 @@ export const ORDER_STATUS_TONES: Record<
   "default" | "primary" | "positive" | "caution" | "critical"
 > = {
   awaiting_payment: "caution",
+  awaiting_confirmation: "primary",
   paid: "primary",
   processing: "default",
   shipped: "positive",
@@ -79,6 +81,22 @@ export const COUPON_DISCOUNT_TYPE_LABELS: Record<
 
 export function formatOrderStatus(status: string): string {
   return ORDER_STATUS_LABELS[status as AdminOrderStatus] ?? status;
+}
+
+export function formatPaymentStatus(args: {
+  currentStatus: string;
+  paidAt: string | null;
+  verifiedAt?: string | null;
+}): string {
+  if (args.paidAt || args.verifiedAt) {
+    return "Opłacone";
+  }
+
+  if (args.currentStatus === "awaiting_payment") {
+    return "Oczekuje na płatność";
+  }
+
+  return "Brak potwierdzenia płatności";
 }
 
 export function formatLineType(lineTypes: string[]): string {

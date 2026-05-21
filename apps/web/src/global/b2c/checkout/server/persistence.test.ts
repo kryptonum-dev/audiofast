@@ -102,6 +102,7 @@ describe('checkout persistence', () => {
     expect(
       mapCheckoutOrderDraftToOrdersInsert({
         orderNumber: 'AF-2026-00001',
+        paymentSessionId: 'AF-2026-00001-session123',
         orderDraft,
       }),
     ).toMatchObject({
@@ -110,6 +111,7 @@ describe('checkout persistence', () => {
       customer_email: 'jan@example.com',
       current_status: 'awaiting_payment',
       payment_provider: 'przelewy24',
+      payment_session_id: 'AF-2026-00001-session123',
       payable_until: '2026-04-20T10:15:00.000Z',
       subtotal_cents: 150_00,
       grand_total_cents: 150_00,
@@ -218,6 +220,7 @@ describe('checkout persistence', () => {
     await expect(
       persistCheckoutOrder({
         orderNumber: 'AF-2026-00001',
+        paymentSessionId: 'AF-2026-00001-session123',
         orderDraft: createOrderDraft(),
       }),
     ).rejects.toBeInstanceOf(CheckoutPersistenceError);
