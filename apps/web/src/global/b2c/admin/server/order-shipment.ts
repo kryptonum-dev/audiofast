@@ -71,28 +71,7 @@ function normalizeIsoDate(value: string | null, fieldName: string) {
   return parsed.toISOString();
 }
 
-function normalizeTrackingUrl(value: string | null): string | null {
-  if (!value) {
-    return null;
-  }
-
-  try {
-    const url = new URL(value);
-    return url.toString();
-  } catch {
-    throw new AdminOrderShipmentError(
-      'Invalid trackingUrl.',
-      'invalid_shipment_payload',
-      400,
-    );
-  }
-}
-
-function buildApaczkaTrackingUrl(trackingNumber: string) {
-  const url = new URL('https://www.apaczka.pl/sledz-przesylke/');
-  url.searchParams.set('trackingNumber', trackingNumber);
-  return url.toString();
-}
+const APACZKA_TRACKING_URL = 'https://www.apaczka.pl/sledz-przesylke/';
 
 export function buildAdminOrderShipmentPayload(args: {
   input: AdminOrderShipmentInput;
@@ -124,7 +103,7 @@ export function buildAdminOrderShipmentPayload(args: {
       carrier,
       shippedAt,
       trackingNumber,
-      trackingUrl: buildApaczkaTrackingUrl(trackingNumber),
+      trackingUrl: APACZKA_TRACKING_URL,
     },
     shipped_at: shippedAt ?? null,
     updated_at: args.now.toISOString(),

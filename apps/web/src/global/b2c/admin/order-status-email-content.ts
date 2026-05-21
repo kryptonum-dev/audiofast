@@ -21,7 +21,7 @@ export const STATUS_EMAIL_CONTENT: Record<
   shipped: {
     label: 'wysłane',
     message:
-      'Zamówienie zostało wysłane. Jeżeli numer śledzenia jest już dostępny, znajdziesz go poniżej.',
+      'Zamówienie zostało wysłane. Jeżeli numer listu przewozowego jest już dostępny, znajdziesz go poniżej. Skopiuj go i wklej na stronie śledzenia przesyłki.',
     subject: (orderNumber) => `Zamówienie ${orderNumber} zostało wysłane`,
   },
   cancelled: {

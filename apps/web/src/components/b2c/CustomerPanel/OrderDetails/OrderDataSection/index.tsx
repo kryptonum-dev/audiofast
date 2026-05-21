@@ -3,7 +3,6 @@ import { formatCustomerOrderDate } from '@/src/global/b2c/customer-auth/orders-f
 import type {
   CustomerOrderAddressBlock,
   CustomerOrderDetail,
-  CustomerOrderShipmentSnapshot,
 } from '@/src/global/b2c/customer-auth/server/order-detail';
 
 import InvoiceDownloadButton from './InvoiceDownloadButton';
@@ -17,16 +16,7 @@ function renderOptionalValue(value: string | null | undefined): string {
   return value && value.trim().length > 0 ? value : 'Brak danych';
 }
 
-function getShipmentTrackingHref(
-  shipment: CustomerOrderShipmentSnapshot,
-): string {
-  return (
-    shipment.trackingUrl ??
-    `https://www.apaczka.pl/sledz-przesylke/?trackingNumber=${encodeURIComponent(
-      shipment.trackingNumber ?? '',
-    )}`
-  );
-}
+const APACZKA_TRACKING_URL = 'https://www.apaczka.pl/sledz-przesylke/';
 
 function DetailRow({
   label,
@@ -172,7 +162,9 @@ function InvoiceDetails({ order }: { order: CustomerOrderDetail }) {
                 </div>
               </div>
               <div className={styles.invoiceDocumentAction}>
-                {invoiceAttachedCopy ? <span>{invoiceAttachedCopy}</span> : null}
+                {invoiceAttachedCopy ? (
+                  <span>{invoiceAttachedCopy}</span>
+                ) : null}
                 {invoice.downloadHref ? (
                   <InvoiceDownloadButton
                     href={invoice.downloadHref}
@@ -286,14 +278,18 @@ export default function OrderDataSection({ order }: OrderDataSectionProps) {
                   value={shipment.trackingNumber}
                 />
               </dl>
+              <p className={styles.mutedText}>
+                Skopiuj numer listu przewozowego i wklej go na stronie śledzenia
+                przesyłki.
+              </p>
               <Button
-                href={getShipmentTrackingHref(shipment)}
+                href={APACZKA_TRACKING_URL}
                 openInNewTab
                 variant="primary"
                 iconUsed="arrowRight"
                 className={styles.trackingButton}
               >
-                Sprawdź status przesyłki
+                Otwórz stronę śledzenia
               </Button>
             </div>
           </div>

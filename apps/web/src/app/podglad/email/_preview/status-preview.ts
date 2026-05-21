@@ -49,8 +49,7 @@ export const statusEmailPreviews: StatusEmailPreview[] = [
     path: 'status-wyslane',
     title: 'Status: wysłane',
     trackingNumber: 'AF123456789PL',
-    trackingUrl:
-      'https://www.apaczka.pl/sledz-przesylke/?trackingNumber=AF123456789PL',
+    trackingUrl: 'https://www.apaczka.pl/sledz-przesylke/',
   }),
   createStatusPreview('cancelled', {
     path: 'status-anulowane',

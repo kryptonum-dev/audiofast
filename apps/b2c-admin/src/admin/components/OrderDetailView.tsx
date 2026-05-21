@@ -965,7 +965,7 @@ function ShipmentSection({
       {order.shipment?.hasShipment ? (
         <Grid columns={[1, 1, 2]} gap={3}>
           <KeyValue
-            label="Numer śledzenia"
+            label="Numer listu przewozowego"
             value={order.shipment.trackingNumber ?? "Brak"}
           />
           <KeyValue label="Kurier" value={order.shipment.carrier ?? "Brak"} />
@@ -981,7 +981,7 @@ function ShipmentSection({
             <Grid columns={[1, 1, 2]} gap={3}>
               <Stack space={2}>
                 <Text muted size={1}>
-                  Numer śledzenia
+                  Numer listu przewozowego
                 </Text>
                 <TextInput
                   disabled={actionState.status === "loading"}

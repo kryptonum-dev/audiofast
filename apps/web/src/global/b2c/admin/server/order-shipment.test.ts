@@ -21,8 +21,7 @@ describe('admin order shipment helpers', () => {
         carrier: null,
         shippedAt: null,
         trackingNumber: 'TRACK123',
-        trackingUrl:
-          'https://www.apaczka.pl/sledz-przesylke/?trackingNumber=TRACK123',
+        trackingUrl: 'https://www.apaczka.pl/sledz-przesylke/',
       },
       shipped_at: null,
       updated_at: '2026-05-06T09:00:00.000Z',
@@ -45,8 +44,7 @@ describe('admin order shipment helpers', () => {
           carrier: null,
           shippedAt: '2026-05-05T08:00:00.000Z',
           trackingNumber: 'ABC',
-          trackingUrl:
-            'https://www.apaczka.pl/sledz-przesylke/?trackingNumber=ABC',
+          trackingUrl: 'https://www.apaczka.pl/sledz-przesylke/',
         },
         shipped_at: '2026-05-05T08:00:00.000Z',
       }),

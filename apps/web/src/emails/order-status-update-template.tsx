@@ -50,7 +50,8 @@ export function OrderStatusUpdateTemplate({
         ) : null}
         {trackingNumber ? (
           <Text style={heroMeta}>
-            Numer śledzenia: <strong style={strongText}>{trackingNumber}</strong>
+            Numer listu przewozowego:{' '}
+            <strong style={strongText}>{trackingNumber}</strong>
           </Text>
         ) : null}
         <Section style={ctaRow}>
@@ -59,7 +60,9 @@ export function OrderStatusUpdateTemplate({
           </Button>
           {trackingBaseUrl ? (
             <Button href={trackingBaseUrl} style={secondaryButton}>
-              <span style={secondaryButtonLabelCell}>Śledź przesyłkę</span>
+              <span style={secondaryButtonLabelCell}>
+                Otwórz stronę śledzenia
+              </span>
             </Button>
           ) : null}
         </Section>
