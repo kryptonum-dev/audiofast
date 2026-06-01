@@ -5,6 +5,7 @@ import type { Database } from '@/src/global/supabase/database.types';
 
 import {
   appendCheckoutStatusHistoryEntry,
+  type CheckoutOrderPaymentProvider,
   type CheckoutOrderStatus,
   type CheckoutStatusHistoryEntry,
 } from '../order-draft';
@@ -201,8 +202,11 @@ function areStatusHistoriesEqual(
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
-function assertPaymentProvider(row: OrderPaymentStateRow): void {
-  if (row.payment_provider !== 'przelewy24') {
+function assertPaymentProvider(
+  row: OrderPaymentStateRow,
+  expectedPaymentProvider: CheckoutOrderPaymentProvider,
+): void {
+  if (row.payment_provider !== expectedPaymentProvider) {
     throw new CheckoutPaymentUpdateError(
       `Checkout order uses unsupported payment provider ${row.payment_provider}.`,
       'invalid_order_state',
@@ -284,11 +288,15 @@ export async function confirmCheckoutOrderPayment(args: {
   orderId: string;
   paymentReference: string | null;
   verifiedAt: string;
+  expectedPaymentProvider?: CheckoutOrderPaymentProvider;
+  enforcePayableUntil?: boolean;
 }): Promise<ConfirmCheckoutPaymentResult> {
   const verifiedAt = normalizeIsoTimestamp(args.verifiedAt);
   const paymentReference = normalizePaymentReference(args.paymentReference);
+  const expectedPaymentProvider = args.expectedPaymentProvider ?? 'przelewy24';
+  const shouldEnforcePayableUntil = args.enforcePayableUntil !== false;
   const currentState = await loadOrderPaymentState(args.orderId);
-  assertPaymentProvider(currentState);
+  assertPaymentProvider(currentState, expectedPaymentProvider);
 
   const markCpoSold = async (
     state: OrderPaymentStateRow,
@@ -369,10 +377,12 @@ export async function confirmCheckoutOrderPayment(args: {
     );
   }
 
-  assertPaymentNotExpired({
-    payableUntil: currentState.payable_until,
-    verifiedAt,
-  });
+  if (shouldEnforcePayableUntil) {
+    assertPaymentNotExpired({
+      payableUntil: currentState.payable_until,
+      verifiedAt,
+    });
+  }
   const currentHistory = normalizeCheckoutStatusHistory(
     currentState.status_history,
   );
@@ -420,7 +430,7 @@ export async function confirmCheckoutOrderPayment(args: {
   }
 
   const reloadedState = await loadOrderPaymentState(args.orderId);
-  assertPaymentProvider(reloadedState);
+  assertPaymentProvider(reloadedState, expectedPaymentProvider);
 
   if (isPostPaymentConfirmationStatus(reloadedState.current_status)) {
     await markCpoSold(

@@ -18,6 +18,8 @@ export type CheckoutOrderStatus =
   | 'awaiting_confirmation'
   | 'paid';
 
+export type CheckoutOrderPaymentProvider = 'przelewy24' | 'zero_total';
+
 export type CheckoutStatusHistoryEntry = {
   status: CheckoutOrderStatus;
   changedAt: string;
@@ -36,7 +38,7 @@ export type CheckoutOrderDraft = {
   usedDiscount: CheckoutOrderSummary['usedDiscount'];
   currentStatus: CheckoutOrderStatus;
   statusHistory: CheckoutStatusHistoryEntry[];
-  paymentProvider: 'przelewy24';
+  paymentProvider: CheckoutOrderPaymentProvider;
   paymentReference: string | null;
   paymentVerifiedAt: string | null;
   payableUntil: string;
@@ -151,7 +153,8 @@ export function buildCheckoutOrderDraft(args: {
     usedDiscount: args.summary.usedDiscount,
     currentStatus: 'awaiting_payment',
     statusHistory: buildInitialCheckoutStatusHistory(createdAt),
-    paymentProvider: 'przelewy24',
+    paymentProvider:
+      args.summary.grandTotalCents === 0 ? 'zero_total' : 'przelewy24',
     paymentReference: null,
     paymentVerifiedAt: null,
     payableUntil: buildCheckoutPayableUntil(createdAt),

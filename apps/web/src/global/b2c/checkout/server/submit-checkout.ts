@@ -386,14 +386,17 @@ export async function submitCheckoutOrder(args: {
       origin: args.requestOrigin,
       orderNumber: persistedOrder.orderNumber,
     });
-    const paymentRegistrationInput = buildP24TransactionRegistrationInput({
-      orderId: persistedOrder.orderId,
-      orderNumber: persistedOrder.orderNumber,
-      paymentSessionId: persistedOrder.paymentSessionId,
-      orderDraft,
-      urlReturn: paymentUrls.urlReturn,
-      urlStatus: paymentUrls.urlStatus,
-    });
+    const paymentRegistrationInput =
+      orderDraft.grandTotalCents === 0
+        ? null
+        : buildP24TransactionRegistrationInput({
+            orderId: persistedOrder.orderId,
+            orderNumber: persistedOrder.orderNumber,
+            paymentSessionId: persistedOrder.paymentSessionId,
+            orderDraft,
+            urlReturn: paymentUrls.urlReturn,
+            urlStatus: paymentUrls.urlStatus,
+          });
 
     if (validationResult.value.newsletterOptIn) {
       try {
@@ -426,6 +429,8 @@ export async function submitCheckoutOrder(args: {
         input: validationResult.value,
         revalidatedCart,
         paymentRegistrationInput,
+        zeroTotalRedirectUrl:
+          orderDraft.grandTotalCents === 0 ? paymentUrls.urlReturn : null,
       },
     };
   } catch (error) {

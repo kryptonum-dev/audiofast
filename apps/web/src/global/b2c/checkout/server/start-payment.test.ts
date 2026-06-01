@@ -220,6 +220,22 @@ describe('startCheckoutPayment', () => {
     expect(providerAdapter.registerTransaction).not.toHaveBeenCalled();
   });
 
+  it('blocks provider registration when the payment amount is not positive', async () => {
+    const result = await startCheckoutPayment({
+      paymentRegistrationInput: {
+        ...createPaymentRegistrationInput(),
+        amount: 0,
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.ok ? null : result.error.code).toBe(
+      'payment_registration_failed',
+    );
+    expect(getCheckoutPaymentProviderAdapter).not.toHaveBeenCalled();
+    expect(providerAdapter.registerTransaction).not.toHaveBeenCalled();
+  });
+
   it('returns payment_verification_failed when status processing throws', async () => {
     vi.mocked(handleCheckoutPaymentStatusNotification).mockRejectedValueOnce(
       new Error('boom'),
