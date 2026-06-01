@@ -15,6 +15,39 @@ const freshClient = createSanityClient({
   perspective: 'published',
 });
 
+const SANITY_FETCH_ATTEMPTS = 3;
+const SANITY_FETCH_RETRY_DELAY_MS = 500;
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function fetchSanityWithRetry<QueryResponse>(
+  fetcher: () => Promise<QueryResponse>,
+): Promise<QueryResponse> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= SANITY_FETCH_ATTEMPTS; attempt += 1) {
+    try {
+      return await fetcher();
+    } catch (error) {
+      lastError = error;
+
+      if (attempt === SANITY_FETCH_ATTEMPTS) {
+        break;
+      }
+
+      console.warn(
+        `Sanity fetch failed; retrying (${attempt}/${SANITY_FETCH_ATTEMPTS}).`,
+        error,
+      );
+      await wait(SANITY_FETCH_RETRY_DELAY_MS * attempt);
+    }
+  }
+
+  throw lastError;
+}
+
 /**
  * Enhanced fetch function with correct Next.js caching strategy
  * - Development: uses "use cache" with cacheLife('seconds') to mimic fresh data while satisfying Static Shell
@@ -41,7 +74,9 @@ export async function sanityFetch<QueryResponse>({
     cacheLife('weeks');
   }
 
-  return await client.fetch<QueryResponse>(query, params);
+  return await fetchSanityWithRetry(() =>
+    client.fetch<QueryResponse>(query, params),
+  );
 }
 
 /**
@@ -58,7 +93,9 @@ export async function sanityFetchDynamic<QueryResponse>({
   query: string;
   params?: QueryParams;
 }): Promise<QueryResponse> {
-  return await client.fetch<QueryResponse>(query, params);
+  return await fetchSanityWithRetry(() =>
+    client.fetch<QueryResponse>(query, params),
+  );
 }
 
 /**
@@ -72,5 +109,7 @@ export async function sanityFetchFresh<QueryResponse>({
   query: string;
   params?: QueryParams;
 }): Promise<QueryResponse> {
-  return await freshClient.fetch<QueryResponse>(query, params);
+  return await fetchSanityWithRetry(() =>
+    freshClient.fetch<QueryResponse>(query, params),
+  );
 }

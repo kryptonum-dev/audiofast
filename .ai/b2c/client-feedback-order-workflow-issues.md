@@ -791,4 +791,3 @@ Several feedback points are connected and should probably be designed together:
 - Legal document and return instruction content should be reviewed by Audiofast before launch.
 - Apaczka should not be represented as completed integration unless API-backed behavior is actually implemented.
 - Return deadlines require legal/business confirmation before being encoded.
-

@@ -16,6 +16,7 @@
  */
 
 import type { SanityClient } from "@sanity/client";
+import sharp from "sharp";
 
 import {
   getProductSummary,
@@ -54,7 +55,6 @@ import {
   createMigrationClient,
   getClientConfig,
 } from "./utils/sanity-client";
-import sharp from "sharp";
 
 // ============================================================================
 // CLI Options
@@ -264,8 +264,11 @@ async function fixMissingImagesForBrand(
   // Build a map of product IDs to their CSV image paths
   const imagePathMap = new Map<string, string>();
   for (const csvProduct of csvData.mainProducts) {
-    if (csvProduct.BrandSlug === brandSlug && csvProduct.Image) {
-      imagePathMap.set(`product-${csvProduct.ProductID}`, csvProduct.Image);
+    if (csvProduct.BrandSlug === brandSlug && csvProduct.MainImageFilename) {
+      imagePathMap.set(
+        `product-${csvProduct.ProductID}`,
+        csvProduct.MainImageFilename,
+      );
     }
   }
 

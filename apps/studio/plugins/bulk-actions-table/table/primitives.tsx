@@ -1,5 +1,7 @@
-import { Card, CardProps } from '@sanity/ui';
-import { PropsWithChildren, forwardRef } from 'react';
+import type { CardProps } from '@sanity/ui';
+import { Card } from '@sanity/ui';
+import type { PropsWithChildren} from 'react';
+import { forwardRef } from 'react';
 import styled, { css } from 'styled-components';
 
 // Table

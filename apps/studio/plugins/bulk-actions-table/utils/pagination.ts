@@ -1,7 +1,7 @@
 /**
  * Efficient pagination utilities for handling Sanity documents with draft/published states
  */
-import { SanityClient } from '@sanity/client';
+import type { SanityClient } from '@sanity/client';
 
 export interface PaginationOptions {
   type: string;

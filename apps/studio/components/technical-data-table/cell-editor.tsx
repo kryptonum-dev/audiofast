@@ -30,6 +30,10 @@ type TextSelection = {
 
 type MarkType = "strong" | "em";
 type ListType = "bullet" | "number";
+type PortableTextSpan = {
+  _type: "span";
+  marks?: string[];
+};
 
 /**
  * Link editor popover component
@@ -398,12 +402,14 @@ export function CellEditor({
     
     // Preserve marks and markDefs from existing content where possible
     if (content.length > 0 && newBlocks.length > 0) {
-      const existingMarks = content[0]?.children?.[0]?.marks || [];
-      const existingMarkDefs = content[0]?.markDefs || [];
+      const children = content[0]?.children as PortableTextSpan[] | undefined;
+      const firstChild = children?.[0];
+      const existingMarks = firstChild?.marks || [];
+      const existingMarkDefs = content[0]?.markDefs as unknown[] | undefined;
       
-      if (existingMarks.length > 0 || existingMarkDefs.length > 0) {
+      if (existingMarks.length > 0 || (existingMarkDefs?.length ?? 0) > 0) {
         newBlocks.forEach((block) => {
-          (block as any).markDefs = existingMarkDefs;
+          (block as any).markDefs = existingMarkDefs || [];
           const children = (block.children as any[]) || [];
           children.forEach((child) => {
             if (child._type === "span") {
@@ -605,10 +611,10 @@ export function CellEditor({
             Wskazówki:
           </Text>
           <Text size={1} muted>
-            • Użyj "• " lub "- " na początku linii dla listy wypunktowanej
+            • Użyj &quot;• &quot; lub &quot;- &quot; na początku linii dla listy wypunktowanej
           </Text>
           <Text size={1} muted>
-            • Użyj "1. " na początku linii dla listy numerowanej
+            • Użyj &quot;1. &quot; na początku linii dla listy numerowanej
           </Text>
           <Text size={1} muted>
             • Przyciski formatowania stosują styl do całego tekstu

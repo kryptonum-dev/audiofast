@@ -1,4 +1,4 @@
-import { ObjectField } from 'sanity';
+import type { ObjectField } from 'sanity';
 
 export interface SelectableField {
   field: ObjectField;

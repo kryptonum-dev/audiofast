@@ -1,5 +1,6 @@
 import { Text } from '@sanity/ui';
-import { Preview, SchemaType } from 'sanity';
+import type { SchemaType } from 'sanity';
+import { Preview } from 'sanity';
 import styled from 'styled-components';
 
 import { CellPrimitive } from './primitives';

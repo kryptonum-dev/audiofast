@@ -616,7 +616,7 @@ function DeliveryEstimateSection({
           label="Aktualny termin"
           value={formatDeliveryEstimate(order.deliveryEstimate)}
         />
-        
+
       </Grid>
       {order.actions.canEditDeliveryEstimate ? (
         <form onSubmit={submitDeliveryEstimate}>

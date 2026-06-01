@@ -14,7 +14,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import { useBulkActionsTableContext } from '../context';
-import { ReferenceFilterConfig } from '../types';
+import type { ReferenceFilterConfig } from '../types';
 
 interface ReferenceOption {
   _id: string;

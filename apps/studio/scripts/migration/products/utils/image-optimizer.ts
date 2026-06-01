@@ -4,6 +4,7 @@
  */
 
 import * as fs from "node:fs";
+import type { IncomingMessage } from "node:http";
 import * as https from "node:https";
 import * as path from "node:path";
 
@@ -117,7 +118,7 @@ export function getAlternativeUrls(sourceUrl: string): string[] {
  */
 async function downloadImage(url: string): Promise<Buffer | null> {
   return new Promise((resolve) => {
-    const handleResponse = (response: https.IncomingMessage) => {
+    const handleResponse = (response: IncomingMessage) => {
       // Handle redirects
       if (response.statusCode === 301 || response.statusCode === 302) {
         let redirectUrl = response.headers.location;

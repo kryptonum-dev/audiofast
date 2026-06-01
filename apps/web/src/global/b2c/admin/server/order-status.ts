@@ -2,6 +2,7 @@ import 'server-only';
 
 import type { PostgrestError } from '@supabase/supabase-js';
 
+import { getAdminOrderStatusEmailStatus } from '@/src/global/b2c/admin/order-status-email-content';
 import type { VerifiedAdminOperator } from '@/src/global/b2c/admin/server/auth';
 import {
   type B2cOrderStatus,
@@ -13,13 +14,9 @@ import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
 import {
-  buildAdminOrderDeliveryEstimatePayload,
   type AdminOrderDeliveryEstimateInput,
+  buildAdminOrderDeliveryEstimatePayload,
 } from './order-delivery-estimate';
-import {
-  getAdminOrderStatusEmailStatus,
-  sendAdminOrderStatusUpdateEmail,
-} from './order-status-email';
 
 export type AdminOrderStatusRow = Pick<
   Database['public']['Tables']['orders']['Row'],
@@ -294,6 +291,10 @@ export async function sendAdminOrderStatusCustomerEmail(args: {
   }
 
   try {
+    const { sendAdminOrderStatusUpdateEmail } = await import(
+      './order-status-email'
+    );
+
     await sendAdminOrderStatusUpdateEmail({
       order: args.row,
       status,

@@ -4,9 +4,9 @@
  */
 
 import type {
-  ProductTypeRecord,
   DeviceTypeItemMapping,
   DeviceTypeRecord,
+  ProductTypeRecord,
 } from "./types";
 
 /**

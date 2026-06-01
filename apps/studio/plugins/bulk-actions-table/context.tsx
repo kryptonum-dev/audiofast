@@ -1,19 +1,23 @@
-import {
+import type {
   Dispatch,
   ReactNode,
-  SetStateAction,
+  SetStateAction} from 'react';
+import {
   createContext,
   useContext,
   useMemo,
   useState,
 } from 'react';
-import { ObjectField, SchemaType } from 'sanity';
+import type { ObjectField, SchemaType } from 'sanity';
 
-import { Options, orderColumnDefault, rowsPerPage } from './constants';
-import { ColumnOrder, useStickyStateOrder } from './hooks/useStickyStateOrder';
+import type { Options} from './constants';
+import { orderColumnDefault, rowsPerPage } from './constants';
+import type { ColumnOrder} from './hooks/useStickyStateOrder';
+import { useStickyStateOrder } from './hooks/useStickyStateOrder';
 import { useStickyStateSet } from './hooks/useStickyStateSet';
-import { FilterConfig, ReferenceFilterConfig } from './types';
-import usePaginatedClient, { PaginatedClient } from './usePaginatedClient';
+import type { FilterConfig, ReferenceFilterConfig } from './types';
+import type { PaginatedClient } from './usePaginatedClient';
+import usePaginatedClient from './usePaginatedClient';
 import { sanitizeGroqInput } from './utils/sanitization';
 
 const BulkActionsTableContext = createContext({

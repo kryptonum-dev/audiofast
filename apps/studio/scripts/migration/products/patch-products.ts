@@ -24,7 +24,7 @@ import { parse } from "csv-parse/sync";
 
 import { htmlToPortableText } from "./parser/html-to-portable-text";
 import { loadLegacyReviewIdMappings,loadReferenceMappings, resolveReviewByLegacyId, resolveReviewReferences } from "./transformers/reference-resolver";
-import type { PortableTextBlock, ProductArticleRow, ProductReviewRow, SanityImageRef } from "./types";
+import type { ImageCache, PortableTextBlock, ProductArticleRow, ProductReviewRow, SanityImageRef } from "./types";
 import { getLegacyAssetUrl, loadImageCache, processAndUploadImage, processImageDryRun,saveImageCache } from "./utils/image-optimizer";
 
 // ============================================================================
@@ -279,7 +279,7 @@ async function executePatch(
   operation: PatchOperation,
   articlesMap: Map<string, ProductArticleRow>,
   reviewsMap: Map<string, ProductReviewRow[]>,
-  imageCache: Record<string, { assetId: string; originalSize: number; optimizedSize: number }>,
+  imageCache: ImageCache,
   dryRun: boolean,
   verbose: boolean
 ): Promise<void> {

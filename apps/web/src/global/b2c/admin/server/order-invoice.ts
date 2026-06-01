@@ -2,10 +2,7 @@ import 'server-only';
 
 import type { PostgrestError } from '@supabase/supabase-js';
 
-import { OrderInvoiceAvailableTemplate } from '@/src/emails/order-invoice-available-template';
 import type { VerifiedAdminOperator } from '@/src/global/b2c/admin/server/auth';
-import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
-import { buildB2cWithdrawalFormEmailAttachment } from '@/src/global/b2c/legal-documents/withdrawal-form';
 import {
   getString,
   isRecord,
@@ -13,7 +10,6 @@ import {
   parseOrderInvoiceData,
 } from '@/src/global/b2c/utils/orders';
 import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
-import { getTransactionalReplyToEmail } from '@/src/global/email/service';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';
 
@@ -259,6 +255,17 @@ async function sendInvoiceEmail(args: {
   fileBase64: string;
   order: OrderInvoiceRow;
 }): Promise<AdminInvoiceEmailStatus> {
+  const [
+    { OrderInvoiceAvailableTemplate },
+    { sendB2cCustomerTransactionalEmail },
+    { buildB2cWithdrawalFormEmailAttachment },
+    { getTransactionalReplyToEmail },
+  ] = await Promise.all([
+    import('@/src/emails/order-invoice-available-template'),
+    import('@/src/global/b2c/customer-transactional-email'),
+    import('@/src/global/b2c/legal-documents/withdrawal-form'),
+    import('@/src/global/email/service'),
+  ]);
   const invoice = parseOrderInvoiceData(args.order.invoice_data);
   const withdrawalForm = await buildB2cWithdrawalFormEmailAttachment({
     invoice,

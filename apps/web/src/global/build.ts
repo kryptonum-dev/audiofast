@@ -1,5 +1,10 @@
 export function shouldLimitBuildTimeStaticParams(): boolean {
+  if (process.env.LIMIT_BUILD_TIME_STATIC_PARAMS === '0') {
+    return false;
+  }
+
   return (
+    process.env.NODE_ENV === 'production' ||
     process.env.VERCEL_ENV === 'preview' ||
     process.env.LIMIT_BUILD_TIME_STATIC_PARAMS === '1'
   );

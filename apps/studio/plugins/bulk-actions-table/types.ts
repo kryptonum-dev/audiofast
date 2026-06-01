@@ -1,6 +1,6 @@
-import { ComponentType } from 'react';
-import { ConfigContext } from 'sanity';
-import { StructureBuilder } from 'sanity/structure';
+import type { ComponentType } from 'react';
+import type { ConfigContext } from 'sanity';
+import type { StructureBuilder } from 'sanity/structure';
 
 /**
  * A single option within a filter dropdown

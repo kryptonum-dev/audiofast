@@ -205,6 +205,22 @@ Leave `P24_API_BASE_URL` and `P24_PANEL_BASE_URL` unset unless intentionally ove
 
 ### 3.2 Supabase Values
 
+Status: confirmed on 2026-06-01.
+
+Vercel production has `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+and `SUPABASE_SERVICE_ROLE_KEY` configured. `SUPABASE_ORDER_INVOICES_BUCKET` is
+not configured, so the app uses its default bucket name: `order-invoices`.
+
+Invoice bucket smoke test passed against Supabase project `xuwapsacaymdemmvblak`:
+
+- bucket `order-invoices` exists
+- bucket is private
+- service-role upload of a PDF object succeeds
+- service-role download returns the uploaded bytes
+- customer-style signed URL creation succeeds
+- unsigned public URL access is blocked
+- smoke-test object cleanup succeeds
+
 Confirm:
 
 ```env
@@ -281,6 +297,25 @@ Migrations added on the branch:
 - `supabase/migrations/20260521081500_add_order_payment_session_id.sql`
 - `supabase/migrations/20260521084300_add_order_expected_delivery_estimate.sql`
 - `supabase/migrations/20260521101500_add_return_case_awaiting_goods.sql`
+
+Status: confirmed on 2026-06-01 against Supabase project
+`xuwapsacaymdemmvblak`.
+
+The Supabase CLI migration ledger check was blocked locally because the linked
+account lacks the required platform privilege and `SUPABASE_DB_PASSWORD` is not
+available. Instead, live service-role API checks confirmed the observable effects
+of every migration in `supabase/migrations`:
+
+- admin cancellation and return-case transaction functions are callable
+- `coupons.archived_at` exists
+- hardened B2C tables are readable through service role
+- anon coupon reads are denied
+- customer-order RLS target tables remain queryable through the intended API path
+- `orders.current_status` is present with the post-migration admin RPC shape
+- `orders.payment_session_id` exists
+- `orders.expected_delivery_from` and `orders.expected_delivery_to` exist
+- return-case awaiting-goods columns exist
+- `admin_mark_return_case_awaiting_goods` is callable
 
 Required checks:
 
@@ -362,21 +397,33 @@ Important follow-up: `NEXT_REVALIDATE_TOKEN` currently also acts as the Sanity w
 
 The Sanity App SDK admin app has its own build-time API base.
 
-Before deploying the admin app, set:
+Status: deployed on 2026-06-01 with production API base
+`https://audiofast.pl/`.
+
+`apps/b2c-admin/src/config.ts` now defaults production builds to
+`https://audiofast.pl/`, so `VITE_B2C_ADMIN_API_BASE_URL` is only needed for an
+intentional override.
+
+Optional override before deploying the admin app:
 
 ```env
 VITE_B2C_ADMIN_API_BASE_URL=https://audiofast.pl/
 ```
-
-Without this, the app code defaults to the old b2c preview deployment:
-
-- `apps/b2c-admin/src/config.ts`
 
 Deploy command from `apps/b2c-admin`:
 
 ```bash
 bun run deploy
 ```
+
+Deployment result on 2026-06-01:
+
+- `sanity deploy` succeeded
+- generated bundle contains `https://audiofast.pl/`
+- Vercel production `B2C_ADMIN_ALLOWED_ORIGINS` includes `https://www.sanity.io`
+- `/api/admin/b2c/me/` currently returns 404 from `audiofast.pl`, so the final
+  in-app API smoke test is blocked until the production web deployment includes
+  the B2C admin API routes
 
 After deployment:
 
@@ -420,6 +467,141 @@ git diff --check origin/main...HEAD
 ```
 
 Known previous issue: whitespace errors existed in `.ai/b2c/audiofast-wymagania-b2c.txt` and `apps/b2c-admin/src/admin/components/OrderDetailView.tsx`.
+
+### 7.1 Latest Local Gate Run
+
+Status: blocked on 2026-06-01.
+
+Do not proceed past the build/test gate until these failures are resolved and
+the full Step 7 command set passes.
+
+Passed checks:
+
+- `cd apps/web && bun run check-types`
+- `cd apps/web && bun run lint`
+- `cd apps/b2c-admin && bun run check-types`
+- `cd apps/b2c-admin && bun run test`
+- `cd apps/b2c-admin && bun run build`
+
+Major failures to fix before moving on:
+
+1. Root typecheck failed:
+
+   ```bash
+   bun run check-types
+   ```
+
+   Failure area: `apps/studio`.
+
+   Status: resolved locally on 2026-06-01. `bun run check-types` now exits 0
+   after upgrading the Studio Sanity plugins and fixing Studio TypeScript
+   errors.
+
+   Observed issues include Sanity/plugin type duplication errors and local
+   TypeScript errors in:
+
+   - `apps/studio/components/slug-field-component.tsx`
+   - `apps/studio/components/technical-data-table/cell-editor.tsx`
+   - `apps/studio/sanity.config.ts`
+   - `apps/studio/structure.ts`
+
+2. Root lint failed:
+
+   ```bash
+   bun run lint
+   ```
+
+   Failure area: `apps/studio`.
+
+   Status: resolved locally on 2026-06-01. `bun run lint` now exits 0. Studio
+   lint still reports warnings, but the Step 7 lint gate is no longer failing.
+
+   Observed issues include import sorting/type-only import violations,
+   conditional React hook usage, unescaped JSX entities, duplicate object keys
+   in migration code, and other Studio lint errors.
+
+3. Root build is not reliable:
+
+   ```bash
+   bun run build
+   ```
+
+   `apps/studio` and `apps/b2c-admin` built successfully, but `apps/web`
+   failed during Next prerender of `/produkty/core-2-0-usb`.
+
+   Observed failure:
+
+   - Sanity request timeout against `fsw3likv.api.sanity.io`
+   - pricing fetch failure
+   - Next export stopped on `/produkty/[slug]/page`
+
+   Production deployment should not proceed until the web build passes
+   reliably, or the build-time data fetch path is made resilient enough that a
+   transient upstream timeout cannot fail the deployment.
+
+4. Focused web tests need the correct Sanity test environment:
+
+   ```bash
+   cd apps/web
+   bun run test:run
+   ```
+
+   Result: command exited with failure even though most tests passed.
+
+   Summary from the run:
+
+   - 92 test files passed
+   - 1 test file skipped
+   - 481 tests passed
+   - 15 tests skipped
+   - 2 suites failed before running tests
+
+   Failed suites:
+
+   - `src/global/b2c/admin/server/order-invoice.test.ts`
+   - `src/global/b2c/admin/server/order-status.test.ts`
+
+   Root cause shown by Vitest:
+
+   - missing `NEXT_PUBLIC_SANITY_PROJECT_ID`
+
+   Fix by loading the expected test environment for these tests or by mocking
+   the Sanity client dependency where the tests should not touch real env.
+
+5. Playwright e2e does not pass:
+
+   ```bash
+   cd apps/web
+   bun run test:e2e
+   ```
+
+   The exact command first failed because an existing `next dev` process was
+   holding `.next/dev/lock`.
+
+   A rerun pointed at the existing dev server on port `3000` reached
+   Playwright, but failed in:
+
+   - `e2e/auth.setup.ts` / `authenticate customer panel user`
+
+   Observed failure:
+
+   - app-side `TypeError: fetch failed`
+   - 12 dependent tests did not run
+
+   Fix by running e2e with a clean dev-server state and the expected e2e env,
+   then investigate the auth setup fetch failure if it persists.
+
+6. Diff whitespace check fails:
+
+   ```bash
+   git diff --check origin/main...HEAD
+   ```
+
+   Current whitespace failures include:
+
+   - trailing whitespace in `.ai/b2c/audiofast-wymagania-b2c.txt`
+   - new blank line at EOF in `.ai/b2c/client-feedback-order-workflow-issues.md`
+   - trailing whitespace in `apps/b2c-admin/src/admin/components/OrderDetailView.tsx`
 
 ## 8. Production Deployment Order
 

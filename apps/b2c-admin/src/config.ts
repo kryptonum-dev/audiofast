@@ -2,7 +2,7 @@ const adminApiBaseUrl =
   import.meta.env.VITE_B2C_ADMIN_API_BASE_URL ??
   (import.meta.env.DEV
     ? "http://localhost:3000/"
-    : "https://audiofast-git-b2c-kryptonum.vercel.app/");
+    : "https://audiofast.pl/");
 
 export const sanityAppConfig = {
   organizationId: "o5BEPFjvf",

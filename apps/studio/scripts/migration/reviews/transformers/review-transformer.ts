@@ -59,6 +59,12 @@ function createPortableTextFromString(
   ];
 }
 
+function isPortableTextBlock(
+  block: ReviewPortableTextContent | ImagePlaceholder,
+): block is PortableTextBlock {
+  return block._type === "block";
+}
+
 /**
  * Build slug for page-type reviews
  */
@@ -249,8 +255,9 @@ export async function transformReview(
     const rawDescription = cleanString(row.Description);
     if (rawDescription) {
       const descriptionBlocks = htmlToPortableText(rawDescription);
-      if (descriptionBlocks.length > 0) {
-        document.description = descriptionBlocks;
+      const textBlocks = descriptionBlocks.filter(isPortableTextBlock);
+      if (textBlocks.length > 0) {
+        document.description = textBlocks;
       }
     }
 
@@ -285,8 +292,9 @@ export async function transformReview(
     const rawDescription = cleanString(row.Description);
     if (rawDescription) {
       const descriptionBlocks = htmlToPortableText(rawDescription);
-      if (descriptionBlocks.length > 0) {
-        document.description = descriptionBlocks;
+      const textBlocks = descriptionBlocks.filter(isPortableTextBlock);
+      if (textBlocks.length > 0) {
+        document.description = textBlocks;
       }
     }
   } else if (destinationType === "external") {
@@ -302,8 +310,9 @@ export async function transformReview(
     const rawDescription = cleanString(row.Description);
     if (rawDescription) {
       const descriptionBlocks = htmlToPortableText(rawDescription);
-      if (descriptionBlocks.length > 0) {
-        document.description = descriptionBlocks;
+      const textBlocks = descriptionBlocks.filter(isPortableTextBlock);
+      if (textBlocks.length > 0) {
+        document.description = textBlocks;
       }
     }
   }
