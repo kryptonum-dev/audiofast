@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createAdminClient } from '@/src/global/supabase/admin';
 
+import { markCpoItemsSoldForOrder } from './cpo-availability';
 import {
   CheckoutPaymentUpdateError,
   confirmCheckoutOrderPayment,
@@ -9,6 +10,10 @@ import {
 
 vi.mock('@/src/global/supabase/admin', () => ({
   createAdminClient: vi.fn(),
+}));
+
+vi.mock('./cpo-availability', () => ({
+  markCpoItemsSoldForOrder: vi.fn(),
 }));
 
 function createSelectChain(
@@ -62,6 +67,7 @@ function createUpdateChain(
 describe('confirmCheckoutOrderPayment', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(markCpoItemsSoldForOrder).mockResolvedValue(undefined);
   });
 
   it('moves an awaiting_payment order to awaiting_confirmation and appends status history', async () => {

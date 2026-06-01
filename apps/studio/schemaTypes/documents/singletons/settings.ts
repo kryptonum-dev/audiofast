@@ -188,12 +188,37 @@ export const settings = defineType({
           of: [
             defineArrayMember({
               type: "string",
-              validation: (Rule) => Rule.email().required(),
+              validation: (Rule) =>
+                Rule.required()
+                  .email()
+                  .error("Podaj poprawny adres e-mail odbiorcy"),
             }),
           ],
           validation: (Rule) => [
-            Rule.min(1).error("Musisz dodać co najmniej jeden adres e-mail"),
-            Rule.required().error("Lista adresów e-mail jest wymagana"),
+            Rule.required().error(
+              "Lista adresów e-mail odbiorców jest wymagana",
+            ),
+            Rule.min(1).error("Dodaj co najmniej jeden adres e-mail odbiorcy"),
+            Rule.unique().error("Adresy e-mail odbiorców muszą być unikalne"),
+            Rule.custom((emails) => {
+              if (!emails?.length) {
+                return true;
+              }
+
+              const normalizedEmails = emails
+                .map((email) => (email as string)?.trim().toLowerCase())
+                .filter(Boolean);
+
+              if (normalizedEmails.length !== emails.length) {
+                return "Każdy odbiorca musi mieć podany adres e-mail";
+              }
+
+              if (normalizedEmails.length !== new Set(normalizedEmails).size) {
+                return "Adresy e-mail odbiorców muszą być unikalne";
+              }
+
+              return true;
+            }),
           ],
         }),
         defineField({

@@ -1,9 +1,19 @@
 import 'server-only';
 
+import { createClient as createSanityClient } from '@sanity/client';
 import { cacheLife, cacheTag } from 'next/cache';
 import { type QueryParams } from 'next-sanity';
 
-import { client } from './client';
+import { apiVersion, client, dataset, projectId, readToken } from './client';
+
+const freshClient = createSanityClient({
+  projectId,
+  dataset,
+  apiVersion,
+  token: readToken,
+  useCdn: false,
+  perspective: 'published',
+});
 
 /**
  * Enhanced fetch function with correct Next.js caching strategy
@@ -49,4 +59,18 @@ export async function sanityFetchDynamic<QueryResponse>({
   params?: QueryParams;
 }): Promise<QueryResponse> {
   return await client.fetch<QueryResponse>(query, params);
+}
+
+/**
+ * Fresh Content Lake read for operational checks that must not go through
+ * Next cache or Sanity CDN, such as checkout-time CPO availability.
+ */
+export async function sanityFetchFresh<QueryResponse>({
+  query,
+  params = {},
+}: {
+  query: string;
+  params?: QueryParams;
+}): Promise<QueryResponse> {
+  return await freshClient.fetch<QueryResponse>(query, params);
 }

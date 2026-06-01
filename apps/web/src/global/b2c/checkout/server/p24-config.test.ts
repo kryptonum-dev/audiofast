@@ -15,6 +15,10 @@ describe('p24-config', () => {
     expect(getP24Mode({})).toBe('mock');
   });
 
+  it('reads explicit mock mode outside production', () => {
+    expect(getP24Mode({ P24_MODE: 'mock' })).toBe('mock');
+  });
+
   it('forces mock mode when P24_FORCE_MOCK is enabled', () => {
     expect(
       getP24Mode({
@@ -22,6 +26,53 @@ describe('p24-config', () => {
         P24_FORCE_MOCK: '1',
       }),
     ).toBe('mock');
+  });
+
+  it('rejects invalid P24_MODE values outside production', () => {
+    expect(() => getP24Mode({ P24_MODE: 'prod' })).toThrow(P24ConfigError);
+  });
+
+  it('allows only production mode in production runtime', () => {
+    expect(
+      getP24Mode({
+        VERCEL_ENV: 'production',
+        P24_MODE: 'production',
+      }),
+    ).toBe('production');
+  });
+
+  it('rejects missing P24_MODE in production runtime', () => {
+    expect(() => getP24Mode({ VERCEL_ENV: 'production' })).toThrow(
+      P24ConfigError,
+    );
+  });
+
+  it('rejects mock mode in production runtime', () => {
+    expect(() =>
+      getP24Mode({
+        VERCEL_ENV: 'production',
+        P24_MODE: 'mock',
+      }),
+    ).toThrow(P24ConfigError);
+  });
+
+  it('rejects sandbox mode in production runtime', () => {
+    expect(() =>
+      getP24Mode({
+        VERCEL_ENV: 'production',
+        P24_MODE: 'sandbox',
+      }),
+    ).toThrow(P24ConfigError);
+  });
+
+  it('rejects forced mock mode in production runtime', () => {
+    expect(() =>
+      getP24Mode({
+        VERCEL_ENV: 'production',
+        P24_MODE: 'production',
+        P24_FORCE_MOCK: '1',
+      }),
+    ).toThrow(P24ConfigError);
   });
 
   it('loads sandbox config with default P24 URLs', () => {

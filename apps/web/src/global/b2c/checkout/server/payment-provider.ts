@@ -7,8 +7,8 @@ import type {
   P24VerificationInput,
   P24VerificationResult,
 } from '../payment-contracts';
-import { mockPrzelewy24PaymentProviderAdapter } from './payment-mock';
 import { isP24LiveMode } from './p24-config';
+import { mockPrzelewy24PaymentProviderAdapter } from './payment-mock';
 import { livePrzelewy24PaymentProviderAdapter } from './payment-przelewy24';
 
 export type CheckoutPaymentProviderAdapter = {
@@ -34,17 +34,14 @@ export type CheckoutPaymentProviderAdapter = {
   ): Promise<P24VerificationResult>;
 };
 
-const checkoutPaymentProviderRegistry: Record<
-  CheckoutPaymentProvider,
-  CheckoutPaymentProviderAdapter
-> = {
-  przelewy24: isP24LiveMode()
-    ? livePrzelewy24PaymentProviderAdapter
-    : mockPrzelewy24PaymentProviderAdapter,
-};
-
 export function getCheckoutPaymentProviderAdapter(
   provider: CheckoutPaymentProvider,
 ): CheckoutPaymentProviderAdapter {
-  return checkoutPaymentProviderRegistry[provider];
+  if (provider === 'przelewy24') {
+    return isP24LiveMode()
+      ? livePrzelewy24PaymentProviderAdapter
+      : mockPrzelewy24PaymentProviderAdapter;
+  }
+
+  throw new Error(`Unsupported checkout payment provider: ${provider}`);
 }

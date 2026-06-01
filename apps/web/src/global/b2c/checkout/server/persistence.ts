@@ -90,7 +90,7 @@ export function mapCheckoutOrderDraftToOrderItemsInsert(args: {
   }));
 }
 
-async function cleanupFailedOrderInsert(orderId: string): Promise<void> {
+export async function cleanupCheckoutOrder(orderId: string): Promise<void> {
   try {
     const supabase = createAdminClient();
     await supabase.from('orders').delete().eq('id', orderId);
@@ -137,7 +137,7 @@ export async function persistCheckoutOrder(args: {
     .select('id');
 
   if (orderItemsInsertError) {
-    await cleanupFailedOrderInsert(orderRow.id);
+    await cleanupCheckoutOrder(orderRow.id);
 
     throw new CheckoutPersistenceError(
       'Failed to persist checkout order items.',

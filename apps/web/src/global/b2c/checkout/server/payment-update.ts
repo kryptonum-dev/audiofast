@@ -8,6 +8,7 @@ import {
   type CheckoutOrderStatus,
   type CheckoutStatusHistoryEntry,
 } from '../order-draft';
+import { markCpoItemsSoldForOrder } from './cpo-availability';
 
 type OrderPaymentStateRow = Pick<
   Database['public']['Tables']['orders']['Row'],
@@ -17,6 +18,7 @@ type OrderPaymentStateRow = Pick<
   | 'current_status'
   | 'payable_until'
   | 'payment_provider'
+  | 'payment_session_id'
   | 'status_history'
   | 'payment_reference'
   | 'payment_verified_at'
@@ -234,7 +236,7 @@ async function updateOrderPaymentState(args: {
     .eq('id', args.orderId)
     .eq('current_status', args.expectedCurrentStatus)
     .select(
-      'created_at, id, order_number, current_status, payable_until, payment_provider, status_history, payment_reference, payment_verified_at, paid_at',
+      'created_at, id, order_number, current_status, payable_until, payment_provider, payment_session_id, status_history, payment_reference, payment_verified_at, paid_at',
     )
     .single();
 
@@ -260,7 +262,7 @@ async function loadOrderPaymentState(
   const { data, error } = await supabase
     .from('orders')
     .select(
-      'created_at, id, order_number, current_status, payable_until, payment_provider, status_history, payment_reference, payment_verified_at, paid_at',
+      'created_at, id, order_number, current_status, payable_until, payment_provider, payment_session_id, status_history, payment_reference, payment_verified_at, paid_at',
     )
     .eq('id', orderId)
     .single();
@@ -288,6 +290,27 @@ export async function confirmCheckoutOrderPayment(args: {
   const currentState = await loadOrderPaymentState(args.orderId);
   assertPaymentProvider(currentState);
 
+  const markCpoSold = async (
+    state: OrderPaymentStateRow,
+    soldAt: string,
+  ): Promise<void> => {
+    await markCpoItemsSoldForOrder({
+      orderId: state.id,
+      orderNumber: state.order_number,
+      paymentSessionId: state.payment_session_id,
+      soldAt,
+    }).catch((error) => {
+      console.error(
+        'Failed to mark CPO items as sold after payment confirmation.',
+        {
+          orderId: state.id,
+          orderNumber: state.order_number,
+          error,
+        },
+      );
+    });
+  };
+
   if (isPostPaymentConfirmationStatus(currentState.current_status)) {
     const currentHistory = normalizeCheckoutStatusHistory(
       currentState.status_history,
@@ -314,6 +337,10 @@ export async function confirmCheckoutOrderPayment(args: {
     }
 
     if (Object.keys(repairedPayload).length === 0) {
+      await markCpoSold(
+        currentState,
+        currentState.paid_at ?? currentState.payment_verified_at ?? verifiedAt,
+      );
       return mapOrderPaymentStateRow(currentState, true);
     }
 
@@ -325,7 +352,14 @@ export async function confirmCheckoutOrderPayment(args: {
       payload: repairedPayload,
     });
 
-    return mapOrderPaymentStateRow(repairedState ?? currentState, true);
+    const finalState = repairedState ?? currentState;
+
+    await markCpoSold(
+      finalState,
+      finalState.paid_at ?? finalState.payment_verified_at ?? verifiedAt,
+    );
+
+    return mapOrderPaymentStateRow(finalState, true);
   }
 
   if (currentState.current_status !== 'awaiting_payment') {
@@ -380,6 +414,8 @@ export async function confirmCheckoutOrderPayment(args: {
   });
 
   if (updatedState) {
+    await markCpoSold(updatedState, verifiedAt);
+
     return mapOrderPaymentStateRow(updatedState, false);
   }
 
@@ -387,6 +423,11 @@ export async function confirmCheckoutOrderPayment(args: {
   assertPaymentProvider(reloadedState);
 
   if (isPostPaymentConfirmationStatus(reloadedState.current_status)) {
+    await markCpoSold(
+      reloadedState,
+      reloadedState.paid_at ?? reloadedState.payment_verified_at ?? verifiedAt,
+    );
+
     return mapOrderPaymentStateRow(reloadedState, true);
   }
 

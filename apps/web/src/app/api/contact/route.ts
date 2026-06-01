@@ -5,6 +5,7 @@ import {
   FALLBACK_EMAIL_BODY,
   FALLBACK_EMAIL_SUBJECT,
   FALLBACK_SUPPORT_EMAIL,
+  REGEX,
 } from '@/global/constants';
 import { isGraphConfigured } from '@/global/microsoft-graph/client';
 import { sanityFetch } from '@/global/sanity/fetch';
@@ -22,7 +23,6 @@ import {
 // Reply-to address for confirmation emails
 const REPLY_TO_EMAIL =
   process.env.MS_GRAPH_REPLY_TO || process.env.MS_GRAPH_SENDER_EMAIL;
-const PRODUCT_INQUIRY_TEST_RECIPIENT = 'oliwier@kryptonum.eu';
 
 type ProductInquiryData = {
   name: string;
@@ -53,19 +53,20 @@ type ContactSettingsType = {
   };
 };
 
+type ContactSettingsSupportEmails =
+  NonNullable<QueryContactSettingsResult>['supportEmails'];
+
 // Get contact settings with fallbacks
 function getContactConfig(
-  contactSettings: NonNullable<QueryContactSettingsResult>,
+  contactSettings: QueryContactSettingsResult | null | undefined,
 ): ContactSettingsType {
-  const supportEmails = contactSettings.supportEmails || [
-    FALLBACK_SUPPORT_EMAIL,
-  ];
+  const supportEmails = normalizeSupportEmails(contactSettings?.supportEmails);
 
   const subject =
-    contactSettings.confirmationEmail?.subject || FALLBACK_EMAIL_SUBJECT;
+    contactSettings?.confirmationEmail?.subject || FALLBACK_EMAIL_SUBJECT;
   const content =
     portableTextToHtml(
-      contactSettings.confirmationEmail?.content as PortableTextProps,
+      contactSettings?.confirmationEmail?.content as PortableTextProps,
     ) || FALLBACK_EMAIL_BODY;
 
   return {
@@ -75,6 +76,25 @@ function getContactConfig(
       content,
     },
   };
+}
+
+function normalizeSupportEmails(
+  supportEmails: ContactSettingsSupportEmails | null | undefined,
+): string[] {
+  const normalizedEmails =
+    supportEmails
+      ?.map((email) => email.trim().toLowerCase())
+      .filter((email, index, allEmails) => {
+        return (
+          email.length > 0 &&
+          REGEX.email.test(email) &&
+          allEmails.indexOf(email) === index
+        );
+      }) ?? [];
+
+  return normalizedEmails.length > 0
+    ? normalizedEmails
+    : [FALLBACK_SUPPORT_EMAIL.trim().toLowerCase()];
 }
 
 // Escape HTML to prevent injection
@@ -140,7 +160,7 @@ export async function POST(request: NextRequest) {
     console.error('[Contact API] Failed to fetch contact settings', error);
   }
 
-  const emailConfig = getContactConfig(contactSettings!);
+  const emailConfig = getContactConfig(contactSettings);
 
   // Prepare variables for template replacement
   const variables = {
@@ -165,14 +185,9 @@ export async function POST(request: NextRequest) {
       : `Zapytanie o produkt: ${body.product.brandName} ${body.product.name}`
     : `Nowe zgłoszenie z formularza kontaktowego`;
 
-  // Temporary testing override: product inquiry notifications go only to Oliwier.
-  const internalNotificationRecipients = body.product
-    ? [PRODUCT_INQUIRY_TEST_RECIPIENT]
-    : emailConfig.supportEmails;
-
   const emails: TransactionalEmailInput[] = [
     {
-      to: internalNotificationRecipients.map((email) => ({ email })),
+      to: emailConfig.supportEmails.map((email) => ({ email })),
       subject: internalSubject,
       react: ContactNotificationTemplate({
         name: body.name,

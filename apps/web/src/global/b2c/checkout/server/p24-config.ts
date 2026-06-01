@@ -29,12 +29,40 @@ export class P24ConfigError extends Error {
   }
 }
 
-function normalizeMode(value: string | undefined): P24Mode {
-  if (value === 'sandbox' || value === 'production') {
-    return value;
+function isProductionRuntime(env: P24Env): boolean {
+  return env.VERCEL_ENV === 'production';
+}
+
+function parseMode(value: string | undefined): P24Mode {
+  const mode = value?.trim();
+
+  if (!mode) {
+    return 'mock';
   }
 
-  return 'mock';
+  if (mode === 'mock' || mode === 'sandbox' || mode === 'production') {
+    return mode;
+  }
+
+  throw new P24ConfigError(
+    `P24_MODE must be one of: mock, sandbox, production. Received "${mode}".`,
+  );
+}
+
+function assertProductionModeIsSafe(env: P24Env, mode: P24Mode): void {
+  if (!isProductionRuntime(env)) {
+    return;
+  }
+
+  if (env.P24_FORCE_MOCK === '1') {
+    throw new P24ConfigError('P24_FORCE_MOCK cannot be enabled in production.');
+  }
+
+  if (mode !== 'production') {
+    throw new P24ConfigError(
+      'Production runtime requires P24_MODE=production.',
+    );
+  }
 }
 
 function parseRequiredInteger(args: { env: P24Env; key: string }): number {
@@ -124,11 +152,11 @@ function parseAllowedStatusIps(env: P24Env): string[] {
 }
 
 export function getP24Mode(env: P24Env = process.env): P24Mode {
-  if (env.P24_FORCE_MOCK === '1') {
-    return 'mock';
-  }
+  const mode = env.P24_FORCE_MOCK === '1' ? 'mock' : parseMode(env.P24_MODE);
 
-  return normalizeMode(env.P24_MODE);
+  assertProductionModeIsSafe(env, mode);
+
+  return mode;
 }
 
 export function isP24LiveMode(env: P24Env = process.env): boolean {

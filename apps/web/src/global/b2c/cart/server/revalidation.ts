@@ -15,14 +15,15 @@ import type {
   StandardCartLine,
   StandardLineRevalidation,
 } from '@/src/global/b2c/cart/types';
+import { releaseExpiredCpoHoldBySlug } from '@/src/global/b2c/checkout/server/cpo-availability';
 import { validateStandardConfigurationSelection } from '@/src/global/b2c/configuration/standard-configuration';
-import { sanityFetch } from '@/src/global/sanity/fetch';
-import { fetchProductPricing } from '@/src/global/supabase/queries';
-import type { CompletePricingData } from '@/src/global/supabase/types';
 import {
   getCpoProductBuyability,
   getStandardProductBuyability,
 } from '@/src/global/b2c/utils/buyability';
+import { sanityFetchFresh } from '@/src/global/sanity/fetch';
+import { fetchProductPricing } from '@/src/global/supabase/queries';
+import type { CompletePricingData } from '@/src/global/supabase/types';
 
 type StandardProductRevalidationSnapshot = {
   isSellableOnline?: boolean | null;
@@ -67,10 +68,9 @@ async function loadStandardRevalidationContext(
   const [pricingData, product] = await Promise.all([
     fetchProductPricing(productSlug),
     routeSlug
-      ? sanityFetch<StandardProductRevalidationSnapshot | null>({
+      ? sanityFetchFresh<StandardProductRevalidationSnapshot | null>({
           query: queryStandardProductRevalidationBySlug,
           params: { slug: routeSlug },
-          tags: ['product', `product:${productSlug}`],
         })
       : Promise.resolve(null),
   ]);
@@ -127,10 +127,16 @@ async function loadCpoRevalidationContext(
     return null;
   }
 
-  return sanityFetch<CpoProductRevalidationSnapshot | null>({
+  await releaseExpiredCpoHoldBySlug(routeSlug).catch((error) => {
+    console.error('Failed to release expired CPO hold before revalidation.', {
+      productSlug: routeSlug,
+      error,
+    });
+  });
+
+  return sanityFetchFresh<CpoProductRevalidationSnapshot | null>({
     query: queryCpoProductRevalidationBySlug,
     params: { slug: routeSlug },
-    tags: ['cpoProduct', `cpoProduct:${productSlug}`],
   });
 }
 

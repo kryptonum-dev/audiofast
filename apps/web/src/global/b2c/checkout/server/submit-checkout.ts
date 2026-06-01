@@ -33,9 +33,17 @@ import { buildCheckoutOrderSummary } from '../summary';
 import type { CheckoutSubmitInput } from '../types';
 import { validateCheckoutSubmitInput } from '../validation';
 import { loadCheckoutAuthContext } from './auth-context';
+import {
+  CpoAvailabilityError,
+  reserveCpoItemsForOrder,
+} from './cpo-availability';
 import { generateNextCheckoutOrderNumber } from './order-number';
 import { getP24Mode } from './p24-config';
-import { CheckoutPersistenceError, persistCheckoutOrder } from './persistence';
+import {
+  CheckoutPersistenceError,
+  cleanupCheckoutOrder,
+  persistCheckoutOrder,
+} from './persistence';
 import {
   type CheckoutSubmitResult,
   createCheckoutSubmitFailure,
@@ -148,6 +156,35 @@ function didCartTruthChange(original: CartState, next: CartState): boolean {
   }
 
   return didCouponStateChange(original.coupon, next.coupon);
+}
+
+function buildCpoUnavailableRevalidationResults(
+  cart: CartState,
+  failedProductKeys: string[],
+  currentResults: CartLineRevalidation[],
+): CartLineRevalidation[] {
+  const failedProductKeySet = new Set(failedProductKeys);
+
+  return currentResults.map((result) => {
+    const line = cart.lines.find(
+      (candidate) => candidate.lineId === result.lineId,
+    );
+
+    if (line?.lineType !== 'cpo' || !failedProductKeySet.has(line.productKey)) {
+      return result;
+    }
+
+    return {
+      lineId: line.lineId,
+      lineType: 'cpo',
+      isBuyable: false,
+      availabilityStatus:
+        typeof line.availabilityStatus === 'string'
+          ? line.availabilityStatus
+          : 'on_hold',
+      unitPriceCents: line.unitPriceCents,
+    };
+  });
 }
 
 function buildCheckoutPaymentUrls(args: {
@@ -314,6 +351,35 @@ export async function submitCheckoutOrder(args: {
         revalidatedCart,
         revalidationResults,
       );
+    }
+
+    try {
+      await reserveCpoItemsForOrder({
+        orderDraft,
+        orderNumber: persistedOrder.orderNumber,
+        paymentSessionId: persistedOrder.paymentSessionId,
+      });
+    } catch (error) {
+      await cleanupCheckoutOrder(persistedOrder.orderId);
+
+      if (
+        error instanceof CpoAvailabilityError &&
+        (error.code === 'not_available' || error.code === 'write_conflict')
+      ) {
+        const cpoConflictResults = buildCpoUnavailableRevalidationResults(
+          revalidatedCart,
+          error.productKeys,
+          revalidationResults,
+        );
+
+        return createCheckoutSubmitFailure(
+          createCheckoutCartInvalidError(['blocking_line_issues']),
+          applyCartRevalidation(revalidatedCart, cpoConflictResults),
+          cpoConflictResults,
+        );
+      }
+
+      throw error;
     }
 
     const paymentUrls = buildCheckoutPaymentUrls({

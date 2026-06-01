@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { P24TransactionRegistrationInput } from '../payment-contracts';
 import { getCheckoutPaymentProviderAdapter } from './payment-provider';
@@ -46,7 +46,13 @@ function createPaymentRegistrationInput(
 }
 
 describe('getCheckoutPaymentProviderAdapter', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('returns the przelewy24 adapter with the expected mock registration data', async () => {
+    vi.stubEnv('P24_MODE', 'mock');
+
     const adapter = getCheckoutPaymentProviderAdapter('przelewy24');
     const registrationInput = createPaymentRegistrationInput();
 
@@ -68,6 +74,8 @@ describe('getCheckoutPaymentProviderAdapter', () => {
   });
 
   it('builds mock notification and verification payloads from the provider contract', async () => {
+    vi.stubEnv('P24_MODE', 'mock');
+
     const adapter = getCheckoutPaymentProviderAdapter('przelewy24');
     const registrationInput = createPaymentRegistrationInput();
     const registration = await adapter.registerTransaction(registrationInput);
@@ -134,5 +142,23 @@ describe('getCheckoutPaymentProviderAdapter', () => {
     expect(verification.isVerified).toBe(true);
     expect(verification.providerReference).toBe('mock-p24-payment-af202600001');
     expect(verification.verifiedAt).toEqual(expect.any(String));
+  });
+
+  it('returns the live adapter when P24 live mode is enabled', () => {
+    vi.stubEnv('P24_MODE', 'sandbox');
+
+    const adapter = getCheckoutPaymentProviderAdapter('przelewy24');
+
+    expect(adapter.provider).toBe('przelewy24');
+    expect(adapter.autoConfirmPaymentOnStart).toBe(false);
+  });
+
+  it('does not return a mock adapter when production runtime is misconfigured', () => {
+    vi.stubEnv('VERCEL_ENV', 'production');
+    vi.stubEnv('P24_MODE', 'sandbox');
+
+    expect(() => getCheckoutPaymentProviderAdapter('przelewy24')).toThrow(
+      'Production runtime requires P24_MODE=production.',
+    );
   });
 });

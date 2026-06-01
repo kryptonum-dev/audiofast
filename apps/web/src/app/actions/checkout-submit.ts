@@ -8,6 +8,7 @@ import type {
 } from '@/src/global/b2c/cart/types';
 import type { CheckoutDomainError } from '@/src/global/b2c/checkout/errors';
 import type { P24TransactionRegistrationResult } from '@/src/global/b2c/checkout/payment-contracts';
+import { releaseCpoReservationsForOrder } from '@/src/global/b2c/checkout/server/cpo-availability';
 import { startCheckoutPayment } from '@/src/global/b2c/checkout/server/start-payment';
 import { submitCheckoutOrder } from '@/src/global/b2c/checkout/server/submit-checkout';
 import { createCheckoutSubmitFailure } from '@/src/global/b2c/checkout/server/types';
@@ -119,6 +120,21 @@ export async function submitCheckout(
   });
 
   if (!paymentStartResult.ok) {
+    await releaseCpoReservationsForOrder({
+      orderDraft: checkoutResult.value.orderDraft,
+      orderNumber: checkoutResult.value.orderNumber,
+      paymentSessionId: checkoutResult.value.paymentSessionId,
+    }).catch((error) => {
+      console.error(
+        'Failed to release CPO reservation after payment start failure.',
+        {
+          orderId: checkoutResult.value.orderId,
+          orderNumber: checkoutResult.value.orderNumber,
+          error,
+        },
+      );
+    });
+
     return createCheckoutSubmitFailure(paymentStartResult.error);
   }
 
