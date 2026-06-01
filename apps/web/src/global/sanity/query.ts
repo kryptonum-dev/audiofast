@@ -2606,16 +2606,15 @@ export const queryReviewSeoBySlug =
 }`);
 
 // SEO-only query for products (used in generateMetadata)
+// brandName uses denormBrandName when brand->name is missing (stale ref / pipeline lag).
 export const queryProductSeoBySlug =
   defineQuery(`*[_type == "product" && slug.current == $slug][0]{
   "slug": slug.current,
+  name,
+  "brandName": coalesce(brand->name, denormBrandName),
   seo {
-    "title": select(
-      defined(brand->name) && defined(name) => brand->name + " " + name,
-      defined(name) => name,
-      title
-    ),
-    description
+    description,
+    title
   },
   openGraph {
     title,
