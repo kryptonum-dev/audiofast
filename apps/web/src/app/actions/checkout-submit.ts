@@ -6,9 +6,13 @@ import type {
   CartLineRevalidation,
   CartState,
 } from '@/src/global/b2c/cart/types';
-import type { CheckoutDomainError } from '@/src/global/b2c/checkout/errors';
+import {
+  type CheckoutDomainError,
+  createCheckoutInternalError,
+} from '@/src/global/b2c/checkout/errors';
 import type { P24TransactionRegistrationResult } from '@/src/global/b2c/checkout/payment-contracts';
 import { releaseCpoReservationsForOrder } from '@/src/global/b2c/checkout/server/cpo-availability';
+import { completeZeroTotalCheckoutPayment } from '@/src/global/b2c/checkout/server/payment-zero-total';
 import { startCheckoutPayment } from '@/src/global/b2c/checkout/server/start-payment';
 import { submitCheckoutOrder } from '@/src/global/b2c/checkout/server/submit-checkout';
 import { createCheckoutSubmitFailure } from '@/src/global/b2c/checkout/server/types';
@@ -18,7 +22,7 @@ type CheckoutSubmitActionSuccessValue = {
   orderId: string;
   orderNumber: string;
   redirectUrl: string;
-  registration: P24TransactionRegistrationResult;
+  registration: P24TransactionRegistrationResult | null;
   wasAlreadyPaid: boolean;
 };
 
@@ -113,6 +117,45 @@ export async function submitCheckout(
 
   if (!checkoutResult.ok) {
     return checkoutResult;
+  }
+
+  if (checkoutResult.value.paymentRegistrationInput === null) {
+    try {
+      return {
+        ok: true,
+        value: await completeZeroTotalCheckoutPayment({
+          order: checkoutResult.value,
+          redirectUrl:
+            checkoutResult.value.zeroTotalRedirectUrl ??
+            `/podziekowania-za-zakup/${encodeURIComponent(
+              checkoutResult.value.orderNumber,
+            )}/`,
+        }),
+      };
+    } catch (error) {
+      await releaseCpoReservationsForOrder({
+        orderDraft: checkoutResult.value.orderDraft,
+        orderNumber: checkoutResult.value.orderNumber,
+        paymentSessionId: checkoutResult.value.paymentSessionId,
+      }).catch((releaseError) => {
+        console.error(
+          'Failed to release CPO reservation after zero-total payment confirmation failure.',
+          {
+            orderId: checkoutResult.value.orderId,
+            orderNumber: checkoutResult.value.orderNumber,
+            error: releaseError,
+          },
+        );
+      });
+
+      console.error('Failed to complete zero-total checkout payment.', {
+        orderId: checkoutResult.value.orderId,
+        orderNumber: checkoutResult.value.orderNumber,
+        error,
+      });
+
+      return createCheckoutSubmitFailure(createCheckoutInternalError());
+    }
   }
 
   const paymentStartResult = await startCheckoutPayment({

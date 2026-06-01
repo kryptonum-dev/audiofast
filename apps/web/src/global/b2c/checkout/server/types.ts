@@ -39,14 +39,15 @@ export type PersistCheckoutOrderResult = {
 export type CheckoutSubmitSuccessValue = PersistCheckoutOrderResult & {
   input: CheckoutSubmitInput;
   revalidatedCart: CartState;
-  paymentRegistrationInput: P24TransactionRegistrationInput;
+  paymentRegistrationInput: P24TransactionRegistrationInput | null;
+  zeroTotalRedirectUrl: string | null;
 };
 
 export type StartCheckoutPaymentData = {
   orderId: string;
   orderNumber: string;
   redirectUrl: string;
-  registration: P24TransactionRegistrationResult;
+  registration: P24TransactionRegistrationResult | null;
   wasAlreadyPaid: boolean;
 };
 

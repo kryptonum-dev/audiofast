@@ -6,6 +6,7 @@ import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line
 import type { CartState } from '@/src/global/b2c/cart/types';
 import { loadCheckoutAuthContext } from '@/src/global/b2c/checkout/server/auth-context';
 import { generateNextCheckoutOrderNumber } from '@/src/global/b2c/checkout/server/order-number';
+import { completeZeroTotalCheckoutPayment } from '@/src/global/b2c/checkout/server/payment-zero-total';
 import {
   CheckoutPersistenceError,
   persistCheckoutOrder,
@@ -51,6 +52,10 @@ vi.mock('@/src/global/b2c/checkout/server/start-payment', () => ({
   startCheckoutPayment: vi.fn(),
 }));
 
+vi.mock('@/src/global/b2c/checkout/server/payment-zero-total', () => ({
+  completeZeroTotalCheckoutPayment: vi.fn(),
+}));
+
 function createValidCart(): CartState {
   return {
     version: 1,
@@ -84,6 +89,29 @@ function createValidCart(): CartState {
       }),
     ],
     coupon: null,
+  };
+}
+
+function createZeroTotalCart(): CartState {
+  const cart = createValidCart();
+
+  return {
+    ...cart,
+    coupon: {
+      code: 'FREE100',
+      couponId: 'coupon-free-100',
+      discountType: 'percent_order',
+      discountValueCents: null,
+      discountPercent: 100,
+      productKeys: null,
+      matchedProductKeys: ['/produkty/test/'],
+      isValid: true,
+      message: null,
+      totalDiscountCents: 150_00,
+      lineDiscounts: {
+        'line-1': 150_00,
+      },
+    },
   };
 }
 
@@ -170,6 +198,15 @@ describe('submitCheckout', () => {
           },
           wasAlreadyPaid: false,
         },
+      }),
+    );
+    vi.mocked(completeZeroTotalCheckoutPayment).mockImplementation(
+      async ({ order, redirectUrl }) => ({
+        orderId: order.orderId,
+        orderNumber: order.orderNumber,
+        redirectUrl,
+        registration: null,
+        wasAlreadyPaid: false,
       }),
     );
   });
@@ -379,6 +416,71 @@ describe('submitCheckout', () => {
     expect(generateNextCheckoutOrderNumber).not.toHaveBeenCalled();
     expect(persistCheckoutOrder).not.toHaveBeenCalled();
     expect(startCheckoutPayment).not.toHaveBeenCalled();
+  });
+
+  it('finalizes a zero-total discounted order without registering a P24 payment', async () => {
+    const cart = createZeroTotalCart();
+
+    vi.mocked(revalidateCartLines).mockResolvedValue([
+      {
+        lineId: 'line-1',
+        lineType: 'standard',
+        isBuyable: true,
+        isConfigurationValid: true,
+        unitPriceCents: 150_00,
+      },
+    ]);
+    vi.mocked(generateNextCheckoutOrderNumber).mockResolvedValue(
+      'AF-2026-00013',
+    );
+    vi.mocked(persistCheckoutOrder).mockImplementation(async (args) => ({
+      orderId: 'order-13',
+      orderNumber: args.orderNumber,
+      paymentSessionId: args.paymentSessionId,
+      createdAt: '2026-04-20T10:00:00.000Z',
+      orderDraft: args.orderDraft,
+      insertedItemCount: args.orderDraft.items.length,
+    }));
+
+    const result = await submitCheckout(createValidInput(), cart);
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    expect(startCheckoutPayment).not.toHaveBeenCalled();
+    expect(persistCheckoutOrder).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orderDraft: expect.objectContaining({
+          paymentProvider: 'zero_total',
+          subtotalCents: 150_00,
+          discountTotalCents: 150_00,
+          grandTotalCents: 0,
+        }),
+      }),
+    );
+    expect(completeZeroTotalCheckoutPayment).toHaveBeenCalledWith({
+      order: expect.objectContaining({
+        orderId: 'order-13',
+        orderNumber: 'AF-2026-00013',
+        orderDraft: expect.objectContaining({
+          paymentProvider: 'zero_total',
+          grandTotalCents: 0,
+        }),
+        paymentRegistrationInput: null,
+      }),
+      redirectUrl:
+        'http://localhost:3000/podziekowania-za-zakup/AF-2026-00013/',
+    });
+    expect(result.value).toMatchObject({
+      orderId: 'order-13',
+      orderNumber: 'AF-2026-00013',
+      redirectUrl:
+        'http://localhost:3000/podziekowania-za-zakup/AF-2026-00013/',
+      registration: null,
+      wasAlreadyPaid: false,
+    });
   });
 
   it('uses the current request origin for checkout payment return URLs', async () => {

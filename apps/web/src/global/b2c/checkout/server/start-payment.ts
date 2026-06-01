@@ -33,6 +33,12 @@ function buildCheckoutPaymentRedirectUrl(args: {
 export async function startCheckoutPayment(args: {
   paymentRegistrationInput: P24TransactionRegistrationInput;
 }): Promise<StartCheckoutPaymentResult> {
+  if (args.paymentRegistrationInput.amount <= 0) {
+    return createCheckoutFailure(
+      createCheckoutPaymentRegistrationFailedError(),
+    );
+  }
+
   if (isOnlinePaymentAmountOverLimit(args.paymentRegistrationInput.amount)) {
     return createCheckoutFailure(createCheckoutPaymentAmountTooHighError());
   }
