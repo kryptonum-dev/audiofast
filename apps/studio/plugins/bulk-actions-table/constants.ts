@@ -1,8 +1,8 @@
-import { SanityClient } from '@sanity/client';
-import { Schema } from 'sanity';
+import type { SanityClient } from '@sanity/client';
+import type { Schema } from 'sanity';
 
-import { Emitter } from './createEmitter';
-import { FilterConfig, ReferenceFilterConfig } from './types';
+import type { Emitter } from './createEmitter';
+import type { FilterConfig, ReferenceFilterConfig } from './types';
 
 export const rowsPerPage = [50, 100];
 export const orderColumnDefault = { key: '', direction: 'asc', type: null };

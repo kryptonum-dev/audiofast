@@ -1,49 +1,144 @@
+import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
 import { redirectsMap } from './generated/redirects';
+import { resolveCustomerAccountReturnTo } from './global/b2c/customer-auth/return-to';
 
-/**
- * Proxy for handling legacy URL redirects.
- *
- * Uses a pre-built Map for O(1) lookup performance.
- * Regenerate from Sanity using: bun run generate:redirects
- * Only runs on initial page loads, not client-side navigations.
- */
-export function proxy(request: NextRequest) {
+function isProtectedCustomerPanelPath(pathname: string) {
+  return (
+    pathname === '/konto-klienta/zamowienia' ||
+    pathname.startsWith('/konto-klienta/zamowienia/') ||
+    pathname === '/konto-klienta/dane-konta' ||
+    pathname.startsWith('/konto-klienta/dane-konta/')
+  );
+}
+
+function isCustomerAccountGatewayPath(pathname: string) {
+  return pathname === '/konto-klienta' || pathname === '/konto-klienta/';
+}
+
+function isCheckoutCustomerAuthPath(pathname: string) {
+  return (
+    pathname === '/koszyk/twoje-dane' || pathname === '/koszyk/twoje-dane/'
+  );
+}
+
+function isLegacyThankYouReturnPath(pathname: string) {
+  return (
+    pathname === '/podziekowania-za-zakup' ||
+    pathname === '/podziekowania-za-zakup/'
+  );
+}
+
+function shouldHandleSupabaseSession(pathname: string) {
+  return (
+    isCustomerAccountGatewayPath(pathname) ||
+    isProtectedCustomerPanelPath(pathname) ||
+    isCheckoutCustomerAuthPath(pathname)
+  );
+}
+
+function resolveReturnToFromRequest(request: NextRequest) {
+  const returnToValues = request.nextUrl.searchParams.getAll('returnTo');
+
+  return resolveCustomerAccountReturnTo(
+    returnToValues.length > 1 ? returnToValues : returnToValues[0],
+  );
+}
+
+function copySessionCookies(source: NextResponse, target: NextResponse) {
+  source.cookies.getAll().forEach((cookie) => {
+    target.cookies.set(cookie);
+  });
+
+  return target;
+}
+
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const legacyThankYouOrder = request.nextUrl.searchParams.get('order')?.trim();
 
-  // Check if this path needs to be redirected
-  // Try both with and without trailing slash to handle inconsistent data
-  const redirect =
+  if (isLegacyThankYouReturnPath(pathname) && legacyThankYouOrder) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/podziekowania-za-zakup/${encodeURIComponent(legacyThankYouOrder)}/`;
+    url.searchParams.delete('order');
+
+    return NextResponse.redirect(url, 307);
+  }
+
+  const redirectMatch =
     redirectsMap.get(pathname) ||
     redirectsMap.get(
       pathname.endsWith('/') ? pathname.slice(0, -1) : `${pathname}/`,
     );
 
-  if (redirect) {
+  if (redirectMatch) {
     const url = request.nextUrl.clone();
-    url.pathname = redirect.destination;
+    url.pathname = redirectMatch.destination;
 
-    // Use 308 for permanent (cacheable) or 307 for temporary
-    return NextResponse.redirect(url, redirect.permanent ? 308 : 307);
+    return NextResponse.redirect(url, redirectMatch.permanent ? 308 : 307);
   }
 
-  // No redirect needed, continue to the app
-  return NextResponse.next();
+  if (!shouldHandleSupabaseSession(pathname)) {
+    return NextResponse.next({
+      request,
+    });
+  }
+
+  let response = NextResponse.next({
+    request,
+  });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value);
+          });
+
+          response = NextResponse.next({
+            request,
+          });
+
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+        },
+      },
+    },
+  );
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user && isCustomerAccountGatewayPath(pathname)) {
+    const redirectUrl = new URL(
+      resolveReturnToFromRequest(request),
+      request.url,
+    );
+    return copySessionCookies(response, NextResponse.redirect(redirectUrl));
+  }
+
+  if (!user && isProtectedCustomerPanelPath(pathname)) {
+    const url = request.nextUrl.clone();
+    const returnTo = `${request.nextUrl.pathname}${request.nextUrl.search}${request.nextUrl.hash}`;
+
+    url.pathname = '/konto-klienta/';
+    url.search = `?returnTo=${encodeURIComponent(returnTo)}`;
+
+    return NextResponse.redirect(url);
+  }
+
+  return response;
 }
 
-/**
- * Matcher config: Only run proxy on paths that could be legacy URLs.
- * This prevents proxy from running on static assets, API routes, etc.
- */
 export const config = {
-  matcher: [
-    /*
-     * Match all paths except:
-     * - _next (Next.js internals)
-     * - api (API routes)
-     * - static files with extensions (.ico, .svg, .png, .jpg, .jpeg, .gif, .webp, .css, .js, .woff, .woff2)
-     */
-    '/((?!_next|api|.*\\.[a-zA-Z0-9]+$).*)',
-  ],
+  matcher: ['/((?!_next|api|.*\\.[a-zA-Z0-9]+$).*)'],
 };

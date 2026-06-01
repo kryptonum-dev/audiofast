@@ -16,6 +16,8 @@ import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
+import { getStandardProductBuyability } from '@/src/global/b2c/utils/buyability';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductSlugs,
@@ -62,11 +64,13 @@ export async function generateStaticParams() {
     tags: ['product'],
   });
 
-  return products
-    .filter((product) => product.slug)
-    .map((product) => ({
-      slug: product.slug!.replace('/produkty/', '').replace(/\/$/, ''),
-    }));
+  return limitBuildTimeStaticParams(
+    products
+      .filter((product) => product.slug)
+      .map((product) => ({
+        slug: product.slug!.replace('/produkty/', '').replace(/\/$/, ''),
+      })),
+  );
 }
 
 export async function generateMetadata({
@@ -115,6 +119,10 @@ export default async function ProductPage(props: ProductPageProps) {
   const priceCents = pricingData?.lowestPrice ?? product.basePriceCents ?? null;
   const pricePLN =
     typeof priceCents === 'number' ? Math.round(priceCents) / 100 : null;
+  const productBuyability = getStandardProductBuyability({
+    isSellableOnline: product.isSellableOnline,
+    pricingData,
+  });
   const categorySlugs =
     product.categories?.map((category) => category?.slug).filter(Boolean) ?? [];
   const primaryCategory = product.categories?.[0];
@@ -188,12 +196,14 @@ export default async function ProductPage(props: ProductPageProps) {
         }}
         categories={categorySlugs.filter(Boolean) as string[]}
       />
-      <Breadcrumbs data={breadcrumbsData} />
+      <Breadcrumbs data={breadcrumbsData} firstItemType="productPage" />
       <ProductHero
         name={product.name || ''}
         subtitle={product.subtitle || ''}
         brand={product.brand as unknown as BrandType | undefined}
         pricingData={pricingData}
+        isBuyable={productBuyability.isBuyable}
+        isReturnable={product.isReturnable ?? false}
         previewImage={product.previewImage as SanityRawImage}
         shortDescription={product.shortDescription}
         awards={product.awards as AwardType[]}

@@ -1,4 +1,3 @@
-import { render } from '@react-email/render';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -6,12 +5,9 @@ import {
   FALLBACK_EMAIL_BODY,
   FALLBACK_EMAIL_SUBJECT,
   FALLBACK_SUPPORT_EMAIL,
+  REGEX,
 } from '@/global/constants';
-import {
-  isGraphConfigured,
-  type SendEmailOptions,
-  sendEmails,
-} from '@/global/microsoft-graph/client';
+import { isGraphConfigured } from '@/global/microsoft-graph/client';
 import { sanityFetch } from '@/global/sanity/fetch';
 import { queryContactSettings } from '@/global/sanity/query';
 import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
@@ -19,11 +15,14 @@ import type { PortableTextProps } from '@/global/types';
 import { portableTextToHtml } from '@/global/utils';
 import { ContactConfirmationTemplate } from '@/src/emails/contact-confirmation-template';
 import { ContactNotificationTemplate } from '@/src/emails/contact-notification-template';
+import {
+  sendTransactionalEmails,
+  type TransactionalEmailInput,
+} from '@/src/global/email/service';
 
 // Reply-to address for confirmation emails
 const REPLY_TO_EMAIL =
   process.env.MS_GRAPH_REPLY_TO || process.env.MS_GRAPH_SENDER_EMAIL;
-const PRODUCT_INQUIRY_TEST_RECIPIENT = 'oliwier@kryptonum.eu';
 
 type ProductInquiryData = {
   name: string;
@@ -34,8 +33,8 @@ type ProductInquiryData = {
     value: string;
     priceDelta: number;
   }>;
-  basePrice: number;
-  totalPrice: number;
+  basePrice: number | null;
+  totalPrice: number | null;
 };
 
 type FormSubmission = {
@@ -54,19 +53,20 @@ type ContactSettingsType = {
   };
 };
 
+type ContactSettingsSupportEmails =
+  NonNullable<QueryContactSettingsResult>['supportEmails'];
+
 // Get contact settings with fallbacks
 function getContactConfig(
-  contactSettings: NonNullable<QueryContactSettingsResult>,
+  contactSettings: QueryContactSettingsResult | null | undefined,
 ): ContactSettingsType {
-  const supportEmails = contactSettings.supportEmails || [
-    FALLBACK_SUPPORT_EMAIL,
-  ];
+  const supportEmails = normalizeSupportEmails(contactSettings?.supportEmails);
 
   const subject =
-    contactSettings.confirmationEmail?.subject || FALLBACK_EMAIL_SUBJECT;
+    contactSettings?.confirmationEmail?.subject || FALLBACK_EMAIL_SUBJECT;
   const content =
     portableTextToHtml(
-      contactSettings.confirmationEmail?.content as PortableTextProps,
+      contactSettings?.confirmationEmail?.content as PortableTextProps,
     ) || FALLBACK_EMAIL_BODY;
 
   return {
@@ -76,6 +76,25 @@ function getContactConfig(
       content,
     },
   };
+}
+
+function normalizeSupportEmails(
+  supportEmails: ContactSettingsSupportEmails | null | undefined,
+): string[] {
+  const normalizedEmails =
+    supportEmails
+      ?.map((email) => email.trim().toLowerCase())
+      .filter((email, index, allEmails) => {
+        return (
+          email.length > 0 &&
+          REGEX.email.test(email) &&
+          allEmails.indexOf(email) === index
+        );
+      }) ?? [];
+
+  return normalizedEmails.length > 0
+    ? normalizedEmails
+    : [FALLBACK_SUPPORT_EMAIL.trim().toLowerCase()];
 }
 
 // Escape HTML to prevent injection
@@ -141,7 +160,7 @@ export async function POST(request: NextRequest) {
     console.error('[Contact API] Failed to fetch contact settings', error);
   }
 
-  const emailConfig = getContactConfig(contactSettings!);
+  const emailConfig = getContactConfig(contactSettings);
 
   // Prepare variables for template replacement
   const variables = {
@@ -160,60 +179,42 @@ export async function POST(request: NextRequest) {
     variables,
   );
 
-  // Render internal notification email using React Email
   const internalSubject = body.product
     ? body.product.kind === 'cpo'
       ? `[CPO] Zapytanie o egzemplarz: ${body.product.brandName} ${body.product.name}`
       : `Zapytanie o produkt: ${body.product.brandName} ${body.product.name}`
     : `Nowe zgłoszenie z formularza kontaktowego`;
-  const internalEmailHtml = await render(
-    ContactNotificationTemplate({
-      name: body.name,
-      email: body.email,
-      message: body.message,
-      product: body.product,
-    }),
-  );
 
-  // Temporary testing override: product inquiry notifications go only to Oliwier.
-  const internalNotificationRecipients = body.product
-    ? [PRODUCT_INQUIRY_TEST_RECIPIENT]
-    : emailConfig.supportEmails;
-
-  // Render confirmation email using React Email
-  const confirmationEmailHtml = await render(
-    ContactConfirmationTemplate({
-      name: body.name,
-      email: body.email,
-      message: body.message,
-      subject: confirmationSubject,
-      htmlContent: confirmationContentHtml,
-    }),
-  );
-
-  // Prepare email payloads
-  const emails: SendEmailOptions[] = [
-    // Internal notification email (to support team)
+  const emails: TransactionalEmailInput[] = [
     {
-      to: internalNotificationRecipients.map((email) => ({ email })),
+      to: emailConfig.supportEmails.map((email) => ({ email })),
       subject: internalSubject,
-      htmlBody: internalEmailHtml,
-      replyTo: body.email, // Reply goes to the person who submitted the form
+      react: ContactNotificationTemplate({
+        name: body.name,
+        email: body.email,
+        message: body.message,
+        product: body.product,
+      }),
+      replyTo: body.email,
       saveToSentItems: true,
     },
-    // Confirmation email (to the user)
     {
       to: { email: body.email, name: body.name },
       subject: confirmationSubject,
-      htmlBody: confirmationEmailHtml,
+      react: ContactConfirmationTemplate({
+        name: body.name,
+        email: body.email,
+        message: body.message,
+        subject: confirmationSubject,
+        htmlContent: confirmationContentHtml,
+      }),
       replyTo: REPLY_TO_EMAIL,
       saveToSentItems: true,
     },
   ];
 
-  // Send emails concurrently
   try {
-    const results = await sendEmails(emails);
+    const results = await sendTransactionalEmails(emails);
     const [internalResult, confirmationResult] = results;
 
     // Check if internal email succeeded (required)

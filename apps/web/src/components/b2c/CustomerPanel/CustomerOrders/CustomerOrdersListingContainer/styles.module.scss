@@ -1,0 +1,28 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  > nav:last-of-type {
+    align-self: flex-end;
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 3.75rem 0 3.75rem;
+    z-index: 10;
+    background: var(--neutral-white, #ffffff);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (max-width: 37.4375rem) {
+      inset: 7rem 0 3.75rem;
+    }
+
+    @media (max-width: 35.9375rem) {
+      inset: 7rem 0 3.75rem;
+    }
+  }
+}

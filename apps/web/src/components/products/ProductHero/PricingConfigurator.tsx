@@ -2,6 +2,15 @@
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 
+import {
+  buildStandardConfigurationData,
+  createStandardConfigurationSelectionState,
+  getStandardConfigurationChildGroups,
+  getStandardConfigurationTopLevelGroups,
+  resolveStandardConfigurationVariant,
+  settleStandardConfigurationSelection,
+  type StandardConfigurationData,
+} from '@/src/global/b2c/configuration/standard-configuration';
 import type {
   CompletePricingData,
   PricingOptionGroupWithDetails,
@@ -9,22 +18,17 @@ import type {
 } from '@/src/global/supabase/types';
 import { formatPrice } from '@/src/global/utils';
 
-import styles from './styles.module.scss';
+import styles from './PricingConfigurator.module.scss';
 
-export interface ConfigurationOptionData {
-  label: string;
-  value: string;
-  priceDelta: number; // in cents
-}
-
-export interface ConfigurationData {
-  basePrice: number;
-  options: ConfigurationOptionData[];
-  totalPrice: number;
-}
+export type ConfigurationData = StandardConfigurationData;
 
 interface PricingConfiguratorProps {
   pricingData: CompletePricingData;
+  initialSelection?: Pick<
+    PricingSelection,
+    'variantId' | 'selectedOptions'
+  > | null;
+  showTotalPrice?: boolean;
   onSelectionChange?: (
     selection: PricingSelection,
     configData: ConfigurationData,
@@ -37,7 +41,6 @@ interface NumericOptionProps {
   };
   currentValue: number;
   onChange: (groupId: string, value: string) => void;
-  formatPrice: (priceCents: number) => string;
 }
 
 function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
@@ -169,21 +172,39 @@ function NumericOption({ group, currentValue, onChange }: NumericOptionProps) {
 
 export default function PricingConfigurator({
   pricingData,
+  initialSelection = null,
+  showTotalPrice = true,
   onSelectionChange,
 }: PricingConfiguratorProps) {
-  // State for user selections - initialize with first variant immediately for SSR
-  const [selection, setSelection] = useState<PricingSelection>(() => {
-    const firstVariant = pricingData.variants[0];
-    return {
-      variantId: firstVariant?.id ?? null,
-      selectedOptions: {},
-      calculatedPrice: firstVariant?.base_price_cents ?? 0,
-    };
-  });
+  const initialSelectionVariantId = initialSelection?.variantId ?? null;
+  const initialSelectionOptionsKey = JSON.stringify(
+    initialSelection?.selectedOptions ?? {},
+  );
+  const resolvedInitialSelection = useMemo(
+    () =>
+      createStandardConfigurationSelectionState(pricingData, {
+        variantId: initialSelectionVariantId,
+        selectedOptions: JSON.parse(initialSelectionOptionsKey) as Record<
+          string,
+          string
+        >,
+      }),
+    [initialSelectionOptionsKey, initialSelectionVariantId, pricingData],
+  );
+
+  // State for user selections - supports both PDP default mode and cart edit mode
+  const [selection, setSelection] = useState<PricingSelection>(
+    resolvedInitialSelection,
+  );
 
   // State for dropdown management
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    setSelection(resolvedInitialSelection);
+    setOpenDropdown(null);
+  }, [resolvedInitialSelection]);
 
   // Close dropdown when clicking outside or tabbing out
   useEffect(() => {
@@ -229,240 +250,55 @@ export default function PricingConfigurator({
 
   // Get currently selected variant
   const selectedVariant = useMemo(() => {
-    if (!selection.variantId) return null;
-    return (
-      pricingData.variants.find((v) => v.id === selection.variantId) || null
+    return resolveStandardConfigurationVariant(
+      pricingData,
+      selection.variantId,
     );
-  }, [selection.variantId, pricingData.variants]);
+  }, [pricingData, selection.variantId]);
 
-  // Calculate price based on selections
-  const calculatePrice = useMemo(() => {
-    if (!selectedVariant) {
-      return pricingData.lowestPrice;
-    }
-
-    let totalPrice = selectedVariant.base_price_cents;
-
-    // Add price deltas from selected options
-    selectedVariant.groups.forEach((group) => {
-      const selectedValue = selection.selectedOptions[group.id];
-      if (!selectedValue) return;
-
-      if (group.input_type === 'select') {
-        // Find the value and add its price delta
-        const value = group.values.find((v) => v.id === selectedValue);
-        if (value) {
-          totalPrice += value.price_delta_cents;
-        }
-      } else if (group.input_type === 'numeric_step' && group.numeric_rule) {
-        // Calculate price based on numeric value
-        const numericValue = parseFloat(selectedValue);
-        if (!isNaN(numericValue)) {
-          const stepsAboveBase =
-            (numericValue - group.numeric_rule.base_included_value) /
-            group.numeric_rule.step_value;
-          if (stepsAboveBase > 0) {
-            totalPrice +=
-              Math.ceil(stepsAboveBase) *
-              group.numeric_rule.price_per_step_cents;
-          }
-        }
-      }
-    });
-
-    return totalPrice;
-  }, [selectedVariant, selection.selectedOptions, pricingData.lowestPrice]);
-
-  // Update calculated price when dependencies change
-  useEffect(() => {
-    setSelection((prev) => ({
-      ...prev,
-      calculatedPrice: calculatePrice,
-    }));
-  }, [calculatePrice]);
-
-  // Build configuration data with individual prices
-  const buildConfigurationData = (): ConfigurationData => {
-    if (!selectedVariant) {
-      return {
-        basePrice: pricingData.lowestPrice,
-        options: [],
-        totalPrice: pricingData.lowestPrice,
-      };
-    }
-
-    const options: ConfigurationOptionData[] = [];
-
-    // Add model name if multiple models exist
-    if (pricingData.hasMultipleModels && selectedVariant.model) {
-      options.push({
-        label: 'Model',
-        value: selectedVariant.model,
-        priceDelta: 0, // Model selection changes base price, not delta
-      });
-    }
-
-    // Add selected options with their price deltas
-    selectedVariant.groups.forEach((group) => {
-      const selectedValue = selection.selectedOptions[group.id];
-      if (!selectedValue) return;
-
-      if (group.input_type === 'select') {
-        const value = group.values.find((v) => v.id === selectedValue);
-        if (value) {
-          options.push({
-            label: group.name,
-            value: value.name,
-            priceDelta: value.price_delta_cents,
-          });
-        }
-      } else if (group.input_type === 'numeric_step' && group.numeric_rule) {
-        const unit = group.unit || 'm';
-        const numericValue = parseFloat(selectedValue);
-
-        // Calculate price delta for numeric option
-        let priceDelta = 0;
-        if (!isNaN(numericValue)) {
-          const stepsAboveBase =
-            (numericValue - group.numeric_rule.base_included_value) /
-            group.numeric_rule.step_value;
-          if (stepsAboveBase > 0) {
-            priceDelta =
-              Math.ceil(stepsAboveBase) *
-              group.numeric_rule.price_per_step_cents;
-          }
-        }
-
-        options.push({
-          label: group.name,
-          value: `${selectedValue} ${unit}`,
-          priceDelta,
-        });
-      }
-    });
-
-    return {
-      basePrice: selectedVariant.base_price_cents,
-      options,
-      totalPrice: selection.calculatedPrice,
-    };
-  };
+  const configData = useMemo(
+    () => buildStandardConfigurationData(pricingData, selection),
+    [pricingData, selection],
+  );
 
   // Notify parent of selection changes
   useEffect(() => {
     if (onSelectionChange && selection.variantId) {
-      const configData = buildConfigurationData();
       onSelectionChange(selection, configData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selection, onSelectionChange]);
-
-  // Auto-select first values for all groups that don't have a selection
-  // AND clean up orphaned child selections when parent value changes
-  useEffect(() => {
-    if (!selectedVariant) return;
-
-    const updates: Record<string, string> = {};
-    const removals: string[] = [];
-    let hasChanges = false;
-
-    // Check all groups (including nested ones)
-    selectedVariant.groups.forEach((group) => {
-      // Check if this is a child group with a parent_value_id
-      if (group.parent_value_id) {
-        const parentSelected = Object.values(
-          selection.selectedOptions,
-        ).includes(group.parent_value_id);
-
-        // If parent is no longer selected, remove this child's selection
-        if (!parentSelected && selection.selectedOptions[group.id]) {
-          removals.push(group.id);
-          hasChanges = true;
-          return;
-        }
-
-        // If parent IS selected and child has no selection, auto-select first option
-        if (parentSelected && !selection.selectedOptions[group.id]) {
-          if (group.input_type === 'select' && group.values.length > 0) {
-            updates[group.id] = group.values[0]!.id;
-            hasChanges = true;
-          } else if (
-            group.input_type === 'numeric_step' &&
-            group.numeric_rule
-          ) {
-            updates[group.id] = String(group.numeric_rule.min_value);
-            hasChanges = true;
-          }
-        }
-      } else {
-        // Top-level group without parent
-        if (
-          group.input_type === 'select' &&
-          group.values.length > 0 &&
-          !selection.selectedOptions[group.id]
-        ) {
-          updates[group.id] = group.values[0]!.id;
-          hasChanges = true;
-        } else if (
-          group.input_type === 'numeric_step' &&
-          group.numeric_rule &&
-          !selection.selectedOptions[group.id]
-        ) {
-          updates[group.id] = String(group.numeric_rule.min_value);
-          hasChanges = true;
-        }
-      }
-    });
-
-    if (hasChanges) {
-      setSelection((prev) => {
-        const newOptions = { ...prev.selectedOptions, ...updates };
-        // Remove orphaned child selections
-        removals.forEach((key) => {
-          delete newOptions[key];
-        });
-        return {
-          ...prev,
-          selectedOptions: newOptions,
-        };
-      });
-    }
-  }, [selectedVariant, selection.selectedOptions]);
+  }, [configData, onSelectionChange, selection]);
 
   // Handler for model selection
   const handleModelChange = (variantId: string) => {
-    setSelection({
-      variantId,
-      selectedOptions: {}, // Reset options when model changes
-      calculatedPrice:
-        pricingData.variants.find((v) => v.id === variantId)
-          ?.base_price_cents || 0,
-    });
+    setSelection(
+      createStandardConfigurationSelectionState(pricingData, {
+        variantId,
+        selectedOptions: {},
+      }),
+    );
   };
 
   // Handler for option selection
   const handleOptionChange = (groupId: string, valueIdOrNumeric: string) => {
-    setSelection((prev) => ({
-      ...prev,
-      selectedOptions: {
-        ...prev.selectedOptions,
-        [groupId]: valueIdOrNumeric,
-      },
-    }));
+    setSelection((prev) =>
+      settleStandardConfigurationSelection(pricingData, {
+        variantId: prev.variantId,
+        selectedOptions: {
+          ...prev.selectedOptions,
+          [groupId]: valueIdOrNumeric,
+        },
+      }),
+    );
   };
 
   // Filter top-level groups (no parent)
   const topLevelGroups = useMemo(() => {
-    if (!selectedVariant) return [];
-    return selectedVariant.groups.filter((g) => !g.parent_value_id);
+    return getStandardConfigurationTopLevelGroups(selectedVariant);
   }, [selectedVariant]);
 
   // Get child groups for a specific parent value
   const getChildGroups = (parentValueId: string) => {
-    if (!selectedVariant) return [];
-    return selectedVariant.groups.filter(
-      (g) => g.parent_value_id === parentValueId,
-    );
+    return getStandardConfigurationChildGroups(selectedVariant, parentValueId);
   };
 
   // Reusable custom dropdown component
@@ -670,7 +506,6 @@ export default function PricingConfigurator({
         }
         currentValue={currentValue}
         onChange={handleOptionChange}
-        formatPrice={formatPrice}
       />
     );
   };
@@ -697,12 +532,14 @@ export default function PricingConfigurator({
           }
           return null;
         })}
-      <div className={styles.priceDisplay}>
-        <span className={styles.priceLabel}>Cena całkowita:</span>
-        <span className={styles.price}>
-          {formatPrice(selection.calculatedPrice)}
-        </span>
-      </div>
+      {showTotalPrice ? (
+        <div className={styles.priceDisplay}>
+          <span className={styles.priceLabel}>Cena całkowita:</span>
+          <span className={styles.price}>
+            {formatPrice(configData.totalPrice)}
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }

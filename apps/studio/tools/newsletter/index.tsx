@@ -116,6 +116,47 @@ function resolveNewsletterApiUrl() {
   return PRODUCTION_NEWSLETTER_API_URL;
 }
 
+function normalizeStoredSanityToken(value: string): string {
+  try {
+    const parsed = JSON.parse(value) as unknown;
+
+    if (typeof parsed === "string") {
+      return parsed;
+    }
+
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      "token" in parsed &&
+      typeof parsed.token === "string"
+    ) {
+      return parsed.token;
+    }
+  } catch {
+    // Studio auth tokens are normally stored as plain strings.
+  }
+
+  return value;
+}
+
+function getStudioAuthToken(client: ReturnType<typeof useClient>) {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const projectId = client.config().projectId;
+
+  if (!projectId) {
+    return null;
+  }
+
+  const storedToken = window.localStorage.getItem(
+    `__sanity_auth_token_${projectId}`,
+  );
+
+  return storedToken ? normalizeStoredSanityToken(storedToken) : null;
+}
+
 // Toolbar preset colors matching the brand palette
 const TOOLBAR_COLORS = [
   { hex: "#303030", label: "Ciemny" },
@@ -797,6 +838,18 @@ export default function NewsletterTool() {
       return;
     }
 
+    const authToken = getStudioAuthToken(client);
+
+    if (!authToken) {
+      toast.push({
+        status: "error",
+        title: "Brak tokenu operatora",
+        description:
+          "Odśwież Studio i spróbuj ponownie. API newslettera wymaga aktywnej sesji Sanity.",
+      });
+      return;
+    }
+
     setIsGenerating(true);
 
     // Filter content based on selection AND enabled lists
@@ -829,7 +882,10 @@ export default function NewsletterTool() {
     try {
       const response = await fetch(newsletterApiUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
         body: JSON.stringify({
           action,
           startDate,

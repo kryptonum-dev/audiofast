@@ -293,7 +293,7 @@ export function resolveReviewReferences(
   const references: SanityReference[] = [];
   for (const slug of reviewSlugs) {
     // Try by slug first
-    let reviewId = referenceMappings.reviews[slug];
+    let reviewId: string | undefined = referenceMappings.reviews[slug];
 
     // If not found by slug, this might be a legacy ID - try the __id__ pattern
     if (!reviewId && legacyReviewIdMapping) {

@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components';
 
 import { orderColumnDefault } from '../constants';
 import { useBulkActionsTableContext } from '../context';
-import { SelectableField } from '../helpers/getSelectableFields';
+import type { SelectableField } from '../helpers/getSelectableFields';
 import { CellPrimitive } from './primitives';
 
 // Type for fields that can be either real SelectableField or mock fields for built-in columns

@@ -1,11 +1,11 @@
-import { SanityClient } from '@sanity/client';
+import type { SanityClient } from '@sanity/client';
 import { nanoid } from 'nanoid';
 import { useCallback, useEffect, useState } from 'react';
 import { debounceTime, tap } from 'rxjs/operators';
-import { SanityDocument } from 'sanity';
+import type { SanityDocument } from 'sanity';
 
 import { defaultDatetimesObj } from './constants';
-import { ColumnOrder } from './hooks/useStickyStateOrder';
+import type { ColumnOrder } from './hooks/useStickyStateOrder';
 import { handleDataFetchError } from './utils/errorHandling';
 
 const removeDraftPrefix = (s: string) =>

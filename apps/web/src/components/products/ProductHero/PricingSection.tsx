@@ -1,50 +1,129 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import type { SanityRawImage } from '@/components/shared/Image';
 import type { FormStateData } from '@/src/components/ui/FormStates';
-import type { CompletePricingData, PricingSelection } from '@/src/global/supabase/types';
+import { trackAddToCart } from '@/src/global/b2c/analytics/commerce-events';
+import { createStandardCartLine } from '@/src/global/b2c/cart/standard-cart-line';
+import { useCart } from '@/src/global/b2c/cart/use-cart';
+import {
+  buildStandardConfigurationData,
+  createStandardConfigurationSelectionState,
+  resolveStandardConfigurationVariant,
+  type StandardConfigurationData,
+} from '@/src/global/b2c/configuration/standard-configuration';
+import type {
+  CompletePricingData,
+  PricingSelection,
+} from '@/src/global/supabase/types';
 
+import AddToCartConfirmationModal from '../../ui/AddToCartConfirmationModal';
 import Button from '../../ui/Button';
 import ProductInquiryModal, {
   type ProductContext,
 } from '../ProductInquiryModal';
-import PricingConfigurator, {
-  type ConfigurationData,
-} from './PricingConfigurator';
+import PricingConfigurator from './PricingConfigurator';
 import styles from './styles.module.scss';
 
 interface PricingSectionProps {
-  pricingData: CompletePricingData;
+  pricingData?: CompletePricingData | null;
+  isBuyable: boolean;
   product: {
     id: string;
     name: string;
     brandName: string;
+    isReturnable: boolean;
     brandLogo?: SanityRawImage;
     image: SanityRawImage;
   };
   formStateData?: FormStateData | null;
+  onAddToCart?: (product: ReturnType<typeof createStandardCartLine>) => void;
 }
 
 export default function PricingSection({
   pricingData,
+  isBuyable,
   product,
   formStateData,
+  onAddToCart,
 }: PricingSectionProps) {
+  const { addLine } = useCart();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [configData, setConfigData] = useState<ConfigurationData>({
-    basePrice: pricingData.lowestPrice,
-    options: [],
-    totalPrice: pricingData.lowestPrice,
-  });
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const isConfirmationOpenRef = useRef(isConfirmationOpen);
+  const shouldCloseConfirmationOnRestoreRef = useRef(false);
+  const [selection, setSelection] = useState<PricingSelection>(() =>
+    pricingData
+      ? createStandardConfigurationSelectionState(pricingData)
+      : {
+          variantId: null,
+          selectedOptions: {},
+          calculatedPrice: 0,
+        },
+  );
+
+  useEffect(() => {
+    setSelection(
+      pricingData
+        ? createStandardConfigurationSelectionState(pricingData)
+        : {
+            variantId: null,
+            selectedOptions: {},
+            calculatedPrice: 0,
+          },
+    );
+  }, [pricingData]);
+
+  useLayoutEffect(() => {
+    isConfirmationOpenRef.current = isConfirmationOpen;
+  }, [isConfirmationOpen]);
+
+  useLayoutEffect(() => {
+    if (shouldCloseConfirmationOnRestoreRef.current) {
+      shouldCloseConfirmationOnRestoreRef.current = false;
+      setIsConfirmationOpen(false);
+    }
+
+    return () => {
+      shouldCloseConfirmationOnRestoreRef.current =
+        isConfirmationOpenRef.current;
+    };
+  }, []);
 
   // Handle selection changes from PricingConfigurator
   const handleSelectionChange = useCallback(
-    (_selection: PricingSelection, newConfigData: ConfigurationData) => {
-      setConfigData(newConfigData);
+    (newSelection: PricingSelection) => {
+      setSelection(newSelection);
     },
-    []
+    [],
+  );
+
+  const selectedVariant = useMemo(
+    () =>
+      pricingData
+        ? resolveStandardConfigurationVariant(pricingData, selection.variantId)
+        : null,
+    [pricingData, selection.variantId],
+  );
+
+  const configData = useMemo<StandardConfigurationData>(
+    () =>
+      pricingData
+        ? buildStandardConfigurationData(pricingData, selection)
+        : {
+            basePrice: 0,
+            options: [],
+            totalPrice: 0,
+          },
+    [pricingData, selection],
   );
 
   // Build product context for the modal
@@ -55,13 +134,13 @@ export default function PricingSection({
     kind: 'standard',
     brandLogo: product.brandLogo,
     image: product.image,
-    basePrice: configData.basePrice,
+    basePrice: selectedVariant ? configData.basePrice : null,
     configurationOptions: configData.options.map((opt) => ({
       label: opt.label,
       value: opt.value,
       priceDelta: opt.priceDelta,
     })),
-    totalPrice: configData.totalPrice,
+    totalPrice: selectedVariant ? configData.totalPrice : null,
   };
 
   const handleOpenModal = () => {
@@ -72,26 +151,80 @@ export default function PricingSection({
     setIsModalOpen(false);
   };
 
+  const handleAddToCart = () => {
+    if (!selectedVariant) return;
+
+    const line = createStandardCartLine({
+      productId: product.id,
+      productKey: selectedVariant.price_key,
+      productName: product.name,
+      brandName: product.brandName,
+      quantity: 1,
+      unitPriceCents: productContext.totalPrice ?? 0,
+      isReturnable: product.isReturnable,
+      configurationSelection: {
+        variantId: selection.variantId,
+        selectedOptions: selection.selectedOptions,
+      },
+      product: {
+        ...productContext,
+        basePrice: configData.basePrice,
+        totalPrice: configData.totalPrice,
+      },
+    });
+
+    addLine(line);
+    trackAddToCart(line);
+    onAddToCart?.(line);
+    setIsConfirmationOpen(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setIsConfirmationOpen(false);
+  };
+
   return (
     <>
-      <PricingConfigurator
-        pricingData={pricingData}
-        onSelectionChange={handleSelectionChange}
-      />
+      {pricingData ? (
+        <PricingConfigurator
+          pricingData={pricingData}
+          onSelectionChange={handleSelectionChange}
+        />
+      ) : null}
+      <div className={styles.buttonsWrapper}>
+        {isBuyable ? (
+          <Button
+            text="Dodaj do koszyka"
+            variant="primary"
+            iconUsed="addToCart"
+            onClick={handleAddToCart}
+            className={styles.inquiryButton}
+          />
+        ) : null}
 
-      <Button
-        text="Zapytaj o produkt"
-        variant="primary"
-        iconUsed="information"
-        onClick={handleOpenModal}
-        className={styles.inquiryButton}
-      />
-
+        <Button
+          text="Zapytaj o produkt"
+          variant={isBuyable ? 'secondary' : 'primary'}
+          iconUsed="information"
+          onClick={handleOpenModal}
+          className={styles.inquiryButton}
+        />
+      </div>
       <ProductInquiryModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         product={productContext}
         formStateData={formStateData}
+      />
+      <AddToCartConfirmationModal
+        isOpen={isConfirmationOpen}
+        product={{
+          name: productContext.name,
+          brandName: productContext.brandName,
+          image: productContext.image,
+          totalPrice: productContext.totalPrice,
+        }}
+        onClose={handleCloseConfirmation}
       />
     </>
   );

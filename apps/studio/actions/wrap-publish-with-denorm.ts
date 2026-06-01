@@ -40,16 +40,11 @@ export function wrapPublishWithDenorm(
     // Get the original action result
     const originalResult = originalPublishAction(props);
 
-    // If the original action returns null, return as-is
-    if (!originalResult) {
-      return originalResult;
-    }
-
     // Keep a ref to the latest onHandle so the async callback always calls the
     // most current version, even if a re-render (triggered by the pre-publish
     // patch arriving via the realtime listener) has produced a new handler.
-    const originalOnHandleRef = useRef(originalResult.onHandle);
-    originalOnHandleRef.current = originalResult.onHandle;
+    const originalOnHandleRef = useRef(originalResult?.onHandle);
+    originalOnHandleRef.current = originalResult?.onHandle;
 
     const wrappedOnHandle = useCallback(async () => {
       if (!draft) {
@@ -118,6 +113,11 @@ export function wrapPublishWithDenorm(
       }
     }, [client, draft, id, published, type]);
 
+    // If the original action returns null, return as-is
+    if (!originalResult) {
+      return originalResult;
+    }
+
     return {
       ...originalResult,
       // Keep original label but show processing state
@@ -150,4 +150,3 @@ export function applyDenormToPublish(
     return action;
   });
 }
-

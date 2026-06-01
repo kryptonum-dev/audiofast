@@ -1,73 +1,92 @@
-import Link from "next/link";
-import { useMemo } from "react";
+import Link from 'next/link';
+import { useMemo } from 'react';
 
-import styles from "./Button.module.scss";
+import styles from './Button.module.scss';
 
 export type Props = React.HTMLAttributes<HTMLAnchorElement> &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text?: string | React.ReactNode;
     children?: React.ReactNode;
-    variant?: "primary" | "secondary" | null;
+    isLoading?: boolean;
+    variant?: 'primary' | 'secondary' | null;
+    focusOutline?: 'black' | 'white' | null;
     openInNewTab?: boolean | null;
     className?: string;
+    download?: boolean | string;
     href?: string | null;
     iconUsed?:
-      | "arrowUp"
-      | "arrowDown"
-      | "arrowLeft"
-      | "arrowRight"
-      | "refresh"
-      | "submit"
-      | "phone"
-      | "clearFilters"
-      | "applyFilters"
-      | "information"
-      | "trash";
+      | 'addToCart'
+      | 'arrowUp'
+      | 'arrowDown'
+      | 'arrowLeft'
+      | 'arrowRight'
+      | 'edit'
+      | 'removeFromCart'
+      | 'refresh'
+      | 'submit'
+      | 'phone'
+      | 'clearFilters'
+      | 'applyFilters'
+      | 'information'
+      | 'trash';
   };
 
 export default function Button({
   children,
   text,
-  variant = "primary",
+  isLoading = false,
+  variant = 'primary',
+  focusOutline = null,
   openInNewTab = false,
   className,
   href,
-  iconUsed = "arrowUp",
+  iconUsed = 'arrowUp',
   ...props
 }: Props) {
-  const Element = href ? Link : "button";
+  const Element = href ? Link : 'button';
+  const resolvedFocusOutline =
+    focusOutline ?? (variant === 'secondary' ? 'white' : 'black');
   const renderedProps = {
     ...(href && { href }),
-    ...(openInNewTab && { target: "_blank", rel: "noreferrer" }),
-    "data-variant": variant,
-    "data-icon": iconUsed,
-    className: `${styles.Button}${className ? ` ${className}` : ""}`,
+    ...(openInNewTab && { target: '_blank', rel: 'noreferrer' }),
+    'data-variant': variant,
+    'data-focus-outline': resolvedFocusOutline,
+    'data-icon': iconUsed,
+    'data-loading': isLoading ? 'true' : 'false',
+    'aria-busy': isLoading || undefined,
+    className: `${styles.Button}${className ? ` ${className}` : ''}`,
     ...props,
   };
 
   const icon = useMemo(() => {
     switch (iconUsed) {
-      case "arrowUp":
+      case 'addToCart':
+        return <AddToCartIcon />;
+      case 'arrowUp':
         return <ArrowUp />;
-      case "arrowDown":
+      case 'arrowDown':
         return <ArrowUp />;
-      case "arrowLeft":
-        return <ArrowUp />;
-      case "arrowRight":
-        return <ArrowUp />;
-      case "refresh":
+      case 'arrowLeft':
+        return <ArrowLeft />;
+      case 'arrowRight':
+        return <ArrowRight />;
+      case 'edit':
+        return <EditIcon />;
+      case 'removeFromCart':
+        return <RemoveFromCartIcon />;
+      case 'refresh':
         return <RefreshIcon />;
-      case "submit":
+      case 'submit':
         return <SubmitIcon />;
-      case "phone":
+      case 'phone':
         return <PhoneIcon />;
-      case "clearFilters":
+      case 'clearFilters':
         return <ClearFiltersIcon />;
-      case "applyFilters":
+      case 'applyFilters':
         return <ApplyFiltersIcon />;
-      case "information":
+      case 'information':
         return <InformationIcon />;
-      case "trash":
+      case 'trash':
         return <TrashIcon />;
       default:
         return <ArrowUp />;
@@ -78,13 +97,21 @@ export default function Button({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Element {...(renderedProps as any)}>
       <div className={styles.iconContainer}>
-        {icon}
-        {iconUsed !== "phone" &&
-          iconUsed !== "clearFilters" &&
-          iconUsed !== "applyFilters" &&
-          iconUsed !== "information" &&
-          iconUsed !== "trash" &&
-          icon}
+        {isLoading ? (
+          <span className={styles.loadingSpinner} aria-hidden="true" />
+        ) : (
+          <>
+            {icon}
+            {iconUsed !== 'addToCart' &&
+              iconUsed !== 'phone' &&
+              iconUsed !== 'clearFilters' &&
+              iconUsed !== 'applyFilters' &&
+              iconUsed !== 'information' &&
+              iconUsed !== 'removeFromCart' &&
+              iconUsed !== 'trash' &&
+              icon}
+          </>
+        )}
       </div>
       <div className={styles.textContainer}>
         <span>{text || children}</span>
@@ -106,6 +133,90 @@ const ArrowUp = () => (
     </g>
     <defs>
       <clipPath id="a">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const AddToCartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#add-to-cart-clip)"
+    >
+      <path d="M4 19a2 2 0 1 0 4 0 2 2 0 0 0-4 0M15 19a2 2 0 1 0 4 0 2 2 0 0 0-4 0" />
+      <path d="M17 17H6V3H4" />
+      <path d="m6.005 5 6 .429m7.138 6.573-.143 1H6M15 6h6m-3-3v6" />
+    </g>
+    <defs>
+      <clipPath id="add-to-cart-clip">
+        <path fill="#fff" d="M0 0h24v24H0z" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+const ArrowLeft = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M19 12H5m6-6-6 6 6 6"
+      stroke="#fff"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const ArrowRight = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M5 12h14m-6-6 6 6-6 6"
+      stroke="#fff"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const EditIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    />
+    <path
+      d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+    />
+  </svg>
+);
+
+const RemoveFromCartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <g
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={1.5}
+      clipPath="url(#remove-from-cart-clip)"
+    >
+      <path d="M4 19a2 2 0 1 0 4 0 2 2 0 0 0-4 0M17 17a2 2 0 1 0 2 2" />
+      <path d="M17 17H6V6M9.239 5.231 20 6.001l-1 7h-2m-4 0H6M3 3l18 18" />
+    </g>
+    <defs>
+      <clipPath id="remove-from-cart-clip">
         <path fill="#fff" d="M0 0h24v24H0z" />
       </clipPath>
     </defs>

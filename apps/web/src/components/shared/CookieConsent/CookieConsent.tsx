@@ -24,6 +24,10 @@ async function getAnalyticsConfig() {
 }
 
 export default async function CookieConsent() {
+  if (process.env.E2E_DISABLE_ANALYTICS === "1") {
+    return null;
+  }
+
   const analytics = await getAnalyticsConfig();
 
   if (

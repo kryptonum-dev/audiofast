@@ -1,0 +1,415 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #101112;
+}
+
+body,
+#root {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+#root > * {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.adminAppRoot button:not(:disabled),
+.adminAppRoot select:not(:disabled),
+.adminAppRoot input:not(:disabled),
+.adminAppRoot [role='button'],
+.adminAppRoot [aria-haspopup='true'] {
+  cursor: pointer;
+}
+
+.adminAppRoot input:not([readonly]):not(:disabled) {
+  cursor: text;
+}
+
+.adminAppRoot button:not(:disabled):hover,
+.adminAppRoot select:not(:disabled):hover,
+.adminAppRoot input:not(:disabled):hover,
+.adminAppRoot [role='button']:hover,
+.adminAppRoot [aria-haspopup='true']:hover {
+  filter: brightness(1.04);
+}
+
+.adminThemeRoot,
+.adminAppRoot {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--card-bg-color, #101112);
+}
+
+.adminThemeRoot {
+  display: flex;
+  flex-direction: column;
+}
+
+.adminThemeRoot > * {
+  flex: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.adminAppRoot {
+  display: flex;
+  flex-direction: column;
+}
+
+.adminAppFrame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.adminLoadingRoot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--card-bg-color, #101112);
+}
+
+.ordersTableScroller {
+  overflow-x: auto;
+}
+
+.ordersTable {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+}
+
+.ordersTable th,
+.ordersTable td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--card-border-color, #e3e4e8);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.ordersTable th {
+  color: var(--card-muted-fg-color, #6f6f73);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ordersTable td:last-child,
+.ordersTable th:last-child {
+  text-align: right;
+}
+
+.ordersTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ordersTable tbody tr:hover {
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.ordersTableRowClickable {
+  cursor: pointer;
+}
+
+.couponTableCheckboxControl {
+  display: inline-grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.couponTableCheckboxControl:hover {
+  border-color: rgba(127, 127, 127, 0.28);
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.couponTableCheckboxControl:focus-within {
+  border-color: var(--card-focus-ring-color, #556bff);
+  background: rgba(85, 107, 255, 0.14);
+}
+
+.adminAppRoot .couponTableCheckboxControl,
+.adminAppRoot .couponTableCheckboxControl input,
+.adminAppRoot .couponTableCheckboxControl input:not([readonly]):not(:disabled),
+.adminAppRoot .couponTableCheckboxControl [data-ui='Checkbox'],
+.adminAppRoot .couponTableCheckboxControl [data-ui='Checkbox'] * {
+  cursor: pointer;
+}
+
+.orderLeadImage,
+.orderLeadImagePlaceholder {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 6px;
+}
+
+.orderLeadImage {
+  object-fit: cover;
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.orderLeadImagePlaceholder {
+  background: linear-gradient(
+    135deg,
+    rgba(127, 127, 127, 0.1),
+    rgba(127, 127, 127, 0.18)
+  );
+  border: 1px solid rgba(127, 127, 127, 0.18);
+}
+
+.couponProductPickerImage,
+.couponProductPickerImagePlaceholder {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 6px;
+}
+
+.couponProductPickerImage {
+  object-fit: cover;
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.couponProductPickerImagePlaceholder {
+  background: linear-gradient(
+    135deg,
+    rgba(127, 127, 127, 0.1),
+    rgba(127, 127, 127, 0.18)
+  );
+  border: 1px solid rgba(127, 127, 127, 0.18);
+}
+
+.adminLoadingTableFrame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 594px;
+}
+
+.analyticsChartFrame {
+  width: 100%;
+  min-height: 360px;
+}
+
+.analyticsChartFrame .recharts-wrapper,
+.analyticsChartFrame .recharts-surface {
+  outline: none;
+}
+
+.analyticsChartFrame .recharts-line-dot,
+.analyticsChartFrame .recharts-active-dot {
+  fill: var(--card-bg-color, #101112);
+  stroke: var(--card-focus-ring-color, #556bff);
+}
+
+.analyticsChartTooltip {
+  min-width: 220px;
+  border: 1px solid var(--card-border-color, rgba(127, 127, 127, 0.24));
+}
+
+.adminAppRoot [data-ui='TextInput']:has(.couponDiscountInputSuffix) {
+  align-items: stretch;
+}
+
+.adminAppRoot [data-ui='TextInput']:has(.couponDiscountInputSuffix) > span {
+  align-self: stretch;
+}
+
+.adminAppRoot
+  [data-ui='TextInput']:has(.couponDiscountInputSuffix)
+  > span:last-child {
+  display: flex;
+  align-items: stretch;
+  min-width: 56px;
+}
+
+.adminAppRoot
+  [data-ui='TextInput']:has(.couponDiscountInputSuffix)
+  > span:last-child
+  > span {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  margin: -1px 0 -1px -1px;
+}
+
+.couponDiscountInputSuffix {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 34px;
+  padding: 0 12px;
+  border-left: 1px solid rgba(127, 127, 127, 0.24);
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01)),
+    rgba(127, 127, 127, 0.08);
+  color: var(--card-muted-fg-color, #9aa0ad);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.orderDetailItems {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderDetailItemImage,
+.orderDetailItemImagePlaceholder {
+  display: block;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 6px;
+}
+
+.orderDetailItemImage {
+  object-fit: cover;
+  background: rgba(127, 127, 127, 0.12);
+}
+
+.orderDetailItemImagePlaceholder {
+  background: linear-gradient(
+    135deg,
+    rgba(127, 127, 127, 0.1),
+    rgba(127, 127, 127, 0.18)
+  );
+  border: 1px solid rgba(127, 127, 127, 0.18);
+}
+
+.invoiceFileInput {
+  display: none;
+}
+
+.timelineEntry {
+  overflow: hidden;
+}
+
+.timelineStatus {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(127, 127, 127, 0.12);
+  color: var(--card-fg-color, #252530);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.timelineStatus[data-tone='success'] {
+  background: rgba(0, 145, 22, 0.12);
+  color: #1ab735;
+}
+
+.timelineStatus[data-tone='warning'],
+.timelineStatus[data-tone='returned'] {
+  background: rgba(255, 106, 0, 0.14);
+  color: #ff9b42;
+}
+
+.timelineStatus[data-tone='processing'] {
+  background: rgba(11, 107, 203, 0.14);
+  color: #5aa9ff;
+}
+
+.timelineStatus[data-tone='shipped'] {
+  background: rgba(124, 58, 237, 0.14);
+  color: #a78bfa;
+}
+
+.timelineStatus[data-tone='destructive'] {
+  background: rgba(254, 1, 64, 0.14);
+  color: #ff5d82;
+}
+
+.timelineAvatar {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(127, 127, 127, 0.24);
+  border-radius: 999px;
+  background: rgba(85, 107, 255, 0.16);
+  color: var(--card-accent-fg-color, #7791ff);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.timelineAvatar[data-source='system'] {
+  background: rgba(127, 127, 127, 0.14);
+  color: var(--card-muted-fg-color, #9aa0ad);
+}
+
+.timelineAvatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.timelineActorText > div {
+  gap: 4px;
+}
+
+.timelineNote {
+  max-width: 640px;
+  border: 1px dashed rgba(127, 127, 127, 0.28);
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.timelineDate {
+  min-width: 150px;
+  text-align: right;
+}
+
+.timelineDate > div {
+  gap: 8px;
+}
+
+.timelineDate span,
+.timelineDate p {
+  line-height: 1.25;
+}

@@ -1,13 +1,13 @@
-import { IS_PRODUCTION_DEPLOYMENT } from "./constants";
+import { IS_PRODUCTION_DEPLOYMENT } from './constants';
 
 type LogContext = Record<string, unknown> | undefined;
 
 function formatContext(context?: LogContext) {
-  if (!context) return "";
+  if (!context) return '';
   try {
     return `\ncontext: ${JSON.stringify(context, null, 2)}`;
   } catch {
-    return "";
+    return '';
   }
 }
 
@@ -31,7 +31,7 @@ export function logError(
       ? { message: error.message, stack: error.stack }
       : error;
   console.error(
-    `🚨 ${message}${normalized ? `\nerror: ${JSON.stringify(normalized, null, 2)}` : ""}${formatContext(
+    `🚨 ${message}${normalized ? `\nerror: ${JSON.stringify(normalized, null, 2)}` : ''}${formatContext(
       context,
     )}`,
   );

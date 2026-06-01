@@ -1,5 +1,3 @@
-import type { SanityClient } from "sanity";
-
 export type DenormalizedProductFields = {
   denormBrandSlug: string | null;
   denormBrandName: string | null;
@@ -7,6 +5,10 @@ export type DenormalizedProductFields = {
   denormParentCategorySlugs: string[];
   denormFilterKeys: string[]; // Only dropdown filters, not range filters
   denormLastSync: string;
+};
+
+type DenormalizeClient = {
+  fetch: <T>(query: string, params?: Record<string, unknown>) => Promise<T>;
 };
 
 /**
@@ -30,7 +32,7 @@ function slugify(str: string): string {
  * expensive dereferencing operations at query time.
  */
 export async function computeDenormalizedFields(
-  client: SanityClient,
+  client: DenormalizeClient,
   document: {
     brand?: { _ref: string };
     categories?: Array<{ _ref: string }>;
@@ -139,4 +141,3 @@ export function computeFilterKeys(
       return `${slug}:${fv.value!.toLowerCase()}`;
     });
 }
-

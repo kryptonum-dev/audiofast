@@ -18,6 +18,7 @@ import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import {
   type ActiveFilters,
   computeAvailableFilters,
@@ -109,12 +110,12 @@ async function getPageContent(categorySlug: string) {
 export async function generateStaticParams() {
   const filterMetadata = await getStaticFilterMetadata();
 
-  return (
+  return limitBuildTimeStaticParams(
     filterMetadata?.categories
       ?.filter((cat) => cat.slug)
       .map((cat) => ({
         category: cat.slug?.replace('/kategoria/', '').replace(/\/$/, '') || '',
-      })) || []
+      })) || [],
   );
 }
 

@@ -38,7 +38,7 @@ export interface PortableTextSpan {
 export interface PortableTextBlock {
   _type: "block";
   _key: string;
-  style: "normal" | "h2";
+  style: "normal" | "h2" | "h3";
   markDefs: MarkDef[];
   children: PortableTextSpan[];
   listItem?: "bullet" | "number";

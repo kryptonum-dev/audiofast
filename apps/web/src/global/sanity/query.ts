@@ -846,6 +846,14 @@ const contactFormBlock = /* groq */ `
       ${portableTextFragment('heading')},
       accountDetails,
     },
+    "companyRegistration": *[_type == "settings"][0].companyRegistration {
+      companyName,
+      krs,
+      nip,
+      regon,
+      registryCourt,
+      shareCapital
+    },
     ${formStateFragment('formState')},
     "newsletterSettings": *[_type == "newsletterSettings"][0] {
       supportEmails,
@@ -1208,6 +1216,10 @@ export const queryCpoProductBySlug =
   "slug": slug.current,
   name,
   priceCents,
+  isSellableOnline,
+  isReturnable,
+  isArchived,
+  availabilityStatus,
   transparentBackground,
   productType,
   brandName,
@@ -2326,6 +2338,8 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     subtitle,
     "slug": slug.current,
     basePriceCents,
+    isSellableOnline,
+    isReturnable,
     isArchived,
     ${imageFragment('previewImage')},
     ${imageFragment('imageGallery[]')},
@@ -2505,6 +2519,49 @@ export const queryContactSettings = defineQuery(/* groq */ `
       ${portableTextFragment('content')}
     }
   } 
+`);
+
+export const queryB2cTransactionalEmailCopyRecipients = defineQuery(/* groq */ `
+  *[_type == "settings"][0].b2cTransactionalEmailCopyRecipients
+`);
+
+export const queryB2cWithdrawalForm = defineQuery(/* groq */ `
+  *[_type == "settings"][0] {
+    "assetUrl": coalesce(
+      b2cWithdrawalForm.asset->url,
+      b2cLegalDocuments.withdrawalForm.file.asset->url
+    ),
+    "originalFilename": coalesce(
+      b2cWithdrawalForm.asset->originalFilename,
+      b2cLegalDocuments.withdrawalForm.file.asset->originalFilename
+    ),
+    "mimeType": coalesce(
+      b2cWithdrawalForm.asset->mimeType,
+      b2cLegalDocuments.withdrawalForm.file.asset->mimeType
+    )
+  }
+`);
+
+export const queryB2cReturnInstructionsEmail = defineQuery(/* groq */ `
+  *[_type == "settings"][0] {
+    ${portableTextFragment('b2cReturnInstructionsEmail')}
+  }
+`);
+
+export const queryCartSupportCard = defineQuery(/* groq */ `
+  *[_type == "settings"][0].cartSupportCard {
+    paragraph,
+    phoneNumber,
+    ${imageFragment('image')}
+  }
+`);
+
+export const queryCartEmptyState = defineQuery(/* groq */ `
+  *[_type == "settings"][0].cartEmptyState {
+    heading,
+    description,
+    buttonText
+  }
 `);
 
 export const queryMailchimpSettings = defineQuery(/* groq */ `

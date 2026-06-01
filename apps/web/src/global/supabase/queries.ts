@@ -76,7 +76,6 @@ export async function fetchProductPricing(
     }
 
     if (!data || data.length === 0) {
-      console.warn(`No pricing data found for product: ${productSlug}`);
       return null;
     }
 

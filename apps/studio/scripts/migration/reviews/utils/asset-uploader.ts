@@ -5,6 +5,7 @@
  */
 
 import { existsSync,readFileSync, writeFileSync } from "node:fs";
+import type { IncomingMessage } from "node:http";
 import * as https from "node:https";
 import * as path from "node:path";
 import { resolve } from "node:path";
@@ -119,7 +120,7 @@ function getOptimizedFilename(originalFilename: string): string {
  */
 async function downloadFile(url: string): Promise<Buffer | null> {
   return new Promise((resolvePromise) => {
-    const handleResponse = (res: https.IncomingMessage) => {
+    const handleResponse = (res: IncomingMessage) => {
       // Handle redirects
       if (res.statusCode === 301 || res.statusCode === 302) {
         let redirectUrl = res.headers.location;
@@ -147,9 +148,9 @@ async function downloadFile(url: string): Promise<Buffer | null> {
       }
 
       const buffers: Buffer[] = [];
-      res.on("data", (chunk) => buffers.push(chunk));
+      res.on("data", (chunk: Buffer) => buffers.push(chunk));
       res.on("end", () => resolvePromise(Buffer.concat(buffers)));
-      res.on("error", (err) => {
+      res.on("error", (err: Error) => {
         console.error(`   ✗ Error downloading ${url}:`, err);
         resolvePromise(null);
       });
@@ -157,7 +158,7 @@ async function downloadFile(url: string): Promise<Buffer | null> {
 
     https
       .get(url, { agent: insecureAgent }, handleResponse)
-      .on("error", (err) => {
+      .on("error", (err: Error) => {
         console.error(`   ✗ Request error for ${url}:`, err);
         resolvePromise(null);
       });

@@ -4,18 +4,21 @@
   "private": true,
   "scripts": {
     "build": "bun run turbo build",
-    "dev": "bun run turbo dev",
+    "dev": "bun run turbo dev --filter=web --filter=studio",
+    "dev:all": "bun run turbo dev",
+    "dev:b2c-admin": "bun run turbo dev --filter=b2c-admin",
     "lint": "bun run turbo lint",
     "check-types": "bun run turbo check-types",
     "format": "bun run prettier --write \"**/*.{ts,tsx,md}\"",
-    "typegen": "cd apps/studio && bunx sanity schema extract && bunx sanity typegen generate --enforce-required-fields"
+    "typegen": "cd apps/studio && bunx sanity schema extract && bunx sanity typegen generate"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "prettier": "^3.6.0",
     "turbo": "^2.6.0",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "vite": "7.3.3"
   },
   "packageManager": "bun@1.1.42",
   "engines": {
@@ -43,7 +46,7 @@
     ]
   },
   "dependencies": {
-    "@sanity/cli": "^5.2.0",
+    "@sanity/cli": "^6.5.0",
     "csv-parse": "^6.1.0"
   }
 }

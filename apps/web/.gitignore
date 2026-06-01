@@ -1,2 +1,5 @@
 .vercel
 .env*.local
+playwright-report
+playwright-results
+e2e/.auth

@@ -19,14 +19,6 @@
 
 import type { SanityClient } from "@sanity/client";
 
-import type {
-  ImageCache,
-  MigrationOptions,
-  MigrationResult,
-  ProductMainRow,
-  ProductSourceData,
-  SanityProduct,
-} from "./types";
 import {
   getProductSummary,
   transformProduct,
@@ -38,11 +30,19 @@ import {
   loadReferenceMappings,
   printReferenceStats,
 } from "./transformers/reference-resolver";
+import type {
+  ImageCache,
+  MigrationOptions,
+  MigrationResult,
+  ProductMainRow,
+  ProductSourceData,
+  SanityProduct,
+} from "./types";
 import {
   buildProductSourceData,
   indexDataByProductId,
-  loadAllCsvData,
   type IndexedProductData,
+  loadAllCsvData,
   type LoadedCsvData,
 } from "./utils/csv-parser";
 import { loadImageCache, saveImageCache } from "./utils/image-optimizer";

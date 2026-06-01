@@ -24,9 +24,9 @@ export interface ProductContext {
   kind?: 'standard' | 'cpo';
   brandLogo?: SanityRawImage;
   image: SanityRawImage;
-  basePrice: number; // in cents
+  basePrice: number | null; // in cents
   configurationOptions: ConfigurationOption[];
-  totalPrice: number; // in cents
+  totalPrice: number | null; // in cents
 }
 
 interface ProductInquiryModalProps {
@@ -52,19 +52,6 @@ export default function ProductInquiryModal({
     setMounted(true);
     return () => setMounted(false);
   }, []);
-
-  // Prevent body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
 
   // Handle close attempt with unsaved changes check
   const handleCloseAttempt = useCallback(() => {

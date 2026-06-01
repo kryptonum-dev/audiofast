@@ -1,5 +1,7 @@
 "use client";
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { TrashIcon } from "@sanity/icons";
 import {
   Box,
@@ -11,8 +13,6 @@ import {
   Text,
   TextInput,
 } from "@sanity/ui";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { Grip } from "lucide-react";
 import type { SanityClient } from "sanity";
 

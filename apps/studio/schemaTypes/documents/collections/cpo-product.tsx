@@ -198,8 +198,7 @@ export const cpoProduct = defineType({
       title: "Marka",
       type: "string",
       group: GROUP.MAIN_CONTENT,
-      description:
-        "Nazwa marki produktu CPO.",
+      description: "Nazwa marki produktu CPO.",
       validation: (Rule) => Rule.required().error("Nazwa marki jest wymagana"),
     }),
     // ----------------------------------------
@@ -210,8 +209,7 @@ export const cpoProduct = defineType({
       type: "string",
       title: "Nazwa",
       group: GROUP.MAIN_CONTENT,
-      description:
-        "Nazwa egzemplarza lub nazwa produktu.",
+      description: "Nazwa egzemplarza lub nazwa produktu.",
       validation: (Rule) => Rule.required().error("Nazwa jest wymagana"),
     }),
     defineField({
@@ -236,7 +234,9 @@ export const cpoProduct = defineType({
       },
       initialValue: "internal",
       validation: (Rule) =>
-        Rule.required().error("Wybierz typ produktu (wewnętrzny lub zewnętrzny)"),
+        Rule.required().error(
+          "Wybierz typ produktu (wewnętrzny lub zewnętrzny)",
+        ),
     }),
     defineField({
       name: "externalUrl",
@@ -312,10 +312,12 @@ export const cpoProduct = defineType({
       },
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          const doc = context.document as {
-            internalProduct?: { _ref?: string };
-            productType?: string;
-          } | undefined;
+          const doc = context.document as
+            | {
+                internalProduct?: { _ref?: string };
+                productType?: string;
+              }
+            | undefined;
           // External: always need a card/hero image (no catalog to inherit from).
           if (doc?.productType === "external") {
             if (!value?.asset) {
@@ -338,8 +340,7 @@ export const cpoProduct = defineType({
       name: "transparentBackground",
       title: "Przezroczyste tło zdjęcia",
       type: "boolean",
-      description:
-        "Zaznacz, jeśli zdjęcie ma przezroczyste tło.",
+      description: "Zaznacz, jeśli zdjęcie ma przezroczyste tło.",
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
     }),
@@ -367,6 +368,22 @@ export const cpoProduct = defineType({
       validation: (Rule) => Rule.integer().min(0),
     }),
     defineField({
+      name: "isSellableOnline",
+      title: "Sprzedaż Online",
+      type: "boolean",
+      description: "Określa, czy egzemplarz CPO może być kupowany online.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "isReturnable",
+      title: "Zwrot",
+      type: "boolean",
+      description: "Określa, czy egzemplarz CPO jest zwrotny w modelu B2C.",
+      initialValue: false,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
       name: "publishedDate",
       title: "Data publikacji",
       type: "datetime",
@@ -386,6 +403,94 @@ export const cpoProduct = defineType({
         "Zaznacz, aby przenieść do archiwum. Nie usuwa dokumentu, tylko ukrywa go z listy.",
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: "availabilityStatus",
+      title: "Status dostępności",
+      type: "string",
+      description:
+        "Operacyjny status dostępności egzemplarza CPO używany przez B2C. ",
+      initialValue: "available",
+      group: GROUP.MAIN_CONTENT,
+      options: {
+        layout: "radio",
+        list: [
+          {
+            title: "Dostępny",
+            value: "available",
+          },
+          {
+            title: "Wstrzymany przez zamówienie",
+            value: "on_hold",
+          },
+          {
+            title: "Sprzedany",
+            value: "sold_out",
+          },
+          {
+            title: "Ręcznie niedostępny",
+            value: "manually_unavailable",
+          },
+        ],
+      },
+      validation: (Rule) =>
+        Rule.required().error("Status dostępności jest wymagany"),
+    }),
+    defineField({
+      name: "holdUntil",
+      title: "Rezerwacja do",
+      type: "datetime",
+      description:
+        "Opcjonalna data i godzina końca blokady egzemplarza, gdy status to „Wstrzymany przez zamówienie”.",
+      group: GROUP.MAIN_CONTENT,
+      hidden: ({ document }) => document?.availabilityStatus !== "on_hold",
+      options: {
+        dateFormat: "YYYY-MM-DD",
+        timeFormat: "HH:mm",
+      },
+    }),
+    defineField({
+      name: "holdOrderNumber",
+      title: "Numer zamówienia rezerwacji",
+      type: "string",
+      description:
+        "Techniczne pole B2C: zamówienie, które aktualnie blokuje egzemplarz.",
+      group: GROUP.MAIN_CONTENT,
+      readOnly: true,
+      hidden: ({ document }) => document?.availabilityStatus !== "on_hold",
+    }),
+    defineField({
+      name: "holdPaymentSessionId",
+      title: "Sesja płatności rezerwacji",
+      type: "string",
+      description:
+        "Techniczne pole B2C: identyfikator sesji płatności powiązanej z blokadą.",
+      group: GROUP.MAIN_CONTENT,
+      readOnly: true,
+      hidden: ({ document }) => document?.availabilityStatus !== "on_hold",
+    }),
+    defineField({
+      name: "soldOrderNumber",
+      title: "Numer zamówienia sprzedaży",
+      type: "string",
+      description:
+        "Techniczne pole B2C: zamówienie, które sprzedało egzemplarz.",
+      group: GROUP.MAIN_CONTENT,
+      readOnly: true,
+      hidden: ({ document }) => document?.availabilityStatus !== "sold_out",
+    }),
+    defineField({
+      name: "availabilityUpdatedAt",
+      title: "Status dostępności zaktualizowany",
+      type: "datetime",
+      description:
+        "Techniczne pole B2C: data ostatniej automatycznej zmiany statusu dostępności.",
+      group: GROUP.MAIN_CONTENT,
+      readOnly: true,
+      options: {
+        dateFormat: "YYYY-MM-DD",
+        timeFormat: "HH:mm",
+      },
     }),
 
     // ----------------------------------------
@@ -418,8 +523,7 @@ export const cpoProduct = defineType({
           title: "Nagłówek szczegółów (opcjonalny)",
           type: "heading",
           optional: true,
-          description:
-            'Jeśli puste, zostanie użyte "O produkcie".',
+          description: 'Jeśli puste, zostanie użyte "O produkcie".',
         }),
         customPortableText({
           name: "productDetailContent",
@@ -480,8 +584,7 @@ export const cpoProduct = defineType({
       name: "technicalData",
       title: "Dane techniczne",
       type: "object",
-      description:
-        '⚠️ Edytuj dane techniczne w zakładce "Dane techniczne".',
+      description: '⚠️ Edytuj dane techniczne w zakładce "Dane techniczne".',
       icon: Table,
       group: GROUP.MAIN_CONTENT,
       hidden: true,
@@ -503,12 +606,7 @@ export const cpoProduct = defineType({
       media: "previewImage",
       referenceMedia: "internalProduct.previewImage",
     },
-    prepare: ({
-      title,
-      brandName,
-      media,
-      referenceMedia,
-    }) => ({
+    prepare: ({ title, brandName, media, referenceMedia }) => ({
       title,
       subtitle: brandName,
       media: media || referenceMedia || Package,

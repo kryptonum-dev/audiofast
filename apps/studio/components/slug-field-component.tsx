@@ -59,6 +59,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
   const validation = useValidationStatus(
     document?._id.replace(/^drafts\./, ""),
     document?._type,
+    false,
   );
 
   // Get the source field name (default to 'name' for backwards compatibility)

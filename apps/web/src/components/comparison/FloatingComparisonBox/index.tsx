@@ -21,6 +21,11 @@ export default function FloatingComparisonBox() {
   const [isOpen, setIsOpen] = useState(false);
   const [products, setProducts] = useState<ProductType[]>([]);
   const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
+  const isHiddenRoute =
+    pathname === '/porownaj/' ||
+    pathname === '/porownaj' ||
+    pathname === '/koszyk/' ||
+    pathname === '/koszyk';
 
   // Optimistic state for instant UI updates
   const [optimisticProducts, removeOptimisticProduct] = useOptimistic<
@@ -57,8 +62,8 @@ export default function FloatingComparisonBox() {
 
   // Set body attribute when comparator is visible (for sticky nav positioning)
   useEffect(() => {
-    // Don't set attribute if we're on the comparison page
-    if (pathname === '/porownaj') {
+    // Don't set attribute if the floating box is not shown on this route
+    if (isHiddenRoute) {
       document.body.removeAttribute('data-comparison-visible');
       return;
     }
@@ -72,7 +77,7 @@ export default function FloatingComparisonBox() {
     return () => {
       document.body.removeAttribute('data-comparison-visible');
     };
-  }, [hasInitiallyLoaded, optimisticProducts.length, pathname]);
+  }, [hasInitiallyLoaded, isHiddenRoute, optimisticProducts.length]);
 
   // Load products on mount and when cookie changes
   useEffect(() => {
@@ -176,8 +181,8 @@ export default function FloatingComparisonBox() {
     return null;
   }
 
-  // Don't render on the comparison page
-  if (pathname === '/porownaj/' || pathname === '/porownaj') {
+  // Don't render on the comparison page or cart (layout is busy enough)
+  if (isHiddenRoute) {
     return null;
   }
 

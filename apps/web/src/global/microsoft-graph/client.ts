@@ -13,9 +13,14 @@ const AZURE_TENANT_ID = process.env.AZURE_TENANT_ID;
 const AZURE_CLIENT_ID = process.env.AZURE_CLIENT_ID;
 const AZURE_CLIENT_SECRET = process.env.AZURE_CLIENT_SECRET;
 const MS_GRAPH_SENDER_EMAIL = process.env.MS_GRAPH_SENDER_EMAIL;
+const E2E_MOCK_EMAILS = process.env.E2E_MOCK_EMAILS === '1';
 
 // Validate configuration
 export function isGraphConfigured(): boolean {
+  if (E2E_MOCK_EMAILS) {
+    return true;
+  }
+
   return !!(
     AZURE_TENANT_ID &&
     AZURE_CLIENT_ID &&
@@ -70,7 +75,16 @@ export type EmailRecipient = {
   name?: string;
 };
 
+export type EmailAttachment = {
+  contentBytes: string;
+  contentType: string;
+  name: string;
+};
+
 export type SendEmailOptions = {
+  attachments?: EmailAttachment[];
+  bcc?: EmailRecipient | EmailRecipient[];
+  cc?: EmailRecipient | EmailRecipient[];
   to: EmailRecipient | EmailRecipient[];
   subject: string;
   htmlBody: string;
@@ -92,9 +106,36 @@ export type SendEmailResult = {
 export async function sendEmail(
   options: SendEmailOptions,
 ): Promise<SendEmailResult> {
+  if (E2E_MOCK_EMAILS) {
+    const recipients = Array.isArray(options.to) ? options.to : [options.to];
+    const bccRecipients = options.bcc
+      ? Array.isArray(options.bcc)
+        ? options.bcc
+        : [options.bcc]
+      : [];
+
+    console.info('[MS Graph] E2E mock email send skipped.', {
+      bccRecipientCount: bccRecipients.length,
+      recipientCount: recipients.length,
+      subject: options.subject,
+    });
+
+    return { success: true };
+  }
+
   try {
     const client = getGraphClient();
     const recipients = Array.isArray(options.to) ? options.to : [options.to];
+    const ccRecipients = options.cc
+      ? Array.isArray(options.cc)
+        ? options.cc
+        : [options.cc]
+      : [];
+    const bccRecipients = options.bcc
+      ? Array.isArray(options.bcc)
+        ? options.bcc
+        : [options.bcc]
+      : [];
 
     // Build the email message object
     const message: Record<string, unknown> = {
@@ -110,6 +151,33 @@ export async function sendEmail(
         },
       })),
     };
+
+    if (ccRecipients.length > 0) {
+      message.ccRecipients = ccRecipients.map((r) => ({
+        emailAddress: {
+          address: r.email,
+          name: r.name,
+        },
+      }));
+    }
+
+    if (bccRecipients.length > 0) {
+      message.bccRecipients = bccRecipients.map((r) => ({
+        emailAddress: {
+          address: r.email,
+          name: r.name,
+        },
+      }));
+    }
+
+    if (options.attachments?.length) {
+      message.attachments = options.attachments.map((attachment) => ({
+        '@odata.type': '#microsoft.graph.fileAttachment',
+        contentBytes: attachment.contentBytes,
+        contentType: attachment.contentType,
+        name: attachment.name,
+      }));
+    }
 
     // Add reply-to if specified
     if (options.replyTo) {

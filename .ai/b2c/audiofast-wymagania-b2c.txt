@@ -1,0 +1,536 @@
+00:00:00,080 --> 00:00:12,379 [Oliwier Sellig]
+Wspomnieć. Dobra, super. Yy, dobra, no to myślę, że to mamy. Yy, jeżeli chodzi o sam zakres, tutaj myślę, że takie dopytanie, bo to na pewno będzie można ustalić na poziomie sanity, które produkty sprzedajemy, ale które nie.
+
+00:00:12,380 --> 00:00:12,980 [Jarosław Orszański]
+Mhm.
+
+00:00:12,980 --> 00:00:18,660 [Oliwier Sellig]
+Ale tutaj, tak jak pan wspominał, tu nie będą wszystkie produkty, prawda, do sprzedania. Obstawiam, że-
+
+00:00:18,660 --> 00:00:24,740 [Jarosław Orszański]
+Nie, nie, nie. My decydujemy, który, yy, produkt, yy, trafia na, na sklep.
+
+00:00:24,740 --> 00:00:27,560 [Oliwier Sellig]
+Okej.
+
+00:00:27,560 --> 00:00:43,640 [Oliwier Sellig]
+Mm, i tu od razu, yy, myś-- do-dopytanie, ale obstawiałem, że tak będzie. Yy, tutaj widzicie normalny koszyk, tak? Po prostu. Koszyk z ilością produktów. Czy na przykład po prostu, yy, kli-klient klika w produkt i przechodzi od razu do jakiegoś checkoutu.
+
+00:00:43,640 --> 00:00:45,500 [Kuba Chrapek]
+Na podstronę zamówienia. Mhm.
+
+00:00:45,500 --> 00:00:45,900 [Oliwier Sellig]
+Bo to mamy dwa-
+
+00:00:45,900 --> 00:00:45,960 [Jarosław Orszański]
+Nie, nie
+
+00:00:45,960 --> 00:00:46,860 [Oliwier Sellig]
+Dwa warianty.
+
+00:00:46,860 --> 00:00:51,830 [Jarosław Orszański]
+Yy, no trzeba dać możliwość, żeby, żeby mógł sobie dodać więcej niż jeden produkt.
+
+00:00:51,830 --> 00:00:51,840 [Oliwier Sellig]
+Okej.
+
+00:00:51,840 --> 00:01:18,259 [Jarosław Orszański]
+Więc, yy, więc, yy, ta funkcjonalność typu, że dodaj do koszyka, a potem wejdź w koszyk i z-- i tam sobie rób na tym koszyku wydaje mi się zrozumiała dla wszystkich i ludzie są przyzwyczajeni, tak, do tego typu. No można oczywiście przejść do koszyka, ewentualnie niech musi być przycisk, że chcę jeszcze kontynuować zakupy. Także może być takie rozwiązanie i takie. Oba są dobre.
+
+00:01:18,260 --> 00:01:33,550 [Kuba Chrapek]
+To ja dopytam od razu, jeśli chodzi o produkty. Mm, bo mówi pan właśnie o wybraniu produktów, a dla produktów, których nie wybierzecie do sklepu, to rozumiem, że będziemy zachęcać po prostu do za-- do złożenia zapytania, yy, w ich sprawie, tak? Rozumiem, niektóre produkty-
+
+00:01:33,550 --> 00:01:33,580 [Jarosław Orszański]
+Tak
+
+00:01:33,580 --> 00:01:34,400 [Kuba Chrapek]
+Nie będą w sklepie.
+
+00:01:34,400 --> 00:01:42,820 [Jarosław Orszański]
+W tej chwili na stronie jest tak, że, yy, przy każdym produkcie jest „zapytaj o produkt" po lewej stronie, a po prawej stronie jest puste miejsce.
+
+00:01:42,820 --> 00:01:43,500 [Kuba Chrapek]
+Mhm. Mhm.
+
+00:01:43,500 --> 00:01:52,040 [Jarosław Orszański]
+I tam, gdzie jest to puste miejsce można dodać dokładnie identyczny przycisk „dodaj do koszyka", ale tylko i wyłącznie ten przycisk powinien być widoczny dla tych produktów-
+
+00:01:52,040 --> 00:01:52,240 [Kuba Chrapek]
+Oczywiście
+
+00:01:52,240 --> 00:01:55,160 [Jarosław Orszański]
+Które u nas w Excelu mają flagę-
+
+00:01:55,160 --> 00:01:55,540 [Kuba Chrapek]
+Mhm
+
+00:01:55,540 --> 00:01:58,630 [Jarosław Orszański]
+Że w ogóle mogą istnieć w koszyku.
+
+00:01:58,630 --> 00:01:58,640 [Kuba Chrapek]
+Okej.
+
+00:01:58,640 --> 00:02:29,460 [Jarosław Orszański]
+Czyli my w Excelu będziemy musieli mieć kolumnę, yy, nawet tam jedna jest pusta, więc można wykorzystać. Yy, po prostu koszy-- jakiś tam gwiazdka w środ-- na tej kolumnie znaczy, że produkt jest na sklepie, tak? Tak mieliśmy w starym Excelu też, że, yy, że te-- znaczy w starym sklepie, w starym, na starej stronie, że, yy, że można było sprzedawać przez stronę produkty, które miały oznaczenie, że w ogóle mogą być wrzucone na, yy, na stronę.
+
+00:02:29,460 --> 00:02:46,989 [Kuba Chrapek]
+Jasne. To ja dopytam od razu, panie Jarku. Logika taka, mm, dotycząca rekomendacji produktów. Podejrzewam, że tu będzie do przemyślenia. Czyli ktoś na przykład jeśli zamówi sobie konkretny sprzęt i do tego są przydatne akcesoria, to te akcesoria prawdopodobnie będziemy podpowiadać, tak? Podczas tego procesu zakupu.
+
+00:02:46,989 --> 00:02:48,510 [Jarosław Orszański]
+Nie, nie, nie ma takiej konieczności.
+
+00:02:48,510 --> 00:03:02,420 [Kuba Chrapek]
+Nie ma potrzeby? Okej, dobra, dobra. To wiecie co? No to logika do tej pory, która jest dotycząca dodania tam, yy, tego naszego konfiguratora, na pewno jest do wykorzystania. Tylko właśnie wziąć pod uwagę tę flagę i wtedy zmienić trochę to flow zakupowe.
+
+00:03:02,420 --> 00:03:03,260 [Oliwier Sellig]
+Ja jeszcze-
+
+00:03:03,260 --> 00:03:13,860 [Jarosław Orszański]
+Tak, konfigurator jest, yy, bardzo fajny tutaj i, i właśnie będziemy korzy-- chcielibyśmy korzystać z tegoż, yy, konfiguratora, tak?
+
+00:03:13,860 --> 00:03:23,920 [Oliwier Sellig]
+To ja jeszcze doprecyzuję dwie kwestie. Yy, czyli tutaj chcielibyście właśnie, yy, możliwość, yy, jakby
+
+00:03:23,920 --> 00:03:31,520 [Oliwier Sellig]
+z-- nadawania, yy, konkretnym przedmiotom możliwości bycia w sklepie na poziomie Excela, tak? A nie na poziomie samego CMS-a.
+
+00:03:31,520 --> 00:03:33,000 [Jarosław Orszański]
+Nie, nie w Excelu, w Excelu.
+
+00:03:33,000 --> 00:03:33,980 [Oliwier Sellig]
+Okej, w Excelu.
+
+00:03:33,980 --> 00:03:41,140 [Jarosław Orszański]
+Czyli my w Excelu dajemy flagę przy produkcie, że dany produkt może się pojawić, yy, na sklepie.
+
+00:03:41,140 --> 00:03:42,360 [Oliwier Sellig]
+No jasne, jasne.
+
+00:03:42,360 --> 00:03:49,430 [Jarosław Orszański]
+Yy, dotyczy to produktu, a nie konkretnej konfiguracji tego produktu.
+
+00:03:49,430 --> 00:03:49,560 [Oliwier Sellig]
+Mhm.
+
+00:03:49,560 --> 00:03:57,600 [Jarosław Orszański]
+Jeżeli produkt jest na stronie jako produkt, tak? No to wszystkie jego wersje są dostępne do zakupu.
+
+00:03:57,600 --> 00:03:58,240 [Oliwier Sellig]
+Mhm.
+
+00:03:58,240 --> 00:04:01,760 [Jarosław Orszański]
+Wszystkie jego opcje w tym momencie, tak?
+
+00:04:01,760 --> 00:04:18,680 [Oliwier Sellig]
+Ja tutaj jeszcze widzę taką możliwość. Znaczy myślę, że to na pewno będzie dla dobrego doświadczenia użytkownika, ale żeby dalej dać możliwość użytkownikowi konfigurowania. Powiedzmy, jeżeli mamy kabel o jakiejś długości, to dalej w koszyku można będzie go, go konfigurować. Chyba że ma pan tutaj jakieś przeciwwskazania odnośnie tego.
+
+00:04:18,680 --> 00:04:51,920 [Jarosław Orszański]
+No właśnie ja to wspomniałem, że jeżeli dany produkt, czyli pr-przez produkt rozumiemy stronę internetową. Yy, czyli jeżeli mamy stronę internetową, która nazywa się Vibrap-- Vibrapod Izolator, yy, to wtedy wszystkie jego wersje, yy, które są dostępne, czyli te opcje, które można w konfiguratorze widać, są dostępne w koszyku. Czyli dodajemy tę konfigurację, która nam odpowiada i taką konfigurację możemy kupić. Nie ma to znaczenia, czy produkt na magazynie jest, czy go nie ma, bo
+
+00:04:51,920 --> 00:04:57,160 [Jarosław Orszański]
+od-od razu mówię, że to nie, nie będzie spięte z żadnym systemem, który pokazuje ile jest sztuk-
+
+00:04:57,160 --> 00:04:58,200 [Oliwier Sellig]
+Okej
+
+00:04:58,200 --> 00:05:03,719 [Jarosław Orszański]
+Dostępnych i tak dalej. Nie, nie będziemy tego robić. Po prostu można kupić i już, tak?
+
+00:05:03,720 --> 00:05:14,490 [Kuba Chrapek]
+Okej. No i na poziomie koszyka oczywiście, że tak, Oliwier. Możliwość konfiguracji. No tak, tak, żeby użytkownik mógł, wiecie, cały czas sobie zmienić na przykład długość kabla czy zmienić wariant, oczywiście, że tak.
+
+00:05:14,490 --> 00:05:17,400 [Jarosław Orszański]
+Tak, tak, tak. Znaczy nie tyle zmienić, co wybrać. No tak.
+
+00:05:17,400 --> 00:05:17,520 [Oliwier Sellig]
+Tak.
+
+00:05:17,520 --> 00:05:44,150 [Kuba Chrapek]
+Mhm. Okej. Yy, odnośnie właśnie samej wysyłki i logistyki. Yy, tutaj przemyślałbym, mm, jak to ma wyglądać właśnie z poziomu, z poziomu naszego CMS-a. Mm, tutaj, yy, myślę, że pierwsze pytanie: jakich państwo, yy, jakie państwo metody wysyłki, czy też jakich, ja-jakich kurierów tutaj byście widzieli, jeżeli, yy, chodzi, jeżeli mówimy o używaniu?
+
+00:05:44,150 --> 00:05:44,780 [Jarosław Orszański]
+Mhm.
+
+00:05:44,780 --> 00:05:53,430 [Kuba Chrapek]
+My z-z reguły, yy, jeżeli robimy sklepy, no to raczej kierujemy na InPost wszystko. Aczkolwiek, no można też zrobić inne rozwiązania.
+
+00:05:53,430 --> 00:06:04,580 [Jarosław Orszański]
+Oczywiście. Yy, to znaczy, yy, my mamy, my współpracujemy z brokerem, yy, który obsługuje wszelkie różne kombinacje, jakie komuś się przyśni, więc-
+
+00:06:04,580 --> 00:06:05,260 [Kuba Chrapek]
+Mhm
+
+00:06:05,260 --> 00:06:17,640 [Jarosław Orszański]
+Yy, natomiast nie jestem w stanie ocenić kosztów, yy, takiej przesyłki, yy, na etapie, kiedy klient składa zamówienie. No bo to, yy, ciężko by było
+
+00:06:18,048 --> 00:06:18,888 [Kuba Chrapek]
+Okej
+
+00:06:18,888 --> 00:06:28,167 [Jarosław Orszański]
+Więc, yy, no nie wiem. Za-założymy chyba, że wysyłka jest za darmo, no bo, yy, bo nic ta-- innego do głowy mi nie przychodzi.
+
+00:06:28,168 --> 00:06:35,348 [Kuba Chrapek]
+Tak też tak myślę. Panie Jarku, czy, czy ten broker ma jakąś aplikację albo integrację ze sklepami?
+
+00:06:35,348 --> 00:06:46,628 [Jarosław Orszański]
+Tak, tak. To jest, yy, to jest Apaczka i oni mają, yy, mnóstwo, yy, opcji integracyjnych i tak dalej, no ale nie wiem, czy jesteście w stanie to jakoś, yy, wyłapać.
+
+00:06:46,628 --> 00:06:51,827 [Kuba Chrapek]
+Używaliśmy, używaliśmy, panie Jarku, w, w kilku projektach. Pamiętam, że robiliśmy integrację.
+
+00:06:51,828 --> 00:06:51,938 [Jarosław Orszański]
+Tak?
+
+00:06:51,938 --> 00:06:52,348 [Kuba Chrapek]
+Tak, tak.
+
+00:06:52,348 --> 00:07:12,858 [Jarosław Orszański]
+Apaczka jest, yy, no bardzo, bardzo nam się dobrze współpracuje, bo tam są wszelkie różne opcje dostępne i, i tak naprawdę są klienci, którzy koniecznie muszą mieć DHL, a inni koniecznie muszą mieć, yy, InPost, a jeszcze inni tylko Pocztex. Tylko Pocztex, bo Pocztex nie rzuca paczek na przykład, tak? Można uwy-
+
+00:07:12,858 --> 00:07:13,408 [Kuba Chrapek]
+Tak
+
+00:07:13,408 --> 00:07:19,018 [Jarosław Orszański]
+... można okleić paczkę, że ostrożnie, nie rzucać i wtedy Pocztex nie rzuca paczki, a wszyscy inni rzucają.
+
+00:07:19,018 --> 00:07:19,037 [Kuba Chrapek]
+[śmiech] Tak.
+
+00:07:19,037 --> 00:07:36,968 [Jarosław Orszański]
+Także my się spotkaliśmy z różnego rodzaju, yy, takimi wymaganiami. Rzeczywiście są klienci, którzy chcą konkretnego kuriera. Jeżeli możecie zaprojektować, yy, integrację z Apaczką, no to my mamy konto biznesowe tam i, i jak najbardziej.
+
+00:07:36,968 --> 00:07:38,428 [Kuba Chrapek]
+Myślę, że najlepszy kierunek.
+
+00:07:38,428 --> 00:07:38,568 [Jarosław Orszański]
+Tak.
+
+00:07:38,568 --> 00:07:49,588 [Kuba Chrapek]
+Tak, tak, Oliwer. Oliwer przejrzyj proszę, wiesz, możliwość właśnie od wyceny kosztów przesyłki z Apaczki. Jeśli to nie będzie konieczne, to tak jak pan Jarek mówi, prawdopodobnie koszt wysyłki darmowy. Yy.
+
+00:07:49,588 --> 00:07:53,088 [Jarosław Orszański]
+My możemy, my możemy w Excelu
+
+00:07:53,088 --> 00:08:03,888 [Jarosław Orszański]
+dodać do każdego produktu, yy, bo to do produktu, to nie, to nie będzie związane z konfiguracją, bo konfiguracja nie dodaje wagi w takim stopniu, żeby miało to znaczenie.
+
+00:08:03,888 --> 00:08:04,448 [Kuba Chrapek]
+Mhm.
+
+00:08:04,448 --> 00:08:08,328 [Jarosław Orszański]
+Czyli do każdego produktu możemy dodać wymiary i wagę.
+
+00:08:08,328 --> 00:08:09,408 [Kuba Chrapek]
+Jasne.
+
+00:08:09,408 --> 00:08:20,748 [Jarosław Orszański]
+Yy, i wtedy wy możecie, yy, przy integracji korzystać z tej informacji, tak? Wymiary. No bo nie będziecie wiedzieli, jakie są wymiary i waga. Ale ja mogęś-- ja mogę to dodać do Excela.
+
+00:08:20,748 --> 00:08:29,508 [Kuba Chrapek]
+Dobrze, dobrze. Oliwer, weź to pod uwagę, dobrze? Jak zobaczysz, jak wiesz, yy, jak teraz wygląda aktualna dokumentacja Apaczki, to daj znać, co polecasz, po prostu.
+
+00:08:29,508 --> 00:08:46,288 [Oliwier Sellig]
+Mhm. Jasne. Myślę, że może się na pewno przydać. Mm, odnośnie faktur, yy, księgowości. Tutaj myślę, mm, mam-- tutaj rozważam właśnie nad tym, czy, mm, uży-- będziemy używać jakiejś automatyzacji odnośnie faktur, to znaczy-
+
+00:08:46,288 --> 00:08:46,528 [Jarosław Orszański]
+Nie
+
+00:08:46,528 --> 00:08:47,428 [Oliwier Sellig]
+... od razu nie?
+
+00:08:47,428 --> 00:08:58,208 [Jarosław Orszański]
+Nie, nie, nie. My wystawiamy fakturę w momencie, kiedy towar wychodzi do klienta i, yy, podpinamy ją po prostu, yy, pod zamówienie, yy, w CMS-ie.
+
+00:08:58,208 --> 00:08:58,628 [Oliwier Sellig]
+Mhm.
+
+00:08:58,628 --> 00:09:06,268 [Jarosław Orszański]
+Dodaj fakturę, plik PDF, po-- wskazujemy, który plik PDF, ona się wpisuje i to jest wszystko, co byśmy chcieli robić, tak?
+
+00:09:06,268 --> 00:09:06,768 [Oliwier Sellig]
+Okej.
+
+00:09:06,768 --> 00:09:22,468 [Jarosław Orszański]
+I, yy, czyli jeżeli my to dodamy, no to wtedy status powinien się zaktualizować i mail powinien pójść do klienta, że status się zaktualizował i dodana jest faktura. Yy, żebyśmy nie musieli ręcznie żadnych faktur wysyłać. Znaczy żadnych maili do klienta.
+
+00:09:22,468 --> 00:09:26,318 [Kuba Chrapek]
+Jasne. Jasne, ale już wystawiacie wy i wgrywacie PDF-a do systemu.
+
+00:09:26,318 --> 00:09:50,338 [Jarosław Orszański]
+A my, my zmieniamy status. Na przykład, że, no my wpisujemy numer listu przewozowego. Yy, no chyba że to z integracji z Apaczki jest, nie. Ale nie, no my musimy zdecydować, kiedy wysyłamy i tak dalej, prawda? Więc, yy, więc, więc podajemy, yy, chyba te dane, tak mi się wydaje. Czyli jakim kurierem, jaki numer listu przewozowego wpisujemy.
+
+00:09:50,338 --> 00:09:50,388 [Kuba Chrapek]
+Jasne.
+
+00:09:50,388 --> 00:09:58,378 [Jarosław Orszański]
+I to jest nasze zadanie. Drugie to jest ewentualnie dołączenie faktury, mm, do takiej, yy, do takiej przesyłki.
+
+00:09:58,378 --> 00:09:58,388 [Kuba Chrapek]
+Oczywiście.
+
+00:09:58,388 --> 00:10:11,688 [Jarosław Orszański]
+No i też ocena terminu zamówienia, czyli na przykład, bo my na etapie sklepu nie jesteśmy w stanie określić, jaki jest termin zamówienia i nie będziemy tego robić. Znaczy termin realizacji. Określimy to w regulaminie, tak, sklepu.
+
+00:10:11,688 --> 00:10:12,608 [Kuba Chrapek]
+Mhm.
+
+00:10:12,608 --> 00:10:24,048 [Jarosław Orszański]
+Że ten termin może być różny. Yy, i wtedy, yy, jakby możemy zaktualizować status już po otrzymaniu zamówienia, że-
+
+00:10:24,048 --> 00:10:24,458 [Kuba Chrapek]
+Dokładnie
+
+00:10:24,458 --> 00:10:31,128 [Jarosław Orszański]
+... na przykład oczekujemy wysyłki za cztery tygodnie albo jutro, prawda?
+
+00:10:31,128 --> 00:10:51,508 [Kuba Chrapek]
+Dokładnie. Tu, tu panie Jarku, ja bym proponował jeszcze usiąść dokładniej do takiej sekwencji mailowej i przemyśleć tą dobr-dobrą komunikację z użytkownikiem. Tak jak pan mówi, pierwszy mail tuż po zakupie, żeby dostali informację, yy, zgodnie z regulaminem, kiedy mogą spodziewać się przesyłki i będziemy później aktualizować. Jak zmienicie kolejny status, to wysyła się kolejny mail, żeby wiedzieli, co się dzieje.
+
+00:10:51,508 --> 00:10:57,508 [Jarosław Orszański]
+Ja bym, ja bym, yy, tak jak to inni robią, ja bym, yy, pierwszy mail to jest potwierdzenie otrzymania zamówienia.
+
+00:10:57,508 --> 00:10:58,028 [Kuba Chrapek]
+Tak.
+
+00:10:58,028 --> 00:11:20,288 [Jarosław Orszański]
+Drugi mail to jest potwierdzenie przyjęcia zamówienia do realizacji. Czyli jakby potwierdzenia zamówienia przez nas, w którym to mailu będzie wyznaczony termin, yy, dostawy. Jeżeli klient się nie zgadza, to on ma możliwość anulowania zamówienia i my wtedy odsyłamy do niego pieniądze, bo ten proces trzeba by było obsłużyć, prawda?
+
+00:11:20,288 --> 00:11:20,928 [Kuba Chrapek]
+Jasne.
+
+00:11:20,928 --> 00:11:41,868 [Jarosław Orszański]
+Jeżeli klient, yy, my na przykład mu napiszemy, że termin realizacji jest za cztery tygodnie, to on ma prawo, no zrezygnować z tego. No to na-- musi, yy, po prostu po zalogowaniu się powiedzieć, że anuluje zamówienie. I jeżeli to oczywiście, yy, na tym etapie jest, yy, jest możliwe, no.
+
+00:11:41,868 --> 00:11:42,047 [Kuba Chrapek]
+Okej.
+
+00:11:42,048 --> 00:11:44,268 [Jarosław Orszański]
+Wydaje mi się.
+
+00:11:44,268 --> 00:11:51,248 [Kuba Chrapek]
+To ja bym dopytał jeszcze o płatności, panie Jarku. Yy, pisał pan o systemie PayNow. Yy,
+
+00:11:51,248 --> 00:11:55,048 [Kuba Chrapek]
+dlaczego? Yy, używacie do tej pory i, i po prostu z tym macie integrację?
+
+00:11:55,048 --> 00:12:02,608 [Jarosław Orszański]
+Bo my używamy, yy, mamy konto w mBanku i ta integracja z tym mBankiem nam tutaj odpowiada. Mamy te wszystkie faktury od nich od razu widoczne-
+
+00:12:02,608 --> 00:12:02,758 [Kuba Chrapek]
+Okej
+
+00:12:02,758 --> 00:12:08,628 [Jarosław Orszański]
+... z prowizjami i tak dalej, ale nie upieram się, yy, przy PayNow jakoś specjalnie, tak? No.
+
+00:12:08,628 --> 00:12:09,268 [Kuba Chrapek]
+Dobrze.
+
+00:12:09,268 --> 00:12:14,968 [Jarosław Orszański]
+PayNow działa, ale, ale jeżeli-- al-a może być i inny system. W sumie nie, nie, nie zależy mi
+
+00:12:16,436 --> 00:12:48,236 [Kuba Chrapek]
+To Oliwier do ciebie prośba, żeby sprawdził dokumentację PayNow. Dobrze? Bo z naszego doświadczenia panie Jarku, Przelewy24 tutaj są po prostu liderem, jeśli chodzi o takie nowoczesne podejście. Z nimi integracje są po prostu bardzo dobre. Yy, ale to przejrzymy, yy, po prostu Oliwier, no wiesz jakie są cele. Po prostu wybierz to, co twoim zdaniem zadziała najlepiej. Ja bym polecał przejrzeć Przelewy24. To tutaj panie Jarku od razu pytanie, czy bierze pan pod uwagę jakąś formę płatności na zasadzie płatności odroczonych albo ratalnych?
+
+00:12:48,236 --> 00:13:02,076 [Jarosław Orszański]
+Yy, no nie, nie, bo, bo raty to jest osobna sprawa. Yy, to, ym, teoretycznie my mamy taką opcję, bo współpracujemy z Santanderem.
+
+00:13:02,076 --> 00:13:02,936 [Kuba Chrapek]
+Mhm.
+
+00:13:02,936 --> 00:13:58,356 [Jarosław Orszański]
+I ten Santander raty ma takie raty zero procent, które, yy, które klienci lubią. I to jest możliwe, żeby wybrać takie raty zero procent, ale nie bardzo wiem, jak to złożyć, bo to jest bardzo skomplikowany proces, yy, obsługi takich, yy, rat. Ale ja widziałem na niektórych stronach, że tam jest na przykład, a, yy, że są raty na przykład, no nie wiem, mają takie fajne sklepy jak, yy, AGD, Euro AGD czy Media, czy, yy, Media Expert, że, yy, można wnioskować, wypełnić wniosek na stronie internetowej o raty zero procent i mamy do wypełnienia wniosek albo do Santandera, albo do, yy, na przykład, yy, tam jakiegoś innego banku. I ta weryfikacja jest online dosłownie. [śmiech]
+
+00:13:58,356 --> 00:13:58,856 [Kuba Chrapek]
+Tak, tak.
+
+00:13:58,856 --> 00:14:14,596 [Jarosław Orszański]
+W czasie rzeczywistym. Tylko by to trzeba było podpisać jakąś umowę z tymi bankami. Ja nie, nie znam w tej chwili na tym etapie tego. No, możemy to ewentualnie dołożyć później jako jakieś tam rozwinięcie tego sklepu, tak? Nie będziemy się teraz nad tym, yy, przejmować.
+
+00:14:14,596 --> 00:14:19,496 [Kuba Chrapek]
+Mhm. Jeśli to nie jest kluczowe, to ja też na teraz właśnie bym nie stawiał na to priorytetowo.
+
+00:14:19,496 --> 00:14:30,276 [Jarosław Orszański]
+Ja bym tego, tego nie, nie brał pod uwagę na ten moment. Po prostu można to na etapie developmentu przewidzieć, że jakaś inna forma płatności po prostu, yy, może być, tak?
+
+00:14:30,276 --> 00:14:31,216 [Kuba Chrapek]
+Dobrze, dobrze.
+
+00:14:31,216 --> 00:14:40,696 [Jarosław Orszański]
+Spodziewam się, że to nie jest proste i, yy, co innego jest prosty system, że zapłacił i pieniądze są na koncie, a co innego jest
+
+00:14:40,696 --> 00:14:44,856 [Jarosław Orszański]
+umowy jakieś podpisywania elektroniczne i takie tam różne.
+
+00:14:44,856 --> 00:15:03,376 [Kuba Chrapek]
+Tak, zdecydowanie. I też panie Jarku zależy dużo od koszyka zakupowego, jeśli chodzi o umowy. Jak to są produkty wie pan, tysiąc, trzy tysiące złotych, pięć tysięcy złotych to żaden problem. Ale jak to będą produkty za kilkadziesiąt czy kilkaset tysięcy, to ja wiem, że z kwestiami prawnymi będzie tutaj, yy, mocna przeprawa. Technicznie to bez problemu to zrobimy, tylko no ja wiem jakie koszty.
+
+00:15:03,376 --> 00:15:11,035 [Jarosław Orszański]
+No ale my nie planujemy sprzedawania tego typu produktów, yy, takich bardzo drogich. Raczej rozchodziło się nam o jakieś proste rzeczy.
+
+00:15:11,036 --> 00:15:19,216 [Kuba Chrapek]
+To właśnie panie Jarku, może pan tutaj więcej powiedzieć, jaka średnia wartość koszyka albo jakie produkty tutaj tak mniej więcej pan przewiduje, żebyśmy od razu też wiedzieli?
+
+00:15:19,216 --> 00:15:34,236 [Jarosław Orszański]
+No myślę, że tak do dziesięciu tysięcy złotych. Yy, nie wiem, jaka może być średnia wartość koszyka, szczerze mówiąc, bo to po prostu zależy od-- ja jeszcze nawet na ten temat, yy, tak do końca nie myślałem.
+
+00:15:34,236 --> 00:15:37,336 [Kuba Chrapek]
+Dobrze, dobrze, ale to-
+
+00:15:37,396 --> 00:15:43,936 [Oliwier Sellig]
+Ja bym tu jeszcze o skalę podpytał. Yy, ile takich produktów może być miesięcznie, yy, jeżeli chodzi właśnie o sklep.
+
+00:15:43,936 --> 00:16:19,496 [Jarosław Orszański]
+Może się zdarzyć, że w ogóle nie będzie. Yy, dlatego mówię o PayNow, bo w PayNow nas nie karają za brak obrotów, za, nie ma, nie ma żadnych, yy, jakby targetów czy, czy jakichś tam prowizji za niedokonanie transakcji w ostatecznej, w jakiejś tam właściwej ilości i tak dalej. Natomiast nie wiem, jak jest w innych, yy, sklepach, czy tam, yy, też są takie opcje, bo ja nie jestem przekonany, ile my będziemy tam sprzedawać. Także ciężko mi jest przewidzieć.
+
+00:16:19,496 --> 00:17:00,976 [Oliwier Sellig]
+Tak, to myślę, że też na pewno będzie do uwzględnienia przy wyborze po prostu metody płatności. To jasne. Yy, tutaj na-na tym gdzieś tam ta agenda się kończy, ale ja bym chciał jeszcze podpytać, yy, o to, co myślę, że wyszło już na tym spotkaniu, aczkolwiek chciałem to doprecyzować, czyli, yy, panel klienta. Yy, możemy mieć kilka kwestii, jeżeli chodzi właśnie o zakupy. Możemy kupić na przykład na, na maila czy też, yy, po prostu wpisywać swoje dane, ale możemy też oczywiście mieć w pewnym stopniu panel. Klient się loguje na naszej stronie. I tutaj jestem bardzo ciekawy pana wizji, jak widzi to pan właśnie po stronie Audiofast. Czy to będzie jakiś panel klienta, czy to będzie zakupy po prostu po wpisaniu konkretnych danych?
+
+00:17:00,976 --> 00:17:02,816 [Jarosław Orszański]
+Yy,
+
+00:17:02,816 --> 00:17:50,256 [Jarosław Orszański]
+znaczy to, mm, najfajniej jest, jeżeli-- znaczy naj-najlepsza obsługa jest wtedy, kiedy, yy, nie trzeba zapamiętywać żadnych haseł. Yy, wydaje mi się, że to jest najsłuszniejsze, żeby nasz system nie przechowywał żadnych haseł. Czyli klient składa zamówienie, yy, posługuje się adresem mailowym i jeżeli chce, ym, śledzić czy zalogować się na swoją, yy, skrzynkę, to wchodzi na stronę. Masz, ma opcję „Moje zakupy” czy tam nie wiem, yy, „Zaloguj się” czy cokolwiek. Wpisuje adres mailowy, klika „Wprowadź” i wtedy system nasz wysyła do niego maila, yy, z podaniem kodu-
+
+00:17:50,256 --> 00:17:51,076 [Oliwier Sellig]
+Mhm
+
+00:17:51,076 --> 00:18:19,256 [Jarosław Orszański]
+... yy, który, yy, który po prostu, yy, jest konieczny przy następnym etapie, tak? On po prostu wpisuje ten kod i wtedy jest zalogowany. To jest najlepsza metoda, bo klienci nie pamiętają haseł. I, yy, no można oczywiście wyczarować jakiś system SMS-ów, yy, też, tak, na telefon komórkowy, ale wydaje mi się, że z mailem jest najprościej i takie rozwiązanie wydaje mi się najprostsze, po prostu jest najlepsze.
+
+00:18:20,064 --> 00:18:28,844 [Kuba Chrapek]
+I w, i w takim panelu klienta panie Jarku, pewnie możliwość edycji takich danych teleadresowych, yy, danej osoby czy biznesu?
+
+00:18:28,844 --> 00:18:43,384 [Jarosław Orszański]
+No tak, yy, może sobie wy-wy-zzaktualizować wszystkie dane teleadresowe czy usunąć konto, czy w ogóle cokolwiek tam chce zrobić. To jak najbardziej tak.
+
+00:18:43,384 --> 00:18:46,134 [Kuba Chrapek]
+I do tego pewnie historia zamówień, prawda? Żeby mógł sobie pobrać.
+
+00:18:46,134 --> 00:19:11,364 [Jarosław Orszański]
+Tak, lista zamówień, yy, z opcją powtórz. Chociaż niepotrzebne, bo to nie cukierki, więc. Nie, po prostu lista zamówień z opcją, yy, no nie wiem. Faktury ściągnięcia czy, yy, podejrzenia jaka była ta, to zamówienie, czyli wyświetlenia zamówienia, ewentualnie wystawienia, wy-wyświetlenia faktury, pobrania faktury
+
+00:19:12,484 --> 00:19:32,944 [Jarosław Orszański]
+i też opcją zwrotu. Tak? No musi być opcja zwrotu, yy, przy czym opcja zwrotu dotyczy tylko i wyłącznie towarów, które my oznaczymy, że można zwrócić. I ustawowy termin oczywiście, yy, musi być obsłużony, tak? Czyli te nie wiem, ile tam, czternaście dni, tak?
+
+00:19:32,944 --> 00:19:48,734 [Kuba Chrapek]
+Tak, tak. W tym przypadku tak. Mhm. To, to Oliwier, wiesz co? To rozpisz w ogóle sam proces zwrotu, żebyśmy mocno przeanalizowali krok po kroku, co się będzie działo też pod względem komunikacji, maila, zmian w systemie i tak dalej. Bo to też będzie bardzo ważne. Na wszelki wypadek.
+
+00:19:48,734 --> 00:19:59,684 [Jarosław Orszański]
+Wchodzi, loguje się, jest przycisk aktywny "zwróć towar". Yy, jak okienko zwrotu jest aktywne, to może zwrócić. Jak już jest nieaktywne to nie musi, nie może zwrócić po prostu.
+
+00:19:59,684 --> 00:20:15,794 [Kuba Chrapek]
+Mhm. Jasne. Jasne. Okej. Mm. Tutaj panie Jarku, ja się jeszcze zastanawiam, czy każdy klient będzie, yy, brał fakturę VAT albo brał to na swoją działalność, czy to będą też klienci indywidualni na osobę fizyczną, którzy będą robili.
+
+00:20:15,794 --> 00:20:19,924 [Jarosław Orszański]
+To będą przede wszystkim klienci indywidualni.
+
+00:20:19,924 --> 00:20:37,744 [Jarosław Orszański]
+Yy, trzeba obsłużyć taką opcję, że przy B2B, yy, jeżeli ktoś chce fakturę, to w ogóle opcja zwrotu od razu nie występuje, tak? Bo tutaj wyłączony jest, yy, w ogóle wyłączona jest ta opcja, yy, rękojmi.
+
+00:20:37,744 --> 00:20:38,344 [Kuba Chrapek]
+Jasne.
+
+00:20:38,344 --> 00:20:51,824 [Jarosław Orszański]
+W związku z tym, yy, wtedy nie ma zwrotu. Jak ktoś bierze na B2B fakturę po prostu. Bo oczywiście może sobie wziąć fakturę na firmę. No to wpisuje dane do faktury i ja nie mam z tym żadnego problemu. Może sobie kupić na firmę, tak?
+
+00:20:51,824 --> 00:20:58,604 [Kuba Chrapek]
+Mhm. Jasna sprawa. Dobrze, dobrze.
+
+00:20:58,604 --> 00:21:08,184 [Kuba Chrapek]
+Yy. Wiecie co? Dajcie mi proszę jeszcze takie, minutę. Ja na pewno jeszcze się chcę zastanowić nad zwrotem płatnością.
+
+00:21:08,184 --> 00:21:46,484 [Jarosław Orszański]
+Znaczy to już jest, yy, zwrot. No to będzie już przez nas ręcznie robiony. Towar zwrócono, tak? Zamówienie anulowane. No, ja mogę rozpisać, yy, albo wy możecie rozpisać do zaakceptowania taki workflow, tak? Yy, jaki jest potrzebny. Ale jeżeli realizujecie takie sklepy, no to przecież ja nie wy-wymagam żadnych niestworzonych rzeczy. No wydaje mi się, że, że to są takie typowe, yy, rzeczy, które po prostu wymagane przez prawo są. N-niczego więcej nie potrzebuję, tylko takie typowe rzeczy, yy, które normalnie na sklepach występują.
+
+00:21:46,484 --> 00:21:56,644 [Kuba Chrapek]
+Tak właśnie, panie Jarku, trochę to było celem tej rozmowy, bo no to są specyficzne produkty i klienci. Zastanawialiśmy się, czy trochę inaczej to będzie wyglądało, a dziś raczej nie wyszło nic niezwykłego.
+
+00:21:56,644 --> 00:22:45,274 [Jarosław Orszański]
+No tak, bo tutaj nie przewiduję żadnych cud, wodosprysków, cudów ani nic takiego. Zresztą my nie będziemy się specjalnie koncentrować na tym sklepie. Chciałbym, żeby coś takiego było, jeżeli to nie będzie zbyt drogo. Yy, natomiast, yy, nie jest to dla mnie jakieś, jakaś kluczowa funkcjonalność. Po prostu są pewne tematy, które chcemy realizować, yy, na przykład, yy, sprzedaż pewnych produktów, które w ogóle nie będą szły przez, przez dealerów, tak? Czyli jakby są wyłączone ze sprzedaży dealerskiej. No, mamy takie opcje, żeby wejść we współpracę z różnego rodzaju takimi jakimiś retailowymi tematami, gdzie marże są bardzo niskie i nie, nie mamy marży na to, żeby sprzedawać przez sklepy.
+
+00:22:45,274 --> 00:22:45,984 [Kuba Chrapek]
+Jasne.
+
+00:22:45,984 --> 00:22:59,944 [Jarosław Orszański]
+W związku z tym wtedy byśmy takie produkty puścili u nas na stronę tylko i wyłącznie do sprzedaży detalicznej, jako opcję dodatkową, tak? Poza tym, co mamy w ofercie dystrybucyjnej. To taki jeden z pomysłów. To był taki trigger, który spowodował wysłanie do was tego maila.
+
+00:22:59,944 --> 00:23:01,284 [Kuba Chrapek]
+Mhm. Nie no, rozumiem.
+
+00:23:01,284 --> 00:23:24,084 [Jarosław Orszański]
+Tych produktów jeszcze nie ma w ogóle na stronie. To są produkty, które chcielibyśmy sprzedawać na własnej stronie, a nie przez Allegro czy przez jakieś tam inne, yy, bo one wymagają, yy, one nie są znane i wymagają pewnej informacji, wymagają pewnej promocji. No to jak już klient zajrzy na tą naszą stronę i widzi, że takie produkty są, ich nigdzie indziej w Polsce nie będzie, tak? Tylko będą na naszej stronie. No to.
+
+00:23:24,084 --> 00:23:31,464 [Kuba Chrapek]
+Świetnie. Świetnie. A tu panie Jarku, jak pan szacuje tych nowych produktów ile? Jaki to jest rząd wielkości?
+
+00:23:31,464 --> 00:23:37,364 [Jarosław Orszański]
+Na razie jedna marka. Yy, jedna marka. Tam jest
+
+00:23:37,364 --> 00:23:39,084 [Jarosław Orszański]
+z pięć tych produktów.
+
+00:23:39,084 --> 00:24:04,324 [Kuba Chrapek]
+Okej, okej. Dobrze. Tutaj, tutaj moja obserwacja. Jak pan mówi właśnie, że te, to nie będzie dostępne w ogóle na polskim rynku praktycznie, produkty tej marki, yy, to tu szczególnie polecam, yy, siąść, jeśli chodzi o SEO, yy, takiego produktu, bo podejrzewam, że konkurencji na polskim rynku dużej tutaj nie będzie pod względem tych produktów. Fajnie można wejść w wynikach wyszukiwania wysoko. Tak podejrzewam.
+
+00:24:04,324 --> 00:24:31,724 [Jarosław Orszański]
+No nie, bo, yy, nie, nie, nie ma takiej potrzeby, bo to są takie produkty typu high end, tak? Więc, yy, więc one, jak ktoś wpisze nazwę i, yy, model to automatycznie wejdzie nasza strona. Po tym co pan Oliwier ostatnio zrobił, to widzę, że to pozycjonowanie ruszyło bardzo ładnie. Także te moje naciski były być może słuszne. Nie wiem, ale w tej chwili jest dobrze. No, w tej chwili jest dobrze.
+
+00:24:31,724 --> 00:24:54,624 [Kuba Chrapek]
+O to chodzi. Nie no, to przyglądajmy się temu. Super, o to chodzi. To ma takie narzędzie właśnie być. Dobrze, dobrze. Mm. Ja panowie, raczej teraz pytań na teraz nie mam, bo o biznesie to wiecie. Nie, nie musimy rozmawiać, bo rozmawialiśmy już tyle razy, że rozumiemy. Dziękuję też panie Jarku za kontekst. Yy, skąd ta decyzja? Bo to nam też zawsze ułatwia, żebyśmy rozumieli. Oliwier, czy pytanie jeszcze jakieś od ciebie?
+
+00:24:54,624 --> 00:25:00,844 [Oliwier Sellig]
+Myślę, że nie. Myślę, że teraz już jest piłeczka po naszej stronie, żebyś przypytałeś wszystko, co możemy zrobić dla pana.
+
+00:25:00,844 --> 00:25:01,443 [Kuba Chrapek]
+Dokładnie.
+
+00:25:01,444 --> 00:25:02,264 [Jarosław Orszański]
+Super.
+
+00:25:02,264 --> 00:25:10,144 [Kuba Chrapek]
+Dokładnie. Dobrze, to myślę co Oliwier. Yy, na pewno w przyszłym tygodniu panie Jarku, my pewnie zrobimy taką burzę mózgów w przyszłym tygodniu.
+
+00:25:10,144 --> 00:25:20,304 [Jarosław Orszański]
+Jak zwykle nie mamy nic. N-noża na gardle nie mamy. Po prostu, yy, zrobicie ofertę i będziem, będziemy myśleć.
+
+00:25:20,304 --> 00:25:22,564 [Kuba Chrapek]
+Super. Dziękuję bardzo. Dziękuję też za to.
+
+00:25:22,564 --> 00:25:24,063 [Jarosław Orszański]
+Pozdrawiam. Do zobaczenia.
+
+00:25:24,064 --> 00:25:24,374 [Kuba Chrapek]
+Dziękuję.
+
+00:25:24,374 --> 00:25:25,584 [Oliwier Sellig]
+Do widzenia. Dziękuję.
+
+00:25:25,584 --> 00:25:28,364 [Kuba Chrapek]
+Do zobaczenia.
+
+00:25:28,364 --> 00:25:29,224 [Oliwier Sellig]
+Okej.
+
+00:25:29,264 --> 00:25:34,424 [Kuba Chrapek]
+Oliwier, yy, minuta maksymalnie, bo ja jadę. Mam taki ogień dzisiaj, że to jest rozpierdziel.
+
+00:25:34,424 --> 00:25:35,644 [Oliwier Sellig]
+Luzik, nie no spoko.
+
+00:25:35,644 --> 00:25:40,704 [Kuba Chrapek]
+Sorry za to. Kurwa, muszę uratować kompa, bo jak tego nie zrobię, to będzie dramat.
+
+00:25:40,704 --> 00:25:43,063 [Oliwier Sellig]
+Ogarnij, ogarnij, wiesz, możemy to ogarnąć, zsynchronizować.
+
+00:25:43,064 --> 00:25:45,884 [Kuba Chrapek]
+No lecę, lecę Oliwier. Dziękuję bardzo.
+
+00:25:45,884 --> 00:25:47,063 [Oliwier Sellig]
+Trzymaj się. Powodzenia.
+
+00:25:47,064 --> 00:25:47,324 [Kuba Chrapek]
+Dzięki.
+
+00:25:47,324 --> 00:25:48,244 [Oliwier Sellig]
+Na razie.

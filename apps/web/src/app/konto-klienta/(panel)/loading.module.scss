@@ -1,0 +1,13 @@
+.loadingPanel {
+  width: 100%;
+  align-self: stretch;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 37.4375rem) {
+    min-height: calc(100svh - var(--site-header-height, 4.75rem));
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+}

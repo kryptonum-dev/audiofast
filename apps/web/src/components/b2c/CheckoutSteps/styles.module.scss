@@ -1,0 +1,93 @@
+.checkoutSteps {
+  padding-bottom: clamp(0.5rem, calc(1vw / 0.48), 1rem);
+  margin-top: clamp(1rem, calc(1.5vw / 0.48), 2rem);
+
+  .stepsList {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    max-width: 58rem;
+  }
+
+  .stepItem {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-right: 1rem;
+
+    &:not(:last-child) {
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0.75rem;
+        left: calc(1.5rem + 0.5rem);
+        right: 0.5rem;
+        height: 0.0625rem;
+        background: var(--neutral-500, #c5c5c5);
+      }
+    }
+
+    &[data-state='current'],
+    &[data-state='completed'] {
+      &::after {
+        background: var(--primary-red, #fe0140);
+      }
+    }
+
+    .stepIndicator {
+      position: relative;
+      z-index: 1;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: var(--typography-body-s, 0.75rem);
+      font-weight: 500;
+      color: var(--neutral-white, #ffffff);
+      background: var(--neutral-500, #c5c5c5);
+      box-shadow: 0 0 0 0.25rem var(--neutral-white, #ffffff);
+    }
+
+    .stepLabel {
+      color: var(--neutral-600, #5b5a5a);
+      font-size: var(--typography-body-m, 0.875rem);
+      line-height: 1.4;
+      letter-spacing: -0.02em;
+    }
+
+    &[data-state='current'] {
+      .stepIndicator {
+        background: var(--primary-red, #fe0140);
+      }
+
+      .stepLabel {
+        color: var(--neutral-700, #303030);
+        font-weight: 500;
+      }
+    }
+
+    &[data-state='completed'] {
+      .stepIndicator {
+        background: var(--neutral-700, #303030);
+      }
+
+      .stepLabel {
+        color: var(--neutral-700, #303030);
+      }
+    }
+  }
+
+  @media (max-width: 56.1875rem) {
+    width: calc(100% - 2rem);
+  }
+
+  @media (max-width: 47.9375rem) {
+    .stepItem {
+      padding-right: 0.75rem;
+    }
+  }
+}

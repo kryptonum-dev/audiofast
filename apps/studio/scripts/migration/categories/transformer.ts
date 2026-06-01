@@ -164,10 +164,6 @@ export function generateSEODescription(
       "Przedwzmacniacze gramofonowe dla miłośników analogu. Odkryj pełnię brzmienia winyli z Audiofast.",
     "Głośniki podłogowe":
       "Głośniki podłogowe klasy high-end od najlepszych światowych producentów. Doświadcz prawdziwego brzmienia.",
-    "Głośniki podstawkowe":
-      "Kompaktowe głośniki podstawkowe o audiofilskiej jakości. Idealne rozwiązanie dla mniejszych pomieszczeń.",
-    "Głośniki aktywne":
-      "Głośniki aktywne z wbudowanymi wzmacniaczami. Kompletne rozwiązanie audio najwyższej klasy.",
     "Subwoofery domowe":
       "Subwoofery high-end dla pełnego, głębokiego basu. Uzupełnij swój system audio o najlepsze niskie tony.",
     Soundbary:
@@ -178,46 +174,20 @@ export function generateSEODescription(
       "Precyzyjne ramiona gramofonowe dla najwyższej jakości odtwarzania płyt winylowych.",
     "Wkładki gramofonowe":
       "Wkładki gramofonowe od renomowanych producentów. Kluczowy element analogowego traktu audio.",
-    "Zegary wzorcowe":
-      "Referencyjne zegary wzorcowe dla synchronizacji cyfrowych urządzeń audio najwyższej klasy.",
-    "Serwery muzyczne":
-      "Serwery muzyczne high-end dla bezstratnego strumieniowania i przechowywania muzyki.",
-    "Serwery muzyczne z wyjściem analogowym":
-      "Serwery muzyczne z wbudowanymi przetwornikami DAC. Kompletne rozwiązanie do streamingu.",
-    "Upsamplery i konwertery audio":
-      "Upsamplery i konwertery audio dla ulepszonej jakości cyfrowego sygnału.",
     "Interkonekty analogowe":
       "Interkonekty analogowe klasy high-end. Przewody sygnałowe dla najczystszego przekazu audio.",
     "Interkonekty cyfrowe":
       "Interkonekty cyfrowe dla bezbłędnej transmisji sygnału. Przewody coaxial, AES/EBU i optyczne.",
-    "Kable głośnikowe":
-      "Kable głośnikowe premium dla optymalnego połączenia wzmacniacza z głośnikami.",
     "Kable zasilające":
       "Kable zasilające high-end eliminujące zakłócenia sieciowe. Fundament czystego zasilania.",
     "Kable USB":
       "Kable USB audio klasy high-end dla cyfrowych połączeń najwyższej jakości.",
     "Kable ethernet":
       "Kable ethernet dedykowane audio dla streamingu muzyki bez zakłóceń i jitteru.",
-    "Przewody gramofonowe":
-      "Przewody phono dla analogowych systemów gramofonowych. Czystość sygnału od igły do przedwzmacniacza.",
-    "Kable zegarowe":
-      "Kable zegarowe do synchronizacji cyfrowych urządzeń audio. Precyzja taktowania.",
-    "Kable uziemiające":
-      "Kable uziemiające dla redukcji szumów i zakłóceń w systemach audio.",
-    "Kable do subwooferów":
-      "Przewody do subwooferów dla pełnego, kontrolowanego basu bez zniekształceń.",
     "Kondycjonery zasilania":
       "Kondycjonery zasilania dla czystej energii elektrycznej. Ochrona i optymalizacja zasilania.",
-    "Stacje uziemiające":
-      "Stacje uziemiające dla profesjonalnych instalacji audio. Eliminacja pętli masy.",
-    Zasilacze:
-      "Zewnętrzne zasilacze liniowe dla urządzeń audio. Czyste, stabilne zasilanie.",
-    Bezpieczniki:
-      "Bezpieczniki audiofilskie dla ochrony i optymalizacji przepływu prądu.",
     Półki:
       "Półki i stojaki audio dla optymalnej organizacji sprzętu. Funkcjonalność i estetyka.",
-    Stoliki:
-      "Stoliki audio zapewniające izolację i stabilność dla sprzętu high-end.",
     "Podstawki i kolce":
       "Podstawki i kolce antywibracyjne dla izolacji sprzętu od zakłóceń mechanicznych.",
     "Akcesoria akustyczne":
@@ -230,14 +200,8 @@ export function generateSEODescription(
       "Wzmacniacze słuchawkowe high-end dla najbardziej wymagających słuchaczy. Odkryj najlepsze rozwiązania w ofercie Audiofast.",
     Słuchawki:
       "Słuchawki audiofilskie najwyższej klasy dla prywatnych odsłuchów bez kompromisów. Sprawdź ofertę Audiofast.",
-    "Głośniki instalacyjne":
-      "Głośniki instalacyjne do zabudowy dla dyskretnych rozwiązań audio bez utraty jakości. Audiofast oferuje najlepsze produkty.",
-    "Głośniki do kina domowego":
-      "Zestawy głośników do kina domowego dla przestrzennego dźwięku najwyższej jakości. Sprawdź ofertę Audiofast.",
     "Switche i routery":
       "Switche i routery audio dla optymalnej infrastruktury sieciowej w systemach streamingowych wysokiej jakości.",
-    "Kable głośnikowe":
-      "Kable głośnikowe premium dla optymalnego połączenia wzmacniacza z głośnikami. Sprawdź ofertę Audiofast.",
     Stoliki:
       "Stoliki audio zapewniające izolację i stabilność dla sprzętu high-end. Odkryj najlepsze rozwiązania w Audiofast.",
     // New categories
@@ -253,6 +217,8 @@ export function generateSEODescription(
       "Serwery muzyczne z wbudowanymi przetwornikami DAC. Kompletne rozwiązanie do streamingu najwyższej jakości.",
     "Kable uziemiające":
       "Kable uziemiające high-end dla redukcji szumów i zakłóceń w systemach audio. Czysta masa sygnałowa.",
+    "Kable głośnikowe":
+      "Kable głośnikowe premium dla optymalnego połączenia wzmacniacza z głośnikami. Sprawdź ofertę Audiofast.",
     Zasilacze:
       "Zewnętrzne zasilacze liniowe klasy high-end dla urządzeń audio. Czyste i stabilne zasilanie bez zakłóceń.",
     "Stacje uziemiające":

@@ -10,15 +10,16 @@ import {
   Text,
 } from '@sanity/ui';
 import { useMemo } from 'react';
-import { SchemaType } from 'sanity';
+import type { SchemaType } from 'sanity';
 import styled from 'styled-components';
 
 import { defaultDatetimeFields } from '../constants';
-import { IndeterminateIndicator } from '../styles';
+import type {
+  SelectableField} from '../helpers/getSelectableFields';
 import {
-  SelectableField,
-  getSelectableFields,
+  getSelectableFields
 } from '../helpers/getSelectableFields';
+import { IndeterminateIndicator } from '../styles';
 
 const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
   height: 100%;

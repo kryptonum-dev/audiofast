@@ -1,5 +1,6 @@
 import '../global/global.scss';
 
+import { Suspense } from 'react';
 import { preconnect, prefetchDNS } from 'react-dom';
 import { Toaster } from 'sonner';
 
@@ -11,6 +12,7 @@ import Analytics from '@/src/components/shared/Analytics';
 import CookieConsent from '@/src/components/shared/CookieConsent';
 import Footer from '@/src/components/ui/Footer';
 import Header from '@/src/components/ui/Header';
+import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
 import { sanityFetch } from '../global/sanity/fetch';
@@ -48,19 +50,25 @@ export default async function RootLayout({
         )}
       </head>
       <body>
-        <Header />
-        {children}
-        <Footer />
-        {settings && <OrganizationSchema settings={settings} />}
-        <WebSiteSchema />
-        {IS_PRODUCTION_DEPLOYMENT && (
-          <>
-            <CookieConsent />
-            <Analytics />
-          </>
-        )}
-        <FloatingComparisonBox />
-        <Toaster position="bottom-center" richColors />
+        <CartProvider>
+          <Suspense fallback={null}>
+            <Header />
+          </Suspense>
+          {children}
+          <Footer />
+          {settings && <OrganizationSchema settings={settings} />}
+          <WebSiteSchema />
+          {IS_PRODUCTION_DEPLOYMENT && (
+            <>
+              <CookieConsent />
+              <Analytics />
+            </>
+          )}
+          <Suspense fallback={null}>
+            <FloatingComparisonBox />
+          </Suspense>
+          <Toaster position="bottom-center" richColors />
+        </CartProvider>
       </body>
     </html>
   );

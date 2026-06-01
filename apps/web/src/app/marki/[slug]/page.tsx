@@ -20,6 +20,7 @@ import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
@@ -102,11 +103,13 @@ export async function generateStaticParams() {
     tags: ['brand'],
   });
 
-  return brands
-    .filter((brand) => brand.slug)
-    .map((brand) => ({
-      slug: brand.slug!.replace('/marki/', '').replace(/\/$/, ''),
-    }));
+  return limitBuildTimeStaticParams(
+    brands
+      .filter((brand) => brand.slug)
+      .map((brand) => ({
+        slug: brand.slug!.replace('/marki/', '').replace(/\/$/, ''),
+      })),
+  );
 }
 
 // ----------------------------------------
@@ -168,7 +171,7 @@ export default async function BrandPage({
   const brandMaxPrice =
     brandPrices.length > 0
       ? Math.max(...brandPrices)
-      : (filterMetadata.globalMaxPrice || 100000);
+      : filterMetadata.globalMaxPrice || 100000;
 
   const breadcrumbsData = [
     {

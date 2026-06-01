@@ -10,6 +10,7 @@ import styles from './styles.module.scss';
 
 type CpoProductHeroProps = {
   productId: string;
+  productKey: string;
   name?: string | null;
   brand?: {
     name?: string | null;
@@ -18,6 +19,8 @@ type CpoProductHeroProps = {
   previewImage?: SanityRawImage | null;
   shortDescription?: PortableTextProps | null;
   priceCents?: number | null;
+  isBuyable: boolean;
+  isReturnable: boolean;
   transparentBackground?: boolean | null;
   formStateData?: FormStateData | null;
   customId?: string;
@@ -25,11 +28,14 @@ type CpoProductHeroProps = {
 
 export default function CpoProductHero({
   productId,
+  productKey,
   name,
   brand,
   previewImage,
   shortDescription,
   priceCents,
+  isBuyable,
+  isReturnable,
   transparentBackground,
   formStateData,
   customId,
@@ -106,11 +112,14 @@ export default function CpoProductHero({
 
       <CpoProductInquirySection
         productId={productId}
+        productKey={productKey}
         productName={productName}
         brandName={brand?.name}
         brandLogo={brand?.logo || undefined}
         previewImage={previewImage}
         priceCents={priceCents}
+        isBuyable={isBuyable}
+        isReturnable={isReturnable}
         formStateData={formStateData}
       />
     </section>

@@ -4,12 +4,15 @@ import { notFound } from 'next/navigation';
 import CpoProductGallerySection from '@/src/components/cpo/CpoProductGallerySection';
 import CpoProductHero from '@/src/components/cpo/CpoProductHero';
 import TechnicalData from '@/src/components/products/TechnicalData';
+import ProductViewTracker from '@/src/components/shared/analytics/ProductViewTracker';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import type { FormStateData } from '@/src/components/ui/FormStates';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
+import { getCpoProductBuyability } from '@/src/global/b2c/utils/buyability';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllCpoProductSlugs,
@@ -62,13 +65,15 @@ export async function generateStaticParams() {
     tags: ['cpoProduct'],
   });
 
-  return products
-    .filter((product) => product.slug)
-    .map((product) => ({
-      slug: product
-        .slug!.replace('/certyfikowany-sprzet-uzywany/', '')
-        .replace(/\/$/, ''),
-    }));
+  return limitBuildTimeStaticParams(
+    products
+      .filter((product) => product.slug)
+      .map((product) => ({
+        slug: product
+          .slug!.replace('/certyfikowany-sprzet-uzywany/', '')
+          .replace(/\/$/, ''),
+      })),
+  );
 }
 
 export async function generateMetadata({
@@ -127,6 +132,16 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
 
   const heroPreviewImage = (product.resolvedPreviewImage ??
     product.previewImage) as SanityRawImage | null | undefined;
+  const productBuyability = getCpoProductBuyability({
+    isArchived: product.isArchived,
+    isSellableOnline: product.isSellableOnline,
+    priceCents: product.priceCents,
+    availabilityStatus: product.availabilityStatus,
+  });
+  const pricePLN =
+    typeof product.priceCents === 'number'
+      ? Math.round(product.priceCents) / 100
+      : null;
 
   const useOwnGallery = product.useCustomGallery === true;
   const galleryImages = (
@@ -175,9 +190,17 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
 
   return (
     <main id="main" className="page-transition">
-      <Breadcrumbs data={breadcrumbsData} />
+      <ProductViewTracker
+        productId={product._id}
+        productName={product.name ?? ''}
+        pricePLN={pricePLN}
+        brand={{ name: product.brandName ?? undefined }}
+        categories={['cpo']}
+      />
+      <Breadcrumbs data={breadcrumbsData} firstItemType="productPage" />
       <CpoProductHero
         productId={product._id}
+        productKey={product.slug || product._id}
         name={product.name || ''}
         brand={
           product.brandName ? { name: product.brandName, logo: null } : null
@@ -185,6 +208,8 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
         previewImage={heroPreviewImage}
         shortDescription={product.shortDescription as PortableTextProps}
         priceCents={product.priceCents}
+        isBuyable={productBuyability.isBuyable}
+        isReturnable={product.isReturnable ?? false}
         transparentBackground={product.transparentBackground}
         formStateData={formStateData as FormStateData | null}
       />
