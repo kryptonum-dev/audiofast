@@ -79,7 +79,7 @@ export default function CustomerAuthEmailStep({
         autoComplete="email"
         inputMode="email"
         disabled={isSubmitting}
-        placeholder="np. jan@example.com"
+        placeholder="adres@email.pl"
         register={register('email', {
           required: {
             value: true,

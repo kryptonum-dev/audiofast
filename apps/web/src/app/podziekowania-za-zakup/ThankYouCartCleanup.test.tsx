@@ -41,36 +41,67 @@ describe('ThankYouCartCleanup', () => {
     vi.clearAllMocks();
   });
 
-  it('clears the cart and removes the marker when the paid order matches the stored checkout marker', () => {
-    const clearCart = vi.fn();
+  it.each(['awaiting_payment', 'paid'] as const)(
+    'clears the cart and removes the marker when the %s thank-you order matches the stored checkout marker',
+    (stateId) => {
+      const clearCart = vi.fn();
 
-    vi.mocked(useCart).mockReturnValue({
-      cart: createEmptyCart(),
-      clearCart,
-      isHydrated: true,
-    } as never);
-    localStorageMock.setItem(
-      CHECKOUT_CART_CLEANUP_STORAGE_KEY,
-      JSON.stringify({
-        orderId: 'order-1',
-        orderNumber: 'AF-2026-00001',
-        startedAt: new Date().toISOString(),
-        cartFingerprint: '{"version":1,"lines":[],"coupon":null}',
-      }),
-    );
+      vi.mocked(useCart).mockReturnValue({
+        cart: createEmptyCart(),
+        clearCart,
+        isHydrated: true,
+      } as never);
+      localStorageMock.setItem(
+        CHECKOUT_CART_CLEANUP_STORAGE_KEY,
+        JSON.stringify({
+          orderId: 'order-1',
+          orderNumber: 'AF-2026-00001',
+          startedAt: new Date().toISOString(),
+          cartFingerprint: '{"version":1,"lines":[],"coupon":null}',
+        }),
+      );
 
-    render(
-      <ThankYouCartCleanup
-        stateId="paid"
-        orderNumber="AF-2026-00001"
-      />,
-    );
+      render(
+        <ThankYouCartCleanup stateId={stateId} orderNumber="AF-2026-00001" />,
+      );
 
-    expect(clearCart).toHaveBeenCalledTimes(1);
-    expect(localStorageMock.removeItem).toHaveBeenCalledWith(
-      CHECKOUT_CART_CLEANUP_STORAGE_KEY,
-    );
-  });
+      expect(clearCart).toHaveBeenCalledTimes(1);
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith(
+        CHECKOUT_CART_CLEANUP_STORAGE_KEY,
+      );
+    },
+  );
+
+  it.each(['expired', 'invalid_access'] as const)(
+    'does not clear the cart for %s thank-you states',
+    (stateId) => {
+      const clearCart = vi.fn();
+
+      vi.mocked(useCart).mockReturnValue({
+        cart: createEmptyCart(),
+        clearCart,
+        isHydrated: true,
+      } as never);
+      localStorageMock.setItem(
+        CHECKOUT_CART_CLEANUP_STORAGE_KEY,
+        JSON.stringify({
+          orderId: 'order-1',
+          orderNumber: 'AF-2026-00001',
+          startedAt: new Date().toISOString(),
+          cartFingerprint: '{"version":1,"lines":[],"coupon":null}',
+        }),
+      );
+
+      render(
+        <ThankYouCartCleanup stateId={stateId} orderNumber="AF-2026-00001" />,
+      );
+
+      expect(clearCart).not.toHaveBeenCalled();
+      expect(localStorageMock.removeItem).not.toHaveBeenCalledWith(
+        CHECKOUT_CART_CLEANUP_STORAGE_KEY,
+      );
+    },
+  );
 
   it('does not clear the cart when the thank-you order does not match the stored marker', () => {
     const clearCart = vi.fn();
@@ -90,12 +121,7 @@ describe('ThankYouCartCleanup', () => {
       }),
     );
 
-    render(
-      <ThankYouCartCleanup
-        stateId="paid"
-        orderNumber="AF-2026-00002"
-      />,
-    );
+    render(<ThankYouCartCleanup stateId="paid" orderNumber="AF-2026-00002" />);
 
     expect(clearCart).not.toHaveBeenCalled();
   });
@@ -133,12 +159,7 @@ describe('ThankYouCartCleanup', () => {
       }),
     );
 
-    render(
-      <ThankYouCartCleanup
-        stateId="paid"
-        orderNumber="AF-2026-00001"
-      />,
-    );
+    render(<ThankYouCartCleanup stateId="paid" orderNumber="AF-2026-00001" />);
 
     expect(clearCart).not.toHaveBeenCalled();
     expect(localStorageMock.removeItem).toHaveBeenCalledWith(

@@ -179,13 +179,13 @@ export default function CheckoutForm({
             label="Imię"
             register={register('contact.firstName', CHECKOUT_RULES.firstName)}
             errors={errors.contact?.firstName?.message ?? ''}
-            placeholder="Jan"
+            placeholder="Imię"
           />
           <Input
             label="Nazwisko"
             register={register('contact.lastName', CHECKOUT_RULES.lastName)}
             errors={errors.contact?.lastName?.message ?? ''}
-            placeholder="Kowalski"
+            placeholder="Nazwisko"
           />
         </div>
 
@@ -206,7 +206,7 @@ export default function CheckoutForm({
               readOnly={isEmailLocked}
               register={register('contact.email', CHECKOUT_RULES.email)}
               errors={errors.contact?.email?.message ?? ''}
-              placeholder="jan@example.com"
+              placeholder="adres@email.pl"
             />
           </div>
         </div>
@@ -245,7 +245,7 @@ export default function CheckoutForm({
                   isCompanyInvoice ? CHECKOUT_RULES.companyName : {},
                 )}
                 errors={errors.invoiceCompanyName?.message ?? ''}
-                placeholder="Audiofast Sp. z o.o."
+                placeholder="Nazwa firmy"
               />
               <Input
                 label="NIP"
@@ -306,7 +306,7 @@ export default function CheckoutForm({
                     CHECKOUT_RULES.streetName,
                   )}
                   errors={errors.invoiceAddress?.streetName?.message ?? ''}
-                  placeholder="Fakturowa"
+                  placeholder="Nazwa ulicy"
                 />
 
                 <div className={styles.fieldGridTwoCompact}>
@@ -364,7 +364,7 @@ export default function CheckoutForm({
             CHECKOUT_RULES.streetName,
           )}
           errors={errors.shippingAddress?.streetName?.message ?? ''}
-          placeholder="Testowa"
+          placeholder="Nazwa ulicy"
         />
 
         <div className={styles.fieldGridTwoCompact}>
@@ -410,7 +410,7 @@ export default function CheckoutForm({
                     : {},
                 )}
                 errors={errors.shippingAddress?.firstName?.message ?? ''}
-                placeholder="Jan"
+                placeholder="Imię odbiorcy"
               />
               <Input
                 label="Nazwisko odbiorcy"
@@ -421,7 +421,7 @@ export default function CheckoutForm({
                     : {},
                 )}
                 errors={errors.shippingAddress?.lastName?.message ?? ''}
-                placeholder="Kowalski"
+                placeholder="Nazwisko odbiorcy"
               />
             </div>
             <Input

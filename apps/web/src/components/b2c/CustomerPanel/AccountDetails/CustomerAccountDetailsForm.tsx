@@ -285,7 +285,7 @@ export default function CustomerAccountDetailsForm({
             label="Imię"
             register={register('contact.firstName', CHECKOUT_RULES.firstName)}
             errors={errors.contact?.firstName?.message ?? ''}
-            placeholder="Jan"
+            placeholder="Imię"
             autoComplete="given-name"
             disabled={isSubmitting}
           />
@@ -293,7 +293,7 @@ export default function CustomerAccountDetailsForm({
             label="Nazwisko"
             register={register('contact.lastName', CHECKOUT_RULES.lastName)}
             errors={errors.contact?.lastName?.message ?? ''}
-            placeholder="Kowalski"
+            placeholder="Nazwisko"
             autoComplete="family-name"
             disabled={isSubmitting}
           />
@@ -366,7 +366,7 @@ export default function CustomerAccountDetailsForm({
             CHECKOUT_RULES.streetName,
           )}
           errors={errors.shippingAddress?.streetName?.message ?? ''}
-          placeholder="Testowa"
+          placeholder="Nazwa ulicy"
           autoComplete="address-line1"
           disabled={isSubmitting}
         />
@@ -415,7 +415,7 @@ export default function CustomerAccountDetailsForm({
                   CHECKOUT_RULES.shippingRecipientFirstName,
                 )}
                 errors={errors.shippingAddress?.firstName?.message ?? ''}
-                placeholder="Jan"
+                placeholder="Imię odbiorcy"
                 disabled={isSubmitting}
               />
               <Input
@@ -425,7 +425,7 @@ export default function CustomerAccountDetailsForm({
                   CHECKOUT_RULES.shippingRecipientLastName,
                 )}
                 errors={errors.shippingAddress?.lastName?.message ?? ''}
-                placeholder="Kowalski"
+                placeholder="Nazwisko odbiorcy"
                 disabled={isSubmitting}
               />
             </div>
@@ -488,7 +488,7 @@ export default function CustomerAccountDetailsForm({
                   CHECKOUT_RULES.companyName,
                 )}
                 errors={errors.invoiceCompanyName?.message ?? ''}
-                placeholder="Twoja firma sp. z o.o."
+                placeholder="Nazwa firmy"
                 disabled={isSubmitting}
               />
               <Input
@@ -552,7 +552,7 @@ export default function CustomerAccountDetailsForm({
                     CHECKOUT_RULES.streetName,
                   )}
                   errors={errors.invoiceAddress?.streetName?.message ?? ''}
-                  placeholder="Firmowa"
+                  placeholder="Nazwa ulicy"
                   disabled={isSubmitting}
                 />
 

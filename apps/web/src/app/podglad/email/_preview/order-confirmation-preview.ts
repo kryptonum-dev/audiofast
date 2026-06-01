@@ -30,12 +30,12 @@ export const orderConfirmationPreviewProps: OrderConfirmationTemplateProps = {
     heading: 'Adres dostawy',
     recipientName: 'Jan Kowalski',
     phone: '+48 123 123 123',
-    lines: ['ul. Testowa 15 / 7', '00-001 Warszawa', 'Polska'],
+    lines: ['ul. Marszałkowska 15 / 7', '00-001 Warszawa', 'Polska'],
   },
   invoiceDetails: {
     companyName: 'Audio Vision Pro Sp. z o.o.',
     taxId: '5252876543',
-    lines: ['ul. Firmowa 8', '00-950 Warszawa', 'Polska'],
+    lines: ['ul. Puławska 8', '00-950 Warszawa', 'Polska'],
   },
   loginUrl: buildB2cOrderDetailEmailUrl('AF-2026-00007'),
 };

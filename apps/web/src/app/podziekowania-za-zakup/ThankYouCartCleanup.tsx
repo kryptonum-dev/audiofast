@@ -15,6 +15,12 @@ type ThankYouCartCleanupProps = {
   orderNumber: string | null;
 };
 
+function shouldClearCartOnThankYouPage(
+  stateId: ThankYouCartCleanupProps['stateId'],
+): boolean {
+  return stateId === 'awaiting_payment' || stateId === 'paid';
+}
+
 export default function ThankYouCartCleanup({
   stateId,
   orderNumber,
@@ -26,7 +32,7 @@ export default function ThankYouCartCleanup({
     if (
       hasProcessedRef.current ||
       !isHydrated ||
-      stateId !== 'paid' ||
+      !shouldClearCartOnThankYouPage(stateId) ||
       orderNumber === null
     ) {
       return;

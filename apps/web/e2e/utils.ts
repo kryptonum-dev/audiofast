@@ -446,6 +446,30 @@ export async function readSingleStoredCartLine(page: Page) {
   return line;
 }
 
+export async function assertPersistedCartIsEmpty(page: Page) {
+  await expect
+    .poll(async () =>
+      page.evaluate((storageKey) => {
+        const rawCart = window.localStorage.getItem(storageKey);
+
+        if (!rawCart) {
+          return null;
+        }
+
+        const cart = JSON.parse(rawCart) as StoredCart;
+
+        return {
+          coupon: cart.coupon,
+          lineCount: cart.lines.length,
+        };
+      }, E2E_CART_STORAGE_KEY),
+    )
+    .toEqual({
+      coupon: null,
+      lineCount: 0,
+    });
+}
+
 export async function updatePricingVariantBasePrice(
   variantId: string,
   basePriceCents: number,
