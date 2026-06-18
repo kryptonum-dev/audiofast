@@ -73,6 +73,9 @@ export async function generateStaticParams() {
           .slug!.replace('/certyfikowany-sprzet-uzywany/', '')
           .replace(/\/$/, ''),
       })),
+    // No CPO products may exist yet (e.g. all archived); emit a placeholder so
+    // Cache Components build-time validation passes. The page 404s for it.
+    { slug: '__placeholder__' },
   );
 }
 

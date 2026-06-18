@@ -10,11 +10,21 @@ export function shouldLimitBuildTimeStaticParams(): boolean {
   );
 }
 
-export function limitBuildTimeStaticParams<TParam>(params: TParam[]): TParam[] {
+export function limitBuildTimeStaticParams<TParam>(
+  params: TParam[],
+  fallback?: TParam,
+): TParam[] {
+  // cacheComponents requires at least one param for build-time validation, even
+  // when the underlying dataset is currently empty. When a fallback is provided
+  // and there is nothing to build, emit it so the route still validates — the
+  // page is expected to `notFound()` for it at runtime.
+  if (params.length === 0 && fallback !== undefined) {
+    return [fallback];
+  }
+
   if (!shouldLimitBuildTimeStaticParams()) {
     return params;
   }
 
-  // cacheComponents still requires at least one param for build-time validation.
   return params.slice(0, 1);
 }
