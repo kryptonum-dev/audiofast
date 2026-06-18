@@ -1,19 +1,23 @@
 // @ts-nocheck
-// Office Script (Excel): paste this file only into Automate → Script; do not combine with other scripts in one editor tab.
+// Office Script (Excel): paste this file only into Automate -> Script; do not combine with other scripts in one editor tab.
 /**
- * Synchronizacja cen do Supabase
- * Skrypt odczytuje dane z arkuszy Produkty, Opcje, Wartości, Listy
- * i wysyła je do bazy danych.
+ * Synchronizacja cen B2C do Supabase.
+ * Sanity jest aktualizowane przez Supabase Edge Functions.
  *
- * FIX:
- * - Gdy model jest pusty w Opcje/Wartości/Listy, dane są stosowane do wszystkich modeli produktu.
- * - Brak dublowania opcji/wartości przy fan-oucie.
+ * Skrypt czyta:
+ * - Produkty: warianty cenowe, powiazane produkty P1-P10 oraz flagi B2C z AL/AM
+ * - Opcje, Wartosci, Listy: konfigurator cenowy
+ * - CPO: produkty CPO oraz flagi B2C z G/H
+ *
+ * Flagi B2C:
+ * - "Sklep" / Sprzedaz online: tylko wartosc TAK oznacza true
+ * - "Zwrot": tylko wartosc TAK oznacza true
+ * - dla Produkty wynik jest agregowany po URL/price_key: jesli dowolny wariant ma TAK, caly produkt ma true
  */
 
 const PRICING_SYNC_CONFIG = {
   SUPABASE_URL: "https://xuwapsacaymdemmvblak.supabase.co",
-  ANON_KEY:
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1d2Fwc2FjYXltZGVtbXZibGFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY4MTg3ODYsImV4cCI6MjA3MjM5NDc4Nn0.qMH2oXCcutbLFdg-IBgJkyfjhq2mQftEUBYfr8e8s2Y",
+  AUTH_HEADER: "Bearer office-script",
   SHEET_USTAWIENIA: "Ustawienia",
   PASSWORD_CELL: "B1",
   SHEET_PRODUKTY: "Produkty",
@@ -26,6 +30,12 @@ const PRICING_SYNC_CONFIG = {
   DATA_START_ROW_WARTOSCI: 2,
   DATA_START_ROW_LISTY: 2,
   DATA_START_ROW_CPO: 1,
+  PRODUCT_RELATED_START_COL: 26, // AA / P1
+  PRODUCT_RELATED_END_COL: 35, // AJ / P10
+  PRODUCT_SELLABLE_ONLINE_COL: 37, // AL / Sklep
+  PRODUCT_RETURNABLE_COL: 38, // AM / Zwrot
+  CPO_SELLABLE_ONLINE_COL: 6, // G / Sklep
+  CPO_RETURNABLE_COL: 7, // H / Zwrot
 };
 
 interface NumericRule {
@@ -52,6 +62,11 @@ interface OptionGroup {
   numeric_rule?: NumericRule;
 }
 
+interface B2CFlags {
+  is_sellable_online: boolean;
+  is_returnable: boolean;
+}
+
 interface Variant {
   price_key: string;
   brand: string;
@@ -60,9 +75,11 @@ interface Variant {
   base_price_cents: number;
   currency: string;
   position: number;
+  related_products?: string[];
   is_sellable_online: boolean;
   is_returnable: boolean;
-  related_products?: string[];
+  isSellableOnline: boolean;
+  isReturnable: boolean;
   groups: OptionGroup[];
 }
 
@@ -75,6 +92,8 @@ interface CpoProduct {
   description: string;
   is_sellable_online: boolean;
   is_returnable: boolean;
+  isSellableOnline: boolean;
+  isReturnable: boolean;
 }
 
 interface WartosciIndex {
@@ -95,6 +114,17 @@ interface ReadOpcjeStats {
   childGroupsCreated: number;
 }
 
+interface ProductFlagStats {
+  uniqueProducts: number;
+  sellableOnline: number;
+  returnable: number;
+}
+
+interface CpoFlagStats {
+  sellableOnline: number;
+  returnable: number;
+}
+
 function parsePriceToCents(priceStr: string): number {
   if (!priceStr || priceStr.trim() === "") return 0;
   const cleaned = priceStr
@@ -111,6 +141,17 @@ function parsePolishDecimal(str: string): number {
   if (!str || str.trim() === "") return 0;
   const value = parseFloat(str.replace(",", ".").trim());
   return isNaN(value) ? 0 : value;
+}
+
+function parseTakFlag(value: string): boolean {
+  return value.trim().toUpperCase() === "TAK";
+}
+
+function makeB2CFlags(sellableOnline: boolean, returnable: boolean): B2CFlags {
+  return {
+    is_sellable_online: sellableOnline,
+    is_returnable: returnable,
+  };
 }
 
 function isSuspiciousValue(value: string): boolean {
@@ -140,11 +181,6 @@ function cellStr(row: (string | number | boolean)[], index: number): string {
   return val === null || val === undefined ? "" : String(val).trim();
 }
 
-function parseTakBoolean(value: string): boolean {
-  const normalized = value.trim().toUpperCase();
-  return normalized === "TAK" || normalized === "TRUE";
-}
-
 function normalizeCpoKey(raw: string): string {
   return raw.trim().replace(/^\/+|\/+$/g, "");
 }
@@ -154,6 +190,89 @@ function normalizeCpoUrl(raw: string): string {
   if (!t) return "";
   if (/^https?:\/\//i.test(t)) return t;
   return t.replace(/^\/+|\/+$/g, "");
+}
+
+function readRelatedProducts(row: (string | number | boolean)[]): string[] {
+  const relatedProducts: string[] = [];
+  for (
+    let i = PRICING_SYNC_CONFIG.PRODUCT_RELATED_START_COL;
+    i <= PRICING_SYNC_CONFIG.PRODUCT_RELATED_END_COL;
+    i++
+  ) {
+    const related = normalizeCpoUrl(cellStr(row, i));
+    if (related) relatedProducts.push(related);
+  }
+  return relatedProducts;
+}
+
+function readProductFlagsByPriceKey(data: (string | number | boolean)[][]): Map<string, B2CFlags> {
+  const flagsByPriceKey = new Map<string, B2CFlags>();
+
+  for (let i = PRICING_SYNC_CONFIG.DATA_START_ROW_PRODUKTY; i < data.length; i++) {
+    const row = data[i];
+    const product = cellStr(row, 1);
+    const priceKey = cellStr(row, 6);
+
+    if (!product || !priceKey) continue;
+    if (priceKey.toLowerCase() === "url" || product.toLowerCase() === "produkt") continue;
+    if (!priceKey.includes("/")) continue;
+
+    const existing = flagsByPriceKey.get(priceKey) || makeB2CFlags(false, false);
+    flagsByPriceKey.set(
+      priceKey,
+      makeB2CFlags(
+        existing.is_sellable_online ||
+          parseTakFlag(cellStr(row, PRICING_SYNC_CONFIG.PRODUCT_SELLABLE_ONLINE_COL)),
+        existing.is_returnable ||
+          parseTakFlag(cellStr(row, PRICING_SYNC_CONFIG.PRODUCT_RETURNABLE_COL))
+      )
+    );
+  }
+
+  return flagsByPriceKey;
+}
+
+function getProductFlagStats(variants: Map<string, Variant>): ProductFlagStats {
+  const byPriceKey = new Map<string, B2CFlags>();
+
+  for (const variant of variants.values()) {
+    const existing = byPriceKey.get(variant.price_key) || makeB2CFlags(false, false);
+    byPriceKey.set(
+      variant.price_key,
+      makeB2CFlags(
+        existing.is_sellable_online || variant.is_sellable_online,
+        existing.is_returnable || variant.is_returnable
+      )
+    );
+  }
+
+  let sellableOnline = 0;
+  let returnable = 0;
+  for (const flags of byPriceKey.values()) {
+    if (flags.is_sellable_online) sellableOnline++;
+    if (flags.is_returnable) returnable++;
+  }
+
+  return {
+    uniqueProducts: byPriceKey.size,
+    sellableOnline,
+    returnable,
+  };
+}
+
+function getCpoFlagStats(products: CpoProduct[]): CpoFlagStats {
+  let sellableOnline = 0;
+  let returnable = 0;
+  for (const product of products) {
+    if (product.is_sellable_online) sellableOnline++;
+    if (product.is_returnable) returnable++;
+  }
+  return { sellableOnline, returnable };
+}
+
+function isSyncFailureStatus(status: string | undefined): boolean {
+  if (!status) return false;
+  return status === "timeout" || status.startsWith("failed:") || status.startsWith("error:");
 }
 
 function readCpo(workbook: ExcelScript.Workbook): CpoProduct[] {
@@ -174,8 +293,10 @@ function readCpo(workbook: ExcelScript.Workbook): CpoProduct[] {
     const priceStr = cellStr(row, 3);
     const url = normalizeCpoUrl(cellStr(row, 4));
     const description = cellStr(row, 5);
-    const isSellableOnline = parseTakBoolean(cellStr(row, 6));
-    const isReturnable = parseTakBoolean(cellStr(row, 7));
+    const flags = makeB2CFlags(
+      parseTakFlag(cellStr(row, PRICING_SYNC_CONFIG.CPO_SELLABLE_ONLINE_COL)),
+      parseTakFlag(cellStr(row, PRICING_SYNC_CONFIG.CPO_RETURNABLE_COL))
+    );
 
     if (!brand || !name || !key) continue;
     if (brand.toLowerCase() === "marka" || name.toLowerCase() === "nazwa" || key.toLowerCase() === "klucz") {
@@ -189,8 +310,10 @@ function readCpo(workbook: ExcelScript.Workbook): CpoProduct[] {
       price_cents: parsePriceToCents(priceStr),
       url,
       description,
-      is_sellable_online: isSellableOnline,
-      is_returnable: isReturnable,
+      is_sellable_online: flags.is_sellable_online,
+      is_returnable: flags.is_returnable,
+      isSellableOnline: flags.is_sellable_online,
+      isReturnable: flags.is_returnable,
     });
   }
 
@@ -238,7 +361,6 @@ function getTargetVariantKeys(
     return variants.has(key) ? [key] : [];
   }
 
-  // Model pusty => wszystkie modele danego produktu
   const keys: string[] = [];
   for (const [key, variant] of variants.entries()) {
     if (variant.product === product) keys.push(key);
@@ -253,6 +375,7 @@ function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
   if (!usedRange) return new Map();
   const data = usedRange.getValues();
   const variants = new Map<string, Variant>();
+  const flagsByPriceKey = readProductFlagsByPriceKey(data);
 
   let position = 0;
 
@@ -263,13 +386,8 @@ function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
     const model = normalizeModel(cellStr(row, 2));
     const priceStr = cellStr(row, 4);
     const priceKey = cellStr(row, 6);
-    const relatedProducts: string[] = [];
-    for (let relatedIndex = 26; relatedIndex <= 35; relatedIndex++) {
-      const relatedProduct = cellStr(row, relatedIndex);
-      if (relatedProduct) relatedProducts.push(relatedProduct);
-    }
-    const isSellableOnline = parseTakBoolean(cellStr(row, 37));
-    const isReturnable = parseTakBoolean(cellStr(row, 38));
+    const relatedProducts = readRelatedProducts(row);
+    const flags = flagsByPriceKey.get(priceKey) || makeB2CFlags(false, false);
 
     if (!brand || !product || !priceKey) continue;
     if (priceKey.toLowerCase() === "url" || product.toLowerCase() === "produkt") continue;
@@ -283,9 +401,11 @@ function readProdukty(workbook: ExcelScript.Workbook): Map<string, Variant> {
       base_price_cents: parsePriceToCents(priceStr),
       currency: "PLN",
       position: position++,
-      is_sellable_online: isSellableOnline,
-      is_returnable: isReturnable,
       related_products: relatedProducts.length > 0 ? relatedProducts : undefined,
+      is_sellable_online: flags.is_sellable_online,
+      is_returnable: flags.is_returnable,
+      isSellableOnline: flags.is_sellable_online,
+      isReturnable: flags.is_returnable,
       groups: [],
     });
   }
@@ -552,7 +672,12 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
       console.log("BŁĄD: Nie znaleziono produktów");
       return;
     }
+    const productFlagStats = getProductFlagStats(variants);
     console.log(`Produkty (warianty): ${variants.size}`);
+    console.log(
+      `Produkty: ${productFlagStats.sellableOnline}/${productFlagStats.uniqueProducts} sklep, ` +
+        `${productFlagStats.returnable}/${productFlagStats.uniqueProducts} zwrot`
+    );
 
     console.log("Czytam arkusz Wartości...");
     const wartosciIndex = readWartosci(workbook);
@@ -571,7 +696,12 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
 
     console.log("Czytam arkusz CPO...");
     const cpoProducts = readCpo(workbook);
+    const cpoFlagStats = getCpoFlagStats(cpoProducts);
     console.log(`CPO produkty: ${cpoProducts.length}`);
+    console.log(
+      `CPO: ${cpoFlagStats.sellableOnline}/${cpoProducts.length} sklep, ` +
+        `${cpoFlagStats.returnable}/${cpoProducts.length} zwrot`
+    );
 
     const variantsArray = Array.from(variants.values());
     const invalid = variantsArray.find(
@@ -581,6 +711,8 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
         !v.product ||
         typeof v.base_price_cents !== "number" ||
         typeof v.position !== "number" ||
+        typeof v.is_sellable_online !== "boolean" ||
+        typeof v.is_returnable !== "boolean" ||
         !Array.isArray(v.groups)
     );
     if (invalid) {
@@ -596,7 +728,7 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
     const response = await fetch(PRICING_SYNC_CONFIG.SUPABASE_URL + "/functions/v1/pricing-ingest", {
       method: "POST",
       headers: {
-        Authorization: "Bearer " + PRICING_SYNC_CONFIG.ANON_KEY,
+        Authorization: PRICING_SYNC_CONFIG.AUTH_HEADER,
         "X-Excel-Token": password,
         "Content-Type": "application/json; charset=utf-8",
       },
@@ -612,6 +744,11 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
     const result = JSON.parse(responseText) as {
       ok?: boolean;
       supabase?: { counts?: { variants?: number }; deleted_products?: number };
+      sanity?: {
+        prices?: string;
+        related_products?: string;
+        related_products_count?: number;
+      };
       cpo?: {
         ok?: boolean;
         created?: number;
@@ -619,19 +756,32 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
         archived?: number;
         unarchived?: number;
         drafts?: number;
+        validationErrors?: Array<{ key: string; messages: string[] }>;
         errors?: string[];
         error?: string;
       };
     };
 
     const elapsedSec = Math.round((Date.now() - startedAt) / 1000);
+    const sanityFailed =
+      isSyncFailureStatus(result.sanity?.prices) ||
+      isSyncFailureStatus(result.sanity?.related_products) ||
+      Boolean(result.cpo?.error) ||
+      Boolean(result.cpo?.errors?.length);
+    const success = Boolean(result.ok) && !sanityFailed;
+
     console.log("=== SYNCHRONIZACJA ZAKOŃCZONA ===");
-    console.log(`Status: ${result.ok ? "SUKCES ✓" : "BŁĄD"}`);
+    console.log(`Status: ${success ? "SUKCES" : "BŁĄD"}`);
     if (result.supabase?.counts) {
-      console.log(`Zaktualizowano: ${result.supabase.counts.variants} produktów`);
+      console.log(`Zaktualizowano w Supabase: ${result.supabase.counts.variants} wariantów`);
     }
     if (result.supabase?.deleted_products && result.supabase.deleted_products > 0) {
       console.log(`Usunięto: ${result.supabase.deleted_products} produktów (brak URL)`);
+    }
+    if (result.sanity) {
+      console.log(`Sanity ceny/flagi: ${result.sanity.prices || "brak statusu"}`);
+      console.log(`Powiązane produkty: ${result.sanity.related_products || "brak statusu"}`);
+      console.log(`Warianty z powiązanymi produktami: ${result.sanity.related_products_count || 0}`);
     }
     if (result.cpo) {
       if (result.cpo.error) {
@@ -644,16 +794,20 @@ async function main(workbook: ExcelScript.Workbook): Promise<void> {
         if (result.cpo.drafts) {
           console.log(`CPO szkice (wymagają uzupełnienia w Sanity): ${result.cpo.drafts}`);
         }
+        if (result.cpo.validationErrors?.length) {
+          console.log(
+            `CPO walidacja: ${result.cpo.validationErrors
+              .map((entry) => `${entry.key}: ${entry.messages.join("; ")}`)
+              .join(" | ")}`
+          );
+        }
         if (result.cpo.errors?.length) {
           console.log(`CPO błędy: ${result.cpo.errors.join(", ")}`);
         }
       }
     }
     console.log(`Czas wykonania: ${elapsedSec}s`);
-    console.log("Ceny w Sanity zostaną zaktualizowane w tle.");
   } catch (error) {
-    console.log(
-      `BŁĄD: ${error instanceof Error ? error.message : JSON.stringify(error)}`
-    );
+    console.log(`BŁĄD: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
   }
 }

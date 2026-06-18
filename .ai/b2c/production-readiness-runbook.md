@@ -326,6 +326,40 @@ Required checks:
 5. Confirm admin upload/download and customer invoice download work through app routes, not public bucket URLs.
 6. Confirm service-role key is present only in server-side Vercel env.
 
+### 4.1 Production B2C Data Cleanup
+
+Status: completed on 2026-06-01 against Supabase project
+`xuwapsacaymdemmvblak`.
+
+Cleanup performed after production deployment:
+
+- deleted 71 rows from `orders`; cascades removed all `order_items`,
+  `return_cases`, and `order_cancellation_requests`
+- deleted all 15 rows from `coupons`
+- removed all 7 objects from the private `order-invoices` storage bucket
+- deleted 6 non-kept rows from `customer_profiles`
+- deleted 5 seeded/test rows from `auth.users`
+
+Post-cleanup verification:
+
+- `orders`: 0
+- `order_items`: 0
+- `return_cases`: 0
+- `order_cancellation_requests`: 0
+- `coupons`: 0
+- `storage.objects` in `order-invoices`: 0
+- `auth.users`: 2
+- `customer_profiles`: 2
+
+Remaining users/profiles:
+
+- `oliwier@kryptonum.eu`
+- `j.orszanski@gmail.com`
+
+Note: requested keep-list included `jarek@audiofast`, but no such Supabase auth
+user or customer profile existed at cleanup time. The existing signed-in Jarek
+account was preserved instead.
+
 ## 5. Sanity CMS Preparation
 
 ### 5.1 Backfill Sellable Product Fields
