@@ -7,6 +7,7 @@ import { toast } from 'sonner';
 
 import { fetchComparisonProducts } from '@/src/app/actions/comparison';
 import Image from '@/src/components/shared/Image';
+import { formatCategoryList } from '@/src/global/comparison/comparison-helpers';
 import {
   clearComparison,
   getComparisonCookie,
@@ -192,14 +193,17 @@ export default function FloatingComparisonBox() {
   }
 
   const count = optimisticProducts.length;
-  // Read category name from the cookie (stored when first product was added)
-  // Fall back to product category data for older cookies that don't have categoryName
+  // Build the category label from the cookie's shared category set.
+  // Fall back to product category data for older cookies without names.
   const cookie = getComparisonCookie();
   const productCategory = optimisticProducts[0]?.categories?.[0] as
     | { slug?: string; name?: string }
     | undefined;
+  const cookieCategoryLabel = cookie
+    ? formatCategoryList(cookie.categorySlugs, cookie.categoryNames)
+    : '';
   const currentCategoryLabel =
-    cookie?.categoryName || productCategory?.name || null;
+    cookieCategoryLabel || productCategory?.name || null;
   // Bust the App Router cache for the compare page after cookie-only updates.
   const compareHref = cookie?.timestamp
     ? `/porownaj?comparison=${cookie.timestamp}`

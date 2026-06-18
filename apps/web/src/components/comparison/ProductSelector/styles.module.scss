@@ -250,6 +250,22 @@
             overflow: hidden;
             text-overflow: ellipsis;
           }
+
+          .categoryPill {
+            align-self: flex-start;
+            max-width: 100%;
+            margin-top: 0.25rem;
+            padding: 0.125rem 0.5rem;
+            border-radius: 1rem;
+            border: 1px solid var(--neutral-400);
+            background: var(--neutral-white);
+            font-size: var(--typography-body-s);
+            font-weight: 400;
+            color: var(--neutral-600);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
 
         .addIcon {

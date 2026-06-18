@@ -16,8 +16,8 @@ import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
-import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { getStandardProductBuyability } from '@/src/global/b2c/utils/buyability';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductSlugs,
@@ -125,10 +125,6 @@ export default async function ProductPage(props: ProductPageProps) {
   });
   const categorySlugs =
     product.categories?.map((category) => category?.slug).filter(Boolean) ?? [];
-  const primaryCategory = product.categories?.[0];
-  const primaryCategorySlug = primaryCategory?.slug ?? '';
-  const primaryCategoryName =
-    primaryCategory?.name || primaryCategory?.slug || '';
 
   // Determine which stores to display (product stores > brand stores > none)
   const effectiveStores =
@@ -208,8 +204,7 @@ export default async function ProductPage(props: ProductPageProps) {
         shortDescription={product.shortDescription}
         awards={product.awards as AwardType[]}
         productId={product._id}
-        categorySlug={primaryCategorySlug}
-        categoryName={primaryCategoryName}
+        categories={product.categories}
         formStateData={formStateData}
       />
       {sections.length > 1 && (

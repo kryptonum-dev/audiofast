@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
+import { normalizeComparisonCategories } from '@/src/global/comparison/comparison-helpers';
 import {
   addProductToComparison,
   isProductInComparison,
   removeProductFromComparison,
-} from "@/src/global/comparison/cookie-manager";
+} from '@/src/global/comparison/cookie-manager';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 type AddToComparisonProps = {
   productId?: string;
-  categorySlug?: string;
-  categoryName?: string;
+  categories?: Array<{ slug?: string | null; name?: string | null }> | null;
   productName?: string;
   productData?: unknown; // Partial or full product data for optimistic updates
 };
 
 export default function AddToComparison({
   productId,
-  categorySlug,
-  categoryName,
+  categories,
   productName,
   productData,
 }: AddToComparisonProps) {
   const [isInComparison, setIsInComparison] = useState(false);
+  const normalizedCategories = normalizeComparisonCategories(categories);
 
   // Check if product is already in comparison on mount and listen for changes
   useEffect(() => {
@@ -39,19 +39,19 @@ export default function AddToComparison({
     checkComparison();
 
     // Listen for comparison changes from other components
-    window.addEventListener("audiofast:comparison-changed", checkComparison);
+    window.addEventListener('audiofast:comparison-changed', checkComparison);
 
     return () => {
       window.removeEventListener(
-        "audiofast:comparison-changed",
+        'audiofast:comparison-changed',
         checkComparison,
       );
     };
   }, [productId]);
 
   const handleClick = () => {
-    if (!productId || !categorySlug) {
-      toast.error("Nie można dodać produktu bez kategorii");
+    if (!productId || normalizedCategories.length === 0) {
+      toast.error('Nie można dodać produktu bez kategorii');
       return;
     }
 
@@ -59,20 +59,19 @@ export default function AddToComparison({
     if (isInComparison) {
       removeProductFromComparison(productId);
       setIsInComparison(false);
-      toast.info("Produkt usunięty z porównania");
+      toast.info('Produkt usunięty z porównania');
       return;
     }
 
     // Otherwise, add to comparison
-    const result = addProductToComparison(productId, categorySlug, {
-      categoryName,
+    const result = addProductToComparison(productId, normalizedCategories, {
       productName,
       productData,
     });
 
     if (result.success) {
       setIsInComparison(true);
-      toast.success("Produkt dodany do porównania");
+      toast.success('Produkt dodany do porównania');
     } else {
       toast.error(result.error);
     }
@@ -86,8 +85,8 @@ export default function AddToComparison({
       type="button"
       aria-label={
         isInComparison
-          ? `Usuń ${productName || "produkt"} z porównania`
-          : `Dodaj ${productName || "produkt"} do porównania`
+          ? `Usuń ${productName || 'produkt'} z porównania`
+          : `Dodaj ${productName || 'produkt'} do porównania`
       }
     >
       <span className={styles.iconWrapper}>
@@ -98,7 +97,7 @@ export default function AddToComparison({
         )}
       </span>
       <span className={styles.addToComparisonText}>
-        {isInComparison ? "Usuń z porównania" : "Dodaj do porównania"}
+        {isInComparison ? 'Usuń z porównania' : 'Dodaj do porównania'}
       </span>
     </button>
   );

@@ -63,12 +63,13 @@ export default function ProductCard({
           priority={priority}
           loading={loading}
         />
-        {brand?.logo && <Image image={brand.logo} sizes="90px" loading={loading} />}
+        {brand?.logo && (
+          <Image image={brand.logo} sizes="90px" loading={loading} />
+        )}
         <AddToComparisonButton
           productId={_id}
           productName={name ?? ''}
-          categorySlug={categories?.[0]?.slug ?? ''}
-          categoryName={categories?.[0]?.name ?? categories?.[0]?.slug ?? ''}
+          categories={categories}
           productData={product}
         />
       </div>
@@ -84,11 +85,7 @@ export default function ProductCard({
             {formatPrice(basePriceCents)}
           </span>
           {showButton && hasLink && (
-            <Button
-              tabIndex={-1}
-              text="Dowiedz się więcej"
-              variant="primary"
-            />
+            <Button tabIndex={-1} text="Dowiedz się więcej" variant="primary" />
           )}
         </div>
       </div>

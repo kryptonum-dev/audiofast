@@ -1,17 +1,31 @@
-import type { PortableTextBlock } from "@portabletext/react";
+import type { PortableTextBlock } from '@portabletext/react';
 
-import type { SanityProjectedImage } from "@/src/components/shared/Image";
+import type { SanityProjectedImage } from '@/src/components/shared/Image';
+
+/**
+ * A product category as supplied when adding a product to comparison.
+ * Products can belong to multiple categories.
+ */
+export type ComparisonCategory = {
+  slug: string;
+  name?: string;
+};
 
 /**
  * Cookie structure for storing comparison data
  */
 export type ComparisonCookie = {
-  categorySlug: string;
   /**
-   * Human-friendly category name captured when the first product is added.
+   * Intersection of category slugs shared by ALL products currently in the
+   * comparison. Narrowed on every addition. A product can be added only if it
+   * shares at least one of these categories (see `validateProductAddition`).
+   */
+  categorySlugs: string[];
+  /**
+   * Optional slug -> human-friendly name map for display labels.
    * Optional to remain backward compatible with existing cookies.
    */
-  categoryName?: string;
+  categoryNames?: Record<string, string>;
   productIds: string[];
   timestamp: number;
 };
@@ -68,7 +82,7 @@ export type ComparisonProduct = {
     logo: SanityProjectedImage | null;
   };
   mainImage: SanityProjectedImage | null;
-  imageSource: "preview" | "gallery";
+  imageSource: 'preview' | 'gallery';
   technicalData: TechnicalData | null;
   categories: Array<{
     slug: string;

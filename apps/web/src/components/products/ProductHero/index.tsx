@@ -28,8 +28,7 @@ interface ProductHeroProps {
   awards?: AwardType[];
   customId?: string;
   productId?: string;
-  categorySlug?: string;
-  categoryName?: string;
+  categories?: Array<{ slug?: string | null; name?: string | null }> | null;
   formStateData?: FormStateData | null;
 }
 
@@ -45,8 +44,7 @@ export default function ProductHero({
   awards,
   customId,
   productId,
-  categorySlug,
-  categoryName,
+  categories,
   formStateData,
 }: ProductHeroProps) {
   // Prepare awards for display
@@ -113,8 +111,7 @@ export default function ProductHero({
 
         <AddToComparison
           productId={productId}
-          categorySlug={categorySlug}
-          categoryName={categoryName}
+          categories={categories}
           productName={name}
           productData={{
             _id: productId,

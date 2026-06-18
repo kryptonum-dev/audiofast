@@ -1,65 +1,124 @@
-import type { PortableTextBlock } from "@portabletext/react";
+import type { PortableTextBlock } from '@portabletext/react';
 
 import type {
+  ComparisonCategory,
   ComparisonColumn,
   ComparisonCookie,
   ComparisonProduct,
   ComparisonTableData,
   EnabledParameter,
-} from "./types";
+} from './types';
 
 /**
- * Validate if product can be added to comparison
+ * Maximum number of products that can be compared at once.
+ */
+export const MAX_COMPARISON_PRODUCTS = 3;
+
+/**
+ * Normalize a loosely-typed list of categories (possibly with null slug/name,
+ * as returned by Sanity projections) into clean `ComparisonCategory` objects,
+ * dropping any without a usable slug.
+ */
+export function normalizeComparisonCategories(
+  categories?: Array<{ slug?: string | null; name?: string | null }> | null,
+): ComparisonCategory[] {
+  return (categories ?? [])
+    .map((category) => ({
+      slug: category?.slug ?? '',
+      name: category?.name ?? undefined,
+    }))
+    .filter((category) => Boolean(category.slug));
+}
+
+/**
+ * Build a human-friendly label for a set of category slugs.
+ */
+export function formatCategoryList(
+  slugs: string[],
+  names?: Record<string, string>,
+): string {
+  return slugs.map((slug) => names?.[slug]?.trim() || slug).join(', ');
+}
+
+/**
+ * Validate if a product can be added to the comparison.
+ *
+ * A product belongs to one or more categories. It can be added when its set of
+ * categories has a non-empty intersection with the categories shared by the
+ * products already in the comparison. On success, `nextCategorySlugs` holds the
+ * narrowed intersection that should be persisted in the cookie.
  */
 type ValidationOptions = {
-  categoryName?: string;
   productName?: string;
+};
+
+export type ValidationResult = {
+  valid: boolean;
+  error?: string;
+  nextCategorySlugs?: string[];
 };
 
 export function validateProductAddition(
   productId: string,
-  categorySlug: string,
+  incomingCategories: ComparisonCategory[],
   currentComparison: ComparisonCookie | null,
   options?: ValidationOptions,
-): { valid: boolean; error?: string } {
-  const categoryName = options?.categoryName;
+): ValidationResult {
   const productName = options?.productName;
+  const productLabel = productName ? `Produkt "${productName}"` : 'Ten produkt';
+
+  const incomingSlugs = incomingCategories
+    .map((category) => category.slug)
+    .filter((slug): slug is string => Boolean(slug));
+
+  if (incomingSlugs.length === 0) {
+    return { valid: false, error: 'Nie można dodać produktu bez kategorii' };
+  }
+
   // Check if already in comparison
   if (currentComparison?.productIds.includes(productId)) {
-    return {
-      valid: false,
-      error: "Ten produkt jest już w porównaniu",
-    };
+    return { valid: false, error: 'Ten produkt jest już w porównaniu' };
   }
 
   // Check max products
-  if (currentComparison && currentComparison.productIds.length >= 3) {
+  if (
+    currentComparison &&
+    currentComparison.productIds.length >= MAX_COMPARISON_PRODUCTS
+  ) {
     return {
       valid: false,
-      error: "Możesz porównywać maksymalnie 3 produkty",
+      error: `Możesz porównywać maksymalnie ${MAX_COMPARISON_PRODUCTS} produkty`,
     };
   }
 
-  // Check category match
-  if (currentComparison && currentComparison.categorySlug !== categorySlug) {
-    const getCategoryLabel = (slug: string, name?: string) =>
-      name?.trim() || slug;
-    const currentLabel = getCategoryLabel(
-      currentComparison.categorySlug,
-      currentComparison.categoryName,
+  // First product: no shared-category constraint yet.
+  if (
+    !currentComparison ||
+    currentComparison.productIds.length === 0 ||
+    currentComparison.categorySlugs.length === 0
+  ) {
+    return { valid: true, nextCategorySlugs: incomingSlugs };
+  }
+
+  // Category intersection: the new product must share at least one category
+  // with the categories common to all products already in the comparison.
+  const incomingSet = new Set(incomingSlugs);
+  const intersection = currentComparison.categorySlugs.filter((slug) =>
+    incomingSet.has(slug),
+  );
+
+  if (intersection.length === 0) {
+    const currentLabel = formatCategoryList(
+      currentComparison.categorySlugs,
+      currentComparison.categoryNames,
     );
-    const incomingLabel = getCategoryLabel(categorySlug, categoryName);
-    const productLabel = productName
-      ? `Produkt "${productName}"`
-      : "Ten produkt";
-
     return {
       valid: false,
-      error: `${productLabel} jest w kategorii "${incomingLabel}". Porównywarka zawiera już produkty z kategorii "${currentLabel}".`,
+      error: `${productLabel} nie należy do żadnej z porównywanych kategorii (${currentLabel}). Porównywać można tylko produkty z tej samej kategorii.`,
     };
   }
 
-  return { valid: true };
+  return { valid: true, nextCategorySlugs: intersection };
 }
 
 /**
@@ -179,7 +238,7 @@ export function createComparisonRows(
   columns: ComparisonColumn[],
   headings: string[],
   enabledParameters?: EnabledParameter[],
-): ComparisonTableData["comparisonRows"] {
+): ComparisonTableData['comparisonRows'] {
   // If enabledParameters is provided (even if empty), use it as the source of truth
   // Only fall back to all headings if enabledParameters is undefined/null (no config exists)
   const orderedHeadings =

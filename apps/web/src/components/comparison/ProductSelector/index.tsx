@@ -7,11 +7,19 @@ import type { ComparisonProduct } from '@/src/global/comparison/types';
 
 import styles from './styles.module.scss';
 
+type ProductCategory = { slug: string; name?: string };
+
 type ProductSelectorProps = {
   isOpen: boolean;
   onClose: () => void;
   availableProducts: ComparisonProduct[];
   onProductSelect: (productId: string) => void;
+  /**
+   * Shared category slugs of the comparison, in cookie order. Used to pick each
+   * product's leading category (the first shared one it belongs to) for the
+   * category pill and the default category grouping.
+   */
+  comparisonCategorySlugs?: string[];
 };
 
 // Helper function to normalize text for searching (remove diacritics, lowercase)
@@ -27,10 +35,26 @@ export default function ProductSelector({
   onClose,
   availableProducts,
   onProductSelect,
+  comparisonCategorySlugs,
 }: ProductSelectorProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const modalRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // A product can belong to several categories; show the first one that is part
+  // of the comparison's shared set (cookie order), falling back to its first
+  // category. This keeps the pill and sorting consistent with which category
+  // the comparison is actually built around.
+  const getLeadingCategory = (
+    product: ComparisonProduct,
+  ): ProductCategory | undefined => {
+    const categories = product.categories ?? [];
+    for (const slug of comparisonCategorySlugs ?? []) {
+      const match = categories.find((category) => category.slug === slug);
+      if (match) return match;
+    }
+    return categories[0];
+  };
 
   // Instant client-side filtering (no async, no debounce!)
   const filteredProducts = useMemo(() => {
@@ -50,6 +74,25 @@ export default function ProductSelector({
       return queryWords.every((word) => searchableText.includes(word));
     });
   }, [searchQuery, availableProducts]);
+
+  // Default grouping: order by leading category (in cookie order), then by name.
+  // No user-facing sort control \u2014 this is the baseline order only.
+  const sortedProducts = useMemo(() => {
+    const slugOrder = comparisonCategorySlugs ?? [];
+    const categoryRank = (product: ComparisonProduct): number => {
+      const leading = getLeadingCategory(product);
+      const index = leading ? slugOrder.indexOf(leading.slug) : -1;
+      return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+    };
+
+    return [...filteredProducts].sort((a, b) => {
+      const rankDiff = categoryRank(a) - categoryRank(b);
+      if (rankDiff !== 0) return rankDiff;
+      return (a.name ?? '').localeCompare(b.name ?? '', 'pl');
+    });
+    // getLeadingCategory is a pure function of comparisonCategorySlugs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredProducts, comparisonCategorySlugs]);
 
   // Focus search input when modal opens
   useEffect(() => {
@@ -121,13 +164,14 @@ export default function ProductSelector({
             aria-label="Szukaj produktu"
           />
         </div>
-        {filteredProducts.length > 0 ? (
+        {sortedProducts.length > 0 ? (
           <ul className={styles.productList}>
-            {filteredProducts.map((product) => {
+            {sortedProducts.map((product) => {
               const imageClassName =
                 product.imageSource === 'preview'
                   ? styles.productImageContain
                   : styles.productImageCover;
+              const leadingCategory = getLeadingCategory(product);
 
               return (
                 <li key={product._id}>
@@ -149,6 +193,11 @@ export default function ProductSelector({
                       <span className={styles.brandName}>
                         {product.brand.name}
                       </span>
+                      {leadingCategory?.name && (
+                        <span className={styles.categoryPill}>
+                          {leadingCategory.name}
+                        </span>
+                      )}
                     </div>
                     <div className={styles.addIcon}>
                       <PlusIcon />

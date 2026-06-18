@@ -2137,6 +2137,11 @@ const productsFilterConditions = /* groq */ `
 // - categories[]._id (only slug and name needed for comparison button)
 // - Main image uses lite fragment (fill mode doesn't need dimensions)
 // - Brand logo keeps full fragment (needs dimensions for non-fill rendering)
+//
+// NOTE: project the FULL categories array (not just the first one). A product can
+// belong to multiple categories, and the comparison button needs all of them to
+// validate the category intersection — otherwise a product whose first category
+// differs from the comparison's shared category is wrongly rejected.
 const productsProjection = /* groq */ `
   _id,
   name,
@@ -2144,7 +2149,7 @@ const productsProjection = /* groq */ `
   "slug": slug.current,
   basePriceCents,
   hasMultiplePrices,
-  "categories": categories[0...1]->{
+  "categories": categories[]->{
     name,
     "slug": slug.current
   },
@@ -2470,9 +2475,12 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
 // Query 2: Get ALL Products AND Comparator Config for a Category (COMBINED)
 // Single query that fetches both products and comparator config
 // Parameters:
-// - $categorySlug: category slug to filter by
+// - $categorySlugs: shared category slugs of the comparison. A product is
+//   included if it belongs to ANY of these categories (set intersection),
+//   so products sharing a common category can be compared even when they
+//   each also belong to other categories.
 export const queryComparisonPageData = defineQuery(/* groq */ `{
-  "products": *[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && $categorySlug in categories[]->slug.current] | order(name asc) {
+  "products": *[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && count((categories[]->slug.current)[@ in $categorySlugs]) > 0] | order(name asc) {
     _id,
     name,
     "slug": slug.current,
@@ -2505,9 +2513,12 @@ export const queryComparisonPageData = defineQuery(/* groq */ `{
     name
     }
   },
-  "enabledParameters": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current == $categorySlug][0].enabledParameters[] {
-    name,
-    displayName
+  "categoryConfigs": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current in $categorySlugs] {
+    "categorySlug": category->slug.current,
+    "enabledParameters": enabledParameters[] {
+      name,
+      displayName
+    }
   }
 }`);
 

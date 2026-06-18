@@ -1,38 +1,44 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { toast } from 'sonner';
 
-import PortableTextRenderer from "@/src/components/portableText";
+import PortableTextRenderer from '@/src/components/portableText';
 import {
   type ComparisonProduct,
   type EnabledParameter,
   getProductColumnCount,
   getProductVariants,
   processComparisonData,
-} from "@/src/global/comparison";
+} from '@/src/global/comparison';
 import {
   addProductToComparison,
   removeProductFromComparison,
-} from "@/src/global/comparison/cookie-manager";
-import type { PortableTextProps } from "@/src/global/types";
+} from '@/src/global/comparison/cookie-manager';
+import type { PortableTextProps } from '@/src/global/types';
 
-import ConfirmationModal from "../../ui/ConfirmationModal";
-import EmptyState from "../../ui/EmptyState";
-import ComparisonProductCard from "../ComparisonProductCard";
-import ProductSelector from "../ProductSelector";
-import styles from "./styles.module.scss";
+import ConfirmationModal from '../../ui/ConfirmationModal';
+import EmptyState from '../../ui/EmptyState';
+import ComparisonProductCard from '../ComparisonProductCard';
+import ProductSelector from '../ProductSelector';
+import styles from './styles.module.scss';
 
 type ComparisonTableProps = {
   products: ComparisonProduct[];
   availableProducts: ComparisonProduct[];
   enabledParameters?: EnabledParameter[];
+  /**
+   * Shared category slugs of the comparison, in cookie order. Used by the
+   * product selector to label and group available products by category.
+   */
+  categorySlugs?: string[];
 };
 
 export default function ComparisonTable({
   products,
   availableProducts,
   enabledParameters,
+  categorySlugs,
 }: ComparisonTableProps) {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -61,19 +67,39 @@ export default function ComparisonTable({
     [allProducts, comparisonIds],
   );
 
-  const currentAvailable = useMemo(
-    () => allProducts.filter((p) => !comparisonIds.has(p._id)),
-    [allProducts, comparisonIds],
-  );
+  // The category set the comparison is currently built around: the intersection
+  // of the categories of all products actually in the comparison. Derived from
+  // state (not the static `categorySlugs` prop) so it stays correct after
+  // client-side adds (narrows) and removals (widens) without a server refetch.
+  const currentSharedCategorySlugs = useMemo(() => {
+    const [first, ...rest] = currentProducts;
+    if (!first) return categorySlugs ?? [];
+    let shared = (first.categories ?? []).map((category) => category.slug);
+    for (const product of rest) {
+      const productSlugs = new Set(
+        (product.categories ?? []).map((category) => category.slug),
+      );
+      shared = shared.filter((slug) => productSlugs.has(slug));
+    }
+    return shared;
+  }, [currentProducts, categorySlugs]);
 
-  const categorySlug =
-    currentProducts[0]?.categories[0]?.slug ||
-    allProducts[0]?.categories[0]?.slug ||
-    "";
-  const categoryName =
-    currentProducts[0]?.categories[0]?.name ||
-    allProducts[0]?.categories[0]?.name ||
-    "";
+  const currentAvailable = useMemo(() => {
+    const notInComparison = allProducts.filter(
+      (p) => !comparisonIds.has(p._id),
+    );
+    if (currentSharedCategorySlugs.length === 0) return notInComparison;
+    // Only offer products that still share at least one category with the
+    // comparison's (possibly narrowed) shared set.
+    const shared = new Set(currentSharedCategorySlugs);
+    return notInComparison.filter((p) =>
+      (p.categories ?? []).some((category) => shared.has(category.slug)),
+    );
+  }, [allProducts, comparisonIds, currentSharedCategorySlugs]);
+
+  const hasCategoryContext =
+    (currentProducts[0]?.categories?.length ?? 0) > 0 ||
+    (allProducts[0]?.categories?.length ?? 0) > 0;
 
   // Process comparison data with new structure
   const comparisonData = useMemo(
@@ -121,8 +147,8 @@ export default function ComparisonTable({
   };
 
   const handleOpenSelector = () => {
-    if (!categorySlug) {
-      toast.error("Nie można dodać produktu bez kategorii");
+    if (!hasCategoryContext) {
+      toast.error('Nie można dodać produktu bez kategorii');
       return;
     }
     setIsSelectorOpen(true);
@@ -132,15 +158,18 @@ export default function ComparisonTable({
     const selectedProduct = allProducts.find(
       (product) => product._id === productId,
     );
-    const result = addProductToComparison(productId, categorySlug, {
-      categoryName,
-      productName: selectedProduct?.name,
-    });
+    const result = addProductToComparison(
+      productId,
+      selectedProduct?.categories ?? [],
+      {
+        productName: selectedProduct?.name,
+      },
+    );
     if (result.success) {
       setComparisonIds((prev) => new Set([...prev, productId]));
-      toast.success("Produkt dodany do porównania");
+      toast.success('Produkt dodany do porównania');
     } else {
-      toast.error(result.error || "Nie można dodać produktu");
+      toast.error(result.error || 'Nie można dodać produktu');
     }
   };
 
@@ -159,13 +188,13 @@ export default function ComparisonTable({
     };
 
     // Check on scroll (vertical page scroll)
-    window.addEventListener("scroll", checkStickyVisibility, { passive: true });
+    window.addEventListener('scroll', checkStickyVisibility, { passive: true });
 
     // Initial check
     checkStickyVisibility();
 
     return () => {
-      window.removeEventListener("scroll", checkStickyVisibility);
+      window.removeEventListener('scroll', checkStickyVisibility);
     };
   }, []);
 
@@ -199,17 +228,17 @@ export default function ComparisonTable({
       });
     };
 
-    stickyHeader.addEventListener("scroll", handleStickyScroll, {
+    stickyHeader.addEventListener('scroll', handleStickyScroll, {
       passive: true,
     });
-    wrapper.addEventListener("scroll", handleWrapperScroll, { passive: true });
+    wrapper.addEventListener('scroll', handleWrapperScroll, { passive: true });
 
     // Sync initial scroll position
     stickyHeader.scrollLeft = wrapper.scrollLeft;
 
     return () => {
-      stickyHeader.removeEventListener("scroll", handleStickyScroll);
-      wrapper.removeEventListener("scroll", handleWrapperScroll);
+      stickyHeader.removeEventListener('scroll', handleStickyScroll);
+      wrapper.removeEventListener('scroll', handleWrapperScroll);
     };
   }, [isStickyVisible]);
 
@@ -281,18 +310,18 @@ export default function ComparisonTable({
       });
     };
 
-    scrollbar.addEventListener("scroll", handleScrollbarScroll, {
+    scrollbar.addEventListener('scroll', handleScrollbarScroll, {
       passive: true,
     });
-    wrapper.addEventListener("scroll", handleWrapperScroll, { passive: true });
+    wrapper.addEventListener('scroll', handleWrapperScroll, { passive: true });
 
     // Update on resize
     const resizeObserver = new ResizeObserver(updateScrollbarWidth);
     resizeObserver.observe(wrapper);
 
     return () => {
-      scrollbar.removeEventListener("scroll", handleScrollbarScroll);
-      wrapper.removeEventListener("scroll", handleWrapperScroll);
+      scrollbar.removeEventListener('scroll', handleScrollbarScroll);
+      wrapper.removeEventListener('scroll', handleWrapperScroll);
       resizeObserver.disconnect();
     };
   }, [isScrollable, currentProducts]);
@@ -325,7 +354,7 @@ export default function ComparisonTable({
           onClick={handleOpenSelector}
           role="button"
           tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && handleOpenSelector()}
+          onKeyDown={(e) => e.key === 'Enter' && handleOpenSelector()}
           aria-label="Dodaj produkt do porównania"
         >
           <div className={styles.placeholderIcon}>
@@ -386,8 +415,8 @@ export default function ComparisonTable({
         <EmptyState
           type="comparator-noProduct"
           button={{
-            name: "Przeglądaj produkty",
-            href: "/produkty/",
+            name: 'Przeglądaj produkty',
+            href: '/produkty/',
           }}
         />
       </section>
@@ -416,8 +445,8 @@ export default function ComparisonTable({
       >
         <div className={styles.headingRow}>
           <h1>
-            Porównujesz {currentProducts.length}{" "}
-            {currentProducts.length === 1 ? "produkt" : "produkty"}
+            Porównujesz {currentProducts.length}{' '}
+            {currentProducts.length === 1 ? 'produkt' : 'produkty'}
           </h1>
           {/* Custom scrollbar - only show if content overflows */}
           {isScrollable && (
@@ -502,6 +531,7 @@ export default function ComparisonTable({
           onClose={() => setIsSelectorOpen(false)}
           availableProducts={currentAvailable}
           onProductSelect={handleProductSelect}
+          comparisonCategorySlugs={currentSharedCategorySlugs}
         />
         <ConfirmationModal
           isOpen={isConfirmationOpen}

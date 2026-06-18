@@ -1,15 +1,70 @@
-import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
-import type { ComparisonCookie } from "./types";
+import { validateProductAddition } from './comparison-helpers';
+import type { ComparisonCategory, ComparisonCookie } from './types';
 
-const COOKIE_NAME = "audiofast_comparison";
+const COOKIE_NAME = 'audiofast_comparison';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
-const MAX_PRODUCTS = 3;
+
+/**
+ * Legacy cookie shape (single category) kept for read-time migration.
+ */
+type LegacyComparisonCookie = {
+  categorySlug?: string;
+  categoryName?: string;
+};
+
+/**
+ * Normalize a raw parsed cookie into the current {@link ComparisonCookie} shape.
+ * Migrates legacy single-category cookies (`categorySlug`/`categoryName`) into
+ * the array-based shape so old visitors keep a working comparison.
+ */
+function normalizeComparisonCookie(raw: unknown): ComparisonCookie | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const data = raw as Partial<ComparisonCookie> & LegacyComparisonCookie;
+
+  if (!Array.isArray(data.productIds)) return null;
+
+  const productIds = data.productIds.filter(
+    (id): id is string => typeof id === 'string',
+  );
+  const timestamp = typeof data.timestamp === 'number' ? data.timestamp : 0;
+
+  // Current shape
+  if (Array.isArray(data.categorySlugs)) {
+    return {
+      categorySlugs: data.categorySlugs.filter(
+        (slug): slug is string => typeof slug === 'string',
+      ),
+      categoryNames:
+        data.categoryNames && typeof data.categoryNames === 'object'
+          ? data.categoryNames
+          : undefined,
+      productIds,
+      timestamp,
+    };
+  }
+
+  // Legacy single-category shape
+  if (typeof data.categorySlug === 'string') {
+    const slug = data.categorySlug;
+    const name =
+      typeof data.categoryName === 'string' ? data.categoryName : undefined;
+    return {
+      categorySlugs: slug ? [slug] : [],
+      categoryNames: slug && name ? { [slug]: name } : undefined,
+      productIds,
+      timestamp,
+    };
+  }
+
+  return { categorySlugs: [], productIds, timestamp };
+}
 
 /**
  * Custom event name for comparison cookie changes
  */
-const COMPARISON_CHANGE_EVENT = "audiofast:comparison-changed";
+const COMPARISON_CHANGE_EVENT = 'audiofast:comparison-changed';
 
 /**
  * Dispatch a custom event when comparison cookie changes
@@ -17,7 +72,7 @@ const COMPARISON_CHANGE_EVENT = "audiofast:comparison-changed";
  * @param productData - Optional product data to include in the event for optimistic updates
  */
 function dispatchComparisonChangeEvent(productData?: unknown): void {
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     window.dispatchEvent(
       new CustomEvent(COMPARISON_CHANGE_EVENT, {
         detail: productData ? { productData } : undefined,
@@ -31,22 +86,24 @@ function dispatchComparisonChangeEvent(productData?: unknown): void {
  * Use this in Client Components, useEffect, and event handlers
  */
 export function getComparisonCookie(): ComparisonCookie | null {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     // Should never be called on server - throw helpful error
     throw new Error(
-      "getComparisonCookie() is client-only. Use getComparisonCookieServer() in Server Components.",
+      'getComparisonCookie() is client-only. Use getComparisonCookieServer() in Server Components.',
     );
   }
 
   const cookieValue = document.cookie
-    .split("; ")
+    .split('; ')
     .find((row) => row.startsWith(`${COOKIE_NAME}=`))
-    ?.split("=")[1];
+    ?.split('=')[1];
 
   if (!cookieValue) return null;
 
   try {
-    return JSON.parse(decodeURIComponent(cookieValue));
+    return normalizeComparisonCookie(
+      JSON.parse(decodeURIComponent(cookieValue)),
+    );
   } catch {
     return null;
   }
@@ -64,7 +121,7 @@ export async function getComparisonCookieServer(
   if (!cookie?.value) return null;
 
   try {
-    return JSON.parse(cookie.value);
+    return normalizeComparisonCookie(JSON.parse(cookie.value));
   } catch {
     return null;
   }
@@ -74,21 +131,17 @@ export async function getComparisonCookieServer(
  * Set comparison cookie (CLIENT-SIDE ONLY)
  */
 export function setComparisonCookie(data: ComparisonCookie): void {
-  if (typeof window === "undefined") {
-    throw new Error("setComparisonCookie can only be called on the client");
+  if (typeof window === 'undefined') {
+    throw new Error('setComparisonCookie can only be called on the client');
   }
 
   const cookieValue = encodeURIComponent(JSON.stringify(data));
-  const secure = window.location.protocol === "https:";
+  const secure = window.location.protocol === 'https:';
 
-  document.cookie = `${COOKIE_NAME}=${cookieValue}; max-age=${COOKIE_MAX_AGE}; path=/; samesite=lax${secure ? "; secure" : ""}`;
+  document.cookie = `${COOKIE_NAME}=${cookieValue}; max-age=${COOKIE_MAX_AGE}; path=/; samesite=lax${secure ? '; secure' : ''}`;
 }
 
 type AddProductOptions = {
-  /**
-   * Human-friendly category name for better messaging.
-   */
-  categoryName?: string;
   /**
    * Product name to personalize toasts.
    */
@@ -99,56 +152,55 @@ type AddProductOptions = {
   productData?: unknown;
 };
 
-const getCategoryLabel = (slug: string, name?: string) => name?.trim() || slug;
-
 /**
- * Add product to comparison
+ * Add product to comparison.
+ *
+ * Accepts the product's FULL list of categories (a product can belong to more
+ * than one). The product is accepted when its categories intersect the set of
+ * categories shared by all products already in the comparison; the cookie then
+ * stores the narrowed intersection.
+ *
+ * @param categories - All categories the product belongs to
  * @param options - Optional metadata for richer UX
  */
 export function addProductToComparison(
   productId: string,
-  categorySlug: string,
+  categories: ComparisonCategory[],
   options?: AddProductOptions,
 ): { success: boolean; error?: string } {
-  const categoryName = options?.categoryName;
   const productName = options?.productName;
   const productData = options?.productData;
   const current = getComparisonCookie();
 
-  // Check if already in comparison
-  if (current?.productIds.includes(productId)) {
-    return { success: false, error: "Ten produkt jest już w porównaniu" };
+  const validation = validateProductAddition(productId, categories, current, {
+    productName,
+  });
+  if (!validation.valid) {
+    return { success: false, error: validation.error };
   }
 
-  // Check max products
-  if (current && current.productIds.length >= MAX_PRODUCTS) {
-    return {
-      success: false,
-      error: "Możesz porównywać maksymalnie 3 produkty",
-    };
+  const nextSlugs =
+    validation.nextCategorySlugs ??
+    categories.map((category) => category.slug).filter(Boolean);
+
+  // Merge known category names, then keep only those for the surviving slugs.
+  const mergedNames: Record<string, string> = {
+    ...(current?.categoryNames ?? {}),
+  };
+  for (const category of categories) {
+    if (category.slug && category.name) {
+      mergedNames[category.slug] = category.name;
+    }
+  }
+  const categoryNames: Record<string, string> = {};
+  for (const slug of nextSlugs) {
+    if (mergedNames[slug]) categoryNames[slug] = mergedNames[slug];
   }
 
-  // Check category match
-  if (current && current.categorySlug !== categorySlug) {
-    const currentLabel = getCategoryLabel(
-      current.categorySlug,
-      current.categoryName,
-    );
-    const incomingLabel = getCategoryLabel(categorySlug, categoryName);
-    const productLabel = productName
-      ? `Produkt "${productName}"`
-      : "Ten produkt";
-
-    return {
-      success: false,
-      error: `${productLabel} jest w kategorii "${incomingLabel}". Porównywarka zawiera już produkty z kategorii "${currentLabel}".`,
-    };
-  }
-
-  // Add product
   const newData: ComparisonCookie = {
-    categorySlug,
-    categoryName: categoryName || current?.categoryName,
+    categorySlugs: nextSlugs,
+    categoryNames:
+      Object.keys(categoryNames).length > 0 ? categoryNames : undefined,
     productIds: current ? [...current.productIds, productId] : [productId],
     timestamp: Date.now(),
   };
@@ -183,8 +235,8 @@ export function removeProductFromComparison(productId: string): void {
  * Clear all products from comparison
  */
 export function clearComparison(): void {
-  if (typeof window === "undefined") {
-    throw new Error("clearComparison can only be called on the client");
+  if (typeof window === 'undefined') {
+    throw new Error('clearComparison can only be called on the client');
   }
 
   document.cookie = `${COOKIE_NAME}=; max-age=0; path=/`;
