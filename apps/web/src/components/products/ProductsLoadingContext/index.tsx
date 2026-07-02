@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import {
   createContext,
   type ReactNode,
@@ -41,16 +41,17 @@ const ProductsLoadingContext = createContext<ProductsLoadingContextType>({
 export function ProductsLoadingProvider({ children }: { children: ReactNode }) {
   const [isPending, setIsPending] = useState(false);
   const [changeType, setChangeType] = useState<LoadingChangeType | null>(null);
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   // Track the search params string to detect changes
   const paramsString = searchParams.toString();
 
-  // When URL params change, loading is complete
+  // When the URL (pathname or params) changes, loading is complete
   useEffect(() => {
     setIsPending(false);
     setChangeType(null);
-  }, [paramsString]);
+  }, [pathname, paramsString]);
 
   const startLoading = useCallback((type: LoadingChangeType) => {
     setIsPending(true);

@@ -98,6 +98,14 @@ export default function SortDropdown({
   }, [isOpen]);
 
   const handleOptionClick = (value: string) => {
+    // Re-selecting the current option navigates to the identical URL, so the
+    // params-change effects that clear pending/loading state never fire and
+    // the skeleton overlay would stay forever — just close the dropdown
+    if (value === currentValue) {
+      setIsOpen(false);
+      return;
+    }
+
     // Optimistic update - show new value immediately
     setPendingValue(value);
 

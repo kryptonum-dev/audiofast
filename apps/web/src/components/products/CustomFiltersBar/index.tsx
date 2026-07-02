@@ -153,6 +153,24 @@ export default function CustomFiltersBar({
   const visibleFilterDefinitions = filterDefinitions.filter(hasFilterOptions);
 
   // ----------------------------------------
+  // Navigation Helper
+  // ----------------------------------------
+
+  // Same-URL navigation never fires the params-change effect that clears the
+  // loading overlay (ProductsLoadingContext), so it would stay forever — only
+  // start loading and navigate when the URL actually changes
+  const navigateIfChanged = (newUrl: string) => {
+    const currentQuery = currentSearchParams.toString();
+    const currentUrl = currentQuery ? `${basePath}?${currentQuery}` : basePath;
+    if (newUrl === currentUrl) return;
+
+    startLoading('filter');
+    startTransition(() => {
+      router.push(newUrl, { scroll: false });
+    });
+  };
+
+  // ----------------------------------------
   // Dropdown Filter Handlers
   // ----------------------------------------
 
@@ -175,10 +193,7 @@ export default function CustomFiltersBar({
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
     setOpenDropdown(null);
-    startLoading('filter');
-    startTransition(() => {
-      router.push(newUrl, { scroll: false });
-    });
+    navigateIfChanged(newUrl);
   };
 
   const handleClearDropdownFilter = (
@@ -195,10 +210,7 @@ export default function CustomFiltersBar({
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
     setOpenDropdown(null);
-    startLoading('filter');
-    startTransition(() => {
-      router.push(newUrl, { scroll: false });
-    });
+    navigateIfChanged(newUrl);
   };
 
   // ----------------------------------------
@@ -282,10 +294,7 @@ export default function CustomFiltersBar({
       return next;
     });
 
-    startLoading('filter');
-    startTransition(() => {
-      router.push(newUrl, { scroll: false });
-    });
+    navigateIfChanged(newUrl);
   };
 
   const handleClearRangeFilter = (filterName: string, e: React.MouseEvent) => {
@@ -307,10 +316,7 @@ export default function CustomFiltersBar({
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
     setOpenDropdown(null);
-    startLoading('filter');
-    startTransition(() => {
-      router.push(newUrl, { scroll: false });
-    });
+    navigateIfChanged(newUrl);
   };
 
   // ----------------------------------------
@@ -346,10 +352,7 @@ export default function CustomFiltersBar({
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
     setOpenDropdown(null);
-    startLoading('filter');
-    startTransition(() => {
-      router.push(newUrl, { scroll: false });
-    });
+    navigateIfChanged(newUrl);
   };
 
   // ----------------------------------------

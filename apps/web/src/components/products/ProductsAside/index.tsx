@@ -541,9 +541,27 @@ export default function ProductsAside({
 
   // Handle category click with optimistic update
   const handleCategoryClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
     categorySlug: string | null,
     parentName?: string,
   ) => {
+    // Re-clicking the active category navigates to the identical URL, so the
+    // params-change effects that clear pending/loading state never fire and
+    // the skeleton overlay would stay forever — skip the navigation entirely
+    const targetClean = categorySlug
+      ? categorySlug.replace('/kategoria/', '').replace(/\//g, '')
+      : null;
+    const activeClean =
+      pendingCategory !== null
+        ? pendingCategory === 'all'
+          ? null
+          : pendingCategory
+        : currentCategoryClean;
+    if ((targetClean || null) === (activeClean || null)) {
+      e.preventDefault();
+      return;
+    }
+
     if (categorySlug === null) {
       // "All Products" clicked - collapse all parent dropdowns
       setPendingCategory('all');
@@ -574,14 +592,6 @@ export default function ProductsAside({
   };
 
   const applyFilters = () => {
-    // Optimistic update - show new filter values immediately
-    setPendingFilters({
-      search: localFilters.search.trim(),
-      brands: localFilters.brands,
-      minPrice: localFilters.minPrice,
-      maxPrice: localFilters.maxPrice,
-    });
-
     const params = new URLSearchParams(window.location.search);
     params.delete('page');
 
@@ -615,20 +625,27 @@ export default function ProductsAside({
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
 
+    // Same-URL navigation never fires the params-change effects that clear
+    // pending/loading state, so the overlay would stay forever — skip it
+    if (newUrl === `${window.location.pathname}${window.location.search}`) {
+      setIsOpen(false);
+      return;
+    }
+
+    // Optimistic update - show new filter values immediately
+    setPendingFilters({
+      search: localFilters.search.trim(),
+      brands: localFilters.brands,
+      minPrice: localFilters.minPrice,
+      maxPrice: localFilters.maxPrice,
+    });
+
     startLoading('filter');
     router.push(newUrl, { scroll: false });
     setIsOpen(false);
   };
 
   const clearFilters = () => {
-    // Optimistic update - show cleared filters immediately
-    setPendingFilters({
-      search: '',
-      brands: [],
-      minPrice: 0,
-      maxPrice: centsToPLN(maxPrice),
-    });
-
     const params = new URLSearchParams(window.location.search);
     params.delete('search');
     params.delete('brands');
@@ -645,6 +662,21 @@ export default function ProductsAside({
 
     const queryString = params.toString();
     const newUrl = queryString ? `${basePath}?${queryString}` : basePath;
+
+    // Same-URL navigation never fires the params-change effects that clear
+    // pending/loading state, so the overlay would stay forever — skip it
+    if (newUrl === `${window.location.pathname}${window.location.search}`) {
+      setIsOpen(false);
+      return;
+    }
+
+    // Optimistic update - show cleared filters immediately
+    setPendingFilters({
+      search: '',
+      brands: [],
+      minPrice: 0,
+      maxPrice: centsToPLN(maxPrice),
+    });
 
     startLoading('filter');
     router.push(newUrl, { scroll: false });
@@ -756,7 +788,7 @@ export default function ProductsAside({
                 className={`${styles.categoryItem} ${isAllProductsActive ? styles.active : ''}`}
                 tabIndex={isAllProductsActive ? -1 : 0}
                 scroll={false}
-                onClick={() => handleCategoryClick(null)}
+                onClick={(e) => handleCategoryClick(e, null)}
               >
                 <span className={styles.categoryName}>Wszystkie produkty</span>
                 <span className={styles.categoryCount}>
@@ -809,8 +841,12 @@ export default function ProductsAside({
                                 className={`${styles.subCategoryItem} ${isActive ? styles.active : ''}`}
                                 tabIndex={isActive ? -1 : 0}
                                 scroll={false}
-                                onClick={() =>
-                                  handleCategoryClick(categorySlug, parentName)
+                                onClick={(e) =>
+                                  handleCategoryClick(
+                                    e,
+                                    categorySlug,
+                                    parentName,
+                                  )
                                 }
                               >
                                 <span className={styles.categoryName}>
