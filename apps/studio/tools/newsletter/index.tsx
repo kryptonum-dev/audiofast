@@ -40,7 +40,7 @@ import {
   useToast,
 } from "@sanity/ui";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useClient } from "sanity";
+import { useClient, useWorkspace, type Workspace } from "sanity";
 
 // Types matching our content structure
 type ContentItem = {
@@ -139,14 +139,25 @@ function normalizeStoredSanityToken(value: string): string {
   return value;
 }
 
-function getStudioAuthToken(client: ReturnType<typeof useClient>) {
+// Sanity v5 keeps the session token in the workspace auth store (backed by
+// the `__studio_auth_token_<projectId>` localStorage key). The store's token
+// observable emits its current value synchronously on subscribe, so a
+// subscribe-and-unsubscribe read is safe. Cookie-based sessions have no
+// token — the observable emits null and the API call cannot be authorized.
+function getAuthStoreToken(auth: Workspace["auth"]): string | null {
+  const result: { token: string | null } = { token: null };
+  const subscription = auth.token?.subscribe((value) => {
+    result.token = value;
+  });
+  subscription?.unsubscribe();
+
+  return result.token;
+}
+
+// Pre-v5 Studios stored the token under `__sanity_auth_token_<projectId>` —
+// kept only as a legacy fallback.
+function getLegacyStoredToken(projectId: string): string | null {
   if (typeof window === "undefined") {
-    return null;
-  }
-
-  const projectId = client.config().projectId;
-
-  if (!projectId) {
     return null;
   }
 
@@ -155,6 +166,13 @@ function getStudioAuthToken(client: ReturnType<typeof useClient>) {
   );
 
   return storedToken ? normalizeStoredSanityToken(storedToken) : null;
+}
+
+function getStudioAuthToken({
+  auth,
+  projectId,
+}: Pick<Workspace, "auth" | "projectId">): string | null {
+  return getAuthStoreToken(auth) ?? getLegacyStoredToken(projectId);
 }
 
 // Toolbar preset colors matching the brand palette
@@ -533,6 +551,7 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
 
 export default function NewsletterTool() {
   const client = useClient({ apiVersion: "2024-01-01" });
+  const workspace = useWorkspace();
   const toast = useToast();
   const newsletterApiUrl = useMemo(() => resolveNewsletterApiUrl(), []);
 
@@ -838,14 +857,14 @@ export default function NewsletterTool() {
       return;
     }
 
-    const authToken = getStudioAuthToken(client);
+    const authToken = getStudioAuthToken(workspace);
 
     if (!authToken) {
       toast.push({
         status: "error",
         title: "Brak tokenu operatora",
         description:
-          "Odśwież Studio i spróbuj ponownie. API newslettera wymaga aktywnej sesji Sanity.",
+          "Wyloguj się ze Studia i zaloguj ponownie, po czym spróbuj jeszcze raz. API newslettera wymaga aktywnej sesji Sanity.",
       });
       return;
     }
