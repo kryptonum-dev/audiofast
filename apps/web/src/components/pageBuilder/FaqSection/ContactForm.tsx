@@ -23,6 +23,8 @@ type ContactFormData = {
   email: string;
   name: string;
   consent: boolean;
+  /** Honeypot - never filled in by a human */
+  companyWebsite: string;
 };
 
 type FormStep = 1 | 2;
@@ -41,6 +43,8 @@ export default function ContactForm({
   const [formKey, setFormKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const previousStepRef = useRef<FormStep>(1);
+  // Timestamp of the first render - used to reject submits that are too fast to be human
+  const renderedAt = useRef(Date.now());
 
   const {
     register,
@@ -51,7 +55,13 @@ export default function ContactForm({
     formState: { errors },
   } = useForm<ContactFormData>({
     mode: 'onTouched',
-    defaultValues: { consent: false, email: '', name: '', message: '' },
+    defaultValues: {
+      consent: false,
+      email: '',
+      name: '',
+      message: '',
+      companyWebsite: '',
+    },
   });
 
   // Focus management when step changes
@@ -113,7 +123,10 @@ export default function ContactForm({
     try {
       trackLead(data);
 
-      const result = await sendContactForm(data);
+      const result = await sendContactForm({
+        ...data,
+        elapsedMs: Date.now() - renderedAt.current,
+      });
 
       if (result.success) {
         setFormState('success');
@@ -252,6 +265,33 @@ export default function ContactForm({
           })}
           errors={errors.consent?.message ?? ''}
         />
+
+        {/*
+          Honeypot. Moved off-screen on purpose instead of `display: none` /
+          `hidden` - spam bots that drive a real browser evaluate CSS and skip
+          fields that are not rendered, but they do fill fields that are merely
+          pushed outside the viewport. Never visible or reachable for humans.
+        */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            left: '-9999px',
+            width: '1px',
+            height: '1px',
+            overflow: 'hidden',
+            opacity: 0,
+            pointerEvents: 'none',
+          }}
+        >
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            {...register('companyWebsite')}
+          />
+        </div>
+
         <Button
           type="button"
           onClick={handleStep1Submit}

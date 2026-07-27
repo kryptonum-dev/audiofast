@@ -22,6 +22,10 @@ type ContactFormData = {
   consent: boolean;
   /** Optional product data for product inquiry forms */
   product?: ProductInquiryData;
+  /** Honeypot field - always empty for humans, filled in by naive bots */
+  companyWebsite?: string;
+  /** Milliseconds between form render and submit - used to reject instant submits */
+  elapsedMs?: number;
 };
 
 type ContactFormResponse = {
@@ -32,7 +36,8 @@ type ContactFormResponse = {
 /**
  * Sends contact form data to the email API endpoint
  *
- * @param data - Contact form data (name, email, message, consent, optional product)
+ * @param data - Contact form data (name, email, message, consent, optional product,
+ *               plus the anti-spam signals: honeypot value and fill time)
  * @returns Promise with success status and optional error message
  */
 export async function sendContactForm(
@@ -50,6 +55,8 @@ export async function sendContactForm(
         message: data.message,
         consent: data.consent,
         product: data.product,
+        companyWebsite: data.companyWebsite,
+        elapsedMs: data.elapsedMs,
       }),
     });
 

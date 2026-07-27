@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import Button from '@/src/components/ui/Button';
@@ -23,19 +23,26 @@ type ContactFormData = {
   email: string;
   message: string;
   consent: boolean;
+  /** Honeypot - never filled in by a human */
+  companyWebsite: string;
 };
 
 export default function ContactFormComponent({
   formState: formStateData,
 }: ContactFormComponentProps) {
   const [formState, setFormState] = useState<FormState>('idle');
+  // Timestamp of the first render - used to reject submits that are too fast to be human
+  const renderedAt = useRef(Date.now());
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ContactFormData>({ mode: 'onTouched' });
+  } = useForm<ContactFormData>({
+    mode: 'onTouched',
+    defaultValues: { companyWebsite: '' },
+  });
 
   const trackLead = (data: ContactFormData) => {
     const [firstName, ...rest] = data.name.trim().split(/\s+/);
@@ -78,7 +85,10 @@ export default function ContactFormComponent({
     try {
       trackLead(data);
 
-      const result = await sendContactForm(data);
+      const result = await sendContactForm({
+        ...data,
+        elapsedMs: Date.now() - renderedAt.current,
+      });
 
       if (result.success) {
         setFormState('success');
@@ -173,6 +183,32 @@ export default function ContactFormComponent({
         })}
         errors={errors.consent?.message ?? ''}
       />
+
+      {/*
+        Honeypot. Moved off-screen on purpose instead of `display: none` /
+        `hidden` - spam bots that drive a real browser evaluate CSS and skip
+        fields that are not rendered, but they do fill fields that are merely
+        pushed outside the viewport. Never visible or reachable for humans.
+      */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+          opacity: 0,
+          pointerEvents: 'none',
+        }}
+      >
+        <input
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          {...register('companyWebsite')}
+        />
+      </div>
 
       <Button
         type="submit"

@@ -24,6 +24,9 @@ import {
 const REPLY_TO_EMAIL =
   process.env.MS_GRAPH_REPLY_TO || process.env.MS_GRAPH_SENDER_EMAIL;
 
+// Minimum time between form render and submit that we accept as human
+const MIN_FILL_MS = 3000;
+
 type ProductInquiryData = {
   name: string;
   brandName: string;
@@ -43,6 +46,29 @@ type FormSubmission = {
   message?: string;
   consent: boolean;
   product?: ProductInquiryData;
+  /** Honeypot field - only bots fill this in */
+  companyWebsite?: string;
+  /** Milliseconds between form render and submit, as reported by the client */
+  elapsedMs?: number;
+};
+
+type SubmissionVerdict = 'accepted' | 'rejected';
+
+type SubmissionReason =
+  | 'honeypot'
+  | 'too-fast'
+  | 'missing-email-or-consent'
+  | 'passed-all-checks';
+
+type SubmissionLogEntry = {
+  verdict: SubmissionVerdict;
+  reason: SubmissionReason;
+  honeypotTripped: boolean;
+  elapsedMs: number | null;
+  email: string | null;
+  ip: string | null;
+  ua: string | null;
+  referer: string | null;
 };
 
 type ContactSettingsType = {
@@ -120,6 +146,21 @@ function replacePlaceholders(
     .replace(/\{\{message\}\}/g, escapeHtml(variables.message || ''));
 }
 
+// `NextRequest.ip` was removed in Next.js 15+, so read the proxy headers instead
+function getClientIp(request: NextRequest): string | null {
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const firstForwardedIp = forwardedFor?.split(',')[0]?.trim();
+
+  if (firstForwardedIp) return firstForwardedIp;
+
+  return request.headers.get('x-real-ip');
+}
+
+// Server-side only - the verdict must never leak into the HTTP response
+function logSubmission(entry: SubmissionLogEntry): void {
+  console.info('[BOTLOG]', JSON.stringify(entry));
+}
+
 export async function POST(request: NextRequest) {
   // Validate Microsoft Graph is configured
   if (!isGraphConfigured()) {
@@ -141,13 +182,52 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Validate required fields
-  if (!body.email || !body.consent) {
+  // Anti-spam signals sent by the client alongside the form data
+  const honeypotValue =
+    typeof body.companyWebsite === 'string' ? body.companyWebsite.trim() : '';
+  const honeypotTripped = honeypotValue.length > 0;
+  const elapsedMs = typeof body.elapsedMs === 'number' ? body.elapsedMs : null;
+
+  const logContext = {
+    honeypotTripped,
+    elapsedMs,
+    email: typeof body.email === 'string' ? body.email : null,
+    ip: getClientIp(request),
+    ua: request.headers.get('user-agent'),
+    referer: request.headers.get('referer'),
+  };
+
+  // Every rejection returns the exact same status and payload, so a spammer
+  // cannot tell bot detection apart from an ordinary validation failure
+  const rejectSubmission = (reason: SubmissionReason) => {
+    logSubmission({ verdict: 'rejected', reason, ...logContext });
+
     return NextResponse.json(
       { success: false, message: 'Email and consent are required' },
       { status: 400 },
     );
+  };
+
+  // Validate required fields
+  if (!body.email || !body.consent) {
+    return rejectSubmission('missing-email-or-consent');
   }
+
+  // Honeypot field is invisible to humans - any value means a bot filled it in
+  if (honeypotTripped) {
+    return rejectSubmission('honeypot');
+  }
+
+  // Humans cannot fill in and submit the form this fast
+  if (elapsedMs !== null && elapsedMs < MIN_FILL_MS) {
+    return rejectSubmission('too-fast');
+  }
+
+  logSubmission({
+    verdict: 'accepted',
+    reason: 'passed-all-checks',
+    ...logContext,
+  });
 
   // Fetch contact settings from Sanity
   let contactSettings;
