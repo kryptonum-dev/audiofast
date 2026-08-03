@@ -1,3 +1,4 @@
+import { withBotId } from 'botid/next/config';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
@@ -64,4 +65,7 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
 };
 
-export default nextConfig;
+// BotID classification runs through a Vercel proxy that `withBotId` wires up as
+// rewrites. Without it the client script has nowhere to post to and every request
+// reaches /api/contact with no `x-is-human` header at all.
+export default withBotId(nextConfig);

@@ -1,5 +1,6 @@
 import '../global/global.scss';
 
+import { BotIdClient } from 'botid/client';
 import { Suspense } from 'react';
 import { preconnect, prefetchDNS } from 'react-dom';
 import { Toaster } from 'sonner';
@@ -41,6 +42,11 @@ export default async function RootLayout({
       className={`${poppins.className} ${switzer.variable} ${poppins.variable}`}
     >
       <head>
+        {/* BotID. Only classifies and stamps an `x-is-human` header — it never blocks
+            on its own. /api/contact decides what to do with the verdict. Rendered
+            unconditionally: guarding it behind a production check would leave preview
+            deployments with no header, which the route reads as an unknown verdict. */}
+        <BotIdClient protect={[{ path: '/api/contact', method: 'POST' }]} />
         {/* Preconnect to Google Tag Manager for faster loading */}
         {settings?.analytics?.gtm_id && IS_PRODUCTION_DEPLOYMENT && (
           <>

@@ -55,8 +55,8 @@ type FormData = {
   email: string;
   message: string;
   consent: boolean;
-  /** Honeypot - never filled in by a human */
-  companyWebsite: string;
+  /** Honeypot - see the note on the off-screen input below */
+  ref2: string;
 };
 
 export default function ProductInquiryForm({
@@ -82,7 +82,7 @@ export default function ProductInquiryForm({
       email: '',
       message: '',
       consent: false,
-      companyWebsite: '',
+      ref2: '',
     },
   });
 
@@ -142,7 +142,7 @@ export default function ProductInquiryForm({
         email: data.email,
         message: data.message,
         consent: data.consent,
-        companyWebsite: data.companyWebsite,
+        ref2: data.ref2,
         elapsedMs: Date.now() - renderedAt.current,
         product: {
           name: product.name,
@@ -255,6 +255,12 @@ export default function ProductInquiryForm({
         `hidden` - spam bots that drive a real browser evaluate CSS and skip
         fields that are not rendered, but they do fill fields that are merely
         pushed outside the viewport. Never visible or reachable for humans.
+
+        The field name is meaningless on purpose: it was `companyWebsite` until
+        2026-08-03, and Chrome/Edge classified it as a company-name field and
+        autofilled it for real users - three blocked leads on the sister project.
+        A trip here is now only a signal, never a rejection on its own;
+        /api/contact requires BotID to agree.
       */}
       <div
         aria-hidden="true"
@@ -272,7 +278,7 @@ export default function ProductInquiryForm({
           type="text"
           tabIndex={-1}
           autoComplete="off"
-          {...register('companyWebsite')}
+          {...register('ref2')}
         />
       </div>
 

@@ -22,8 +22,12 @@ type ContactFormData = {
   consent: boolean;
   /** Optional product data for product inquiry forms */
   product?: ProductInquiryData;
-  /** Honeypot field - always empty for humans, filled in by naive bots */
-  companyWebsite?: string;
+  /**
+   * Honeypot. Named so no browser autofill heuristic can classify it - the previous
+   * name `companyWebsite` matched Chromium's COMPANY_NAME regex on the `company`
+   * substring, so Chrome/Edge filled it for real users.
+   */
+  ref2?: string;
   /** Milliseconds between form render and submit - used to reject instant submits */
   elapsedMs?: number;
 };
@@ -55,7 +59,7 @@ export async function sendContactForm(
         message: data.message,
         consent: data.consent,
         product: data.product,
-        companyWebsite: data.companyWebsite,
+        ref2: data.ref2,
         elapsedMs: data.elapsedMs,
       }),
     });
