@@ -45,10 +45,15 @@ type ContactFormResponse = {
  * @returns Promise with success status and optional error message
  */
 export async function sendContactForm(
-  data: ContactFormData
+  data: ContactFormData,
 ): Promise<ContactFormResponse> {
   try {
-    const response = await fetch('/api/contact', {
+    // Trailing slash is required: next.config.ts sets `trailingSlash: true`, so
+    // POSTing to `/api/contact` answers 308 to `/api/contact/`. The BotID client
+    // interceptor stamps `x-is-human` on the request it matches, and the handler
+    // then runs on the redirected one — an avoidable seam in bot classification.
+    // Hitting the canonical path removes the redirect entirely.
+    const response = await fetch('/api/contact/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

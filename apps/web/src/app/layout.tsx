@@ -46,7 +46,14 @@ export default async function RootLayout({
             on its own. /api/contact decides what to do with the verdict. Rendered
             unconditionally: guarding it behind a production check would leave preview
             deployments with no header, which the route reads as an unknown verdict. */}
-        <BotIdClient protect={[{ path: '/api/contact', method: 'POST' }]} />
+        {/* Both spellings: the interceptor matches pathname exactly, and
+            `trailingSlash: true` makes `/api/contact/` the canonical path. */}
+        <BotIdClient
+          protect={[
+            { path: '/api/contact/', method: 'POST' },
+            { path: '/api/contact', method: 'POST' },
+          ]}
+        />
         {/* Preconnect to Google Tag Manager for faster loading */}
         {settings?.analytics?.gtm_id && IS_PRODUCTION_DEPLOYMENT && (
           <>

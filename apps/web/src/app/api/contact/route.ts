@@ -3,6 +3,11 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import {
+  type ContentSignal,
+  isSpamContent,
+  scoreContent,
+} from '@/global/anti-spam/content-score';
+import {
   FALLBACK_EMAIL_BODY,
   FALLBACK_EMAIL_SUBJECT,
   FALLBACK_SUPPORT_EMAIL,
@@ -60,7 +65,8 @@ type FormSubmission = {
 type SubmissionVerdict = 'accepted' | 'rejected';
 
 type SubmissionReason =
-  | 'honeypot+botid'
+  | 'spam-content'
+  | 'honeypot'
   | 'too-fast'
   | 'missing-email-or-consent'
   | 'passed-all-checks';
@@ -79,6 +85,9 @@ type SubmissionLogEntry = {
   honeypotValue: string | null;
   elapsedMs: number | null;
   botid: BotIdVerdict;
+  /** Logged for accepted submissions too, so the threshold can be tuned from real traffic */
+  contentScore: number;
+  contentSignals: ContentSignal[];
   email: string | null;
   ip: string | null;
   ua: string | null;
@@ -171,17 +180,21 @@ function getClientIp(request: NextRequest): string | null {
 }
 
 /**
- * BotID never rejects on its own. It can only CONFIRM a honeypot trip — see
- * honeypotConfirmed below. A bot verdict with an empty honeypot is logged and let through.
+ * BotID never rejects on its own here. Its only job is to VOUCH: a confident
+ * `isHuman` verdict vetoes a honeypot rejection (see honeypotConfirmed below).
  *
- * So: this function can never throw. Every failure path returns nulls, which the
- * `isBot === true` check downstream reads as "not a bot" and lets the submission through.
- * That fail-open posture is deliberate — a missing `x-is-human` header (ad blocker,
- * privacy extension, a submit that beat classification) is absence of evidence, not
- * evidence of a bot. Treating it as proof once cost the sister project three real leads.
+ * This function can never throw. Every failure path returns nulls, which the
+ * `isHuman !== true` check downstream reads as "no vouch available".
  *
- * Before BotID is ever allowed to block by itself, check the [BOTLOG] lines for accepted
- * submissions where isBot=true — those would have been the false positives.
+ * Note the direction. Until 2026-08-11 the rule required `isBot === true` to reject,
+ * which meant an unknown verdict let everything through — and at `checkLevel: 'basic'`
+ * the verdict is unknown or negative for bots that drive real browsers, which is
+ * exactly the traffic hitting this form. That inverted gate is why the honeypot
+ * caught nothing between 2026-08-03 and 2026-08-11.
+ *
+ * Vouching preserves the property that mattered: on the sister project BotID
+ * returned `isHuman` for all six autofill false positives, so those leads still
+ * get through, while an absent verdict no longer disarms the honeypot.
  */
 async function getBotIdVerdict(request: NextRequest): Promise<BotIdVerdict> {
   const headerPresent = request.headers.has('x-is-human');
@@ -240,6 +253,7 @@ export async function POST(request: NextRequest) {
   const honeypotTripped = honeypotValue.length > 0;
   const elapsedMs = typeof body.elapsedMs === 'number' ? body.elapsedMs : null;
   const botid = await getBotIdVerdict(request);
+  const contentScore = scoreContent(body.name, body.message);
 
   const logContext = {
     honeypotTripped,
@@ -248,6 +262,8 @@ export async function POST(request: NextRequest) {
     honeypotValue: honeypotValue ? honeypotValue.slice(0, 32) : null,
     elapsedMs,
     botid,
+    contentScore: contentScore.score,
+    contentSignals: contentScore.signals,
     email: typeof body.email === 'string' ? body.email : null,
     ip: getClientIp(request),
     ua: request.headers.get('user-agent'),
@@ -271,22 +287,37 @@ export async function POST(request: NextRequest) {
   }
 
   /**
-   * The honeypot alone is NOT sufficient to reject.
+   * Content heuristics reject on their own, with NO BotID veto.
    *
-   * On 2026-07-29 the identical rule on the sister project (Fabryka Atrakcji) blocked
-   * two real B2B leads — Chrome and Edge ignore `autocomplete="off"` for address-profile
-   * autofill and filled the field for humans. Three of the four honeypot trips in that
-   * observation window were false positives. BotID, meanwhile, was right 6/6 and said
-   * `isHuman` for every one of them.
+   * This is deliberate and differs from the honeypot rule below. The veto exists to
+   * absorb browser autofill, and no browser autofills a message body with random
+   * consonant runs — so a vouch here would buy no protection while disarming the one
+   * check that works against a bot driving a real browser. Scoring is content-only,
+   * so it holds whether or not the bot touches hidden fields or runs page JS.
    *
-   * So a honeypot trip only rejects when BotID independently agrees it is a bot. The
-   * `=== true` is deliberate: a null/unknown verdict (BotID errored, header missing,
-   * classification never ran) falls through to accept.
+   * Thresholds penalise structure, never brevity: "Cena?" scores zero. See
+   * content-score.ts and its tests for the calibration against real traffic.
    */
-  const honeypotConfirmed = honeypotTripped && botid.isBot === true;
+  if (isSpamContent(contentScore)) {
+    return rejectSubmission('spam-content');
+  }
+
+  /**
+   * A honeypot trip rejects unless BotID vouches for a human.
+   *
+   * On 2026-07-29 an unconditional version of this rule blocked two real B2B leads on
+   * the sister project (Fabryka Atrakcji) — Chrome and Edge ignore `autocomplete="off"`
+   * for address-profile autofill and filled the field for humans. That was fixed by
+   * renaming the field to `ref2`, which no autofill heuristic classifies; the vouch is
+   * the remaining insurance in case another heuristic starts matching it.
+   *
+   * `!== true` is the point: only a confident human verdict rescues a trip. An absent
+   * or errored verdict no longer disarms the check, which is the bug this replaces.
+   */
+  const honeypotConfirmed = honeypotTripped && botid.isHuman !== true;
 
   if (honeypotConfirmed) {
-    return rejectSubmission('honeypot+botid');
+    return rejectSubmission('honeypot');
   }
 
   // Humans cannot fill in and submit the form this fast
