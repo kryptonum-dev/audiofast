@@ -1,3 +1,4 @@
+import { checkBotId } from 'botid/server';
 import type { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -8,6 +9,10 @@ import { sanityFetch } from '@/src/global/sanity/fetch';
 import type { QueryContactSettingsResult } from '@/src/global/sanity/sanity.types';
 
 import { POST } from './route';
+
+vi.mock('botid/server', () => ({
+  checkBotId: vi.fn(),
+}));
 
 vi.mock('@/src/global/email/service', () => ({
   sendTransactionalEmails: vi.fn(),
@@ -48,10 +53,32 @@ function createContactRequest(body: Record<string, unknown>): NextRequest {
   }) as NextRequest;
 }
 
+/** No verdict available — the common production case at `checkLevel: 'basic'`. */
+function botIdUnknown() {
+  vi.mocked(checkBotId).mockResolvedValue({
+    isBot: false,
+    isHuman: false,
+    isVerifiedBot: false,
+    bypassed: false,
+  } as Awaited<ReturnType<typeof checkBotId>>);
+}
+
+/** BotID positively vouches for a human — the autofill-rescue path. */
+function botIdVouchesHuman() {
+  vi.mocked(checkBotId).mockResolvedValue({
+    isBot: false,
+    isHuman: true,
+    isVerifiedBot: false,
+    bypassed: false,
+  } as Awaited<ReturnType<typeof checkBotId>>);
+}
+
 describe('contact API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(isGraphConfigured).mockReturnValue(true);
+    vi.mocked(sanityFetch).mockResolvedValue(createContactSettings([]));
+    botIdUnknown();
     vi.mocked(sendTransactionalEmails).mockResolvedValue([
       { success: true },
       { success: true },
@@ -119,5 +146,118 @@ describe('contact API', () => {
         }),
       ]),
     );
+  });
+
+  describe('anti-spam gates', () => {
+    const legitimate = {
+      name: 'Jan Kowalski',
+      email: 'jan@example.com',
+      consent: true,
+      message: 'Prosze o kontakt w sprawie Ayre KX-8.',
+    };
+
+    it('accepts a legitimate submission when BotID has no verdict', async () => {
+      // The regression case: an absent verdict must not block real leads
+      const response = await POST(createContactRequest(legitimate));
+
+      expect(response.status).toBe(200);
+      expect(sendTransactionalEmails).toHaveBeenCalled();
+    });
+
+    it('rejects the captured 2026-08-09 spam payload', async () => {
+      const response = await POST(
+        createContactRequest({
+          name: 'afHZeUWfAEaGHPZuSj',
+          email: 'olaf.tillema@yoobi.nl',
+          consent: true,
+          message: 'uUeOyBQwSCXYwfgIhXaus',
+        }),
+      );
+
+      expect(response.status).toBe(400);
+      expect(sendTransactionalEmails).not.toHaveBeenCalled();
+    });
+
+    it('rejects gibberish even when BotID vouches for a human', async () => {
+      // Content scoring is deliberately un-vetoable: no browser autofills a
+      // message body, so a vouch here would only disarm the check.
+      botIdVouchesHuman();
+
+      const response = await POST(
+        createContactRequest({
+          name: 'afHZeUWfAEaGHPZuSj',
+          email: 'olaf.tillema@yoobi.nl',
+          consent: true,
+          message: 'uUeOyBQwSCXYwfgIhXaus',
+        }),
+      );
+
+      expect(response.status).toBe(400);
+      expect(sendTransactionalEmails).not.toHaveBeenCalled();
+    });
+
+    it('rejects a honeypot trip when BotID offers no verdict', async () => {
+      // This is what broke between 2026-08-03 and 2026-08-11: the old rule
+      // required isBot === true, so an unknown verdict accepted the submission.
+      const response = await POST(
+        createContactRequest({ ...legitimate, ref2: 'http://spam.example' }),
+      );
+
+      expect(response.status).toBe(400);
+      expect(sendTransactionalEmails).not.toHaveBeenCalled();
+    });
+
+    it('lets a honeypot trip through when BotID vouches for a human', async () => {
+      // Browser autofill rescue - the Fabryka Atrakcji false-positive path
+      botIdVouchesHuman();
+
+      const response = await POST(
+        createContactRequest({ ...legitimate, ref2: 'Audiofast Sp. z o.o.' }),
+      );
+
+      expect(response.status).toBe(200);
+      expect(sendTransactionalEmails).toHaveBeenCalled();
+    });
+
+    it('rejects submissions faster than a human can fill the form', async () => {
+      const response = await POST(
+        createContactRequest({ ...legitimate, elapsedMs: 400 }),
+      );
+
+      expect(response.status).toBe(400);
+      expect(sendTransactionalEmails).not.toHaveBeenCalled();
+    });
+
+    it('accepts when the timing signal is absent', async () => {
+      // Fail-open on absence is deliberate; the honeypot has no such escape hatch
+      const response = await POST(createContactRequest(legitimate));
+
+      expect(response.status).toBe(200);
+    });
+
+    it('returns an identical response for every rejection reason', async () => {
+      // A spammer must not be able to tell detection from ordinary validation
+      const bodies = [
+        { ...legitimate, ref2: 'http://spam.example' },
+        { ...legitimate, elapsedMs: 400 },
+        {
+          ...legitimate,
+          name: 'afHZeUWfAEaGHPZuSj',
+          message: 'uUeOyBQwSCXYwfgIhXaus',
+        },
+        { ...legitimate, email: '' },
+      ];
+
+      const payloads = await Promise.all(
+        bodies.map(async (body) => {
+          const response = await POST(createContactRequest(body));
+          return { status: response.status, body: await response.json() };
+        }),
+      );
+
+      for (const payload of payloads) {
+        expect(payload).toEqual(payloads[0]);
+      }
+    });
   });
 });

@@ -259,8 +259,8 @@ export default function ProductInquiryForm({
         The field name is meaningless on purpose: it was `companyWebsite` until
         2026-08-03, and Chrome/Edge classified it as a company-name field and
         autofilled it for real users - three blocked leads on the sister project.
-        A trip here is now only a signal, never a rejection on its own;
-        /api/contact requires BotID to agree.
+        A trip here rejects the submission unless BotID positively vouches for
+        a human - see the honeypot rule in /api/contact.
       */}
       <div
         aria-hidden="true"
