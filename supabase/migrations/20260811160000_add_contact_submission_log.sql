@@ -30,7 +30,14 @@ create table if not exists public.contact_submissions (
   email text,
   ip text,
   user_agent text,
-  referer text
+  referer text,
+
+  -- Submitted content, truncated at the code layer. Without it a rejected row
+  -- cannot be judged after the fact - "was this a real lead?" is unanswerable
+  -- from a score alone, and recovering a wrongly blocked B2B inquiry is the
+  -- main reason rejected submissions are logged at all.
+  name text,
+  message text
 );
 
 comment on table public.contact_submissions is

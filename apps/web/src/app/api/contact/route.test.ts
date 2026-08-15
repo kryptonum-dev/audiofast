@@ -2,6 +2,7 @@ import { checkBotId } from 'botid/server';
 import type { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { persistSubmission } from '@/global/anti-spam/submission-log';
 import { FALLBACK_SUPPORT_EMAIL } from '@/global/constants';
 import { sendTransactionalEmails } from '@/src/global/email/service';
 import { isGraphConfigured } from '@/src/global/microsoft-graph/client';
@@ -12,6 +13,10 @@ import { POST } from './route';
 
 vi.mock('botid/server', () => ({
   checkBotId: vi.fn(),
+}));
+
+vi.mock('@/global/anti-spam/submission-log', () => ({
+  persistSubmission: vi.fn(async () => undefined),
 }));
 
 vi.mock('@/src/global/email/service', () => ({
@@ -70,6 +75,16 @@ function botIdVouchesHuman() {
     isHuman: true,
     isVerifiedBot: false,
     bypassed: false,
+  } as Awaited<ReturnType<typeof checkBotId>>);
+}
+
+/** BotID confidently flags a bot — the verdict on all 249 requests of the 2026-08 campaign. */
+function botIdFlagsBot(bypassed = false) {
+  vi.mocked(checkBotId).mockResolvedValue({
+    isBot: true,
+    isHuman: false,
+    isVerifiedBot: false,
+    bypassed,
   } as Awaited<ReturnType<typeof checkBotId>>);
 }
 
@@ -162,6 +177,44 @@ describe('contact API', () => {
 
       expect(response.status).toBe(200);
       expect(sendTransactionalEmails).toHaveBeenCalled();
+    });
+
+    it('rejects when BotID confidently flags a bot, even with clean content', async () => {
+      // The 2026-08-15 00:15 acceptance: content mutated below the score
+      // threshold, honeypot untouched, timing waited out — and BotID said
+      // isBot on that request too. The veto closes that adaptation route.
+      botIdFlagsBot();
+
+      const response = await POST(createContactRequest(legitimate));
+
+      expect(response.status).toBe(400);
+      expect(sendTransactionalEmails).not.toHaveBeenCalled();
+    });
+
+    it('honours the BotID bypass escape hatch', async () => {
+      // Local dev and E2E runs set the bypass; they must not be vetoed
+      botIdFlagsBot(true);
+
+      const response = await POST(createContactRequest(legitimate));
+
+      expect(response.status).toBe(200);
+      expect(sendTransactionalEmails).toHaveBeenCalled();
+    });
+
+    it('rejects the captured 2026-08-13 spam payload on content alone', async () => {
+      // Defence in depth: even with no BotID verdict, the uppercase-run
+      // variant that reached the inbox on 2026-08-13 must not pass again
+      const response = await POST(
+        createContactRequest({
+          name: 'mKIHYDnOYBLMXjYWPfYIK',
+          email: 'jrangel@bcew.com',
+          consent: true,
+          message: 'wQyJPSVQuhsUbxarkxO',
+        }),
+      );
+
+      expect(response.status).toBe(400);
+      expect(sendTransactionalEmails).not.toHaveBeenCalled();
     });
 
     it('rejects the captured 2026-08-09 spam payload', async () => {
@@ -258,6 +311,46 @@ describe('contact API', () => {
       for (const payload of payloads) {
         expect(payload).toEqual(payloads[0]);
       }
+    });
+  });
+
+  describe('durable submission log', () => {
+    const legitimate = {
+      name: 'Jan Kowalski',
+      email: 'jan@example.com',
+      consent: true,
+      message: 'Prosze o kontakt w sprawie Ayre KX-8.',
+    };
+
+    it('persists accepted submissions with the submitted content', async () => {
+      await POST(createContactRequest(legitimate));
+
+      expect(persistSubmission).toHaveBeenCalledWith(
+        expect.objectContaining({
+          verdict: 'accepted',
+          reason: 'passed-all-checks',
+          name: 'Jan Kowalski',
+          message: 'Prosze o kontakt w sprawie Ayre KX-8.',
+          email: 'jan@example.com',
+        }),
+      );
+    });
+
+    it('persists rejected submissions with the real reason and content', async () => {
+      // The row is what lets a human review rejections for false positives -
+      // it must carry the content even though the HTTP response hides the reason
+      botIdFlagsBot();
+
+      await POST(createContactRequest(legitimate));
+
+      expect(persistSubmission).toHaveBeenCalledWith(
+        expect.objectContaining({
+          verdict: 'rejected',
+          reason: 'botid',
+          name: 'Jan Kowalski',
+          botidIsBot: true,
+        }),
+      );
     });
   });
 });

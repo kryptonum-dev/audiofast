@@ -42,36 +42,56 @@ const WEIGHTS: Record<ContentSignal, number> = {
   'name-single-token': 1,
 };
 
-/** Reject at or above this. Tune from the logged scores of accepted traffic. */
-export const SPAM_SCORE_THRESHOLD = 5;
+/**
+ * Reject at or above this. Tune from the logged scores of accepted traffic.
+ *
+ * Lowered from 5 on 2026-08-15: the 2026-08-13 spam wave scored exactly 4
+ * (`no-whitespace-long` + `name-single-token`) — a 20-char single-token "name"
+ * plus a whitespace-free "message" describes no real inquiry, yet sat one
+ * point under the old threshold. The bot probes each payload against the 400s
+ * until a variant passes, so a near-miss threshold is a training target.
+ */
+export const SPAM_SCORE_THRESHOLD = 4;
 
 const MIN_LENGTH_FOR_WHITESPACE_CHECK = 15;
 const MIN_LETTERS_FOR_CASE_CHECK = 8;
-const MAX_CASE_TRANSITION_RATIO = 0.4;
+const MAX_CASE_TRANSITION_RATIO = 0.3;
 const MAX_CONSONANT_RUN = 6;
 
 /**
- * Share of adjacent letter pairs that switch case. Natural text sits near zero
- * (one transition per capitalised word); generated filler sits above 0.5.
+ * Share of adjacent letter pairs that switch case, measured per
+ * whitespace-separated token and reported as the worst token's ratio. Natural
+ * words sit near zero (one transition for a capitalised word); generated
+ * filler sits above 0.3 even when the generator emits uppercase runs
+ * (`mKIHYDnOYBLMXjYWPfYIK` scores 0.33 — the 2026-08-13 wave halved its ratio
+ * versus per-character flipping, which is why the limit moved from 0.4).
  *
- * Returns 0 for inputs too short to judge — two letters cannot establish a
- * pattern, and a false positive here costs a real lead.
+ * Per-token, not across the whole text: joining words would manufacture
+ * transitions at word boundaries, and a real message like "Ayre KX-8 oraz
+ * RP-3" would cross 0.3 purely on its model numbers. Tokens too short to
+ * judge are skipped — a false positive here costs a real lead.
  */
-function caseTransitionRatio(text: string): number {
-  const letters = [...text].filter((char) => LETTER.test(char));
-  if (letters.length < MIN_LETTERS_FOR_CASE_CHECK) return 0;
+function maxTokenCaseTransitionRatio(text: string): number {
+  let worst = 0;
 
-  let transitions = 0;
-  for (let index = 1; index < letters.length; index++) {
-    const previous = letters[index - 1]!;
-    const current = letters[index]!;
-    // Characters without case (digits already filtered) compare equal both ways
-    const previousIsUpper = previous === previous.toUpperCase();
-    const currentIsUpper = current === current.toUpperCase();
-    if (previousIsUpper !== currentIsUpper) transitions++;
+  for (const token of text.split(/\s+/)) {
+    const letters = [...token].filter((char) => LETTER.test(char));
+    if (letters.length < MIN_LETTERS_FOR_CASE_CHECK) continue;
+
+    let transitions = 0;
+    for (let index = 1; index < letters.length; index++) {
+      const previous = letters[index - 1]!;
+      const current = letters[index]!;
+      // Characters without case (digits already filtered) compare equal both ways
+      const previousIsUpper = previous === previous.toUpperCase();
+      const currentIsUpper = current === current.toUpperCase();
+      if (previousIsUpper !== currentIsUpper) transitions++;
+    }
+
+    worst = Math.max(worst, transitions / letters.length);
   }
 
-  return transitions / letters.length;
+  return worst;
 }
 
 /** Longest unbroken consonant sequence. Non-letters reset the run. */
@@ -111,8 +131,8 @@ export function scoreContent(
   }
 
   if (
-    caseTransitionRatio(trimmedName) > MAX_CASE_TRANSITION_RATIO ||
-    caseTransitionRatio(trimmedMessage) > MAX_CASE_TRANSITION_RATIO
+    maxTokenCaseTransitionRatio(trimmedName) > MAX_CASE_TRANSITION_RATIO ||
+    maxTokenCaseTransitionRatio(trimmedMessage) > MAX_CASE_TRANSITION_RATIO
   ) {
     signals.push('random-case');
   }

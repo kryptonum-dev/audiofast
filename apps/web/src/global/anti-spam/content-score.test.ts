@@ -16,6 +16,19 @@ const REAL_SPAM = {
   message: 'uUeOyBQwSCXYwfgIhXaus',
 };
 
+/**
+ * Captured from the submission Jarek forwarded on 2026-08-15 (sent 08-13).
+ * Same generator, adapted: uppercase RUNS instead of per-character flipping
+ * (halves the case-transition ratio) and enough `Y`s to break consonant runs.
+ * Scored 4 against the old threshold of 5 and reached the inbox — the
+ * recalibration (threshold 4, per-token case ratio 0.3) exists to catch this
+ * shape, so a change that stops catching it should fail here.
+ */
+const REAL_SPAM_UPPERCASE_RUNS = {
+  name: 'mKIHYDnOYBLMXjYWPfYIK',
+  message: 'wQyJPSVQuhsUbxarkxO',
+};
+
 describe('scoreContent', () => {
   it('flags the captured 2026-08-09 spam submission', () => {
     const score = scoreContent(REAL_SPAM.name, REAL_SPAM.message);
@@ -23,6 +36,28 @@ describe('scoreContent', () => {
     expect(isSpamContent(score)).toBe(true);
     expect(score.signals).toContain('no-whitespace-long');
     expect(score.signals).toContain('random-case');
+  });
+
+  it('flags the captured 2026-08-13 spam submission (uppercase-run variant)', () => {
+    const score = scoreContent(
+      REAL_SPAM_UPPERCASE_RUNS.name,
+      REAL_SPAM_UPPERCASE_RUNS.message,
+    );
+
+    expect(isSpamContent(score)).toBe(true);
+    expect(score.signals).toContain('no-whitespace-long');
+    expect(score.signals).toContain('random-case');
+  });
+
+  it('still flags the 2026-08-13 name when the message dodges other checks', () => {
+    // The bot probes variants against the 400s; a message with whitespace must
+    // not launder a generated single-token name below the threshold.
+    const score = scoreContent(
+      REAL_SPAM_UPPERCASE_RUNS.name,
+      'wQy JPSVQuhsUbxarkxO',
+    );
+
+    expect(isSpamContent(score)).toBe(true);
   });
 
   describe('legitimate inquiries stay well below the threshold', () => {
@@ -90,6 +125,14 @@ describe('scoreContent', () => {
       expect(scoreContent('aFhZ', 'Normalna wiadomość').signals).not.toContain(
         'random-case',
       );
+    });
+
+    it('does not treat model numbers as case flipping', () => {
+      // The ratio is per token: joined across words, "KX-8 oraz RP-3" would
+      // manufacture transitions at word boundaries and cross the limit.
+      expect(
+        scoreContent('Marek Zieliński', 'Ayre KX-8 oraz RP-3 — cena?').signals,
+      ).not.toContain('random-case');
     });
 
     it('treats y as a vowel so Polish words do not trip the run check', () => {

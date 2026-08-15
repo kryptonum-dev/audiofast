@@ -7,6 +7,7 @@ import {
   isSpamContent,
   scoreContent,
 } from '@/global/anti-spam/content-score';
+import { persistSubmission } from '@/global/anti-spam/submission-log';
 import {
   FALLBACK_EMAIL_BODY,
   FALLBACK_EMAIL_SUBJECT,
@@ -65,6 +66,7 @@ type FormSubmission = {
 type SubmissionVerdict = 'accepted' | 'rejected';
 
 type SubmissionReason =
+  | 'botid'
   | 'spam-content'
   | 'honeypot'
   | 'too-fast'
@@ -180,21 +182,24 @@ function getClientIp(request: NextRequest): string | null {
 }
 
 /**
- * BotID never rejects on its own here. Its only job is to VOUCH: a confident
- * `isHuman` verdict vetoes a honeypot rejection (see honeypotConfirmed below).
+ * BotID plays two roles: a confident `isBot` verdict rejects outright (the
+ * veto gate in POST below), and a confident `isHuman` verdict rescues a
+ * honeypot trip (see honeypotConfirmed). Only confident verdicts act — an
+ * unknown or errored verdict neither rejects nor vouches — so this function
+ * can never throw: every failure path returns nulls, which downstream checks
+ * read as "no verdict available".
  *
- * This function can never throw. Every failure path returns nulls, which the
- * `isHuman !== true` check downstream reads as "no vouch available".
+ * History of the direction. Until 2026-08-11 the honeypot required
+ * `isBot === true` to reject, which meant an unknown verdict let everything
+ * through, so 1b87e20 demoted BotID to vouch-only. The 2026-08-13/15 campaign
+ * then proved the opposite failure: BotID returned `isBot: true` on all 249
+ * logged bot requests — including the one that slid under the content-score
+ * threshold and reached the inbox — while the vouch-only rule ignored it.
+ * The lesson is not that `isBot` is unreliable, but that its ABSENCE is:
+ * reject on `isBot === true`, never on `isBot !== false`.
  *
- * Note the direction. Until 2026-08-11 the rule required `isBot === true` to reject,
- * which meant an unknown verdict let everything through — and at `checkLevel: 'basic'`
- * the verdict is unknown or negative for bots that drive real browsers, which is
- * exactly the traffic hitting this form. That inverted gate is why the honeypot
- * caught nothing between 2026-08-03 and 2026-08-11.
- *
- * Vouching preserves the property that mattered: on the sister project BotID
- * returned `isHuman` for all six autofill false positives, so those leads still
- * get through, while an absent verdict no longer disarms the honeypot.
+ * Vouching still matters for autofill: on the sister project BotID returned
+ * `isHuman` for all six honeypot false positives, so those leads get through.
  */
 async function getBotIdVerdict(request: NextRequest): Promise<BotIdVerdict> {
   const headerPresent = request.headers.has('x-is-human');
@@ -270,10 +275,40 @@ export async function POST(request: NextRequest) {
     referer: request.headers.get('referer'),
   };
 
+  // Two records per submission: the [BOTLOG] console line (gone from Vercel
+  // within ~24h on the current plan) and a durable row in Supabase
+  // `contact_submissions` — the place where a wrongly rejected human inquiry
+  // can be spotted and recovered, which is what makes the strict gates below
+  // safe to run. Persistence is best-effort and never changes the verdict.
+  const recordSubmission = async (
+    verdict: SubmissionVerdict,
+    reason: SubmissionReason,
+  ) => {
+    logSubmission({ verdict, reason, ...logContext });
+
+    await persistSubmission({
+      verdict,
+      reason,
+      contentScore: contentScore.score,
+      contentSignals: contentScore.signals,
+      honeypotTripped,
+      honeypotValue: logContext.honeypotValue,
+      elapsedMs,
+      botidIsBot: botid.isBot,
+      botidIsHuman: botid.isHuman,
+      email: logContext.email,
+      ip: logContext.ip,
+      userAgent: logContext.ua,
+      referer: logContext.referer,
+      name: typeof body.name === 'string' ? body.name : null,
+      message: typeof body.message === 'string' ? body.message : null,
+    });
+  };
+
   // Every rejection returns the exact same status and payload, so a spammer
   // cannot tell bot detection apart from an ordinary validation failure
-  const rejectSubmission = (reason: SubmissionReason) => {
-    logSubmission({ verdict: 'rejected', reason, ...logContext });
+  const rejectSubmission = async (reason: SubmissionReason) => {
+    await recordSubmission('rejected', reason);
 
     return NextResponse.json(
       { success: false, message: 'Email and consent are required' },
@@ -284,6 +319,19 @@ export async function POST(request: NextRequest) {
   // Validate required fields
   if (!body.email || !body.consent) {
     return rejectSubmission('missing-email-or-consent');
+  }
+
+  /**
+   * A confident bot verdict rejects outright. In the 2026-08-14/15 log window
+   * BotID flagged 249/249 bot requests (`isBot: true`) with zero human traffic
+   * misclassified, while the bot mutated payloads until one slid under the
+   * content-score threshold — this gate is what closes that adaptation route.
+   * Only `isBot === true` rejects: unknown and errored verdicts pass through
+   * to the content gates, and `bypassed` (the dev/E2E escape hatch) is
+   * honoured. A wrongly vetoed human is recoverable from `contact_submissions`.
+   */
+  if (botid.isBot === true && botid.bypassed !== true) {
+    return rejectSubmission('botid');
   }
 
   /**
@@ -325,11 +373,7 @@ export async function POST(request: NextRequest) {
     return rejectSubmission('too-fast');
   }
 
-  logSubmission({
-    verdict: 'accepted',
-    reason: 'passed-all-checks',
-    ...logContext,
-  });
+  await recordSubmission('accepted', 'passed-all-checks');
 
   // Fetch contact settings from Sanity
   let contactSettings;
