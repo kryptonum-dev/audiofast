@@ -1,5 +1,12 @@
 # Next.js 16 Caching & Revalidation Implementation Plan
 
+> ⚠️ **Read `.ai/rendering-revalidation-research-2026-08.md` first.** That dossier (Aug 2026) audits
+> what this plan actually produced, with measurements. Key deltas: the brand page's 8 s load was
+> traced to a dead GROQ fragment (`query.ts:2330`); the `TYPE_DEPENDENCY_MAP` here is over-broad and
+> keeps brand shells permanently cold; `revalidateTag(tag)` single-arg is deprecated in Next 16; and
+> the house standard for new projects has moved to `defineLive` + Sanity Functions (sync tags), which
+> would replace the webhook + tag-map approach described below.
+
 This document outlines the implementation strategy for high-performance caching in the Audiofast website using Next.js 16 Cache Components (`"use cache"`, `cacheTag`, `cacheLife`) and Sanity Webhooks.
 
 ## 1. Configuration Changes
