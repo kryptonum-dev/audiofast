@@ -1,3 +1,5 @@
+import { cacheLife, cacheTag } from 'next/cache';
+
 import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 
 import StoreMapWrapper from './StoreMapWrapper';
@@ -38,14 +40,29 @@ function cleanStreetForGeocoding(street: string): string {
   );
 }
 
-// Server-side geocoding function using Nominatim structured search
-// Note: Uses Next.js fetch cache (force-cache) instead of 'use cache' directive
-// to avoid timeout issues during prerender with external API calls
+// Server-side geocoding against Nominatim.
+//
+// Cached **per address**, not per brand. Audiofast's dealer network is shared —
+// the same shop appears on many brand pages — so keying the cache on the address
+// object collapses the ~41 brands x up to 27 stores of lookups into one call per
+// distinct address, both during `next build` and at runtime. The whole section
+// also sits behind a `<Suspense>` boundary on the brand page, so a cold entry
+// streams in instead of blocking the static shell (which is why the previous
+// "force-cache instead of 'use cache' to avoid prerender timeouts" note no
+// longer applies). The `fetch`-level `force-cache` is kept underneath as a
+// second layer that, unlike `use cache`, survives a deploy.
+//
+// The argument is a plain serializable object and nothing here reads
+// `cookies()` / `headers()` / `searchParams`, so it is a legal `use cache` scope.
 async function geocodeAddress(address: {
   street: string;
   city: string;
   postalCode: string;
 }): Promise<{ lat: number; lng: number } | null> {
+  'use cache';
+  cacheTag('geocode');
+  cacheLife('max');
+
   const cleanStreet = cleanStreetForGeocoding(address.street);
 
   const fetchNominatim = async (

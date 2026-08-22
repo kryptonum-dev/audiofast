@@ -10,7 +10,7 @@ export function shouldLimitBuildTimeStaticParams(): boolean {
   );
 }
 
-export function limitBuildTimeStaticParams<TParam>(
+export function allBuildTimeStaticParams<TParam>(
   params: TParam[],
   fallback?: TParam,
 ): TParam[] {
@@ -22,9 +22,18 @@ export function limitBuildTimeStaticParams<TParam>(
     return [fallback];
   }
 
+  return params;
+}
+
+export function limitBuildTimeStaticParams<TParam>(
+  params: TParam[],
+  fallback?: TParam,
+): TParam[] {
+  const resolved = allBuildTimeStaticParams(params, fallback);
+
   if (!shouldLimitBuildTimeStaticParams()) {
-    return params;
+    return resolved;
   }
 
-  return params.slice(0, 1);
+  return resolved.slice(0, 1);
 }

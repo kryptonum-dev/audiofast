@@ -1976,8 +1976,11 @@ export const queryBrandsPageData = defineQuery(`
     openGraph{
       title,
       description,
+      // Already scoped inside openGraph{}, so image resolves relative to it.
+      // Referencing openGraph.image here looked for openGraph.openGraph.image
+      // and always yielded null.
       "seoImage": select(
-        defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        defined(image) => image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
         null
       ),
     }
@@ -2282,21 +2285,18 @@ export const queryCategoryMetadata = defineQuery(`
 // Brand Queries
 // ----------------------------------------
 
-// Brand detail query with products filter metadata
-// Fetches both brand data AND filter metadata in a single API call
-// NOTE: Metadata does NOT filter by search/embeddings - it shows ALL products
+// Brand detail query (content only - no filter metadata)
+// NOTE: the filter sidebar on /marki/[slug] is built from queryAllProductsFilterMetadata,
+// so productsFilterMetadataFragment() is deliberately NOT injected here - it scanned the
+// whole product collection on every brand page load without anything reading the result.
 // Parameters:
 // - $slug: brand slug (e.g., "/marki/yamaha/")
-// - $category: category slug filter (optional) - empty string "" for all categories
-// - $brands: array of brand slugs filter (optional) - empty array [] for all brands
-// - $minPrice: minimum price filter (optional) - 0 for no minimum
-// - $maxPrice: maximum price filter (optional) - 999999999 for no maximum
-// - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
 export const queryBrandBySlug = defineQuery(/* groq */ `
   *[_type == "brand" && slug.current == $slug][0] {
     _id,
     name,
     "slug": slug.current,
+    doNotIndex,
     ${imageFragment('logo')},
     ${portableTextFragmentExtended('description')},
     ${imageFragment('heroImage')},
@@ -2319,15 +2319,13 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
     },
     seo {
       title,
-      description,
-      ${imageFragment('ogImage')}
+      description
     },
     openGraph {
       title,
       description,
-      "seoImage": ogImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
-    },
-    ${productsFilterMetadataFragment()}
+      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
+    }
   }
 `);
 
@@ -2435,9 +2433,12 @@ export const queryProductBySlug = defineQuery(/* groq */ `
       image{
         ${imageFragment()}
       },
+      // Scoped inside openGraph{}: image is relative to it, while previewImage
+      // is a document-level field and needs a caret to hop back out. Both paths
+      // were previously resolved against openGraph and always yielded null.
       "seoImage": select(
-        defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-        defined(previewImage) => previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        defined(image) => image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+        defined(^.previewImage) => ^.previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
         null
       )
     }
@@ -2653,27 +2654,14 @@ export const queryProductSeoBySlug =
   openGraph {
     title,
     description,
+    // Scoped inside openGraph{}: image is relative to it, while previewImage
+    // is a document-level field and needs a caret to hop back out. Both paths
+    // were previously resolved against openGraph and always yielded null.
     "seoImage": select(
-      defined(openGraph.image) => openGraph.image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-      defined(previewImage) => previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+      defined(image) => image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
+      defined(^.previewImage) => ^.previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
       null
     )
-  }
-}`);
-
-// SEO-only query for brands (used in generateMetadata)
-export const queryBrandSeoBySlug =
-  defineQuery(`*[_type == "brand" && slug.current == $slug][0]{
-  "slug": slug.current,
-  doNotIndex,
-  seo {
-    title,
-    description
-  },
-  openGraph {
-    title,
-    description,
-    "seoImage": openGraph.ogImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"
   }
 }`);
 

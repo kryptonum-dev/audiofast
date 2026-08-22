@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   cacheComponents: true,
 
+  // Requires `cacheComponents`. Makes `<Link prefetch="auto">` prefetch one
+  // reusable App Shell per route instead of a per-link route prefetch, and
+  // enables the 16.3 App Shell for params not returned by `generateStaticParams`
+  // — those pages return the shell instantly instead of blocking on a full
+  // server render.
+  partialPrefetching: true,
+
   // Override default cache profiles to prevent 5-minute stale window.
   // Default presets have stale: 300s (5 min) which causes every page to
   // regenerate (ISR write) every 5 minutes when visited by bots/users.

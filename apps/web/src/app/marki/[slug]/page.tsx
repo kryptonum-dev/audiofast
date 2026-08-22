@@ -19,8 +19,9 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
+import StoreLocationsSkeleton from '@/src/components/ui/StoreLocations/StoreLocationsSkeleton';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
-import { limitBuildTimeStaticParams } from '@/src/global/build';
+import { allBuildTimeStaticParams } from '@/src/global/build';
 import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
@@ -31,13 +32,11 @@ import {
   queryAllBrandSlugs,
   queryAllProductsFilterMetadata,
   queryBrandBySlug,
-  queryBrandSeoBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllBrandSlugsResult,
   QueryAllProductsFilterMetadataResult,
   QueryBrandBySlugResult,
-  QueryBrandSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import type { PortableTextProps } from '@/src/global/types';
@@ -69,28 +68,29 @@ async function getBrandContent(slug: string) {
     query: queryBrandBySlug,
     params: {
       slug: `/marki/${slug}/`,
-      // Pass empty filters - we don't need filtered counts for PPR
-      category: '',
-      search: '',
-      brands: [],
-      minPrice: 0,
-      maxPrice: 999999999,
-      customFilters: [],
-      embeddingResults: [],
     },
     tags: ['brand', `brand:${slug}`],
   });
 }
 
 // Global filter metadata (shared across all pages, heavily cached)
+// Tagged with its own `filter-metadata` tag rather than the broad `products` /
+// `brands` tags. This data really does derive from every product, brand and
+// category, so it still has to be invalidated when any of them is published —
+// but it is now an explicit, single-purpose dependency instead of riding tags
+// that also carry page content. Because this fetch is awaited alongside the
+// brand document, whatever tags it carries end up on the brand page's static
+// shell (tags propagate from nested `use cache` entries to the outer one), so
+// keeping it off `products` is what stops every product publish from cooling
+// all ~41 brand shells.
 async function getStaticFilterMetadata() {
   'use cache';
-  cacheTag('products', 'brands');
+  cacheTag('filter-metadata');
   cacheLife('weeks');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ['products'],
+    tags: ['filter-metadata'],
   });
 }
 
@@ -100,15 +100,31 @@ async function getStaticFilterMetadata() {
 export async function generateStaticParams() {
   const brands = await sanityFetch<QueryAllBrandSlugsResult>({
     query: queryAllBrandSlugs,
-    tags: ['brand'],
+    // `brands` is what a brand publish invalidates now that the broad `brand`
+    // tag is reserved for fallbacks — keep both so the slug list stays current.
+    tags: ['brand', 'brands'],
   });
 
-  return limitBuildTimeStaticParams(
+  // Brands are the one route that prerenders its full set at build time —
+  // `allBuildTimeStaticParams` instead of `limitBuildTimeStaticParams`. Every
+  // other content type keeps the "build one, render the rest on demand" default,
+  // because products alone are ~866 pages and prerendering them would blow up
+  // both build time and ISR write cost. Brands are exempt because there are only
+  // ~41 of them, they are linked directly from the main navigation and the
+  // homepage (so the long tail is hit immediately, not rarely), and their
+  // per-page render cost collapsed from ~5.5 s to a few ms once the dead
+  // fragment was removed from `queryBrandBySlug`.
+  return allBuildTimeStaticParams(
     brands
       .filter((brand) => brand.slug)
       .map((brand) => ({
         slug: brand.slug!.replace('/marki/', '').replace(/\/$/, ''),
       })),
+    // cacheComponents treats an empty `generateStaticParams` as a build error
+    // (`empty-generate-static-params`), and this route now emits the whole list
+    // rather than a guaranteed-non-empty slice — so guard the empty/unreachable
+    // dataset case with a placeholder. The page `notFound()`s for it.
+    { slug: '__placeholder__' },
   );
 }
 
@@ -119,19 +135,21 @@ export async function generateMetadata({
   params,
 }: BrandPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const seoData = await sanityFetch<QueryBrandSeoBySlugResult>({
-    query: queryBrandSeoBySlug,
-    params: { slug: `/marki/${slug}/` },
-    tags: ['brand', `brand:${slug}`],
-  });
 
-  if (!seoData) return getSEOMetadata();
+  // Deliberately the *same* cached fetcher the page body calls. `getBrandContent`
+  // is a `use cache` scope keyed on `slug`, and `sanityFetch` underneath it is
+  // keyed on (query, params, tags) — so `generateMetadata` and `BrandPage` hit one
+  // cache entry and therefore one Sanity round trip. Previously this issued a
+  // second, uncached `queryBrandSeoBySlug` fetch for the same document.
+  const brand = await getBrandContent(slug);
+
+  if (!brand) return getSEOMetadata();
 
   return getSEOMetadata({
-    seo: seoData.seo,
-    slug: seoData.slug,
-    openGraph: seoData.openGraph,
-    noNotIndex: seoData.doNotIndex,
+    seo: brand.seo,
+    slug: brand.slug,
+    openGraph: brand.openGraph,
+    noNotIndex: brand.doNotIndex,
   });
 }
 
@@ -325,13 +343,30 @@ export default async function BrandPage({
         />
       )}
 
+      {/*
+        Geocoding the dealer list against OpenStreetMap Nominatim used to sit in
+        the static shell, so every one of the ~41 prerendered brand pages waited
+        on a third-party service before it could ship any HTML. Behind this
+        boundary the shell is emitted immediately and the section streams in —
+        normally straight out of the per-address `use cache` entry inside
+        `StoreLocations`, and only occasionally from a live Nominatim round trip.
+      */}
       {brand.stores &&
         Array.isArray(brand.stores) &&
         brand.stores.length > 0 && (
-          <StoreLocations
-            customId="gdzie-kupic"
-            stores={brand.stores.filter((s) => s !== null)}
-          />
+          <Suspense
+            fallback={
+              <StoreLocationsSkeleton
+                customId="gdzie-kupic"
+                storeCount={brand.stores.length}
+              />
+            }
+          >
+            <StoreLocations
+              customId="gdzie-kupic"
+              stores={brand.stores.filter((s) => s !== null)}
+            />
+          </Suspense>
         )}
     </main>
   );

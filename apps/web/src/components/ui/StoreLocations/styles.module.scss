@@ -126,6 +126,46 @@
         align-self: start;
       }
 
+      // Placeholder rows rendered by StoreLocationsSkeleton while the
+      // geocoded stores stream in. They reuse `.store` for layout so the
+      // fallback occupies the same box as the resolved section.
+      .skeletonInfo {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .skeletonName,
+      .skeletonAddress,
+      .skeletonContact {
+        border-radius: 0.25rem;
+        background: linear-gradient(
+          90deg,
+          var(--neutral-300, #f0f0f0) 25%,
+          var(--neutral-400, #e0e0e0) 50%,
+          var(--neutral-300, #f0f0f0) 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1500ms infinite;
+      }
+
+      .skeletonName {
+        width: 55%;
+        height: 1rem;
+      }
+
+      .skeletonAddress {
+        width: 75%;
+        height: 0.875rem;
+      }
+
+      .skeletonContact {
+        width: 7.5rem;
+        height: 1.25rem;
+        margin: 0.75rem 0;
+      }
+
       .storeContact {
         display: flex;
         flex-direction: column;
