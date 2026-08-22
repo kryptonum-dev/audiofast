@@ -22,8 +22,8 @@ export default function Input({
   textarea = false,
   ...props
 }: InputTypes) {
-  const handleExpand = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const textarea = e.target;
+  const handleExpand = (e: React.SyntheticEvent<HTMLTextAreaElement>) => {
+    const textarea = e.currentTarget;
     // Use requestAnimationFrame to avoid forced reflow
     requestAnimationFrame(() => {
       textarea.style.height = "auto";

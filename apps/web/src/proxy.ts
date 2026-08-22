@@ -97,7 +97,7 @@ export async function proxy(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet, headers) {
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
@@ -108,6 +108,13 @@ export async function proxy(request: NextRequest) {
 
           cookiesToSet.forEach(({ name, value, options }) => {
             response.cookies.set(name, value, options);
+          });
+
+          // @supabase/ssr >= 0.10 hands us cache-busting headers
+          // (Cache-Control: private, no-store …) whenever it writes auth
+          // cookies — forward them so CDN never caches a Set-Cookie response.
+          Object.entries(headers ?? {}).forEach(([key, value]) => {
+            response.headers.set(key, value);
           });
         },
       },

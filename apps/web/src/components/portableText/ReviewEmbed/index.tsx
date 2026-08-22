@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { PortableTextTypeComponentProps } from 'next-sanity';
+import type { PortableTextTypeComponentProps } from '@portabletext/react';
 
 import type { PortableTextProps } from '@/src/global/types';
 import { portableTextToPlainString } from '@/src/global/utils';

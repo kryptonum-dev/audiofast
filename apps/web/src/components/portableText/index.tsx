@@ -1,12 +1,12 @@
-import type { PortableTextBlock } from '@portabletext/react';
 import {
   PortableText,
+  type PortableTextBlock,
   type PortableTextComponentProps,
   type PortableTextComponents,
   type PortableTextMarkComponentProps,
+  type PortableTextTypeComponentProps,
 } from '@portabletext/react';
 import Link from 'next/link';
-import type { PortableTextTypeComponentProps } from 'next-sanity';
 import React, { Suspense } from 'react';
 
 import type { PortableTextProps } from '@/global/types';

@@ -1,5 +1,7 @@
-import createImageUrlBuilder from '@sanity/image-url';
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import {
+  createImageUrlBuilder,
+  type SanityImageSource,
+} from '@sanity/image-url';
 import { createClient } from 'next-sanity';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../constants';

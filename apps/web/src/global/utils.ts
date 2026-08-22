@@ -1,4 +1,4 @@
-import type { PortableTextBlock } from 'next-sanity';
+import type { PortableTextBlock } from '@portabletext/react';
 import slugify from 'slugify';
 
 import type {
@@ -92,14 +92,12 @@ export function portableTextToPlainString(
   return portableText
     .map((block) => {
       // Handle standard block types (normal text, headings, etc.)
-      if (block._type === 'block') {
-        // Extract text from children
-        const blockText = (block.children || [])
-          .map((child: PortableTextBlock['children'][number]) => {
-            // Extract plain text, ignoring all marks (strong, italic, links, etc.)
-            return child.text || '';
-          })
-          .join('');
+      if (block._type === 'block' && 'children' in block) {
+        // Extract plain text from children, ignoring all marks (strong,
+        // italic, links, etc.). Children may be spans or inline objects; only
+        // spans carry `text`.
+        const children = (block.children ?? []) as Array<{ text?: string }>;
+        const blockText = children.map((child) => child.text || '').join('');
 
         return blockText.trim();
       }

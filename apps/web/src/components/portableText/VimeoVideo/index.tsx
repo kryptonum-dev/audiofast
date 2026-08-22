@@ -1,5 +1,5 @@
 import NextImage from "next/image";
-import type { PortableTextTypeComponentProps } from "next-sanity";
+import type { PortableTextTypeComponentProps } from "@portabletext/react";
 
 import type { PortableTextProps } from "@/src/global/types";
 
