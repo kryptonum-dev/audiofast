@@ -264,6 +264,14 @@ export const settings = defineType({
       group: SETTINGS_GROUP.FORMS,
     },
     defineField({
+      name: "archivedProductCta",
+      type: "buttonWithNoVariant",
+      title: "Produkt archiwalny – przycisk kontaktu",
+      description:
+        "Przycisk wyświetlany zamiast 'Zapytaj o produkt' na stronach produktów archiwalnych bez ceny (oznaczonych jako niedostępne). Zwykle prowadzi do strony kontaktu. Jeśli pole jest puste, strona użyje domyślnego linku do /kontakt.",
+      group: SETTINGS_GROUP.FORMS,
+    }),
+    defineField({
       name: "b2cTransactionalEmailCopyRecipients",
       type: "array",
       title: "Kopie e-maili transakcyjnych B2C",

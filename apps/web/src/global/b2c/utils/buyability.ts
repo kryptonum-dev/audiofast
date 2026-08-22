@@ -68,6 +68,44 @@ export function getStandardProductBuyability({
   };
 }
 
+export type StandardAvailabilityReason = 'archived_no_price';
+
+export type StandardAvailabilityResult = {
+  isUnavailable: boolean;
+  reason: StandardAvailabilityReason | null;
+};
+
+type StandardProductAvailabilityInput = {
+  isArchived?: boolean | null;
+  pricingData?: StandardPricingSignal | null;
+};
+
+/**
+ * Business rule agreed with the client (Aug 2026): a standard product is
+ * presented as UNAVAILABLE only when it is archived AND has no valid price.
+ * - Live products without a price stay "available" (they just show no price).
+ * - Archived products that still carry a price remain on sale as usual.
+ *
+ * This is deliberately separate from buyability: it drives the "product
+ * unavailable" notice, not cart/checkout gating.
+ */
+export function getStandardProductAvailability({
+  isArchived,
+  pricingData,
+}: StandardProductAvailabilityInput): StandardAvailabilityResult {
+  if (isArchived && !hasValidStandardPricing(pricingData)) {
+    return {
+      isUnavailable: true,
+      reason: 'archived_no_price',
+    };
+  }
+
+  return {
+    isUnavailable: false,
+    reason: null,
+  };
+}
+
 export function getCpoProductBuyability({
   isArchived,
   isSellableOnline,

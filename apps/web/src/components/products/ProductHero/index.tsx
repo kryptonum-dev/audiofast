@@ -1,5 +1,8 @@
+import Link from 'next/link';
+
 import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
+import Button from '@/src/components/ui/Button';
 import type { FormStateData } from '@/src/components/ui/FormStates';
 import type { CompletePricingData } from '@/src/global/supabase/types';
 import type { BrandType, PortableTextProps } from '@/src/global/types';
@@ -16,12 +19,27 @@ export type AwardType = {
   logo?: SanityRawImage | null;
 };
 
+export type ArchivedCta = {
+  text?: string | null;
+  href?: string | null;
+  openInNewTab?: boolean | null;
+};
+
+const DEFAULT_ARCHIVED_CTA = {
+  text: 'Skontaktuj się z nami',
+  href: '/kontakt',
+} as const;
+
 interface ProductHeroProps {
   name: string;
   subtitle?: string;
   brand?: BrandType;
   pricingData?: CompletePricingData | null;
   isBuyable: boolean;
+  /** Archived product without a price — renders the "unavailable" notice */
+  isUnavailable?: boolean;
+  /** Contact CTA from Sanity settings, shown instead of "Zapytaj o produkt" when unavailable */
+  archivedCta?: ArchivedCta | null;
   isReturnable: boolean;
   previewImage: SanityRawImage;
   shortDescription?: PortableTextProps;
@@ -38,6 +56,8 @@ export default function ProductHero({
   brand,
   pricingData,
   isBuyable,
+  isUnavailable = false,
+  archivedCta,
   isReturnable,
   previewImage,
   shortDescription,
@@ -92,34 +112,67 @@ export default function ProductHero({
       {shortDescription && shortDescription.length > 0 && (
         <ProductDescription shortDescription={shortDescription} />
       )}
-      <div className={styles.priceWrapper}>
-        {!pricingData ? <span className={styles.price}>Brak ceny</span> : null}
+      <div className={styles.priceWrapper} data-unavailable={isUnavailable}>
+        {isUnavailable ? (
+          <div className={styles.archived} role="status" aria-live="polite">
+            <span className={styles.archivedEyebrow}>Produkt archiwalny</span>
+            <span className={styles.archivedStatus}>Niedostępny</span>
+            <p className={styles.archivedText}>
+              Ten model nie jest już dostępny w naszej ofercie. Chętnie
+              doradzimy jego następcę lub podobny sprzęt z aktualnej oferty.
+            </p>
+          </div>
+        ) : !pricingData ? (
+          <span className={styles.price}>Brak ceny</span>
+        ) : null}
 
-        <PricingSection
-          pricingData={pricingData}
-          isBuyable={isBuyable}
-          product={{
-            id: productId || '',
-            name,
-            brandName: brand?.name || '',
-            isReturnable,
-            brandLogo: brand?.logo || undefined,
-            image: previewImage,
-          }}
-          formStateData={formStateData}
-        />
+        {isUnavailable ? (
+          <div className={styles.buttonsWrapper}>
+            <Button
+              href={archivedCta?.href || DEFAULT_ARCHIVED_CTA.href}
+              text={archivedCta?.text || DEFAULT_ARCHIVED_CTA.text}
+              openInNewTab={archivedCta?.openInNewTab ?? false}
+              className={styles.inquiryButton}
+            />
+          </div>
+        ) : (
+          <PricingSection
+            pricingData={pricingData}
+            isBuyable={isBuyable}
+            product={{
+              id: productId || '',
+              name,
+              brandName: brand?.name || '',
+              isReturnable,
+              brandLogo: brand?.logo || undefined,
+              image: previewImage,
+            }}
+            formStateData={formStateData}
+          />
+        )}
 
-        <AddToComparison
-          productId={productId}
-          categories={categories}
-          productName={name}
-          productData={{
-            _id: productId,
-            name,
-            brand,
-            mainImage: previewImage,
-          }}
-        />
+        {isUnavailable && brand?.slug ? (
+          <Link
+            href={brand.slug}
+            className={`link ${styles.archivedBrandLink}`}
+          >
+            Zobacz aktualną ofertę {brand.name}
+          </Link>
+        ) : null}
+
+        {!isUnavailable && (
+          <AddToComparison
+            productId={productId}
+            categories={categories}
+            productName={name}
+            productData={{
+              _id: productId,
+              name,
+              brand,
+              mainImage: previewImage,
+            }}
+          />
+        )}
       </div>
       {displayAwards && displayAwards?.length > 0 && (
         <div

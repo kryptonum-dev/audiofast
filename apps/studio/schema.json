@@ -16078,6 +16078,14 @@
         },
         "optional": true
       },
+      "archivedProductCta": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "buttonWithNoVariant"
+        },
+        "optional": true
+      },
       "b2cTransactionalEmailCopyRecipients": {
         "type": "objectAttribute",
         "value": {

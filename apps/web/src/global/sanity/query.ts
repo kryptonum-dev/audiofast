@@ -2584,6 +2584,19 @@ export const queryMailchimpSettings = defineQuery(/* groq */ `
   *[_type == "settings"][0].mailchimpAudienceId
 `);
 
+// CTA shown instead of "Zapytaj o produkt" on archived products without a price
+export const queryArchivedProductCta = defineQuery(/* groq */ `
+  *[_type == "settings"][0].archivedProductCta {
+    text,
+    "openInNewTab": url.openInNewTab,
+    "href": select(
+      url.type == "internal" => url.internal->slug.current,
+      url.type == "external" => url.external,
+      url.href
+    )
+  }
+`);
+
 export const queryProductInquiryFormState = defineQuery(/* groq */ `
   *[_type == "settings"][0].productInquiryFormState {
     success {

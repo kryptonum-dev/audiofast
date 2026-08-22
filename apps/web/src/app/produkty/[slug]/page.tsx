@@ -16,17 +16,22 @@ import type { ContentBlock } from '@/src/components/ui/ContentBlocks';
 import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import StoreLocations from '@/src/components/ui/StoreLocations';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
-import { getStandardProductBuyability } from '@/src/global/b2c/utils/buyability';
+import {
+  getStandardProductAvailability,
+  getStandardProductBuyability,
+} from '@/src/global/b2c/utils/buyability';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductSlugs,
+  queryArchivedProductCta,
   queryProductBySlug,
   queryProductInquiryFormState,
   queryProductSeoBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllProductSlugsResult,
+  QueryArchivedProductCtaResult,
   QueryProductBySlugResult,
   QueryProductInquiryFormStateResult,
   QueryProductSeoBySlugResult,
@@ -123,6 +128,19 @@ export default async function ProductPage(props: ProductPageProps) {
     isSellableOnline: product.isSellableOnline,
     pricingData,
   });
+  // Archived + no price => show the "product unavailable" notice
+  const productAvailability = getStandardProductAvailability({
+    isArchived: product.isArchived,
+    pricingData,
+  });
+  // Contact CTA replaces "Zapytaj o produkt" on unavailable products;
+  // fetched only when needed (cached under the 'settings' tag).
+  const archivedProductCta = productAvailability.isUnavailable
+    ? await sanityFetch<QueryArchivedProductCtaResult>({
+        query: queryArchivedProductCta,
+        tags: ['settings'],
+      })
+    : null;
   const categorySlugs =
     product.categories?.map((category) => category?.slug).filter(Boolean) ?? [];
 
@@ -199,6 +217,8 @@ export default async function ProductPage(props: ProductPageProps) {
         brand={product.brand as unknown as BrandType | undefined}
         pricingData={pricingData}
         isBuyable={productBuyability.isBuyable}
+        isUnavailable={productAvailability.isUnavailable}
+        archivedCta={archivedProductCta}
         isReturnable={product.isReturnable ?? false}
         previewImage={product.previewImage as SanityRawImage}
         shortDescription={product.shortDescription}
