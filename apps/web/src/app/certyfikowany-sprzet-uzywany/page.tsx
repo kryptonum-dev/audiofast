@@ -19,6 +19,7 @@ export async function generateMetadata() {
     seo: pageData.seo,
     slug: pageData.slug,
     openGraph: pageData.openGraph,
+    noNotIndex: pageData.doNotIndex,
   });
 }
 

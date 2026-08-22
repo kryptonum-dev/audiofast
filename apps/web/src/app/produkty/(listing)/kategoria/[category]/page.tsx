@@ -14,11 +14,11 @@ import SortDropdown from '@/src/components/products/SortDropdown';
 import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
+import { limitBuildTimeStaticParams } from '@/src/global/build';
 import {
   PRODUCT_SORT_OPTIONS,
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
-import { limitBuildTimeStaticParams } from '@/src/global/build';
 import {
   type ActiveFilters,
   computeAvailableFilters,
@@ -60,6 +60,7 @@ type CategoryContentType = NonNullable<
     name: string | null;
     slug: string | null;
   } | null;
+  doNotIndex?: boolean | null;
 };
 
 type CategoryPageProps = {
@@ -126,7 +127,9 @@ export async function generateMetadata({ params }: CategoryPageProps) {
   const { category: categorySlug } = await params;
   const contentData = await getPageContent(categorySlug);
 
-  const pageData = contentData?.categoryContent || contentData?.defaultContent;
+  const categoryContent =
+    contentData?.categoryContent as unknown as CategoryContentType | null;
+  const pageData = categoryContent || contentData?.defaultContent;
 
   if (!pageData) {
     logWarn(`Category not found: ${categorySlug}`);
@@ -137,6 +140,7 @@ export async function generateMetadata({ params }: CategoryPageProps) {
     seo: pageData.seo,
     slug: `/produkty${pageData.slug}`,
     openGraph: pageData.openGraph,
+    noNotIndex: categoryContent?.doNotIndex,
   });
 }
 

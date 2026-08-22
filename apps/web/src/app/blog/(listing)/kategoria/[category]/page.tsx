@@ -39,6 +39,7 @@ type CategoryContent = {
   seo: DefaultContent['seo'];
   openGraph: DefaultContent['openGraph'];
   heroImage?: DefaultContent['heroImage'];
+  doNotIndex?: boolean | null;
 };
 
 // Cached static data fetcher for main blog data
@@ -109,6 +110,7 @@ export async function generateMetadata(props: CategoryPageProps) {
     seo: categoryContent.seo,
     slug: categoryContent.slug,
     openGraph: categoryContent.openGraph,
+    noNotIndex: categoryContent.doNotIndex,
   });
 }
 

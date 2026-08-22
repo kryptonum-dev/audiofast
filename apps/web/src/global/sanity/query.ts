@@ -1101,6 +1101,7 @@ export const queryCpoPage = defineQuery(`*[_type == "cpoPage"][0]{
   _type,
   "slug": slug.current,
   name,
+  doNotIndex,
   seo,
   openGraph{
     title,
@@ -1490,6 +1491,7 @@ export const queryBlogPageContent = defineQuery(`
         _id,
         name,
         "slug": slug.current,
+        doNotIndex,
         ${portableTextFragment('title')},
         ${portableTextFragment('description')},
         seo,
@@ -1694,6 +1696,7 @@ export const queryProductsPageContent = defineQuery(`
         _id,
         name,
         "slug": slug.current,
+        doNotIndex,
         ${portableTextFragment('title')},
         ${portableTextFragment('description')},
         ${imageFragment('heroImage')},
@@ -2626,6 +2629,7 @@ export const queryProductInquiryFormState = defineQuery(/* groq */ `
 export const queryReviewSeoBySlug =
   defineQuery(`*[_type == "review" && destinationType == "page" && slug.current == $slug][0]{
   "slug": slug.current,
+  doNotIndex,
   seo,
   openGraph{
     title,
@@ -2641,6 +2645,7 @@ export const queryProductSeoBySlug =
   "slug": slug.current,
   name,
   "brandName": coalesce(brand->name, denormBrandName),
+  doNotIndex,
   seo {
     description,
     title
@@ -2660,6 +2665,7 @@ export const queryProductSeoBySlug =
 export const queryBrandSeoBySlug =
   defineQuery(`*[_type == "brand" && slug.current == $slug][0]{
   "slug": slug.current,
+  doNotIndex,
   seo {
     title,
     description
@@ -2675,6 +2681,7 @@ export const queryBrandSeoBySlug =
 export const queryBlogPostSeoBySlug =
   defineQuery(`*[_type == "blog-article" && slug.current == $slug][0]{
   "slug": slug.current,
+  doNotIndex,
   seo,
   openGraph{
     title,
@@ -2701,14 +2708,14 @@ export const queryPageSeoBySlug =
 // ----------------------------------------
 
 export const queryAllPageSlugsForSitemap = defineQuery(`
-  *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**")) && doNotIndex != true] {
     "slug": slug.current,
     _updatedAt
   }
 `);
 
 export const queryAllBlogPostSlugsForSitemap = defineQuery(`
-  *[_type == "blog-article" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  *[_type == "blog-article" && defined(slug.current) && !(_id in path("drafts.**")) && doNotIndex != true] {
     "slug": slug.current,
     _updatedAt
   }
@@ -2716,14 +2723,14 @@ export const queryAllBlogPostSlugsForSitemap = defineQuery(`
 
 // NOTE: Excludes hidden brands from sitemap - they should not be indexed
 export const queryAllBrandSlugsForSitemap = defineQuery(`
-  *[_type == "brand" && defined(slug.current) && !(_id in path("drafts.**")) && doNotShowBrand != true] {
+  *[_type == "brand" && defined(slug.current) && !(_id in path("drafts.**")) && doNotShowBrand != true && doNotIndex != true] {
     "slug": slug.current,
     _updatedAt
   }
 `);
 
 export const queryAllProductSlugsForSitemap = defineQuery(`
-  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && isArchived != true] {
+  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && isArchived != true && doNotIndex != true] {
     "slug": slug.current,
     _updatedAt
   }
@@ -2737,14 +2744,14 @@ export const queryAllCpoProductSlugsForSitemap = defineQuery(`
 `);
 
 export const queryAllReviewSlugsForSitemap = defineQuery(`
-  *[_type == "review" && destinationType == "page" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  *[_type == "review" && destinationType == "page" && defined(slug.current) && !(_id in path("drafts.**")) && doNotIndex != true] {
     "slug": slug.current,
     _updatedAt
   }
 `);
 
 export const queryAllBlogCategorySlugsForSitemap = defineQuery(`
-  *[_type == "blog-category" && defined(slug.current) && !(_id in path("drafts.**"))] {
+  *[_type == "blog-category" && defined(slug.current) && !(_id in path("drafts.**")) && doNotIndex != true] {
     "slug": slug.current,
     _updatedAt
   }
@@ -2752,7 +2759,7 @@ export const queryAllBlogCategorySlugsForSitemap = defineQuery(`
 
 // Only include categories that have at least one visible product (not archived, not from hidden brand)
 export const queryAllProductCategorySlugsForSitemap = defineQuery(`
-  *[_type == "productCategorySub" && defined(slug.current) && !(_id in path("drafts.**")) && count(*[
+  *[_type == "productCategorySub" && defined(slug.current) && !(_id in path("drafts.**")) && doNotIndex != true && count(*[
     _type == "product"
     && defined(slug.current)
     && isArchived != true

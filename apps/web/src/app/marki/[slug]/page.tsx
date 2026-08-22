@@ -131,6 +131,7 @@ export async function generateMetadata({
     seo: seoData.seo,
     slug: seoData.slug,
     openGraph: seoData.openGraph,
+    noNotIndex: seoData.doNotIndex,
   });
 }
 

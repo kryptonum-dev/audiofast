@@ -66,6 +66,7 @@ export async function generateMetadata(props: BlogPostPageProps) {
     seo: seoData.seo,
     slug: seoData.slug,
     openGraph: seoData.openGraph,
+    noNotIndex: seoData.doNotIndex,
   });
 }
 

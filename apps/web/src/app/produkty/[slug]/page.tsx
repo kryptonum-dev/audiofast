@@ -104,6 +104,7 @@ export async function generateMetadata({
     },
     slug: seoData.slug,
     openGraph: seoData.openGraph,
+    noNotIndex: seoData.doNotIndex,
   });
 }
 
