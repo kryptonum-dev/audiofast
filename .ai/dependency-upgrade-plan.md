@@ -1,0 +1,169 @@
+# Dependency upgrade plan — milestone 1 of the brand-page performance fix
+
+> Research date: 2026-08-22. Status: **research complete, nothing changed yet.**
+> Context: client-reported ~8 s load on `/marki/[slug]/`. Milestone 1 = bring the
+> dependency baseline up to date (this doc). Milestone 2 = move revalidation to the
+> Sanity Functions + `defineLive` model used in `Najbar` / `kryptonum-starter`.
+> Target reference state: `Najbar` (`next 16.2.x`, `next-sanity 13.2`, `@sanity/client 7.25`,
+> `sanity 6.x`, TS `5.9.3`, ESLint 9).
+
+Local toolchain at research time: Bun 1.3.2 (root `packageManager` still says `bun@1.1.42`),
+Node 25.6.1. Vercel project `audiofast`: root dir `apps/web`, **Node 22.x**, Bun detected from `bun.lock`.
+
+---
+
+## 0. TL;DR
+
+| Bucket | Packages | Verdict |
+|---|---|---|
+| **Delete** (declared, zero imports) | web: `@sanity/visual-editing`, `schema-dts`, `@types/minimatch`. studio: `@sanity/portable-text-editor`, `react-portable-text`, `@portabletext/block-tools`, `@sanity/schema`, `@supercharge/promise-pool`, `sanity-plugin-icon-picker`, `sanity-plugin-bulk-actions-table`, `@sanity/sdk-react`, `jsdom`, `@types/jsdom` | 12 removals; `sanity-plugin-icon-picker` alone drags a private copy of **`sanity@3.99.0`** into `node_modules` |
+| **Add** (used but undeclared) | web: `@portabletext/react ^7.0.1`. studio: `rxjs` (runtime! vendored bulk table), `csv-parse` (move from root), `sharp`, `uuid`, `node-html-parser`, `p-limit` (migration scripts). web+b2c-admin: `@testing-library/dom` (jest-dom 7 peer) | phantom deps that only work thanks to hoisting |
+| **Upgrade now — safe/mechanical** | everything in §2–§4 | ~60 bumps, ~6 one-line code edits |
+| **Hold** | `@sanity/client 8`, `typescript 7`, ESLint 10, `@types/node 26`, `@sanity/ui 4`, `@sanity/icons 5`, `embla-carousel 9` (RC), Bun 1.4 locally, Leaflet 2 | blocked by peers or not worth it yet (§5) |
+
+Hard constraints discovered (these decide the matrix):
+
+- `next-sanity@13.3.3` peers: `@sanity/client ^7.26.2` (**not 8**), `react ^19.2.3` (web pins `19.2.0` → must bump), `next ^16`, `sanity ^5.29 || ^6`, `styled-components ^6.1` (hard peers, not optional → Bun will install them in web too; harmless in a monorepo that already has studio).
+- `sanity@6`, `@sanity/client@8`, `@sanity/visual-editing@6`, `@portabletext/to-html@6`, `nanoid@6`, `supabase-js ≥2.110` all need **Node ≥ 22.12**. Vercel is on 22.x → OK, but set it to 24.x (Node 20 is deprecated on Vercel from 2026-10-01).
+- `typescript-eslint@8.67` peer `typescript <6.1` → **TS 7 blocked**. TS 7 has no JS API at all.
+- `eslint-plugin-import@2.32` and `eslint-plugin-react@7.37` are broken on ESLint 10 (unreleased fixes) → **ESLint 10 blocked**; `@sanity/eslint-config-studio@6` also peers `eslint ^9`.
+- `sanity@6.10` internally uses `@sanity/ui ^4` and `@sanity/icons ^5`, but officially supports apps staying on `@sanity/ui ^3.5` / `@sanity/icons ^3.8` side-by-side → do ui4/icons5 as a separate pass (≈200 `space=`→`gap=` edits, ~60 subpath import rewrites, icons v5 root imports are runtime tombstones).
+
+---
+
+## 1. Why this matters for the 8-second brand page
+
+Not the fix itself, but the upgrade removes known contributors and unblocks milestone 2:
+
+- `next 16.0.7` is missing ~30 CVE fixes incl. **CVE-2026-44579 "DoS via connection exhaustion in apps using Cache Components"** (16.2.5) — a latency-under-load problem on exactly our architecture.
+- 16.2/16.3 landed: runtime data cached on PPR resume (#90888), dedupe of concurrent `'use cache'` invocations (#91830), "discard only cache entries that predate a tag revalidation" (#97314, 16.3.1 — fixes every later read regenerating after `updateTag`, and `'use cache: private'` bodies running twice), and **App Shell / `partialPrefetching` for params not in `generateStaticParams`** (16.3 — "earlier versions wait for a full server render before sending the response"). That last one maps directly onto `limitBuildTimeStaticParams` + on-demand brands.
+- `next-sanity 13` is the `defineLive`/Live Content API generation (milestone 2). It **requires `cacheComponents: true`** resolution conditions (we have it) and `sanity ≥5.29||6` in the workspace.
+- `next-sanity@9` drags a second full copy of **`next@15.5.4`** into `node_modules` (via `@sanity/next-loader`); `sanity-plugin-icon-picker` drags **`sanity@3.99.0`** + `@portabletext/editor@1.58`. Both are dead weight in install/build (Studio already builds with an 8 GB heap).
+
+---
+
+## 2. apps/web — target matrix
+
+| Package | Now (installed) | Target | Class | Required change |
+|---|---|---|---|---|
+| `next` | 16.0.7 | **16.3.2** | minor, behaviour shifts | none required. Verify at build: 16.2 rule "explicit `cacheLife` on outer `'use cache'` when nesting shorter-lived caches" (4 files use `'use cache'` without `cacheLife`: `app/layout.tsx`, `ui/Header`, `ui/Footer`, `ui/StoreLocations` — they rely on the overridden `default` profile, should pass). 16.3 defaults `cachedNavigations`, `prefetchInlining`, Node streams, Turbopack build cache on; `next dev` now writes a block into `AGENTS.md`. Codemod: `bunx @next/codemod@canary upgrade latest` (nothing 16.0→16.3-specific is mandatory). Keep `revalidateTag(tag, { expire: 0 })` (still the documented 2-arg form; no `expireTag` in 16.x). |
+| `react` / `react-dom` | 19.2.0 (pinned) | **19.2.8** | patch (security) | required by next-sanity 13 (`^19.2.3`). |
+| `@types/react` / `@types/react-dom` | 19.2.2 (pinned + `overrides`) | 19.2.18 / 19.2.4 | patch | `ErrorInfo.digest` removed — repo doesn't use it. Update `overrides` too. |
+| `next-sanity` | 9.12.3 | **13.3.3** | 4 majors, **mechanical here** | we import only `createClient`, `defineQuery`, `QueryParams`, `PortableTextBlock`, `PortableTextTypeComponentProps` — all still exported. Redirect the two PT types to `@portabletext/react` (8 files in `components/portableText/`) and add `@portabletext/react ^7.0.1` as an explicit dep (11 files already import it undeclared; currently resolves to hoisted 6.2.0). |
+| `@sanity/client` | 7.22.0 | **7.26.2** (NOT 8) | minor | floor for next-sanity 13.3 / sanity 6.10 / sdk-react 2.20. v8 = ESM-only, Node 22.12, removed `unstable__adapter`, needs next-sanity 14 (PR #3916 open). Re-run `bun run typegen` (module augmentation in `sanity.types.ts`). |
+| `@sanity/visual-editing` | 2.15.4 | **remove** | — | zero imports; next-sanity 13 bundles/re-exports v6 for when milestone 2 needs it. |
+| `@sanity/image-url` | 1.2.0 | **2.1.1** | major, one line | `src/global/sanity/client.ts`: `import { createImageUrlBuilder, type SanityImageSource } from '@sanity/image-url'` (default export deprecated, `/lib/types/types` path gone). |
+| `@sanity/asset-utils` | 2.2.1 | latest 2.x | — | — |
+| `@portabletext/to-html` | 4.0.1 | **6.0.0** | major | exports unchanged; Node 22.12; list nesting now honours `level` exactly (newsletter HTML may change for skipped-level lists — eyeball one generated newsletter). |
+| `@supabase/ssr` | 0.5.2 | **0.12.4** | minor-ish | already on `getAll/setAll`, cookie format identical (no session migration). 0.10+ passes a 2nd `headers` arg to `setAll` — forward it in `src/proxy.ts` and `server-auth.ts`. Peer `supabase-js ^2.111`. |
+| `@supabase/supabase-js` | 2.81.0 | **2.112.3** | minor, behaviour | Node ≥22 (2.110); auto-retries on transient GET errors (2.102); lockless auth refresh (2.107); stricter insert/update typing (`RejectExcessProperties`) and `from()` constrained to known tables (2.96) → expect type errors, not runtime breaks. Re-run `rls.integration.test.ts` + auth tests. 2.81.1 was the first Next-16-compatible patch — we're below it. |
+| `lucide-react` | 0.553.0 (web) / 0.539.0 (studio) | **1.33.0** (both) | major, no-op | only break = brand icons removed; none used. `aria-hidden` now default. |
+| `zod` | 4.3.6 | 4.4.3 | minor, semantics | 4.4: keys typed `z.undefined()/unknown()/any()` become required; `.merge()` on refined throws. `validation.ts` uses neither. `z.ZodIssueCode.custom` (3 sites) still works; idiom is `code: 'custom'`. |
+| `schema-dts` | 1.1.5 | **remove** | — | zero imports (JSON-LD is hand-built). |
+| `@types/minimatch` | 6.0.0 | **remove** | — | stub; `minimatch` ships types. |
+| `minimatch` | 10.2.5 | 10.2.6 | patch | — |
+| `babel-plugin-react-compiler` | 19.1.0-rc.3 | **1.0.0** | stable | `latest` tag = 1.0.0; still an optional peer of next (not bundled). |
+| `sass` | 1.93.3 | 1.103.1 | minor | Node 20.19 floor; new deprecation warnings possible (`if()`, compound selectors) — check build log. |
+| `react-hook-form` | 7.66.0 | 7.86.0 | minor | — |
+| `@react-email/components` / `render` | 1.0.1 / 2.0.0 | 1.0.12 / 2.1.0 | minor | — |
+| `@vercel/edge-config` | 1.4.3 | 1.5.1 | minor | — |
+| `@azure/identity` | 4.13.0 | 4.13.2 | patch | engines Node ≥22. |
+| `sonner`, `slugify`, `embla-carousel-react`, `leaflet`/`react-leaflet`, `next-themes`, `botid`, `@microsoft/microsoft-graph-client`, `@mailchimp/mailchimp_marketing`, `server-only` | — | latest patch / already latest | — | embla 9 is RC (big API rename) — stay on 8.6. |
+| **test stack** | | | | |
+| `vitest` | 4.1.4 | 4.1.11 | patch | — |
+| `vite` | 8.0.8 | 8.2.2 | minor | `vitest.config.ts`: `esbuild: { jsx: 'automatic' }` is deprecated under Vite 8 → `oxc: { jsx: { runtime: 'automatic' } }` (or drop; automatic is the default). |
+| `@testing-library/jest-dom` | 6.9.1 | **7.0.1** | major | add `@testing-library/dom ^10` devDep (new hard peer). `/vitest` entry unchanged. |
+| `@testing-library/react` / `user-event` | 16.3.2 / 14.6.1 | 16.3.2 / 14.6.6 | — | — |
+| `jsdom` | 29.0.2 | 29.1.1 (hold 30) | — | jsdom 30 engines `^22.22.2 \|\| ^24.15 \|\| >=26` — local Node 25.6 is outside; Bun ignores engines but no upside. Optional later. |
+| `msw` | 2.13.2 | 2.15.0 | minor | 2.14 stops cloning user-provided `Response` objects — handlers are registered per-suite, fine. |
+| `@playwright/test` | 1.59.1 | 1.62.1 | minor | 1.60 removed `Locator.ariaRef()` etc. — grep e2e if it fails. |
+| `@types/node` | 24.10.0 | 24.13.3 (hold 26) | — | Vercel has no Node 26; keep 24 types. |
+
+Code-level edits in web (complete list): `client.ts` image-url import · 8 PT component imports → `@portabletext/react` · `proxy.ts`/`server-auth.ts` `setAll(cookies, headers)` · `vitest.config.ts` oxc · `package.json` pins/overrides · optional: `cookie-manager.ts` deep import `next/dist/server/web/spec-extension/adapters/request-cookies` → `Awaited<ReturnType<typeof cookies>>` (unsupported path, may break on any patch).
+
+---
+
+## 3. apps/studio + apps/b2c-admin — target matrix
+
+| Package | Now | Target | Class | Notes |
+|---|---|---|---|---|
+| `sanity` | 5.24.0 (`^5.1.0`) | **6.10.1** | major, **mechanical** | v6 breaking: Node ≥22.12; Vite 8 (Rolldown) under the hood; `auth.mode` removed; `enableLegacySearch` removed (groq2024 default); React StrictMode on in dev (`reactStrictMode: false` in `sanity.cli.ts` to opt out). Export diff 5.24→6.10.1: root `sanity` lost only `CorsOriginError*`; `sanity/structure`, `/presentation`, `/router`, `/desk` unchanged. We use none of the removed config. Auto-update studios are NOT auto-bumped to 6 — redeploy. Test whether `NODE_OPTIONS=--max-old-space-size=8192` is still needed (Rolldown builds 2–9× faster; memory unverified). |
+| `@sanity/vision` | 5.1.0 | **6.10.1** | lockstep | peer `sanity ^6`. |
+| `@sanity/cli` (root) | 6.5.0 | **8.2.1** | major | Node 22.12, Vite 8; `schema extract`/`typegen generate` commands unchanged (legacy singular topics aliased). Root 6.x against a sanity@6 studio is a skew (cf. sanity#12927). `studioHost` in `sanity.cli.ts` is deprecated but honoured; `deployment.appId` already set. |
+| `@sanity/ui` | 3.2.0 | **3.5.3** (hold 4) | minor | v4 = `space→gap`, Grid `columns→gridTemplateColumns`, `Menu/Popover/Tooltip/Toast/Autocomplete` moved to subpaths, `@sanity/ui/styles.css` must be imported where we render `ThemeProvider` (b2c-admin) — ~107 `space=` in studio, 93 in b2c-admin. Separate PR. |
+| `@sanity/icons` | 3.7.4 | **3.8.0** (hold 5) | minor | v5 removed root barrel exports (runtime `never` tombstones) → needs `@sanity/icons/<Name>` subpath rewrite of 47 icons / 42 files. Separate PR. |
+| `styled-components` | 6.1.19 | **6.5.3** | minor | what sanity 6.10 ships; 6.5.0 stricter `style` prop typing (fixed in 6.5.1–6.5.3). |
+| `sanity-plugin-media` | 4.3.0 | **6.1.6** | major, mechanical | `media()` API unchanged; peers react 19.2 / sanity `^5\|\|^6`; adds folders, EXIF, replace-asset. |
+| `@sanity/orderable-document-list` | 1.5.1 | **2.0.22** | major, mechanical | exports unchanged (`orderableDocumentListDeskItem`, `orderRankField`, `orderRankOrdering`); used in 11 files. Note: our custom `UnpublishAction` exists because this plugin removes the default unpublish — re-verify it still does. |
+| `@sanity/embeddings-index-ui` | 3.0.1 | **4.0.17** | major, mechanical | `embeddingsIndexDashboard()` unchanged; 3.x doesn't peer sanity 6. |
+| `@sanity/assist` | 6.0.7 | 6.1.21 | minor | — |
+| `@sanity/eslint-config-studio` | 5.0.2 | **6.0.0** (not 7) | major | 6 = updated plugins, peer eslint ^9. 7 = ESLint 10 + `@eslint-react` rule renames → hold. |
+| `nanoid` | 5.1.6 | **6.0.1** | major, API same | Node 22 floor only. |
+| `lucide-react` | 0.539.0 | **1.33.0** | major | all 71 studio icon names (incl. `LucideIcon` type) verified present in 1.33 d.ts. |
+| `@sanity/sdk-react` | 2.8.0 (studio: unused → remove; b2c-admin: keep) | **2.20.1** | minor | no breaking changes 2.8→2.20; **avoid 2.20.0** (shipped raw JSX, crashed `sanity dev`; fixed 2.20.1). b2c-admin uses only `SanityApp`, `SanityConfig`, `useAuthToken`. |
+| `recharts` (b2c-admin) | 3.8.1 | 3.10.1 | minor | tests mock recharts; eyeball `AnalyticsView` once. |
+| `react`, `react-dom` | 19.2.6 | 19.2.8 | patch | align with web. |
+| `@types/react`/`react-dom` | mixed | 19.2.18 / 19.2.4 | — | unify across apps. |
+| `react-error-boundary`, `@supercharge/promise-pool`(remove), `@dnd-kit/*` (already latest), `classnames`, `lodash.*`, `pluralize`, `slugify` | — | latest patch | — | `@dnd-kit/react` is still 0.x — no change. |
+| **remove** | `@sanity/portable-text-editor` (peer react ≤18, frozen since 2024), `react-portable-text` (peer react ≤17), `@portabletext/block-tools`, `@sanity/schema`, `@supercharge/promise-pool`, `sanity-plugin-icon-picker` (peer sanity ^3, pulls sanity@3.99), `sanity-plugin-bulk-actions-table` (peer sanity ^3; we use the vendored fork in `apps/studio/plugins/bulk-actions-table/`), `@sanity/sdk-react` (studio only), `jsdom` + `@types/jsdom` (no studio tests) | | | |
+| **add** | `rxjs ^7` (runtime: `plugins/bulk-actions-table/usePaginatedClient.ts` uses `rxjs/operators` on `client.listen()`), `csv-parse ^7` (18 script files; move from root), `sharp`, `uuid`, `node-html-parser`, `p-limit` (scripts) | | | |
+
+Code-level edits in studio: none required for the runtime. Normalise `useClient({ apiVersion })` (4 different values today) while touching files. Highest-risk surface = vendored `plugins/bulk-actions-table/` (Preview, `usePaneRouter`, `buildTheme` from `@sanity/ui/theme`, `client.listen().pipe()`, 6 styled-components files) — smoke-test the product table, bulk actions and the live counter after the bump.
+
+---
+
+## 4. Tooling / root
+
+| Package | Now | Target | Notes |
+|---|---|---|---|
+| `typescript` | 5.7.3 | **5.9.3** (matches Najbar/starter) | 6.0.3 is a mechanical option later (deprecates `baseUrl` in `apps/web/tsconfig.json` — paths work without it; `types: []` new default → add `"types": ["node"]`). 7.0.2 = Go port, no JS API, typescript-eslint says "not planned" → hold. Next 16.3 builds fine on 5.9/6/7. |
+| `turbo` | 2.6.0 | 2.10.11 | `globalEnv` unchanged; `$schema` → `https://turborepo.dev/schema.json` (`npx @turbo/codemod migrate`); `turbo-ignore` deprecated → check Vercel "Ignored Build Step". Add `NEXT_PUBLIC_SANITY_*` to `globalEnv` (read by `client.ts`/`next.config.ts`, currently untracked by the cache key) and a `test` task. |
+| `prettier` | 3.6.2 | 3.9.6 | no option changes; reformat diff in TS unions / SCSS `if()` / Markdown (remark→micromark) → **separate reformat commit**. |
+| `vite` (root devDep) | 7.3.3 | **8.2.2** or remove | root pin conflicts with web's `^8.0.8`; sanity 6 / cli 8 bring their own `^8`. |
+| `eslint` | 9.33.0 | **9.39.5** (hold 10) | see constraints. |
+| `@next/eslint-plugin-next` | 15.4.6 | **16.3.2** | a full major behind the framework today. |
+| `eslint-plugin-react-hooks` | 5.2.0 | **7.1.1** | config export shape changed (`configs.flat.recommended` / `configs['recommended-latest']`); `recommended` now includes **12 error-level React Compiler rules** (`set-state-in-effect`, `refs`, `purity`, `immutability`, …) → expect new warnings (we run `eslint-plugin-only-warn`, so non-blocking). Register react-hooks once (don't also spread `eslint-config-next`). |
+| `typescript-eslint` + `@typescript-eslint/*` | 8.39.1 | 8.67.0 | — |
+| `eslint-plugin-simple-import-sort` | 12.1.1 | 14.0.0 | deterministic ordering for same-source imports → run `--fix` once. |
+| `globals` | 16.3.0 | 17.11.0 | — |
+| `eslint-plugin-turbo` | 2.5.5 | 2.10.11 | match turbo. |
+| `eslint-plugin-only-warn`, `eslint-plugin-prettier`, `eslint-config-prettier`, `eslint-plugin-import`, `eslint-plugin-react` | — | latest 9-compatible | import/react are the ESLint-10 blockers. |
+| root `.eslintrc.js` | legacy, extends non-existent `@workspace/eslint-config/library.js` | delete | already broken; apps lint via their own flat configs. b2c-admin has **no** lint config/script — add (`react-internal` preset). |
+| `packageManager` | `bun@1.1.42` | `bun@1.3.2` | cosmetic (Vercel ignores `packageManager` for Bun; default build Bun is 1.3.x). **Do not move local Bun to 1.4** — it writes lockfile v2 that 1.3 can't read and Vercel 1.4 is opt-in only (`vercel.json` `bunVersion`). |
+| `engines.node` | `>=20` | `>=22.12` (root) + set Vercel project to **24.x** | Vercel reads the root-directory `package.json` (`apps/web`, no engines) → dashboard setting applies; 22.x today. |
+| `csv-parse` (root) | 6.1.0 | 7.0.2, **move to studio** | maintainer: 7.0 "published by mistake, no breaking changes". |
+
+---
+
+## 5. Hold list (with the unblock condition)
+
+| Package | Why hold | Unblocks when |
+|---|---|---|
+| `@sanity/client` 8.x | next-sanity 13 peers `^7.26.2`; sanity 6.10 uses 7.26 | next-sanity 14 (PR #3916) + sanity 6.11 ship |
+| `typescript` 7 | no JS API; typescript-eslint won't support it | never for lint; 6.0.3 is the practical ceiling |
+| ESLint 10 | `eslint-plugin-import` 2.32 / `eslint-plugin-react` 7.37 crash; `@sanity/eslint-config-studio` 6 peers ^9 | plugin releases (or swap to `eslint-plugin-import-x` + `@eslint-react`) |
+| `@sanity/ui` 4 / `@sanity/icons` 5 | wide mechanical churn (~200 prop edits, ~100 import rewrites, runtime tombstones) | dedicated PR after sanity 6 is stable |
+| `@types/node` 26 | Vercel has no Node 26 runtime | Vercel ships 26 |
+| `jsdom` 30 | engines exclude local Node 25; no upside | any time, optional |
+| `embla-carousel` 9 | RC with full API rename | GA |
+| Leaflet 2 | alpha, react-leaflet 5 doesn't support it | — |
+| Bun 1.4 | lockfile v2 incompatible with 1.3 / Vercel default | Vercel default moves to 1.4 |
+
+---
+
+## 6. Execution order (each step = one commit, build + tests green before the next)
+
+1. **Hygiene** — delete dead deps, add phantom deps, move `csv-parse`, unify `@types/react*`/`lucide-react`/`jsdom` versions, `packageManager bun@1.3.2`, `engines >=22.12`, delete root `.eslintrc.js`, fix `typegen` script to use studio's `--enforce-required-fields`. `bun install`, `bun run build`, `bun run check-types`.
+2. **Web runtime** — `next 16.3.2`, `react 19.2.8`, `next-sanity 13.3.3`, `@sanity/client 7.26.2`, `@sanity/image-url 2.1.1` (+1-line edit), `@portabletext/react ^7.0.1` (+8 import edits), `@portabletext/to-html 6`, `@supabase/*`, `lucide-react 1.33`, `zod 4.4.3`, `babel-plugin-react-compiler 1.0.0`, misc minors. `bun run typegen`. Run `bunx @next/codemod@canary upgrade latest` for the report only. Full `bun run build` (watch for the nested-`cacheLife` rule and sass deprecations), `test:run`, `test:e2e` (checkout + account flows), then deploy preview and re-measure `/marki/oladra/`.
+3. **Sanity** — `sanity 6.10.1`, `@sanity/vision 6.10.1`, root `@sanity/cli 8.2.1`, plugins (media 6.1.6, orderable 2.0.22, embeddings 4.0.17, assist 6.1.21), `@sanity/ui 3.5.3`, `@sanity/icons 3.8.0`, `styled-components 6.5.3`, `nanoid 6`, `@sanity/eslint-config-studio 6`, b2c-admin `@sanity/sdk-react 2.20.1` + `recharts 3.10.1`. `bun run typegen`, `sanity build` both apps (try without the 8 GB heap flag), smoke-test: product table (vendored bulk plugin), media tool, orderable lists, custom unpublish action, embeddings dashboard, b2c-admin login + orders. Then `sanity deploy` both.
+4. **Tooling** — TS 5.9.3, ESLint plugin set (react-hooks 7, next-plugin 16.3.2, ts-eslint 8.67, simple-import-sort 14, globals 17, turbo plugin), turbo 2.10 (+schema URL, `globalEnv` additions, `test` task), vitest/vite/msw/playwright/jest-dom(+`@testing-library/dom`). `bun run lint --fix` once.
+5. **Prettier 3.9.6** — separate pure-reformat commit (`bun run format`).
+6. Vercel dashboard: Node 24.x. Re-measure brand page TTFB before/after (baseline to be captured before step 2 — see milestone 2 doc).
+
+Follow-ups (not in this milestone): `@sanity/ui 4` + `@sanity/icons 5` pass; `@sanity/client 8` + next-sanity 14; TS 6.0; ESLint 10; b2c-admin lint config; `cookie-manager.ts` deep `next/dist` import; `vitest.config.ts` hardcoded `../../node_modules/react*` aliases.
+
+---
+
+## 7. Source notes
+
+Peer/engine data read from the npm registry on 2026-08-22 (`npm view … peerDependencies engines`). Release notes: nextjs.org/blog/next-16-1|16-2|16-3, github.com/vercel/next.js/releases (v16.3.1, v16.3.2) and security advisories; sanity-io/next-sanity `MIGRATE-v9-to-v10…v12-to-v13.md` + `src/live/*`; sanity-io/sanity v6.0.0 release + sanity.io/blog/sanity-studio-v6; sanity-io/ui `MIGRATION.md`; sanity-io/icons CHANGELOG (v4/v5); sanity-io/client CHANGELOG (8.0.0); sanity-io/image-url `MIGRATE-v1-to-v2.md`; sanity-io/plugins CHANGELOGs (media, orderable-document-list, embeddings-index-ui); sanity-io/cli releases (7.0.0, 8.0.0); sanity-io/sdk react CHANGELOG + issue #14236; supabase/ssr releases + `createServerClient.ts`; supabase-js releases; lucide.dev/guide/version-1; eslint.org migrate-to-10 + vercel/next.js#89764; typescript 6.0 / 7.0 announcements + typescript-eslint#12518; vite.dev/guide/migration; vercel.com docs on Node versions / Bun pinning / Node 20 deprecation.
