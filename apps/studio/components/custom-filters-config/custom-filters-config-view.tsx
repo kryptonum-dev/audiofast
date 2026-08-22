@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   closestCenter,
@@ -8,14 +8,14 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { AddIcon } from "@sanity/icons";
+} from '@dnd-kit/sortable';
+import { AddIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -25,14 +25,14 @@ import {
   Stack,
   Text,
   useToast,
-} from "@sanity/ui";
-import { Filter } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { SanityDocument } from "sanity";
-import { useClient } from "sanity";
+} from '@sanity/ui';
+import { Filter } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { SanityDocument } from 'sanity';
+import { useClient } from 'sanity';
 
-import { SortableFilterItem } from "../custom-filters-config/filter-item";
-import type { FilterConfigItem, RangeFilterStats } from "./types";
+import { SortableFilterItem } from '../custom-filters-config/filter-item';
+import type { FilterConfigItem, RangeFilterStats } from './types';
 
 type CustomFiltersConfigViewProps = {
   document: {
@@ -54,14 +54,13 @@ function generateKey(): string {
 export function CustomFiltersConfigView({
   document,
 }: CustomFiltersConfigViewProps) {
-  const client = useClient({ apiVersion: "2024-01-01" });
+  const client = useClient({ apiVersion: '2024-01-01' });
   const toast = useToast();
 
   // Get document info
   const documentId = document.displayed._id;
   const existingFilters = document.displayed.customFilters as
-    | FilterConfigItem[]
-    | undefined;
+    FilterConfigItem[] | undefined;
 
   // Local state for editing (optimistic updates)
   const [filters, setFilters] = useState<FilterConfigItem[]>([]);
@@ -69,8 +68,8 @@ export function CustomFiltersConfigView({
     Map<string, RangeFilterStats>
   >(new Map());
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
-  const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "error">(
-    "saved",
+  const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'error'>(
+    'saved',
   );
 
   // Track if initial load is complete (to avoid saving on mount)
@@ -120,7 +119,7 @@ export function CustomFiltersConfigView({
     }
 
     isSavingRef.current = true;
-    setSaveStatus("saving");
+    setSaveStatus('saving');
 
     try {
       const currentFilters = latestFiltersRef.current;
@@ -132,8 +131,8 @@ export function CustomFiltersConfigView({
       }));
 
       // Get the base document ID (without drafts. prefix)
-      const baseId = documentId.startsWith("drafts.")
-        ? documentId.replace("drafts.", "")
+      const baseId = documentId.startsWith('drafts.')
+        ? documentId.replace('drafts.', '')
         : documentId;
       const draftId = `drafts.${baseId}`;
 
@@ -170,20 +169,20 @@ export function CustomFiltersConfigView({
           ...restOfDocument,
           ...patchData,
           _id: draftId,
-          _type: "productCategorySub",
+          _type: 'productCategorySub',
         });
       }
 
       await transaction.commit();
 
-      setSaveStatus("saved");
+      setSaveStatus('saved');
     } catch (error) {
-      console.error("Error saving filters:", error);
-      setSaveStatus("error");
+      console.error('Error saving filters:', error);
+      setSaveStatus('error');
       toast.push({
-        status: "error",
-        title: "Błąd zapisu",
-        description: "Nie udało się zapisać. Spróbuj ponownie.",
+        status: 'error',
+        title: 'Błąd zapisu',
+        description: 'Nie udało się zapisać. Spróbuj ponownie.',
       });
     } finally {
       isSavingRef.current = false;
@@ -228,8 +227,8 @@ export function CustomFiltersConfigView({
     }
 
     try {
-      const categoryId = documentId.startsWith("drafts.")
-        ? documentId.replace("drafts.", "")
+      const categoryId = documentId.startsWith('drafts.')
+        ? documentId.replace('drafts.', '')
         : documentId;
 
       const products = await client.fetch<
@@ -254,7 +253,7 @@ export function CustomFiltersConfigView({
       const statsMap = new Map<string, RangeFilterStats>();
 
       filters.forEach((filter) => {
-        if (filter.filterType === "range") {
+        if (filter.filterType === 'range') {
           const numericValues = products
             .flatMap(
               (p) =>
@@ -277,7 +276,7 @@ export function CustomFiltersConfigView({
 
       setProductStats(statsMap);
     } catch (error) {
-      console.error("Error loading product stats:", error);
+      console.error('Error loading product stats:', error);
       setProductStats(new Map());
     }
   }, [filters, documentId, client]);
@@ -316,23 +315,20 @@ export function CustomFiltersConfigView({
     const newKey = generateKey();
     const newFilter: FilterConfigItem = {
       _key: newKey,
-      name: "",
-      filterType: "dropdown",
+      name: '',
+      filterType: 'dropdown',
     };
     setFilters([...filters, newFilter]);
   }, [filters]);
 
   // Update a filter (optimistic - instant UI update)
-  const handleUpdateFilter = useCallback(
-    (updatedFilter: FilterConfigItem) => {
-      setFilters((prevFilters) =>
-        prevFilters.map((f) =>
-          f._key === updatedFilter._key ? updatedFilter : f,
-        ),
-      );
-    },
-    [],
-  );
+  const handleUpdateFilter = useCallback((updatedFilter: FilterConfigItem) => {
+    setFilters((prevFilters) =>
+      prevFilters.map((f) =>
+        f._key === updatedFilter._key ? updatedFilter : f,
+      ),
+    );
+  }, []);
 
   // Request delete (shows confirmation)
   const handleRequestDelete = useCallback((index: number) => {
@@ -364,8 +360,8 @@ export function CustomFiltersConfigView({
     ): Promise<void> => {
       try {
         // Get base product ID (always without drafts prefix)
-        const baseProductId = productId.startsWith("drafts.")
-          ? productId.replace("drafts.", "")
+        const baseProductId = productId.startsWith('drafts.')
+          ? productId.replace('drafts.', '')
           : productId;
         const draftProductId = `drafts.${baseProductId}`;
 
@@ -400,7 +396,7 @@ export function CustomFiltersConfigView({
         const sourceProduct = publishedProduct || draftProduct;
 
         if (!sourceProduct) {
-          throw new Error("Product not found (neither published nor draft)");
+          throw new Error('Product not found (neither published nor draft)');
         }
 
         // Build the new customFilterValues array
@@ -436,8 +432,7 @@ export function CustomFiltersConfigView({
         }
 
         const patchData = {
-          customFilterValues:
-            newFilterValues.length > 0 ? newFilterValues : [],
+          customFilterValues: newFilterValues.length > 0 ? newFilterValues : [],
         };
 
         const transaction = client.transaction();
@@ -462,11 +457,11 @@ export function CustomFiltersConfigView({
         // Refresh stats after saving
         loadProductStats();
       } catch (error) {
-        console.error("Error saving product filter value:", error);
+        console.error('Error saving product filter value:', error);
         toast.push({
-          status: "error",
-          title: "Błąd zapisu",
-          description: "Nie udało się zapisać wartości filtra dla produktu.",
+          status: 'error',
+          title: 'Błąd zapisu',
+          description: 'Nie udało się zapisać wartości filtra dla produktu.',
         });
         throw error;
       }
@@ -484,18 +479,18 @@ export function CustomFiltersConfigView({
               <Text size={3} weight="bold">
                 Konfiguracja filtrów
               </Text>
-              {saveStatus === "saving" && (
+              {saveStatus === 'saving' && (
                 <Text size={1} muted>
                   Zapisywanie...
                 </Text>
               )}
-              {saveStatus === "saved" && filters.length > 0 && (
-                <Text size={1} muted style={{ color: "green" }}>
+              {saveStatus === 'saved' && filters.length > 0 && (
+                <Text size={1} muted style={{ color: 'green' }}>
                   ✓ Zapisano
                 </Text>
               )}
-              {saveStatus === "error" && (
-                <Text size={1} style={{ color: "red" }}>
+              {saveStatus === 'error' && (
+                <Text size={1} style={{ color: 'red' }}>
                   ✕ Błąd zapisu
                 </Text>
               )}
@@ -571,7 +566,7 @@ export function CustomFiltersConfigView({
               <Stack space={4}>
                 <Text size={2}>
                   Czy na pewno chcesz usunąć filtr &ldquo;
-                  <strong>{filters[deletingIndex]?.name || "Bez nazwy"}</strong>
+                  <strong>{filters[deletingIndex]?.name || 'Bez nazwy'}</strong>
                   &rdquo;?
                 </Text>
                 <Text size={1} muted>
@@ -611,8 +606,8 @@ export function CustomFiltersConfigView({
                 wartości (np. impedancja 4-16Ω, moc 10-100W)
               </Text>
               <Text size={1} muted>
-                • Kliknij &ldquo;Wartości produktów&rdquo; aby przypisać wartości
-                do produktów w tej kategorii
+                • Kliknij &ldquo;Wartości produktów&rdquo; aby przypisać
+                wartości do produktów w tej kategorii
               </Text>
             </Stack>
           </Card>

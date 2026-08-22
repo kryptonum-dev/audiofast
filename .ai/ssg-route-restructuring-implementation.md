@@ -1376,7 +1376,7 @@ export function ProductsSidebar({
  */
 export function buildFilterUrl(
   baseUrl: string,
-  filters: Record<string, string | string[] | undefined>
+  filters: Record<string, string | string[] | undefined>,
 ): string {
   const params = new URLSearchParams();
 
@@ -1399,7 +1399,7 @@ export function buildFilterUrl(
  * Parse search params into typed filter object
  */
 export function parseSearchParams(
-  params: Record<string, string | string[] | undefined>
+  params: Record<string, string | string[] | undefined>,
 ) {
   return {
     page: parseInt(String(params.page || '1'), 10),
@@ -1419,7 +1419,7 @@ export function parseSearchParams(
  * Parse custom filter params (e.g., kolor=czarny,bialy)
  */
 function parseCustomFilters(
-  params: Record<string, string | string[] | undefined>
+  params: Record<string, string | string[] | undefined>,
 ): Array<{ filterName: string; value: string }> {
   const customFilters: Array<{ filterName: string; value: string }> = [];
 

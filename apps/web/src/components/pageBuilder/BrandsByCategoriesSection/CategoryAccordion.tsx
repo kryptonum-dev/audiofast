@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
-import type { BrandType } from "@/src/global/types";
+import type { BrandType } from '@/src/global/types';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
 type CategoryWithBrands = {
   _id: string;
@@ -46,14 +46,14 @@ export default function CategoryAccordion({
     checkScroll();
 
     // Check on scroll
-    container.addEventListener("scroll", checkScroll);
+    container.addEventListener('scroll', checkScroll);
 
     // Check on resize (in case content changes)
     const resizeObserver = new ResizeObserver(checkScroll);
     resizeObserver.observe(container);
 
     return () => {
-      container.removeEventListener("scroll", checkScroll);
+      container.removeEventListener('scroll', checkScroll);
       resizeObserver.disconnect();
     };
   }, []);
@@ -74,7 +74,7 @@ export default function CategoryAccordion({
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+          if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             handleToggle();
           }

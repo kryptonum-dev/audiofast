@@ -38,7 +38,9 @@ export default function TwoColumnContent({
 }: TwoColumnContentProps) {
   // Check content availability with priority order
   const hasUnifiedContent =
-    unifiedContent && Array.isArray(unifiedContent) && unifiedContent.length > 0;
+    unifiedContent &&
+    Array.isArray(unifiedContent) &&
+    unifiedContent.length > 0;
   const hasContentBlocks =
     contentBlocks && Array.isArray(contentBlocks) && contentBlocks.length > 0;
   const hasLegacyContent =

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { TrashIcon } from "@sanity/icons";
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { TrashIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -12,12 +12,12 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { Grip } from "lucide-react";
-import type { SanityClient } from "sanity";
+} from '@sanity/ui';
+import { Grip } from 'lucide-react';
+import type { SanityClient } from 'sanity';
 
-import { ProductFilterValues } from "./product-filter-values";
-import type { FilterConfigItem, RangeFilterStats } from "./types";
+import { ProductFilterValues } from './product-filter-values';
+import type { FilterConfigItem, RangeFilterStats } from './types';
 
 interface SortableFilterItemProps {
   id: string;
@@ -64,12 +64,12 @@ export function SortableFilterItem({
     onUpdate({ ...filter, name });
   };
 
-  const handleTypeChange = (filterType: "dropdown" | "range") => {
+  const handleTypeChange = (filterType: 'dropdown' | 'range') => {
     onUpdate({
       ...filter,
       filterType,
       // Clear unit if switching to dropdown
-      unit: filterType === "dropdown" ? undefined : filter.unit,
+      unit: filterType === 'dropdown' ? undefined : filter.unit,
     });
   };
 
@@ -83,7 +83,7 @@ export function SortableFilterItem({
         border
         padding={3}
         radius={2}
-        tone={isDragging ? "primary" : "default"}
+        tone={isDragging ? 'primary' : 'default'}
       >
         <Stack space={3}>
           {/* Main row with drag handle, name input, and actions */}
@@ -92,7 +92,7 @@ export function SortableFilterItem({
             <Box
               {...attributes}
               {...listeners}
-              style={{ cursor: "grab", opacity: 0.5, flexShrink: 0 }}
+              style={{ cursor: 'grab', opacity: 0.5, flexShrink: 0 }}
             >
               <Grip size={20} />
             </Box>
@@ -100,7 +100,7 @@ export function SortableFilterItem({
             {/* Filter Name */}
             <Box flex={1}>
               <TextInput
-                value={filter.name || ""}
+                value={filter.name || ''}
                 onChange={(e) => handleNameChange(e.currentTarget.value)}
                 placeholder="Nazwa filtra (np. Impedancja)"
                 fontSize={2}
@@ -108,12 +108,12 @@ export function SortableFilterItem({
             </Box>
 
             {/* Filter Type Select */}
-            <Box style={{ width: "180px", flexShrink: 0 }}>
+            <Box style={{ width: '180px', flexShrink: 0 }}>
               <Select
                 value={filter.filterType}
                 onChange={(e) =>
                   handleTypeChange(
-                    e.currentTarget.value as "dropdown" | "range",
+                    e.currentTarget.value as 'dropdown' | 'range',
                   )
                 }
                 fontSize={1}
@@ -124,10 +124,10 @@ export function SortableFilterItem({
             </Box>
 
             {/* Unit Input (only for range) */}
-            {filter.filterType === "range" && (
-              <Box style={{ width: "80px", flexShrink: 0 }}>
+            {filter.filterType === 'range' && (
+              <Box style={{ width: '80px', flexShrink: 0 }}>
                 <TextInput
-                  value={filter.unit || ""}
+                  value={filter.unit || ''}
                   onChange={(e) => handleUnitChange(e.currentTarget.value)}
                   placeholder="Jednostka"
                   fontSize={1}
@@ -147,10 +147,10 @@ export function SortableFilterItem({
           </Flex>
 
           {/* Range stats info */}
-          {filter.filterType === "range" && rangeStats && (
+          {filter.filterType === 'range' && rangeStats && (
             <Text size={1} muted>
               Zakres z produktów: {rangeStats.min} - {rangeStats.max}
-              {filter.unit ? ` ${filter.unit}` : ""} ({rangeStats.productCount}{" "}
+              {filter.unit ? ` ${filter.unit}` : ''} ({rangeStats.productCount}{' '}
               produktów)
             </Text>
           )}

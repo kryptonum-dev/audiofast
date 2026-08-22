@@ -1,14 +1,14 @@
-import NextImage from "next/image";
-import type { PortableTextTypeComponentProps } from "@portabletext/react";
+import NextImage from 'next/image';
+import type { PortableTextTypeComponentProps } from '@portabletext/react';
 
-import type { PortableTextProps } from "@/src/global/types";
+import type { PortableTextProps } from '@/src/global/types';
 
-import Image from "../../shared/Image";
-import styles from "../YouTubeVideo/styles.module.scss";
-import { VimeoVideoClient } from "./VimeoVideoClient";
+import Image from '../../shared/Image';
+import styles from '../YouTubeVideo/styles.module.scss';
+import { VimeoVideoClient } from './VimeoVideoClient';
 
 type VimeoVideoValue = NonNullable<PortableTextProps>[number] & {
-  _type: "ptVimeoVideo";
+  _type: 'ptVimeoVideo';
 };
 
 /**
@@ -20,9 +20,9 @@ async function fetchVimeoTitle(vimeoId: string): Promise<string | null> {
     const oEmbedUrl = `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`;
 
     const response = await fetch(oEmbedUrl, {
-      cache: "force-cache",
+      cache: 'force-cache',
       headers: {
-        "User-Agent": "Audiofast-Website/1.0",
+        'User-Agent': 'Audiofast-Website/1.0',
       },
     });
 
@@ -48,9 +48,9 @@ async function getVimeoThumbnailUrl(
     const oEmbedUrl = `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${vimeoId}`;
 
     const response = await fetch(oEmbedUrl, {
-      cache: "force-cache",
+      cache: 'force-cache',
       headers: {
-        "User-Agent": "Audiofast-Website/1.0",
+        'User-Agent': 'Audiofast-Website/1.0',
       },
     });
 
@@ -64,7 +64,7 @@ async function getVimeoThumbnailUrl(
     const thumbnailUrl = data?.thumbnail_url;
     if (thumbnailUrl) {
       // Replace the size in URL to get higher resolution (default is 640)
-      return thumbnailUrl.replace(/_\d+x\d+/, "_1280x720");
+      return thumbnailUrl.replace(/_\d+x\d+/, '_1280x720');
     }
     return undefined;
   } catch {
@@ -91,7 +91,7 @@ export async function VimeoVideoComponent({
   }
 
   const imageSizes =
-    "(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 43vw, 587px";
+    '(max-width: 33.6875rem) 98vw, (max-width: 56.1875rem) 86vw, (max-width: 85.375rem) 43vw, 587px';
 
   return (
     <div className={styles.youtubeVideo}>
@@ -102,7 +102,7 @@ export async function VimeoVideoComponent({
           sizes={imageSizes}
           loading="lazy"
           fill
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: 'cover' }}
         />
       ) : thumbnailUrl ? (
         <NextImage
@@ -111,7 +111,7 @@ export async function VimeoVideoComponent({
           className={styles.thumbnail}
           loading="lazy"
           fill
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: 'cover' }}
         />
       ) : (
         <div className={styles.placeholder}>

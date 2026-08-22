@@ -1,5 +1,5 @@
-import { ChevronLeftIcon, ChevronRightIcon } from "@sanity/icons";
-import { Box, Button, Card, Flex, Inline, Select, Text } from "@sanity/ui";
+import { ChevronLeftIcon, ChevronRightIcon } from '@sanity/icons';
+import { Box, Button, Card, Flex, Inline, Select, Text } from '@sanity/ui';
 
 type AdminPaginationProps = {
   disabled?: boolean;
@@ -14,7 +14,7 @@ type AdminPaginationProps = {
 };
 
 type PageSelectItem = {
-  kind: "select";
+  kind: 'select';
   from: number;
   to: number;
 };
@@ -44,7 +44,7 @@ export function AdminPagination({
       <Card border radius={2}>
         <Flex align="center" justify="space-between" padding={3} wrap="wrap">
           <Text muted size={1}>
-            {firstVisibleItem}-{lastVisibleItem} z {pagination.totalCount}{" "}
+            {firstVisibleItem}-{lastVisibleItem} z {pagination.totalCount}{' '}
             {itemLabel}
           </Text>
 
@@ -59,7 +59,7 @@ export function AdminPagination({
               type="button"
             />
             {pageItems.map((item) =>
-              typeof item !== "number" ? (
+              typeof item !== 'number' ? (
                 <Select
                   aria-label="Wybierz stronę"
                   disabled={disabled}
@@ -88,7 +88,7 @@ export function AdminPagination({
                 <Button
                   key={item}
                   disabled={disabled}
-                  mode={item === currentPage ? "default" : "bleed"}
+                  mode={item === currentPage ? 'default' : 'bleed'}
                   onClick={() => onPageChange(item)}
                   padding={2}
                   selected={item === currentPage}
@@ -127,9 +127,9 @@ function buildPageItems(currentPage: number, totalPages: number): PageItem[] {
   for (const page of sortedPages) {
     const previous = items.at(-1);
 
-    if (typeof previous === "number" && page - previous > 1) {
+    if (typeof previous === 'number' && page - previous > 1) {
       items.push({
-        kind: "select",
+        kind: 'select',
         from: previous + 1,
         to: page - 1,
       });

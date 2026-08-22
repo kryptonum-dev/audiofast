@@ -1,4 +1,4 @@
-import { LaunchIcon, SearchIcon } from "@sanity/icons";
+import { LaunchIcon, SearchIcon } from '@sanity/icons';
 import {
   Badge,
   Box,
@@ -12,12 +12,12 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { type KeyboardEvent, useMemo, useState } from "react";
+} from '@sanity/ui';
+import { type KeyboardEvent, useMemo, useState } from 'react';
 
-import { sanityAppConfig } from "../../config.js";
-import type { AdminCouponProductOption } from "../types.js";
-import { SanityThumbnail } from "./SanityThumbnail.js";
+import { sanityAppConfig } from '../../config.js';
+import type { AdminCouponProductOption } from '../types.js';
+import { SanityThumbnail } from './SanityThumbnail.js';
 
 type CouponProductPickerProps = {
   disabled?: boolean;
@@ -36,7 +36,7 @@ export function CouponProductPicker({
   products,
   selectedProductKeys,
 }: CouponProductPickerProps) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const selectedKeys = useMemo(
     () => new Set(selectedProductKeys),
     [selectedProductKeys],
@@ -47,7 +47,7 @@ export function CouponProductPicker({
   const filteredProducts = products.filter((product) =>
     [product.productName, product.brandName, product.productKey]
       .filter(Boolean)
-      .join(" ")
+      .join(' ')
       .toLowerCase()
       .includes(search.trim().toLowerCase()),
   );
@@ -141,7 +141,7 @@ export function CouponProductPicker({
           <Box
             style={{
               maxHeight: 360,
-              overflow: "auto",
+              overflow: 'auto',
             }}
           >
             <Stack space={2}>
@@ -163,7 +163,7 @@ export function CouponProductPicker({
                         return;
                       }
 
-                      if (event.key === "Enter" || event.key === " ") {
+                      if (event.key === 'Enter' || event.key === ' ') {
                         event.preventDefault();
                         toggleProduct(product);
                       }
@@ -173,12 +173,12 @@ export function CouponProductPicker({
                     radius={2}
                     role="button"
                     style={{
-                      cursor: disabled ? "default" : "pointer",
-                      textAlign: "left",
-                      width: "100%",
+                      cursor: disabled ? 'default' : 'pointer',
+                      textAlign: 'left',
+                      width: '100%',
                     }}
                     tabIndex={disabled ? -1 : 0}
-                    tone={isSelected ? "primary" : "default"}
+                    tone={isSelected ? 'primary' : 'default'}
                   >
                     <Flex align="center" gap={3}>
                       <Checkbox checked={isSelected} readOnly />
@@ -196,7 +196,7 @@ export function CouponProductPicker({
                             {productLabel}
                           </Text>
                           <Badge fontSize={1} padding={2}>
-                            {product.lineType === "cpo" ? "CPO" : "Produkt"}
+                            {product.lineType === 'cpo' ? 'CPO' : 'Produkt'}
                           </Badge>
                         </Flex>
                       </Stack>
@@ -222,7 +222,7 @@ export function CouponProductPicker({
 }
 
 function buildSanityDocumentHref(product: AdminCouponProductOption): string {
-  const schemaType = product.lineType === "cpo" ? "cpoProduct" : "product";
+  const schemaType = product.lineType === 'cpo' ? 'cpoProduct' : 'product';
   const documentId = encodeURIComponent(product.id);
 
   return `${sanityAppConfig.studioUrl}/intent/edit/id=${documentId};type=${schemaType}`;

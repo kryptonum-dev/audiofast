@@ -1,9 +1,9 @@
-import { useCallback, useRef, useState } from "react";
-import type { DocumentActionComponent, DocumentActionsContext } from "sanity";
-import { useClient } from "sanity";
+import { useCallback, useRef, useState } from 'react';
+import type { DocumentActionComponent, DocumentActionsContext } from 'sanity';
+import { useClient } from 'sanity';
 
-import { computeDenormalizedFields } from "../utils/denormalize-product";
-import { fetchReviewAuthorCounts } from "../utils/review-author-counts";
+import { computeDenormalizedFields } from '../utils/denormalize-product';
+import { fetchReviewAuthorCounts } from '../utils/review-author-counts';
 
 async function syncReviewAuthorCounts(
   client: ReturnType<typeof useClient>,
@@ -22,7 +22,7 @@ async function syncReviewAuthorCounts(
     });
   }
 
-  await tx.commit({ visibility: "sync" });
+  await tx.commit({ visibility: 'sync' });
 }
 
 /**
@@ -34,7 +34,7 @@ export function wrapPublishWithDenorm(
 ): DocumentActionComponent {
   const WrappedAction: DocumentActionComponent = (props) => {
     const { draft, published, id, type } = props;
-    const client = useClient({ apiVersion: "2024-01-01" });
+    const client = useClient({ apiVersion: '2024-01-01' });
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Get the original action result
@@ -57,13 +57,11 @@ export function wrapPublishWithDenorm(
 
       try {
         // Review publish flow: sync author counters after publish completes.
-        if (type === "review") {
+        if (type === 'review') {
           const previousAuthorId = (published as any)?.author?._ref as
-            | string
-            | undefined;
+            string | undefined;
           const nextAuthorId = (draft as any)?.author?._ref as
-            | string
-            | undefined;
+            string | undefined;
           const affectedAuthorIds = [previousAuthorId, nextAuthorId].filter(
             Boolean,
           ) as string[];
@@ -72,15 +70,20 @@ export function wrapPublishWithDenorm(
 
           // Publish action is async in Studio internals; delay recount slightly.
           setTimeout(() => {
-            void syncReviewAuthorCounts(client, affectedAuthorIds).catch((error) => {
-              console.error("Failed to sync reviewAuthor counts after publish:", error);
-            });
+            void syncReviewAuthorCounts(client, affectedAuthorIds).catch(
+              (error) => {
+                console.error(
+                  'Failed to sync reviewAuthor counts after publish:',
+                  error,
+                );
+              },
+            );
           }, 800);
 
           return;
         }
 
-        if (type !== "product") {
+        if (type !== 'product') {
           originalOnHandleRef.current?.();
           return;
         }
@@ -99,13 +102,13 @@ export function wrapPublishWithDenorm(
         await client
           .patch(`drafts.${id}`)
           .set(denormalized)
-          .commit({ visibility: "sync" });
+          .commit({ visibility: 'sync' });
 
         // Step 3: Execute the original publish using the latest handler, which
         // now reflects the patched draft state received via the realtime listener.
         originalOnHandleRef.current?.();
       } catch (error) {
-        console.error("Failed to denormalize before publish:", error);
+        console.error('Failed to denormalize before publish:', error);
         // Still try to publish even if denormalization fails
         originalOnHandleRef.current?.();
       } finally {
@@ -121,7 +124,7 @@ export function wrapPublishWithDenorm(
     return {
       ...originalResult,
       // Keep original label but show processing state
-      label: isProcessing ? "Publishing..." : originalResult.label,
+      label: isProcessing ? 'Publishing...' : originalResult.label,
       disabled: isProcessing || originalResult.disabled,
       onHandle: wrappedOnHandle,
     };
@@ -138,13 +141,13 @@ export function applyDenormToPublish(
   context: DocumentActionsContext,
 ): DocumentActionComponent[] {
   // Wrap for product and review documents.
-  if (!["product", "review"].includes(context.schemaType)) {
+  if (!['product', 'review'].includes(context.schemaType)) {
     return actions;
   }
 
   return actions.map((action) => {
     // Wrap the publish action
-    if (action.action === "publish") {
+    if (action.action === 'publish') {
       return wrapPublishWithDenorm(action);
     }
     return action;

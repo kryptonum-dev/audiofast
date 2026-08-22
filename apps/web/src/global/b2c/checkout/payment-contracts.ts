@@ -21,12 +21,7 @@ export type P24TransactionRegisterCartItem = {
 };
 
 export type P24TransactionNotificationStatus =
-  | 'done'
-  | 'pending'
-  | 'submitted'
-  | 'rejected'
-  | 'scheduled'
-  | 'cancelled';
+  'done' | 'pending' | 'submitted' | 'rejected' | 'scheduled' | 'cancelled';
 
 export type P24TransactionRegistrationInput = {
   provider: CheckoutPaymentProvider;
@@ -68,11 +63,7 @@ export type P24TransactionRegistrationResult = {
 };
 
 export type P24ReturnStatus =
-  | 'success'
-  | 'failure'
-  | 'cancel'
-  | 'pending'
-  | 'unknown';
+  'success' | 'failure' | 'cancel' | 'pending' | 'unknown';
 
 export type P24ReturnState = {
   provider: CheckoutPaymentProvider;

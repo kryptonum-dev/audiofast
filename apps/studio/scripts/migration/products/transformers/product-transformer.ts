@@ -9,7 +9,7 @@
  * - Reference resolution (brand, categories, reviews)
  */
 
-import type { SanityClient } from "@sanity/client";
+import type { SanityClient } from '@sanity/client';
 
 import {
   createHorizontalLine,
@@ -22,8 +22,8 @@ import {
   htmlToPortableText,
   type ImagePlaceholder,
   type ReviewEmbedPlaceholder,
-} from "../parser/html-to-portable-text";
-import { parseTechnicalData } from "../parser/technical-data-parser";
+} from '../parser/html-to-portable-text';
+import { parseTechnicalData } from '../parser/technical-data-parser';
 import type {
   ContentBlockText,
   DetailsContentBlock,
@@ -37,19 +37,19 @@ import type {
   SanityImageRef,
   SanityProduct,
   SanityReference,
-} from "../types";
+} from '../types';
 import {
   getLegacyAssetUrl,
   processAndUploadImage,
   processImageDryRun,
-} from "../utils/image-optimizer";
+} from '../utils/image-optimizer';
 import {
   loadLegacyReviewIdMappings,
   resolveBrandReference,
   resolveCategoryReferences,
   resolveReviewByLegacyId,
   resolveReviewReferences,
-} from "./reference-resolver";
+} from './reference-resolver';
 
 // ============================================================================
 // Helpers
@@ -78,9 +78,9 @@ async function transformMainImage(
   if (dryRun) {
     const result = processImageDryRun(imageUrl);
     return {
-      _type: "image",
+      _type: 'image',
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: result.assetId,
       },
     };
@@ -89,15 +89,15 @@ async function transformMainImage(
   if (!client) return undefined;
 
   const result = await processAndUploadImage(imageUrl, client, imageCache, {
-    imageType: "preview",
+    imageType: 'preview',
   });
 
   if (!result) return undefined;
 
   return {
-    _type: "image",
+    _type: 'image',
     asset: {
-      _type: "reference",
+      _type: 'reference',
       _ref: result.assetId,
     },
   };
@@ -127,10 +127,10 @@ async function transformGalleryImages(
     if (dryRun) {
       const result = processImageDryRun(imageUrl);
       galleryImages.push({
-        _type: "image",
+        _type: 'image',
         _key: generateKey(),
         asset: {
-          _type: "reference",
+          _type: 'reference',
           _ref: result.assetId,
         },
       });
@@ -140,15 +140,15 @@ async function transformGalleryImages(
     if (!client) continue;
 
     const result = await processAndUploadImage(imageUrl, client, imageCache, {
-      imageType: "gallery",
+      imageType: 'gallery',
     });
 
     if (result) {
       galleryImages.push({
-        _type: "image",
+        _type: 'image',
         _key: generateKey(),
         asset: {
-          _type: "reference",
+          _type: 'reference',
           _ref: result.assetId,
         },
       });
@@ -169,7 +169,7 @@ function createContentBlockText(
   content: PortableTextContent[],
 ): ContentBlockText {
   return {
-    _type: "contentBlockText",
+    _type: 'contentBlockText',
     _key: generateKey(),
     content,
   };
@@ -187,7 +187,7 @@ async function transformContentBoxes(
     const boxType = box.BoxType?.toLowerCase();
 
     switch (boxType) {
-      case "text": {
+      case 'text': {
         // Parse HTML content to Portable Text
         if (box.BoxContent) {
           const parsed = htmlToPortableText(box.BoxContent);
@@ -195,12 +195,12 @@ async function transformContentBoxes(
 
           // Process parsed content and handle placeholders (images, review embeds)
           for (const block of parsed) {
-            if (block._type === "imagePlaceholder") {
+            if (block._type === 'imagePlaceholder') {
               const placeholder = block as ImagePlaceholder;
 
               // Determine image type based on whether it's inline (floating)
               const isInlineImage = !!placeholder.float;
-              const imageType = isInlineImage ? "inline" : "content";
+              const imageType = isInlineImage ? 'inline' : 'content';
 
               if (dryRun) {
                 const result = processImageDryRun(placeholder.src);
@@ -208,9 +208,9 @@ async function transformContentBoxes(
                 if (placeholder.float) {
                   const widthStr = placeholder.width
                     ? ` w=${placeholder.width}px`
-                    : "";
+                    : '';
                   console.log(
-                    `   🖼️  Inline image (float: ${placeholder.float}${widthStr}): ${placeholder.src.split("/").pop()}`,
+                    `   🖼️  Inline image (float: ${placeholder.float}${widthStr}): ${placeholder.src.split('/').pop()}`,
                   );
                   portableTextContent.push(
                     createInlineImageBlock(
@@ -237,7 +237,7 @@ async function transformContentBoxes(
                   if (placeholder.float) {
                     const widthStr = placeholder.width
                       ? ` w=${placeholder.width}px`
-                      : "";
+                      : '';
                     console.log(
                       `   🖼️  Inline image (float: ${placeholder.float}${widthStr}): ${result.filename}`,
                     );
@@ -257,8 +257,8 @@ async function transformContentBoxes(
                 }
               }
             } else if (
-              block._type === "ptReviewEmbed" &&
-              "legacyReviewId" in block
+              block._type === 'ptReviewEmbed' &&
+              'legacyReviewId' in block
             ) {
               // Resolve legacy review ID to Sanity reference
               const placeholder = block as unknown as ReviewEmbedPlaceholder;
@@ -271,7 +271,7 @@ async function transformContentBoxes(
                   `   📰 Resolved review embed: legacy ID ${placeholder.legacyReviewId} → ${reviewRef._ref}`,
                 );
                 portableTextContent.push({
-                  _type: "ptReviewEmbed",
+                  _type: 'ptReviewEmbed',
                   _key: placeholder._key,
                   review: reviewRef,
                 } as PtReviewEmbed);
@@ -293,12 +293,12 @@ async function transformContentBoxes(
         break;
       }
 
-      case "hr": {
+      case 'hr': {
         contentBlocks.push(createHorizontalLine());
         break;
       }
 
-      case "video": {
+      case 'video': {
         if (box.YoutubeId) {
           // YoutubeId is now directly provided in the CSV
           contentBlocks.push(createYoutubeBlock(box.YoutubeId));
@@ -344,10 +344,10 @@ export async function transformProduct(
   // 1. Basic fields
   const product: SanityProduct = {
     _id: `product-${source.id}`,
-    _type: "product",
+    _type: 'product',
     name: source.name,
     slug: {
-      _type: "slug",
+      _type: 'slug',
       current: `/produkty/${source.slug.toLowerCase()}/`,
     },
     isArchived: source.isArchived,
@@ -361,7 +361,7 @@ export async function transformProduct(
   }
 
   // 3. Main preview image
-  if (verbose) console.log("   📷 Processing main image...");
+  if (verbose) console.log('   📷 Processing main image...');
   const previewImage = await transformMainImage(
     source.mainImageFilename,
     client,
@@ -397,7 +397,7 @@ export async function transformProduct(
 
   // 4b. Article data (shortDescription and publicationImage)
   if (source.articleData) {
-    if (verbose) console.log("   📰 Processing article data...");
+    if (verbose) console.log('   📰 Processing article data...');
 
     // Parse ShortDescription HTML to Portable Text
     if (source.articleData.ShortDescription) {
@@ -406,11 +406,12 @@ export async function transformProduct(
       );
       // Extract only PortableTextBlock items (not images, videos, etc.)
       const textBlocks = descriptionBlocks.filter(
-        (block): block is PortableTextBlock => block._type === "block",
+        (block): block is PortableTextBlock => block._type === 'block',
       );
       if (textBlocks.length > 0) {
         product.shortDescription = textBlocks;
-        if (verbose) console.log(`   ✓ Short description: ${textBlocks.length} blocks`);
+        if (verbose)
+          console.log(`   ✓ Short description: ${textBlocks.length} blocks`);
       }
     }
 
@@ -424,7 +425,7 @@ export async function transformProduct(
       );
       if (publicationImage) {
         product.publicationImage = publicationImage;
-        if (verbose) console.log("   ✓ Publication image uploaded");
+        if (verbose) console.log('   ✓ Publication image uploaded');
       }
     }
   }
@@ -489,7 +490,7 @@ export async function transformProduct(
           `   ✓ Technical data: ${technicalData.groups.length} groups, ${totalRows} rows`,
         );
         if (technicalData.variants && technicalData.variants.length > 0) {
-          console.log(`   ✓ Variants: ${technicalData.variants.join(", ")}`);
+          console.log(`   ✓ Variants: ${technicalData.variants.join(', ')}`);
         }
       }
     }
@@ -534,7 +535,7 @@ export async function transformProduct(
   // 12. SEO (title only, description empty)
   product.seo = {
     title: source.name,
-    description: "", // Intentionally empty per migration plan
+    description: '', // Intentionally empty per migration plan
   };
 
   return product;
@@ -553,21 +554,21 @@ export function validateProduct(product: SanityProduct): {
 
   // Required fields
   if (!product.name) {
-    errors.push("Missing required field: name");
+    errors.push('Missing required field: name');
   }
   if (!product.slug?.current) {
-    errors.push("Missing required field: slug");
+    errors.push('Missing required field: slug');
   }
 
   // Recommended fields
   if (!product.previewImage) {
-    warnings.push("No preview image set");
+    warnings.push('No preview image set');
   }
   if (!product.brand) {
-    warnings.push("No brand reference");
+    warnings.push('No brand reference');
   }
   if (!product.categories || product.categories.length === 0) {
-    warnings.push("No category references");
+    warnings.push('No category references');
   }
 
   return {
@@ -591,15 +592,15 @@ export function getProductSummary(product: SanityProduct): string {
     `ID: ${product._id}`,
     `Name: ${product.name}`,
     `Slug: ${product.slug.current}`,
-    `Preview: ${product.previewImage ? "✓" : "✗"}`,
+    `Preview: ${product.previewImage ? '✓' : '✗'}`,
     `Gallery: ${product.imageGallery?.length || 0}`,
-    `ShortDesc: ${product.shortDescription ? "✓" : "✗"}`,
-    `PubImg: ${product.publicationImage ? "✓" : "✗"}`,
-    `Brand: ${product.brand ? "✓" : "✗"}`,
+    `ShortDesc: ${product.shortDescription ? '✓' : '✗'}`,
+    `PubImg: ${product.publicationImage ? '✓' : '✗'}`,
+    `Brand: ${product.brand ? '✓' : '✗'}`,
     `Categories: ${product.categories?.length || 0}`,
     `Content blocks: ${product.details?.content?.length || 0}`,
-    `Tech data: ${techDataGroups}g/${techDataRows}r${techDataVariants > 0 ? `/${techDataVariants}v` : ""}`,
+    `Tech data: ${techDataGroups}g/${techDataRows}r${techDataVariants > 0 ? `/${techDataVariants}v` : ''}`,
     `Reviews: ${product.reviews?.length || 0}`,
   ];
-  return parts.join(" | ");
+  return parts.join(' | ');
 }

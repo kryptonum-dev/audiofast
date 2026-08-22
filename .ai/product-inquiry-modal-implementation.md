@@ -9,6 +9,7 @@ This document outlines the implementation strategy for adding a product inquiry 
 ## Problem Statement
 
 **Current behavior:**
+
 1. User visits a product page (e.g., `/produkty/some-product/`)
 2. User configures product options (selects variants, adjusts quantities)
 3. User clicks "Zapytaj o produkt" button
@@ -17,6 +18,7 @@ This document outlines the implementation strategy for adding a product inquiry 
 6. User must manually type product information in the message
 
 **Proposed behavior:**
+
 1. User visits a product page
 2. User configures product options
 3. User clicks "Zapytaj o produkt" button
@@ -34,11 +36,13 @@ This document outlines the implementation strategy for adding a product inquiry 
 **Location:** `apps/web/src/components/products/ProductInquiryModal/`
 
 **Files to create:**
+
 - `index.tsx` - Main modal component
 - `styles.module.scss` - Modal styles
 - `ProductInquiryForm.tsx` - Form component (client-side)
 
 **Modal Features:**
+
 - Overlay with backdrop blur (matching existing modal patterns)
 - Escape key to close (with unsaved changes check)
 - Click outside to close (with unsaved changes check)
@@ -49,24 +53,28 @@ This document outlines the implementation strategy for adding a product inquiry 
 - **Stays open after success:** User manually closes modal after seeing success state
 
 **Form Fields (identical to ContactForm):**
+
 - `name` - "Imię i nazwisko" (required, min 2 chars)
 - `email` - "Adres e-mail" (required, email regex validation)
 - `message` - "Twoja wiadomość" (required, min 10 chars, textarea)
 - `consent` - Privacy policy checkbox (required)
 
 **Form States (using existing FormStates component):**
+
 - `idle` - Default form state
 - `loading` - During submission (all fields disabled)
 - `success` - After successful submission (show success message, allow user to close)
 - `error` - After failed submission (show error message with retry option)
 
 **Product Context Display (above the form):**
+
 - Product name and brand
 - Selected configuration summary
 - Calculated price
 - Product image thumbnail
 
 **Modal Close Behavior:**
+
 - Modal stays open after successful submission - user closes manually
 - Unsaved changes warning: If any form field has content and user tries to close, show confirmation dialog
 - Use existing `ConfirmationModal` pattern for the unsaved changes warning
@@ -78,6 +86,7 @@ This document outlines the implementation strategy for adding a product inquiry 
 **File:** `apps/web/src/components/products/ProductHero/index.tsx`
 
 **Changes:**
+
 1. Convert to client component OR lift modal state to a client wrapper
 2. Add modal state: `const [isModalOpen, setIsModalOpen] = useState(false)`
 3. Replace `href="/kontakt/"` with `onClick={() => setIsModalOpen(true)}`
@@ -91,11 +100,13 @@ This document outlines the implementation strategy for adding a product inquiry 
 **State Lifting Strategy:**
 
 Option A: **Client wrapper approach** (recommended)
+
 - Keep `ProductHero` as server component for SEO
 - Create `ProductHeroClient` wrapper that handles modal state
 - PricingConfigurator already client-side, share state via context or props
 
 Option B: **Convert ProductHero to client**
+
 - Simpler but loses server component benefits
 - Not recommended
 
@@ -133,6 +144,7 @@ This allows the modal to access the exact configuration the user selected.
 **File:** `apps/web/src/app/api/contact/route.ts`
 
 **Changes:**
+
 1. Add new endpoint or extend existing: `/api/contact/product-inquiry`
 2. Accept additional fields:
    - `productId` - Sanity product ID
@@ -143,6 +155,7 @@ This allows the modal to access the exact configuration the user selected.
    - `productUrl` - URL of the product page
 
 **Request body schema:**
+
 ```typescript
 interface ProductInquiryRequest {
   // Standard contact fields
@@ -151,7 +164,7 @@ interface ProductInquiryRequest {
   phone?: string;
   message: string;
   consent: boolean;
-  
+
   // Product context
   product: {
     id: string;
@@ -173,6 +186,7 @@ interface ProductInquiryRequest {
 **New email template:** `ProductInquiryEmail.tsx`
 
 The email should include:
+
 - Clear "Zapytanie o produkt" subject line
 - Product name and brand (prominent)
 - Selected configuration table
@@ -182,6 +196,7 @@ The email should include:
 - Customer message
 
 **Example email structure:**
+
 ```
 Subject: Zapytanie o produkt: [Product Name]
 
@@ -213,11 +228,13 @@ WIADOMOŚĆ:
 **File:** `apps/web/src/global/analytics/track-event.ts`
 
 Add new event types:
+
 - `product_inquiry_modal_opened` - When modal opens
 - `product_inquiry_submitted` - When form is submitted successfully
 - `product_inquiry_error` - When submission fails
 
 Include product context in analytics:
+
 - Product ID
 - Product name
 - Brand
@@ -271,12 +288,13 @@ interface ProductInquiryModalProps {
   };
   configuration: {
     summary: string; // Formatted configuration summary
-    price: number;   // Price in cents
+    price: number; // Price in cents
   };
 }
 ```
 
 **Key behaviors:**
+
 - Portal rendering to document.body
 - Focus trap for accessibility
 - Prevent body scroll when open
@@ -296,6 +314,7 @@ interface ProductInquiryFormProps {
 ```
 
 **Key behaviors:**
+
 - Reuse logic from `ContactForm.tsx` (copy and adapt)
 - react-hook-form with identical validation rules
 - Use existing `FormStates` component for success/error states
@@ -330,6 +349,7 @@ const handleCancelClose = () => {
 ```
 
 **Warning modal text:**
+
 - Title: "Niezapisane zmiany"
 - Message: "Masz niewysłaną wiadomość. Czy na pewno chcesz zamknąć formularz? Wprowadzone dane zostaną utracone."
 - Confirm button: "Zamknij formularz"
@@ -340,12 +360,14 @@ const handleCancelClose = () => {
 ## Implementation Order
 
 ### Step 1: Create Modal Component Structure
+
 1. Create `ProductInquiryModal/` folder
 2. Create base modal with overlay (no form yet)
 3. Add styles matching existing modal patterns
 4. Test open/close functionality
 
 ### Step 2: Build the Form (Copy from ContactForm)
+
 1. Create `ProductInquiryForm.tsx`
 2. Copy logic from `ContactForm.tsx`
 3. Same fields: name, email, message (textarea), consent (checkbox)
@@ -354,30 +376,35 @@ const handleCancelClose = () => {
 6. Add `onFormDirtyChange` callback to notify parent of dirty state
 
 ### Step 3: Add Product Summary Component
+
 1. Create `ProductSummary.tsx`
 2. Display product image, name, brand
 3. Display configuration summary
 4. Display calculated price
 
 ### Step 4: Implement Unsaved Changes Warning
+
 1. Track form dirty state in modal via callback from form
 2. On close attempt (X button, click outside, Escape key), check if dirty
 3. If dirty, show `ConfirmationModal` with warning
 4. "Zamknij formularz" confirms close, "Wróć do formularza" cancels
 
 ### Step 5: Integrate with ProductHero
+
 1. Create client wrapper for ProductHero (if needed)
 2. Add modal state management
 3. Connect PricingConfigurator state to modal
 4. Replace button href with onClick handler
 
 ### Step 6: Update Backend
+
 1. Create/update API endpoint to accept product context
 2. Add product context handling
 3. Create email template with product details
 4. Test email sending
 
 ### Step 7: Polish & Testing
+
 1. Add analytics events
 2. Responsive design testing
 3. Accessibility testing (keyboard nav, screen readers)
@@ -389,24 +416,31 @@ const handleCancelClose = () => {
 ## Technical Considerations
 
 ### State Management
+
 The PricingConfigurator component already manages configuration state. We need to:
+
 1. Lift this state up to a shared parent, OR
 2. Use a ref/callback to access current configuration when modal opens
 
 **Recommended approach:** Use a ref in PricingConfigurator that holds current configuration, accessible by parent.
 
 ### Server/Client Component Split
+
 ProductHero is currently a server component. Options:
+
 1. Keep it server-side, add a small client wrapper just for the modal
 2. Use a "use client" boundary at the minimum required level
 
 **Recommended:** Create `ProductHeroClient.tsx` that wraps the modal logic.
 
 ### Form Reusability
+
 Consider extracting common form components (inputs, validation) from existing ContactForm for reuse.
 
 ### Mobile Experience
+
 Modal should be:
+
 - Full-screen on mobile (< 768px)
 - Scrollable if content exceeds viewport
 - Touch-friendly close button
@@ -425,50 +459,53 @@ Modal should be:
 
 ## Risk Mitigation
 
-| Risk | Mitigation |
-|------|------------|
-| Modal blocks content | Proper z-index, click-outside close |
-| Form submission fails | Clear error messages, retry option |
-| Mobile usability | Full-screen modal, large touch targets |
-| SEO impact | Keep ProductHero SSR, only modal is client |
-| Email deliverability | Use existing MS Graph infrastructure |
+| Risk                  | Mitigation                                 |
+| --------------------- | ------------------------------------------ |
+| Modal blocks content  | Proper z-index, click-outside close        |
+| Form submission fails | Clear error messages, retry option         |
+| Mobile usability      | Full-screen modal, large touch targets     |
+| SEO impact            | Keep ProductHero SSR, only modal is client |
+| Email deliverability  | Use existing MS Graph infrastructure       |
 
 ---
 
 ## Estimated Effort
 
-| Phase | Complexity | Notes |
-|-------|------------|-------|
-| Phase 1: Modal Component | Medium | Reuse existing modal patterns |
-| Phase 2: Form (from ContactForm) | Low | Copy and adapt existing form |
-| Phase 3: Product Summary | Low | Simple display component |
-| Phase 4: Unsaved Changes Warning | Low | Use existing ConfirmationModal |
-| Phase 5: ProductHero Update | Medium | State management consideration |
-| Phase 6: API Update | Low | Extend existing endpoint |
-| Phase 7: Email Templates | Low | Similar to existing templates |
-| Phase 8: Analytics | Low | Add event tracking |
+| Phase                            | Complexity | Notes                          |
+| -------------------------------- | ---------- | ------------------------------ |
+| Phase 1: Modal Component         | Medium     | Reuse existing modal patterns  |
+| Phase 2: Form (from ContactForm) | Low        | Copy and adapt existing form   |
+| Phase 3: Product Summary         | Low        | Simple display component       |
+| Phase 4: Unsaved Changes Warning | Low        | Use existing ConfirmationModal |
+| Phase 5: ProductHero Update      | Medium     | State management consideration |
+| Phase 6: API Update              | Low        | Extend existing endpoint       |
+| Phase 7: Email Templates         | Low        | Similar to existing templates  |
+| Phase 8: Analytics               | Low        | Add event tracking             |
 
 ---
 
 ## Dependencies & Reuse Strategy
 
 ### Components to Reuse Directly
-| Component | Location | Usage |
-|-----------|----------|-------|
-| `FormStates` | `ui/FormStates` | Success/error state display |
-| `Input` | `ui/Input` | Form input fields |
-| `Checkbox` | `ui/Checkbox` | Consent checkbox |
-| `Button` | `ui/Button` | Submit button |
-| `ConfirmationModal` | `ui/ConfirmationModal` | Unsaved changes warning |
+
+| Component           | Location               | Usage                       |
+| ------------------- | ---------------------- | --------------------------- |
+| `FormStates`        | `ui/FormStates`        | Success/error state display |
+| `Input`             | `ui/Input`             | Form input fields           |
+| `Checkbox`          | `ui/Checkbox`          | Consent checkbox            |
+| `Button`            | `ui/Button`            | Submit button               |
+| `ConfirmationModal` | `ui/ConfirmationModal` | Unsaved changes warning     |
 
 ### Code to Copy & Adapt
-| Source | Target | What to Copy |
-|--------|--------|--------------|
-| `ContactForm.tsx` | `ProductInquiryForm.tsx` | Form logic, validation rules, react-hook-form setup |
-| `ConfirmationModal` | `ProductInquiryModal` | Modal structure, overlay, close handlers |
-| `ProductSelector` | `ProductInquiryModal` | Escape key handling, click-outside logic |
+
+| Source              | Target                   | What to Copy                                        |
+| ------------------- | ------------------------ | --------------------------------------------------- |
+| `ContactForm.tsx`   | `ProductInquiryForm.tsx` | Form logic, validation rules, react-hook-form setup |
+| `ConfirmationModal` | `ProductInquiryModal`    | Modal structure, overlay, close handlers            |
+| `ProductSelector`   | `ProductInquiryModal`    | Escape key handling, click-outside logic            |
 
 ### Infrastructure to Use
+
 - Existing email infrastructure (Microsoft Graph API)
 - Existing analytics setup (`track-event.ts`)
 - Existing `REGEX.email` constant for validation
@@ -478,19 +515,20 @@ Modal should be:
 
 ## Decisions (Confirmed)
 
-| Question | Decision |
-|----------|----------|
-| Form fields | Identical to ContactForm: name, email, message, consent |
-| Success behavior | Show success state in modal, user closes manually |
-| Product info display | Show separately above the form (not pre-filled in message) |
-| Unsaved changes | Show warning if any field has content when user tries to close |
-| Post-success | Keep modal open with success state, user closes when ready |
+| Question             | Decision                                                       |
+| -------------------- | -------------------------------------------------------------- |
+| Form fields          | Identical to ContactForm: name, email, message, consent        |
+| Success behavior     | Show success state in modal, user closes manually              |
+| Product info display | Show separately above the form (not pre-filled in message)     |
+| Unsaved changes      | Show warning if any field has content when user tries to close |
+| Post-success         | Keep modal open with success state, user closes when ready     |
 
 ---
 
 ## Next Steps
 
 After approval of this plan:
+
 1. Create the ProductInquiryModal component
 2. Integrate with ProductHero
 3. Update API and email templates

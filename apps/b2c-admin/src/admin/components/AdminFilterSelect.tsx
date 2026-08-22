@@ -1,4 +1,4 @@
-import { Box, Label, Select } from "@sanity/ui";
+import { Box, Label, Select } from '@sanity/ui';
 
 type AdminFilterSelectProps = {
   label: string;

@@ -6,7 +6,10 @@ import { useForm } from 'react-hook-form';
 
 import Button from '@/src/components/ui/Button';
 import Checkbox from '@/src/components/ui/Checkbox';
-import FormStates, { type FormState, type FormStateData } from '@/src/components/ui/FormStates';
+import FormStates, {
+  type FormState,
+  type FormStateData,
+} from '@/src/components/ui/FormStates';
 import Input from '@/src/components/ui/Input';
 import { saveAnalyticsUser } from '@/src/global/analytics/analytics-user-storage';
 import { trackEvent } from '@/src/global/analytics/track-event';
@@ -37,14 +40,18 @@ const defaultFormStateData: FormStateData = {
   success: {
     withIcon: true,
     heading: toPortableText('Dziękujemy za zapytanie!'),
-    paragraph: toPortableText('Twoja wiadomość została wysłana. Skontaktujemy się z Tobą wkrótce.'),
+    paragraph: toPortableText(
+      'Twoja wiadomość została wysłana. Skontaktujemy się z Tobą wkrótce.',
+    ),
     refreshButton: false,
     refreshButtonText: null,
   },
   error: {
     withIcon: true,
     heading: toPortableText('Wystąpił błąd'),
-    paragraph: toPortableText('Nie udało się wysłać wiadomości. Spróbuj ponownie później.'),
+    paragraph: toPortableText(
+      'Nie udało się wysłać wiadomości. Spróbuj ponownie później.',
+    ),
     refreshButton: true,
     refreshButtonText: 'Spróbuj ponownie',
   },

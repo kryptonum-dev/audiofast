@@ -409,8 +409,8 @@ apps/studio/scripts/migration/
 
 ```typescript
 // html-to-portable-text.ts
-import { htmlToBlocks } from "@sanity/block-tools";
-import { Schema } from "@sanity/schema";
+import { htmlToBlocks } from '@sanity/block-tools';
+import { Schema } from '@sanity/schema';
 
 export function convertHtmlToPortableText(
   html: string,

@@ -5,7 +5,7 @@ import {
   DownloadIcon,
   RefreshIcon,
   UploadIcon,
-} from "@sanity/icons";
+} from '@sanity/icons';
 import {
   Badge,
   Box,
@@ -21,9 +21,9 @@ import {
   Text,
   TextArea,
   TextInput,
-} from "@sanity/ui";
-import { useAuthToken } from "@sanity/sdk-react";
-import { type FormEvent, type ReactNode, useEffect, useState } from "react";
+} from '@sanity/ui';
+import { useAuthToken } from '@sanity/sdk-react';
+import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
 
 import {
   getAdminErrorMessage,
@@ -38,7 +38,7 @@ import {
   updateAdminOrderDeliveryEstimate,
   updateAdminOrderShipment,
   updateAdminOrderStatus,
-} from "../api.js";
+} from '../api.js';
 import {
   formatDateTime,
   formatDeliveryEstimate,
@@ -47,7 +47,7 @@ import {
   formatOrderStatus,
   formatPaymentStatus,
   formatReturnCaseStatus,
-} from "../formatters.js";
+} from '../formatters.js';
 import type {
   AdminOrderAddressBlock,
   AdminOrderCancellationRequest,
@@ -56,10 +56,10 @@ import type {
   AdminOrderReturnCase,
   AdminOrderStatus,
   AdminOrderTimelineEntry,
-} from "../types.js";
-import { AdminStateCard } from "./AdminStateCard.js";
-import { OrderStatusBadge } from "./OrderStatusBadge.js";
-import { SanityThumbnail } from "./SanityThumbnail.js";
+} from '../types.js';
+import { AdminStateCard } from './AdminStateCard.js';
+import { OrderStatusBadge } from './OrderStatusBadge.js';
+import { SanityThumbnail } from './SanityThumbnail.js';
 
 type OrderDetailViewProps = {
   orderNumber: string;
@@ -68,28 +68,28 @@ type OrderDetailViewProps = {
 
 type OrderDetailState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       order: AdminOrderDetail | null;
       error: null;
     }
   | {
-      status: "ready";
+      status: 'ready';
       order: AdminOrderDetail;
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       order: AdminOrderDetail | null;
       error: string;
     };
 
 type ActionState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       message?: string;
     }
   | {
-      status: "success" | "error";
+      status: 'success' | 'error';
       message: string;
     };
 
@@ -97,7 +97,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
   const authToken = useAuthToken();
   const [refreshToken, setRefreshToken] = useState(0);
   const [state, setState] = useState<OrderDetailState>({
-    status: "idle",
+    status: 'idle',
     order: null,
     error: null,
   });
@@ -105,7 +105,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
   useEffect(() => {
     if (!authToken) {
       setState({
-        status: "idle",
+        status: 'idle',
         order: null,
         error: null,
       });
@@ -115,7 +115,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
     const controller = new AbortController();
 
     setState((current) => ({
-      status: "loading",
+      status: 'loading',
       order: current.order,
       error: null,
     }));
@@ -127,7 +127,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
     })
       .then((order) =>
         setState({
-          status: "ready",
+          status: 'ready',
           order,
           error: null,
         }),
@@ -138,11 +138,11 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
         }
 
         setState((current) => ({
-          status: "error",
+          status: 'error',
           order: current.order,
           error: getAdminErrorMessage(
             error,
-            "Nie udało się załadować szczegółów zamówienia.",
+            'Nie udało się załadować szczegółów zamówienia.',
           ),
         }));
       });
@@ -172,7 +172,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
             type="button"
           />
           <Button
-            disabled={state.status === "loading"}
+            disabled={state.status === 'loading'}
             icon={RefreshIcon}
             mode="ghost"
             onClick={() => setRefreshToken((value) => value + 1)}
@@ -181,7 +181,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
           />
         </Flex>
 
-        {state.status === "loading" && !state.order ? (
+        {state.status === 'loading' && !state.order ? (
           <AdminStateCard
             heading="Ładowanie szczegółów"
             description="Pobieranie zamówienia z backendu Audiofast."
@@ -189,7 +189,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
           />
         ) : null}
 
-        {state.status === "error" ? (
+        {state.status === 'error' ? (
           <AdminStateCard
             action={
               <Button
@@ -243,7 +243,7 @@ function OrderDetailContent({
       />
       <CustomerSection order={order} />
       <ItemsSection order={order} />
-      {order.currentStatus !== "awaiting_payment" ? (
+      {order.currentStatus !== 'awaiting_payment' ? (
         <Grid columns={[1, 1, 2]} gap={4}>
           <ShipmentSection
             authToken={authToken}
@@ -331,12 +331,12 @@ function PaymentSection({ order }: { order: AdminOrderDetail }) {
           value={
             order.payment.verifiedAt
               ? formatDateTime(order.payment.verifiedAt)
-              : "Brak"
+              : 'Brak'
           }
         />
         <KeyValue
           label="Identyfikator płatności"
-          value={order.payment.reference ?? "Brak"}
+          value={order.payment.reference ?? 'Brak'}
         />
       </Grid>
     </DetailSection>
@@ -352,30 +352,30 @@ function StatusActionsSection({
   onChanged: () => void;
   order: AdminOrderDetail;
 }) {
-  const [note, setNote] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState<AdminOrderStatus | "">(
-    order.actions.allowedNextStatuses[0] ?? "",
+  const [note, setNote] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<AdminOrderStatus | ''>(
+    order.actions.allowedNextStatuses[0] ?? '',
   );
   const [expectedDeliveryFrom, setExpectedDeliveryFrom] = useState(
-    order.deliveryEstimate?.from ?? "",
+    order.deliveryEstimate?.from ?? '',
   );
   const [expectedDeliveryTo, setExpectedDeliveryTo] = useState(
-    order.deliveryEstimate?.to ?? "",
+    order.deliveryEstimate?.to ?? '',
   );
   const [actionState, setActionState] = useState<ActionState>({
-    status: "idle",
+    status: 'idle',
   });
   const shouldShowStatusDeliveryEstimate =
-    (selectedStatus === "processing" || selectedStatus === "shipped") &&
+    (selectedStatus === 'processing' || selectedStatus === 'shipped') &&
     order.actions.canEditDeliveryEstimate;
 
   useEffect(() => {
-    setSelectedStatus(order.actions.allowedNextStatuses[0] ?? "");
+    setSelectedStatus(order.actions.allowedNextStatuses[0] ?? '');
   }, [order.actions.allowedNextStatuses, order.currentStatus]);
 
   useEffect(() => {
-    setExpectedDeliveryFrom(order.deliveryEstimate?.from ?? "");
-    setExpectedDeliveryTo(order.deliveryEstimate?.to ?? "");
+    setExpectedDeliveryFrom(order.deliveryEstimate?.from ?? '');
+    setExpectedDeliveryTo(order.deliveryEstimate?.to ?? '');
   }, [order.deliveryEstimate?.from, order.deliveryEstimate?.to]);
 
   async function submitStatus(event: FormEvent<HTMLFormElement>) {
@@ -385,7 +385,7 @@ function StatusActionsSection({
       return;
     }
 
-    setActionState({ status: "loading" });
+    setActionState({ status: 'loading' });
 
     try {
       await updateAdminOrderStatus({
@@ -400,18 +400,18 @@ function StatusActionsSection({
         orderNumber: order.orderNumber,
         status: selectedStatus,
       });
-      setNote("");
+      setNote('');
       setActionState({
-        status: "success",
-        message: "Status został zmieniony.",
+        status: 'success',
+        message: 'Status został zmieniony.',
       });
       onChanged();
     } catch (error) {
       setActionState({
-        status: "error",
+        status: 'error',
         message: getAdminErrorMessage(
           error,
-          "Nie udało się zmienić statusu zamówienia.",
+          'Nie udało się zmienić statusu zamówienia.',
         ),
       });
     }
@@ -430,8 +430,8 @@ function StatusActionsSection({
             order.actions.allowedNextStatuses.length > 0
               ? order.actions.allowedNextStatuses
                   .map(formatOrderStatus)
-                  .join(", ")
-              : "Brak dostępnych przejść"
+                  .join(', ')
+              : 'Brak dostępnych przejść'
           }
         />
       </Grid>
@@ -444,7 +444,7 @@ function StatusActionsSection({
                   Nowy status
                 </Text>
                 <Select
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onChange={(event) =>
                     setSelectedStatus(
                       event.currentTarget.value as AdminOrderStatus,
@@ -464,7 +464,7 @@ function StatusActionsSection({
                   Notatka
                 </Text>
                 <TextInput
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onChange={(event) => setNote(event.currentTarget.value)}
                   placeholder="Opcjonalnie"
                   value={note}
@@ -482,7 +482,7 @@ function StatusActionsSection({
                       Od
                     </Text>
                     <TextInput
-                      disabled={actionState.status === "loading"}
+                      disabled={actionState.status === 'loading'}
                       onChange={(event) =>
                         setExpectedDeliveryFrom(event.currentTarget.value)
                       }
@@ -495,7 +495,7 @@ function StatusActionsSection({
                       Do
                     </Text>
                     <TextInput
-                      disabled={actionState.status === "loading"}
+                      disabled={actionState.status === 'loading'}
                       min={expectedDeliveryFrom || undefined}
                       onChange={(event) =>
                         setExpectedDeliveryTo(event.currentTarget.value)
@@ -514,18 +514,18 @@ function StatusActionsSection({
             <Inline space={3}>
               <Button
                 disabled={
-                  actionState.status === "loading" ||
+                  actionState.status === 'loading' ||
                   !selectedStatus ||
                   Boolean(
                     shouldShowStatusDeliveryEstimate &&
-                      expectedDeliveryTo &&
-                      !expectedDeliveryFrom,
+                    expectedDeliveryTo &&
+                    !expectedDeliveryFrom,
                   )
                 }
                 text={
-                  actionState.status === "loading"
-                    ? "Zapisywanie"
-                    : "Zmień status"
+                  actionState.status === 'loading'
+                    ? 'Zapisywanie'
+                    : 'Zmień status'
                 }
                 tone="primary"
                 type="submit"
@@ -549,18 +549,18 @@ function DeliveryEstimateSection({
   order: AdminOrderDetail;
 }) {
   const [expectedDeliveryFrom, setExpectedDeliveryFrom] = useState(
-    order.deliveryEstimate?.from ?? "",
+    order.deliveryEstimate?.from ?? '',
   );
   const [expectedDeliveryTo, setExpectedDeliveryTo] = useState(
-    order.deliveryEstimate?.to ?? "",
+    order.deliveryEstimate?.to ?? '',
   );
   const [actionState, setActionState] = useState<ActionState>({
-    status: "idle",
+    status: 'idle',
   });
 
   useEffect(() => {
-    setExpectedDeliveryFrom(order.deliveryEstimate?.from ?? "");
-    setExpectedDeliveryTo(order.deliveryEstimate?.to ?? "");
+    setExpectedDeliveryFrom(order.deliveryEstimate?.from ?? '');
+    setExpectedDeliveryTo(order.deliveryEstimate?.to ?? '');
   }, [order.deliveryEstimate?.from, order.deliveryEstimate?.to]);
 
   async function submitDeliveryEstimate(event: FormEvent<HTMLFormElement>) {
@@ -572,11 +572,11 @@ function DeliveryEstimateSection({
   }
 
   async function clearDeliveryEstimate() {
-    setExpectedDeliveryFrom("");
-    setExpectedDeliveryTo("");
+    setExpectedDeliveryFrom('');
+    setExpectedDeliveryTo('');
     await saveDeliveryEstimate({
-      expectedDeliveryFrom: "",
-      expectedDeliveryTo: "",
+      expectedDeliveryFrom: '',
+      expectedDeliveryTo: '',
     });
   }
 
@@ -584,7 +584,7 @@ function DeliveryEstimateSection({
     expectedDeliveryFrom: string;
     expectedDeliveryTo: string;
   }) {
-    setActionState({ status: "loading" });
+    setActionState({ status: 'loading' });
 
     try {
       await updateAdminOrderDeliveryEstimate({
@@ -594,16 +594,16 @@ function DeliveryEstimateSection({
         orderNumber: order.orderNumber,
       });
       setActionState({
-        status: "success",
-        message: "Przewidywana dostawa została zapisana.",
+        status: 'success',
+        message: 'Przewidywana dostawa została zapisana.',
       });
       onChanged();
     } catch (error) {
       setActionState({
-        status: "error",
+        status: 'error',
         message: getAdminErrorMessage(
           error,
-          "Nie udało się zapisać przewidywanej dostawy.",
+          'Nie udało się zapisać przewidywanej dostawy.',
         ),
       });
     }
@@ -616,7 +616,6 @@ function DeliveryEstimateSection({
           label="Aktualny termin"
           value={formatDeliveryEstimate(order.deliveryEstimate)}
         />
-
       </Grid>
       {order.actions.canEditDeliveryEstimate ? (
         <form onSubmit={submitDeliveryEstimate}>
@@ -627,7 +626,7 @@ function DeliveryEstimateSection({
                   Od
                 </Text>
                 <TextInput
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onChange={(event) =>
                     setExpectedDeliveryFrom(event.currentTarget.value)
                   }
@@ -640,7 +639,7 @@ function DeliveryEstimateSection({
                   Do
                 </Text>
                 <TextInput
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   min={expectedDeliveryFrom || undefined}
                   onChange={(event) =>
                     setExpectedDeliveryTo(event.currentTarget.value)
@@ -653,20 +652,20 @@ function DeliveryEstimateSection({
             <Inline space={3}>
               <Button
                 disabled={
-                  actionState.status === "loading" ||
+                  actionState.status === 'loading' ||
                   Boolean(expectedDeliveryTo && !expectedDeliveryFrom)
                 }
                 text={
-                  actionState.status === "loading"
-                    ? "Zapisywanie"
-                    : "Zapisz termin"
+                  actionState.status === 'loading'
+                    ? 'Zapisywanie'
+                    : 'Zapisz termin'
                 }
                 tone="primary"
                 type="submit"
               />
               <Button
                 disabled={
-                  actionState.status === "loading" ||
+                  actionState.status === 'loading' ||
                   (!expectedDeliveryFrom && !expectedDeliveryTo)
                 }
                 mode="ghost"
@@ -690,7 +689,7 @@ function DeliveryEstimateSection({
 
 function CustomerSection({ order }: { order: AdminOrderDetail }) {
   const hasCompanyData =
-    order.invoice.recipientType === "company" ||
+    order.invoice.recipientType === 'company' ||
     Boolean(
       order.invoice.companyName || order.invoice.taxId || order.invoice.address,
     );
@@ -706,12 +705,12 @@ function CustomerSection({ order }: { order: AdminOrderDetail }) {
             <Grid columns={[1, 1, 2]} gap={3}>
               <KeyValue
                 label="Klient"
-                value={order.customer.displayName ?? "Bez nazwy"}
+                value={order.customer.displayName ?? 'Bez nazwy'}
               />
               <KeyValue label="E-mail" value={order.customer.email} />
               <KeyValue
                 label="Telefon"
-                value={order.customer.phone ?? "Brak"}
+                value={order.customer.phone ?? 'Brak'}
               />
             </Grid>
           </Stack>
@@ -724,9 +723,9 @@ function CustomerSection({ order }: { order: AdminOrderDetail }) {
               <Grid columns={[1, 1, 2]} gap={3}>
                 <KeyValue
                   label="Firma"
-                  value={order.invoice.companyName ?? "Brak"}
+                  value={order.invoice.companyName ?? 'Brak'}
                 />
-                <KeyValue label="NIP" value={order.invoice.taxId ?? "Brak"} />
+                <KeyValue label="NIP" value={order.invoice.taxId ?? 'Brak'} />
                 {order.invoice.address ? (
                   <AddressBlock
                     address={order.invoice.address}
@@ -754,7 +753,7 @@ function ItemsSection({ order }: { order: AdminOrderDetail }) {
         <Badge fontSize={1} padding={2}>
           {formatLineType(lineTypes)}
         </Badge>
-        {lineTypes.includes("cpo") ? (
+        {lineTypes.includes('cpo') ? (
           <Badge fontSize={1} padding={2} tone="primary">
             Zawiera CPO
           </Badge>
@@ -821,8 +820,8 @@ function OrderItemRow({ item }: { item: AdminOrderItem }) {
           ) : null}
           {item.cpoContext ? (
             <Text muted size={1}>
-              CPO:{" "}
-              {item.cpoContext.availabilityStatusAtPurchase ?? "brak statusu"}
+              CPO:{' '}
+              {item.cpoContext.availabilityStatusAtPurchase ?? 'brak statusu'}
             </Text>
           ) : null}
         </Stack>
@@ -843,19 +842,19 @@ function ShipmentSection({
   onChanged: () => void;
   order: AdminOrderDetail;
 }) {
-  const [carrier, setCarrier] = useState(order.shipment?.carrier ?? "");
+  const [carrier, setCarrier] = useState(order.shipment?.carrier ?? '');
   const [trackingNumber, setTrackingNumber] = useState(
-    order.shipment?.trackingNumber ?? "",
+    order.shipment?.trackingNumber ?? '',
   );
   const [actionState, setActionState] = useState<ActionState>({
-    status: "idle",
+    status: 'idle',
   });
-  const [statusNote, setStatusNote] = useState("");
+  const [statusNote, setStatusNote] = useState('');
   const [shipDialogOpen, setShipDialogOpen] = useState(false);
 
   useEffect(() => {
-    setCarrier(order.shipment?.carrier ?? "");
-    setTrackingNumber(order.shipment?.trackingNumber ?? "");
+    setCarrier(order.shipment?.carrier ?? '');
+    setTrackingNumber(order.shipment?.trackingNumber ?? '');
   }, [order.shipment?.carrier, order.shipment?.trackingNumber]);
 
   async function submitShipment(event: FormEvent<HTMLFormElement>) {
@@ -870,7 +869,7 @@ function ShipmentSection({
   }
 
   async function saveShipment({ updateStatus }: { updateStatus: boolean }) {
-    setActionState({ status: "loading" });
+    setActionState({ status: 'loading' });
 
     try {
       await updateAdminOrderShipment({
@@ -885,25 +884,25 @@ function ShipmentSection({
           authToken,
           note: statusNote,
           orderNumber: order.orderNumber,
-          status: "shipped",
+          status: 'shipped',
         });
       }
 
       setShipDialogOpen(false);
-      setStatusNote("");
+      setStatusNote('');
       setActionState({
-        status: "success",
+        status: 'success',
         message: updateStatus
-          ? "Wysyłka została zapisana, a status zmieniony na wysłane."
-          : "Dane wysyłki zostały zapisane.",
+          ? 'Wysyłka została zapisana, a status zmieniony na wysłane.'
+          : 'Dane wysyłki zostały zapisane.',
       });
       onChanged();
     } catch (error) {
       setActionState({
-        status: "error",
+        status: 'error',
         message: getAdminErrorMessage(
           error,
-          "Nie udało się zapisać danych wysyłki.",
+          'Nie udało się zapisać danych wysyłki.',
         ),
       });
     }
@@ -921,19 +920,19 @@ function ShipmentSection({
             <Box paddingX={4} paddingBottom={4}>
               <Inline space={3}>
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   mode="ghost"
                   onClick={() => saveShipment({ updateStatus: false })}
                   text="Zapisz bez zmiany statusu"
                   type="button"
                 />
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onClick={() => saveShipment({ updateStatus: true })}
                   text={
-                    actionState.status === "loading"
-                      ? "Zapisywanie"
-                      : "Zapisz i oznacz jako wysłane"
+                    actionState.status === 'loading'
+                      ? 'Zapisywanie'
+                      : 'Zapisz i oznacz jako wysłane'
                   }
                   tone="primary"
                   type="button"
@@ -953,7 +952,7 @@ function ShipmentSection({
                   Notatka do zmiany statusu
                 </Text>
                 <TextArea
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onChange={(event) => setStatusNote(event.currentTarget.value)}
                   placeholder="Opcjonalnie"
                   rows={3}
@@ -968,9 +967,9 @@ function ShipmentSection({
         <Grid columns={[1, 1, 2]} gap={3}>
           <KeyValue
             label="Numer listu przewozowego"
-            value={order.shipment.trackingNumber ?? "Brak"}
+            value={order.shipment.trackingNumber ?? 'Brak'}
           />
-          <KeyValue label="Kurier" value={order.shipment.carrier ?? "Brak"} />
+          <KeyValue label="Kurier" value={order.shipment.carrier ?? 'Brak'} />
         </Grid>
       ) : (
         <Text muted size={1}>
@@ -986,7 +985,7 @@ function ShipmentSection({
                   Numer listu przewozowego
                 </Text>
                 <TextInput
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onChange={(event) =>
                     setTrackingNumber(event.currentTarget.value)
                   }
@@ -998,7 +997,7 @@ function ShipmentSection({
                   Kurier
                 </Text>
                 <TextInput
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onChange={(event) => setCarrier(event.currentTarget.value)}
                   placeholder="Opcjonalnie"
                   value={carrier}
@@ -1008,12 +1007,12 @@ function ShipmentSection({
             <Inline space={3}>
               <Button
                 disabled={
-                  actionState.status === "loading" || !trackingNumber.trim()
+                  actionState.status === 'loading' || !trackingNumber.trim()
                 }
                 text={
-                  actionState.status === "loading"
-                    ? "Zapisywanie"
-                    : "Zapisz wysyłkę"
+                  actionState.status === 'loading'
+                    ? 'Zapisywanie'
+                    : 'Zapisz wysyłkę'
                 }
                 tone="primary"
                 type="submit"
@@ -1037,7 +1036,7 @@ function InvoiceSection({
   order: AdminOrderDetail;
 }) {
   const [actionState, setActionState] = useState<ActionState>({
-    status: "idle",
+    status: 'idle',
   });
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const invoiceInputId = `invoice-upload-${order.id}`;
@@ -1045,26 +1044,26 @@ function InvoiceSection({
     ? (order.invoice.filename ?? `faktura-${order.orderNumber}.pdf`)
     : null;
 
-  function getInvoiceUploadSuccessMessage(result: Awaited<
-    ReturnType<typeof attachAdminOrderInvoice>
-  >) {
-    if (result.customerEmail.status === "failed") {
-      return "Faktura została dodana, ale nie udało się wysłać maila do klienta.";
+  function getInvoiceUploadSuccessMessage(
+    result: Awaited<ReturnType<typeof attachAdminOrderInvoice>>,
+  ) {
+    if (result.customerEmail.status === 'failed') {
+      return 'Faktura została dodana, ale nie udało się wysłać maila do klienta.';
     }
 
     if (result.customerEmail.withdrawalFormAttached) {
-      return "Faktura została dodana. Mail do klienta zawiera fakturę i formularz odstąpienia od umowy.";
+      return 'Faktura została dodana. Mail do klienta zawiera fakturę i formularz odstąpienia od umowy.';
     }
 
-    return "Faktura została dodana. Mail do klienta wysłano bez formularza odstąpienia.";
+    return 'Faktura została dodana. Mail do klienta wysłano bez formularza odstąpienia.';
   }
 
   async function uploadInvoice(file: File | null) {
-    if (!file || actionState.status === "loading") {
+    if (!file || actionState.status === 'loading') {
       return;
     }
 
-    setActionState({ status: "loading" });
+    setActionState({ status: 'loading' });
 
     try {
       const result = await attachAdminOrderInvoice({
@@ -1073,37 +1072,37 @@ function InvoiceSection({
         orderNumber: order.orderNumber,
       });
       setActionState({
-        status: "success",
+        status: 'success',
         message: getInvoiceUploadSuccessMessage(result),
       });
       onChanged();
     } catch (error) {
       setActionState({
-        status: "error",
-        message: getAdminErrorMessage(error, "Nie udało się dodać faktury."),
+        status: 'error',
+        message: getAdminErrorMessage(error, 'Nie udało się dodać faktury.'),
       });
     }
   }
 
   async function downloadInvoice() {
-    setActionState({ status: "loading" });
+    setActionState({ status: 'loading' });
 
     try {
       await downloadAdminOrderInvoice({
         authToken,
         orderNumber: order.orderNumber,
       });
-      setActionState({ status: "idle" });
+      setActionState({ status: 'idle' });
     } catch (error) {
       setActionState({
-        status: "error",
-        message: getAdminErrorMessage(error, "Nie udało się pobrać faktury."),
+        status: 'error',
+        message: getAdminErrorMessage(error, 'Nie udało się pobrać faktury.'),
       });
     }
   }
 
   async function removeInvoice() {
-    setActionState({ status: "loading" });
+    setActionState({ status: 'loading' });
 
     try {
       await removeAdminOrderInvoice({
@@ -1112,14 +1111,14 @@ function InvoiceSection({
       });
       setRemoveDialogOpen(false);
       setActionState({
-        status: "success",
-        message: "Faktura została usunięta.",
+        status: 'success',
+        message: 'Faktura została usunięta.',
       });
       onChanged();
     } catch (error) {
       setActionState({
-        status: "error",
-        message: getAdminErrorMessage(error, "Nie udało się usunąć faktury."),
+        status: 'error',
+        message: getAdminErrorMessage(error, 'Nie udało się usunąć faktury.'),
       });
     }
   }
@@ -1136,19 +1135,19 @@ function InvoiceSection({
             <Box paddingX={4} paddingBottom={4}>
               <Inline space={3}>
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   mode="ghost"
                   onClick={() => setRemoveDialogOpen(false)}
                   text="Anuluj"
                   type="button"
                 />
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onClick={removeInvoice}
                   text={
-                    actionState.status === "loading"
-                      ? "Usuwanie"
-                      : "Usuń fakturę"
+                    actionState.status === 'loading'
+                      ? 'Usuwanie'
+                      : 'Usuń fakturę'
                   }
                   tone="critical"
                   type="button"
@@ -1169,7 +1168,7 @@ function InvoiceSection({
           <input
             accept="application/pdf"
             className="invoiceFileInput"
-            disabled={actionState.status === "loading"}
+            disabled={actionState.status === 'loading'}
             id={invoiceInputId}
             onChange={(event) =>
               uploadInvoice(event.currentTarget.files?.[0] ?? null)
@@ -1192,7 +1191,7 @@ function InvoiceSection({
                     </Text>
                   </Stack>
                   <Button
-                    disabled={actionState.status === "loading"}
+                    disabled={actionState.status === 'loading'}
                     icon={CloseIcon}
                     mode="bleed"
                     onClick={() => setRemoveDialogOpen(true)}
@@ -1205,7 +1204,7 @@ function InvoiceSection({
               </Card>
               <Inline space={3}>
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   icon={UploadIcon}
                   mode="ghost"
                   onClick={() =>
@@ -1215,7 +1214,7 @@ function InvoiceSection({
                   type="button"
                 />
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   icon={DownloadIcon}
                   mode="ghost"
                   onClick={downloadInvoice}
@@ -1227,13 +1226,13 @@ function InvoiceSection({
           ) : (
             <Box style={{ maxWidth: 240 }}>
               <Button
-                disabled={actionState.status === "loading"}
+                disabled={actionState.status === 'loading'}
                 icon={UploadIcon}
                 onClick={() => document.getElementById(invoiceInputId)?.click()}
                 text={
-                  actionState.status === "loading"
-                    ? "Dodawanie faktury"
-                    : "Dodaj fakturę"
+                  actionState.status === 'loading'
+                    ? 'Dodawanie faktury'
+                    : 'Dodaj fakturę'
                 }
                 tone="primary"
                 type="button"
@@ -1285,21 +1284,21 @@ function CancellationPanel({
   onChanged: () => void;
   order: AdminOrderDetail;
 }) {
-  const [adminNote, setAdminNote] = useState("");
+  const [adminNote, setAdminNote] = useState('');
   const [cancellationToResolve, setCancellationToResolve] = useState<{
     request: AdminOrderCancellationRequest;
-    resolution: "cancel_order" | "decline_request";
+    resolution: 'cancel_order' | 'decline_request';
   } | null>(null);
   const [actionState, setActionState] = useState<ActionState>({
-    status: "idle",
+    status: 'idle',
   });
   const request =
     order.cancellationRequests.find(
-      (candidate) => candidate.status === "open",
+      (candidate) => candidate.status === 'open',
     ) ?? null;
 
   async function submitCancellation(
-    resolution: "cancel_order" | "decline_request",
+    resolution: 'cancel_order' | 'decline_request',
   ) {
     const targetRequest = cancellationToResolve?.request ?? request;
 
@@ -1307,8 +1306,8 @@ function CancellationPanel({
       return;
     }
 
-    setActionState({ status: "loading" });
-    const resolvedAdminNote = resolution === "cancel_order" ? adminNote : "";
+    setActionState({ status: 'loading' });
+    const resolvedAdminNote = resolution === 'cancel_order' ? adminNote : '';
 
     try {
       await resolveAdminOrderCancellation({
@@ -1318,19 +1317,19 @@ function CancellationPanel({
         requestId: targetRequest.id,
         resolution,
       });
-      setAdminNote("");
+      setAdminNote('');
       setCancellationToResolve(null);
       setActionState({
-        status: "success",
-        message: "Zgłoszenie anulowania zostało obsłużone.",
+        status: 'success',
+        message: 'Zgłoszenie anulowania zostało obsłużone.',
       });
       onChanged();
     } catch (error) {
       setActionState({
-        status: "error",
+        status: 'error',
         message: getAdminErrorMessage(
           error,
-          "Nie udało się obsłużyć anulowania.",
+          'Nie udało się obsłużyć anulowania.',
         ),
       });
     }
@@ -1342,14 +1341,14 @@ function CancellationPanel({
         <Dialog
           id="resolve-cancellation-dialog"
           header={
-            cancellationToResolve.resolution === "cancel_order"
-              ? "Anulować zamówienie?"
-              : "Odrzucić zgłoszenie anulowania?"
+            cancellationToResolve.resolution === 'cancel_order'
+              ? 'Anulować zamówienie?'
+              : 'Odrzucić zgłoszenie anulowania?'
           }
           onClose={() => {
-            if (actionState.status !== "loading") {
+            if (actionState.status !== 'loading') {
               setCancellationToResolve(null);
-              setAdminNote("");
+              setAdminNote('');
             }
           }}
           width={1}
@@ -1357,31 +1356,31 @@ function CancellationPanel({
             <Box paddingX={4} paddingBottom={4}>
               <Inline space={3}>
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   mode="ghost"
                   onClick={() => {
                     setCancellationToResolve(null);
-                    setAdminNote("");
+                    setAdminNote('');
                   }}
                   text="Anuluj"
                   type="button"
                 />
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onClick={() =>
                     submitCancellation(cancellationToResolve.resolution)
                   }
                   text={
-                    actionState.status === "loading"
-                      ? "Zapisywanie"
-                      : cancellationToResolve.resolution === "cancel_order"
-                        ? "Anuluj zamówienie"
-                        : "Odrzuć zgłoszenie"
+                    actionState.status === 'loading'
+                      ? 'Zapisywanie'
+                      : cancellationToResolve.resolution === 'cancel_order'
+                        ? 'Anuluj zamówienie'
+                        : 'Odrzuć zgłoszenie'
                   }
                   tone={
-                    cancellationToResolve.resolution === "cancel_order"
-                      ? "critical"
-                      : "primary"
+                    cancellationToResolve.resolution === 'cancel_order'
+                      ? 'critical'
+                      : 'primary'
                   }
                   type="button"
                 />
@@ -1392,17 +1391,17 @@ function CancellationPanel({
           <Box paddingX={4} paddingTop={4} paddingBottom={5}>
             <Stack space={4}>
               <Text size={1}>
-                {cancellationToResolve.resolution === "cancel_order"
-                  ? "Czy na pewno chcesz anulować to zamówienie i zamknąć zgłoszenie klienta?"
-                  : "Czy na pewno chcesz odrzucić zgłoszenie anulowania? Zamówienie pozostanie w aktualnym statusie."}
+                {cancellationToResolve.resolution === 'cancel_order'
+                  ? 'Czy na pewno chcesz anulować to zamówienie i zamknąć zgłoszenie klienta?'
+                  : 'Czy na pewno chcesz odrzucić zgłoszenie anulowania? Zamówienie pozostanie w aktualnym statusie.'}
               </Text>
-              {cancellationToResolve.resolution === "cancel_order" ? (
+              {cancellationToResolve.resolution === 'cancel_order' ? (
                 <Stack space={2}>
                   <Text muted size={1}>
                     Notatka do zmiany statusu
                   </Text>
                   <TextArea
-                    disabled={actionState.status === "loading"}
+                    disabled={actionState.status === 'loading'}
                     onChange={(event) =>
                       setAdminNote(event.currentTarget.value)
                     }
@@ -1422,7 +1421,7 @@ function CancellationPanel({
       {order.cancellationRequests.length > 0 ? (
         <Stack space={3}>
           {order.cancellationRequests.map((cancellationRequest) => {
-            const isOpen = cancellationRequest.status === "open";
+            const isOpen = cancellationRequest.status === 'open';
 
             return (
               <Card
@@ -1432,19 +1431,19 @@ function CancellationPanel({
                 radius={2}
                 shadow={isOpen ? 1 : 0}
                 style={{ opacity: isOpen ? 1 : 0.66 }}
-                tone={isOpen ? "primary" : "transparent"}
+                tone={isOpen ? 'primary' : 'transparent'}
               >
                 <Stack space={3}>
                   <Flex align="center" justify="space-between">
                     <Text size={1} weight="semibold">
-                      {isOpen ? "Aktualne zgłoszenie" : "Historia zgłoszenia"}
+                      {isOpen ? 'Aktualne zgłoszenie' : 'Historia zgłoszenia'}
                     </Text>
                     <Badge
                       fontSize={1}
                       padding={2}
-                      tone={isOpen ? "primary" : "default"}
+                      tone={isOpen ? 'primary' : 'default'}
                     >
-                      {isOpen ? "Aktywne" : "Zamknięte"}
+                      {isOpen ? 'Aktywne' : 'Zamknięte'}
                     </Badge>
                   </Flex>
                   <Grid columns={[1, 1, 2]} gap={3}>
@@ -1458,14 +1457,14 @@ function CancellationPanel({
                     />
                     <KeyValue
                       label="Powód"
-                      value={cancellationRequest.reason ?? "Brak"}
+                      value={cancellationRequest.reason ?? 'Brak'}
                     />
                     <KeyValue
                       label="Zamknięto"
                       value={
                         cancellationRequest.resolvedAt
                           ? formatDateTime(cancellationRequest.resolvedAt)
-                          : "Nie"
+                          : 'Nie'
                       }
                     />
                     {cancellationRequest.adminNote ? (
@@ -1478,11 +1477,11 @@ function CancellationPanel({
                   {isOpen && order.actions.canResolveCancellationRequest ? (
                     <Inline space={3}>
                       <Button
-                        disabled={actionState.status === "loading"}
+                        disabled={actionState.status === 'loading'}
                         onClick={() =>
                           setCancellationToResolve({
                             request: cancellationRequest,
-                            resolution: "cancel_order",
+                            resolution: 'cancel_order',
                           })
                         }
                         text="Anuluj zamówienie"
@@ -1490,12 +1489,12 @@ function CancellationPanel({
                         type="button"
                       />
                       <Button
-                        disabled={actionState.status === "loading"}
+                        disabled={actionState.status === 'loading'}
                         mode="ghost"
                         onClick={() =>
                           setCancellationToResolve({
                             request: cancellationRequest,
-                            resolution: "decline_request",
+                            resolution: 'decline_request',
                           })
                         }
                         text="Odrzuć zgłoszenie"
@@ -1527,21 +1526,21 @@ function ReturnsPanel({
   onChanged: () => void;
   order: AdminOrderDetail;
 }) {
-  const [adminNote, setAdminNote] = useState("");
+  const [adminNote, setAdminNote] = useState('');
   const [returnToComplete, setReturnToComplete] =
     useState<AdminOrderReturnCase | null>(null);
   const [actionState, setActionState] = useState<ActionState>({
-    status: "idle",
+    status: 'idle',
   });
 
   async function updateReturnCase(
     returnCase: AdminOrderReturnCase,
-    action: "await_goods" | "close" | "complete",
+    action: 'await_goods' | 'close' | 'complete',
   ) {
-    setActionState({ status: "loading" });
+    setActionState({ status: 'loading' });
 
     try {
-      if (action === "await_goods") {
+      if (action === 'await_goods') {
         const result = await markAdminOrderReturnCaseAwaitingGoods({
           authToken,
           orderNumber: order.orderNumber,
@@ -1549,13 +1548,13 @@ function ReturnsPanel({
         });
         setActionState({
           status:
-            result.customerEmail?.status === "failed" ? "error" : "success",
+            result.customerEmail?.status === 'failed' ? 'error' : 'success',
           message:
-            result.customerEmail?.status === "failed"
-              ? "Zwrot został potwierdzony, ale nie udało się wysłać instrukcji do klienta. Sprawdź konfigurację treści w CMS."
-              : "Zwrot został potwierdzony, a instrukcja została wysłana do klienta.",
+            result.customerEmail?.status === 'failed'
+              ? 'Zwrot został potwierdzony, ale nie udało się wysłać instrukcji do klienta. Sprawdź konfigurację treści w CMS.'
+              : 'Zwrot został potwierdzony, a instrukcja została wysłana do klienta.',
         });
-      } else if (action === "complete") {
+      } else if (action === 'complete') {
         await completeAdminOrderReturnCase({
           adminNote,
           authToken,
@@ -1570,21 +1569,21 @@ function ReturnsPanel({
         });
       }
 
-      setAdminNote("");
+      setAdminNote('');
       setReturnToComplete(null);
-      if (action !== "await_goods") {
+      if (action !== 'await_goods') {
         setActionState({
-          status: "success",
-          message: "Sprawa zwrotu została zaktualizowana.",
+          status: 'success',
+          message: 'Sprawa zwrotu została zaktualizowana.',
         });
       }
       onChanged();
     } catch (error) {
       setActionState({
-        status: "error",
+        status: 'error',
         message: getAdminErrorMessage(
           error,
-          "Nie udało się zaktualizować sprawy zwrotu.",
+          'Nie udało się zaktualizować sprawy zwrotu.',
         ),
       });
     }
@@ -1597,9 +1596,9 @@ function ReturnsPanel({
           id="complete-return-dialog"
           header="Oznaczyć zamówienie jako zwrócone?"
           onClose={() => {
-            if (actionState.status !== "loading") {
+            if (actionState.status !== 'loading') {
               setReturnToComplete(null);
-              setAdminNote("");
+              setAdminNote('');
             }
           }}
           width={1}
@@ -1607,22 +1606,22 @@ function ReturnsPanel({
             <Box paddingX={4} paddingBottom={4}>
               <Inline space={3}>
                 <Button
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   mode="ghost"
                   onClick={() => {
                     setReturnToComplete(null);
-                    setAdminNote("");
+                    setAdminNote('');
                   }}
                   text="Anuluj"
                   type="button"
                 />
                 <Button
-                  disabled={actionState.status === "loading"}
-                  onClick={() => updateReturnCase(returnToComplete, "complete")}
+                  disabled={actionState.status === 'loading'}
+                  onClick={() => updateReturnCase(returnToComplete, 'complete')}
                   text={
-                    actionState.status === "loading"
-                      ? "Zapisywanie"
-                      : "Oznacz jako zwrócone"
+                    actionState.status === 'loading'
+                      ? 'Zapisywanie'
+                      : 'Oznacz jako zwrócone'
                   }
                   tone="primary"
                   type="button"
@@ -1642,7 +1641,7 @@ function ReturnsPanel({
                   Notatka do zmiany statusu
                 </Text>
                 <TextArea
-                  disabled={actionState.status === "loading"}
+                  disabled={actionState.status === 'loading'}
                   onChange={(event) => setAdminNote(event.currentTarget.value)}
                   placeholder="Opcjonalnie"
                   rows={3}
@@ -1659,8 +1658,8 @@ function ReturnsPanel({
       {order.returnCases.length > 0 ? (
         <Stack space={2}>
           {order.returnCases.map((returnCase) => {
-            const isOpen = returnCase.status === "open";
-            const isAwaitingGoods = returnCase.status === "awaiting_goods";
+            const isOpen = returnCase.status === 'open';
+            const isAwaitingGoods = returnCase.status === 'awaiting_goods';
             const isActive = isOpen || isAwaitingGoods;
 
             return (
@@ -1671,19 +1670,19 @@ function ReturnsPanel({
                 radius={2}
                 shadow={isActive ? 1 : 0}
                 style={{ opacity: isActive ? 1 : 0.66 }}
-                tone={isActive ? "primary" : "transparent"}
+                tone={isActive ? 'primary' : 'transparent'}
               >
                 <Stack space={3}>
                   <Flex align="center" justify="space-between">
                     <Text size={1} weight="semibold">
-                      {isActive ? "Aktualna sprawa zwrotu" : "Historia zwrotu"}
+                      {isActive ? 'Aktualna sprawa zwrotu' : 'Historia zwrotu'}
                     </Text>
                     <Badge
                       fontSize={1}
                       padding={2}
-                      tone={isActive ? "primary" : "default"}
+                      tone={isActive ? 'primary' : 'default'}
                     >
-                      {isActive ? "Aktywna" : "Zamknięta"}
+                      {isActive ? 'Aktywna' : 'Zamknięta'}
                     </Badge>
                   </Flex>
                   <Grid columns={[1, 1, 2]} gap={3}>
@@ -1697,14 +1696,14 @@ function ReturnsPanel({
                     />
                     <KeyValue
                       label="Powód"
-                      value={returnCase.reason ?? "Brak"}
+                      value={returnCase.reason ?? 'Brak'}
                     />
                     <KeyValue
                       label="Instrukcję wysłano"
                       value={
                         returnCase.instructionsSentAt
                           ? formatDateTime(returnCase.instructionsSentAt)
-                          : "Nie"
+                          : 'Nie'
                       }
                     />
                   </Grid>
@@ -1712,9 +1711,9 @@ function ReturnsPanel({
                     <Inline space={3}>
                       {isOpen ? (
                         <Button
-                          disabled={actionState.status === "loading"}
+                          disabled={actionState.status === 'loading'}
                           onClick={() =>
-                            updateReturnCase(returnCase, "await_goods")
+                            updateReturnCase(returnCase, 'await_goods')
                           }
                           text="Potwierdź zwrot i wyślij instrukcje"
                           tone="primary"
@@ -1723,9 +1722,9 @@ function ReturnsPanel({
                       ) : null}
                       {isAwaitingGoods ? (
                         <Button
-                          disabled={actionState.status === "loading"}
+                          disabled={actionState.status === 'loading'}
                           onClick={() => {
-                            setAdminNote("");
+                            setAdminNote('');
                             setReturnToComplete(returnCase);
                           }}
                           text="Oznacz jako zwrócone"
@@ -1734,9 +1733,9 @@ function ReturnsPanel({
                         />
                       ) : null}
                       <Button
-                        disabled={actionState.status === "loading"}
+                        disabled={actionState.status === 'loading'}
                         mode="ghost"
-                        onClick={() => updateReturnCase(returnCase, "close")}
+                        onClick={() => updateReturnCase(returnCase, 'close')}
                         text="Zamknij bez zwrotu"
                         type="button"
                       />
@@ -1758,15 +1757,15 @@ function ReturnsPanel({
 }
 
 function getTimelineSourceLabel(source: string) {
-  if (source === "system") {
-    return "System Audiofast";
+  if (source === 'system') {
+    return 'System Audiofast';
   }
 
-  if (source === "admin" || source === "operator") {
-    return "Panel admina";
+  if (source === 'admin' || source === 'operator') {
+    return 'Panel admina';
   }
 
-  return source || "Źródło nieznane";
+  return source || 'Źródło nieznane';
 }
 
 function getTimelineActorName(entry: AdminOrderTimelineEntry) {
@@ -1782,23 +1781,23 @@ function getTimelineActorName(entry: AdminOrderTimelineEntry) {
     return entry.actor;
   }
 
-  return entry.source === "system" ? "Automatyzacja" : "Nieznany operator";
+  return entry.source === 'system' ? 'Automatyzacja' : 'Nieznany operator';
 }
 
 function getTimelineActorInitials(entry: AdminOrderTimelineEntry) {
-  if (entry.source === "system" && !entry.actorName && !entry.actorEmail) {
-    return "SA";
+  if (entry.source === 'system' && !entry.actorName && !entry.actorEmail) {
+    return 'SA';
   }
 
   const name = getTimelineActorName(entry);
-  const parts = name.replace(/@.*/, "").split(/\s+/).filter(Boolean);
+  const parts = name.replace(/@.*/, '').split(/\s+/).filter(Boolean);
   const initials = parts
     .slice(0, 2)
     .map((part) => part[0])
-    .join("")
+    .join('')
     .toUpperCase();
 
-  return initials || "AF";
+  return initials || 'AF';
 }
 
 function TimelineActor({ entry }: { entry: AdminOrderTimelineEntry }) {
@@ -1822,7 +1821,7 @@ function TimelineActor({ entry }: { entry: AdminOrderTimelineEntry }) {
           {sourceLabel}
           {entry.actorEmail && entry.actorEmail !== actorName
             ? ` · ${entry.actorEmail}`
-            : ""}
+            : ''}
         </Text>
       </Stack>
     </Flex>
@@ -1831,22 +1830,22 @@ function TimelineActor({ entry }: { entry: AdminOrderTimelineEntry }) {
 
 function getTimelineStatusTone(status: string) {
   switch (status) {
-    case "awaiting_confirmation":
-    case "paid":
-    case "completed":
-      return "success";
-    case "awaiting_payment":
-      return "warning";
-    case "processing":
-      return "processing";
-    case "shipped":
-      return "shipped";
-    case "cancelled":
-      return "destructive";
-    case "returned":
-      return "returned";
+    case 'awaiting_confirmation':
+    case 'paid':
+    case 'completed':
+      return 'success';
+    case 'awaiting_payment':
+      return 'warning';
+    case 'processing':
+      return 'processing';
+    case 'shipped':
+      return 'shipped';
+    case 'cancelled':
+      return 'destructive';
+    case 'returned':
+      return 'returned';
     default:
-      return "neutral";
+      return 'neutral';
   }
 }
 
@@ -1946,7 +1945,7 @@ function AddressBlock({
         {label}
       </Text>
       <Text size={1} weight="medium">
-        {values.join(", ") || "Brak"}
+        {values.join(', ') || 'Brak'}
       </Text>
     </Stack>
   );
@@ -1977,8 +1976,8 @@ function AddressSection({
           <KeyValue label="Odbiorca" value={recipientName} />
         ) : null}
         {phone ? <KeyValue label="Telefon" value={phone} /> : null}
-        <KeyValue label="Ulica" value={streetLine ?? "Brak"} />
-        <KeyValue label="Kod i miasto" value={cityLine ?? "Brak"} />
+        <KeyValue label="Ulica" value={streetLine ?? 'Brak'} />
+        <KeyValue label="Kod i miasto" value={cityLine ?? 'Brak'} />
       </Grid>
     </Stack>
   );
@@ -1995,10 +1994,10 @@ function SummaryLine({
 }) {
   return (
     <Flex align="center" justify="space-between">
-      <Text muted={!strong} size={2} weight={strong ? "bold" : undefined}>
+      <Text muted={!strong} size={2} weight={strong ? 'bold' : undefined}>
         {label}
       </Text>
-      <Text size={2} weight={strong ? "bold" : "medium"}>
+      <Text size={2} weight={strong ? 'bold' : 'medium'}>
         {value}
       </Text>
     </Flex>
@@ -2006,11 +2005,11 @@ function SummaryLine({
 }
 
 function ActionMessage({ state }: { state: ActionState }) {
-  if (state.status === "idle") {
+  if (state.status === 'idle') {
     return null;
   }
 
-  if (state.status === "loading") {
+  if (state.status === 'loading') {
     return (
       <Text muted size={1}>
         Zapisywanie...
@@ -2019,7 +2018,7 @@ function ActionMessage({ state }: { state: ActionState }) {
   }
 
   return (
-    <Text muted={state.status !== "error"} size={1}>
+    <Text muted={state.status !== 'error'} size={1}>
       {state.message}
     </Text>
   );
@@ -2027,20 +2026,20 @@ function ActionMessage({ state }: { state: ActionState }) {
 
 function shouldConfirmShippedStatus(order: AdminOrderDetail) {
   return (
-    order.currentStatus === "processing" &&
-    order.actions.allowedNextStatuses.includes("shipped")
+    order.currentStatus === 'processing' &&
+    order.actions.allowedNextStatuses.includes('shipped')
   );
 }
 
 function toDatetimeLocalValue(value: string | null | undefined) {
   if (!value) {
-    return "";
+    return '';
   }
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "";
+    return '';
   }
 
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);

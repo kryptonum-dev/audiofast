@@ -197,8 +197,7 @@ export default function FloatingComparisonBox() {
   // Fall back to product category data for older cookies without names.
   const cookie = getComparisonCookie();
   const productCategory = optimisticProducts[0]?.categories?.[0] as
-    | { slug?: string; name?: string }
-    | undefined;
+    { slug?: string; name?: string } | undefined;
   const cookieCategoryLabel = cookie
     ? formatCategoryList(cookie.categorySlugs, cookie.categoryNames)
     : '';

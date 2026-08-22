@@ -1,10 +1,10 @@
 import {
   render as rtlRender,
   type RenderOptions,
-} from "@testing-library/react";
-import { ThemeProvider } from "@sanity/ui";
-import { buildTheme } from "@sanity/ui/theme";
-import type { ReactElement, ReactNode } from "react";
+} from '@testing-library/react';
+import { ThemeProvider } from '@sanity/ui';
+import { buildTheme } from '@sanity/ui/theme';
+import type { ReactElement, ReactNode } from 'react';
 
 const theme = buildTheme();
 
@@ -23,4 +23,4 @@ export function render(ui: ReactElement, options?: RenderOptions) {
   });
 }
 
-export * from "@testing-library/react";
+export * from '@testing-library/react';

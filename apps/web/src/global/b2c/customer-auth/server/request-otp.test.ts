@@ -138,9 +138,9 @@ describe('requestCustomerAuthOtp', () => {
 
     expect(createAuthServerClient).not.toHaveBeenCalled();
     expect(result.status).toBe('generic_success');
-    expect(result.status === 'generic_success' ? result.didRequestOtp : null).toBe(
-      false,
-    );
+    expect(
+      result.status === 'generic_success' ? result.didRequestOtp : null,
+    ).toBe(false);
   });
 
   it('requests an OTP for eligible bootstrapped emails', async () => {
@@ -162,9 +162,9 @@ describe('requestCustomerAuthOtp', () => {
       },
     });
     expect(result.status).toBe('generic_success');
-    expect(result.status === 'generic_success' ? result.didRequestOtp : null).toBe(
-      true,
-    );
+    expect(
+      result.status === 'generic_success' ? result.didRequestOtp : null,
+    ).toBe(true);
   });
 
   it('returns a retryable error when Supabase OTP send fails', async () => {

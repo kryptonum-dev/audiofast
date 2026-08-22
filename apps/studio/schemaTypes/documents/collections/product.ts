@@ -1,56 +1,56 @@
 import {
   orderRankField,
   orderRankOrdering,
-} from "@sanity/orderable-document-list";
-import { BookAudio, FileText, Package, Settings, Table } from "lucide-react";
-import { defineArrayMember, defineField, defineType } from "sanity";
+} from '@sanity/orderable-document-list';
+import { BookAudio, FileText, Package, Settings, Table } from 'lucide-react';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
-import { defineSlugForDocument } from "../../../components/define-slug-for-document";
-import { GROUP, GROUPS } from "../../../utils/constant";
-import { customPortableText } from "../../portableText";
-import { getSEOFields } from "../../shared/seo";
+import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { GROUP, GROUPS } from '../../../utils/constant';
+import { customPortableText } from '../../portableText';
+import { getSEOFields } from '../../shared/seo';
 
 export const product = defineType({
-  name: "product",
-  title: "Produkt audio",
-  type: "document",
+  name: 'product',
+  title: 'Produkt audio',
+  type: 'document',
   icon: BookAudio,
   groups: GROUPS,
   orderings: [orderRankOrdering],
   description:
-    "Produkt audio, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis i specyfikację, aby utworzyć nowy produkt.",
+    'Produkt audio, który zostanie opublikowany na stronie internetowej. Dodaj tytuł, opis i specyfikację, aby utworzyć nowy produkt.',
   fields: [
     // ----------------------------------------
     // 1-4: Core Identification (Client's order)
     // ----------------------------------------
     defineField({
-      name: "name",
-      type: "string",
-      title: "Nazwa",
+      name: 'name',
+      type: 'string',
+      title: 'Nazwa',
       group: GROUP.MAIN_CONTENT,
       description:
-        "Nazwa dokumentu, używana do wyświetlania w ścieżce nawigacyjnej.",
-      validation: (Rule) => Rule.required().error("Nazwa jest wymagana"),
+        'Nazwa dokumentu, używana do wyświetlania w ścieżce nawigacyjnej.',
+      validation: (Rule) => Rule.required().error('Nazwa jest wymagana'),
     }),
     defineField({
-      name: "brand",
-      title: "Marka",
-      type: "reference",
-      description: "Wybierz markę tego produktu.",
-      to: [{ type: "brand" }],
-      validation: (Rule) => Rule.required().error("Marka jest wymagana"),
+      name: 'brand',
+      title: 'Marka',
+      type: 'reference',
+      description: 'Wybierz markę tego produktu.',
+      to: [{ type: 'brand' }],
+      validation: (Rule) => Rule.required().error('Marka jest wymagana'),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "categories",
-      title: "Kategorie",
-      type: "array",
+      name: 'categories',
+      title: 'Kategorie',
+      type: 'array',
       description:
-        "Wybierz kategorie, do których należy ten produkt. Produkt może należeć do wielu kategorii.",
+        'Wybierz kategorie, do których należy ten produkt. Produkt może należeć do wielu kategorii.',
       of: [
         {
-          type: "reference",
-          to: [{ type: "productCategorySub" }],
+          type: 'reference',
+          to: [{ type: 'productCategorySub' }],
           options: {
             filter: ({ document }) => {
               const selectedIds = Array.isArray(document?.categories)
@@ -59,7 +59,7 @@ export const product = defineType({
                     .filter(Boolean)
                 : [];
               return {
-                filter: "!(_id in $selectedIds)",
+                filter: '!(_id in $selectedIds)',
                 params: { selectedIds },
               };
             },
@@ -68,14 +68,14 @@ export const product = defineType({
       ],
       validation: (Rule) =>
         Rule.required().error(
-          "Produkt musi należeć do co najmniej jednej kategorii",
+          'Produkt musi należeć do co najmniej jednej kategorii',
         ),
       group: GROUP.MAIN_CONTENT,
     }),
     // Slug only (name is defined above)
     ...defineSlugForDocument({
-      source: "name",
-      prefix: "/produkty/",
+      source: 'name',
+      prefix: '/produkty/',
       group: GROUP.MAIN_CONTENT,
     }),
 
@@ -83,9 +83,9 @@ export const product = defineType({
     // 5: Subtitle
     // ----------------------------------------
     defineField({
-      name: "subtitle",
-      title: "Podtytuł (opcjonalny)",
-      type: "string",
+      name: 'subtitle',
+      title: 'Podtytuł (opcjonalny)',
+      type: 'string',
       description:
         'Opcjonalny krótki opis kategorii produktu (np. "Trójdrożny głośnik wolnostojący"). Jeśli nie zostanie wypełniony, sekcja nie będzie wyświetlana.',
       group: GROUP.MAIN_CONTENT,
@@ -95,28 +95,28 @@ export const product = defineType({
     // 6: Main Image
     // ----------------------------------------
     defineField({
-      name: "previewImage",
-      title: "Zdjęcie główne produktu",
-      type: "image",
+      name: 'previewImage',
+      title: 'Zdjęcie główne produktu',
+      type: 'image',
       description:
-        "Główne zdjęcie produktu używane w kartach produktów, listingach i sekcji hero na stronie produktu. Zalecane: zdjęcie na białym/czystym tle.",
+        'Główne zdjęcie produktu używane w kartach produktów, listingach i sekcji hero na stronie produktu. Zalecane: zdjęcie na białym/czystym tle.',
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,
       },
       validation: (Rule) =>
-        Rule.required().error("Zdjęcie główne produktu jest wymagane"),
+        Rule.required().error('Zdjęcie główne produktu jest wymagane'),
     }),
 
     // ----------------------------------------
     // 7: Short Description
     // ----------------------------------------
     customPortableText({
-      name: "shortDescription",
-      title: "Krótki opis (opcjonalny)",
+      name: 'shortDescription',
+      title: 'Krótki opis (opcjonalny)',
       optional: true,
       description:
-        "Opcjonalny krótki opis produktu wyświetlany na górze strony produktu oraz w kontekstach publikacji (newsletter, wyróżnione publikacje). Jeśli nie zostanie wypełniony, sekcja opisu nie będzie wyświetlana.",
+        'Opcjonalny krótki opis produktu wyświetlany na górze strony produktu oraz w kontekstach publikacji (newsletter, wyróżnione publikacje). Jeśli nie zostanie wypełniony, sekcja opisu nie będzie wyświetlana.',
       group: GROUP.MAIN_CONTENT,
     }),
 
@@ -124,11 +124,11 @@ export const product = defineType({
     // 8: Publication Image
     // ----------------------------------------
     defineField({
-      name: "publicationImage",
-      title: "Obraz publikacji (opcjonalny)",
-      type: "image",
+      name: 'publicationImage',
+      title: 'Obraz publikacji (opcjonalny)',
+      type: 'image',
       description:
-        "Obraz wyświetlany gdy produkt jest prezentowany jako publikacja (newsletter, wyróżnione publikacje). Zalecany format 16:10. Jeśli nie ustawiono, zostanie użyte zdjęcie główne produktu. Wypełnienie tego pola lub krótkiego opisu umożliwia użycie produktu jako publikacji.",
+        'Obraz wyświetlany gdy produkt jest prezentowany jako publikacja (newsletter, wyróżnione publikacje). Zalecany format 16:10. Jeśli nie ustawiono, zostanie użyte zdjęcie główne produktu. Wypełnienie tego pola lub krótkiego opisu umożliwia użycie produktu jako publikacji.',
       group: GROUP.MAIN_CONTENT,
       options: {
         hotspot: true,
@@ -139,66 +139,66 @@ export const product = defineType({
     // 9: Product Details
     // ----------------------------------------
     defineField({
-      name: "details",
-      title: "Szczegóły produktu",
-      type: "object",
-      description: "Szczegółowy opis produktu z nagłówkiem i treścią.",
+      name: 'details',
+      title: 'Szczegóły produktu',
+      type: 'object',
+      description: 'Szczegółowy opis produktu z nagłówkiem i treścią.',
       fields: [
         customPortableText({
-          name: "heading",
-          title: "Nagłówek szczegółów (opcjonalny)",
+          name: 'heading',
+          title: 'Nagłówek szczegółów (opcjonalny)',
           description:
             'Opcjonalny nagłówek sekcji szczegółów produktu. Jeśli puste, zostanie użyte "O produkcie".',
-          type: "heading",
+          type: 'heading',
           optional: true,
         }),
         defineField({
-          name: "content",
-          title: "Treść szczegółów (stary format)",
-          type: "array",
+          name: 'content',
+          title: 'Treść szczegółów (stary format)',
+          type: 'array',
           description:
             "⚠️ STARY FORMAT - Użyj pola 'Treść zunifikowana' poniżej. To pole pozostaje dla kompatybilności wstecznej.",
           of: [
-            { type: "contentBlockText" },
-            { type: "contentBlockYoutube" },
-            { type: "contentBlockVimeo" },
-            { type: "contentBlockHorizontalLine" },
+            { type: 'contentBlockText' },
+            { type: 'contentBlockYoutube' },
+            { type: 'contentBlockVimeo' },
+            { type: 'contentBlockHorizontalLine' },
           ],
           options: {
             insertMenu: {
               filter: true,
               showIcons: true,
-              views: [{ name: "list" }],
+              views: [{ name: 'list' }],
             },
           },
         }),
         customPortableText({
-          name: "productDetailContent",
-          title: "Szczegółowy opis",
+          name: 'productDetailContent',
+          title: 'Szczegółowy opis',
           description:
             "Zunifikowana treść produktu. Użyj 'Sekcja dwukolumnowa' do oznaczenia początku i końca sekcji dwukolumnowych, a 'Podział kolumn' do rozdzielenia lewej i prawej kolumny.",
           optional: true,
           include: {
-            styles: ["normal", "h3"],
-            lists: ["bullet", "number"],
-            decorators: ["strong", "em"],
-            annotations: ["customLink"],
+            styles: ['normal', 'h3'],
+            lists: ['bullet', 'number'],
+            decorators: ['strong', 'em'],
+            annotations: ['customLink'],
           },
           components: [
-            "ptMinimalImage",
-            "ptInlineImage",
-            "ptHeading",
-            "ptYoutubeVideo",
-            "ptVimeoVideo",
-            "ptPageBreak",
-            "ptTwoColumnLine",
-            "ptHorizontalLine",
-            "ptReviewEmbed",
+            'ptMinimalImage',
+            'ptInlineImage',
+            'ptHeading',
+            'ptYoutubeVideo',
+            'ptVimeoVideo',
+            'ptPageBreak',
+            'ptTwoColumnLine',
+            'ptHorizontalLine',
+            'ptReviewEmbed',
           ],
         }),
       ],
       validation: (Rule) =>
-        Rule.required().error("Szczegóły produktu są wymagane"),
+        Rule.required().error('Szczegóły produktu są wymagane'),
       group: GROUP.MAIN_CONTENT,
     }),
 
@@ -206,53 +206,53 @@ export const product = defineType({
     // 10: Downloadable PDFs
     // ----------------------------------------
     defineField({
-      name: "downloadablePdfs",
-      title: "Pliki do pobrania (PDF)",
-      type: "array",
+      name: 'downloadablePdfs',
+      title: 'Pliki do pobrania (PDF)',
+      type: 'array',
       description:
         "Lista plików PDF do pobrania (instrukcje obsługi, broszury, specyfikacje itp.). Wyświetlane w sekcji 'Do pobrania' na stronie produktu.",
       group: GROUP.MAIN_CONTENT,
       of: [
         defineArrayMember({
-          type: "object",
-          name: "pdfItem",
-          title: "Plik PDF",
+          type: 'object',
+          name: 'pdfItem',
+          title: 'Plik PDF',
           fields: [
             defineField({
-              name: "title",
-              title: "Tytuł",
-              type: "string",
+              name: 'title',
+              title: 'Tytuł',
+              type: 'string',
               description:
                 'Nagłówek pliku wyświetlany na stronie (np. "Aurender N30SA - Instrukcja obsługi")',
               validation: (Rule) =>
-                Rule.required().error("Tytuł pliku jest wymagany"),
+                Rule.required().error('Tytuł pliku jest wymagany'),
             }),
             defineField({
-              name: "description",
-              title: "Opis (opcjonalny)",
-              type: "string",
+              name: 'description',
+              title: 'Opis (opcjonalny)',
+              type: 'string',
               description:
                 'Krótki opis pod tytułem (np. "Pobierz instrukcję w wersji polskiej")',
             }),
             defineField({
-              name: "file",
-              title: "Plik PDF",
-              type: "file",
+              name: 'file',
+              title: 'Plik PDF',
+              type: 'file',
               options: {
-                accept: ".pdf",
+                accept: '.pdf',
               },
               validation: (Rule) =>
-                Rule.required().error("Plik PDF jest wymagany"),
+                Rule.required().error('Plik PDF jest wymagany'),
             }),
           ],
           preview: {
             select: {
-              title: "title",
-              fileName: "file.asset.originalFilename",
+              title: 'title',
+              fileName: 'file.asset.originalFilename',
             },
             prepare: ({ title, fileName }) => ({
-              title: title || "Plik PDF",
-              subtitle: fileName || "Brak pliku",
+              title: title || 'Plik PDF',
+              subtitle: fileName || 'Brak pliku',
               media: FileText,
             }),
           },
@@ -264,12 +264,12 @@ export const product = defineType({
     // 11: Image Gallery
     // ----------------------------------------
     defineField({
-      name: "imageGallery",
-      title: "Galeria zdjęć (opcjonalna)",
-      type: "array",
+      name: 'imageGallery',
+      title: 'Galeria zdjęć (opcjonalna)',
+      type: 'array',
       description:
-        "Dodatkowe zdjęcia produktu wyświetlane w sekcji galerii na stronie produktu. Mogą zawierać różne tła, konteksty użycia, zbliżenia itp.",
-      of: [{ type: "image" }],
+        'Dodatkowe zdjęcia produktu wyświetlane w sekcji galerii na stronie produktu. Mogą zawierać różne tła, konteksty użycia, zbliżenia itp.',
+      of: [{ type: 'image' }],
       group: GROUP.MAIN_CONTENT,
     }),
 
@@ -277,21 +277,21 @@ export const product = defineType({
     // 12: Reviews
     // ----------------------------------------
     defineField({
-      name: "reviews",
-      title: "Recenzje",
-      type: "array",
-      description: "Wybierz recenzje tego produktu (opcjonalne).",
+      name: 'reviews',
+      title: 'Recenzje',
+      type: 'array',
+      description: 'Wybierz recenzje tego produktu (opcjonalne).',
       of: [
         {
-          type: "reference",
-          to: [{ type: "review" }],
+          type: 'reference',
+          to: [{ type: 'review' }],
           options: {
             filter: ({ document }) => {
               const selectedIds = Array.isArray(document?.reviews)
                 ? document.reviews.map((item: any) => item._ref).filter(Boolean)
                 : [];
               return {
-                filter: "!(_id in $selectedIds)",
+                filter: '!(_id in $selectedIds)',
                 params: { selectedIds },
               };
             },
@@ -305,15 +305,15 @@ export const product = defineType({
     // 13: Related Products
     // ----------------------------------------
     defineField({
-      name: "relatedProducts",
-      title: "Powiązane produkty (opcjonalne)",
-      type: "array",
+      name: 'relatedProducts',
+      title: 'Powiązane produkty (opcjonalne)',
+      type: 'array',
       description:
-        "Wybierz powiązane produkty, które będą wyświetlane na stronie tego produktu. To pole jest automatycznie synchronizowane z pipeline cenowego Excel, ale można je również edytować ręcznie.",
+        'Wybierz powiązane produkty, które będą wyświetlane na stronie tego produktu. To pole jest automatycznie synchronizowane z pipeline cenowego Excel, ale można je również edytować ręcznie.',
       of: [
         {
-          type: "reference",
-          to: [{ type: "product" }],
+          type: 'reference',
+          to: [{ type: 'product' }],
           options: {
             filter: ({ document }) => {
               const currentId = document?._id;
@@ -323,7 +323,7 @@ export const product = defineType({
                     .filter(Boolean)
                 : [];
               return {
-                filter: "_id != $currentId && !(_id in $selectedIds)",
+                filter: '_id != $currentId && !(_id in $selectedIds)',
                 params: { currentId, selectedIds },
               };
             },
@@ -337,15 +337,15 @@ export const product = defineType({
     // 14: Available in Stores
     // ----------------------------------------
     defineField({
-      name: "availableInStores",
-      title: "Dostępny w salonach (opcjonalny)",
-      type: "array",
+      name: 'availableInStores',
+      title: 'Dostępny w salonach (opcjonalny)',
+      type: 'array',
       description:
-        "Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, na stronie produktu wyświetlone zostaną salony przypisane do marki.",
+        'Opcjonalnie wybierz salony dla tego produktu. Jeśli puste, na stronie produktu wyświetlone zostaną salony przypisane do marki.',
       of: [
         {
-          type: "reference",
-          to: [{ type: "store" }],
+          type: 'reference',
+          to: [{ type: 'store' }],
           options: {
             filter: ({ document }) => {
               const selectedIds = Array.isArray(document?.availableInStores)
@@ -354,7 +354,7 @@ export const product = defineType({
                     .filter(Boolean)
                 : [];
               return {
-                filter: "!(_id in $selectedIds)",
+                filter: '!(_id in $selectedIds)',
                 params: { selectedIds },
               };
             },
@@ -368,11 +368,11 @@ export const product = defineType({
     // 15: Page Builder (Custom Sections)
     // ----------------------------------------
     defineField({
-      name: "pageBuilder",
-      title: "Niestandardowe sekcje",
-      type: "pageBuilder",
+      name: 'pageBuilder',
+      title: 'Niestandardowe sekcje',
+      type: 'pageBuilder',
       description:
-        "Dodaj niestandardowe sekcje na końcu strony produktu (opcjonalne).",
+        'Dodaj niestandardowe sekcje na końcu strony produktu (opcjonalne).',
       group: GROUP.MAIN_CONTENT,
     }),
 
@@ -380,29 +380,27 @@ export const product = defineType({
     // 16-17: Status Flags
     // ----------------------------------------
     defineField({
-      name: "isArchived",
-      title: "Produkt archiwalny",
-      type: "boolean",
+      name: 'isArchived',
+      title: 'Produkt archiwalny',
+      type: 'boolean',
       description:
-        "Oznacz jako archiwalne, jeśli producent już nie produkuje tego produktu, ale Audiofast nadal ma go w sprzedaży.",
+        'Oznacz jako archiwalne, jeśli producent już nie produkuje tego produktu, ale Audiofast nadal ma go w sprzedaży.',
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "isSellableOnline",
-      title: "Sprzedaż Online",
-      type: "boolean",
-      description:
-        "Określa, czy produkt może być kupowany online.",
+      name: 'isSellableOnline',
+      title: 'Sprzedaż Online',
+      type: 'boolean',
+      description: 'Określa, czy produkt może być kupowany online.',
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "isReturnable",
-      title: "Zwrot",
-      type: "boolean",
-      description:
-        "Określa, czy produkt jest zwrotny w modelu B2C.",
+      name: 'isReturnable',
+      title: 'Zwrot',
+      type: 'boolean',
+      description: 'Określa, czy produkt jest zwrotny w modelu B2C.',
       initialValue: false,
       group: GROUP.MAIN_CONTENT,
     }),
@@ -411,19 +409,19 @@ export const product = defineType({
     // 18-20: Pricing and Dates
     // ----------------------------------------
     defineField({
-      name: "basePriceCents",
-      title: "Cena bazowa (grosze)",
-      type: "number",
+      name: 'basePriceCents',
+      title: 'Cena bazowa (grosze)',
+      type: 'number',
       description:
-        "Automatycznie synchronizowana z danych cenowych z Excela. To pole jest tylko do odczytu i jest aktualizowane przez pipeline cenowy. 1 PLN = 100 groszy.",
+        'Automatycznie synchronizowana z danych cenowych z Excela. To pole jest tylko do odczytu i jest aktualizowane przez pipeline cenowy. 1 PLN = 100 groszy.',
       readOnly: false,
       validation: (Rule) => Rule.integer().min(0),
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "hasMultiplePrices",
-      title: "Cena zmienna",
-      type: "boolean",
+      name: 'hasMultiplePrices',
+      title: 'Cena zmienna',
+      type: 'boolean',
       description:
         "Automatycznie synchronizowane. Określa czy produkt ma wiele wariantów cenowych (różne modele lub opcje konfiguracji). Jeśli true, na listingu wyświetla się prefix 'od'.",
       readOnly: true,
@@ -431,24 +429,24 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "lastPricingSync",
-      title: "Ostatnia synchronizacja cen",
-      type: "datetime",
+      name: 'lastPricingSync',
+      title: 'Ostatnia synchronizacja cen',
+      type: 'datetime',
       description:
-        "Znacznik czasu ostatniej aktualizacji ceny z Excela. Aktualizowany automatycznie.",
+        'Znacznik czasu ostatniej aktualizacji ceny z Excela. Aktualizowany automatycznie.',
       readOnly: false,
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "publishedDate",
-      title: "Nadpisz datę publikacji",
-      type: "datetime",
+      name: 'publishedDate',
+      title: 'Nadpisz datę publikacji',
+      type: 'datetime',
       description:
-        "Niestandardowa data publikacji produktu. Jeśli nie jest ustawiona, używana jest data utworzenia dokumentu. Przydatne przy migracji treści z innych systemów.",
+        'Niestandardowa data publikacji produktu. Jeśli nie jest ustawiona, używana jest data utworzenia dokumentu. Przydatne przy migracji treści z innych systemów.',
       group: GROUP.MAIN_CONTENT,
       options: {
-        dateFormat: "YYYY-MM-DD",
-        timeFormat: "HH:mm",
+        dateFormat: 'YYYY-MM-DD',
+        timeFormat: 'HH:mm',
       },
     }),
 
@@ -457,15 +455,15 @@ export const product = defineType({
     // ----------------------------------------
     // Temporary compatibility cast: this plugin currently resolves a nested Sanity type tree
     // that conflicts with the root `sanity` package types used by this schema file.
-    orderRankField({ type: "products" }) as any,
+    orderRankField({ type: 'products' }) as any,
 
     // ----------------------------------------
     // Denormalized Fields (Computed, Hidden)
     // ----------------------------------------
     defineField({
-      name: "denormBrandSlug",
-      title: "Brand Slug (computed)",
-      type: "string",
+      name: 'denormBrandSlug',
+      title: 'Brand Slug (computed)',
+      type: 'string',
       description:
         "Extracted brand slug without prefix (e.g., 'yamaha' from '/marki/yamaha/'). Auto-computed on save.",
       hidden: true,
@@ -473,40 +471,41 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "denormBrandName",
-      title: "Brand Name (computed)",
-      type: "string",
-      description: "Denormalized brand name for display. Auto-computed on save.",
-      hidden: true,
-      readOnly: true,
-      group: GROUP.MAIN_CONTENT,
-    }),
-    defineField({
-      name: "denormCategorySlugs",
-      title: "Category Slugs (computed)",
-      type: "array",
-      of: [{ type: "string" }],
+      name: 'denormBrandName',
+      title: 'Brand Name (computed)',
+      type: 'string',
       description:
-        "Array of all category slugs this product belongs to. Auto-computed on save.",
+        'Denormalized brand name for display. Auto-computed on save.',
       hidden: true,
       readOnly: true,
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "denormParentCategorySlugs",
-      title: "Parent Category Slugs (computed)",
-      type: "array",
-      of: [{ type: "string" }],
-      description: "Array of parent category slugs. Auto-computed on save.",
+      name: 'denormCategorySlugs',
+      title: 'Category Slugs (computed)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description:
+        'Array of all category slugs this product belongs to. Auto-computed on save.',
       hidden: true,
       readOnly: true,
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "denormFilterKeys",
-      title: "Filter Keys (computed)",
-      type: "array",
-      of: [{ type: "string" }],
+      name: 'denormParentCategorySlugs',
+      title: 'Parent Category Slugs (computed)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Array of parent category slugs. Auto-computed on save.',
+      hidden: true,
+      readOnly: true,
+      group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: 'denormFilterKeys',
+      title: 'Filter Keys (computed)',
+      type: 'array',
+      of: [{ type: 'string' }],
       description:
         "Pre-computed filter keys for DROPDOWN filters only (e.g., 'kolor:czarny'). Range filters use customFilterValues.numericValue. Auto-computed on save.",
       hidden: true,
@@ -514,11 +513,11 @@ export const product = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
-      name: "denormLastSync",
-      title: "Last Denormalization Sync",
-      type: "datetime",
+      name: 'denormLastSync',
+      title: 'Last Denormalization Sync',
+      type: 'datetime',
       description:
-        "Timestamp of last denormalization sync. Used for debugging.",
+        'Timestamp of last denormalization sync. Used for debugging.',
       hidden: true,
       readOnly: true,
       group: GROUP.MAIN_CONTENT,
@@ -528,40 +527,41 @@ export const product = defineType({
     // Custom Filter Values (Hidden, managed via tab)
     // ----------------------------------------
     defineField({
-      name: "customFilterValues",
-      title: "Wartości niestandardowych filtrów",
-      type: "array",
+      name: 'customFilterValues',
+      title: 'Wartości niestandardowych filtrów',
+      type: 'array',
       description:
         '⚠️ Edytuj wartości filtrów w zakładce "Filtry" powyżej. To pole jest zarządzane przez dedykowany widok.',
       group: GROUP.MAIN_CONTENT,
       hidden: true,
       of: [
         defineField({
-          type: "object",
-          name: "filterValue",
-          title: "Wartość filtra",
+          type: 'object',
+          name: 'filterValue',
+          title: 'Wartość filtra',
           fields: [
             defineField({
-              name: "filterName",
-              title: "Nazwa filtra",
-              type: "string",
+              name: 'filterName',
+              title: 'Nazwa filtra',
+              type: 'string',
               description:
                 'Nazwa filtra z kategorii (np. "Długość kabla", "Moc wzmacniacza")',
               validation: (Rule) =>
-                Rule.required().error("Nazwa filtra jest wymagana"),
+                Rule.required().error('Nazwa filtra jest wymagana'),
             }),
             defineField({
-              name: "value",
-              title: "Wartość tekstowa",
-              type: "string",
-              description: 'Dla filtrów typu lista (np. "2m", "Złoty", "Custom")',
-            }),
-            defineField({
-              name: "numericValue",
-              title: "Wartość liczbowa",
-              type: "number",
+              name: 'value',
+              title: 'Wartość tekstowa',
+              type: 'string',
               description:
-                "Dla filtrów typu zakres - tylko liczby (np. 4, 8, 12)",
+                'Dla filtrów typu lista (np. "2m", "Złoty", "Custom")',
+            }),
+            defineField({
+              name: 'numericValue',
+              title: 'Wartość liczbowa',
+              type: 'number',
+              description:
+                'Dla filtrów typu zakres - tylko liczby (np. 4, 8, 12)',
               validation: (Rule) =>
                 Rule.custom((value, context) => {
                   // numericValue is required for range filters
@@ -572,16 +572,16 @@ export const product = defineType({
           ],
           preview: {
             select: {
-              filterName: "filterName",
-              value: "value",
-              numericValue: "numericValue",
+              filterName: 'filterName',
+              value: 'value',
+              numericValue: 'numericValue',
             },
             prepare: ({ filterName, value, numericValue }) => ({
-              title: filterName || "Filtr",
+              title: filterName || 'Filtr',
               subtitle:
                 numericValue !== undefined
                   ? String(numericValue)
-                  : value || "Brak wartości",
+                  : value || 'Brak wartości',
               media: Settings,
             }),
           },
@@ -593,9 +593,9 @@ export const product = defineType({
     // Technical Data (Hidden, managed via tab)
     // ----------------------------------------
     defineField({
-      name: "technicalData",
-      title: "Dane techniczne",
-      type: "object",
+      name: 'technicalData',
+      title: 'Dane techniczne',
+      type: 'object',
       description:
         '⚠️ Edytuj dane techniczne w zakładce "Dane techniczne" powyżej. Ta sekcja obsługuje zarówno produkty z jednym modelem, jak i produkty z wieloma wariantami.',
       icon: Table,
@@ -603,114 +603,114 @@ export const product = defineType({
       hidden: true,
       fields: [
         defineField({
-          name: "variants",
-          title: "Warianty produktu",
-          type: "array",
-          of: [{ type: "string" }],
+          name: 'variants',
+          title: 'Warianty produktu',
+          type: 'array',
+          of: [{ type: 'string' }],
           description:
             'Nazwy wariantów produktu (np. "Alive", "Excite", "Euphoria"). Pozostaw puste dla produktów bez wariantów.',
         }),
         defineField({
-          name: "groups",
-          title: "Sekcje danych technicznych",
-          type: "array",
+          name: 'groups',
+          title: 'Sekcje danych technicznych',
+          type: 'array',
           description:
             'Sekcje z parametrami technicznymi (np. "Specyfikacja techniczna", "Specyfikacja audio")',
           of: [
             defineArrayMember({
-              type: "object",
-              name: "technicalDataGroup",
-              title: "Sekcja",
+              type: 'object',
+              name: 'technicalDataGroup',
+              title: 'Sekcja',
               fields: [
                 defineField({
-                  name: "title",
-                  title: "Nazwa sekcji",
-                  type: "string",
+                  name: 'title',
+                  title: 'Nazwa sekcji',
+                  type: 'string',
                   description:
                     'Opcjonalnie - np. "Specyfikacja techniczna". Zostaw puste dla produktów bez sekcji.',
                 }),
                 defineField({
-                  name: "rows",
-                  title: "Parametry",
-                  type: "array",
+                  name: 'rows',
+                  title: 'Parametry',
+                  type: 'array',
                   of: [
                     defineArrayMember({
-                      type: "object",
-                      name: "technicalDataRow",
-                      title: "Parametr techniczny",
+                      type: 'object',
+                      name: 'technicalDataRow',
+                      title: 'Parametr techniczny',
                       fields: [
                         defineField({
-                          name: "title",
-                          title: "Nazwa parametru",
-                          type: "string",
+                          name: 'title',
+                          title: 'Nazwa parametru',
+                          type: 'string',
                           description:
                             'Nazwa specyfikacji (np. "Wzmocnienie", "Impedancja")',
                           validation: (Rule) => Rule.required(),
                         }),
                         defineField({
-                          name: "values",
-                          title: "Wartości",
-                          type: "array",
+                          name: 'values',
+                          title: 'Wartości',
+                          type: 'array',
                           description:
-                            "Wartości dla każdego wariantu (lub jedna wartość dla produktów bez wariantów)",
+                            'Wartości dla każdego wariantu (lub jedna wartość dla produktów bez wariantów)',
                           of: [
                             defineArrayMember({
-                              type: "object",
-                              name: "cellValue",
-                              title: "Wartość komórki",
+                              type: 'object',
+                              name: 'cellValue',
+                              title: 'Wartość komórki',
                               fields: [
                                 defineField({
-                                  name: "content",
-                                  title: "Zawartość",
-                                  type: "array",
+                                  name: 'content',
+                                  title: 'Zawartość',
+                                  type: 'array',
                                   of: [
                                     defineArrayMember({
-                                      type: "block",
+                                      type: 'block',
                                       styles: [
-                                        { title: "Normalny", value: "normal" },
+                                        { title: 'Normalny', value: 'normal' },
                                       ],
                                       lists: [
                                         {
-                                          title: "Wypunktowana",
-                                          value: "bullet",
+                                          title: 'Wypunktowana',
+                                          value: 'bullet',
                                         },
                                         {
-                                          title: "Numerowana",
-                                          value: "number",
+                                          title: 'Numerowana',
+                                          value: 'number',
                                         },
                                       ],
                                       marks: {
                                         decorators: [
                                           {
-                                            title: "Pogrubienie",
-                                            value: "strong",
+                                            title: 'Pogrubienie',
+                                            value: 'strong',
                                           },
-                                          { title: "Kursywa", value: "em" },
+                                          { title: 'Kursywa', value: 'em' },
                                         ],
                                         annotations: [
                                           {
-                                            name: "link",
-                                            type: "object",
-                                            title: "Link",
+                                            name: 'link',
+                                            type: 'object',
+                                            title: 'Link',
                                             fields: [
                                               defineField({
-                                                name: "href",
-                                                type: "url",
-                                                title: "URL",
+                                                name: 'href',
+                                                type: 'url',
+                                                title: 'URL',
                                                 validation: (Rule) =>
                                                   Rule.uri({
                                                     scheme: [
-                                                      "http",
-                                                      "https",
-                                                      "mailto",
-                                                      "tel",
+                                                      'http',
+                                                      'https',
+                                                      'mailto',
+                                                      'tel',
                                                     ],
                                                   }),
                                               }),
                                               defineField({
-                                                name: "blank",
-                                                type: "boolean",
-                                                title: "Otwórz w nowej karcie",
+                                                name: 'blank',
+                                                type: 'boolean',
+                                                title: 'Otwórz w nowej karcie',
                                                 initialValue: true,
                                               }),
                                             ],
@@ -723,16 +723,16 @@ export const product = defineType({
                               ],
                               preview: {
                                 select: {
-                                  content: "content",
+                                  content: 'content',
                                 },
                                 prepare: ({ content }) => {
                                   const text =
                                     content?.[0]?.children?.[0]?.text ||
-                                    "Pusta komórka";
+                                    'Pusta komórka';
                                   return {
                                     title:
                                       text.length > 50
-                                        ? text.slice(0, 50) + "..."
+                                        ? text.slice(0, 50) + '...'
                                         : text,
                                   };
                                 },
@@ -743,20 +743,20 @@ export const product = defineType({
                       ],
                       preview: {
                         select: {
-                          title: "title",
-                          values: "values",
+                          title: 'title',
+                          values: 'values',
                         },
                         prepare: ({ title, values }) => {
                           const valueCount = values?.length || 0;
                           const firstValue =
                             values?.[0]?.content?.[0]?.children?.[0]?.text ||
-                            "";
+                            '';
                           return {
-                            title: title || "Parametr",
+                            title: title || 'Parametr',
                             subtitle:
                               valueCount > 1
                                 ? `${valueCount} wariantów`
-                                : firstValue || "Brak wartości",
+                                : firstValue || 'Brak wartości',
                             media: Settings,
                           };
                         },
@@ -767,11 +767,11 @@ export const product = defineType({
               ],
               preview: {
                 select: {
-                  title: "title",
-                  rows: "rows",
+                  title: 'title',
+                  rows: 'rows',
                 },
                 prepare: ({ title, rows }) => ({
-                  title: title || "Parametry (bez sekcji)",
+                  title: title || 'Parametry (bez sekcji)',
                   subtitle: `${rows?.length || 0} parametrów`,
                   media: Table,
                 }),
@@ -782,20 +782,20 @@ export const product = defineType({
       ],
     }),
 
-    ...getSEOFields({ exclude: ["hideFromList"], hideTitle: true }),
+    ...getSEOFields({ exclude: ['hideFromList'], hideTitle: true }),
   ],
   preview: {
     select: {
-      name: "name",
-      brandName: "brand.name",
-      subtitle: "subtitle",
-      isArchived: "isArchived",
-      image: "previewImage",
+      name: 'name',
+      brandName: 'brand.name',
+      subtitle: 'subtitle',
+      isArchived: 'isArchived',
+      image: 'previewImage',
     },
     prepare: ({ name, brandName, subtitle, isArchived, image }) => ({
-      title: brandName && name ? `${brandName} ${name}` : name || "Produkt",
+      title: brandName && name ? `${brandName} ${name}` : name || 'Produkt',
       media: image || Package,
-      subtitle: `${subtitle || "Produkt audio"}${isArchived ? " (Archiwalny)" : ""}`,
+      subtitle: `${subtitle || 'Produkt audio'}${isArchived ? ' (Archiwalny)' : ''}`,
     }),
   },
 });

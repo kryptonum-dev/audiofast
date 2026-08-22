@@ -9,25 +9,25 @@
  *   bun run migrate-brand-csv.ts --name="Bricasti" --dry-run
  */
 
-import * as https from "node:https";
-import { Readable } from "node:stream";
+import * as https from 'node:https';
+import { Readable } from 'node:stream';
 
-import { createClient, type SanityClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
-import * as fs from "fs";
-import * as path from "path";
-import { v4 as uuidv4 } from "uuid";
+import { createClient, type SanityClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
+import * as fs from 'fs';
+import * as path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
 
-const CSV_FILE_PATH = path.resolve(__dirname, "../../../../../brandsall.csv");
+const CSV_FILE_PATH = path.resolve(__dirname, '../../../../../brandsall.csv');
 
 const PRIMALUNA_HERO_IMAGE_REF =
-  "image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp";
+  'image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp';
 
-const LEGACY_ASSETS_BASE_URL = "https://audiofast.pl/assets/";
+const LEGACY_ASSETS_BASE_URL = 'https://audiofast.pl/assets/';
 
 // SSL bypass agent for legacy assets
 const insecureAgent = new https.Agent({
@@ -64,10 +64,10 @@ interface BrandData {
 
 interface PortableTextBlock {
   _key: string;
-  _type: "block";
+  _type: 'block';
   children: Array<{
     _key: string;
-    _type: "span";
+    _type: 'span';
     marks: string[];
     text: string;
   }>;
@@ -77,18 +77,18 @@ interface PortableTextBlock {
 
 interface PortableTextYouTube {
   _key: string;
-  _type: "ptYoutubeVideo";
+  _type: 'ptYoutubeVideo';
   youtubeId: string;
   title?: string;
 }
 
 interface PortableTextMinimalImage {
   _key: string;
-  _type: "ptMinimalImage";
+  _type: 'ptMinimalImage';
   image: {
-    _type: "image";
+    _type: 'image';
     asset: {
-      _type: "reference";
+      _type: 'reference';
       _ref: string;
     };
   };
@@ -108,16 +108,14 @@ interface ParsedHtmlResult {
 }
 
 type PortableTextContent =
-  | PortableTextBlock
-  | PortableTextYouTube
-  | PortableTextMinimalImage;
+  PortableTextBlock | PortableTextYouTube | PortableTextMinimalImage;
 
 // ============================================================================
 // CSV PARSING
 // ============================================================================
 
 function parseCSV(filePath: string): CSVRow[] {
-  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const fileContent = fs.readFileSync(filePath, 'utf-8');
 
   const records = parse(fileContent, {
     columns: true,
@@ -153,7 +151,7 @@ function groupBrandData(rows: CSVRow[]): Map<string, BrandData> {
     if (row.TextBoxContent && row.TextBoxContent.trim()) {
       // Skip empty or divider-only content
       const content = row.TextBoxContent.trim();
-      if (content !== "<hr><p>&nbsp;</p>" && content !== "<p>&nbsp;</p>") {
+      if (content !== '<hr><p>&nbsp;</p>' && content !== '<p>&nbsp;</p>') {
         // Check if this exact content is already added
         if (!brand.textBlocks.includes(content)) {
           brand.textBlocks.push(content);
@@ -202,14 +200,14 @@ function generateKey(): string {
 
 function stripHtml(html: string): string {
   return html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -250,11 +248,11 @@ function extractYouTubeIds(html: string): string[] {
  */
 function isYouTubeOnlyContent(html: string): boolean {
   // Remove the iframe and see if there's meaningful text left
-  const withoutIframe = html.replace(/<iframe[^>]*>.*?<\/iframe>/gi, "");
+  const withoutIframe = html.replace(/<iframe[^>]*>.*?<\/iframe>/gi, '');
   const textContent = stripHtml(withoutIframe);
 
   // If text content is very short (just titles or empty), it's YouTube-only
-  return textContent.length < 100 && html.includes("youtube.com/embed");
+  return textContent.length < 100 && html.includes('youtube.com/embed');
 }
 
 /**
@@ -281,7 +279,7 @@ function extractImageShortcodes(html: string): ImageShortcode[] {
       images.push({
         fullMatch: match[0],
         src: srcMatch[1],
-        id: idMatch ? idMatch[1] : "",
+        id: idMatch ? idMatch[1] : '',
         width: widthMatch ? widthMatch[1] : undefined,
         height: heightMatch ? heightMatch[1] : undefined,
       });
@@ -304,7 +302,7 @@ async function parseHtmlToBlocks(
   let h1Heading: string | null = null;
 
   // Normalize line breaks
-  let content = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  let content = html.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
   // Extract and process image shortcodes first
   const imageShortcodes = extractImageShortcodes(content);
@@ -315,13 +313,13 @@ async function parseHtmlToBlocks(
     if (client && !dryRun) {
       // Convert src to full URL
       let imageUrl = img.src;
-      if (imageUrl.startsWith("/assets/")) {
-        imageUrl = `${LEGACY_ASSETS_BASE_URL}${imageUrl.replace("/assets/", "")}`;
-      } else if (!imageUrl.startsWith("http")) {
+      if (imageUrl.startsWith('/assets/')) {
+        imageUrl = `${LEGACY_ASSETS_BASE_URL}${imageUrl.replace('/assets/', '')}`;
+      } else if (!imageUrl.startsWith('http')) {
         imageUrl = `${LEGACY_ASSETS_BASE_URL}${imageUrl}`;
       }
 
-      const filename = imageUrl.split("/").pop() || "image.jpg";
+      const filename = imageUrl.split('/').pop() || 'image.jpg';
       console.log(`    📷 Found image in text: ${filename}`);
 
       const assetRef = await uploadImageToSanity(client, imageUrl, filename);
@@ -336,7 +334,7 @@ async function parseHtmlToBlocks(
   }
 
   // Replace image shortcodes with placeholders for processing
-  const IMAGE_PLACEHOLDER_PREFIX = "___IMAGE_PLACEHOLDER_";
+  const IMAGE_PLACEHOLDER_PREFIX = '___IMAGE_PLACEHOLDER_';
   let placeholderIndex = 0;
   const placeholderMap = new Map<string, ImageShortcode>();
 
@@ -349,7 +347,7 @@ async function parseHtmlToBlocks(
 
   // Remove YouTube iframes (handled separately)
   const youtubeIds = extractYouTubeIds(content);
-  content = content.replace(/<iframe[^>]*>.*?<\/iframe>/gi, "");
+  content = content.replace(/<iframe[^>]*>.*?<\/iframe>/gi, '');
 
   // Process block-level elements with regex to preserve order
   // Match: <h1>...</h1>, <h2>...</h2>, <h3>...</h3>, <h4>...</h4>, <p>...</p>, <blockquote>...</blockquote>
@@ -377,11 +375,11 @@ async function parseHtmlToBlocks(
         if (assetRef) {
           blocks.push({
             _key: generateKey(),
-            _type: "ptMinimalImage",
+            _type: 'ptMinimalImage',
             image: {
-              _type: "image",
+              _type: 'image',
               asset: {
-                _type: "reference",
+                _type: 'reference',
                 _ref: assetRef,
               },
             },
@@ -391,12 +389,12 @@ async function parseHtmlToBlocks(
 
       // Also process any text around the image
       const textWithoutPlaceholder = innerContent.replace(
-        new RegExp(`${IMAGE_PLACEHOLDER_PREFIX}\\d+___`, "g"),
-        "",
+        new RegExp(`${IMAGE_PLACEHOLDER_PREFIX}\\d+___`, 'g'),
+        '',
       );
       const cleanText = stripHtml(textWithoutPlaceholder);
       if (cleanText.length > 0) {
-        blocks.push(createTextBlock(cleanText, "normal"));
+        blocks.push(createTextBlock(cleanText, 'normal'));
       }
 
       continue;
@@ -406,9 +404,9 @@ async function parseHtmlToBlocks(
     if (text.length === 0) continue;
 
     // Determine block style based on tag
-    let style = "normal";
+    let style = 'normal';
 
-    if (tag === "h1") {
+    if (tag === 'h1') {
       // H1 becomes the description heading (only first one)
       if (!h1Heading) {
         h1Heading = text;
@@ -416,20 +414,20 @@ async function parseHtmlToBlocks(
       }
       // Don't add h1 to blocks - it becomes the heading
       continue;
-    } else if (tag === "h2") {
+    } else if (tag === 'h2') {
       // H2 with left-border class is typically the main heading
-      if (blockMatch[2].includes("left-border") && !h1Heading) {
+      if (blockMatch[2].includes('left-border') && !h1Heading) {
         h1Heading = text;
         console.log(
           `    📌 Found H2 heading with left-border: "${text.slice(0, 50)}..."`,
         );
         continue;
       }
-      style = "h3"; // Map h2 to h3 in detailed description
-    } else if (tag === "h3" || tag === "h4") {
-      style = "h3"; // Map h3/h4 to h3 style
-    } else if (tag === "blockquote") {
-      style = "blockquote";
+      style = 'h3'; // Map h2 to h3 in detailed description
+    } else if (tag === 'h3' || tag === 'h4') {
+      style = 'h3'; // Map h3/h4 to h3 style
+    } else if (tag === 'blockquote') {
+      style = 'blockquote';
     }
 
     blocks.push(createTextBlock(text, style));
@@ -439,7 +437,7 @@ async function parseHtmlToBlocks(
   if (blocks.length === 0) {
     const text = stripHtml(content);
     if (text.length > 0) {
-      blocks.push(createTextBlock(text, "normal"));
+      blocks.push(createTextBlock(text, 'normal'));
     }
   }
 
@@ -447,7 +445,7 @@ async function parseHtmlToBlocks(
   for (const videoId of youtubeIds) {
     blocks.push({
       _key: generateKey(),
-      _type: "ptYoutubeVideo",
+      _type: 'ptYoutubeVideo',
       youtubeId: videoId,
     });
   }
@@ -461,11 +459,11 @@ async function parseHtmlToBlocks(
 function createTextBlock(text: string, style: string): PortableTextBlock {
   return {
     _key: generateKey(),
-    _type: "block",
+    _type: 'block',
     children: [
       {
         _key: generateKey(),
-        _type: "span",
+        _type: 'span',
         marks: [],
         text: text,
       },
@@ -491,7 +489,7 @@ function htmlToPortableText(html: string | null): PortableTextContent[] {
     for (const videoId of youtubeIds) {
       blocks.push({
         _key: generateKey(),
-        _type: "ptYoutubeVideo",
+        _type: 'ptYoutubeVideo',
         youtubeId: videoId,
       });
     }
@@ -499,12 +497,12 @@ function htmlToPortableText(html: string | null): PortableTextContent[] {
   }
 
   // Remove iframe tags for text processing
-  const htmlWithoutIframes = html.replace(/<iframe[^>]*>.*?<\/iframe>/gi, "");
+  const htmlWithoutIframes = html.replace(/<iframe[^>]*>.*?<\/iframe>/gi, '');
 
   // Extract headings and paragraphs
   const normalized = htmlWithoutIframes
-    .replace(/\r\n/g, "\n")
-    .replace(/\r/g, "\n");
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n');
 
   // Split by common block elements
   const parts = normalized.split(/<\/?(?:p|h[1-6]|div|blockquote)[^>]*>/gi);
@@ -512,7 +510,7 @@ function htmlToPortableText(html: string | null): PortableTextContent[] {
   for (const part of parts) {
     const text = stripHtml(part);
     if (text.length > 0) {
-      blocks.push(createTextBlock(text, "normal"));
+      blocks.push(createTextBlock(text, 'normal'));
     }
   }
 
@@ -520,7 +518,7 @@ function htmlToPortableText(html: string | null): PortableTextContent[] {
   if (blocks.length === 0 && !youtubeIds.length) {
     const text = stripHtml(htmlWithoutIframes);
     if (text.length > 0) {
-      blocks.push(createTextBlock(text, "normal"));
+      blocks.push(createTextBlock(text, 'normal'));
     }
   }
 
@@ -529,7 +527,7 @@ function htmlToPortableText(html: string | null): PortableTextContent[] {
     for (const videoId of youtubeIds) {
       blocks.push({
         _key: generateKey(),
-        _type: "ptYoutubeVideo",
+        _type: 'ptYoutubeVideo',
         youtubeId: videoId,
       });
     }
@@ -544,17 +542,17 @@ function textToPortableText(text: string): PortableTextBlock[] {
   return [
     {
       _key: generateKey(),
-      _type: "block",
+      _type: 'block',
       children: [
         {
           _key: generateKey(),
-          _type: "span",
+          _type: 'span',
           marks: [],
           text: text.trim(),
         },
       ],
       markDefs: [],
-      style: "normal",
+      style: 'normal',
     },
   ];
 }
@@ -578,13 +576,13 @@ function generateSeoDescription(
       firstSentence.length >= 80 &&
       firstSentence.length <= 140
     ) {
-      return firstSentence.trim() + ".";
+      return firstSentence.trim() + '.';
     }
 
     // If first sentence is too short or too long, truncate appropriately
     if (plainText.length >= 110) {
       const truncated = plainText.slice(0, 137).trim();
-      return truncated + "...";
+      return truncated + '...';
     }
   }
 
@@ -618,16 +616,16 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
         }
 
         const chunks: Buffer[] = [];
-        response.on("data", (chunk) => chunks.push(chunk));
-        response.on("end", () => resolve(Buffer.concat(chunks)));
-        response.on("error", (error) => {
+        response.on('data', (chunk) => chunks.push(chunk));
+        response.on('end', () => resolve(Buffer.concat(chunks)));
+        response.on('error', (error) => {
           console.error(`  ✗ Response error:`, error);
           resolve(null);
         });
       },
     );
 
-    request.on("error", (error) => {
+    request.on('error', (error) => {
       console.error(`  ✗ Request error:`, error);
       resolve(null);
     });
@@ -650,7 +648,7 @@ async function uploadImageToSanity(
 
   try {
     const asset = await client.assets.upload(
-      "image",
+      'image',
       Readable.from(imageBuffer),
       {
         filename: filename,
@@ -673,13 +671,13 @@ function createMigrationClient(): SanityClient {
   const token = process.env.SANITY_API_TOKEN;
 
   if (!token) {
-    throw new Error("SANITY_API_TOKEN environment variable is required");
+    throw new Error('SANITY_API_TOKEN environment variable is required');
   }
 
   return createClient({
-    projectId: "fsw3likv",
-    dataset: "production",
-    apiVersion: "2024-01-01",
+    projectId: 'fsw3likv',
+    dataset: 'production',
+    apiVersion: '2024-01-01',
     token,
     useCdn: false,
   });
@@ -691,18 +689,18 @@ function createMigrationClient(): SanityClient {
 
 interface SanityBrandDoc {
   _id: string;
-  _type: "brand";
+  _type: 'brand';
   name: string;
-  slug: { _type: "slug"; current: string };
+  slug: { _type: 'slug'; current: string };
   description: PortableTextContent[];
-  heroImage: { _type: "image"; asset: { _type: "reference"; _ref: string } };
+  heroImage: { _type: 'image'; asset: { _type: 'reference'; _ref: string } };
   brandDescriptionHeading: PortableTextBlock[];
   brandDescription: PortableTextContent[];
   seo: { title: string; description: string };
   doNotIndex: boolean;
   hideFromList: boolean;
-  logo?: { _type: "image"; asset: { _type: "reference"; _ref: string } };
-  bannerImage?: { _type: "image"; asset: { _type: "reference"; _ref: string } };
+  logo?: { _type: 'image'; asset: { _type: 'reference'; _ref: string } };
+  bannerImage?: { _type: 'image'; asset: { _type: 'reference'; _ref: string } };
 }
 
 async function transformBrandToSanity(
@@ -725,7 +723,7 @@ async function transformBrandToSanity(
   let logoRef: string | null = null;
   if (brand.logoFilename && !dryRun) {
     const logoUrl = `${LEGACY_ASSETS_BASE_URL}${brand.logoFilename}`;
-    const filename = brand.logoFilename.split("/").pop() || "logo.png";
+    const filename = brand.logoFilename.split('/').pop() || 'logo.png';
     logoRef = await uploadImageToSanity(client, logoUrl, filename);
   } else if (brand.logoFilename) {
     console.log(`  Logo: ${brand.logoFilename} (dry-run, not uploading)`);
@@ -735,7 +733,7 @@ async function transformBrandToSanity(
   let bannerImageRef: string | null = null;
   if (brand.bannerImageFilename && !dryRun) {
     const bannerUrl = `${LEGACY_ASSETS_BASE_URL}${brand.bannerImageFilename}`;
-    const filename = brand.bannerImageFilename.split("/").pop() || "banner.jpg";
+    const filename = brand.bannerImageFilename.split('/').pop() || 'banner.jpg';
     bannerImageRef = await uploadImageToSanity(client, bannerUrl, filename);
   } else if (brand.bannerImageFilename) {
     console.log(
@@ -758,7 +756,7 @@ async function transformBrandToSanity(
     console.log(`  Processing ${brand.textBlocks.length} text blocks...`);
 
     // Combine all text blocks for processing
-    const allContent = brand.textBlocks.join("\n");
+    const allContent = brand.textBlocks.join('\n');
 
     // Parse HTML with proper heading and image handling
     const parseResult = await parseHtmlToBlocks(allContent, client, dryRun);
@@ -792,16 +790,16 @@ async function transformBrandToSanity(
 
     // Count content types
     const youtubeCount = brandDescription.filter(
-      (b) => b._type === "ptYoutubeVideo",
+      (b) => b._type === 'ptYoutubeVideo',
     ).length;
     const textBlockCount = brandDescription.filter(
-      (b) => b._type === "block",
+      (b) => b._type === 'block',
     ).length;
     const imageCount = brandDescription.filter(
-      (b) => b._type === "ptMinimalImage",
+      (b) => b._type === 'ptMinimalImage',
     ).length;
     const h3Count = brandDescription.filter(
-      (b) => b._type === "block" && (b as PortableTextBlock).style === "h3",
+      (b) => b._type === 'block' && (b as PortableTextBlock).style === 'h3',
     ).length;
 
     console.log(
@@ -828,10 +826,10 @@ async function transformBrandToSanity(
   // Build the document
   const brandDoc: SanityBrandDoc = {
     _id: `brand-${brand.id}`,
-    _type: "brand",
+    _type: 'brand',
     name: brand.name,
     slug: {
-      _type: "slug",
+      _type: 'slug',
       current: slug,
     },
     description:
@@ -841,9 +839,9 @@ async function transformBrandToSanity(
             `Odkryj produkty marki ${brand.name} w ofercie Audiofast.`,
           ),
     heroImage: {
-      _type: "image",
+      _type: 'image',
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: PRIMALUNA_HERO_IMAGE_REF,
       },
     },
@@ -860,9 +858,9 @@ async function transformBrandToSanity(
   // Add logo if uploaded
   if (logoRef) {
     brandDoc.logo = {
-      _type: "image",
+      _type: 'image',
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: logoRef,
       },
     };
@@ -871,9 +869,9 @@ async function transformBrandToSanity(
   // Add banner image if uploaded
   if (bannerImageRef) {
     brandDoc.bannerImage = {
-      _type: "image",
+      _type: 'image',
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: bannerImageRef,
       },
     };
@@ -897,19 +895,19 @@ async function main() {
   const excludeIds: string[] = [];
 
   for (const arg of args) {
-    if (arg.startsWith("--name=")) {
-      brandName = arg.replace("--name=", "").replace(/"/g, "");
-    } else if (arg.startsWith("--id=")) {
-      brandId = arg.replace("--id=", "");
-    } else if (arg === "--dry-run") {
+    if (arg.startsWith('--name=')) {
+      brandName = arg.replace('--name=', '').replace(/"/g, '');
+    } else if (arg.startsWith('--id=')) {
+      brandId = arg.replace('--id=', '');
+    } else if (arg === '--dry-run') {
       dryRun = true;
-    } else if (arg === "--skip-description") {
+    } else if (arg === '--skip-description') {
       skipDescription = true;
-    } else if (arg === "--all") {
+    } else if (arg === '--all') {
       migrateAll = true;
-    } else if (arg.startsWith("--exclude=")) {
+    } else if (arg.startsWith('--exclude=')) {
       // Comma-separated list of IDs to exclude
-      const ids = arg.replace("--exclude=", "").split(",");
+      const ids = arg.replace('--exclude=', '').split(',');
       excludeIds.push(...ids);
     }
   }
@@ -919,24 +917,24 @@ async function main() {
       'Usage: bun run migrate-brand-csv.ts --name="BrandName" [--dry-run] [--skip-description]',
     );
     console.error(
-      "       bun run migrate-brand-csv.ts --id=58 [--dry-run] [--skip-description]",
+      '       bun run migrate-brand-csv.ts --id=58 [--dry-run] [--skip-description]',
     );
     console.error(
-      "       bun run migrate-brand-csv.ts --all [--exclude=id1,id2,...] [--dry-run] [--skip-description]",
+      '       bun run migrate-brand-csv.ts --all [--exclude=id1,id2,...] [--dry-run] [--skip-description]',
     );
     process.exit(1);
   }
 
   console.log(
-    "╔════════════════════════════════════════════════════════════════╗",
+    '╔════════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║           BRAND MIGRATION (CSV-based)                         ║",
+    '║           BRAND MIGRATION (CSV-based)                         ║',
   );
   console.log(
-    "╚════════════════════════════════════════════════════════════════╝",
+    '╚════════════════════════════════════════════════════════════════╝',
   );
-  console.log(`Mode: ${dryRun ? "DRY RUN (no changes)" : "LIVE"}`);
+  console.log(`Mode: ${dryRun ? 'DRY RUN (no changes)' : 'LIVE'}`);
   if (skipDescription) {
     console.log(`⚠️  Skipping detailed description (brandDescription)`);
   }
@@ -944,7 +942,7 @@ async function main() {
   // Check CSV file exists
   if (!fs.existsSync(CSV_FILE_PATH)) {
     console.error(`\n✗ CSV file not found: ${CSV_FILE_PATH}`);
-    console.error("  Please place brandsall.csv in the project root.");
+    console.error('  Please place brandsall.csv in the project root.');
     process.exit(1);
   }
 
@@ -962,9 +960,9 @@ async function main() {
   if (!dryRun) {
     try {
       client = createMigrationClient();
-      console.log("\n✓ Sanity client initialized");
+      console.log('\n✓ Sanity client initialized');
     } catch (error) {
-      console.error("\n✗ Failed to create Sanity client:", error);
+      console.error('\n✗ Failed to create Sanity client:', error);
       process.exit(1);
     }
   }
@@ -986,7 +984,7 @@ async function main() {
     const brand = findBrandByName(brands, brandName);
     if (!brand) {
       console.error(`\n✗ Brand not found: "${brandName}"`);
-      console.log("\nAvailable brands:");
+      console.log('\nAvailable brands:');
       for (const b of brands.values()) {
         console.log(`  - ${b.name} (ID: ${b.id})`);
       }
@@ -1003,7 +1001,7 @@ async function main() {
   }
 
   if (brandsToMigrate.length === 0) {
-    console.error("\n✗ No brands to migrate");
+    console.error('\n✗ No brands to migrate');
     process.exit(1);
   }
 
@@ -1018,18 +1016,18 @@ async function main() {
     const brand = brandsToMigrate[i];
 
     console.log(
-      "\n═══════════════════════════════════════════════════════════════════",
+      '\n═══════════════════════════════════════════════════════════════════',
     );
     console.log(
       `🏷️  [${i + 1}/${brandsToMigrate.length}] Brand: ${brand.name} (ID: ${brand.id})`,
     );
     console.log(
-      "═══════════════════════════════════════════════════════════════════",
+      '═══════════════════════════════════════════════════════════════════',
     );
     console.log(`  Slug: ${brand.slug}`);
-    console.log(`  Logo: ${brand.logoFilename || "None"}`);
-    console.log(`  Banner: ${brand.bannerImageFilename || "None"}`);
-    console.log(`  Hero Description: ${brand.heroDescription ? "Yes" : "No"}`);
+    console.log(`  Logo: ${brand.logoFilename || 'None'}`);
+    console.log(`  Banner: ${brand.bannerImageFilename || 'None'}`);
+    console.log(`  Hero Description: ${brand.heroDescription ? 'Yes' : 'No'}`);
     console.log(`  Text Blocks: ${brand.textBlocks.length}`);
 
     try {
@@ -1043,13 +1041,13 @@ async function main() {
 
       // Create or update in Sanity
       if (!dryRun && client) {
-        console.log("\n📤 Uploading to Sanity...");
+        console.log('\n📤 Uploading to Sanity...');
         await client.createOrReplace(brandDoc);
         console.log(`\n✅ SUCCESS: ${brand.name} migrated!`);
         console.log(`   Document ID: ${brandDoc._id}`);
         results.success.push(brand.name);
       } else {
-        console.log("\n📋 DRY RUN - Would create document:");
+        console.log('\n📋 DRY RUN - Would create document:');
         console.log(`   ID: ${brandDoc._id}`);
         console.log(`   Name: ${brandDoc.name}`);
         console.log(`   Slug: ${brandDoc.slug.current}`);
@@ -1063,11 +1061,11 @@ async function main() {
 
   // Print summary
   console.log(
-    "\n════════════════════════════════════════════════════════════════════",
+    '\n════════════════════════════════════════════════════════════════════',
   );
-  console.log("📊 MIGRATION SUMMARY");
+  console.log('📊 MIGRATION SUMMARY');
   console.log(
-    "════════════════════════════════════════════════════════════════════",
+    '════════════════════════════════════════════════════════════════════',
   );
   console.log(`✅ Successful: ${results.success.length}`);
   if (results.success.length > 0) {
@@ -1077,10 +1075,10 @@ async function main() {
   if (results.failed.length > 0) {
     results.failed.forEach((name) => console.log(`   - ${name}`));
   }
-  console.log("\nMigration complete!");
+  console.log('\nMigration complete!');
 }
 
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error('Fatal error:', error);
   process.exit(1);
 });

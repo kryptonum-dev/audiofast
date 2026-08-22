@@ -86,7 +86,10 @@ export function buildAdminOrderShipmentPayload(args: {
     args.previousShippedAt,
   );
   const shippedAt =
-    normalizeIsoDate(normalizeOptionalText(args.input.shippedAt), 'shippedAt') ??
+    normalizeIsoDate(
+      normalizeOptionalText(args.input.shippedAt),
+      'shippedAt',
+    ) ??
     previousShipment?.shippedAt ??
     args.previousShippedAt;
 
@@ -116,7 +119,9 @@ async function loadOrderShipmentRow(
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('orders')
-    .select('current_status, id, order_number, shipment_data, shipped_at, updated_at')
+    .select(
+      'current_status, id, order_number, shipment_data, shipped_at, updated_at',
+    )
     .eq('order_number', orderNumber)
     .maybeSingle();
 
@@ -149,7 +154,9 @@ async function updateOrderShipment(args: {
     .from('orders')
     .update(args.payload)
     .eq('id', args.orderId)
-    .select('current_status, id, order_number, shipment_data, shipped_at, updated_at')
+    .select(
+      'current_status, id, order_number, shipment_data, shipped_at, updated_at',
+    )
     .single();
 
   if (error) {

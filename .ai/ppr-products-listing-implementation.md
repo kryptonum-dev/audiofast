@@ -124,9 +124,9 @@ export const queryProductsPageContent = defineQuery(`
       _type,
       "slug": slug.current,
       name,
-      ${portableTextFragment("title")},
-      ${portableTextFragment("description")},
-      ${imageFragment("heroImage")},
+      ${portableTextFragment('title')},
+      ${portableTextFragment('description')},
+      ${imageFragment('heroImage')},
       ${pageBuilderFragment},
       seo,
       openGraph{
@@ -141,9 +141,9 @@ export const queryProductsPageContent = defineQuery(`
         _id,
         name,
         "slug": slug.current,
-        ${portableTextFragment("title")},
-        ${portableTextFragment("description")},
-        ${imageFragment("heroImage")},
+        ${portableTextFragment('title')},
+        ${portableTextFragment('description')},
+        ${imageFragment('heroImage')},
         customFilters,
         ${pageBuilderFragment},
         seo,
@@ -170,7 +170,7 @@ export const queryProductsPageContent = defineQuery(`
 // For /produkty page
 const data = await sanityFetch({
   query: queryProductsPageContent,
-  params: { category: "" },
+  params: { category: '' },
 });
 // data.defaultContent = main page content
 // data.categoryContent = null
@@ -178,7 +178,7 @@ const data = await sanityFetch({
 // For /produkty/kategoria/streamery page
 const data = await sanityFetch({
   query: queryProductsPageContent,
-  params: { category: "/kategoria/streamery/" },
+  params: { category: '/kategoria/streamery/' },
 });
 // data.defaultContent = fallback content
 // data.categoryContent = streamery-specific content (or null if not found)
@@ -229,7 +229,7 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       _id,
       name,
       "slug": slug.current,
-      ${imageFragment("logo")}
+      ${imageFragment('logo')}
     },
     "globalMaxPrice": math::max(*[
       _type == "product" 
@@ -260,7 +260,7 @@ import type {
   ProductFilterMetadata,
   ComputedFilters,
   ActiveFilters,
-} from "./types";
+} from './types';
 
 /**
  * Computes available filter options from product metadata
@@ -477,14 +477,14 @@ export type BrandMetadata = {
 **File**: `apps/web/src/global/filters/index.ts`
 
 ```typescript
-export { computeAvailableFilters } from "./computeFilters";
+export { computeAvailableFilters } from './computeFilters';
 export type {
   ProductFilterMetadata,
   ActiveFilters,
   ComputedFilters,
   CategoryMetadata,
   BrandMetadata,
-} from "./types";
+} from './types';
 ```
 
 ---
@@ -1339,13 +1339,13 @@ Ensure SortDropdown reads current sort value from URL client-side rather than re
 ```typescript
 // Add to SortDropdown component
 const searchParams = useSearchParams();
-const currentSort = searchParams.get("sortBy") || defaultValue;
-const hasSearchQuery = Boolean(searchParams.get("search"));
+const currentSort = searchParams.get('sortBy') || defaultValue;
+const hasSearchQuery = Boolean(searchParams.get('search'));
 
 // Show relevance option only when search is active
 const visibleOptions = hasSearchQuery
   ? options
-  : options.filter((opt) => opt.value !== "relevance");
+  : options.filter((opt) => opt.value !== 'relevance');
 ```
 
 #### Task 5.2: Update CategoryViewTracker

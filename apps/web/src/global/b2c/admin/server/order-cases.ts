@@ -901,9 +901,8 @@ export async function markAdminOrderReturnCaseAwaitingGoods(args: {
     orderNumber: args.orderNumber,
     returnCaseId: existingReturnCase.id,
   });
-  const { sendReturnInstructionsEmail } = await import(
-    '@/src/global/b2c/return-emails'
-  );
+  const { sendReturnInstructionsEmail } =
+    await import('@/src/global/b2c/return-emails');
   const emailResult = await sendReturnInstructionsEmail({
     customerEmail: order.customer_email,
     customerFirstName: getCustomerFirstName(order.customer_snapshot),

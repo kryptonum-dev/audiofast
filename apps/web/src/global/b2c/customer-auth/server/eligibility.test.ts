@@ -26,7 +26,10 @@ function createOrdersSelectChain(result: { data: unknown; error: unknown }) {
   };
 }
 
-function createProfileMaybeSingleChain(result: { data: unknown; error: unknown }) {
+function createProfileMaybeSingleChain(result: {
+  data: unknown;
+  error: unknown;
+}) {
   const maybeSingleMock = vi.fn().mockResolvedValue(result);
   const ilikeMock = vi.fn(() => ({
     maybeSingle: maybeSingleMock,
@@ -234,7 +237,9 @@ describe('resolveCustomerAuthEligibility', () => {
 
     expect(result.isEligible).toBe(false);
     expect(result.reason).toBe('only_expired_awaiting_payment_orders');
-    expect(result.matchedOrders[0]?.accessKind).toBe('awaiting_payment_expired');
+    expect(result.matchedOrders[0]?.accessKind).toBe(
+      'awaiting_payment_expired',
+    );
   });
 
   it('keeps profile metadata internal without making profile-only emails eligible', async () => {

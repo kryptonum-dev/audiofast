@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export type AdminErrorResponse = {
   ok: false;
@@ -7,8 +7,8 @@ export type AdminErrorResponse = {
 };
 
 function parseCsvEnv(value: string | undefined): string[] {
-  return (value ?? "")
-    .split(",")
+  return (value ?? '')
+    .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
 }
@@ -45,7 +45,7 @@ function isOriginAllowed(
 }
 
 function matchesWildcardOriginRule(origin: URL, rule: string): boolean {
-  if (!rule.includes("*")) {
+  if (!rule.includes('*')) {
     return false;
   }
 
@@ -57,12 +57,12 @@ function matchesWildcardOriginRule(origin: URL, rule: string): boolean {
     return false;
   }
 
-  const wildcardPrefix = "*.";
+  const wildcardPrefix = '*.';
 
   if (
     parsedRule.protocol !== origin.protocol ||
     !parsedRule.hostname.startsWith(wildcardPrefix) ||
-    parsedRule.pathname !== "/" ||
+    parsedRule.pathname !== '/' ||
     parsedRule.search ||
     parsedRule.hash
   ) {
@@ -79,7 +79,7 @@ function matchesWildcardOriginRule(origin: URL, rule: string): boolean {
 }
 
 export function getAdminCorsHeaders(request: Request): HeadersInit {
-  const origin = request.headers.get("origin");
+  const origin = request.headers.get('origin');
   const allowedOriginRules = getAllowedOriginRules();
 
   if (
@@ -88,15 +88,15 @@ export function getAdminCorsHeaders(request: Request): HeadersInit {
     !isOriginAllowed(origin, allowedOriginRules)
   ) {
     return {
-      Vary: "Origin",
+      Vary: 'Origin',
     };
   }
 
   return {
-    "Access-Control-Allow-Origin": origin,
-    "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Authorization, Content-Type",
-    Vary: "Origin",
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+    Vary: 'Origin',
   };
 }
 
@@ -129,14 +129,14 @@ export function adminErrorJson(
 }
 
 export function adminOptions(request: Request): Response {
-  const origin = request.headers.get("origin");
+  const origin = request.headers.get('origin');
   const allowedOriginRules = getAllowedOriginRules();
 
   if (!allowedOriginRules) {
     return adminErrorJson(
       request,
-      "admin_cors_config_missing",
-      "B2C admin allowed origins are not configured.",
+      'admin_cors_config_missing',
+      'B2C admin allowed origins are not configured.',
       500,
     );
   }
@@ -144,8 +144,8 @@ export function adminOptions(request: Request): Response {
   if (origin && !isOriginAllowed(origin, allowedOriginRules)) {
     return adminErrorJson(
       request,
-      "origin_not_allowed",
-      "This origin is not allowed to call the B2C admin API.",
+      'origin_not_allowed',
+      'This origin is not allowed to call the B2C admin API.',
       403,
     );
   }

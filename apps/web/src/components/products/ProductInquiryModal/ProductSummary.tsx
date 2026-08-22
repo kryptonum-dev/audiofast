@@ -16,8 +16,7 @@ export default function ProductSummary({
   const { configurationOptions } = product;
   const totalPrice = product.totalPrice;
   const basePrice = product.basePrice;
-  const hasVisiblePrice =
-    typeof totalPrice === 'number' && totalPrice > 0;
+  const hasVisiblePrice = typeof totalPrice === 'number' && totalPrice > 0;
 
   // Calculate if there are any price additions
   const totalAdditions = configurationOptions.reduce(
@@ -95,7 +94,9 @@ export default function ProductSummary({
       {/* Configuration Options with Prices */}
       {hasConfiguration && (
         <div className={styles.configurationSection}>
-          <span className={styles.configurationLabel}>Wybrana konfiguracja</span>
+          <span className={styles.configurationLabel}>
+            Wybrana konfiguracja
+          </span>
           <div className={styles.configurationList}>
             {configurationOptions.map((option, index) => (
               <div key={index} className={styles.configurationItem}>
@@ -120,7 +121,9 @@ export default function ProductSummary({
             <>
               <div className={styles.priceRow}>
                 <span className={styles.priceLabel}>Cena bazowa</span>
-                <span className={styles.priceValue}>{formatPrice(basePrice)}</span>
+                <span className={styles.priceValue}>
+                  {formatPrice(basePrice)}
+                </span>
               </div>
               <div className={styles.priceRow}>
                 <span className={styles.priceLabel}>Dodatki</span>

@@ -1,4 +1,4 @@
-import { sanityAppConfig } from "../config.js";
+import { sanityAppConfig } from '../config.js';
 
 export type AdminProductImage = {
   id?: string | null;
@@ -56,9 +56,9 @@ export function buildSanityImageUrl(
   const params = new URLSearchParams({
     w: String(width * scale),
     h: String(height * scale),
-    fit: "fill",
-    bg: "ffffff",
-    fm: "webp",
+    fit: 'fill',
+    bg: 'ffffff',
+    fm: 'webp',
     q: String(quality),
   });
 

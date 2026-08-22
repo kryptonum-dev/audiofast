@@ -1,9 +1,4 @@
-import {
-  Heading,
-  Hr,
-  Section,
-  Text,
-} from '@react-email/components';
+import { Heading, Hr, Section, Text } from '@react-email/components';
 import * as React from 'react';
 
 import { EmailLayout } from './components/EmailLayout';
@@ -346,5 +341,3 @@ const emailLink = {
 };
 
 export default ContactNotificationTemplate;
-
-

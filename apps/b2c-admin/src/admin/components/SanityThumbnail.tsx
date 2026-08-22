@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 import {
   buildSanityImageAssetUrl,
   buildSanityImageUrl,
   type AdminProductImage,
-} from "../image.js";
+} from '../image.js';
 
 type SanityThumbnailProps = {
   alt: string;
@@ -41,11 +41,12 @@ export function SanityThumbnail({
       return source ? `${source} ${scale}x` : null;
     })
     .filter(Boolean)
-    .join(", ");
+    .join(', ');
   const rawAssetSource = buildSanityImageAssetUrl(image);
   const [fallbackIndex, setFallbackIndex] = useState(0);
-  const source = fallbackIndex === 0 ? (cdnSource ?? rawAssetSource) : rawAssetSource;
-  const sourceSet = fallbackIndex === 0 && cdnSource ? cdnSourceSet : "";
+  const source =
+    fallbackIndex === 0 ? (cdnSource ?? rawAssetSource) : rawAssetSource;
+  const sourceSet = fallbackIndex === 0 && cdnSource ? cdnSourceSet : '';
 
   useEffect(() => {
     setFallbackIndex(0);

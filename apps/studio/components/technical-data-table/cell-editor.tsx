@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { LinkIcon } from "@sanity/icons";
+import { LinkIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -10,12 +10,12 @@ import {
   Text,
   TextArea,
   TextInput,
-} from "@sanity/ui";
-import { Bold, Italic, Link2, List, ListOrdered } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { PortableTextBlock } from "sanity";
+} from '@sanity/ui';
+import { Bold, Italic, Link2, List, ListOrdered } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { PortableTextBlock } from 'sanity';
 
-import { generateKey } from "./types";
+import { generateKey } from './types';
 
 type CellEditorProps = {
   initialContent: PortableTextBlock[];
@@ -28,10 +28,10 @@ type TextSelection = {
   end: number;
 };
 
-type MarkType = "strong" | "em";
-type ListType = "bullet" | "number";
+type MarkType = 'strong' | 'em';
+type ListType = 'bullet' | 'number';
 type PortableTextSpan = {
-  _type: "span";
+  _type: 'span';
   marks?: string[];
 };
 
@@ -41,7 +41,7 @@ type PortableTextSpan = {
 function LinkEditor({
   onSave,
   onClose,
-  initialHref = "",
+  initialHref = '',
 }: {
   onSave: (href: string, blank: boolean) => void;
   onClose: () => void;
@@ -63,13 +63,13 @@ function LinkEditor({
       radius={2}
       shadow={2}
       style={{
-        position: "absolute",
-        top: "100%",
+        position: 'absolute',
+        top: '100%',
         left: 0,
         zIndex: 100,
-        background: "var(--card-bg-color)",
-        minWidth: "300px",
-        marginTop: "4px",
+        background: 'var(--card-bg-color)',
+        minWidth: '300px',
+        marginTop: '4px',
       }}
     >
       <Stack space={3}>
@@ -90,7 +90,7 @@ function LinkEditor({
             checked={blank}
             onChange={(e) => setBlank(e.target.checked)}
           />
-          <label htmlFor="blank-checkbox" style={{ fontSize: "13px" }}>
+          <label htmlFor="blank-checkbox" style={{ fontSize: '13px' }}>
             Otwórz w nowej karcie
           </label>
         </Flex>
@@ -113,26 +113,26 @@ function LinkEditor({
  * Convert Portable Text blocks to plain text for editing
  */
 function blocksToText(blocks: PortableTextBlock[]): string {
-  if (!blocks || blocks.length === 0) return "";
+  if (!blocks || blocks.length === 0) return '';
 
   return blocks
     .map((block) => {
-      if (block._type !== "block") return "";
+      if (block._type !== 'block') return '';
 
       const children = (block.children as Array<{ text?: string }>) || [];
-      const text = children.map((child) => child.text || "").join("");
+      const text = children.map((child) => child.text || '').join('');
 
       // Add list prefix for display
-      if (block.listItem === "bullet") {
+      if (block.listItem === 'bullet') {
         return `• ${text}`;
       }
-      if (block.listItem === "number") {
+      if (block.listItem === 'number') {
         return `1. ${text}`;
       }
 
       return text;
     })
-    .join("\n");
+    .join('\n');
 }
 
 /**
@@ -142,7 +142,7 @@ function blocksToText(blocks: PortableTextBlock[]): string {
 function textToBlocks(text: string): PortableTextBlock[] {
   if (!text.trim()) return [];
 
-  const lines = text.split("\n");
+  const lines = text.split('\n');
   const blocks: PortableTextBlock[] = [];
 
   lines.forEach((line) => {
@@ -151,24 +151,24 @@ function textToBlocks(text: string): PortableTextBlock[] {
 
     // Detect bullet list
     if (line.match(/^[•\-\*]\s+/)) {
-      listItem = "bullet";
-      processedLine = line.replace(/^[•\-\*]\s+/, "");
+      listItem = 'bullet';
+      processedLine = line.replace(/^[•\-\*]\s+/, '');
     }
     // Detect numbered list
     else if (line.match(/^\d+\.\s+/)) {
-      listItem = "number";
-      processedLine = line.replace(/^\d+\.\s+/, "");
+      listItem = 'number';
+      processedLine = line.replace(/^\d+\.\s+/, '');
     }
 
     const block: PortableTextBlock = {
       _key: generateKey(),
-      _type: "block",
-      style: "normal",
+      _type: 'block',
+      style: 'normal',
       markDefs: [],
       children: [
         {
           _key: generateKey(),
-          _type: "span",
+          _type: 'span',
           text: processedLine,
           marks: [],
         },
@@ -194,18 +194,20 @@ function applyMarkToBlocks(
   mark: MarkType,
 ): PortableTextBlock[] {
   return blocks.map((block) => {
-    if (block._type !== "block") return block;
+    if (block._type !== 'block') return block;
 
     const children = (block.children as any[]) || [];
     const newChildren = children.map((child) => {
-      if (child._type !== "span") return child;
+      if (child._type !== 'span') return child;
 
       const marks = child.marks || [];
       const hasMark = marks.includes(mark);
 
       return {
         ...child,
-        marks: hasMark ? marks.filter((m: string) => m !== mark) : [...marks, mark],
+        marks: hasMark
+          ? marks.filter((m: string) => m !== mark)
+          : [...marks, mark],
       };
     });
 
@@ -229,7 +231,7 @@ function toggleListOnBlocks(
   );
 
   return blocks.map((block) => {
-    if (block._type !== "block") return block;
+    if (block._type !== 'block') return block;
 
     if (allHaveList) {
       // Remove list
@@ -257,12 +259,12 @@ function addLinkToBlocks(
   const linkKey = generateKey();
 
   return blocks.map((block) => {
-    if (block._type !== "block") return block;
+    if (block._type !== 'block') return block;
 
     const markDefs = [...((block.markDefs as any[]) || [])];
-    
+
     // Check if there's already a link
-    const existingLinkIndex = markDefs.findIndex((m) => m._type === "link");
+    const existingLinkIndex = markDefs.findIndex((m) => m._type === 'link');
     if (existingLinkIndex >= 0) {
       // Update existing link
       markDefs[existingLinkIndex] = {
@@ -276,14 +278,14 @@ function addLinkToBlocks(
     // Add new link
     markDefs.push({
       _key: linkKey,
-      _type: "link",
+      _type: 'link',
       href,
       blank,
     });
 
     const children = (block.children as any[]) || [];
     const newChildren = children.map((child) => {
-      if (child._type !== "span") return child;
+      if (child._type !== 'span') return child;
       const marks = child.marks || [];
       return {
         ...child,
@@ -304,7 +306,7 @@ function addLinkToBlocks(
  */
 function blocksHaveMark(blocks: PortableTextBlock[], mark: MarkType): boolean {
   return blocks.some((block) => {
-    if (block._type !== "block") return false;
+    if (block._type !== 'block') return false;
     const children = (block.children as any[]) || [];
     return children.some((child) => {
       const marks = child.marks || [];
@@ -316,7 +318,10 @@ function blocksHaveMark(blocks: PortableTextBlock[], mark: MarkType): boolean {
 /**
  * Check if blocks have a specific list type
  */
-function blocksHaveList(blocks: PortableTextBlock[], listType: ListType): boolean {
+function blocksHaveList(
+  blocks: PortableTextBlock[],
+  listType: ListType,
+): boolean {
   return blocks.some((block) => (block as any).listItem === listType);
 }
 
@@ -325,27 +330,33 @@ function blocksHaveList(blocks: PortableTextBlock[], listType: ListType): boolea
  */
 function blocksHaveLink(blocks: PortableTextBlock[]): boolean {
   return blocks.some((block) => {
-    if (block._type !== "block") return false;
+    if (block._type !== 'block') return false;
     const markDefs = (block.markDefs as any[]) || [];
-    return markDefs.some((m) => m._type === "link");
+    return markDefs.some((m) => m._type === 'link');
   });
 }
 
 /**
  * Remove links from blocks
  */
-function removeLinksFromBlocks(blocks: PortableTextBlock[]): PortableTextBlock[] {
+function removeLinksFromBlocks(
+  blocks: PortableTextBlock[],
+): PortableTextBlock[] {
   return blocks.map((block) => {
-    if (block._type !== "block") return block;
+    if (block._type !== 'block') return block;
 
     const markDefs = (block.markDefs as any[]) || [];
-    const linkKeys = markDefs.filter((m) => m._type === "link").map((m) => m._key);
+    const linkKeys = markDefs
+      .filter((m) => m._type === 'link')
+      .map((m) => m._key);
 
-    const newMarkDefs = markDefs.filter((m) => m._type !== "link");
+    const newMarkDefs = markDefs.filter((m) => m._type !== 'link');
     const children = (block.children as any[]) || [];
     const newChildren = children.map((child) => {
-      if (child._type !== "span") return child;
-      const marks = (child.marks || []).filter((m: string) => !linkKeys.includes(m));
+      if (child._type !== 'span') return child;
+      const marks = (child.marks || []).filter(
+        (m: string) => !linkKeys.includes(m),
+      );
       return { ...child, marks };
     });
 
@@ -373,14 +384,14 @@ export function CellEditor({
       return [
         {
           _key: generateKey(),
-          _type: "block",
-          style: "normal",
+          _type: 'block',
+          style: 'normal',
           markDefs: [],
           children: [
             {
               _key: generateKey(),
-              _type: "span",
-              text: "",
+              _type: 'span',
+              text: '',
               marks: [],
             },
           ],
@@ -399,27 +410,27 @@ export function CellEditor({
   // Sync text changes back to blocks
   const syncTextToBlocks = useCallback(() => {
     const newBlocks = textToBlocks(text);
-    
+
     // Preserve marks and markDefs from existing content where possible
     if (content.length > 0 && newBlocks.length > 0) {
       const children = content[0]?.children as PortableTextSpan[] | undefined;
       const firstChild = children?.[0];
       const existingMarks = firstChild?.marks || [];
       const existingMarkDefs = content[0]?.markDefs as unknown[] | undefined;
-      
+
       if (existingMarks.length > 0 || (existingMarkDefs?.length ?? 0) > 0) {
         newBlocks.forEach((block) => {
           (block as any).markDefs = existingMarkDefs || [];
           const children = (block.children as any[]) || [];
           children.forEach((child) => {
-            if (child._type === "span") {
+            if (child._type === 'span') {
               child.marks = [...existingMarks];
             }
           });
         });
       }
     }
-    
+
     setContent(newBlocks);
   }, [text, content]);
 
@@ -432,25 +443,31 @@ export function CellEditor({
   }, [text, syncTextToBlocks]);
 
   // Formatting state
-  const hasBold = useMemo(() => blocksHaveMark(content, "strong"), [content]);
-  const hasItalic = useMemo(() => blocksHaveMark(content, "em"), [content]);
-  const hasBulletList = useMemo(() => blocksHaveList(content, "bullet"), [content]);
-  const hasNumberList = useMemo(() => blocksHaveList(content, "number"), [content]);
+  const hasBold = useMemo(() => blocksHaveMark(content, 'strong'), [content]);
+  const hasItalic = useMemo(() => blocksHaveMark(content, 'em'), [content]);
+  const hasBulletList = useMemo(
+    () => blocksHaveList(content, 'bullet'),
+    [content],
+  );
+  const hasNumberList = useMemo(
+    () => blocksHaveList(content, 'number'),
+    [content],
+  );
   const hasLink = useMemo(() => blocksHaveLink(content), [content]);
 
   // Toolbar actions
   const handleBold = useCallback(() => {
-    setContent((prev) => applyMarkToBlocks(prev, "strong"));
+    setContent((prev) => applyMarkToBlocks(prev, 'strong'));
   }, []);
 
   const handleItalic = useCallback(() => {
-    setContent((prev) => applyMarkToBlocks(prev, "em"));
+    setContent((prev) => applyMarkToBlocks(prev, 'em'));
   }, []);
 
   const handleBulletList = useCallback(() => {
     // Parse current text and apply list
     const blocks = textToBlocks(text);
-    const newBlocks = toggleListOnBlocks(blocks, "bullet");
+    const newBlocks = toggleListOnBlocks(blocks, 'bullet');
     setContent(newBlocks);
     setText(blocksToText(newBlocks));
   }, [text]);
@@ -458,7 +475,7 @@ export function CellEditor({
   const handleNumberList = useCallback(() => {
     // Parse current text and apply list
     const blocks = textToBlocks(text);
-    const newBlocks = toggleListOnBlocks(blocks, "number");
+    const newBlocks = toggleListOnBlocks(blocks, 'number');
     setContent(newBlocks);
     setText(blocksToText(newBlocks));
   }, [text]);
@@ -486,12 +503,12 @@ export function CellEditor({
   const handleSave = useCallback(() => {
     // Make sure we have the latest content
     const finalBlocks = textToBlocks(text);
-    
+
     // Preserve formatting from content state
     const mergedBlocks = finalBlocks.map((block, index) => {
       const existingBlock = content[index];
       if (!existingBlock) return block;
-      
+
       return {
         ...block,
         markDefs: existingBlock.markDefs || [],
@@ -504,7 +521,7 @@ export function CellEditor({
         }),
       };
     });
-    
+
     onSave(mergedBlocks.length > 0 ? mergedBlocks : content);
   }, [text, content, onSave]);
 
@@ -513,62 +530,62 @@ export function CellEditor({
       <Stack space={4}>
         {/* Toolbar */}
         <Card padding={2} border radius={2}>
-          <Flex gap={1} wrap="wrap" style={{ position: "relative" }}>
+          <Flex gap={1} wrap="wrap" style={{ position: 'relative' }}>
             <Button
               icon={Bold}
-              mode={hasBold ? "default" : "ghost"}
-              tone={hasBold ? "primary" : "default"}
+              mode={hasBold ? 'default' : 'ghost'}
+              tone={hasBold ? 'primary' : 'default'}
               padding={2}
               onClick={handleBold}
               title="Pogrubienie (stosuje do całego tekstu)"
             />
             <Button
               icon={Italic}
-              mode={hasItalic ? "default" : "ghost"}
-              tone={hasItalic ? "primary" : "default"}
+              mode={hasItalic ? 'default' : 'ghost'}
+              tone={hasItalic ? 'primary' : 'default'}
               padding={2}
               onClick={handleItalic}
               title="Kursywa (stosuje do całego tekstu)"
             />
             <Box
               style={{
-                width: "1px",
-                background: "var(--card-border-color)",
-                margin: "0 4px",
-                alignSelf: "stretch",
+                width: '1px',
+                background: 'var(--card-border-color)',
+                margin: '0 4px',
+                alignSelf: 'stretch',
               }}
             />
             <Button
               icon={List}
-              mode={hasBulletList ? "default" : "ghost"}
-              tone={hasBulletList ? "primary" : "default"}
+              mode={hasBulletList ? 'default' : 'ghost'}
+              tone={hasBulletList ? 'primary' : 'default'}
               padding={2}
               onClick={handleBulletList}
               title="Lista wypunktowana"
             />
             <Button
               icon={ListOrdered}
-              mode={hasNumberList ? "default" : "ghost"}
-              tone={hasNumberList ? "primary" : "default"}
+              mode={hasNumberList ? 'default' : 'ghost'}
+              tone={hasNumberList ? 'primary' : 'default'}
               padding={2}
               onClick={handleNumberList}
               title="Lista numerowana"
             />
             <Box
               style={{
-                width: "1px",
-                background: "var(--card-border-color)",
-                margin: "0 4px",
-                alignSelf: "stretch",
+                width: '1px',
+                background: 'var(--card-border-color)',
+                margin: '0 4px',
+                alignSelf: 'stretch',
               }}
             />
             <Button
               icon={Link2}
-              mode={hasLink ? "default" : "ghost"}
-              tone={hasLink ? "primary" : "default"}
+              mode={hasLink ? 'default' : 'ghost'}
+              tone={hasLink ? 'primary' : 'default'}
               padding={2}
               onClick={handleLink}
-              title={hasLink ? "Usuń link" : "Dodaj link"}
+              title={hasLink ? 'Usuń link' : 'Dodaj link'}
             />
             {showLinkEditor && (
               <LinkEditor
@@ -588,19 +605,19 @@ export function CellEditor({
             placeholder="Wpisz tekst..."
             autoFocus
             style={{
-              width: "100%",
-              minHeight: "150px",
-              padding: "12px",
-              fontSize: "14px",
-              lineHeight: "1.6",
-              fontFamily: "inherit",
-              border: "none",
-              outline: "none",
-              resize: "vertical",
-              background: "transparent",
-              color: "inherit",
+              width: '100%',
+              minHeight: '150px',
+              padding: '12px',
+              fontSize: '14px',
+              lineHeight: '1.6',
+              fontFamily: 'inherit',
+              border: 'none',
+              outline: 'none',
+              resize: 'vertical',
+              background: 'transparent',
+              color: 'inherit',
               fontWeight: hasBold ? 600 : 400,
-              fontStyle: hasItalic ? "italic" : "normal",
+              fontStyle: hasItalic ? 'italic' : 'normal',
             }}
           />
         </Card>
@@ -611,7 +628,8 @@ export function CellEditor({
             Wskazówki:
           </Text>
           <Text size={1} muted>
-            • Użyj &quot;• &quot; lub &quot;- &quot; na początku linii dla listy wypunktowanej
+            • Użyj &quot;• &quot; lub &quot;- &quot; na początku linii dla listy
+            wypunktowanej
           </Text>
           <Text size={1} muted>
             • Użyj &quot;1. &quot; na początku linii dla listy numerowanej

@@ -346,7 +346,7 @@ import { TechnicalDataView } from './components/technical-data-table/technical-d
 
 export const defaultDocumentNode: DefaultDocumentNodeResolver = (
   S,
-  { schemaType }
+  { schemaType },
 ) => {
   // Product: 3 tabs
   if (schemaType === 'product') {
@@ -729,14 +729,14 @@ export default function CustomFiltersBar({
  */
 function applyRangeFilters(
   products: ProductFilterMetadata[],
-  rangeFilters: ActiveRangeFilter[]
+  rangeFilters: ActiveRangeFilter[],
 ): ProductFilterMetadata[] {
   if (!rangeFilters || rangeFilters.length === 0) return products;
 
   return products.filter((product) => {
     return rangeFilters.every((rangeFilter) => {
       const productValue = product.customFilterValues?.find(
-        (fv) => fv.filterName === rangeFilter.filterName
+        (fv) => fv.filterName === rangeFilter.filterName,
       );
 
       // Product must have a numeric value for this filter
@@ -762,13 +762,13 @@ function applyRangeFilters(
  */
 function computeRangeFilterBounds(
   products: ProductFilterMetadata[],
-  filterName: string
+  filterName: string,
 ): { min: number; max: number; productCount: number } | null {
   const values = products
     .map(
       (p) =>
         p.customFilterValues?.find((fv) => fv.filterName === filterName)
-          ?.numericValue
+          ?.numericValue,
     )
     .filter((v): v is number => v !== undefined && v !== null);
 
@@ -794,7 +794,7 @@ function computeRangeFilterBounds(
  */
 function computeAllRangeFilterBounds(
   products: ProductFilterMetadata[],
-  rangeFilterDefinitions: CustomFilterDefinition[]
+  rangeFilterDefinitions: CustomFilterDefinition[],
 ): Map<string, { min: number; max: number; productCount: number }> {
   const bounds = new Map();
 
@@ -822,7 +822,7 @@ function computeAllRangeFilterBounds(
  */
 export function parseRangeFilters(
   searchParams: URLSearchParams,
-  filterDefinitions: CustomFilterDefinition[]
+  filterDefinitions: CustomFilterDefinition[],
 ): ActiveRangeFilter[] {
   const rangeFilters: ActiveRangeFilter[] = [];
 
@@ -851,7 +851,7 @@ export function parseRangeFilters(
  */
 export function buildRangeFilterParams(
   rangeFilters: ActiveRangeFilter[],
-  computedBounds: Map<string, { min: number; max: number }>
+  computedBounds: Map<string, { min: number; max: number }>,
 ): URLSearchParams {
   const params = new URLSearchParams();
 
@@ -985,7 +985,7 @@ The schema change is additive - existing `customFilters` string arrays need to b
 // Migration script concept
 const migrateFilters = async (client: SanityClient) => {
   const subCategories = await client.fetch(
-    `*[_type == "productCategorySub" && defined(customFilters)]`
+    `*[_type == "productCategorySub" && defined(customFilters)]`,
   );
 
   for (const subCat of subCategories) {

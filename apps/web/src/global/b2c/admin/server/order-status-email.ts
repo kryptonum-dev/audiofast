@@ -16,9 +16,7 @@ import {
   type AdminOrderStatusEmailStatus,
 } from '@/src/global/b2c/admin/order-status-email-content';
 import { buildB2cOrderDetailEmailUrl } from '@/src/global/b2c/email-urls';
-import {
-  getTransactionalReplyToEmail,
-} from '@/src/global/email/service';
+import { getTransactionalReplyToEmail } from '@/src/global/email/service';
 import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
 import type { Database } from '@/src/global/supabase/database.types';
 

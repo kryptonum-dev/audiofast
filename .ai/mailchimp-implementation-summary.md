@@ -368,8 +368,8 @@ await fetch('/api/newsletter', {
 
 ```typescript
 await subscribeToNewsletter(body.email, {
-  source: "homepage",
-  tags: ["website", "homepage", "promo-2024"],
+  source: 'homepage',
+  tags: ['website', 'homepage', 'promo-2024'],
 });
 ```
 

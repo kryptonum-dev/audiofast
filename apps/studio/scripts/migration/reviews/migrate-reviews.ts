@@ -24,17 +24,32 @@
  *   SANITY_API_TOKEN="xxx" bun run ... --rollback
  */
 
-import { writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import type { SanityClient } from "@sanity/client";
+import type { SanityClient } from '@sanity/client';
 
-import { createDryRunAuthorMappings,loadAuthorMappings } from "./transformers/author-resolver";
-import { transformReview, validateReviewDocument } from "./transformers/review-transformer";
-import type { MigrationOptions, MigrationResult, ReviewCsvRow, SanityReviewDocument } from "./types";
-import { loadImageCache, saveImageCache } from "./utils/asset-uploader";
-import { filterReviews, readReviewsCsv } from "./utils/csv-parser";
-import { createDryRunClient, createMigrationClient, getClientConfig } from "./utils/sanity-client";
+import {
+  createDryRunAuthorMappings,
+  loadAuthorMappings,
+} from './transformers/author-resolver';
+import {
+  transformReview,
+  validateReviewDocument,
+} from './transformers/review-transformer';
+import type {
+  MigrationOptions,
+  MigrationResult,
+  ReviewCsvRow,
+  SanityReviewDocument,
+} from './types';
+import { loadImageCache, saveImageCache } from './utils/asset-uploader';
+import { filterReviews, readReviewsCsv } from './utils/csv-parser';
+import {
+  createDryRunClient,
+  createMigrationClient,
+  getClientConfig,
+} from './utils/sanity-client';
 
 // ============================================================================
 // CLI Argument Parsing
@@ -45,7 +60,7 @@ function parseArgs(): MigrationOptions {
 
   const getArg = (prefix: string): string | undefined => {
     const arg = args.find((a) => a.startsWith(`${prefix}=`));
-    return arg ? arg.replace(`${prefix}=`, "") : undefined;
+    return arg ? arg.replace(`${prefix}=`, '') : undefined;
   };
 
   const hasFlag = (flag: string): boolean => {
@@ -53,15 +68,17 @@ function parseArgs(): MigrationOptions {
   };
 
   return {
-    csvPath: getArg("--csv") || "./csv/reviews/reviews-all.csv",
-    dryRun: hasFlag("--dry-run") || hasFlag("-d"),
-    verbose: hasFlag("--verbose") || hasFlag("-v"),
-    limit: getArg("--limit") ? parseInt(getArg("--limit")!, 10) : undefined,
-    minId: getArg("--min-id") ? parseInt(getArg("--min-id")!, 10) : undefined,
-    skipExisting: hasFlag("--skip-existing"),
-    batchSize: getArg("--batch-size") ? parseInt(getArg("--batch-size")!, 10) : 50,
-    rollback: hasFlag("--rollback"),
-    reportPath: getArg("--report") || undefined,
+    csvPath: getArg('--csv') || './csv/reviews/reviews-all.csv',
+    dryRun: hasFlag('--dry-run') || hasFlag('-d'),
+    verbose: hasFlag('--verbose') || hasFlag('-v'),
+    limit: getArg('--limit') ? parseInt(getArg('--limit')!, 10) : undefined,
+    minId: getArg('--min-id') ? parseInt(getArg('--min-id')!, 10) : undefined,
+    skipExisting: hasFlag('--skip-existing'),
+    batchSize: getArg('--batch-size')
+      ? parseInt(getArg('--batch-size')!, 10)
+      : 50,
+    rollback: hasFlag('--rollback'),
+    reportPath: getArg('--report') || undefined,
   };
 }
 
@@ -72,8 +89,10 @@ function parseArgs(): MigrationOptions {
 /**
  * Fetch existing review IDs from Sanity
  */
-async function fetchExistingReviewIds(client: SanityClient): Promise<Set<string>> {
-  console.log("\n🔍 Fetching existing review IDs from Sanity...");
+async function fetchExistingReviewIds(
+  client: SanityClient,
+): Promise<Set<string>> {
+  console.log('\n🔍 Fetching existing review IDs from Sanity...');
 
   const ids = await client.fetch<string[]>(
     '*[_type == "review" && !(_id match "drafts.*")]._id',
@@ -87,7 +106,7 @@ async function fetchExistingReviewIds(client: SanityClient): Promise<Set<string>
  * Rollback migrated reviews (delete by pattern)
  */
 async function rollbackReviews(client: SanityClient): Promise<void> {
-  console.log("\n🔄 Rolling back migrated reviews...");
+  console.log('\n🔄 Rolling back migrated reviews...');
 
   // Find all reviews with legacy ID pattern
   const ids = await client.fetch<string[]>(
@@ -95,7 +114,7 @@ async function rollbackReviews(client: SanityClient): Promise<void> {
   );
 
   if (ids.length === 0) {
-    console.log("   No reviews found to rollback");
+    console.log('   No reviews found to rollback');
     return;
   }
 
@@ -112,7 +131,9 @@ async function rollbackReviews(client: SanityClient): Promise<void> {
     }
 
     await transaction.commit();
-    console.log(`   Deleted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(ids.length / batchSize)}`);
+    console.log(
+      `   Deleted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(ids.length / batchSize)}`,
+    );
   }
 
   console.log(`   ✓ Rolled back ${ids.length} reviews`);
@@ -134,12 +155,12 @@ async function migrateReviews(
   };
 
   if (documents.length === 0) {
-    console.log("   No documents to migrate");
+    console.log('   No documents to migrate');
     return result;
   }
 
   if (options.dryRun) {
-    console.log("\n🧪 DRY RUN - No changes will be made");
+    console.log('\n🧪 DRY RUN - No changes will be made');
 
     for (const doc of documents) {
       const validation = validateReviewDocument(doc);
@@ -152,8 +173,8 @@ async function migrateReviews(
       } else {
         result.errors.push({
           reviewId: doc._id,
-          reviewTitle: doc.title[0]?.children[0]?.text || "Unknown",
-          error: validation.errors.join(", "),
+          reviewTitle: doc.title[0]?.children[0]?.text || 'Unknown',
+          error: validation.errors.join(', '),
         });
       }
     }
@@ -175,7 +196,9 @@ async function migrateReviews(
     const batchNum = Math.floor(i / batchSize) + 1;
     const totalBatches = Math.ceil(documents.length / batchSize);
 
-    console.log(`\n   Batch ${batchNum}/${totalBatches} (${batch.length} documents)...`);
+    console.log(
+      `\n   Batch ${batchNum}/${totalBatches} (${batch.length} documents)...`,
+    );
 
     const transaction = client!.transaction();
     for (const doc of batch) {
@@ -192,10 +215,13 @@ async function migrateReviews(
         }
       }
     } catch (err) {
-      console.error(`   ❌ Batch failed:`, err instanceof Error ? err.message : err);
+      console.error(
+        `   ❌ Batch failed:`,
+        err instanceof Error ? err.message : err,
+      );
 
       // Fallback to individual documents
-      console.log("   Falling back to individual migration...");
+      console.log('   Falling back to individual migration...');
 
       for (const doc of batch) {
         try {
@@ -207,10 +233,12 @@ async function migrateReviews(
         } catch (docErr) {
           result.errors.push({
             reviewId: doc._id,
-            reviewTitle: doc.title[0]?.children[0]?.text || "Unknown",
+            reviewTitle: doc.title[0]?.children[0]?.text || 'Unknown',
             error: docErr instanceof Error ? docErr.message : String(docErr),
           });
-          console.error(`      ❌ ${doc._id}: ${docErr instanceof Error ? docErr.message : docErr}`);
+          console.error(
+            `      ❌ ${doc._id}: ${docErr instanceof Error ? docErr.message : docErr}`,
+          );
         }
       }
     }
@@ -227,7 +255,9 @@ function generateReport(
   result: MigrationResult,
   options: MigrationOptions,
 ): void {
-  const reportPath = options.reportPath || `apps/studio/scripts/migration/reviews/migration-report-${Date.now()}.json`;
+  const reportPath =
+    options.reportPath ||
+    `apps/studio/scripts/migration/reviews/migration-report-${Date.now()}.json`;
 
   const report = {
     timestamp: new Date().toISOString(),
@@ -250,7 +280,10 @@ function generateReport(
     errors: result.errors,
   };
 
-  writeFileSync(resolve(process.cwd(), reportPath), JSON.stringify(report, null, 2));
+  writeFileSync(
+    resolve(process.cwd(), reportPath),
+    JSON.stringify(report, null, 2),
+  );
   console.log(`\n📄 Report saved to: ${reportPath}`);
 }
 
@@ -261,20 +294,20 @@ function generateReport(
 async function main(): Promise<void> {
   const options = parseArgs();
 
-  console.log("");
+  console.log('');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║            AUDIOFAST DATA MIGRATION                           ║",
+    '║            AUDIOFAST DATA MIGRATION                           ║',
   );
   console.log(
-    "║            Reviews (Restructured)                             ║",
+    '║            Reviews (Restructured)                             ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
+  console.log('');
 
   // Print configuration
   const config = getClientConfig();
@@ -282,7 +315,7 @@ async function main(): Promise<void> {
   console.log(`   Project: ${config.projectId}`);
   console.log(`   Dataset: ${config.dataset}`);
   console.log(`   CSV Path: ${resolve(process.cwd(), options.csvPath)}`);
-  console.log(`   Mode: ${options.dryRun ? "DRY RUN (no writes)" : "LIVE"}`);
+  console.log(`   Mode: ${options.dryRun ? 'DRY RUN (no writes)' : 'LIVE'}`);
   console.log(`   Skip Existing: ${options.skipExisting}`);
   if (options.limit) console.log(`   Limit: ${options.limit}`);
   if (options.minId) console.log(`   Min ID: ${options.minId}`);
@@ -294,8 +327,8 @@ async function main(): Promise<void> {
   if (!options.dryRun) {
     if (!process.env.SANITY_API_TOKEN) {
       throw new Error(
-        "SANITY_API_TOKEN environment variable is required for live migration.\n" +
-        "Set it with: SANITY_API_TOKEN='your-token' bun run ...",
+        'SANITY_API_TOKEN environment variable is required for live migration.\n' +
+          "Set it with: SANITY_API_TOKEN='your-token' bun run ...",
       );
     }
     client = createMigrationClient();
@@ -306,7 +339,7 @@ async function main(): Promise<void> {
   // Handle rollback
   if (options.rollback) {
     if (options.dryRun) {
-      console.log("\n⚠️  Cannot rollback in dry-run mode");
+      console.log('\n⚠️  Cannot rollback in dry-run mode');
       return;
     }
     await rollbackReviews(client!);
@@ -333,7 +366,7 @@ async function main(): Promise<void> {
   });
 
   if (rows.length === 0) {
-    console.log("\nℹ️  No reviews to migrate after filtering");
+    console.log('\nℹ️  No reviews to migrate after filtering');
     return;
   }
 
@@ -341,7 +374,9 @@ async function main(): Promise<void> {
 
   // Load author mappings
   if (options.dryRun) {
-    const uniqueAuthors = [...new Set(rows.map((r) => r.AuthorName).filter(Boolean))];
+    const uniqueAuthors = [
+      ...new Set(rows.map((r) => r.AuthorName).filter(Boolean)),
+    ];
     createDryRunAuthorMappings(uniqueAuthors);
   } else {
     await loadAuthorMappings(client!);
@@ -354,7 +389,12 @@ async function main(): Promise<void> {
 
   for (const row of rows) {
     try {
-      const doc = await transformReview(row, client, options.dryRun, options.verbose);
+      const doc = await transformReview(
+        row,
+        client,
+        options.dryRun,
+        options.verbose,
+      );
       if (doc) {
         documents.push(doc);
         processed++;
@@ -362,7 +402,10 @@ async function main(): Promise<void> {
         failed++;
       }
     } catch (err) {
-      console.error(`   ❌ Error transforming review ${row.ID}:`, err instanceof Error ? err.message : err);
+      console.error(
+        `   ❌ Error transforming review ${row.ID}:`,
+        err instanceof Error ? err.message : err,
+      );
       failed++;
     }
 
@@ -372,7 +415,9 @@ async function main(): Promise<void> {
     }
   }
 
-  console.log(`\n   Transformed ${documents.length} valid documents (${failed} failed)`);
+  console.log(
+    `\n   Transformed ${documents.length} valid documents (${failed} failed)`,
+  );
 
   // Migrate
   const result = await migrateReviews(client, documents, options);
@@ -383,14 +428,14 @@ async function main(): Promise<void> {
   }
 
   // Summary
-  console.log("\n" + "═".repeat(65));
-  console.log("📊 Migration Summary:");
+  console.log('\n' + '═'.repeat(65));
+  console.log('📊 Migration Summary:');
   console.log(`   ✅ Created/Updated: ${result.created.length}`);
   console.log(`   ⏭️  Skipped: ${result.skipped.length}`);
   console.log(`   ❌ Errors: ${result.errors.length}`);
 
   if (result.errors.length > 0) {
-    console.log("\n❌ Errors:");
+    console.log('\n❌ Errors:');
     for (const err of result.errors.slice(0, 10)) {
       console.log(`   - ${err.reviewId}: ${err.error}`);
     }
@@ -404,11 +449,11 @@ async function main(): Promise<void> {
     generateReport(result, options);
   }
 
-  console.log("\n✅ Review migration complete.");
+  console.log('\n✅ Review migration complete.');
 }
 
 // Run
 main().catch((error) => {
-  console.error("\n❌ Migration failed:", error);
+  console.error('\n❌ Migration failed:', error);
   process.exit(1);
 });

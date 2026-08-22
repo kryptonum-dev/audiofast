@@ -131,10 +131,10 @@ describe('admin order status transitions', () => {
   it('rejects backward, same-state, system-owned, and terminal transitions', () => {
     const baseInput = {
       actor: OPERATOR,
-        changedAt: '2026-05-06T08:00:00.000Z',
-        note: null,
-        shippedAt: '2026-05-01T08:00:00.000Z',
-        statusHistory: [],
+      changedAt: '2026-05-06T08:00:00.000Z',
+      note: null,
+      shippedAt: '2026-05-01T08:00:00.000Z',
+      statusHistory: [],
     };
 
     expect(() =>

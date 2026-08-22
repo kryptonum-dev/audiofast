@@ -5,13 +5,13 @@
  * Caches lookups to minimize API calls.
  */
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import type { SanityClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
+import type { SanityClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
 
-import type { ReferenceMappings, SanityReference } from "../types";
+import type { ReferenceMappings, SanityReference } from '../types';
 
 // ============================================================================
 // Reference Cache
@@ -25,7 +25,8 @@ let legacyReviewIdMapping: Map<string, string> | null = null;
 // Set of review IDs that actually exist in Sanity (for validation)
 let existingReviewIds: Set<string> | null = null;
 
-const DEFAULT_PRODUCTS_REVIEWS_CSV_PATH = "csv/products/december/products-reviews.csv";
+const DEFAULT_PRODUCTS_REVIEWS_CSV_PATH =
+  'csv/products/december/products-reviews.csv';
 
 type ProductReviewRow = {
   ProductID: string;
@@ -45,7 +46,7 @@ export async function loadReferenceMappings(
     return referenceMappings;
   }
 
-  console.log("\n🔗 Loading reference mappings from Sanity...");
+  console.log('\n🔗 Loading reference mappings from Sanity...');
 
   // Load brands
   const brands = await client.fetch<
@@ -55,8 +56,8 @@ export async function loadReferenceMappings(
   for (const brand of brands) {
     // Extract slug from full path (e.g., "/marki/acoustic-signature/" → "acoustic-signature")
     const slug = brand.slug.current
-      .replace(/^\/marki\//, "")
-      .replace(/\/$/, "");
+      .replace(/^\/marki\//, '')
+      .replace(/\/$/, '');
     brandMapping[slug] = brand._id;
   }
   console.log(`   ✓ Loaded ${brands.length} brand mappings`);
@@ -69,9 +70,9 @@ export async function loadReferenceMappings(
   for (const category of categories) {
     // Extract slug from full path (e.g., "/produkty/kategoria/gramofony/" → "gramofony")
     const slug = category.slug.current
-      .replace(/^\/produkty\/kategoria\//, "")
-      .replace(/^\/kategoria\//, "")
-      .replace(/\/$/, "");
+      .replace(/^\/produkty\/kategoria\//, '')
+      .replace(/^\/kategoria\//, '')
+      .replace(/\/$/, '');
     categoryMapping[slug] = category._id;
   }
   console.log(`   ✓ Loaded ${categories.length} category mappings`);
@@ -92,8 +93,8 @@ export async function loadReferenceMappings(
     // For page type reviews with slug, map by slug
     if (review.slug?.current) {
       const slug = review.slug.current
-        .replace(/^\/recenzje\//, "")
-        .replace(/\/$/, "");
+        .replace(/^\/recenzje\//, '')
+        .replace(/\/$/, '');
       reviewMapping[slug] = review._id;
       pageReviews++;
     } else {
@@ -102,8 +103,8 @@ export async function loadReferenceMappings(
 
     // Also map by _id pattern for legacy ID lookups (e.g., "review-123" → extract "123")
     // This helps match PDF/external reviews that were migrated with ID pattern
-    if (review._id.startsWith("review-")) {
-      const legacyIdFromSanityId = review._id.replace("review-", "");
+    if (review._id.startsWith('review-')) {
+      const legacyIdFromSanityId = review._id.replace('review-', '');
       // Store with a special prefix to avoid collisions with slugs
       reviewMapping[`__id__${legacyIdFromSanityId}`] = review._id;
     }
@@ -136,13 +137,13 @@ export function loadLegacyReviewIdMappings(): void {
     return;
   }
 
-  console.log("\n🔗 Loading legacy review ID mappings...");
+  console.log('\n🔗 Loading legacy review ID mappings...');
 
   legacyReviewIdMapping = new Map();
 
   try {
     const resolved = resolve(process.cwd(), DEFAULT_PRODUCTS_REVIEWS_CSV_PATH);
-    const file = readFileSync(resolved, "utf-8");
+    const file = readFileSync(resolved, 'utf-8');
     const rows = parse(file, {
       columns: true,
       skip_empty_lines: true,
@@ -226,7 +227,7 @@ export function resolveBrandReference(
 ): SanityReference | null {
   if (!referenceMappings) {
     console.warn(
-      "⚠️  Reference mappings not loaded. Call loadReferenceMappings first.",
+      '⚠️  Reference mappings not loaded. Call loadReferenceMappings first.',
     );
     return null;
   }
@@ -238,7 +239,7 @@ export function resolveBrandReference(
   }
 
   return {
-    _type: "reference",
+    _type: 'reference',
     _ref: brandId,
   };
 }
@@ -251,7 +252,7 @@ export function resolveCategoryReferences(
 ): SanityReference[] {
   if (!referenceMappings) {
     console.warn(
-      "⚠️  Reference mappings not loaded. Call loadReferenceMappings first.",
+      '⚠️  Reference mappings not loaded. Call loadReferenceMappings first.',
     );
     return [];
   }
@@ -261,7 +262,7 @@ export function resolveCategoryReferences(
     const categoryId = referenceMappings.categories[slug];
     if (categoryId) {
       references.push({
-        _type: "reference",
+        _type: 'reference',
         _key: generateKey(),
         _ref: categoryId,
       });
@@ -285,7 +286,7 @@ export function resolveReviewReferences(
 ): SanityReference[] {
   if (!referenceMappings) {
     console.warn(
-      "⚠️  Reference mappings not loaded. Call loadReferenceMappings first.",
+      '⚠️  Reference mappings not loaded. Call loadReferenceMappings first.',
     );
     return [];
   }
@@ -303,7 +304,7 @@ export function resolveReviewReferences(
 
     if (reviewId) {
       references.push({
-        _type: "reference",
+        _type: 'reference',
         _key: generateKey(),
         _ref: reviewId,
       });
@@ -341,7 +342,7 @@ export function resolveReviewByLegacyId(
   }
 
   if (!legacyReviewIdMapping) {
-    console.warn("⚠️  Legacy review ID mappings not available");
+    console.warn('⚠️  Legacy review ID mappings not available');
     return null;
   }
 
@@ -360,7 +361,7 @@ export function resolveReviewByLegacyId(
   }
 
   return {
-    _type: "reference",
+    _type: 'reference',
     _ref: sanityId,
   };
 }
@@ -461,11 +462,11 @@ export function validateReferences(
  */
 export function printReferenceStats(): void {
   if (!referenceMappings) {
-    console.log("   No reference mappings loaded");
+    console.log('   No reference mappings loaded');
     return;
   }
 
-  console.log("\n📊 Reference Statistics:");
+  console.log('\n📊 Reference Statistics:');
   console.log(`   Brands: ${Object.keys(referenceMappings.brands).length}`);
   console.log(
     `   Categories: ${Object.keys(referenceMappings.categories).length}`,

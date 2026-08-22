@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from "@sanity/icons";
+import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -10,11 +10,11 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { SanityClient } from "sanity";
+} from '@sanity/ui';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { SanityClient } from 'sanity';
 
-import type { FilterConfigItem } from "./types";
+import type { FilterConfigItem } from './types';
 
 type ProductWithFilterValue = {
   _id: string;
@@ -52,13 +52,16 @@ export function ProductFilterValues({
 }: ProductFilterValuesProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [products, setProducts] = useState<ProductWithFilterValue[]>([]);
-  const [counts, setCounts] = useState<ProductCounts>({ total: 0, withValue: 0 });
+  const [counts, setCounts] = useState<ProductCounts>({
+    total: 0,
+    withValue: 0,
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCounts, setIsLoadingCounts] = useState(true);
   const [savingProductIds, setSavingProductIds] = useState<Set<string>>(
     new Set(),
   );
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [showAllWithoutValue, setShowAllWithoutValue] = useState(false);
 
   // Load counts initially (even when collapsed)
@@ -71,11 +74,11 @@ export function ProductFilterValues({
 
     setIsLoadingCounts(true);
     try {
-      const baseCategoryId = categoryId.startsWith("drafts.")
-        ? categoryId.replace("drafts.", "")
+      const baseCategoryId = categoryId.startsWith('drafts.')
+        ? categoryId.replace('drafts.', '')
         : categoryId;
 
-      const isRangeFilter = filter.filterType === "range";
+      const isRangeFilter = filter.filterType === 'range';
 
       // Lightweight query to just get counts
       const result = await client.fetch<
@@ -91,7 +94,7 @@ export function ProductFilterValues({
             customFilterValues
           }
         }.product {
-          "hasValue": defined(customFilterValues) && count(customFilterValues[filterName == $filterName && (${isRangeFilter ? "defined(numericValue)" : "defined(value) && value != ''"})] ) > 0
+          "hasValue": defined(customFilterValues) && count(customFilterValues[filterName == $filterName && (${isRangeFilter ? 'defined(numericValue)' : "defined(value) && value != ''"})] ) > 0
         }`,
         { categoryId: baseCategoryId, filterName: filter.name },
       );
@@ -101,7 +104,7 @@ export function ProductFilterValues({
 
       setCounts({ total, withValue });
     } catch (error) {
-      console.error("Error loading counts:", error);
+      console.error('Error loading counts:', error);
       setCounts({ total: 0, withValue: 0 });
     } finally {
       setIsLoadingCounts(false);
@@ -119,8 +122,8 @@ export function ProductFilterValues({
 
     setIsLoading(true);
     try {
-      const baseCategoryId = categoryId.startsWith("drafts.")
-        ? categoryId.replace("drafts.", "")
+      const baseCategoryId = categoryId.startsWith('drafts.')
+        ? categoryId.replace('drafts.', '')
         : categoryId;
 
       const result = await client.fetch<
@@ -158,8 +161,8 @@ export function ProductFilterValues({
           const filterValue = product.customFilterValues?.find(
             (fv) => fv.filterName === filter.name,
           );
-          const baseId = product._id.startsWith("drafts.")
-            ? product._id.replace("drafts.", "")
+          const baseId = product._id.startsWith('drafts.')
+            ? product._id.replace('drafts.', '')
             : product._id;
           return {
             _id: baseId,
@@ -174,7 +177,7 @@ export function ProductFilterValues({
       setProducts(productsWithValues);
 
       // Update counts from loaded data
-      const isRangeFilter = filter.filterType === "range";
+      const isRangeFilter = filter.filterType === 'range';
       const withValue = productsWithValues.filter(
         (p) =>
           (isRangeFilter && p.currentNumericValue !== undefined) ||
@@ -182,7 +185,7 @@ export function ProductFilterValues({
       ).length;
       setCounts({ total: productsWithValues.length, withValue });
     } catch (error) {
-      console.error("Error loading products:", error);
+      console.error('Error loading products:', error);
       setProducts([]);
     } finally {
       setIsLoading(false);
@@ -197,7 +200,7 @@ export function ProductFilterValues({
   useEffect(() => {
     if (!isExpanded) {
       setShowAllWithoutValue(false);
-      setSearchQuery("");
+      setSearchQuery('');
     }
   }, [isExpanded]);
 
@@ -302,7 +305,7 @@ export function ProductFilterValues({
     [filter.name, onSaveProduct, loadProducts, loadCounts, products],
   );
 
-  const isRangeFilter = filter.filterType === "range";
+  const isRangeFilter = filter.filterType === 'range';
 
   // Filter products by search query
   const filteredProducts = useMemo(() => {
@@ -359,13 +362,13 @@ export function ProductFilterValues({
           mode="bleed"
           tone="default"
           onClick={() => setIsExpanded(!isExpanded)}
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
           padding={2}
         >
           <Flex
             align="center"
             justify="space-between"
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
           >
             <Flex align="center" gap={2}>
               {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
@@ -467,7 +470,7 @@ export function ProductFilterValues({
                         mode="ghost"
                         tone="primary"
                         onClick={() => setShowAllWithoutValue(true)}
-                        style={{ width: "100%" }}
+                        style={{ width: '100%' }}
                         padding={3}
                       >
                         <Text size={1}>
@@ -504,8 +507,8 @@ function ProductRow({
 }) {
   const [localValue, setLocalValue] = useState(
     isRangeFilter
-      ? product.currentNumericValue?.toString() || ""
-      : product.currentValue || "",
+      ? product.currentNumericValue?.toString() || ''
+      : product.currentValue || '',
   );
   const [isDirty, setIsDirty] = useState(false);
 
@@ -514,8 +517,8 @@ function ProductRow({
     if (!isDirty) {
       setLocalValue(
         isRangeFilter
-          ? product.currentNumericValue?.toString() || ""
-          : product.currentValue || "",
+          ? product.currentNumericValue?.toString() || ''
+          : product.currentValue || '',
       );
     }
   }, [
@@ -542,7 +545,7 @@ function ProductRow({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       (e.target as HTMLInputElement).blur();
     }
   };
@@ -552,18 +555,18 @@ function ProductRow({
       padding={2}
       border
       radius={2}
-      tone={isSaving ? "positive" : "default"}
+      tone={isSaving ? 'positive' : 'default'}
     >
       <Flex align="center" gap={3}>
         {/* Product image */}
         <Box
           style={{
-            width: "40px",
-            height: "40px",
+            width: '40px',
+            height: '40px',
             flexShrink: 0,
-            borderRadius: "4px",
-            overflow: "hidden",
-            backgroundColor: "var(--card-bg2-color)",
+            borderRadius: '4px',
+            overflow: 'hidden',
+            backgroundColor: 'var(--card-bg2-color)',
           }}
         >
           {product.imageUrl ? (
@@ -571,16 +574,16 @@ function ProductRow({
               src={`${product.imageUrl}?w=80&h=80&fit=max`}
               alt={product.name}
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
               }}
             />
           ) : (
             <Flex
               align="center"
               justify="center"
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: '100%', height: '100%' }}
             >
               <Text size={0} muted>
                 –
@@ -600,15 +603,15 @@ function ProductRow({
         </Box>
 
         {/* Value input */}
-        <Box style={{ width: isRangeFilter ? "100px" : "180px" }}>
+        <Box style={{ width: isRangeFilter ? '100px' : '180px' }}>
           <Flex align="center" gap={1}>
             <TextInput
               value={localValue}
               onChange={handleChange}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              placeholder={isRangeFilter ? "Wartość" : "Wpisz..."}
-              type={isRangeFilter ? "number" : "text"}
+              placeholder={isRangeFilter ? 'Wartość' : 'Wpisz...'}
+              type={isRangeFilter ? 'number' : 'text'}
               fontSize={1}
               disabled={isSaving}
             />

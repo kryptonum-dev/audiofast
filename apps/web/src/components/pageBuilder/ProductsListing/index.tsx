@@ -66,7 +66,7 @@ export default async function ProductsListing(props: ProductsListingProps) {
   const maxPrice =
     prices.length > 0
       ? Math.max(...prices)
-      : (filterMetadata.globalMaxPrice || 100000);
+      : filterMetadata.globalMaxPrice || 100000;
 
   // Convert searchParams to Promise for ProductsListingComponent
   // (PageBuilder already awaited it, so we wrap it back)

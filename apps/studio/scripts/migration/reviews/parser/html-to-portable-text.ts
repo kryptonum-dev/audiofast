@@ -11,10 +11,10 @@
  * Note: Page breaks (<!-- pagebreak -->) are REMOVED, not converted
  */
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { parse } from "csv-parse/sync";
+import { parse } from 'csv-parse/sync';
 
 import type {
   ImagePlaceholder,
@@ -23,15 +23,15 @@ import type {
   PortableTextSpan,
   PtHorizontalLine,
   ReviewPortableTextContent,
-} from "../types";
+} from '../types';
 
 // ============================================================================
 // Link Resolution CSV Configuration
 // ============================================================================
 
 const DEFAULT_PRODUCT_SLUGS_CSV_PATH =
-  "csv/products/product-brand-slug-map.csv";
-const DEFAULT_SITETREE_CSV_PATH = "csv/products/sitetree-map.csv";
+  'csv/products/product-brand-slug-map.csv';
+const DEFAULT_SITETREE_CSV_PATH = 'csv/products/sitetree-map.csv';
 
 // Mapping caches (loaded lazily)
 let productSlugMap: Map<string, string> | null = null;
@@ -63,7 +63,7 @@ type SiteTreeRow = {
 function readCsvRows<T>(csvPath: string): T[] {
   try {
     const resolved = resolve(process.cwd(), csvPath);
-    const file = readFileSync(resolved, "utf-8");
+    const file = readFileSync(resolved, 'utf-8');
     return parse(file, {
       columns: true,
       skip_empty_lines: true,
@@ -120,8 +120,8 @@ function loadSiteTreeMap(): Map<
     const siteTreeId = row.SiteTreeID;
     if (siteTreeId) {
       sitetreeMap.set(siteTreeId, {
-        urlSegment: row.URLSegment || "",
-        className: row.ClassName || "",
+        urlSegment: row.URLSegment || '',
+        className: row.ClassName || '',
         linkedProductId: row.LinkedProductID || null,
       });
     }
@@ -156,7 +156,7 @@ function resolveSiteTreeId(siteTreeId: string): string | null {
   }
 
   // If it's a ProductLink, resolve the product URL using original brand/product format
-  if (entry.className === "ProductLink" && entry.linkedProductId) {
+  if (entry.className === 'ProductLink' && entry.linkedProductId) {
     const productPath = getProductFullPathById(entry.linkedProductId);
     if (productPath) {
       return `https://www.audiofast.pl/${productPath}`;
@@ -179,7 +179,7 @@ function resolveSiteTreeId(siteTreeId: string): string | null {
  * - Internal/relative URLs: prefixed with https://www.audiofast.pl/
  */
 function resolveSilverStripeLink(url: string): string {
-  if (!url) return "#";
+  if (!url) return '#';
 
   // Handle product_link shortcode: [product_link,id=X]
   const productMatch = url.match(/\[product_link,id=(\d+)\]/);
@@ -189,7 +189,7 @@ function resolveSilverStripeLink(url: string): string {
     if (fullPath) {
       return `https://www.audiofast.pl/${fullPath}`;
     }
-    return "#";
+    return '#';
   }
 
   // Handle sitetree_link shortcode: [sitetree_link,id=X]
@@ -200,21 +200,21 @@ function resolveSilverStripeLink(url: string): string {
     if (resolvedUrl) {
       return resolvedUrl;
     }
-    return "#";
+    return '#';
   }
 
   // If URL starts with audiofast.pl (without https://), add protocol
-  if (url.startsWith("audiofast.pl") || url.startsWith("www.audiofast.pl")) {
+  if (url.startsWith('audiofast.pl') || url.startsWith('www.audiofast.pl')) {
     return `https://${url}`;
   }
 
   // External URLs (http:// or https://) - return as-is
-  if (url.startsWith("http://") || url.startsWith("https://")) {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
 
   // Relative URLs starting with /
-  if (url.startsWith("/")) {
+  if (url.startsWith('/')) {
     return `https://www.audiofast.pl${url}`;
   }
 
@@ -231,22 +231,22 @@ function generateKey(): string {
 }
 
 function cleanString(value: string | null | undefined): string {
-  if (value === undefined || value === null) return "";
-  const cleaned = value.replace(/\u00a0/g, " ").trim();
-  if (!cleaned || cleaned.toLowerCase() === "null") return "";
+  if (value === undefined || value === null) return '';
+  const cleaned = value.replace(/\u00a0/g, ' ').trim();
+  if (!cleaned || cleaned.toLowerCase() === 'null') return '';
   return cleaned;
 }
 
 function stripHtmlTags(html: string): string {
   return html
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -265,22 +265,22 @@ function parseInlineContent(html: string): {
   const markDefs: MarkDef[] = [];
 
   // Remove images from the content (handled separately)
-  let content = html.replace(/<img[^>]*>/gi, "");
+  let content = html.replace(/<img[^>]*>/gi, '');
 
   // Handle "first-big-letter" pattern: <span class="first-big-letter...">X</span><strong>rest</strong>
   content = content.replace(
     /<span[^>]*class="[^"]*first-big-letter[^"]*"[^>]*>([^<]*)<\/span>\s*<strong([^>]*)>/gi,
-    "<strong$2>$1",
+    '<strong$2>$1',
   );
 
   // Also handle when first-big-letter is followed by text without strong
   content = content.replace(
     /<span[^>]*class="[^"]*first-big-letter[^"]*"[^>]*>([^<]*)<\/span>/gi,
-    "$1",
+    '$1',
   );
 
   // Replace <br> tags with a special marker
-  content = content.replace(/<br\s*\/?>/gi, "|||BR|||");
+  content = content.replace(/<br\s*\/?>/gi, '|||BR|||');
 
   // Extract and process links first (replace with placeholders)
   const linkRegex = /<a[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
@@ -300,15 +300,15 @@ function parseInlineContent(html: string): {
     const placeholder = `|||LINK${linkIndex}|||`;
     // Strip HTML from link text but preserve strong/em placeholders
     const cleanText = text
-      .replace(/<strong[^>]*>/gi, "|||STRONG_START|||")
-      .replace(/<\/strong>/gi, "|||STRONG_END|||")
-      .replace(/<b[^>]*>/gi, "|||STRONG_START|||")
-      .replace(/<\/b>/gi, "|||STRONG_END|||")
-      .replace(/<em[^>]*>/gi, "|||EM_START|||")
-      .replace(/<\/em>/gi, "|||EM_END|||")
-      .replace(/<i[^>]*>/gi, "|||EM_START|||")
-      .replace(/<\/i>/gi, "|||EM_END|||")
-      .replace(/<[^>]+>/g, "");
+      .replace(/<strong[^>]*>/gi, '|||STRONG_START|||')
+      .replace(/<\/strong>/gi, '|||STRONG_END|||')
+      .replace(/<b[^>]*>/gi, '|||STRONG_START|||')
+      .replace(/<\/b>/gi, '|||STRONG_END|||')
+      .replace(/<em[^>]*>/gi, '|||EM_START|||')
+      .replace(/<\/em>/gi, '|||EM_END|||')
+      .replace(/<i[^>]*>/gi, '|||EM_START|||')
+      .replace(/<\/i>/gi, '|||EM_END|||')
+      .replace(/<[^>]+>/g, '');
     links.push({
       url: resolvedUrl,
       text: cleanText,
@@ -322,10 +322,10 @@ function parseInlineContent(html: string): {
   // Create mark definitions for links
   for (const link of links) {
     markDefs.push({
-      _type: "customLink",
+      _type: 'customLink',
       _key: link.key,
       customLink: {
-        type: "external",
+        type: 'external',
         openInNewTab: true,
         external: link.url,
       },
@@ -333,32 +333,32 @@ function parseInlineContent(html: string): {
   }
 
   // Replace strong/bold tags with markers
-  content = content.replace(/<strong[^>]*>/gi, "|||STRONG_START|||");
-  content = content.replace(/<\/strong>/gi, "|||STRONG_END|||");
-  content = content.replace(/<b[^>]*>/gi, "|||STRONG_START|||");
-  content = content.replace(/<\/b>/gi, "|||STRONG_END|||");
+  content = content.replace(/<strong[^>]*>/gi, '|||STRONG_START|||');
+  content = content.replace(/<\/strong>/gi, '|||STRONG_END|||');
+  content = content.replace(/<b[^>]*>/gi, '|||STRONG_START|||');
+  content = content.replace(/<\/b>/gi, '|||STRONG_END|||');
 
   // Replace em/italic tags with markers
-  content = content.replace(/<em[^>]*>/gi, "|||EM_START|||");
-  content = content.replace(/<\/em>/gi, "|||EM_END|||");
-  content = content.replace(/<i[^>]*>/gi, "|||EM_START|||");
-  content = content.replace(/<\/i>/gi, "|||EM_END|||");
+  content = content.replace(/<em[^>]*>/gi, '|||EM_START|||');
+  content = content.replace(/<\/em>/gi, '|||EM_END|||');
+  content = content.replace(/<i[^>]*>/gi, '|||EM_START|||');
+  content = content.replace(/<\/i>/gi, '|||EM_END|||');
 
   // Strip remaining HTML tags (like span)
-  content = content.replace(/<[^>]+>/g, "");
+  content = content.replace(/<[^>]+>/g, '');
 
   // Decode HTML entities
   content = content
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'");
 
   // Parse the content into spans with marks
   const children: PortableTextSpan[] = [];
-  let currentText = "";
+  let currentText = '';
   let inStrong = false;
   let inEm = false;
 
@@ -370,41 +370,41 @@ function parseInlineContent(html: string): {
   const flushSpan = () => {
     if (currentText) {
       const marks: string[] = [];
-      if (inStrong) marks.push("strong");
-      if (inEm) marks.push("em");
+      if (inStrong) marks.push('strong');
+      if (inEm) marks.push('em');
 
       children.push({
-        _type: "span",
+        _type: 'span',
         _key: generateKey(),
         text: currentText,
         marks: marks.length > 0 ? marks : [],
       });
-      currentText = "";
+      currentText = '';
     }
   };
 
   for (const part of parts) {
     if (!part) continue;
 
-    if (part === "|||STRONG_START|||") {
+    if (part === '|||STRONG_START|||') {
       flushSpan();
       inStrong = true;
-    } else if (part === "|||STRONG_END|||") {
+    } else if (part === '|||STRONG_END|||') {
       flushSpan();
       inStrong = false;
-    } else if (part === "|||EM_START|||") {
+    } else if (part === '|||EM_START|||') {
       flushSpan();
       inEm = true;
-    } else if (part === "|||EM_END|||") {
+    } else if (part === '|||EM_END|||') {
       flushSpan();
       inEm = false;
-    } else if (part === "|||BR|||") {
+    } else if (part === '|||BR|||') {
       flushSpan();
       // Add a newline character as a separate span
       children.push({
-        _type: "span",
+        _type: 'span',
         _key: generateKey(),
-        text: "\n",
+        text: '\n',
         marks: [],
       });
     } else if (part.match(/^\|\|\|LINK(\d+)\|\|\|$/)) {
@@ -422,21 +422,21 @@ function parseInlineContent(html: string): {
         for (const linkPart of linkParts) {
           if (!linkPart) continue;
 
-          if (linkPart === "|||STRONG_START|||") {
+          if (linkPart === '|||STRONG_START|||') {
             linkInStrong = true;
-          } else if (linkPart === "|||STRONG_END|||") {
+          } else if (linkPart === '|||STRONG_END|||') {
             linkInStrong = false;
-          } else if (linkPart === "|||EM_START|||") {
+          } else if (linkPart === '|||EM_START|||') {
             linkInEm = true;
-          } else if (linkPart === "|||EM_END|||") {
+          } else if (linkPart === '|||EM_END|||') {
             linkInEm = false;
           } else if (linkPart.trim()) {
             const linkMarks: string[] = [linkInfo.key];
-            if (linkInStrong) linkMarks.push("strong");
-            if (linkInEm) linkMarks.push("em");
+            if (linkInStrong) linkMarks.push('strong');
+            if (linkInEm) linkMarks.push('em');
 
             children.push({
-              _type: "span",
+              _type: 'span',
               _key: generateKey(),
               text: linkPart,
               marks: linkMarks,
@@ -455,9 +455,9 @@ function parseInlineContent(html: string): {
   // If no children were created, add empty span
   if (children.length === 0) {
     children.push({
-      _type: "span",
+      _type: 'span',
       _key: generateKey(),
-      text: "",
+      text: '',
       marks: [],
     });
   }
@@ -470,16 +470,16 @@ function parseInlineContent(html: string): {
  */
 function createTextBlock(
   text: string,
-  style: "normal" | "h2" = "normal",
+  style: 'normal' | 'h2' = 'normal',
 ): PortableTextBlock {
   return {
-    _type: "block",
+    _type: 'block',
     _key: generateKey(),
     style,
     markDefs: [],
     children: [
       {
-        _type: "span",
+        _type: 'span',
         _key: generateKey(),
         text: text.trim(),
       },
@@ -492,9 +492,9 @@ function createTextBlock(
  */
 function createHorizontalLine(): PtHorizontalLine {
   return {
-    _type: "ptHorizontalLine",
+    _type: 'ptHorizontalLine',
     _key: generateKey(),
-    style: "horizontalLine",
+    style: 'horizontalLine',
   };
 }
 
@@ -535,16 +535,16 @@ export function htmlToPortableText(
   let content = html;
 
   // Normalize whitespace first
-  content = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
   // REMOVE pagebreak comments (don't convert, just strip)
-  content = content.replace(/<!--\s*pagebreak\s*-->/gi, "");
+  content = content.replace(/<!--\s*pagebreak\s*-->/gi, '');
 
   // Also remove <p><!-- pagebreak --></p> pattern
-  content = content.replace(/<p[^>]*>\s*<!--\s*pagebreak\s*-->\s*<\/p>/gi, "");
+  content = content.replace(/<p[^>]*>\s*<!--\s*pagebreak\s*-->\s*<\/p>/gi, '');
 
   // Remove other HTML comments
-  content = content.replace(/<!--[\s\S]*?-->/g, "");
+  content = content.replace(/<!--[\s\S]*?-->/g, '');
 
   // Extract <img> tags for processing
   const imgMatches: BlockMatch[] = [];
@@ -554,12 +554,12 @@ export function htmlToPortableText(
     const altMatch = imgMatch[0].match(/alt=["']([^"']*)["']/i);
     imgMatches.push({
       index: imgMatch.index,
-      type: "img",
+      type: 'img',
       content: imgMatch[1],
       fullMatch: imgMatch[0],
       imageData: {
         src: imgMatch[1],
-        alt: altMatch ? altMatch[1] : "",
+        alt: altMatch ? altMatch[1] : '',
       },
     });
   }
@@ -584,7 +584,7 @@ export function htmlToPortableText(
   while ((match = pRegex.exec(content)) !== null) {
     allMatches.push({
       index: match.index,
-      type: "p",
+      type: 'p',
       content: match[1],
       fullMatch: match[0],
     });
@@ -595,7 +595,7 @@ export function htmlToPortableText(
   while ((match = ulRegex.exec(content)) !== null) {
     allMatches.push({
       index: match.index,
-      type: "ul",
+      type: 'ul',
       content: match[1],
       fullMatch: match[0],
     });
@@ -606,7 +606,7 @@ export function htmlToPortableText(
   while ((match = olRegex.exec(content)) !== null) {
     allMatches.push({
       index: match.index,
-      type: "ol",
+      type: 'ol',
       content: match[1],
       fullMatch: match[0],
     });
@@ -617,8 +617,8 @@ export function htmlToPortableText(
   while ((match = hrRegex.exec(content)) !== null) {
     allMatches.push({
       index: match.index,
-      type: "hr",
-      content: "",
+      type: 'hr',
+      content: '',
       fullMatch: match[0],
     });
   }
@@ -635,27 +635,27 @@ export function htmlToPortableText(
     const innerContent = m.content;
 
     // Handle <hr> tags
-    if (tagName === "hr") {
+    if (tagName === 'hr') {
       blocks.push(createHorizontalLine());
       continue;
     }
 
     // Handle <img> tags → ImagePlaceholder
-    if (tagName === "img" && m.imageData) {
+    if (tagName === 'img' && m.imageData) {
       let imgSrc = m.imageData.src;
       // Make sure the src is a full URL
-      if (!imgSrc.startsWith("http")) {
-        if (imgSrc.startsWith("assets/") || imgSrc.startsWith("/assets/")) {
-          imgSrc = imgSrc.startsWith("/")
+      if (!imgSrc.startsWith('http')) {
+        if (imgSrc.startsWith('assets/') || imgSrc.startsWith('/assets/')) {
+          imgSrc = imgSrc.startsWith('/')
             ? `https://www.audiofast.pl${imgSrc}`
             : `https://www.audiofast.pl/${imgSrc}`;
-        } else if (imgSrc.startsWith("/")) {
+        } else if (imgSrc.startsWith('/')) {
           imgSrc = `https://www.audiofast.pl${imgSrc}`;
         }
       }
 
       blocks.push({
-        _type: "imagePlaceholder",
+        _type: 'imagePlaceholder',
         _key: generateKey(),
         src: imgSrc,
         alt: m.imageData.alt,
@@ -664,28 +664,28 @@ export function htmlToPortableText(
     }
 
     // Handle headings - ALL headings → h2
-    if (tagName.startsWith("h")) {
+    if (tagName.startsWith('h')) {
       const textContent = stripHtmlTags(innerContent).trim();
       if (textContent) {
-        blocks.push(createTextBlock(textContent, "h2"));
+        blocks.push(createTextBlock(textContent, 'h2'));
       }
       continue;
     }
 
     // Handle unordered lists
-    if (tagName === "ul") {
+    if (tagName === 'ul') {
       const listItems = innerContent.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
       for (const li of listItems) {
-        const itemContent = li.replace(/<\/?li[^>]*>/gi, "");
+        const itemContent = li.replace(/<\/?li[^>]*>/gi, '');
         const { children, markDefs } = parseInlineContent(itemContent);
         if (children.length > 0 && children.some((c) => c.text.trim())) {
           const block: PortableTextBlock = {
-            _type: "block",
+            _type: 'block',
             _key: generateKey(),
-            style: "normal",
+            style: 'normal',
             markDefs,
             children,
-            listItem: "bullet",
+            listItem: 'bullet',
             level: 1,
           };
           blocks.push(block);
@@ -695,19 +695,19 @@ export function htmlToPortableText(
     }
 
     // Handle ordered lists
-    if (tagName === "ol") {
+    if (tagName === 'ol') {
       const listItems = innerContent.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
       for (const li of listItems) {
-        const itemContent = li.replace(/<\/?li[^>]*>/gi, "");
+        const itemContent = li.replace(/<\/?li[^>]*>/gi, '');
         const { children, markDefs } = parseInlineContent(itemContent);
         if (children.length > 0 && children.some((c) => c.text.trim())) {
           const block: PortableTextBlock = {
-            _type: "block",
+            _type: 'block',
             _key: generateKey(),
-            style: "normal",
+            style: 'normal',
             markDefs,
             children,
-            listItem: "number",
+            listItem: 'number',
             level: 1,
           };
           blocks.push(block);
@@ -717,13 +717,13 @@ export function htmlToPortableText(
     }
 
     // Handle paragraphs
-    if (tagName === "p") {
+    if (tagName === 'p') {
       // Check if paragraph only contains whitespace or &nbsp;
       const textContent = stripHtmlTags(innerContent).trim();
       if (
         !textContent ||
-        textContent === "&nbsp;" ||
-        textContent === "\u00a0"
+        textContent === '&nbsp;' ||
+        textContent === '\u00a0'
       ) {
         continue;
       }
@@ -731,9 +731,9 @@ export function htmlToPortableText(
       const { children, markDefs } = parseInlineContent(innerContent);
       if (children.length > 0 && children.some((c) => c.text.trim())) {
         blocks.push({
-          _type: "block",
+          _type: 'block',
           _key: generateKey(),
-          style: "normal",
+          style: 'normal',
           markDefs,
           children,
         });
@@ -748,19 +748,19 @@ export function htmlToPortableText(
  * Strip HTML and get plain text (for descriptions)
  */
 export function htmlToPlainText(html: string | null): string {
-  if (!html) return "";
+  if (!html) return '';
 
   return html
-    .replace(/<!--[\s\S]*?-->/g, "") // Remove comments
-    .replace(/<br\s*\/?>/gi, "\n") // Replace <br> with newlines
-    .replace(/<\/p>/gi, "\n\n") // Replace </p> with double newlines
-    .replace(/<[^>]+>/g, "") // Strip all HTML tags
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
+    .replace(/<!--[\s\S]*?-->/g, '') // Remove comments
+    .replace(/<br\s*\/?>/gi, '\n') // Replace <br> with newlines
+    .replace(/<\/p>/gi, '\n\n') // Replace </p> with double newlines
+    .replace(/<[^>]+>/g, '') // Strip all HTML tags
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, ' ')
     .trim();
 }

@@ -4,11 +4,11 @@
  * Resolves author names to Sanity reviewAuthor document references
  */
 
-import type { SanityClient } from "@sanity/client";
-import slugify from "slugify";
+import type { SanityClient } from '@sanity/client';
+import slugify from 'slugify';
 
-import type { SanityReference } from "../types";
-import { cleanString } from "../utils/csv-parser";
+import type { SanityReference } from '../types';
+import { cleanString } from '../utils/csv-parser';
 
 // Cache of author mappings
 let authorMap: Map<string, string> | null = null;
@@ -23,7 +23,7 @@ export async function loadAuthorMappings(
     return authorMap;
   }
 
-  console.log("\n🔗 Loading review author mappings from Sanity...");
+  console.log('\n🔗 Loading review author mappings from Sanity...');
 
   const docs = await client.fetch<Array<{ _id: string; name: string }>>(
     '*[_type == "reviewAuthor"]{_id, name}',
@@ -72,7 +72,7 @@ export function resolveAuthorReference(
 ): SanityReference | null {
   if (!authorMap) {
     console.warn(
-      "⚠️  Author mappings not loaded. Call loadAuthorMappings first.",
+      '⚠️  Author mappings not loaded. Call loadAuthorMappings first.',
     );
     return null;
   }
@@ -90,12 +90,14 @@ export function resolveAuthorReference(
 
   const authorId = authorMap.get(normalizedName);
   if (!authorId) {
-    console.warn(`   ⚠️  Author not found: "${cleanedName}" (slug: ${normalizedName})`);
+    console.warn(
+      `   ⚠️  Author not found: "${cleanedName}" (slug: ${normalizedName})`,
+    );
     return null;
   }
 
   return {
-    _type: "reference",
+    _type: 'reference',
     _ref: authorId,
   };
 }

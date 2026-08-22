@@ -1,8 +1,5 @@
 type MinimalSanityClient = {
-  fetch: <T>(
-    query: string,
-    params?: Record<string, unknown>,
-  ) => Promise<T>;
+  fetch: <T>(query: string, params?: Record<string, unknown>) => Promise<T>;
 };
 
 type ReviewRow = {
@@ -31,11 +28,11 @@ const REVIEWS_WITH_AUTHORS_QUERY = `
 `;
 
 function toBaseId(documentId: string): string {
-  return documentId.startsWith("drafts.") ? documentId.slice(7) : documentId;
+  return documentId.startsWith('drafts.') ? documentId.slice(7) : documentId;
 }
 
 function isDraftId(documentId: string): boolean {
-  return documentId.startsWith("drafts.");
+  return documentId.startsWith('drafts.');
 }
 
 function computeCounts(rows: ReviewRow[]): Map<string, number> {

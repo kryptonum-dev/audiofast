@@ -3,21 +3,21 @@
  * Converts images to WebP format using Sharp for optimal performance
  */
 
-import * as fs from "node:fs";
-import type { IncomingMessage } from "node:http";
-import * as https from "node:https";
-import * as path from "node:path";
+import * as fs from 'node:fs';
+import type { IncomingMessage } from 'node:http';
+import * as https from 'node:https';
+import * as path from 'node:path';
 
-import type { SanityClient } from "@sanity/client";
-import sharp from "sharp";
+import type { SanityClient } from '@sanity/client';
+import sharp from 'sharp';
 
-import type { ImageCache, ImageUploadResult } from "../types";
+import type { ImageCache, ImageUploadResult } from '../types';
 
 // ============================================================================
 // Configuration
 // ============================================================================
 
-const LEGACY_ASSETS_BASE_URL = "https://audiofast.pl/assets/";
+const LEGACY_ASSETS_BASE_URL = 'https://audiofast.pl/assets/';
 
 // SSL bypass for legacy server with certificate issues
 const insecureAgent = new https.Agent({
@@ -39,16 +39,16 @@ const OPTIMIZATION_CONFIGS: Record<string, ImageOptimizationConfig> = {
 };
 
 // Cache file path
-const CACHE_FILE_PATH = path.resolve(__dirname, "../image-cache.json");
+const CACHE_FILE_PATH = path.resolve(__dirname, '../image-cache.json');
 
 // ============================================================================
 // Helpers
 // ============================================================================
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 B";
+  if (bytes === 0) return '0 B';
   const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"];
+  const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 }
@@ -59,11 +59,11 @@ function formatBytes(bytes: number): string {
 export function loadImageCache(): ImageCache {
   try {
     if (fs.existsSync(CACHE_FILE_PATH)) {
-      const data = fs.readFileSync(CACHE_FILE_PATH, "utf-8");
+      const data = fs.readFileSync(CACHE_FILE_PATH, 'utf-8');
       return JSON.parse(data);
     }
   } catch (error) {
-    console.warn("⚠️  Could not load image cache:", error);
+    console.warn('⚠️  Could not load image cache:', error);
   }
   return {};
 }
@@ -75,7 +75,7 @@ export function saveImageCache(cache: ImageCache): void {
   try {
     fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cache, null, 2));
   } catch (error) {
-    console.warn("⚠️  Could not save image cache:", error);
+    console.warn('⚠️  Could not save image cache:', error);
   }
 }
 
@@ -83,7 +83,7 @@ export function saveImageCache(cache: ImageCache): void {
  * Get full URL for a legacy asset
  */
 export function getLegacyAssetUrl(filename: string): string {
-  if (filename.startsWith("http")) return filename;
+  if (filename.startsWith('http')) return filename;
   return `${LEGACY_ASSETS_BASE_URL}${filename}`;
 }
 
@@ -127,13 +127,13 @@ async function downloadImage(url: string): Promise<Buffer | null> {
           return;
         }
         // Handle relative redirects
-        if (redirectUrl.startsWith("/")) {
+        if (redirectUrl.startsWith('/')) {
           const urlObj = new URL(url);
           redirectUrl = `${urlObj.protocol}//${urlObj.host}${redirectUrl}`;
         }
         https
           .get(redirectUrl, { agent: insecureAgent }, handleResponse)
-          .on("error", () => resolve(null));
+          .on('error', () => resolve(null));
         return;
       }
 
@@ -146,14 +146,14 @@ async function downloadImage(url: string): Promise<Buffer | null> {
       }
 
       const chunks: Buffer[] = [];
-      response.on("data", (chunk: Buffer) => chunks.push(chunk));
-      response.on("end", () => resolve(Buffer.concat(chunks)));
-      response.on("error", () => resolve(null));
+      response.on('data', (chunk: Buffer) => chunks.push(chunk));
+      response.on('end', () => resolve(Buffer.concat(chunks)));
+      response.on('error', () => resolve(null));
     };
 
     https
       .get(url, { agent: insecureAgent }, handleResponse)
-      .on("error", () => resolve(null));
+      .on('error', () => resolve(null));
   });
 }
 
@@ -209,7 +209,7 @@ async function optimizeImage(
     .resize({
       width: targetWidth,
       height: targetHeight,
-      fit: "inside",
+      fit: 'inside',
       withoutEnlargement: !wasUpscaled, // Only allow enlargement if we're upscaling
     })
     .webp({
@@ -236,7 +236,7 @@ function getOptimizedFilename(originalFilename: string): string {
 // ============================================================================
 
 export interface ProcessImageOptions {
-  imageType?: "preview" | "gallery" | "content" | "inline";
+  imageType?: 'preview' | 'gallery' | 'content' | 'inline';
   skipOptimization?: boolean;
   skipUpscaling?: boolean; // For inline images that should stay small
 }
@@ -252,22 +252,22 @@ export async function processAndUploadImage(
   options: ProcessImageOptions = {},
 ): Promise<ImageUploadResult | null> {
   const {
-    imageType = "gallery",
+    imageType = 'gallery',
     skipOptimization = false,
     skipUpscaling,
   } = options;
   const config = OPTIMIZATION_CONFIGS[imageType];
   // For inline images, skip upscaling by default (keep them small)
-  const shouldSkipUpscaling = skipUpscaling ?? imageType === "inline";
+  const shouldSkipUpscaling = skipUpscaling ?? imageType === 'inline';
 
   // Check cache first
   if (cache[sourceUrl]) {
-    console.log(`   📦 Cached: ${sourceUrl.split("/").pop()}`);
+    console.log(`   📦 Cached: ${sourceUrl.split('/').pop()}`);
     return {
       assetId: cache[sourceUrl].assetId,
       originalSize: cache[sourceUrl].originalSize,
       optimizedSize: cache[sourceUrl].optimizedSize,
-      filename: sourceUrl.split("/").pop() || "image",
+      filename: sourceUrl.split('/').pop() || 'image',
     };
   }
 
@@ -283,7 +283,7 @@ export async function processAndUploadImage(
         successUrl = url;
         if (url !== sourceUrl) {
           console.log(
-            `   📍 Found at alternative URL: ${url.split("/").pop()}`,
+            `   📍 Found at alternative URL: ${url.split('/').pop()}`,
           );
         }
         break;
@@ -291,7 +291,7 @@ export async function processAndUploadImage(
     }
 
     if (!originalBuffer || originalBuffer.length === 0) {
-      const triedUrls = urlsToTry.map((u) => u.split("/").pop()).join(", ");
+      const triedUrls = urlsToTry.map((u) => u.split('/').pop()).join(', ');
       console.warn(`   ⚠️  Failed to download (tried: ${triedUrls})`);
       return null;
     }
@@ -307,7 +307,7 @@ export async function processAndUploadImage(
     if (skipOptimization) {
       // Upload original without optimization
       uploadBuffer = originalBuffer;
-      filename = sourceUrl.split("/").pop() || "image.jpg";
+      filename = sourceUrl.split('/').pop() || 'image.jpg';
     } else {
       // 2. Optimize image
       const result = await optimizeImage(
@@ -320,16 +320,16 @@ export async function processAndUploadImage(
       originalWidth = result.originalWidth;
       targetWidth = result.targetWidth;
       filename = getOptimizedFilename(
-        sourceUrl.split("/").pop() || "image.jpg",
+        sourceUrl.split('/').pop() || 'image.jpg',
       );
     }
 
     const optimizedSize = uploadBuffer.length;
 
     // 3. Upload to Sanity
-    const asset = await client.assets.upload("image", uploadBuffer, {
+    const asset = await client.assets.upload('image', uploadBuffer, {
       filename,
-      contentType: skipOptimization ? undefined : "image/webp",
+      contentType: skipOptimization ? undefined : 'image/webp',
     });
 
     // 4. Cache the result
@@ -344,7 +344,7 @@ export async function processAndUploadImage(
     const reduction = ((1 - optimizedSize / originalSize) * 100).toFixed(1);
     const upscaleInfo = wasUpscaled
       ? ` [↑2x: ${originalWidth}→${targetWidth}px]`
-      : "";
+      : '';
     console.log(
       `   ✓ ${filename}: ${formatBytes(originalSize)} → ${formatBytes(optimizedSize)} (-${reduction}%)${upscaleInfo}`,
     );
@@ -376,7 +376,7 @@ export async function processImageWithFallback(
   // If failed, try uploading original
   if (!result) {
     console.log(
-      `   🔄 Retrying without optimization: ${sourceUrl.split("/").pop()}`,
+      `   🔄 Retrying without optimization: ${sourceUrl.split('/').pop()}`,
     );
     result = await processAndUploadImage(sourceUrl, client, cache, {
       ...options,
@@ -391,7 +391,7 @@ export async function processImageWithFallback(
  * Dry run version - returns mock asset ID
  */
 export function processImageDryRun(sourceUrl: string): ImageUploadResult {
-  const filename = sourceUrl.split("/").pop() || "image.jpg";
+  const filename = sourceUrl.split('/').pop() || 'image.jpg';
   console.log(`   🧪 [DRY RUN] Would upload: ${filename}`);
   return {
     assetId: `image-dryrun-${Math.random().toString(36).slice(2, 10)}`,

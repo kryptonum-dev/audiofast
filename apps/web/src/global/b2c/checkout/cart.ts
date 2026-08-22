@@ -11,9 +11,7 @@ import type {
 } from '../cart/types';
 
 export type CheckoutCartBlockingReasonCode =
-  | 'empty_cart'
-  | 'blocking_line_issues'
-  | 'no_eligible_lines';
+  'empty_cart' | 'blocking_line_issues' | 'no_eligible_lines';
 
 export type CheckoutCartBlockingLineIssue = {
   lineId: string;

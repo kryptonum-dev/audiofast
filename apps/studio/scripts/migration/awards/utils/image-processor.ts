@@ -3,21 +3,21 @@
  * Converts logo images to WebP format (no upscaling for logos)
  */
 
-import * as fs from "node:fs";
-import type { IncomingMessage } from "node:http";
-import * as https from "node:https";
-import * as path from "node:path";
+import * as fs from 'node:fs';
+import type { IncomingMessage } from 'node:http';
+import * as https from 'node:https';
+import * as path from 'node:path';
 
-import type { SanityClient } from "@sanity/client";
-import sharp from "sharp";
+import type { SanityClient } from '@sanity/client';
+import sharp from 'sharp';
 
-import type { ImageCache, ImageUploadResult } from "../types";
+import type { ImageCache, ImageUploadResult } from '../types';
 
 // ============================================================================
 // Configuration
 // ============================================================================
 
-const LEGACY_ASSETS_BASE_URL = "https://audiofast.pl/assets/";
+const LEGACY_ASSETS_BASE_URL = 'https://audiofast.pl/assets/';
 
 // SSL bypass for legacy server with certificate issues
 const insecureAgent = new https.Agent({
@@ -32,16 +32,16 @@ const LOGO_CONFIG = {
 };
 
 // Cache file path
-const CACHE_FILE_PATH = path.resolve(__dirname, "../image-cache.json");
+const CACHE_FILE_PATH = path.resolve(__dirname, '../image-cache.json');
 
 // ============================================================================
 // Helpers
 // ============================================================================
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 B";
+  if (bytes === 0) return '0 B';
   const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"];
+  const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 }
@@ -52,11 +52,11 @@ function formatBytes(bytes: number): string {
 export function loadImageCache(): ImageCache {
   try {
     if (fs.existsSync(CACHE_FILE_PATH)) {
-      const data = fs.readFileSync(CACHE_FILE_PATH, "utf-8");
+      const data = fs.readFileSync(CACHE_FILE_PATH, 'utf-8');
       return JSON.parse(data);
     }
   } catch (error) {
-    console.warn("⚠️  Could not load image cache:", error);
+    console.warn('⚠️  Could not load image cache:', error);
   }
   return {};
 }
@@ -68,7 +68,7 @@ export function saveImageCache(cache: ImageCache): void {
   try {
     fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(cache, null, 2));
   } catch (error) {
-    console.warn("⚠️  Could not save image cache:", error);
+    console.warn('⚠️  Could not save image cache:', error);
   }
 }
 
@@ -76,7 +76,7 @@ export function saveImageCache(cache: ImageCache): void {
  * Get full URL for a legacy asset
  */
 export function getLegacyAssetUrl(filename: string): string {
-  if (filename.startsWith("http")) return filename;
+  if (filename.startsWith('http')) return filename;
   return `${LEGACY_ASSETS_BASE_URL}${filename}`;
 }
 
@@ -98,13 +98,13 @@ async function downloadImage(url: string): Promise<Buffer | null> {
           return;
         }
         // Handle relative redirects
-        if (redirectUrl.startsWith("/")) {
+        if (redirectUrl.startsWith('/')) {
           const urlObj = new URL(url);
           redirectUrl = `${urlObj.protocol}//${urlObj.host}${redirectUrl}`;
         }
         https
           .get(redirectUrl, { agent: insecureAgent }, handleResponse)
-          .on("error", () => resolve(null));
+          .on('error', () => resolve(null));
         return;
       }
 
@@ -117,14 +117,14 @@ async function downloadImage(url: string): Promise<Buffer | null> {
       }
 
       const chunks: Buffer[] = [];
-      response.on("data", (chunk: Buffer) => chunks.push(chunk));
-      response.on("end", () => resolve(Buffer.concat(chunks)));
-      response.on("error", () => resolve(null));
+      response.on('data', (chunk: Buffer) => chunks.push(chunk));
+      response.on('end', () => resolve(Buffer.concat(chunks)));
+      response.on('error', () => resolve(null));
     };
 
     https
       .get(url, { agent: insecureAgent }, handleResponse)
-      .on("error", () => resolve(null));
+      .on('error', () => resolve(null));
   });
 }
 
@@ -140,7 +140,7 @@ async function optimizeLogo(buffer: Buffer): Promise<Buffer> {
     .resize({
       width: LOGO_CONFIG.maxWidth,
       height: LOGO_CONFIG.maxHeight,
-      fit: "inside",
+      fit: 'inside',
       withoutEnlargement: true, // Never upscale logos
     })
     .webp({
@@ -179,13 +179,13 @@ export async function processAndUploadLogo(
   // Check cache first
   if (cache[sourceUrl]) {
     if (verbose) {
-      console.log(`   📦 Cached: ${logoFilename.split("/").pop()}`);
+      console.log(`   📦 Cached: ${logoFilename.split('/').pop()}`);
     }
     return {
       assetId: cache[sourceUrl].assetId,
       originalSize: cache[sourceUrl].originalSize,
       optimizedSize: cache[sourceUrl].optimizedSize,
-      filename: logoFilename.split("/").pop() || "logo",
+      filename: logoFilename.split('/').pop() || 'logo',
     };
   }
 
@@ -203,13 +203,13 @@ export async function processAndUploadLogo(
     const optimizedBuffer = await optimizeLogo(originalBuffer);
     const optimizedSize = optimizedBuffer.length;
     const filename = getOptimizedFilename(
-      logoFilename.split("/").pop() || "logo.png",
+      logoFilename.split('/').pop() || 'logo.png',
     );
 
     // 3. Upload to Sanity
-    const asset = await client.assets.upload("image", optimizedBuffer, {
+    const asset = await client.assets.upload('image', optimizedBuffer, {
       filename,
-      contentType: "image/webp",
+      contentType: 'image/webp',
     });
 
     // 4. Cache the result
@@ -255,7 +255,7 @@ export async function processLogoWithFallback(
   // If failed, try uploading original
   if (!result) {
     console.log(
-      `   🔄 Retrying without optimization: ${logoFilename.split("/").pop()}`,
+      `   🔄 Retrying without optimization: ${logoFilename.split('/').pop()}`,
     );
     result = await uploadOriginalLogo(logoFilename, client, cache);
   }
@@ -279,8 +279,8 @@ async function uploadOriginalLogo(
       return null;
     }
 
-    const filename = logoFilename.split("/").pop() || "logo.png";
-    const asset = await client.assets.upload("image", buffer, { filename });
+    const filename = logoFilename.split('/').pop() || 'logo.png';
+    const asset = await client.assets.upload('image', buffer, { filename });
 
     cache[sourceUrl] = {
       assetId: asset._id,
@@ -308,7 +308,7 @@ async function uploadOriginalLogo(
  * Dry run version - returns mock asset ID
  */
 export function processLogoDryRun(logoFilename: string): ImageUploadResult {
-  const filename = logoFilename.split("/").pop() || "logo.png";
+  const filename = logoFilename.split('/').pop() || 'logo.png';
   console.log(`   🧪 [DRY RUN] Would upload: ${filename}`);
   return {
     assetId: `image-dryrun-${Math.random().toString(36).slice(2, 10)}`,

@@ -406,7 +406,7 @@ function getGraphClient(): Client {
   if (!isGraphConfigured()) {
     throw new Error(
       '[MS Graph] Missing required environment variables. ' +
-        'Required: AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, MS_GRAPH_SENDER_EMAIL'
+        'Required: AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, MS_GRAPH_SENDER_EMAIL',
     );
   }
 
@@ -414,7 +414,7 @@ function getGraphClient(): Client {
   const credential = new ClientSecretCredential(
     AZURE_TENANT_ID!,
     AZURE_CLIENT_ID!,
-    AZURE_CLIENT_SECRET!
+    AZURE_CLIENT_SECRET!,
   );
 
   // Initialize Graph client with custom auth provider
@@ -422,7 +422,7 @@ function getGraphClient(): Client {
     authProvider: {
       getAccessToken: async () => {
         const tokenResponse = await credential.getToken(
-          'https://graph.microsoft.com/.default'
+          'https://graph.microsoft.com/.default',
         );
         return tokenResponse.token;
       },
@@ -458,7 +458,7 @@ export type SendEmailResult = {
  * @returns Promise with success status
  */
 export async function sendEmail(
-  options: SendEmailOptions
+  options: SendEmailOptions,
 ): Promise<SendEmailResult> {
   try {
     const client = getGraphClient();
@@ -512,10 +512,10 @@ export async function sendEmail(
  * @returns Promise with array of results
  */
 export async function sendEmails(
-  emails: SendEmailOptions[]
+  emails: SendEmailOptions[],
 ): Promise<SendEmailResult[]> {
   const results = await Promise.allSettled(
-    emails.map((email) => sendEmail(email))
+    emails.map((email) => sendEmail(email)),
   );
 
   return results.map((result) => {
@@ -575,7 +575,7 @@ type ContactSettingsType = {
 
 // Get contact settings with fallbacks
 function getContactConfig(
-  contactSettings: NonNullable<QueryContactSettingsResult>
+  contactSettings: NonNullable<QueryContactSettingsResult>,
 ): ContactSettingsType {
   const supportEmails = contactSettings.supportEmails || [
     FALLBACK_SUPPORT_EMAIL,
@@ -585,7 +585,7 @@ function getContactConfig(
     contactSettings.confirmationEmail?.subject || FALLBACK_EMAIL_SUBJECT;
   const content =
     portableTextToHtml(
-      contactSettings.confirmationEmail?.content as PortableTextProps
+      contactSettings.confirmationEmail?.content as PortableTextProps,
     ) || FALLBACK_EMAIL_BODY;
 
   return {
@@ -612,7 +612,7 @@ function escapeHtml(text: string): string {
 // Replace placeholders in text
 function replacePlaceholders(
   text: string,
-  variables: { name?: string; email?: string; message?: string }
+  variables: { name?: string; email?: string; message?: string },
 ): string {
   return text
     .replace(/\{\{name\}\}/g, escapeHtml(variables.name || ''))
@@ -642,7 +642,7 @@ export async function POST(request: NextRequest) {
     console.error('[Contact API] Microsoft Graph not configured');
     return NextResponse.json(
       { success: false, message: 'Email service not configured' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -653,7 +653,7 @@ export async function POST(request: NextRequest) {
   } catch {
     return NextResponse.json(
       { success: false, message: 'Invalid JSON' },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -661,7 +661,7 @@ export async function POST(request: NextRequest) {
   if (!body.email || !body.consent) {
     return NextResponse.json(
       { success: false, message: 'Email and consent are required' },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -688,11 +688,11 @@ export async function POST(request: NextRequest) {
   // Render confirmation email content
   const confirmationSubject = replacePlaceholders(
     emailConfig.confirmationEmail.subject,
-    variables
+    variables,
   );
   const confirmationBody = replacePlaceholders(
     emailConfig.confirmationEmail.content,
-    variables
+    variables,
   );
 
   // Build internal notification email
@@ -733,11 +733,11 @@ export async function POST(request: NextRequest) {
     if (!internalResult?.success) {
       console.error(
         '[Contact API] Internal email failed:',
-        internalResult?.error
+        internalResult?.error,
       );
       return NextResponse.json(
         { success: false, message: 'Failed to send notification email' },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -745,7 +745,7 @@ export async function POST(request: NextRequest) {
     if (!confirmationResult?.success) {
       console.error(
         '[Contact API] Confirmation email failed:',
-        confirmationResult?.error
+        confirmationResult?.error,
       );
     }
 
@@ -754,7 +754,7 @@ export async function POST(request: NextRequest) {
     console.error('[Contact API] Email sending failed', error);
     return NextResponse.json(
       { success: false, message: 'Failed to send emails' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -790,7 +790,7 @@ type ContactFormResponse = {
  * @returns Promise with success status and optional error message
  */
 export async function sendContactForm(
-  data: ContactFormData
+  data: ContactFormData,
 ): Promise<ContactFormResponse> {
   try {
     const response = await fetch('/api/contact', {

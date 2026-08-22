@@ -1,4 +1,4 @@
-import { sanityAppConfig } from "../config.js";
+import { sanityAppConfig } from '../config.js';
 import type {
   AdminAnalyticsResult,
   AdminApiEnvelope,
@@ -14,12 +14,12 @@ import type {
   AnalyticsFilters,
   CouponsFilters,
   OrdersFilters,
-} from "./types.js";
+} from './types.js';
 
 export class AdminApiError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "AdminApiError";
+    this.name = 'AdminApiError';
   }
 }
 
@@ -31,11 +31,11 @@ export function getAdminErrorMessage(
 }
 
 const ADMIN_NETWORK_ERROR_MESSAGE =
-  "Nie udało się połączyć z API admina. Spróbuj ponownie za chwilę.";
+  'Nie udało się połączyć z API admina. Spróbuj ponownie za chwilę.';
 
 function adminApiUrl(path: string): string {
-  const baseUrl = sanityAppConfig.adminApiBaseUrl.replace(/\/+$/, "");
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const baseUrl = sanityAppConfig.adminApiBaseUrl.replace(/\/+$/, '');
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
   return `${baseUrl}${normalizedPath}`;
 }
@@ -57,7 +57,7 @@ async function adminFetch(
 }
 
 function isAbortError(error: unknown): boolean {
-  return error instanceof DOMException && error.name === "AbortError";
+  return error instanceof DOMException && error.name === 'AbortError';
 }
 
 export async function fetchAdminOrders(args: {
@@ -74,35 +74,35 @@ export async function fetchAdminOrders(args: {
   const search = args.filters.search.trim();
 
   if (search) {
-    params.set("q", search);
+    params.set('q', search);
   }
 
-  if (args.filters.status !== "all") {
-    params.set("status", args.filters.status);
+  if (args.filters.status !== 'all') {
+    params.set('status', args.filters.status);
   }
 
-  if (args.filters.lineType !== "all") {
-    params.set("lineType", args.filters.lineType);
+  if (args.filters.lineType !== 'all') {
+    params.set('lineType', args.filters.lineType);
   }
 
-  if (args.filters.operations === "cancellation") {
-    params.set("hasOpenCancellationRequest", "true");
+  if (args.filters.operations === 'cancellation') {
+    params.set('hasOpenCancellationRequest', 'true');
   }
 
-  if (args.filters.operations === "return") {
-    params.set("hasOpenReturnCase", "true");
+  if (args.filters.operations === 'return') {
+    params.set('hasOpenReturnCase', 'true');
   }
 
   if (args.filters.dateRange.from) {
     params.set(
-      "createdFrom",
+      'createdFrom',
       new Date(`${args.filters.dateRange.from}T00:00:00`).toISOString(),
     );
   }
 
   if (args.filters.dateRange.to) {
     params.set(
-      "createdTo",
+      'createdTo',
       new Date(`${args.filters.dateRange.to}T23:59:59.999`).toISOString(),
     );
   }
@@ -115,12 +115,12 @@ export async function fetchAdminOrders(args: {
       },
       signal: args.signal,
     },
-    "Nie udało się połączyć z API zamówień. Spróbuj ponownie za chwilę.",
+    'Nie udało się połączyć z API zamówień. Spróbuj ponownie za chwilę.',
   );
 
   return readAdminEnvelope<AdminOrdersResult>(
     response,
-    "Nie udało się załadować zamówień.",
+    'Nie udało się załadować zamówień.',
   );
 }
 
@@ -135,14 +135,14 @@ export async function fetchAdminAnalytics(args: {
 
   if (args.filters.dateRange.from) {
     params.set(
-      "from",
+      'from',
       new Date(`${args.filters.dateRange.from}T00:00:00`).toISOString(),
     );
   }
 
   if (args.filters.dateRange.to) {
     params.set(
-      "to",
+      'to',
       new Date(`${args.filters.dateRange.to}T23:59:59.999`).toISOString(),
     );
   }
@@ -155,12 +155,12 @@ export async function fetchAdminAnalytics(args: {
       },
       signal: args.signal,
     },
-    "Nie udało się połączyć z API analityki. Spróbuj ponownie za chwilę.",
+    'Nie udało się połączyć z API analityki. Spróbuj ponownie za chwilę.',
   );
 
   return readAdminEnvelope<AdminAnalyticsResult>(
     response,
-    "Nie udało się załadować analityki.",
+    'Nie udało się załadować analityki.',
   );
 }
 
@@ -178,19 +178,19 @@ export async function fetchAdminCoupons(args: {
   const search = args.filters.search.trim();
 
   if (offset > 0) {
-    params.set("cursor", String(offset));
+    params.set('cursor', String(offset));
   }
 
   if (search) {
-    params.set("q", search);
+    params.set('q', search);
   }
 
-  if (args.filters.status !== "all") {
-    params.set("derivedStatus", args.filters.status);
+  if (args.filters.status !== 'all') {
+    params.set('derivedStatus', args.filters.status);
   }
 
-  if (args.filters.discountType !== "all") {
-    params.set("discountType", args.filters.discountType);
+  if (args.filters.discountType !== 'all') {
+    params.set('discountType', args.filters.discountType);
   }
 
   const response = await adminFetch(
@@ -201,11 +201,11 @@ export async function fetchAdminCoupons(args: {
       },
       signal: args.signal,
     },
-    "Nie udało się połączyć z API kuponów. Spróbuj ponownie za chwilę.",
+    'Nie udało się połączyć z API kuponów. Spróbuj ponownie za chwilę.',
   );
   const data = await readAdminEnvelope<AdminCouponsResult>(
     response,
-    "Nie udało się załadować kuponów.",
+    'Nie udało się załadować kuponów.',
   );
 
   const totalCount = data.pagination.total;
@@ -228,18 +228,18 @@ export async function createAdminCoupon(args: {
   authToken: string;
   input: AdminCouponMutationInput;
 }): Promise<AdminCoupon> {
-  const response = await adminFetch("/api/admin/coupons/", {
+  const response = await adminFetch('/api/admin/coupons/', {
     body: JSON.stringify(args.input),
     headers: {
       Authorization: `Bearer ${args.authToken}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    method: "POST",
+    method: 'POST',
   });
 
   return readAdminEnvelope<AdminCoupon>(
     response,
-    "Nie udało się utworzyć kuponu.",
+    'Nie udało się utworzyć kuponu.',
   );
 }
 
@@ -260,7 +260,7 @@ export async function fetchAdminCoupon(args: {
 
   return readAdminEnvelope<AdminCoupon>(
     response,
-    "Nie udało się załadować kuponu.",
+    'Nie udało się załadować kuponu.',
   );
 }
 
@@ -275,15 +275,15 @@ export async function updateAdminCoupon(args: {
       body: JSON.stringify(args.input),
       headers: {
         Authorization: `Bearer ${args.authToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      method: "PATCH",
+      method: 'PATCH',
     },
   );
 
   return readAdminEnvelope<AdminCoupon>(
     response,
-    "Nie udało się zapisać kuponu.",
+    'Nie udało się zapisać kuponu.',
   );
 }
 
@@ -297,13 +297,13 @@ export async function archiveAdminCoupon(args: {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
       },
-      method: "DELETE",
+      method: 'DELETE',
     },
   );
 
   return readAdminEnvelope<AdminCoupon>(
     response,
-    "Nie udało się usunąć kuponu.",
+    'Nie udało się usunąć kuponu.',
   );
 }
 
@@ -311,7 +311,7 @@ export async function fetchAdminCouponProducts(args: {
   authToken: string;
   signal?: AbortSignal;
 }): Promise<AdminCouponProductsResult> {
-  const response = await adminFetch("/api/admin/coupons/products/", {
+  const response = await adminFetch('/api/admin/coupons/products/', {
     headers: {
       Authorization: `Bearer ${args.authToken}`,
     },
@@ -320,7 +320,7 @@ export async function fetchAdminCouponProducts(args: {
 
   return readAdminEnvelope<AdminCouponProductsResult>(
     response,
-    "Nie udało się załadować produktów do kuponu.",
+    'Nie udało się załadować produktów do kuponu.',
   );
 }
 
@@ -341,7 +341,7 @@ export async function fetchAdminOrderDetail(args: {
 
   return readAdminEnvelope<AdminOrderDetail>(
     response,
-    "Nie udało się załadować szczegółów zamówienia.",
+    'Nie udało się załadować szczegółów zamówienia.',
   );
 }
 
@@ -370,14 +370,14 @@ async function adminJsonMutation<TData>(args: {
   authToken: string;
   body: unknown;
   fallbackMessage: string;
-  method: "POST" | "PUT";
+  method: 'POST' | 'PUT';
   path: string;
 }): Promise<TData> {
   const response = await adminFetch(args.path, {
     body: JSON.stringify(args.body),
     headers: {
       Authorization: `Bearer ${args.authToken}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     method: args.method,
   });
@@ -418,9 +418,9 @@ export async function updateAdminOrderStatus(args: {
   return adminJsonMutation({
     authToken: args.authToken,
     body,
-    fallbackMessage: "Nie udało się zmienić statusu zamówienia.",
-    method: "POST",
-    path: orderPath(args.orderNumber, "/status/"),
+    fallbackMessage: 'Nie udało się zmienić statusu zamówienia.',
+    method: 'POST',
+    path: orderPath(args.orderNumber, '/status/'),
   });
 }
 
@@ -436,9 +436,9 @@ export async function updateAdminOrderShipment(args: {
       carrier: args.carrier || null,
       trackingNumber: args.trackingNumber,
     },
-    fallbackMessage: "Nie udało się zapisać danych wysyłki.",
-    method: "PUT",
-    path: orderPath(args.orderNumber, "/shipment/"),
+    fallbackMessage: 'Nie udało się zapisać danych wysyłki.',
+    method: 'PUT',
+    path: orderPath(args.orderNumber, '/shipment/'),
   });
 }
 
@@ -454,9 +454,9 @@ export async function updateAdminOrderDeliveryEstimate(args: {
       expectedDeliveryFrom: args.expectedDeliveryFrom || null,
       expectedDeliveryTo: args.expectedDeliveryTo || null,
     },
-    fallbackMessage: "Nie udało się zapisać przewidywanej dostawy.",
-    method: "PUT",
-    path: orderPath(args.orderNumber, "/delivery-estimate/"),
+    fallbackMessage: 'Nie udało się zapisać przewidywanej dostawy.',
+    method: 'PUT',
+    path: orderPath(args.orderNumber, '/delivery-estimate/'),
   });
 }
 
@@ -466,19 +466,19 @@ export async function attachAdminOrderInvoice(args: {
   orderNumber: string;
 }) {
   const formData = new FormData();
-  formData.set("file", args.file);
+  formData.set('file', args.file);
 
-  const response = await adminFetch(orderPath(args.orderNumber, "/invoice/"), {
+  const response = await adminFetch(orderPath(args.orderNumber, '/invoice/'), {
     body: formData,
     headers: {
       Authorization: `Bearer ${args.authToken}`,
     },
-    method: "POST",
+    method: 'POST',
   });
 
   return readAdminEnvelope<AdminInvoiceUploadResult>(
     response,
-    "Nie udało się dodać faktury.",
+    'Nie udało się dodać faktury.',
   );
 }
 
@@ -487,7 +487,7 @@ export async function downloadAdminOrderInvoice(args: {
   orderNumber: string;
 }) {
   const response = await adminFetch(
-    orderPath(args.orderNumber, "/invoice/download/"),
+    orderPath(args.orderNumber, '/invoice/download/'),
     {
       headers: {
         Authorization: `Bearer ${args.authToken}`,
@@ -496,12 +496,12 @@ export async function downloadAdminOrderInvoice(args: {
   );
 
   if (!response.ok) {
-    throw new AdminApiError("Nie udało się pobrać faktury.");
+    throw new AdminApiError('Nie udało się pobrać faktury.');
   }
 
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
+  const link = document.createElement('a');
 
   link.href = url;
   link.download = `faktura-${args.orderNumber}.pdf`;
@@ -515,14 +515,14 @@ export async function removeAdminOrderInvoice(args: {
   authToken: string;
   orderNumber: string;
 }) {
-  const response = await adminFetch(orderPath(args.orderNumber, "/invoice/"), {
+  const response = await adminFetch(orderPath(args.orderNumber, '/invoice/'), {
     headers: {
       Authorization: `Bearer ${args.authToken}`,
     },
-    method: "DELETE",
+    method: 'DELETE',
   });
 
-  return readAdminEnvelope(response, "Nie udało się usunąć faktury.");
+  return readAdminEnvelope(response, 'Nie udało się usunąć faktury.');
 }
 
 export async function resolveAdminOrderCancellation(args: {
@@ -530,7 +530,7 @@ export async function resolveAdminOrderCancellation(args: {
   authToken: string;
   orderNumber: string;
   requestId: string;
-  resolution: "cancel_order" | "decline_request";
+  resolution: 'cancel_order' | 'decline_request';
 }) {
   return adminJsonMutation({
     authToken: args.authToken,
@@ -539,9 +539,9 @@ export async function resolveAdminOrderCancellation(args: {
       requestId: args.requestId,
       resolution: args.resolution,
     },
-    fallbackMessage: "Nie udało się obsłużyć anulowania.",
-    method: "POST",
-    path: orderPath(args.orderNumber, "/cancellation/resolve/"),
+    fallbackMessage: 'Nie udało się obsłużyć anulowania.',
+    method: 'POST',
+    path: orderPath(args.orderNumber, '/cancellation/resolve/'),
   });
 }
 
@@ -555,9 +555,9 @@ export async function createAdminOrderReturnCase(args: {
     body: {
       reason: args.reason || null,
     },
-    fallbackMessage: "Nie udało się utworzyć sprawy zwrotu.",
-    method: "POST",
-    path: orderPath(args.orderNumber, "/return-cases/"),
+    fallbackMessage: 'Nie udało się utworzyć sprawy zwrotu.',
+    method: 'POST',
+    path: orderPath(args.orderNumber, '/return-cases/'),
   });
 }
 
@@ -569,8 +569,8 @@ export async function closeAdminOrderReturnCase(args: {
   return adminJsonMutation<AdminReturnCaseMutationResult>({
     authToken: args.authToken,
     body: {},
-    fallbackMessage: "Nie udało się zamknąć sprawy zwrotu.",
-    method: "POST",
+    fallbackMessage: 'Nie udało się zamknąć sprawy zwrotu.',
+    method: 'POST',
     path: orderPath(
       args.orderNumber,
       `/return-cases/${encodeURIComponent(args.returnCaseId)}/close/`,
@@ -586,8 +586,8 @@ export async function markAdminOrderReturnCaseAwaitingGoods(args: {
   return adminJsonMutation<AdminReturnCaseMutationResult>({
     authToken: args.authToken,
     body: {},
-    fallbackMessage: "Nie udało się potwierdzić zwrotu.",
-    method: "POST",
+    fallbackMessage: 'Nie udało się potwierdzić zwrotu.',
+    method: 'POST',
     path: orderPath(
       args.orderNumber,
       `/return-cases/${encodeURIComponent(args.returnCaseId)}/await-goods/`,
@@ -606,8 +606,8 @@ export async function completeAdminOrderReturnCase(args: {
     body: {
       adminNote: args.adminNote || null,
     },
-    fallbackMessage: "Nie udało się zakończyć zwrotu.",
-    method: "POST",
+    fallbackMessage: 'Nie udało się zakończyć zwrotu.',
+    method: 'POST',
     path: orderPath(
       args.orderNumber,
       `/return-cases/${encodeURIComponent(args.returnCaseId)}/complete/`,

@@ -42,10 +42,10 @@ We use function-level `"use cache"` directive in `sanityFetch` to cache Sanity q
 **`apps/web/src/global/sanity/fetch.ts`**: Server-only data fetching (✅ Implemented)
 
 ```typescript
-import "server-only";
-import { cacheLife, cacheTag } from "next/cache";
-import { type QueryParams } from "next-sanity";
-import { client } from "./client";
+import 'server-only';
+import { cacheLife, cacheTag } from 'next/cache';
+import { type QueryParams } from 'next-sanity';
+import { client } from './client';
 
 export async function sanityFetch<QueryResponse>({
   query,
@@ -56,13 +56,13 @@ export async function sanityFetch<QueryResponse>({
   params?: QueryParams;
   tags?: string[];
 }): Promise<QueryResponse> {
-  "use cache";
+  'use cache';
 
   if (tags.length > 0) {
     cacheTag(...tags);
   }
 
-  cacheLife(process.env.NODE_ENV === "development" ? "seconds" : "weeks");
+  cacheLife(process.env.NODE_ENV === 'development' ? 'seconds' : 'weeks');
 
   return await client.fetch<QueryResponse>(query, params);
 }
@@ -71,15 +71,15 @@ export async function sanityFetch<QueryResponse>({
 **`apps/web/src/global/sanity/settings.ts`**: Cached settings fetch for Root Layout (✅ Implemented)
 
 ```typescript
-import "server-only";
-import { sanityFetch } from "./fetch";
-import { querySettings } from "./query";
-import type { QuerySettingsResult } from "./sanity.types";
+import 'server-only';
+import { sanityFetch } from './fetch';
+import { querySettings } from './query';
+import type { QuerySettingsResult } from './sanity.types';
 
 export async function getSettings() {
   return await sanityFetch<QuerySettingsResult>({
     query: querySettings,
-    tags: ["settings"],
+    tags: ['settings'],
   });
 }
 ```
@@ -159,9 +159,9 @@ New filtered products rendered
 ✅ **Implemented** in `apps/web/src/app/api/revalidate/route.ts`:
 
 ```typescript
-import { revalidateTag } from "next/cache";
-import { type NextRequest, NextResponse } from "next/server";
-import { parseBody } from "next-sanity/webhook";
+import { revalidateTag } from 'next/cache';
+import { type NextRequest, NextResponse } from 'next/server';
+import { parseBody } from 'next-sanity/webhook';
 
 type WebhookPayload = {
   _type: string;
@@ -177,11 +177,11 @@ export async function POST(req: NextRequest) {
     );
 
     if (!isValidSignature) {
-      return new NextResponse("Invalid Signature", { status: 401 });
+      return new NextResponse('Invalid Signature', { status: 401 });
     }
 
     if (!body?._type) {
-      return new NextResponse("Bad Request", { status: 400 });
+      return new NextResponse('Bad Request', { status: 400 });
     }
 
     const tags = new Set<string>();
@@ -400,7 +400,7 @@ Below is a comprehensive audit of all `sanityFetch` calls across the application
 Documents like `settings`, `navbar`, `footer`, `homePage`, `blog`, `products`, `brands`:
 
 ```typescript
-tags: ["documentType"];
+tags: ['documentType'];
 ```
 
 #### **Pattern 2: Detail Pages**
@@ -408,7 +408,7 @@ tags: ["documentType"];
 Individual documents (product, blog post, review, brand):
 
 ```typescript
-tags: ["documentType"];
+tags: ['documentType'];
 ```
 
 **Note**: Do NOT add relationship tags. When a referenced document (e.g., brand, category) changes, Sanity webhook fires for that document type, automatically revalidating all pages that reference it. We also omit slugs for simplicity, revalidating all detail pages of a type when any changes.
@@ -419,13 +419,13 @@ Listing pages with category context:
 
 ```typescript
 // Products Category
-tags: ["productCategorySub"];
+tags: ['productCategorySub'];
 
 // Blog Category
-tags: ["blog-category"];
+tags: ['blog-category'];
 
 // Brand Detail (shows products)
-tags: ["brand"];
+tags: ['brand'];
 ```
 
 #### **Pattern 4: Dynamic Listing Components**
@@ -434,10 +434,10 @@ Components that fetch filtered lists:
 
 ```typescript
 // Products Listing
-tags: ["product"];
+tags: ['product'];
 
 // Blog Listing
-tags: ["blog-article"];
+tags: ['blog-article'];
 ```
 
 #### **Pattern 5: Static Params Generation**
@@ -445,7 +445,7 @@ tags: ["blog-article"];
 Only include the primary document type:
 
 ```typescript
-tags: ["product"]; // or ['blog-article'], ['brand'], etc.
+tags: ['product']; // or ['blog-article'], ['brand'], etc.
 ```
 
 ---

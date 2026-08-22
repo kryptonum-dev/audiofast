@@ -14,9 +14,7 @@ import type {
 } from './types';
 
 export type CheckoutOrderStatus =
-  | 'awaiting_payment'
-  | 'awaiting_confirmation'
-  | 'paid';
+  'awaiting_payment' | 'awaiting_confirmation' | 'paid';
 
 export type CheckoutOrderPaymentProvider = 'przelewy24' | 'zero_total';
 

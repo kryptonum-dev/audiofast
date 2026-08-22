@@ -1,34 +1,34 @@
-import { RefreshIcon } from "@sanity/icons";
-import { Box, Button, Flex, Text } from "@sanity/ui";
-import { useAuthToken } from "@sanity/sdk-react";
-import { useEffect, useState } from "react";
+import { RefreshIcon } from '@sanity/icons';
+import { Box, Button, Flex, Text } from '@sanity/ui';
+import { useAuthToken } from '@sanity/sdk-react';
+import { useEffect, useState } from 'react';
 
-import { getAdminErrorMessage, fetchAdminOrders } from "../api.js";
-import type { AdminOrdersResult, OrdersFilters } from "../types.js";
-import { AdminStateCard } from "./AdminStateCard.js";
+import { getAdminErrorMessage, fetchAdminOrders } from '../api.js';
+import type { AdminOrdersResult, OrdersFilters } from '../types.js';
+import { AdminStateCard } from './AdminStateCard.js';
 import {
   DEFAULT_ORDERS_FILTERS,
   OrdersFilters as OrdersFiltersControls,
-} from "./OrdersFilters.js";
-import { OrdersLoadingTable } from "./OrdersLoadingTable.js";
-import { OrdersPagination } from "./OrdersPagination.js";
-import { OrdersTable } from "./OrdersTable.js";
+} from './OrdersFilters.js';
+import { OrdersLoadingTable } from './OrdersLoadingTable.js';
+import { OrdersPagination } from './OrdersPagination.js';
+import { OrdersTable } from './OrdersTable.js';
 
 const ORDERS_PER_PAGE = 15;
 
 type OrdersState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       data: AdminOrdersResult | null;
       error: null;
     }
   | {
-      status: "ready";
+      status: 'ready';
       data: AdminOrdersResult;
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       data: AdminOrdersResult | null;
       error: string;
     };
@@ -43,7 +43,7 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
   const [page, setPage] = useState(1);
   const [refreshToken, setRefreshToken] = useState(0);
   const [ordersState, setOrdersState] = useState<OrdersState>({
-    status: "idle",
+    status: 'idle',
     data: null,
     error: null,
   });
@@ -51,7 +51,7 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
   useEffect(() => {
     if (!authToken) {
       setOrdersState({
-        status: "idle",
+        status: 'idle',
         data: null,
         error: null,
       });
@@ -61,7 +61,7 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
     const controller = new AbortController();
 
     setOrdersState((current) => ({
-      status: "loading",
+      status: 'loading',
       data: current.data,
       error: null,
     }));
@@ -75,7 +75,7 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
     })
       .then((data) => {
         setOrdersState({
-          status: "ready",
+          status: 'ready',
           data,
           error: null,
         });
@@ -86,11 +86,11 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
         }
 
         setOrdersState((current) => ({
-          status: "error",
+          status: 'error',
           data: current.data,
           error: getAdminErrorMessage(
             error,
-            "Nie udało się załadować zamówień.",
+            'Nie udało się załadować zamówień.',
           ),
         }));
       });
@@ -131,9 +131,9 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
       <Box paddingX={3} paddingBottom={3}>
         <Flex align="center" justify="space-between" wrap="wrap">
           <Text muted size={1}>
-            {data && ordersState.status !== "loading"
+            {data && ordersState.status !== 'loading'
               ? `${data.pagination.totalCount} zamówień`
-              : "Lista zamówień"}
+              : 'Lista zamówień'}
           </Text>
           <Button
             icon={RefreshIcon}
@@ -146,7 +146,7 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
         </Flex>
       </Box>
 
-      {ordersState.status === "error" ? (
+      {ordersState.status === 'error' ? (
         <AdminStateCard
           action={
             <Button
@@ -163,7 +163,7 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
         />
       ) : null}
 
-      {ordersState.status === "loading" ? (
+      {ordersState.status === 'loading' ? (
         <>
           <OrdersLoadingTable />
           {data ? (
@@ -176,14 +176,14 @@ export function OrdersListing({ onOpenOrder }: OrdersListingProps) {
         </>
       ) : null}
 
-      {ordersState.status !== "loading" && data && data.orders.length === 0 ? (
+      {ordersState.status !== 'loading' && data && data.orders.length === 0 ? (
         <AdminStateCard
           heading="Brak zamówień"
           description="Nie znaleziono zamówień dla wybranych filtrów."
         />
       ) : null}
 
-      {ordersState.status !== "loading" && data && data.orders.length > 0 ? (
+      {ordersState.status !== 'loading' && data && data.orders.length > 0 ? (
         <>
           <OrdersTable orders={data.orders} onOpenOrder={onOpenOrder} />
           <OrdersPagination

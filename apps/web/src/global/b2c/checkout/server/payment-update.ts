@@ -32,9 +32,7 @@ export class CheckoutPaymentUpdateError extends Error {
   constructor(
     message: string,
     public readonly code:
-      | 'not_found'
-      | 'invalid_order_state'
-      | 'database_error',
+      'not_found' | 'invalid_order_state' | 'database_error',
     public readonly causeError: PostgrestError | Error | null = null,
   ) {
     super(message);

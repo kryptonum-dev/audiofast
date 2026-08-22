@@ -10,20 +10,20 @@ The website serves as their digital storefront: a product catalog, brand showcas
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Monorepo** | Turborepo v2.6.0 |
-| **Package Manager** | Bun v1.1.42 |
-| **Frontend** | Next.js 16 (App Router), React 19, TypeScript |
-| **Styling** | SCSS Modules with CSS variables |
-| **CMS** | Sanity v5 (GROQ queries, Portable Text) |
-| **Database** | Supabase (PostgreSQL) — product pricing only |
-| **Email** | Microsoft Graph API + React Email templates |
-| **Newsletter** | Mailchimp |
-| **Analytics** | Google Tag Manager + Meta Pixel (dual tracking) |
-| **Maps** | Leaflet (react-leaflet) for store locators |
-| **Deployment** | Vercel (web), Sanity hosting (studio) |
-| **CI/CD** | GitHub Actions (Sanity deploy), Vercel (web auto-deploy) |
+| Layer               | Technology                                               |
+| ------------------- | -------------------------------------------------------- |
+| **Monorepo**        | Turborepo v2.6.0                                         |
+| **Package Manager** | Bun v1.1.42                                              |
+| **Frontend**        | Next.js 16 (App Router), React 19, TypeScript            |
+| **Styling**         | SCSS Modules with CSS variables                          |
+| **CMS**             | Sanity v5 (GROQ queries, Portable Text)                  |
+| **Database**        | Supabase (PostgreSQL) — product pricing only             |
+| **Email**           | Microsoft Graph API + React Email templates              |
+| **Newsletter**      | Mailchimp                                                |
+| **Analytics**       | Google Tag Manager + Meta Pixel (dual tracking)          |
+| **Maps**            | Leaflet (react-leaflet) for store locators               |
+| **Deployment**      | Vercel (web), Sanity hosting (studio)                    |
+| **CI/CD**           | GitHub Actions (Sanity deploy), Vercel (web auto-deploy) |
 
 ---
 
@@ -72,39 +72,40 @@ audiofast/
 
 All routes use the Next.js App Router with trailing slashes.
 
-| Route | Purpose |
-|---|---|
-| `/` | Homepage (Page Builder) |
-| `/produkty/` | Products listing with filters |
-| `/produkty/kategoria/[category]/` | Products filtered by category |
-| `/produkty/[slug]/` | Product detail page |
-| `/produkty/[slug]/pliki/[pdfKey]/` | Product PDF download |
-| `/produkty/archiwalne/` | Archived products |
-| `/marki/` | Brands listing |
-| `/marki/[slug]/` | Brand detail page |
-| `/blog/` | Blog listing |
-| `/blog/kategoria/[category]/` | Blog filtered by category |
-| `/blog/[slug]/` | Blog article page |
-| `/recenzje/[slug]/` | Review page |
-| `/recenzje/pdf/[slug]/` | Review PDF download |
-| `/recenzje/archiwalne/` | Orphan reviews |
-| `/porownaj/` | Product comparison tool |
-| `/certyfikowany-sprzet-uzywany/` | Certified Pre-Owned page |
-| `/polityka-prywatnosci/` | Privacy policy |
-| `/regulamin/` | Terms and conditions |
-| `/[slug]/` | Dynamic CMS pages (catch-all) |
+| Route                              | Purpose                       |
+| ---------------------------------- | ----------------------------- |
+| `/`                                | Homepage (Page Builder)       |
+| `/produkty/`                       | Products listing with filters |
+| `/produkty/kategoria/[category]/`  | Products filtered by category |
+| `/produkty/[slug]/`                | Product detail page           |
+| `/produkty/[slug]/pliki/[pdfKey]/` | Product PDF download          |
+| `/produkty/archiwalne/`            | Archived products             |
+| `/marki/`                          | Brands listing                |
+| `/marki/[slug]/`                   | Brand detail page             |
+| `/blog/`                           | Blog listing                  |
+| `/blog/kategoria/[category]/`      | Blog filtered by category     |
+| `/blog/[slug]/`                    | Blog article page             |
+| `/recenzje/[slug]/`                | Review page                   |
+| `/recenzje/pdf/[slug]/`            | Review PDF download           |
+| `/recenzje/archiwalne/`            | Orphan reviews                |
+| `/porownaj/`                       | Product comparison tool       |
+| `/certyfikowany-sprzet-uzywany/`   | Certified Pre-Owned page      |
+| `/polityka-prywatnosci/`           | Privacy policy                |
+| `/regulamin/`                      | Terms and conditions          |
+| `/[slug]/`                         | Dynamic CMS pages (catch-all) |
 
 **API Routes:**
 
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/revalidate/` | POST | Cache invalidation (Sanity webhooks) |
-| `/api/newsletter/` | POST | Newsletter subscription (Mailchimp) |
-| `/api/newsletter/generate/` | POST | Newsletter HTML generation |
-| `/api/contact/` | POST | Contact & product inquiry forms |
-| `/api/analytics/meta/` | GET | Analytics metadata |
+| Endpoint                    | Method | Purpose                              |
+| --------------------------- | ------ | ------------------------------------ |
+| `/api/revalidate/`          | POST   | Cache invalidation (Sanity webhooks) |
+| `/api/newsletter/`          | POST   | Newsletter subscription (Mailchimp)  |
+| `/api/newsletter/generate/` | POST   | Newsletter HTML generation           |
+| `/api/contact/`             | POST   | Contact & product inquiry forms      |
+| `/api/analytics/meta/`      | GET    | Analytics metadata                   |
 
 **Generated Files:**
+
 - `sitemap.ts` — dynamic sitemap from Sanity content
 - `robots.ts` — robots.txt
 - `manifest.ts` — web app manifest
@@ -119,29 +120,29 @@ Components are organized by domain, with a clear separation between page-level b
 
 The site uses a modular **Page Builder** pattern. Pages in Sanity are composed of an array of blocks, and the `PageBuilder` component (`components/shared/PageBuilder.tsx`) maps each block type to its React component. There are 20+ block types:
 
-| Block | Purpose |
-|---|---|
-| `HeroCarousel` | Rotating hero banners with slides |
-| `HeroStatic` | Static hero section |
-| `LatestPublication` | Showcases the most recent content |
-| `FeaturedPublications` | Carousel of selected articles/reviews |
-| `FeaturedProducts` | Highlighted products grid |
-| `ProductsCarousel` | Scrollable product carousel |
-| `ProductsListing` | Full product listing (CPO page) |
-| `BrandsMarquee` | Infinite-scrolling brand logo ticker |
-| `BrandsList` | Grid of brand logos |
-| `BrandsByCategoriesSection` | Brands organized by product category |
-| `ImageTextColumns` | Image paired with text columns |
-| `ImageWithVideo` | Image with embedded video |
-| `ImageWithTextBoxes` | Image with overlaid text boxes |
-| `BlurLinesTextImage` | Decorative blur-line effect with text/image |
-| `GallerySection` | Image gallery |
-| `ContactForm` | Contact form with email integration |
-| `ContactMap` | Map showing store locations |
-| `FaqSection` | Expandable FAQ accordion |
-| `TeamSection` | Team member profiles |
-| `PhoneImageCta` | CTA with phone/image |
-| `StepList` | Step-by-step instructional content |
+| Block                       | Purpose                                     |
+| --------------------------- | ------------------------------------------- |
+| `HeroCarousel`              | Rotating hero banners with slides           |
+| `HeroStatic`                | Static hero section                         |
+| `LatestPublication`         | Showcases the most recent content           |
+| `FeaturedPublications`      | Carousel of selected articles/reviews       |
+| `FeaturedProducts`          | Highlighted products grid                   |
+| `ProductsCarousel`          | Scrollable product carousel                 |
+| `ProductsListing`           | Full product listing (CPO page)             |
+| `BrandsMarquee`             | Infinite-scrolling brand logo ticker        |
+| `BrandsList`                | Grid of brand logos                         |
+| `BrandsByCategoriesSection` | Brands organized by product category        |
+| `ImageTextColumns`          | Image paired with text columns              |
+| `ImageWithVideo`            | Image with embedded video                   |
+| `ImageWithTextBoxes`        | Image with overlaid text boxes              |
+| `BlurLinesTextImage`        | Decorative blur-line effect with text/image |
+| `GallerySection`            | Image gallery                               |
+| `ContactForm`               | Contact form with email integration         |
+| `ContactMap`                | Map showing store locations                 |
+| `FaqSection`                | Expandable FAQ accordion                    |
+| `TeamSection`               | Team member profiles                        |
+| `PhoneImageCta`             | CTA with phone/image                        |
+| `StepList`                  | Step-by-step instructional content          |
 
 #### UI Components (`components/ui/`)
 
@@ -176,6 +177,7 @@ The application uses a **dual-database** strategy:
 #### Sanity CMS — Content & Metadata
 
 All editorial content lives in Sanity:
+
 - Product information (name, description, images, categories, brand, technical specs, reviews, related products, store availability)
 - Brand pages (logo, description, hero images, content, galleries, featured reviews)
 - Blog articles (content, categories, authors, publication dates)
@@ -187,6 +189,7 @@ All editorial content lives in Sanity:
 #### Supabase — Dynamic Pricing
 
 Product pricing is stored separately in Supabase (PostgreSQL):
+
 - `pricing_variants` — product models/variants with base prices
 - `pricing_option_groups` — option groups (dropdown selects, numeric steppers)
 - `pricing_option_values` — dropdown options with price deltas
@@ -229,6 +232,7 @@ Queries live in `src/global/sanity/query.ts` (~2400+ lines). They use a **fragme
 #### Denormalization Strategy
 
 Products store **denormalized fields** to avoid expensive dereferencing in GROQ:
+
 - `denormBrandSlug`, `denormBrandName` — avoids `brand->slug` lookups
 - `denormCategorySlugs`, `denormParentCategorySlugs` — avoids category reference resolution
 - `denormFilterKeys` — pre-computed filter keys
@@ -242,11 +246,14 @@ These fields are automatically recomputed when a product is published (via a cus
 The application uses **Next.js `use cache`** directive with a sophisticated invalidation strategy:
 
 #### Cache Lifecycle
+
 - **Development**: `cacheLife('seconds')` — fresh data on every request
 - **Production**: `cacheLife('weeks')` — 30-day stale window, invalidated on demand
 
 #### Tag-Based Invalidation
+
 Every cached query is tagged with specific identifiers:
+
 - `product:yamaha-thr10ii` — a specific product page
 - `brand:wilson-audio` — a specific brand page
 - `products` — the products listing page
@@ -254,7 +261,9 @@ Every cached query is tagged with specific identifiers:
 - `product-pricing:slug` — pricing data for a product
 
 #### Reverse Lookup Mechanism
+
 When a Sanity document is edited, the `/api/revalidate/` endpoint performs a **reverse lookup** to find all pages that reference that document:
+
 1. Receives webhook from Sanity with the edited document ID
 2. Queries Sanity: `*[references($id) && _type in [...]]` to find referencing documents
 3. Extracts slugs from those documents
@@ -263,6 +272,7 @@ When a Sanity document is edited, the `/api/revalidate/` endpoint performs a **r
 This avoids the naive approach of invalidating entire categories when a single product changes.
 
 #### Denormalization Sync
+
 When a brand or category is updated, the revalidation endpoint also triggers **denormalization updates** — it patches all referencing products with the new denormalized values, ensuring data consistency without manual intervention.
 
 ---
@@ -276,15 +286,16 @@ Filtering uses a **client-side computation** approach for instant responsiveness
 3. **Key rule**: Filter X does not reduce options for Filter X (e.g., selecting brand "Wilson Audio" doesn't hide other brands from the brand filter)
 
 #### Filter Types
-| Filter | Type | Logic |
-|---|---|---|
-| Category | Single select | Matches against denormalized category slugs |
-| Brand | Multi-select | Array of brand slugs (OR within, AND with other filters) |
-| Price | Range (min/max) | Cents-based comparison |
-| Custom Dropdowns | Category-specific | Per-category configurable filters (e.g., "Cable Length") |
-| Range Filters | Numeric range | Per-category numeric ranges (e.g., "Impedance: 4-12Ω") |
-| CPO | Boolean | Certified Pre-Owned toggle |
-| Search | Text | Matches product name; supports semantic search via embeddings |
+
+| Filter           | Type              | Logic                                                         |
+| ---------------- | ----------------- | ------------------------------------------------------------- |
+| Category         | Single select     | Matches against denormalized category slugs                   |
+| Brand            | Multi-select      | Array of brand slugs (OR within, AND with other filters)      |
+| Price            | Range (min/max)   | Cents-based comparison                                        |
+| Custom Dropdowns | Category-specific | Per-category configurable filters (e.g., "Cable Length")      |
+| Range Filters    | Numeric range     | Per-category numeric ranges (e.g., "Impedance: 4-12Ω")        |
+| CPO              | Boolean           | Certified Pre-Owned toggle                                    |
+| Search           | Text              | Matches product name; supports semantic search via embeddings |
 
 ---
 
@@ -303,11 +314,13 @@ A cookie-based comparison tool:
 ### Email System
 
 **Outbound Email (Microsoft Graph API):**
+
 - Contact form submissions → notification to Audiofast team + confirmation to user
 - Product inquiry forms → same flow with product context
 - Templates built with React Email (`src/emails/`)
 
 **Newsletter (Mailchimp):**
+
 - Subscription via `/api/newsletter/`
 - Newsletter generation tool in Sanity Studio: select date range → auto-fetch articles/reviews/products → generate HTML → create Mailchimp draft
 
@@ -355,40 +368,40 @@ Dual-tracking with consent management:
 
 #### Document Types (Collections)
 
-| Type | Purpose | Key Features |
-|---|---|---|
-| `product` | Products | Brand/category refs, denormalized fields, technical data, custom filter values, image gallery, PDFs, reviews, related products, page builder, CPO/archived flags, pricing sync |
-| `brand` | Brands | Logo, description, hero/banner images, unified content, distribution year, image gallery, stores, featured reviews |
-| `blog-article` | Blog articles | Category ref, portable text content, page builder, author (internal/external), keywords |
-| `blog-category` | Blog categories | Orderable |
-| `review` | Reviews | Multiple destination types (page, PDF, external), product links |
-| `reviewAuthor` | Review authors | Orderable |
-| `productCategoryParent` | Parent product categories | Orderable |
-| `productCategorySub` | Sub product categories | Parent ref, custom filter definitions |
-| `store` | Stores/salons | Location data for store finder |
-| `teamMember` | Team members | Staff profiles |
-| `award` | Awards | Product awards |
-| `faq` | FAQs | Question/answer pairs |
-| `socialMedia` | Social media links | Restricted actions |
-| `page` | Generic CMS pages | Page builder, slug validation |
+| Type                    | Purpose                   | Key Features                                                                                                                                                                   |
+| ----------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `product`               | Products                  | Brand/category refs, denormalized fields, technical data, custom filter values, image gallery, PDFs, reviews, related products, page builder, CPO/archived flags, pricing sync |
+| `brand`                 | Brands                    | Logo, description, hero/banner images, unified content, distribution year, image gallery, stores, featured reviews                                                             |
+| `blog-article`          | Blog articles             | Category ref, portable text content, page builder, author (internal/external), keywords                                                                                        |
+| `blog-category`         | Blog categories           | Orderable                                                                                                                                                                      |
+| `review`                | Reviews                   | Multiple destination types (page, PDF, external), product links                                                                                                                |
+| `reviewAuthor`          | Review authors            | Orderable                                                                                                                                                                      |
+| `productCategoryParent` | Parent product categories | Orderable                                                                                                                                                                      |
+| `productCategorySub`    | Sub product categories    | Parent ref, custom filter definitions                                                                                                                                          |
+| `store`                 | Stores/salons             | Location data for store finder                                                                                                                                                 |
+| `teamMember`            | Team members              | Staff profiles                                                                                                                                                                 |
+| `award`                 | Awards                    | Product awards                                                                                                                                                                 |
+| `faq`                   | FAQs                      | Question/answer pairs                                                                                                                                                          |
+| `socialMedia`           | Social media links        | Restricted actions                                                                                                                                                             |
+| `page`                  | Generic CMS pages         | Page builder, slug validation                                                                                                                                                  |
 
 #### Singleton Types
 
-| Type | Purpose |
-|---|---|
-| `homePage` | Homepage content |
-| `settings` | Global settings (contact info, form config, Mailchimp, analytics, SEO, structured data) |
-| `footer` | Footer content |
-| `navbar` | Navigation bar |
-| `redirects` | URL redirect mappings |
-| `privacyPolicy` | Privacy policy content |
-| `termsAndConditions` | Terms content |
-| `notFound` | 404 page content |
-| `blog` | Blog listing page config |
-| `products` | Products listing page config |
-| `brands` | Brands listing page config |
-| `cpoPage` | Certified Pre-Owned page config |
-| `comparatorConfig` | Product comparison parameters per category |
+| Type                 | Purpose                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------- |
+| `homePage`           | Homepage content                                                                        |
+| `settings`           | Global settings (contact info, form config, Mailchimp, analytics, SEO, structured data) |
+| `footer`             | Footer content                                                                          |
+| `navbar`             | Navigation bar                                                                          |
+| `redirects`          | URL redirect mappings                                                                   |
+| `privacyPolicy`      | Privacy policy content                                                                  |
+| `termsAndConditions` | Terms content                                                                           |
+| `notFound`           | 404 page content                                                                        |
+| `blog`               | Blog listing page config                                                                |
+| `products`           | Products listing page config                                                            |
+| `brands`             | Brands listing page config                                                              |
+| `cpoPage`            | Certified Pre-Owned page config                                                         |
+| `comparatorConfig`   | Product comparison parameters per category                                              |
 
 #### Page Builder Blocks (20+ types)
 
@@ -453,6 +466,7 @@ The studio desk is organized into logical sections:
 #### Bulk Actions Table (`plugins/bulk-actions-table/`)
 
 A custom table interface for managing large collections:
+
 - Bulk selection and editing
 - Filtering and search
 - Reference-based filters (e.g., filter products by brand)
@@ -467,6 +481,7 @@ A custom table interface for managing large collections:
 #### Newsletter Tool (`tools/newsletter/`)
 
 Generates newsletters from CMS content:
+
 1. Select date range
 2. Auto-fetches matching blog articles, reviews, and products
 3. Configure hero image
@@ -476,6 +491,7 @@ Generates newsletters from CMS content:
 #### Comparator Tool (`tools/comparator/`)
 
 Configures the product comparison feature:
+
 1. Discovers all technical data parameters from products
 2. Category-based parameter configuration
 3. Drag-and-drop parameter ordering
@@ -490,6 +506,7 @@ Configures the product comparison feature:
 #### Denormalization Wrapper (`actions/wrap-publish-with-denorm.ts`)
 
 Wraps the standard publish action for products:
+
 1. Before publishing, computes denormalized fields (brand slug/name, category slugs, filter keys)
 2. Patches the draft with computed values
 3. Then proceeds with the standard publish
@@ -504,17 +521,17 @@ Restores the unpublish action for orderable document types (`product`, `brand`, 
 
 Comprehensive migration tooling for importing/transforming data:
 
-| Domain | Scripts | Purpose |
-|---|---|---|
-| **Products** | 8+ scripts | Import, brand-based migration, PDF migration, unified content migration, date fixes, reference fixes |
-| **Brands** | 10+ scripts | CSV import, content blocks migration, unified content, reviews, galleries |
-| **Reviews** | 4+ scripts | Import, author resolution, HTML-to-Portable-Text conversion |
-| **Blog** | 2+ scripts | Article import, content migration |
-| **Categories** | 3+ scripts | Category import and transformation |
-| **Stores** | 4+ scripts | Store import and transformation |
-| **Awards** | 4+ scripts | Award import, image processing |
-| **Brand-Stores** | 1 script | Brand-store relationship mapping |
-| **Denormalization** | 1 script | Batch recomputation of all denormalized fields |
+| Domain              | Scripts     | Purpose                                                                                              |
+| ------------------- | ----------- | ---------------------------------------------------------------------------------------------------- |
+| **Products**        | 8+ scripts  | Import, brand-based migration, PDF migration, unified content migration, date fixes, reference fixes |
+| **Brands**          | 10+ scripts | CSV import, content blocks migration, unified content, reviews, galleries                            |
+| **Reviews**         | 4+ scripts  | Import, author resolution, HTML-to-Portable-Text conversion                                          |
+| **Blog**            | 2+ scripts  | Article import, content migration                                                                    |
+| **Categories**      | 3+ scripts  | Category import and transformation                                                                   |
+| **Stores**          | 4+ scripts  | Store import and transformation                                                                      |
+| **Awards**          | 4+ scripts  | Award import, image processing                                                                       |
+| **Brand-Stores**    | 1 script    | Brand-store relationship mapping                                                                     |
+| **Denormalization** | 1 script    | Batch recomputation of all denormalized fields                                                       |
 
 Each migration domain includes parsers (CSV/HTML), transformers, and Sanity client utilities.
 
@@ -525,6 +542,7 @@ Each migration domain includes parsers (CSV/HTML), transformers, and Sanity clie
 ### `packages/eslint-config`
 
 Shared ESLint configurations exported as:
+
 - `base` — core TypeScript + Prettier rules
 - `next-js` — Next.js specific rules
 - `react-internal` — React library rules
@@ -532,6 +550,7 @@ Shared ESLint configurations exported as:
 ### `packages/typescript-config`
 
 Shared TypeScript configurations:
+
 - `base.json` — strict mode, modern module resolution
 - `nextjs.json` — extends base with Next.js settings
 - `react-library.json` — extends base for React packages
@@ -542,37 +561,38 @@ Shared TypeScript configurations:
 
 ### Web App (`apps/web`)
 
-| Variable | Purpose |
-|---|---|
-| `SANITY_API_READ_TOKEN` | Sanity read access |
-| `SANITY_API_WRITE_TOKEN` | Sanity write access (revalidation denorm) |
-| `SANITY_WEBHOOK_SECRET` | Webhook authentication |
-| `NEXT_REVALIDATE_TOKEN` | Cache revalidation auth |
-| `NEXT_PUBLIC_SUPABASE_URL` | Supabase endpoint |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase public key |
-| `AZURE_TENANT_ID` | Microsoft Graph auth |
-| `AZURE_CLIENT_ID` | Microsoft Graph auth |
-| `AZURE_CLIENT_SECRET` | Microsoft Graph auth |
-| `MS_GRAPH_SENDER_EMAIL` | Email sender address |
-| `MS_GRAPH_REPLY_TO` | Email reply-to address |
-| `MAILCHIMP_API_KEY` | Mailchimp API key |
-| `MAILCHIMP_SERVER_PREFIX` | Mailchimp server prefix |
-| `EMBEDDINGS_INDEX_BEARER_TOKEN` | Semantic search auth |
-| `VERCEL_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_ENV` | Vercel environment |
+| Variable                                                    | Purpose                                   |
+| ----------------------------------------------------------- | ----------------------------------------- |
+| `SANITY_API_READ_TOKEN`                                     | Sanity read access                        |
+| `SANITY_API_WRITE_TOKEN`                                    | Sanity write access (revalidation denorm) |
+| `SANITY_WEBHOOK_SECRET`                                     | Webhook authentication                    |
+| `NEXT_REVALIDATE_TOKEN`                                     | Cache revalidation auth                   |
+| `NEXT_PUBLIC_SUPABASE_URL`                                  | Supabase endpoint                         |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`                             | Supabase public key                       |
+| `AZURE_TENANT_ID`                                           | Microsoft Graph auth                      |
+| `AZURE_CLIENT_ID`                                           | Microsoft Graph auth                      |
+| `AZURE_CLIENT_SECRET`                                       | Microsoft Graph auth                      |
+| `MS_GRAPH_SENDER_EMAIL`                                     | Email sender address                      |
+| `MS_GRAPH_REPLY_TO`                                         | Email reply-to address                    |
+| `MAILCHIMP_API_KEY`                                         | Mailchimp API key                         |
+| `MAILCHIMP_SERVER_PREFIX`                                   | Mailchimp server prefix                   |
+| `EMBEDDINGS_INDEX_BEARER_TOKEN`                             | Semantic search auth                      |
+| `VERCEL_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_ENV` | Vercel environment                        |
 
 ### Sanity Studio (`apps/studio`)
 
-| Variable | Purpose |
-|---|---|
-| `SANITY_STUDIO_PROJECT_ID` | Sanity project ID |
-| `SANITY_STUDIO_DATASET` | Sanity dataset name |
-| `SANITY_STUDIO_TITLE` | Studio title |
+| Variable                   | Purpose             |
+| -------------------------- | ------------------- |
+| `SANITY_STUDIO_PROJECT_ID` | Sanity project ID   |
+| `SANITY_STUDIO_DATASET`    | Sanity dataset name |
+| `SANITY_STUDIO_TITLE`      | Studio title        |
 
 ---
 
 ## Development
 
 ### Prerequisites
+
 - Node.js ≥ 20
 - Bun v1.1.42
 

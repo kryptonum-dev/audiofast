@@ -29,8 +29,12 @@ describe('B2C withdrawal form document helpers', () => {
   });
 
   it('treats non-company invoice recipients as eligible for the form', () => {
-    expect(canReceiveB2cWithdrawalForm({ recipientType: 'private' })).toBe(true);
-    expect(canReceiveB2cWithdrawalForm({ recipientType: 'unknown' })).toBe(true);
+    expect(canReceiveB2cWithdrawalForm({ recipientType: 'private' })).toBe(
+      true,
+    );
+    expect(canReceiveB2cWithdrawalForm({ recipientType: 'unknown' })).toBe(
+      true,
+    );
     expect(canReceiveB2cWithdrawalForm({ recipientType: 'company' })).toBe(
       false,
     );

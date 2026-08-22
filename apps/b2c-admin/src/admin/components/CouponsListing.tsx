@@ -1,42 +1,42 @@
-import { AddIcon, RefreshIcon } from "@sanity/icons";
-import { Box, Button, Dialog, Flex, Inline, Text } from "@sanity/ui";
-import { useAuthToken } from "@sanity/sdk-react";
-import { useEffect, useState } from "react";
+import { AddIcon, RefreshIcon } from '@sanity/icons';
+import { Box, Button, Dialog, Flex, Inline, Text } from '@sanity/ui';
+import { useAuthToken } from '@sanity/sdk-react';
+import { useEffect, useState } from 'react';
 
 import {
   getAdminErrorMessage,
   archiveAdminCoupon,
   fetchAdminCoupons,
-} from "../api.js";
+} from '../api.js';
 import type {
   AdminCoupon,
   AdminCouponsResult,
   CouponsFilters,
-} from "../types.js";
-import { AdminLoadingTable } from "./AdminLoadingTable.js";
-import { AdminPagination } from "./AdminPagination.js";
-import { AdminStateCard } from "./AdminStateCard.js";
+} from '../types.js';
+import { AdminLoadingTable } from './AdminLoadingTable.js';
+import { AdminPagination } from './AdminPagination.js';
+import { AdminStateCard } from './AdminStateCard.js';
 import {
   DEFAULT_COUPONS_FILTERS,
   CouponsFilters as CouponsFiltersControls,
-} from "./CouponsFilters.js";
-import { CouponsTable } from "./CouponsTable.js";
+} from './CouponsFilters.js';
+import { CouponsTable } from './CouponsTable.js';
 
 const COUPONS_PER_PAGE = 15;
 
 type CouponsState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       data: AdminCouponsResult | null;
       error: null;
     }
   | {
-      status: "ready";
+      status: 'ready';
       data: AdminCouponsResult;
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       data: AdminCouponsResult | null;
       error: string;
     };
@@ -73,7 +73,7 @@ export function CouponsListing({
     error: null,
   });
   const [couponsState, setCouponsState] = useState<CouponsState>({
-    status: "idle",
+    status: 'idle',
     data: null,
     error: null,
   });
@@ -81,7 +81,7 @@ export function CouponsListing({
   useEffect(() => {
     if (!authToken) {
       setCouponsState({
-        status: "idle",
+        status: 'idle',
         data: null,
         error: null,
       });
@@ -91,7 +91,7 @@ export function CouponsListing({
     const controller = new AbortController();
 
     setCouponsState((current) => ({
-      status: "loading",
+      status: 'loading',
       data: current.data,
       error: null,
     }));
@@ -105,7 +105,7 @@ export function CouponsListing({
     })
       .then((data) => {
         setCouponsState({
-          status: "ready",
+          status: 'ready',
           data,
           error: null,
         });
@@ -116,11 +116,11 @@ export function CouponsListing({
         }
 
         setCouponsState((current) => ({
-          status: "error",
+          status: 'error',
           data: current.data,
           error: getAdminErrorMessage(
             error,
-            "Nie udało się załadować kuponów.",
+            'Nie udało się załadować kuponów.',
           ),
         }));
       });
@@ -228,7 +228,7 @@ export function CouponsListing({
       setArchiveState({
         bulk: false,
         couponId: couponToArchive.id,
-        error: getAdminErrorMessage(error, "Nie udało się usunąć kuponu."),
+        error: getAdminErrorMessage(error, 'Nie udało się usunąć kuponu.'),
       });
     }
   }
@@ -278,7 +278,7 @@ export function CouponsListing({
         couponId: null,
         error: getAdminErrorMessage(
           error,
-          "Nie udało się usunąć zaznaczonych kuponów.",
+          'Nie udało się usunąć zaznaczonych kuponów.',
         ),
       });
     }
@@ -335,8 +335,8 @@ export function CouponsListing({
                   onClick={confirmArchiveCoupon}
                   text={
                     archiveState.couponId === couponToArchive.id
-                      ? "Usuwanie..."
-                      : "Usuń kupon"
+                      ? 'Usuwanie...'
+                      : 'Usuń kupon'
                   }
                   tone="critical"
                   type="button"
@@ -396,7 +396,7 @@ export function CouponsListing({
                   onClick={confirmBulkArchiveCoupons}
                   text={
                     archiveState.bulk
-                      ? "Usuwanie..."
+                      ? 'Usuwanie...'
                       : `Usuń ${couponsToBulkArchive.length} kuponów`
                   }
                   tone="critical"
@@ -429,9 +429,9 @@ export function CouponsListing({
       <Box paddingX={3} paddingBottom={3}>
         <Flex align="center" justify="space-between" wrap="wrap">
           <Text muted size={1}>
-            {data && couponsState.status !== "loading"
+            {data && couponsState.status !== 'loading'
               ? `${data.pagination.totalCount} kuponów`
-              : "Lista kuponów"}
+              : 'Lista kuponów'}
           </Text>
           <Flex gap={2} wrap="wrap">
             <Button
@@ -463,7 +463,7 @@ export function CouponsListing({
         </Flex>
       </Box>
 
-      {couponsState.status === "error" ? (
+      {couponsState.status === 'error' ? (
         <AdminStateCard
           action={
             <Button
@@ -480,7 +480,7 @@ export function CouponsListing({
         />
       ) : null}
 
-      {couponsState.status === "loading" ? (
+      {couponsState.status === 'loading' ? (
         <>
           <AdminLoadingTable />
           {data ? (
@@ -494,7 +494,7 @@ export function CouponsListing({
         </>
       ) : null}
 
-      {couponsState.status !== "loading" &&
+      {couponsState.status !== 'loading' &&
       data &&
       data.coupons.length === 0 ? (
         <AdminStateCard
@@ -503,7 +503,7 @@ export function CouponsListing({
         />
       ) : null}
 
-      {couponsState.status !== "loading" && data && data.coupons.length > 0 ? (
+      {couponsState.status !== 'loading' && data && data.coupons.length > 0 ? (
         <>
           <CouponsTable
             archivingCouponId={archiveState.couponId}

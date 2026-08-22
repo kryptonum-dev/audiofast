@@ -1,7 +1,7 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
 
-import { REGEX } from "@/global/constants";
-import { subscribeToNewsletter } from "@/global/mailchimp/subscribe";
+import { REGEX } from '@/global/constants';
+import { subscribeToNewsletter } from '@/global/mailchimp/subscribe';
 
 type NewsletterSubmission = {
   email: string;
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, message: "Invalid request" },
+      { success: false, message: 'Invalid request' },
       { status: 400 },
     );
   }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   // Validate required fields
   if (!body.email || !body.consent) {
     return NextResponse.json(
-      { success: false, message: "Email and consent are required" },
+      { success: false, message: 'Email and consent are required' },
       { status: 400 },
     );
   }
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
   // Validate email format
   if (!REGEX.email.test(body.email)) {
     return NextResponse.json(
-      { success: false, message: "Invalid email address" },
+      { success: false, message: 'Invalid email address' },
       { status: 400 },
     );
   }
@@ -56,9 +56,9 @@ export async function POST(request: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("[Newsletter API] Unexpected error:", error);
+    console.error('[Newsletter API] Unexpected error:', error);
     return NextResponse.json(
-      { success: false, message: "Failed to process subscription" },
+      { success: false, message: 'Failed to process subscription' },
       { status: 500 },
     );
   }

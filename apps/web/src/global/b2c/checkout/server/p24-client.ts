@@ -64,10 +64,7 @@ export class P24ClientError extends Error {
   constructor(
     message: string,
     public readonly code:
-      | 'network_error'
-      | 'http_error'
-      | 'invalid_response'
-      | 'p24_error',
+      'network_error' | 'http_error' | 'invalid_response' | 'p24_error',
     public readonly status: number | null = null,
     public readonly responseCode: number | null = null,
     public readonly responseBody: unknown = null,

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   closestCenter,
@@ -8,7 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   horizontalListSortingStrategy,
@@ -16,15 +16,15 @@ import {
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import {
   AddIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   DragHandleIcon,
   TrashIcon,
-} from "@sanity/icons";
+} from '@sanity/icons';
 import {
   Box,
   Button,
@@ -36,13 +36,13 @@ import {
   Text,
   TextInput,
   useToast,
-} from "@sanity/ui";
-import { Edit2, FolderPlus } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { PortableTextBlock, SanityDocument } from "sanity";
-import { useClient } from "sanity";
+} from '@sanity/ui';
+import { Edit2, FolderPlus } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { PortableTextBlock, SanityDocument } from 'sanity';
+import { useClient } from 'sanity';
 
-import { CellEditor } from "./cell-editor";
+import { CellEditor } from './cell-editor';
 import {
   createEmptyCellValue,
   createEmptyGroup,
@@ -52,7 +52,7 @@ import {
   type TechnicalDataGroup,
   type TechnicalDataRow,
   type TechnicalDataValue,
-} from "./types";
+} from './types';
 
 type CellEditorState = {
   isOpen: boolean;
@@ -63,7 +63,7 @@ type CellEditorState = {
 } | null;
 
 type DeleteConfirmState = {
-  type: "row" | "variant" | "group";
+  type: 'row' | 'variant' | 'group';
   groupIndex?: number;
   index: number;
   name: string;
@@ -87,21 +87,21 @@ function getGridTemplateColumns(valueColumnCount: number): string {
  */
 function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
   if (!blocks || blocks.length === 0) {
-    return <span style={{ color: "var(--card-muted-fg-color)" }}>–</span>;
+    return <span style={{ color: 'var(--card-muted-fg-color)' }}>–</span>;
   }
 
   return (
-    <div style={{ fontSize: "13px", lineHeight: 1.4 }}>
+    <div style={{ fontSize: '13px', lineHeight: 1.4 }}>
       {blocks.map((block, blockIndex) => {
-        if (block._type !== "block") return null;
+        if (block._type !== 'block') return null;
 
         const isListItem = block.listItem;
         const listStyle =
-          block.listItem === "bullet"
-            ? "• "
-            : block.listItem === "number"
+          block.listItem === 'bullet'
+            ? '• '
+            : block.listItem === 'number'
               ? `${blockIndex + 1}. `
-              : "";
+              : '';
 
         const children =
           (block.children as Array<{
@@ -111,20 +111,20 @@ function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
           }>) || [];
 
         const content = children.map((child, childIndex) => {
-          const text = child.text || "";
+          const text = child.text || '';
           if (!text) return null;
 
           const marks = child.marks || [];
-          const isBold = marks.includes("strong");
-          const isItalic = marks.includes("em");
-          const isLink = marks.some((m) => m !== "strong" && m !== "em");
+          const isBold = marks.includes('strong');
+          const isItalic = marks.includes('em');
+          const isLink = marks.some((m) => m !== 'strong' && m !== 'em');
 
           let style: React.CSSProperties = {};
           if (isBold) style.fontWeight = 600;
-          if (isItalic) style.fontStyle = "italic";
+          if (isItalic) style.fontStyle = 'italic';
           if (isLink) {
-            style.color = "var(--card-link-color)";
-            style.textDecoration = "underline";
+            style.color = 'var(--card-link-color)';
+            style.textDecoration = 'underline';
           }
 
           return (
@@ -138,9 +138,9 @@ function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
           return (
             <div
               key={block._key || blockIndex}
-              style={{ paddingLeft: "0.5em" }}
+              style={{ paddingLeft: '0.5em' }}
             >
-              <span style={{ color: "var(--card-muted-fg-color)" }}>
+              <span style={{ color: 'var(--card-muted-fg-color)' }}>
                 {listStyle}
               </span>
               {content}
@@ -154,7 +154,9 @@ function RichTextPreview({ blocks }: { blocks: PortableTextBlock[] }) {
   );
 }
 
-function hasMeaningfulCellContent(blocks: PortableTextBlock[] | undefined): boolean {
+function hasMeaningfulCellContent(
+  blocks: PortableTextBlock[] | undefined,
+): boolean {
   return extractPlainTextFromBlocks(blocks || []).trim().length > 0;
 }
 
@@ -182,10 +184,13 @@ function createTechnicalDataSnapshot(
       const rows = (group.rows || [])
         .map((row) => {
           const title = row.title.trim();
-          const values = Array.from({ length: valueColumnCount }, (_, index) => {
-            const content = row.values[index]?.content || [];
-            return Array.isArray(content) ? content : [];
-          });
+          const values = Array.from(
+            { length: valueColumnCount },
+            (_, index) => {
+              const content = row.values[index]?.content || [];
+              return Array.isArray(content) ? content : [];
+            },
+          );
           const hasAnyValue = values.some((content) =>
             hasMeaningfulCellContent(content),
           );
@@ -245,15 +250,18 @@ function normalizeTechnicalDataForSave(
       const rows = group.rows
         .map((row) => {
           const title = row.title.trim();
-          const values = Array.from({ length: valueColumnCount }, (_, index) => {
-            const existingValue = row.values[index];
-            return {
-              _key: existingValue?._key || generateKey(),
-              content: Array.isArray(existingValue?.content)
-                ? existingValue.content
-                : [],
-            };
-          });
+          const values = Array.from(
+            { length: valueColumnCount },
+            (_, index) => {
+              const existingValue = row.values[index];
+              return {
+                _key: existingValue?._key || generateKey(),
+                content: Array.isArray(existingValue?.content)
+                  ? existingValue.content
+                  : [],
+              };
+            },
+          );
           const hasAnyValue = values.some((value) =>
             hasMeaningfulCellContent(value.content),
           );
@@ -332,15 +340,15 @@ function SortableVariant({
       padding={3}
       border
       radius={2}
-      tone={isDragging ? "primary" : "default"}
+      tone={isDragging ? 'primary' : 'default'}
     >
       <Flex align="center" gap={2}>
         <Box
           {...attributes}
           {...listeners}
           style={{
-            cursor: "grab",
-            padding: "2px",
+            cursor: 'grab',
+            padding: '2px',
             flexShrink: 0,
           }}
         >
@@ -404,9 +412,9 @@ function SortableRow({
   // Auto-resize textarea on mount and when value changes
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + "px";
+        textareaRef.current.scrollHeight + 'px';
     }
   }, [row.title]);
 
@@ -423,14 +431,14 @@ function SortableRow({
       padding={2}
       border
       radius={2}
-      tone={isDragging ? "primary" : "default"}
+      tone={isDragging ? 'primary' : 'default'}
     >
       <div
         style={{
-          display: "grid",
+          display: 'grid',
           gridTemplateColumns: getGridTemplateColumns(valueColumnCount),
-          gap: "8px",
-          alignItems: "start",
+          gap: '8px',
+          alignItems: 'start',
         }}
       >
         {/* Drag handle + Row title */}
@@ -439,10 +447,10 @@ function SortableRow({
             {...attributes}
             {...listeners}
             style={{
-              cursor: "grab",
-              padding: "2px",
+              cursor: 'grab',
+              padding: '2px',
               flexShrink: 0,
-              marginTop: "6px",
+              marginTop: '6px',
             }}
           >
             <DragHandleIcon />
@@ -450,29 +458,29 @@ function SortableRow({
           <Box flex={1}>
             <textarea
               ref={textareaRef}
-              value={row.title || ""}
+              value={row.title || ''}
               onChange={(e) =>
                 onTitleChange(groupIndex, rowIndex, e.target.value)
               }
               placeholder="Parametr"
               rows={1}
               style={{
-                maxWidth: "88%",
-                padding: "6px 8px",
-                fontSize: "13px",
-                fontFamily: "inherit",
-                border: "1px solid var(--card-border-color)",
-                borderRadius: "3px",
-                background: "var(--card-bg-color)",
-                color: "inherit",
-                resize: "none",
-                overflow: "hidden",
+                maxWidth: '88%',
+                padding: '6px 8px',
+                fontSize: '13px',
+                fontFamily: 'inherit',
+                border: '1px solid var(--card-border-color)',
+                borderRadius: '3px',
+                background: 'var(--card-bg-color)',
+                color: 'inherit',
+                resize: 'none',
+                overflow: 'hidden',
                 lineHeight: 1.4,
               }}
               onInput={(e) => {
                 const target = e.target as HTMLTextAreaElement;
-                target.style.height = "auto";
-                target.style.height = target.scrollHeight + "px";
+                target.style.height = 'auto';
+                target.style.height = target.scrollHeight + 'px';
               }}
             />
           </Box>
@@ -487,11 +495,11 @@ function SortableRow({
             radius={2}
             tone="default"
             style={{
-              cursor: "pointer",
-              minHeight: "2.25rem",
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "4px",
+              cursor: 'pointer',
+              minHeight: '2.25rem',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '4px',
             }}
             onClick={() => onCellClick(groupIndex, rowIndex, valueIndex)}
           >
@@ -500,7 +508,7 @@ function SortableRow({
             </Box>
             <Edit2
               size={12}
-              style={{ opacity: 0.4, flexShrink: 0, marginTop: "2px" }}
+              style={{ opacity: 0.4, flexShrink: 0, marginTop: '2px' }}
             />
           </Card>
         ))}
@@ -513,7 +521,7 @@ function SortableRow({
           onClick={() => onRemove(groupIndex, rowIndex)}
           title="Usuń"
           padding={2}
-          style={{ justifySelf: "center", marginTop: "4px" }}
+          style={{ justifySelf: 'center', marginTop: '4px' }}
         />
       </div>
     </Card>
@@ -526,7 +534,7 @@ function SortableRow({
  * Provides a table-like interface for managing technical specifications with groups
  */
 export function TechnicalDataView({ document }: TechnicalDataViewProps) {
-  const client = useClient({ apiVersion: "2024-01-01" });
+  const client = useClient({ apiVersion: '2024-01-01' });
   const toast = useToast();
 
   // Get document info
@@ -635,8 +643,8 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       }
 
       // Get the base document ID (without drafts. prefix)
-      const baseId = documentId.startsWith("drafts.")
-        ? documentId.replace("drafts.", "")
+      const baseId = documentId.startsWith('drafts.')
+        ? documentId.replace('drafts.', '')
         : documentId;
       const draftId = `drafts.${baseId}`;
 
@@ -660,7 +668,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
           patch.set({ technicalData: newTechnicalData }),
         );
       } else {
-        transaction.patch(draftId, (patch) => patch.unset(["technicalData"]));
+        transaction.patch(draftId, (patch) => patch.unset(['technicalData']));
       }
 
       await transaction.commit();
@@ -668,11 +676,11 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
       // Clear dirty flag on successful save
       isDirty.current = false;
     } catch (error) {
-      console.error("Error saving technical data:", error);
+      console.error('Error saving technical data:', error);
       toast.push({
-        status: "error",
-        title: "Błąd zapisu",
-        description: "Nie udało się zapisać danych technicznych.",
+        status: 'error',
+        title: 'Błąd zapisu',
+        description: 'Nie udało się zapisać danych technicznych.',
       });
       throw error; // Re-throw so flushSave can handle it
     } finally {
@@ -779,7 +787,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   const handleRequestRemoveVariant = useCallback(
     (index: number) => {
       setDeleteConfirm({
-        type: "variant",
+        type: 'variant',
         index,
         name: variants[index] || `Wariant ${index + 1}`,
       });
@@ -890,7 +898,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   const handleRequestRemoveGroup = useCallback(
     (groupIndex: number) => {
       setDeleteConfirm({
-        type: "group",
+        type: 'group',
         index: groupIndex,
         name: groups[groupIndex]?.title || `Sekcja ${groupIndex + 1}`,
       });
@@ -945,7 +953,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
   const handleRequestRemoveRow = useCallback(
     (groupIndex: number, rowIndex: number) => {
       setDeleteConfirm({
-        type: "row",
+        type: 'row',
         groupIndex,
         index: rowIndex,
         name:
@@ -1066,13 +1074,13 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
     if (!deleteConfirm) return;
 
     if (
-      deleteConfirm.type === "row" &&
+      deleteConfirm.type === 'row' &&
       deleteConfirm.groupIndex !== undefined
     ) {
       handleConfirmRemoveRow(deleteConfirm.groupIndex, deleteConfirm.index);
-    } else if (deleteConfirm.type === "variant") {
+    } else if (deleteConfirm.type === 'variant') {
       handleConfirmRemoveVariant(deleteConfirm.index);
-    } else if (deleteConfirm.type === "group") {
+    } else if (deleteConfirm.type === 'group') {
       handleConfirmRemoveGroup(deleteConfirm.index);
     }
 
@@ -1120,8 +1128,8 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                 </Text>
                 <Text size={1} muted>
                   {variants.length === 0
-                    ? "Brak wariantów - produkt jednomodelowy (1 kolumna wartości)"
-                    : `${variants.length} wariant${variants.length === 1 ? "" : variants.length < 5 ? "y" : "ów"}`}
+                    ? 'Brak wariantów - produkt jednomodelowy (1 kolumna wartości)'
+                    : `${variants.length} wariant${variants.length === 1 ? '' : variants.length < 5 ? 'y' : 'ów'}`}
                 </Text>
               </Stack>
               <Button
@@ -1205,7 +1213,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                     {showSectionName ? (
                       <Box flex={1}>
                         <TextInput
-                          value={group.title || ""}
+                          value={group.title || ''}
                           onChange={(e) =>
                             handleGroupTitleChange(
                               groupIndex,
@@ -1227,10 +1235,10 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                     <Text size={1} muted>
                       {group.rows.length} parametr
                       {group.rows.length === 1
-                        ? ""
+                        ? ''
                         : group.rows.length < 5
-                          ? "y"
-                          : "ów"}
+                          ? 'y'
+                          : 'ów'}
                     </Text>
                     {groups.length > 1 && (
                       <Button
@@ -1250,14 +1258,14 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                       {/* Table Header */}
                       <div
                         style={{
-                          display: "grid",
+                          display: 'grid',
                           gridTemplateColumns:
                             getGridTemplateColumns(valueColumnCount),
-                          gap: "8px",
-                          alignItems: "center",
-                          padding: "8px 12px",
-                          background: "var(--card-bg2-color)",
-                          borderRadius: "4px",
+                          gap: '8px',
+                          alignItems: 'center',
+                          padding: '8px 12px',
+                          background: 'var(--card-bg2-color)',
+                          borderRadius: '4px',
                         }}
                       >
                         <Text size={1} weight="bold">
@@ -1323,7 +1331,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                         text="Dodaj parametr"
                         mode="ghost"
                         onClick={() => handleAddRow(groupIndex)}
-                        style={{ width: "100%" }}
+                        style={{ width: '100%' }}
                       />
                     </>
                   )}
@@ -1339,7 +1347,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             mode="ghost"
             tone="positive"
             onClick={handleAddGroup}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
           />
         </Stack>
 
@@ -1364,11 +1372,11 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
           <Dialog
             id="delete-confirm-dialog"
             header={
-              deleteConfirm.type === "row"
-                ? "Usuń parametr"
-                : deleteConfirm.type === "group"
-                  ? "Usuń sekcję"
-                  : "Usuń wariant"
+              deleteConfirm.type === 'row'
+                ? 'Usuń parametr'
+                : deleteConfirm.type === 'group'
+                  ? 'Usuń sekcję'
+                  : 'Usuń wariant'
             }
             onClose={() => setDeleteConfirm(null)}
             width={0}
@@ -1376,21 +1384,21 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             <Box padding={4}>
               <Stack space={4}>
                 <Text size={2}>
-                  Czy na pewno chcesz usunąć{" "}
-                  {deleteConfirm.type === "row"
-                    ? "parametr"
-                    : deleteConfirm.type === "group"
-                      ? "sekcję"
-                      : "wariant"}{" "}
+                  Czy na pewno chcesz usunąć{' '}
+                  {deleteConfirm.type === 'row'
+                    ? 'parametr'
+                    : deleteConfirm.type === 'group'
+                      ? 'sekcję'
+                      : 'wariant'}{' '}
                   <strong>&ldquo;{deleteConfirm.name}&rdquo;</strong>?
                 </Text>
-                {deleteConfirm.type === "variant" && (
+                {deleteConfirm.type === 'variant' && (
                   <Text size={1} muted>
                     Spowoduje to usunięcie tej kolumny wartości ze wszystkich
                     parametrów.
                   </Text>
                 )}
-                {deleteConfirm.type === "group" && (
+                {deleteConfirm.type === 'group' && (
                   <Text size={1} muted>
                     Spowoduje to usunięcie wszystkich parametrów w tej sekcji.
                   </Text>

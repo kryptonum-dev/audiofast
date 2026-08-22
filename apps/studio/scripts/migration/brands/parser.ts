@@ -10,14 +10,14 @@ import type {
   FileRecord,
   ProducerPageRecord,
   SiteTreeRecord,
-} from "./types";
+} from './types';
 
 /**
  * Split CSV values handling quoted strings with commas
  */
 function splitCSVValues(line: string): string[] {
   const values: string[] = [];
-  let current = "";
+  let current = '';
   let inQuotes = false;
   let i = 0;
 
@@ -36,9 +36,9 @@ function splitCSVValues(line: string): string[] {
         inQuotes = false;
         current += char;
       }
-    } else if (char === "," && !inQuotes) {
+    } else if (char === ',' && !inQuotes) {
       values.push(current.trim());
-      current = "";
+      current = '';
     } else {
       current += char;
     }
@@ -56,11 +56,11 @@ function splitCSVValues(line: string): string[] {
  * Parse a value, handling NULL and quoted strings
  */
 function parseValue(value: string | undefined): string | null {
-  if (!value || value === "NULL") {
+  if (!value || value === 'NULL') {
     return null;
   }
   // Remove surrounding quotes and unescape (using [\s\S] instead of .+s flag)
-  return value.replace(/^'([\s\S]*)'$/, "$1").replace(/''/g, "'");
+  return value.replace(/^'([\s\S]*)'$/, '$1').replace(/''/g, "'");
 }
 
 /**
@@ -76,7 +76,7 @@ export function parseProducerPagesFromSQL(
     /INSERT INTO `ProducerPage` VALUES\s*([\s\S]+?);\n/,
   );
   if (!insertMatch) {
-    console.error("Could not find ProducerPage INSERT statement");
+    console.error('Could not find ProducerPage INSERT statement');
     return producerPages;
   }
 
@@ -119,7 +119,7 @@ export function parseSiteTreeProducersFromSQL(
     /INSERT INTO `SiteTree` VALUES\s*([\s\S]+?);\n(?:UNLOCK|--)/,
   );
   if (!insertMatch) {
-    console.error("Could not find SiteTree INSERT statement");
+    console.error('Could not find SiteTree INSERT statement');
     return siteTreeRecords;
   }
 
@@ -139,7 +139,7 @@ export function parseSiteTreeProducersFromSQL(
 
       const record: SiteTreeRecord = {
         ID: id,
-        ClassName: "ProducerPage",
+        ClassName: 'ProducerPage',
         URLSegment: urlSegment,
         Title: title,
         MetaTitle: null,
@@ -168,7 +168,7 @@ export function parseFilesFromSQL(
     /INSERT INTO `File` VALUES\s*([\s\S]+?);\n(?:UNLOCK|--)/,
   );
   if (!insertMatch) {
-    console.error("Could not find File INSERT statement");
+    console.error('Could not find File INSERT statement');
     return files;
   }
 
@@ -215,7 +215,7 @@ export function parseBoxRecordsFromSQL(
     /INSERT INTO `Box` VALUES\s*([\s\S]+?);\n(?:UNLOCK|--)/,
   );
   if (!insertMatch) {
-    console.error("Could not find Box INSERT statement");
+    console.error('Could not find Box INSERT statement');
     return boxesByPage;
   }
 
@@ -227,7 +227,7 @@ export function parseBoxRecordsFromSQL(
 
   for (const record of records) {
     // Clean up the record string
-    const cleanRecord = record.replace(/^\(/, "").replace(/\)$/, "");
+    const cleanRecord = record.replace(/^\(/, '').replace(/\)$/, '');
 
     // Parse the record using CSV parsing
     const values = splitCSVValues(cleanRecord);
@@ -244,17 +244,17 @@ export function parseBoxRecordsFromSQL(
 
     const boxType = parseValue(values[5]);
     // Only interested in 'text' and 'bigimg' types for brand descriptions
-    if (boxType !== "text" && boxType !== "bigimg") continue;
+    if (boxType !== 'text' && boxType !== 'bigimg') continue;
 
     const boxRecord: BoxRecord = {
-      ID: parseValue(values[0]) || "",
-      boxType: boxType || "",
+      ID: parseValue(values[0]) || '',
+      boxType: boxType || '',
       content: parseValue(values[6]),
       contentPl: parseValue(values[19]), // Content_pl_PL is at index 19
       boxTitlePl: parseValue(values[17]), // BoxTitle_pl_PL is at index 17
       boxedPageID: boxedPageID,
-      headerImgID: parseValue(values[10]) || "0",
-      bigPictureID: parseValue(values[11]) || "0",
+      headerImgID: parseValue(values[10]) || '0',
+      bigPictureID: parseValue(values[11]) || '0',
       youtubeEmbed: parseValue(values[4]),
     };
 
@@ -303,7 +303,7 @@ function processBoxContent(
   let youtubeVideoId: string | null = null;
 
   for (const box of boxes) {
-    if (box.boxType === "text") {
+    if (box.boxType === 'text') {
       // Check for description title and content
       if (box.boxTitlePl && !descriptionTitle) {
         descriptionTitle = box.boxTitlePl;
@@ -311,7 +311,7 @@ function processBoxContent(
       if (box.contentPl && !descriptionContent) {
         // Check if this is just a YouTube embed
         const ytId = extractYouTubeId(box.contentPl);
-        if (ytId && box.contentPl.includes("<iframe")) {
+        if (ytId && box.contentPl.includes('<iframe')) {
           // This is primarily a YouTube embed box
           if (!youtubeVideoId) {
             youtubeVideoId = ytId;
@@ -327,11 +327,11 @@ function processBoxContent(
       }
     }
 
-    if (box.boxType === "bigimg") {
+    if (box.boxType === 'bigimg') {
       // Extract banner image
       const imgId =
-        box.bigPictureID !== "0" ? box.bigPictureID : box.headerImgID;
-      if (imgId && imgId !== "0" && !bannerImageId) {
+        box.bigPictureID !== '0' ? box.bigPictureID : box.headerImgID;
+      if (imgId && imgId !== '0' && !bannerImageId) {
         bannerImageId = imgId;
         const file = files.get(imgId);
         if (file) {
@@ -400,11 +400,11 @@ export function combineBrandData(
  * Main parsing function - parses all brand data from SQL file
  */
 export function parseBrandsFromSQL(sqlContent: string): BrandSourceData[] {
-  console.log("Parsing ProducerPage records...");
+  console.log('Parsing ProducerPage records...');
   const producerPages = parseProducerPagesFromSQL(sqlContent);
   console.log(`Found ${producerPages.size} ProducerPage records`);
 
-  console.log("Parsing SiteTree ProducerPage records...");
+  console.log('Parsing SiteTree ProducerPage records...');
   const siteTree = parseSiteTreeProducersFromSQL(sqlContent);
   console.log(`Found ${siteTree.size} SiteTree ProducerPage records`);
 
@@ -412,7 +412,7 @@ export function parseBrandsFromSQL(sqlContent: string): BrandSourceData[] {
   const brandPageIds = new Set<string>(producerPages.keys());
 
   // Parse Box records for brand pages (page sections with descriptions, images, videos)
-  console.log("Parsing Box records for brand page sections...");
+  console.log('Parsing Box records for brand page sections...');
   const boxesByPage = parseBoxRecordsFromSQL(sqlContent, brandPageIds);
   let totalBoxes = 0;
   for (const boxes of boxesByPage.values()) {
@@ -425,27 +425,27 @@ export function parseBrandsFromSQL(sqlContent: string): BrandSourceData[] {
   // Collect all file IDs we need (logos + banner images)
   const fileIds = new Set<string>();
   for (const producer of producerPages.values()) {
-    if (producer.LogoID && producer.LogoID !== "0") {
+    if (producer.LogoID && producer.LogoID !== '0') {
       fileIds.add(producer.LogoID);
     }
   }
   // Add banner image IDs from Box records
   for (const boxes of boxesByPage.values()) {
     for (const box of boxes) {
-      if (box.headerImgID && box.headerImgID !== "0") {
+      if (box.headerImgID && box.headerImgID !== '0') {
         fileIds.add(box.headerImgID);
       }
-      if (box.bigPictureID && box.bigPictureID !== "0") {
+      if (box.bigPictureID && box.bigPictureID !== '0') {
         fileIds.add(box.bigPictureID);
       }
     }
   }
 
-  console.log("Parsing File records...");
+  console.log('Parsing File records...');
   const files = parseFilesFromSQL(sqlContent, fileIds);
   console.log(`Found ${files.size} File records`);
 
-  console.log("Combining brand data...");
+  console.log('Combining brand data...');
   const brands = combineBrandData(producerPages, siteTree, files, boxesByPage);
   console.log(`Combined ${brands.length} brand records`);
 

@@ -1,5 +1,5 @@
-import type { AdminOrdersPagination } from "../types.js";
-import { AdminPagination } from "./AdminPagination.js";
+import type { AdminOrdersPagination } from '../types.js';
+import { AdminPagination } from './AdminPagination.js';
 
 type OrdersPaginationProps = {
   disabled?: boolean;

@@ -24,7 +24,8 @@ interface TooltipPosition {
 
 export default function AwardItem({ award, isDuplicate }: AwardItemProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition | null>(null);
+  const [tooltipPosition, setTooltipPosition] =
+    useState<TooltipPosition | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -109,7 +110,7 @@ export default function AwardItem({ award, isDuplicate }: AwardItemProps) {
               <span className={styles.awardTooltipName}>{award.name}</span>
             )}
           </div>,
-          document.body
+          document.body,
         )
       : null;
 

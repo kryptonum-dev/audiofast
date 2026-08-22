@@ -61,8 +61,7 @@ export type CheckoutDomainFailure = {
 };
 
 export type CheckoutDomainResult<T> =
-  | CheckoutDomainSuccess<T>
-  | CheckoutDomainFailure;
+  CheckoutDomainSuccess<T> | CheckoutDomainFailure;
 
 export function createCheckoutSuccess<T>(value: T): CheckoutDomainSuccess<T> {
   return {

@@ -1,6 +1,4 @@
-import {
-  Section,
-} from '@react-email/components';
+import { Section } from '@react-email/components';
 import * as React from 'react';
 
 import { EmailLayout } from './components/EmailLayout';
@@ -31,5 +29,3 @@ const section = {
 };
 
 export default ContactConfirmationTemplate;
-
-

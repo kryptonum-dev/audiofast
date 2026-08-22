@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from 'vitest';
 
 import {
   formatCouponActivityWindow,
@@ -7,78 +7,78 @@ import {
   formatLineType,
   formatOrderStatus,
   formatPaymentStatus,
-} from "./formatters.js";
-import type { AdminCoupon } from "./types.js";
+} from './formatters.js';
+import type { AdminCoupon } from './types.js';
 
 const BASE_COUPON: AdminCoupon = {
-  code: "AUDIO100",
-  createdAt: "2026-05-01T00:00:00.000Z",
-  derivedStatus: "active",
+  code: 'AUDIO100',
+  createdAt: '2026-05-01T00:00:00.000Z',
+  derivedStatus: 'active',
   discountPercent: null,
-  discountType: "fixed_order",
+  discountType: 'fixed_order',
   discountValueCents: 10000,
   expiresAt: null,
-  id: "coupon-1",
+  id: 'coupon-1',
   isActive: true,
   productKeys: [],
   startsAt: null,
-  updatedAt: "2026-05-01T00:00:00.000Z",
+  updatedAt: '2026-05-01T00:00:00.000Z',
   usageCount: 0,
   usageLimit: null,
 };
 
-describe("admin formatters", () => {
-  it("formats known and unknown order statuses", () => {
-    expect(formatOrderStatus("awaiting_confirmation")).toBe(
-      "Oczekiwanie na potwierdzenie",
+describe('admin formatters', () => {
+  it('formats known and unknown order statuses', () => {
+    expect(formatOrderStatus('awaiting_confirmation')).toBe(
+      'Oczekiwanie na potwierdzenie',
     );
-    expect(formatOrderStatus("paid")).toBe("Opłacone");
-    expect(formatOrderStatus("custom_status")).toBe("custom_status");
+    expect(formatOrderStatus('paid')).toBe('Opłacone');
+    expect(formatOrderStatus('custom_status')).toBe('custom_status');
   });
 
-  it("formats payment status separately from order lifecycle status", () => {
+  it('formats payment status separately from order lifecycle status', () => {
     expect(
       formatPaymentStatus({
-        currentStatus: "awaiting_confirmation",
-        paidAt: "2026-05-21T05:00:00.000Z",
+        currentStatus: 'awaiting_confirmation',
+        paidAt: '2026-05-21T05:00:00.000Z',
         verifiedAt: null,
       }),
-    ).toBe("Opłacone");
+    ).toBe('Opłacone');
     expect(
       formatPaymentStatus({
-        currentStatus: "awaiting_payment",
+        currentStatus: 'awaiting_payment',
         paidAt: null,
         verifiedAt: null,
       }),
-    ).toBe("Oczekuje na płatność");
+    ).toBe('Oczekuje na płatność');
   });
 
-  it("formats order line-type combinations", () => {
-    expect(formatLineType(["standard"])).toBe("Katalogowe");
-    expect(formatLineType(["cpo"])).toBe("CPO");
-    expect(formatLineType(["standard", "cpo"])).toBe("Mieszane");
+  it('formats order line-type combinations', () => {
+    expect(formatLineType(['standard'])).toBe('Katalogowe');
+    expect(formatLineType(['cpo'])).toBe('CPO');
+    expect(formatLineType(['standard', 'cpo'])).toBe('Mieszane');
   });
 
-  it("formats coupon discount, scope, and activity windows", () => {
-    expect(formatCouponDiscount(BASE_COUPON)).toContain("100");
-    expect(formatCouponScope(BASE_COUPON)).toBe("Cały koszyk");
-    expect(formatCouponActivityWindow(BASE_COUPON)).toBe("Bez terminu");
+  it('formats coupon discount, scope, and activity windows', () => {
+    expect(formatCouponDiscount(BASE_COUPON)).toContain('100');
+    expect(formatCouponScope(BASE_COUPON)).toBe('Cały koszyk');
+    expect(formatCouponActivityWindow(BASE_COUPON)).toBe('Bez terminu');
 
     expect(
       formatCouponDiscount({
         ...BASE_COUPON,
         discountPercent: 15,
-        discountType: "percent_product",
+        discountType: 'percent_product',
         discountValueCents: null,
-        productKeys: ["price-a"],
+        productKeys: ['price-a'],
       }),
-    ).toBe("15%");
+    ).toBe('15%');
     expect(
       formatCouponScope({
         ...BASE_COUPON,
-        discountType: "percent_product",
-        productKeys: ["price-a"],
+        discountType: 'percent_product',
+        productKeys: ['price-a'],
       }),
-    ).toBe("Wybrane produkty");
+    ).toBe('Wybrane produkty');
   });
 });

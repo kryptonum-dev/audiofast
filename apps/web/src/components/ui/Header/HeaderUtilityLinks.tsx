@@ -52,7 +52,9 @@ export default function HeaderUtilityLinks() {
             className={`${styles.navLink} ${styles.utilityLink} ${
               link.id === 'contact' ? styles.contactUtilityLink : ''
             } ${link.id === 'cart' ? styles.cartUtilityLink : ''} ${
-              link.id === 'contact' && isCartMode ? styles.contactUtilityLinkHidden : ''
+              link.id === 'contact' && isCartMode
+                ? styles.contactUtilityLinkHidden
+                : ''
             } ${isActive ? styles.active : ''}`}
             aria-current={isActive ? 'page' : undefined}
             aria-hidden={link.id === 'contact' && isCartMode}

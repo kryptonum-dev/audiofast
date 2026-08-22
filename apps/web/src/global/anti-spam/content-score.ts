@@ -21,10 +21,7 @@ const VOWEL = /[aeiouyąęó]/i;
 const LETTER = /\p{L}/u;
 
 export type ContentSignal =
-  | 'no-whitespace-long'
-  | 'random-case'
-  | 'consonant-run'
-  | 'name-single-token';
+  'no-whitespace-long' | 'random-case' | 'consonant-run' | 'name-single-token';
 
 export type ContentScore = {
   score: number;

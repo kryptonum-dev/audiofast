@@ -81,7 +81,8 @@ function isNumericSelectionValid(group: NumericGroup, value: string): boolean {
   }
 
   const steps =
-    (numericValue - group.numeric_rule.min_value) / group.numeric_rule.step_value;
+    (numericValue - group.numeric_rule.min_value) /
+    group.numeric_rule.step_value;
   const remainder = Math.abs(steps - Math.round(steps));
 
   return remainder < 0.0001;
@@ -96,10 +97,7 @@ function isGroupSelectionValid(
   }
 
   if (group.input_type === 'numeric_step' && group.numeric_rule) {
-    return isNumericSelectionValid(
-      group as NumericGroup,
-      value,
-    );
+    return isNumericSelectionValid(group as NumericGroup, value);
   }
 
   return false;
@@ -133,7 +131,9 @@ export function findStandardConfigurationVariant(
     return null;
   }
 
-  return pricingData.variants.find((variant) => variant.id === variantId) ?? null;
+  return (
+    pricingData.variants.find((variant) => variant.id === variantId) ?? null
+  );
 }
 
 export function resolveStandardConfigurationVariant(
@@ -165,7 +165,9 @@ export function getStandardConfigurationChildGroups(
     return [];
   }
 
-  return variant.groups.filter((group) => group.parent_value_id === parentValueId);
+  return variant.groups.filter(
+    (group) => group.parent_value_id === parentValueId,
+  );
 }
 
 export function calculateStandardConfigurationNumericPriceDelta(
@@ -324,7 +326,10 @@ export function settleStandardConfigurationSelection(
   pricingData: CompletePricingData,
   selection: StandardConfigurationSelectionSeed,
 ): PricingSelection {
-  const variant = resolveStandardConfigurationVariant(pricingData, selection.variantId);
+  const variant = resolveStandardConfigurationVariant(
+    pricingData,
+    selection.variantId,
+  );
 
   if (!variant) {
     return createEmptySelectionState(pricingData);
@@ -393,7 +398,10 @@ export function validateStandardConfigurationSelection(
   pricingData: CompletePricingData,
   selection: StandardConfigurationSelectionSeed,
 ): StandardConfigurationValidationResult {
-  const variant = findStandardConfigurationVariant(pricingData, selection.variantId);
+  const variant = findStandardConfigurationVariant(
+    pricingData,
+    selection.variantId,
+  );
 
   if (!variant) {
     return {
@@ -454,7 +462,10 @@ export function validateStandardConfigurationSelection(
     }
 
     if (group.input_type === 'numeric_step') {
-      if (!group.numeric_rule || !isNumericSelectionValid(group as NumericGroup, selectedValue)) {
+      if (
+        !group.numeric_rule ||
+        !isNumericSelectionValid(group as NumericGroup, selectedValue)
+      ) {
         issues.push({
           code: 'invalid_numeric_value',
           groupId: group.id,

@@ -104,7 +104,9 @@ describe('admin coupon helpers', () => {
   it('derives operational coupon status', () => {
     const now = new Date('2026-05-06T08:00:00.000Z');
 
-    expect(adminCouponTesting.getDerivedStatus(BASE_COUPON, now)).toBe('active');
+    expect(adminCouponTesting.getDerivedStatus(BASE_COUPON, now)).toBe(
+      'active',
+    );
     expect(
       adminCouponTesting.getDerivedStatus(
         {

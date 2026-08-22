@@ -1,8 +1,5 @@
 export type CheckoutThankYouStateId =
-  | 'awaiting_payment'
-  | 'paid'
-  | 'expired'
-  | 'invalid_access';
+  'awaiting_payment' | 'paid' | 'expired' | 'invalid_access';
 
 export type CheckoutThankYouStateDefinition = {
   id: CheckoutThankYouStateId;

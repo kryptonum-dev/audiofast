@@ -72,7 +72,9 @@ describe('createStandardCartLineConfigurationSource', () => {
       },
     });
 
-    expect(createStandardCartLineConfigurationSource(line, pricingData)).toEqual({
+    expect(
+      createStandardCartLineConfigurationSource(line, pricingData),
+    ).toEqual({
       status: 'missing_selection',
     });
   });
@@ -103,7 +105,9 @@ describe('createStandardCartLineConfigurationSource', () => {
       },
     });
 
-    expect(createStandardCartLineConfigurationSource(line, pricingData)).toEqual({
+    expect(
+      createStandardCartLineConfigurationSource(line, pricingData),
+    ).toEqual({
       status: 'variant_unavailable',
     });
   });
@@ -137,7 +141,9 @@ describe('createStandardCartLineConfigurationSource', () => {
       },
     });
 
-    expect(createStandardCartLineConfigurationSource(line, pricingData)).toEqual({
+    expect(
+      createStandardCartLineConfigurationSource(line, pricingData),
+    ).toEqual({
       status: 'ready',
       initialSelection: {
         variantId: 'variant-1',
@@ -174,7 +180,9 @@ describe('createStandardCartLineConfigurationSource', () => {
       },
     });
 
-    expect(createStandardCartLineConfigurationSource(line, pricingData)).toEqual({
+    expect(
+      createStandardCartLineConfigurationSource(line, pricingData),
+    ).toEqual({
       status: 'ready',
       initialSelection: {
         variantId: 'variant-1',

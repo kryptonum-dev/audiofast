@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   closestCenter,
@@ -8,15 +8,15 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import {
   AddIcon,
   CheckmarkIcon,
@@ -25,7 +25,7 @@ import {
   DragHandleIcon,
   SearchIcon,
   TrashIcon,
-} from "@sanity/icons";
+} from '@sanity/icons';
 import {
   Avatar,
   Badge,
@@ -44,7 +44,7 @@ import {
   TextInput,
   ToastProvider,
   useToast,
-} from "@sanity/ui";
+} from '@sanity/ui';
 import {
   ArrowDownWideNarrow,
   ArrowRightLeft,
@@ -57,9 +57,9 @@ import {
   Package,
   RefreshCw,
   Sparkles,
-} from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useClient } from "sanity";
+} from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useClient } from 'sanity';
 
 // Types
 type Category = {
@@ -100,7 +100,7 @@ type CategoryConfig = {
 
 type ComparatorConfigDoc = {
   _id: string;
-  _type: "comparatorConfig";
+  _type: 'comparatorConfig';
   categoryConfigs?: CategoryConfig[];
 };
 
@@ -168,14 +168,14 @@ function SortableParameter({
       padding={0}
       border
       radius={2}
-      tone={isDragging ? "primary" : "default"}
+      tone={isDragging ? 'primary' : 'default'}
     >
       <Box padding={3}>
         <Flex align="center" gap={3}>
           <Box
             {...attributes}
             {...listeners}
-            style={{ cursor: "grab", flexShrink: 0 }}
+            style={{ cursor: 'grab', flexShrink: 0 }}
           >
             <DragHandleIcon />
           </Box>
@@ -204,9 +204,9 @@ function SortableParameter({
               )}
             </Flex>
           </Box>
-          <Box style={{ width: "180px" }}>
+          <Box style={{ width: '180px' }}>
             <TextInput
-              value={param.displayName || ""}
+              value={param.displayName || ''}
               onChange={(e) => onDisplayNameChange(e.currentTarget.value)}
               placeholder="Nazwa wyświetlana..."
               fontSize={1}
@@ -236,8 +236,8 @@ function SortableParameter({
         <Box
           padding={3}
           style={{
-            borderTop: "1px solid var(--card-border-color)",
-            background: "var(--card-bg2-color)",
+            borderTop: '1px solid var(--card-border-color)',
+            background: 'var(--card-bg2-color)',
           }}
         >
           <Stack space={4}>
@@ -259,10 +259,10 @@ function SortableParameter({
                         src={product.imageUrl}
                         size={1}
                         style={{
-                          borderRadius: "4px",
+                          borderRadius: '4px',
                           background: product.imageUrl
-                            ? "transparent"
-                            : "var(--card-bg-color)",
+                            ? 'transparent'
+                            : 'var(--card-bg-color)',
                         }}
                       />
                       <Box flex={1}>
@@ -297,17 +297,17 @@ function SortableParameter({
                       padding={2}
                       radius={2}
                       tone="caution"
-                      style={{ background: "var(--card-bg-color)" }}
+                      style={{ background: 'var(--card-bg-color)' }}
                     >
                       <Flex align="center" gap={2}>
                         <Avatar
                           src={product.imageUrl}
                           size={1}
                           style={{
-                            borderRadius: "4px",
+                            borderRadius: '4px',
                             background: product.imageUrl
-                              ? "transparent"
-                              : "var(--card-border-color)",
+                              ? 'transparent'
+                              : 'var(--card-border-color)',
                           }}
                         />
                         <Box flex={1}>
@@ -347,7 +347,7 @@ function SortableParameter({
 
 // Main Comparator Tool Component
 export default function ComparatorTool() {
-  const client = useClient({ apiVersion: "2024-01-01" });
+  const client = useClient({ apiVersion: '2024-01-01' });
   const toast = useToast();
 
   // State
@@ -359,7 +359,7 @@ export default function ComparatorTool() {
     DiscoveredParameter[]
   >([]);
   const [enabledParams, setEnabledParams] = useState<EnabledParameter[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [isLoadingParams, setIsLoadingParams] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -374,7 +374,7 @@ export default function ComparatorTool() {
     Set<string>
   >(new Set());
   // Sorting and pagination for discovered parameters
-  const [sortOrder, setSortOrder] = useState<"most" | "least">("most");
+  const [sortOrder, setSortOrder] = useState<'most' | 'least'>('most');
   const [visibleCount, setVisibleCount] = useState(20);
   const PARAMS_PER_PAGE = 20;
 
@@ -383,8 +383,9 @@ export default function ComparatorTool() {
   const [sourceParam, setSourceParam] = useState<DiscoveredParameter | null>(
     null,
   );
-  const [selectedExistingParam, setSelectedExistingParam] = useState<string>("");
-  const [customParamName, setCustomParamName] = useState<string>("");
+  const [selectedExistingParam, setSelectedExistingParam] =
+    useState<string>('');
+  const [customParamName, setCustomParamName] = useState<string>('');
   const [transformPreview, setTransformPreview] =
     useState<TransformPreview | null>(null);
   const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(
@@ -454,11 +455,11 @@ export default function ComparatorTool() {
           setConfigDocId(configDoc._id);
         }
       } catch (err) {
-        console.error("Error fetching categories:", err);
+        console.error('Error fetching categories:', err);
         toast.push({
-          status: "error",
-          title: "Błąd",
-          description: "Nie udało się pobrać kategorii.",
+          status: 'error',
+          title: 'Błąd',
+          description: 'Nie udało się pobrać kategorii.',
         });
       } finally {
         setIsLoadingCategories(false);
@@ -577,7 +578,7 @@ export default function ComparatorTool() {
                   if (val.text && param.sampleValues.size < 3) {
                     param.sampleValues.add(
                       val.text.length > 50
-                        ? val.text.substring(0, 50) + "..."
+                        ? val.text.substring(0, 50) + '...'
                         : val.text,
                     );
                   }
@@ -639,11 +640,11 @@ export default function ComparatorTool() {
 
         return true;
       } catch (err) {
-        console.error("Error fetching parameters:", err);
+        console.error('Error fetching parameters:', err);
         toast.push({
-          status: "error",
-          title: "Błąd",
-          description: "Nie udało się pobrać parametrów.",
+          status: 'error',
+          title: 'Błąd',
+          description: 'Nie udało się pobrać parametrów.',
         });
         return false;
       } finally {
@@ -671,9 +672,9 @@ export default function ComparatorTool() {
     const success = await fetchParameters(selectedCategoryId, true);
     if (success) {
       toast.push({
-        status: "success",
-        title: "Odświeżono",
-        description: "Dane parametrów zostały zaktualizowane.",
+        status: 'success',
+        title: 'Odświeżono',
+        description: 'Dane parametrów zostały zaktualizowane.',
       });
     }
   }, [selectedCategoryId, fetchParameters, toast]);
@@ -689,7 +690,7 @@ export default function ComparatorTool() {
       if (!docId) {
         // Create the config document
         const newDoc = await client.create({
-          _type: "comparatorConfig",
+          _type: 'comparatorConfig',
           categoryConfigs: [],
         });
         docId = newDoc._id;
@@ -730,11 +731,11 @@ export default function ComparatorTool() {
         .set({ categoryConfigs: updatedConfigs })
         .commit();
     } catch (err) {
-      console.error("Error saving config:", err);
+      console.error('Error saving config:', err);
       toast.push({
-        status: "error",
-        title: "Błąd zapisu",
-        description: "Nie udało się zapisać konfiguracji.",
+        status: 'error',
+        title: 'Błąd zapisu',
+        description: 'Nie udało się zapisać konfiguracji.',
       });
     } finally {
       setIsSaving(false);
@@ -833,7 +834,7 @@ export default function ComparatorTool() {
 
     // Sort each group separately
     const sortFn = (a: DiscoveredParameter, b: DiscoveredParameter) => {
-      if (sortOrder === "most") {
+      if (sortOrder === 'most') {
         return b.products.length - a.products.length;
       } else {
         return a.products.length - b.products.length;
@@ -871,8 +872,8 @@ export default function ComparatorTool() {
     >();
 
     for (const cat of categories) {
-      const parentKey = cat.parentId || "no-parent";
-      const parentName = cat.parentName || "Bez kategorii nadrzędnej";
+      const parentKey = cat.parentId || 'no-parent';
+      const parentName = cat.parentName || 'Bez kategorii nadrzędnej';
 
       if (!groups.has(parentKey)) {
         groups.set(parentKey, {
@@ -914,8 +915,8 @@ export default function ComparatorTool() {
   // Open transform modal
   const openTransformModal = useCallback((param: DiscoveredParameter) => {
     setSourceParam(param);
-    setSelectedExistingParam("");
-    setCustomParamName("");
+    setSelectedExistingParam('');
+    setCustomParamName('');
     setTransformPreview(null);
     setSelectedProductIds(new Set());
     setTransformModalOpen(true);
@@ -925,8 +926,8 @@ export default function ComparatorTool() {
   const closeTransformModal = useCallback(() => {
     setTransformModalOpen(false);
     setSourceParam(null);
-    setSelectedExistingParam("");
-    setCustomParamName("");
+    setSelectedExistingParam('');
+    setCustomParamName('');
     setTransformPreview(null);
     setSelectedProductIds(new Set());
   }, []);
@@ -976,7 +977,7 @@ export default function ComparatorTool() {
   const handleExistingParamSelect = useCallback(
     (value: string) => {
       setSelectedExistingParam(value);
-      setCustomParamName(""); // Clear custom input when dropdown is used
+      setCustomParamName(''); // Clear custom input when dropdown is used
       calculateTransformPreview(value);
     },
     [calculateTransformPreview],
@@ -986,7 +987,7 @@ export default function ComparatorTool() {
   const handleCustomNameChange = useCallback(
     (value: string) => {
       setCustomParamName(value);
-      setSelectedExistingParam(""); // Clear dropdown when custom input is used
+      setSelectedExistingParam(''); // Clear dropdown when custom input is used
       calculateTransformPreview(value);
     },
     [calculateTransformPreview],
@@ -1036,9 +1037,9 @@ export default function ComparatorTool() {
     // Validation: target cannot be same as source
     if (targetParamName === sourceParam.name) {
       toast.push({
-        status: "error",
-        title: "Błąd",
-        description: "Nazwa docelowa nie może być taka sama jak źródłowa.",
+        status: 'error',
+        title: 'Błąd',
+        description: 'Nazwa docelowa nie może być taka sama jak źródłowa.',
       });
       return;
     }
@@ -1099,8 +1100,8 @@ export default function ComparatorTool() {
 
       // 3. Success handling
       toast.push({
-        status: "success",
-        title: "Przekształcono!",
+        status: 'success',
+        title: 'Przekształcono!',
         description: `Zaktualizowano ${patchCount} parametrów w ${selectedProductIds.size} produktach.`,
       });
 
@@ -1108,14 +1109,14 @@ export default function ComparatorTool() {
       await fetchParameters(selectedCategoryId!, true);
       closeTransformModal();
     } catch (error) {
-      console.error("Transform error:", error);
+      console.error('Transform error:', error);
       toast.push({
-        status: "error",
-        title: "Błąd przekształcenia",
+        status: 'error',
+        title: 'Błąd przekształcenia',
         description:
           error instanceof Error
             ? error.message
-            : "Nie udało się przekształcić parametrów.",
+            : 'Nie udało się przekształcić parametrów.',
       });
     } finally {
       setIsTransforming(false);
@@ -1134,33 +1135,33 @@ export default function ComparatorTool() {
 
   return (
     <ToastProvider>
-      <Flex style={{ height: "100%", overflow: "hidden" }}>
+      <Flex style={{ height: '100%', overflow: 'hidden' }}>
         {/* Left Sidebar - Categories */}
         <Card
           style={{
-            width: "320px",
+            width: '320px',
             flexShrink: 0,
-            borderRight: "1px solid var(--card-border-color)",
-            display: "flex",
-            flexDirection: "column",
+            borderRight: '1px solid var(--card-border-color)',
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           {/* Sidebar Header */}
           <Box
             padding={4}
-            style={{ borderBottom: "1px solid var(--card-border-color)" }}
+            style={{ borderBottom: '1px solid var(--card-border-color)' }}
           >
             <Flex align="center" gap={2}>
               <GitCompareArrows size={20} />
               <Heading size={1}>Porównywarka</Heading>
             </Flex>
-            <Text size={1} muted style={{ marginTop: "0.5rem" }}>
+            <Text size={1} muted style={{ marginTop: '0.5rem' }}>
               Wybierz kategorię, aby skonfigurować parametry porównania.
             </Text>
           </Box>
 
           {/* Category List */}
-          <Box padding={3} style={{ flex: 1, overflowY: "auto" }}>
+          <Box padding={3} style={{ flex: 1, overflowY: 'auto' }}>
             {isLoadingCategories ? (
               <Flex align="center" justify="center" padding={5}>
                 <Spinner muted />
@@ -1178,8 +1179,8 @@ export default function ComparatorTool() {
                         radius={2}
                         tone="primary"
                         style={{
-                          cursor: "pointer",
-                          background: "var(--card-bg2-color)",
+                          cursor: 'pointer',
+                          background: 'var(--card-bg2-color)',
                         }}
                         onClick={() => toggleParentCollapse(group.parentId)}
                       >
@@ -1220,17 +1221,17 @@ export default function ComparatorTool() {
                                   key={cat._id}
                                   padding={3}
                                   radius={2}
-                                  tone={isSelected ? "positive" : "default"}
+                                  tone={isSelected ? 'positive' : 'default'}
                                   style={{
-                                    cursor: "pointer",
-                                    marginLeft: "8px",
-                                    borderLeft: "2px solid",
+                                    cursor: 'pointer',
+                                    marginLeft: '8px',
+                                    borderLeft: '2px solid',
                                     borderLeftColor: isSelected
-                                      ? "var(--card-focus-ring-color)"
-                                      : "var(--card-border-color)",
+                                      ? 'var(--card-focus-ring-color)'
+                                      : 'var(--card-border-color)',
                                     background: isSelected
-                                      ? "var(--card-bg-color)"
-                                      : "transparent",
+                                      ? 'var(--card-bg-color)'
+                                      : 'transparent',
                                   }}
                                   onClick={() => setSelectedCategoryId(cat._id)}
                                 >
@@ -1240,7 +1241,7 @@ export default function ComparatorTool() {
                                       <Text
                                         size={1}
                                         weight={
-                                          isSelected ? "semibold" : "regular"
+                                          isSelected ? 'semibold' : 'regular'
                                         }
                                       >
                                         {cat.name}
@@ -1249,8 +1250,8 @@ export default function ComparatorTool() {
                                     <Badge
                                       tone={
                                         cat.productCount > 0
-                                          ? "default"
-                                          : "caution"
+                                          ? 'default'
+                                          : 'caution'
                                       }
                                       fontSize={0}
                                       padding={1}
@@ -1278,9 +1279,9 @@ export default function ComparatorTool() {
         <Box
           style={{
             flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
           }}
         >
           {!selectedCategoryId ? (
@@ -1294,14 +1295,14 @@ export default function ComparatorTool() {
             >
               <Box
                 style={{
-                  padding: "2rem",
-                  borderRadius: "50%",
-                  background: "var(--card-bg2-color)",
+                  padding: '2rem',
+                  borderRadius: '50%',
+                  background: 'var(--card-bg2-color)',
                 }}
               >
                 <GitCompareArrows size={48} strokeWidth={1.5} />
               </Box>
-              <Stack space={2} style={{ textAlign: "center" }}>
+              <Stack space={2} style={{ textAlign: 'center' }}>
                 <Text size={2} weight="semibold">
                   Wybierz kategorię
                 </Text>
@@ -1313,11 +1314,11 @@ export default function ComparatorTool() {
             </Flex>
           ) : (
             /* Category Configuration */
-            <Flex direction="column" style={{ flex: 1, overflow: "hidden" }}>
+            <Flex direction="column" style={{ flex: 1, overflow: 'hidden' }}>
               {/* Header */}
               <Box
                 padding={4}
-                style={{ borderBottom: "1px solid var(--card-border-color)" }}
+                style={{ borderBottom: '1px solid var(--card-border-color)' }}
               >
                 <Flex align="center" justify="space-between">
                   <Stack space={2}>
@@ -1326,8 +1327,8 @@ export default function ComparatorTool() {
                       <Heading size={2}>{selectedCategory?.name}</Heading>
                     </Flex>
                     <Text size={1} muted>
-                      {selectedCategory?.productCount || 0} produktów •{" "}
-                      {discoveredParams.length} wykrytych parametrów •{" "}
+                      {selectedCategory?.productCount || 0} produktów •{' '}
+                      {discoveredParams.length} wykrytych parametrów •{' '}
                       {enabledParams.length} włączonych
                     </Text>
                   </Stack>
@@ -1355,7 +1356,7 @@ export default function ComparatorTool() {
               </Box>
 
               {/* Content */}
-              <Flex style={{ flex: 1, overflow: "hidden" }}>
+              <Flex style={{ flex: 1, overflow: 'hidden' }}>
                 {isLoadingParams ? (
                   <Flex align="center" justify="center" style={{ flex: 1 }}>
                     <Spinner muted />
@@ -1366,9 +1367,9 @@ export default function ComparatorTool() {
                     <Box
                       padding={4}
                       style={{
-                        width: "420px",
-                        borderRight: "1px solid var(--card-border-color)",
-                        overflowY: "auto",
+                        width: '420px',
+                        borderRight: '1px solid var(--card-border-color)',
+                        overflowY: 'auto',
                       }}
                     >
                       <Stack space={4}>
@@ -1384,25 +1385,25 @@ export default function ComparatorTool() {
                           <Flex gap={2}>
                             <Button
                               icon={
-                                sortOrder === "most"
+                                sortOrder === 'most'
                                   ? ArrowDownWideNarrow
                                   : ArrowUpNarrowWide
                               }
                               text={
-                                sortOrder === "most" ? "Najwięcej" : "Najmniej"
+                                sortOrder === 'most' ? 'Najwięcej' : 'Najmniej'
                               }
                               mode="ghost"
                               fontSize={0}
                               padding={2}
                               onClick={() =>
                                 setSortOrder(
-                                  sortOrder === "most" ? "least" : "most",
+                                  sortOrder === 'most' ? 'least' : 'most',
                                 )
                               }
                               title={
-                                sortOrder === "most"
-                                  ? "Sortuj od największej liczby produktów"
-                                  : "Sortuj od najmniejszej liczby produktów"
+                                sortOrder === 'most'
+                                  ? 'Sortuj od największej liczby produktów'
+                                  : 'Sortuj od najmniejszej liczby produktów'
                               }
                             />
                             <Button
@@ -1442,8 +1443,8 @@ export default function ComparatorTool() {
                           >
                             <Text size={1} muted align="center">
                               {discoveredParams.length === 0
-                                ? "Brak parametrów w produktach tej kategorii."
-                                : "Nie znaleziono parametrów."}
+                                ? 'Brak parametrów w produktach tej kategorii.'
+                                : 'Nie znaleziono parametrów.'}
                             </Text>
                           </Card>
                         ) : (
@@ -1466,7 +1467,7 @@ export default function ComparatorTool() {
                                   padding={0}
                                   border
                                   radius={2}
-                                  tone={isEnabled ? "positive" : "default"}
+                                  tone={isEnabled ? 'positive' : 'default'}
                                   style={{
                                     opacity: isEnabled ? 0.7 : 1,
                                   }}
@@ -1478,9 +1479,9 @@ export default function ComparatorTool() {
                                       flex={1}
                                       style={{
                                         cursor: isEnabled
-                                          ? "default"
-                                          : "pointer",
-                                        alignItems: "center",
+                                          ? 'default'
+                                          : 'pointer',
+                                        alignItems: 'center',
                                       }}
                                       onClick={() =>
                                         !isEnabled &&
@@ -1488,7 +1489,7 @@ export default function ComparatorTool() {
                                       }
                                     >
                                       <Flex align="flex-start" gap={3}>
-                                        <Box style={{ marginTop: "2px" }}>
+                                        <Box style={{ marginTop: '2px' }}>
                                           {isEnabled ? (
                                             <CheckmarkIcon />
                                           ) : (
@@ -1539,8 +1540,7 @@ export default function ComparatorTool() {
                                           }}
                                           title="Przekształć w inny parametr"
                                           style={{
-                                            paddingTop: "1px",
-                                       
+                                            paddingTop: '1px',
                                           }}
                                         />
                                       )}
@@ -1571,8 +1571,8 @@ export default function ComparatorTool() {
                                       padding={3}
                                       style={{
                                         borderTop:
-                                          "1px solid var(--card-border-color)",
-                                        background: "var(--card-bg2-color)",
+                                          '1px solid var(--card-border-color)',
+                                        background: 'var(--card-bg2-color)',
                                       }}
                                     >
                                       <Stack space={3}>
@@ -1608,11 +1608,11 @@ export default function ComparatorTool() {
                                                     src={product.imageUrl}
                                                     size={1}
                                                     style={{
-                                                      borderRadius: "4px",
+                                                      borderRadius: '4px',
                                                       background:
                                                         product.imageUrl
-                                                          ? "transparent"
-                                                          : "var(--card-bg-color)",
+                                                          ? 'transparent'
+                                                          : 'var(--card-bg-color)',
                                                     }}
                                                   />
                                                   <Box flex={1}>
@@ -1665,7 +1665,7 @@ export default function ComparatorTool() {
                                                     tone="caution"
                                                     style={{
                                                       background:
-                                                        "var(--card-bg-color)",
+                                                        'var(--card-bg-color)',
                                                     }}
                                                   >
                                                     <Flex
@@ -1676,11 +1676,11 @@ export default function ComparatorTool() {
                                                         src={product.imageUrl}
                                                         size={1}
                                                         style={{
-                                                          borderRadius: "4px",
+                                                          borderRadius: '4px',
                                                           background:
                                                             product.imageUrl
-                                                              ? "transparent"
-                                                              : "var(--card-border-color)",
+                                                              ? 'transparent'
+                                                              : 'var(--card-border-color)',
                                                         }}
                                                       />
                                                       <Box flex={1}>
@@ -1731,7 +1731,7 @@ export default function ComparatorTool() {
                                 text={`Pokaż więcej (${totalFilteredCount - visibleCount} pozostało)`}
                                 mode="ghost"
                                 onClick={handleLoadMore}
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                               />
                             )}
                           </Stack>
@@ -1740,7 +1740,7 @@ export default function ComparatorTool() {
                     </Box>
 
                     {/* Enabled Parameters */}
-                    <Box padding={4} style={{ flex: 1, overflowY: "auto" }}>
+                    <Box padding={4} style={{ flex: 1, overflowY: 'auto' }}>
                       <Stack space={4}>
                         <Stack space={2}>
                           <Label size={1}>
@@ -1758,7 +1758,7 @@ export default function ComparatorTool() {
                             border
                             radius={2}
                             tone="transparent"
-                            style={{ textAlign: "center" }}
+                            style={{ textAlign: 'center' }}
                           >
                             <Stack space={3}>
                               <Text size={1} muted>
@@ -1869,8 +1869,8 @@ export default function ComparatorTool() {
                 <Box
                   style={{
                     flex: 1,
-                    height: "1px",
-                    background: "var(--card-border-color)",
+                    height: '1px',
+                    background: 'var(--card-border-color)',
                   }}
                 />
                 <Text size={0} muted>
@@ -1879,8 +1879,8 @@ export default function ComparatorTool() {
                 <Box
                   style={{
                     flex: 1,
-                    height: "1px",
-                    background: "var(--card-border-color)",
+                    height: '1px',
+                    background: 'var(--card-border-color)',
                   }}
                 />
               </Flex>
@@ -1890,7 +1890,9 @@ export default function ComparatorTool() {
                 <Label size={1}>Nowa nazwa parametru:</Label>
                 <TextInput
                   value={customParamName}
-                  onChange={(e) => handleCustomNameChange(e.currentTarget.value)}
+                  onChange={(e) =>
+                    handleCustomNameChange(e.currentTarget.value)
+                  }
                   placeholder="Wpisz nową nazwę parametru..."
                 />
                 {customParamName.trim() &&
@@ -1898,8 +1900,8 @@ export default function ComparatorTool() {
                     (p) => p.name === customParamName.trim(),
                   ) && (
                     <Text size={0} muted>
-                      ✨ Ta nazwa nie istnieje jeszcze w tej kategorii - zostanie
-                      utworzona
+                      ✨ Ta nazwa nie istnieje jeszcze w tej kategorii -
+                      zostanie utworzona
                     </Text>
                   )}
               </Stack>
@@ -1915,8 +1917,9 @@ export default function ComparatorTool() {
                           <Flex align="center" gap={2}>
                             <Badge tone="positive">✓</Badge>
                             <Text size={1} weight="medium">
-                              Produkty do przekształcenia ({selectedProductIds.size}
-                              /{transformPreview.eligible.length}):
+                              Produkty do przekształcenia (
+                              {selectedProductIds.size}/
+                              {transformPreview.eligible.length}):
                             </Text>
                           </Flex>
                           <Flex gap={2}>
@@ -1950,10 +1953,10 @@ export default function ComparatorTool() {
                               padding={2}
                               style={{
                                 background: selectedProductIds.has(p._id)
-                                  ? "var(--card-bg2-color)"
-                                  : "transparent",
-                                borderRadius: "4px",
-                                cursor: "pointer",
+                                  ? 'var(--card-bg2-color)'
+                                  : 'transparent',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
                               }}
                               onClick={() => toggleProductSelection(p._id)}
                             >
@@ -1964,7 +1967,7 @@ export default function ComparatorTool() {
                               <Avatar
                                 src={p.imageUrl}
                                 size={1}
-                                style={{ borderRadius: "4px" }}
+                                style={{ borderRadius: '4px' }}
                               />
                               <Box flex={1}>
                                 <Text size={1}>{p.name}</Text>
@@ -2003,7 +2006,7 @@ export default function ComparatorTool() {
                                 src={p.imageUrl}
                                 size={1}
                                 style={{
-                                  borderRadius: "4px",
+                                  borderRadius: '4px',
                                   opacity: 0.6,
                                 }}
                               />
@@ -2025,9 +2028,9 @@ export default function ComparatorTool() {
                     {transformPreview.eligible.length === 0 && (
                       <Card padding={3} radius={2} tone="caution">
                         <Text size={1}>
-                          Wszystkie produkty z &quot;{sourceParam.name}&quot; mają
-                          już parametr &quot;{targetParamName}&quot;. Nie ma nic
-                          do przekształcenia.
+                          Wszystkie produkty z &quot;{sourceParam.name}&quot;
+                          mają już parametr &quot;{targetParamName}&quot;. Nie
+                          ma nic do przekształcenia.
                         </Text>
                       </Card>
                     )}
@@ -2046,10 +2049,10 @@ export default function ComparatorTool() {
                 <Button
                   text={
                     isTransforming
-                      ? "Przekształcanie..."
+                      ? 'Przekształcanie...'
                       : selectedProductIds.size > 0
                         ? `Przekształć ${selectedProductIds.size} prod.`
-                        : "Przekształć"
+                        : 'Przekształć'
                   }
                   tone="positive"
                   onClick={handleTransformConfirm}

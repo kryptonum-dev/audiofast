@@ -4,22 +4,23 @@
  * Images are converted to WebP format for optimal performance
  */
 
-import { existsSync,readFileSync, writeFileSync } from "node:fs";
-import type { IncomingMessage } from "node:http";
-import * as https from "node:https";
-import * as path from "node:path";
-import { resolve } from "node:path";
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import type { IncomingMessage } from 'node:http';
+import * as https from 'node:https';
+import * as path from 'node:path';
+import { resolve } from 'node:path';
 
-import type { SanityClient } from "@sanity/client";
-import sharp from "sharp";
+import type { SanityClient } from '@sanity/client';
+import sharp from 'sharp';
 
-import type { ImageCache } from "../types";
+import type { ImageCache } from '../types';
 
 // Legacy assets base URL
-const LEGACY_ASSETS_BASE_URL = "https://www.audiofast.pl/assets/";
+const LEGACY_ASSETS_BASE_URL = 'https://www.audiofast.pl/assets/';
 
 // Cache file path
-const DEFAULT_CACHE_PATH = "apps/studio/scripts/migration/reviews/image-cache.json";
+const DEFAULT_CACHE_PATH =
+  'apps/studio/scripts/migration/reviews/image-cache.json';
 
 // Insecure agent for legacy site with SSL issues
 const insecureAgent = new https.Agent({
@@ -37,7 +38,7 @@ interface ImageOptimizationConfig {
 }
 
 const OPTIMIZATION_CONFIGS: Record<string, ImageOptimizationConfig> = {
-  cover: { quality: 82, maxWidth: 1920, maxHeight: 1280 },   // Cover images
+  cover: { quality: 82, maxWidth: 1920, maxHeight: 1280 }, // Cover images
   content: { quality: 80, maxWidth: 1600, maxHeight: 1200 }, // Inline content images
 };
 
@@ -63,9 +64,11 @@ export function loadImageCache(cachePath?: string): ImageCache {
 
   if (existsSync(filePath)) {
     try {
-      const data = readFileSync(filePath, "utf-8");
+      const data = readFileSync(filePath, 'utf-8');
       imageCache = JSON.parse(data);
-      console.log(`   📦 Loaded ${Object.keys(imageCache).length} cached assets`);
+      console.log(
+        `   📦 Loaded ${Object.keys(imageCache).length} cached assets`,
+      );
     } catch (err) {
       console.warn(`   ⚠️  Could not load cache: ${err}`);
       imageCache = {};
@@ -84,7 +87,9 @@ export function saveImageCache(cachePath?: string): void {
 
   try {
     writeFileSync(filePath, JSON.stringify(imageCache, null, 2));
-    console.log(`   💾 Saved ${Object.keys(imageCache).length} assets to cache`);
+    console.log(
+      `   💾 Saved ${Object.keys(imageCache).length} assets to cache`,
+    );
   } catch (err) {
     console.warn(`   ⚠️  Could not save cache: ${err}`);
   }
@@ -95,9 +100,9 @@ export function saveImageCache(cachePath?: string): void {
 // ============================================================================
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 B";
+  if (bytes === 0) return '0 B';
   const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"];
+  const sizes = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 }
@@ -129,13 +134,13 @@ async function downloadFile(url: string): Promise<Buffer | null> {
           return;
         }
         // Handle relative redirects
-        if (redirectUrl.startsWith("/")) {
+        if (redirectUrl.startsWith('/')) {
           const urlObj = new URL(url);
           redirectUrl = `${urlObj.protocol}//${urlObj.host}${redirectUrl}`;
         }
         https
           .get(redirectUrl, { agent: insecureAgent }, handleResponse)
-          .on("error", () => resolvePromise(null));
+          .on('error', () => resolvePromise(null));
         return;
       }
 
@@ -148,9 +153,9 @@ async function downloadFile(url: string): Promise<Buffer | null> {
       }
 
       const buffers: Buffer[] = [];
-      res.on("data", (chunk: Buffer) => buffers.push(chunk));
-      res.on("end", () => resolvePromise(Buffer.concat(buffers)));
-      res.on("error", (err: Error) => {
+      res.on('data', (chunk: Buffer) => buffers.push(chunk));
+      res.on('end', () => resolvePromise(Buffer.concat(buffers)));
+      res.on('error', (err: Error) => {
         console.error(`   ✗ Error downloading ${url}:`, err);
         resolvePromise(null);
       });
@@ -158,7 +163,7 @@ async function downloadFile(url: string): Promise<Buffer | null> {
 
     https
       .get(url, { agent: insecureAgent }, handleResponse)
-      .on("error", (err: Error) => {
+      .on('error', (err: Error) => {
         console.error(`   ✗ Request error for ${url}:`, err);
         resolvePromise(null);
       });
@@ -193,7 +198,11 @@ async function optimizeImage(
   let targetHeight: number;
   let wasUpscaled = false;
 
-  if (!skipUpscaling && originalWidth < UPSCALE_THRESHOLD && originalWidth > 0) {
+  if (
+    !skipUpscaling &&
+    originalWidth < UPSCALE_THRESHOLD &&
+    originalWidth > 0
+  ) {
     // Small image - upscale by 2x (but don't exceed maxWidth)
     targetWidth = Math.min(originalWidth * UPSCALE_FACTOR, config.maxWidth);
     targetHeight = Math.min(originalHeight * UPSCALE_FACTOR, config.maxHeight);
@@ -208,7 +217,7 @@ async function optimizeImage(
     .resize({
       width: targetWidth,
       height: targetHeight,
-      fit: "inside",
+      fit: 'inside',
       withoutEnlargement: !wasUpscaled, // Only allow enlargement if we're upscaling
     })
     .webp({
@@ -231,15 +240,15 @@ async function optimizeImage(
 export function resolveAssetUrl(
   src: string,
 ): { url: string; filename: string } | null {
-  if (!src || src.toLowerCase() === "null") return null;
-  let cleaned = src.replace(/&amp;/g, "&").trim();
-  if (!cleaned || cleaned.toLowerCase() === "null") return null;
+  if (!src || src.toLowerCase() === 'null') return null;
+  let cleaned = src.replace(/&amp;/g, '&').trim();
+  if (!cleaned || cleaned.toLowerCase() === 'null') return null;
 
   // Build full URL if relative
   if (!/^https?:\/\//i.test(cleaned)) {
-    let relative = cleaned.replace(/^\/+/, "");
-    if (relative.toLowerCase().startsWith("assets/")) {
-      relative = relative.slice("assets/".length);
+    let relative = cleaned.replace(/^\/+/, '');
+    if (relative.toLowerCase().startsWith('assets/')) {
+      relative = relative.slice('assets/'.length);
     }
     cleaned = `${LEGACY_ASSETS_BASE_URL}${relative}`;
   } else if (/audiofast\.pl\/assets\//i.test(cleaned)) {
@@ -249,8 +258,8 @@ export function resolveAssetUrl(
     );
   }
 
-  let filename = cleaned.split("/").pop() || "";
-  filename = filename.split("?")[0];
+  let filename = cleaned.split('/').pop() || '';
+  filename = filename.split('?')[0];
   if (!filename) return null;
 
   return { url: cleaned, filename };
@@ -261,7 +270,7 @@ export function resolveAssetUrl(
 // ============================================================================
 
 export interface ProcessImageOptions {
-  imageType?: "cover" | "content";
+  imageType?: 'cover' | 'content';
   skipOptimization?: boolean;
   skipUpscaling?: boolean;
 }
@@ -274,9 +283,13 @@ async function processAndUploadImage(
   sourceUrl: string,
   client: SanityClient,
   options: ProcessImageOptions = {},
-): Promise<{ assetId: string; originalSize: number; optimizedSize: number } | null> {
+): Promise<{
+  assetId: string;
+  originalSize: number;
+  optimizedSize: number;
+} | null> {
   const {
-    imageType = "content",
+    imageType = 'content',
     skipOptimization = false,
     skipUpscaling = false,
   } = options;
@@ -297,7 +310,7 @@ async function processAndUploadImage(
     // 1. Download image
     const originalBuffer = await downloadFile(sourceUrl);
     if (!originalBuffer || originalBuffer.length === 0) {
-      console.warn(`   ⚠️  Failed to download: ${sourceUrl.split("/").pop()}`);
+      console.warn(`   ⚠️  Failed to download: ${sourceUrl.split('/').pop()}`);
       return null;
     }
 
@@ -311,7 +324,7 @@ async function processAndUploadImage(
     if (skipOptimization) {
       // Upload original without optimization
       uploadBuffer = originalBuffer;
-      filename = sourceUrl.split("/").pop() || "image.jpg";
+      filename = sourceUrl.split('/').pop() || 'image.jpg';
     } else {
       // 2. Optimize image to WebP
       const result = await optimizeImage(originalBuffer, config, skipUpscaling);
@@ -319,15 +332,17 @@ async function processAndUploadImage(
       wasUpscaled = result.wasUpscaled;
       originalWidth = result.originalWidth;
       targetWidth = result.targetWidth;
-      filename = getOptimizedFilename(sourceUrl.split("/").pop() || "image.jpg");
+      filename = getOptimizedFilename(
+        sourceUrl.split('/').pop() || 'image.jpg',
+      );
     }
 
     const optimizedSize = uploadBuffer.length;
 
     // 3. Upload to Sanity
-    const asset = await client.assets.upload("image", uploadBuffer, {
+    const asset = await client.assets.upload('image', uploadBuffer, {
       filename,
-      contentType: skipOptimization ? undefined : "image/webp",
+      contentType: skipOptimization ? undefined : 'image/webp',
     });
 
     // 4. Cache the result
@@ -337,8 +352,13 @@ async function processAndUploadImage(
     };
 
     // Log result
-    const reduction = originalSize > 0 ? ((1 - optimizedSize / originalSize) * 100).toFixed(1) : "0";
-    const upscaleInfo = wasUpscaled ? ` [↑2x: ${originalWidth}→${targetWidth}px]` : "";
+    const reduction =
+      originalSize > 0
+        ? ((1 - optimizedSize / originalSize) * 100).toFixed(1)
+        : '0';
+    const upscaleInfo = wasUpscaled
+      ? ` [↑2x: ${originalWidth}→${targetWidth}px]`
+      : '';
     console.log(
       `   ✓ ${filename}: ${formatBytes(originalSize)} → ${formatBytes(optimizedSize)} (-${reduction}%)${upscaleInfo}`,
     );
@@ -362,20 +382,22 @@ export async function uploadCoverImage(
   coverFilename: string | null,
   dryRun: boolean,
 ): Promise<string | null> {
-  if (!coverFilename || coverFilename.toLowerCase() === "null") return null;
+  if (!coverFilename || coverFilename.toLowerCase() === 'null') return null;
 
   const resolved = resolveAssetUrl(coverFilename);
   if (!resolved) return null;
 
   if (dryRun) {
-    console.log(`   🧪 [DRY RUN] Would upload cover: ${resolved.filename} → WebP`);
-    return `image-dryrun-${resolved.filename.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`;
+    console.log(
+      `   🧪 [DRY RUN] Would upload cover: ${resolved.filename} → WebP`,
+    );
+    return `image-dryrun-${resolved.filename.replace(/[^a-z0-9]/gi, '-').toLowerCase()}`;
   }
 
   if (!client) return null;
 
   const result = await processAndUploadImage(resolved.url, client, {
-    imageType: "cover",
+    imageType: 'cover',
     skipUpscaling: false,
   });
 
@@ -394,14 +416,16 @@ export async function uploadInlineImage(
   if (!resolved) return null;
 
   if (dryRun) {
-    console.log(`   🧪 [DRY RUN] Would upload inline: ${resolved.filename} → WebP`);
-    return `image-dryrun-${resolved.filename.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`;
+    console.log(
+      `   🧪 [DRY RUN] Would upload inline: ${resolved.filename} → WebP`,
+    );
+    return `image-dryrun-${resolved.filename.replace(/[^a-z0-9]/gi, '-').toLowerCase()}`;
   }
 
   if (!client) return null;
 
   const result = await processAndUploadImage(resolved.url, client, {
-    imageType: "content",
+    imageType: 'content',
     skipUpscaling: true, // Keep inline images smaller
   });
 
@@ -423,7 +447,7 @@ export async function uploadPdfFile(
 
   if (dryRun) {
     console.log(`   🧪 [DRY RUN] Would upload PDF: ${resolved.filename}`);
-    return `file-dryrun-${resolved.filename.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`;
+    return `file-dryrun-${resolved.filename.replace(/[^a-z0-9]/gi, '-').toLowerCase()}`;
   }
 
   if (!client) return null;
@@ -441,7 +465,7 @@ export async function uploadPdfFile(
       return null;
     }
 
-    const asset = await client.assets.upload("file", buffer, {
+    const asset = await client.assets.upload('file', buffer, {
       filename: resolved.filename,
     });
 
@@ -451,7 +475,9 @@ export async function uploadPdfFile(
       uploadedAt: new Date().toISOString(),
     };
 
-    console.log(`   ✓ PDF: ${resolved.filename} (${formatBytes(buffer.length)})`);
+    console.log(
+      `   ✓ PDF: ${resolved.filename} (${formatBytes(buffer.length)})`,
+    );
     return asset._id;
   } catch (error) {
     console.error(`   ❌ Error uploading PDF ${resolved.filename}:`, error);

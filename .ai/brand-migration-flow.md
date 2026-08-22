@@ -322,8 +322,8 @@ When encountering a `slider` box type, extract all images and add to brand's `im
 // Don't create a content block
 // Instead, add images to:
 imageGallery: [
-  { _type: "image", asset: { _ref: "image-1-xxx" } },
-  { _type: "image", asset: { _ref: "image-2-xxx" } },
+  { _type: 'image', asset: { _ref: 'image-1-xxx' } },
+  { _type: 'image', asset: { _ref: 'image-2-xxx' } },
   // ...
 ];
 ```
@@ -530,19 +530,19 @@ The component iterates through `brandContentBlocks` and renders each block type:
 ```tsx
 blocks.map((block) => {
   switch (block._type) {
-    case "contentBlockText":
+    case 'contentBlockText':
       // Check if content has ptPageBreak
       // If yes → render in two-column grid layout
       // If no → render as single column
       return <TextBlockRenderer content={block.content} />;
 
-    case "contentBlockYoutube":
+    case 'contentBlockYoutube':
       return <YoutubeBlock youtubeId={block.youtubeId} />;
 
-    case "contentBlockVimeo":
+    case 'contentBlockVimeo':
       return <VimeoBlock vimeoId={block.vimeoId} />;
 
-    case "contentBlockHorizontalLine":
+    case 'contentBlockHorizontalLine':
       return <HorizontalLineBlock />;
   }
 });
@@ -552,11 +552,11 @@ blocks.map((block) => {
 
 ```typescript
 function hasPageBreak(content: PortableTextProps): boolean {
-  return content.some((item) => item._type === "ptPageBreak");
+  return content.some((item) => item._type === 'ptPageBreak');
 }
 
 function splitContentAtPageBreak(content) {
-  const index = content.findIndex((item) => item._type === "ptPageBreak");
+  const index = content.findIndex((item) => item._type === 'ptPageBreak');
   if (index === -1) return null;
 
   return [
@@ -642,7 +642,7 @@ SANITY_API_TOKEN="xxx" bun run apps/studio/scripts/migration/brands/migrate-bran
 The legacy site `audiofast.pl` has SSL certificate issues. The script uses:
 
 ```javascript
-import * as https from "node:https";
+import * as https from 'node:https';
 
 const insecureAgent = new https.Agent({
   rejectUnauthorized: false,

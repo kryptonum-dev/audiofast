@@ -2,10 +2,10 @@
  * CSV Parsing Utilities for Product Migration
  */
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { parse } from "csv-parse/sync";
+import { parse } from 'csv-parse/sync';
 
 import type {
   ProductArticleRow,
@@ -16,22 +16,25 @@ import type {
   ProductReviewRow,
   ProductSourceData,
   ProductTechnicalDataRow,
-} from "../types";
+} from '../types';
 
 // ============================================================================
 // CSV File Paths
 // ============================================================================
 
-const CSV_BASE_PATH = resolve(__dirname, "../../../../../../csv/products/december");
+const CSV_BASE_PATH = resolve(
+  __dirname,
+  '../../../../../../csv/products/december',
+);
 
 const CSV_FILES = {
-  main: resolve(CSV_BASE_PATH, "products-main.csv"),
-  categories: resolve(CSV_BASE_PATH, "products-categories.csv"),
-  gallery: resolve(CSV_BASE_PATH, "products-gallery.csv"),
-  boxes: resolve(CSV_BASE_PATH, "products-boxes.csv"),
-  reviews: resolve(CSV_BASE_PATH, "products-reviews.csv"),
-  technicalData: resolve(CSV_BASE_PATH, "products-technical-data.csv"),
-  articles: resolve(CSV_BASE_PATH, "products-articles.csv"),
+  main: resolve(CSV_BASE_PATH, 'products-main.csv'),
+  categories: resolve(CSV_BASE_PATH, 'products-categories.csv'),
+  gallery: resolve(CSV_BASE_PATH, 'products-gallery.csv'),
+  boxes: resolve(CSV_BASE_PATH, 'products-boxes.csv'),
+  reviews: resolve(CSV_BASE_PATH, 'products-reviews.csv'),
+  technicalData: resolve(CSV_BASE_PATH, 'products-technical-data.csv'),
+  articles: resolve(CSV_BASE_PATH, 'products-articles.csv'),
 };
 
 // ============================================================================
@@ -41,7 +44,7 @@ const CSV_FILES = {
 function parseCsvFile<T>(csvPath: string): T[] {
   try {
     const resolved = resolve(process.cwd(), csvPath);
-    const file = readFileSync(resolved, "utf-8");
+    const file = readFileSync(resolved, 'utf-8');
     return parse(file, {
       columns: true,
       skip_empty_lines: true,
@@ -50,7 +53,7 @@ function parseCsvFile<T>(csvPath: string): T[] {
       relax_quotes: true,
       cast: (value: string) => {
         // Handle NULL values
-        if (value === "NULL" || value === "null") return null;
+        if (value === 'NULL' || value === 'null') return null;
         return value;
       },
     }) as T[];
@@ -78,7 +81,7 @@ export interface LoadedCsvData {
  * Load all CSV files for product migration
  */
 export function loadAllCsvData(): LoadedCsvData {
-  console.log("📖 Loading CSV files...");
+  console.log('📖 Loading CSV files...');
 
   const mainProducts = parseCsvFile<ProductMainRow>(CSV_FILES.main);
   console.log(`   ✓ products-main.csv: ${mainProducts.length} products`);
@@ -107,7 +110,15 @@ export function loadAllCsvData(): LoadedCsvData {
     `   ✓ products-articles.csv: ${articles.length} article mappings`,
   );
 
-  return { mainProducts, categories, gallery, boxes, reviews, technicalData, articles };
+  return {
+    mainProducts,
+    categories,
+    gallery,
+    boxes,
+    reviews,
+    technicalData,
+    articles,
+  };
 }
 
 // ============================================================================
@@ -127,7 +138,7 @@ export interface IndexedProductData {
  * Index all related data by ProductID for efficient lookup
  */
 export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
-  console.log("\n📑 Indexing data by ProductID...");
+  console.log('\n📑 Indexing data by ProductID...');
 
   // Index categories
   const categoriesByProductId = new Map<string, ProductCategoryRow[]>();
@@ -165,9 +176,7 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
   for (const [productId, boxes] of boxesByProductId) {
     boxesByProductId.set(
       productId,
-      boxes.sort(
-        (a, b) => parseInt(a.BoxSort, 10) - parseInt(b.BoxSort, 10),
-      ),
+      boxes.sort((a, b) => parseInt(a.BoxSort, 10) - parseInt(b.BoxSort, 10)),
     );
   }
 
@@ -222,9 +231,7 @@ export function indexDataByProductId(data: LoadedCsvData): IndexedProductData {
       articleByProductId.set(row.ProductID, row);
     }
   }
-  console.log(
-    `   ✓ Articles indexed for ${articleByProductId.size} products`,
-  );
+  console.log(`   ✓ Articles indexed for ${articleByProductId.size} products`);
 
   return {
     categoriesByProductId,
@@ -274,9 +281,9 @@ export function buildProductSourceData(
     name: mainRow.ProductName,
     subtitle: mainRow.Subtitle,
     slug: mainRow.ProductSlug,
-    isArchived: mainRow.IsArchived === "1",
-    isPublished: mainRow.IsPublished === "1",
-    isHidden: mainRow.IsHidden === "1",
+    isArchived: mainRow.IsArchived === '1',
+    isPublished: mainRow.IsPublished === '1',
+    isHidden: mainRow.IsHidden === '1',
     mainImageFilename: mainRow.MainImageFilename,
     brandSlug: mainRow.BrandSlug,
     brandName: mainRow.BrandName,

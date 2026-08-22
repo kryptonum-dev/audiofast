@@ -15,16 +15,16 @@
  *   SANITY_API_TOKEN="xxx" bun run apps/studio/scripts/migration/brands/migrate-to-unified-content.ts
  */
 
-import { createClient, type SanityClient } from "@sanity/client";
-import { v4 as uuidv4 } from "uuid";
+import { createClient, type SanityClient } from '@sanity/client';
+import { v4 as uuidv4 } from 'uuid';
 
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
 
-const PROJECT_ID = process.env.SANITY_PROJECT_ID || "your-project-id";
-const DATASET = process.env.SANITY_DATASET || "production";
-const API_TOKEN = process.env.SANITY_API_TOKEN || "";
+const PROJECT_ID = process.env.SANITY_PROJECT_ID || 'your-project-id';
+const DATASET = process.env.SANITY_DATASET || 'production';
+const API_TOKEN = process.env.SANITY_API_TOKEN || '';
 
 // ============================================================================
 // TYPES
@@ -37,13 +37,13 @@ interface PortableTextItem {
 }
 
 interface ContentBlockText {
-  _type: "contentBlockText";
+  _type: 'contentBlockText';
   _key: string;
   content: PortableTextItem[];
 }
 
 interface ContentBlockYoutube {
-  _type: "contentBlockYoutube";
+  _type: 'contentBlockYoutube';
   _key: string;
   youtubeId: string;
   title?: string;
@@ -51,7 +51,7 @@ interface ContentBlockYoutube {
 }
 
 interface ContentBlockVimeo {
-  _type: "contentBlockVimeo";
+  _type: 'contentBlockVimeo';
   _key: string;
   vimeoId: string;
   title?: string;
@@ -59,7 +59,7 @@ interface ContentBlockVimeo {
 }
 
 interface ContentBlockHorizontalLine {
-  _type: "contentBlockHorizontalLine";
+  _type: 'contentBlockHorizontalLine';
   _key: string;
 }
 
@@ -83,17 +83,17 @@ interface Brand {
 function createMigrationClient(): SanityClient {
   if (!API_TOKEN) {
     throw new Error(
-      "SANITY_API_TOKEN environment variable is required.\n" +
-        "Get a token from: https://www.sanity.io/manage/project/" +
+      'SANITY_API_TOKEN environment variable is required.\n' +
+        'Get a token from: https://www.sanity.io/manage/project/' +
         PROJECT_ID +
-        "/api#tokens"
+        '/api#tokens',
     );
   }
 
   return createClient({
     projectId: PROJECT_ID,
     dataset: DATASET,
-    apiVersion: "2024-01-01",
+    apiVersion: '2024-01-01',
     token: API_TOKEN,
     useCdn: false,
   });
@@ -108,7 +108,7 @@ function createMigrationClient(): SanityClient {
  */
 function hasPageBreak(block: ContentBlockText): boolean {
   if (!block.content || !Array.isArray(block.content)) return false;
-  return block.content.some((item) => item._type === "ptPageBreak");
+  return block.content.some((item) => item._type === 'ptPageBreak');
 }
 
 /**
@@ -117,8 +117,8 @@ function hasPageBreak(block: ContentBlockText): boolean {
 function createTwoColumnLine(): PortableTextItem {
   return {
     _key: uuidv4().slice(0, 8),
-    _type: "ptTwoColumnLine",
-    style: "twoColumnLine",
+    _type: 'ptTwoColumnLine',
+    style: 'twoColumnLine',
   };
 }
 
@@ -138,7 +138,7 @@ function analyzeBlocks(blocks: ContentBlock[]): BlockAnalysis[] {
     index,
     block,
     hasPageBreak:
-      block._type === "contentBlockText" ? hasPageBreak(block) : false,
+      block._type === 'contentBlockText' ? hasPageBreak(block) : false,
     needsStartMarker: false,
     needsEndMarker: false,
   }));
@@ -194,7 +194,12 @@ function transformToUnifiedContent(blocks: ContentBlock[]): PortableTextItem[] {
   let lastTwoColumnNeedsEndMarker = false;
 
   for (let i = 0; i < analysis.length; i++) {
-    const { block, hasPageBreak: isTwoColumn, needsStartMarker, needsEndMarker } = analysis[i];
+    const {
+      block,
+      hasPageBreak: isTwoColumn,
+      needsStartMarker,
+      needsEndMarker,
+    } = analysis[i];
 
     // If transitioning from two-column to single-column, insert end marker if needed
     if (lastWasTwoColumn && !isTwoColumn && lastTwoColumnNeedsEndMarker) {
@@ -203,7 +208,7 @@ function transformToUnifiedContent(blocks: ContentBlock[]): PortableTextItem[] {
     }
 
     switch (block._type) {
-      case "contentBlockText": {
+      case 'contentBlockText': {
         if (isTwoColumn && needsStartMarker) {
           // Insert start marker before two-column block (only if there's single-column before)
           result.push(createTwoColumnLine());
@@ -225,10 +230,10 @@ function transformToUnifiedContent(blocks: ContentBlock[]): PortableTextItem[] {
         break;
       }
 
-      case "contentBlockYoutube": {
+      case 'contentBlockYoutube': {
         result.push({
           _key: uuidv4().slice(0, 8),
-          _type: "ptYoutubeVideo",
+          _type: 'ptYoutubeVideo',
           youtubeId: block.youtubeId,
           ...(block.title && { title: block.title }),
           ...(block.thumbnail && { thumbnail: block.thumbnail }),
@@ -238,10 +243,10 @@ function transformToUnifiedContent(blocks: ContentBlock[]): PortableTextItem[] {
         break;
       }
 
-      case "contentBlockVimeo": {
+      case 'contentBlockVimeo': {
         result.push({
           _key: uuidv4().slice(0, 8),
-          _type: "ptVimeoVideo",
+          _type: 'ptVimeoVideo',
           vimeoId: block.vimeoId,
           ...(block.title && { title: block.title }),
           ...(block.thumbnail && { thumbnail: block.thumbnail }),
@@ -251,10 +256,10 @@ function transformToUnifiedContent(blocks: ContentBlock[]): PortableTextItem[] {
         break;
       }
 
-      case "contentBlockHorizontalLine": {
+      case 'contentBlockHorizontalLine': {
         result.push({
           _key: uuidv4().slice(0, 8),
-          _type: "ptHorizontalLine",
+          _type: 'ptHorizontalLine',
         });
         lastWasTwoColumn = false;
         lastTwoColumnNeedsEndMarker = false;
@@ -277,7 +282,7 @@ function transformToUnifiedContent(blocks: ContentBlock[]): PortableTextItem[] {
 
 async function fetchBrands(
   client: SanityClient,
-  brandName?: string
+  brandName?: string,
 ): Promise<Brand[]> {
   let query = `*[_type == "brand" && defined(brandContentBlocks) && count(brandContentBlocks) > 0]`;
 
@@ -321,7 +326,7 @@ async function migrateBrand(
   client: SanityClient,
   brand: Brand,
   dryRun: boolean,
-  forceOverwrite: boolean
+  forceOverwrite: boolean,
 ): Promise<{ success: boolean; error?: string }> {
   try {
     // Skip if already has brandDetailContent (unless force overwrite)
@@ -354,22 +359,22 @@ async function migrateBrand(
     }
 
     console.log(
-      `  📦 Transformed ${brand.brandContentBlocks.length} blocks → ${unifiedContent.length} items`
+      `  📦 Transformed ${brand.brandContentBlocks.length} blocks → ${unifiedContent.length} items`,
     );
 
     // Log some details about the transformation
     const blockTypes = brand.brandContentBlocks.map((b) => b._type);
     const resultTypes = [...new Set(unifiedContent.map((r) => r._type))];
-    console.log(`     Input types: ${blockTypes.join(", ")}`);
-    console.log(`     Output types: ${resultTypes.join(", ")}`);
+    console.log(`     Input types: ${blockTypes.join(', ')}`);
+    console.log(`     Output types: ${resultTypes.join(', ')}`);
 
     // Check for ptTwoColumnLine markers
     const twoColumnLineCount = unifiedContent.filter(
-      (item) => item._type === "ptTwoColumnLine"
+      (item) => item._type === 'ptTwoColumnLine',
     ).length;
     if (twoColumnLineCount > 0) {
       console.log(
-        `     📐 Inserted ${twoColumnLineCount} ptTwoColumnLine boundary marker(s)`
+        `     📐 Inserted ${twoColumnLineCount} ptTwoColumnLine boundary marker(s)`,
       );
     }
 
@@ -395,52 +400,52 @@ async function migrateBrand(
 
 async function clearBrandDetailContent(
   client: SanityClient,
-  dryRun: boolean
+  dryRun: boolean,
 ): Promise<void> {
-  console.log("\n🧹 Clearing existing brandDetailContent from all brands...");
+  console.log('\n🧹 Clearing existing brandDetailContent from all brands...');
 
   const brands = await client.fetch<{ _id: string; name: string }[]>(
-    `*[_type == "brand" && defined(brandDetailContent)]{_id, name}`
+    `*[_type == "brand" && defined(brandDetailContent)]{_id, name}`,
   );
 
   if (brands.length === 0) {
-    console.log("   No brands with brandDetailContent found.");
+    console.log('   No brands with brandDetailContent found.');
     return;
   }
 
   console.log(`   Found ${brands.length} brand(s) with existing content.`);
 
   if (dryRun) {
-    console.log("   🔍 DRY RUN - Would clear brandDetailContent from:");
+    console.log('   🔍 DRY RUN - Would clear brandDetailContent from:');
     brands.forEach((b) => console.log(`      - ${b.name}`));
     return;
   }
 
   for (const brand of brands) {
-    await client.patch(brand._id).unset(["brandDetailContent"]).commit();
+    await client.patch(brand._id).unset(['brandDetailContent']).commit();
     console.log(`   Cleared: ${brand.name}`);
   }
 
-  console.log("   ✅ All existing brandDetailContent cleared.\n");
+  console.log('   ✅ All existing brandDetailContent cleared.\n');
 }
 
 async function main() {
   const args = process.argv.slice(2);
-  const dryRun = args.includes("--dry-run");
-  const forceOverwrite = args.includes("--force");
-  const clearFirst = args.includes("--clear");
-  const brandArg = args.find((arg) => arg.startsWith("--brand="));
-  const brandName = brandArg?.split("=")[1]?.replace(/"/g, "");
+  const dryRun = args.includes('--dry-run');
+  const forceOverwrite = args.includes('--force');
+  const clearFirst = args.includes('--clear');
+  const brandArg = args.find((arg) => arg.startsWith('--brand='));
+  const brandName = brandArg?.split('=')[1]?.replace(/"/g, '');
 
-  console.log("╔════════════════════════════════════════════════════════════╗");
-  console.log("║     Brand Unified Content Migration                        ║");
-  console.log("║     brandContentBlocks → brandDetailContent                ║");
-  console.log("║     Using ptTwoColumnLine as boundary marker               ║");
-  console.log("╚════════════════════════════════════════════════════════════╝");
+  console.log('╔════════════════════════════════════════════════════════════╗');
+  console.log('║     Brand Unified Content Migration                        ║');
+  console.log('║     brandContentBlocks → brandDetailContent                ║');
+  console.log('║     Using ptTwoColumnLine as boundary marker               ║');
+  console.log('╚════════════════════════════════════════════════════════════╝');
   console.log();
 
   if (dryRun) {
-    console.log("🔍 DRY RUN MODE - No changes will be made\n");
+    console.log('🔍 DRY RUN MODE - No changes will be made\n');
   }
 
   console.log(`📊 Configuration:`);
@@ -463,8 +468,8 @@ async function main() {
     client = createMigrationClient();
   } catch (error) {
     console.error(
-      "❌ Failed to create Sanity client:",
-      error instanceof Error ? error.message : error
+      '❌ Failed to create Sanity client:',
+      error instanceof Error ? error.message : error,
     );
     process.exit(1);
   }
@@ -475,12 +480,12 @@ async function main() {
   }
 
   // Fetch brands
-  console.log("📥 Fetching brands...");
+  console.log('📥 Fetching brands...');
   const brands = await fetchBrands(client, brandName);
   console.log(`   Found ${brands.length} brand(s) to process\n`);
 
   if (brands.length === 0) {
-    console.log("✨ No brands to migrate!");
+    console.log('✨ No brands to migrate!');
     return;
   }
 
@@ -506,21 +511,21 @@ async function main() {
   }
 
   // Summary
-  console.log("\n════════════════════════════════════════════════════════════");
-  console.log("📊 Migration Summary:");
+  console.log('\n════════════════════════════════════════════════════════════');
+  console.log('📊 Migration Summary:');
   console.log(`   ✅ Migrated: ${successCount}`);
   console.log(`   ⏭️  Skipped:  ${skipCount}`);
   console.log(`   ❌ Errors:   ${errorCount}`);
-  console.log("════════════════════════════════════════════════════════════");
+  console.log('════════════════════════════════════════════════════════════');
 
   if (dryRun) {
-    console.log("\n💡 Run without --dry-run to apply changes");
-    console.log("💡 Use --clear to clear existing brandDetailContent first");
-    console.log("💡 Use --force to overwrite existing brandDetailContent");
+    console.log('\n💡 Run without --dry-run to apply changes');
+    console.log('💡 Use --clear to clear existing brandDetailContent first');
+    console.log('💡 Use --force to overwrite existing brandDetailContent');
   }
 }
 
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error('Fatal error:', error);
   process.exit(1);
 });

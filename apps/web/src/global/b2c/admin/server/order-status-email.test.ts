@@ -11,9 +11,8 @@ vi.mock('@/src/global/b2c/customer-transactional-email', () => ({
   sendB2cCustomerTransactionalEmail: vi.fn(),
 }));
 
-const { sendB2cCustomerTransactionalEmail } = await import(
-  '@/src/global/b2c/customer-transactional-email'
-);
+const { sendB2cCustomerTransactionalEmail } =
+  await import('@/src/global/b2c/customer-transactional-email');
 
 describe('getAdminOrderStatusEmailStatus', () => {
   beforeEach(() => {

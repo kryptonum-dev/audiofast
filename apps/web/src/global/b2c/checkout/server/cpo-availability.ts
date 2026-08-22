@@ -10,10 +10,7 @@ import { createAdminClient } from '@/src/global/supabase/admin';
 import type { CheckoutOrderDraft } from '../order-draft';
 
 type CpoAvailabilityStatus =
-  | 'available'
-  | 'on_hold'
-  | 'sold_out'
-  | 'manually_unavailable';
+  'available' | 'on_hold' | 'sold_out' | 'manually_unavailable';
 
 type CpoAvailabilitySnapshot = {
   _id: string;
@@ -39,10 +36,7 @@ type CpoHeldOrderRow = {
 };
 
 export type CpoAvailabilityFailureCode =
-  | 'missing_write_token'
-  | 'not_available'
-  | 'write_conflict'
-  | 'write_failed';
+  'missing_write_token' | 'not_available' | 'write_conflict' | 'write_failed';
 
 export class CpoAvailabilityError extends Error {
   constructor(

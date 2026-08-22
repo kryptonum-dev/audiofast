@@ -1,9 +1,9 @@
-import { ResetIcon, SearchIcon } from "@sanity/icons";
-import { Box, Button, Card, Flex, Grid, Label, TextInput } from "@sanity/ui";
-import { useEffect, useState } from "react";
+import { ResetIcon, SearchIcon } from '@sanity/icons';
+import { Box, Button, Card, Flex, Grid, Label, TextInput } from '@sanity/ui';
+import { useEffect, useState } from 'react';
 
-import type { CouponsFilters as CouponsFiltersValue } from "../types.js";
-import { AdminFilterSelect } from "./AdminFilterSelect.js";
+import type { CouponsFilters as CouponsFiltersValue } from '../types.js';
+import { AdminFilterSelect } from './AdminFilterSelect.js';
 
 type CouponsFiltersProps = {
   filters: CouponsFiltersValue;
@@ -12,9 +12,9 @@ type CouponsFiltersProps = {
 };
 
 export const DEFAULT_COUPONS_FILTERS: CouponsFiltersValue = {
-  search: "",
-  status: "all",
-  discountType: "all",
+  search: '',
+  status: 'all',
+  discountType: 'all',
 };
 
 export function CouponsFilters({
@@ -71,16 +71,16 @@ export function CouponsFilters({
               onChange={(value) =>
                 onChange({
                   ...filters,
-                  status: value as CouponsFiltersValue["status"],
+                  status: value as CouponsFiltersValue['status'],
                 })
               }
               options={[
-                ["all", "Wszystkie"],
-                ["active", "Aktywne"],
-                ["inactive", "Nieaktywne"],
-                ["scheduled", "Zaplanowane"],
-                ["expired", "Wygasłe"],
-                ["usage_limit_reached", "Limit osiągnięty"],
+                ['all', 'Wszystkie'],
+                ['active', 'Aktywne'],
+                ['inactive', 'Nieaktywne'],
+                ['scheduled', 'Zaplanowane'],
+                ['expired', 'Wygasłe'],
+                ['usage_limit_reached', 'Limit osiągnięty'],
               ]}
             />
 
@@ -90,15 +90,15 @@ export function CouponsFilters({
               onChange={(value) =>
                 onChange({
                   ...filters,
-                  discountType: value as CouponsFiltersValue["discountType"],
+                  discountType: value as CouponsFiltersValue['discountType'],
                 })
               }
               options={[
-                ["all", "Wszystkie"],
-                ["fixed_order", "Kwota na koszyk"],
-                ["fixed_product", "Kwota na produkty"],
-                ["percent_order", "% na koszyk"],
-                ["percent_product", "% na produkty"],
+                ['all', 'Wszystkie'],
+                ['fixed_order', 'Kwota na koszyk'],
+                ['fixed_product', 'Kwota na produkty'],
+                ['percent_order', '% na koszyk'],
+                ['percent_product', '% na produkty'],
               ]}
             />
 

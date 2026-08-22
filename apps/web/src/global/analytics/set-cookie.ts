@@ -7,10 +7,10 @@ export function setCookie(
   value: string,
   ttlInDays?: number,
 ): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === 'undefined') return;
 
-  let expires = "";
-  if (typeof ttlInDays === "number") {
+  let expires = '';
+  if (typeof ttlInDays === 'number') {
     const date = new Date();
     date.setTime(date.getTime() + ttlInDays * 24 * 60 * 60 * 1000);
     expires = `; expires=${date.toUTCString()}`;

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Autocomplete,
@@ -17,11 +17,11 @@ import {
   Text,
   TextInput,
   useToast,
-} from "@sanity/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useClient } from "sanity";
+} from '@sanity/ui';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useClient } from 'sanity';
 
-import { fetchReviewAuthorCounts } from "../../utils/review-author-counts";
+import { fetchReviewAuthorCounts } from '../../utils/review-author-counts';
 
 type ReviewAuthorItem = {
   _id: string;
@@ -32,7 +32,7 @@ type ReviewAuthorItem = {
 type OrphanReviewItem = {
   _id: string;
   title: string;
-  destinationType: "page" | "pdf" | "external";
+  destinationType: 'page' | 'pdf' | 'external';
   publishedDate?: string;
   createdAt: string;
   path?: string;
@@ -127,22 +127,22 @@ const chunk = <T,>(items: T[], size: number): T[][] => {
 };
 
 function formatDate(value?: string): string {
-  if (!value) return "Brak daty";
+  if (!value) return 'Brak daty';
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Brak daty";
+  if (Number.isNaN(date.getTime())) return 'Brak daty';
 
-  return new Intl.DateTimeFormat("pl-PL", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
+  return new Intl.DateTimeFormat('pl-PL', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
   }).format(date);
 }
 
 function normalizeSearchText(value: string): string {
   return value
-    .toLocaleLowerCase("pl-PL")
-    .normalize("NFKD")
-    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .toLocaleLowerCase('pl-PL')
+    .normalize('NFKD')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
     .trim();
 }
 
@@ -157,7 +157,7 @@ function matchesSimpleNameSearch(name: string, query: string): boolean {
 }
 
 export default function ReviewAuthorManager() {
-  const client = useClient({ apiVersion: "2024-01-01" });
+  const client = useClient({ apiVersion: '2024-01-01' });
   const toast = useToast();
 
   const [authors, setAuthors] = useState<ReviewAuthorItem[]>([]);
@@ -165,8 +165,8 @@ export default function ReviewAuthorManager() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const [targetAuthorId, setTargetAuthorId] = useState("");
-  const [sourceSearch, setSourceSearch] = useState("");
+  const [targetAuthorId, setTargetAuthorId] = useState('');
+  const [sourceSearch, setSourceSearch] = useState('');
   const [selectedSourceIds, setSelectedSourceIds] = useState<Set<string>>(
     new Set(),
   );
@@ -176,8 +176,8 @@ export default function ReviewAuthorManager() {
   const [isMerging, setIsMerging] = useState(false);
   const [isMergeDialogOpen, setIsMergeDialogOpen] = useState(false);
 
-  const [assignTargetAuthorId, setAssignTargetAuthorId] = useState("");
-  const [orphanSearch, setOrphanSearch] = useState("");
+  const [assignTargetAuthorId, setAssignTargetAuthorId] = useState('');
+  const [orphanSearch, setOrphanSearch] = useState('');
   const [selectedOrphanIds, setSelectedOrphanIds] = useState<Set<string>>(
     new Set(),
   );
@@ -185,7 +185,9 @@ export default function ReviewAuthorManager() {
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false);
 
   const [lastMergeSummary, setLastMergeSummary] = useState<string | null>(null);
-  const [lastAssignSummary, setLastAssignSummary] = useState<string | null>(null);
+  const [lastAssignSummary, setLastAssignSummary] = useState<string | null>(
+    null,
+  );
 
   const syncReviewAuthorCounts = useCallback(
     async (authorIds?: string[]) => {
@@ -198,42 +200,47 @@ export default function ReviewAuthorManager() {
         for (const row of batch) {
           tx.patch(row._id, { set: { reviewCount: row.reviewCount ?? 0 } });
         }
-        await tx.commit({ visibility: "sync" });
+        await tx.commit({ visibility: 'sync' });
       }
     },
     [client],
   );
 
-  const loadData = useCallback(async (isManualRefresh = false) => {
-    if (isManualRefresh) setRefreshing(true);
-    else setLoading(true);
+  const loadData = useCallback(
+    async (isManualRefresh = false) => {
+      if (isManualRefresh) setRefreshing(true);
+      else setLoading(true);
 
-    try {
-      if (isManualRefresh) {
-        await syncReviewAuthorCounts();
+      try {
+        if (isManualRefresh) {
+          await syncReviewAuthorCounts();
+        }
+
+        const [nextAuthors, nextOrphans] = await Promise.all([
+          client.fetch<ReviewAuthorItem[]>(AUTHORS_WITH_COUNTS_QUERY),
+          client.fetch<OrphanReviewItem[]>(ORPHAN_REVIEWS_QUERY, {
+            limit: ORPHAN_LIMIT,
+          }),
+        ]);
+
+        setAuthors(nextAuthors ?? []);
+        setOrphanReviews(nextOrphans ?? []);
+      } catch (error) {
+        toast.push({
+          status: 'error',
+          title: 'Nie udało się wczytać danych',
+          description:
+            error instanceof Error
+              ? error.message
+              : 'Wystąpił nieoczekiwany błąd.',
+        });
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
       }
-
-      const [nextAuthors, nextOrphans] = await Promise.all([
-        client.fetch<ReviewAuthorItem[]>(AUTHORS_WITH_COUNTS_QUERY),
-        client.fetch<OrphanReviewItem[]>(ORPHAN_REVIEWS_QUERY, {
-          limit: ORPHAN_LIMIT,
-        }),
-      ]);
-
-      setAuthors(nextAuthors ?? []);
-      setOrphanReviews(nextOrphans ?? []);
-    } catch (error) {
-      toast.push({
-        status: "error",
-        title: "Nie udało się wczytać danych",
-        description:
-          error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd.",
-      });
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [client, syncReviewAuthorCounts, toast]);
+    },
+    [client, syncReviewAuthorCounts, toast],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -311,7 +318,7 @@ export default function ReviewAuthorManager() {
     return orphanReviews.filter((review) => {
       return (
         review.title.toLowerCase().includes(phrase) ||
-        (review.path ?? "").toLowerCase().includes(phrase)
+        (review.path ?? '').toLowerCase().includes(phrase)
       );
     });
   }, [orphanReviews, orphanSearch]);
@@ -350,9 +357,10 @@ export default function ReviewAuthorManager() {
   const openMergeDialog = async () => {
     if (!targetAuthorId || selectedSourceIds.size === 0) {
       toast.push({
-        status: "warning",
-        title: "Uzupełnij dane",
-        description: "Wybierz autora docelowego oraz co najmniej jednego autora źródłowego.",
+        status: 'warning',
+        title: 'Uzupełnij dane',
+        description:
+          'Wybierz autora docelowego oraz co najmniej jednego autora źródłowego.',
       });
       return;
     }
@@ -367,9 +375,10 @@ export default function ReviewAuthorManager() {
       );
       if (sourceIds.length === 0) {
         toast.push({
-          status: "warning",
-          title: "Nieprawidłowy wybór",
-          description: "Autor docelowy nie może znajdować się na liście źródłowej.",
+          status: 'warning',
+          title: 'Nieprawidłowy wybór',
+          description:
+            'Autor docelowy nie może znajdować się na liście źródłowej.',
         });
         return;
       }
@@ -392,10 +401,12 @@ export default function ReviewAuthorManager() {
       setIsMergeDialogOpen(true);
     } catch (error) {
       toast.push({
-        status: "error",
-        title: "Podgląd nie powiódł się",
+        status: 'error',
+        title: 'Podgląd nie powiódł się',
         description:
-          error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd.",
+          error instanceof Error
+            ? error.message
+            : 'Wystąpił nieoczekiwany błąd.',
       });
     } finally {
       setIsPreviewLoading(false);
@@ -405,10 +416,10 @@ export default function ReviewAuthorManager() {
   const executeMerge = async () => {
     if (!targetAuthorId || selectedSourceIds.size === 0) {
       toast.push({
-        status: "warning",
-        title: "Brak danych do scalenia",
+        status: 'warning',
+        title: 'Brak danych do scalenia',
         description:
-          "Wybierz autora docelowego i przynajmniej jednego autora źródłowego.",
+          'Wybierz autora docelowego i przynajmniej jednego autora źródłowego.',
       });
       return;
     }
@@ -418,9 +429,10 @@ export default function ReviewAuthorManager() {
     );
     if (sourceIds.length === 0) {
       toast.push({
-        status: "warning",
-        title: "Nieprawidłowy wybór",
-        description: "Autor docelowy nie może znajdować się na liście źródłowej.",
+        status: 'warning',
+        title: 'Nieprawidłowy wybór',
+        description:
+          'Autor docelowy nie może znajdować się na liście źródłowej.',
       });
       return;
     }
@@ -452,14 +464,14 @@ export default function ReviewAuthorManager() {
           tx.patch(reviewId, {
             set: {
               author: {
-                _type: "reference",
+                _type: 'reference',
                 _ref: targetAuthorId,
               },
             },
           });
         }
 
-        await tx.commit({ visibility: "sync" });
+        await tx.commit({ visibility: 'sync' });
         patchedDocCount += batch.length;
       }
 
@@ -502,26 +514,28 @@ export default function ReviewAuthorManager() {
           `Usunięto pustych autorów: ${deletedSources.length}.`,
           skippedSources.length > 0
             ? `Pominięto (nadal mają referencje, np. drafty): ${skippedSources.length}.`
-            : "Wszyscy wybrani autorzy źródłowi są bez referencji po scaleniu.",
+            : 'Wszyscy wybrani autorzy źródłowi są bez referencji po scaleniu.',
         );
       }
 
-      const summary = summaryParts.join(" ");
+      const summary = summaryParts.join(' ');
       setLastMergeSummary(summary);
 
       toast.push({
-        status: "success",
-        title: "Scalanie zakończone",
+        status: 'success',
+        title: 'Scalanie zakończone',
         description: summary,
       });
 
       await loadData();
     } catch (error) {
       toast.push({
-        status: "error",
-        title: "Scalanie nie powiodło się",
+        status: 'error',
+        title: 'Scalanie nie powiodło się',
         description:
-          error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd.",
+          error instanceof Error
+            ? error.message
+            : 'Wystąpił nieoczekiwany błąd.',
       });
     } finally {
       setIsMerging(false);
@@ -531,10 +545,10 @@ export default function ReviewAuthorManager() {
   const executeAssignMissingAuthors = async () => {
     if (!assignTargetAuthorId || selectedOrphanIds.size === 0) {
       toast.push({
-        status: "warning",
-        title: "Brak danych",
+        status: 'warning',
+        title: 'Brak danych',
         description:
-          "Wybierz autora docelowego oraz co najmniej jedną recenzję bez autora.",
+          'Wybierz autora docelowego oraz co najmniej jedną recenzję bez autora.',
       });
       return;
     }
@@ -544,10 +558,7 @@ export default function ReviewAuthorManager() {
 
     try {
       const baseIds = Array.from(selectedOrphanIds);
-      const candidateIds = [
-        ...baseIds,
-        ...baseIds.map((id) => `drafts.${id}`),
-      ];
+      const candidateIds = [...baseIds, ...baseIds.map((id) => `drafts.${id}`)];
 
       const existingDocIds = await client.fetch<string[]>(
         REVIEW_IDS_BY_CANDIDATE_QUERY,
@@ -565,14 +576,14 @@ export default function ReviewAuthorManager() {
           tx.patch(reviewId, {
             set: {
               author: {
-                _type: "reference",
+                _type: 'reference',
                 _ref: assignTargetAuthorId,
               },
             },
           });
         }
 
-        await tx.commit({ visibility: "sync" });
+        await tx.commit({ visibility: 'sync' });
         patchedDocCount += batch.length;
       }
 
@@ -585,18 +596,20 @@ export default function ReviewAuthorManager() {
       setLastAssignSummary(summary);
 
       toast.push({
-        status: "success",
-        title: "Przypisanie zakończone",
+        status: 'success',
+        title: 'Przypisanie zakończone',
         description: summary,
       });
 
       await loadData();
     } catch (error) {
       toast.push({
-        status: "error",
-        title: "Przypisanie nie powiodło się",
+        status: 'error',
+        title: 'Przypisanie nie powiodło się',
         description:
-          error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd.",
+          error instanceof Error
+            ? error.message
+            : 'Wystąpił nieoczekiwany błąd.',
       });
     } finally {
       setIsAssigning(false);
@@ -606,10 +619,10 @@ export default function ReviewAuthorManager() {
   const openAssignDialog = () => {
     if (!assignTargetAuthorId || selectedOrphanIds.size === 0) {
       toast.push({
-        status: "warning",
-        title: "Brak danych",
+        status: 'warning',
+        title: 'Brak danych',
         description:
-          "Wybierz autora docelowego oraz co najmniej jedną recenzję bez autora.",
+          'Wybierz autora docelowego oraz co najmniej jedną recenzję bez autora.',
       });
       return;
     }
@@ -619,7 +632,7 @@ export default function ReviewAuthorManager() {
 
   if (loading) {
     return (
-      <Flex align="center" justify="center" style={{ minHeight: "16rem" }}>
+      <Flex align="center" justify="center" style={{ minHeight: '16rem' }}>
         <Spinner muted />
       </Flex>
     );
@@ -632,7 +645,7 @@ export default function ReviewAuthorManager() {
           <Heading size={1}>Scalanie autorów recenzji</Heading>
           <Button
             mode="ghost"
-            text={refreshing ? "Odświeżanie..." : "Odśwież dane"}
+            text={refreshing ? 'Odświeżanie...' : 'Odśwież dane'}
             disabled={refreshing}
             onClick={() => {
               void loadData(true);
@@ -644,9 +657,9 @@ export default function ReviewAuthorManager() {
           <Stack space={4}>
             <Heading size={1}>1. Scal warianty autorów</Heading>
             <Text size={1} muted>
-              Wybierz autora docelowego (kanonicznego), następnie zaznacz warianty
-              do scalenia. Wszystkie referencje recenzji zostaną przepięte do
-              autora docelowego.
+              Wybierz autora docelowego (kanonicznego), następnie zaznacz
+              warianty do scalenia. Wszystkie referencje recenzji zostaną
+              przepięte do autora docelowego.
             </Text>
 
             <Grid columns={[1, 1, 2]} gap={3}>
@@ -674,18 +687,23 @@ export default function ReviewAuthorManager() {
                   }
                   renderValue={(value, option) =>
                     option?.label ||
-                    mergeTargetAuthorOptions.find((item) => item.value === value)
-                      ?.label ||
-                    ""
+                    mergeTargetAuthorOptions.find(
+                      (item) => item.value === value,
+                    )?.label ||
+                    ''
                   }
                   renderOption={(option) => (
-                    <Flex align="center" justify="space-between" gap={3} padding={2}>
+                    <Flex
+                      align="center"
+                      justify="space-between"
+                      gap={3}
+                      padding={2}
+                    >
                       <Text size={1}>{option.label}</Text>
                       <Badge tone="default">{option.reviewCount}</Badge>
                     </Flex>
                   )}
-                >
-                </Autocomplete>
+                ></Autocomplete>
               </Stack>
 
               <Stack space={2}>
@@ -693,7 +711,9 @@ export default function ReviewAuthorManager() {
                 <TextInput
                   id="sourceSearch"
                   value={sourceSearch}
-                  onChange={(event) => setSourceSearch(event.currentTarget.value)}
+                  onChange={(event) =>
+                    setSourceSearch(event.currentTarget.value)
+                  }
                   placeholder="np. AUDIO"
                 />
               </Stack>
@@ -712,8 +732,8 @@ export default function ReviewAuthorManager() {
 
                 <Box
                   style={{
-                    maxHeight: "16rem",
-                    overflowY: "auto",
+                    maxHeight: '16rem',
+                    overflowY: 'auto',
                   }}
                 >
                   <Stack space={1}>
@@ -728,7 +748,9 @@ export default function ReviewAuthorManager() {
                           padding={2}
                           radius={2}
                           tone={
-                            selectedSourceIds.has(author._id) ? "primary" : "default"
+                            selectedSourceIds.has(author._id)
+                              ? 'primary'
+                              : 'default'
                           }
                         >
                           <Flex align="center" justify="space-between" gap={3}>
@@ -751,7 +773,9 @@ export default function ReviewAuthorManager() {
 
             <Flex align="center" gap={2}>
               <Button
-                text={isPreviewLoading ? "Przygotowywanie..." : "Wykonaj scalenie"}
+                text={
+                  isPreviewLoading ? 'Przygotowywanie...' : 'Wykonaj scalenie'
+                }
                 tone="primary"
                 disabled={
                   isPreviewLoading ||
@@ -777,15 +801,15 @@ export default function ReviewAuthorManager() {
         <Box
           padding={1}
           style={{
-            borderTop: "1px solid var(--card-border-color)",
-            paddingTop: "1.5rem",
+            borderTop: '1px solid var(--card-border-color)',
+            paddingTop: '1.5rem',
           }}
         >
           <Stack space={4}>
             <Heading size={1}>2. Przypisz brakujących autorów</Heading>
             <Text size={1} muted>
-              Przypisz autora hurtowo do recenzji, które nie mają obecnie ustawionego
-              pola `author`.
+              Przypisz autora hurtowo do recenzji, które nie mają obecnie
+              ustawionego pola `author`.
             </Text>
 
             <Grid columns={[1, 1, 2]} gap={3}>
@@ -804,12 +828,18 @@ export default function ReviewAuthorManager() {
                   }
                   renderValue={(value, option) =>
                     option?.label ||
-                    assignTargetAuthorOptions.find((item) => item.value === value)
-                      ?.label ||
-                    ""
+                    assignTargetAuthorOptions.find(
+                      (item) => item.value === value,
+                    )?.label ||
+                    ''
                   }
                   renderOption={(option) => (
-                    <Flex align="center" justify="space-between" gap={3} padding={2}>
+                    <Flex
+                      align="center"
+                      justify="space-between"
+                      gap={3}
+                      padding={2}
+                    >
                       <Text size={1}>{option.label}</Text>
                       <Badge tone="default">{option.reviewCount}</Badge>
                     </Flex>
@@ -822,7 +852,9 @@ export default function ReviewAuthorManager() {
                 <TextInput
                   id="orphanSearch"
                   value={orphanSearch}
-                  onChange={(event) => setOrphanSearch(event.currentTarget.value)}
+                  onChange={(event) =>
+                    setOrphanSearch(event.currentTarget.value)
+                  }
                   placeholder="Tytuł lub URL"
                 />
               </Stack>
@@ -839,9 +871,7 @@ export default function ReviewAuthorManager() {
                 text="Wyczyść zaznaczenie"
                 onClick={clearOrphanSelection}
               />
-              <Badge tone="caution">
-                Zaznaczone: {selectedOrphanIds.size}
-              </Badge>
+              <Badge tone="caution">Zaznaczone: {selectedOrphanIds.size}</Badge>
               <Badge tone="default">
                 Wszystkie bez autora: {orphanReviews.length}
               </Badge>
@@ -850,8 +880,8 @@ export default function ReviewAuthorManager() {
             <Card padding={3} radius={2}>
               <Box
                 style={{
-                  maxHeight: "20rem",
-                  overflowY: "auto",
+                  maxHeight: '20rem',
+                  overflowY: 'auto',
                 }}
               >
                 <Stack space={1}>
@@ -866,10 +896,16 @@ export default function ReviewAuthorManager() {
                         padding={2}
                         radius={2}
                         tone={
-                          selectedOrphanIds.has(review._id) ? "primary" : "default"
+                          selectedOrphanIds.has(review._id)
+                            ? 'primary'
+                            : 'default'
                         }
                       >
-                        <Flex align="flex-start" justify="space-between" gap={3}>
+                        <Flex
+                          align="flex-start"
+                          justify="space-between"
+                          gap={3}
+                        >
                           <Flex align="flex-start" gap={2}>
                             <Checkbox
                               checked={selectedOrphanIds.has(review._id)}
@@ -880,8 +916,10 @@ export default function ReviewAuthorManager() {
                                 {review.title}
                               </Text>
                               <Text size={1} muted>
-                                {review.path || "Brak ścieżki"} •{" "}
-                                {formatDate(review.publishedDate || review.createdAt)}
+                                {review.path || 'Brak ścieżki'} •{' '}
+                                {formatDate(
+                                  review.publishedDate || review.createdAt,
+                                )}
                               </Text>
                             </Stack>
                           </Flex>
@@ -896,7 +934,11 @@ export default function ReviewAuthorManager() {
 
             <Button
               tone="primary"
-              text={isAssigning ? "Przypisywanie..." : "Przypisz autora do zaznaczonych"}
+              text={
+                isAssigning
+                  ? 'Przypisywanie...'
+                  : 'Przypisz autora do zaznaczonych'
+              }
               disabled={
                 isAssigning ||
                 !assignTargetAuthorId ||
@@ -929,8 +971,8 @@ export default function ReviewAuthorManager() {
           <Box padding={4}>
             <Stack space={4}>
               <Text size={1}>
-                Autor docelowy:{" "}
-                <strong>{targetAuthor?.name ?? "Nie wybrano"}</strong>
+                Autor docelowy:{' '}
+                <strong>{targetAuthor?.name ?? 'Nie wybrano'}</strong>
               </Text>
 
               <Card padding={3} radius={2} tone="primary" border>
@@ -939,7 +981,7 @@ export default function ReviewAuthorManager() {
                     Podgląd operacji
                   </Text>
                   <Text size={1}>
-                    Łącznie opublikowanych recenzji do scalenia:{" "}
+                    Łącznie opublikowanych recenzji do scalenia:{' '}
                     <strong>{mergePreview?.totalPublishedReviews ?? 0}</strong>
                   </Text>
                   <Stack space={1}>
@@ -960,7 +1002,8 @@ export default function ReviewAuthorManager() {
                   }
                 />
                 <Text size={1}>
-                  Usuń autorów źródłowych, jeśli po scaleniu nie mają żadnych referencji
+                  Usuń autorów źródłowych, jeśli po scaleniu nie mają żadnych
+                  referencji
                 </Text>
               </Flex>
 
@@ -973,7 +1016,7 @@ export default function ReviewAuthorManager() {
                 />
                 <Button
                   tone="primary"
-                  text={isMerging ? "Scalanie..." : "Potwierdź i scal"}
+                  text={isMerging ? 'Scalanie...' : 'Potwierdź i scal'}
                   disabled={isMerging}
                   onClick={() => {
                     void executeMerge();
@@ -998,8 +1041,8 @@ export default function ReviewAuthorManager() {
           <Box padding={4}>
             <Stack space={4}>
               <Text size={1}>
-                Autor docelowy:{" "}
-                <strong>{assignTargetAuthor?.name ?? "Nie wybrano"}</strong>
+                Autor docelowy:{' '}
+                <strong>{assignTargetAuthor?.name ?? 'Nie wybrano'}</strong>
               </Text>
 
               <Card padding={3} radius={2} tone="primary" border>
@@ -1008,7 +1051,7 @@ export default function ReviewAuthorManager() {
                     Podgląd operacji
                   </Text>
                   <Text size={1}>
-                    Liczba recenzji do przypisania:{" "}
+                    Liczba recenzji do przypisania:{' '}
                     <strong>{selectedOrphanItems.length}</strong>
                   </Text>
                   <Stack space={1}>
@@ -1035,7 +1078,9 @@ export default function ReviewAuthorManager() {
                 />
                 <Button
                   tone="primary"
-                  text={isAssigning ? "Przypisywanie..." : "Potwierdź i przypisz"}
+                  text={
+                    isAssigning ? 'Przypisywanie...' : 'Potwierdź i przypisz'
+                  }
                   disabled={isAssigning}
                   onClick={() => {
                     void executeAssignMissingAuthors();

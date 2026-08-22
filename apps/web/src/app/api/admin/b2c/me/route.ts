@@ -2,10 +2,7 @@ import type {
   AdminAccessMode,
   VerifiedAdminOperator,
 } from '@/src/global/b2c/admin/server/auth';
-import {
-  adminJson,
-  adminOptions,
-} from '@/src/global/b2c/admin/server/http';
+import { adminJson, adminOptions } from '@/src/global/b2c/admin/server/http';
 import { withAdminRoute } from '@/src/global/b2c/admin/server/route';
 
 type AdminBridgeResponse =

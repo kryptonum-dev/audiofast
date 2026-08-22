@@ -158,9 +158,9 @@ function hasValidationErrors(
 ): boolean {
   return Boolean(
     errors.formErrors.length > 0 ||
-      errors.contact ||
-      errors.shippingAddress ||
-      errors.invoice,
+    errors.contact ||
+    errors.shippingAddress ||
+    errors.invoice,
   );
 }
 

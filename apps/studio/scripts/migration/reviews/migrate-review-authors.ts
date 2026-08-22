@@ -16,12 +16,12 @@
  *   bun run apps/studio/scripts/migration/reviews/migrate-review-authors.ts --csv=./data/review-authors.csv
  */
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { createClient, type SanityClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
-import slugify from "slugify";
+import { createClient, type SanityClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
+import slugify from 'slugify';
 
 type CliOptions = {
   csvPath: string;
@@ -37,7 +37,7 @@ type CsvRow = {
 
 type AuthorDoc = {
   _id: string;
-  _type: "reviewAuthor";
+  _type: 'reviewAuthor';
   name: string;
   websiteUrl?: string;
 };
@@ -48,30 +48,30 @@ type PreparedAuthor = {
   rawName: string;
 };
 
-const DEFAULT_CSV_PATH = "./ReviewPage.csv";
-const DEFAULT_PROJECT_ID = "fsw3likv";
-const DEFAULT_DATASET = "production";
+const DEFAULT_CSV_PATH = './ReviewPage.csv';
+const DEFAULT_PROJECT_ID = 'fsw3likv';
+const DEFAULT_DATASET = 'production';
 
 function parseArgs(): CliOptions {
   const args = process.argv.slice(2);
 
-  const csvArg = args.find((arg) => arg.startsWith("--csv="));
-  const authorArg = args.find((arg) => arg.startsWith("--author="));
+  const csvArg = args.find((arg) => arg.startsWith('--csv='));
+  const authorArg = args.find((arg) => arg.startsWith('--author='));
 
   return {
-    csvPath: csvArg ? csvArg.replace("--csv=", "") : DEFAULT_CSV_PATH,
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    verbose: args.includes("--verbose") || args.includes("-v"),
+    csvPath: csvArg ? csvArg.replace('--csv=', '') : DEFAULT_CSV_PATH,
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    verbose: args.includes('--verbose') || args.includes('-v'),
     authorFilter: authorArg
-      ? authorArg.replace("--author=", "").trim()
+      ? authorArg.replace('--author=', '').trim()
       : undefined,
   };
 }
 
 function normalizeName(name: string): string {
   return name
-    .replace(/\u00a0/g, " ")
-    .replace(/\s+/g, " ")
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -86,8 +86,8 @@ function createSlug(name: string): string {
 function looksLikeDomain(input: string): boolean {
   // Remove protocol and www for detection
   const sanitized = input
-    .replace(/^https?:\/\//i, "")
-    .replace(/^www\./i, "")
+    .replace(/^https?:\/\//i, '')
+    .replace(/^www\./i, '')
     .trim();
 
   // Domain-like strings shouldn't contain whitespace
@@ -123,7 +123,7 @@ function buildAuthorDocuments(
   const deduped = new Map<string, PreparedAuthor>();
 
   for (const row of rows) {
-    const rawName = row.AuthorName ? normalizeName(row.AuthorName) : "";
+    const rawName = row.AuthorName ? normalizeName(row.AuthorName) : '';
     if (!rawName) continue;
 
     if (normalizedFilter && rawName.toLowerCase() !== normalizedFilter) {
@@ -141,13 +141,13 @@ function buildAuthorDocuments(
     }
 
     const _id = `review-author-${slug}`;
-    const reviewCount = parseInt(row.ReviewCount ?? "0", 10) || 0;
+    const reviewCount = parseInt(row.ReviewCount ?? '0', 10) || 0;
     const websiteUrl = inferWebsite(rawName);
 
     const prepared: PreparedAuthor = {
       doc: {
         _id,
-        _type: "reviewAuthor",
+        _type: 'reviewAuthor',
         name: rawName,
         ...(websiteUrl ? { websiteUrl } : {}),
       },
@@ -189,7 +189,7 @@ function buildAuthorDocuments(
 function readCsvRows(csvPath: string): CsvRow[] {
   const resolved = resolve(process.cwd(), csvPath);
   try {
-    const fileContent = readFileSync(resolved, "utf-8");
+    const fileContent = readFileSync(resolved, 'utf-8');
     return parse(fileContent, {
       columns: true,
       skip_empty_lines: true,
@@ -207,14 +207,14 @@ function createMigrationClient(): SanityClient {
   const token = process.env.SANITY_API_TOKEN;
 
   if (!token) {
-    throw new Error("SANITY_API_TOKEN environment variable is required");
+    throw new Error('SANITY_API_TOKEN environment variable is required');
   }
 
   return createClient({
     projectId,
     dataset,
     token,
-    apiVersion: "2024-01-01",
+    apiVersion: '2024-01-01',
     useCdn: false,
   });
 }
@@ -224,29 +224,29 @@ async function migrateAuthors(
   dryRun: boolean,
 ): Promise<void> {
   if (authors.length === 0) {
-    console.log("ℹ️  No authors to migrate.");
+    console.log('ℹ️  No authors to migrate.');
     return;
   }
 
   console.log(
-    `\n📦 Prepared ${authors.length} unique author document${authors.length === 1 ? "" : "s"}.`,
+    `\n📦 Prepared ${authors.length} unique author document${authors.length === 1 ? '' : 's'}.`,
   );
 
   if (dryRun) {
-    console.log("\n🧪 DRY RUN OUTPUT");
+    console.log('\n🧪 DRY RUN OUTPUT');
     authors.forEach(({ doc, reviewCount }) => {
       console.log(`\n${doc._id} (${reviewCount} reviews)`);
       console.log(JSON.stringify(doc, null, 2));
     });
     console.log(
-      "\n💡 Run again without --dry-run to write documents to Sanity.",
+      '\n💡 Run again without --dry-run to write documents to Sanity.',
     );
     return;
   }
 
   const client = createMigrationClient();
 
-  console.log("\n🚀 Migrating authors to Sanity...");
+  console.log('\n🚀 Migrating authors to Sanity...');
   for (const { doc, reviewCount } of authors) {
     try {
       await client.createOrReplace(doc);
@@ -256,32 +256,32 @@ async function migrateAuthors(
     }
   }
 
-  console.log("\n✅ Author migration complete.");
+  console.log('\n✅ Author migration complete.');
 }
 
 async function main(): Promise<void> {
   const { csvPath, dryRun, verbose, authorFilter } = parseArgs();
 
-  console.log("");
+  console.log('');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║            AUDIOFAST DATA MIGRATION                           ║",
+    '║            AUDIOFAST DATA MIGRATION                           ║',
   );
   console.log(
-    "║            Review Authors                                     ║",
+    '║            Review Authors                                     ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
+  console.log('');
   console.log(`CSV Path: ${resolve(process.cwd(), csvPath)}`);
-  console.log(`Mode: ${dryRun ? "DRY RUN (no writes)" : "LIVE"}`);
+  console.log(`Mode: ${dryRun ? 'DRY RUN (no writes)' : 'LIVE'}`);
   if (authorFilter) {
     console.log(`Author Filter: ${authorFilter}`);
   }
-  console.log("");
+  console.log('');
 
   const rows = readCsvRows(csvPath);
   console.log(`Found ${rows.length} CSV rows.`);
@@ -291,6 +291,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  console.error("❌ Migration failed:", error);
+  console.error('❌ Migration failed:', error);
   process.exit(1);
 });

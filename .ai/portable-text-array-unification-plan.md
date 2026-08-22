@@ -181,7 +181,7 @@ import styles from './styles.module.scss';
  */
 export function ColumnEndComponent() {
   return (
-    <div className={styles.columnEnd} role='separator' aria-hidden='true' />
+    <div className={styles.columnEnd} role="separator" aria-hidden="true" />
   );
 }
 ```
@@ -434,7 +434,7 @@ export default function TwoColumnContent({
 <TwoColumnContent
   unifiedContent={brand.brandDetailContent} // NEW - try first
   contentBlocks={brand.brandContentBlocks as ContentBlock[]} // FALLBACK
-  customId='o-marce'
+  customId="o-marce"
   distributionYear={brand.distributionYear}
   gallery={brand.imageGallery as SanityRawImage[]}
 />

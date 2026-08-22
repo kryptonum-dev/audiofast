@@ -4,7 +4,7 @@ researcher: Oliwier Sellig
 git_commit: 4b96fd242e0e5356fb5d4926e0656802ed9dc138
 branch: main
 repository: audiofast
-topic: "Porównywarka odrzuca produkt należący do więcej niż jednej kategorii"
+topic: 'Porównywarka odrzuca produkt należący do więcej niż jednej kategorii'
 tags: [research, codebase, comparison, porownywarka, categories, bug]
 status: complete
 last_updated: 2026-06-18
@@ -101,15 +101,17 @@ if (current && current.categorySlug !== categorySlug) {
 
 ```ts
 defineField({
-  name: "categories",                          // :45
-  title: "Kategorie",                          // :46
-  type: "array",                               // :47  ← TABLICA, nie pojedyncza referencja
+  name: 'categories', // :45
+  title: 'Kategorie', // :46
+  type: 'array', // :47  ← TABLICA, nie pojedyncza referencja
   description:
-    "Wybierz kategorie, do których należy ten produkt. Produkt może należeć do wielu kategorii.", // :48-49
-  of: [{ type: "reference", to: [{ type: "productCategorySub" }] }],
+    'Wybierz kategorie, do których należy ten produkt. Produkt może należeć do wielu kategorii.', // :48-49
+  of: [{ type: 'reference', to: [{ type: 'productCategorySub' }] }],
   validation: (Rule) =>
-    Rule.required().error("Produkt musi należeć do co najmniej jednej kategorii"), // :71
-})
+    Rule.required().error(
+      'Produkt musi należeć do co najmniej jednej kategorii',
+    ), // :71
+});
 ```
 
 Produkt trzyma **tablicę referencji** do `productCategorySub`; opis i walidacja
@@ -117,6 +119,7 @@ wprost dopuszczają wiele kategorii. Ayre KX-8 w `dac` + `przedwzmacniacze-linio
 jest poprawny z punktu widzenia modelu.
 
 Pola zdenormalizowane potwierdzają „mnogość":
+
 - `denormCategorySlugs` (`product.ts:485-494`) — `array of string`, „Array of all
   category slugs this product belongs to".
 - Liczone w `apps/studio/utils/denormalize-product.ts:34-116`
@@ -156,19 +159,23 @@ Wszystkie wywołania `addProductToComparison(...)` przekazują slug z `categorie
 
 1. **Karta produktu (listingi/siatki)** —
    `apps/web/src/components/ui/ProductCard/index.tsx:67-73`:
+
    ```tsx
    categorySlug={categories?.[0]?.slug ?? ''}
    categoryName={categories?.[0]?.name ?? categories?.[0]?.slug ?? ''}
    ```
+
    → wywołanie `addProductToComparison(...)` w
    `components/ui/ProductCard/AddToComparisonButton.tsx:70`.
 
 2. **Strona produktu (ProductHero)** — slug pochodzi z kontekstu trasy,
    `apps/web/src/app/produkty/[slug]/page.tsx:128-131`:
+
    ```ts
    const primaryCategory = product.categories?.[0];
    const primaryCategorySlug = primaryCategory?.slug ?? '';
    ```
+
    przekazany jako `categorySlug={primaryCategorySlug}` (`:211`) →
    `components/products/ProductHero/AddToComparison.tsx:67`. (Strona liczy też
    pełną tablicę `categorySlugs` na `:126-127`, ale używa jej tylko do analytics
@@ -215,7 +222,9 @@ ze zbiorem kategorii wspólnych dla produktów już będących w porównaniu (lo
    ```ts
    const incoming = new Set(incomingSlugs);
    const intersection = current.categorySlugs.filter((s) => incoming.has(s));
-   if (current && intersection.length === 0) { /* odrzuć */ }
+   if (current && intersection.length === 0) {
+     /* odrzuć */
+   }
    ```
    Po dodaniu: `categorySlugs = intersection` (zawężanie wspólnego mianownika).
 3. **Punkty wywołania** (ProductCard `:67-73`, page.tsx `:128-131`,

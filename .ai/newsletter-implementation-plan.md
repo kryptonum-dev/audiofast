@@ -66,7 +66,7 @@ Create a secure API route to handle the generation logic. This keeps secrets (Ma
 - **Payload**:
   ```typescript
   interface Payload {
-    action: "download-html" | "create-mailchimp-draft";
+    action: 'download-html' | 'create-mailchimp-draft';
     startDate: string;
     endDate: string;
     content: {

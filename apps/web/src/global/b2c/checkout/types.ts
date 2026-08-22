@@ -134,8 +134,7 @@ export type CheckoutCpoItemSnapshot = CheckoutItemDisplaySnapshot & {
 };
 
 export type CheckoutOrderItemSnapshot =
-  | CheckoutStandardItemSnapshot
-  | CheckoutCpoItemSnapshot;
+  CheckoutStandardItemSnapshot | CheckoutCpoItemSnapshot;
 
 export type CheckoutOrderLineDraft = {
   lineId: string;

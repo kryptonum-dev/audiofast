@@ -109,7 +109,9 @@ function getSeriesLabel(date: Date, groupBy: AdminAnalyticsGroupBy): string {
 }
 
 function isRevenueOrder(row: AnalyticsOrderRow): boolean {
-  return row.current_status !== 'cancelled' && row.current_status !== 'returned';
+  return (
+    row.current_status !== 'cancelled' && row.current_status !== 'returned'
+  );
 }
 
 export function aggregateAdminAnalyticsRows(args: {
@@ -177,7 +179,9 @@ export function aggregateAdminAnalyticsRows(args: {
       grossPaidRevenueCents,
       revenueCents,
       averageOrderValueCents:
-        revenueOrderCount > 0 ? Math.round(revenueCents / revenueOrderCount) : 0,
+        revenueOrderCount > 0
+          ? Math.round(revenueCents / revenueOrderCount)
+          : 0,
       discountTotalCents,
     },
     statusCounts: Array.from(statusCounts.entries())

@@ -4,10 +4,7 @@ import type { PricingSelection } from '@/src/global/supabase/types';
 export type CartLineType = 'standard' | 'cpo';
 
 export type CartLineIssueCode =
-  | 'configuration_invalid'
-  | 'cpo_unavailable'
-  | 'not_buyable'
-  | 'price_changed';
+  'configuration_invalid' | 'cpo_unavailable' | 'not_buyable' | 'price_changed';
 
 export type CartLineIssue = {
   code: CartLineIssueCode;
@@ -16,10 +13,7 @@ export type CartLineIssue = {
 };
 
 export type CartCouponDiscountType =
-  | 'fixed_order'
-  | 'fixed_product'
-  | 'percent_order'
-  | 'percent_product';
+  'fixed_order' | 'fixed_product' | 'percent_order' | 'percent_product';
 
 export type CartCouponDefinition = {
   id: string;
@@ -142,5 +136,4 @@ export type CpoLineRevalidation = {
 };
 
 export type CartLineRevalidation =
-  | StandardLineRevalidation
-  | CpoLineRevalidation;
+  StandardLineRevalidation | CpoLineRevalidation;

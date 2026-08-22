@@ -13,8 +13,7 @@ import TableOfContent from '../../ui/TableOfContent';
 import styles from './styles.module.scss';
 
 type Props =
-  | NonNullable<QueryBlogPostBySlugResult>
-  | NonNullable<QueryReviewBySlugResult>;
+  NonNullable<QueryBlogPostBySlugResult> | NonNullable<QueryReviewBySlugResult>;
 
 export function ArticleBody({
   headings,

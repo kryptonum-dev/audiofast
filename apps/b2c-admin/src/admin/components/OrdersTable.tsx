@@ -1,9 +1,9 @@
-import { Badge, Box, Card, Inline, Stack, Text } from "@sanity/ui";
+import { Badge, Box, Card, Inline, Stack, Text } from '@sanity/ui';
 
-import { formatDateTime, formatLineType, formatMoney } from "../formatters.js";
-import type { AdminOrderListItem } from "../types.js";
-import { OrderStatusBadge } from "./OrderStatusBadge.js";
-import { SanityThumbnail } from "./SanityThumbnail.js";
+import { formatDateTime, formatLineType, formatMoney } from '../formatters.js';
+import type { AdminOrderListItem } from '../types.js';
+import { OrderStatusBadge } from './OrderStatusBadge.js';
+import { SanityThumbnail } from './SanityThumbnail.js';
 
 type OrdersTableProps = {
   onOpenOrder?: (orderNumber: string) => void;
@@ -32,19 +32,21 @@ export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
                 <tr
                   key={order.id}
                   aria-label={`Otwórz zamówienie ${order.orderNumber}`}
-                  className={onOpenOrder ? "ordersTableRowClickable" : undefined}
+                  className={
+                    onOpenOrder ? 'ordersTableRowClickable' : undefined
+                  }
                   onKeyDown={(event) => {
                     if (!onOpenOrder) {
                       return;
                     }
 
-                    if (event.key === "Enter" || event.key === " ") {
+                    if (event.key === 'Enter' || event.key === ' ') {
                       event.preventDefault();
                       onOpenOrder(order.orderNumber);
                     }
                   }}
                   onClick={() => onOpenOrder?.(order.orderNumber)}
-                  role={onOpenOrder ? "button" : undefined}
+                  role={onOpenOrder ? 'button' : undefined}
                   tabIndex={onOpenOrder ? 0 : undefined}
                 >
                   <td>
@@ -68,7 +70,7 @@ export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
                   <td>
                     <Stack space={2}>
                       <Text size={1} weight="medium">
-                        {order.customer.displayName ?? "Bez nazwy"}
+                        {order.customer.displayName ?? 'Bez nazwy'}
                       </Text>
                       <Text muted size={1}>
                         {order.customer.email}
@@ -142,7 +144,7 @@ function formatLeadItemLabel(order: AdminOrderListItem): string {
   const leadItem = order.itemSummary.leadItem;
 
   if (!leadItem) {
-    return "";
+    return '';
   }
 
   const remainingItemCount = Math.max(order.itemSummary.totalItemCount - 1, 0);
@@ -158,5 +160,5 @@ function formatLeadItemLabel(order: AdminOrderListItem): string {
 }
 
 function formatOtherItemsLabel(count: number): string {
-  return count === 1 ? "inny" : "inne";
+  return count === 1 ? 'inny' : 'inne';
 }

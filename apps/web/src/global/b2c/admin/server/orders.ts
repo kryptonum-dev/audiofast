@@ -777,9 +777,7 @@ async function resolveOpenRelatedOrderIds(args: {
   table: 'order_cancellation_requests' | 'return_cases';
 }): Promise<Set<string>> {
   const supabase = createAdminClient();
-  let query = supabase
-    .from(args.table)
-    .select('order_id');
+  let query = supabase.from(args.table).select('order_id');
 
   query =
     args.table === 'return_cases'

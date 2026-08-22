@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { CloseIcon } from "@sanity/icons";
+import { CloseIcon } from '@sanity/icons';
 import {
   Button,
   Card,
@@ -10,10 +10,10 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { useCallback, useState } from "react";
+} from '@sanity/ui';
+import { useCallback, useState } from 'react';
 
-import type { FilterConfigItem } from "./types";
+import type { FilterConfigItem } from './types';
 
 interface FilterEditorDialogProps {
   filter: FilterConfigItem;
@@ -35,11 +35,11 @@ export function FilterEditorDialog({
     const newErrors: { name?: string; unit?: string } = {};
 
     if (!editingFilter.name?.trim()) {
-      newErrors.name = "Nazwa filtra jest wymagana";
+      newErrors.name = 'Nazwa filtra jest wymagana';
     }
 
-    if (editingFilter.filterType === "range" && !editingFilter.unit?.trim()) {
-      newErrors.unit = "Jednostka jest wymagana dla filtrów typu zakres";
+    if (editingFilter.filterType === 'range' && !editingFilter.unit?.trim()) {
+      newErrors.unit = 'Jednostka jest wymagana dla filtrów typu zakres';
     }
 
     setErrors(newErrors);
@@ -54,7 +54,12 @@ export function FilterEditorDialog({
   }, [editingFilter, validateForm, onSave, onClose]);
 
   return (
-    <Dialog header="Edytuj filtr" id="filter-editor" open={isOpen} onClose={onClose}>
+    <Dialog
+      header="Edytuj filtr"
+      id="filter-editor"
+      open={isOpen}
+      onClose={onClose}
+    >
       <Stack space={4} padding={4}>
         {/* Filter Name */}
         <Stack space={2}>
@@ -63,7 +68,7 @@ export function FilterEditorDialog({
           </Text>
           <TextInput
             placeholder="np. Impedancja, Długość kabla"
-            value={editingFilter.name || ""}
+            value={editingFilter.name || ''}
             onChange={(e) => {
               setEditingFilter({
                 ...editingFilter,
@@ -87,12 +92,12 @@ export function FilterEditorDialog({
           <Select
             value={editingFilter.filterType}
             onChange={(e) => {
-              const newType = e.currentTarget.value as "dropdown" | "range";
+              const newType = e.currentTarget.value as 'dropdown' | 'range';
               setEditingFilter({
                 ...editingFilter,
                 filterType: newType,
                 // Clear unit if switching to dropdown
-                unit: newType === "dropdown" ? undefined : editingFilter.unit,
+                unit: newType === 'dropdown' ? undefined : editingFilter.unit,
               });
             }}
           >
@@ -102,14 +107,14 @@ export function FilterEditorDialog({
         </Stack>
 
         {/* Unit (only for range filters) */}
-        {editingFilter.filterType === "range" && (
+        {editingFilter.filterType === 'range' && (
           <Stack space={2}>
             <Text weight="semibold" size={1}>
               Jednostka
             </Text>
             <TextInput
-              placeholder='np. Ω, W, m, Hz'
-              value={editingFilter.unit || ""}
+              placeholder="np. Ω, W, m, Hz"
+              value={editingFilter.unit || ''}
               onChange={(e) => {
                 setEditingFilter({
                   ...editingFilter,

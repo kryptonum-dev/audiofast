@@ -33,7 +33,10 @@ describe('cart-product-key', () => {
 
   it('builds a cpo product route slug from a cart product slug', () => {
     expect(
-      buildCartProductRouteSlug('/certyfikowany-sprzet-uzywany/test-cpo/', 'cpo'),
+      buildCartProductRouteSlug(
+        '/certyfikowany-sprzet-uzywany/test-cpo/',
+        'cpo',
+      ),
     ).toBe('/certyfikowany-sprzet-uzywany/test-cpo/');
   });
 });

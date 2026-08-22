@@ -1,10 +1,10 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-import { logError, logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
-import { queryPdfReviewBySlug } from "@/src/global/sanity/query";
-import type { QueryPdfReviewBySlugResult } from "@/src/global/sanity/sanity.types";
+import { logError, logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
+import { queryPdfReviewBySlug } from '@/src/global/sanity/query';
+import type { QueryPdfReviewBySlugResult } from '@/src/global/sanity/sanity.types';
 
 type RouteParams = {
   params: Promise<{ slug: string }>;
@@ -21,12 +21,12 @@ export async function GET(request: NextRequest, props: RouteParams) {
     const pdfReview = await sanityFetch<QueryPdfReviewBySlugResult>({
       query: queryPdfReviewBySlug,
       params: { slug: fullSlug },
-      tags: ["review"],
+      tags: ['review'],
     });
 
     if (!pdfReview || !pdfReview.pdfUrl) {
       logWarn(`PDF review not found for slug: ${fullSlug}`);
-      return new NextResponse("PDF not found", { status: 404 });
+      return new NextResponse('PDF not found', { status: 404 });
     }
 
     // Fetch the PDF from Sanity CDN
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, props: RouteParams) {
 
     if (!pdfResponse.ok) {
       logError(`Failed to fetch PDF from Sanity CDN: ${pdfReview.pdfUrl}`);
-      return new NextResponse("Failed to fetch PDF", { status: 500 });
+      return new NextResponse('Failed to fetch PDF', { status: 500 });
     }
 
     // Get the PDF buffer
@@ -42,9 +42,9 @@ export async function GET(request: NextRequest, props: RouteParams) {
 
     // Prepare filename for Content-Disposition header
     // HTTP headers only support ASCII, so we need RFC 5987 encoding for UTF-8 filenames
-    const originalFileName = pdfReview.pdfFilename || "review.pdf";
+    const originalFileName = pdfReview.pdfFilename || 'review.pdf';
     // Create ASCII-safe fallback by removing non-ASCII characters
-    const asciiFileName = originalFileName.replace(/[^\x20-\x7E]/g, "_");
+    const asciiFileName = originalFileName.replace(/[^\x20-\x7E]/g, '_');
     // RFC 5987 encoded version for UTF-8 support
     const encodedFileName = encodeURIComponent(originalFileName);
 
@@ -52,16 +52,16 @@ export async function GET(request: NextRequest, props: RouteParams) {
     return new NextResponse(pdfBuffer, {
       status: 200,
       headers: {
-        "Content-Type": pdfReview.pdfMimeType || "application/pdf",
-        "Content-Disposition": `inline; filename="${asciiFileName}"; filename*=UTF-8''${encodedFileName}`,
-        "Content-Length": String(pdfBuffer.byteLength),
-        "Cache-Control": "public, max-age=31536000, immutable",
+        'Content-Type': pdfReview.pdfMimeType || 'application/pdf',
+        'Content-Disposition': `inline; filename="${asciiFileName}"; filename*=UTF-8''${encodedFileName}`,
+        'Content-Length': String(pdfBuffer.byteLength),
+        'Cache-Control': 'public, max-age=31536000, immutable',
         // SEO: Tell search engines not to index this PDF URL
-        "X-Robots-Tag": "noindex, nofollow",
+        'X-Robots-Tag': 'noindex, nofollow',
       },
     });
   } catch (error) {
     logError(`Error serving PDF for slug ${fullSlug}:`, error);
-    return new NextResponse("Internal server error", { status: 500 });
+    return new NextResponse('Internal server error', { status: 500 });
   }
 }

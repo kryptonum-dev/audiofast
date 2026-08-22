@@ -162,12 +162,7 @@ Show success message with count
 
 ```typescript
 for (const product of eligibleProducts) {
-  await client
-    .patch(product._id)
-    .set({
-      /* path to title */
-    })
-    .commit();
+  await client.patch(product._id).set({/* path to title */}).commit();
 }
 ```
 
@@ -176,11 +171,7 @@ for (const product of eligibleProducts) {
 ```typescript
 const transaction = client.transaction();
 for (const product of eligibleProducts) {
-  transaction.patch(product._id, (patch) =>
-    patch.set({
-      /* path to title */
-    })
-  );
+  transaction.patch(product._id, (patch) => patch.set({/* path to title */}));
 }
 await transaction.commit();
 ```
@@ -214,10 +205,10 @@ The challenge is finding the exact path to the parameter within the nested struc
 ```tsx
 <Button
   icon={ArrowRightLeft}
-  mode='ghost'
+  mode="ghost"
   padding={2}
   onClick={() => openTransformModal(param)}
-  title='Przekształć w inny parametr'
+  title="Przekształć w inny parametr"
   disabled={discoveredParams.length < 2}
 />
 ```
@@ -230,7 +221,7 @@ The challenge is finding the exact path to the parameter within the nested struc
 // State for modal
 const [transformModalOpen, setTransformModalOpen] = useState(false);
 const [sourceParam, setSourceParam] = useState<DiscoveredParameter | null>(
-  null
+  null,
 );
 
 // Target can be selected from dropdown OR typed as custom name
@@ -247,7 +238,7 @@ const [transformPreview, setTransformPreview] = useState<{
 
 // NEW: Track which products are selected for transformation (by product ID)
 const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(
-  new Set()
+  new Set(),
 );
 
 const [isTransforming, setIsTransforming] = useState(false);
@@ -306,7 +297,7 @@ Render modal at the end of the component, controlled by state:
     <TransformParameterModal
       sourceParam={sourceParam}
       availableTargets={discoveredParams.filter(
-        (p) => p.name !== sourceParam.name
+        (p) => p.name !== sourceParam.name,
       )}
       onClose={() => setTransformModalOpen(false)}
       onConfirm={handleTransformConfirm}
@@ -326,27 +317,27 @@ When user selects target parameter OR types custom name, calculate:
 function calculateTransformPreview(
   sourceParam: DiscoveredParameter,
   targetParamName: string,
-  discoveredParams: DiscoveredParameter[]
+  discoveredParams: DiscoveredParameter[],
 ): { eligible: ProductInfo[]; skipped: ProductInfo[] } {
   // Check if target parameter already exists in the category
   const existingTargetParam = discoveredParams.find(
-    (p) => p.name === targetParamName
+    (p) => p.name === targetParamName,
   );
 
   if (existingTargetParam) {
     // Target exists - check for duplicates
     const targetProductIds = new Set(
-      existingTargetParam.products.map((p) => p._id)
+      existingTargetParam.products.map((p) => p._id),
     );
 
     // Eligible: have source, don't have target
     const eligible = sourceParam.products.filter(
-      (p) => !targetProductIds.has(p._id)
+      (p) => !targetProductIds.has(p._id),
     );
 
     // Skipped: have both source and target
     const skipped = sourceParam.products.filter((p) =>
-      targetProductIds.has(p._id)
+      targetProductIds.has(p._id),
     );
 
     return { eligible, skipped };
@@ -419,7 +410,7 @@ For transformation, we need the full `technicalData` structure to find exact pat
 
 ```typescript
 async function fetchProductsForTransform(
-  productIds: string[]
+  productIds: string[],
 ): Promise<FullProductData[]> {
   const query = `*[_type == "product" && _id in $productIds] {
     _id,
@@ -450,7 +441,7 @@ For each product, find the parameter and build the patch:
 function buildPatchForProduct(
   product: FullProductData,
   sourceParamName: string,
-  targetParamName: string
+  targetParamName: string,
 ): { productId: string; path: string } | null {
   const groups = product.technicalData?.groups || [];
 
@@ -485,7 +476,7 @@ async function executeTransform(
   eligibleProducts: FullProductData[],
   selectedProductIds: Set<string>, // NEW: Only process selected products
   sourceParamName: string,
-  targetParamName: string
+  targetParamName: string,
 ): Promise<{ success: boolean; count: number; error?: string }> {
   try {
     const transaction = client.transaction();
@@ -500,11 +491,11 @@ async function executeTransform(
       const patchInfo = buildPatchForProduct(
         product,
         sourceParamName,
-        targetParamName
+        targetParamName,
       );
       if (patchInfo) {
         transaction.patch(product._id, (patch) =>
-          patch.set({ [patchInfo.path]: targetParamName })
+          patch.set({ [patchInfo.path]: targetParamName }),
         );
         patchCount++;
       }
@@ -624,7 +615,7 @@ type FullProductTechnicalData = {
 // Transform modal state
 const [transformModalOpen, setTransformModalOpen] = useState(false);
 const [sourceParam, setSourceParam] = useState<DiscoveredParameter | null>(
-  null
+  null,
 );
 
 // Target parameter - can be selected from dropdown OR typed as custom
@@ -639,7 +630,7 @@ const [transformPreview, setTransformPreview] =
 
 // NEW: Track which eligible products are selected for transformation
 const [selectedProductIds, setSelectedProductIds] = useState<Set<string>>(
-  new Set()
+  new Set(),
 );
 
 const [isTransforming, setIsTransforming] = useState(false);
@@ -669,7 +660,7 @@ const calculatePreview = useCallback(
 
     // Check if target parameter already exists in the category
     const existingTargetParam = discoveredParams.find(
-      (p) => p.name === targetName.trim()
+      (p) => p.name === targetName.trim(),
     );
 
     let eligible: ProductInfo[];
@@ -678,10 +669,10 @@ const calculatePreview = useCallback(
     if (existingTargetParam) {
       // Target exists - check for duplicates
       const targetProductIds = new Set(
-        existingTargetParam.products.map((p) => p._id)
+        existingTargetParam.products.map((p) => p._id),
       );
       eligible = sourceParam.products.filter(
-        (p) => !targetProductIds.has(p._id)
+        (p) => !targetProductIds.has(p._id),
       );
       skipped = sourceParam.products.filter((p) => targetProductIds.has(p._id));
     } else {
@@ -694,7 +685,7 @@ const calculatePreview = useCallback(
     // Select all eligible products by default
     setSelectedProductIds(new Set(eligible.map((p) => p._id)));
   },
-  [sourceParam, discoveredParams]
+  [sourceParam, discoveredParams],
 );
 
 // Handle dropdown selection
@@ -704,7 +695,7 @@ const handleExistingParamSelect = useCallback(
     setCustomParamName(''); // Clear custom input when dropdown is used
     calculatePreview(value);
   },
-  [calculatePreview]
+  [calculatePreview],
 );
 
 // Handle custom name input
@@ -714,7 +705,7 @@ const handleCustomNameChange = useCallback(
     setSelectedExistingParam(''); // Clear dropdown when custom input is used
     calculatePreview(value);
   },
-  [calculatePreview]
+  [calculatePreview],
 );
 
 // Toggle single product selection
@@ -787,7 +778,7 @@ const handleTransformConfirm = useCallback(async () => {
           }
         }
       }`,
-      { productIds }
+      { productIds },
     );
 
     // 2. Build and execute transaction
@@ -806,7 +797,7 @@ const handleTransformConfirm = useCallback(async () => {
               patch.set({
                 [`technicalData.groups[_key=="${group._key}"].rows[_key=="${row._key}"].title`]:
                   finalTargetName,
-              })
+              }),
             );
             patchCount++;
             break; // Only patch first occurrence per group
@@ -872,10 +863,10 @@ const handleTransformConfirm = useCallback(async () => {
   hasAnyProducts && (
     <Button
       icon={isExpanded ? ChevronDownIcon : ChevronRightIcon}
-      mode='bleed'
+      mode="bleed"
       padding={3}
       onClick={() => toggleDiscoveredParamExpand(param.name)}
-      title='Pokaż produkty'
+      title="Pokaż produkty"
     />
   );
 }
@@ -887,13 +878,13 @@ const handleTransformConfirm = useCallback(async () => {
   param.products.length > 0 && discoveredParams.length > 1 && (
     <Button
       icon={ArrowRightLeft}
-      mode='bleed'
+      mode="bleed"
       padding={3}
       onClick={(e) => {
         e.stopPropagation();
         openTransformModal(param);
       }}
-      title='Przekształć w inny parametr'
+      title="Przekształć w inny parametr"
     />
   );
 }
@@ -908,8 +899,8 @@ const handleTransformConfirm = useCallback(async () => {
 {
   transformModalOpen && sourceParam && (
     <Dialog
-      id='transform-parameter-modal'
-      header='Przekształć parametr'
+      id="transform-parameter-modal"
+      header="Przekształć parametr"
       onClose={() => {
         setTransformModalOpen(false);
         setSourceParam(null);
@@ -918,20 +909,21 @@ const handleTransformConfirm = useCallback(async () => {
         setTransformPreview(null);
         setSelectedProductIds(new Set());
       }}
-      width={1}>
+      width={1}
+    >
       <Box padding={4}>
         <Stack space={4}>
           {/* Source parameter info */}
-          <Card padding={3} radius={2} tone='primary'>
+          <Card padding={3} radius={2} tone="primary">
             <Stack space={2}>
-              <Text size={1} weight='medium'>
+              <Text size={1} weight="medium">
                 Parametr źródłowy:
               </Text>
-              <Flex align='center' gap={2}>
-                <Text size={2} weight='semibold'>
+              <Flex align="center" gap={2}>
+                <Text size={2} weight="semibold">
                   {sourceParam.name}
                 </Text>
-                <Badge tone='positive'>
+                <Badge tone="positive">
                   {sourceParam.products.length} produktów
                 </Badge>
               </Flex>
@@ -943,10 +935,9 @@ const handleTransformConfirm = useCallback(async () => {
             <Label size={1}>Przekształć w istniejący parametr:</Label>
             <Select
               value={selectedExistingParam}
-              onChange={(e) =>
-                handleExistingParamSelect(e.currentTarget.value)
-              }>
-              <option value=''>Wybierz parametr docelowy...</option>
+              onChange={(e) => handleExistingParamSelect(e.currentTarget.value)}
+            >
+              <option value="">Wybierz parametr docelowy...</option>
               {discoveredParams
                 .filter((p) => p.name !== sourceParam.name)
                 .map((p) => (
@@ -958,7 +949,7 @@ const handleTransformConfirm = useCallback(async () => {
           </Stack>
 
           {/* Divider */}
-          <Flex align='center' gap={3}>
+          <Flex align="center" gap={3}>
             <Box
               style={{
                 flex: 1,
@@ -984,11 +975,11 @@ const handleTransformConfirm = useCallback(async () => {
             <TextInput
               value={customParamName}
               onChange={(e) => handleCustomNameChange(e.currentTarget.value)}
-              placeholder='Wpisz nową nazwę parametru...'
+              placeholder="Wpisz nową nazwę parametru..."
             />
             {customParamName.trim() &&
               !discoveredParams.find(
-                (p) => p.name === customParamName.trim()
+                (p) => p.name === customParamName.trim(),
               ) && (
                 <Text size={0} muted>
                   ✨ Ta nazwa nie istnieje jeszcze w tej kategorii - zostanie
@@ -1004,18 +995,18 @@ const handleTransformConfirm = useCallback(async () => {
                 {/* Eligible products with checkboxes */}
                 {transformPreview.eligible.length > 0 && (
                   <Stack space={2}>
-                    <Flex align='center' justify='space-between'>
-                      <Flex align='center' gap={2}>
-                        <Badge tone='positive'>✓</Badge>
-                        <Text size={1} weight='medium'>
+                    <Flex align="center" justify="space-between">
+                      <Flex align="center" gap={2}>
+                        <Badge tone="positive">✓</Badge>
+                        <Text size={1} weight="medium">
                           Produkty do przekształcenia ({selectedProductIds.size}
                           /{transformPreview.eligible.length}):
                         </Text>
                       </Flex>
                       <Flex gap={2}>
                         <Button
-                          text='Zaznacz wszystkie'
-                          mode='ghost'
+                          text="Zaznacz wszystkie"
+                          mode="ghost"
                           fontSize={0}
                           padding={2}
                           onClick={selectAllProducts}
@@ -1025,8 +1016,8 @@ const handleTransformConfirm = useCallback(async () => {
                           }
                         />
                         <Button
-                          text='Odznacz wszystkie'
-                          mode='ghost'
+                          text="Odznacz wszystkie"
+                          mode="ghost"
                           fontSize={0}
                           padding={2}
                           onClick={deselectAllProducts}
@@ -1038,7 +1029,7 @@ const handleTransformConfirm = useCallback(async () => {
                       {transformPreview.eligible.map((p) => (
                         <Flex
                           key={p._id}
-                          align='center'
+                          align="center"
                           gap={2}
                           padding={2}
                           style={{
@@ -1048,7 +1039,8 @@ const handleTransformConfirm = useCallback(async () => {
                             borderRadius: '4px',
                             cursor: 'pointer',
                           }}
-                          onClick={() => toggleProductSelection(p._id)}>
+                          onClick={() => toggleProductSelection(p._id)}
+                        >
                           <Checkbox
                             checked={selectedProductIds.has(p._id)}
                             onChange={() => toggleProductSelection(p._id)}
@@ -1062,7 +1054,7 @@ const handleTransformConfirm = useCallback(async () => {
                             <Text size={1}>{p.name}</Text>
                           </Box>
                           {p.brandName && (
-                            <Badge tone='primary' fontSize={0} padding={1}>
+                            <Badge tone="primary" fontSize={0} padding={1}>
                               {p.brandName}
                             </Badge>
                           )}
@@ -1075,9 +1067,9 @@ const handleTransformConfirm = useCallback(async () => {
                 {/* Skipped products (no checkboxes - just info) */}
                 {transformPreview.skipped.length > 0 && (
                   <Stack space={2}>
-                    <Flex align='center' gap={2}>
-                      <Badge tone='caution'>⚠</Badge>
-                      <Text size={1} weight='medium'>
+                    <Flex align="center" gap={2}>
+                      <Badge tone="caution">⚠</Badge>
+                      <Text size={1} weight="medium">
                         Produkty pominięte - mają już "
                         {customParamName.trim() || selectedExistingParam}" (
                         {transformPreview.skipped.length}):
@@ -1085,7 +1077,7 @@ const handleTransformConfirm = useCallback(async () => {
                     </Flex>
                     <Stack space={1}>
                       {transformPreview.skipped.slice(0, 5).map((p) => (
-                        <Flex key={p._id} align='center' gap={2} padding={1}>
+                        <Flex key={p._id} align="center" gap={2} padding={1}>
                           <Avatar
                             src={p.imageUrl}
                             size={1}
@@ -1107,7 +1099,7 @@ const handleTransformConfirm = useCallback(async () => {
 
                 {/* No eligible products message */}
                 {transformPreview.eligible.length === 0 && (
-                  <Card padding={3} radius={2} tone='caution'>
+                  <Card padding={3} radius={2} tone="caution">
                     <Text size={1}>
                       Wszystkie produkty z "{sourceParam.name}" mają już
                       parametr "
@@ -1121,10 +1113,10 @@ const handleTransformConfirm = useCallback(async () => {
           )}
 
           {/* Actions */}
-          <Flex gap={3} justify='flex-end'>
+          <Flex gap={3} justify="flex-end">
             <Button
-              text='Anuluj'
-              mode='ghost'
+              text="Anuluj"
+              mode="ghost"
               onClick={() => {
                 setTransformModalOpen(false);
                 setSourceParam(null);
@@ -1143,7 +1135,7 @@ const handleTransformConfirm = useCallback(async () => {
                     ? `Przekształć ${selectedProductIds.size} prod.`
                     : 'Przekształć'
               }
-              tone='positive'
+              tone="positive"
               onClick={handleTransformConfirm}
               disabled={
                 !(customParamName.trim() || selectedExistingParam) ||

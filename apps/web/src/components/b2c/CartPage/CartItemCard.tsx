@@ -128,14 +128,11 @@ export default function CartItemCard({
     line.lineType === 'standard' &&
     Boolean(onReconfigure) &&
     hasConfigurationSection;
-  const blockingOverlayContent = getBlockingOverlayContent(
-    blockingIssues,
-    {
-      allowKeepWithoutOptions: shouldShowKeepWithoutOptionsAction,
-      allowReconfigureWithAddedOptions:
-        shouldShowReconfigureWithAddedOptionsAction,
-    },
-  );
+  const blockingOverlayContent = getBlockingOverlayContent(blockingIssues, {
+    allowKeepWithoutOptions: shouldShowKeepWithoutOptionsAction,
+    allowReconfigureWithAddedOptions:
+      shouldShowReconfigureWithAddedOptionsAction,
+  });
   const areLineMutationControlsDisabled =
     isInteractionDisabled || hasBlockingIssue;
 

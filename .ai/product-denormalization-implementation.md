@@ -180,7 +180,7 @@ export async function computeDenormalizedFields(
       value?: string;
       numericValue?: number;
     }>;
-  }
+  },
 ): Promise<DenormalizedProductFields> {
   const now = new Date().toISOString();
 
@@ -195,7 +195,7 @@ export async function computeDenormalizedFields(
   if (document.brand?._ref) {
     const brand = await client.fetch<{ name: string; slug: string } | null>(
       `*[_id == $id][0]{ name, "slug": slug.current }`,
-      { id: document.brand._ref }
+      { id: document.brand._ref },
     );
 
     if (brand) {
@@ -219,7 +219,7 @@ export async function computeDenormalizedFields(
         "slug": slug.current,
         "parentSlug": parentCategory->slug.current
       }`,
-      { ids: categoryRefs }
+      { ids: categoryRefs },
     );
 
     categorySlugs = categories.map((c) => c.slug).filter(Boolean);
@@ -363,7 +363,7 @@ export const PublishWithDenormAction: DocumentActionComponent = (props) => {
       // Step 1: Compute denormalized fields
       const denormalized = await computeDenormalizedFields(
         client,
-        draft as any
+        draft as any,
       );
 
       // Step 2: Patch the draft with denormalized fields
@@ -496,12 +496,12 @@ async function migrateAllProducts() {
           errorCount++;
           return null;
         }
-      })
+      }),
     );
 
     // Apply patches
     const validPatches = patches.filter(
-      (p): p is NonNullable<typeof p> => p !== null
+      (p): p is NonNullable<typeof p> => p !== null,
     );
 
     const transaction = client.transaction();
@@ -604,7 +604,7 @@ async function updateProductsForBrand(brandId: string) {
   // Fetch brand data
   const brand = await client.fetch<{ name: string; slug: string } | null>(
     `*[_id == $id][0]{ name, "slug": slug.current }`,
-    { id: brandId }
+    { id: brandId },
   );
 
   if (!brand) return;
@@ -615,11 +615,11 @@ async function updateProductsForBrand(brandId: string) {
   // Find all products referencing this brand
   const productIds = await client.fetch<string[]>(
     `*[_type == "product" && brand._ref == $brandId]._id`,
-    { brandId }
+    { brandId },
   );
 
   console.log(
-    `[Denorm] Updating ${productIds.length} products for brand ${brand.name}`
+    `[Denorm] Updating ${productIds.length} products for brand ${brand.name}`,
   );
 
   // Update products in batches
@@ -634,7 +634,7 @@ async function updateProductsForBrand(brandId: string) {
           _brandSlug: brandSlug,
           _brandName: brand.name,
           _lastDenormSync: new Date().toISOString(),
-        })
+        }),
       );
     }
 
@@ -652,7 +652,7 @@ async function updateProductsForCategory(categoryId: string) {
       "slug": slug.current,
       "parentSlug": parentCategory->slug.current
     }`,
-    { id: categoryId }
+    { id: categoryId },
   );
 
   if (!category) return;
@@ -668,11 +668,11 @@ async function updateProductsForCategory(categoryId: string) {
       _id,
       categories
     }`,
-    { categoryId }
+    { categoryId },
   );
 
   console.log(
-    `[Denorm] Updating ${products.length} products for category ${category.slug}`
+    `[Denorm] Updating ${products.length} products for category ${category.slug}`,
   );
 
   // For each product, recompute all category slugs
@@ -686,7 +686,7 @@ async function updateProductsForCategory(categoryId: string) {
         "slug": slug.current,
         "parentSlug": parentCategory->slug.current
       }`,
-      { ids: categoryRefs }
+      { ids: categoryRefs },
     );
 
     const categorySlugs = categories.map((c) => c.slug).filter(Boolean);
@@ -778,7 +778,7 @@ const handleSaveProductValue = useCallback(
     productId: string,
     filterName: string,
     value: string | undefined,
-    numericValue: number | undefined
+    numericValue: number | undefined,
   ): Promise<void> => {
     try {
       // ... existing code to build newFilterValues ...
@@ -824,7 +824,7 @@ const handleSaveProductValue = useCallback(
               newFilterValues.length > 0 ? newFilterValues : [],
             _filterKeys: _filterKeys.length > 0 ? _filterKeys : [], // NEW
             _lastDenormSync: new Date().toISOString(), // NEW
-          })
+          }),
         );
 
         await transaction.commit();
@@ -835,7 +835,7 @@ const handleSaveProductValue = useCallback(
       // ... existing error handling ...
     }
   },
-  [client, toast, loadProductStats]
+  [client, toast, loadProductStats],
 );
 ```
 

@@ -9,18 +9,18 @@
  *   bun run scripts/migration/cpo/migrate-cpo-brand-to-brandname.ts --dry-run
  */
 
-import { createClient, type SanityClient } from "@sanity/client";
+import { createClient, type SanityClient } from '@sanity/client';
 
-const PROJECT_ID = process.env.SANITY_PROJECT_ID ?? "fsw3likv";
-const DATASET = process.env.SANITY_DATASET ?? "production";
-const API_VERSION = "2025-02-10";
+const PROJECT_ID = process.env.SANITY_PROJECT_ID ?? 'fsw3likv';
+const DATASET = process.env.SANITY_DATASET ?? 'production';
+const API_VERSION = '2025-02-10';
 
-const DRY_RUN = process.argv.includes("--dry-run");
+const DRY_RUN = process.argv.includes('--dry-run');
 
 type CpoRow = {
   _id: string;
   brandName: string | null;
-  brand: { _ref: string; _type: "reference" } | null;
+  brand: { _ref: string; _type: 'reference' } | null;
   brandDoc: { name: string } | null;
   otherBrandName: string | null;
   brandType: string | null;
@@ -29,35 +29,32 @@ type CpoRow = {
 };
 
 function token(): string {
-  const t =
-    process.env.SANITY_API_TOKEN ||
-    process.env.MIGRATION_TOKEN ||
-    "";
+  const t = process.env.SANITY_API_TOKEN || process.env.MIGRATION_TOKEN || '';
   if (!t) {
     throw new Error(
-      "Set SANITY_API_TOKEN or MIGRATION_TOKEN for write access.",
+      'Set SANITY_API_TOKEN or MIGRATION_TOKEN for write access.',
     );
   }
   return t;
 }
 
 function resolveBrandName(doc: CpoRow): string {
-  if (typeof doc.brandName === "string" && doc.brandName.trim() !== "") {
+  if (typeof doc.brandName === 'string' && doc.brandName.trim() !== '') {
     return doc.brandName.trim();
   }
   if (doc.brandDoc?.name) return String(doc.brandDoc.name).trim();
   if (doc.otherBrandName) return String(doc.otherBrandName).trim();
   if (doc.denormBrandName) return String(doc.denormBrandName).trim();
-  return "";
+  return '';
 }
 
 function legacyUnsetPaths(doc: CpoRow): string[] {
   const paths: string[] = [];
-  if (doc.brand != null) paths.push("brand");
-  if (doc.brandType != null) paths.push("brandType");
-  if (doc.otherBrandName != null) paths.push("otherBrandName");
-  if (doc.denormBrandName != null) paths.push("denormBrandName");
-  if (doc.denormBrandSlug != null) paths.push("denormBrandSlug");
+  if (doc.brand != null) paths.push('brand');
+  if (doc.brandType != null) paths.push('brandType');
+  if (doc.otherBrandName != null) paths.push('otherBrandName');
+  if (doc.denormBrandName != null) paths.push('denormBrandName');
+  if (doc.denormBrandSlug != null) paths.push('denormBrandSlug');
   return paths;
 }
 
@@ -92,8 +89,8 @@ async function main() {
 
     const unset = legacyUnsetPaths(doc);
     const nameMismatch =
-      typeof doc.brandName !== "string" ||
-      doc.brandName.trim() === "" ||
+      typeof doc.brandName !== 'string' ||
+      doc.brandName.trim() === '' ||
       doc.brandName.trim() !== resolved;
 
     if (!nameMismatch && unset.length === 0) {
@@ -103,7 +100,7 @@ async function main() {
 
     if (DRY_RUN) {
       console.log(
-        `[dry-run] ${doc._id} → brandName="${resolved}" unset=[${unset.join(", ")}]`,
+        `[dry-run] ${doc._id} → brandName="${resolved}" unset=[${unset.join(', ')}]`,
       );
       continue;
     }
@@ -112,7 +109,7 @@ async function main() {
     if (unset.length > 0) {
       patch = patch.unset(unset);
     }
-    await patch.commit({ visibility: "sync" });
+    await patch.commit({ visibility: 'sync' });
     console.log(`✓ ${doc._id} → "${resolved}"`);
   }
 }

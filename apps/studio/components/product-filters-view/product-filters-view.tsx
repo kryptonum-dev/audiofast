@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { CheckmarkCircleIcon, CloseCircleIcon, SyncIcon } from "@sanity/icons";
+import { CheckmarkCircleIcon, CloseCircleIcon, SyncIcon } from '@sanity/icons';
 import {
   Badge,
   Box,
@@ -10,16 +10,16 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { Filter, Hash,Sliders } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { SanityDocument } from "sanity";
-import { useClient } from "sanity";
+} from '@sanity/ui';
+import { Filter, Hash, Sliders } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { SanityDocument } from 'sanity';
+import { useClient } from 'sanity';
 
 type FilterDefinition = {
   _key: string;
   name: string;
-  filterType: "dropdown" | "range";
+  filterType: 'dropdown' | 'range';
   unit?: string;
 };
 
@@ -44,16 +44,16 @@ type ProductFiltersViewProps = {
   };
 };
 
-type SaveStatus = "idle" | "saving" | "saved" | "error";
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 export function ProductFiltersView({ document }: ProductFiltersViewProps) {
-  const client = useClient({ apiVersion: "2024-01-01" });
+  const client = useClient({ apiVersion: '2024-01-01' });
   const product = document?.displayed;
 
   const [categories, setCategories] = useState<CategoryWithFilters[]>([]);
   const [filterValues, setFilterValues] = useState<FilterValue[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
 
   // Refs for debounced saving
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -72,8 +72,8 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
 
     setIsLoading(true);
     try {
-      const productId = (product._id as string).startsWith("drafts.")
-        ? (product._id as string).replace("drafts.", "")
+      const productId = (product._id as string).startsWith('drafts.')
+        ? (product._id as string).replace('drafts.', '')
         : product._id;
 
       // Fetch the product's categories with their custom filters
@@ -129,7 +129,7 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
         }
       }
     } catch (error) {
-      console.error("Error loading categories:", error);
+      console.error('Error loading categories:', error);
     } finally {
       setIsLoading(false);
     }
@@ -149,11 +149,11 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
     }
 
     isSavingRef.current = true;
-    setSaveStatus("saving");
+    setSaveStatus('saving');
 
     try {
-      const productId = (product._id as string).startsWith("drafts.")
-        ? (product._id as string).replace("drafts.", "")
+      const productId = (product._id as string).startsWith('drafts.')
+        ? (product._id as string).replace('drafts.', '')
         : product._id;
 
       const draftProductId = `drafts.${productId}`;
@@ -169,20 +169,24 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
       );
 
       if (!currentProduct) {
-        throw new Error("Product not found");
+        throw new Error('Product not found');
       }
 
-      const isDraft = currentProduct._id.startsWith("drafts.");
+      const isDraft = currentProduct._id.startsWith('drafts.');
 
       // Prepare the filter values with _key
       const filterValuesWithKeys = valuesToSave
-        .filter((fv) => fv.filterName && (fv.value || fv.numericValue !== undefined))
+        .filter(
+          (fv) => fv.filterName && (fv.value || fv.numericValue !== undefined),
+        )
         .map((fv, index) => ({
           _key: `filter-${index}`,
-          _type: "filterValue",
+          _type: 'filterValue',
           filterName: fv.filterName,
           ...(fv.value !== undefined && { value: fv.value }),
-          ...(fv.numericValue !== undefined && { numericValue: fv.numericValue }),
+          ...(fv.numericValue !== undefined && {
+            numericValue: fv.numericValue,
+          }),
         }));
 
       if (isDraft) {
@@ -204,11 +208,11 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
           .commit();
       }
 
-      setSaveStatus("saved");
-      setTimeout(() => setSaveStatus("idle"), 2000);
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (error) {
-      console.error("Error saving filter values:", error);
-      setSaveStatus("error");
+      console.error('Error saving filter values:', error);
+      setSaveStatus('error');
     } finally {
       isSavingRef.current = false;
 
@@ -231,14 +235,16 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
 
   // Handle value change for a filter
   const handleValueChange = useCallback(
-    (filterName: string, value: string | undefined, numericValue: number | undefined) => {
+    (
+      filterName: string,
+      value: string | undefined,
+      numericValue: number | undefined,
+    ) => {
       setFilterValues((prev) => {
         const existing = prev.find((fv) => fv.filterName === filterName);
         if (existing) {
           return prev.map((fv) =>
-            fv.filterName === filterName
-              ? { ...fv, value, numericValue }
-              : fv,
+            fv.filterName === filterName ? { ...fv, value, numericValue } : fv,
           );
         }
         return [...prev, { filterName, value, numericValue }];
@@ -250,7 +256,10 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
 
   // Get all unique filters across all categories
   const allFilters = useMemo(() => {
-    const filterMap = new Map<string, { filter: FilterDefinition; categoryName: string }>();
+    const filterMap = new Map<
+      string,
+      { filter: FilterDefinition; categoryName: string }
+    >();
 
     categories.forEach((cat) => {
       cat.filters.forEach((filter) => {
@@ -275,10 +284,10 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
   const filledCount = useMemo(() => {
     return allFilters.filter((f) => {
       const value = getFilterValue(f.filter.name);
-      if (f.filter.filterType === "range") {
+      if (f.filter.filterType === 'range') {
         return value?.numericValue !== undefined;
       }
-      return value?.value && value.value.trim() !== "";
+      return value?.value && value.value.trim() !== '';
     }).length;
   }, [allFilters, getFilterValue]);
 
@@ -309,11 +318,11 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
             style={{
               width: 64,
               height: 64,
-              borderRadius: "50%",
-              backgroundColor: "var(--card-bg2-color)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              borderRadius: '50%',
+              backgroundColor: 'var(--card-bg2-color)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Filter size={28} style={{ opacity: 0.4 }} />
@@ -343,11 +352,11 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
               style={{
                 width: 40,
                 height: 40,
-                borderRadius: "50%",
-                backgroundColor: "var(--card-badge-default-bg-color)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                borderRadius: '50%',
+                backgroundColor: 'var(--card-badge-default-bg-color)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               <Filter size={20} />
@@ -364,29 +373,41 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
 
           {/* Save status & progress */}
           <Flex align="center" gap={3}>
-            <Badge tone={filledCount === allFilters.length ? "positive" : "default"}>
+            <Badge
+              tone={filledCount === allFilters.length ? 'positive' : 'default'}
+            >
               {filledCount}/{allFilters.length} uzupełnionych
             </Badge>
-            {saveStatus === "saving" && (
+            {saveStatus === 'saving' && (
               <Flex align="center" gap={2}>
-                <SyncIcon style={{ animation: "spin 1s linear infinite" }} />
+                <SyncIcon style={{ animation: 'spin 1s linear infinite' }} />
                 <Text size={1} muted>
                   Zapisuję...
                 </Text>
               </Flex>
             )}
-            {saveStatus === "saved" && (
+            {saveStatus === 'saved' && (
               <Flex align="center" gap={2}>
-                <CheckmarkCircleIcon style={{ color: "var(--card-positive-fg-color)" }} />
-                <Text size={1} style={{ color: "var(--card-positive-fg-color)" }}>
+                <CheckmarkCircleIcon
+                  style={{ color: 'var(--card-positive-fg-color)' }}
+                />
+                <Text
+                  size={1}
+                  style={{ color: 'var(--card-positive-fg-color)' }}
+                >
                   Zapisano
                 </Text>
               </Flex>
             )}
-            {saveStatus === "error" && (
+            {saveStatus === 'error' && (
               <Flex align="center" gap={2}>
-                <CloseCircleIcon style={{ color: "var(--card-critical-fg-color)" }} />
-                <Text size={1} style={{ color: "var(--card-critical-fg-color)" }}>
+                <CloseCircleIcon
+                  style={{ color: 'var(--card-critical-fg-color)' }}
+                />
+                <Text
+                  size={1}
+                  style={{ color: 'var(--card-critical-fg-color)' }}
+                >
                   Błąd zapisu
                 </Text>
               </Flex>
@@ -412,8 +433,8 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
           <Flex align="center" gap={2}>
             <Text size={1}>ℹ️</Text>
             <Text size={1} muted>
-              Filtry pochodzą z kategorii:{" "}
-              <strong>{categories.map((c) => c.name).join(", ")}</strong>
+              Filtry pochodzą z kategorii:{' '}
+              <strong>{categories.map((c) => c.name).join(', ')}</strong>
             </Text>
           </Flex>
         </Card>
@@ -446,12 +467,12 @@ function FilterInputRow({
     numericValue: number | undefined,
   ) => void;
 }) {
-  const isRangeFilter = filter.filterType === "range";
+  const isRangeFilter = filter.filterType === 'range';
 
   const [localValue, setLocalValue] = useState(
     isRangeFilter
-      ? currentValue?.numericValue?.toString() || ""
-      : currentValue?.value || "",
+      ? currentValue?.numericValue?.toString() || ''
+      : currentValue?.value || '',
   );
   const [isDirty, setIsDirty] = useState(false);
 
@@ -460,8 +481,8 @@ function FilterInputRow({
     if (!isDirty) {
       setLocalValue(
         isRangeFilter
-          ? currentValue?.numericValue?.toString() || ""
-          : currentValue?.value || "",
+          ? currentValue?.numericValue?.toString() || ''
+          : currentValue?.value || '',
       );
     }
   }, [currentValue, isRangeFilter, isDirty]);
@@ -484,22 +505,21 @@ function FilterInputRow({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       (e.target as HTMLInputElement).blur();
     }
   };
 
   const hasValue = isRangeFilter
     ? currentValue?.numericValue !== undefined
-    : currentValue?.value && currentValue.value.trim() !== "";
+    : currentValue?.value && currentValue.value.trim() !== '';
 
   return (
     <Card
       padding={3}
       border
       radius={2}
-      tone={hasValue ? "positive" : "default"}
-
+      tone={hasValue ? 'positive' : 'default'}
     >
       <Flex align="center" gap={4}>
         {/* Icon */}
@@ -507,13 +527,13 @@ function FilterInputRow({
           style={{
             width: 36,
             height: 36,
-            borderRadius: "8px",
+            borderRadius: '8px',
             backgroundColor: hasValue
-              ? "var(--card-positive-bg-color)"
-              : "var(--card-bg2-color)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+              ? 'var(--card-positive-bg-color)'
+              : 'var(--card-bg2-color)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             flexShrink: 0,
           }}
         >
@@ -529,9 +549,9 @@ function FilterInputRow({
           <Text size={2} weight="medium">
             {filter.name}
           </Text>
-          <Flex align="center" gap={2} style={{ marginTop: "8px" }}>
+          <Flex align="center" gap={2} style={{ marginTop: '8px' }}>
             <Badge mode="outline" fontSize={0}>
-              {isRangeFilter ? "Zakres" : "Lista"}
+              {isRangeFilter ? 'Zakres' : 'Lista'}
             </Badge>
             <Text size={0} muted>
               z kategorii: {categoryName}
@@ -547,8 +567,8 @@ function FilterInputRow({
               onChange={handleChange}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              placeholder={isRangeFilter ? "Wartość" : "Wpisz wartość..."}
-              type={isRangeFilter ? "number" : "text"}
+              placeholder={isRangeFilter ? 'Wartość' : 'Wpisz wartość...'}
+              type={isRangeFilter ? 'number' : 'text'}
               fontSize={1}
             />
             {isRangeFilter && filter.unit && (
@@ -563,15 +583,15 @@ function FilterInputRow({
         <Box style={{ width: 24, flexShrink: 0 }}>
           {hasValue ? (
             <CheckmarkCircleIcon
-              style={{ color: "var(--card-positive-fg-color)", fontSize: 20 }}
+              style={{ color: 'var(--card-positive-fg-color)', fontSize: 20 }}
             />
           ) : (
             <Box
               style={{
                 width: 12,
                 height: 12,
-                borderRadius: "50%",
-                border: "2px solid var(--card-muted-fg-color)",
+                borderRadius: '50%',
+                border: '2px solid var(--card-muted-fg-color)',
                 opacity: 0.3,
               }}
             />

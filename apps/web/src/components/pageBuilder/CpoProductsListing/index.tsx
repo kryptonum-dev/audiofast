@@ -3,7 +3,10 @@ import { Suspense } from 'react';
 
 import type { PageBuilderBlock } from '@/src/components/shared/PageBuilder';
 import { PRODUCT_SORT_OPTIONS } from '@/src/global/constants';
-import type { BrandMetadata, ProductFilterMetadata } from '@/src/global/filters';
+import type {
+  BrandMetadata,
+  ProductFilterMetadata,
+} from '@/src/global/filters';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import { queryCpoProductsFilterMetadata } from '@/src/global/sanity/query';
 import type { QueryCpoProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
@@ -66,7 +69,7 @@ export default async function CpoProductsListing(
   const maxPrice =
     prices.length > 0
       ? Math.max(...prices)
-      : (filterMetadata.globalMaxPrice || 100000);
+      : filterMetadata.globalMaxPrice || 100000;
 
   const normalizedParams = {
     ...searchParams,
@@ -87,9 +90,7 @@ export default async function CpoProductsListing(
             filterMetadata.products as unknown as ProductFilterMetadata[]
           }
           allCategories={[]}
-          allBrands={
-            filterMetadata.brands as unknown as BrandMetadata[]
-          }
+          allBrands={filterMetadata.brands as unknown as BrandMetadata[]}
           globalMaxPrice={maxPrice}
           basePath={basePath}
           heading={heading}

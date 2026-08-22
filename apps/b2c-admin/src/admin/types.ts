@@ -1,22 +1,15 @@
-export type AdminArea = "orders" | "coupons" | "analytics";
+export type AdminArea = 'orders' | 'coupons' | 'analytics';
 
 export type AdminCouponDerivedStatus =
-  | "active"
-  | "expired"
-  | "inactive"
-  | "scheduled"
-  | "usage_limit_reached";
+  'active' | 'expired' | 'inactive' | 'scheduled' | 'usage_limit_reached';
 
 export type AdminCouponDiscountType =
-  | "fixed_order"
-  | "fixed_product"
-  | "percent_order"
-  | "percent_product";
+  'fixed_order' | 'fixed_product' | 'percent_order' | 'percent_product';
 
 export type CouponsFilters = {
   search: string;
-  status: AdminCouponDerivedStatus | "all";
-  discountType: AdminCouponDiscountType | "all";
+  status: AdminCouponDerivedStatus | 'all';
+  discountType: AdminCouponDiscountType | 'all';
 };
 
 export type AdminCoupon = {
@@ -51,7 +44,7 @@ export type AdminCouponMutationInput = {
 
 export type AdminCouponProductOption = {
   id: string;
-  lineType: "standard" | "cpo";
+  lineType: 'standard' | 'cpo';
   productName: string;
   brandName: string | null;
   productKey: string;
@@ -87,25 +80,25 @@ export type AdminCouponsResult = {
 };
 
 export type AdminOrderStatus =
-  | "awaiting_payment"
-  | "awaiting_confirmation"
-  | "paid"
-  | "processing"
-  | "shipped"
-  | "completed"
-  | "cancelled"
-  | "returned";
+  | 'awaiting_payment'
+  | 'awaiting_confirmation'
+  | 'paid'
+  | 'processing'
+  | 'shipped'
+  | 'completed'
+  | 'cancelled'
+  | 'returned';
 
-export type AdminOrderLineType = "standard" | "cpo" | "mixed";
+export type AdminOrderLineType = 'standard' | 'cpo' | 'mixed';
 
-export type AdminOperationsFilter = "all" | "return" | "cancellation";
+export type AdminOperationsFilter = 'all' | 'return' | 'cancellation';
 
 export type AdminDateRangeFilter = {
   from: string;
   to: string;
 };
 
-export type AdminAnalyticsGroupBy = "day" | "month" | "week";
+export type AdminAnalyticsGroupBy = 'day' | 'month' | 'week';
 
 export type AnalyticsFilters = {
   dateRange: AdminDateRangeFilter;
@@ -125,10 +118,10 @@ export type AdminAnalyticsResult = {
   period: {
     from: string;
     to: string;
-    groupBy: AdminAnalyticsGroupBy | "none";
+    groupBy: AdminAnalyticsGroupBy | 'none';
   };
   revenue: {
-    countingMode: "paid_orders_excluding_cancelled_and_returned" | string;
+    countingMode: 'paid_orders_excluding_cancelled_and_returned' | string;
     paidOrderCount: number;
     revenueOrderCount: number;
     grossPaidRevenueCents: number;
@@ -145,8 +138,8 @@ export type AdminAnalyticsResult = {
 
 export type OrdersFilters = {
   search: string;
-  status: AdminOrderStatus | "all";
-  lineType: AdminOrderLineType | "all";
+  status: AdminOrderStatus | 'all';
+  lineType: AdminOrderLineType | 'all';
   dateRange: AdminDateRangeFilter;
   operations: AdminOperationsFilter;
 };
@@ -185,7 +178,7 @@ export type AdminOrderListItem = {
     hasInvoice: boolean;
     filename: string | null;
     attachedAt: string | null;
-    recipientType: "private" | "company" | "unknown";
+    recipientType: 'private' | 'company' | 'unknown';
   };
   shipment: {
     hasShipment: boolean;
@@ -292,14 +285,14 @@ export type AdminOrderDeliveryEstimate = {
 
 export type AdminInvoiceEmailStatus = {
   attempted: boolean;
-  status: "sent" | "failed" | "not_required";
+  status: 'sent' | 'failed' | 'not_required';
   withdrawalFormAttached: boolean;
 };
 
 export type AdminInvoiceUploadResult = {
   orderId: string;
   orderNumber: string;
-  invoice: AdminOrderListItem["invoice"];
+  invoice: AdminOrderListItem['invoice'];
   updatedAt: string;
   customerEmail: AdminInvoiceEmailStatus;
 };
@@ -311,7 +304,7 @@ export type AdminReturnCaseMutationResult = {
   orderStatus: unknown | null;
   customerEmail?: {
     attempted: boolean;
-    status: "sent" | "failed" | "not_required";
+    status: 'sent' | 'failed' | 'not_required';
   };
 };
 
@@ -332,7 +325,7 @@ export type AdminOrderDetail = {
     reference: string | null;
     verifiedAt: string | null;
   };
-  customer: AdminOrderListItem["customer"];
+  customer: AdminOrderListItem['customer'];
   shippingAddress: AdminOrderAddressBlock;
   subtotalCents: number;
   discountTotalCents: number;
@@ -345,12 +338,12 @@ export type AdminOrderDetail = {
     totalDiscountCents: number;
   } | null;
   deliveryEstimate: AdminOrderDeliveryEstimate | null;
-  invoice: AdminOrderListItem["invoice"] & {
+  invoice: AdminOrderListItem['invoice'] & {
     companyName: string | null;
     taxId: string | null;
     address: AdminOrderAddressBlock | null;
   };
-  shipment: AdminOrderListItem["shipment"] | null;
+  shipment: AdminOrderListItem['shipment'] | null;
   items: AdminOrderItem[];
   returnCases: AdminOrderReturnCase[];
   cancellationRequests: AdminOrderCancellationRequest[];

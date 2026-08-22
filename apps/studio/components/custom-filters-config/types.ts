@@ -4,7 +4,7 @@
 export type FilterConfigItem = {
   _key: string;
   name: string;
-  filterType: "dropdown" | "range";
+  filterType: 'dropdown' | 'range';
   unit?: string;
 };
 

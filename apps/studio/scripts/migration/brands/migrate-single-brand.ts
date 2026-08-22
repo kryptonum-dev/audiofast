@@ -9,13 +9,13 @@
  *   bun run migrate-single-brand.ts --name="Bricasti" --dry-run
  */
 
-import * as https from "node:https";
-import { Readable } from "node:stream";
+import * as https from 'node:https';
+import { Readable } from 'node:stream';
 
-import { createClient, type SanityClient } from "@sanity/client";
-import * as fs from "fs";
-import * as path from "path";
-import { v4 as uuidv4 } from "uuid";
+import { createClient, type SanityClient } from '@sanity/client';
+import * as fs from 'fs';
+import * as path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 // ============================================================================
 // CONFIGURATION
@@ -23,13 +23,13 @@ import { v4 as uuidv4 } from "uuid";
 
 const SQL_FILE_PATH = path.resolve(
   __dirname,
-  "../../../../../20250528_audiofast.sql",
+  '../../../../../20250528_audiofast.sql',
 );
 
 const PRIMALUNA_HERO_IMAGE_REF =
-  "image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp";
+  'image-c19f5cd6588ad862e6597c9843b6d5f44b8cfe96-3494x1538-webp';
 
-const LEGACY_ASSETS_BASE_URL = "https://audiofast.pl/assets/";
+const LEGACY_ASSETS_BASE_URL = 'https://audiofast.pl/assets/';
 
 // Custom HTTPS agent that bypasses SSL verification for legacy assets
 const insecureAgent = new https.Agent({
@@ -73,10 +73,10 @@ interface BoxRecord {
 
 interface PortableTextBlock {
   _key: string;
-  _type: "block";
+  _type: 'block';
   children: Array<{
     _key: string;
-    _type: "span";
+    _type: 'span';
     marks: string[];
     text: string;
   }>;
@@ -86,7 +86,7 @@ interface PortableTextBlock {
 
 interface PortableTextYouTubeBlock {
   _key: string;
-  _type: "ptYoutubeVideo";
+  _type: 'ptYoutubeVideo';
   youtubeId: string;
 }
 
@@ -95,19 +95,19 @@ interface PortableTextYouTubeBlock {
 // ============================================================================
 
 function generateKey(): string {
-  return uuidv4().replace(/-/g, "").substring(0, 12);
+  return uuidv4().replace(/-/g, '').substring(0, 12);
 }
 
 function stripHtml(html: string): string {
   return html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -116,17 +116,17 @@ function textToPortableText(text: string): PortableTextBlock[] {
   return [
     {
       _key: generateKey(),
-      _type: "block",
+      _type: 'block',
       children: [
         {
           _key: generateKey(),
-          _type: "span",
+          _type: 'span',
           marks: [],
           text: text.trim(),
         },
       ],
       markDefs: [],
-      style: "normal",
+      style: 'normal',
     },
   ];
 }
@@ -135,19 +135,19 @@ function htmlToPortableText(html: string | null): PortableTextBlock[] {
   if (!html) return [];
 
   const paragraphs: string[] = [];
-  const normalizedHtml = html.replace(/\n/g, "___NEWLINE___");
+  const normalizedHtml = html.replace(/\n/g, '___NEWLINE___');
   const pRegex = /<p[^>]*>(.*?)<\/p>/g;
   let match;
 
   while ((match = pRegex.exec(normalizedHtml)) !== null) {
-    const content = stripHtml(match[1].replace(/___NEWLINE___/g, "\n"));
+    const content = stripHtml(match[1].replace(/___NEWLINE___/g, '\n'));
     if (content) {
       paragraphs.push(content);
     }
   }
 
   if (paragraphs.length === 0) {
-    const content = stripHtml(normalizedHtml.replace(/___NEWLINE___/g, "\n"));
+    const content = stripHtml(normalizedHtml.replace(/___NEWLINE___/g, '\n'));
     if (content) {
       paragraphs.push(content);
     }
@@ -155,17 +155,17 @@ function htmlToPortableText(html: string | null): PortableTextBlock[] {
 
   return paragraphs.map((text) => ({
     _key: generateKey(),
-    _type: "block" as const,
+    _type: 'block' as const,
     children: [
       {
         _key: generateKey(),
-        _type: "span" as const,
+        _type: 'span' as const,
         marks: [],
         text,
       },
     ],
     markDefs: [],
-    style: "normal",
+    style: 'normal',
   }));
 }
 
@@ -182,7 +182,7 @@ function generateSeoDescription(
   motto: string | null,
   description: string | null,
 ): string {
-  const sourceText = motto || (description ? stripHtml(description) : "");
+  const sourceText = motto || (description ? stripHtml(description) : '');
 
   if (sourceText) {
     if (sourceText.length <= 140 && sourceText.length >= 110) {
@@ -195,11 +195,11 @@ function generateSeoDescription(
       );
     }
     let truncated = sourceText.substring(0, 137);
-    const lastSpace = truncated.lastIndexOf(" ");
+    const lastSpace = truncated.lastIndexOf(' ');
     if (lastSpace > 100) {
       truncated = truncated.substring(0, lastSpace);
     }
-    return truncated + "...";
+    return truncated + '...';
   }
 
   return `Odkryj produkty marki ${brandName} w ofercie Audiofast. Sprzęt audio klasy high-end dla wymagających.`;
@@ -213,7 +213,7 @@ function generateSeoDescription(
  * Parse a CSV-style value, handling quoted strings
  */
 function parseCSVValue(value: string): string | null {
-  if (!value || value === "NULL") return null;
+  if (!value || value === 'NULL') return null;
   // Remove surrounding quotes and unescape
   if (value.startsWith("'") && value.endsWith("'")) {
     return value.slice(1, -1).replace(/''/g, "'");
@@ -228,7 +228,7 @@ function parseSiteTreeBrand(
   // Use grep-style matching on the raw SQL
   const regex = new RegExp(
     `\\(${brandId},'ProducerPage','[^']*','[^']*','([^']+)','([^']+)'`,
-    "g",
+    'g',
   );
   const match = regex.exec(sqlContent);
 
@@ -279,17 +279,17 @@ function parseProducerPage(
   const match = sqlContent.match(searchRegex);
   if (match) {
     return {
-      logoFileId: match[1] !== "0" ? match[1] : null,
+      logoFileId: match[1] !== '0' ? match[1] : null,
       motto: match[4] || null,
       heroDescription: match[7] || null,
     };
   }
 
   // Alternative: Search line by line in ProducerPage INSERT
-  const lines = sqlContent.split("\n");
+  const lines = sqlContent.split('\n');
   for (const line of lines) {
     if (
-      line.includes("INSERT INTO `ProducerPage`") ||
+      line.includes('INSERT INTO `ProducerPage`') ||
       line.includes(`(${brandId},'a:`)
     ) {
       // Try to find our brand in this line
@@ -305,7 +305,7 @@ function parseProducerPage(
           const descMatch = line.match(/,\d+,'(<p>[^']*<\/p>)'\)/);
 
           return {
-            logoFileId: brandMatch[1] !== "0" ? brandMatch[1] : null,
+            logoFileId: brandMatch[1] !== '0' ? brandMatch[1] : null,
             motto: mottoMatch ? mottoMatch[1] || mottoMatch[2] : null,
             heroDescription: descMatch ? descMatch[1] : null,
           };
@@ -318,7 +318,7 @@ function parseProducerPage(
 }
 
 function parseFileRecord(sqlContent: string, fileId: string): string | null {
-  if (!fileId || fileId === "NULL" || fileId === "0") return null;
+  if (!fileId || fileId === 'NULL' || fileId === '0') return null;
 
   // Direct search for file record
   // Format: (ID,'ClassName','LastEdited','Created','Name','Title',...,'FileHash','FileFilename',...)
@@ -356,8 +356,8 @@ function parseBoxRecords(sqlContent: string, brandId: string): BoxRecord[] {
 
       // Parse title (could be NULL or 'string')
       let title: string | null = null;
-      if (titleRaw && titleRaw !== "NULL") {
-        title = titleRaw.replace(/^'|'$/g, "");
+      if (titleRaw && titleRaw !== 'NULL') {
+        title = titleRaw.replace(/^'|'$/g, '');
       }
 
       boxes.push({
@@ -375,12 +375,12 @@ function parseBoxRecords(sqlContent: string, brandId: string): BoxRecord[] {
     // Search for Box records containing our brandId in the BoxedPageID position
     const altRegex = new RegExp(
       `\\((\\d+),'Box',[^)]*,${brandId},\\d+,(\\d+|NULL)`,
-      "g",
+      'g',
     );
 
     while ((match = altRegex.exec(sqlContent)) !== null) {
       const boxId = match[1];
-      const bigPictureId = match[2] !== "NULL" ? match[2] : null;
+      const bigPictureId = match[2] !== 'NULL' ? match[2] : null;
 
       // Get more details about this box
       const detailRegex = new RegExp(
@@ -390,8 +390,8 @@ function parseBoxRecords(sqlContent: string, brandId: string): BoxRecord[] {
 
       if (detailMatch) {
         let title: string | null = null;
-        if (detailMatch[1] && detailMatch[1] !== "NULL") {
-          title = detailMatch[1].replace(/^'|'$/g, "");
+        if (detailMatch[1] && detailMatch[1] !== 'NULL') {
+          title = detailMatch[1].replace(/^'|'$/g, '');
         }
 
         boxes.push({
@@ -426,14 +426,14 @@ function parseProducerPageAlt(
   if (startIdx === -1) return null;
 
   // Find the end of this record (next record starts with ),()
-  let endIdx = sqlContent.indexOf("),(", startIdx);
-  if (endIdx === -1) endIdx = sqlContent.indexOf(");", startIdx);
+  let endIdx = sqlContent.indexOf('),(', startIdx);
+  if (endIdx === -1) endIdx = sqlContent.indexOf(');', startIdx);
 
   const record = sqlContent.substring(startIdx, endIdx + 1);
 
   // Extract LogoID (third field after ID and productLinks)
   const logoMatch = record.match(/^[^,]*,'[^']*',(\d+),/);
-  const logoFileId = logoMatch && logoMatch[1] !== "0" ? logoMatch[1] : null;
+  const logoFileId = logoMatch && logoMatch[1] !== '0' ? logoMatch[1] : null;
 
   // Extract motto (look for the motto pattern)
   const mottoMatch = record.match(/'([^']{1,200})','[^']*',NULL,\d+,'/);
@@ -462,11 +462,11 @@ function extractProducerPageDirect(
   heroDescription: string | null;
 } {
   // Find the ProducerPage record line
-  const lines = sqlContent.split("\n");
-  let producerPageLine = "";
+  const lines = sqlContent.split('\n');
+  let producerPageLine = '';
 
   for (const line of lines) {
-    if (line.includes("INSERT INTO `ProducerPage`")) {
+    if (line.includes('INSERT INTO `ProducerPage`')) {
       producerPageLine = line;
       break;
     }
@@ -477,7 +477,7 @@ function extractProducerPageDirect(
   }
 
   // Split by ),( to find our brand's record
-  const records = producerPageLine.split("),(");
+  const records = producerPageLine.split('),(');
 
   for (const record of records) {
     // Check if this record starts with our brand ID
@@ -486,13 +486,13 @@ function extractProducerPageDirect(
       record.match(new RegExp(`^${brandId},'`))
     ) {
       // Extract LogoID (third comma-separated value after ID and productLinks)
-      const parts = record.split(",");
+      const parts = record.split(',');
 
       // Find LogoID (should be after ID and 'a:...' productLinks string)
       let logoFileId: string | null = null;
       for (let i = 0; i < parts.length; i++) {
         if (parts[i].match(/^\d+$/) && i > 1) {
-          logoFileId = parts[i] !== "0" ? parts[i] : null;
+          logoFileId = parts[i] !== '0' ? parts[i] : null;
           break;
         }
       }
@@ -520,14 +520,14 @@ function extractFilenameDirect(
   sqlContent: string,
   fileId: string,
 ): string | null {
-  if (!fileId || fileId === "0") return null;
+  if (!fileId || fileId === '0') return null;
 
   // Find the File INSERT statement and search for our file ID
-  const lines = sqlContent.split("\n");
-  let fileLine = "";
+  const lines = sqlContent.split('\n');
+  let fileLine = '';
 
   for (const line of lines) {
-    if (line.includes("INSERT INTO `File`")) {
+    if (line.includes('INSERT INTO `File`')) {
       fileLine = line;
       break;
     }
@@ -536,7 +536,7 @@ function extractFilenameDirect(
   if (!fileLine) return null;
 
   // Split by ),( to find our record
-  const records = fileLine.split("),(");
+  const records = fileLine.split('),(');
 
   for (const record of records) {
     // Check if this record starts with our file ID
@@ -573,18 +573,18 @@ function extractBoxesDirect(sqlContent: string, brandId: string): BoxRecord[] {
   const boxes: BoxRecord[] = [];
 
   // Find the Box INSERT statement
-  const lines = sqlContent.split("\n");
-  let boxLine = "";
+  const lines = sqlContent.split('\n');
+  let boxLine = '';
 
   for (const line of lines) {
-    if (line.includes("INSERT INTO `Box`")) {
+    if (line.includes('INSERT INTO `Box`')) {
       boxLine = line;
       break;
     }
   }
 
   if (!boxLine) {
-    console.log("  [DEBUG] Box INSERT statement not found");
+    console.log('  [DEBUG] Box INSERT statement not found');
     return boxes;
   }
 
@@ -595,17 +595,17 @@ function extractBoxesDirect(sqlContent: string, brandId: string): BoxRecord[] {
   const bigimgPattern = `(\\d+),'Box','[^']+','[^']+',NULL,'bigimg',NULL,(\\d+),(\\d+),${brandId},(\\d+),(\\d+)`;
   console.log(`  [DEBUG] bigimg pattern: ${bigimgPattern}`);
 
-  const bigimgRegex = new RegExp(bigimgPattern, "g");
+  const bigimgRegex = new RegExp(bigimgPattern, 'g');
 
   let match;
   while ((match = bigimgRegex.exec(boxLine)) !== null) {
     console.log(
       `  [DEBUG] Found bigimg box: ${match[1]}, BigPicID: ${match[5]}`,
     );
-    const bigPictureId = match[5] !== "0" ? match[5] : null;
+    const bigPictureId = match[5] !== '0' ? match[5] : null;
     boxes.push({
       id: match[1],
-      boxType: "bigimg",
+      boxType: 'bigimg',
       title: null,
       content: null,
       bigPictureId,
@@ -619,7 +619,7 @@ function extractBoxesDirect(sqlContent: string, brandId: string): BoxRecord[] {
   // Find all text boxes first, then filter by brandId
   // Pattern: boxId,'Box','ts','ts',Title,'text','content...',isPublished,Sort,brandId,
   const textSimplePattern = `(\\d+),'Box','[^']+','[^']+',(NULL|'[^']*'),'text','`;
-  const textStartRegex = new RegExp(textSimplePattern, "g");
+  const textStartRegex = new RegExp(textSimplePattern, 'g');
 
   while ((match = textStartRegex.exec(boxLine)) !== null) {
     const boxId = match[1];
@@ -641,7 +641,7 @@ function extractBoxesDirect(sqlContent: string, brandId: string): BoxRecord[] {
       );
       boxes.push({
         id: boxId,
-        boxType: "text",
+        boxType: 'text',
         title: null,
         content: content,
         bigPictureId: null,
@@ -669,14 +669,14 @@ function extractBrandData(
   // 2. Get ProducerPage data - use direct extraction
   const producerPage = extractProducerPageDirect(sqlContent, brandId);
   console.log(
-    `✓ ProducerPage: Logo=${producerPage.logoFileId}, Motto=${producerPage.motto ? "Yes" : "No"}, Desc=${producerPage.heroDescription ? "Yes" : "No"}`,
+    `✓ ProducerPage: Logo=${producerPage.logoFileId}, Motto=${producerPage.motto ? 'Yes' : 'No'}, Desc=${producerPage.heroDescription ? 'Yes' : 'No'}`,
   );
 
   // 3. Get logo filename
   let logoFilename: string | null = null;
   if (producerPage.logoFileId) {
     logoFilename = extractFilenameDirect(sqlContent, producerPage.logoFileId);
-    console.log(`✓ Logo file: ${logoFilename || "Not found"}`);
+    console.log(`✓ Logo file: ${logoFilename || 'Not found'}`);
   }
 
   // 4. Get Box records - use direct extraction
@@ -693,21 +693,21 @@ function extractBrandData(
   for (const box of boxes) {
     console.log(`  - Box ${box.id}: type=${box.boxType}`);
 
-    if (box.boxType === "bigimg" && box.bigPictureId) {
+    if (box.boxType === 'bigimg' && box.bigPictureId) {
       bannerImageId = box.bigPictureId;
       bannerImageFilename = extractFilenameDirect(sqlContent, box.bigPictureId);
-      console.log(`    → Banner image: ${bannerImageFilename || "Not found"}`);
+      console.log(`    → Banner image: ${bannerImageFilename || 'Not found'}`);
     }
 
-    if (box.boxType === "text" && box.content) {
+    if (box.boxType === 'text' && box.content) {
       // Check for YouTube embeds (skip Vimeo for now)
       const youtubeId = extractYouTubeId(box.content);
       if (youtubeId) {
         youtubeVideoIds.push(youtubeId);
         console.log(`    → YouTube video: ${youtubeId}`);
       } else if (
-        !box.content.includes("vimeo.com") &&
-        !box.content.includes("player.vimeo")
+        !box.content.includes('vimeo.com') &&
+        !box.content.includes('player.vimeo')
       ) {
         // This is a text description block (not video)
         if (!detailedDescriptionContent) {
@@ -758,10 +758,10 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
       hostname: url.hostname,
       port: 443,
       path: url.pathname + url.search,
-      method: "GET",
+      method: 'GET',
       agent: insecureAgent,
       headers: {
-        "User-Agent": "Sanity-Migration-Script/1.0",
+        'User-Agent': 'Sanity-Migration-Script/1.0',
       },
     };
 
@@ -773,12 +773,12 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
       }
 
       const chunks: Buffer[] = [];
-      res.on("data", (chunk: Buffer) => chunks.push(chunk));
-      res.on("end", () => resolve(Buffer.concat(chunks)));
-      res.on("error", () => resolve(null));
+      res.on('data', (chunk: Buffer) => chunks.push(chunk));
+      res.on('end', () => resolve(Buffer.concat(chunks)));
+      res.on('error', () => resolve(null));
     });
 
-    req.on("error", () => resolve(null));
+    req.on('error', () => resolve(null));
     req.end();
   });
 }
@@ -801,11 +801,11 @@ async function uploadImage(
     readable.push(imageBuffer);
     readable.push(null);
 
-    const asset = await client.assets.upload("image", readable, {
+    const asset = await client.assets.upload('image', readable, {
       filename,
       source: {
         id: imageUrl,
-        name: "SilverStripe",
+        name: 'SilverStripe',
         url: imageUrl,
       },
     });
@@ -864,8 +864,7 @@ async function createBrandDocument(
 
   // 3. Brand description content
   let brandDescriptionContent: (
-    | PortableTextBlock
-    | PortableTextYouTubeBlock
+    PortableTextBlock | PortableTextYouTubeBlock
   )[] = [];
 
   if (brandData.detailedDescriptionContent) {
@@ -888,7 +887,7 @@ async function createBrandDocument(
   for (const videoId of brandData.youtubeVideoIds) {
     brandDescriptionContent.push({
       _key: generateKey(),
-      _type: "ptYoutubeVideo",
+      _type: 'ptYoutubeVideo',
       youtubeId: videoId,
     });
     console.log(`✓ Added YouTube video: ${videoId}`);
@@ -920,7 +919,7 @@ async function createBrandDocument(
         logoRef = await uploadImage(
           client,
           logoUrl,
-          brandData.logoFilename.split("/").pop() || "logo.png",
+          brandData.logoFilename.split('/').pop() || 'logo.png',
         );
       } else {
         console.log(`✓ Logo already exists in Sanity`);
@@ -935,7 +934,7 @@ async function createBrandDocument(
         bannerRef = await uploadImage(
           client,
           bannerUrl,
-          brandData.bannerImageFilename.split("/").pop() || "banner.jpg",
+          brandData.bannerImageFilename.split('/').pop() || 'banner.jpg',
         );
       } else {
         console.log(`✓ Banner already exists in Sanity`);
@@ -951,17 +950,17 @@ async function createBrandDocument(
   // 7. Build document
   const document: any = {
     _id: `brand-${brandData.id}`,
-    _type: "brand",
+    _type: 'brand',
     name: brandData.name,
     slug: {
-      _type: "slug",
+      _type: 'slug',
       current: `/marki/${brandData.urlSegment}/`,
     },
     description: heroDescription,
     heroImage: {
-      _type: "image",
+      _type: 'image',
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: PRIMALUNA_HERO_IMAGE_REF,
       },
     },
@@ -977,9 +976,9 @@ async function createBrandDocument(
 
   if (logoRef) {
     document.logo = {
-      _type: "image",
+      _type: 'image',
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: logoRef,
       },
     };
@@ -987,9 +986,9 @@ async function createBrandDocument(
 
   if (bannerRef) {
     document.bannerImage = {
-      _type: "image",
+      _type: 'image',
       asset: {
-        _type: "reference",
+        _type: 'reference',
         _ref: bannerRef,
       },
     };
@@ -1020,11 +1019,11 @@ async function main(): Promise<void> {
   let dryRun = false;
 
   for (const arg of args) {
-    if (arg.startsWith("--name=")) {
-      brandName = arg.replace("--name=", "");
-    } else if (arg.startsWith("--id=")) {
-      brandId = arg.replace("--id=", "");
-    } else if (arg === "--dry-run") {
+    if (arg.startsWith('--name=')) {
+      brandName = arg.replace('--name=', '');
+    } else if (arg.startsWith('--id=')) {
+      brandId = arg.replace('--id=', '');
+    } else if (arg === '--dry-run') {
       dryRun = true;
     }
   }
@@ -1044,9 +1043,9 @@ Options:
     process.exit(1);
   }
 
-  console.log(`\n${"=".repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   console.log(`  SINGLE BRAND MIGRATION SCRIPT`);
-  console.log(`${"=".repeat(60)}\n`);
+  console.log(`${'='.repeat(60)}\n`);
 
   if (dryRun) {
     console.log(`🔍 DRY RUN MODE - No changes will be made\n`);
@@ -1054,7 +1053,7 @@ Options:
 
   // Read SQL file
   console.log(`📂 Reading SQL file: ${SQL_FILE_PATH}\n`);
-  const sqlContent = fs.readFileSync(SQL_FILE_PATH, "utf-8");
+  const sqlContent = fs.readFileSync(SQL_FILE_PATH, 'utf-8');
 
   // Find brand ID if name provided
   if (brandName && !brandId) {
@@ -1074,28 +1073,28 @@ Options:
   }
 
   // Display summary
-  console.log(`\n${"=".repeat(60)}`);
+  console.log(`\n${'='.repeat(60)}`);
   console.log(`  BRAND DATA SUMMARY`);
-  console.log(`${"=".repeat(60)}\n`);
+  console.log(`${'='.repeat(60)}\n`);
   console.log(`Name:           ${brandData.name}`);
   console.log(`ID:             ${brandData.id}`);
   console.log(`Slug:           /marki/${brandData.urlSegment}/`);
-  console.log(`Logo:           ${brandData.logoFilename || "None"}`);
-  console.log(`Banner:         ${brandData.bannerImageFilename || "None"}`);
-  console.log(`Motto:          ${brandData.motto || "None"}`);
-  console.log(`Hero Desc:      ${brandData.heroDescription ? "Yes" : "No"}`);
+  console.log(`Logo:           ${brandData.logoFilename || 'None'}`);
+  console.log(`Banner:         ${brandData.bannerImageFilename || 'None'}`);
+  console.log(`Motto:          ${brandData.motto || 'None'}`);
+  console.log(`Hero Desc:      ${brandData.heroDescription ? 'Yes' : 'No'}`);
   console.log(
-    `Detailed Title: ${brandData.detailedDescriptionTitle || "None"}`,
+    `Detailed Title: ${brandData.detailedDescriptionTitle || 'None'}`,
   );
   console.log(
-    `Detailed Desc:  ${brandData.detailedDescriptionContent ? "Yes" : "No"}`,
+    `Detailed Desc:  ${brandData.detailedDescriptionContent ? 'Yes' : 'No'}`,
   );
   console.log(`YouTube Videos: ${brandData.youtubeVideoIds.length}`);
   console.log(`Total Boxes:    ${brandData.boxes.length}`);
 
   // Create Sanity client
-  const projectId = process.env.SANITY_PROJECT_ID || "fsw3likv";
-  const dataset = process.env.SANITY_DATASET || "production";
+  const projectId = process.env.SANITY_PROJECT_ID || 'fsw3likv';
+  const dataset = process.env.SANITY_DATASET || 'production';
   const token = process.env.SANITY_API_TOKEN;
 
   if (!token && !dryRun) {
@@ -1108,8 +1107,8 @@ Options:
   const client = createClient({
     projectId,
     dataset,
-    token: token || "dummy-token-for-dry-run",
-    apiVersion: "2024-01-01",
+    token: token || 'dummy-token-for-dry-run',
+    apiVersion: '2024-01-01',
     useCdn: false,
   });
 
@@ -1118,6 +1117,6 @@ Options:
 }
 
 main().catch((error) => {
-  console.error("Migration failed:", error);
+  console.error('Migration failed:', error);
   process.exit(1);
 });

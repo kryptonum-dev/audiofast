@@ -1,5 +1,5 @@
-import { EyeClosedIcon } from "@sanity/icons";
-import { type DocumentActionComponent,useDocumentOperation } from "sanity";
+import { EyeClosedIcon } from '@sanity/icons';
+import { type DocumentActionComponent, useDocumentOperation } from 'sanity';
 
 /**
  * Custom unpublish action for orderable document types.
@@ -15,9 +15,9 @@ export const UnpublishAction: DocumentActionComponent = (props) => {
   }
 
   return {
-    label: "Unpublish",
+    label: 'Unpublish',
     icon: EyeClosedIcon,
-    tone: "caution",
+    tone: 'caution',
     onHandle: () => {
       unpublish.execute();
       props.onComplete();

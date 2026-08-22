@@ -1,7 +1,7 @@
-import { expect, test } from "@playwright/test";
-import { createClient } from "@sanity/client";
+import { expect, test } from '@playwright/test';
+import { createClient } from '@sanity/client';
 
-import { E2E_EMAIL_PREFIXES } from "./constants";
+import { E2E_EMAIL_PREFIXES } from './constants';
 import {
   acceptCheckoutRequiredConsents,
   assertPaidOrderByEmail,
@@ -10,7 +10,7 @@ import {
   fillCheckoutDetails,
   goFromCartToCheckout,
   submitCheckoutPayment,
-} from "./utils";
+} from './utils';
 
 type AvailableCpoProduct = {
   name: string;
@@ -25,14 +25,14 @@ async function findAvailableCpoProduct() {
 
   if (!projectId || !dataset) {
     throw new Error(
-      "Missing Sanity E2E env. Set NEXT_PUBLIC_SANITY_PROJECT_ID and NEXT_PUBLIC_SANITY_DATASET.",
+      'Missing Sanity E2E env. Set NEXT_PUBLIC_SANITY_PROJECT_ID and NEXT_PUBLIC_SANITY_DATASET.',
     );
   }
 
   const sanity = createClient({
     projectId,
     dataset,
-    apiVersion: "2025-01-01",
+    apiVersion: '2025-01-01',
     useCdn: false,
   });
 
@@ -52,8 +52,8 @@ async function findAvailableCpoProduct() {
   );
 }
 
-test.describe("CPO purchase path", () => {
-  test("buys an available CPO product when Sanity exposes one", async ({
+test.describe('CPO purchase path', () => {
+  test('buys an available CPO product when Sanity exposes one', async ({
     page,
   }, testInfo) => {
     const product = await findAvailableCpoProduct();
@@ -61,7 +61,7 @@ test.describe("CPO purchase path", () => {
     if (!product) {
       test.skip(
         true,
-        "No buyable CPO product exists in Sanity right now. This test will run automatically once Sanity has an available sellable CPO item.",
+        'No buyable CPO product exists in Sanity right now. This test will run automatically once Sanity has an available sellable CPO item.',
       );
       return;
     }
@@ -77,27 +77,27 @@ test.describe("CPO purchase path", () => {
       await page.goto(`/certyfikowany-sprzet-uzywany/${product.slug}/`);
 
       await expect(
-        page.getByRole("heading", { name: new RegExp(product.name, "i") }),
+        page.getByRole('heading', { name: new RegExp(product.name, 'i') }),
       ).toBeVisible();
 
-      await page.getByRole("button", { name: "Dodaj do koszyka" }).click();
+      await page.getByRole('button', { name: 'Dodaj do koszyka' }).click();
       await expect(
-        page.getByRole("dialog", { name: "Produkt został dodany" }),
+        page.getByRole('dialog', { name: 'Produkt został dodany' }),
       ).toBeVisible();
-      await page.getByRole("button", { name: "Kontynuuj zakupy" }).click();
+      await page.getByRole('button', { name: 'Kontynuuj zakupy' }).click();
       await expect(
-        page.getByRole("button", { name: "Usuń z koszyka" }),
+        page.getByRole('button', { name: 'Usuń z koszyka' }),
       ).toBeVisible();
 
-      await page.getByRole("button", { name: "Usuń z koszyka" }).click();
+      await page.getByRole('button', { name: 'Usuń z koszyka' }).click();
       await expect(
-        page.getByRole("button", { name: "Dodaj do koszyka" }),
+        page.getByRole('button', { name: 'Dodaj do koszyka' }),
       ).toBeVisible();
 
-      await page.getByRole("button", { name: "Dodaj do koszyka" }).click();
-      await page.getByRole("link", { name: "Przejdź do koszyka" }).click();
+      await page.getByRole('button', { name: 'Dodaj do koszyka' }).click();
+      await page.getByRole('link', { name: 'Przejdź do koszyka' }).click();
 
-      await expect(page.getByText("Egzemplarz CPO")).toBeVisible();
+      await expect(page.getByText('Egzemplarz CPO')).toBeVisible();
       await expect(page.getByText(product.name)).toBeVisible();
 
       await goFromCartToCheckout(page);

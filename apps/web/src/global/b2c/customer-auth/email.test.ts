@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  isValidCustomerAuthEmail,
-  normalizeCustomerAuthEmail,
-} from './email';
+import { isValidCustomerAuthEmail, normalizeCustomerAuthEmail } from './email';
 
 describe('customer auth email helpers', () => {
   it('normalizes customer auth emails by trimming and lowercasing them', () => {

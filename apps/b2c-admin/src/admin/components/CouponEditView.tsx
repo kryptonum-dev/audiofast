@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, RefreshIcon, TrashIcon } from "@sanity/icons";
+import { ArrowLeftIcon, RefreshIcon, TrashIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -9,9 +9,9 @@ import {
   Inline,
   Stack,
   Text,
-} from "@sanity/ui";
-import { useAuthToken } from "@sanity/sdk-react";
-import { useEffect, useMemo, useState } from "react";
+} from '@sanity/ui';
+import { useAuthToken } from '@sanity/sdk-react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   getAdminErrorMessage,
@@ -19,15 +19,15 @@ import {
   fetchAdminCoupon,
   fetchAdminCouponProducts,
   updateAdminCoupon,
-} from "../api.js";
+} from '../api.js';
 import type {
   AdminCoupon,
   AdminCouponMutationInput,
   AdminCouponProductOption,
-} from "../types.js";
-import { AdminStateCard } from "./AdminStateCard.js";
-import { CouponForm, getCouponFormValues } from "./CouponForm.js";
-import { CouponStatusBadge } from "./CouponStatusBadge.js";
+} from '../types.js';
+import { AdminStateCard } from './AdminStateCard.js';
+import { CouponForm, getCouponFormValues } from './CouponForm.js';
+import { CouponStatusBadge } from './CouponStatusBadge.js';
 
 type CouponEditViewProps = {
   couponId: string;
@@ -36,44 +36,44 @@ type CouponEditViewProps = {
 
 type CouponLoadState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       coupon: AdminCoupon | null;
       error: null;
     }
   | {
-      status: "ready";
+      status: 'ready';
       coupon: AdminCoupon;
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       coupon: AdminCoupon | null;
       error: string;
     };
 
 type SaveState =
   | {
-      status: "idle" | "loading" | "success";
+      status: 'idle' | 'loading' | 'success';
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       error: string;
     };
 
 type ProductOptionsState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       products: AdminCouponProductOption[];
       error: null;
     }
   | {
-      status: "ready";
+      status: 'ready';
       products: AdminCouponProductOption[];
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       products: AdminCouponProductOption[];
       error: string;
     };
@@ -81,17 +81,17 @@ type ProductOptionsState =
 export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
   const authToken = useAuthToken();
   const [couponState, setCouponState] = useState<CouponLoadState>({
-    status: "idle",
+    status: 'idle',
     coupon: null,
     error: null,
   });
   const [saveState, setSaveState] = useState<SaveState>({
-    status: "idle",
+    status: 'idle',
     error: null,
   });
   const [productOptionsState, setProductOptionsState] =
     useState<ProductOptionsState>({
-      status: "idle",
+      status: 'idle',
       products: [],
       error: null,
     });
@@ -100,15 +100,15 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
   const [confirmArchiveOpen, setConfirmArchiveOpen] = useState(false);
   const [archiveState, setArchiveState] = useState<
     | {
-        status: "idle" | "loading";
+        status: 'idle' | 'loading';
         error: null;
       }
     | {
-        status: "error";
+        status: 'error';
         error: string;
       }
   >({
-    status: "idle",
+    status: 'idle',
     error: null,
   });
   const [refreshToken, setRefreshToken] = useState(0);
@@ -116,7 +116,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
   useEffect(() => {
     if (!authToken) {
       setCouponState({
-        status: "idle",
+        status: 'idle',
         coupon: null,
         error: null,
       });
@@ -126,12 +126,12 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     const controller = new AbortController();
 
     setCouponState((current) => ({
-      status: "loading",
+      status: 'loading',
       coupon: current.coupon,
       error: null,
     }));
     setSaveState({
-      status: "idle",
+      status: 'idle',
       error: null,
     });
 
@@ -142,7 +142,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     })
       .then((coupon) => {
         setCouponState({
-          status: "ready",
+          status: 'ready',
           coupon,
           error: null,
         });
@@ -153,9 +153,9 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
         }
 
         setCouponState((current) => ({
-          status: "error",
+          status: 'error',
           coupon: current.coupon,
-          error: getAdminErrorMessage(error, "Nie udało się załadować kuponu."),
+          error: getAdminErrorMessage(error, 'Nie udało się załadować kuponu.'),
         }));
       });
 
@@ -165,7 +165,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
   useEffect(() => {
     if (!authToken) {
       setProductOptionsState({
-        status: "idle",
+        status: 'idle',
         products: [],
         error: null,
       });
@@ -175,7 +175,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     const controller = new AbortController();
 
     setProductOptionsState((current) => ({
-      status: "loading",
+      status: 'loading',
       products: current.products,
       error: null,
     }));
@@ -186,7 +186,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     })
       .then((data) => {
         setProductOptionsState({
-          status: "ready",
+          status: 'ready',
           products: data.products,
           error: null,
         });
@@ -197,11 +197,11 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
         }
 
         setProductOptionsState((current) => ({
-          status: "error",
+          status: 'error',
           products: current.products,
           error: getAdminErrorMessage(
             error,
-            "Nie udało się załadować produktów do kuponu.",
+            'Nie udało się załadować produktów do kuponu.',
           ),
         }));
       });
@@ -211,7 +211,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
 
   const initialValues = useMemo(
     () =>
-      couponState.status === "ready"
+      couponState.status === 'ready'
         ? getCouponFormValues(couponState.coupon)
         : null,
     [couponState],
@@ -232,7 +232,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     }
 
     setSaveState({
-      status: "loading",
+      status: 'loading',
       error: null,
     });
 
@@ -244,18 +244,18 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
       });
 
       setCouponState({
-        status: "ready",
+        status: 'ready',
         coupon,
         error: null,
       });
       setSaveState({
-        status: "success",
+        status: 'success',
         error: null,
       });
     } catch (error: unknown) {
       setSaveState({
-        status: "error",
-        error: getAdminErrorMessage(error, "Nie udało się zapisać kuponu."),
+        status: 'error',
+        error: getAdminErrorMessage(error, 'Nie udało się zapisać kuponu.'),
       });
     }
   }
@@ -266,7 +266,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
     }
 
     setArchiveState({
-      status: "loading",
+      status: 'loading',
       error: null,
     });
 
@@ -279,8 +279,8 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
       onBack();
     } catch (error: unknown) {
       setArchiveState({
-        status: "error",
-        error: getAdminErrorMessage(error, "Nie udało się usunąć kuponu."),
+        status: 'error',
+        error: getAdminErrorMessage(error, 'Nie udało się usunąć kuponu.'),
       });
     }
   }
@@ -339,10 +339,10 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
             id="archive-coupon-edit-dialog"
             header="Usunąć kupon?"
             onClose={() => {
-              if (archiveState.status !== "loading") {
+              if (archiveState.status !== 'loading') {
                 setConfirmArchiveOpen(false);
                 setArchiveState({
-                  status: "idle",
+                  status: 'idle',
                   error: null,
                 });
               }
@@ -352,12 +352,12 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
               <Box paddingX={4} paddingBottom={4}>
                 <Inline space={3}>
                   <Button
-                    disabled={archiveState.status === "loading"}
+                    disabled={archiveState.status === 'loading'}
                     mode="ghost"
                     onClick={() => {
                       setConfirmArchiveOpen(false);
                       setArchiveState({
-                        status: "idle",
+                        status: 'idle',
                         error: null,
                       });
                     }}
@@ -365,12 +365,12 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
                     type="button"
                   />
                   <Button
-                    disabled={archiveState.status === "loading"}
+                    disabled={archiveState.status === 'loading'}
                     onClick={confirmArchiveCoupon}
                     text={
-                      archiveState.status === "loading"
-                        ? "Usuwanie..."
-                        : "Usuń kupon"
+                      archiveState.status === 'loading'
+                        ? 'Usuwanie...'
+                        : 'Usuń kupon'
                     }
                     tone="critical"
                     type="button"
@@ -384,7 +384,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
                 Kupon {coupon.code} zostanie zarchiwizowany i nie będzie
                 dostępny dla klientów. Historia użycia pozostanie w systemie.
               </Text>
-              {archiveState.status === "error" ? (
+              {archiveState.status === 'error' ? (
                 <Box marginTop={4}>
                   <Text size={1}>{archiveState.error}</Text>
                 </Box>
@@ -403,13 +403,13 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
           />
           <Flex gap={2} wrap="wrap">
             <Button
-              disabled={couponState.status === "loading" || !coupon}
+              disabled={couponState.status === 'loading' || !coupon}
               icon={TrashIcon}
               mode="ghost"
               onClick={() => {
                 setConfirmArchiveOpen(true);
                 setArchiveState({
-                  status: "idle",
+                  status: 'idle',
                   error: null,
                 });
               }}
@@ -418,7 +418,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
               type="button"
             />
             <Button
-              disabled={couponState.status === "loading"}
+              disabled={couponState.status === 'loading'}
               icon={RefreshIcon}
               mode="ghost"
               onClick={() => setRefreshToken((value) => value + 1)}
@@ -431,7 +431,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
         <Card padding={2} radius={2}>
           <Flex align="center" gap={3} wrap="wrap">
             <Heading as="h2" size={2}>
-              {coupon ? `Edytuj kupon ${coupon.code}` : "Edytuj kupon"}
+              {coupon ? `Edytuj kupon ${coupon.code}` : 'Edytuj kupon'}
             </Heading>
             {coupon ? (
               <CouponStatusBadge status={coupon.derivedStatus} />
@@ -439,7 +439,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
           </Flex>
         </Card>
 
-        {couponState.status === "loading" && !coupon ? (
+        {couponState.status === 'loading' && !coupon ? (
           <AdminStateCard
             heading="Ładowanie kuponu"
             description="Pobieram aktualne dane kuponu."
@@ -447,7 +447,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
           />
         ) : null}
 
-        {couponState.status === "error" ? (
+        {couponState.status === 'error' ? (
           <AdminStateCard
             action={
               <Button
@@ -464,7 +464,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
           />
         ) : null}
 
-        {saveState.status === "success" ? (
+        {saveState.status === 'success' ? (
           <AdminStateCard
             heading="Kupon został zapisany"
             description="Zmiany są już dostępne w systemie."
@@ -472,7 +472,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
           />
         ) : null}
 
-        {saveState.status === "error" ? (
+        {saveState.status === 'error' ? (
           <AdminStateCard
             heading="Nie udało się zapisać kuponu"
             description={saveState.error}
@@ -480,18 +480,18 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
           />
         ) : null}
 
-        {couponState.status === "ready" && initialValues ? (
+        {couponState.status === 'ready' && initialValues ? (
           <CouponForm
-            disabled={saveState.status === "loading"}
+            disabled={saveState.status === 'loading'}
             enforceFutureDates={false}
             initialValues={initialValues}
             onDirtyChange={setFormDirty}
             onSubmit={handleSubmit}
             productOptions={productOptionsState.products}
             productOptionsError={productOptionsState.error}
-            productOptionsLoading={productOptionsState.status === "loading"}
+            productOptionsLoading={productOptionsState.status === 'loading'}
             submitText={
-              saveState.status === "loading" ? "Zapisywanie..." : "Zapisz kupon"
+              saveState.status === 'loading' ? 'Zapisywanie...' : 'Zapisz kupon'
             }
             usageLimitMinimum={Math.max(couponState.coupon.usageCount, 1)}
           />

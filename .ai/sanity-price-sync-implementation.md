@@ -186,13 +186,13 @@ let sanityResult = null;
 if (variants.length > 0) {
   try {
     const sanityResponse = await fetch(
-      `${Deno.env.get("SUPABASE_URL")}/functions/v1/sync-prices-to-sanity`,
+      `${Deno.env.get('SUPABASE_URL')}/functions/v1/sync-prices-to-sanity`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          Authorization: req.headers.get("authorization")!,
-          "X-Excel-Token": token,
-          "Content-Type": "application/json",
+          Authorization: req.headers.get('authorization')!,
+          'X-Excel-Token': token,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ variants }),
       },
@@ -202,7 +202,7 @@ if (variants.length > 0) {
       sanityResult = await sanityResponse.json();
     } else {
       console.error(
-        "Sanity sync failed:",
+        'Sanity sync failed:',
         sanityResponse.status,
         await sanityResponse.text(),
       );
@@ -211,7 +211,7 @@ if (variants.length > 0) {
       };
     }
   } catch (sanityError) {
-    console.error("Sanity sync error:", sanityError);
+    console.error('Sanity sync error:', sanityError);
     sanityResult = {
       error:
         sanityError instanceof Error
@@ -231,7 +231,7 @@ return new Response(
   }),
   {
     status: 200,
-    headers: { "content-type": "application/json" },
+    headers: { 'content-type': 'application/json' },
   },
 );
 ```

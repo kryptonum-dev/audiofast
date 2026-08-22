@@ -5,14 +5,14 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import {
   ChevronDownIcon,
   ChevronUpIcon,
@@ -20,7 +20,7 @@ import {
   DragHandleIcon,
   RefreshIcon,
   SearchIcon,
-} from "@sanity/icons";
+} from '@sanity/icons';
 import {
   Box,
   Button,
@@ -38,14 +38,20 @@ import {
   TextInput,
   ToastProvider,
   useToast,
-} from "@sanity/ui";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useClient, useWorkspace, type Workspace } from "sanity";
+} from '@sanity/ui';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { useClient, useWorkspace, type Workspace } from 'sanity';
 
 // Types matching our content structure
 type ContentItem = {
   _id: string;
-  _type: "blog-article" | "review" | "product";
+  _type: 'blog-article' | 'review' | 'product';
   title?: string; // articles/reviews
   name?: string; // products/reviews/articles
   description?: string; // plain text (for studio preview)
@@ -53,9 +59,9 @@ type ContentItem = {
   shortDescription?: string; // products plain text (for studio preview)
   shortDescriptionBlocks?: Record<string, unknown>[]; // raw Portable Text (for email HTML)
   image?: string;
-  imageSource?: "publication" | "preview" | "gallery" | "default";
+  imageSource?: 'publication' | 'preview' | 'gallery' | 'default';
   slug: string;
-  destinationType?: "page" | "pdf" | "external" | null; // review types
+  destinationType?: 'page' | 'pdf' | 'external' | null; // review types
   openInNewTab?: boolean; // for external/pdf reviews
   _createdAt: string;
   publishedDate?: string; // override date (if set)
@@ -70,12 +76,12 @@ type GroupedContent = {
   products: ContentItem[];
 };
 
-type ListKey = "reviews" | "articles" | "products";
+type ListKey = 'reviews' | 'articles' | 'products';
 
 const SECTION_LABELS: Record<ListKey, string> = {
-  articles: "Artykuły Blogowe",
-  products: "Produkty",
-  reviews: "Recenzje",
+  articles: 'Artykuły Blogowe',
+  products: 'Produkty',
+  reviews: 'Recenzje',
 };
 
 // Hero configuration type
@@ -100,15 +106,16 @@ type SanityAsset = {
 };
 
 const PRODUCTION_NEWSLETTER_API_URL =
-  "https://audiofast.pl/api/newsletter/generate/";
-const LOCAL_NEWSLETTER_API_URL = "http://localhost:3000/api/newsletter/generate/";
+  'https://audiofast.pl/api/newsletter/generate/';
+const LOCAL_NEWSLETTER_API_URL =
+  'http://localhost:3000/api/newsletter/generate/';
 
 function resolveNewsletterApiUrl() {
   // In local Studio development prefer local web API,
   // so newsletter HTML generation uses current code changes.
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     const host = window.location.hostname;
-    if (host === "localhost" || host === "127.0.0.1") {
+    if (host === 'localhost' || host === '127.0.0.1') {
       return LOCAL_NEWSLETTER_API_URL;
     }
   }
@@ -120,15 +127,15 @@ function normalizeStoredSanityToken(value: string): string {
   try {
     const parsed = JSON.parse(value) as unknown;
 
-    if (typeof parsed === "string") {
+    if (typeof parsed === 'string') {
       return parsed;
     }
 
     if (
       parsed &&
-      typeof parsed === "object" &&
-      "token" in parsed &&
-      typeof parsed.token === "string"
+      typeof parsed === 'object' &&
+      'token' in parsed &&
+      typeof parsed.token === 'string'
     ) {
       return parsed.token;
     }
@@ -144,7 +151,7 @@ function normalizeStoredSanityToken(value: string): string {
 // observable emits its current value synchronously on subscribe, so a
 // subscribe-and-unsubscribe read is safe. Cookie-based sessions have no
 // token — the observable emits null and the API call cannot be authorized.
-function getAuthStoreToken(auth: Workspace["auth"]): string | null {
+function getAuthStoreToken(auth: Workspace['auth']): string | null {
   const result: { token: string | null } = { token: null };
   const subscription = auth.token?.subscribe((value) => {
     result.token = value;
@@ -157,7 +164,7 @@ function getAuthStoreToken(auth: Workspace["auth"]): string | null {
 // Pre-v5 Studios stored the token under `__sanity_auth_token_<projectId>` —
 // kept only as a legacy fallback.
 function getLegacyStoredToken(projectId: string): string | null {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return null;
   }
 
@@ -171,17 +178,17 @@ function getLegacyStoredToken(projectId: string): string | null {
 function getStudioAuthToken({
   auth,
   projectId,
-}: Pick<Workspace, "auth" | "projectId">): string | null {
+}: Pick<Workspace, 'auth' | 'projectId'>): string | null {
   return getAuthStoreToken(auth) ?? getLegacyStoredToken(projectId);
 }
 
 // Toolbar preset colors matching the brand palette
 const TOOLBAR_COLORS = [
-  { hex: "#303030", label: "Ciemny" },
-  { hex: "#5b5a5a", label: "Szary" },
-  { hex: "#fe0140", label: "Czerwony (główny)" },
-  { hex: "#000000", label: "Czarny" },
-  { hex: "#ffffff", label: "Biały" },
+  { hex: '#303030', label: 'Ciemny' },
+  { hex: '#5b5a5a', label: 'Szary' },
+  { hex: '#fe0140', label: 'Czerwony (główny)' },
+  { hex: '#000000', label: 'Czarny' },
+  { hex: '#ffffff', label: 'Biały' },
 ];
 
 type RichTextEditorProps = {
@@ -194,14 +201,14 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const savedSelectionRef = useRef<Range | null>(null);
   const [showLinkDialog, setShowLinkDialog] = useState(false);
-  const [linkUrl, setLinkUrl] = useState("");
+  const [linkUrl, setLinkUrl] = useState('');
   const [isEmpty, setIsEmpty] = useState(!value);
-  const [blockType, setBlockType] = useState<"p" | "h2" | "h3">("p");
+  const [blockType, setBlockType] = useState<'p' | 'h2' | 'h3'>('p');
 
   // Sync initial value into the contenteditable on mount only
   useEffect(() => {
     if (editorRef.current) {
-      editorRef.current.innerHTML = value || "";
+      editorRef.current.innerHTML = value || '';
       setIsEmpty(!value);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -211,28 +218,28 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
     (command: string, val?: string) => {
       editorRef.current?.focus();
       document.execCommand(command, false, val);
-      const html = editorRef.current?.innerHTML ?? "";
-      setIsEmpty(!html || html === "<br>");
+      const html = editorRef.current?.innerHTML ?? '';
+      setIsEmpty(!html || html === '<br>');
       onChange(html);
     },
     [onChange],
   );
 
   const setBlockTag = useCallback(
-    (tag: "p" | "h2" | "h3") => {
+    (tag: 'p' | 'h2' | 'h3') => {
       editorRef.current?.focus();
-      document.execCommand("formatBlock", false, `<${tag}>`);
+      document.execCommand('formatBlock', false, `<${tag}>`);
       setBlockType(tag);
-      const html = editorRef.current?.innerHTML ?? "";
-      setIsEmpty(!html || html === "<br>");
+      const html = editorRef.current?.innerHTML ?? '';
+      setIsEmpty(!html || html === '<br>');
       onChange(html);
     },
     [onChange],
   );
 
   const handleInput = useCallback(() => {
-    const html = editorRef.current?.innerHTML ?? "";
-    setIsEmpty(!html || html === "<br>");
+    const html = editorRef.current?.innerHTML ?? '';
+    setIsEmpty(!html || html === '<br>');
     onChange(html);
   }, [onChange]);
 
@@ -255,52 +262,52 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
   const handleInsertLink = useCallback(() => {
     if (!linkUrl.trim()) return;
     restoreSelection();
-    document.execCommand("createLink", false, linkUrl.trim());
+    document.execCommand('createLink', false, linkUrl.trim());
     // Force target="_blank" on newly created links
-    const anchors = editorRef.current?.querySelectorAll("a");
+    const anchors = editorRef.current?.querySelectorAll('a');
     anchors?.forEach((a) => {
-      if (!a.getAttribute("target")) {
-        a.setAttribute("target", "_blank");
-        a.setAttribute("rel", "noopener noreferrer");
+      if (!a.getAttribute('target')) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
       }
     });
-    const html = editorRef.current?.innerHTML ?? "";
+    const html = editorRef.current?.innerHTML ?? '';
     onChange(html);
     setShowLinkDialog(false);
-    setLinkUrl("");
+    setLinkUrl('');
   }, [linkUrl, onChange, restoreSelection]);
 
   // Theme-neutral button style — inherits color from Card, transparent bg
   const btnStyle: React.CSSProperties = {
-    background: "transparent",
-    border: "1px solid rgba(127,127,127,0.3)",
-    borderRadius: "3px",
-    cursor: "pointer",
-    padding: "0 6px",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "inherit",
-    fontSize: "13px",
-    height: "26px",
-    minWidth: "26px",
+    background: 'transparent',
+    border: '1px solid rgba(127,127,127,0.3)',
+    borderRadius: '3px',
+    cursor: 'pointer',
+    padding: '0 6px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'inherit',
+    fontSize: '13px',
+    height: '26px',
+    minWidth: '26px',
     lineHeight: 1,
   };
 
   const separator = (
     <div
       style={{
-        width: "1px",
-        height: "18px",
-        backgroundColor: "rgba(127,127,127,0.25)",
-        margin: "0 2px",
+        width: '1px',
+        height: '18px',
+        backgroundColor: 'rgba(127,127,127,0.25)',
+        margin: '0 2px',
         flexShrink: 0,
       }}
     />
   );
 
   return (
-    <Card border radius={1} style={{ overflow: "hidden" }}>
+    <Card border radius={1} style={{ overflow: 'hidden' }}>
       {/* Toolbar — Card tone="transparent" picks up the correct theme bg */}
       <Card
         tone="transparent"
@@ -308,10 +315,10 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
         radius={0}
         padding={1}
         style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "3px",
-          alignItems: "center",
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '3px',
+          alignItems: 'center',
         }}
       >
         {/* Block type selector */}
@@ -319,14 +326,16 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
           value={blockType}
           aria-label="Wybierz typ akapitu"
           title="Typ tekstu"
-          onChange={(e) => setBlockTag(e.currentTarget.value as "p" | "h2" | "h3")}
+          onChange={(e) =>
+            setBlockTag(e.currentTarget.value as 'p' | 'h2' | 'h3')
+          }
           style={{
             ...btnStyle,
-            minWidth: "72px",
-            padding: "0 8px",
-            appearance: "auto",
-            WebkitAppearance: "menulist",
-            MozAppearance: "menulist",
+            minWidth: '72px',
+            padding: '0 8px',
+            appearance: 'auto',
+            WebkitAppearance: 'menulist',
+            MozAppearance: 'menulist',
           }}
         >
           <option value="p">Akapit</option>
@@ -343,7 +352,7 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
           title="Pogrubienie"
           onMouseDown={(e) => {
             e.preventDefault();
-            exec("bold");
+            exec('bold');
           }}
         >
           B
@@ -352,11 +361,11 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
         {/* Italic */}
         <button
           type="button"
-          style={{ ...btnStyle, fontStyle: "italic" }}
+          style={{ ...btnStyle, fontStyle: 'italic' }}
           title="Kursywa"
           onMouseDown={(e) => {
             e.preventDefault();
-            exec("italic");
+            exec('italic');
           }}
         >
           I
@@ -365,11 +374,11 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
         {/* Underline */}
         <button
           type="button"
-          style={{ ...btnStyle, textDecoration: "underline" }}
+          style={{ ...btnStyle, textDecoration: 'underline' }}
           title="Podkreślenie"
           onMouseDown={(e) => {
             e.preventDefault();
-            exec("underline");
+            exec('underline');
           }}
         >
           U
@@ -380,11 +389,11 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
         {/* Align Left */}
         <button
           type="button"
-          style={{ ...btnStyle, fontSize: "11px" }}
+          style={{ ...btnStyle, fontSize: '11px' }}
           title="Wyrównaj do lewej"
           onMouseDown={(e) => {
             e.preventDefault();
-            exec("justifyLeft");
+            exec('justifyLeft');
           }}
         >
           ←≡
@@ -393,11 +402,11 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
         {/* Align Center */}
         <button
           type="button"
-          style={{ ...btnStyle, fontSize: "11px" }}
+          style={{ ...btnStyle, fontSize: '11px' }}
           title="Wyśrodkuj"
           onMouseDown={(e) => {
             e.preventDefault();
-            exec("justifyCenter");
+            exec('justifyCenter');
           }}
         >
           ↔≡
@@ -406,11 +415,11 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
         {/* Align Right */}
         <button
           type="button"
-          style={{ ...btnStyle, fontSize: "11px" }}
+          style={{ ...btnStyle, fontSize: '11px' }}
           title="Wyrównaj do prawej"
           onMouseDown={(e) => {
             e.preventDefault();
-            exec("justifyRight");
+            exec('justifyRight');
           }}
         >
           →≡
@@ -419,11 +428,11 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
         {/* Align Justify */}
         <button
           type="button"
-          style={{ ...btnStyle, fontSize: "15px", letterSpacing: "-1px" }}
+          style={{ ...btnStyle, fontSize: '15px', letterSpacing: '-1px' }}
           title="Wyjustuj"
           onMouseDown={(e) => {
             e.preventDefault();
-            exec("justifyFull");
+            exec('justifyFull');
           }}
         >
           ≡
@@ -440,7 +449,7 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
             e.preventDefault();
             saveSelection();
             setShowLinkDialog(true);
-            setLinkUrl("");
+            setLinkUrl('');
           }}
         >
           🔗
@@ -455,19 +464,19 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
             type="button"
             title={`Kolor: ${label}`}
             style={{
-              width: "18px",
-              height: "18px",
-              minWidth: "18px",
+              width: '18px',
+              height: '18px',
+              minWidth: '18px',
               padding: 0,
-              border: "1px solid rgba(127,127,127,0.4)",
-              borderRadius: "50%",
-              cursor: "pointer",
+              border: '1px solid rgba(127,127,127,0.4)',
+              borderRadius: '50%',
+              cursor: 'pointer',
               backgroundColor: hex,
               flexShrink: 0,
             }}
             onMouseDown={(e) => {
               e.preventDefault();
-              exec("foreColor", hex);
+              exec('foreColor', hex);
             }}
           />
         ))}
@@ -485,11 +494,11 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
                 onChange={(e) => setLinkUrl(e.currentTarget.value)}
                 placeholder="https://..."
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === 'Enter') {
                     e.preventDefault();
                     handleInsertLink();
                   }
-                  if (e.key === "Escape") setShowLinkDialog(false);
+                  if (e.key === 'Escape') setShowLinkDialog(false);
                 }}
               />
             </Box>
@@ -512,33 +521,33 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
       )}
 
       {/* Editor area — transparent bg, inherits text color from Card */}
-      <Box padding={3} style={{ position: "relative" }}>
+      <Box padding={3} style={{ position: 'relative' }}>
         <div
           ref={editorRef}
           contentEditable
           suppressContentEditableWarning
           onInput={handleInput}
           style={{
-            minHeight: "90px",
-            outline: "none",
-            fontSize: "14px",
-            lineHeight: "1.6",
-            color: "inherit",
-            backgroundColor: "transparent",
+            minHeight: '90px',
+            outline: 'none',
+            fontSize: '14px',
+            lineHeight: '1.6',
+            color: 'inherit',
+            backgroundColor: 'transparent',
           }}
         />
         {isEmpty && (
           <div
             style={{
-              position: "absolute",
-              top: "12px",
-              left: "12px",
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
               opacity: 0.4,
-              color: "inherit",
-              pointerEvents: "none",
-              fontSize: "14px",
-              lineHeight: "1.6",
-              userSelect: "none",
+              color: 'inherit',
+              pointerEvents: 'none',
+              fontSize: '14px',
+              lineHeight: '1.6',
+              userSelect: 'none',
             }}
           >
             {placeholder}
@@ -550,17 +559,17 @@ function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
 }
 
 export default function NewsletterTool() {
-  const client = useClient({ apiVersion: "2024-01-01" });
+  const client = useClient({ apiVersion: '2024-01-01' });
   const workspace = useWorkspace();
   const toast = useToast();
   const newsletterApiUrl = useMemo(() => resolveNewsletterApiUrl(), []);
 
   // State
   const [startDate, setStartDate] = useState<string>(
-    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   );
   const [endDate, setEndDate] = useState<string>(
-    new Date().toISOString().split("T")[0],
+    new Date().toISOString().split('T')[0],
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -587,15 +596,15 @@ export default function NewsletterTool() {
 
   // Section order state (configurable by user)
   const [sectionOrder, setSectionOrder] = useState<ListKey[]>([
-    "articles",
-    "products",
-    "reviews",
+    'articles',
+    'products',
+    'reviews',
   ]);
 
   // Hero configuration state
   const [heroConfig, setHeroConfig] = useState<HeroConfig>({
-    imageUrl: "",
-    text: "",
+    imageUrl: '',
+    text: '',
   });
 
   const handleHeroTextChange = useCallback((html: string) => {
@@ -606,7 +615,7 @@ export default function NewsletterTool() {
   const [isAssetBrowserOpen, setIsAssetBrowserOpen] = useState(false);
   const [assets, setAssets] = useState<SanityAsset[]>([]);
   const [isLoadingAssets, setIsLoadingAssets] = useState(false);
-  const [assetSearchQuery, setAssetSearchQuery] = useState("");
+  const [assetSearchQuery, setAssetSearchQuery] = useState('');
 
   // 1. Fetch Content
   const fetchContent = async () => {
@@ -667,9 +676,9 @@ export default function NewsletterTool() {
       });
 
       const grouped = {
-        articles: result.filter((item) => item._type === "blog-article"),
-        reviews: result.filter((item) => item._type === "review"),
-        products: result.filter((item) => item._type === "product"),
+        articles: result.filter((item) => item._type === 'blog-article'),
+        reviews: result.filter((item) => item._type === 'review'),
+        products: result.filter((item) => item._type === 'product'),
       };
 
       setContent(grouped);
@@ -677,16 +686,16 @@ export default function NewsletterTool() {
       setSelectedIds(new Set(result.map((item) => item._id)));
 
       toast.push({
-        status: "success",
+        status: 'success',
         title: `Znaleziono ${result.length} elementów`,
         description: `Recenzje: ${grouped.reviews.length}, Artykuły: ${grouped.articles.length}, Produkty: ${grouped.products.length}`,
       });
     } catch (err) {
       console.error(err);
       toast.push({
-        status: "error",
-        title: "Błąd pobierania treści",
-        description: err instanceof Error ? err.message : "Nieznany błąd",
+        status: 'error',
+        title: 'Błąd pobierania treści',
+        description: err instanceof Error ? err.message : 'Nieznany błąd',
       });
     } finally {
       setIsLoading(false);
@@ -791,8 +800,8 @@ export default function NewsletterTool() {
       } catch (err) {
         console.error(err);
         toast.push({
-          status: "error",
-          title: "Błąd ładowania obrazów",
+          status: 'error',
+          title: 'Błąd ładowania obrazów',
         });
       } finally {
         setIsLoadingAssets(false);
@@ -805,7 +814,7 @@ export default function NewsletterTool() {
   useEffect(() => {
     if (isAssetBrowserOpen) {
       fetchAssets();
-      setAssetSearchQuery("");
+      setAssetSearchQuery('');
     }
   }, [isAssetBrowserOpen, fetchAssets]);
 
@@ -845,14 +854,14 @@ export default function NewsletterTool() {
 
   // 6. Generate Newsletter
   const handleAction = async (
-    action: "download-html" | "create-mailchimp-draft",
+    action: 'download-html' | 'create-mailchimp-draft',
   ) => {
     // Validate hero image
     if (!heroConfig.imageUrl) {
       toast.push({
-        status: "warning",
-        title: "Brak obrazu nagłówka",
-        description: "Dodaj obraz nagłówka przed generowaniem newslettera.",
+        status: 'warning',
+        title: 'Brak obrazu nagłówka',
+        description: 'Dodaj obraz nagłówka przed generowaniem newslettera.',
       });
       return;
     }
@@ -861,10 +870,10 @@ export default function NewsletterTool() {
 
     if (!authToken) {
       toast.push({
-        status: "error",
-        title: "Brak tokenu operatora",
+        status: 'error',
+        title: 'Brak tokenu operatora',
         description:
-          "Wyloguj się ze Studia i zaloguj ponownie, po czym spróbuj jeszcze raz. API newslettera wymaga aktywnej sesji Sanity.",
+          'Wyloguj się ze Studia i zaloguj ponownie, po czym spróbuj jeszcze raz. API newslettera wymaga aktywnej sesji Sanity.',
       });
       return;
     }
@@ -890,9 +899,9 @@ export default function NewsletterTool() {
       payloadContent.products.length === 0
     ) {
       toast.push({
-        status: "warning",
-        title: "Brak wybranych elementów",
-        description: "Zaznacz co najmniej jeden element.",
+        status: 'warning',
+        title: 'Brak wybranych elementów',
+        description: 'Zaznacz co najmniej jeden element.',
       });
       setIsGenerating(false);
       return;
@@ -900,9 +909,9 @@ export default function NewsletterTool() {
 
     try {
       const response = await fetch(newsletterApiUrl, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
@@ -917,35 +926,35 @@ export default function NewsletterTool() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Błąd serwera");
+        throw new Error(errorData.error || 'Błąd serwera');
       }
 
-      if (action === "download-html") {
+      if (action === 'download-html') {
         // Handle file download
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
+        const a = document.createElement('a');
         a.href = url;
         a.download = `newsletter-audiofast-${startDate}.html`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
-        toast.push({ status: "success", title: "Pobrano plik HTML" });
+        toast.push({ status: 'success', title: 'Pobrano plik HTML' });
       } else {
         // Handle Mailchimp success
         const data = await response.json();
         toast.push({
-          status: "success",
-          title: "Utworzono draft w Mailchimp",
+          status: 'success',
+          title: 'Utworzono draft w Mailchimp',
           description: `ID Kampanii: ${data.campaignId}`,
         });
       }
     } catch (err) {
       console.error(err);
       toast.push({
-        status: "error",
-        title: "Błąd generowania",
-        description: err instanceof Error ? err.message : "Nieznany błąd",
+        status: 'error',
+        title: 'Błąd generowania',
+        description: err instanceof Error ? err.message : 'Nieznany błąd',
       });
     } finally {
       setIsGenerating(false);
@@ -968,14 +977,14 @@ export default function NewsletterTool() {
         <Flex
           direction="column"
           gap={5}
-          style={{ maxWidth: "800px", margin: "0 auto" }}
+          style={{ maxWidth: '800px', margin: '0 auto' }}
         >
           {/* Header */}
           <Box>
             <Heading as="h1" size={4}>
               Generator Newslettera
             </Heading>
-            <Text muted size={1} style={{ marginTop: "0.5rem" }}>
+            <Text muted size={1} style={{ marginTop: '0.5rem' }}>
               Wybierz zakres dat, pobierz treści, dostosuj wybór i wygeneruj
               newsletter.
             </Text>
@@ -983,7 +992,7 @@ export default function NewsletterTool() {
 
           {/* Date Controls */}
           <Card padding={4} tone="primary" radius={2} shadow={1}>
-            <Grid columns={[1, 2, 3]} gap={3} style={{ alignItems: "end" }}>
+            <Grid columns={[1, 2, 3]} gap={3} style={{ alignItems: 'end' }}>
               <Stack space={2}>
                 <Label>Data początkowa</Label>
                 <TextInput
@@ -1002,7 +1011,7 @@ export default function NewsletterTool() {
               </Stack>
               <Button
                 icon={RefreshIcon}
-                text={isLoading ? "Pobieranie..." : "Pobierz treści"}
+                text={isLoading ? 'Pobieranie...' : 'Pobierz treści'}
                 onClick={fetchContent}
                 disabled={isLoading}
                 tone="primary"
@@ -1025,17 +1034,17 @@ export default function NewsletterTool() {
                       radius={2}
                       tone="transparent"
                       style={{
-                        overflow: "hidden",
+                        overflow: 'hidden',
                       }}
                     >
                       <img
                         src={heroConfig.imageUrl}
                         alt="Podgląd nagłówka"
                         style={{
-                          width: "100%",
-                          maxHeight: "300px",
-                          objectFit: "contain",
-                          display: "block",
+                          width: '100%',
+                          maxHeight: '300px',
+                          objectFit: 'contain',
+                          display: 'block',
                         }}
                       />
                     </Card>
@@ -1050,7 +1059,7 @@ export default function NewsletterTool() {
                         mode="ghost"
                         tone="critical"
                         onClick={() =>
-                          setHeroConfig((prev) => ({ ...prev, imageUrl: "" }))
+                          setHeroConfig((prev) => ({ ...prev, imageUrl: '' }))
                         }
                       />
                     </Flex>
@@ -1062,8 +1071,8 @@ export default function NewsletterTool() {
                     border
                     tone="transparent"
                     style={{
-                      textAlign: "center",
-                      cursor: "pointer",
+                      textAlign: 'center',
+                      cursor: 'pointer',
                     }}
                     onClick={() => setIsAssetBrowserOpen(true)}
                   >
@@ -1139,34 +1148,36 @@ export default function NewsletterTool() {
                 radius={2}
                 border
                 tone="default"
-                style={{ position: "sticky", bottom: 0 }}
+                style={{ position: 'sticky', bottom: 0 }}
               >
                 <Flex gap={3} justify="space-between" align="center">
                   <Text size={1} muted>
                     {!heroConfig.imageUrl
-                      ? "⚠️ Dodaj obraz nagłówka"
+                      ? '⚠️ Dodaj obraz nagłówka'
                       : !hasSelectedItems
-                        ? "⚠️ Wybierz co najmniej jeden element"
-                        : ""}
+                        ? '⚠️ Wybierz co najmniej jeden element'
+                        : ''}
                   </Text>
                   <Flex gap={3}>
                     <Button
                       mode="ghost"
                       text="Pobierz HTML"
-                      onClick={() => handleAction("download-html")}
+                      onClick={() => handleAction('download-html')}
                       disabled={
-                        isGenerating || !heroConfig.imageUrl || !hasSelectedItems
+                        isGenerating ||
+                        !heroConfig.imageUrl ||
+                        !hasSelectedItems
                       }
                     />
                     <Button
-                      icon={
-                        hasSelectedItems ? ComposeSparklesIcon : undefined
-                      }
+                      icon={hasSelectedItems ? ComposeSparklesIcon : undefined}
                       tone="primary"
                       text="Wyślij do Mailchimp"
-                      onClick={() => handleAction("create-mailchimp-draft")}
+                      onClick={() => handleAction('create-mailchimp-draft')}
                       disabled={
-                        isGenerating || !heroConfig.imageUrl || !hasSelectedItems
+                        isGenerating ||
+                        !heroConfig.imageUrl ||
+                        !hasSelectedItems
                       }
                     />
                   </Flex>
@@ -1174,7 +1185,7 @@ export default function NewsletterTool() {
               </Card>
             </Stack>
           ) : (
-            <Card padding={5} radius={2} border style={{ textAlign: "center" }}>
+            <Card padding={5} radius={2} border style={{ textAlign: 'center' }}>
               <Text muted>
                 Brak treści. Wybierz zakres dat i kliknij &quot;Pobierz
                 treści&quot;.
@@ -1209,8 +1220,8 @@ export default function NewsletterTool() {
                 ) : assets.length > 0 ? (
                   <Box
                     style={{
-                      maxHeight: "60vh",
-                      overflowY: "auto",
+                      maxHeight: '60vh',
+                      overflowY: 'auto',
                     }}
                   >
                     <Grid columns={[2, 3, 4]} gap={3}>
@@ -1219,29 +1230,29 @@ export default function NewsletterTool() {
                           key={asset._id}
                           radius={2}
                           style={{
-                            cursor: "pointer",
-                            overflow: "hidden",
-                            border: "2px solid transparent",
-                            transition: "border-color 150ms",
+                            cursor: 'pointer',
+                            overflow: 'hidden',
+                            border: '2px solid transparent',
+                            transition: 'border-color 150ms',
                           }}
                           onClick={() => handleAssetSelect(asset)}
                         >
                           <Box
                             style={{
-                              aspectRatio: "16/10",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              overflow: "hidden",
+                              aspectRatio: '16/10',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              overflow: 'hidden',
                             }}
                           >
                             <img
                               src={`${asset.url}?w=300&h=188&fit=crop`}
                               alt={asset.originalFilename}
                               style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
                               }}
                             />
                           </Box>
@@ -1249,11 +1260,11 @@ export default function NewsletterTool() {
                             <Text
                               size={0}
                               style={{
-                                wordBreak: "break-word",
+                                wordBreak: 'break-word',
                                 lineHeight: 1.3,
                               }}
                             >
-                              {asset.originalFilename || "Bez nazwy"}
+                              {asset.originalFilename || 'Bez nazwy'}
                             </Text>
                           </Box>
                         </Card>
@@ -1261,11 +1272,16 @@ export default function NewsletterTool() {
                     </Grid>
                   </Box>
                 ) : (
-                  <Card padding={5} radius={2} border style={{ textAlign: "center" }}>
+                  <Card
+                    padding={5}
+                    radius={2}
+                    border
+                    style={{ textAlign: 'center' }}
+                  >
                     <Text muted>
                       {assetSearchQuery
-                        ? "Nie znaleziono obrazów"
-                        : "Brak obrazów w bibliotece"}
+                        ? 'Nie znaleziono obrazów'
+                        : 'Brak obrazów w bibliotece'}
                     </Text>
                   </Card>
                 )}
@@ -1291,7 +1307,7 @@ export default function NewsletterTool() {
 
 // Sortable wrapper that wires dnd-kit into ContentGroup
 function SortableContentGroup(
-  props: Omit<Parameters<typeof ContentGroup>[0], "dragHandleProps"> & {
+  props: Omit<Parameters<typeof ContentGroup>[0], 'dragHandleProps'> & {
     id: string;
   },
 ) {
@@ -1312,7 +1328,7 @@ function SortableContentGroup(
         transform: CSS.Transform.toString(transform),
         transition,
         opacity: isDragging ? 0.5 : 1,
-        position: "relative",
+        position: 'relative',
         zIndex: isDragging ? 1 : undefined,
       }}
     >
@@ -1354,62 +1370,64 @@ function ContentGroup({
     <Card border radius={2} overflow="hidden">
       {/* Header - Fixed height regardless of enabled state */}
       <Card
-        tone={isEnabled ? "default" : "transparent"}
+        tone={isEnabled ? 'default' : 'transparent'}
         borderBottom={isEnabled && isExpanded}
         padding={3}
         radius={0}
         style={{ opacity: isEnabled ? 1 : 0.7 }}
       >
-      <Flex
-        align="center"
-        justify="space-between"
-        style={{ minHeight: "32px" }}
-      >
-        <Flex align="center" gap={3}>
-          {/* Drag handle */}
-          <div
-            {...dragHandleProps}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              cursor: "grab",
-              opacity: 0.4,
-              color: "inherit",
-              touchAction: "none",
-              background: "none",
-            }}
-            title="Przeciągnij, aby zmienić kolejność"
-          >
-            <DragHandleIcon style={{ fontSize: "20px" }} />
-          </div>
-          <Switch checked={isEnabled} onChange={onToggleEnabled} />
+        <Flex
+          align="center"
+          justify="space-between"
+          style={{ minHeight: '32px' }}
+        >
+          <Flex align="center" gap={3}>
+            {/* Drag handle */}
+            <div
+              {...dragHandleProps}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'grab',
+                opacity: 0.4,
+                color: 'inherit',
+                touchAction: 'none',
+                background: 'none',
+              }}
+              title="Przeciągnij, aby zmienić kolejność"
+            >
+              <DragHandleIcon style={{ fontSize: '20px' }} />
+            </div>
+            <Switch checked={isEnabled} onChange={onToggleEnabled} />
+            <Box
+              style={{
+                cursor: isEnabled ? 'pointer' : 'default',
+                opacity: isEnabled ? 1 : 0.5,
+              }}
+              onClick={isEnabled ? onToggleExpanded : undefined}
+            >
+              <Flex align="center" gap={2}>
+                <Heading size={1}>{title}</Heading>
+                <Text size={1} muted>
+                  ({selectedCount}/{items.length})
+                </Text>
+              </Flex>
+            </Box>
+          </Flex>
+          {/* Always render button container to maintain consistent width */}
           <Box
-            style={{
-              cursor: isEnabled ? "pointer" : "default",
-              opacity: isEnabled ? 1 : 0.5,
-            }}
-            onClick={isEnabled ? onToggleExpanded : undefined}
+            style={{ width: '32px', display: 'flex', justifyContent: 'center' }}
           >
-            <Flex align="center" gap={2}>
-              <Heading size={1}>{title}</Heading>
-              <Text size={1} muted>
-                ({selectedCount}/{items.length})
-              </Text>
-            </Flex>
+            {isEnabled && (
+              <Button
+                icon={isExpanded ? ChevronUpIcon : ChevronDownIcon}
+                mode="bleed"
+                onClick={onToggleExpanded}
+                padding={2}
+              />
+            )}
           </Box>
         </Flex>
-        {/* Always render button container to maintain consistent width */}
-        <Box style={{ width: "32px", display: "flex", justifyContent: "center" }}>
-          {isEnabled && (
-            <Button
-              icon={isExpanded ? ChevronUpIcon : ChevronDownIcon}
-              mode="bleed"
-              onClick={onToggleExpanded}
-              padding={2}
-            />
-          )}
-        </Box>
-      </Flex>
       </Card>
 
       {/* Items */}
@@ -1432,12 +1450,12 @@ function ContentGroup({
                   <Text
                     weight="semibold"
                     size={1}
-                    style={{ marginBottom: "0.25rem" }}
+                    style={{ marginBottom: '0.25rem' }}
                   >
                     {item.title || item.name}
                   </Text>
                   <Text size={1} muted textOverflow="ellipsis">
-                    {new Date(item.publishDate).toLocaleDateString("pl-PL")}
+                    {new Date(item.publishDate).toLocaleDateString('pl-PL')}
                     {item.authorName && ` • ${item.authorName}`}
                     {item.brandName && ` • ${item.brandName}`}
                     {(item.shortDescription || item.description) &&
@@ -1452,9 +1470,9 @@ function ContentGroup({
                       width: 48,
                       height: 48,
                       objectFit:
-                        item.imageSource === "preview" ? "contain" : "cover",
+                        item.imageSource === 'preview' ? 'contain' : 'cover',
                       borderRadius: 4,
-                      backgroundColor: "transparent",
+                      backgroundColor: 'transparent',
                     }}
                   />
                 )}

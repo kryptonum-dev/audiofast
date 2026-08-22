@@ -25,11 +25,7 @@ type CouponInsert = Database['public']['Tables']['coupons']['Insert'];
 type CouponUpdate = Database['public']['Tables']['coupons']['Update'];
 
 export type AdminCouponDerivedStatus =
-  | 'active'
-  | 'expired'
-  | 'inactive'
-  | 'scheduled'
-  | 'usage_limit_reached';
+  'active' | 'expired' | 'inactive' | 'scheduled' | 'usage_limit_reached';
 
 const ADMIN_COUPON_DERIVED_STATUSES: AdminCouponDerivedStatus[] = [
   'active',

@@ -6,19 +6,19 @@ Current Vercel ISR costs are ~$5/day due to excessive cache invalidation. When a
 
 ### Root Causes Identified
 
-| Issue | Impact | Severity |
-|-------|--------|----------|
-| Broad cache tags (`product` for all 551 products) | One edit invalidates ALL pages of that type | **Critical** |
-| Aggressive `TYPE_DEPENDENCY_MAP` | One product edit triggers 10 tag revalidations | **High** |
-| Denormalization webhook loop | Brand edit → patches products → triggers more webhooks | **High** |
+| Issue                                             | Impact                                                 | Severity     |
+| ------------------------------------------------- | ------------------------------------------------------ | ------------ |
+| Broad cache tags (`product` for all 551 products) | One edit invalidates ALL pages of that type            | **Critical** |
+| Aggressive `TYPE_DEPENDENCY_MAP`                  | One product edit triggers 10 tag revalidations         | **High**     |
+| Denormalization webhook loop                      | Brand edit → patches products → triggers more webhooks | **High**     |
 
 ### Current vs Target
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Pages invalidated per product edit | ~612 | ~37 |
-| Daily ISR writes (5 edits, 10% visited) | ~306 | ~19 |
-| Daily ISR cost | ~$5 | ~$0.30 |
+| Metric                                  | Current | Target |
+| --------------------------------------- | ------- | ------ |
+| Pages invalidated per product edit      | ~612    | ~37    |
+| Daily ISR writes (5 edits, 10% visited) | ~306    | ~19    |
+| Daily ISR cost                          | ~$5     | ~$0.30 |
 
 ---
 
@@ -34,12 +34,14 @@ Current Vercel ISR costs are ~$5/day due to excessive cache invalidation. When a
 ### Why Hybrid Tags (Not Fully Specific)?
 
 When a product's brand changes (e.g., Product X moves from Suniata to Yamaha):
+
 - The **new brand page** (Yamaha) needs to show Product X
 - The **old brand page** (Suniata) needs to stop showing Product X
 
 **Problem:** The webhook only provides the NEW brand, not the OLD brand. We can't know which old brand page to invalidate.
 
 **Solution:** Keep brand pages on a broad `brand` tag. When any product is edited, all ~30 brand pages are invalidated. This is acceptable because:
+
 - Only ~30 brand pages (not 551 products)
 - Brand membership changes require full brand page updates anyway
 
@@ -49,23 +51,23 @@ When a product's brand changes (e.g., Product X moves from Suniata to Yamaha):
 
 ### Concept
 
-| Page Type | Tag Strategy | Reason |
-|-----------|--------------|--------|
-| Product pages | Specific (`product:${slug}`) | 551 pages, must be specific |
-| Brand pages | Broad (`brand`) | ~30 pages, brand membership changes |
-| Blog pages | Specific (`blog-article:${slug}`) | No cross-references |
-| Review pages | Specific (`review:${slug}`) | No cross-references |
-| CMS pages | Specific (`page:${slug}`) | Few pages |
+| Page Type     | Tag Strategy                      | Reason                              |
+| ------------- | --------------------------------- | ----------------------------------- |
+| Product pages | Specific (`product:${slug}`)      | 551 pages, must be specific         |
+| Brand pages   | Broad (`brand`)                   | ~30 pages, brand membership changes |
+| Blog pages    | Specific (`blog-article:${slug}`) | No cross-references                 |
+| Review pages  | Specific (`review:${slug}`)       | No cross-references                 |
+| CMS pages     | Specific (`page:${slug}`)         | Few pages                           |
 
 ### Files to Modify
 
-| File | Change |
-|------|--------|
-| `apps/web/src/app/produkty/[slug]/page.tsx` | Add `product:${slug}` tag |
-| `apps/web/src/app/marki/[slug]/page.tsx` | Keep broad `brand` tag (no change needed) |
-| `apps/web/src/app/blog/[slug]/page.tsx` | Add `blog-article:${slug}` tag |
-| `apps/web/src/app/recenzje/[slug]/page.tsx` | Add `review:${slug}` tag |
-| `apps/web/src/app/[slug]/page.tsx` | Add `page:${slug}` tag |
+| File                                        | Change                                    |
+| ------------------------------------------- | ----------------------------------------- |
+| `apps/web/src/app/produkty/[slug]/page.tsx` | Add `product:${slug}` tag                 |
+| `apps/web/src/app/marki/[slug]/page.tsx`    | Keep broad `brand` tag (no change needed) |
+| `apps/web/src/app/blog/[slug]/page.tsx`     | Add `blog-article:${slug}` tag            |
+| `apps/web/src/app/recenzje/[slug]/page.tsx` | Add `review:${slug}` tag                  |
+| `apps/web/src/app/[slug]/page.tsx`          | Add `page:${slug}` tag                    |
 
 ### Implementation Pattern
 
@@ -73,26 +75,26 @@ When a product's brand changes (e.g., Product X moves from Suniata to Yamaha):
 // Product page - specific tag
 export default async function ProductPage({ params }) {
   const { slug } = await params;
-  
+
   const product = await sanityFetch({
     query: queryProductBySlug,
     params: { slug: `/produkty/${slug}/` },
-    tags: ['product', `product:${slug}`],  // Specific tag added
+    tags: ['product', `product:${slug}`], // Specific tag added
   });
-  
+
   // ...
 }
 
 // Brand page - broad tag (unchanged)
 export default async function BrandPage({ params }) {
   const { slug } = await params;
-  
+
   const brand = await sanityFetch({
     query: queryBrandBySlug,
     params: { slug },
-    tags: ['brand'],  // Broad tag - all brand pages
+    tags: ['brand'], // Broad tag - all brand pages
   });
-  
+
   // ...
 }
 ```
@@ -107,28 +109,28 @@ When Product X is edited, query Sanity to find all documents that reference Prod
 
 ### What Gets Revalidated (Product Edit)
 
-| Target | Tag | Condition |
-|--------|-----|-----------|
-| Product X's page | `product:${slug}` | Always |
-| Products listing | `products` | Always |
-| **All brand pages** | `brand` | **Always (hybrid approach)** |
-| Products referencing X | `product:${refSlug}` | Found via reverse lookup |
-| Home page | `homePage` | If references X |
-| CMS pages | `page:${refSlug}` | If reference X |
+| Target                 | Tag                  | Condition                    |
+| ---------------------- | -------------------- | ---------------------------- |
+| Product X's page       | `product:${slug}`    | Always                       |
+| Products listing       | `products`           | Always                       |
+| **All brand pages**    | `brand`              | **Always (hybrid approach)** |
+| Products referencing X | `product:${refSlug}` | Found via reverse lookup     |
+| Home page              | `homePage`           | If references X              |
+| CMS pages              | `page:${refSlug}`    | If reference X               |
 
 ### Expected Impact (Real Data)
 
 Based on actual usage: **max 4 products reference any given product**
 
-| Component | Pages Revalidated |
-|-----------|------------------|
-| Product's own page | 1 |
-| Products listing | 1 |
-| Brand pages (all) | ~30 |
-| Related products | 0-4 |
-| Home page (if ref) | 0-1 |
-| **Total** | **~37 max** |
-| **Current system** | **~612** |
+| Component          | Pages Revalidated |
+| ------------------ | ----------------- |
+| Product's own page | 1                 |
+| Products listing   | 1                 |
+| Brand pages (all)  | ~30               |
+| Related products   | 0-4               |
+| Home page (if ref) | 0-1               |
+| **Total**          | **~37 max**       |
+| **Current system** | **~612**          |
 
 ### Implementation
 
@@ -136,25 +138,27 @@ Based on actual usage: **max 4 products reference any given product**
 // In webhook handler
 async function handleProductEdit(doc: { _id: string; slug: string }) {
   const tags: string[] = [];
-  
+
   // 1. This product's page
   tags.push(`product:${doc.slug}`);
-  
+
   // 2. Products listing
   tags.push('products');
-  
+
   // 3. ALL brand pages (hybrid approach - can't know old brand)
   tags.push('brand');
-  
+
   // 4. Reverse lookup - find documents referencing this product
-  const references = await sanityClient.fetch<Array<{
-    _type: string;
-    slug: string | null;
-  }>>(
+  const references = await sanityClient.fetch<
+    Array<{
+      _type: string;
+      slug: string | null;
+    }>
+  >(
     `*[references($id) && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
-    { id: doc._id }
+    { id: doc._id },
   );
-  
+
   for (const ref of references) {
     if (ref._type === 'product' && ref.slug) {
       tags.push(`product:${extractSlug(ref.slug)}`);
@@ -167,7 +171,7 @@ async function handleProductEdit(doc: { _id: string; slug: string }) {
     }
     // Add other types as needed
   }
-  
+
   // Revalidate all collected tags with immediate expiration
   for (const tag of tags) {
     revalidateTag(tag, { expire: 0 });
@@ -177,12 +181,13 @@ async function handleProductEdit(doc: { _id: string; slug: string }) {
 
 ### Latency Consideration
 
-| Operation | Time |
-|-----------|------|
-| Current (no lookup) | ~50-100ms |
+| Operation           | Time       |
+| ------------------- | ---------- |
+| Current (no lookup) | ~50-100ms  |
 | With reverse lookup | ~200-500ms |
 
 The +300ms latency is acceptable because:
+
 - Sanity webhooks timeout at 30s
 - Editor doesn't wait (async after Publish)
 - Query is simple and indexed
@@ -231,16 +236,16 @@ The dependency map should only include **listing tags**, not specific document t
 ```typescript
 const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // Core content - listings and related
-  product: ['products', 'brand'],  // brand = all brand pages (hybrid)
-  brand: ['brands', 'products', 'brand'],  // affects all brand pages + products filter
+  product: ['products', 'brand'], // brand = all brand pages (hybrid)
+  brand: ['brands', 'products', 'brand'], // affects all brand pages + products filter
   review: [],
   'blog-article': ['blog'],
-  
+
   // Categories
   productCategorySub: ['products', 'productCategorySub'],
   productCategoryParent: ['products'],
   'blog-category': ['blog', 'blog-category'],
-  
+
   // Singletons - only themselves
   homePage: ['homePage'],
   cpoPage: ['cpoPage'],
@@ -248,12 +253,12 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   products: ['products'],
   brands: ['brands'],
   page: ['page'],
-  
+
   // Global - these affect all pages
   settings: ['settings'],
   navbar: ['navbar'],
   footer: ['footer'],
-  
+
   // Legal
   privacyPolicy: ['privacyPolicy'],
   termsAndConditions: ['termsAndConditions'],
@@ -264,9 +269,11 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
 ### Key Removals
 
 **From `product`:** Removed `homePage`, `page`, `review`, `blog-article`, `cpoPage`, `comparatorConfig`
+
 - These are now handled by reverse lookup if they actually reference the product
 
 **From `brand`:** Removed specific product tags
+
 - All brand pages use broad `brand` tag
 
 ---
@@ -276,6 +283,7 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
 ### Problem
 
 Current flow creates webhook cascade:
+
 ```
 Brand edited → Webhook fires → Handler patches 50 products → 50 more webhooks fire
 ```
@@ -311,13 +319,13 @@ Handler revalidates brand tag + products listing
 
 ## Implementation Order
 
-| Step | Task | Risk | Time |
-|------|------|------|------|
-| 1 | Simplify `TYPE_DEPENDENCY_MAP` with hybrid approach | Low | 30 min |
-| 2 | Add specific tags to product/blog/review/page detail pages | Medium | 2 hours |
-| 3 | Update webhook handler with reverse lookup | Medium | 2 hours |
-| 4 | Update Sanity webhook projection (Dashboard) | Low | 15 min |
-| 5 | Configure webhook filter for denorm (Dashboard) | Low | 15 min |
+| Step | Task                                                       | Risk   | Time    |
+| ---- | ---------------------------------------------------------- | ------ | ------- |
+| 1    | Simplify `TYPE_DEPENDENCY_MAP` with hybrid approach        | Low    | 30 min  |
+| 2    | Add specific tags to product/blog/review/page detail pages | Medium | 2 hours |
+| 3    | Update webhook handler with reverse lookup                 | Medium | 2 hours |
+| 4    | Update Sanity webhook projection (Dashboard)               | Low    | 15 min  |
+| 5    | Configure webhook filter for denorm (Dashboard)            | Low    | 15 min  |
 
 **Total estimated time:** ~5 hours
 
@@ -352,13 +360,13 @@ Handler revalidates brand tag + products listing
 
 Each phase can be rolled back independently:
 
-| Phase | Rollback Action |
-|-------|----------------|
-| 1 | Restore original `TYPE_DEPENDENCY_MAP` |
-| 2 | Pages work with or without specific tags |
-| 3 | Remove reverse lookup, use broad tags |
-| 4 | Restore original webhook projection |
-| 5 | Remove webhook filter |
+| Phase | Rollback Action                          |
+| ----- | ---------------------------------------- |
+| 1     | Restore original `TYPE_DEPENDENCY_MAP`   |
+| 2     | Pages work with or without specific tags |
+| 3     | Remove reverse lookup, use broad tags    |
+| 4     | Restore original webhook projection      |
+| 5     | Remove webhook filter                    |
 
 ---
 
@@ -381,10 +389,10 @@ Multiple revalidateTag calls to the same tag = still only 1 ISR write when visit
 
 The cost comes from **how many different pages become stale**, not how many times you call revalidateTag.
 
-| Strategy | Pages Stale | ISR Writes (if 10% visited) |
-|----------|-------------|----------------------------|
-| Current (broad tags) | 612 | 61 |
-| Hybrid (specific products, broad brands) | 37 | 4-7 |
+| Strategy                                 | Pages Stale | ISR Writes (if 10% visited) |
+| ---------------------------------------- | ----------- | --------------------------- |
+| Current (broad tags)                     | 612         | 61                          |
+| Hybrid (specific products, broad brands) | 37          | 4-7                         |
 
 ---
 
@@ -397,10 +405,10 @@ Maximum products referencing any given product: **4**
 ### Impact on Reverse Lookup
 
 | Products Referencing | Additional ISR Writes |
-|---------------------|----------------------|
-| 0 | 0 |
-| 1-2 | 1-2 |
-| 3-4 | 3-4 |
+| -------------------- | --------------------- |
+| 0                    | 0                     |
+| 1-2                  | 1-2                   |
+| 3-4                  | 3-4                   |
 
 This makes reverse lookup very cost-effective for this codebase.
 
@@ -410,10 +418,10 @@ This makes reverse lookup very cost-effective for this codebase.
 
 The client prefers immediate content updates over stale-while-revalidate:
 
-| Profile | Behavior | User Experience |
-|---------|----------|-----------------|
-| `{ expire: 0 }` | Immediate expiration, blocking regeneration | User waits for regeneration (sees fresh content) |
-| `'max'` | Stale-while-revalidate | User gets instant response (but may see stale content briefly) |
+| Profile         | Behavior                                    | User Experience                                                |
+| --------------- | ------------------------------------------- | -------------------------------------------------------------- |
+| `{ expire: 0 }` | Immediate expiration, blocking regeneration | User waits for regeneration (sees fresh content)               |
+| `'max'`         | Stale-while-revalidate                      | User gets instant response (but may see stale content briefly) |
 
 **Important:** Both profiles result in the **same number of ISR writes**. The difference is only in user experience.
 
@@ -421,9 +429,9 @@ The client prefers immediate content updates over stale-while-revalidate:
 
 ## Summary
 
-| Before | After |
-|--------|-------|
-| 1 product edit = 612 pages stale | 1 product edit = ~37 pages stale |
-| ~$5/day ISR cost | ~$0.30/day ISR cost |
+| Before                                         | After                                                |
+| ---------------------------------------------- | ---------------------------------------------------- |
+| 1 product edit = 612 pages stale               | 1 product edit = ~37 pages stale                     |
+| ~$5/day ISR cost                               | ~$0.30/day ISR cost                                  |
 | Product brand change = stale data on old brand | Product brand change = both brands updated correctly |
-| Denormalization causes webhook cascade | Webhook filter prevents cascade |
+| Denormalization causes webhook cascade         | Webhook filter prevents cascade                      |

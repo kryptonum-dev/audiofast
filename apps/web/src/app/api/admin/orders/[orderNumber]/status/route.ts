@@ -1,7 +1,4 @@
-import {
-  adminJson,
-  adminOptions,
-} from '@/src/global/b2c/admin/server/http';
+import { adminJson, adminOptions } from '@/src/global/b2c/admin/server/http';
 import { updateAdminOrderStatus } from '@/src/global/b2c/admin/server/order-status';
 import { withAdminRoute } from '@/src/global/b2c/admin/server/route';
 

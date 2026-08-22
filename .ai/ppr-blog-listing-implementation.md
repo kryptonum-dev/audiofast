@@ -1256,9 +1256,10 @@ If you want to keep the expandable year navigation (showing article links) AND a
         {availableYears.map((year) => (
           <button
             key={year}
-            type='button'
+            type="button"
             className={`${styles.yearPill} ${currentYear === year ? styles.yearPillActive : ''}`}
-            onClick={() => handleYearClick(year)}>
+            onClick={() => handleYearClick(year)}
+          >
             {year}
           </button>
         ))}

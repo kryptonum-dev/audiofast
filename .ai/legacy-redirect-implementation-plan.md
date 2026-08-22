@@ -527,7 +527,7 @@ const nextConfig: NextConfig = {
       }
 
       console.log(
-        `Loaded ${redirectsDoc.redirects.length} redirects from Sanity`
+        `Loaded ${redirectsDoc.redirects.length} redirects from Sanity`,
       );
       return redirectsDoc.redirects;
     } catch (error) {

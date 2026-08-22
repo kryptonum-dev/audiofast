@@ -1,4 +1,4 @@
-import { Box, Card, Spinner } from "@sanity/ui";
+import { Box, Card, Spinner } from '@sanity/ui';
 
 export function AdminLoadingTable() {
   return (

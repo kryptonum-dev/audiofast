@@ -8,10 +8,6 @@ import styles from './styles.module.scss';
  */
 export function TwoColumnLineComponent() {
   return (
-    <div
-      className={styles.twoColumnLine}
-      role="separator"
-      aria-hidden="true"
-    />
+    <div className={styles.twoColumnLine} role="separator" aria-hidden="true" />
   );
 }

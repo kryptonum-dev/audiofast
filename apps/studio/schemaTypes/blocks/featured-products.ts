@@ -1,69 +1,69 @@
-import { Speaker } from "lucide-react";
-import { defineField, defineType } from "sanity";
+import { Speaker } from 'lucide-react';
+import { defineField, defineType } from 'sanity';
 
-import { toPlainText } from "../../utils/helper";
-import { customPortableText } from "../portableText";
+import { toPlainText } from '../../utils/helper';
+import { customPortableText } from '../portableText';
 
-const title = "Wyróżnione produkty";
+const title = 'Wyróżnione produkty';
 
 export const featuredProducts = defineType({
-  name: "featuredProducts",
+  name: 'featuredProducts',
   title,
   icon: Speaker,
-  type: "object",
+  type: 'object',
   description:
-    "Sekcja z karuzelą wyróżnionych produktów - nowości i bestsellery",
+    'Sekcja z karuzelą wyróżnionych produktów - nowości i bestsellery',
   fields: [
     customPortableText({
-      name: "heading",
-      title: "Nagłówek sekcji",
+      name: 'heading',
+      title: 'Nagłówek sekcji',
       description:
         'Główny nagłówek sekcji wyróżnionych produktów (np. "Najchętniej wybierane rozwiązania audio klasy high-end")',
-      type: "heading",
+      type: 'heading',
     }),
     customPortableText({
-      name: "description",
-      title: "Opis sekcji",
-      description: "Krótki opis sekcji wyróżnionych produktów",
+      name: 'description',
+      title: 'Opis sekcji',
+      description: 'Krótki opis sekcji wyróżnionych produktów',
       include: {
-        styles: ["normal"],
-        decorators: ["strong", "em"],
-        annotations: ["customLink"],
+        styles: ['normal'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
       },
     }),
     defineField({
-      name: "button",
-      title: "Przycisk CTA",
-      type: "button",
-      description: "Główny przycisk wezwania do działania sekcji",
-      validation: (Rule) => Rule.required().error("Przycisk CTA jest wymagany"),
+      name: 'button',
+      title: 'Przycisk CTA',
+      type: 'button',
+      description: 'Główny przycisk wezwania do działania sekcji',
+      validation: (Rule) => Rule.required().error('Przycisk CTA jest wymagany'),
     }),
     defineField({
-      name: "newProductsMode",
-      title: "Tryb wyboru nowych produktów",
-      type: "string",
+      name: 'newProductsMode',
+      title: 'Tryb wyboru nowych produktów',
+      type: 'string',
       description:
-        "Wybierz, czy automatycznie pobrać 10 najnowszych produktów, czy wybrać ręcznie",
+        'Wybierz, czy automatycznie pobrać 10 najnowszych produktów, czy wybrać ręcznie',
       options: {
         list: [
-          { title: "Automatycznie (10 najnowszych)", value: "automatic" },
-          { title: "Ręcznie wybrane", value: "manual" },
+          { title: 'Automatycznie (10 najnowszych)', value: 'automatic' },
+          { title: 'Ręcznie wybrane', value: 'manual' },
         ],
-        layout: "radio",
+        layout: 'radio',
       },
-      initialValue: "automatic",
+      initialValue: 'automatic',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "newProducts",
-      title: "Nowe produkty",
-      type: "array",
-      description: "Wybierz nowe produkty do wyświetlenia (3-8 elementów)",
-      hidden: ({ parent }) => parent?.newProductsMode !== "manual",
+      name: 'newProducts',
+      title: 'Nowe produkty',
+      type: 'array',
+      description: 'Wybierz nowe produkty do wyświetlenia (3-8 elementów)',
+      hidden: ({ parent }) => parent?.newProductsMode !== 'manual',
       of: [
         {
-          type: "reference",
-          to: [{ type: "product" }],
+          type: 'reference',
+          to: [{ type: 'product' }],
           options: {
             disableNew: true,
             filter: ({ parent, document }) => {
@@ -96,27 +96,27 @@ export const featuredProducts = defineType({
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const parent = context.parent as { newProductsMode?: string };
-          if (parent?.newProductsMode === "manual") {
+          if (parent?.newProductsMode === 'manual') {
             if (!value || !Array.isArray(value) || value.length < 3) {
-              return "Minimum 3 produkty są wymagane";
+              return 'Minimum 3 produkty są wymagane';
             }
             if (value.length > 8) {
-              return "Maksimum 8 produktów";
+              return 'Maksimum 8 produktów';
             }
           }
           return true;
         }),
     }),
     defineField({
-      name: "bestsellers",
-      title: "Bestsellery",
-      type: "array",
+      name: 'bestsellers',
+      title: 'Bestsellery',
+      type: 'array',
       description:
-        "Wybierz produkty-bestsellery do wyświetlenia (3-8 elementów)",
+        'Wybierz produkty-bestsellery do wyświetlenia (3-8 elementów)',
       of: [
         {
-          type: "reference",
-          to: [{ type: "product" }],
+          type: 'reference',
+          to: [{ type: 'product' }],
           options: {
             disableNew: true,
             filter: ({ parent, document }) => {
@@ -147,29 +147,29 @@ export const featuredProducts = defineType({
         },
       ],
       validation: (Rule) => [
-        Rule.min(3).error("Minimum 3 produkty"),
-        Rule.max(8).error("Maksimum 8 produktów"),
-        Rule.required().error("Produkty są wymagane"),
-        Rule.unique().error("Każdy produkt może być wybrany tylko raz"),
+        Rule.min(3).error('Minimum 3 produkty'),
+        Rule.max(8).error('Maksimum 8 produktów'),
+        Rule.required().error('Produkty są wymagane'),
+        Rule.unique().error('Każdy produkt może być wybrany tylko raz'),
       ],
     }),
   ],
   preview: {
     select: {
-      heading: "heading",
-      description: "description",
-      newProductsMode: "newProductsMode",
-      newProductsCount: "newProducts",
+      heading: 'heading',
+      description: 'description',
+      newProductsMode: 'newProductsMode',
+      newProductsCount: 'newProducts',
     },
     prepare: ({ heading, description, newProductsMode, newProductsCount }) => {
       const modeLabel =
-        newProductsMode === "manual"
+        newProductsMode === 'manual'
           ? `Ręcznie (${Array.isArray(newProductsCount) ? newProductsCount.length : 0})`
-          : "Auto (10 najnowszych)";
+          : 'Auto (10 najnowszych)';
 
       return {
         title,
-        subtitle: `${toPlainText(heading) || toPlainText(description) || "Nowości i bestsellery"} | Nowości: ${modeLabel}`,
+        subtitle: `${toPlainText(heading) || toPlainText(description) || 'Nowości i bestsellery'} | Nowości: ${modeLabel}`,
         media: Speaker,
       };
     },

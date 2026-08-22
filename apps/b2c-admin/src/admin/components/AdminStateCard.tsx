@@ -1,12 +1,12 @@
-import { Box, Card, Flex, Heading, Spinner, Stack, Text } from "@sanity/ui";
-import type { ReactNode } from "react";
+import { Box, Card, Flex, Heading, Spinner, Stack, Text } from '@sanity/ui';
+import type { ReactNode } from 'react';
 
 type AdminStateCardProps = {
   heading: string;
   description: string;
   action?: ReactNode;
   loading?: boolean;
-  tone?: "default" | "critical" | "caution" | "positive";
+  tone?: 'default' | 'critical' | 'caution' | 'positive';
 };
 
 export function AdminStateCard({
@@ -14,7 +14,7 @@ export function AdminStateCard({
   description,
   heading,
   loading = false,
-  tone = "default",
+  tone = 'default',
 }: AdminStateCardProps) {
   return (
     <Box padding={3}>

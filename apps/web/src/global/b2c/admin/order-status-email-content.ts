@@ -1,8 +1,5 @@
 export type AdminOrderStatusEmailStatus =
-  | 'processing'
-  | 'shipped'
-  | 'cancelled'
-  | 'returned';
+  'processing' | 'shipped' | 'cancelled' | 'returned';
 
 export const STATUS_EMAIL_CONTENT: Record<
   AdminOrderStatusEmailStatus,

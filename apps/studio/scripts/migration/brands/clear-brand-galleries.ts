@@ -10,7 +10,7 @@
  *   SANITY_API_TOKEN="xxx" bun run apps/studio/scripts/migration/brands/clear-brand-galleries.ts
  */
 
-import { createClient, type SanityClient } from "@sanity/client";
+import { createClient, type SanityClient } from '@sanity/client';
 
 // ============================================================================
 // SANITY CLIENT
@@ -20,13 +20,13 @@ function createMigrationClient(): SanityClient {
   const token = process.env.SANITY_API_TOKEN;
 
   if (!token) {
-    throw new Error("SANITY_API_TOKEN environment variable is required");
+    throw new Error('SANITY_API_TOKEN environment variable is required');
   }
 
   return createClient({
-    projectId: "fsw3likv",
-    dataset: "production",
-    apiVersion: "2024-01-01",
+    projectId: 'fsw3likv',
+    dataset: 'production',
+    apiVersion: '2024-01-01',
     token,
     useCdn: false,
   });
@@ -38,18 +38,18 @@ function createMigrationClient(): SanityClient {
 
 async function main() {
   const args = process.argv.slice(2);
-  const dryRun = args.includes("--dry-run");
+  const dryRun = args.includes('--dry-run');
 
   console.log(
-    "╔════════════════════════════════════════════════════════════════╗",
+    '╔════════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║           CLEAR BRAND GALLERIES                                ║",
+    '║           CLEAR BRAND GALLERIES                                ║',
   );
   console.log(
-    "╚════════════════════════════════════════════════════════════════╝",
+    '╚════════════════════════════════════════════════════════════════╝',
   );
-  console.log(`Mode: ${dryRun ? "DRY RUN (no changes)" : "LIVE"}`);
+  console.log(`Mode: ${dryRun ? 'DRY RUN (no changes)' : 'LIVE'}`);
 
   // Create Sanity client
   let client: SanityClient;
@@ -57,23 +57,23 @@ async function main() {
   if (!dryRun) {
     try {
       client = createMigrationClient();
-      console.log("\n✓ Sanity client initialized");
+      console.log('\n✓ Sanity client initialized');
     } catch (error) {
-      console.error("\n✗ Failed to create Sanity client:", error);
+      console.error('\n✗ Failed to create Sanity client:', error);
       process.exit(1);
     }
   } else {
     // Create a read-only client for dry run
     client = createClient({
-      projectId: "fsw3likv",
-      dataset: "production",
-      apiVersion: "2024-01-01",
+      projectId: 'fsw3likv',
+      dataset: 'production',
+      apiVersion: '2024-01-01',
       useCdn: false,
     });
   }
 
   // Find all brands with imageGallery
-  console.log("\n📋 Finding brands with imageGallery...");
+  console.log('\n📋 Finding brands with imageGallery...');
 
   const brandsWithGallery = await client.fetch<
     Array<{ _id: string; name: string; imageCount: number }>
@@ -86,7 +86,7 @@ async function main() {
   );
 
   if (brandsWithGallery.length === 0) {
-    console.log("\n✓ No brands have imageGallery data. Nothing to clear.");
+    console.log('\n✓ No brands have imageGallery data. Nothing to clear.');
     return;
   }
 
@@ -98,23 +98,23 @@ async function main() {
   }
 
   if (dryRun) {
-    console.log("\n📋 DRY RUN - Would clear imageGallery from:");
+    console.log('\n📋 DRY RUN - Would clear imageGallery from:');
     for (const brand of brandsWithGallery) {
       console.log(`   - ${brand.name} (${brand._id})`);
     }
-    console.log("\n✓ Dry run complete. No changes made.");
+    console.log('\n✓ Dry run complete. No changes made.');
     return;
   }
 
   // Clear galleries
-  console.log("\n🗑️  Clearing imageGallery from all brands...");
+  console.log('\n🗑️  Clearing imageGallery from all brands...');
 
   let successCount = 0;
   let failCount = 0;
 
   for (const brand of brandsWithGallery) {
     try {
-      await client.patch(brand._id).unset(["imageGallery"]).commit();
+      await client.patch(brand._id).unset(['imageGallery']).commit();
 
       console.log(`   ✓ Cleared: ${brand.name}`);
       successCount++;
@@ -126,18 +126,18 @@ async function main() {
 
   // Summary
   console.log(
-    "\n════════════════════════════════════════════════════════════════════",
+    '\n════════════════════════════════════════════════════════════════════',
   );
-  console.log("📊 SUMMARY");
+  console.log('📊 SUMMARY');
   console.log(
-    "════════════════════════════════════════════════════════════════════",
+    '════════════════════════════════════════════════════════════════════',
   );
   console.log(`✅ Cleared: ${successCount}`);
   console.log(`❌ Failed: ${failCount}`);
-  console.log("\nGallery cleanup complete!");
+  console.log('\nGallery cleanup complete!');
 }
 
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error('Fatal error:', error);
   process.exit(1);
 });

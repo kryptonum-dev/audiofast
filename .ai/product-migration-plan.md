@@ -164,25 +164,26 @@ ORDER BY st_brand.Title, p.name;
 ```
 
 **Expected Columns:**
-| Column | Description |
-|--------|-------------|
-| ProductID | Legacy product ID |
-| ProductName | Product name |
-| Subtitle | Product subtitle/category description |
-| ProductSlug | URL segment |
-| IsArchived | 0 or 1 |
-| IsPublished | 0 or 1 |
-| IsHidden | 0 or 1 |
-| MetaDescription | SEO description |
-| MetaTitle | SEO title |
-| ProductImageID | Main image file ID |
-| MainImageFilename | Main image path |
-| PrimaryCategoryID | Primary category ID |
-| PrimaryCategorySlug | Primary category URL segment |
-| PrimaryCategoryName | Primary category name |
-| BrandID | Brand ID |
-| BrandSlug | Brand URL segment |
-| BrandName | Brand name |
+
+| Column              | Description                           |
+| ------------------- | ------------------------------------- |
+| ProductID           | Legacy product ID                     |
+| ProductName         | Product name                          |
+| Subtitle            | Product subtitle/category description |
+| ProductSlug         | URL segment                           |
+| IsArchived          | 0 or 1                                |
+| IsPublished         | 0 or 1                                |
+| IsHidden            | 0 or 1                                |
+| MetaDescription     | SEO description                       |
+| MetaTitle           | SEO title                             |
+| ProductImageID      | Main image file ID                    |
+| MainImageFilename   | Main image path                       |
+| PrimaryCategoryID   | Primary category ID                   |
+| PrimaryCategorySlug | Primary category URL segment          |
+| PrimaryCategoryName | Primary category name                 |
+| BrandID             | Brand ID                              |
+| BrandSlug           | Brand URL segment                     |
+| BrandName           | Brand name                            |
 
 ---
 
@@ -206,12 +207,13 @@ ORDER BY ppt.ProductID, ppt.ProductTypeID;
 ```
 
 **Expected Columns:**
-| Column | Description |
-|--------|-------------|
-| ProductID | Legacy product ID |
-| CategoryID | Category ID |
+
+| Column       | Description          |
+| ------------ | -------------------- |
+| ProductID    | Legacy product ID    |
+| CategoryID   | Category ID          |
 | CategorySlug | Category URL segment |
-| CategoryName | Category name |
+| CategoryName | Category name        |
 
 ---
 
@@ -240,16 +242,17 @@ ORDER BY b.ProductID, b.Sort;
 ```
 
 **Expected Columns:**
-| Column | Description |
-|--------|-------------|
-| BoxID | Box ID |
-| ProductID | Legacy product ID |
-| ProductName | Product name (for reference) |
-| BoxSort | Order within product |
-| BoxType | 'text', 'youtube', 'vimeo', 'line', 'hr', 'gallery' |
-| BoxTitle | Section title |
-| BoxContent | HTML content |
-| YoutubeId | YouTube video ID (if applicable) |
+
+| Column      | Description                                         |
+| ----------- | --------------------------------------------------- |
+| BoxID       | Box ID                                              |
+| ProductID   | Legacy product ID                                   |
+| ProductName | Product name (for reference)                        |
+| BoxSort     | Order within product                                |
+| BoxType     | 'text', 'youtube', 'vimeo', 'line', 'hr', 'gallery' |
+| BoxTitle    | Section title                                       |
+| BoxContent  | HTML content                                        |
+| YoutubeId   | YouTube video ID (if applicable)                    |
 
 **Note:** `gallery` boxes are included to identify them, but their content goes to `imageGallery` field (not details).
 
@@ -281,15 +284,16 @@ ORDER BY b.ProductID, bgi.Sort;
 ```
 
 **Expected Columns:**
-| Column | Description |
-|--------|-------------|
-| BoxID | Parent box ID |
-| ProductID | Legacy product ID |
-| ProductName | Product name (for reference) |
-| ImageID | File ID |
-| ImageSort | Image order |
-| ImageFilename | Image path |
-| ImageName | Image name |
+
+| Column        | Description                  |
+| ------------- | ---------------------------- |
+| BoxID         | Parent box ID                |
+| ProductID     | Legacy product ID            |
+| ProductName   | Product name (for reference) |
+| ImageID       | File ID                      |
+| ImageSort     | Image order                  |
+| ImageFilename | Image path                   |
+| ImageName     | Image name                   |
 
 ---
 
@@ -317,15 +321,16 @@ ORDER BY b.ProductID, t.Sort;
 ```
 
 **Expected Columns:**
-| Column | Description |
-|--------|-------------|
-| TabID | Tab ID |
-| BoxID | Parent box ID |
-| ProductID | Legacy product ID |
+
+| Column      | Description                  |
+| ----------- | ---------------------------- |
+| TabID       | Tab ID                       |
+| BoxID       | Parent box ID                |
+| ProductID   | Legacy product ID            |
 | ProductName | Product name (for reference) |
-| TabSort | Tab order |
-| TabTitle | Tab/section title |
-| TabContent | HTML table content |
+| TabSort     | Tab order                    |
+| TabTitle    | Tab/section title            |
+| TabContent  | HTML table content           |
 
 ---
 
@@ -367,14 +372,15 @@ ORDER BY ProductID, ReviewSort;
 ```
 
 **Expected Columns:**
-| Column | Description |
-|--------|-------------|
-| ProductID | Legacy product ID |
-| ProductName | Product name |
-| ReviewID | Review ID |
-| ReviewSlug | Review URL segment |
-| ReviewTitle | Review title |
-| ReviewSort | Review order |
+
+| Column      | Description        |
+| ----------- | ------------------ |
+| ProductID   | Legacy product ID  |
+| ProductName | Product name       |
+| ReviewID    | Review ID          |
+| ReviewSlug  | Review URL segment |
+| ReviewTitle | Review title       |
+| ReviewSort  | Review order       |
 
 ---
 
@@ -549,10 +555,10 @@ This is the most complex transformation. Each box type is processed differently:
 ```typescript
 // details.content is an array of:
 type DetailsContent = Array<
-  | { _type: "contentBlockText"; _key: string; content: PortableTextBlock[] }
-  | { _type: "contentBlockYoutube"; _key: string; videoId: string }
-  | { _type: "contentBlockVimeo"; _key: string; videoId: string }
-  | { _type: "contentBlockHorizontalLine"; _key: string }
+  | { _type: 'contentBlockText'; _key: string; content: PortableTextBlock[] }
+  | { _type: 'contentBlockYoutube'; _key: string; videoId: string }
+  | { _type: 'contentBlockVimeo'; _key: string; videoId: string }
+  | { _type: 'contentBlockHorizontalLine'; _key: string }
 >;
 ```
 
@@ -921,10 +927,10 @@ WebP provides **50-80% smaller file sizes** compared to JPEG/PNG with equivalent
 #### Sharp Configuration
 
 ```typescript
-import sharp from "sharp";
+import sharp from 'sharp';
 
 interface ImageOptimizationConfig {
-  format: "webp";
+  format: 'webp';
   quality: number; // 80-85 for photos, 90 for graphics
   maxWidth: number; // 2400px for main images, 1920px for gallery
   maxHeight: number; // 1600px max
@@ -933,7 +939,7 @@ interface ImageOptimizationConfig {
 }
 
 const DEFAULT_CONFIG: ImageOptimizationConfig = {
-  format: "webp",
+  format: 'webp',
   quality: 82,
   maxWidth: 2400,
   maxHeight: 1600,
@@ -949,7 +955,7 @@ async function optimizeImage(
     .resize({
       width: config.maxWidth,
       height: config.maxHeight,
-      fit: "inside", // Maintain aspect ratio
+      fit: 'inside', // Maintain aspect ratio
       withoutEnlargement: true, // Don't upscale small images
     })
     .webp({
@@ -977,7 +983,7 @@ async function optimizeImage(
 
 function getOptimizedFilename(originalFilename: string): string {
   const ext = path.extname(originalFilename);
-  return originalFilename.replace(ext, ".webp");
+  return originalFilename.replace(ext, '.webp');
 }
 ```
 
@@ -986,7 +992,7 @@ function getOptimizedFilename(originalFilename: string): string {
 The legacy server has SSL certificate issues. Use:
 
 ```typescript
-import * as https from "node:https";
+import * as https from 'node:https';
 
 const insecureAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -998,8 +1004,8 @@ const insecureAgent = new https.Agent({
 Complete image download → optimize → upload pipeline:
 
 ```typescript
-import sharp from "sharp";
-import * as https from "node:https";
+import sharp from 'sharp';
+import * as https from 'node:https';
 
 async function processAndUploadImage(
   sourceUrl: string,
@@ -1025,7 +1031,7 @@ async function processAndUploadImage(
     const optimizedBuffer = await sharp(originalBuffer)
       .resize({
         width: maxWidth,
-        fit: "inside",
+        fit: 'inside',
         withoutEnlargement: true,
       })
       .webp({ quality, smartSubsample: true })
@@ -1033,16 +1039,16 @@ async function processAndUploadImage(
 
     // 3. Get optimized filename
     const originalFilename =
-      new URL(sourceUrl).pathname.split("/").pop() || "image";
+      new URL(sourceUrl).pathname.split('/').pop() || 'image';
     const optimizedFilename = originalFilename.replace(
       /\.(jpe?g|png|gif)$/i,
-      ".webp",
+      '.webp',
     );
 
     // 4. Upload to Sanity
-    const asset = await sanityClient.assets.upload("image", optimizedBuffer, {
+    const asset = await sanityClient.assets.upload('image', optimizedBuffer, {
       filename: optimizedFilename,
-      contentType: "image/webp",
+      contentType: 'image/webp',
     });
 
     // Log size reduction
@@ -1081,7 +1087,7 @@ interface ImageCacheFile {
 }
 
 // Cache file location
-const CACHE_FILE = "apps/studio/scripts/migration/products/image-cache.json";
+const CACHE_FILE = 'apps/studio/scripts/migration/products/image-cache.json';
 ```
 
 ### 9.6 Expected Optimization Results
@@ -1130,8 +1136,8 @@ async function processImageWithFallback(
         agent: new https.Agent({ rejectUnauthorized: false }),
       });
       const buffer = Buffer.from(await response.arrayBuffer());
-      return await client.assets.upload("image", buffer, {
-        filename: sourceUrl.split("/").pop(),
+      return await client.assets.upload('image', buffer, {
+        filename: sourceUrl.split('/').pop(),
       });
     } catch (uploadError) {
       console.error(`Failed to upload image ${sourceUrl}:`, uploadError);

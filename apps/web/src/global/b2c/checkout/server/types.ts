@@ -67,8 +67,7 @@ export type CheckoutSubmitSuccess = {
 };
 
 export type CheckoutSubmitResult =
-  | CheckoutSubmitSuccess
-  | CheckoutSubmitFailure;
+  CheckoutSubmitSuccess | CheckoutSubmitFailure;
 
 export function createCheckoutSubmitFailure(
   error: CheckoutDomainError,

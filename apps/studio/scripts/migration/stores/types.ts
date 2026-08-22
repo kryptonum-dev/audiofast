@@ -29,7 +29,7 @@ export interface ParsedAddress {
 
 // Target Sanity store document
 export interface SanityStoreDocument {
-  _type: "store";
+  _type: 'store';
   _id: string;
   name: string;
   address: {

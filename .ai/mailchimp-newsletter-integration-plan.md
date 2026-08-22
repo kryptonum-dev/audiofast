@@ -48,14 +48,14 @@ npm install @mailchimp/mailchimp_marketing
 **File**: `apps/web/src/global/mailchimp/client.ts`
 
 ```typescript
-import mailchimp from "@mailchimp/mailchimp_marketing";
+import mailchimp from '@mailchimp/mailchimp_marketing';
 
 const MAILCHIMP_API_KEY = process.env.MAILCHIMP_API_KEY;
 const MAILCHIMP_SERVER_PREFIX = process.env.MAILCHIMP_SERVER_PREFIX;
 
 if (!MAILCHIMP_API_KEY || !MAILCHIMP_SERVER_PREFIX) {
   console.warn(
-    "[Mailchimp] Missing API credentials. Newsletter signup will be disabled.",
+    '[Mailchimp] Missing API credentials. Newsletter signup will be disabled.',
   );
 }
 
@@ -67,7 +67,7 @@ mailchimp.setConfig({
 
 export const mailchimpClient = mailchimp;
 
-export const MAILCHIMP_AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID || "";
+export const MAILCHIMP_AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID || '';
 ```
 
 ### 2. Create Helper Functions
@@ -75,8 +75,8 @@ export const MAILCHIMP_AUDIENCE_ID = process.env.MAILCHIMP_AUDIENCE_ID || "";
 **File**: `apps/web/src/global/mailchimp/subscribe.ts`
 
 ```typescript
-import crypto from "crypto";
-import { mailchimpClient, MAILCHIMP_AUDIENCE_ID } from "./client";
+import crypto from 'crypto';
+import { mailchimpClient, MAILCHIMP_AUDIENCE_ID } from './client';
 
 export type SubscribeResult = {
   success: boolean;
@@ -96,19 +96,19 @@ export async function subscribeToNewsletter(
   },
 ): Promise<SubscribeResult> {
   if (!mailchimpClient || !MAILCHIMP_AUDIENCE_ID) {
-    console.error("[Mailchimp] Client not configured");
+    console.error('[Mailchimp] Client not configured');
     return {
       success: false,
-      message: "Newsletter service not available",
+      message: 'Newsletter service not available',
     };
   }
 
   try {
     // Generate subscriber hash for idempotent operations
     const subscriberHash = crypto
-      .createHash("md5")
+      .createHash('md5')
       .update(email.toLowerCase())
-      .digest("hex");
+      .digest('hex');
 
     // Use setListMember (PUT) instead of addListMember (POST)
     // This is idempotent and won't fail if email already exists
@@ -117,42 +117,42 @@ export async function subscribeToNewsletter(
       subscriberHash,
       {
         email_address: email,
-        status_if_new: "pending", // 'pending' for double opt-in, 'subscribed' for single opt-in
+        status_if_new: 'pending', // 'pending' for double opt-in, 'subscribed' for single opt-in
         merge_fields: {
-          SOURCE: metadata?.source || "website",
+          SOURCE: metadata?.source || 'website',
         },
-        tags: metadata?.tags || ["website"],
+        tags: metadata?.tags || ['website'],
       },
     );
 
     // Check if user needs to confirm (double opt-in)
-    const needsConfirmation = response.status === "pending";
+    const needsConfirmation = response.status === 'pending';
 
     return {
       success: true,
       needsConfirmation,
       message: needsConfirmation
-        ? "Please check your email to confirm subscription"
-        : "Successfully subscribed to newsletter",
+        ? 'Please check your email to confirm subscription'
+        : 'Successfully subscribed to newsletter',
     };
   } catch (error: any) {
-    console.error("[Mailchimp] Subscribe error:", error);
+    console.error('[Mailchimp] Subscribe error:', error);
 
     // Handle specific Mailchimp errors
     if (error.status === 400) {
-      const errorDetail = error.response?.body?.title || "";
+      const errorDetail = error.response?.body?.title || '';
 
-      if (errorDetail.includes("already a list member")) {
+      if (errorDetail.includes('already a list member')) {
         return {
           success: true,
-          message: "You are already subscribed",
+          message: 'You are already subscribed',
         };
       }
 
-      if (errorDetail.includes("Invalid Resource")) {
+      if (errorDetail.includes('Invalid Resource')) {
         return {
           success: false,
-          message: "Invalid email address",
+          message: 'Invalid email address',
         };
       }
     }
@@ -160,13 +160,13 @@ export async function subscribeToNewsletter(
     if (error.status === 403) {
       return {
         success: false,
-        message: "Newsletter signup is temporarily unavailable",
+        message: 'Newsletter signup is temporarily unavailable',
       };
     }
 
     return {
       success: false,
-      message: "Failed to subscribe. Please try again later.",
+      message: 'Failed to subscribe. Please try again later.',
     };
   }
 }
@@ -181,9 +181,9 @@ export async function subscribeToNewsletter(
 **File**: `apps/web/src/app/api/newsletter/route.ts`
 
 ```typescript
-import { type NextRequest, NextResponse } from "next/server";
-import { subscribeToNewsletter } from "@/global/mailchimp/subscribe";
-import { REGEX } from "@/global/constants";
+import { type NextRequest, NextResponse } from 'next/server';
+import { subscribeToNewsletter } from '@/global/mailchimp/subscribe';
+import { REGEX } from '@/global/constants';
 
 type NewsletterSubmission = {
   email: string;
@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { success: false, message: "Invalid request" },
+      { success: false, message: 'Invalid request' },
       { status: 400 },
     );
   }
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
   // Validate required fields
   if (!body.email || !body.consent) {
     return NextResponse.json(
-      { success: false, message: "Email and consent are required" },
+      { success: false, message: 'Email and consent are required' },
       { status: 400 },
     );
   }
@@ -214,7 +214,7 @@ export async function POST(request: NextRequest) {
   // Validate email format
   if (!REGEX.email.test(body.email)) {
     return NextResponse.json(
-      { success: false, message: "Invalid email address" },
+      { success: false, message: 'Invalid email address' },
       { status: 400 },
     );
   }
@@ -222,8 +222,8 @@ export async function POST(request: NextRequest) {
   // Subscribe to Mailchimp
   try {
     const result = await subscribeToNewsletter(body.email, {
-      source: body.source || "footer",
-      tags: ["website", body.source || "footer"],
+      source: body.source || 'footer',
+      tags: ['website', body.source || 'footer'],
     });
 
     if (!result.success) {
@@ -242,9 +242,9 @@ export async function POST(request: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("[Newsletter API] Unexpected error:", error);
+    console.error('[Newsletter API] Unexpected error:', error);
     return NextResponse.json(
-      { success: false, message: "Failed to process subscription" },
+      { success: false, message: 'Failed to process subscription' },
       { status: 500 },
     );
   }

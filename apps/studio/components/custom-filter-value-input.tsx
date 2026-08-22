@@ -1,4 +1,4 @@
-import { TrashIcon } from "@sanity/icons";
+import { TrashIcon } from '@sanity/icons';
 import {
   Autocomplete,
   Box,
@@ -8,10 +8,10 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ArrayOfObjectsInputProps } from "sanity";
-import { set, unset, useClient, useFormValue } from "sanity";
+} from '@sanity/ui';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { ArrayOfObjectsInputProps } from 'sanity';
+import { set, unset, useClient, useFormValue } from 'sanity';
 
 type FilterValue = {
   _key: string;
@@ -22,13 +22,13 @@ type FilterValue = {
 
 type FilterDefinition = {
   name: string;
-  filterType: "dropdown" | "range";
+  filterType: 'dropdown' | 'range';
   unit?: string;
 };
 
 export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
   const { value = [], onChange } = props;
-  const client = useClient({ apiVersion: "2024-01-01" });
+  const client = useClient({ apiVersion: '2024-01-01' });
   const [availableFilters, setAvailableFilters] = useState<FilterDefinition[]>(
     [],
   );
@@ -74,21 +74,18 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
         // Combine all filters from all categories and remove duplicates by name
         const allFilters = result
           .flatMap((cat) => cat.customFilters || [])
-          .reduce(
-            (acc, filter) => {
-              // Keep first occurrence of each filter name
-              if (!acc.find((f) => f.name === filter.name)) {
-                acc.push(filter);
-              }
-              return acc;
-            },
-            [] as FilterDefinition[],
-          )
+          .reduce((acc, filter) => {
+            // Keep first occurrence of each filter name
+            if (!acc.find((f) => f.name === filter.name)) {
+              acc.push(filter);
+            }
+            return acc;
+          }, [] as FilterDefinition[])
           .sort((a, b) => a.name.localeCompare(b.name));
 
         setAvailableFilters(allFilters);
       } catch (error) {
-        console.error("Error fetching filters:", error);
+        console.error('Error fetching filters:', error);
         setAvailableFilters([]);
       } finally {
         setInitialLoading(false);
@@ -199,7 +196,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
         const filterDef = availableFilters.find(
           (f) => f.name === item.filterName,
         );
-        const isRangeFilter = filterDef?.filterType === "range";
+        const isRangeFilter = filterDef?.filterType === 'range';
 
         return (
           <Card key={item._key} padding={3} border>
@@ -218,14 +215,12 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                       options={availableFilters.map((filter) => ({
                         value: filter.name,
                       }))}
-                      value={item.filterName || ""}
+                      value={item.filterName || ''}
                       onChange={(newValue) =>
                         handleFilterNameChange(index, newValue)
                       }
                       filterOption={(query, option) =>
-                        option.value
-                          .toLowerCase()
-                          .includes(query.toLowerCase())
+                        option.value.toLowerCase().includes(query.toLowerCase())
                       }
                     />
                   </Stack>
@@ -236,15 +231,17 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                   <Box flex={1}>
                     <Stack space={2}>
                       <Text size={1} weight="semibold">
-                        Wartość{filterDef?.unit ? ` (${filterDef.unit})` : ""}
+                        Wartość{filterDef?.unit ? ` (${filterDef.unit})` : ''}
                       </Text>
                       <TextInput
                         fontSize={2}
                         padding={3}
                         placeholder="np. 4, 8, 12"
                         type="number"
-                        value={item.numericValue?.toString() || ""}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        value={item.numericValue?.toString() || ''}
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>,
+                        ) =>
                           handleNumericValueChange(
                             index,
                             event.currentTarget.valueAsNumber,
@@ -263,7 +260,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                         fontSize={2}
                         padding={3}
                         placeholder="np. 2m, 100W, 8Ω"
-                        value={item.value || ""}
+                        value={item.value || ''}
                         onChange={(event) =>
                           handleValueChange(index, event.currentTarget.value)
                         }
@@ -287,11 +284,13 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                   <Text size={1}>Wybierz nazwę filtra</Text>
                 </Card>
               )}
-              {item.filterName && isRangeFilter && item.numericValue === undefined && (
-                <Card padding={2} tone="caution" radius={2}>
-                  <Text size={1}>Podaj wartość liczbową dla tego filtra</Text>
-                </Card>
-              )}
+              {item.filterName &&
+                isRangeFilter &&
+                item.numericValue === undefined && (
+                  <Card padding={2} tone="caution" radius={2}>
+                    <Text size={1}>Podaj wartość liczbową dla tego filtra</Text>
+                  </Card>
+                )}
               {item.filterName && !isRangeFilter && !item.value && (
                 <Card padding={2} tone="caution" radius={2}>
                   <Text size={1}>Podaj wartość dla filtra</Text>
@@ -311,7 +310,9 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
               Dostępne filtry z wybranych kategorii:
             </Text>
             <Text size={1} muted>
-              {availableFilters.map((f) => `${f.name}${f.unit ? ` (${f.unit})` : ""}`).join(", ")}
+              {availableFilters
+                .map((f) => `${f.name}${f.unit ? ` (${f.unit})` : ''}`)
+                .join(', ')}
             </Text>
           </Stack>
         </Card>

@@ -14,11 +14,8 @@ import type { SchemaType } from 'sanity';
 import styled from 'styled-components';
 
 import { defaultDatetimeFields } from '../constants';
-import type {
-  SelectableField} from '../helpers/getSelectableFields';
-import {
-  getSelectableFields
-} from '../helpers/getSelectableFields';
+import type { SelectableField } from '../helpers/getSelectableFields';
+import { getSelectableFields } from '../helpers/getSelectableFields';
 import { IndeterminateIndicator } from '../styles';
 
 const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
@@ -163,7 +160,13 @@ function ColumnSelector({
                 >
                   <Label htmlFor={fieldPath}>
                     <ColumnMenuFlex align="center" gap={1}>
-                      {isSelected ? <CheckmarkIcon /> : hasChildren ? <IndeterminateIndicator>—</IndeterminateIndicator> : <ColumnBox />}
+                      {isSelected ? (
+                        <CheckmarkIcon />
+                      ) : hasChildren ? (
+                        <IndeterminateIndicator>—</IndeterminateIndicator>
+                      ) : (
+                        <ColumnBox />
+                      )}
                       <MenuItemText>{title}</MenuItemText>
                     </ColumnMenuFlex>
                     <HiddenCheckbox

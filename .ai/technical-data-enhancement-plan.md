@@ -41,26 +41,26 @@ technicalData: [
 // apps/studio/schemaTypes/documents/collections/product.ts
 
 defineField({
-  name: "technicalData",
-  title: "Dane techniczne",
-  type: "object",
+  name: 'technicalData',
+  title: 'Dane techniczne',
+  type: 'object',
   group: GROUP.MAIN_CONTENT,
   fields: [
     // Optional: Product variants (for multi-model products)
     defineField({
-      name: "variants",
-      title: "Warianty produktu",
-      type: "array",
-      of: [{ type: "string" }],
+      name: 'variants',
+      title: 'Warianty produktu',
+      type: 'array',
+      of: [{ type: 'string' }],
       description:
         'Np. "Alive", "Excite", "Euphoria". Pozostaw puste dla produktów bez wariantów.',
     }),
 
     // Optional: Group title (shown as header above variants)
     defineField({
-      name: "groupTitle",
-      title: "Nazwa grupy wariantów",
-      type: "string",
+      name: 'groupTitle',
+      title: 'Nazwa grupy wariantów',
+      type: 'string',
       description:
         'Np. "Atmosphere SX". Wyświetla się jako nagłówek tabeli nad wariantami.',
       hidden: ({ parent }) => !parent?.variants || parent.variants.length === 0,
@@ -68,45 +68,45 @@ defineField({
 
     // The actual specification rows
     defineField({
-      name: "rows",
-      title: "Parametry techniczne",
-      type: "array",
+      name: 'rows',
+      title: 'Parametry techniczne',
+      type: 'array',
       of: [
         {
-          type: "object",
-          name: "technicalDataRow",
+          type: 'object',
+          name: 'technicalDataRow',
           fields: [
             defineField({
-              name: "title",
-              title: "Nazwa parametru",
-              type: "string",
+              name: 'title',
+              title: 'Nazwa parametru',
+              type: 'string',
               validation: (Rule) => Rule.required(),
             }),
             defineField({
-              name: "values",
-              title: "Wartości",
-              type: "array",
+              name: 'values',
+              title: 'Wartości',
+              type: 'array',
               of: [
                 // Each value is a Portable Text block array
                 {
-                  type: "object",
-                  name: "cellValue",
+                  type: 'object',
+                  name: 'cellValue',
                   fields: [
                     customPortableText({
-                      name: "content",
-                      title: "Zawartość",
+                      name: 'content',
+                      title: 'Zawartość',
                       include: {
-                        styles: ["normal"],
-                        lists: ["bullet", "number"],
-                        decorators: ["strong", "em"],
-                        annotations: ["customLink"],
+                        styles: ['normal'],
+                        lists: ['bullet', 'number'],
+                        decorators: ['strong', 'em'],
+                        annotations: ['customLink'],
                       },
                     }),
                   ],
                   preview: {
-                    select: { content: "content" },
+                    select: { content: 'content' },
                     prepare: ({ content }) => ({
-                      title: extractPlainText(content) || "Pusta komórka",
+                      title: extractPlainText(content) || 'Pusta komórka',
                     }),
                   },
                 },
@@ -124,11 +124,11 @@ defineField({
           ],
           preview: {
             select: {
-              title: "title",
-              values: "values",
+              title: 'title',
+              values: 'values',
             },
             prepare: ({ title, values }) => ({
-              title: title || "Parametr",
+              title: title || 'Parametr',
               subtitle: `${values?.length || 0} wartości`,
             }),
           },
@@ -406,19 +406,19 @@ Add a dedicated view tab in the product document structure:
 // Product document views
 S.document()
   .documentId(documentId)
-  .schemaType("product")
+  .schemaType('product')
   .views([
     // Default form view
-    S.view.form().title("Edycja").icon(EditIcon),
+    S.view.form().title('Edycja').icon(EditIcon),
 
     // Technical Data table view
     S.view
       .component(TechnicalDataView)
-      .title("Dane techniczne")
+      .title('Dane techniczne')
       .icon(TableIcon),
 
     // Preview view
-    S.view.component(PreviewView).title("Podgląd").icon(EyeIcon),
+    S.view.component(PreviewView).title('Podgląd').icon(EyeIcon),
   ]);
 ```
 
@@ -603,7 +603,7 @@ export type ComparisonProduct = {
     logo: SanityProjectedImage | null;
   };
   mainImage: SanityProjectedImage | null;
-  imageSource: "preview" | "gallery";
+  imageSource: 'preview' | 'gallery';
 
   // Updated technical data structure
   technicalData: {
@@ -818,7 +818,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
         title,
         values[] {
           _key,
-          ${portableTextFragment("content")}
+          ${portableTextFragment('content')}
         }
       }
     },
@@ -848,7 +848,7 @@ export const queryComparisonProducts = defineQuery(/* groq */ `
         title,
         values[] {
           _key,
-          ${portableTextFragment("content")}
+          ${portableTextFragment('content')}
         }
       }
     },

@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from "@sanity/icons";
+import { ArrowLeftIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -9,22 +9,22 @@ import {
   Inline,
   Stack,
   Text,
-} from "@sanity/ui";
-import { useAuthToken } from "@sanity/sdk-react";
-import { useEffect, useState } from "react";
+} from '@sanity/ui';
+import { useAuthToken } from '@sanity/sdk-react';
+import { useEffect, useState } from 'react';
 
 import {
   getAdminErrorMessage,
   createAdminCoupon,
   fetchAdminCouponProducts,
-} from "../api.js";
+} from '../api.js';
 import type {
   AdminCoupon,
   AdminCouponMutationInput,
   AdminCouponProductOption,
-} from "../types.js";
-import { AdminStateCard } from "./AdminStateCard.js";
-import { CouponForm } from "./CouponForm.js";
+} from '../types.js';
+import { AdminStateCard } from './AdminStateCard.js';
+import { CouponForm } from './CouponForm.js';
 
 type CouponCreateViewProps = {
   onBack: () => void;
@@ -32,34 +32,34 @@ type CouponCreateViewProps = {
 
 type CreateState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       coupon: null;
       error: null;
     }
   | {
-      status: "success";
+      status: 'success';
       coupon: AdminCoupon;
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       coupon: null;
       error: string;
     };
 
 type ProductOptionsState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       products: AdminCouponProductOption[];
       error: null;
     }
   | {
-      status: "ready";
+      status: 'ready';
       products: AdminCouponProductOption[];
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       products: AdminCouponProductOption[];
       error: string;
     };
@@ -67,13 +67,13 @@ type ProductOptionsState =
 export function CouponCreateView({ onBack }: CouponCreateViewProps) {
   const authToken = useAuthToken();
   const [state, setState] = useState<CreateState>({
-    status: "idle",
+    status: 'idle',
     coupon: null,
     error: null,
   });
   const [productOptionsState, setProductOptionsState] =
     useState<ProductOptionsState>({
-      status: "idle",
+      status: 'idle',
       products: [],
       error: null,
     });
@@ -83,7 +83,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
   useEffect(() => {
     if (!authToken) {
       setProductOptionsState({
-        status: "idle",
+        status: 'idle',
         products: [],
         error: null,
       });
@@ -93,7 +93,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
     const controller = new AbortController();
 
     setProductOptionsState((current) => ({
-      status: "loading",
+      status: 'loading',
       products: current.products,
       error: null,
     }));
@@ -104,7 +104,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
     })
       .then((data) => {
         setProductOptionsState({
-          status: "ready",
+          status: 'ready',
           products: data.products,
           error: null,
         });
@@ -115,11 +115,11 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
         }
 
         setProductOptionsState((current) => ({
-          status: "error",
+          status: 'error',
           products: current.products,
           error: getAdminErrorMessage(
             error,
-            "Nie udało się załadować produktów do kuponu.",
+            'Nie udało się załadować produktów do kuponu.',
           ),
         }));
       });
@@ -128,7 +128,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
   }, [authToken]);
 
   function requestBack() {
-    if (formDirty && state.status !== "success") {
+    if (formDirty && state.status !== 'success') {
       setConfirmBackOpen(true);
       return;
     }
@@ -142,7 +142,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
     }
 
     setState({
-      status: "loading",
+      status: 'loading',
       coupon: null,
       error: null,
     });
@@ -154,15 +154,15 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
       });
 
       setState({
-        status: "success",
+        status: 'success',
         coupon,
         error: null,
       });
     } catch (error: unknown) {
       setState({
-        status: "error",
+        status: 'error',
         coupon: null,
-        error: getAdminErrorMessage(error, "Nie udało się utworzyć kuponu."),
+        error: getAdminErrorMessage(error, 'Nie udało się utworzyć kuponu.'),
       });
     }
   }
@@ -230,7 +230,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
           </Heading>
         </Card>
 
-        {state.status === "success" ? (
+        {state.status === 'success' ? (
           <AdminStateCard
             action={
               <Flex gap={2} wrap="wrap">
@@ -244,7 +244,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
                   mode="ghost"
                   onClick={() =>
                     setState({
-                      status: "idle",
+                      status: 'idle',
                       coupon: null,
                       error: null,
                     })
@@ -260,7 +260,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
           />
         ) : null}
 
-        {state.status === "error" ? (
+        {state.status === 'error' ? (
           <AdminStateCard
             heading="Nie udało się utworzyć kuponu"
             description={state.error}
@@ -268,16 +268,16 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
           />
         ) : null}
 
-        {state.status !== "success" ? (
+        {state.status !== 'success' ? (
           <CouponForm
-            disabled={state.status === "loading"}
+            disabled={state.status === 'loading'}
             onDirtyChange={setFormDirty}
             onSubmit={handleSubmit}
             productOptions={productOptionsState.products}
             productOptionsError={productOptionsState.error}
-            productOptionsLoading={productOptionsState.status === "loading"}
+            productOptionsLoading={productOptionsState.status === 'loading'}
             submitText={
-              state.status === "loading" ? "Tworzenie..." : "Utwórz kupon"
+              state.status === 'loading' ? 'Tworzenie...' : 'Utwórz kupon'
             }
           />
         ) : null}

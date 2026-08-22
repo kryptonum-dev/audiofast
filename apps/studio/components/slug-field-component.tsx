@@ -1,4 +1,4 @@
-import { CopyIcon, SyncIcon, WarningOutlineIcon } from "@sanity/icons";
+import { CopyIcon, SyncIcon, WarningOutlineIcon } from '@sanity/icons';
 import {
   Badge,
   Box,
@@ -8,9 +8,9 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import type { FocusEvent } from "react";
-import { useCallback, useMemo, useRef } from "react";
+} from '@sanity/ui';
+import type { FocusEvent } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import {
   type ObjectFieldProps,
   type SanityDocument,
@@ -19,11 +19,11 @@ import {
   unset,
   useFormValue,
   useValidationStatus,
-} from "sanity";
-import { styled } from "styled-components";
+} from 'sanity';
+import { styled } from 'styled-components';
 
-import { WEB_BASE_URL } from "../utils/constant";
-import { parsePortableTextToString, slugify } from "../utils/helper";
+import { WEB_BASE_URL } from '../utils/constant';
+import { parsePortableTextToString, slugify } from '../utils/helper';
 
 const GenerateButton = styled(Button)`
   cursor: pointer;
@@ -51,30 +51,30 @@ const CopyButton = styled(Button)`
 interface PathnameFieldComponentProps extends ObjectFieldProps<SlugValue> {
   prefix?: string;
   sourceField?: string;
-  sourceFieldType?: "string" | "portableText";
+  sourceFieldType?: 'string' | 'portableText';
 }
 
 export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
   const document = useFormValue([]) as SanityDocument;
   const validation = useValidationStatus(
-    document?._id.replace(/^drafts\./, ""),
+    document?._id.replace(/^drafts\./, ''),
     document?._type,
     false,
   );
 
   // Get the source field name (default to 'name' for backwards compatibility)
-  const sourceFieldName = props.sourceField || "name";
-  const sourceFieldType = props.sourceFieldType || "string";
+  const sourceFieldName = props.sourceField || 'name';
+  const sourceFieldType = props.sourceFieldType || 'string';
 
   // Get the source field value
   const rawSourceValue = useFormValue([sourceFieldName]);
 
   // Extract text from source field (handle both string and Portable Text)
   const sourceFieldValue = useMemo(() => {
-    if (!rawSourceValue) return "";
-    if (sourceFieldType === "portableText") {
+    if (!rawSourceValue) return '';
+    if (sourceFieldType === 'portableText') {
       const text = parsePortableTextToString(rawSourceValue);
-      return text === "No Content" ? "" : text;
+      return text === 'No Content' ? '' : text;
     }
     return rawSourceValue as string;
   }, [rawSourceValue, sourceFieldType]);
@@ -86,7 +86,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     () =>
       validation.validation.find(
         (v) =>
-          (v?.path.includes("current") || v?.path.includes("slug")) &&
+          (v?.path.includes('current') || v?.path.includes('slug')) &&
           v.message,
       ),
     [validation.validation],
@@ -103,34 +103,34 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     // If no value yet, show the configured prefix (without trailing slash for display)
     if (!value?.current) {
       return {
-        prefixPart: prefix ? prefix.replace(/\/$/, "") : "",
-        mainContent: "",
+        prefixPart: prefix ? prefix.replace(/\/$/, '') : '',
+        mainContent: '',
       };
     }
 
     // Handle root path specially
-    if (value.current === "/") {
+    if (value.current === '/') {
       return {
-        prefixPart: "",
-        mainContent: "",
+        prefixPart: '',
+        mainContent: '',
       };
     }
 
     if (prefix && value.current.startsWith(prefix)) {
       // Remove the expected prefix and trailing slash to get the main content
       const contentWithoutPrefix = value.current
-        .replace(prefix, "")
-        .replace(/\/$/, "");
+        .replace(prefix, '')
+        .replace(/\/$/, '');
       return {
-        prefixPart: prefix.replace(/\/$/, ""), // Remove trailing slash from prefix for display
+        prefixPart: prefix.replace(/\/$/, ''), // Remove trailing slash from prefix for display
         mainContent: contentWithoutPrefix,
       };
     }
 
     // If no defined prefix, treat the whole path as main content (without leading/trailing slashes)
     return {
-      prefixPart: prefix ? prefix.replace(/\/$/, "") : "",
-      mainContent: value.current.replace(/^\/+|\/+$/g, ""), // Remove leading and trailing slashes
+      prefixPart: prefix ? prefix.replace(/\/$/, '') : '',
+      mainContent: value.current.replace(/^\/+|\/+$/g, ''), // Remove leading and trailing slashes
     };
   }, [value, prefix]);
 
@@ -146,8 +146,8 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
       let finalValue: string;
 
       // If user is typing a full path (starts with /), use it as-is but ensure trailing slash
-      if (value.startsWith("/")) {
-        finalValue = value === "/" ? value : `${value.replace(/\/+$/, "")}/`;
+      if (value.startsWith('/')) {
+        finalValue = value === '/' ? value : `${value.replace(/\/+$/, '')}/`;
       } else {
         // If user is typing just the content part, add prefix and trailing slash
         const cleanValue = value.trim();
@@ -156,14 +156,14 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
         } else if (cleanValue) {
           finalValue = `/${cleanValue}/`;
         } else {
-          finalValue = prefix || "/";
+          finalValue = prefix || '/';
         }
       }
 
       onChange(
         set({
           current: finalValue,
-          _type: "slug",
+          _type: 'slug',
         }),
       );
     },
@@ -174,7 +174,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     // No longer need to set folder lock state
   }, []);
 
-  const localizedPathname = `${WEB_BASE_URL}${value?.current || "/"}`;
+  const localizedPathname = `${WEB_BASE_URL}${value?.current || '/'}`;
 
   // Function to generate slug from name field
   const generateSlug = useCallback(() => {
@@ -194,25 +194,25 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     const errors = [];
 
     // Check for invalid characters at the beginning
-    if (mainContent.startsWith("/")) {
+    if (mainContent.startsWith('/')) {
       errors.push('Nie można zaczynać od "/"');
     }
 
     // Check for invalid characters at the end
-    if (mainContent.endsWith("-")) {
+    if (mainContent.endsWith('-')) {
       errors.push('Nie może kończyć się "-"');
     }
 
     // Check for invalid characters in general
     const invalidChars = mainContent.match(/[^a-z0-9-]/gi);
     if (invalidChars) {
-      const uniqueChars = [...new Set(invalidChars)].join(", ");
+      const uniqueChars = [...new Set(invalidChars)].join(', ');
       errors.push(`Nieprawidłowe znaki: ${uniqueChars}`);
     }
 
     // Check for multiple consecutive hyphens
-    if (mainContent.includes("--")) {
-      errors.push("Wiele następujących po sobie myślników nie jest dozwolone");
+    if (mainContent.includes('--')) {
+      errors.push('Wiele następujących po sobie myślników nie jest dozwolone');
     }
 
     return errors.length > 0 ? errors : null;
@@ -227,20 +227,20 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
       let cleanedValue = inputValue;
 
       // Remove leading slashes as user types
-      cleanedValue = cleanedValue.replace(/^\/+/, "");
+      cleanedValue = cleanedValue.replace(/^\/+/, '');
 
       // Remove invalid characters (keep only a-z, 0-9, and single hyphens)
-      cleanedValue = cleanedValue.replace(/[^a-z0-9-]/gi, "");
+      cleanedValue = cleanedValue.replace(/[^a-z0-9-]/gi, '');
 
       // Replace multiple consecutive hyphens with single hyphen
-      cleanedValue = cleanedValue.replace(/-+/g, "-");
+      cleanedValue = cleanedValue.replace(/-+/g, '-');
 
       // Remove trailing hyphens (but allow typing them temporarily)
       // This creates a balance - user can type but sees immediate feedback
-      const hasTrailingHyphen = cleanedValue.endsWith("-");
+      const hasTrailingHyphen = cleanedValue.endsWith('-');
       if (hasTrailingHyphen && cleanedValue.length > 1) {
         // Allow one trailing hyphen for typing, but show warning
-        cleanedValue = cleanedValue.replace(/-+$/, "-");
+        cleanedValue = cleanedValue.replace(/-+$/, '-');
       }
 
       // Update the input field to reflect the cleaned value
@@ -258,7 +258,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     const showGenerateButton = Boolean(nameField) && !readOnly;
 
     // Handle special fixed paths
-    if (value?.current === "/") {
+    if (value?.current === '/') {
       return (
         <Stack space={2}>
           <Flex gap={1} align="center">
@@ -270,7 +270,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
               radius={1}
               tone="transparent"
               style={{
-                backgroundColor: "var(--card-muted-bg-color)",
+                backgroundColor: 'var(--card-muted-bg-color)',
               }}
             >
               <Text muted size={2}>
@@ -286,7 +286,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     }
 
     // Handle other fixed paths (like /blog, /404, etc.) that don't end with /
-    if (value?.current && !value.current.endsWith("/") && readOnly) {
+    if (value?.current && !value.current.endsWith('/') && readOnly) {
       return (
         <Stack space={2}>
           <Flex gap={1} align="center">
@@ -298,7 +298,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
               radius={1}
               tone="transparent"
               style={{
-                backgroundColor: "var(--card-muted-bg-color)",
+                backgroundColor: 'var(--card-muted-bg-color)',
               }}
             >
               <Text muted size={2}>
@@ -325,7 +325,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
               radius={1}
               tone="transparent"
               style={{
-                backgroundColor: "var(--card-muted-bg-color)",
+                backgroundColor: 'var(--card-muted-bg-color)',
               }}
             >
               <Text muted size={2}>
@@ -343,7 +343,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
                 radius={1}
                 tone="transparent"
                 style={{
-                  backgroundColor: "var(--card-muted-bg-color)",
+                  backgroundColor: 'var(--card-muted-bg-color)',
                 }}
               >
                 <Text muted size={2}>
@@ -365,14 +365,14 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
               onBlur={handleBlur}
               disabled={readOnly}
               placeholder={
-                prefixPart ? "Wprowadź nazwę" : "Wprowadź nazwę strony"
+                prefixPart ? 'Wprowadź nazwę' : 'Wprowadź nazwę strony'
               }
-              style={{ width: "100%" }}
+              style={{ width: '100%' }}
             />
           </Box>
 
           {/* Trailing slash indicator (only show for non-root paths) */}
-          {value?.current !== "/" && (
+          {value?.current !== '/' && (
             <Card
               paddingX={2}
               paddingY={2}
@@ -380,7 +380,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
               radius={1}
               tone="transparent"
               style={{
-                backgroundColor: "var(--card-muted-bg-color)",
+                backgroundColor: 'var(--card-muted-bg-color)',
               }}
             >
               <Text muted size={2}>
@@ -426,24 +426,24 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
         {description && (
           <Text
             size={1}
-            style={{ color: "var(--card-fg-color)", marginTop: "8px" }}
+            style={{ color: 'var(--card-fg-color)', marginTop: '8px' }}
           >
             {description}
           </Text>
         )}
       </Stack>
 
-      {typeof value?.current === "string" && (
+      {typeof value?.current === 'string' && (
         <Flex direction="column" gap={2}>
           <Flex align="center">
             <p
               style={{
-                textOverflow: "ellipsis",
+                textOverflow: 'ellipsis',
                 margin: 0,
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                color: "var(--card-muted-fg-color)",
-                fontSize: "0.8125rem",
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                color: 'var(--card-muted-fg-color)',
+                fontSize: '0.8125rem',
               }}
             >
               {localizedPathname}
@@ -473,7 +473,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
               tone="critical"
               padding={4}
               style={{
-                borderRadius: "var(--card-radius)",
+                borderRadius: 'var(--card-radius)',
               }}
             >
               <Flex gap={4} align="center">
@@ -492,7 +492,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
           tone="critical"
           padding={4}
           style={{
-            borderRadius: "var(--card-radius)",
+            borderRadius: 'var(--card-radius)',
           }}
         >
           <Flex gap={4} align="center">

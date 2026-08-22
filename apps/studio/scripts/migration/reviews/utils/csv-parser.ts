@@ -2,12 +2,12 @@
  * CSV Parser for Review Migration
  */
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { parse } from "csv-parse/sync";
+import { parse } from 'csv-parse/sync';
 
-import type { ReviewCsvRow } from "../types";
+import type { ReviewCsvRow } from '../types';
 
 /**
  * Read and parse review CSV file
@@ -16,7 +16,7 @@ export function readReviewsCsv(csvPath: string): ReviewCsvRow[] {
   const resolved = resolve(process.cwd(), csvPath);
   console.log(`📂 Reading CSV: ${resolved}`);
 
-  const file = readFileSync(resolved, "utf-8");
+  const file = readFileSync(resolved, 'utf-8');
   const rows = parse(file, {
     columns: true,
     skip_empty_lines: true,
@@ -33,9 +33,9 @@ export function readReviewsCsv(csvPath: string): ReviewCsvRow[] {
  * Clean string value (handle null, "NULL", whitespace)
  */
 export function cleanString(value: string | null | undefined): string {
-  if (value === undefined || value === null) return "";
-  const cleaned = value.replace(/\u00a0/g, " ").trim();
-  if (!cleaned || cleaned.toLowerCase() === "null") return "";
+  if (value === undefined || value === null) return '';
+  const cleaned = value.replace(/\u00a0/g, ' ').trim();
+  if (!cleaned || cleaned.toLowerCase() === 'null') return '';
   return cleaned;
 }
 
@@ -44,11 +44,11 @@ export function cleanString(value: string | null | undefined): string {
  */
 export function parseReviewType(
   type: string | null | undefined,
-): "page" | "pdf" | "external" {
+): 'page' | 'pdf' | 'external' {
   const cleaned = cleanString(type).toLowerCase();
-  if (cleaned === "external") return "external";
-  if (cleaned === "pdf") return "pdf";
-  return "page";
+  if (cleaned === 'external') return 'external';
+  if (cleaned === 'pdf') return 'pdf';
+  return 'page';
 }
 
 /**
@@ -70,7 +70,9 @@ export function filterReviews(
       const id = parseInt(row.ID, 10);
       return !isNaN(id) && id > options.minId!;
     });
-    console.log(`   After minId filter (>${options.minId}): ${filtered.length} reviews`);
+    console.log(
+      `   After minId filter (>${options.minId}): ${filtered.length} reviews`,
+    );
   }
 
   // Skip already existing IDs

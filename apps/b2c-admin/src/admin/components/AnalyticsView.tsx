@@ -1,4 +1,4 @@
-import { RefreshIcon, ResetIcon } from "@sanity/icons";
+import { RefreshIcon, ResetIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -9,9 +9,9 @@ import {
   Spinner,
   Stack,
   Text,
-} from "@sanity/ui";
-import { useAuthToken } from "@sanity/sdk-react";
-import { useEffect, useMemo, useState } from "react";
+} from '@sanity/ui';
+import { useAuthToken } from '@sanity/sdk-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   CartesianGrid,
   Line,
@@ -20,32 +20,32 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
+} from 'recharts';
 
-import { getAdminErrorMessage, fetchAdminAnalytics } from "../api.js";
-import { formatMoney, formatOptionalDate } from "../formatters.js";
+import { getAdminErrorMessage, fetchAdminAnalytics } from '../api.js';
+import { formatMoney, formatOptionalDate } from '../formatters.js';
 import type {
   AdminAnalyticsResult,
   AdminAnalyticsSeriesPoint,
   AnalyticsFilters,
-} from "../types.js";
-import { AdminFilterSelect } from "./AdminFilterSelect.js";
-import { AdminStateCard } from "./AdminStateCard.js";
-import { DateRangePicker } from "./DateRangePicker.js";
+} from '../types.js';
+import { AdminFilterSelect } from './AdminFilterSelect.js';
+import { AdminStateCard } from './AdminStateCard.js';
+import { DateRangePicker } from './DateRangePicker.js';
 
 type AnalyticsState =
   | {
-      status: "idle" | "loading";
+      status: 'idle' | 'loading';
       data: AdminAnalyticsResult | null;
       error: null;
     }
   | {
-      status: "ready";
+      status: 'ready';
       data: AdminAnalyticsResult;
       error: null;
     }
   | {
-      status: "error";
+      status: 'error';
       data: AdminAnalyticsResult | null;
       error: string;
     };
@@ -68,7 +68,7 @@ export function AnalyticsView() {
   );
   const [refreshToken, setRefreshToken] = useState(0);
   const [analyticsState, setAnalyticsState] = useState<AnalyticsState>({
-    status: "idle",
+    status: 'idle',
     data: null,
     error: null,
   });
@@ -76,7 +76,7 @@ export function AnalyticsView() {
   useEffect(() => {
     if (!authToken) {
       setAnalyticsState({
-        status: "idle",
+        status: 'idle',
         data: null,
         error: null,
       });
@@ -86,7 +86,7 @@ export function AnalyticsView() {
     const controller = new AbortController();
 
     setAnalyticsState((current) => ({
-      status: "loading",
+      status: 'loading',
       data: current.data,
       error: null,
     }));
@@ -98,7 +98,7 @@ export function AnalyticsView() {
     })
       .then((data) => {
         setAnalyticsState({
-          status: "ready",
+          status: 'ready',
           data,
           error: null,
         });
@@ -109,11 +109,11 @@ export function AnalyticsView() {
         }
 
         setAnalyticsState((current) => ({
-          status: "error",
+          status: 'error',
           data: current.data,
           error: getAdminErrorMessage(
             error,
-            "Nie udało się załadować analityki.",
+            'Nie udało się załadować analityki.',
           ),
         }));
       });
@@ -142,7 +142,7 @@ export function AnalyticsView() {
         onReset={() => setFilters(getDefaultAnalyticsFilters())}
       />
 
-      {analyticsState.status === "error" ? (
+      {analyticsState.status === 'error' ? (
         <AdminStateCard
           action={
             <Button
@@ -159,7 +159,7 @@ export function AnalyticsView() {
         />
       ) : null}
 
-      {analyticsState.status === "loading" && !data ? (
+      {analyticsState.status === 'loading' && !data ? (
         <AnalyticsLoadingState />
       ) : null}
 
@@ -167,11 +167,11 @@ export function AnalyticsView() {
         <Stack space={3}>
           <AnalyticsMetricGrid
             data={data}
-            loading={analyticsState.status === "loading"}
+            loading={analyticsState.status === 'loading'}
           />
           <RevenueChartCard
             data={data}
-            loading={analyticsState.status === "loading"}
+            loading={analyticsState.status === 'loading'}
           />
         </Stack>
       ) : null}
@@ -205,13 +205,13 @@ function AnalyticsFiltersCard(props: {
               onChange={(value) =>
                 props.onChange({
                   ...props.filters,
-                  groupBy: value as AnalyticsFilters["groupBy"],
+                  groupBy: value as AnalyticsFilters['groupBy'],
                 })
               }
               options={[
-                ["day", "Dzień"],
-                ["week", "Tydzień"],
-                ["month", "Miesiąc"],
+                ['day', 'Dzień'],
+                ['week', 'Tydzień'],
+                ['month', 'Miesiąc'],
               ]}
             />
 
@@ -344,8 +344,8 @@ function RevenueChartCard(props: {
 }
 
 function RevenueLineChart(props: {
-  groupBy: AnalyticsFilters["groupBy"];
-  period: AdminAnalyticsResult["period"];
+  groupBy: AnalyticsFilters['groupBy'];
+  period: AdminAnalyticsResult['period'];
   series: AdminAnalyticsSeriesPoint[];
 }) {
   const chartData = useMemo(
@@ -390,13 +390,13 @@ function RevenueLineChart(props: {
             dataKey="xLabel"
             interval="preserveStartEnd"
             minTickGap={28}
-            tick={{ fill: "var(--card-muted-fg-color, #9aa0ad)", fontSize: 12 }}
+            tick={{ fill: 'var(--card-muted-fg-color, #9aa0ad)', fontSize: 12 }}
             tickLine={false}
           />
           <YAxis
             axisLine={false}
             domain={[0, yMax]}
-            tick={{ fill: "var(--card-muted-fg-color, #9aa0ad)", fontSize: 12 }}
+            tick={{ fill: 'var(--card-muted-fg-color, #9aa0ad)', fontSize: 12 }}
             tickFormatter={formatCompactMoney}
             tickLine={false}
             width={64}
@@ -404,8 +404,8 @@ function RevenueLineChart(props: {
           <Tooltip
             content={<AnalyticsChartTooltip />}
             cursor={{
-              stroke: "var(--card-muted-fg-color, rgba(154, 160, 173, 0.45))",
-              strokeDasharray: "4 4",
+              stroke: 'var(--card-muted-fg-color, rgba(154, 160, 173, 0.45))',
+              strokeDasharray: '4 4',
             }}
           />
           <Line
@@ -487,8 +487,8 @@ function AnalyticsLoadingState() {
 
 function buildChartData(
   series: AdminAnalyticsSeriesPoint[],
-  period: AdminAnalyticsResult["period"],
-  groupBy: AnalyticsFilters["groupBy"],
+  period: AdminAnalyticsResult['period'],
+  groupBy: AnalyticsFilters['groupBy'],
 ): AnalyticsChartPoint[] {
   const byLabel = new Map(series.map((point) => [point.label, point]));
   const labels = buildPeriodLabels(period.from, period.to, groupBy);
@@ -514,7 +514,7 @@ function buildChartData(
 function buildPeriodLabels(
   fromIso: string,
   toIso: string,
-  groupBy: AnalyticsFilters["groupBy"],
+  groupBy: AnalyticsFilters['groupBy'],
 ) {
   const from = parseIsoDateOnly(fromIso);
   const to = parseIsoDateOnly(toIso);
@@ -525,19 +525,19 @@ function buildPeriodLabels(
 
   const labels: string[] = [];
   const cursor =
-    groupBy === "month"
+    groupBy === 'month'
       ? startOfMonth(from)
-      : groupBy === "week"
+      : groupBy === 'week'
         ? startOfIsoWeek(from)
         : from;
 
   while (cursor <= to) {
     labels.push(toIsoDateOnly(cursor));
 
-    if (groupBy === "month") {
+    if (groupBy === 'month') {
       cursor.setUTCMonth(cursor.getUTCMonth() + 1);
     } else {
-      cursor.setUTCDate(cursor.getUTCDate() + (groupBy === "week" ? 7 : 1));
+      cursor.setUTCDate(cursor.getUTCDate() + (groupBy === 'week' ? 7 : 1));
     }
   }
 
@@ -549,7 +549,7 @@ function formatCompactMoney(cents: number): string {
     return `${Math.round(cents / 100000) / 10}k`;
   }
 
-  return formatMoney(cents).replace(",00", "");
+  return formatMoney(cents).replace(',00', '');
 }
 
 function formatPeriodLabel(from: string, to: string): string {
@@ -557,7 +557,7 @@ function formatPeriodLabel(from: string, to: string): string {
   const toLabel = formatOptionalDate(to);
 
   if (!fromLabel && !toLabel) {
-    return "";
+    return '';
   }
 
   return `${fromLabel} - ${toLabel}`;
@@ -565,10 +565,10 @@ function formatPeriodLabel(from: string, to: string): string {
 
 function formatSeriesLabel(
   value: string,
-  groupBy: AnalyticsFilters["groupBy"],
-  period?: AdminAnalyticsResult["period"],
+  groupBy: AnalyticsFilters['groupBy'],
+  period?: AdminAnalyticsResult['period'],
 ) {
-  if (groupBy === "week" || groupBy === "month") {
+  if (groupBy === 'week' || groupBy === 'month') {
     const range = getBucketRangeLabel(value, groupBy, period);
 
     return range || value;
@@ -579,18 +579,18 @@ function formatSeriesLabel(
 
 function getBucketRangeLabel(
   value: string,
-  groupBy: Exclude<AnalyticsFilters["groupBy"], "day">,
-  period?: AdminAnalyticsResult["period"],
+  groupBy: Exclude<AnalyticsFilters['groupBy'], 'day'>,
+  period?: AdminAnalyticsResult['period'],
 ) {
   const start = parseIsoDateOnly(value);
 
   if (!start) {
-    return "";
+    return '';
   }
 
   const end = new Date(start);
 
-  if (groupBy === "month") {
+  if (groupBy === 'month') {
     end.setUTCMonth(end.getUTCMonth() + 1);
     end.setUTCDate(0);
   } else {
@@ -636,9 +636,9 @@ function toIsoDateOnly(date: Date) {
 }
 
 function getRenderableGroupBy(
-  groupBy: AdminAnalyticsResult["period"]["groupBy"],
-): AnalyticsFilters["groupBy"] {
-  return groupBy === "none" ? "day" : groupBy;
+  groupBy: AdminAnalyticsResult['period']['groupBy'],
+): AnalyticsFilters['groupBy'] {
+  return groupBy === 'none' ? 'day' : groupBy;
 }
 
 function getDefaultDateRange() {
@@ -656,14 +656,14 @@ function getDefaultDateRange() {
 function getDefaultAnalyticsFilters(): AnalyticsFilters {
   return {
     dateRange: getDefaultDateRange(),
-    groupBy: "day",
+    groupBy: 'day',
   };
 }
 
 function toDateValue(date: Date): string {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
 }

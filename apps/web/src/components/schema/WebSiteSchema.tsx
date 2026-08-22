@@ -1,4 +1,4 @@
-import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from "@/src/global/constants";
+import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from '@/src/global/constants';
 
 /**
  * WebSite Schema Component
@@ -12,16 +12,16 @@ import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from "@/src/global/constants";
  */
 export default function WebSiteSchema() {
   const schema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": `${BASE_URL}/#website`,
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${BASE_URL}/#website`,
     url: BASE_URL,
     name: SITE_TITLE,
     description: SITE_DESCRIPTION,
     publisher: {
-      "@id": `${BASE_URL}#organization`,
+      '@id': `${BASE_URL}#organization`,
     },
-    inLanguage: "pl-PL",
+    inLanguage: 'pl-PL',
   };
 
   return (

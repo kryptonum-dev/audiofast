@@ -1,7 +1,4 @@
-import {
-  adminJson,
-  adminOptions,
-} from '@/src/global/b2c/admin/server/http';
+import { adminJson, adminOptions } from '@/src/global/b2c/admin/server/http';
 import {
   archiveAdminCoupon,
   loadAdminCoupon,
@@ -19,7 +16,10 @@ export async function OPTIONS(request: Request) {
   return adminOptions(request);
 }
 
-export async function GET(request: Request, { params }: AdminCouponRouteContext) {
+export async function GET(
+  request: Request,
+  { params }: AdminCouponRouteContext,
+) {
   return withAdminRoute(request, {
     errorCode: 'admin_coupon_load_failed',
     errorMessage: 'Could not load the B2C coupon.',

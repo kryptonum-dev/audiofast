@@ -26,7 +26,7 @@
  *   SANITY_API_TOKEN   - Sanity API token (required for live migration)
  */
 
-import type { SanityClient } from "@sanity/client";
+import type { SanityClient } from '@sanity/client';
 
 import type {
   AwardSourceData,
@@ -35,25 +35,25 @@ import type {
   MigrationResult,
   SanityAward,
   SanityReference,
-} from "./types";
+} from './types';
 import {
   buildAwardSourceData,
   getAwardStats,
   indexDataByAwardId,
   loadAllCsvData,
   type LoadedCsvData,
-} from "./utils/csv-parser";
+} from './utils/csv-parser';
 import {
   loadImageCache,
   processLogoDryRun,
   processLogoWithFallback,
   saveImageCache,
-} from "./utils/image-processor";
+} from './utils/image-processor';
 import {
   createDryRunClient,
   createMigrationClient,
   getClientConfig,
-} from "./utils/sanity-client";
+} from './utils/sanity-client';
 
 // ============================================================================
 // CLI Options
@@ -62,22 +62,22 @@ import {
 function parseArgs(): MigrationOptions {
   const args = process.argv.slice(2);
 
-  const limitArg = args.find((arg) => arg.startsWith("--limit="));
-  const idArg = args.find((arg) => arg.startsWith("--id="));
-  const batchSizeArg = args.find((arg) => arg.startsWith("--batch-size="));
+  const limitArg = args.find((arg) => arg.startsWith('--limit='));
+  const idArg = args.find((arg) => arg.startsWith('--id='));
+  const batchSizeArg = args.find((arg) => arg.startsWith('--batch-size='));
 
   return {
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    verbose: args.includes("--verbose") || args.includes("-v"),
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    verbose: args.includes('--verbose') || args.includes('-v'),
     limit: limitArg
-      ? parseInt(limitArg.replace("--limit=", ""), 10)
+      ? parseInt(limitArg.replace('--limit=', ''), 10)
       : undefined,
-    awardId: idArg ? idArg.replace("--id=", "") : undefined,
-    skipExisting: args.includes("--skip-existing"),
+    awardId: idArg ? idArg.replace('--id=', '') : undefined,
+    skipExisting: args.includes('--skip-existing'),
     batchSize: batchSizeArg
-      ? parseInt(batchSizeArg.replace("--batch-size=", ""), 10)
+      ? parseInt(batchSizeArg.replace('--batch-size=', ''), 10)
       : 10,
-    rollback: args.includes("--rollback"),
+    rollback: args.includes('--rollback'),
   };
 }
 
@@ -126,7 +126,7 @@ Examples:
 let existingProductIds: Set<string> = new Set();
 
 async function loadExistingProductIds(client: SanityClient): Promise<void> {
-  console.log("🔍 Loading existing products from Sanity...");
+  console.log('🔍 Loading existing products from Sanity...');
 
   const products = await client.fetch<Array<{ _id: string }>>(
     `*[_type == "product" && _id match "product-*"]{_id}`,
@@ -145,7 +145,7 @@ function resolveProductReferences(productIds: string[]): SanityReference[] {
 
     if (existingProductIds.has(sanityId)) {
       references.push({
-        _type: "reference",
+        _type: 'reference',
         _key: `ref-${legacyId}`,
         _ref: sanityId,
       });
@@ -156,7 +156,7 @@ function resolveProductReferences(productIds: string[]): SanityReference[] {
 
   if (missingProducts.length > 0 && missingProducts.length <= 5) {
     console.log(
-      `      ⚠️  Missing products: ${missingProducts.join(", ")} (skipped)`,
+      `      ⚠️  Missing products: ${missingProducts.join(', ')} (skipped)`,
     );
   } else if (missingProducts.length > 5) {
     console.log(
@@ -184,7 +184,7 @@ async function transformAward(
 
   const award: SanityAward = {
     _id: `award-${source.id}`,
-    _type: "award",
+    _type: 'award',
     name: source.name,
   };
 
@@ -193,8 +193,8 @@ async function transformAward(
     if (dryRun) {
       const mockResult = processLogoDryRun(source.logoFilename);
       award.logo = {
-        _type: "image",
-        asset: { _type: "reference", _ref: mockResult.assetId },
+        _type: 'image',
+        asset: { _type: 'reference', _ref: mockResult.assetId },
       };
     } else if (client) {
       const logoResult = await processLogoWithFallback(
@@ -205,8 +205,8 @@ async function transformAward(
       );
       if (logoResult) {
         award.logo = {
-          _type: "image",
-          asset: { _type: "reference", _ref: logoResult.assetId },
+          _type: 'image',
+          asset: { _type: 'reference', _ref: logoResult.assetId },
         };
       }
     }
@@ -217,7 +217,7 @@ async function transformAward(
     if (dryRun) {
       // In dry run, create mock references
       award.products = source.productIds.map((id) => ({
-        _type: "reference",
+        _type: 'reference',
         _key: `ref-${id}`,
         _ref: `product-${id}`,
       }));
@@ -234,7 +234,7 @@ async function transformAward(
 // ============================================================================
 
 async function getExistingAwardIds(client: SanityClient): Promise<Set<string>> {
-  console.log("🔍 Checking for existing awards in Sanity...");
+  console.log('🔍 Checking for existing awards in Sanity...');
 
   const existingAwards = await client.fetch<Array<{ _id: string }>>(
     `*[_type == "award" && _id match "award-*"]{_id}`,
@@ -250,14 +250,14 @@ async function getExistingAwardIds(client: SanityClient): Promise<Set<string>> {
 // ============================================================================
 
 async function rollbackAwards(client: SanityClient): Promise<void> {
-  console.log("\n🗑️  Rolling back all migrated awards...");
+  console.log('\n🗑️  Rolling back all migrated awards...');
 
   const awardsToDelete = await client.fetch<Array<{ _id: string }>>(
     `*[_type == "award" && _id match "award-*"]{_id}`,
   );
 
   if (awardsToDelete.length === 0) {
-    console.log("   No migrated awards found to delete.");
+    console.log('   No migrated awards found to delete.');
     return;
   }
 
@@ -279,7 +279,7 @@ async function rollbackAwards(client: SanityClient): Promise<void> {
     );
   }
 
-  console.log("\n✅ Rollback complete.");
+  console.log('\n✅ Rollback complete.');
 }
 
 // ============================================================================
@@ -321,7 +321,7 @@ async function processBatch(
 
       // Verbose output
       if (options.verbose) {
-        console.log(`      Logo: ${source.logoFilename || "none"}`);
+        console.log(`      Logo: ${source.logoFilename || 'none'}`);
         console.log(`      Products: ${source.productIds.length} in CSV`);
         console.log(
           `      Resolved: ${award.products?.length || 0} references`,
@@ -359,7 +359,7 @@ async function runMigration(
 
   // Print statistics
   const stats = getAwardStats(csvData);
-  console.log("\n📊 Data Statistics:");
+  console.log('\n📊 Data Statistics:');
   console.log(`   Total awards: ${stats.totalAwards}`);
   console.log(`   Awards with logos: ${stats.awardsWithLogos}`);
   console.log(`   Total relations: ${stats.totalRelations}`);
@@ -382,7 +382,7 @@ async function runMigration(
   // Handle rollback
   if (options.rollback) {
     if (options.dryRun) {
-      console.log("\n🧪 [DRY RUN] Would delete all migrated awards");
+      console.log('\n🧪 [DRY RUN] Would delete all migrated awards');
       return result;
     }
     await rollbackAwards(client!);
@@ -393,7 +393,7 @@ async function runMigration(
   if (!options.dryRun) {
     await loadExistingProductIds(client!);
   } else {
-    console.log("\n🧪 [DRY RUN] Skipping product reference validation");
+    console.log('\n🧪 [DRY RUN] Skipping product reference validation');
   }
 
   // Check for existing awards if skip-existing is set
@@ -418,7 +418,7 @@ async function runMigration(
     );
     if (awardsToMigrate.length === 0) {
       console.error(`\n❌ Award not found: ${options.awardId}`);
-      console.log("\n📋 Available award IDs (first 20):");
+      console.log('\n📋 Available award IDs (first 20):');
       csvData.awards.slice(0, 20).forEach((a) => {
         console.log(`   [${a.AwardID}] ${a.AwardName}`);
       });
@@ -483,33 +483,33 @@ async function runMigration(
 async function main(): Promise<void> {
   const options = parseArgs();
 
-  if (process.argv.includes("--help") || process.argv.includes("-h")) {
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
     printUsage();
     process.exit(0);
   }
 
-  console.log("\n");
+  console.log('\n');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║              AUDIOFAST AWARD MIGRATION                        ║",
+    '║              AUDIOFAST AWARD MIGRATION                        ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
-  console.log(`Mode: ${options.dryRun ? "🧪 DRY RUN (no writes)" : "🚀 LIVE"}`);
+  console.log('');
+  console.log(`Mode: ${options.dryRun ? '🧪 DRY RUN (no writes)' : '🚀 LIVE'}`);
   if (options.awardId) {
     console.log(`Single Award: ${options.awardId}`);
   }
   if (options.limit) {
     console.log(`Limit: ${options.limit} awards`);
   }
-  console.log(`Skip Existing: ${options.skipExisting ? "Yes" : "No"}`);
+  console.log(`Skip Existing: ${options.skipExisting ? 'Yes' : 'No'}`);
   console.log(`Batch Size: ${options.batchSize}`);
-  console.log(`Verbose: ${options.verbose ? "Yes" : "No"}`);
-  console.log(`Rollback: ${options.rollback ? "Yes" : "No"}`);
+  console.log(`Verbose: ${options.verbose ? 'Yes' : 'No'}`);
+  console.log(`Rollback: ${options.rollback ? 'Yes' : 'No'}`);
 
   const clientConfig = getClientConfig();
   console.log(`Project: ${clientConfig.projectId} / ${clientConfig.dataset}`);
@@ -522,15 +522,15 @@ async function main(): Promise<void> {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
     // Print summary
-    console.log("\n");
+    console.log('\n');
     console.log(
-      "═══════════════════════════════════════════════════════════════",
+      '═══════════════════════════════════════════════════════════════',
     );
     console.log(
-      "                      MIGRATION SUMMARY                         ",
+      '                      MIGRATION SUMMARY                         ',
     );
     console.log(
-      "═══════════════════════════════════════════════════════════════",
+      '═══════════════════════════════════════════════════════════════',
     );
     console.log(`   Duration: ${duration}s`);
     console.log(`   Created: ${result.created.length}`);
@@ -539,28 +539,28 @@ async function main(): Promise<void> {
     console.log(`   Errors: ${result.errors.length}`);
 
     if (result.errors.length > 0) {
-      console.log("\n❌ Errors:");
+      console.log('\n❌ Errors:');
       for (const err of result.errors) {
         console.log(`   [${err.awardId}] ${err.awardName}: ${err.error}`);
       }
     }
 
-    console.log("\n");
+    console.log('\n');
     if (options.dryRun) {
-      console.log("✅ Dry run complete. No changes were made to Sanity.");
+      console.log('✅ Dry run complete. No changes were made to Sanity.');
     } else if (options.rollback) {
       // Already printed by rollbackAwards
     } else {
-      console.log("✅ Migration complete.");
+      console.log('✅ Migration complete.');
     }
-    console.log("");
+    console.log('');
   } catch (error) {
-    console.error("\n❌ Migration failed:", error);
+    console.error('\n❌ Migration failed:', error);
     process.exit(1);
   }
 }
 
 main().catch((error) => {
-  console.error("❌ Migration failed:", error);
+  console.error('❌ Migration failed:', error);
   process.exit(1);
 });

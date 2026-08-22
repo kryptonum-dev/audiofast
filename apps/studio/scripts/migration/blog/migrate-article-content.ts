@@ -13,13 +13,13 @@
  * Add --limit=N to limit to first N articles.
  */
 
-import { readFileSync } from "node:fs";
-import * as https from "node:https";
-import { resolve } from "node:path";
-import { Readable } from "node:stream";
+import { readFileSync } from 'node:fs';
+import * as https from 'node:https';
+import { resolve } from 'node:path';
+import { Readable } from 'node:stream';
 
-import { createClient, type SanityClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
+import { createClient, type SanityClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
 
 // ============================================================================
 // Types
@@ -55,19 +55,19 @@ type ImageRow = {
 };
 
 type PortableTextSpan = {
-  _type: "span";
+  _type: 'span';
   _key: string;
   text: string;
   marks?: string[];
 };
 
 type PortableTextBlock = {
-  _type: "block";
+  _type: 'block';
   _key: string;
-  style: "normal" | "h2" | "h3";
+  style: 'normal' | 'h2' | 'h3';
   markDefs: MarkDef[];
   children: PortableTextSpan[];
-  listItem?: "bullet" | "number";
+  listItem?: 'bullet' | 'number';
   level?: number;
 };
 
@@ -78,40 +78,40 @@ type MarkDef = {
 };
 
 type ImageSliderBlock = {
-  _type: "ptImageSlider";
+  _type: 'ptImageSlider';
   _key: string;
   images: Array<{
-    _type: "image";
+    _type: 'image';
     _key: string;
-    asset: { _type: "reference"; _ref: string };
+    asset: { _type: 'reference'; _ref: string };
   }>;
 };
 
 type YouTubeBlock = {
-  _type: "ptYoutubeVideo";
+  _type: 'ptYoutubeVideo';
   _key: string;
   youtubeId: string;
   title?: string;
 };
 
 type PageBreakBlock = {
-  _type: "ptPageBreak";
+  _type: 'ptPageBreak';
   _key: string;
 };
 
 type ImageBlock = {
-  _type: "ptImage";
+  _type: 'ptImage';
   _key: string;
-  layout: "single";
+  layout: 'single';
   image: {
-    _type: "image";
-    asset: { _type: "reference"; _ref: string };
+    _type: 'image';
+    asset: { _type: 'reference'; _ref: string };
   };
   autoWidth?: boolean;
 };
 
 type VimeoBlock = {
-  _type: "ptVimeoVideo";
+  _type: 'ptVimeoVideo';
   _key: string;
   vimeoId: string;
   title?: string;
@@ -119,7 +119,7 @@ type VimeoBlock = {
 
 // Placeholder for images that need to be uploaded later
 type ImagePlaceholder = {
-  _type: "imagePlaceholder";
+  _type: 'imagePlaceholder';
   _key: string;
   src: string;
   alt: string;
@@ -140,15 +140,15 @@ type ContentBlock =
 // ============================================================================
 
 const DEFAULT_BOXES_CSV_PATH =
-  "/Users/oliwiersellig/Desktop/real-articles-text.csv";
+  '/Users/oliwiersellig/Desktop/real-articles-text.csv';
 const DEFAULT_IMAGES_CSV_PATH =
-  "/Users/oliwiersellig/Desktop/real-articles-gallery.csv";
+  '/Users/oliwiersellig/Desktop/real-articles-gallery.csv';
 const DEFAULT_PRODUCT_SLUGS_CSV_PATH =
-  "/Users/oliwiersellig/Desktop/product-brand-slug-mapping.csv";
-const DEFAULT_SITETREE_CSV_PATH = "/Users/oliwiersellig/Desktop/site-tree.csv";
-const DEFAULT_PROJECT_ID = "fsw3likv";
-const DEFAULT_DATASET = "production";
-const LEGACY_ASSETS_BASE_URL = "https://www.audiofast.pl/assets/";
+  '/Users/oliwiersellig/Desktop/product-brand-slug-mapping.csv';
+const DEFAULT_SITETREE_CSV_PATH = '/Users/oliwiersellig/Desktop/site-tree.csv';
+const DEFAULT_PROJECT_ID = 'fsw3likv';
+const DEFAULT_DATASET = 'production';
+const LEGACY_ASSETS_BASE_URL = 'https://www.audiofast.pl/assets/';
 
 // Product slug lookup map (loaded from CSV)
 let productSlugMap: Map<string, string> | null = null;
@@ -166,36 +166,36 @@ const insecureAgent = new https.Agent({
 
 function parseArgs(): CliOptions {
   const args = process.argv.slice(2);
-  const boxesCsvArg = args.find((arg) => arg.startsWith("--boxes="));
-  const imagesCsvArg = args.find((arg) => arg.startsWith("--images="));
-  const limitArg = args.find((arg) => arg.startsWith("--limit="));
-  const articleArg = args.find((arg) => arg.startsWith("--article="));
-  const sanityDocArg = args.find((arg) => arg.startsWith("--sanity-doc="));
+  const boxesCsvArg = args.find((arg) => arg.startsWith('--boxes='));
+  const imagesCsvArg = args.find((arg) => arg.startsWith('--images='));
+  const limitArg = args.find((arg) => arg.startsWith('--limit='));
+  const articleArg = args.find((arg) => arg.startsWith('--article='));
+  const sanityDocArg = args.find((arg) => arg.startsWith('--sanity-doc='));
 
   return {
     boxesCsvPath: boxesCsvArg
-      ? boxesCsvArg.replace("--boxes=", "")
+      ? boxesCsvArg.replace('--boxes=', '')
       : DEFAULT_BOXES_CSV_PATH,
     imagesCsvPath: imagesCsvArg
-      ? imagesCsvArg.replace("--images=", "")
+      ? imagesCsvArg.replace('--images=', '')
       : DEFAULT_IMAGES_CSV_PATH,
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    verbose: args.includes("--verbose") || args.includes("-v"),
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    verbose: args.includes('--verbose') || args.includes('-v'),
     limit: limitArg
-      ? parseInt(limitArg.replace("--limit=", ""), 10)
+      ? parseInt(limitArg.replace('--limit=', ''), 10)
       : undefined,
     articleId: articleArg
-      ? parseInt(articleArg.replace("--article=", ""), 10)
+      ? parseInt(articleArg.replace('--article=', ''), 10)
       : undefined,
     sanityDocId: sanityDocArg
-      ? sanityDocArg.replace("--sanity-doc=", "")
+      ? sanityDocArg.replace('--sanity-doc=', '')
       : undefined,
   };
 }
 
 function readCsvRows<T>(csvPath: string): T[] {
   const resolved = resolve(process.cwd(), csvPath);
-  const file = readFileSync(resolved, "utf-8");
+  const file = readFileSync(resolved, 'utf-8');
   return parse(file, {
     columns: true,
     skip_empty_lines: true,
@@ -210,9 +210,9 @@ function generateKey(): string {
 }
 
 function cleanString(value?: string | null): string {
-  if (value === undefined || value === null) return "";
-  const cleaned = value.replace(/\u00a0/g, " ").trim();
-  if (!cleaned || cleaned.toLowerCase() === "null") return "";
+  if (value === undefined || value === null) return '';
+  const cleaned = value.replace(/\u00a0/g, ' ').trim();
+  if (!cleaned || cleaned.toLowerCase() === 'null') return '';
   return cleaned;
 }
 
@@ -323,7 +323,7 @@ function getSiteTreeUrlById(siteTreeId: string): string | null {
  * - Internal/relative URLs: prefixed with https://www.audiofast.pl/
  */
 function resolveSilverStripeLink(url: string): string {
-  if (!url) return "#";
+  if (!url) return '#';
 
   // Handle product_link shortcode: [product_link,id=X]
   // Uses product-brand-slug-mapping.csv for full path (e.g., "dcs/vivaldi-dac")
@@ -335,7 +335,7 @@ function resolveSilverStripeLink(url: string): string {
       return `https://www.audiofast.pl/${fullPath}`;
     }
     console.warn(`   ⚠️  Product ID ${id} not found in product mapping`);
-    return "#";
+    return '#';
   }
 
   // Handle sitetree_link shortcode: [sitetree_link,id=X]
@@ -349,21 +349,21 @@ function resolveSilverStripeLink(url: string): string {
       return `https://www.audiofast.pl/${urlSegment}`;
     }
     console.warn(`   ⚠️  SiteTree ID ${id} not found in sitetree mapping`);
-    return "#";
+    return '#';
   }
 
   // If URL starts with audiofast.pl (without https://), add protocol
-  if (url.startsWith("audiofast.pl") || url.startsWith("www.audiofast.pl")) {
+  if (url.startsWith('audiofast.pl') || url.startsWith('www.audiofast.pl')) {
     return `https://${url}`;
   }
 
   // External URLs (http:// or https://) - return as-is
-  if (url.startsWith("http://") || url.startsWith("https://")) {
+  if (url.startsWith('http://') || url.startsWith('https://')) {
     return url;
   }
 
   // Relative URLs starting with /
-  if (url.startsWith("/")) {
+  if (url.startsWith('/')) {
     return `https://www.audiofast.pl${url}`;
   }
 
@@ -416,8 +416,8 @@ function extractImagesFromHtml(
     if (srcMatch) {
       images.push({
         src: srcMatch[1],
-        alt: altMatch ? altMatch[1] : "",
-        className: classMatch ? classMatch[1] : "",
+        alt: altMatch ? altMatch[1] : '',
+        className: classMatch ? classMatch[1] : '',
       });
     }
   }
@@ -436,11 +436,11 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
   let content = html;
 
   // Remove pagebreaks and HTML comments
-  content = content.replace(/<!--\s*pagebreak\s*-->/gi, "");
-  content = content.replace(/<!--[\s\S]*?-->/g, "");
+  content = content.replace(/<!--\s*pagebreak\s*-->/gi, '');
+  content = content.replace(/<!--[\s\S]*?-->/g, '');
 
   // Normalize whitespace
-  content = content.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  content = content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
   // Handle SilverStripe image shortcodes: [image src="..." class="left" ...]
   // These need to be converted to image placeholders
@@ -463,18 +463,18 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
     if (srcMatch) {
       let imgSrc = srcMatch[1];
       // Make sure the src is a full URL
-      if (!imgSrc.startsWith("http")) {
-        if (imgSrc.startsWith("assets/") || imgSrc.startsWith("/assets/")) {
-          imgSrc = imgSrc.startsWith("/")
+      if (!imgSrc.startsWith('http')) {
+        if (imgSrc.startsWith('assets/') || imgSrc.startsWith('/assets/')) {
+          imgSrc = imgSrc.startsWith('/')
             ? `https://www.audiofast.pl${imgSrc}`
             : `https://www.audiofast.pl/${imgSrc}`;
-        } else if (imgSrc.startsWith("/")) {
+        } else if (imgSrc.startsWith('/')) {
           imgSrc = `https://www.audiofast.pl${imgSrc}`;
         }
       }
 
       // Check if class is exactly "left" or "right" (not leftAlone/rightAlone)
-      const className = classMatch ? classMatch[1] : "";
+      const className = classMatch ? classMatch[1] : '';
       const hasLeftOrRight =
         /\bleft\b|\bright\b/i.test(className) &&
         !/leftAlone|rightAlone/i.test(className);
@@ -482,7 +482,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
       ssImageMatches.push({
         index: ssMatch.index,
         src: imgSrc,
-        alt: titleMatch ? titleMatch[1] : altMatch ? altMatch[1] : "",
+        alt: titleMatch ? titleMatch[1] : altMatch ? altMatch[1] : '',
         autoWidth: hasLeftOrRight,
       });
     }
@@ -540,7 +540,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
   while ((match = pRegex.exec(content)) !== null) {
     allMatches.push({
       index: match.index,
-      type: "p",
+      type: 'p',
       content: match[1],
       fullMatch: match[0],
     });
@@ -551,7 +551,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
   while ((match = ulRegex.exec(content)) !== null) {
     allMatches.push({
       index: match.index,
-      type: "ul",
+      type: 'ul',
       content: match[1],
       fullMatch: match[0],
     });
@@ -562,7 +562,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
   while ((match = olRegex.exec(content)) !== null) {
     allMatches.push({
       index: match.index,
-      type: "ol",
+      type: 'ol',
       content: match[1],
       fullMatch: match[0],
     });
@@ -572,7 +572,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
   for (const ssImg of ssImageMatches) {
     allMatches.push({
       index: ssImg.index,
-      type: "ssImage",
+      type: 'ssImage',
       content: ssImg.src,
       fullMatch: `[image src="${ssImg.src}" alt="${ssImg.alt}"]`,
     });
@@ -582,7 +582,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
   for (const ytVid of youtubeMatches) {
     allMatches.push({
       index: ytVid.index,
-      type: "youtubeIframe",
+      type: 'youtubeIframe',
       content: ytVid.videoId,
       fullMatch: `<iframe youtube="${ytVid.videoId}">`,
     });
@@ -592,7 +592,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
   for (const vimeoVid of vimeoMatches) {
     allMatches.push({
       index: vimeoVid.index,
-      type: "vimeoIframe",
+      type: 'vimeoIframe',
       content: vimeoVid.videoId,
       fullMatch: `<iframe vimeo="${vimeoVid.videoId}">`,
     });
@@ -603,7 +603,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
 
   // Calculate heading shift: find minimum heading level and shift so it becomes h2
   // This normalizes heading hierarchy for articles that only use h3/h4/etc.
-  const headingMatches = allMatches.filter((m) => m.type.startsWith("h"));
+  const headingMatches = allMatches.filter((m) => m.type.startsWith('h'));
   let headingShift = 0;
   if (headingMatches.length > 0) {
     const headingLevels = headingMatches.map((m) => parseInt(m.type[1], 10));
@@ -620,9 +620,9 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
     const innerContent = m.content;
 
     // Handle YouTube iframes
-    if (tagName === "youtubeIframe") {
+    if (tagName === 'youtubeIframe') {
       blocks.push({
-        _type: "ptYoutubeVideo",
+        _type: 'ptYoutubeVideo',
         _key: generateKey(),
         youtubeId: innerContent,
       });
@@ -630,9 +630,9 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
     }
 
     // Handle Vimeo iframes
-    if (tagName === "vimeoIframe") {
+    if (tagName === 'vimeoIframe') {
       blocks.push({
-        _type: "ptVimeoVideo",
+        _type: 'ptVimeoVideo',
         _key: generateKey(),
         vimeoId: innerContent,
       });
@@ -640,11 +640,11 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
     }
 
     // Handle SilverStripe image shortcodes
-    if (tagName === "ssImage") {
+    if (tagName === 'ssImage') {
       const ssImgData = ssImageMatches.find((img) => img.index === m.index);
       if (ssImgData) {
         blocks.push({
-          _type: "imagePlaceholder",
+          _type: 'imagePlaceholder',
           _key: generateKey(),
           src: ssImgData.src,
           alt: ssImgData.alt,
@@ -655,7 +655,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
     }
 
     // Handle headings with normalized hierarchy
-    if (tagName.startsWith("h")) {
+    if (tagName.startsWith('h')) {
       const originalLevel = parseInt(tagName[1], 10);
       const textContent = stripHtmlTags(innerContent).trim();
       if (textContent) {
@@ -663,26 +663,26 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
         // e.g., if article only has h4, shift=2, so h4 becomes h2
         const shiftedLevel = originalLevel - headingShift;
         // Cap between h2 (min for content) and h3 (max depth we support)
-        const style = shiftedLevel <= 2 ? "h2" : "h3";
+        const style = shiftedLevel <= 2 ? 'h2' : 'h3';
         blocks.push(createTextBlock(textContent, style));
       }
       continue;
     }
 
     // Handle unordered lists
-    if (tagName === "ul") {
+    if (tagName === 'ul') {
       const listItems = innerContent.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
       for (const li of listItems) {
-        const itemContent = li.replace(/<\/?li[^>]*>/gi, "");
+        const itemContent = li.replace(/<\/?li[^>]*>/gi, '');
         const { children, markDefs } = parseInlineContent(itemContent);
         if (children.length > 0 && children.some((c) => c.text.trim())) {
           const block: PortableTextBlock = {
-            _type: "block",
+            _type: 'block',
             _key: generateKey(),
-            style: "normal",
+            style: 'normal',
             markDefs,
             children,
-            listItem: "bullet",
+            listItem: 'bullet',
             level: 1,
           };
           blocks.push(block);
@@ -692,19 +692,19 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
     }
 
     // Handle ordered lists
-    if (tagName === "ol") {
+    if (tagName === 'ol') {
       const listItems = innerContent.match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
       for (const li of listItems) {
-        const itemContent = li.replace(/<\/?li[^>]*>/gi, "");
+        const itemContent = li.replace(/<\/?li[^>]*>/gi, '');
         const { children, markDefs } = parseInlineContent(itemContent);
         if (children.length > 0 && children.some((c) => c.text.trim())) {
           const block: PortableTextBlock = {
-            _type: "block",
+            _type: 'block',
             _key: generateKey(),
-            style: "normal",
+            style: 'normal',
             markDefs,
             children,
-            listItem: "number",
+            listItem: 'number',
             level: 1,
           };
           blocks.push(block);
@@ -714,7 +714,7 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
     }
 
     // Handle paragraphs
-    if (tagName === "p") {
+    if (tagName === 'p') {
       // Check if paragraph contains an image
       const imgMatch = innerContent.match(
         /<img[^>]+src=["']([^"']+)["'][^>]*>/i,
@@ -725,40 +725,40 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
 
         // Try to also get alt text
         const altMatch = innerContent.match(/alt=["']([^"']*)["']/i);
-        const imgAlt = altMatch ? altMatch[1] : "";
+        const imgAlt = altMatch ? altMatch[1] : '';
 
         // Make sure the src is a full URL
-        if (!imgSrc.startsWith("http")) {
-          if (imgSrc.startsWith("assets/")) {
+        if (!imgSrc.startsWith('http')) {
+          if (imgSrc.startsWith('assets/')) {
             imgSrc = `https://www.audiofast.pl/${imgSrc}`;
-          } else if (imgSrc.startsWith("/")) {
+          } else if (imgSrc.startsWith('/')) {
             imgSrc = `https://www.audiofast.pl${imgSrc}`;
           }
         }
 
         // Add image placeholder (will be converted to ptImage later)
         blocks.push({
-          _type: "imagePlaceholder",
+          _type: 'imagePlaceholder',
           _key: generateKey(),
           src: imgSrc,
           alt: imgAlt,
         } as ImagePlaceholder);
 
         // Also process any text that might be around the image
-        const textWithoutImage = innerContent.replace(/<img[^>]*>/gi, "");
+        const textWithoutImage = innerContent.replace(/<img[^>]*>/gi, '');
         const textContent = stripHtmlTags(textWithoutImage).trim();
         if (
           textContent &&
-          textContent !== "&nbsp;" &&
-          textContent !== "\u00a0" &&
+          textContent !== '&nbsp;' &&
+          textContent !== '\u00a0' &&
           textContent.length > 1
         ) {
           const { children, markDefs } = parseInlineContent(textWithoutImage);
           if (children.length > 0 && children.some((c) => c.text.trim())) {
             blocks.push({
-              _type: "block",
+              _type: 'block',
               _key: generateKey(),
-              style: "normal",
+              style: 'normal',
               markDefs,
               children,
             });
@@ -772,8 +772,8 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
       // Skip empty paragraphs or paragraphs with only &nbsp;
       if (
         !textContent ||
-        textContent === "&nbsp;" ||
-        textContent === "\u00a0"
+        textContent === '&nbsp;' ||
+        textContent === '\u00a0'
       ) {
         continue;
       }
@@ -781,9 +781,9 @@ function htmlToPortableText(html: string | null): ContentBlock[] {
       const { children, markDefs } = parseInlineContent(innerContent);
       if (children.length > 0 && children.some((c) => c.text.trim())) {
         blocks.push({
-          _type: "block",
+          _type: 'block',
           _key: generateKey(),
-          style: "normal",
+          style: 'normal',
           markDefs,
           children,
         });
@@ -805,16 +805,16 @@ function parseInlineContent(html: string): {
   const markDefs: MarkDef[] = [];
 
   // Remove images from the content (they're handled separately)
-  let content = html.replace(/<img[^>]*>/gi, "");
+  let content = html.replace(/<img[^>]*>/gi, '');
 
   // Remove SilverStripe image shortcodes (they're handled separately)
-  content = content.replace(/\[image\s+[^\]]+\]/gi, "");
+  content = content.replace(/\[image\s+[^\]]+\]/gi, '');
 
   // Replace <br> tags with spaces
-  content = content.replace(/<br\s*\/?>/gi, " ");
+  content = content.replace(/<br\s*\/?>/gi, ' ');
 
   // Strip strong/em tags but keep content
-  content = content.replace(/<\/?(?:strong|b|em|i|span)[^>]*>/gi, "");
+  content = content.replace(/<\/?(?:strong|b|em|i|span)[^>]*>/gi, '');
 
   // Handle links - extract and replace with placeholders
   const linkRegex = /<a[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
@@ -843,10 +843,10 @@ function parseInlineContent(html: string): {
   // Create mark definitions for links
   for (const link of links) {
     markDefs.push({
-      _type: "customLink",
+      _type: 'customLink',
       _key: link.key,
       customLink: {
-        type: "external",
+        type: 'external',
         openInNewTab: true,
         external: link.url,
       },
@@ -854,14 +854,14 @@ function parseInlineContent(html: string): {
   }
 
   // Strip remaining HTML tags
-  content = content.replace(/<[^>]+>/g, "");
+  content = content.replace(/<[^>]+>/g, '');
 
   // Decode HTML entities
   content = content
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'");
 
@@ -871,7 +871,7 @@ function parseInlineContent(html: string): {
     const text = content.trim();
     if (text) {
       children.push({
-        _type: "span",
+        _type: 'span',
         _key: generateKey(),
         text,
       });
@@ -890,7 +890,7 @@ function parseInlineContent(html: string): {
         const linkInfo = links[linkIdx];
         if (linkInfo) {
           children.push({
-            _type: "span",
+            _type: 'span',
             _key: generateKey(),
             text: linkInfo.text,
             marks: [linkInfo.key],
@@ -901,7 +901,7 @@ function parseInlineContent(html: string): {
         const text = part;
         if (text) {
           children.push({
-            _type: "span",
+            _type: 'span',
             _key: generateKey(),
             text,
           });
@@ -913,9 +913,9 @@ function parseInlineContent(html: string): {
   // If no children were created, add an empty span
   if (children.length === 0) {
     children.push({
-      _type: "span",
+      _type: 'span',
       _key: generateKey(),
-      text: "",
+      text: '',
     });
   }
 
@@ -945,7 +945,7 @@ function splitByMarks(html: string): Array<{ text: string; marks: string[] }> {
   });
 
   // Strip any remaining HTML tags
-  remaining = remaining.replace(/<[^>]+>/g, "");
+  remaining = remaining.replace(/<[^>]+>/g, '');
 
   result.push({ text: remaining, marks: [] });
   return result;
@@ -956,14 +956,14 @@ function splitByMarks(html: string): Array<{ text: string; marks: string[] }> {
  */
 function stripHtmlTags(html: string): string {
   return html
-    .replace(/<[^>]+>/g, "")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
     .replace(/&quot;/gi, '"')
     .replace(/&#39;/gi, "'")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -972,16 +972,16 @@ function stripHtmlTags(html: string): string {
  */
 function createTextBlock(
   text: string,
-  style: "normal" | "h2" | "h3",
+  style: 'normal' | 'h2' | 'h3',
 ): PortableTextBlock {
   return {
-    _type: "block",
+    _type: 'block',
     _key: generateKey(),
     style,
     markDefs: [],
     children: [
       {
-        _type: "span",
+        _type: 'span',
         _key: generateKey(),
         text: text.trim(),
       },
@@ -1015,7 +1015,7 @@ async function uploadImageFromUrl(
           if (response.statusCode === 301 || response.statusCode === 302) {
             // Follow redirect - handle relative URLs
             let redirectUrl = response.headers.location;
-            if (redirectUrl.startsWith("/")) {
+            if (redirectUrl.startsWith('/')) {
               // Relative URL - make it absolute
               const urlObj = new URL(imageUrl);
               redirectUrl = `${urlObj.protocol}//${urlObj.host}${redirectUrl}`;
@@ -1030,16 +1030,16 @@ async function uploadImageFromUrl(
                     return;
                   }
                   const chunks: Buffer[] = [];
-                  redirectResponse.on("data", (chunk: Buffer) =>
+                  redirectResponse.on('data', (chunk: Buffer) =>
                     chunks.push(chunk),
                   );
-                  redirectResponse.on("end", () =>
+                  redirectResponse.on('end', () =>
                     resolve(Buffer.concat(chunks)),
                   );
-                  redirectResponse.on("error", reject);
+                  redirectResponse.on('error', reject);
                 },
               )
-              .on("error", reject);
+              .on('error', reject);
             return;
           }
 
@@ -1052,16 +1052,16 @@ async function uploadImageFromUrl(
             return;
           }
           const chunks: Buffer[] = [];
-          response.on("data", (chunk: Buffer) => chunks.push(chunk));
-          response.on("end", () => resolve(Buffer.concat(chunks)));
-          response.on("error", reject);
+          response.on('data', (chunk: Buffer) => chunks.push(chunk));
+          response.on('end', () => resolve(Buffer.concat(chunks)));
+          response.on('error', reject);
         },
       );
-      request.on("error", reject);
+      request.on('error', reject);
     });
 
     const stream = Readable.from(buffer);
-    const asset = await client.assets.upload("image", stream, { filename });
+    const asset = await client.assets.upload('image', stream, { filename });
 
     cache.set(cacheKey, asset._id);
     console.log(`   ✓ Uploaded: ${asset._id}`);
@@ -1142,28 +1142,28 @@ async function processBox(
   // Add heading if BoxTitle exists
   const boxTitle = cleanString(box.BoxTitle);
   if (boxTitle) {
-    blocks.push(createTextBlock(boxTitle, "h2"));
+    blocks.push(createTextBlock(boxTitle, 'h2'));
   }
 
   switch (boxType) {
-    case "text": {
+    case 'text': {
       const htmlContent = cleanString(box.HtmlContent);
       if (htmlContent) {
         const textBlocks = htmlToPortableText(htmlContent);
 
         // Process image placeholders - upload and convert to ptImage
         for (const block of textBlocks) {
-          if (block._type === "imagePlaceholder") {
+          if (block._type === 'imagePlaceholder') {
             const placeholder = block as ImagePlaceholder;
             if (dryRun) {
               const imgBlock: ImageBlock = {
-                _type: "ptImage",
+                _type: 'ptImage',
                 _key: generateKey(),
-                layout: "single",
+                layout: 'single',
                 image: {
-                  _type: "image",
+                  _type: 'image',
                   asset: {
-                    _type: "reference",
+                    _type: 'reference',
                     _ref: `image-dryrun-${generateKey()}`,
                   },
                 },
@@ -1173,7 +1173,7 @@ async function processBox(
               }
               blocks.push(imgBlock);
             } else if (client) {
-              const filename = placeholder.src.split("/").pop() || "image.jpg";
+              const filename = placeholder.src.split('/').pop() || 'image.jpg';
               const assetId = await uploadImageFromUrl(
                 client,
                 placeholder.src,
@@ -1182,12 +1182,12 @@ async function processBox(
               );
               if (assetId) {
                 const imgBlock: ImageBlock = {
-                  _type: "ptImage",
+                  _type: 'ptImage',
                   _key: generateKey(),
-                  layout: "single",
+                  layout: 'single',
                   image: {
-                    _type: "image",
-                    asset: { _type: "reference", _ref: assetId },
+                    _type: 'image',
+                    asset: { _type: 'reference', _ref: assetId },
                   },
                 };
                 if (placeholder.autoWidth) {
@@ -1197,8 +1197,8 @@ async function processBox(
               }
             }
           } else if (
-            block._type === "ptYoutubeVideo" ||
-            block._type === "ptVimeoVideo"
+            block._type === 'ptYoutubeVideo' ||
+            block._type === 'ptVimeoVideo'
           ) {
             // Pass through YouTube and Vimeo blocks
             blocks.push(block);
@@ -1210,11 +1210,11 @@ async function processBox(
       break;
     }
 
-    case "video": {
+    case 'video': {
       const youtubeId = extractYouTubeId(box.YoutubeId);
       if (youtubeId) {
         blocks.push({
-          _type: "ptYoutubeVideo",
+          _type: 'ptYoutubeVideo',
           _key: generateKey(),
           youtubeId,
         });
@@ -1222,8 +1222,8 @@ async function processBox(
       break;
     }
 
-    case "gallery":
-    case "slider": {
+    case 'gallery':
+    case 'slider': {
       const images = imagesByBoxId.get(box.BoxID) || [];
       if (images.length >= 4) {
         // Sort images by ImageSort
@@ -1232,9 +1232,9 @@ async function processBox(
         );
 
         const imageRefs: Array<{
-          _type: "image";
+          _type: 'image';
           _key: string;
-          asset: { _type: "reference"; _ref: string };
+          asset: { _type: 'reference'; _ref: string };
         }> = [];
 
         for (const img of images) {
@@ -1245,10 +1245,10 @@ async function processBox(
 
           if (dryRun) {
             imageRefs.push({
-              _type: "image",
+              _type: 'image',
               _key: generateKey(),
               asset: {
-                _type: "reference",
+                _type: 'reference',
                 _ref: `image-dryrun-${generateKey()}`,
               },
             });
@@ -1256,14 +1256,14 @@ async function processBox(
             const assetId = await uploadImageFromUrl(
               client,
               imageUrl,
-              filename.split("/").pop() || filename,
+              filename.split('/').pop() || filename,
               assetCache,
             );
             if (assetId) {
               imageRefs.push({
-                _type: "image",
+                _type: 'image',
                 _key: generateKey(),
-                asset: { _type: "reference", _ref: assetId },
+                asset: { _type: 'reference', _ref: assetId },
               });
             }
           }
@@ -1271,7 +1271,7 @@ async function processBox(
 
         if (imageRefs.length >= 4) {
           blocks.push({
-            _type: "ptImageSlider",
+            _type: 'ptImageSlider',
             _key: generateKey(),
             images: imageRefs,
           });
@@ -1288,12 +1288,12 @@ async function processBox(
       break;
     }
 
-    case "hr": {
+    case 'hr': {
       // Skip horizontal rules / page breaks - don't render them
       break;
     }
 
-    case "tabs": {
+    case 'tabs': {
       // Tabs are complex - for now, skip or convert to text if content exists
       const htmlContent = cleanString(box.HtmlContent);
       if (htmlContent) {
@@ -1301,17 +1301,17 @@ async function processBox(
 
         // Process image placeholders and video blocks
         for (const block of textBlocks) {
-          if (block._type === "imagePlaceholder") {
+          if (block._type === 'imagePlaceholder') {
             const placeholder = block as ImagePlaceholder;
             if (dryRun) {
               const imgBlock: ImageBlock = {
-                _type: "ptImage",
+                _type: 'ptImage',
                 _key: generateKey(),
-                layout: "single",
+                layout: 'single',
                 image: {
-                  _type: "image",
+                  _type: 'image',
                   asset: {
-                    _type: "reference",
+                    _type: 'reference',
                     _ref: `image-dryrun-${generateKey()}`,
                   },
                 },
@@ -1321,7 +1321,7 @@ async function processBox(
               }
               blocks.push(imgBlock);
             } else if (client) {
-              const filename = placeholder.src.split("/").pop() || "image.jpg";
+              const filename = placeholder.src.split('/').pop() || 'image.jpg';
               const assetId = await uploadImageFromUrl(
                 client,
                 placeholder.src,
@@ -1330,12 +1330,12 @@ async function processBox(
               );
               if (assetId) {
                 const imgBlock: ImageBlock = {
-                  _type: "ptImage",
+                  _type: 'ptImage',
                   _key: generateKey(),
-                  layout: "single",
+                  layout: 'single',
                   image: {
-                    _type: "image",
-                    asset: { _type: "reference", _ref: assetId },
+                    _type: 'image',
+                    asset: { _type: 'reference', _ref: assetId },
                   },
                 };
                 if (placeholder.autoWidth) {
@@ -1345,8 +1345,8 @@ async function processBox(
               }
             }
           } else if (
-            block._type === "ptYoutubeVideo" ||
-            block._type === "ptVimeoVideo"
+            block._type === 'ptYoutubeVideo' ||
+            block._type === 'ptVimeoVideo'
           ) {
             // Pass through YouTube and Vimeo blocks
             blocks.push(block);
@@ -1370,29 +1370,29 @@ async function processBox(
 // ============================================================================
 
 async function migrateArticleContent(options: CliOptions): Promise<void> {
-  console.log("");
+  console.log('');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║            AUDIOFAST DATA MIGRATION                           ║",
+    '║            AUDIOFAST DATA MIGRATION                           ║',
   );
   console.log(
-    "║            Article Content (Boxes → Portable Text)            ║",
+    '║            Article Content (Boxes → Portable Text)            ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
+  console.log('');
   console.log(`Boxes CSV: ${options.boxesCsvPath}`);
   console.log(`Images CSV: ${options.imagesCsvPath}`);
-  console.log(`Mode: ${options.dryRun ? "DRY RUN (no writes)" : "LIVE"}`);
+  console.log(`Mode: ${options.dryRun ? 'DRY RUN (no writes)' : 'LIVE'}`);
   if (options.articleId) console.log(`Article ID: ${options.articleId}`);
   if (options.limit) console.log(`Limit: ${options.limit}`);
-  console.log("");
+  console.log('');
 
   // Read CSV files
-  console.log("📖 Reading CSV files...");
+  console.log('📖 Reading CSV files...');
   const boxRows = readCsvRows<BoxRow>(options.boxesCsvPath);
   const imageRows = readCsvRows<ImageRow>(options.imagesCsvPath);
   console.log(
@@ -1409,13 +1409,13 @@ async function migrateArticleContent(options: CliOptions): Promise<void> {
     : createClient({
         projectId: process.env.SANITY_PROJECT_ID || DEFAULT_PROJECT_ID,
         dataset: process.env.SANITY_DATASET || DEFAULT_DATASET,
-        apiVersion: "2024-01-01",
+        apiVersion: '2024-01-01',
         token: process.env.SANITY_API_TOKEN,
         useCdn: false,
       });
 
   if (!options.dryRun && !process.env.SANITY_API_TOKEN) {
-    throw new Error("SANITY_API_TOKEN env var is required for live migration.");
+    throw new Error('SANITY_API_TOKEN env var is required for live migration.');
   }
 
   const assetCache = new Map<string, string>();
@@ -1511,7 +1511,7 @@ async function migrateArticleContent(options: CliOptions): Promise<void> {
           .commit();
 
         // Also update the draft version if it exists
-        const draftId = targetDocId.startsWith("drafts.")
+        const draftId = targetDocId.startsWith('drafts.')
           ? targetDocId
           : `drafts.${targetDocId}`;
         try {
@@ -1533,29 +1533,29 @@ async function migrateArticleContent(options: CliOptions): Promise<void> {
   }
 
   // Summary
-  console.log("\n");
+  console.log('\n');
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
   console.log(
-    "                        MIGRATION SUMMARY                       ",
+    '                        MIGRATION SUMMARY                       ',
   );
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
   console.log(`   Total articles processed: ${processedCount}`);
   console.log(`   Successful: ${successCount}`);
   console.log(`   Errors: ${errorCount}`);
   console.log(`   Images uploaded: ${assetCache.size}`);
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
-  console.log("");
+  console.log('');
 
   if (options.dryRun) {
-    console.log("✅ Dry run complete. No changes were made to Sanity.");
+    console.log('✅ Dry run complete. No changes were made to Sanity.');
   } else {
-    console.log("✅ Migration complete.");
+    console.log('✅ Migration complete.');
   }
 }
 
@@ -1569,6 +1569,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("❌ Migration failed:", error);
+  console.error('❌ Migration failed:', error);
   process.exit(1);
 });

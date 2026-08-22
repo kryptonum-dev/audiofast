@@ -1,8 +1,5 @@
 export type BuyabilityReason =
-  | 'archived'
-  | 'missing_price'
-  | 'not_sellable_online'
-  | 'unavailable';
+  'archived' | 'missing_price' | 'not_sellable_online' | 'unavailable';
 
 export type BuyabilityResult = {
   isBuyable: boolean;

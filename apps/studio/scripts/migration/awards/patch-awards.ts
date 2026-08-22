@@ -24,22 +24,22 @@
  *   SANITY_API_TOKEN   - Sanity API token (required for live patch)
  */
 
-import { createClient, type SanityClient } from "@sanity/client";
+import { createClient, type SanityClient } from '@sanity/client';
 
-import type { SanityReference } from "./types";
+import type { SanityReference } from './types';
 import {
   buildAwardSourceData,
   indexDataByAwardId,
   loadAllCsvData,
-} from "./utils/csv-parser";
+} from './utils/csv-parser';
 
 // ============================================================================
 // Constants
 // ============================================================================
 
-const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || "fsw3likv";
-const SANITY_DATASET = process.env.SANITY_DATASET || "production";
-const SANITY_API_VERSION = "2024-01-01";
+const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID || 'fsw3likv';
+const SANITY_DATASET = process.env.SANITY_DATASET || 'production';
+const SANITY_API_VERSION = '2024-01-01';
 
 // ============================================================================
 // Types
@@ -81,16 +81,16 @@ interface PatchResult {
 function parseArgs(): PatchOptions {
   const args = process.argv.slice(2);
 
-  const limitArg = args.find((arg) => arg.startsWith("--limit="));
-  const idArg = args.find((arg) => arg.startsWith("--id="));
+  const limitArg = args.find((arg) => arg.startsWith('--limit='));
+  const idArg = args.find((arg) => arg.startsWith('--id='));
 
   return {
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    verbose: args.includes("--verbose") || args.includes("-v"),
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    verbose: args.includes('--verbose') || args.includes('-v'),
     limit: limitArg
-      ? parseInt(limitArg.replace("--limit=", ""), 10)
+      ? parseInt(limitArg.replace('--limit=', ''), 10)
       : undefined,
-    awardId: idArg ? idArg.replace("--id=", "") : undefined,
+    awardId: idArg ? idArg.replace('--id=', '') : undefined,
   };
 }
 
@@ -102,7 +102,7 @@ function createSanityClient(): SanityClient {
   const token = process.env.SANITY_API_TOKEN;
   if (!token) {
     throw new Error(
-      "SANITY_API_TOKEN is required. Set it in environment variables.",
+      'SANITY_API_TOKEN is required. Set it in environment variables.',
     );
   }
 
@@ -122,7 +122,7 @@ function createSanityClient(): SanityClient {
 let existingProductIds: Set<string> = new Set();
 
 async function loadExistingProductIds(client: SanityClient): Promise<void> {
-  console.log("🔍 Loading existing products from Sanity...");
+  console.log('🔍 Loading existing products from Sanity...');
 
   const products = await client.fetch<Array<{ _id: string }>>(
     `*[_type == "product" && _id match "product-*"]{_id}`,
@@ -132,9 +132,10 @@ async function loadExistingProductIds(client: SanityClient): Promise<void> {
   console.log(`   ✓ Found ${existingProductIds.size} existing products`);
 }
 
-function resolveProductReferences(
-  productIds: string[],
-): { validRefs: string[]; missingProducts: string[] } {
+function resolveProductReferences(productIds: string[]): {
+  validRefs: string[];
+  missingProducts: string[];
+} {
   const validRefs: string[] = [];
   const missingProducts: string[] = [];
 
@@ -160,7 +161,8 @@ function determinePatchOperations(
   csvProductIds: string[],
 ): PatchOperation | null {
   const currentRefs = new Set(existingAward.products || []);
-  const { validRefs, missingProducts } = resolveProductReferences(csvProductIds);
+  const { validRefs, missingProducts } =
+    resolveProductReferences(csvProductIds);
   const newRefs = new Set(validRefs);
 
   // Find differences
@@ -170,10 +172,12 @@ function determinePatchOperations(
   // Log missing products (but don't treat as "removed" - they just don't exist)
   if (missingProducts.length > 0 && missingProducts.length <= 5) {
     console.log(
-      `      ⚠️  Missing products (not in Sanity): ${missingProducts.join(", ")}`,
+      `      ⚠️  Missing products (not in Sanity): ${missingProducts.join(', ')}`,
     );
   } else if (missingProducts.length > 5) {
-    console.log(`      ⚠️  ${missingProducts.length} products not found in Sanity`);
+    console.log(
+      `      ⚠️  ${missingProducts.length} products not found in Sanity`,
+    );
   }
 
   // Only patch if there are differences
@@ -182,7 +186,7 @@ function determinePatchOperations(
   }
 
   return {
-    awardId: existingAward._id.replace("award-", ""),
+    awardId: existingAward._id.replace('award-', ''),
     name: existingAward.name,
     currentProductCount: currentRefs.size,
     newProductCount: newRefs.size,
@@ -237,15 +241,12 @@ async function executePatch(
   try {
     // Build the product references array
     const productRefs: SanityReference[] = newProductRefs.map((ref) => ({
-      _type: "reference",
+      _type: 'reference',
       _key: generateKey(),
       _ref: ref,
     }));
 
-    await client
-      .patch(awardSanityId)
-      .set({ products: productRefs })
-      .commit();
+    await client.patch(awardSanityId).set({ products: productRefs }).commit();
 
     return true;
   } catch (error) {
@@ -268,7 +269,7 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
   };
 
   // Load CSV data
-  console.log("\n📂 Loading CSV data...");
+  console.log('\n📂 Loading CSV data...');
   const csvData = loadAllCsvData();
   const indexed = indexDataByAwardId(csvData);
 
@@ -282,7 +283,9 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
   } catch (error) {
     if (options.dryRun) {
       // For dry run, we can continue without a real client
-      console.log("\n⚠️  No SANITY_API_TOKEN set, but continuing in dry-run mode");
+      console.log(
+        '\n⚠️  No SANITY_API_TOKEN set, but continuing in dry-run mode',
+      );
       client = createClient({
         projectId: SANITY_PROJECT_ID,
         dataset: SANITY_DATASET,
@@ -298,32 +301,32 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
   await loadExistingProductIds(client);
 
   // Fetch existing awards from Sanity
-  console.log("\n🔍 Fetching existing awards from Sanity...");
+  console.log('\n🔍 Fetching existing awards from Sanity...');
   const existingAwards = await client.fetch<SanityAwardState[]>(
     `*[_type == "award" && _id match "award-*"]{
       _id,
       name,
       "products": products[]._ref
-    }`
+    }`,
   );
   console.log(`   ✓ Found ${existingAwards.length} existing awards`);
 
   // Build a map of existing awards by ID
   const existingAwardsMap = new Map<string, SanityAwardState>();
   for (const award of existingAwards) {
-    const legacyId = award._id.replace("award-", "");
+    const legacyId = award._id.replace('award-', '');
     existingAwardsMap.set(legacyId, award);
   }
 
   // Filter CSV awards to only those that exist in Sanity
   let awardsToProcess = csvData.awards.filter((row) =>
-    existingAwardsMap.has(row.AwardID)
+    existingAwardsMap.has(row.AwardID),
   );
 
   // Filter by single award ID if specified
   if (options.awardId) {
     awardsToProcess = awardsToProcess.filter(
-      (a) => a.AwardID === options.awardId
+      (a) => a.AwardID === options.awardId,
     );
     if (awardsToProcess.length === 0) {
       console.error(`\n❌ Award not found: ${options.awardId}`);
@@ -336,7 +339,9 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
     awardsToProcess = awardsToProcess.slice(0, options.limit);
   }
 
-  console.log(`\n🔄 Processing ${awardsToProcess.length} awards for patching...\n`);
+  console.log(
+    `\n🔄 Processing ${awardsToProcess.length} awards for patching...\n`,
+  );
 
   // Determine operations needed
   const operations: PatchOperation[] = [];
@@ -346,14 +351,19 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
     if (!existingAward) continue;
 
     const sourceData = buildAwardSourceData(csvRow, indexed);
-    const operation = determinePatchOperations(existingAward, sourceData.productIds);
+    const operation = determinePatchOperations(
+      existingAward,
+      sourceData.productIds,
+    );
 
     if (operation) {
       operations.push(operation);
     } else {
       result.skipped.push(csvRow.AwardID);
       if (options.verbose) {
-        console.log(`   ⏭️  ${csvRow.AwardID} "${csvRow.AwardName}" - no changes needed`);
+        console.log(
+          `   ⏭️  ${csvRow.AwardID} "${csvRow.AwardName}" - no changes needed`,
+        );
       }
     }
   }
@@ -363,7 +373,7 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
   console.log(`   Awards unchanged: ${result.skipped.length}`);
 
   if (operations.length === 0) {
-    console.log("\n✅ No patches needed. All awards are up to date.");
+    console.log('\n✅ No patches needed. All awards are up to date.');
     return result;
   }
 
@@ -390,7 +400,7 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
     } else {
       result.errors.push({
         awardId: operation.awardId,
-        error: "Patch failed",
+        error: 'Patch failed',
       });
     }
   }
@@ -405,25 +415,25 @@ async function runPatch(options: PatchOptions): Promise<PatchResult> {
 async function main(): Promise<void> {
   const options = parseArgs();
 
-  console.log("\n");
+  console.log('\n');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║              AUDIOFAST AWARD PATCH                            ║",
+    '║              AUDIOFAST AWARD PATCH                            ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
-  console.log(`Mode: ${options.dryRun ? "🧪 DRY RUN (no writes)" : "🚀 LIVE"}`);
+  console.log('');
+  console.log(`Mode: ${options.dryRun ? '🧪 DRY RUN (no writes)' : '🚀 LIVE'}`);
   if (options.awardId) {
     console.log(`Single Award: ${options.awardId}`);
   }
   if (options.limit) {
     console.log(`Limit: ${options.limit} awards`);
   }
-  console.log(`Verbose: ${options.verbose ? "Yes" : "No"}`);
+  console.log(`Verbose: ${options.verbose ? 'Yes' : 'No'}`);
   console.log(`Project: ${SANITY_PROJECT_ID} / ${SANITY_DATASET}`);
 
   const startTime = Date.now();
@@ -434,15 +444,15 @@ async function main(): Promise<void> {
     const duration = ((Date.now() - startTime) / 1000).toFixed(1);
 
     // Print summary
-    console.log("\n");
+    console.log('\n');
     console.log(
-      "═══════════════════════════════════════════════════════════════",
+      '═══════════════════════════════════════════════════════════════',
     );
     console.log(
-      "                      PATCH SUMMARY                             ",
+      '                      PATCH SUMMARY                             ',
     );
     console.log(
-      "═══════════════════════════════════════════════════════════════",
+      '═══════════════════════════════════════════════════════════════',
     );
     console.log(`   Duration: ${duration}s`);
     console.log(`   Patched: ${result.patched.length}`);
@@ -450,26 +460,26 @@ async function main(): Promise<void> {
     console.log(`   Errors: ${result.errors.length}`);
 
     if (result.errors.length > 0) {
-      console.log("\n❌ Errors:");
+      console.log('\n❌ Errors:');
       for (const err of result.errors) {
         console.log(`   [${err.awardId}]: ${err.error}`);
       }
     }
 
-    console.log("\n");
+    console.log('\n');
     if (options.dryRun) {
-      console.log("✅ Dry run complete. No changes were made to Sanity.");
+      console.log('✅ Dry run complete. No changes were made to Sanity.');
     } else {
-      console.log("✅ Patch complete.");
+      console.log('✅ Patch complete.');
     }
-    console.log("");
+    console.log('');
   } catch (error) {
-    console.error("\n❌ Patch failed:", error);
+    console.error('\n❌ Patch failed:', error);
     process.exit(1);
   }
 }
 
 main().catch((error) => {
-  console.error("❌ Patch failed:", error);
+  console.error('❌ Patch failed:', error);
   process.exit(1);
 });

@@ -18,10 +18,10 @@ type DenormalizeClient = {
 function slugify(str: string): string {
   return str
     .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 /**
@@ -61,8 +61,7 @@ export async function computeDenormalizedFields(
 
     if (brand) {
       // Extract slug without prefix: "/marki/yamaha/" -> "yamaha"
-      brandSlug =
-        brand.slug?.replace("/marki/", "").replace(/\/$/, "") || null;
+      brandSlug = brand.slug?.replace('/marki/', '').replace(/\/$/, '') || null;
       brandName = brand.name || null;
     }
   }

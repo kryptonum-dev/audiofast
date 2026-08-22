@@ -16,16 +16,33 @@
  *   bun run patch-products.ts
  */
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { createClient, type SanityClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
+import { createClient, type SanityClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
 
-import { htmlToPortableText } from "./parser/html-to-portable-text";
-import { loadLegacyReviewIdMappings,loadReferenceMappings, resolveReviewByLegacyId, resolveReviewReferences } from "./transformers/reference-resolver";
-import type { ImageCache, PortableTextBlock, ProductArticleRow, ProductReviewRow, SanityImageRef } from "./types";
-import { getLegacyAssetUrl, loadImageCache, processAndUploadImage, processImageDryRun,saveImageCache } from "./utils/image-optimizer";
+import { htmlToPortableText } from './parser/html-to-portable-text';
+import {
+  loadLegacyReviewIdMappings,
+  loadReferenceMappings,
+  resolveReviewByLegacyId,
+  resolveReviewReferences,
+} from './transformers/reference-resolver';
+import type {
+  ImageCache,
+  PortableTextBlock,
+  ProductArticleRow,
+  ProductReviewRow,
+  SanityImageRef,
+} from './types';
+import {
+  getLegacyAssetUrl,
+  loadImageCache,
+  processAndUploadImage,
+  processImageDryRun,
+  saveImageCache,
+} from './utils/image-optimizer';
 
 // ============================================================================
 // Configuration
@@ -33,9 +50,12 @@ import { getLegacyAssetUrl, loadImageCache, processAndUploadImage, processImageD
 
 // Cutoff: Only patch products with publishedDate before this date (latest product: Audio Research I/70)
 // Using publishedDate (the overwritten creation date from legacy DB), not _createdAt
-const CUTOFF_DATE = "2025-05-23";
+const CUTOFF_DATE = '2025-05-23';
 
-const CSV_BASE_PATH = resolve(__dirname, "../../../../../csv/products/december");
+const CSV_BASE_PATH = resolve(
+  __dirname,
+  '../../../../../csv/products/december',
+);
 
 // ============================================================================
 // Types
@@ -81,14 +101,16 @@ interface PatchResult {
 
 function parseArgs(): PatchOptions {
   const args = process.argv.slice(2);
-  const limitArg = args.find((arg) => arg.startsWith("--limit="));
-  const productIdArg = args.find((arg) => arg.startsWith("--id="));
+  const limitArg = args.find((arg) => arg.startsWith('--limit='));
+  const productIdArg = args.find((arg) => arg.startsWith('--id='));
 
   return {
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    verbose: args.includes("--verbose") || args.includes("-v"),
-    limit: limitArg ? parseInt(limitArg.replace("--limit=", ""), 10) : undefined,
-    productId: productIdArg ? productIdArg.replace("--id=", "") : undefined,
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    verbose: args.includes('--verbose') || args.includes('-v'),
+    limit: limitArg
+      ? parseInt(limitArg.replace('--limit=', ''), 10)
+      : undefined,
+    productId: productIdArg ? productIdArg.replace('--id=', '') : undefined,
   };
 }
 
@@ -97,18 +119,18 @@ function parseArgs(): PatchOptions {
 // ============================================================================
 
 function createSanityClient(): SanityClient {
-  const projectId = process.env.SANITY_PROJECT_ID || "fsw3likv";
-  const dataset = process.env.SANITY_DATASET || "production";
+  const projectId = process.env.SANITY_PROJECT_ID || 'fsw3likv';
+  const dataset = process.env.SANITY_DATASET || 'production';
   const token = process.env.SANITY_API_TOKEN;
 
   if (!token) {
-    throw new Error("SANITY_API_TOKEN environment variable is required");
+    throw new Error('SANITY_API_TOKEN environment variable is required');
   }
 
   return createClient({
     projectId,
     dataset,
-    apiVersion: "2024-01-01",
+    apiVersion: '2024-01-01',
     useCdn: false,
     token,
   });
@@ -119,13 +141,14 @@ function createSanityClient(): SanityClient {
 // ============================================================================
 
 function loadArticlesCSV(): Map<string, ProductArticleRow> {
-  const csvPath = resolve(CSV_BASE_PATH, "products-articles.csv");
-  const file = readFileSync(csvPath, "utf-8");
+  const csvPath = resolve(CSV_BASE_PATH, 'products-articles.csv');
+  const file = readFileSync(csvPath, 'utf-8');
   const rows = parse(file, {
     columns: true,
     skip_empty_lines: true,
     trim: true,
-    cast: (value: string) => (value === "NULL" || value === "null" ? null : value),
+    cast: (value: string) =>
+      value === 'NULL' || value === 'null' ? null : value,
   }) as ProductArticleRow[];
 
   // Index by ProductID (take first if duplicates)
@@ -139,8 +162,8 @@ function loadArticlesCSV(): Map<string, ProductArticleRow> {
 }
 
 function loadReviewsCSV(): Map<string, ProductReviewRow[]> {
-  const csvPath = resolve(CSV_BASE_PATH, "products-reviews.csv");
-  const file = readFileSync(csvPath, "utf-8");
+  const csvPath = resolve(CSV_BASE_PATH, 'products-reviews.csv');
+  const file = readFileSync(csvPath, 'utf-8');
   const rows = parse(file, {
     columns: true,
     skip_empty_lines: true,
@@ -163,7 +186,7 @@ function loadReviewsCSV(): Map<string, ProductReviewRow[]> {
 
 async function queryExistingProducts(
   client: SanityClient,
-  options: PatchOptions
+  options: PatchOptions,
 ): Promise<SanityProductState[]> {
   let query: string;
   let params: Record<string, unknown> = {};
@@ -214,7 +237,7 @@ function generateKey(): string {
 function determinePatchOperations(
   products: SanityProductState[],
   articlesMap: Map<string, ProductArticleRow>,
-  reviewsMap: Map<string, ProductReviewRow[]>
+  reviewsMap: Map<string, ProductReviewRow[]>,
 ): PatchOperation[] {
   const operations: PatchOperation[] = [];
 
@@ -223,19 +246,21 @@ function determinePatchOperations(
     const reviewData = reviewsMap.get(product.legacyId) || [];
 
     // Check if we need to add shortDescription
-    const addShortDescription = !product.hasShortDescription && 
-      !!articleData?.ShortDescription;
+    const addShortDescription =
+      !product.hasShortDescription && !!articleData?.ShortDescription;
 
     // Check if we need to add publicationImage
-    const addPublicationImage = !product.hasPublicationImage && 
-      !!articleData?.PublicationImageFilename;
+    const addPublicationImage =
+      !product.hasPublicationImage && !!articleData?.PublicationImageFilename;
 
     // Check if we need to update reviews
     // Resolve expected review references from CSV (deduplicated with Set)
     const expectedReviewRefs = new Set<string>();
     for (const row of reviewData) {
       // Try by slug first
-      const refsBySlug = resolveReviewReferences([row.ReviewSlug], { silent: true });
+      const refsBySlug = resolveReviewReferences([row.ReviewSlug], {
+        silent: true,
+      });
       if (refsBySlug.length > 0) {
         expectedReviewRefs.add(refsBySlug[0]._ref);
       } else {
@@ -249,7 +274,9 @@ function determinePatchOperations(
 
     // Compare: are there any NEW reviews in CSV that aren't already in Sanity?
     const currentSet = new Set(product.currentReviewRefs);
-    const newReviewsToAdd = [...expectedReviewRefs].filter(ref => !currentSet.has(ref));
+    const newReviewsToAdd = [...expectedReviewRefs].filter(
+      (ref) => !currentSet.has(ref),
+    );
     const updateReviews = newReviewsToAdd.length > 0;
 
     // Only add if there's something to patch
@@ -281,7 +308,7 @@ async function executePatch(
   reviewsMap: Map<string, ProductReviewRow[]>,
   imageCache: ImageCache,
   dryRun: boolean,
-  verbose: boolean
+  verbose: boolean,
 ): Promise<void> {
   const articleData = articlesMap.get(operation.legacyId);
   const reviewData = reviewsMap.get(operation.legacyId) || [];
@@ -292,31 +319,34 @@ async function executePatch(
   if (operation.addShortDescription && articleData?.ShortDescription) {
     const descriptionBlocks = htmlToPortableText(articleData.ShortDescription);
     const textBlocks = descriptionBlocks.filter(
-      (block): block is PortableTextBlock => block._type === "block"
+      (block): block is PortableTextBlock => block._type === 'block',
     );
     if (textBlocks.length > 0) {
       patchOps.shortDescription = textBlocks;
-      if (verbose) console.log(`     + shortDescription: ${textBlocks.length} blocks`);
+      if (verbose)
+        console.log(`     + shortDescription: ${textBlocks.length} blocks`);
     }
   }
 
   // Add publicationImage
   if (operation.addPublicationImage && articleData?.PublicationImageFilename) {
     if (dryRun) {
-      console.log(`     🧪 [DRY RUN] Would upload: ${articleData.PublicationImageFilename}`);
+      console.log(
+        `     🧪 [DRY RUN] Would upload: ${articleData.PublicationImageFilename}`,
+      );
       patchOps.publicationImage = {
-        _type: "image",
-        asset: { _type: "reference", _ref: "image-dry-run-placeholder" },
+        _type: 'image',
+        asset: { _type: 'reference', _ref: 'image-dry-run-placeholder' },
       };
     } else {
       const imageUrl = getLegacyAssetUrl(articleData.PublicationImageFilename);
       const result = await processAndUploadImage(imageUrl, client, imageCache, {
-        imageType: "preview",
+        imageType: 'preview',
       });
       if (result) {
         patchOps.publicationImage = {
-          _type: "image",
-          asset: { _type: "reference", _ref: result.assetId },
+          _type: 'image',
+          asset: { _type: 'reference', _ref: result.assetId },
         };
         if (verbose) console.log(`     + publicationImage: ${result.assetId}`);
       }
@@ -327,16 +357,17 @@ async function executePatch(
   if (operation.updateReviews) {
     // Start with existing review refs (to preserve them)
     const existingRefs = new Set(
-      (await client.fetch<string[]>(
-        `*[_id == $id][0].reviews[]._ref`,
-        { id: operation.productId }
-      )) || []
+      (await client.fetch<string[]>(`*[_id == $id][0].reviews[]._ref`, {
+        id: operation.productId,
+      })) || [],
     );
-    
+
     // Collect new refs from CSV
     const newRefs = new Set<string>();
     for (const row of reviewData) {
-      const refsBySlug = resolveReviewReferences([row.ReviewSlug], { silent: true });
+      const refsBySlug = resolveReviewReferences([row.ReviewSlug], {
+        silent: true,
+      });
       if (refsBySlug.length > 0) {
         newRefs.add(refsBySlug[0]._ref);
       } else {
@@ -346,25 +377,31 @@ async function executePatch(
         }
       }
     }
-    
+
     // Merge: existing + new (union), deduplicated
     const allRefs = new Set([...existingRefs, ...newRefs]);
-    
+
     // Only patch if there are actually new reviews to add
-    const addedCount = [...allRefs].filter(ref => !existingRefs.has(ref)).length;
-    
+    const addedCount = [...allRefs].filter(
+      (ref) => !existingRefs.has(ref),
+    ).length;
+
     if (addedCount > 0) {
-      const reviewRefs = [...allRefs].map(ref => ({
-        _type: "reference" as const,
+      const reviewRefs = [...allRefs].map((ref) => ({
+        _type: 'reference' as const,
         _ref: ref,
         _key: generateKey(),
       }));
       patchOps.reviews = reviewRefs;
       if (verbose) {
-        console.log(`     + reviews: ${existingRefs.size} → ${allRefs.size} (+${addedCount} new)`);
+        console.log(
+          `     + reviews: ${existingRefs.size} → ${allRefs.size} (+${addedCount} new)`,
+        );
       }
     } else if (verbose) {
-      console.log(`     = reviews: ${existingRefs.size} (no new reviews to add)`);
+      console.log(
+        `     = reviews: ${existingRefs.size} (no new reviews to add)`,
+      );
     }
   }
 
@@ -392,40 +429,50 @@ async function main(): Promise<void> {
 ╚═══════════════════════════════════════════════════════════════╝
 `);
 
-  console.log(`Mode: ${options.dryRun ? "🧪 DRY RUN (no writes)" : "🚀 LIVE PATCH"}`);
+  console.log(
+    `Mode: ${options.dryRun ? '🧪 DRY RUN (no writes)' : '🚀 LIVE PATCH'}`,
+  );
   console.log(`Cutoff Date: ${CUTOFF_DATE}`);
   if (options.limit) console.log(`Limit: ${options.limit}`);
   if (options.productId) console.log(`Product ID: ${options.productId}`);
-  console.log("");
+  console.log('');
 
   // Load CSV data
-  console.log("📖 Loading CSV files...");
+  console.log('📖 Loading CSV files...');
   const articlesMap = loadArticlesCSV();
-  console.log(`   ✓ products-articles.csv: ${articlesMap.size} unique products`);
+  console.log(
+    `   ✓ products-articles.csv: ${articlesMap.size} unique products`,
+  );
 
   const reviewsMap = loadReviewsCSV();
-  console.log(`   ✓ products-reviews.csv: ${reviewsMap.size} products with reviews`);
+  console.log(
+    `   ✓ products-reviews.csv: ${reviewsMap.size} products with reviews`,
+  );
 
   // Create client
   const client = createSanityClient();
 
   // Load reference mappings
-  console.log("\n📚 Loading reference mappings...");
+  console.log('\n📚 Loading reference mappings...');
   await loadReferenceMappings(client);
   loadLegacyReviewIdMappings();
 
   // Query products
-  console.log("\n🔍 Querying existing products in Sanity...");
+  console.log('\n🔍 Querying existing products in Sanity...');
   const products = await queryExistingProducts(client, options);
   console.log(`   ✓ Found ${products.length} products to check`);
 
   // Determine patch operations
-  console.log("\n📊 Analyzing what needs patching...");
-  const operations = determinePatchOperations(products, articlesMap, reviewsMap);
+  console.log('\n📊 Analyzing what needs patching...');
+  const operations = determinePatchOperations(
+    products,
+    articlesMap,
+    reviewsMap,
+  );
   console.log(`   ✓ ${operations.length} products need patching`);
 
   if (operations.length === 0) {
-    console.log("\n✅ All products are up to date! Nothing to patch.");
+    console.log('\n✅ All products are up to date! Nothing to patch.');
     return;
   }
 
@@ -447,12 +494,14 @@ async function main(): Promise<void> {
   const imageCache = loadImageCache();
 
   // Execute patches
-  console.log("🔧 Executing patches...\n");
+  console.log('🔧 Executing patches...\n');
   const result: PatchResult = { patched: [], skipped: [], errors: [] };
 
   for (let i = 0; i < operations.length; i++) {
     const op = operations[i];
-    console.log(`[${i + 1}/${operations.length}] ${op.productName} (ID: ${op.legacyId})`);
+    console.log(
+      `[${i + 1}/${operations.length}] ${op.productName} (ID: ${op.legacyId})`,
+    );
 
     try {
       await executePatch(
@@ -462,7 +511,7 @@ async function main(): Promise<void> {
         reviewsMap,
         imageCache,
         options.dryRun,
-        options.verbose
+        options.verbose,
       );
       result.patched.push(op.productId);
     } catch (error) {
@@ -482,12 +531,12 @@ async function main(): Promise<void> {
 ═══════════════════════════════════════════════════════════════
                       PATCH SUMMARY                         
 ═══════════════════════════════════════════════════════════════
-   ${options.dryRun ? "Would patch" : "Patched"}: ${result.patched.length}
+   ${options.dryRun ? 'Would patch' : 'Patched'}: ${result.patched.length}
    Errors: ${result.errors.length}
 `);
 
   if (result.errors.length > 0) {
-    console.log("Errors:");
+    console.log('Errors:');
     for (const err of result.errors) {
       console.log(`   - ${err.productId}: ${err.error}`);
     }
@@ -495,6 +544,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error('Fatal error:', error);
   process.exit(1);
 });

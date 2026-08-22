@@ -16,10 +16,10 @@
  *   SANITY_API_TOKEN - API token with write access
  */
 
-import { createClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
-import * as fs from "fs";
-import * as path from "path";
+import { createClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Types
 interface BrandDealerRelation {
@@ -56,7 +56,7 @@ interface MigrationReport {
     brandSlug: string;
     brandName: string;
     storesAdded: number;
-    status: "updated" | "skipped" | "failed";
+    status: 'updated' | 'skipped' | 'failed';
     error?: string;
   }>;
 }
@@ -64,7 +64,7 @@ interface MigrationReport {
 // Paths
 const CSV_PATH = path.resolve(
   __dirname,
-  "../../../../../csv/dealers/dealer-brand-relations.csv",
+  '../../../../../csv/dealers/dealer-brand-relations.csv',
 );
 
 /**
@@ -77,18 +77,18 @@ function parseArgs(): {
   brandSlug: string | null;
 } {
   const args = process.argv.slice(2);
-  const brandArg = args.find((a) => a.startsWith("--brand="));
+  const brandArg = args.find((a) => a.startsWith('--brand='));
   return {
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    rollback: args.includes("--rollback") || args.includes("-r"),
-    verbose: args.includes("--verbose") || args.includes("-v"),
-    brandSlug: brandArg ? brandArg.split("=")[1] : null,
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    rollback: args.includes('--rollback') || args.includes('-r'),
+    verbose: args.includes('--verbose') || args.includes('-v'),
+    brandSlug: brandArg ? brandArg.split('=')[1] : null,
   };
 }
 
 // Default configuration
-const DEFAULT_PROJECT_ID = "fsw3likv";
-const DEFAULT_DATASET = "production";
+const DEFAULT_PROJECT_ID = 'fsw3likv';
+const DEFAULT_DATASET = 'production';
 
 /**
  * Create Sanity client
@@ -100,7 +100,7 @@ function createMigrationClient() {
 
   if (!token) {
     throw new Error(
-      "Missing required environment variable: SANITY_API_TOKEN or MIGRATION_TOKEN",
+      'Missing required environment variable: SANITY_API_TOKEN or MIGRATION_TOKEN',
     );
   }
 
@@ -108,7 +108,7 @@ function createMigrationClient() {
     projectId,
     dataset,
     token,
-    apiVersion: "2024-01-01",
+    apiVersion: '2024-01-01',
     useCdn: false,
   });
 }
@@ -118,7 +118,7 @@ function createMigrationClient() {
  * Returns Map<brandSlug, dealerNames[]>
  */
 function parseBrandStoreRelations(csvPath: string): Map<string, string[]> {
-  const content = fs.readFileSync(csvPath, "utf-8");
+  const content = fs.readFileSync(csvPath, 'utf-8');
   const records = parse(content, {
     columns: true,
     skip_empty_lines: true,
@@ -151,8 +151,8 @@ function parseBrandStoreRelations(csvPath: string): Map<string, string[]> {
 function extractSlug(fullPath: string): string {
   // Remove leading/trailing slashes and prefix
   return fullPath
-    .replace(/^\/marki\//, "")
-    .replace(/\/$/, "")
+    .replace(/^\/marki\//, '')
+    .replace(/\/$/, '')
     .toLowerCase();
 }
 
@@ -224,61 +224,61 @@ function generateKey(): string {
  * Print migration report
  */
 function printReport(report: MigrationReport): void {
-  console.log("\n");
+  console.log('\n');
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
-  console.log("           BRAND-STORES MIGRATION REPORT");
+  console.log('           BRAND-STORES MIGRATION REPORT');
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
-  console.log("");
+  console.log('');
   console.log(`Date: ${new Date().toISOString()}`);
-  console.log("");
+  console.log('');
   console.log(
-    "───────────────────────────────────────────────────────────────",
+    '───────────────────────────────────────────────────────────────',
   );
-  console.log("SUMMARY");
+  console.log('SUMMARY');
   console.log(
-    "───────────────────────────────────────────────────────────────",
+    '───────────────────────────────────────────────────────────────',
   );
   console.log(`Total Brands Processed:      ${report.totalBrands}`);
   console.log(`Brands Updated:              ${report.brandsUpdated}`);
   console.log(`Brands Skipped (no stores):  ${report.brandsSkipped}`);
   console.log(`Brands Failed:               ${report.brandsFailed}`);
   console.log(`Total Store References:      ${report.storesMapped}`);
-  console.log("");
+  console.log('');
 
   if (report.missingBrands.length > 0) {
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     console.log(`MISSING BRANDS (${report.missingBrands.length})`);
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     report.missingBrands.forEach((slug) => {
       console.log(`  - ${slug}`);
     });
-    console.log("");
+    console.log('');
   }
 
   if (report.missingStores.length > 0) {
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     console.log(`MISSING STORES (${report.missingStores.length})`);
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     report.missingStores.forEach((id) => {
       console.log(`  - ${id}`);
     });
-    console.log("");
+    console.log('');
   }
 
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
 }
 
@@ -286,7 +286,7 @@ function printReport(report: MigrationReport): void {
  * Rollback migration - clear stores arrays from all brands
  */
 async function rollbackMigration(): Promise<void> {
-  console.log("🔄 Starting rollback...");
+  console.log('🔄 Starting rollback...');
 
   const client = createMigrationClient();
 
@@ -295,7 +295,7 @@ async function rollbackMigration(): Promise<void> {
   const ids: string[] = await client.fetch(query);
 
   if (ids.length === 0) {
-    console.log("✅ No brands with stores found to rollback");
+    console.log('✅ No brands with stores found to rollback');
     return;
   }
 
@@ -308,7 +308,7 @@ async function rollbackMigration(): Promise<void> {
     const transaction = client.transaction();
 
     batch.forEach((id) => {
-      transaction.patch(id, (p) => p.unset(["stores"]));
+      transaction.patch(id, (p) => p.unset(['stores']));
     });
 
     await transaction.commit();
@@ -330,15 +330,15 @@ async function runMigration(
   verbose: boolean,
   filterBrandSlug: string | null,
 ): Promise<void> {
-  console.log("🚀 Starting Brand → Stores migration");
+  console.log('🚀 Starting Brand → Stores migration');
   console.log(
-    `   Mode: ${dryRun ? "DRY RUN (no changes will be made)" : "PRODUCTION"}`,
+    `   Mode: ${dryRun ? 'DRY RUN (no changes will be made)' : 'PRODUCTION'}`,
   );
   console.log(`   CSV File: ${CSV_PATH}`);
   if (filterBrandSlug) {
     console.log(`   Filter: Only brand "${filterBrandSlug}"`);
   }
-  console.log("");
+  console.log('');
 
   // Initialize report
   const report: MigrationReport = {
@@ -359,7 +359,7 @@ async function runMigration(
   }
 
   // Parse CSV
-  console.log("📖 Parsing CSV file...");
+  console.log('📖 Parsing CSV file...');
   let brandStoreRelations = parseBrandStoreRelations(CSV_PATH);
   console.log(
     `   Found ${brandStoreRelations.size} brands with store relations`,
@@ -375,7 +375,7 @@ async function runMigration(
       );
     } else {
       console.error(`   ❌ Brand "${filterBrandSlug}" not found in CSV`);
-      console.log("   Available brands:");
+      console.log('   Available brands:');
       Array.from(brandStoreRelations.keys())
         .sort()
         .forEach((slug) => console.log(`      - ${slug}`));
@@ -391,17 +391,17 @@ async function runMigration(
   console.log(`   Dataset: ${process.env.SANITY_DATASET || DEFAULT_DATASET}`);
 
   // Fetch existing brands from Sanity
-  console.log("📥 Fetching brands from Sanity...");
+  console.log('📥 Fetching brands from Sanity...');
   const sanityBrands = await fetchBrands(client);
   console.log(`   Found ${sanityBrands.size} brands in Sanity`);
 
   // Fetch existing stores (name → ID map)
-  console.log("📥 Fetching stores from Sanity...");
+  console.log('📥 Fetching stores from Sanity...');
   const storeNameToId = await fetchStores(client);
   console.log(`   Found ${storeNameToId.size} stores in Sanity`);
 
   // Process each brand
-  console.log("\n🔄 Processing brands...");
+  console.log('\n🔄 Processing brands...');
   report.totalBrands = brandStoreRelations.size;
 
   const updates: Array<{
@@ -420,8 +420,8 @@ async function runMigration(
         brandSlug,
         brandName: brandSlug,
         storesAdded: 0,
-        status: "failed",
-        error: "Brand not found in Sanity",
+        status: 'failed',
+        error: 'Brand not found in Sanity',
       });
       if (verbose) {
         console.log(`   ⚠️  Brand "${brandSlug}" not found in Sanity`);
@@ -447,7 +447,7 @@ async function runMigration(
 
       storeRefs.push({
         _ref: storeId,
-        _type: "reference",
+        _type: 'reference',
         _key: generateKey(),
       });
     }
@@ -458,8 +458,8 @@ async function runMigration(
         brandSlug,
         brandName: brand.name,
         storesAdded: 0,
-        status: "skipped",
-        error: "No valid stores to add",
+        status: 'skipped',
+        error: 'No valid stores to add',
       });
       if (verbose) {
         console.log(`   ○ ${brand.name} (${brandSlug}): No valid stores`);
@@ -478,7 +478,7 @@ async function runMigration(
       brandSlug,
       brandName: brand.name,
       storesAdded: storeRefs.length,
-      status: "updated",
+      status: 'updated',
     });
 
     if (verbose) {
@@ -492,9 +492,9 @@ async function runMigration(
 
   // Dry run - just show what would be updated
   if (dryRun) {
-    console.log("\n📋 DRY RUN - Updates that would be applied:");
+    console.log('\n📋 DRY RUN - Updates that would be applied:');
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
 
     for (const update of updates) {
@@ -504,12 +504,12 @@ async function runMigration(
 
     report.brandsUpdated = updates.length;
     printReport(report);
-    console.log("\n💡 Run without --dry-run to actually apply changes");
+    console.log('\n💡 Run without --dry-run to actually apply changes');
     return;
   }
 
   // Production run - apply updates
-  console.log("\n📤 Applying updates to Sanity...");
+  console.log('\n📤 Applying updates to Sanity...');
 
   const batchSize = 20;
   for (let i = 0; i < updates.length; i += batchSize) {
@@ -540,7 +540,7 @@ async function runMigration(
   printReport(report);
 
   if (report.brandsFailed === 0 && report.missingBrands.length === 0) {
-    console.log("\n✅ Migration completed successfully!");
+    console.log('\n✅ Migration completed successfully!');
   } else {
     console.log(`\n⚠️  Migration completed with issues`);
   }
@@ -552,20 +552,20 @@ async function runMigration(
 async function main(): Promise<void> {
   const { dryRun, rollback, verbose, brandSlug } = parseArgs();
 
-  console.log("");
+  console.log('');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║            AUDIOFAST DATA MIGRATION                           ║",
+    '║            AUDIOFAST DATA MIGRATION                           ║',
   );
   console.log(
-    "║            Brand → Stores Relationships                       ║",
+    '║            Brand → Stores Relationships                       ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
+  console.log('');
 
   if (rollback) {
     await rollbackMigration();
@@ -576,6 +576,6 @@ async function main(): Promise<void> {
 
 // Run
 main().catch((error) => {
-  console.error("❌ Migration failed with error:", error);
+  console.error('❌ Migration failed with error:', error);
   process.exit(1);
 });

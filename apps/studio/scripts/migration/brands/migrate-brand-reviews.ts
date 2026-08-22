@@ -16,10 +16,10 @@
  *   SANITY_API_TOKEN or MIGRATION_TOKEN - API token with write access
  */
 
-import { createClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
-import * as fs from "fs";
-import * as path from "path";
+import { createClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Types
 interface BrandReviewRelation {
@@ -51,7 +51,7 @@ interface MigrationReport {
     brandSlug: string;
     brandName: string;
     reviewsAdded: number;
-    status: "updated" | "skipped" | "failed";
+    status: 'updated' | 'skipped' | 'failed';
     error?: string;
   }>;
 }
@@ -59,7 +59,7 @@ interface MigrationReport {
 // Paths
 const CSV_PATH = path.resolve(
   __dirname,
-  "../../../../../csv/brands-reviews-mapping.csv",
+  '../../../../../csv/brands-reviews-mapping.csv',
 );
 
 /**
@@ -72,18 +72,18 @@ function parseArgs(): {
   brandSlug: string | null;
 } {
   const args = process.argv.slice(2);
-  const brandArg = args.find((a) => a.startsWith("--brand="));
+  const brandArg = args.find((a) => a.startsWith('--brand='));
   return {
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    rollback: args.includes("--rollback") || args.includes("-r"),
-    verbose: args.includes("--verbose") || args.includes("-v"),
-    brandSlug: brandArg ? brandArg.split("=")[1] : null,
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    rollback: args.includes('--rollback') || args.includes('-r'),
+    verbose: args.includes('--verbose') || args.includes('-v'),
+    brandSlug: brandArg ? brandArg.split('=')[1] : null,
   };
 }
 
 // Default configuration
-const DEFAULT_PROJECT_ID = "fsw3likv";
-const DEFAULT_DATASET = "production";
+const DEFAULT_PROJECT_ID = 'fsw3likv';
+const DEFAULT_DATASET = 'production';
 
 /**
  * Create Sanity client
@@ -95,7 +95,7 @@ function createMigrationClient() {
 
   if (!token) {
     throw new Error(
-      "Missing required environment variable: SANITY_API_TOKEN or MIGRATION_TOKEN",
+      'Missing required environment variable: SANITY_API_TOKEN or MIGRATION_TOKEN',
     );
   }
 
@@ -103,7 +103,7 @@ function createMigrationClient() {
     projectId,
     dataset,
     token,
-    apiVersion: "2024-01-01",
+    apiVersion: '2024-01-01',
     useCdn: false,
   });
 }
@@ -113,7 +113,7 @@ function createMigrationClient() {
  * Returns Map<brandSlug, reviewIds[]> where reviewIds are the legacy IDs (e.g., "1697")
  */
 function parseBrandReviewRelations(csvPath: string): Map<string, string[]> {
-  const content = fs.readFileSync(csvPath, "utf-8");
+  const content = fs.readFileSync(csvPath, 'utf-8');
   const records = parse(content, {
     columns: true,
     skip_empty_lines: true,
@@ -147,8 +147,8 @@ function parseBrandReviewRelations(csvPath: string): Map<string, string[]> {
  */
 function extractSlug(fullPath: string): string {
   return fullPath
-    .replace(/^\/marki\//, "")
-    .replace(/\/$/, "")
+    .replace(/^\/marki\//, '')
+    .replace(/\/$/, '')
     .toLowerCase();
 }
 
@@ -201,52 +201,52 @@ function generateKey(): string {
  * Print migration report
  */
 function printReport(report: MigrationReport): void {
-  console.log("\n");
+  console.log('\n');
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
-  console.log("           BRAND-REVIEWS MIGRATION REPORT");
+  console.log('           BRAND-REVIEWS MIGRATION REPORT');
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
-  console.log("");
+  console.log('');
   console.log(`Date: ${new Date().toISOString()}`);
-  console.log("");
+  console.log('');
   console.log(
-    "───────────────────────────────────────────────────────────────",
+    '───────────────────────────────────────────────────────────────',
   );
-  console.log("SUMMARY");
+  console.log('SUMMARY');
   console.log(
-    "───────────────────────────────────────────────────────────────",
+    '───────────────────────────────────────────────────────────────',
   );
   console.log(`Total Brands Processed:       ${report.totalBrands}`);
   console.log(`Brands Updated:               ${report.brandsUpdated}`);
   console.log(`Brands Skipped (no reviews):  ${report.brandsSkipped}`);
   console.log(`Brands Failed:                ${report.brandsFailed}`);
   console.log(`Total Review References:      ${report.reviewsMapped}`);
-  console.log("");
+  console.log('');
 
   if (report.missingBrands.length > 0) {
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     console.log(`MISSING BRANDS (${report.missingBrands.length})`);
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     report.missingBrands.forEach((slug) => {
       console.log(`  - ${slug}`);
     });
-    console.log("");
+    console.log('');
   }
 
   if (report.missingReviews.length > 0) {
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     console.log(`MISSING REVIEWS (${report.missingReviews.length})`);
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     // Show only first 20 if too many
     const toShow = report.missingReviews.slice(0, 20);
@@ -256,11 +256,11 @@ function printReport(report: MigrationReport): void {
     if (report.missingReviews.length > 20) {
       console.log(`  ... and ${report.missingReviews.length - 20} more`);
     }
-    console.log("");
+    console.log('');
   }
 
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
 }
 
@@ -268,7 +268,7 @@ function printReport(report: MigrationReport): void {
  * Rollback migration - clear featuredReviews arrays from all brands
  */
 async function rollbackMigration(): Promise<void> {
-  console.log("🔄 Starting rollback...");
+  console.log('🔄 Starting rollback...');
 
   const client = createMigrationClient();
 
@@ -277,7 +277,7 @@ async function rollbackMigration(): Promise<void> {
   const ids: string[] = await client.fetch(query);
 
   if (ids.length === 0) {
-    console.log("✅ No brands with featuredReviews found to rollback");
+    console.log('✅ No brands with featuredReviews found to rollback');
     return;
   }
 
@@ -290,7 +290,7 @@ async function rollbackMigration(): Promise<void> {
     const transaction = client.transaction();
 
     batch.forEach((id) => {
-      transaction.patch(id, (p) => p.unset(["featuredReviews"]));
+      transaction.patch(id, (p) => p.unset(['featuredReviews']));
     });
 
     await transaction.commit();
@@ -312,15 +312,15 @@ async function runMigration(
   verbose: boolean,
   filterBrandSlug: string | null,
 ): Promise<void> {
-  console.log("🚀 Starting Brand → Reviews migration");
+  console.log('🚀 Starting Brand → Reviews migration');
   console.log(
-    `   Mode: ${dryRun ? "DRY RUN (no changes will be made)" : "PRODUCTION"}`,
+    `   Mode: ${dryRun ? 'DRY RUN (no changes will be made)' : 'PRODUCTION'}`,
   );
   console.log(`   CSV File: ${CSV_PATH}`);
   if (filterBrandSlug) {
     console.log(`   Filter: Only brand "${filterBrandSlug}"`);
   }
-  console.log("");
+  console.log('');
 
   // Initialize report
   const report: MigrationReport = {
@@ -341,7 +341,7 @@ async function runMigration(
   }
 
   // Parse CSV
-  console.log("📖 Parsing CSV file...");
+  console.log('📖 Parsing CSV file...');
   let brandReviewRelations = parseBrandReviewRelations(CSV_PATH);
   console.log(
     `   Found ${brandReviewRelations.size} brands with review relations`,
@@ -357,7 +357,7 @@ async function runMigration(
       );
     } else {
       console.error(`   ❌ Brand "${filterBrandSlug}" not found in CSV`);
-      console.log("   Available brands:");
+      console.log('   Available brands:');
       Array.from(brandReviewRelations.keys())
         .sort()
         .forEach((slug) => console.log(`      - ${slug}`));
@@ -373,17 +373,17 @@ async function runMigration(
   console.log(`   Dataset: ${process.env.SANITY_DATASET || DEFAULT_DATASET}`);
 
   // Fetch existing brands from Sanity
-  console.log("📥 Fetching brands from Sanity...");
+  console.log('📥 Fetching brands from Sanity...');
   const sanityBrands = await fetchBrands(client);
   console.log(`   Found ${sanityBrands.size} brands in Sanity`);
 
   // Fetch existing review IDs from Sanity
-  console.log("📥 Fetching reviews from Sanity...");
+  console.log('📥 Fetching reviews from Sanity...');
   const existingReviewIds = await fetchReviewIds(client);
   console.log(`   Found ${existingReviewIds.size} reviews in Sanity`);
 
   // Process each brand
-  console.log("\n🔄 Processing brands...");
+  console.log('\n🔄 Processing brands...');
   report.totalBrands = brandReviewRelations.size;
 
   const updates: Array<{
@@ -402,8 +402,8 @@ async function runMigration(
         brandSlug,
         brandName: brandSlug,
         reviewsAdded: 0,
-        status: "failed",
-        error: "Brand not found in Sanity",
+        status: 'failed',
+        error: 'Brand not found in Sanity',
       });
       if (verbose) {
         console.log(`   ⚠️  Brand "${brandSlug}" not found in Sanity`);
@@ -432,7 +432,7 @@ async function runMigration(
 
       reviewRefs.push({
         _ref: sanityReviewId,
-        _type: "reference",
+        _type: 'reference',
         _key: generateKey(),
       });
     }
@@ -443,8 +443,8 @@ async function runMigration(
         brandSlug,
         brandName: brand.name,
         reviewsAdded: 0,
-        status: "skipped",
-        error: "No valid reviews to add",
+        status: 'skipped',
+        error: 'No valid reviews to add',
       });
       if (verbose) {
         console.log(`   ○ ${brand.name} (${brandSlug}): No valid reviews`);
@@ -463,7 +463,7 @@ async function runMigration(
       brandSlug,
       brandName: brand.name,
       reviewsAdded: reviewRefs.length,
-      status: "updated",
+      status: 'updated',
     });
 
     if (verbose) {
@@ -477,9 +477,9 @@ async function runMigration(
 
   // Dry run - just show what would be updated
   if (dryRun) {
-    console.log("\n📋 DRY RUN - Updates that would be applied:");
+    console.log('\n📋 DRY RUN - Updates that would be applied:');
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
 
     for (const update of updates) {
@@ -496,12 +496,12 @@ async function runMigration(
 
     report.brandsUpdated = updates.length;
     printReport(report);
-    console.log("\n💡 Run without --dry-run to actually apply changes");
+    console.log('\n💡 Run without --dry-run to actually apply changes');
     return;
   }
 
   // Production run - apply updates
-  console.log("\n📤 Applying updates to Sanity...");
+  console.log('\n📤 Applying updates to Sanity...');
 
   const batchSize = 20;
   for (let i = 0; i < updates.length; i += batchSize) {
@@ -532,7 +532,7 @@ async function runMigration(
   printReport(report);
 
   if (report.brandsFailed === 0 && report.missingBrands.length === 0) {
-    console.log("\n✅ Migration completed successfully!");
+    console.log('\n✅ Migration completed successfully!');
   } else {
     console.log(`\n⚠️  Migration completed with issues`);
   }
@@ -544,20 +544,20 @@ async function runMigration(
 async function main(): Promise<void> {
   const { dryRun, rollback, verbose, brandSlug } = parseArgs();
 
-  console.log("");
+  console.log('');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║            AUDIOFAST DATA MIGRATION                           ║",
+    '║            AUDIOFAST DATA MIGRATION                           ║',
   );
   console.log(
-    "║            Brand → Reviews Relationships                      ║",
+    '║            Brand → Reviews Relationships                      ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
+  console.log('');
 
   if (rollback) {
     await rollbackMigration();
@@ -568,6 +568,6 @@ async function main(): Promise<void> {
 
 // Run
 main().catch((error) => {
-  console.error("❌ Migration failed with error:", error);
+  console.error('❌ Migration failed with error:', error);
   process.exit(1);
 });

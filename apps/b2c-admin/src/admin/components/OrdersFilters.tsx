@@ -1,10 +1,10 @@
-import { ResetIcon, SearchIcon } from "@sanity/icons";
-import { Box, Button, Card, Flex, Grid, Label, TextInput } from "@sanity/ui";
-import { useEffect, useState } from "react";
+import { ResetIcon, SearchIcon } from '@sanity/icons';
+import { Box, Button, Card, Flex, Grid, Label, TextInput } from '@sanity/ui';
+import { useEffect, useState } from 'react';
 
-import type { OrdersFilters as OrdersFiltersValue } from "../types.js";
-import { AdminFilterSelect } from "./AdminFilterSelect.js";
-import { DateRangePicker } from "./DateRangePicker.js";
+import type { OrdersFilters as OrdersFiltersValue } from '../types.js';
+import { AdminFilterSelect } from './AdminFilterSelect.js';
+import { DateRangePicker } from './DateRangePicker.js';
 
 type OrdersFiltersProps = {
   filters: OrdersFiltersValue;
@@ -13,14 +13,14 @@ type OrdersFiltersProps = {
 };
 
 export const DEFAULT_ORDERS_FILTERS: OrdersFiltersValue = {
-  search: "",
-  status: "all",
-  lineType: "all",
+  search: '',
+  status: 'all',
+  lineType: 'all',
   dateRange: {
-    from: "",
-    to: "",
+    from: '',
+    to: '',
   },
-  operations: "all",
+  operations: 'all',
 };
 
 export function OrdersFilters({
@@ -77,18 +77,18 @@ export function OrdersFilters({
               onChange={(value) =>
                 onChange({
                   ...filters,
-                  status: value as OrdersFiltersValue["status"],
+                  status: value as OrdersFiltersValue['status'],
                 })
               }
               options={[
-                ["all", "Wszystkie"],
-                ["awaiting_payment", "Oczekuje na płatność"],
-                ["awaiting_confirmation", "Oczekiwanie na potwierdzenie"],
-                ["processing", "W realizacji"],
-                ["shipped", "Wysłane"],
-                ["completed", "Zakończone"],
-                ["cancelled", "Anulowane"],
-                ["returned", "Zwrócone"],
+                ['all', 'Wszystkie'],
+                ['awaiting_payment', 'Oczekuje na płatność'],
+                ['awaiting_confirmation', 'Oczekiwanie na potwierdzenie'],
+                ['processing', 'W realizacji'],
+                ['shipped', 'Wysłane'],
+                ['completed', 'Zakończone'],
+                ['cancelled', 'Anulowane'],
+                ['returned', 'Zwrócone'],
               ]}
             />
 
@@ -98,14 +98,14 @@ export function OrdersFilters({
               onChange={(value) =>
                 onChange({
                   ...filters,
-                  lineType: value as OrdersFiltersValue["lineType"],
+                  lineType: value as OrdersFiltersValue['lineType'],
                 })
               }
               options={[
-                ["all", "Wszystkie"],
-                ["standard", "Katalogowe"],
-                ["cpo", "CPO"],
-                ["mixed", "Mieszane"],
+                ['all', 'Wszystkie'],
+                ['standard', 'Katalogowe'],
+                ['cpo', 'CPO'],
+                ['mixed', 'Mieszane'],
               ]}
             />
 
@@ -115,13 +115,13 @@ export function OrdersFilters({
               onChange={(value) =>
                 onChange({
                   ...filters,
-                  operations: value as OrdersFiltersValue["operations"],
+                  operations: value as OrdersFiltersValue['operations'],
                 })
               }
               options={[
-                ["all", "Wszystkie"],
-                ["cancellation", "Anulowanie"],
-                ["return", "Zwrot"],
+                ['all', 'Wszystkie'],
+                ['cancellation', 'Anulowanie'],
+                ['return', 'Zwrot'],
               ]}
             />
 

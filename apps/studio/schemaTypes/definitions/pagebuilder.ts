@@ -1,10 +1,10 @@
-import { defineArrayMember, defineType } from "sanity";
+import { defineArrayMember, defineType } from 'sanity';
 
-import { pageBuilderBlocks } from "../blocks";
+import { pageBuilderBlocks } from '../blocks';
 
 // All blocks EXCEPT cpoProductsListing (for regular pages — CPO listing only on CPO page)
 const pageBuilderBlocksWithoutCpoProductsListing = pageBuilderBlocks.filter(
-  (block) => block.name !== "cpoProductsListing",
+  (block) => block.name !== 'cpoProductsListing',
 );
 
 // All blocks INCLUDING cpoProductsListing (for CPO page only)
@@ -22,8 +22,8 @@ export const pagebuilderBlockTypesWithCpoProductsListing =
 
 // Standard pageBuilder (without cpoProductsListing)
 export const pageBuilder = defineType({
-  name: "pageBuilder",
-  type: "array",
+  name: 'pageBuilder',
+  type: 'array',
   of: pagebuilderBlockTypes.map((block) => defineArrayMember(block)),
   options: {
     insertMenu: {
@@ -31,11 +31,11 @@ export const pageBuilder = defineType({
       showIcons: true,
       views: [
         {
-          name: "grid",
+          name: 'grid',
           previewImageUrl: (schemaTypeName) =>
             `/static/components/${schemaTypeName}.webp`,
         },
-        { name: "list" },
+        { name: 'list' },
       ],
     },
   },
@@ -43,8 +43,8 @@ export const pageBuilder = defineType({
 
 // CPO-specific pageBuilder (with cpoProductsListing)
 export const cpoPageBuilder = defineType({
-  name: "cpoPageBuilder",
-  type: "array",
+  name: 'cpoPageBuilder',
+  type: 'array',
   of: pagebuilderBlockTypesWithCpoProductsListing.map((block) =>
     defineArrayMember(block),
   ),
@@ -54,11 +54,11 @@ export const cpoPageBuilder = defineType({
       showIcons: true,
       views: [
         {
-          name: "grid",
+          name: 'grid',
           previewImageUrl: (schemaTypeName) =>
             `/static/components/${schemaTypeName}.webp`,
         },
-        { name: "list" },
+        { name: 'list' },
       ],
     },
   },

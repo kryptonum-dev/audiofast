@@ -155,7 +155,9 @@ function mapStandardProductOption(
     ? extractCartProductSlug(product.slug)
     : null;
   const productKeys = Array.from(
-    new Set(pricingVariants.map((variant) => variant.price_key).filter(Boolean)),
+    new Set(
+      pricingVariants.map((variant) => variant.price_key).filter(Boolean),
+    ),
   );
   const lowestPrice = getLowestPrice(pricingVariants);
   const buyability = getStandardProductBuyability({

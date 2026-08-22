@@ -1,16 +1,16 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import AppImage from "@/components/shared/Image";
-import type { PagebuilderType } from "@/src/global/types";
+import AppImage from '@/components/shared/Image';
+import type { PagebuilderType } from '@/src/global/types';
 
-import styles from "./styles.module.scss";
+import styles from './styles.module.scss';
 
-type BrandSelectorProps = PagebuilderType<"brandsMarquee">;
-type BrandType = NonNullable<BrandSelectorProps["topBrands"]>[number];
+type BrandSelectorProps = PagebuilderType<'brandsMarquee'>;
+type BrandType = NonNullable<BrandSelectorProps['topBrands']>[number];
 
 interface BrandMarqueeListProps {
   brands: BrandType[];
-  direction: "normal" | "reverse";
+  direction: 'normal' | 'reverse';
   onBrandHover: (brand: BrandType) => void;
   onBrandLeave: () => void;
   onBrandInteractionStart?: () => void;
@@ -66,13 +66,13 @@ export default function BrandMarqueeList({
               >
                 <AppImage
                   image={brand.logo}
-                  alt={brand.name || "Logo marki"}
+                  alt={brand.name || 'Logo marki'}
                   sizes="(max-width: 62.4375rem) 96px, 121px"
                   quality={80}
                   className={styles.brandLogo}
                   priority={index === 0 && !isDuplicate && idx < 6}
                   loading={
-                    index === 0 && !isDuplicate && idx < 6 ? "eager" : "lazy"
+                    index === 0 && !isDuplicate && idx < 6 ? 'eager' : 'lazy'
                   }
                 />
               </Link>

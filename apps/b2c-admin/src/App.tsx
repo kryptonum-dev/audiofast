@@ -1,10 +1,10 @@
-import { SanityApp, type SanityConfig } from "@sanity/sdk-react";
-import { Box, Card, Spinner, ThemeProvider, usePrefersDark } from "@sanity/ui";
-import { buildTheme } from "@sanity/ui/theme";
+import { SanityApp, type SanityConfig } from '@sanity/sdk-react';
+import { Box, Card, Spinner, ThemeProvider, usePrefersDark } from '@sanity/ui';
+import { buildTheme } from '@sanity/ui/theme';
 
-import { AdminApp } from "./admin/AdminApp.js";
-import { sanityAppConfig } from "./config.js";
-import "./App.css";
+import { AdminApp } from './admin/AdminApp.js';
+import { sanityAppConfig } from './config.js';
+import './App.css';
 
 const sanityConfig: SanityConfig[] = [
   {
@@ -26,7 +26,7 @@ function AppFallback() {
 
 export default function App() {
   const prefersDark = usePrefersDark();
-  const scheme = prefersDark ? "dark" : "light";
+  const scheme = prefersDark ? 'dark' : 'light';
 
   return (
     <ThemeProvider scheme={scheme} theme={theme}>

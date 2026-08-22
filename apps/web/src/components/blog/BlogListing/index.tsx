@@ -1,16 +1,16 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { fetchEmbeddings } from "@/src/app/actions/embeddings";
-import { logWarn } from "@/src/global/logger";
-import { sanityFetch } from "@/src/global/sanity/fetch";
-import { getBlogArticlesQuery } from "@/src/global/sanity/query";
-import type { QueryBlogArticlesNewestResult } from "@/src/global/sanity/sanity.types";
-import { BLOG_ITEMS_PER_PAGE } from "@/src/global/constants";
+import { fetchEmbeddings } from '@/src/app/actions/embeddings';
+import { logWarn } from '@/src/global/logger';
+import { sanityFetch } from '@/src/global/sanity/fetch';
+import { getBlogArticlesQuery } from '@/src/global/sanity/query';
+import type { QueryBlogArticlesNewestResult } from '@/src/global/sanity/sanity.types';
+import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
 
-import EmptyState from "../../ui/EmptyState";
-import Pagination from "../../ui/Pagination";
-import PublicationCard from "../../ui/PublicationCard";
-import styles from "./styles.module.scss";
+import EmptyState from '../../ui/EmptyState';
+import Pagination from '../../ui/Pagination';
+import PublicationCard from '../../ui/PublicationCard';
+import styles from './styles.module.scss';
 
 type SearchParamsType = {
   page?: string;
@@ -27,24 +27,24 @@ type BlogListingProps = {
 export default async function BlogListing({
   searchParams,
   basePath,
-  category = "",
+  category = '',
 }: BlogListingProps) {
   const params = await searchParams;
 
   const currentPage = Number(params.page) || 1;
   const itemsPerPage = BLOG_ITEMS_PER_PAGE;
-  const searchTerm = params.search || "";
-  const year = params.year || "";
+  const searchTerm = params.search || '';
+  const year = params.year || '';
 
   const hasSearchQuery = Boolean(searchTerm);
 
   // Fetch embeddings if search exists
   const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, "blog")) || []
+    ? (await fetchEmbeddings(searchTerm, 'blog')) || []
     : [];
 
   // Determine sort order
-  const sortBy = hasSearchQuery ? "relevance" : "newest";
+  const sortBy = hasSearchQuery ? 'relevance' : 'newest';
 
   const offset = (currentPage - 1) * itemsPerPage;
   const limit = offset + itemsPerPage;
@@ -62,11 +62,11 @@ export default async function BlogListing({
       limit,
       embeddingResults,
     },
-    tags: ["blog-article"],
+    tags: ['blog-article'],
   });
 
   if (!articlesData) {
-    logWarn("Blog articles data not found");
+    logWarn('Blog articles data not found');
     notFound();
   }
 
@@ -74,8 +74,8 @@ export default async function BlogListing({
 
   // Create URLSearchParams for Pagination
   const urlSearchParams = new URLSearchParams();
-  if (searchTerm) urlSearchParams.set("search", searchTerm);
-  if (year) urlSearchParams.set("year", year);
+  if (searchTerm) urlSearchParams.set('search', searchTerm);
+  if (year) urlSearchParams.set('year', year);
 
   const ITEMS_PER_ROW = 2;
   const ROW_DELAY = 80; // delay between rows in ms
@@ -109,7 +109,7 @@ export default async function BlogListing({
                     imageFit="contain"
                     imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 440px"
                     priority={index === 0}
-                    loading={index === 0 ? "eager" : "lazy"}
+                    loading={index === 0 ? 'eager' : 'lazy'}
                   />
                 </div>
               );

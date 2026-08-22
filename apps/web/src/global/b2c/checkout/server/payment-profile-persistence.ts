@@ -63,9 +63,7 @@ export type PersistPaidOrderProfileResult = {
   linkedAuthUser: boolean;
   linkedOrderToProfile: boolean;
   skippedReason:
-    | 'profile_persistence_disabled'
-    | 'profile_persistence_missing'
-    | null;
+    'profile_persistence_disabled' | 'profile_persistence_missing' | null;
 };
 
 function isRecord(

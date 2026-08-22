@@ -16,11 +16,11 @@
  *   SANITY_API_TOKEN=xxx bun run apps/studio/scripts/migration/products/migrate-creation-dates.ts --verbose
  */
 
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
-import { createClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
+import { createClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
 
 // ============================================================================
 // Configuration
@@ -28,13 +28,13 @@ import { parse } from "csv-parse/sync";
 
 const CSV_PATH = resolve(
   __dirname,
-  "../../../../../csv/products/december/products-creation-dates.csv",
+  '../../../../../csv/products/december/products-creation-dates.csv',
 );
 
 const client = createClient({
-  projectId: "fsw3likv",
-  dataset: "production",
-  apiVersion: "2024-01-01",
+  projectId: 'fsw3likv',
+  dataset: 'production',
+  apiVersion: '2024-01-01',
   token: process.env.SANITY_API_TOKEN,
   useCdn: false,
 });
@@ -59,8 +59,8 @@ interface ProductWithDate {
 // ============================================================================
 
 const args = process.argv.slice(2);
-const isDryRun = args.includes("--dry-run");
-const isVerbose = args.includes("--verbose");
+const isDryRun = args.includes('--dry-run');
+const isVerbose = args.includes('--verbose');
 
 // ============================================================================
 // Main Migration
@@ -68,21 +68,21 @@ const isVerbose = args.includes("--verbose");
 
 async function migrateCreationDates() {
   console.log(
-    "\n╔═══════════════════════════════════════════════════════════════╗",
+    '\n╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║         MIGRATE PRODUCT CREATION DATES                        ║",
+    '║         MIGRATE PRODUCT CREATION DATES                        ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝\n",
+    '╚═══════════════════════════════════════════════════════════════╝\n',
   );
 
   if (isDryRun) {
-    console.log("🔍 DRY RUN MODE - No changes will be made\n");
+    console.log('🔍 DRY RUN MODE - No changes will be made\n');
   } else {
     if (!process.env.SANITY_API_TOKEN) {
-      console.error("❌ SANITY_API_TOKEN is required for live migration");
-      console.error("   Set it with: export SANITY_API_TOKEN=your-token-here");
+      console.error('❌ SANITY_API_TOKEN is required for live migration');
+      console.error('   Set it with: export SANITY_API_TOKEN=your-token-here');
       process.exit(1);
     }
   }
@@ -90,11 +90,11 @@ async function migrateCreationDates() {
   // ----------------------------------------------------------------
   // Step 1: Load CSV data
   // ----------------------------------------------------------------
-  console.log("📖 Loading CSV file...");
+  console.log('📖 Loading CSV file...');
 
   let csvData: CreationDateRow[];
   try {
-    const csvContent = readFileSync(CSV_PATH, "utf-8");
+    const csvContent = readFileSync(CSV_PATH, 'utf-8');
     csvData = parse(csvContent, {
       columns: true,
       skip_empty_lines: true,
@@ -110,7 +110,7 @@ async function migrateCreationDates() {
   // ----------------------------------------------------------------
   // Step 2: Fetch existing products from Sanity
   // ----------------------------------------------------------------
-  console.log("🔍 Fetching existing products from Sanity...");
+  console.log('🔍 Fetching existing products from Sanity...');
 
   const existingProducts = await client.fetch<ProductWithDate[]>(
     `*[_type == "product" && _id match "product-*"]{_id, name, publishedDate}`,
@@ -127,7 +127,7 @@ async function migrateCreationDates() {
   // ----------------------------------------------------------------
   // Step 3: Prepare updates
   // ----------------------------------------------------------------
-  console.log("📝 Preparing updates...\n");
+  console.log('📝 Preparing updates...\n');
 
   const updates: Array<{
     sanityId: string;
@@ -152,7 +152,7 @@ async function migrateCreationDates() {
     // Parse the legacy date (format: "2016-07-04 10:37:24")
     // Convert to ISO 8601 format for Sanity datetime
     const legacyDate = row.CreatedDate;
-    const isoDate = legacyDate.replace(" ", "T") + ".000Z";
+    const isoDate = legacyDate.replace(' ', 'T') + '.000Z';
 
     // Check if already set (and same value)
     if (product.publishedDate) {
@@ -177,42 +177,42 @@ async function migrateCreationDates() {
   // Step 4: Report summary
   // ----------------------------------------------------------------
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
   console.log(
-    "                       SUMMARY                                 ",
+    '                       SUMMARY                                 ',
   );
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
   console.log(`   📊 Total in CSV:        ${csvData.length}`);
   console.log(`   ✅ To update:           ${updates.length}`);
   console.log(`   ⏭️  Already set:         ${alreadySet.length}`);
   console.log(`   ⚠️  Not found in Sanity: ${notFound.length}`);
-  console.log("");
+  console.log('');
 
   if (notFound.length > 0 && isVerbose) {
-    console.log("   Products not found in Sanity:");
+    console.log('   Products not found in Sanity:');
     for (const id of notFound.slice(0, 10)) {
       console.log(`      - product-${id}`);
     }
     if (notFound.length > 10) {
       console.log(`      ... and ${notFound.length - 10} more`);
     }
-    console.log("");
+    console.log('');
   }
 
   if (updates.length === 0) {
-    console.log("✅ No updates needed!\n");
+    console.log('✅ No updates needed!\n');
     return;
   }
 
   // Show sample updates
-  console.log("📋 Sample updates:");
+  console.log('📋 Sample updates:');
   for (const update of updates.slice(0, 5)) {
     const oldStr = update.oldDate
       ? new Date(update.oldDate).toLocaleString()
-      : "not set";
+      : 'not set';
     const newStr = new Date(update.newDate).toLocaleString();
     console.log(`   [${update.sanityId}] ${update.name}`);
     console.log(`      ${oldStr} → ${newStr}`);
@@ -226,12 +226,12 @@ async function migrateCreationDates() {
   // ----------------------------------------------------------------
   if (isDryRun) {
     console.log(
-      "\n🔍 DRY RUN - No changes made. Run without --dry-run to apply.\n",
+      '\n🔍 DRY RUN - No changes made. Run without --dry-run to apply.\n',
     );
     return;
   }
 
-  console.log("\n🔧 Applying updates...\n");
+  console.log('\n🔧 Applying updates...\n');
 
   let updated = 0;
   let failed = 0;
@@ -268,32 +268,32 @@ async function migrateCreationDates() {
     }
   }
 
-  console.log("\n");
+  console.log('\n');
 
   // ----------------------------------------------------------------
   // Step 6: Final report
   // ----------------------------------------------------------------
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
   console.log(
-    "                     FINAL REPORT                              ",
+    '                     FINAL REPORT                              ',
   );
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
   console.log(`   ✅ Updated:  ${updated}`);
   console.log(`   ❌ Failed:   ${failed}`);
-  console.log("");
+  console.log('');
 
   if (updated > 0) {
-    console.log("✅ Migration complete!");
-    console.log("");
-    console.log("ℹ️  Notes:");
-    console.log("   - Products now have their original creation dates");
+    console.log('✅ Migration complete!');
+    console.log('');
+    console.log('ℹ️  Notes:');
+    console.log('   - Products now have their original creation dates');
     console.log('   - Sorting by "newest" or "oldest" will use these dates');
     console.log("   - Run 'bun typegen' to regenerate types if needed");
-    console.log("");
+    console.log('');
   }
 }
 
@@ -302,6 +302,6 @@ async function migrateCreationDates() {
 // ============================================================================
 
 migrateCreationDates().catch((error) => {
-  console.error("❌ Migration failed:", error);
+  console.error('❌ Migration failed:', error);
   process.exit(1);
 });

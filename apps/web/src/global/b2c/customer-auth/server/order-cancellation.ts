@@ -1,16 +1,16 @@
-import "server-only";
+import 'server-only';
 
-import { isCancellableOrderStatus } from "@/src/global/b2c/utils/statuses";
-import { normalizeOptionalText } from "@/src/global/b2c/utils/text";
-import { createAdminClient } from "@/src/global/supabase/admin";
-import type { Database } from "@/src/global/supabase/database.types";
+import { isCancellableOrderStatus } from '@/src/global/b2c/utils/statuses';
+import { normalizeOptionalText } from '@/src/global/b2c/utils/text';
+import { createAdminClient } from '@/src/global/supabase/admin';
+import type { Database } from '@/src/global/supabase/database.types';
 
 type OrderRow = Pick<
-  Database["public"]["Tables"]["orders"]["Row"],
-  "current_status" | "customer_email" | "id" | "order_number"
+  Database['public']['Tables']['orders']['Row'],
+  'current_status' | 'customer_email' | 'id' | 'order_number'
 >;
 type CancellationRequestRow =
-  Database["public"]["Tables"]["order_cancellation_requests"]["Row"];
+  Database['public']['Tables']['order_cancellation_requests']['Row'];
 
 export type CustomerOrderCancellationRequestSummary = {
   id: string;
@@ -28,27 +28,27 @@ export type RequestCustomerOrderCancellationInput = {
 
 export type RequestCustomerOrderCancellationResult =
   | {
-      kind: "created";
+      kind: 'created';
       request: CustomerOrderCancellationRequestSummary;
     }
   | {
-      kind: "already_requested";
+      kind: 'already_requested';
       request: CustomerOrderCancellationRequestSummary;
     }
   | {
-      kind: "not_eligible";
+      kind: 'not_eligible';
       currentStatus: string;
     }
   | {
-      kind: "not_found";
+      kind: 'not_found';
     };
 
-const CANCELLATION_REQUEST_SELECT = "id, status, reason, requested_at";
+const CANCELLATION_REQUEST_SELECT = 'id, status, reason, requested_at';
 
 function mapCancellationRequest(
   request: Pick<
     CancellationRequestRow,
-    "id" | "reason" | "requested_at" | "status"
+    'id' | 'reason' | 'requested_at' | 'status'
   >,
 ): CustomerOrderCancellationRequestSummary {
   return {
@@ -64,10 +64,10 @@ async function loadOpenCancellationRequest(
 ): Promise<CustomerOrderCancellationRequestSummary | null> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("order_cancellation_requests")
+    .from('order_cancellation_requests')
     .select(CANCELLATION_REQUEST_SELECT)
-    .eq("order_id", orderId)
-    .eq("status", "open")
+    .eq('order_id', orderId)
+    .eq('status', 'open')
     .maybeSingle();
 
   if (error) {
@@ -82,14 +82,14 @@ async function loadOwnedOrder({
   orderNumber,
 }: Pick<
   RequestCustomerOrderCancellationInput,
-  "normalizedEmail" | "orderNumber"
+  'normalizedEmail' | 'orderNumber'
 >): Promise<OrderRow | null> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("orders")
-    .select("id, order_number, current_status, customer_email")
-    .eq("order_number", orderNumber)
-    .ilike("customer_email", normalizedEmail)
+    .from('orders')
+    .select('id, order_number, current_status, customer_email')
+    .eq('order_number', orderNumber)
+    .ilike('customer_email', normalizedEmail)
     .maybeSingle();
 
   if (error) {
@@ -108,12 +108,12 @@ export async function requestCustomerOrderCancellation({
   const order = await loadOwnedOrder({ normalizedEmail, orderNumber });
 
   if (!order) {
-    return { kind: "not_found" };
+    return { kind: 'not_found' };
   }
 
   if (!isCancellableOrderStatus(order.current_status)) {
     return {
-      kind: "not_eligible",
+      kind: 'not_eligible',
       currentStatus: order.current_status,
     };
   }
@@ -122,7 +122,7 @@ export async function requestCustomerOrderCancellation({
 
   if (existingRequest) {
     return {
-      kind: "already_requested",
+      kind: 'already_requested',
       request: existingRequest,
     };
   }
@@ -130,26 +130,26 @@ export async function requestCustomerOrderCancellation({
   const requestedAt = now.toISOString();
   const supabase = createAdminClient();
   const { data, error } = await supabase
-    .from("order_cancellation_requests")
+    .from('order_cancellation_requests')
     .insert({
       customer_email: order.customer_email,
       customer_message: null,
       order_id: order.id,
       reason: normalizeOptionalText(reason),
       requested_at: requestedAt,
-      status: "open",
+      status: 'open',
       updated_at: requestedAt,
     })
     .select(CANCELLATION_REQUEST_SELECT)
     .single();
 
   if (error) {
-    if (error.code === "23505") {
+    if (error.code === '23505') {
       const duplicateRequest = await loadOpenCancellationRequest(order.id);
 
       if (duplicateRequest) {
         return {
-          kind: "already_requested",
+          kind: 'already_requested',
           request: duplicateRequest,
         };
       }
@@ -159,7 +159,7 @@ export async function requestCustomerOrderCancellation({
   }
 
   return {
-    kind: "created",
+    kind: 'created',
     request: mapCancellationRequest(data),
   };
 }

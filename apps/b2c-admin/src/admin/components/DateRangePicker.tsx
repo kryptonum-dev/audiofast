@@ -1,4 +1,4 @@
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "@sanity/icons";
+import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@sanity/icons';
 import {
   Box,
   Button,
@@ -11,32 +11,34 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { useMemo, useState } from "react";
+} from '@sanity/ui';
+import { useMemo, useState } from 'react';
 
-import type { AdminDateRangeFilter } from "../types.js";
+import type { AdminDateRangeFilter } from '../types.js';
 
 type DateRangePickerProps = {
   value: AdminDateRangeFilter;
   onChange: (value: AdminDateRangeFilter) => void;
 };
 
-const WEEKDAYS = ["Pn", "Wt", "Śr", "Cz", "Pt", "So", "Nd"];
-const MONTH_FORMATTER = new Intl.DateTimeFormat("pl-PL", {
-  month: "long",
-  year: "numeric",
+const WEEKDAYS = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'];
+const MONTH_FORMATTER = new Intl.DateTimeFormat('pl-PL', {
+  month: 'long',
+  year: 'numeric',
 });
-const DISPLAY_DATE_FORMATTER = new Intl.DateTimeFormat("pl-PL", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
+const DISPLAY_DATE_FORMATTER = new Intl.DateTimeFormat('pl-PL', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
 });
 
 export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
   const today = useMemo(() => toDateValue(new Date()), []);
   const [open, setOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(() =>
-    value.from ? parseDate(clampDateValue(value.from, today)) : startOfMonth(new Date()),
+    value.from
+      ? parseDate(clampDateValue(value.from, today))
+      : startOfMonth(new Date()),
   );
   const calendarDays = useMemo(
     () => buildCalendarDays(visibleMonth),
@@ -54,7 +56,7 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
     if (!sanitizedValue.from || sanitizedValue.to) {
       onChange({
         from: safeDateValue,
-        to: "",
+        to: '',
       });
       return;
     }
@@ -89,9 +91,7 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
                     aria-label="Poprzedni miesiąc"
                     icon={ChevronLeftIcon}
                     mode="bleed"
-                    onClick={() =>
-                      setVisibleMonth(addMonths(visibleMonth, -1))
-                    }
+                    onClick={() => setVisibleMonth(addMonths(visibleMonth, -1))}
                     padding={2}
                     type="button"
                   />
@@ -122,8 +122,8 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
                         key={day.value}
                         mode={
                           dayInRange(day.value, sanitizedValue)
-                            ? "default"
-                            : "bleed"
+                            ? 'default'
+                            : 'bleed'
                         }
                         onClick={() => selectDate(day.value)}
                         padding={2}
@@ -143,7 +143,7 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
                 <Inline space={2}>
                   <Button
                     mode="ghost"
-                    onClick={() => onChange({ from: "", to: "" })}
+                    onClick={() => onChange({ from: '', to: '' })}
                     text="Wyczyść"
                     type="button"
                   />
@@ -206,14 +206,14 @@ function addMonths(date: Date, amount: number): Date {
 
 function toDateValue(date: Date): string {
   const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
 }
 
 function parseDate(value: string): Date {
-  const [year, month, day] = value.split("-").map(Number);
+  const [year, month, day] = value.split('-').map(Number);
 
   if (!year || !month || !day) {
     return startOfMonth(new Date());
@@ -266,7 +266,7 @@ function dayInRange(day: string, range: AdminDateRangeFilter): boolean {
 
 function formatRangeLabel(range: AdminDateRangeFilter): string {
   if (!range.from && !range.to) {
-    return "";
+    return '';
   }
 
   if (range.from && !range.to) {

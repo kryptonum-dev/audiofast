@@ -1,69 +1,69 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from '@playwright/test';
 
 import {
   preparePrestigeCheckout,
   readCustomerAuthSeedMetadata,
   readCustomerProfileByEmail,
   resetCustomerProfileFromSeed,
-} from "./utils";
+} from './utils';
 
-test.describe("authenticated account details", () => {
-  test("saves future checkout defaults without changing historical order snapshots", async ({
+test.describe('authenticated account details', () => {
+  test('saves future checkout defaults without changing historical order snapshots', async ({
     page,
   }) => {
     const seed = await readCustomerAuthSeedMetadata();
     const updatedDefaults = {
-      firstName: "Karol",
-      lastName: "Konto",
-      phone: "502503504",
-      postalCode: "22-222",
-      city: "Gdansk",
-      streetName: "Profilowa",
-      buildingNumber: "22",
-      apartmentNumber: "4",
-      companyName: "Audiofast E2E Sp. z o.o.",
-      taxId: "1234567890",
+      firstName: 'Karol',
+      lastName: 'Konto',
+      phone: '502503504',
+      postalCode: '22-222',
+      city: 'Gdansk',
+      streetName: 'Profilowa',
+      buildingNumber: '22',
+      apartmentNumber: '4',
+      companyName: 'Audiofast E2E Sp. z o.o.',
+      taxId: '1234567890',
     };
 
     await resetCustomerProfileFromSeed(seed);
-    await page.goto("/konto-klienta/dane-konta/");
+    await page.goto('/konto-klienta/dane-konta/');
 
-    const form = page.getByRole("form", { name: "Formularz danych konta" });
+    const form = page.getByRole('form', { name: 'Formularz danych konta' });
 
     await expect(
-      page.getByRole("heading", { name: "Dane konta" }),
+      page.getByRole('heading', { name: 'Dane konta' }),
     ).toBeVisible();
     await form
-      .getByLabel("Imię", { exact: true })
+      .getByLabel('Imię', { exact: true })
       .fill(updatedDefaults.firstName);
     await form
-      .getByLabel("Nazwisko", { exact: true })
+      .getByLabel('Nazwisko', { exact: true })
       .fill(updatedDefaults.lastName);
     await form
-      .getByLabel("Telefon", { exact: true })
+      .getByLabel('Telefon', { exact: true })
       .fill(updatedDefaults.phone);
     await form
-      .getByLabel("Kod pocztowy", { exact: true })
+      .getByLabel('Kod pocztowy', { exact: true })
       .fill(updatedDefaults.postalCode);
     await form
-      .getByLabel("Miejscowość", { exact: true })
+      .getByLabel('Miejscowość', { exact: true })
       .fill(updatedDefaults.city);
     await form
-      .getByLabel("Ulica", { exact: true })
+      .getByLabel('Ulica', { exact: true })
       .fill(updatedDefaults.streetName);
     await form
-      .getByLabel("Numer domu", { exact: true })
+      .getByLabel('Numer domu', { exact: true })
       .fill(updatedDefaults.buildingNumber);
     await form
-      .getByLabel("Numer mieszkania (opcjonalnie)", { exact: true })
+      .getByLabel('Numer mieszkania (opcjonalnie)', { exact: true })
       .fill(updatedDefaults.apartmentNumber);
-    await form.getByText("Firma", { exact: true }).click();
+    await form.getByText('Firma', { exact: true }).click();
     await form
-      .getByLabel("Nazwa firmy", { exact: true })
+      .getByLabel('Nazwa firmy', { exact: true })
       .fill(updatedDefaults.companyName);
-    await form.getByLabel("NIP", { exact: true }).fill(updatedDefaults.taxId);
+    await form.getByLabel('NIP', { exact: true }).fill(updatedDefaults.taxId);
 
-    await form.getByRole("button", { name: "Zapisz dane konta" }).click();
+    await form.getByRole('button', { name: 'Zapisz dane konta' }).click();
 
     await expect
       .poll(async () => {
@@ -91,7 +91,7 @@ test.describe("authenticated account details", () => {
           apartmentNumber: updatedDefaults.apartmentNumber,
         },
         invoiceData: {
-          recipientType: "company",
+          recipientType: 'company',
           companyName: updatedDefaults.companyName,
           taxId: updatedDefaults.taxId,
         },
@@ -108,16 +108,16 @@ test.describe("authenticated account details", () => {
 
     await preparePrestigeCheckout(page);
 
-    const checkoutForm = page.locator("#checkout-details-form");
+    const checkoutForm = page.locator('#checkout-details-form');
 
-    await expect(checkoutForm.getByLabel("Imię", { exact: true })).toHaveValue(
+    await expect(checkoutForm.getByLabel('Imię', { exact: true })).toHaveValue(
       updatedDefaults.firstName,
     );
     await expect(
-      checkoutForm.getByLabel("Nazwisko", { exact: true }),
+      checkoutForm.getByLabel('Nazwisko', { exact: true }),
     ).toHaveValue(updatedDefaults.lastName);
     await expect(
-      checkoutForm.getByLabel("Telefon", { exact: true }),
+      checkoutForm.getByLabel('Telefon', { exact: true }),
     ).toHaveValue(updatedDefaults.phone);
     await expect(
       checkoutForm.locator('input[name="shippingAddress.postalCode"]'),

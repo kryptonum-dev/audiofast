@@ -132,7 +132,6 @@ Work intentionally handed off to `Phase 06`:
 - hard validation at checkout submit / buy
 - browser-level cart -> checkout -> payment coverage in `Playwright`
 
-
 ## Work Included In This Phase
 
 ### 1. Introduce The Testing Foundation First

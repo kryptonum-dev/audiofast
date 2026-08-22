@@ -1,10 +1,5 @@
-import {
-  adminJson,
-  adminOptions,
-} from '@/src/global/b2c/admin/server/http';
-import {
-  updateAdminOrderShipment,
-} from '@/src/global/b2c/admin/server/order-shipment';
+import { adminJson, adminOptions } from '@/src/global/b2c/admin/server/http';
+import { updateAdminOrderShipment } from '@/src/global/b2c/admin/server/order-shipment';
 import { withAdminRoute } from '@/src/global/b2c/admin/server/route';
 
 type AdminOrderShipmentRouteContext = {

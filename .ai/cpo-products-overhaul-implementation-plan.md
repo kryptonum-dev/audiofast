@@ -31,45 +31,45 @@ Create a new document type `cpoProduct`. The **first field after name** is `prod
 
 #### Fields — Always Visible
 
-| Field | Type | Description |
-|---|---|---|
-| `name` | `string` (from `defineSlugForDocument`) | Specimen name (e.g. "Momentum Z - egzemplarz #2") |
-| `productType` | `string` (radio list) | **`"internal"`** or **`"external"`** — top-level architectural toggle. Default: `"internal"` |
-| `previewImage` | `image` | Main preview image for listing cards and hero. Same definition as `product.previewImage` |
-| `shortDescription` | `customPortableText` | Short description. Same config as `product.shortDescription` (optional, with default PT settings) |
-| `priceCents` | `number` | Price in grosz (PLN × 100). Temporary direct field until cennik integration |
-| `publishedDate` | `datetime` | Publication date for sorting. Same config as `product.publishedDate` |
-| `isArchived` | `boolean` | Mark as sold/unavailable without deleting |
-| SEO fields | via `getSEOFields` | Standard SEO fields |
+| Field              | Type                                    | Description                                                                                       |
+| ------------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `name`             | `string` (from `defineSlugForDocument`) | Specimen name (e.g. "Momentum Z - egzemplarz #2")                                                 |
+| `productType`      | `string` (radio list)                   | **`"internal"`** or **`"external"`** — top-level architectural toggle. Default: `"internal"`      |
+| `previewImage`     | `image`                                 | Main preview image for listing cards and hero. Same definition as `product.previewImage`          |
+| `shortDescription` | `customPortableText`                    | Short description. Same config as `product.shortDescription` (optional, with default PT settings) |
+| `priceCents`       | `number`                                | Price in grosz (PLN × 100). Temporary direct field until cennik integration                       |
+| `publishedDate`    | `datetime`                              | Publication date for sorting. Same config as `product.publishedDate`                              |
+| `isArchived`       | `boolean`                               | Mark as sold/unavailable without deleting                                                         |
+| SEO fields         | via `getSEOFields`                      | Standard SEO fields                                                                               |
 
 #### Fields — Internal Only (hidden when `productType === "external"`)
 
-| Field | Type | Description |
-|---|---|---|
-| `slug` | via `defineSlugForDocument` | Slug with prefix `/certyfikowany-sprzet-uzywany/`. Only internal products need a URL |
-| `subtitle` | `string` | Optional subtitle (e.g. "Stan: bardzo dobry"). Same as `product.subtitle` |
-| `brand` | `reference` to `brand` | Brand reference. Same as `product.brand` but not required |
-| `internalProduct` | `reference` to `product` | Reference to the main Audiofast catalog product |
-| `imageGallery` | `array` of `image` | Specimen photos. **Same structure as `product.imageGallery`** (array of image, lines 263–271 of product schema) |
-| `details` | `object` | **Same structure as `product.details`** — contains `heading` (optional heading PT) and `productDetailContent` (rich PT with styles h3, lists, decorators, annotations, and components: ptMinimalImage, ptInlineImage, ptHeading, ptYoutubeVideo, ptVimeoVideo, ptPageBreak, ptTwoColumnLine, ptHorizontalLine, ptReviewEmbed). Lines 138–200 of product schema |
-| `technicalData` | `object` | **Same structure as `product.technicalData`** — with `variants` (array of string), `groups` (array of sections with `title` and `rows`, where each row has `title` and `values` as Portable Text cells). Lines 580–768 of product schema. Managed via the same Technical Data tab editor |
+| Field             | Type                        | Description                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `slug`            | via `defineSlugForDocument` | Slug with prefix `/certyfikowany-sprzet-uzywany/`. Only internal products need a URL                                                                                                                                                                                                                                                                           |
+| `subtitle`        | `string`                    | Optional subtitle (e.g. "Stan: bardzo dobry"). Same as `product.subtitle`                                                                                                                                                                                                                                                                                      |
+| `brand`           | `reference` to `brand`      | Brand reference. Same as `product.brand` but not required                                                                                                                                                                                                                                                                                                      |
+| `internalProduct` | `reference` to `product`    | Reference to the main Audiofast catalog product                                                                                                                                                                                                                                                                                                                |
+| `imageGallery`    | `array` of `image`          | Specimen photos. **Same structure as `product.imageGallery`** (array of image, lines 263–271 of product schema)                                                                                                                                                                                                                                                |
+| `details`         | `object`                    | **Same structure as `product.details`** — contains `heading` (optional heading PT) and `productDetailContent` (rich PT with styles h3, lists, decorators, annotations, and components: ptMinimalImage, ptInlineImage, ptHeading, ptYoutubeVideo, ptVimeoVideo, ptPageBreak, ptTwoColumnLine, ptHorizontalLine, ptReviewEmbed). Lines 138–200 of product schema |
+| `technicalData`   | `object`                    | **Same structure as `product.technicalData`** — with `variants` (array of string), `groups` (array of sections with `title` and `rows`, where each row has `title` and `values` as Portable Text cells). Lines 580–768 of product schema. Managed via the same Technical Data tab editor                                                                       |
 
 #### Fields — External Only (hidden when `productType === "internal"`)
 
-| Field | Type | Description |
-|---|---|---|
-| `otherBrandName` | `string` | Free-text brand name for non-distributed brands (e.g. "Naim Audio") |
-| `externalUrl` | `url` | URL to manufacturer/distributor page. Required when external |
+| Field               | Type     | Description                                                                                       |
+| ------------------- | -------- | ------------------------------------------------------------------------------------------------- |
+| `otherBrandName`    | `string` | Free-text brand name for non-distributed brands (e.g. "Naim Audio")                               |
+| `externalUrl`       | `url`    | URL to manufacturer/distributor page. Required when external                                      |
 | `externalLinkLabel` | `string` | Label for external link (e.g. "Zobacz na stronie producenta"). Defaults to "Zobacz opis produktu" |
 
 #### Conditional Visibility Rules
 
 ```typescript
 // Internal-only fields: hidden when productType === "external"
-hidden: ({ document }) => document?.productType === "external"
+hidden: ({ document }) => document?.productType === 'external';
 
 // External-only fields: hidden when productType === "internal" (or undefined/default)
-hidden: ({ document }) => document?.productType !== "external"
+hidden: ({ document }) => document?.productType !== 'external';
 ```
 
 **Slug handling**: The `defineSlugForDocument` helper generates both a `name` field and a `slug` field. Since we always need `name`, we use `defineSlugForDocument` with `source: "name"` and `prefix: "/certyfikowany-sprzet-uzywany/"`, but apply `hidden` to the slug field only (not the name field) for external products. External products still have a name (for the card), just no slug/URL.
@@ -117,8 +117,8 @@ The `cpoPageBuilder` currently includes the `productsListing` block (which uses 
 
 A new page builder block specifically for CPO product listings. Fields:
 
-| Field | Type | Description |
-|---|---|---|
+| Field     | Type                                | Description     |
+| --------- | ----------------------------------- | --------------- |
 | `heading` | `customPortableText` (heading type) | Section heading |
 
 This block replaces `productsListing` with `cpoOnly: true` on the CPO page. No `cpoOnly` boolean needed — this block always queries `cpoProduct` documents.
@@ -398,7 +398,9 @@ export async function generateStaticParams() {
   return products
     .filter((p) => p.slug)
     .map((p) => ({
-      slug: p.slug!.replace('/certyfikowany-sprzet-uzywany/', '').replace(/\/$/, ''),
+      slug: p
+        .slug!.replace('/certyfikowany-sprzet-uzywany/', '')
+        .replace(/\/$/, ''),
     }));
 }
 
@@ -492,7 +494,7 @@ Add `cpoProduct` to `TYPE_DEPENDENCY_MAP`:
 ```typescript
 const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // ... existing entries
-  cpoProduct: ['cpoProduct', 'cpoPage'],  // invalidate the CPO listing + individual product
+  cpoProduct: ['cpoProduct', 'cpoPage'], // invalidate the CPO listing + individual product
   // product already exists
 };
 ```
@@ -501,11 +503,13 @@ Add `cpoProduct` to the reverse lookup query (line ~136) and add a handler for i
 
 ```typescript
 // In the references query
-`*[references($id) && _type in ["product", "page", "homePage", "cpoPage", "cpoProduct", ...]]`
+`*[references($id) && _type in ["product", "page", "homePage", "cpoPage", "cpoProduct", ...]]`;
 
 // In the handler
 if (ref._type === 'cpoProduct') {
-  const slug = ref.slug?.replace('/certyfikowany-sprzet-uzywany/', '').replace(/\/$/, '');
+  const slug = ref.slug
+    ?.replace('/certyfikowany-sprzet-uzywany/', '')
+    .replace(/\/$/, '');
   if (slug) tags.push(`cpoProduct:${slug}`);
   tags.push('cpoPage'); // also invalidate the listing
   continue;
@@ -577,6 +581,7 @@ The `cpoPageBuilder` should include `cpoProductsListing` instead of `productsLis
 ### Step 7.5: Clean up filter system
 
 **Files**:
+
 - `apps/web/src/global/filters/types.ts` — Remove `isCPO` from `ActiveFilters` type (lines 71–73)
 - `apps/web/src/global/filters/computeFilters.ts` — Remove `isCPO` filter logic (lines 131–134) and all other `isCPO` references (~lines 22, 166, 185, 216, 237, 253, 273)
 - `apps/web/src/components/products/ProductsAside/index.tsx` — Remove `isCPO: false` from `activeFilters` (lines ~198, ~233)
@@ -592,6 +597,7 @@ Remove the `isCPO` prop and its usage in the query params.
 **File**: `apps/web/src/components/pageBuilder/ProductsListing/index.tsx`
 
 Remove all CPO-related logic:
+
 - Remove `cpoOnly` prop handling (lines ~47, 56–58)
 - Remove CPO-specific `visibleFilters` configuration (lines ~100–106)
 - Remove `isCPO={cpoOnly}` prop pass (line ~122)
@@ -628,34 +634,34 @@ Phase 7: Cleanup (run LAST — only after Phases 1–6 are verified working)
 
 ### Estimated Effort
 
-| Phase | Estimate |
-|---|---|
-| Phase 1: Sanity Schema | ~1h |
-| Phase 2: Studio Structure | ~15min |
-| Phase 3: GROQ Queries | ~1h |
-| Phase 4: CPO Listing Page | ~1.5h |
-| Phase 5: CPO Detail Page | ~2h |
-| Phase 6: Revalidation + SEO | ~30min |
-| Phase 7: Cleanup | ~45min |
-| **Total** | **~7h** |
+| Phase                       | Estimate |
+| --------------------------- | -------- |
+| Phase 1: Sanity Schema      | ~1h      |
+| Phase 2: Studio Structure   | ~15min   |
+| Phase 3: GROQ Queries       | ~1h      |
+| Phase 4: CPO Listing Page   | ~1.5h    |
+| Phase 5: CPO Detail Page    | ~2h      |
+| Phase 6: Revalidation + SEO | ~30min   |
+| Phase 7: Cleanup            | ~45min   |
+| **Total**                   | **~7h**  |
 
 ---
 
 ## Files to Create
 
-| File | Purpose |
-|---|---|
-| `apps/studio/schemaTypes/documents/collections/cpo-product.ts` | CPO product document schema |
-| `apps/studio/schemaTypes/blocks/cpo-products-listing.ts` | CPO products listing page builder block |
-| `apps/web/src/app/certyfikowany-sprzet-uzywany/[slug]/page.tsx` | CPO product detail page route (internal products only) |
-| `apps/web/src/components/pageBuilder/CpoProductsListing/index.tsx` | CPO listing page builder component |
-| `apps/web/src/components/pageBuilder/CpoProductsListing/styles.module.scss` | Styles for CPO listing |
-| `apps/web/src/components/ui/CpoProductCard/index.tsx` | CPO product card (handles both internal `<Link>` and external `<a target="_blank">`) |
-| `apps/web/src/components/ui/CpoProductCard/styles.module.scss` | Styles for CPO card |
-| `apps/web/src/components/cpo/CpoProductHero/index.tsx` | CPO product hero (adapted from ProductHero — flat price, no configurator/comparison) |
-| `apps/web/src/components/cpo/CpoProductHero/styles.module.scss` | Styles for CPO hero |
-| `apps/web/src/components/cpo/OriginalProductLink/index.tsx` | Mini card linking to the referenced catalog product |
-| `apps/web/src/components/cpo/OriginalProductLink/styles.module.scss` | Styles for original product link |
+| File                                                                        | Purpose                                                                              |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `apps/studio/schemaTypes/documents/collections/cpo-product.ts`              | CPO product document schema                                                          |
+| `apps/studio/schemaTypes/blocks/cpo-products-listing.ts`                    | CPO products listing page builder block                                              |
+| `apps/web/src/app/certyfikowany-sprzet-uzywany/[slug]/page.tsx`             | CPO product detail page route (internal products only)                               |
+| `apps/web/src/components/pageBuilder/CpoProductsListing/index.tsx`          | CPO listing page builder component                                                   |
+| `apps/web/src/components/pageBuilder/CpoProductsListing/styles.module.scss` | Styles for CPO listing                                                               |
+| `apps/web/src/components/ui/CpoProductCard/index.tsx`                       | CPO product card (handles both internal `<Link>` and external `<a target="_blank">`) |
+| `apps/web/src/components/ui/CpoProductCard/styles.module.scss`              | Styles for CPO card                                                                  |
+| `apps/web/src/components/cpo/CpoProductHero/index.tsx`                      | CPO product hero (adapted from ProductHero — flat price, no configurator/comparison) |
+| `apps/web/src/components/cpo/CpoProductHero/styles.module.scss`             | Styles for CPO hero                                                                  |
+| `apps/web/src/components/cpo/OriginalProductLink/index.tsx`                 | Mini card linking to the referenced catalog product                                  |
+| `apps/web/src/components/cpo/OriginalProductLink/styles.module.scss`        | Styles for original product link                                                     |
 
 **Components reused as-is (no new files needed):**
 
@@ -667,21 +673,21 @@ Phase 7: Cleanup (run LAST — only after Phases 1–6 are verified working)
 
 ## Files to Modify
 
-| File | Change |
-|---|---|
-| `apps/studio/schemaTypes/index.ts` | Register `cpoProduct` and `cpoProductsListing` |
-| `apps/studio/schemaTypes/definitions/pagebuilder.ts` | Add `cpoProductsListing` to `cpoPageBuilder`, remove `productsListing` from it |
-| `apps/studio/structure.ts` | Update CPO section to use `cpoProduct` type |
-| `apps/web/src/global/sanity/query.ts` | Add CPO queries, remove `isCPO` references |
-| `apps/web/src/global/sanity/fetch.ts` | No changes needed |
-| `apps/web/src/components/shared/PageBuilder.tsx` | Register `cpoProductsListing` component |
-| `apps/web/src/app/api/revalidate/route.ts` | Add `cpoProduct` type handling |
-| `apps/web/src/app/sitemap.ts` | Add CPO product pages |
-| `apps/web/src/global/filters/types.ts` | Remove `isCPO` |
-| `apps/web/src/global/filters/computeFilters.ts` | Remove `isCPO` filter logic |
-| `apps/web/src/components/products/ProductsAside/index.tsx` | Remove `isCPO` references |
-| `apps/web/src/components/products/ProductsListing/index.tsx` | Remove `isCPO` prop |
-| `apps/web/src/components/pageBuilder/ProductsListing/index.tsx` | Remove `cpoOnly` logic |
-| `apps/studio/schemaTypes/documents/collections/product.ts` | Remove `isCPO` field |
-| `apps/studio/schemaTypes/blocks/products-listing.ts` | Remove `cpoOnly` field |
-| `apps/studio/scripts/migration/products/transformers/product-transformer.ts` | Remove `isCPO` |
+| File                                                                         | Change                                                                         |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `apps/studio/schemaTypes/index.ts`                                           | Register `cpoProduct` and `cpoProductsListing`                                 |
+| `apps/studio/schemaTypes/definitions/pagebuilder.ts`                         | Add `cpoProductsListing` to `cpoPageBuilder`, remove `productsListing` from it |
+| `apps/studio/structure.ts`                                                   | Update CPO section to use `cpoProduct` type                                    |
+| `apps/web/src/global/sanity/query.ts`                                        | Add CPO queries, remove `isCPO` references                                     |
+| `apps/web/src/global/sanity/fetch.ts`                                        | No changes needed                                                              |
+| `apps/web/src/components/shared/PageBuilder.tsx`                             | Register `cpoProductsListing` component                                        |
+| `apps/web/src/app/api/revalidate/route.ts`                                   | Add `cpoProduct` type handling                                                 |
+| `apps/web/src/app/sitemap.ts`                                                | Add CPO product pages                                                          |
+| `apps/web/src/global/filters/types.ts`                                       | Remove `isCPO`                                                                 |
+| `apps/web/src/global/filters/computeFilters.ts`                              | Remove `isCPO` filter logic                                                    |
+| `apps/web/src/components/products/ProductsAside/index.tsx`                   | Remove `isCPO` references                                                      |
+| `apps/web/src/components/products/ProductsListing/index.tsx`                 | Remove `isCPO` prop                                                            |
+| `apps/web/src/components/pageBuilder/ProductsListing/index.tsx`              | Remove `cpoOnly` logic                                                         |
+| `apps/studio/schemaTypes/documents/collections/product.ts`                   | Remove `isCPO` field                                                           |
+| `apps/studio/schemaTypes/blocks/products-listing.ts`                         | Remove `cpoOnly` field                                                         |
+| `apps/studio/scripts/migration/products/transformers/product-transformer.ts` | Remove `isCPO`                                                                 |

@@ -1,13 +1,13 @@
-import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/react";
-import { afterEach, vi } from "vitest";
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach, vi } from 'vitest';
 
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
 });
 
-Object.defineProperty(window, "matchMedia", {
+Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({
     matches: false,
@@ -27,4 +27,4 @@ class ResizeObserverMock {
   disconnect() {}
 }
 
-vi.stubGlobal("ResizeObserver", ResizeObserverMock);
+vi.stubGlobal('ResizeObserver', ResizeObserverMock);

@@ -1,4 +1,4 @@
-import { EditIcon, TrashIcon } from "@sanity/icons";
+import { EditIcon, TrashIcon } from '@sanity/icons';
 import {
   Badge,
   Box,
@@ -9,16 +9,16 @@ import {
   Inline,
   Stack,
   Text,
-} from "@sanity/ui";
+} from '@sanity/ui';
 
 import {
   formatCouponActivityWindow,
   formatCouponDiscount,
   formatCouponScope,
   formatDateTime,
-} from "../formatters.js";
-import type { AdminCoupon } from "../types.js";
-import { CouponStatusBadge } from "./CouponStatusBadge.js";
+} from '../formatters.js';
+import type { AdminCoupon } from '../types.js';
+import { CouponStatusBadge } from './CouponStatusBadge.js';
 
 type CouponsTableProps = {
   archivingCouponId?: string | null;
@@ -43,7 +43,8 @@ export function CouponsTable({
 }: CouponsTableProps) {
   const selectedCouponIdSet = new Set(selectedCouponIds);
   const allVisibleSelected =
-    coupons.length > 0 && coupons.every((coupon) => selectedCouponIdSet.has(coupon.id));
+    coupons.length > 0 &&
+    coupons.every((coupon) => selectedCouponIdSet.has(coupon.id));
   const someVisibleSelected = coupons.some((coupon) =>
     selectedCouponIdSet.has(coupon.id),
   );
@@ -82,20 +83,20 @@ export function CouponsTable({
                   key={coupon.id}
                   aria-label={`Edytuj kupon ${coupon.code}`}
                   className={
-                    onOpenCoupon ? "ordersTableRowClickable" : undefined
+                    onOpenCoupon ? 'ordersTableRowClickable' : undefined
                   }
                   onKeyDown={(event) => {
                     if (!onOpenCoupon) {
                       return;
                     }
 
-                    if (event.key === "Enter" || event.key === " ") {
+                    if (event.key === 'Enter' || event.key === ' ') {
                       event.preventDefault();
                       onOpenCoupon(coupon.id);
                     }
                   }}
                   onClick={() => onOpenCoupon?.(coupon.id)}
-                  role={onOpenCoupon ? "button" : undefined}
+                  role={onOpenCoupon ? 'button' : undefined}
                   tabIndex={onOpenCoupon ? 0 : undefined}
                 >
                   <td>
@@ -176,9 +177,9 @@ export function CouponsTable({
                   </td>
                   <td>
                     <Text size={1}>
-                      {coupon.usageCount} /{" "}
+                      {coupon.usageCount} /{' '}
                       {coupon.usageLimit === null
-                        ? "bez limitu"
+                        ? 'bez limitu'
                         : coupon.usageLimit}
                     </Text>
                   </td>

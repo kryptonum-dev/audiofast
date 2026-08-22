@@ -3,26 +3,29 @@
  * Parses award data from CSV files exported from phpMyAdmin
  */
 
-import * as fs from "node:fs";
-import * as path from "node:path";
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
-import { parse } from "csv-parse/sync";
+import { parse } from 'csv-parse/sync';
 
 import type {
   AwardMainRow,
   AwardProductRelationRow,
   AwardSourceData,
-} from "../types";
+} from '../types';
 
 // ============================================================================
 // Constants
 // ============================================================================
 
-const CSV_BASE_PATH = path.resolve(__dirname, "../../../../../../csv/awards/december");
+const CSV_BASE_PATH = path.resolve(
+  __dirname,
+  '../../../../../../csv/awards/december',
+);
 
 const CSV_FILES = {
-  main: "awards-all.csv",
-  relations: "awards-products-relations.csv",
+  main: 'awards-all.csv',
+  relations: 'awards-products-relations.csv',
 };
 
 // ============================================================================
@@ -34,7 +37,7 @@ function parseCSV<T>(filePath: string): T[] {
     throw new Error(`CSV file not found: ${filePath}`);
   }
 
-  const content = fs.readFileSync(filePath, "utf-8");
+  const content = fs.readFileSync(filePath, 'utf-8');
   return parse(content, {
     columns: true,
     skip_empty_lines: true,
@@ -54,7 +57,7 @@ export interface LoadedCsvData {
 }
 
 export function loadAllCsvData(): LoadedCsvData {
-  console.log("📂 Loading CSV data...");
+  console.log('📂 Loading CSV data...');
 
   const awardsPath = path.join(CSV_BASE_PATH, CSV_FILES.main);
   const relationsPath = path.join(CSV_BASE_PATH, CSV_FILES.relations);

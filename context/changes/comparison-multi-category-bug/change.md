@@ -1,6 +1,6 @@
 ---
 id: comparison-multi-category-bug
-title: "Porównywarka — produkt w wielu kategoriach nie da się porównać"
+title: 'Porównywarka — produkt w wielu kategoriach nie da się porównać'
 status: preparing
 created: 2026-06-18
 updated: 2026-06-18

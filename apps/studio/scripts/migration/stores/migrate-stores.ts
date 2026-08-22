@@ -16,16 +16,16 @@
  *   SANITY_API_TOKEN - API token with write access
  */
 
-import { readFileSync } from "fs";
-import { resolve } from "path";
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
 
-import { parseDealersFromSQL } from "./parser";
-import { createMigrationClient, getClientConfig } from "./sanity-client";
-import { transformDealerToStore, validateStoreDocument } from "./transformer";
-import type { MigrationReport, SanityStoreDocument } from "./types";
+import { parseDealersFromSQL } from './parser';
+import { createMigrationClient, getClientConfig } from './sanity-client';
+import { transformDealerToStore, validateStoreDocument } from './transformer';
+import type { MigrationReport, SanityStoreDocument } from './types';
 
 // Default SQL file path (relative to project root)
-const DEFAULT_SQL_PATH = "./20250528_audiofast.sql";
+const DEFAULT_SQL_PATH = './20250528_audiofast.sql';
 
 /**
  * Parse command line arguments
@@ -40,16 +40,16 @@ function parseArgs(): {
   const args = process.argv.slice(2);
 
   // Parse --limit=N argument
-  const limitArg = args.find((arg) => arg.startsWith("--limit="));
-  const limit = limitArg ? parseInt(limitArg.split("=")[1], 10) : 0;
+  const limitArg = args.find((arg) => arg.startsWith('--limit='));
+  const limit = limitArg ? parseInt(limitArg.split('=')[1], 10) : 0;
 
   return {
-    dryRun: args.includes("--dry-run") || args.includes("-d"),
-    rollback: args.includes("--rollback") || args.includes("-r"),
+    dryRun: args.includes('--dry-run') || args.includes('-d'),
+    rollback: args.includes('--rollback') || args.includes('-r'),
     sqlPath:
-      args.find((arg) => arg.startsWith("--sql="))?.split("=")[1] ||
+      args.find((arg) => arg.startsWith('--sql='))?.split('=')[1] ||
       DEFAULT_SQL_PATH,
-    verbose: args.includes("--verbose") || args.includes("-v"),
+    verbose: args.includes('--verbose') || args.includes('-v'),
     limit: isNaN(limit) ? 0 : limit, // 0 means no limit
   };
 }
@@ -58,62 +58,62 @@ function parseArgs(): {
  * Print migration report
  */
 function printReport(report: MigrationReport): void {
-  console.log("\n");
+  console.log('\n');
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
-  console.log("                    STORE MIGRATION REPORT");
+  console.log('                    STORE MIGRATION REPORT');
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
-  console.log("");
+  console.log('');
   console.log(`Source: SQL File`);
   console.log(`Date: ${new Date().toISOString()}`);
-  console.log("");
+  console.log('');
   console.log(
-    "───────────────────────────────────────────────────────────────",
+    '───────────────────────────────────────────────────────────────',
   );
-  console.log("SUMMARY");
+  console.log('SUMMARY');
   console.log(
-    "───────────────────────────────────────────────────────────────",
+    '───────────────────────────────────────────────────────────────',
   );
   console.log(`Total Dealers in SQL:        ${report.totalDealers}`);
   console.log(`Published Dealers:           ${report.publishedDealers}`);
   console.log(`Successfully Migrated:       ${report.successfullyMigrated}`);
   console.log(`Failed:                      ${report.failed}`);
   console.log(`Skipped (unpublished):       ${report.skipped}`);
-  console.log("");
+  console.log('');
 
   if (report.warnings.length > 0) {
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
-    console.log("WARNINGS");
+    console.log('WARNINGS');
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     report.warnings.forEach((w) => {
       console.log(`- Dealer ID ${w.dealerId}: ${w.error} (field: ${w.field})`);
     });
-    console.log("");
+    console.log('');
   }
 
   if (report.errors.length > 0) {
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
-    console.log("ERRORS");
+    console.log('ERRORS');
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
     report.errors.forEach((e) => {
       console.log(`- Dealer ID ${e.dealerId}: ${e.error} (field: ${e.field})`);
     });
-    console.log("");
+    console.log('');
   }
 
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
 }
 
@@ -121,7 +121,7 @@ function printReport(report: MigrationReport): void {
  * Rollback migration - delete all migrated stores
  */
 async function rollbackMigration(): Promise<void> {
-  console.log("🔄 Starting rollback...");
+  console.log('🔄 Starting rollback...');
 
   const client = createMigrationClient();
   const config = getClientConfig();
@@ -134,7 +134,7 @@ async function rollbackMigration(): Promise<void> {
   const ids: string[] = await client.fetch(query);
 
   if (ids.length === 0) {
-    console.log("✅ No migrated stores found to rollback");
+    console.log('✅ No migrated stores found to rollback');
     return;
   }
 
@@ -164,15 +164,15 @@ async function runMigration(
   verbose: boolean,
   limit: number,
 ): Promise<void> {
-  console.log("🚀 Starting Dealer → Store migration");
+  console.log('🚀 Starting Dealer → Store migration');
   console.log(
-    `   Mode: ${dryRun ? "DRY RUN (no changes will be made)" : "PRODUCTION"}`,
+    `   Mode: ${dryRun ? 'DRY RUN (no changes will be made)' : 'PRODUCTION'}`,
   );
   console.log(`   SQL File: ${sqlPath}`);
   if (limit > 0) {
     console.log(`   Limit: First ${limit} dealers only`);
   }
-  console.log("");
+  console.log('');
 
   // Initialize report
   const report: MigrationReport = {
@@ -187,12 +187,12 @@ async function runMigration(
   };
 
   // Read SQL file
-  console.log("📖 Reading SQL file...");
+  console.log('📖 Reading SQL file...');
   const absolutePath = resolve(process.cwd(), sqlPath);
   let sqlContent: string;
 
   try {
-    sqlContent = readFileSync(absolutePath, "utf-8");
+    sqlContent = readFileSync(absolutePath, 'utf-8');
     console.log(
       `   File size: ${(sqlContent.length / 1024 / 1024).toFixed(2)} MB`,
     );
@@ -203,7 +203,7 @@ async function runMigration(
   }
 
   // Parse dealers from SQL
-  console.log("🔍 Parsing Dealer records...");
+  console.log('🔍 Parsing Dealer records...');
   const allDealers = parseDealersFromSQL(sqlContent);
   report.totalDealers = allDealers.length;
   console.log(`   Found ${allDealers.length} dealer records`);
@@ -226,7 +226,7 @@ async function runMigration(
   console.log(`   Total to migrate: ${dealers.length}`);
 
   // Transform dealers to stores
-  console.log("🔄 Transforming data...");
+  console.log('🔄 Transforming data...');
   const documents: SanityStoreDocument[] = [];
 
   for (const dealer of dealers) {
@@ -245,7 +245,7 @@ async function runMigration(
         dealerId: dealer.ID,
         sanityId: document._id,
         success: false,
-        error: validationErrors.map((e) => e.error).join("; "),
+        error: validationErrors.map((e) => e.error).join('; '),
       });
 
       if (verbose) {
@@ -277,9 +277,9 @@ async function runMigration(
 
   // Dry run - just show what would be created
   if (dryRun) {
-    console.log("\n📋 DRY RUN - Documents that would be created:");
+    console.log('\n📋 DRY RUN - Documents that would be created:');
     console.log(
-      "───────────────────────────────────────────────────────────────",
+      '───────────────────────────────────────────────────────────────',
     );
 
     documents.forEach((doc) => {
@@ -289,12 +289,12 @@ async function runMigration(
 
     report.successfullyMigrated = documents.length;
     printReport(report);
-    console.log("\n💡 Run without --dry-run to actually create documents");
+    console.log('\n💡 Run without --dry-run to actually create documents');
     return;
   }
 
   // Production run - create documents in Sanity
-  console.log("\n📤 Creating documents in Sanity...");
+  console.log('\n📤 Creating documents in Sanity...');
 
   const client = createMigrationClient();
   const config = getClientConfig();
@@ -323,7 +323,7 @@ async function runMigration(
       batch.forEach((doc) => {
         report.successfullyMigrated++;
         report.results.push({
-          dealerId: parseInt(doc._id.replace("store-dealer-", ""), 10),
+          dealerId: parseInt(doc._id.replace('store-dealer-', ''), 10),
           sanityId: doc._id,
           success: true,
         });
@@ -338,7 +338,7 @@ async function runMigration(
       batch.forEach((doc) => {
         report.failed++;
         report.results.push({
-          dealerId: parseInt(doc._id.replace("store-dealer-", ""), 10),
+          dealerId: parseInt(doc._id.replace('store-dealer-', ''), 10),
           sanityId: doc._id,
           success: false,
           error: String(error),
@@ -350,7 +350,7 @@ async function runMigration(
   printReport(report);
 
   if (report.failed === 0) {
-    console.log("\n✅ Migration completed successfully!");
+    console.log('\n✅ Migration completed successfully!');
   } else {
     console.log(`\n⚠️  Migration completed with ${report.failed} errors`);
   }
@@ -362,20 +362,20 @@ async function runMigration(
 async function main(): Promise<void> {
   const { dryRun, rollback, sqlPath, verbose, limit } = parseArgs();
 
-  console.log("");
+  console.log('');
   console.log(
-    "╔═══════════════════════════════════════════════════════════════╗",
+    '╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║            AUDIOFAST DATA MIGRATION                           ║",
+    '║            AUDIOFAST DATA MIGRATION                           ║',
   );
   console.log(
-    "║            Dealers → Stores                                   ║",
+    '║            Dealers → Stores                                   ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝",
+    '╚═══════════════════════════════════════════════════════════════╝',
   );
-  console.log("");
+  console.log('');
 
   if (rollback) {
     await rollbackMigration();
@@ -386,6 +386,6 @@ async function main(): Promise<void> {
 
 // Run
 main().catch((error) => {
-  console.error("❌ Migration failed with error:", error);
+  console.error('❌ Migration failed with error:', error);
   process.exit(1);
 });

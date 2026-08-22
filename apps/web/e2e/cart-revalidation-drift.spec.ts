@@ -1,6 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from '@playwright/test';
 
-import { E2E_EMAIL_PREFIXES } from "./constants";
+import { E2E_EMAIL_PREFIXES } from './constants';
 import {
   acceptCheckoutRequiredConsents,
   assertPaidOrderByEmail,
@@ -11,10 +11,10 @@ import {
   readSingleStoredCartLine,
   submitCheckoutPayment,
   updatePricingVariantBasePrice,
-} from "./utils";
+} from './utils';
 
-test.describe("cart revalidation drift", () => {
-  test("blocks first checkout submit when product pricing changes, then accepts refreshed totals", async ({
+test.describe('cart revalidation drift', () => {
+  test('blocks first checkout submit when product pricing changes, then accepts refreshed totals', async ({
     page,
   }, testInfo) => {
     const email = buildE2eEmail({
@@ -34,7 +34,7 @@ test.describe("cart revalidation drift", () => {
       originalBasePriceCents = line.unitPriceCents;
 
       if (!variantId || originalBasePriceCents === null) {
-        throw new Error("Prestige cart line did not expose variant pricing.");
+        throw new Error('Prestige cart line did not expose variant pricing.');
       }
 
       await fillCheckoutDetails(page, { email });
@@ -47,7 +47,7 @@ test.describe("cart revalidation drift", () => {
 
       await submitCheckoutPayment(page);
 
-      await expect(page.getByText("Ceny zostały zaktualizowane")).toBeVisible();
+      await expect(page.getByText('Ceny zostały zaktualizowane')).toBeVisible();
       await expect(page).toHaveURL(/\/koszyk\/twoje-dane\/$/);
 
       await submitCheckoutPayment(page);

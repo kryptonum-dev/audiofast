@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { useProductsLoading } from "../../products/ProductsLoadingContext";
-import ArrowButton from "../ArrowButton";
-import styles from "./styles.module.scss";
+import { useProductsLoading } from '../../products/ProductsLoadingContext';
+import ArrowButton from '../ArrowButton';
+import styles from './styles.module.scss';
 
 type PaginationProps = {
   totalItems: number;
@@ -35,7 +35,7 @@ export default function Pagination({
     if (scrollTargetId) {
       const target = document.getElementById(scrollTargetId);
       if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
   };
@@ -51,7 +51,7 @@ export default function Pagination({
   // Helper to trigger pagination loading with optimistic update
   const handlePageNavigate = (pageNum: number) => {
     setPendingPage(pageNum);
-    startLoading("pagination");
+    startLoading('pagination');
     scrollToTarget();
   };
 
@@ -59,7 +59,7 @@ export default function Pagination({
   if (totalPages <= 1) return null;
 
   const getPageUrl = (pageNum: number): string => {
-    if (pageNum < 1 || pageNum > totalPages) return "#";
+    if (pageNum < 1 || pageNum > totalPages) return '#';
 
     // Clone the existing search params properly using the URLSearchParams constructor
     const params = searchParams
@@ -67,9 +67,9 @@ export default function Pagination({
       : new URLSearchParams();
 
     if (pageNum > 1) {
-      params.set("page", pageNum.toString());
+      params.set('page', pageNum.toString());
     } else {
-      params.delete("page");
+      params.delete('page');
     }
 
     const queryString = params.toString();
@@ -77,21 +77,18 @@ export default function Pagination({
   };
 
   const getPaginationCase = ():
-    | "FEW_PAGES"
-    | "NEAR_START"
-    | "IN_MIDDLE"
-    | "NEAR_END" => {
-    if (totalPages <= 5) return "FEW_PAGES";
-    if (displayPage <= 2) return "NEAR_START";
-    if (displayPage >= totalPages - 1) return "NEAR_END";
-    return "IN_MIDDLE";
+    'FEW_PAGES' | 'NEAR_START' | 'IN_MIDDLE' | 'NEAR_END' => {
+    if (totalPages <= 5) return 'FEW_PAGES';
+    if (displayPage <= 2) return 'NEAR_START';
+    if (displayPage >= totalPages - 1) return 'NEAR_END';
+    return 'IN_MIDDLE';
   };
 
   const renderPageNumbers = () => {
     const paginationCase = getPaginationCase();
 
     switch (paginationCase) {
-      case "FEW_PAGES":
+      case 'FEW_PAGES':
         // Show all pages: 1, 2, 3, 4, 5
         return Array.from({ length: totalPages }, (_, i) => i + 1).map(
           (pageNum) => (
@@ -105,7 +102,7 @@ export default function Pagination({
           ),
         );
 
-      case "NEAR_START":
+      case 'NEAR_START':
         // Show: 1, 2, 3, ..., last
         return (
           <>
@@ -137,7 +134,7 @@ export default function Pagination({
           </>
         );
 
-      case "IN_MIDDLE":
+      case 'IN_MIDDLE':
         // Show: 1, ..., current, ..., last
         return (
           <>
@@ -164,7 +161,7 @@ export default function Pagination({
           </>
         );
 
-      case "NEAR_END":
+      case 'NEAR_END':
         // Show: 1, ..., (last-2), (last-1), last
         return (
           <>
@@ -202,7 +199,7 @@ export default function Pagination({
     const prevPage = displayPage - 1;
     if (prevPage >= 1) {
       setPendingPage(prevPage);
-      startLoading("pagination");
+      startLoading('pagination');
       scrollToTarget();
       router.push(getPageUrl(prevPage), { scroll: false });
     }
@@ -212,7 +209,7 @@ export default function Pagination({
     const nextPage = displayPage + 1;
     if (nextPage <= totalPages) {
       setPendingPage(nextPage);
-      startLoading("pagination");
+      startLoading('pagination');
       scrollToTarget();
       router.push(getPageUrl(nextPage), { scroll: false });
     }

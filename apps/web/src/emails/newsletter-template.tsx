@@ -152,9 +152,7 @@ export const NewsletterTemplate = ({
                 {item.name}
               </Link>
             </Heading>
-            {item.subtitle && (
-              <Text style={subtitleText}>{item.subtitle}</Text>
-            )}
+            {item.subtitle && <Text style={subtitleText}>{item.subtitle}</Text>}
             {item.shortDescriptionHtml ? (
               <div
                 dangerouslySetInnerHTML={{ __html: item.shortDescriptionHtml }}
@@ -259,9 +257,7 @@ export const NewsletterTemplate = ({
           </Section>
 
           {sectionOrder.map((key) => (
-            <React.Fragment key={key}>
-              {sectionRenderers[key]()}
-            </React.Fragment>
+            <React.Fragment key={key}>{sectionRenderers[key]()}</React.Fragment>
           ))}
 
           {/* Footer */}

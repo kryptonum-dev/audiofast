@@ -291,9 +291,8 @@ export async function sendAdminOrderStatusCustomerEmail(args: {
   }
 
   try {
-    const { sendAdminOrderStatusUpdateEmail } = await import(
-      './order-status-email'
-    );
+    const { sendAdminOrderStatusUpdateEmail } =
+      await import('./order-status-email');
 
     await sendAdminOrderStatusUpdateEmail({
       order: args.row,

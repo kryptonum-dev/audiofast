@@ -1,4 +1,4 @@
-import { BarChartIcon, BasketIcon, TagsIcon } from "@sanity/icons";
+import { BarChartIcon, BasketIcon, TagsIcon } from '@sanity/icons';
 import {
   Box,
   Card,
@@ -9,10 +9,10 @@ import {
   Tab,
   TabList,
   TabPanel,
-} from "@sanity/ui";
-import type { ReactNode } from "react";
+} from '@sanity/ui';
+import type { ReactNode } from 'react';
 
-import type { AdminArea } from "../types.js";
+import type { AdminArea } from '../types.js';
 
 type AdminShellProps = {
   activeArea: AdminArea;
@@ -27,26 +27,26 @@ const ADMIN_AREAS: {
   disabled?: boolean;
 }[] = [
   {
-    id: "orders",
-    label: "Zamówienia",
+    id: 'orders',
+    label: 'Zamówienia',
     icon: BasketIcon,
   },
   {
-    id: "coupons",
-    label: "Kupony",
+    id: 'coupons',
+    label: 'Kupony',
     icon: TagsIcon,
   },
   {
-    id: "analytics",
-    label: "Analityka",
+    id: 'analytics',
+    label: 'Analityka',
     icon: BarChartIcon,
   },
 ];
 
 const ADMIN_AREA_TITLES: Record<AdminArea, string> = {
-  orders: "Zamówienia",
-  coupons: "Kupony",
-  analytics: "Analityka",
+  orders: 'Zamówienia',
+  coupons: 'Kupony',
+  analytics: 'Analityka',
 };
 
 export function AdminShell({

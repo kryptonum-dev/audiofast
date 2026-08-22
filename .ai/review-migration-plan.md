@@ -355,19 +355,19 @@ SANITY_API_TOKEN="xxx" bun run apps/studio/scripts/migration/reviews/migrate-rev
 ### 6.5 Review Type Detection Logic
 
 ```typescript
-function determineReviewType(row: CSVRow): "page" | "pdf" | "external" {
+function determineReviewType(row: CSVRow): 'page' | 'pdf' | 'external' {
   // External link takes priority
   if (row.ExternalLink && row.ExternalLink.trim()) {
-    return "external";
+    return 'external';
   }
 
   // PDF file
   if (row.PDFFileID && parseInt(row.PDFFileID) > 0 && row.PDFFilename) {
-    return "pdf";
+    return 'pdf';
   }
 
   // Default to page content
-  return "page";
+  return 'page';
 }
 ```
 
@@ -490,7 +490,7 @@ Target: Sanity CDN (file asset)
 The legacy server has SSL issues. Use the same approach as brand migration:
 
 ```typescript
-import * as https from "node:https";
+import * as https from 'node:https';
 
 const insecureAgent = new https.Agent({
   rejectUnauthorized: false,
@@ -532,17 +532,17 @@ The `Title` field may contain HTML entities or formatting:
 function convertTitleToPortableText(title: string): PortableTextBlock[] {
   // Clean HTML entities
   const cleaned = title
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/<[^>]+>/g, "") // Strip HTML tags
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/<[^>]+>/g, '') // Strip HTML tags
     .trim();
 
   return [
     {
-      _type: "block",
+      _type: 'block',
       _key: generateKey(),
-      style: "normal",
-      children: [{ _type: "span", _key: generateKey(), text: cleaned }],
+      style: 'normal',
+      children: [{ _type: 'span', _key: generateKey(), text: cleaned }],
     },
   ];
 }

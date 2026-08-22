@@ -309,7 +309,7 @@ The brand page already has:
 {
   brand.stores && Array.isArray(brand.stores) && brand.stores.length > 0 && (
     <StoreLocations
-      customId='gdzie-kupic'
+      customId="gdzie-kupic"
       stores={brand.stores.filter((s) => s !== null)}
     />
   );
@@ -390,14 +390,15 @@ ORDER BY st_brand.Title, d.Company;
 ```
 
 **Expected CSV columns:**
-| Column | Description |
-|--------|-------------|
-| `ID` | Relationship ID |
-| `DealerID` | Legacy dealer/store ID |
-| `BrandID` | Legacy brand ID |
-| `BrandSlug` | Brand URL segment |
-| `BrandName` | Brand name |
-| `DealerName` | Dealer/store name |
+
+| Column       | Description            |
+| ------------ | ---------------------- |
+| `ID`         | Relationship ID        |
+| `DealerID`   | Legacy dealer/store ID |
+| `BrandID`    | Legacy brand ID        |
+| `BrandSlug`  | Brand URL segment      |
+| `BrandName`  | Brand name             |
+| `DealerName` | Dealer/store name      |
 
 **Save as:** `csv/brands/brands-dealers.csv`
 
@@ -443,13 +444,13 @@ interface BrandMapping {
 async function migrateBrandStores() {
   // 1. Load CSV data
   const relations = await parseCSV<BrandDealerRelation>(
-    'csv/brands/brands-dealers.csv'
+    'csv/brands/brands-dealers.csv',
   );
 
   // 2. Query Sanity for all stores and brands
   const stores = await client.fetch(`*[_type == "store"]{_id, name}`);
   const brands = await client.fetch(
-    `*[_type == "brand"]{"id": _id, "slug": slug.current, name}`
+    `*[_type == "brand"]{"id": _id, "slug": slug.current, name}`,
   );
 
   // 3. Build store mapping (using store migration pattern)

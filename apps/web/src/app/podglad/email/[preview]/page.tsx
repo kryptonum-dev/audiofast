@@ -180,8 +180,8 @@ function SupabaseOtpPreviewNote() {
           <p style={otpCardLabelStyle}>Przykładowa treść domeny maila</p>
           <p style={otpCodeStyle}>123456</p>
           <p style={otpTextStyle}>
-            Kod jest jednorazowy i według założeń B2C jest ważny przez 15
-            minut. To nie jest magic link.
+            Kod jest jednorazowy i według założeń B2C jest ważny przez 15 minut.
+            To nie jest magic link.
           </p>
         </div>
       </section>

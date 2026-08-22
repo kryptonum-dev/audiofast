@@ -9,9 +9,7 @@ import type {
 } from '@/src/emails/order-confirmation-template';
 import { OrderConfirmationTemplate } from '@/src/emails/order-confirmation-template';
 import { buildB2cOrderDetailEmailUrl } from '@/src/global/b2c/email-urls';
-import {
-  getTransactionalReplyToEmail,
-} from '@/src/global/email/service';
+import { getTransactionalReplyToEmail } from '@/src/global/email/service';
 import { sendB2cCustomerTransactionalEmail } from '@/src/global/b2c/customer-transactional-email';
 import { createAdminClient } from '@/src/global/supabase/admin';
 import type { Database, Json } from '@/src/global/supabase/database.types';

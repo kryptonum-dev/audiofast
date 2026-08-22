@@ -4,29 +4,29 @@
  * This script updates brand._ref from "drafts.brand-X" to "brand-X"
  */
 
-import { createClient } from "@sanity/client";
+import { createClient } from '@sanity/client';
 
 const client = createClient({
-  projectId: "fsw3likv",
-  dataset: "production",
-  apiVersion: "2024-01-01",
+  projectId: 'fsw3likv',
+  dataset: 'production',
+  apiVersion: '2024-01-01',
   token: process.env.SANITY_API_TOKEN,
   useCdn: false,
 });
 
 async function fixDraftBrandReferences() {
   console.log(
-    "\n╔═══════════════════════════════════════════════════════════════╗",
+    '\n╔═══════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║      FIX DRAFT BRAND REFERENCES IN PRODUCTS                    ║",
+    '║      FIX DRAFT BRAND REFERENCES IN PRODUCTS                    ║',
   );
   console.log(
-    "╚═══════════════════════════════════════════════════════════════╝\n",
+    '╚═══════════════════════════════════════════════════════════════╝\n',
   );
 
   if (!process.env.SANITY_API_TOKEN) {
-    console.error("❌ SANITY_API_TOKEN is required");
+    console.error('❌ SANITY_API_TOKEN is required');
     process.exit(1);
   }
 
@@ -42,7 +42,7 @@ async function fixDraftBrandReferences() {
   );
 
   if (productsWithDraftRefs.length === 0) {
-    console.log("✅ No products need fixing!");
+    console.log('✅ No products need fixing!');
     return;
   }
 
@@ -56,9 +56,9 @@ async function fixDraftBrandReferences() {
     byBrand.get(brandRef)!.push({ _id: product._id, name: product.name });
   }
 
-  console.log("📋 Products by draft brand:");
+  console.log('📋 Products by draft brand:');
   for (const [brandRef, products] of byBrand) {
-    const publishedId = brandRef.replace("drafts.", "");
+    const publishedId = brandRef.replace('drafts.', '');
     console.log(
       `\n   ${brandRef} → ${publishedId} (${products.length} products)`,
     );
@@ -70,21 +70,21 @@ async function fixDraftBrandReferences() {
     }
   }
 
-  console.log("\n🔧 Fixing references...\n");
+  console.log('\n🔧 Fixing references...\n');
 
   let fixed = 0;
   let failed = 0;
 
   for (const product of productsWithDraftRefs) {
     const oldRef = product.brandRef;
-    const newRef = oldRef.replace("drafts.", "");
+    const newRef = oldRef.replace('drafts.', '');
 
     try {
       await client
         .patch(product._id)
         .set({
           brand: {
-            _type: "reference",
+            _type: 'reference',
             _ref: newRef,
           },
         })
@@ -101,23 +101,23 @@ async function fixDraftBrandReferences() {
   }
 
   console.log(
-    "\n═══════════════════════════════════════════════════════════════",
+    '\n═══════════════════════════════════════════════════════════════',
   );
   console.log(
-    "                         SUMMARY                                ",
+    '                         SUMMARY                                ',
   );
   console.log(
-    "═══════════════════════════════════════════════════════════════",
+    '═══════════════════════════════════════════════════════════════',
   );
   console.log(`   ✅ Fixed: ${fixed}`);
   console.log(`   ❌ Failed: ${failed}`);
-  console.log("\n✅ Done.\n");
-  console.log("ℹ️  You should now be able to publish the brands:");
-  console.log("   - Symposium");
-  console.log("   - Grimm Audio");
-  console.log("   - Dutch & Dutch");
-  console.log("   - Stealth Audio");
-  console.log("");
+  console.log('\n✅ Done.\n');
+  console.log('ℹ️  You should now be able to publish the brands:');
+  console.log('   - Symposium');
+  console.log('   - Grimm Audio');
+  console.log('   - Dutch & Dutch');
+  console.log('   - Stealth Audio');
+  console.log('');
 }
 
 fixDraftBrandReferences().catch(console.error);

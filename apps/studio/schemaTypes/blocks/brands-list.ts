@@ -1,67 +1,67 @@
-import { Tag } from "lucide-react";
-import { defineField, defineType } from "sanity";
+import { Tag } from 'lucide-react';
+import { defineField, defineType } from 'sanity';
 
-import { toPlainText } from "../../utils/helper";
-import { customPortableText } from "../portableText";
+import { toPlainText } from '../../utils/helper';
+import { customPortableText } from '../portableText';
 
-const title = "Lista wszystkich marek";
+const title = 'Lista wszystkich marek';
 
 export const brandsList = defineType({
-  name: "brandsList",
+  name: 'brandsList',
   icon: Tag,
-  type: "object",
+  type: 'object',
   title,
   description:
-    "Sekcja wyświetlająca wszystkie marki z automatycznie pobieraną listą logo marek.",
+    'Sekcja wyświetlająca wszystkie marki z automatycznie pobieraną listą logo marek.',
   fields: [
     customPortableText({
-      name: "heading",
-      title: "Nagłówek sekcji",
-      description: "Główny nagłówek sekcji",
-      type: "heading",
+      name: 'heading',
+      title: 'Nagłówek sekcji',
+      description: 'Główny nagłówek sekcji',
+      type: 'heading',
     }),
     customPortableText({
-      name: "description",
-      title: "Opis sekcji",
+      name: 'description',
+      title: 'Opis sekcji',
       description:
-        "Tekst opisowy wyświetlany pod nagłówkiem, wyjaśniający informacje o markach.",
+        'Tekst opisowy wyświetlany pod nagłówkiem, wyjaśniający informacje o markach.',
     }),
     customPortableText({
-      name: "ctaText",
-      title: "Tekst CTA (opcjonalny)",
-      description: "Tekst zachęty wyświetlany poniżej listy marek",
+      name: 'ctaText',
+      title: 'Tekst CTA (opcjonalny)',
+      description: 'Tekst zachęty wyświetlany poniżej listy marek',
       include: {
-        styles: ["normal"],
-        decorators: ["strong", "em"],
-        annotations: ["customLink"],
+        styles: ['normal'],
+        decorators: ['strong', 'em'],
+        annotations: ['customLink'],
       },
       optional: true,
     }),
     defineField({
-      name: "brandsDisplayMode",
-      title: "Tryb wyświetlania marek",
-      type: "string",
-      description: "Wybierz, które marki mają być wyświetlane",
+      name: 'brandsDisplayMode',
+      title: 'Tryb wyświetlania marek',
+      type: 'string',
+      description: 'Wybierz, które marki mają być wyświetlane',
       options: {
         list: [
-          { title: "Wszystkie marki", value: "all" },
-          { title: "Wybrane ręcznie marki", value: "manual" },
+          { title: 'Wszystkie marki', value: 'all' },
+          { title: 'Wybrane ręcznie marki', value: 'manual' },
         ],
-        layout: "radio",
+        layout: 'radio',
       },
-      initialValue: "all",
+      initialValue: 'all',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: "selectedBrands",
-      title: "Wybrane marki",
-      type: "array",
-      description: "Wybierz marki do wyświetlenia (minimum 6 marek)",
-      hidden: ({ parent }) => parent?.brandsDisplayMode !== "manual",
+      name: 'selectedBrands',
+      title: 'Wybrane marki',
+      type: 'array',
+      description: 'Wybierz marki do wyświetlenia (minimum 6 marek)',
+      hidden: ({ parent }) => parent?.brandsDisplayMode !== 'manual',
       of: [
         {
-          type: "reference",
-          to: [{ type: "brand" }],
+          type: 'reference',
+          to: [{ type: 'brand' }],
           options: {
             filter: ({ document }) => {
               const selectedIds = Array.isArray(document?.selectedBrands)
@@ -70,7 +70,7 @@ export const brandsList = defineType({
                     .filter(Boolean)
                 : [];
               return {
-                filter: "!(_id in $selectedIds)",
+                filter: '!(_id in $selectedIds)',
                 params: { selectedIds },
               };
             },
@@ -80,9 +80,9 @@ export const brandsList = defineType({
       validation: (Rule) =>
         Rule.custom((value, context) => {
           const parent = context.parent as any;
-          if (parent?.brandsDisplayMode === "manual") {
+          if (parent?.brandsDisplayMode === 'manual') {
             if (!value || !Array.isArray(value) || value.length < 6) {
-              return "Wybierz co najmniej 6 marek";
+              return 'Wybierz co najmniej 6 marek';
             }
           }
           return true;
@@ -91,14 +91,14 @@ export const brandsList = defineType({
   ],
   preview: {
     select: {
-      heading: "heading",
-      brandsDisplayMode: "brandsDisplayMode",
-      selectedBrandsCount: "selectedBrands",
+      heading: 'heading',
+      brandsDisplayMode: 'brandsDisplayMode',
+      selectedBrandsCount: 'selectedBrands',
     },
     prepare: ({ heading, brandsDisplayMode, selectedBrandsCount }) => {
       const modeLabel =
-        brandsDisplayMode === "all"
-          ? "Wszystkie marki"
+        brandsDisplayMode === 'all'
+          ? 'Wszystkie marki'
           : `Wybrane ręcznie (${Array.isArray(selectedBrandsCount) ? selectedBrandsCount.length : 0})`;
 
       return {

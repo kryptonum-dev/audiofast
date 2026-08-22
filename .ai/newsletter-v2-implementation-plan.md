@@ -309,8 +309,8 @@ function ContentGroup({
 }) {
   return (
     <Stack space={3}>
-      <Flex align='center' justify='space-between'>
-        <Flex align='center' gap={3}>
+      <Flex align="center" justify="space-between">
+        <Flex align="center" gap={3}>
           <Switch checked={isEnabled} onChange={onToggleEnabled} />
           <Heading
             size={1}
@@ -318,14 +318,15 @@ function ContentGroup({
               opacity: isEnabled ? 1 : 0.5,
               cursor: isEnabled ? 'pointer' : 'default',
             }}
-            onClick={onToggleExpanded}>
+            onClick={onToggleExpanded}
+          >
             {title} ({items.length})
           </Heading>
         </Flex>
         {isEnabled && (
           <Button
             icon={isExpanded ? ChevronUpIcon : ChevronDownIcon}
-            mode='bleed'
+            mode="bleed"
             onClick={onToggleExpanded}
           />
         )}
@@ -336,25 +337,27 @@ function ContentGroup({
           {items.map((item, index) => (
             <Flex
               key={item._id}
-              align='center'
+              align="center"
               padding={3}
               style={{
                 borderBottom:
                   index < items.length - 1 ? '1px solid #e6e8eb' : 'none',
               }}
-              gap={3}>
+              gap={3}
+            >
               <Checkbox
                 checked={selectedIds.has(item._id)}
                 onChange={() => onToggle(item._id)}
               />
               <Box flex={1}>
                 <Text
-                  weight='semibold'
+                  weight="semibold"
                   size={1}
-                  style={{ marginBottom: '0.75rem' }}>
+                  style={{ marginBottom: '0.75rem' }}
+                >
                   {item.title || item.name}
                 </Text>
-                <Text size={1} muted textOverflow='ellipsis'>
+                <Text size={1} muted textOverflow="ellipsis">
                   {new Date(item.publishDate).toLocaleDateString('pl-PL')} •{' '}
                   {item.shortDescription ||
                     item.description?.substring(0, 60) ||
@@ -365,7 +368,7 @@ function ContentGroup({
               {item.image && (
                 <img
                   src={item.image}
-                  alt=''
+                  alt=""
                   style={{
                     width: 40,
                     height: 40,
@@ -392,7 +395,7 @@ Add before the content lists:
 {
   /* Hero Configuration */
 }
-<Card padding={4} tone='transparent' radius={2} border>
+<Card padding={4} tone="transparent" radius={2} border>
   <Stack space={4}>
     <Heading size={1}>Konfiguracja nagłówka newslettera</Heading>
 
@@ -667,9 +670,9 @@ Replace the existing header section:
 <Section style={heroSection}>
   <Img
     src={hero.image}
-    width='600'
-    height='auto'
-    alt='Audiofast Newsletter'
+    width="600"
+    height="auto"
+    alt="Audiofast Newsletter"
     style={heroImage}
   />
   {hero.text && hero.text.length > 0 && (
@@ -740,8 +743,8 @@ Update to use publication description when available:
               src={item.image}
               alt={item.name}
               style={itemImage}
-              width='600'
-              height='auto'
+              width="600"
+              height="auto"
             />
           )}
           <Text style={metaText}>{item.brandName || 'Audiofast'}</Text>
@@ -831,7 +834,7 @@ interface GeneratePayload {
 if (!body.hero?.image) {
   return NextResponse.json(
     { error: 'Hero image is required' },
-    { status: 400, headers: corsHeaders }
+    { status: 400, headers: corsHeaders },
   );
 }
 
@@ -841,7 +844,7 @@ const emailHtml = await render(
     content,
     dateRange: dateRangeDisplay,
     hero: body.hero,
-  })
+  }),
 );
 ```
 
@@ -900,7 +903,7 @@ Update button text logic:
       text={
         publication._type === 'product' ? 'Zobacz produkt' : 'Czytaj artykuł'
       }
-      variant='primary'
+      variant="primary"
     />
   );
 }

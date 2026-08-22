@@ -25,13 +25,12 @@ import get from 'lodash.get';
 import pluralize, { singular } from 'pluralize';
 import { useMemo, useRef } from 'react';
 import { Preview } from 'sanity';
-import type { ListItem} from 'sanity/structure';
+import type { ListItem } from 'sanity/structure';
 import { usePaneRouter } from 'sanity/structure';
 
 import BulkActionsMenu from './BulkActionsMenu';
 import ColumnSelector from './ColumnSelector';
-import type {
-  Options} from './constants';
+import type { Options } from './constants';
 import {
   defaultDatetimeFields,
   orderColumnDefault,
@@ -43,11 +42,8 @@ import {
 } from './context';
 import createEmitter from './createEmitter';
 import FilterDropdown from './FilterDropdown';
-import type {
-  SelectableField} from './helpers/getSelectableFields';
-import {
-  getSelectableFields
-} from './helpers/getSelectableFields';
+import type { SelectableField } from './helpers/getSelectableFields';
+import { getSelectableFields } from './helpers/getSelectableFields';
 import ReferenceFilter from './ReferenceFilter';
 import SearchField from './SearchField';
 import {
@@ -649,7 +645,15 @@ function createBulkActionsTable(
         // Prevents the component from NOT re-rendering when switching listItems
         key: itemId,
         type: 'component',
-        options: { type, client, schema, refresh, title, filters, referenceFilters },
+        options: {
+          type,
+          client,
+          schema,
+          refresh,
+          title,
+          filters,
+          referenceFilters,
+        },
         component: BulkActionsTableParent,
         menuItems: [
           S.menuItem()

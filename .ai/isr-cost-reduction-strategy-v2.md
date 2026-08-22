@@ -14,26 +14,26 @@ The v1 changes added specific tags **alongside** broad tags but never stopped th
 
 ### Current Top Offenders (from Vercel Observability)
 
-| Route | Writes | Reads | Ratio | Write Units |
-|-------|--------|-------|-------|-------------|
-| `/ [slug]` (CMS pages) | 250 | 83 | 3:1 | 23K |
-| `/marki/dan-dagostino` | 266 | 10 | 26:1 | 11K |
-| `/produkty` | 486 | 24 | 20:1 | 9.2K |
-| `/marki/shunyata-research` | 176 | 9 | 19:1 | 6.7K |
-| + PPR segments | ~150 each | — | — | ~3K each |
+| Route                      | Writes    | Reads | Ratio | Write Units |
+| -------------------------- | --------- | ----- | ----- | ----------- |
+| `/ [slug]` (CMS pages)     | 250       | 83    | 3:1   | 23K         |
+| `/marki/dan-dagostino`     | 266       | 10    | 26:1  | 11K         |
+| `/produkty`                | 486       | 24    | 20:1  | 9.2K        |
+| `/marki/shunyata-research` | 176       | 9     | 19:1  | 6.7K        |
+| + PPR segments             | ~150 each | —     | —     | ~3K each    |
 
 ---
 
 ## Changes Overview
 
-| # | Change | Est. Impact |
-|---|--------|-------------|
-| 1 | Kill denormalization cascade (webhook filter) | ~50-60% reduction |
-| 2 | Targeted brand invalidation (slug-specific brand tags) | ~15-20% reduction |
-| 3 | Slug-specific CMS page tags | ~5-10% reduction |
-| 4 | Kill `cacheLife('hours')` on 5 functions | ~367 writes/day saved |
-| 5 | Narrow reverse lookup scope | Small (prevents future bloat) |
-| 6 | Fix `ProductsListing` tag bug (`product` vs `products`) | Correctness fix |
+| #   | Change                                                  | Est. Impact                   |
+| --- | ------------------------------------------------------- | ----------------------------- |
+| 1   | Kill denormalization cascade (webhook filter)           | ~50-60% reduction             |
+| 2   | Targeted brand invalidation (slug-specific brand tags)  | ~15-20% reduction             |
+| 3   | Slug-specific CMS page tags                             | ~5-10% reduction              |
+| 4   | Kill `cacheLife('hours')` on 5 functions                | ~367 writes/day saved         |
+| 5   | Narrow reverse lookup scope                             | Small (prevents future bloat) |
+| 6   | Fix `ProductsListing` tag bug (`product` vs `products`) | Correctness fix               |
 
 ---
 
@@ -88,7 +88,7 @@ Brand pages all share `cacheTag('brand')`. The product dependency map includes `
 // apps/web/src/app/marki/[slug]/page.tsx
 async function getBrandContent(slug: string) {
   'use cache';
-  cacheTag('brand', `brand:${slug}`);  // Add slug-specific tag
+  cacheTag('brand', `brand:${slug}`); // Add slug-specific tag
   cacheLife('weeks');
   // ...
 }
@@ -106,7 +106,7 @@ product: ['products'],  // Was: ['products', 'brand']
 // In the revalidation route, for product type changes:
 const productBrand = await client.fetch(
   `*[_type == "product" && _id == $id][0]{ "brandSlug": brand->slug.current }`,
-  { id: doc._id }
+  { id: doc._id },
 );
 if (productBrand?.brandSlug) {
   const slug = extractSlug(productBrand.brandSlug);
@@ -179,13 +179,13 @@ Five functions use `cacheLife('hours')`, causing ~11K time-based revalidations o
 
 ### Files to Change
 
-| File | Function | Current | New |
-|------|----------|---------|-----|
-| `apps/web/src/app/blog/(listing)/page.tsx` | `getStaticPageData` | `'hours'` | `'weeks'` |
-| `apps/web/src/app/blog/(listing)/kategoria/[category]/page.tsx` | `getStaticBlogData` | `'hours'` | `'weeks'` |
-| `apps/web/src/app/blog/(listing)/kategoria/[category]/page.tsx` | `getPageContent` | `'hours'` | `'weeks'` |
+| File                                                                | Function                  | Current   | New       |
+| ------------------------------------------------------------------- | ------------------------- | --------- | --------- |
+| `apps/web/src/app/blog/(listing)/page.tsx`                          | `getStaticPageData`       | `'hours'` | `'weeks'` |
+| `apps/web/src/app/blog/(listing)/kategoria/[category]/page.tsx`     | `getStaticBlogData`       | `'hours'` | `'weeks'` |
+| `apps/web/src/app/blog/(listing)/kategoria/[category]/page.tsx`     | `getPageContent`          | `'hours'` | `'weeks'` |
 | `apps/web/src/app/produkty/(listing)/kategoria/[category]/page.tsx` | `getStaticFilterMetadata` | `'hours'` | `'weeks'` |
-| `apps/web/src/app/produkty/(listing)/kategoria/[category]/page.tsx` | `getPageContent` | `'hours'` | `'weeks'` |
+| `apps/web/src/app/produkty/(listing)/kategoria/[category]/page.tsx` | `getPageContent`          | `'hours'` | `'weeks'` |
 
 ### Expected Result
 
@@ -243,22 +243,22 @@ Product listings on brand pages and listing pages now correctly invalidate when 
 
 ## Implementation Order
 
-| Step | Change | Risk |
-|------|--------|------|
-| 1 | Kill denorm cascade (Sanity webhook filter) | Low — dashboard config only |
-| 2 | Targeted brand invalidation (code changes) | Medium — needs testing |
-| 3 | Slug-specific CMS page tags | Low — straightforward |
-| 4 | Kill `cacheLife('hours')` | Low — 5 simple edits |
-| 5 | Narrow reverse lookup scope | Low — query tweak |
-| 6 | Fix `ProductsListing` tag bug | Low — 1 line change |
+| Step | Change                                      | Risk                        |
+| ---- | ------------------------------------------- | --------------------------- |
+| 1    | Kill denorm cascade (Sanity webhook filter) | Low — dashboard config only |
+| 2    | Targeted brand invalidation (code changes)  | Medium — needs testing      |
+| 3    | Slug-specific CMS page tags                 | Low — straightforward       |
+| 4    | Kill `cacheLife('hours')`                   | Low — 5 simple edits        |
+| 5    | Narrow reverse lookup scope                 | Low — query tweak           |
+| 6    | Fix `ProductsListing` tag bug               | Low — 1 line change         |
 
 ---
 
 ## Expected Outcome
 
-| Metric | Before (v1) | After (v2) |
-|--------|-------------|------------|
-| Brand edit ISR writes | ~930 (31 webhooks × 30 brand pages) | ~32 (1 webhook × 30 brand pages + listings) |
-| Product edit ISR writes | ~30+ brand pages + listings | ~3-5 (1 brand page + listing + related) |
-| Time-based writes/day | ~367 | 0 |
-| Daily ISR cost | ~$3-9 | Target: <$0.50 |
+| Metric                  | Before (v1)                         | After (v2)                                  |
+| ----------------------- | ----------------------------------- | ------------------------------------------- |
+| Brand edit ISR writes   | ~930 (31 webhooks × 30 brand pages) | ~32 (1 webhook × 30 brand pages + listings) |
+| Product edit ISR writes | ~30+ brand pages + listings         | ~3-5 (1 brand page + listing + related)     |
+| Time-based writes/day   | ~367                                | 0                                           |
+| Daily ISR cost          | ~$3-9                               | Target: <$0.50                              |

@@ -1,8 +1,6 @@
 'use server';
 
-import type {
-  CartCouponDefinition,
-} from '@/src/global/b2c/cart/types';
+import type { CartCouponDefinition } from '@/src/global/b2c/cart/types';
 import {
   mapCouponRowToDefinition,
   normalizeCouponCode,

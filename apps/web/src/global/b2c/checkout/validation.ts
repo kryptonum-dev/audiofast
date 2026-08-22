@@ -52,8 +52,7 @@ export type CheckoutValidationFailure = {
 };
 
 export type CheckoutValidationResult<T> =
-  | CheckoutValidationSuccess<T>
-  | CheckoutValidationFailure;
+  CheckoutValidationSuccess<T> | CheckoutValidationFailure;
 
 const PHONE_SANITIZE_PATTERN = /[\s()-]/g;
 const PHONE_PL_PREFIX_PATTERN = /^(\+48|0048|48)/;
@@ -453,10 +452,10 @@ function mergeSubmitErrors(
 function hasAnyErrors(errors: CheckoutSubmitErrors): boolean {
   return Boolean(
     errors.formErrors.length > 0 ||
-      errors.contact ||
-      errors.shippingAddress ||
-      errors.invoice ||
-      errors.consents,
+    errors.contact ||
+    errors.shippingAddress ||
+    errors.invoice ||
+    errors.consents,
   );
 }
 

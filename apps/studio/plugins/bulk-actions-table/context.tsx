@@ -1,18 +1,10 @@
-import type {
-  Dispatch,
-  ReactNode,
-  SetStateAction} from 'react';
-import {
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import type { Dispatch, ReactNode, SetStateAction } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 import type { ObjectField, SchemaType } from 'sanity';
 
-import type { Options} from './constants';
+import type { Options } from './constants';
 import { orderColumnDefault, rowsPerPage } from './constants';
-import type { ColumnOrder} from './hooks/useStickyStateOrder';
+import type { ColumnOrder } from './hooks/useStickyStateOrder';
 import { useStickyStateOrder } from './hooks/useStickyStateOrder';
 import { useStickyStateSet } from './hooks/useStickyStateSet';
 import type { FilterConfig, ReferenceFilterConfig } from './types';
@@ -125,9 +117,7 @@ export const BulkActionsTableProvider = ({
         const idList = Array.from(ids)
           .map((id) => `"${id}"`)
           .join(', ');
-        refFilterClauses.push(
-          ` && ${refFilter.referenceField} in [${idList}]`,
-        );
+        refFilterClauses.push(` && ${refFilter.referenceField} in [${idList}]`);
       }
     }
 

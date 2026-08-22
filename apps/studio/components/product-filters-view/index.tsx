@@ -1,1 +1,1 @@
-export { ProductFiltersView } from "./product-filters-view";
+export { ProductFiltersView } from './product-filters-view';

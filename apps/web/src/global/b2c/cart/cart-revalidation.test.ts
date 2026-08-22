@@ -142,7 +142,9 @@ describe('cart-revalidation', () => {
     );
 
     expect(
-      state.lines[0]?.lineType === 'cpo' ? state.lines[0].availabilityStatus : null,
+      state.lines[0]?.lineType === 'cpo'
+        ? state.lines[0].availabilityStatus
+        : null,
     ).toBe('sold_out');
     expect(state.lines[0]?.issues).toEqual([
       {

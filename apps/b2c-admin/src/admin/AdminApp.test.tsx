@@ -1,14 +1,14 @@
-import { render, screen } from "../test/render.js";
-import { userEvent } from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
+import { render, screen } from '../test/render.js';
+import { userEvent } from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
 
-import { AdminApp } from "./AdminApp.js";
+import { AdminApp } from './AdminApp.js';
 
-vi.mock("./components/AnalyticsView.js", () => ({
+vi.mock('./components/AnalyticsView.js', () => ({
   AnalyticsView: () => <div>Analytics screen</div>,
 }));
 
-vi.mock("./components/CouponCreateView.js", () => ({
+vi.mock('./components/CouponCreateView.js', () => ({
   CouponCreateView: ({ onBack }: { onBack: () => void }) => (
     <div>
       Coupon create screen
@@ -19,7 +19,7 @@ vi.mock("./components/CouponCreateView.js", () => ({
   ),
 }));
 
-vi.mock("./components/CouponEditView.js", () => ({
+vi.mock('./components/CouponEditView.js', () => ({
   CouponEditView: ({
     couponId,
     onBack,
@@ -36,7 +36,7 @@ vi.mock("./components/CouponEditView.js", () => ({
   ),
 }));
 
-vi.mock("./components/CouponsListing.js", () => ({
+vi.mock('./components/CouponsListing.js', () => ({
   CouponsListing: ({
     onCreateCoupon,
     onOpenCoupon,
@@ -49,14 +49,14 @@ vi.mock("./components/CouponsListing.js", () => ({
       <button type="button" onClick={onCreateCoupon}>
         Create coupon
       </button>
-      <button type="button" onClick={() => onOpenCoupon("coupon-1")}>
+      <button type="button" onClick={() => onOpenCoupon('coupon-1')}>
         Open coupon
       </button>
     </div>
   ),
 }));
 
-vi.mock("./components/OrderDetailView.js", () => ({
+vi.mock('./components/OrderDetailView.js', () => ({
   OrderDetailView: ({
     onBack,
     orderNumber,
@@ -73,7 +73,7 @@ vi.mock("./components/OrderDetailView.js", () => ({
   ),
 }));
 
-vi.mock("./components/OrdersListing.js", () => ({
+vi.mock('./components/OrdersListing.js', () => ({
   OrdersListing: ({
     onOpenOrder,
   }: {
@@ -81,53 +81,53 @@ vi.mock("./components/OrdersListing.js", () => ({
   }) => (
     <div>
       Orders screen
-      <button type="button" onClick={() => onOpenOrder("AF-2026-00001")}>
+      <button type="button" onClick={() => onOpenOrder('AF-2026-00001')}>
         Open order
       </button>
     </div>
   ),
 }));
 
-describe("AdminApp", () => {
-  it("defaults the App SDK shell to orders and navigates between top-level areas", async () => {
+describe('AdminApp', () => {
+  it('defaults the App SDK shell to orders and navigates between top-level areas', async () => {
     const user = userEvent.setup();
 
-    window.history.replaceState(null, "", "/");
+    window.history.replaceState(null, '', '/');
     render(<AdminApp />);
 
-    expect(screen.getByText("Orders screen")).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/orders");
+    expect(screen.getByText('Orders screen')).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/orders');
 
-    await user.click(screen.getByRole("tab", { name: /Kupony/ }));
-    expect(screen.getByText("Coupons screen")).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/coupons");
+    await user.click(screen.getByRole('tab', { name: /Kupony/ }));
+    expect(screen.getByText('Coupons screen')).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/coupons');
 
-    await user.click(screen.getByRole("tab", { name: /Analityka/ }));
-    expect(screen.getByText("Analytics screen")).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/analytics");
+    await user.click(screen.getByRole('tab', { name: /Analityka/ }));
+    expect(screen.getByText('Analytics screen')).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/analytics');
   });
 
-  it("routes to order and coupon details through callback navigation", async () => {
+  it('routes to order and coupon details through callback navigation', async () => {
     const user = userEvent.setup();
 
-    window.history.replaceState(null, "", "/orders");
+    window.history.replaceState(null, '', '/orders');
     render(<AdminApp />);
 
-    await user.click(screen.getByRole("button", { name: "Open order" }));
+    await user.click(screen.getByRole('button', { name: 'Open order' }));
     expect(
-      screen.getByText("Order detail screen AF-2026-00001"),
+      screen.getByText('Order detail screen AF-2026-00001'),
     ).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/orders/AF-2026-00001");
+    expect(window.location.pathname).toBe('/orders/AF-2026-00001');
 
-    await user.click(screen.getByRole("button", { name: "Back from order" }));
-    await user.click(screen.getByRole("tab", { name: /Kupony/ }));
-    await user.click(screen.getByRole("button", { name: "Create coupon" }));
-    expect(screen.getByText("Coupon create screen")).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/coupons/new");
+    await user.click(screen.getByRole('button', { name: 'Back from order' }));
+    await user.click(screen.getByRole('tab', { name: /Kupony/ }));
+    await user.click(screen.getByRole('button', { name: 'Create coupon' }));
+    expect(screen.getByText('Coupon create screen')).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/coupons/new');
 
-    await user.click(screen.getByRole("button", { name: "Back from create" }));
-    await user.click(screen.getByRole("button", { name: "Open coupon" }));
-    expect(screen.getByText("Coupon edit screen coupon-1")).toBeInTheDocument();
-    expect(window.location.pathname).toBe("/coupons/coupon-1");
+    await user.click(screen.getByRole('button', { name: 'Back from create' }));
+    await user.click(screen.getByRole('button', { name: 'Open coupon' }));
+    expect(screen.getByText('Coupon edit screen coupon-1')).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/coupons/coupon-1');
   });
 });

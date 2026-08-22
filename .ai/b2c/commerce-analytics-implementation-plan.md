@@ -676,12 +676,15 @@ export function trackB2cBeginCheckout(cart: CartState): string;
 export function trackB2cAddPaymentInfo(args: {
   cart: CartState;
   orderNumber: string;
-  paymentType: "przelewy24";
+  paymentType: 'przelewy24';
 }): string;
 export function trackB2cPurchase(payload: B2cPurchaseAnalyticsPayload): string;
 
 // Later, if needed beyond v1:
-export function trackB2cRemoveFromCart(line: CartLine, quantity?: number): string;
+export function trackB2cRemoveFromCart(
+  line: CartLine,
+  quantity?: number,
+): string;
 ```
 
 The exact API can be adjusted during implementation, but the key rule is that components should call semantic helpers rather than assemble raw `trackEvent` payloads.
@@ -906,7 +909,7 @@ export type CheckoutPurchaseAnalyticsPayload = {
   grandTotalCents: number;
   couponCode: string | null;
   items: Array<{
-    lineType: "standard" | "cpo";
+    lineType: 'standard' | 'cpo';
     productKey: string;
     productName: string;
     brandName: string;

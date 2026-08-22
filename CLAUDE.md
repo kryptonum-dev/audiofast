@@ -7,6 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Audiofast is a premium audio distributor's site (Next.js storefront + Sanity CMS) that is being extended with a **B2C direct-sales layer** (cart, checkout, online payment, orders, customer accounts, coupons, returns).
 
 Read these existing docs before deep work — do not duplicate them here:
+
 - `CODEBASE_OVERVIEW.md` — definitive deep-dive on the storefront, Sanity content model, GROQ query system, caching/revalidation, filtering, and Studio internals. **Note:** it predates the B2C layer and still says the site is "not e-commerce" — that is now outdated (see below).
 - `.ai/b2c/` — the living planning hub for the B2C initiative. Start at `.ai/b2c/README.md` → `b2c-implementation-overview.md` → `open-threads.md`. Business rules, architecture decisions, phases, and the production-readiness runbook all live here.
 - `.cursor/rules/` — enforced conventions: `scss.mdc` (also `.cursorrules`), `next.mdc`, `sanity-rules.mdc`. Follow these; SCSS in particular has strict nesting/units/transition rules.
@@ -14,6 +15,7 @@ Read these existing docs before deep work — do not duplicate them here:
 ## Monorepo layout
 
 Turborepo + Bun workspaces. Three apps:
+
 - `apps/web` — Next.js 16 (App Router, React 19 + Compiler, Turbopack) public storefront **and** all B2C runtime (checkout, payment, order/customer APIs, server actions).
 - `apps/studio` — Sanity v5 Studio (editorial content model, migrations, custom tools/plugins).
 - `apps/b2c-admin` — separate **Sanity App SDK** React app (runs via `sanity dev`, not Next.js) for operators: Orders, Coupons, Analytics.
@@ -35,6 +37,7 @@ bun run typegen              # regenerate Sanity types (extract schema + typegen
 ```
 
 App-specific (run inside the app dir):
+
 - `apps/web`: `bun run test` / `bun run test:run` (vitest), `bun run test:e2e` (Playwright, uses `.env.e2e.local`), `bun run generate:redirects`, `bun run verify:build-env`. The web `build` script runs `verify:build-env` then `generate:redirects` before `next build`.
 - `apps/studio`: `bun run migrate:denormalize` (+ `:dry`) for batch denorm recompute; studio build/deploy bump Node heap to 8 GB.
 - `apps/b2c-admin`: `bun run test` (vitest).
@@ -51,6 +54,7 @@ This is the most important architectural fact:
 ## B2C layer (apps/web)
 
 The transactional code is concentrated under `apps/web/src/global/b2c/` and `apps/web/src/components/b2c/`, with routes under Polish-named segments:
+
 - Storefront flow: `app/koszyk/` (cart) → `app/koszyk/twoje-dane/` (checkout data) → payment → `app/podziekowania-za-zakup/[orderNumber]/` (thank-you).
 - Customer account: `app/konto-klienta/` (email-OTP auth, order history, invoice download, profile edit).
 - Domain logic: `global/b2c/{cart,checkout,configuration,customer-auth,utils,...}` — heavily unit-tested; prefer extending these pure modules over inlining logic in components/routes.

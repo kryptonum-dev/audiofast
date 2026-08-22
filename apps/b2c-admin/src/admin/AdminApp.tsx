@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 import {
   getAnalyticsPath,
@@ -9,22 +9,22 @@ import {
   getOrdersPath,
   parseAdminRoute,
   type AdminRoute,
-} from "./router.js";
-import { AdminShell } from "./components/AdminShell.js";
-import { CouponCreateView } from "./components/CouponCreateView.js";
-import { CouponEditView } from "./components/CouponEditView.js";
-import { CouponsListing } from "./components/CouponsListing.js";
-import { OrderDetailView } from "./components/OrderDetailView.js";
-import { OrdersListing } from "./components/OrdersListing.js";
-import type { AdminArea } from "./types.js";
-import { AnalyticsView } from "./components/AnalyticsView.js";
+} from './router.js';
+import { AdminShell } from './components/AdminShell.js';
+import { CouponCreateView } from './components/CouponCreateView.js';
+import { CouponEditView } from './components/CouponEditView.js';
+import { CouponsListing } from './components/CouponsListing.js';
+import { OrderDetailView } from './components/OrderDetailView.js';
+import { OrdersListing } from './components/OrdersListing.js';
+import type { AdminArea } from './types.js';
+import { AnalyticsView } from './components/AnalyticsView.js';
 
 export function AdminApp() {
   const [route, setRoute] = useState<AdminRoute>(() => parseAdminRoute());
 
   useEffect(() => {
-    if (window.location.pathname === "/") {
-      window.history.replaceState(null, "", getOrdersPath());
+    if (window.location.pathname === '/') {
+      window.history.replaceState(null, '', getOrdersPath());
       setRoute(parseAdminRoute());
     }
 
@@ -32,58 +32,58 @@ export function AdminApp() {
       setRoute(parseAdminRoute());
     }
 
-    window.addEventListener("popstate", handlePopState);
+    window.addEventListener('popstate', handlePopState);
 
-    return () => window.removeEventListener("popstate", handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   function navigate(path: string) {
-    window.history.pushState(null, "", path);
+    window.history.pushState(null, '', path);
     setRoute(parseAdminRoute(path));
   }
 
   function navigateArea(area: AdminArea) {
-    if (area === "analytics") {
+    if (area === 'analytics') {
       navigate(getAnalyticsPath());
       return;
     }
 
-    if (area === "coupons") {
+    if (area === 'coupons') {
       navigate(getCouponsPath());
       return;
     }
 
-    if (area === "orders") {
+    if (area === 'orders') {
       navigate(getOrdersPath());
     }
   }
 
   const activeArea =
-    route.screen === "coupons" ||
-    route.screen === "couponCreate" ||
-    route.screen === "couponEdit"
-      ? "coupons"
-      : route.screen === "analytics"
-        ? "analytics"
-      : "orders";
+    route.screen === 'coupons' ||
+    route.screen === 'couponCreate' ||
+    route.screen === 'couponEdit'
+      ? 'coupons'
+      : route.screen === 'analytics'
+        ? 'analytics'
+        : 'orders';
 
   return (
     <AdminShell activeArea={activeArea} onAreaChange={navigateArea}>
-      {route.screen === "couponCreate" ? (
+      {route.screen === 'couponCreate' ? (
         <CouponCreateView onBack={() => navigate(getCouponsPath())} />
-      ) : route.screen === "analytics" ? (
+      ) : route.screen === 'analytics' ? (
         <AnalyticsView />
-      ) : route.screen === "couponEdit" ? (
+      ) : route.screen === 'couponEdit' ? (
         <CouponEditView
           couponId={route.couponId}
           onBack={() => navigate(getCouponsPath())}
         />
-      ) : route.screen === "coupons" ? (
+      ) : route.screen === 'coupons' ? (
         <CouponsListing
           onCreateCoupon={() => navigate(getCouponCreatePath())}
           onOpenCoupon={(couponId) => navigate(getCouponEditPath(couponId))}
         />
-      ) : route.screen === "orderDetail" ? (
+      ) : route.screen === 'orderDetail' ? (
         <OrderDetailView
           orderNumber={route.orderNumber}
           onBack={() => navigate(getOrdersPath())}

@@ -1,10 +1,10 @@
-import type { PortableTextTypeComponentProps } from "@portabletext/react";
+import type { PortableTextTypeComponentProps } from '@portabletext/react';
 
-import type { SanityRawImage } from "../../shared/Image";
-import { Slider } from "./Slider";
+import type { SanityRawImage } from '../../shared/Image';
+import { Slider } from './Slider';
 
 type ImageSliderValue = {
-  _type: "ptImageSlider";
+  _type: 'ptImageSlider';
   _key: string;
   images?: SanityRawImage[];
 };

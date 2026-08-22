@@ -65,12 +65,7 @@ const BrandImagePlaceholder = styled.div`
   justify-content: center;
 `;
 
-
-function ReferenceFilterItem({
-  config,
-}: {
-  config: ReferenceFilterConfig;
-}) {
+function ReferenceFilterItem({ config }: { config: ReferenceFilterConfig }) {
   const {
     options: { client },
     selectedReferenceIds,
@@ -84,7 +79,8 @@ function ReferenceFilterItem({
   const [searchTerm, setSearchTerm] = useState('');
   const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  const selectedIds = selectedReferenceIds[config.referenceField] || new Set<string>();
+  const selectedIds =
+    selectedReferenceIds[config.referenceField] || new Set<string>();
 
   // Fetch reference options
   useEffect(() => {
@@ -93,12 +89,8 @@ function ReferenceFilterItem({
     async function fetchOptions() {
       setLoading(true);
       try {
-        const projection =
-          config.groqProjection ||
-          '{ _id, name }';
-        const extraFilter = config.groqFilter
-          ? ` && ${config.groqFilter}`
-          : '';
+        const projection = config.groqProjection || '{ _id, name }';
+        const extraFilter = config.groqFilter ? ` && ${config.groqFilter}` : '';
         const results = await client.fetch<ReferenceOption[]>(
           `*[_type == $refType && !(_id in path("drafts.**"))${extraFilter}] | order(name asc) ${projection}`,
           { refType: config.referenceType },
@@ -122,9 +114,7 @@ function ReferenceFilterItem({
   const filteredOptions = useMemo(() => {
     if (!searchTerm) return options;
     const lower = searchTerm.toLowerCase();
-    return options.filter((opt) =>
-      opt.name?.toLowerCase().includes(lower),
-    );
+    return options.filter((opt) => opt.name?.toLowerCase().includes(lower));
   }, [options, searchTerm]);
 
   const toggleOption = useCallback(
@@ -138,7 +128,12 @@ function ReferenceFilterItem({
       setSelectedReferenceIds(config.referenceField, next);
       paginatedClient.setPage(0);
     },
-    [selectedIds, setSelectedReferenceIds, config.referenceField, paginatedClient],
+    [
+      selectedIds,
+      setSelectedReferenceIds,
+      config.referenceField,
+      paginatedClient,
+    ],
   );
 
   const clearAll = useCallback(() => {
@@ -264,10 +259,7 @@ function ReferenceFilter() {
   return (
     <>
       {referenceFilterConfigs.map((config) => (
-        <ReferenceFilterItem
-          key={config.referenceField}
-          config={config}
-        />
+        <ReferenceFilterItem key={config.referenceField} config={config} />
       ))}
     </>
   );

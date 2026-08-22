@@ -10,20 +10,23 @@
  * Dry run:  bun run migrate:denormalize --dry-run
  */
 
-import { computeDenormalizedFields } from "../utils/denormalize-product";
-import { createMigrationClient, getClientConfig } from "./migration/products/utils/sanity-client";
+import { computeDenormalizedFields } from '../utils/denormalize-product';
+import {
+  createMigrationClient,
+  getClientConfig,
+} from './migration/products/utils/sanity-client';
 
 // Parse command line arguments
-const isDryRun = process.argv.includes("--dry-run");
-const isVerbose = process.argv.includes("--verbose");
+const isDryRun = process.argv.includes('--dry-run');
+const isVerbose = process.argv.includes('--verbose');
 
 async function migrateAllProducts() {
   const config = getClientConfig();
-  console.log("🚀 Starting product denormalization migration...");
+  console.log('🚀 Starting product denormalization migration...');
   console.log(`   Project: ${config.projectId}`);
   console.log(`   Dataset: ${config.dataset}`);
-  console.log(`   Mode: ${isDryRun ? "DRY RUN (no changes)" : "LIVE"}`);
-  console.log("");
+  console.log(`   Mode: ${isDryRun ? 'DRY RUN (no changes)' : 'LIVE'}`);
+  console.log('');
 
   const client = createMigrationClient();
 
@@ -51,7 +54,7 @@ async function migrateAllProducts() {
   `);
 
   console.log(`📦 Found ${products.length} products to migrate`);
-  console.log("");
+  console.log('');
 
   let successCount = 0;
   let errorCount = 0;
@@ -70,9 +73,15 @@ async function migrateAllProducts() {
 
           if (isVerbose) {
             console.log(`   Processing: ${product.name || product._id}`);
-            console.log(`     Brand: ${denormalized.denormBrandName} (${denormalized.denormBrandSlug})`);
-            console.log(`     Categories: ${denormalized.denormCategorySlugs.join(", ") || "none"}`);
-            console.log(`     Filter keys: ${denormalized.denormFilterKeys.length}`);
+            console.log(
+              `     Brand: ${denormalized.denormBrandName} (${denormalized.denormBrandSlug})`,
+            );
+            console.log(
+              `     Categories: ${denormalized.denormCategorySlugs.join(', ') || 'none'}`,
+            );
+            console.log(
+              `     Filter keys: ${denormalized.denormFilterKeys.length}`,
+            );
           }
 
           return {
@@ -81,7 +90,10 @@ async function migrateAllProducts() {
             patch: denormalized,
           };
         } catch (error) {
-          console.error(`❌ Error processing ${product.name || product._id}:`, error);
+          console.error(
+            `❌ Error processing ${product.name || product._id}:`,
+            error,
+          );
           errorCount++;
           return null;
         }
@@ -105,18 +117,22 @@ async function migrateAllProducts() {
           transaction.patch(id, (p) => p.set(patch));
         }
 
-        await transaction.commit({ visibility: "async" });
+        await transaction.commit({ visibility: 'async' });
         successCount += validPatches.length;
       }
     }
 
     const progress = Math.min(i + BATCH_SIZE, products.length);
     const progressPct = Math.round((progress / products.length) * 100);
-    
+
     if (isDryRun) {
-      console.log(`📋 [DRY RUN] Would migrate ${progress}/${products.length} products (${progressPct}%)`);
+      console.log(
+        `📋 [DRY RUN] Would migrate ${progress}/${products.length} products (${progressPct}%)`,
+      );
     } else {
-      console.log(`✅ Migrated ${progress}/${products.length} products (${progressPct}%)`);
+      console.log(
+        `✅ Migrated ${progress}/${products.length} products (${progressPct}%)`,
+      );
     }
 
     // Small delay between batches to avoid rate limits
@@ -125,19 +141,21 @@ async function migrateAllProducts() {
     }
   }
 
-  console.log("");
-  console.log("🎉 Migration complete!");
+  console.log('');
+  console.log('🎉 Migration complete!');
   console.log(`   Success: ${isDryRun ? skippedCount : successCount}`);
   console.log(`   Errors: ${errorCount}`);
 
   if (isDryRun) {
-    console.log("");
-    console.log("ℹ️  This was a dry run. Run without --dry-run to apply changes.");
+    console.log('');
+    console.log(
+      'ℹ️  This was a dry run. Run without --dry-run to apply changes.',
+    );
   }
 }
 
 // Run migration
 migrateAllProducts().catch((error) => {
-  console.error("💥 Migration failed:", error);
+  console.error('💥 Migration failed:', error);
   process.exit(1);
 });

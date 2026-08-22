@@ -35,11 +35,11 @@ Product technical data (`technicalData.rows[].values[].content[]`) uses a standa
 
 ## Documents & Fields to Scan
 
-| Document Type    | Portable Text Fields (with `customLink`)             | Other Link Fields                                      |
-| ---------------- | ---------------------------------------------------- | ------------------------------------------------------ |
+| Document Type    | Portable Text Fields (with `customLink`)                                                  | Other Link Fields                                             |
+| ---------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | **Product**      | `shortDescription`, `details.heading`, `details.productDetailContent`, pageBuilder blocks | `technicalData.rows[].values[].content[]` (`link` annotation) |
-| **Blog Article** | `title`, `description`, `content`, pageBuilder blocks | —                                                      |
-| **Review**       | `title`, `description`, `content`, pageBuilder blocks | `externalUrl` (direct string field)                    |
+| **Blog Article** | `title`, `description`, `content`, pageBuilder blocks                                     | —                                                             |
+| **Review**       | `title`, `description`, `content`, pageBuilder blocks                                     | `externalUrl` (direct string field)                           |
 
 > **PageBuilder blocks** are arrays of typed objects, each potentially containing their own portable text fields with links. The script must handle this recursively.
 
@@ -103,6 +103,7 @@ PageBuilder sections are arrays of typed objects. Each block type may contain po
 For each document, run the walkers on the appropriate fields:
 
 **Product:**
+
 1. `shortDescription` -> PT walker
 2. `details.heading` -> PT walker
 3. `details.productDetailContent` -> PT walker
@@ -110,12 +111,14 @@ For each document, run the walkers on the appropriate fields:
 5. `pageBuilder` -> PageBuilder walker
 
 **Blog Article:**
+
 1. `title` -> PT walker
 2. `description` -> PT walker
 3. `content` -> PT walker
 4. `pageBuilder` -> PageBuilder walker
 
 **Review:**
+
 1. `title` -> PT walker
 2. `description` -> PT walker
 3. `content` -> PT walker
@@ -164,6 +167,7 @@ apps/studio/scripts/migration/replace-stale-links/
 ```
 
 **CLI flags** (following project conventions):
+
 - `--dry-run` — report only, no writes
 - `--verbose` — detailed per-field logging
 - `--limit N` — process only N documents (for testing)
@@ -173,14 +177,14 @@ apps/studio/scripts/migration/replace-stale-links/
 
 ## Risks & Edge Cases
 
-| Risk | Mitigation |
-| ---- | ---------- |
-| PageBuilder blocks have deeply nested portable text | Recursive walker must handle arbitrary depth; test with known complex pages |
-| `href` field on `customUrl` is marked `readOnly` in schema | This is a Studio UI constraint, not an API constraint — patching via the Sanity client API will work |
-| Some "external" links intentionally point to old-format paths | The dry-run report enables human review before committing changes |
-| Draft vs Published documents | Fetch and patch both `drafts.*` and published document IDs |
-| URL format variations (http/https, www/no-www, trailing slash) | Normalize all URLs to path-only before matching |
-| Volume (~3,163 redirects x hundreds of documents) | Use a Map for O(1) lookups; batch processing prevents API rate limits |
+| Risk                                                           | Mitigation                                                                                           |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| PageBuilder blocks have deeply nested portable text            | Recursive walker must handle arbitrary depth; test with known complex pages                          |
+| `href` field on `customUrl` is marked `readOnly` in schema     | This is a Studio UI constraint, not an API constraint — patching via the Sanity client API will work |
+| Some "external" links intentionally point to old-format paths  | The dry-run report enables human review before committing changes                                    |
+| Draft vs Published documents                                   | Fetch and patch both `drafts.*` and published document IDs                                           |
+| URL format variations (http/https, www/no-www, trailing slash) | Normalize all URLs to path-only before matching                                                      |
+| Volume (~3,163 redirects x hundreds of documents)              | Use a Map for O(1) lookups; batch processing prevents API rate limits                                |
 
 ---
 

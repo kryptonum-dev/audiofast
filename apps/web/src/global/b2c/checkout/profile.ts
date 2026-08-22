@@ -306,10 +306,10 @@ export function canPrefillOrderFormFromProfile(
 ): boolean {
   return Boolean(
     sessionContext.isAuthenticated &&
-      sessionContext.authenticatedEmail &&
-      profile &&
-      profile.email.toLowerCase() ===
-        sessionContext.authenticatedEmail.toLowerCase(),
+    sessionContext.authenticatedEmail &&
+    profile &&
+    profile.email.toLowerCase() ===
+      sessionContext.authenticatedEmail.toLowerCase(),
   );
 }
 

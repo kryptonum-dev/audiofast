@@ -9,7 +9,9 @@ import {
 describe('customer auth returnTo helpers', () => {
   it('accepts protected customer-panel routes and the checkout return path', () => {
     expect(
-      sanitizeCustomerAccountReturnTo('/konto-klienta/zamowienia/AF-2026-00009'),
+      sanitizeCustomerAccountReturnTo(
+        '/konto-klienta/zamowienia/AF-2026-00009',
+      ),
     ).toBe('/konto-klienta/zamowienia/AF-2026-00009/');
     expect(sanitizeCustomerAccountReturnTo('/konto-klienta/dane-konta/')).toBe(
       '/konto-klienta/dane-konta/',
@@ -22,7 +24,9 @@ describe('customer auth returnTo helpers', () => {
   it('rejects non-allowlisted and external redirects', () => {
     expect(sanitizeCustomerAccountReturnTo('/koszyk/')).toBeNull();
     expect(sanitizeCustomerAccountReturnTo('/koszyk/podsumowanie/')).toBeNull();
-    expect(sanitizeCustomerAccountReturnTo('https://example.com/evil')).toBeNull();
+    expect(
+      sanitizeCustomerAccountReturnTo('https://example.com/evil'),
+    ).toBeNull();
     expect(sanitizeCustomerAccountReturnTo('//example.com/evil')).toBeNull();
   });
 
@@ -40,7 +44,9 @@ describe('customer auth returnTo helpers', () => {
 
   it('builds the gateway login URL only for safe destinations', () => {
     expect(
-      buildCustomerAccountGatewayHref('/konto-klienta/zamowienia/AF-2026-00009/'),
+      buildCustomerAccountGatewayHref(
+        '/konto-klienta/zamowienia/AF-2026-00009/',
+      ),
     ).toBe(
       '/konto-klienta/?returnTo=%2Fkonto-klienta%2Fzamowienia%2FAF-2026-00009%2F',
     );

@@ -18,33 +18,33 @@
  *   --json           Output results as JSON (for piping to a file)
  */
 
-import { createClient } from "@sanity/client";
+import { createClient } from '@sanity/client';
 
 // ============================================================================
 // Configuration
 // ============================================================================
 
-const PROJECT_ID = process.env.SANITY_PROJECT_ID || "fsw3likv";
-const DATASET = process.env.SANITY_DATASET || "production";
-const API_VERSION = "2024-01-01";
+const PROJECT_ID = process.env.SANITY_PROJECT_ID || 'fsw3likv';
+const DATASET = process.env.SANITY_DATASET || 'production';
+const API_VERSION = '2024-01-01';
 const TOKEN = process.env.SANITY_API_TOKEN;
 
 // Known domain variations for the audiofast.pl site
 const KNOWN_DOMAINS = [
-  "https://audiofast.pl",
-  "https://www.audiofast.pl",
-  "http://audiofast.pl",
-  "http://www.audiofast.pl",
+  'https://audiofast.pl',
+  'https://www.audiofast.pl',
+  'http://audiofast.pl',
+  'http://www.audiofast.pl',
 ];
 
 // CLI argument parsing
 const args = process.argv.slice(2);
-const isVerbose = args.includes("--verbose");
-const isJson = args.includes("--json");
-const limitIndex = args.indexOf("--limit");
+const isVerbose = args.includes('--verbose');
+const isJson = args.includes('--json');
+const limitIndex = args.indexOf('--limit');
 const limit =
   limitIndex !== -1 ? parseInt(args[limitIndex + 1], 10) : undefined;
-const typeIndex = args.indexOf("--type");
+const typeIndex = args.indexOf('--type');
 const filterType = typeIndex !== -1 ? args[typeIndex + 1] : undefined;
 
 // ============================================================================
@@ -65,10 +65,7 @@ interface StaleLink {
   matchedSource: string;
   newDestination: string;
   linkType:
-    | "customUrl-external"
-    | "customUrl-href"
-    | "link-annotation"
-    | "direct-url";
+    'customUrl-external' | 'customUrl-href' | 'link-annotation' | 'direct-url';
 }
 
 interface DiagnosticsReport {
@@ -77,7 +74,7 @@ interface DiagnosticsReport {
   redirectsCount: number;
   documentsScanned: {
     product: number;
-    "blog-article": number;
+    'blog-article': number;
     review: number;
   };
   totalStaleLinks: number;
@@ -86,7 +83,11 @@ interface DiagnosticsReport {
     byDocumentType: Record<string, number>;
     byLinkType: Record<string, number>;
     uniqueDocumentsAffected: number;
-    topRedirectsUsed: Array<{ source: string; destination: string; count: number }>;
+    topRedirectsUsed: Array<{
+      source: string;
+      destination: string;
+      count: number;
+    }>;
   };
 }
 
@@ -106,7 +107,7 @@ interface DiagnosticsReport {
  *   "https://external-site.com/page"   → null (not a local URL)
  */
 function normalizeToPath(url: string): string | null {
-  if (!url || typeof url !== "string") return null;
+  if (!url || typeof url !== 'string') return null;
 
   let path = url.trim();
 
@@ -119,27 +120,27 @@ function normalizeToPath(url: string): string | null {
   }
 
   // If it still starts with http(s)://, it's an external URL — skip
-  if (path.startsWith("http://") || path.startsWith("https://")) {
+  if (path.startsWith('http://') || path.startsWith('https://')) {
     return null;
   }
 
   // Skip mailto, tel, and anchor links
   if (
-    path.startsWith("mailto:") ||
-    path.startsWith("tel:") ||
-    path.startsWith("#")
+    path.startsWith('mailto:') ||
+    path.startsWith('tel:') ||
+    path.startsWith('#')
   ) {
     return null;
   }
 
   // Ensure leading slash
-  if (!path.startsWith("/")) {
-    path = "/" + path;
+  if (!path.startsWith('/')) {
+    path = '/' + path;
   }
 
   // Ensure trailing slash for consistency
-  if (!path.endsWith("/")) {
-    path = path + "/";
+  if (!path.endsWith('/')) {
+    path = path + '/';
   }
 
   // Lowercase for case-insensitive matching
@@ -163,16 +164,14 @@ function matchRedirect(
   if (match) return match;
 
   // Try without trailing slash
-  const withoutSlash = normalized.endsWith("/")
+  const withoutSlash = normalized.endsWith('/')
     ? normalized.slice(0, -1)
     : normalized;
   const matchNoSlash = redirectsMap.get(withoutSlash);
   if (matchNoSlash) return matchNoSlash;
 
   // Try with trailing slash
-  const withSlash = normalized.endsWith("/")
-    ? normalized
-    : normalized + "/";
+  const withSlash = normalized.endsWith('/') ? normalized : normalized + '/';
   const matchWithSlash = redirectsMap.get(withSlash);
   if (matchWithSlash) return matchWithSlash;
 
@@ -202,27 +201,36 @@ function findStaleLinks(
     doc.name ||
     (doc.title && Array.isArray(doc.title)
       ? extractPlainText(doc.title)
-      : "Unknown");
+      : 'Unknown');
 
   // Check direct URL fields first
-  if (doc._type === "review" && typeof doc.externalUrl === "string") {
+  if (doc._type === 'review' && typeof doc.externalUrl === 'string') {
     const redirect = matchRedirect(doc.externalUrl, redirectsMap);
     if (redirect) {
       results.push({
         documentId: doc._id,
         documentType: doc._type,
         documentName: docName,
-        fieldPath: "externalUrl",
+        fieldPath: 'externalUrl',
         oldUrl: doc.externalUrl,
         matchedSource: redirect.source,
         newDestination: redirect.destination,
-        linkType: "direct-url",
+        linkType: 'direct-url',
       });
     }
   }
 
   // Recursive walk
-  walkValue(doc, "", doc._id, doc._type, docName, redirectsMap, results, new Set());
+  walkValue(
+    doc,
+    '',
+    doc._id,
+    doc._type,
+    docName,
+    redirectsMap,
+    results,
+    new Set(),
+  );
 
   return results;
 }
@@ -237,7 +245,7 @@ function walkValue(
   results: StaleLink[],
   visited: Set<unknown>,
 ): void {
-  if (!value || typeof value !== "object") return;
+  if (!value || typeof value !== 'object') return;
 
   // Prevent circular references
   if (visited.has(value)) return;
@@ -264,34 +272,34 @@ function walkValue(
   // ---- Pattern 1: customUrl object (external type) ----
   // Detect objects with { type: "external", external: "..." }
   // These appear in: customLink annotations (.customLink), button URL fields (.url), etc.
-  if (obj.type === "external" && typeof obj.external === "string") {
+  if (obj.type === 'external' && typeof obj.external === 'string') {
     const redirect = matchRedirect(obj.external, redirectsMap);
     if (redirect) {
       results.push({
         documentId: docId,
         documentType: docType,
         documentName: docName,
-        fieldPath: path + ".external",
+        fieldPath: path + '.external',
         oldUrl: obj.external,
         matchedSource: redirect.source,
         newDestination: redirect.destination,
-        linkType: "customUrl-external",
+        linkType: 'customUrl-external',
       });
     }
 
     // Also check the href mirror field
-    if (typeof obj.href === "string" && obj.href !== "#") {
+    if (typeof obj.href === 'string' && obj.href !== '#') {
       const hrefRedirect = matchRedirect(obj.href, redirectsMap);
       if (hrefRedirect) {
         results.push({
           documentId: docId,
           documentType: docType,
           documentName: docName,
-          fieldPath: path + ".href",
+          fieldPath: path + '.href',
           oldUrl: obj.href,
           matchedSource: hrefRedirect.source,
           newDestination: hrefRedirect.destination,
-          linkType: "customUrl-href",
+          linkType: 'customUrl-href',
         });
       }
     }
@@ -299,18 +307,18 @@ function walkValue(
 
   // ---- Pattern 2: link annotation (technical data) ----
   // Detect objects with { _type: "link", href: "..." }
-  if (obj._type === "link" && typeof obj.href === "string") {
+  if (obj._type === 'link' && typeof obj.href === 'string') {
     const redirect = matchRedirect(obj.href, redirectsMap);
     if (redirect) {
       results.push({
         documentId: docId,
         documentType: docType,
         documentName: docName,
-        fieldPath: path + ".href",
+        fieldPath: path + '.href',
         oldUrl: obj.href,
         matchedSource: redirect.source,
         newDestination: redirect.destination,
-        linkType: "link-annotation",
+        linkType: 'link-annotation',
       });
     }
   }
@@ -318,7 +326,8 @@ function walkValue(
   // ---- Recurse into all properties ----
   for (const [key, val] of Object.entries(obj)) {
     // Skip Sanity metadata fields that can't contain URLs
-    if (key === "_rev" || key === "_createdAt" || key === "_updatedAt") continue;
+    if (key === '_rev' || key === '_createdAt' || key === '_updatedAt')
+      continue;
     walkValue(
       val,
       path ? `${path}.${key}` : key,
@@ -336,18 +345,20 @@ function walkValue(
  * Extract plain text from a portable text array (simple version for display).
  */
 function extractPlainText(blocks: any[]): string {
-  if (!Array.isArray(blocks)) return "Unknown";
-  return blocks
-    .filter((block) => block._type === "block")
-    .map((block) =>
-      (block.children || [])
-        .filter((child: any) => child._type === "span")
-        .map((span: any) => span.text || "")
-        .join(""),
-    )
-    .join(" ")
-    .trim()
-    .slice(0, 80) || "Unknown";
+  if (!Array.isArray(blocks)) return 'Unknown';
+  return (
+    blocks
+      .filter((block) => block._type === 'block')
+      .map((block) =>
+        (block.children || [])
+          .filter((child: any) => child._type === 'span')
+          .map((span: any) => span.text || '')
+          .join(''),
+      )
+      .join(' ')
+      .trim()
+      .slice(0, 80) || 'Unknown'
+  );
 }
 
 // ============================================================================
@@ -372,7 +383,7 @@ async function fetchRedirects(
   `);
 
   if (!doc?.redirects) {
-    throw new Error("No redirects document found in Sanity");
+    throw new Error('No redirects document found in Sanity');
   }
 
   const map = new Map<string, RedirectEntry>();
@@ -384,8 +395,8 @@ async function fetchRedirects(
       destination: r.destination,
     });
     // Also store with trailing slash if missing
-    if (!normalizedSource.endsWith("/")) {
-      map.set(normalizedSource + "/", {
+    if (!normalizedSource.endsWith('/')) {
+      map.set(normalizedSource + '/', {
         source: r.source,
         destination: r.destination,
       });
@@ -402,7 +413,7 @@ async function fetchDocuments(
 ): Promise<Record<string, any>[]> {
   // Fetch raw documents (no projection) to get all nested data
   // We exclude pure metadata and image/file assets to reduce payload
-  const limitClause = docLimit ? `[0...${docLimit}]` : "";
+  const limitClause = docLimit ? `[0...${docLimit}]` : '';
   const query = `*[_type == "${type}" && !(_id in path("drafts.**"))]${limitClause}`;
   return client.fetch(query);
 }
@@ -463,62 +474,60 @@ function generateReport(
 }
 
 function printReport(report: DiagnosticsReport): void {
-  console.log("");
-  console.log("═══════════════════════════════════════════════════════════");
-  console.log("  STALE LINK DIAGNOSTICS REPORT");
-  console.log("═══════════════════════════════════════════════════════════");
-  console.log("");
+  console.log('');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('  STALE LINK DIAGNOSTICS REPORT');
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('');
   console.log(`  Timestamp:    ${report.timestamp}`);
   console.log(`  Project:      ${report.config.projectId}`);
   console.log(`  Dataset:      ${report.config.dataset}`);
   console.log(`  Redirects:    ${report.redirectsCount} entries in table`);
-  console.log("");
+  console.log('');
 
-  console.log("─── Documents Scanned ──────────────────────────────────");
+  console.log('─── Documents Scanned ──────────────────────────────────');
+  console.log(`  Products:       ${report.documentsScanned.product ?? 0}`);
   console.log(
-    `  Products:       ${report.documentsScanned.product ?? 0}`,
+    `  Blog Articles:  ${report.documentsScanned['blog-article'] ?? 0}`,
   );
-  console.log(
-    `  Blog Articles:  ${report.documentsScanned["blog-article"] ?? 0}`,
-  );
-  console.log(
-    `  Reviews:        ${report.documentsScanned.review ?? 0}`,
-  );
-  console.log("");
+  console.log(`  Reviews:        ${report.documentsScanned.review ?? 0}`);
+  console.log('');
 
-  console.log("─── Results ────────────────────────────────────────────");
+  console.log('─── Results ────────────────────────────────────────────');
   console.log(`  Total stale links found:      ${report.totalStaleLinks}`);
   console.log(
     `  Unique documents affected:    ${report.summary.uniqueDocumentsAffected}`,
   );
-  console.log("");
+  console.log('');
 
   if (report.totalStaleLinks === 0) {
-    console.log("  ✅ No stale links found! All content links are clean.");
-    console.log("");
+    console.log('  ✅ No stale links found! All content links are clean.');
+    console.log('');
     return;
   }
 
-  console.log("─── Breakdown by Document Type ─────────────────────────");
+  console.log('─── Breakdown by Document Type ─────────────────────────');
   for (const [type, count] of Object.entries(report.summary.byDocumentType)) {
     console.log(`  ${type}: ${count} stale link(s)`);
   }
-  console.log("");
+  console.log('');
 
-  console.log("─── Breakdown by Link Type ─────────────────────────────");
+  console.log('─── Breakdown by Link Type ─────────────────────────────');
   for (const [type, count] of Object.entries(report.summary.byLinkType)) {
     console.log(`  ${type}: ${count}`);
   }
-  console.log("");
+  console.log('');
 
-  console.log("─── Top Redirect Sources Found in Content ──────────────");
+  console.log('─── Top Redirect Sources Found in Content ──────────────');
   for (const entry of report.summary.topRedirectsUsed) {
-    console.log(`  ${entry.source}  →  ${entry.destination}  (${entry.count}x)`);
+    console.log(
+      `  ${entry.source}  →  ${entry.destination}  (${entry.count}x)`,
+    );
   }
-  console.log("");
+  console.log('');
 
-  console.log("─── Detailed Findings ──────────────────────────────────");
-  console.log("");
+  console.log('─── Detailed Findings ──────────────────────────────────');
+  console.log('');
 
   // Group by document
   const byDoc = new Map<string, StaleLink[]>();
@@ -543,11 +552,11 @@ function printReport(report: DiagnosticsReport): void {
       console.log(`     │  New:   ${link.newDestination}`);
       console.log(`     │`);
     }
-    console.log("");
+    console.log('');
   }
 
-  console.log("═══════════════════════════════════════════════════════════");
-  console.log("");
+  console.log('═══════════════════════════════════════════════════════════');
+  console.log('');
 }
 
 // ============================================================================
@@ -556,11 +565,9 @@ function printReport(report: DiagnosticsReport): void {
 
 async function main() {
   if (!TOKEN) {
+    console.error('Error: SANITY_API_TOKEN environment variable is required.');
     console.error(
-      "Error: SANITY_API_TOKEN environment variable is required.",
-    );
-    console.error(
-      "Usage: SANITY_API_TOKEN=<token> bun run apps/studio/scripts/migration/replace-stale-links/index.ts",
+      'Usage: SANITY_API_TOKEN=<token> bun run apps/studio/scripts/migration/replace-stale-links/index.ts',
     );
     process.exit(1);
   }
@@ -574,26 +581,28 @@ async function main() {
   });
 
   if (!isJson) {
-    console.log("");
-    console.log("🔍 Stale Link Scanner — Stage 1: Diagnostics");
+    console.log('');
+    console.log('🔍 Stale Link Scanner — Stage 1: Diagnostics');
     console.log(`   Project: ${PROJECT_ID}`);
     console.log(`   Dataset: ${DATASET}`);
     if (filterType) console.log(`   Filter:  ${filterType} only`);
     if (limit) console.log(`   Limit:   ${limit} documents per type`);
-    console.log("");
+    console.log('');
   }
 
   // Step 1: Fetch redirects
-  if (!isJson) console.log("📋 Fetching redirects table...");
+  if (!isJson) console.log('📋 Fetching redirects table...');
   const redirectsMap = await fetchRedirects(client);
   if (!isJson)
-    console.log(`   Found ${redirectsMap.size} redirect entries (incl. slash variants)`);
-  if (!isJson) console.log("");
+    console.log(
+      `   Found ${redirectsMap.size} redirect entries (incl. slash variants)`,
+    );
+  if (!isJson) console.log('');
 
   // Step 2: Fetch and scan documents
   const documentTypes = filterType
     ? [filterType]
-    : ["product", "blog-article", "review"];
+    : ['product', 'blog-article', 'review'];
 
   const allStaleLinks: StaleLink[] = [];
   const documentCounts: Record<string, number> = {};
@@ -617,9 +626,7 @@ async function main() {
             (doc.title && Array.isArray(doc.title)
               ? extractPlainText(doc.title)
               : doc._id);
-          console.log(
-            `   ⚠️  ${docName}: ${staleLinks.length} stale link(s)`,
-          );
+          console.log(`   ⚠️  ${docName}: ${staleLinks.length} stale link(s)`);
           for (const link of staleLinks) {
             console.log(
               `       ${link.fieldPath}: ${link.oldUrl} → ${link.newDestination}`,
@@ -631,13 +638,17 @@ async function main() {
 
     if (!isJson)
       console.log(
-        `   ${typeStaleCount > 0 ? "⚠️ " : "✅ "}${typeStaleCount} stale link(s) found in ${type} documents`,
+        `   ${typeStaleCount > 0 ? '⚠️ ' : '✅ '}${typeStaleCount} stale link(s) found in ${type} documents`,
       );
-    if (!isJson) console.log("");
+    if (!isJson) console.log('');
   }
 
   // Step 3: Generate report
-  const report = generateReport(allStaleLinks, redirectsMap.size, documentCounts);
+  const report = generateReport(
+    allStaleLinks,
+    redirectsMap.size,
+    documentCounts,
+  );
 
   if (isJson) {
     console.log(JSON.stringify(report, null, 2));
@@ -652,6 +663,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error("💥 Diagnostics failed:", error);
+  console.error('💥 Diagnostics failed:', error);
   process.exit(2);
 });

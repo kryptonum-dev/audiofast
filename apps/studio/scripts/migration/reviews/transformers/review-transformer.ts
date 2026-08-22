@@ -4,10 +4,10 @@
  * Transforms CSV review rows into Sanity review documents
  */
 
-import type { SanityClient } from "@sanity/client";
-import slugify from "slugify";
+import type { SanityClient } from '@sanity/client';
+import slugify from 'slugify';
 
-import { htmlToPortableText } from "../parser/html-to-portable-text";
+import { htmlToPortableText } from '../parser/html-to-portable-text';
 import type {
   ImagePlaceholder,
   PortableTextBlock,
@@ -15,14 +15,18 @@ import type {
   ReviewCsvRow,
   ReviewPortableTextContent,
   SanityReviewDocument,
-} from "../types";
-import { uploadCoverImage, uploadInlineImage, uploadPdfFile } from "../utils/asset-uploader";
-import { cleanString, parseReviewType } from "../utils/csv-parser";
-import { resolveAuthorReference } from "./author-resolver";
+} from '../types';
+import {
+  uploadCoverImage,
+  uploadInlineImage,
+  uploadPdfFile,
+} from '../utils/asset-uploader';
+import { cleanString, parseReviewType } from '../utils/csv-parser';
+import { resolveAuthorReference } from './author-resolver';
 
 // Slug prefixes
-const PAGE_SLUG_PREFIX = "/recenzje/";
-const PDF_SLUG_PREFIX = "/recenzje/pdf/";
+const PAGE_SLUG_PREFIX = '/recenzje/';
+const PDF_SLUG_PREFIX = '/recenzje/pdf/';
 
 // ============================================================================
 // Helpers
@@ -37,20 +41,20 @@ function generateKey(): string {
  */
 function createPortableTextFromString(
   text: string,
-  style: "normal" | "h2" | "h3" = "normal",
+  style: 'normal' | 'h2' | 'h3' = 'normal',
 ): PortableTextBlock[] {
   const clean = cleanString(text);
   if (!clean) return [];
 
   return [
     {
-      _type: "block",
+      _type: 'block',
       _key: generateKey(),
       style,
       markDefs: [],
       children: [
         {
-          _type: "span",
+          _type: 'span',
           _key: generateKey(),
           text: clean,
         },
@@ -62,13 +66,16 @@ function createPortableTextFromString(
 function isPortableTextBlock(
   block: ReviewPortableTextContent | ImagePlaceholder,
 ): block is PortableTextBlock {
-  return block._type === "block";
+  return block._type === 'block';
 }
 
 /**
  * Build slug for page-type reviews
  */
-function buildPageSlug(slug: string | null, fallbackTitle: string): string | null {
+function buildPageSlug(
+  slug: string | null,
+  fallbackTitle: string,
+): string | null {
   let slugSource = cleanString(slug);
 
   if (!slugSource) {
@@ -79,11 +86,11 @@ function buildPageSlug(slug: string | null, fallbackTitle: string): string | nul
 
   // Remove any existing prefix
   slugSource = slugSource
-    .replace(/^\/recenzje\/pdf\//, "")
-    .replace(/^\/recenzje\//, "")
-    .replace(/^\/pl\//, "")
-    .replace(/^\//, "")
-    .replace(/\/$/, "");
+    .replace(/^\/recenzje\/pdf\//, '')
+    .replace(/^\/recenzje\//, '')
+    .replace(/^\/pl\//, '')
+    .replace(/^\//, '')
+    .replace(/\/$/, '');
 
   // Build full slug with prefix
   const fullSlug = `${PAGE_SLUG_PREFIX}${slugSource}/`;
@@ -93,7 +100,10 @@ function buildPageSlug(slug: string | null, fallbackTitle: string): string | nul
 /**
  * Build slug for PDF-type reviews
  */
-function buildPdfSlug(slug: string | null, fallbackTitle: string): string | null {
+function buildPdfSlug(
+  slug: string | null,
+  fallbackTitle: string,
+): string | null {
   let slugSource = cleanString(slug);
 
   if (!slugSource) {
@@ -104,11 +114,11 @@ function buildPdfSlug(slug: string | null, fallbackTitle: string): string | null
 
   // Remove any existing prefix
   slugSource = slugSource
-    .replace(/^\/recenzje\/pdf\//, "")
-    .replace(/^\/recenzje\//, "")
-    .replace(/^\/pl\//, "")
-    .replace(/^\//, "")
-    .replace(/\/$/, "");
+    .replace(/^\/recenzje\/pdf\//, '')
+    .replace(/^\/recenzje\//, '')
+    .replace(/^\/pl\//, '')
+    .replace(/^\//, '')
+    .replace(/\/$/, '');
 
   // Build full slug with prefix
   const fullSlug = `${PDF_SLUG_PREFIX}${slugSource}/`;
@@ -159,12 +169,15 @@ export async function transformReview(
 
   // Resolve author (optional - skip if "Unknown" or not found)
   const authorName = cleanString(row.AuthorName);
-  const authorRef = authorName && authorName.toLowerCase() !== "unknown"
-    ? resolveAuthorReference(row.AuthorName)
-    : null;
+  const authorRef =
+    authorName && authorName.toLowerCase() !== 'unknown'
+      ? resolveAuthorReference(row.AuthorName)
+      : null;
 
-  if (!authorRef && authorName && authorName.toLowerCase() !== "unknown") {
-    console.warn(`   ⚠️  Review ${id} has unrecognized author "${row.AuthorName}", will migrate without author`);
+  if (!authorRef && authorName && authorName.toLowerCase() !== 'unknown') {
+    console.warn(
+      `   ⚠️  Review ${id} has unrecognized author "${row.AuthorName}", will migrate without author`,
+    );
   }
 
   // Upload cover image
@@ -186,7 +199,7 @@ export async function transformReview(
   // Build base document
   const document: SanityReviewDocument = {
     _id: sanityId,
-    _type: "review",
+    _type: 'review',
     ...(authorRef && { author: authorRef }),
     destinationType,
     publishedDate:
@@ -195,49 +208,57 @@ export async function transformReview(
         : undefined,
     title: titleBlocks,
     image: {
-      _type: "image",
-      asset: { _type: "reference", _ref: coverAssetId },
+      _type: 'image',
+      asset: { _type: 'reference', _ref: coverAssetId },
     },
   };
 
   // Handle type-specific fields
-  if (destinationType === "page") {
+  if (destinationType === 'page') {
     // Build slug
     const slug = buildPageSlug(row.Slug, titleSource);
     if (!slug) {
       console.warn(`   ⚠️  Review ${id} missing slug, skipping`);
       return null;
     }
-    document.slug = { _type: "slug", current: slug };
+    document.slug = { _type: 'slug', current: slug };
 
     // Parse content
     const rawContent = htmlToPortableText(row.BoxContent);
 
     if (rawContent.length === 0) {
-      console.warn(`   ⚠️  Review ${id} is a page but has empty content, skipping`);
+      console.warn(
+        `   ⚠️  Review ${id} is a page but has empty content, skipping`,
+      );
       return null;
     }
 
     // Process image placeholders → upload and convert to ptImage
     const finalContent: ReviewPortableTextContent[] = [];
     for (const block of rawContent) {
-      if (block._type === "imagePlaceholder") {
+      if (block._type === 'imagePlaceholder') {
         const placeholder = block as ImagePlaceholder;
-        const assetId = await uploadInlineImage(client, placeholder.src, dryRun);
+        const assetId = await uploadInlineImage(
+          client,
+          placeholder.src,
+          dryRun,
+        );
 
         if (assetId) {
           const ptImage: PtImage = {
-            _type: "ptImage",
+            _type: 'ptImage',
             _key: generateKey(),
-            layout: "single",
+            layout: 'single',
             image: {
-              _type: "image",
-              asset: { _type: "reference", _ref: assetId },
+              _type: 'image',
+              asset: { _type: 'reference', _ref: assetId },
             },
           };
           finalContent.push(ptImage);
         } else if (verbose) {
-          console.warn(`   ⚠️  Failed to upload inline image: ${placeholder.src}`);
+          console.warn(
+            `   ⚠️  Failed to upload inline image: ${placeholder.src}`,
+          );
         }
       } else {
         finalContent.push(block as ReviewPortableTextContent);
@@ -268,14 +289,14 @@ export async function transformReview(
       noIndex: false,
       hideFromList: false,
     };
-  } else if (destinationType === "pdf") {
+  } else if (destinationType === 'pdf') {
     // Build PDF slug
     const pdfSlug = buildPdfSlug(row.Slug, titleSource);
     if (!pdfSlug) {
       console.warn(`   ⚠️  Review ${id} missing PDF slug, skipping`);
       return null;
     }
-    document.pdfSlug = { _type: "slug", current: pdfSlug };
+    document.pdfSlug = { _type: 'slug', current: pdfSlug };
 
     // Upload PDF file
     const pdfAssetId = await uploadPdfFile(client, row.PDFFilename, dryRun);
@@ -284,8 +305,8 @@ export async function transformReview(
       return null;
     }
     document.pdfFile = {
-      _type: "file",
-      asset: { _type: "reference", _ref: pdfAssetId },
+      _type: 'file',
+      asset: { _type: 'reference', _ref: pdfAssetId },
     };
 
     // Build description from Description field - parse as Portable Text to preserve formatting
@@ -297,7 +318,7 @@ export async function transformReview(
         document.description = textBlocks;
       }
     }
-  } else if (destinationType === "external") {
+  } else if (destinationType === 'external') {
     // External link
     const externalUrl = cleanString(row.ExternalLink);
     if (!externalUrl) {
@@ -323,46 +344,47 @@ export async function transformReview(
 /**
  * Validate a review document before migration
  */
-export function validateReviewDocument(
-  doc: SanityReviewDocument,
-): { valid: boolean; errors: string[] } {
+export function validateReviewDocument(doc: SanityReviewDocument): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   if (!doc._id) {
-    errors.push("Missing _id");
+    errors.push('Missing _id');
   }
 
   // Author is now optional - no validation needed
 
   if (!doc.title || doc.title.length === 0) {
-    errors.push("Missing title");
+    errors.push('Missing title');
   }
 
   if (!doc.image?.asset?._ref) {
-    errors.push("Missing cover image");
+    errors.push('Missing cover image');
   }
 
-  if (doc.destinationType === "page") {
+  if (doc.destinationType === 'page') {
     if (!doc.slug?.current) {
-      errors.push("Page type requires slug");
+      errors.push('Page type requires slug');
     }
     if (!doc.content || doc.content.length === 0) {
-      errors.push("Page type requires content");
+      errors.push('Page type requires content');
     }
   }
 
-  if (doc.destinationType === "pdf") {
+  if (doc.destinationType === 'pdf') {
     if (!doc.pdfSlug?.current) {
-      errors.push("PDF type requires pdfSlug");
+      errors.push('PDF type requires pdfSlug');
     }
     if (!doc.pdfFile?.asset?._ref) {
-      errors.push("PDF type requires pdfFile");
+      errors.push('PDF type requires pdfFile');
     }
   }
 
-  if (doc.destinationType === "external") {
+  if (doc.destinationType === 'external') {
     if (!doc.externalUrl) {
-      errors.push("External type requires externalUrl");
+      errors.push('External type requires externalUrl');
     }
   }
 

@@ -12,14 +12,14 @@
  *   SANITY_API_TOKEN="xxx" bun run apps/studio/scripts/migration/brands/migrate-content-blocks.ts --all
  */
 
-import * as https from "node:https";
-import { Readable } from "node:stream";
+import * as https from 'node:https';
+import { Readable } from 'node:stream';
 
-import { createClient, type SanityClient } from "@sanity/client";
-import { parse } from "csv-parse/sync";
-import * as fs from "fs";
-import * as path from "path";
-import { v4 as uuidv4 } from "uuid";
+import { createClient, type SanityClient } from '@sanity/client';
+import { parse } from 'csv-parse/sync';
+import * as fs from 'fs';
+import * as path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 // ============================================================================
 // CONFIGURATION
@@ -27,10 +27,10 @@ import { v4 as uuidv4 } from "uuid";
 
 const CSV_FILE_PATH = path.resolve(
   __dirname,
-  "../../../../../brand-content-blocks.csv",
+  '../../../../../brand-content-blocks.csv',
 );
 
-const LEGACY_ASSETS_BASE_URL = "https://www.audiofast.pl/assets/";
+const LEGACY_ASSETS_BASE_URL = 'https://www.audiofast.pl/assets/';
 
 // SSL bypass agent for legacy assets
 const insecureAgent = new https.Agent({
@@ -68,10 +68,10 @@ interface BoxData {
 // Portable Text types
 interface PortableTextBlock {
   _key: string;
-  _type: "block";
+  _type: 'block';
   children: Array<{
     _key: string;
-    _type: "span";
+    _type: 'span';
     marks: string[];
     text: string;
   }>;
@@ -87,25 +87,25 @@ interface PortableTextBlock {
 
 interface PortableTextYouTube {
   _key: string;
-  _type: "ptYoutubeVideo";
+  _type: 'ptYoutubeVideo';
   youtubeId: string;
   title?: string;
 }
 
 interface PortableTextVimeo {
   _key: string;
-  _type: "ptVimeoVideo";
+  _type: 'ptVimeoVideo';
   vimeoId: string;
   title?: string;
 }
 
 interface PortableTextMinimalImage {
   _key: string;
-  _type: "ptMinimalImage";
+  _type: 'ptMinimalImage';
   image: {
-    _type: "image";
+    _type: 'image';
     asset: {
-      _type: "reference";
+      _type: 'reference';
       _ref: string;
     };
   };
@@ -113,11 +113,11 @@ interface PortableTextMinimalImage {
 
 interface PortableTextInlineImage {
   _key: string;
-  _type: "ptInlineImage";
+  _type: 'ptInlineImage';
   image: {
-    _type: "image";
+    _type: 'image';
     asset: {
-      _type: "reference";
+      _type: 'reference';
       _ref: string;
     };
   };
@@ -125,8 +125,8 @@ interface PortableTextInlineImage {
 
 interface PortableTextPageBreak {
   _key: string;
-  _type: "ptPageBreak";
-  style: "columnBreak";
+  _type: 'ptPageBreak';
+  style: 'columnBreak';
 }
 
 type PortableTextContent =
@@ -139,29 +139,29 @@ type PortableTextContent =
 
 // Content block types
 interface ContentBlockText {
-  _type: "contentBlockText";
+  _type: 'contentBlockText';
   _key: string;
   content: PortableTextContent[];
 }
 
 interface ContentBlockYoutube {
-  _type: "contentBlockYoutube";
+  _type: 'contentBlockYoutube';
   _key: string;
   youtubeId: string;
   title?: string;
 }
 
 interface ContentBlockVimeo {
-  _type: "contentBlockVimeo";
+  _type: 'contentBlockVimeo';
   _key: string;
   vimeoId: string;
   title?: string;
 }
 
 interface ContentBlockHorizontalLine {
-  _type: "contentBlockHorizontalLine";
+  _type: 'contentBlockHorizontalLine';
   _key: string;
-  style: "horizontalLine";
+  style: 'horizontalLine';
 }
 
 type ContentBlock =
@@ -185,7 +185,7 @@ interface ImageShortcode {
 // ============================================================================
 
 function parseCSV(filePath: string): CSVRow[] {
-  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const fileContent = fs.readFileSync(filePath, 'utf-8');
 
   const records = parse(fileContent, {
     columns: true,
@@ -241,14 +241,14 @@ function generateKey(): string {
 
 function stripHtml(html: string): string {
   return html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/\s+/g, " ")
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
@@ -279,9 +279,9 @@ function extractVimeoId(html: string): string | null {
 
 function extractAllVideos(
   html: string,
-): Array<{ type: "youtube" | "vimeo"; id: string; fullMatch: string }> {
+): Array<{ type: 'youtube' | 'vimeo'; id: string; fullMatch: string }> {
   const videos: Array<{
-    type: "youtube" | "vimeo";
+    type: 'youtube' | 'vimeo';
     id: string;
     fullMatch: string;
   }> = [];
@@ -292,7 +292,7 @@ function extractAllVideos(
   let match;
   while ((match = youtubeRegex.exec(html)) !== null) {
     videos.push({
-      type: "youtube",
+      type: 'youtube',
       id: match[1],
       fullMatch: match[0],
     });
@@ -303,7 +303,7 @@ function extractAllVideos(
     /<iframe[^>]*src="[^"]*vimeo\.com\/(?:video\/)?(\d+)[^"]*"[^>]*>.*?<\/iframe>/gi;
   while ((match = vimeoRegex.exec(html)) !== null) {
     videos.push({
-      type: "vimeo",
+      type: 'vimeo',
       id: match[1],
       fullMatch: match[0],
     });
@@ -338,7 +338,7 @@ function extractImageShortcodes(html: string): ImageShortcode[] {
       images.push({
         fullMatch: match[0],
         src: srcMatch[1],
-        id: idMatch ? idMatch[1] : "",
+        id: idMatch ? idMatch[1] : '',
         width: widthMatch ? widthMatch[1] : undefined,
         height: heightMatch ? heightMatch[1] : undefined,
         title: titleMatch ? titleMatch[1] : undefined,
@@ -356,11 +356,11 @@ function extractImageShortcodes(html: string): ImageShortcode[] {
 
 async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
   return new Promise((resolve) => {
-    const protocol = imageUrl.startsWith("https") ? https : require("http");
+    const protocol = imageUrl.startsWith('https') ? https : require('http');
 
     const request = protocol.get(
       imageUrl,
-      { agent: imageUrl.startsWith("https") ? insecureAgent : undefined },
+      { agent: imageUrl.startsWith('https') ? insecureAgent : undefined },
       (response: any) => {
         // Handle redirects
         if (response.statusCode === 301 || response.statusCode === 302) {
@@ -378,16 +378,16 @@ async function fetchImageInsecure(imageUrl: string): Promise<Buffer | null> {
         }
 
         const chunks: Buffer[] = [];
-        response.on("data", (chunk: Buffer) => chunks.push(chunk));
-        response.on("end", () => resolve(Buffer.concat(chunks)));
-        response.on("error", (error: Error) => {
+        response.on('data', (chunk: Buffer) => chunks.push(chunk));
+        response.on('end', () => resolve(Buffer.concat(chunks)));
+        response.on('error', (error: Error) => {
           console.error(`    ✗ Response error:`, error);
           resolve(null);
         });
       },
     );
 
-    request.on("error", (error: Error) => {
+    request.on('error', (error: Error) => {
       console.error(`    ✗ Request error:`, error);
       resolve(null);
     });
@@ -410,7 +410,7 @@ async function uploadImageToSanity(
 
   try {
     const asset = await client.assets.upload(
-      "image",
+      'image',
       Readable.from(imageBuffer),
       {
         filename: filename,
@@ -431,7 +431,7 @@ async function uploadImageToSanity(
 
 interface SpanChild {
   _key: string;
-  _type: "span";
+  _type: 'span';
   marks: string[];
   text: string;
 }
@@ -446,21 +446,21 @@ function parseHtmlToChildren(html: string): SpanChild[] {
 
   // Decode HTML entities first
   let content = html
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'");
 
   // Remove <br> tags - replace with space
-  content = content.replace(/<br\s*\/?>/gi, " ");
+  content = content.replace(/<br\s*\/?>/gi, ' ');
 
   // Remove span tags but keep content
-  content = content.replace(/<\/?span[^>]*>/gi, "");
+  content = content.replace(/<\/?span[^>]*>/gi, '');
 
   // Collapse multiple spaces into one
-  content = content.replace(/\s+/g, " ");
+  content = content.replace(/\s+/g, ' ');
 
   // Pattern to match text with possible strong/em marks
   const tagPattern = /<(strong|b|em|i)>([\s\S]*?)<\/\1>/gi;
@@ -476,11 +476,11 @@ function parseHtmlToChildren(html: string): SpanChild[] {
     if (match.index > lastIndex) {
       const textBefore = contentCopy.slice(lastIndex, match.index);
       // Strip HTML tags but preserve spaces
-      const cleanText = textBefore.replace(/<[^>]*>/g, "");
+      const cleanText = textBefore.replace(/<[^>]*>/g, '');
       if (cleanText) {
         children.push({
           _key: generateKey(),
-          _type: "span",
+          _type: 'span',
           marks: [],
           text: cleanText,
         });
@@ -489,15 +489,15 @@ function parseHtmlToChildren(html: string): SpanChild[] {
 
     // Determine the mark type
     const tagName = match[1].toLowerCase();
-    const mark = tagName === "strong" || tagName === "b" ? "strong" : "em";
+    const mark = tagName === 'strong' || tagName === 'b' ? 'strong' : 'em';
 
     // Get inner content - strip HTML but preserve internal spaces
-    const innerContent = match[2].replace(/<[^>]*>/g, "");
+    const innerContent = match[2].replace(/<[^>]*>/g, '');
 
     if (innerContent) {
       children.push({
         _key: generateKey(),
-        _type: "span",
+        _type: 'span',
         marks: [mark],
         text: innerContent,
       });
@@ -509,11 +509,11 @@ function parseHtmlToChildren(html: string): SpanChild[] {
   // Add remaining text after last match - preserve leading space
   if (lastIndex < contentCopy.length) {
     const remainingText = contentCopy.slice(lastIndex);
-    const cleanText = remainingText.replace(/<[^>]*>/g, "");
+    const cleanText = remainingText.replace(/<[^>]*>/g, '');
     if (cleanText) {
       children.push({
         _key: generateKey(),
-        _type: "span",
+        _type: 'span',
         marks: [],
         text: cleanText,
       });
@@ -523,13 +523,13 @@ function parseHtmlToChildren(html: string): SpanChild[] {
   // If no children were created, create one with stripped HTML
   if (children.length === 0) {
     const plainText = content
-      .replace(/<[^>]*>/g, "")
-      .replace(/\s+/g, " ")
+      .replace(/<[^>]*>/g, '')
+      .replace(/\s+/g, ' ')
       .trim();
     if (plainText) {
       children.push({
         _key: generateKey(),
-        _type: "span",
+        _type: 'span',
         marks: [],
         text: plainText,
       });
@@ -551,15 +551,15 @@ function parseHtmlToChildren(html: string): SpanChild[] {
 
 function createTextBlock(
   text: string,
-  style: string = "normal",
+  style: string = 'normal',
 ): PortableTextBlock {
   return {
     _key: generateKey(),
-    _type: "block",
+    _type: 'block',
     children: [
       {
         _key: generateKey(),
-        _type: "span",
+        _type: 'span',
         marks: [],
         text: text,
       },
@@ -574,7 +574,7 @@ function createTextBlock(
  */
 function createTextBlockFromHtml(
   html: string,
-  style: string = "normal",
+  style: string = 'normal',
 ): PortableTextBlock {
   const children = parseHtmlToChildren(html);
 
@@ -582,13 +582,13 @@ function createTextBlockFromHtml(
   if (children.length === 0) {
     return {
       _key: generateKey(),
-      _type: "block",
+      _type: 'block',
       children: [
         {
           _key: generateKey(),
-          _type: "span",
+          _type: 'span',
           marks: [],
-          text: "",
+          text: '',
         },
       ],
       markDefs: [],
@@ -598,7 +598,7 @@ function createTextBlockFromHtml(
 
   return {
     _key: generateKey(),
-    _type: "block",
+    _type: 'block',
     children: children,
     markDefs: [],
     style: style,
@@ -617,7 +617,7 @@ async function parseHtmlToPortableText(
   const blocks: PortableTextContent[] = [];
 
   // Normalize line breaks
-  let content = html.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  let content = html.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
   // Extract and store image shortcodes with their positions
   const imageShortcodes = extractImageShortcodes(content);
@@ -629,20 +629,20 @@ async function parseHtmlToPortableText(
       let imageUrl = img.src;
 
       // Strip /assets/ prefix and construct full URL
-      if (imageUrl.startsWith("/assets/")) {
-        imageUrl = imageUrl.replace("/assets/", "");
+      if (imageUrl.startsWith('/assets/')) {
+        imageUrl = imageUrl.replace('/assets/', '');
       }
 
       // Remove hash-like folders (e.g., /27d6e131a7/) that may not exist on the actual server
       // Pattern: folder name that looks like a hash (alphanumeric, 8-12 chars)
-      imageUrl = imageUrl.replace(/\/[a-f0-9]{8,12}\//gi, "/");
+      imageUrl = imageUrl.replace(/\/[a-f0-9]{8,12}\//gi, '/');
 
       // Construct full URL if not already absolute
-      if (!imageUrl.startsWith("http")) {
+      if (!imageUrl.startsWith('http')) {
         imageUrl = `${LEGACY_ASSETS_BASE_URL}${imageUrl}`;
       }
 
-      const filename = imageUrl.split("/").pop() || "image.jpg";
+      const filename = imageUrl.split('/').pop() || 'image.jpg';
       const assetRef = await uploadImageToSanity(client, imageUrl, filename);
       if (assetRef) {
         imageAssetMap.set(img.fullMatch, assetRef);
@@ -656,11 +656,11 @@ async function parseHtmlToPortableText(
   const videos = extractAllVideos(content);
 
   // Replace page breaks with a placeholder
-  const PAGE_BREAK_PLACEHOLDER = "___PAGE_BREAK___";
+  const PAGE_BREAK_PLACEHOLDER = '___PAGE_BREAK___';
   content = content.replace(/<!--\s*pagebreak\s*-->/gi, PAGE_BREAK_PLACEHOLDER);
 
   // Replace image shortcodes with placeholders
-  const IMAGE_PLACEHOLDER_PREFIX = "___IMAGE_";
+  const IMAGE_PLACEHOLDER_PREFIX = '___IMAGE_';
   let imageIndex = 0;
   const imagePlaceholderMap = new Map<string, ImageShortcode>();
 
@@ -672,11 +672,11 @@ async function parseHtmlToPortableText(
   }
 
   // Replace video iframes with placeholders
-  const VIDEO_PLACEHOLDER_PREFIX = "___VIDEO_";
+  const VIDEO_PLACEHOLDER_PREFIX = '___VIDEO_';
   let videoIndex = 0;
   const videoPlaceholderMap = new Map<
     string,
-    { type: "youtube" | "vimeo"; id: string }
+    { type: 'youtube' | 'vimeo'; id: string }
   >();
 
   for (const video of videos) {
@@ -700,8 +700,8 @@ async function parseHtmlToPortableText(
     if (trimmed === PAGE_BREAK_PLACEHOLDER) {
       blocks.push({
         _key: generateKey(),
-        _type: "ptPageBreak",
-        style: "columnBreak",
+        _type: 'ptPageBreak',
+        style: 'columnBreak',
       });
       continue;
     }
@@ -716,16 +716,16 @@ async function parseHtmlToPortableText(
         // Small images (<= 300px width) or images with specific classes/alignments could be inline
         const width = img.width ? parseInt(img.width, 10) : 9999;
         const isSmall = width <= 300;
-        const type = isSmall ? "ptInlineImage" : "ptMinimalImage";
+        const type = isSmall ? 'ptInlineImage' : 'ptMinimalImage';
 
         if (assetRef) {
           blocks.push({
             _key: generateKey(),
             _type: type,
             image: {
-              _type: "image",
+              _type: 'image',
               asset: {
-                _type: "reference",
+                _type: 'reference',
                 _ref: assetRef,
               },
             },
@@ -736,10 +736,10 @@ async function parseHtmlToPortableText(
             _key: generateKey(),
             _type: type,
             image: {
-              _type: "image",
+              _type: 'image',
               asset: {
-                _type: "reference",
-                _ref: "dry-run-image-placeholder",
+                _type: 'reference',
+                _ref: 'dry-run-image-placeholder',
               },
             },
           });
@@ -752,16 +752,16 @@ async function parseHtmlToPortableText(
     if (trimmed.match(/^___VIDEO_\d+___$/)) {
       const video = videoPlaceholderMap.get(trimmed);
       if (video) {
-        if (video.type === "youtube") {
+        if (video.type === 'youtube') {
           blocks.push({
             _key: generateKey(),
-            _type: "ptYoutubeVideo",
+            _type: 'ptYoutubeVideo',
             youtubeId: video.id,
           });
         } else {
           blocks.push({
             _key: generateKey(),
-            _type: "ptVimeoVideo",
+            _type: 'ptVimeoVideo',
             vimeoId: video.id,
           });
         }
@@ -780,7 +780,7 @@ async function parseHtmlToPortableText(
     const headingMatch = trimmed.match(/^<(h[1-6])[^>]*>([\s\S]*?)<\/\1>$/i);
     if (headingMatch) {
       const htmlContent = headingMatch[2];
-      const block = createTextBlockFromHtml(htmlContent, "h3");
+      const block = createTextBlockFromHtml(htmlContent, 'h3');
       // Only add if there's actual content
       if (block.children.some((child) => child.text.trim())) {
         blocks.push(block);
@@ -794,7 +794,7 @@ async function parseHtmlToPortableText(
     );
     if (blockquoteMatch) {
       const htmlContent = blockquoteMatch[1];
-      const block = createTextBlockFromHtml(htmlContent, "blockquote");
+      const block = createTextBlockFromHtml(htmlContent, 'blockquote');
       if (block.children.some((child) => child.text.trim())) {
         blocks.push(block);
       }
@@ -811,8 +811,8 @@ async function parseHtmlToPortableText(
         console.log(`    📄 Detected page break (column divider)`);
         blocks.push({
           _key: generateKey(),
-          _type: "ptPageBreak",
-          style: "columnBreak",
+          _type: 'ptPageBreak',
+          style: 'columnBreak',
         });
         continue;
       }
@@ -822,10 +822,10 @@ async function parseHtmlToPortableText(
       if (imageMatch) {
         // Check if the rest of the content is just whitespace, &nbsp;, <br>, or <span> wrappers
         const withoutImage = innerContent
-          .replace(/___IMAGE_\d+___/g, "")
-          .replace(/&nbsp;/g, "")
-          .replace(/<br\s*\/?>/gi, "")
-          .replace(/<\/?span[^>]*>/gi, "")
+          .replace(/___IMAGE_\d+___/g, '')
+          .replace(/&nbsp;/g, '')
+          .replace(/<br\s*\/?>/gi, '')
+          .replace(/<\/?span[^>]*>/gi, '')
           .trim();
 
         // If paragraph is essentially just the image, add it as a block
@@ -838,16 +838,16 @@ async function parseHtmlToPortableText(
             const isInline = img.className
               ? /\bleft\b/.test(img.className)
               : false;
-            const type = isInline ? "ptInlineImage" : "ptMinimalImage";
+            const type = isInline ? 'ptInlineImage' : 'ptMinimalImage';
 
             if (assetRef) {
               blocks.push({
                 _key: generateKey(),
                 _type: type,
                 image: {
-                  _type: "image",
+                  _type: 'image',
                   asset: {
-                    _type: "reference",
+                    _type: 'reference',
                     _ref: assetRef,
                   },
                 },
@@ -857,10 +857,10 @@ async function parseHtmlToPortableText(
                 _key: generateKey(),
                 _type: type,
                 image: {
-                  _type: "image",
+                  _type: 'image',
                   asset: {
-                    _type: "reference",
-                    _ref: "dry-run-image-placeholder",
+                    _type: 'reference',
+                    _ref: 'dry-run-image-placeholder',
                   },
                 },
               });
@@ -879,16 +879,16 @@ async function parseHtmlToPortableText(
             const isInline = img.className
               ? /\bleft\b/.test(img.className)
               : false;
-            const type = isInline ? "ptInlineImage" : "ptMinimalImage";
+            const type = isInline ? 'ptInlineImage' : 'ptMinimalImage';
 
             if (assetRef) {
               blocks.push({
                 _key: generateKey(),
                 _type: type,
                 image: {
-                  _type: "image",
+                  _type: 'image',
                   asset: {
-                    _type: "reference",
+                    _type: 'reference',
                     _ref: assetRef,
                   },
                 },
@@ -898,17 +898,17 @@ async function parseHtmlToPortableText(
                 _key: generateKey(),
                 _type: type,
                 image: {
-                  _type: "image",
+                  _type: 'image',
                   asset: {
-                    _type: "reference",
-                    _ref: "dry-run-image-placeholder",
+                    _type: 'reference',
+                    _ref: 'dry-run-image-placeholder',
                   },
                 },
               });
             }
           }
           // Then add the text if there's any meaningful content (preserve formatting)
-          const textBlock = createTextBlockFromHtml(withoutImage, "normal");
+          const textBlock = createTextBlockFromHtml(withoutImage, 'normal');
           if (textBlock.children.some((child) => child.text.trim())) {
             blocks.push(textBlock);
           }
@@ -920,16 +920,16 @@ async function parseHtmlToPortableText(
       if (innerContent.trim().match(/^___VIDEO_\d+___$/)) {
         const video = videoPlaceholderMap.get(innerContent.trim());
         if (video) {
-          if (video.type === "youtube") {
+          if (video.type === 'youtube') {
             blocks.push({
               _key: generateKey(),
-              _type: "ptYoutubeVideo",
+              _type: 'ptYoutubeVideo',
               youtubeId: video.id,
             });
           } else {
             blocks.push({
               _key: generateKey(),
-              _type: "ptVimeoVideo",
+              _type: 'ptVimeoVideo',
               vimeoId: video.id,
             });
           }
@@ -941,10 +941,10 @@ async function parseHtmlToPortableText(
       let htmlContent = innerContent;
 
       // Remove any remaining image/video placeholders from text
-      htmlContent = htmlContent.replace(/___IMAGE_\d+___/g, "");
-      htmlContent = htmlContent.replace(/___VIDEO_\d+___/g, "");
+      htmlContent = htmlContent.replace(/___IMAGE_\d+___/g, '');
+      htmlContent = htmlContent.replace(/___VIDEO_\d+___/g, '');
 
-      const block = createTextBlockFromHtml(htmlContent, "normal");
+      const block = createTextBlockFromHtml(htmlContent, 'normal');
       if (block.children.some((child) => child.text.trim())) {
         blocks.push(block);
       }
@@ -952,8 +952,8 @@ async function parseHtmlToPortableText(
     }
 
     // Fallback: try to extract any remaining text with formatting
-    if (!trimmed.startsWith("___")) {
-      const block = createTextBlockFromHtml(trimmed, "normal");
+    if (!trimmed.startsWith('___')) {
+      const block = createTextBlockFromHtml(trimmed, 'normal');
       if (block.children.some((child) => child.text.trim())) {
         blocks.push(block);
       }
@@ -973,7 +973,7 @@ async function convertBoxToContentBlock(
   dryRun: boolean,
 ): Promise<ContentBlock | ContentBlock[] | null> {
   switch (box.type.toLowerCase()) {
-    case "text": {
+    case 'text': {
       if (!box.content) return null;
 
       const portableText = await parseHtmlToPortableText(
@@ -985,28 +985,28 @@ async function convertBoxToContentBlock(
       if (portableText.length === 0) return null;
 
       return {
-        _type: "contentBlockText",
+        _type: 'contentBlockText',
         _key: `text-${box.boxId}`,
         content: portableText,
       };
     }
 
-    case "hr": {
+    case 'hr': {
       return {
-        _type: "contentBlockHorizontalLine",
+        _type: 'contentBlockHorizontalLine',
         _key: `hr-${box.boxId}`,
-        style: "horizontalLine",
+        style: 'horizontalLine',
       };
     }
 
-    case "bigimg": {
+    case 'bigimg': {
       // Skip - this is the banner image, handled separately
       console.log(`    ⏭️  Skipping bigimg box (banner image)`);
       return null;
     }
 
-    case "video":
-    case "youtube": {
+    case 'video':
+    case 'youtube': {
       // YouTube video box - get ID from YoutubeLink field
       if (box.youtubeLink) {
         // Extract YouTube ID from various URL formats
@@ -1027,7 +1027,7 @@ async function convertBoxToContentBlock(
         console.log(`    🎬 YouTube video: ${youtubeId}`);
 
         return {
-          _type: "contentBlockYoutube",
+          _type: 'contentBlockYoutube',
           _key: `yt-${box.boxId}`,
           youtubeId: youtubeId,
         };
@@ -1131,13 +1131,13 @@ function createMigrationClient(): SanityClient {
   const token = process.env.SANITY_API_TOKEN;
 
   if (!token) {
-    throw new Error("SANITY_API_TOKEN environment variable is required");
+    throw new Error('SANITY_API_TOKEN environment variable is required');
   }
 
   return createClient({
-    projectId: "fsw3likv",
-    dataset: "production",
-    apiVersion: "2024-01-01",
+    projectId: 'fsw3likv',
+    dataset: 'production',
+    apiVersion: '2024-01-01',
     token,
     useCdn: false,
   });
@@ -1156,22 +1156,22 @@ async function main() {
   let migrateAll = false;
 
   for (const arg of args) {
-    if (arg.startsWith("--name=")) {
-      brandName = arg.replace("--name=", "").replace(/"/g, "");
-    } else if (arg.startsWith("--id=")) {
-      brandId = arg.replace("--id=", "");
-    } else if (arg === "--dry-run") {
+    if (arg.startsWith('--name=')) {
+      brandName = arg.replace('--name=', '').replace(/"/g, '');
+    } else if (arg.startsWith('--id=')) {
+      brandId = arg.replace('--id=', '');
+    } else if (arg === '--dry-run') {
       dryRun = true;
-    } else if (arg === "--all") {
+    } else if (arg === '--all') {
       migrateAll = true;
     }
   }
 
   // Parse CSV file path
   let csvPath = CSV_FILE_PATH;
-  const csvArg = args.find((arg) => arg.startsWith("--csv="));
+  const csvArg = args.find((arg) => arg.startsWith('--csv='));
   if (csvArg) {
-    csvPath = path.resolve(process.cwd(), csvArg.replace("--csv=", ""));
+    csvPath = path.resolve(process.cwd(), csvArg.replace('--csv=', ''));
   }
 
   if (!brandName && !brandId && !migrateAll) {
@@ -1179,28 +1179,28 @@ async function main() {
       'Usage: bun run migrate-content-blocks.ts --name="BrandName" [--dry-run] [--csv=path/to/file.csv]',
     );
     console.error(
-      "       bun run migrate-content-blocks.ts --id=73 [--dry-run]",
+      '       bun run migrate-content-blocks.ts --id=73 [--dry-run]',
     );
-    console.error("       bun run migrate-content-blocks.ts --all [--dry-run]");
+    console.error('       bun run migrate-content-blocks.ts --all [--dry-run]');
     process.exit(1);
   }
 
   console.log(
-    "╔════════════════════════════════════════════════════════════════╗",
+    '╔════════════════════════════════════════════════════════════════╗',
   );
   console.log(
-    "║           BRAND CONTENT BLOCKS MIGRATION                       ║",
+    '║           BRAND CONTENT BLOCKS MIGRATION                       ║',
   );
   console.log(
-    "╚════════════════════════════════════════════════════════════════╝",
+    '╚════════════════════════════════════════════════════════════════╝',
   );
-  console.log(`Mode: ${dryRun ? "DRY RUN (no changes)" : "LIVE"}`);
+  console.log(`Mode: ${dryRun ? 'DRY RUN (no changes)' : 'LIVE'}`);
 
   // Check CSV file exists
   if (!fs.existsSync(csvPath)) {
     console.error(`\n✗ CSV file not found: ${csvPath}`);
     console.error(
-      "  Please provide a valid CSV file path with --csv=path/to/file.csv",
+      '  Please provide a valid CSV file path with --csv=path/to/file.csv',
     );
     process.exit(1);
   }
@@ -1219,9 +1219,9 @@ async function main() {
   if (!dryRun) {
     try {
       client = createMigrationClient();
-      console.log("\n✓ Sanity client initialized");
+      console.log('\n✓ Sanity client initialized');
     } catch (error) {
-      console.error("\n✗ Failed to create Sanity client:", error);
+      console.error('\n✗ Failed to create Sanity client:', error);
       process.exit(1);
     }
   }
@@ -1240,7 +1240,7 @@ async function main() {
 
     if (!brand) {
       console.error(`\n✗ Brand not found: "${brandName}"`);
-      console.log("\nAvailable brands:");
+      console.log('\nAvailable brands:');
       for (const b of brands.values()) {
         console.log(`  - ${b.brandName} (ID: ${b.brandId})`);
       }
@@ -1266,13 +1266,13 @@ async function main() {
     const brand = brandsToProcess[i];
 
     console.log(
-      "\n═══════════════════════════════════════════════════════════════════",
+      '\n═══════════════════════════════════════════════════════════════════',
     );
     console.log(
       `🏷️  [${i + 1}/${brandsToProcess.length}] ${brand.brandName} (ID: ${brand.brandId})`,
     );
     console.log(
-      "═══════════════════════════════════════════════════════════════════",
+      '═══════════════════════════════════════════════════════════════════',
     );
 
     try {
@@ -1295,11 +1295,11 @@ async function main() {
 
   // Print summary
   console.log(
-    "\n════════════════════════════════════════════════════════════════════",
+    '\n════════════════════════════════════════════════════════════════════',
   );
-  console.log("📊 MIGRATION SUMMARY");
+  console.log('📊 MIGRATION SUMMARY');
   console.log(
-    "════════════════════════════════════════════════════════════════════",
+    '════════════════════════════════════════════════════════════════════',
   );
   console.log(`✅ Successful: ${results.success.length}`);
   if (results.success.length > 0 && results.success.length <= 20) {
@@ -1309,10 +1309,10 @@ async function main() {
   if (results.failed.length > 0) {
     results.failed.forEach((name) => console.log(`   - ${name}`));
   }
-  console.log("\nMigration complete!");
+  console.log('\nMigration complete!');
 }
 
 main().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error('Fatal error:', error);
   process.exit(1);
 });

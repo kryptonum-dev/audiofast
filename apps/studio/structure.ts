@@ -1,5 +1,5 @@
-import { BlockContentIcon, EditIcon, FilterIcon } from "@sanity/icons";
-import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
+import { BlockContentIcon, EditIcon, FilterIcon } from '@sanity/icons';
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
   Archive,
   BadgeCheck,
@@ -17,21 +17,21 @@ import {
   Speaker,
   Table2,
   UserPen,
-} from "lucide-react";
+} from 'lucide-react';
 import type {
   DefaultDocumentNodeResolver,
   StructureBuilder,
   StructureResolverContext,
-} from "sanity/structure";
+} from 'sanity/structure';
 
-import { CustomFiltersConfigView } from "./components/custom-filters-config";
-import { ProductFiltersView } from "./components/product-filters-view";
-import ReviewAuthorManager from "./components/review-author-manager";
-import { TechnicalDataView } from "./components/technical-data-table/technical-data-view";
-import { createBulkActionsTable } from "./plugins/bulk-actions-table";
-import type { SchemaType, SingletonType } from "./schemaTypes";
-import { schemaTypes } from "./schemaTypes";
-import { getTitleCase } from "./utils/helper";
+import { CustomFiltersConfigView } from './components/custom-filters-config';
+import { ProductFiltersView } from './components/product-filters-view';
+import ReviewAuthorManager from './components/review-author-manager';
+import { TechnicalDataView } from './components/technical-data-table/technical-data-view';
+import { createBulkActionsTable } from './plugins/bulk-actions-table';
+import type { SchemaType, SingletonType } from './schemaTypes';
+import { schemaTypes } from './schemaTypes';
+import { getTitleCase } from './utils/helper';
 
 /**
  * Product ordering configurations
@@ -39,36 +39,39 @@ import { getTitleCase } from "./utils/helper";
  */
 const getProductOrderingMenuItems = (S: StructureBuilder) => [
   S.orderingMenuItem({
-    name: "priceAsc",
-    title: "Cena (od najniższej)",
+    name: 'priceAsc',
+    title: 'Cena (od najniższej)',
     by: [
-      { field: "basePriceCents", direction: "asc" },
-      { field: "_createdAt", direction: "desc" },
+      { field: 'basePriceCents', direction: 'asc' },
+      { field: '_createdAt', direction: 'desc' },
     ],
   }),
   S.orderingMenuItem({
-    name: "priceDesc",
-    title: "Cena (od najwyższej)",
+    name: 'priceDesc',
+    title: 'Cena (od najwyższej)',
     by: [
-      { field: "basePriceCents", direction: "desc" },
-      { field: "_createdAt", direction: "desc" },
+      { field: 'basePriceCents', direction: 'desc' },
+      { field: '_createdAt', direction: 'desc' },
     ],
   }),
   S.orderingMenuItem({
-    name: "createdAtDesc",
-    title: "Data utworzenia (od najnowszych)",
-    by: [{ field: "_createdAt", direction: "desc" }],
+    name: 'createdAtDesc',
+    title: 'Data utworzenia (od najnowszych)',
+    by: [{ field: '_createdAt', direction: 'desc' }],
   }),
   S.orderingMenuItem({
-    name: "createdAtAsc",
-    title: "Data utworzenia (od najstarszych)",
-    by: [{ field: "_createdAt", direction: "asc" }],
+    name: 'createdAtAsc',
+    title: 'Data utworzenia (od najstarszych)',
+    by: [{ field: '_createdAt', direction: 'asc' }],
   }),
 ];
 
-const productDefaultOrdering: Array<{ field: string; direction: "asc" | "desc" }> = [
-  { field: "basePriceCents", direction: "asc" },
-  { field: "_createdAt", direction: "desc" },
+const productDefaultOrdering: Array<{
+  field: string;
+  direction: 'asc' | 'desc';
+}> = [
+  { field: 'basePriceCents', direction: 'asc' },
+  { field: '_createdAt', direction: 'desc' },
 ];
 
 type CreateSingleTon = {
@@ -153,72 +156,72 @@ export const structure = (
   context: StructureResolverContext,
 ) => {
   return S.list()
-    .title("Content")
+    .title('Content')
     .items([
-      createSingleTon({ S, type: "homePage" }),
-      createCollection({ S, context, type: "page", title: "Podstrony" }),
+      createSingleTon({ S, type: 'homePage' }),
+      createCollection({ S, context, type: 'page', title: 'Podstrony' }),
       S.divider(),
       S.listItem()
-        .title("Produkty")
+        .title('Produkty')
         .icon(Speaker)
         .child(
           S.list()
-            .title("Produkty")
+            .title('Produkty')
             .items([
-              createSingleTon({ S, type: "products" }),
+              createSingleTon({ S, type: 'products' }),
               // Bulk actions table for products
               createBulkActionsTable({
-                type: "product",
+                type: 'product',
                 S: S as any,
                 context: context as any,
-                title: "Tabela produktów",
+                title: 'Tabela produktów',
                 icon: Table2,
                 filters: [
                   {
-                    field: "isArchived",
-                    label: "Status",
+                    field: 'isArchived',
+                    label: 'Status',
                     options: [
-                      { label: "Wszystkie", value: null },
-                      { label: "Aktywne", value: "isArchived != true" },
-                      { label: "Archiwalne", value: "isArchived == true" },
+                      { label: 'Wszystkie', value: null },
+                      { label: 'Aktywne', value: 'isArchived != true' },
+                      { label: 'Archiwalne', value: 'isArchived == true' },
                     ],
                     defaultIndex: 0,
                   },
                 ],
                 referenceFilters: [
                   {
-                    referenceField: "brand._ref",
-                    referenceType: "brand",
-                    label: "Marka",
+                    referenceField: 'brand._ref',
+                    referenceType: 'brand',
+                    label: 'Marka',
                     groqProjection:
                       '{ _id, name, "imageUrl": logo.asset->url }',
-                    groqFilter: "doNotShowBrand != true",
+                    groqFilter: 'doNotShowBrand != true',
                   },
                 ],
               }) as any,
               S.divider(),
               // Products grouped by brand
               S.listItem()
-                .title("Produkty według marek")
+                .title('Produkty według marek')
                 .icon(Speaker)
                 .child(async () => {
                   // Fetch all brands using the Sanity client
                   const brands = await context
-                    .getClient({ apiVersion: "2024-01-01" })
-                    .fetch<
-                      Array<{ _id: string; name: string; logo?: any }>
-                    >(`*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name, logo}`);
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<Array<{ _id: string; name: string; logo?: any }>>(
+                      `*[_type == "brand" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name, logo}`,
+                    );
 
                   return S.list()
-                    .title("Produkty według marek")
+                    .title('Produkty według marek')
                     .items([
                       // "All Products" option as first item
                       S.listItem()
-                        .title("Wszystkie produkty")
+                        .title('Wszystkie produkty')
                         .icon(Speaker)
                         .child(
                           S.documentList()
-                            .title("Wszystkie produkty")
+                            .title('Wszystkie produkty')
                             .filter('_type == "product"')
                             .defaultOrdering(productDefaultOrdering)
                             .menuItems(getProductOrderingMenuItems(S)),
@@ -228,7 +231,7 @@ export const structure = (
                       ...brands.map((brand) =>
                         S.listItem()
                           .id(brand._id)
-                          .title(brand.name || "Bez nazwy")
+                          .title(brand.name || 'Bez nazwy')
                           .icon(Folder)
                           .child(
                             S.documentList()
@@ -245,12 +248,12 @@ export const structure = (
                 }),
               // Products grouped by category (nested by parent category)
               S.listItem()
-                .title("Produkty według kategorii")
+                .title('Produkty według kategorii')
                 .icon(Folder)
                 .child(async () => {
                   // Fetch all parent categories and their sub-categories that have products
                   const parentCategories = await context.getClient({
-                    apiVersion: "2024-01-01",
+                    apiVersion: '2024-01-01',
                   }).fetch<
                     Array<{
                       _id: string;
@@ -269,15 +272,15 @@ export const structure = (
                   );
 
                   return S.list()
-                    .title("Produkty według kategorii")
+                    .title('Produkty według kategorii')
                     .items([
                       // "All Products" option as first item
                       S.listItem()
-                        .title("Wszystkie produkty")
+                        .title('Wszystkie produkty')
                         .icon(Speaker)
                         .child(
                           S.documentList()
-                            .title("Wszystkie produkty")
+                            .title('Wszystkie produkty')
                             .filter('_type == "product"')
                             .defaultOrdering(productDefaultOrdering)
                             .menuItems(getProductOrderingMenuItems(S)),
@@ -287,16 +290,16 @@ export const structure = (
                       ...parentCategoriesWithProducts.map((parent) =>
                         S.listItem()
                           .id(`parent-${parent._id}`)
-                          .title(parent.name || "Bez nazwy")
+                          .title(parent.name || 'Bez nazwy')
                           .icon(FolderOpen)
                           .child(
                             S.list()
-                              .title(parent.name || "Kategoria")
+                              .title(parent.name || 'Kategoria')
                               .items(
                                 parent.subCategories.map((subCategory) =>
                                   S.listItem()
                                     .id(subCategory._id)
-                                    .title(subCategory.name || "Bez nazwy")
+                                    .title(subCategory.name || 'Bez nazwy')
                                     .icon(Folder)
                                     .child(
                                       S.documentList()
@@ -306,7 +309,9 @@ export const structure = (
                                         )
                                         .params({ categoryId: subCategory._id })
                                         .defaultOrdering(productDefaultOrdering)
-                                        .menuItems(getProductOrderingMenuItems(S)),
+                                        .menuItems(
+                                          getProductOrderingMenuItems(S),
+                                        ),
                                     ),
                                 ),
                               ),
@@ -316,28 +321,28 @@ export const structure = (
                 }),
               // Products by archive status (archived vs non-archived)
               S.listItem()
-                .title("Produkty według statusu")
+                .title('Produkty według statusu')
                 .icon(Archive)
                 .child(
                   S.list()
-                    .title("Produkty według statusu")
+                    .title('Produkty według statusu')
                     .items([
                       S.listItem()
-                        .title("Produkty aktywne")
+                        .title('Produkty aktywne')
                         .icon(CheckCircle)
                         .child(
                           S.documentList()
-                            .title("Produkty aktywne")
+                            .title('Produkty aktywne')
                             .filter('_type == "product" && isArchived != true')
                             .defaultOrdering(productDefaultOrdering)
                             .menuItems(getProductOrderingMenuItems(S)),
                         ),
                       S.listItem()
-                        .title("Produkty archiwalne")
+                        .title('Produkty archiwalne')
                         .icon(Archive)
                         .child(
                           S.documentList()
-                            .title("Produkty archiwalne")
+                            .title('Produkty archiwalne')
                             .filter('_type == "product" && isArchived == true')
                             .defaultOrdering(productDefaultOrdering)
                             .menuItems(getProductOrderingMenuItems(S)),
@@ -347,42 +352,42 @@ export const structure = (
               createCollection({
                 S,
                 context,
-                type: "award",
-                title: "Lista nagród",
+                type: 'award',
+                title: 'Lista nagród',
               }),
               S.divider(),
               createCollection({
                 S,
                 context,
-                type: "productCategoryParent",
+                type: 'productCategoryParent',
                 orderable: false,
-                title: "Kategorie nadrzędne",
+                title: 'Kategorie nadrzędne',
               }),
               // Sub-categories grouped by parent
               S.listItem()
-                .title("Kategorie podrzędne")
+                .title('Kategorie podrzędne')
                 .icon(Folder)
                 .child(async () => {
                   // Fetch all parent categories
                   const parentCategories = await context
-                    .getClient({ apiVersion: "2024-01-01" })
-                    .fetch<
-                      Array<{ _id: string; name: string }>
-                    >(`*[_type == "productCategoryParent" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name}`);
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<Array<{ _id: string; name: string }>>(
+                      `*[_type == "productCategoryParent" && !(_id in path("drafts.**"))] | order(orderRank) {_id, name}`,
+                    );
 
                   return S.list()
-                    .title("Kategorie podrzędne")
+                    .title('Kategorie podrzędne')
                     .items([
                       // "All Sub-categories" option
                       S.listItem()
-                        .title("Wszystkie podkategorie")
+                        .title('Wszystkie podkategorie')
                         .icon(Folder)
                         .child(
                           S.documentList()
-                            .title("Wszystkie podkategorie")
+                            .title('Wszystkie podkategorie')
                             .filter('_type == "productCategorySub"')
                             .defaultOrdering([
-                              { field: "orderRank", direction: "asc" },
+                              { field: 'orderRank', direction: 'asc' },
                             ]),
                         ),
                       S.divider(),
@@ -390,7 +395,7 @@ export const structure = (
                       ...parentCategories.map((parent) =>
                         S.listItem()
                           .id(parent._id)
-                          .title(parent.name || "Bez nazwy")
+                          .title(parent.name || 'Bez nazwy')
                           .icon(FolderOpen)
                           .child(
                             S.documentList()
@@ -400,7 +405,7 @@ export const structure = (
                               )
                               .params({ parentId: parent._id })
                               .defaultOrdering([
-                                { field: "orderRank", direction: "asc" },
+                                { field: 'orderRank', direction: 'asc' },
                               ]),
                           ),
                       ),
@@ -409,81 +414,83 @@ export const structure = (
             ]),
         ),
       S.listItem()
-        .title("Marki")
+        .title('Marki')
         .icon(Podcast)
         .child(
           S.list()
-            .title("Marki")
+            .title('Marki')
             .items([
-              createSingleTon({ S, type: "brands" }),
+              createSingleTon({ S, type: 'brands' }),
               // Bulk actions table for brands
               createBulkActionsTable({
-                type: "brand",
+                type: 'brand',
                 S: S as any,
                 context: context as any,
-                title: "Tabela marek",
+                title: 'Tabela marek',
                 icon: Table2,
               }) as any,
               S.divider(),
               createCollection({
                 S,
                 context,
-                type: "brand",
+                type: 'brand',
                 orderable: true,
-                title: "Lista marek",
-                id: "brand-list",
+                title: 'Lista marek',
+                id: 'brand-list',
               }),
             ]),
         ),
       S.listItem()
-        .title("Recenzje")
+        .title('Recenzje')
         .icon(MessageSquareText)
         .child(
           S.list()
-            .title("Recenzje")
+            .title('Recenzje')
             .items([
               // Bulk actions table for reviews
               createBulkActionsTable({
-                type: "review",
+                type: 'review',
                 S: S as any,
                 context: context as any,
-                title: "Tabela recenzji",
+                title: 'Tabela recenzji',
                 icon: Table2,
               }) as any,
               createBulkActionsTable({
-                id: "review-author-table",
-                type: "reviewAuthor",
+                id: 'review-author-table',
+                type: 'reviewAuthor',
                 S: S as any,
                 context: context as any,
-                title: "Tabela autorów",
+                title: 'Tabela autorów',
                 icon: Table2,
               }) as any,
               S.divider(),
               // Reviews grouped by author
               S.listItem()
-                .title("Recenzje według autorów")
+                .title('Recenzje według autorów')
                 .icon(MessageSquareText)
                 .child(async () => {
                   // Fetch all review authors using the Sanity client
                   const authors = await context
-                    .getClient({ apiVersion: "2024-01-01" })
+                    .getClient({ apiVersion: '2024-01-01' })
                     .fetch<
                       Array<{ _id: string; name: string; reviewCount?: number }>
-                    >(`*[_type == "reviewAuthor" && !(_id in path("drafts.**"))] | order(coalesce(reviewCount, 0) desc, name asc) {_id, name, reviewCount}`);
+                    >(
+                      `*[_type == "reviewAuthor" && !(_id in path("drafts.**"))] | order(coalesce(reviewCount, 0) desc, name asc) {_id, name, reviewCount}`,
+                    );
 
                   return S.list()
-                    .title("Recenzje według autorów")
+                    .title('Recenzje według autorów')
                     .items([
                       // "All Reviews" option as first item
                       S.listItem()
-                        .title("Wszystkie recenzje")
+                        .title('Wszystkie recenzje')
                         .icon(MessageSquareText)
                         .child(
                           S.documentList()
-                            .title("Wszystkie recenzje")
+                            .title('Wszystkie recenzje')
                             .filter('_type == "review"')
                             .defaultOrdering([
-                              { field: "_createdAt", direction: "desc" },
+                              { field: '_createdAt', direction: 'desc' },
                             ]),
                         ),
                       S.divider(),
@@ -492,7 +499,7 @@ export const structure = (
                         S.listItem()
                           .id(author._id)
                           .title(
-                            `${author.name || "Bez nazwy"} (${author.reviewCount ?? 0})`,
+                            `${author.name || 'Bez nazwy'} (${author.reviewCount ?? 0})`,
                           )
                           .icon(UserPen)
                           .child(
@@ -503,7 +510,7 @@ export const structure = (
                               )
                               .params({ authorId: author._id })
                               .defaultOrdering([
-                                { field: "_createdAt", direction: "desc" },
+                                { field: '_createdAt', direction: 'desc' },
                               ]),
                           ),
                       ),
@@ -512,51 +519,51 @@ export const structure = (
               createCollection({
                 S,
                 context,
-                type: "reviewAuthor",
+                type: 'reviewAuthor',
                 orderable: false,
-                title: "Lista autorów",
-                id: "review-author-list",
+                title: 'Lista autorów',
+                id: 'review-author-list',
               }),
               S.listItem()
-                .id("review-author-manager")
-                .title("Scalanie autorów recenzji")
+                .id('review-author-manager')
+                .title('Scalanie autorów recenzji')
                 .icon(Settings2)
                 .child(
                   S.component()
-                    .id("review-author-manager-pane")
-                    .title("Scalanie autorów recenzji")
+                    .id('review-author-manager-pane')
+                    .title('Scalanie autorów recenzji')
                     .component(ReviewAuthorManager),
                 ),
             ]),
         ),
       S.listItem()
-        .title("Blog")
+        .title('Blog')
         .icon(BookOpen)
         .child(
           S.list()
-            .title("Blog")
+            .title('Blog')
             .items([
-              createSingleTon({ S, type: "blog", icon: FileText }),
+              createSingleTon({ S, type: 'blog', icon: FileText }),
               // Bulk actions table for blog articles
               createBulkActionsTable({
-                type: "blog-article",
+                type: 'blog-article',
                 S: S as any,
                 context: context as any,
-                title: "Tabela artykułów",
+                title: 'Tabela artykułów',
                 icon: Table2,
               }) as any,
               S.divider(),
               // Blog articles grouped by year
               S.listItem()
-                .title("Wpisy na blogu")
+                .title('Wpisy na blogu')
                 .icon(BookOpen)
                 .child(async () => {
                   // Fetch all blog articles with their publish dates (custom or creation date)
                   const articles = await context
-                    .getClient({ apiVersion: "2024-01-01" })
-                    .fetch<
-                      Array<{ publishDate: string }>
-                    >(`*[_type == "blog-article"] {"publishDate": coalesce(publishedDate, _createdAt)}`);
+                    .getClient({ apiVersion: '2024-01-01' })
+                    .fetch<Array<{ publishDate: string }>>(
+                      `*[_type == "blog-article"] {"publishDate": coalesce(publishedDate, _createdAt)}`,
+                    );
 
                   // Extract unique years and sort them in descending order
                   const years = [
@@ -568,22 +575,22 @@ export const structure = (
                   ].sort((a, b) => b - a);
 
                   return S.list()
-                    .title("Wpisy na blogu")
+                    .title('Wpisy na blogu')
                     .items([
                       // "All Articles" option as first item
                       S.listItem()
-                        .title("Wszystkie wpisy")
+                        .title('Wszystkie wpisy')
                         .icon(BookOpen)
                         .child(
                           S.documentList()
-                            .title("Wszystkie wpisy")
+                            .title('Wszystkie wpisy')
                             .filter('_type == "blog-article"')
                             .defaultOrdering([
                               {
-                                field: "publishedDate",
-                                direction: "desc",
+                                field: 'publishedDate',
+                                direction: 'desc',
                               },
-                              { field: "_createdAt", direction: "desc" },
+                              { field: '_createdAt', direction: 'desc' },
                             ]),
                         ),
                       S.divider(),
@@ -601,10 +608,10 @@ export const structure = (
                               )
                               .defaultOrdering([
                                 {
-                                  field: "publishedDate",
-                                  direction: "desc",
+                                  field: 'publishedDate',
+                                  direction: 'desc',
                                 },
-                                { field: "_createdAt", direction: "desc" },
+                                { field: '_createdAt', direction: 'desc' },
                               ]),
                           ),
                       ),
@@ -613,92 +620,94 @@ export const structure = (
               createCollection({
                 S,
                 context,
-                type: "blog-category",
+                type: 'blog-category',
                 orderable: true,
-                title: "Kategorie bloga",
+                title: 'Kategorie bloga',
               }),
             ]),
         ),
       createCollection({
         S,
         context,
-        type: "store",
+        type: 'store',
         orderable: false,
-        title: "Salony",
+        title: 'Salony',
       }),
       S.listItem()
-        .title("CPO")
+        .title('CPO')
         .icon(BadgeCheck)
         .child(
           S.list()
-            .title("CPO - Certyfikowany sprzęt używany")
+            .title('CPO - Certyfikowany sprzęt używany')
             .items([
-              createSingleTon({ S, type: "cpoPage" }),
+              createSingleTon({ S, type: 'cpoPage' }),
               createBulkActionsTable({
-                type: "cpoProduct",
+                type: 'cpoProduct',
                 S: S as any,
                 context: context as any,
-                id: "cpo-products-table",
-                title: "Tabela produktów CPO",
+                id: 'cpo-products-table',
+                title: 'Tabela produktów CPO',
                 icon: Table2,
                 filters: [
                   {
-                    field: "isArchived",
-                    label: "Status",
+                    field: 'isArchived',
+                    label: 'Status',
                     options: [
-                      { label: "Wszystkie", value: null },
-                      { label: "Aktywne", value: "isArchived != true" },
-                      { label: "Archiwalne", value: "isArchived == true" },
+                      { label: 'Wszystkie', value: null },
+                      { label: 'Aktywne', value: 'isArchived != true' },
+                      { label: 'Archiwalne', value: 'isArchived == true' },
                     ],
                     defaultIndex: 0,
                   },
                 ],
                 referenceFilters: [
                   {
-                    referenceField: "brand._ref",
-                    referenceType: "brand",
-                    label: "Marka",
+                    referenceField: 'brand._ref',
+                    referenceType: 'brand',
+                    label: 'Marka',
                     groqProjection:
                       '{ _id, name, "imageUrl": logo.asset->url }',
-                    groqFilter: "doNotShowBrand != true",
+                    groqFilter: 'doNotShowBrand != true',
                   },
                 ],
               }) as any,
               S.divider(),
               S.listItem()
-                .title("Produkty CPO")
+                .title('Produkty CPO')
                 .icon(Folder)
                 .child(
                   S.documentList()
-                    .title("Produkty CPO")
+                    .title('Produkty CPO')
                     .filter('_type == "cpoProduct"')
-                    .defaultOrdering([{ field: "_createdAt", direction: "desc" }]),
+                    .defaultOrdering([
+                      { field: '_createdAt', direction: 'desc' },
+                    ]),
                 ),
             ]),
         ),
       createCollection({
         S,
         context,
-        type: "teamMember",
-        title: "Zespół",
+        type: 'teamMember',
+        title: 'Zespół',
       }),
-      createCollection({ S, context, type: "faq" }),
+      createCollection({ S, context, type: 'faq' }),
       S.divider(),
       S.listItem()
-        .title("Konfiguracja strony")
+        .title('Konfiguracja strony')
         .icon(Settings2)
         .child(
           S.list()
-            .title("Konfiguracja strony")
+            .title('Konfiguracja strony')
             .items([
-              createSingleTon({ S, type: "navbar" }),
-              createSingleTon({ S, type: "footer" }),
-              createSingleTon({ S, type: "settings" }),
-              createCollection({ S, context, type: "socialMedia" }),
-              createSingleTon({ S, type: "notFound" }),
-              createSingleTon({ S, type: "termsAndConditions" }),
-              createSingleTon({ S, type: "privacyPolicy" }),
-              createSingleTon({ S, type: "redirects" }),
+              createSingleTon({ S, type: 'navbar' }),
+              createSingleTon({ S, type: 'footer' }),
+              createSingleTon({ S, type: 'settings' }),
+              createCollection({ S, context, type: 'socialMedia' }),
+              createSingleTon({ S, type: 'notFound' }),
+              createSingleTon({ S, type: 'termsAndConditions' }),
+              createSingleTon({ S, type: 'privacyPolicy' }),
+              createSingleTon({ S, type: 'redirects' }),
             ]),
         ),
     ]);
@@ -713,43 +722,40 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (
   { schemaType },
 ) => {
   // Add Technical Data view and Product Filters view for product documents
-  if (schemaType === "product") {
+  if (schemaType === 'product') {
     return S.document().views([
       // Default form view
-      S.view.form().title("Zawartość").icon(EditIcon),
+      S.view.form().title('Zawartość').icon(EditIcon),
       // Technical Data table view
       S.view
         .component(TechnicalDataView)
-        .title("Dane techniczne")
+        .title('Dane techniczne')
         .icon(BlockContentIcon),
       // Product Filters view
-      S.view
-        .component(ProductFiltersView)
-        .title("Filtry")
-        .icon(FilterIcon),
+      S.view.component(ProductFiltersView).title('Filtry').icon(FilterIcon),
     ]);
   }
 
   // Add Technical Data view for cpoProduct documents (internal products)
-  if (schemaType === "cpoProduct") {
+  if (schemaType === 'cpoProduct') {
     return S.document().views([
-      S.view.form().title("Zawartość").icon(EditIcon),
+      S.view.form().title('Zawartość').icon(EditIcon),
       S.view
         .component(TechnicalDataView)
-        .title("Dane techniczne")
+        .title('Dane techniczne')
         .icon(BlockContentIcon),
     ]);
   }
 
   // Add Custom Filters Config view for sub-category documents
-  if (schemaType === "productCategorySub") {
+  if (schemaType === 'productCategorySub') {
     return S.document().views([
       // Default form view
-      S.view.form().title("Zawartość").icon(EditIcon),
+      S.view.form().title('Zawartość').icon(EditIcon),
       // Custom Filters Config view
       S.view
         .component(CustomFiltersConfigView)
-        .title("Konfiguracja filtrów")
+        .title('Konfiguracja filtrów')
         .icon(FilterIcon),
     ]);
   }

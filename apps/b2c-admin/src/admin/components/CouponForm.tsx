@@ -10,16 +10,16 @@ import {
   Stack,
   Text,
   TextInput,
-} from "@sanity/ui";
-import { type FormEvent, type ReactNode, useEffect, useState } from "react";
+} from '@sanity/ui';
+import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
 
 import type {
   AdminCoupon,
   AdminCouponDiscountType,
   AdminCouponMutationInput,
   AdminCouponProductOption,
-} from "../types.js";
-import { CouponProductPicker } from "./CouponProductPicker.js";
+} from '../types.js';
+import { CouponProductPicker } from './CouponProductPicker.js';
 
 export type CouponFormValues = {
   code: string;
@@ -47,22 +47,22 @@ type CouponFormProps = {
 };
 
 const DEFAULT_FORM_VALUES: CouponFormValues = {
-  code: "",
-  discountType: "fixed_order",
-  discountValuePln: "",
-  discountPercent: "",
+  code: '',
+  discountType: 'fixed_order',
+  discountValuePln: '',
+  discountPercent: '',
   selectedProductKeys: [],
-  usageLimit: "",
-  startsAt: "",
-  expiresAt: "",
+  usageLimit: '',
+  startsAt: '',
+  expiresAt: '',
   isActive: true,
 };
 
 const COUPON_DISCOUNT_TYPES: AdminCouponDiscountType[] = [
-  "fixed_order",
-  "fixed_product",
-  "percent_order",
-  "percent_product",
+  'fixed_order',
+  'fixed_product',
+  'percent_order',
+  'percent_product',
 ];
 
 export function getCouponFormValues(coupon: AdminCoupon): CouponFormValues {
@@ -70,19 +70,19 @@ export function getCouponFormValues(coupon: AdminCoupon): CouponFormValues {
     coupon.discountType as AdminCouponDiscountType,
   )
     ? (coupon.discountType as AdminCouponDiscountType)
-    : "fixed_order";
+    : 'fixed_order';
 
   return {
     code: coupon.code,
     discountType,
     discountValuePln:
       coupon.discountValueCents === null
-        ? ""
+        ? ''
         : formatCentsInput(coupon.discountValueCents),
     discountPercent:
-      coupon.discountPercent === null ? "" : String(coupon.discountPercent),
+      coupon.discountPercent === null ? '' : String(coupon.discountPercent),
     selectedProductKeys: coupon.productKeys,
-    usageLimit: coupon.usageLimit === null ? "" : String(coupon.usageLimit),
+    usageLimit: coupon.usageLimit === null ? '' : String(coupon.usageLimit),
     startsAt: formatDateTimeInputValue(coupon.startsAt),
     expiresAt: formatDateTimeInputValue(coupon.expiresAt),
     isActive: coupon.isActive,
@@ -103,8 +103,8 @@ export function CouponForm({
 }: CouponFormProps) {
   const [values, setValues] = useState<CouponFormValues>(initialValues);
   const [error, setError] = useState<string | null>(null);
-  const isFixedDiscount = values.discountType.startsWith("fixed");
-  const isProductScoped = values.discountType.endsWith("_product");
+  const isFixedDiscount = values.discountType.startsWith('fixed');
+  const isProductScoped = values.discountType.endsWith('_product');
   const earliestDateTime = enforceFutureDates
     ? getTodayDateTimeInputMin()
     : undefined;
@@ -144,7 +144,7 @@ export function CouponForm({
       setError(
         validationError instanceof Error
           ? validationError.message
-          : "Nie udało się przygotować danych kuponu.",
+          : 'Nie udało się przygotować danych kuponu.',
       );
     }
   }
@@ -166,7 +166,7 @@ export function CouponForm({
                   disabled={disabled}
                   fontSize={1}
                   onChange={(event) =>
-                    updateValue("code", event.currentTarget.value)
+                    updateValue('code', event.currentTarget.value)
                   }
                   padding={3}
                   placeholder="AUDIO100"
@@ -181,7 +181,7 @@ export function CouponForm({
                   fontSize={1}
                   onChange={(event) =>
                     updateValue(
-                      "discountType",
+                      'discountType',
                       event.currentTarget.value as AdminCouponDiscountType,
                     )
                   }
@@ -202,7 +202,7 @@ export function CouponForm({
                     disabled={disabled}
                     fontSize={1}
                     onChange={(event) =>
-                      updateValue("discountValuePln", event.currentTarget.value)
+                      updateValue('discountValuePln', event.currentTarget.value)
                     }
                     padding={3}
                     placeholder="100.00"
@@ -221,7 +221,7 @@ export function CouponForm({
                     max={100}
                     min={1}
                     onChange={(event) =>
-                      updateValue("discountPercent", event.currentTarget.value)
+                      updateValue('discountPercent', event.currentTarget.value)
                     }
                     padding={3}
                     placeholder="15"
@@ -240,7 +240,7 @@ export function CouponForm({
                   fontSize={1}
                   min={usageLimitMinimum}
                   onChange={(event) =>
-                    updateValue("usageLimit", event.currentTarget.value)
+                    updateValue('usageLimit', event.currentTarget.value)
                   }
                   padding={3}
                   placeholder="Bez limitu"
@@ -257,7 +257,7 @@ export function CouponForm({
                   fontSize={1}
                   min={earliestDateTime}
                   onChange={(event) =>
-                    updateValue("startsAt", event.currentTarget.value)
+                    updateValue('startsAt', event.currentTarget.value)
                   }
                   padding={3}
                   radius={2}
@@ -272,7 +272,7 @@ export function CouponForm({
                   fontSize={1}
                   min={expiryDateTimeMin}
                   onChange={(event) =>
-                    updateValue("expiresAt", event.currentTarget.value)
+                    updateValue('expiresAt', event.currentTarget.value)
                   }
                   padding={3}
                   radius={2}
@@ -290,7 +290,7 @@ export function CouponForm({
                 products={productOptions}
                 selectedProductKeys={values.selectedProductKeys}
                 onChange={(productKeys) =>
-                  updateValue("selectedProductKeys", productKeys)
+                  updateValue('selectedProductKeys', productKeys)
                 }
               />
             ) : null}
@@ -301,7 +301,7 @@ export function CouponForm({
                   checked={values.isActive}
                   disabled={disabled}
                   onChange={(event) =>
-                    updateValue("isActive", event.currentTarget.checked)
+                    updateValue('isActive', event.currentTarget.checked)
                   }
                 />
                 <Stack space={2}>
@@ -355,27 +355,27 @@ function buildCouponInput(
   },
 ): AdminCouponMutationInput {
   const code = values.code.trim();
-  const isProductScoped = values.discountType.endsWith("_product");
+  const isProductScoped = values.discountType.endsWith('_product');
   const productKeys = isProductScoped
     ? Array.from(new Set(values.selectedProductKeys.map((key) => key.trim())))
         .filter(Boolean)
         .sort()
     : [];
   const todayStart = getTodayStart();
-  const startsAt = parseDateTime(values.startsAt, "Aktywny od");
-  const expiresAt = parseDateTime(values.expiresAt, "Wygasa");
+  const startsAt = parseDateTime(values.startsAt, 'Aktywny od');
+  const expiresAt = parseDateTime(values.expiresAt, 'Wygasa');
   const usageLimit = parseOptionalPositiveInteger(
     values.usageLimit,
-    "Limit użyć",
+    'Limit użyć',
   );
 
   if (!code) {
-    throw new Error("Kod kuponu jest wymagany.");
+    throw new Error('Kod kuponu jest wymagany.');
   }
 
   if (isProductScoped && productKeys.length === 0) {
     throw new Error(
-      "Kupon produktowy wymaga wyboru co najmniej jednego produktu.",
+      'Kupon produktowy wymaga wyboru co najmniej jednego produktu.',
     );
   }
 
@@ -384,7 +384,7 @@ function buildCouponInput(
     startsAt &&
     Date.parse(startsAt) < todayStart.getTime()
   ) {
-    throw new Error("Data startu nie może być wcześniejsza niż dzisiaj.");
+    throw new Error('Data startu nie może być wcześniejsza niż dzisiaj.');
   }
 
   if (
@@ -392,11 +392,11 @@ function buildCouponInput(
     expiresAt &&
     Date.parse(expiresAt) < todayStart.getTime()
   ) {
-    throw new Error("Data wygaśnięcia nie może być wcześniejsza niż dzisiaj.");
+    throw new Error('Data wygaśnięcia nie może być wcześniejsza niż dzisiaj.');
   }
 
   if (startsAt && expiresAt && Date.parse(startsAt) >= Date.parse(expiresAt)) {
-    throw new Error("Data startu musi być wcześniejsza niż data wygaśnięcia.");
+    throw new Error('Data startu musi być wcześniejsza niż data wygaśnięcia.');
   }
 
   if (usageLimit !== null && usageLimit < options.usageLimitMinimum) {
@@ -405,7 +405,7 @@ function buildCouponInput(
     );
   }
 
-  if (values.discountType.startsWith("fixed")) {
+  if (values.discountType.startsWith('fixed')) {
     return {
       code,
       discountType: values.discountType,
@@ -433,11 +433,11 @@ function buildCouponInput(
 }
 
 function parseMoneyToCents(value: string): number {
-  const normalized = value.trim().replace(",", ".");
+  const normalized = value.trim().replace(',', '.');
   const amount = Number(normalized);
 
   if (!Number.isFinite(amount) || amount <= 0) {
-    throw new Error("Kwota rabatu musi być większa od 0.");
+    throw new Error('Kwota rabatu musi być większa od 0.');
   }
 
   return Math.round(amount * 100);
@@ -447,7 +447,7 @@ function parsePercent(value: string): number {
   const percent = Number(value.trim());
 
   if (!Number.isInteger(percent) || percent < 1 || percent > 100) {
-    throw new Error("Procent rabatu musi być liczbą od 1 do 100.");
+    throw new Error('Procent rabatu musi być liczbą od 1 do 100.');
   }
 
   return percent;
@@ -495,8 +495,8 @@ function getTodayStart(): Date {
 function getTodayDateTimeInputMin(): string {
   const today = getTodayStart();
   const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}T00:00`;
 }
@@ -507,13 +507,13 @@ function formatCentsInput(cents: number): string {
 
 function formatDateTimeInputValue(value: string | null): string {
   if (!value) {
-    return "";
+    return '';
   }
 
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return "";
+    return '';
   }
 
   const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
