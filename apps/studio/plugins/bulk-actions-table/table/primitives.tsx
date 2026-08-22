@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 import styled, { css } from 'styled-components';
 
 // Table
-const TableWrapper = forwardRef<HTMLDivElement, CardProps>(
+const TableWrapper = forwardRef<HTMLDivElement, PropsWithChildren<CardProps>>(
   (props = {}, ref) => <Card as="table" ref={ref} {...props} />,
 );
 
