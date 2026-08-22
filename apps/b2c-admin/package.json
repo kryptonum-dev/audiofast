@@ -9,7 +9,8 @@
     "deploy": "sanity deploy",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@sanity/icons": "^3.8.0",
@@ -22,15 +23,18 @@
     "styled-components": "^6.5.3"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^24.10.0",
+    "@testing-library/user-event": "^14.6.6",
+    "@types/node": "^24.13.3",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
+    "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "jsdom": "^29.0.2",
-    "typescript": "5.7.3",
-    "vitest": "^4.1.4"
+    "eslint": "^9.39.5",
+    "jsdom": "^29.1.1",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.11"
   }
 }
