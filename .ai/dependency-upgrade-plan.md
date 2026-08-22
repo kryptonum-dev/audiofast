@@ -1,6 +1,9 @@
 # Dependency upgrade plan — milestone 1 of the brand-page performance fix
 
-> Research date: 2026-08-22. Status: **research complete, nothing changed yet.**
+> Research date: 2026-08-22. Status: **Steps 1-5 executed on branch `chore/deps-overhaul`**
+> (commits b826420, 6487838, 981bc2c, 0176571, 0cb5436). Remaining: Step 6 (Vercel Node 24.x,
+> merge) + manual Studio verification. Deviations from the plan as written are recorded in
+> section 8 at the end of this document.
 > Context: client-reported ~8 s load on `/marki/[slug]/`. Milestone 1 = bring the
 > dependency baseline up to date (this doc). Milestone 2 = move revalidation to the
 > Sanity Functions + `defineLive` model used in `Najbar` / `kryptonum-starter`.
@@ -167,3 +170,43 @@ Follow-ups (not in this milestone): `@sanity/ui 4` + `@sanity/icons 5` pass; `@s
 ## 7. Source notes
 
 Peer/engine data read from the npm registry on 2026-08-22 (`npm view … peerDependencies engines`). Release notes: nextjs.org/blog/next-16-1|16-2|16-3, github.com/vercel/next.js/releases (v16.3.1, v16.3.2) and security advisories; sanity-io/next-sanity `MIGRATE-v9-to-v10…v12-to-v13.md` + `src/live/*`; sanity-io/sanity v6.0.0 release + sanity.io/blog/sanity-studio-v6; sanity-io/ui `MIGRATION.md`; sanity-io/icons CHANGELOG (v4/v5); sanity-io/client CHANGELOG (8.0.0); sanity-io/image-url `MIGRATE-v1-to-v2.md`; sanity-io/plugins CHANGELOGs (media, orderable-document-list, embeddings-index-ui); sanity-io/cli releases (7.0.0, 8.0.0); sanity-io/sdk react CHANGELOG + issue #14236; supabase/ssr releases + `createServerClient.ts`; supabase-js releases; lucide.dev/guide/version-1; eslint.org migrate-to-10 + vercel/next.js#89764; typescript 6.0 / 7.0 announcements + typescript-eslint#12518; vite.dev/guide/migration; vercel.com docs on Node versions / Bun pinning / Node 20 deprecation.
+
+
+---
+
+## 8. What actually happened (execution log, 2026-08-22)
+
+Deviations from the plan above, discovered while executing it:
+
+- **`@sanity/orderable-document-list` pinned to `2.0.20`, not `^2.0.22`.** 2.0.21+ import
+  `DocumentVersionsStatusIndicator` from `sanity`, which `sanity@6.10.1` does not export -
+  the Studio build fails with `MISSING_EXPORT`. They target the 6.11 line. Revisit when
+  sanity 6.11 ships.
+- **`@sanity/cli` 8 requires `--force` to overwrite `schema.json`.** Both typegen scripts
+  (root `typegen`, studio `type`) were updated. Root and studio still differ on
+  `--enforce-required-fields`; left as-is, it changes generated types and is out of scope.
+- **The 8 GB heap workaround is gone.** `NODE_OPTIONS='--max-old-space-size=8192'` was removed
+  from the studio `build`/`deploy` scripts: with Vite 8/Rolldown a cold build completes in
+  ~1 s under a 2 GB heap (it was ~54 s before).
+- **Prettier had no config file at all.** `bun run format` used prettier defaults (double
+  quotes) while eslint's `prettier/prettier` rule passed `singleQuote: true` inline, so the two
+  contradicted each other on every string. Added `.prettierrc` matching the eslint rule before
+  reformatting - that halved the churn (419 -> 182 files in `apps/web/src`) and dropped
+  apps/web lint warnings from 11926 to 115.
+- **Code changes needed beyond imports:** `portableTextToPlainString` (narrow the
+  `@portabletext/types` v4 child union), `Input` `onInput` handler (`@types/react` now types it
+  `InputEventHandler`), vendored `bulk-actions-table/table/primitives.tsx` (`TableWrapper` needs
+  explicit `PropsWithChildren`), `proxy.ts` (forward the `headers` argument `@supabase/ssr` 0.10+
+  passes to `setAll`).
+- **`next dev` on 16.3 generates `apps/web/AGENTS.md` + `apps/web/CLAUDE.md`** and re-creates
+  them on every run. Committed, per the instruction inside the generated file.
+- **Typegen picked up `media.folder` / `media.folder.reference`** - new document types from
+  sanity-plugin-media 6.1's folders feature.
+- **Not verified: Playwright e2e.** The dedicated e2e Supabase project
+  (`knrmiyciwnoelexwsqpg.supabase.co` in `apps/web/.env.e2e.local`) no longer resolves
+  (NXDOMAIN), so `auth.setup.ts` fails before any test runs. This is pre-existing and unrelated
+  to the upgrade, but it means the checkout/account flows have not been exercised end-to-end.
+- **Not verified: Studio editorial UX under a real login** - media tool, orderable lists, bulk
+  actions on live documents, embeddings dashboard, custom unpublish action. `sanity dev` boots
+  clean (HTTP 200, Vite 8, ready in ~108 ms) and both apps build, but the interactive surfaces
+  need a human pass.
