@@ -43,9 +43,12 @@ type ProductsPageProps = {
 // ----------------------------------------
 // Cached Static Data Fetcher
 // ----------------------------------------
+// `products` covers the editorial page content; the shared filter sidebar data
+// rides its own `filter-metadata` tag so that product/brand/category publishes
+// no longer have to reach for a broad tag to refresh it.
 async function getStaticPageData() {
   'use cache';
-  cacheTag('products', 'brands');
+  cacheTag('products', 'filter-metadata');
   cacheLife('weeks');
 
   const [contentData, filterMetadata] = await Promise.all([
@@ -56,7 +59,7 @@ async function getStaticPageData() {
     }),
     sanityFetch<QueryAllProductsFilterMetadataResult>({
       query: queryAllProductsFilterMetadata,
-      tags: ['products'],
+      tags: ['filter-metadata'],
     }),
   ]);
 

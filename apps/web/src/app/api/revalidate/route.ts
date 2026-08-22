@@ -85,7 +85,28 @@ const REVERSE_LOOKUP_TYPES = new Set([
   'blog-article',
   'productCategorySub',
   'productCategoryParent',
+  // Stores are referenced by brand documents ("Gdzie kupić"), so a store edit
+  // has to reach the brand pages that list it — via `brand:<slug>` rather than
+  // the broad `brand` tag.
+  'store',
 ]);
+
+/**
+ * Tags produced by a lookup, split by how the cache should be invalidated.
+ *
+ * - `self`: tags that address the edited document's *own* page. The first
+ *   visitor after the publish is almost always the editor verifying their
+ *   change, and the blast radius is a single page — these get immediate
+ *   expiration so that visit is guaranteed fresh.
+ * - `related`: collateral fan-out (a product publish touching its brand page,
+ *   the shared filter sidebar, home-page carousels, …). These face real public
+ *   traffic and are also triggered by automated price-sync runs, so they get
+ *   stale-while-revalidate instead of a blocking expiry.
+ */
+type LookupTags = {
+  self: string[];
+  related: string[];
+};
 
 /**
  * Perform reverse lookup to find all documents that reference a given document,
@@ -99,10 +120,11 @@ async function getReferencingDocumentTags(
   docId: string,
   docType: string,
   docSlug: string | null | undefined,
-): Promise<string[]> {
+): Promise<LookupTags> {
   const client = getSanityClient();
-  if (!client) return [];
+  if (!client) return { self: [], related: [] };
 
+  const self: string[] = [];
   const tags: string[] = [];
 
   // 1. Add specific tag for the edited document itself
@@ -111,20 +133,20 @@ async function getReferencingDocumentTags(
     if (slug) {
       switch (docType) {
         case 'product':
-          tags.push(`product:${slug}`);
-          tags.push(`product-pricing:${slug}`);
+          self.push(`product:${slug}`);
+          self.push(`product-pricing:${slug}`);
           break;
         case 'cpoProduct':
-          tags.push(`cpoProduct:${slug}`);
+          self.push(`cpoProduct:${slug}`);
           break;
         case 'blog-article':
-          tags.push(`blog-article:${slug}`);
+          self.push(`blog-article:${slug}`);
           break;
         case 'review':
-          tags.push(`review:${slug}`);
+          self.push(`review:${slug}`);
           break;
         case 'page':
-          tags.push(`page:${slug}`);
+          self.push(`page:${slug}`);
           break;
       }
     }
@@ -138,7 +160,7 @@ async function getReferencingDocumentTags(
         slug: string | null;
       }>
     >(
-      `*[references($id) && _type in ["product", "cpoProduct", "page", "homePage", "cpoPage", "review", "blog-article"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
+      `*[references($id) && _type in ["product", "cpoProduct", "page", "homePage", "cpoPage", "review", "blog-article", "brand"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
       { id: docId },
     );
 
@@ -174,6 +196,11 @@ async function getReferencingDocumentTags(
         case 'blog-article':
           tags.push(`blog-article:${refSlug}`);
           break;
+        case 'brand':
+          // Brand pages embed stores and featured reviews — invalidate only
+          // the brands that actually reference the edited document.
+          tags.push(`brand:${refSlug}`);
+          break;
       }
     }
 
@@ -189,7 +216,7 @@ async function getReferencingDocumentTags(
     );
   }
 
-  return tags;
+  return { self, related: tags };
 }
 
 /**
@@ -198,9 +225,9 @@ async function getReferencingDocumentTags(
  */
 async function getProductsInCategoryTags(
   categoryId: string,
-): Promise<string[]> {
+): Promise<LookupTags> {
   const client = getSanityClient();
-  if (!client) return [];
+  if (!client) return { self: [], related: [] };
 
   try {
     const products = await client.fetch<Array<{ slug: string | null }>>(
@@ -222,13 +249,13 @@ async function getProductsInCategoryTags(
       );
     }
 
-    return tags;
+    return { self: [], related: tags };
   } catch (error) {
     console.error(
       `[ReverseLookup] Error querying products for category ${categoryId}:`,
       error,
     );
-    return [];
+    return { self: [], related: [] };
   }
 }
 
@@ -237,9 +264,9 @@ async function getProductsInCategoryTags(
  * This replaces the broad "brand" tag on product edits — only the product's
  * own brand page gets invalidated instead of all ~30 brand pages.
  */
-async function getProductBrandTag(productId: string): Promise<string[]> {
+async function getProductBrandTag(productId: string): Promise<LookupTags> {
   const client = getSanityClient();
-  if (!client) return [];
+  if (!client) return { self: [], related: [] };
 
   try {
     const result = await client.fetch<{ brandSlug: string | null } | null>(
@@ -249,23 +276,74 @@ async function getProductBrandTag(productId: string): Promise<string[]> {
       { productId },
     );
 
-    if (!result?.brandSlug) return [];
+    if (!result?.brandSlug) return { self: [], related: [] };
 
     const slug = extractSlug(result.brandSlug);
     if (slug) {
       console.log(
         `[BrandLookup] Product ${productId} belongs to brand "${slug}"`,
       );
-      return [`brand:${slug}`];
+      // Collateral, not the edited document: automated price-sync runs patch
+      // products in bulk, and blocking one brand page per patched product is
+      // exactly the cold-shell problem we are fixing.
+      return { self: [], related: [`brand:${slug}`] };
     }
 
-    return [];
+    return { self: [], related: [] };
   } catch (error) {
     console.error(
       `[BrandLookup] Error querying brand for product ${productId}:`,
       error,
     );
-    return [];
+    return { self: [], related: [] };
+  }
+}
+
+/**
+ * When a brand is edited, resolve its slug so only that brand's page is
+ * invalidated (`brand:<slug>`) instead of every brand page via the broad
+ * `brand` tag.
+ *
+ * The webhook payload normally carries the slug; when it does not (or the
+ * document is gone, e.g. an unpublish/delete) we fall back to the broad
+ * `brand` tag so nothing can silently keep serving removed content.
+ */
+async function getBrandOwnTags(
+  brandId: string,
+  docSlug: string | null | undefined,
+): Promise<LookupTags> {
+  const payloadSlug = extractSlug(docSlug);
+  if (payloadSlug) {
+    return { self: [`brand:${payloadSlug}`], related: [] };
+  }
+
+  const client = getSanityClient();
+  if (!client) return { self: [], related: ['brand'] };
+
+  try {
+    const result = await client.fetch<{ slug: string | null } | null>(
+      `*[_type == "brand" && _id == $brandId && !(_id in path("drafts.**"))][0]{
+        "slug": slug.current
+      }`,
+      { brandId },
+    );
+
+    const slug = extractSlug(result?.slug);
+    if (slug) {
+      console.log(`[BrandLookup] Brand ${brandId} resolved to "${slug}"`);
+      return { self: [`brand:${slug}`], related: [] };
+    }
+
+    console.warn(
+      `[BrandLookup] Could not resolve slug for brand ${brandId} - falling back to the broad "brand" tag`,
+    );
+    return { self: [], related: ['brand'] };
+  } catch (error) {
+    console.error(
+      `[BrandLookup] Error querying slug for brand ${brandId}:`,
+      error,
+    );
+    return { self: [], related: ['brand'] };
   }
 }
 
@@ -275,8 +353,15 @@ async function getProductBrandTag(productId: string): Promise<string[]> {
  *
  * SIMPLIFIED FOR ISR COST REDUCTION:
  * - Product edits invalidate listings + the specific brand page (via lookup)
- * - Brand edits invalidate brand listings, product filters, and all brand pages
+ * - Brand edits invalidate the brand listing + the edited brand's own page
+ *   (via lookup) — never all brand pages
  * - Home page, CMS pages, reviews, blog articles handled by reverse lookup
+ *
+ * Tag breadth is the thing to watch here: every tag listed for a type is
+ * applied to every cache entry carrying it, and tags propagate from nested
+ * `use cache` entries up into the page's static shell. A broad tag therefore
+ * cools every shell that touches it, which is what kept all ~41 brand pages
+ * permanently cold. Prefer a narrow tag plus a targeted lookup.
  */
 const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // ============================================================================
@@ -284,11 +369,17 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // ============================================================================
 
   // Products: Invalidate listings + homePage (latest/featured publication blocks use dynamic queries)
+  // `filter-metadata` is the shared filter-sidebar dataset, which genuinely
+  // derives from every product — it is listed explicitly here rather than
+  // being invalidated as a side effect of the broad `products` tag.
   // Brand page handled by targeted lookup below; CMS pages, reviews, blog articles handled by reverse lookup
-  product: ['products', 'homePage'],
+  product: ['products', 'homePage', 'filter-metadata'],
 
-  // Brands: Invalidate brand listings, product filters, and all brand pages
-  brand: ['brands', 'products', 'brand'],
+  // Brands: brand listing + the shared filter sidebar (which lists brands).
+  // The edited brand's own page is invalidated through `brand:<slug>` added by
+  // getBrandOwnTags() — deliberately NOT the broad `brand` tag, which would
+  // expire all ~41 brand shells for a single-brand edit.
+  brand: ['brands', 'filter-metadata'],
 
   // Reviews: Also invalidate homePage (latest/featured publication blocks use dynamic queries)
   review: ['homePage'],
@@ -300,8 +391,8 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // CATEGORY & ORGANIZATION TYPES
   // ============================================================================
 
-  productCategorySub: ['products', 'productCategorySub'],
-  productCategoryParent: ['products'],
+  productCategorySub: ['products', 'productCategorySub', 'filter-metadata'],
+  productCategoryParent: ['products', 'filter-metadata'],
   'blog-category': ['blog', 'blog-category'],
 
   // ============================================================================
@@ -311,7 +402,9 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   teamMember: ['teamMember'],
   reviewAuthor: ['reviewAuthor'],
   faq: ['faq'],
-  store: ['store', 'brand'], // Stores appear on brand pages
+  // Stores appear on brand pages, but only on the brands that reference them —
+  // resolved to `brand:<slug>` by the reverse lookup instead of the broad tag.
+  store: ['store'],
   award: ['award'],
 
   // ============================================================================
@@ -360,6 +453,35 @@ function getTransitiveDependencies(documentType: string): string[] {
   return TYPE_DEPENDENCY_MAP[documentType] ?? [documentType];
 }
 
+// ============================================================================
+// INVALIDATION PROFILES
+// ============================================================================
+
+/**
+ * `updateTag` is Server-Action-only (it throws in a Route Handler) and
+ * `expireTag` does not exist, so `revalidateTag(tag, profile)` is the only
+ * legal API here. The single-argument form is deprecated in Next 16.
+ *
+ * Two profiles, chosen per tag rather than in bulk:
+ *
+ * - IMMEDIATE (`{ expire: 0 }`) expires matching entries on the spot, so the
+ *   very next request blocks on a full regeneration. Correct when the tag
+ *   points at the document that was just published: the first visitor is
+ *   nearly always the editor checking their own change, and exactly one page
+ *   pays the cost. Also used for explicit `tags` in a manual payload — that is
+ *   the operator's deliberate "make this fresh now" lever.
+ *
+ * - SWR (`'max'`) marks entries stale and serves them while a fresh copy is
+ *   built in the background. Correct for collateral fan-out — broad tags such
+ *   as `products`, `brands` or `filter-metadata`, and slug tags reached
+ *   through a reference lookup. These cover many prerendered shells at once,
+ *   face real public traffic, and are re-triggered by automated price-sync
+ *   runs; expiring them is what made every visitor after a publish pay a cold
+ *   render. The trade-off is one extra request before the new content shows.
+ */
+const IMMEDIATE_EXPIRATION = { expire: 0 } as const;
+const STALE_WHILE_REVALIDATE = 'max';
+
 export async function POST(request: NextRequest) {
   const timestamp = new Date().toISOString();
   const revalidateToken = process.env.NEXT_REVALIDATE_TOKEN;
@@ -401,13 +523,16 @@ export async function POST(request: NextRequest) {
   const revalidatedTags: string[] = [];
   const revalidatedPaths: string[] = [];
   const tags = new Set<string>();
+  // Subset of `tags` that addresses the edited documents themselves and is
+  // therefore expired immediately instead of being served stale.
+  const immediateTags = new Set<string>();
   const paths = new Set<string>();
 
   // Track denormalization tasks to run in parallel
   const denormTasks: Promise<void>[] = [];
 
   // Track reverse lookup tasks
-  const reverseLookupTasks: Promise<string[]>[] = [];
+  const reverseLookupTasks: Promise<LookupTags>[] = [];
 
   for (const doc of documents) {
     // =========================================================================
@@ -416,7 +541,16 @@ export async function POST(request: NextRequest) {
     if (doc._type) {
       // Add all transitive dependencies from the static map
       const transitiveDeps = getTransitiveDependencies(doc._type);
-      transitiveDeps.forEach((tag) => addTag(tags, tag));
+      transitiveDeps.forEach((tag) => {
+        addTag(tags, tag);
+
+        // A tag equal to the document type is that document's own surface
+        // (`homePage` for a homePage edit, `store` for a store edit, …), as
+        // opposed to the collateral entries listed alongside it.
+        if (tag === doc._type) {
+          addTag(immediateTags, tag);
+        }
+      });
 
       // =========================================================================
       // Slug-specific CMS page tag
@@ -427,6 +561,7 @@ export async function POST(request: NextRequest) {
         const pageSlug = extractSlug(doc.slug);
         if (pageSlug) {
           addTag(tags, `page:${pageSlug}`);
+          addTag(immediateTags, `page:${pageSlug}`);
         }
       }
 
@@ -455,6 +590,28 @@ export async function POST(request: NextRequest) {
       // brand page instead of all ~30 brand pages.
       if (doc._id && doc._type === 'product') {
         reverseLookupTasks.push(getProductBrandTag(doc._id));
+      }
+
+      // =========================================================================
+      // Targeted own-page lookup for brand edits
+      // =========================================================================
+      // Resolve the edited brand's slug so only `brand:<slug>` is invalidated
+      // instead of the broad `brand` tag (which covers every brand shell).
+      if (doc._type === 'brand') {
+        if (doc._id) {
+          reverseLookupTasks.push(getBrandOwnTags(doc._id, doc.slug));
+        } else {
+          // No document id to look the slug up with — use whatever the payload
+          // carries, and fall back to the broad tag rather than leave the
+          // brand's page pinned to stale content.
+          const brandSlug = extractSlug(doc.slug);
+          if (brandSlug) {
+            addTag(tags, `brand:${brandSlug}`);
+            addTag(immediateTags, `brand:${brandSlug}`);
+          } else {
+            addTag(tags, 'brand');
+          }
+        }
       }
 
       // =========================================================================
@@ -495,7 +652,11 @@ export async function POST(request: NextRequest) {
     // =========================================================================
     if (doc.tags && Array.isArray(doc.tags)) {
       for (const tag of doc.tags) {
+        // Explicit tags are a deliberate operator request ("refresh this
+        // now"), and the only way to force a blocking refresh through this
+        // endpoint — keep them on immediate expiration.
         addTag(tags, tag);
+        addTag(immediateTags, tag);
       }
     }
 
@@ -516,7 +677,11 @@ export async function POST(request: NextRequest) {
     try {
       const reverseLookupResults = await Promise.all(reverseLookupTasks);
       for (const resultTags of reverseLookupResults) {
-        for (const tag of resultTags) {
+        for (const tag of resultTags.self) {
+          addTag(tags, tag);
+          addTag(immediateTags, tag);
+        }
+        for (const tag of resultTags.related) {
           addTag(tags, tag);
         }
       }
@@ -525,12 +690,15 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Revalidate all collected tags
-  // Using { expire: 0 } for immediate cache expiration instead of stale-while-revalidate.
-  // This ensures clients see fresh content on the FIRST visit after publishing in Sanity,
-  // rather than needing a second visit/refresh with 'max' profile.
+  // Revalidate all collected tags, per-tag profile (see IMMEDIATE_EXPIRATION /
+  // STALE_WHILE_REVALIDATE above): the edited document's own surface expires
+  // immediately so the editor sees their change on the first visit, everything
+  // else is served stale while it regenerates in the background.
   for (const tag of tags) {
-    revalidateTag(tag, { expire: 0 });
+    revalidateTag(
+      tag,
+      immediateTags.has(tag) ? IMMEDIATE_EXPIRATION : STALE_WHILE_REVALIDATE,
+    );
     revalidatedTags.push(tag);
   }
 
@@ -557,7 +725,11 @@ export async function POST(request: NextRequest) {
     const logParts = [`[Revalidation] ${timestamp}`];
     if (documentTypes) logParts.push(`Types: ${documentTypes}`);
     if (revalidatedTags.length > 0) {
-      logParts.push(`Tags: ${revalidatedTags.join(', ')}`);
+      logParts.push(
+        `Tags: ${revalidatedTags
+          .map((tag) => (immediateTags.has(tag) ? `${tag} (immediate)` : tag))
+          .join(', ')}`,
+      );
     }
     if (revalidatedPaths.length > 0) {
       logParts.push(`Paths: ${revalidatedPaths.join(', ')}`);
@@ -569,6 +741,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     revalidated: revalidatedTags.length > 0 || revalidatedPaths.length > 0,
     tags: revalidatedTags,
+    immediateTags: revalidatedTags.filter((tag) => immediateTags.has(tag)),
     paths: revalidatedPaths,
     timestamp,
   });
@@ -583,7 +756,7 @@ export async function GET() {
     status: 'ok',
     endpoint: 'Cache Revalidation API',
     description:
-      'Invalidates Next.js cache with immediate expiration for instant content updates',
+      "Invalidates the Next.js cache: the edited document's own page expires immediately, dependent content is served stale while it regenerates",
     supportedPayloads: {
       sanityWebhook: {
         description: 'Sanity document change webhook',
@@ -610,8 +783,8 @@ export async function GET() {
     features: {
       transitiveRevalidation:
         'Automatically revalidates dependent content (e.g., brand → products → pages)',
-      immediateExpiration:
-        'Uses revalidateTag with { expire: 0 } for immediate cache invalidation - visitors see fresh content on first visit after publishing',
+      perTagInvalidationProfile:
+        "Tags addressing the edited document (and explicit tags in a manual payload) use revalidateTag(tag, { expire: 0 }); collateral tags use revalidateTag(tag, 'max') so visitors get a stale page instantly while it regenerates in the background",
       staticDependencyMap:
         'Pre-defined content relationships for instant, zero-latency revalidation',
       reverseLookup:

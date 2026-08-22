@@ -39,7 +39,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllBrandSlugsForSitemap,
-      tags: ['brand'],
+      // A brand publish invalidates `brands` (the broad `brand` tag is now a
+      // fallback only), so the sitemap has to listen on both.
+      tags: ['brand', 'brands'],
     }),
     sanityFetch<SitemapEntry[]>({
       query: queryAllCpoProductSlugsForSitemap,

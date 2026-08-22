@@ -31,14 +31,16 @@ type ProductsListingProps = {
 // ----------------------------------------
 // Cached Static Data Fetcher
 // ----------------------------------------
+// Dedicated `filter-metadata` tag — see apps/web/src/app/marki/[slug]/page.tsx
+// for why this data does not ride the broad `products` / `brands` tags.
 async function getStaticFilterMetadata() {
   'use cache';
-  cacheTag('products', 'brands');
+  cacheTag('filter-metadata');
   cacheLife('weeks');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ['products'],
+    tags: ['filter-metadata'],
   });
 }
 

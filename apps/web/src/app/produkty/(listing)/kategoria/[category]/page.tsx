@@ -81,14 +81,16 @@ type CategoryPageProps = {
 // ----------------------------------------
 
 // Shared filter metadata (same for all category pages)
+// Carries the dedicated `filter-metadata` tag instead of the broad
+// `products` / `brands` tags — see the brand page for the full rationale.
 async function getStaticFilterMetadata() {
   'use cache';
-  cacheTag('products', 'brands');
+  cacheTag('filter-metadata');
   cacheLife('weeks');
 
   return sanityFetch<QueryAllProductsFilterMetadataResult>({
     query: queryAllProductsFilterMetadata,
-    tags: ['products'],
+    tags: ['filter-metadata'],
   });
 }
 
