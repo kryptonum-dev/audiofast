@@ -289,10 +289,15 @@ const publicationBlock = /* groq */ `
     _type == "product" => null,
     ${portableTextFragment('title')}
   ),
+  // Every Portable Text branch must resolve markDefs (customLink -> href),
+  // otherwise links render with the stored placeholder href "#".
   "description": select(
-    _type == "review" && count(description) > 0 => description,
-    _type == "review" => content[_type == "block"][0...3],
-    _type == "product" => shortDescription,
+    _type == "review" && count(description) > 0 => ${portableTextFragment('description')},
+    _type == "review" => content[_type == "block"][0...3]{
+      ...,
+      ${markDefsFragment()}
+    },
+    _type == "product" => ${portableTextFragment('shortDescription')},
     ${portableTextFragment('description')}
   ),
   "image": select(
