@@ -15,6 +15,15 @@ import {
 import * as React from 'react';
 
 export interface NewsletterContent {
+  videos?: Array<{
+    _id: string;
+    title: string;
+    description?: string;
+    descriptionHtml?: string;
+    image?: string;
+    slug: string;
+    _createdAt: string;
+  }>;
   articles: Array<{
     _id: string;
     title: string;
@@ -55,9 +64,14 @@ export interface HeroConfig {
   text?: string;
 }
 
-export type SectionKey = 'articles' | 'products' | 'reviews';
+export type SectionKey = 'articles' | 'products' | 'reviews' | 'videos';
 
-const DEFAULT_SECTION_ORDER: SectionKey[] = ['articles', 'products', 'reviews'];
+const DEFAULT_SECTION_ORDER: SectionKey[] = [
+  'articles',
+  'products',
+  'reviews',
+  'videos',
+];
 
 interface NewsletterTemplateProps {
   content: NewsletterContent;
@@ -71,14 +85,18 @@ export const NewsletterTemplate = ({
   sectionOrder = DEFAULT_SECTION_ORDER,
 }: NewsletterTemplateProps) => {
   const baseUrl = 'https://audiofast.pl';
-  const { articles = [], reviews = [], products = [] } = content;
+  const { articles = [], reviews = [], products = [], videos = [] } = content;
   const hasContent =
-    articles.length > 0 || reviews.length > 0 || products.length > 0;
+    articles.length > 0 ||
+    reviews.length > 0 ||
+    products.length > 0 ||
+    videos.length > 0;
 
   const sectionLabels: Record<SectionKey, string> = {
     articles: 'Artykuły',
     products: 'Produkty',
     reviews: 'Recenzje',
+    videos: 'Filmy YouTube',
   };
 
   const previewText = sectionOrder
@@ -86,6 +104,7 @@ export const NewsletterTemplate = ({
       if (key === 'articles') return articles.length > 0;
       if (key === 'products') return products.length > 0;
       if (key === 'reviews') return reviews.length > 0;
+      if (key === 'videos') return videos.length > 0;
       return false;
     })
     .map((key) => sectionLabels[key])
@@ -219,10 +238,52 @@ export const NewsletterTemplate = ({
       </Section>
     ) : null;
 
+  const renderVideos = () =>
+    videos.length > 0 ? (
+      <Section style={section}>
+        <Heading as="h2" style={h2}>
+          Filmy YouTube
+        </Heading>
+        {videos.map((item) => (
+          <Section key={item._id} style={itemContainer}>
+            {item.image && (
+              <Link href={item.slug}>
+                <Img
+                  src={item.image}
+                  alt={item.title}
+                  style={itemImage}
+                  width="600"
+                  height="auto"
+                />
+              </Link>
+            )}
+            <Text style={metaText}>YouTube</Text>
+            <Heading as="h3" style={h3}>
+              <Link href={item.slug} style={linkTitle}>
+                {item.title}
+              </Link>
+            </Heading>
+            {item.descriptionHtml ? (
+              <div
+                dangerouslySetInnerHTML={{ __html: item.descriptionHtml }}
+                style={itemDescriptionHtml}
+              />
+            ) : item.description ? (
+              <Text style={itemDescription}>{item.description}</Text>
+            ) : null}
+            <Button href={item.slug} style={button}>
+              Obejrzyj na YouTube
+            </Button>
+          </Section>
+        ))}
+      </Section>
+    ) : null;
+
   const sectionRenderers: Record<SectionKey, () => React.ReactNode> = {
     articles: renderArticles,
     products: renderProducts,
     reviews: renderReviews,
+    videos: renderVideos,
   };
 
   return (
@@ -257,7 +318,9 @@ export const NewsletterTemplate = ({
           </Section>
 
           {sectionOrder.map((key) => (
-            <React.Fragment key={key}>{sectionRenderers[key]()}</React.Fragment>
+            <React.Fragment key={key}>
+              {sectionRenderers[key]?.()}
+            </React.Fragment>
           ))}
 
           {/* Footer */}

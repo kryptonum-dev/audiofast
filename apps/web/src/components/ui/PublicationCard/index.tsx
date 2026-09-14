@@ -44,10 +44,18 @@ export default function PublicationCard({
 
   // Products use name field instead of portable text title
   const isProduct = _type === 'product';
-  const displayTitle = isProduct ? name : portableTextToPlainString(title);
+  const displayTitle =
+    isProduct || _type === 'youtubeVideo'
+      ? name
+      : portableTextToPlainString(title);
 
   // Determine button text based on publication type
-  const buttonText = isProduct ? 'Zobacz produkt' : 'Czytaj artykuł';
+  const buttonText =
+    _type === 'youtubeVideo'
+      ? 'Obejrzyj na YouTube'
+      : isProduct
+        ? 'Zobacz produkt'
+        : 'Czytaj artykuł';
 
   return (
     <article

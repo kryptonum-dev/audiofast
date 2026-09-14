@@ -83,6 +83,7 @@ const REVERSE_LOOKUP_TYPES = new Set([
   'cpoProduct',
   'review',
   'blog-article',
+  'youtubeVideo',
   'productCategorySub',
   'productCategoryParent',
   // Stores are referenced by brand documents ("Gdzie kupić"), so a store edit
@@ -383,6 +384,7 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
 
   // Reviews: Also invalidate homePage (latest/featured publication blocks use dynamic queries)
   review: ['homePage'],
+  youtubeVideo: ['homePage'],
 
   // Blog articles: Blog listing + homePage (latest/featured publication blocks use dynamic queries)
   'blog-article': ['blog', 'homePage'],

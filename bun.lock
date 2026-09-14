@@ -57,6 +57,7 @@
         "@sanity/orderable-document-list": "2.0.20",
         "@sanity/ui": "^3.5.3",
         "@sanity/vision": "^6.10.1",
+        "@workspace/youtube": "workspace:*",
         "classnames": "^2.5.1",
         "lodash.debounce": "^4.0.8",
         "lodash.get": "^4.4.2",
@@ -109,6 +110,7 @@
         "@supabase/ssr": "^0.12.4",
         "@supabase/supabase-js": "^2.112.3",
         "@vercel/edge-config": "^1.5.1",
+        "@workspace/youtube": "workspace:*",
         "botid": "^1.5.11",
         "embla-carousel-react": "^8.6.0",
         "leaflet": "^1.9.4",
@@ -173,6 +175,10 @@
     "packages/typescript-config": {
       "name": "@workspace/typescript-config",
       "version": "0.0.0",
+    },
+    "packages/youtube": {
+      "name": "@workspace/youtube",
+      "version": "1.0.0",
     },
   },
   "trustedDependencies": [
@@ -1312,6 +1318,8 @@
     "@workspace/eslint-config": ["@workspace/eslint-config@workspace:packages/eslint-config"],
 
     "@workspace/typescript-config": ["@workspace/typescript-config@workspace:packages/typescript-config"],
+
+    "@workspace/youtube": ["@workspace/youtube@workspace:packages/youtube"],
 
     "@xstate/react": ["@xstate/react@6.1.0", "", { "dependencies": { "use-isomorphic-layout-effect": "^1.1.2", "use-sync-external-store": "^1.2.0" }, "peerDependencies": { "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "xstate": "^5.28.0" }, "optionalPeers": ["xstate"] }, "sha512-ep9F0jGTI63B/jE8GHdMpUqtuz7yRebNaKv8EMUaiSi29NOglywc2X2YSOV/ygbIK+LtmgZ0q9anoEA2iBSEOw=="],
 

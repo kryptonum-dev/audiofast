@@ -50,7 +50,7 @@ export const client = createClient({
   dataset,
   apiVersion,
   useCdn: IS_PRODUCTION_DEPLOYMENT,
-  perspective: IS_PRODUCTION_DEPLOYMENT ? 'published' : 'drafts',
+  perspective: process.env.VERCEL_ENV ? 'published' : 'drafts',
   ...(!IS_PRODUCTION_DEPLOYMENT ? { token: readToken } : {}),
 });
 

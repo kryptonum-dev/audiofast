@@ -278,6 +278,7 @@ const publicationBlock = /* groq */ `
     _type == "review" => coalesce(publishedDate, _createdAt),
     _type == "blog-article" => coalesce(publishedDate, _createdAt),
     _type == "product" => coalesce(publishedDate, _createdAt),
+    _type == "youtubeVideo" => coalesce(publishedDate, _createdAt),
     _createdAt
   ),
   "name": select(
@@ -286,7 +287,7 @@ const publicationBlock = /* groq */ `
     name
   ),
   "title": select(
-    _type == "product" => null,
+    _type in ["product", "youtubeVideo"] => null,
     ${portableTextFragment('title')}
   ),
   // Every Portable Text branch must resolve markDefs (customLink -> href),
@@ -310,16 +311,19 @@ const publicationBlock = /* groq */ `
     ${imageFragment('image')}
   ),
   "publicationType": select(
+    _type == "youtubeVideo" => "YouTube",
     _type == "review" => "Recenzja",
     _type == "blog-article" => category->name,
     _type == "product" => "Produkt",
     "Artykuł"
   ),
   "destinationType": select(
+    _type == "youtubeVideo" => "external",
     _type == "review" => coalesce(destinationType, "page"),
     "page"
   ),
   "slug": select(
+    _type == "youtubeVideo" => videoUrl,
     _type == "review" && destinationType == "page" => slug.current,
     _type == "review" && destinationType == "pdf" => pdfSlug.current,
     _type == "review" && destinationType == "external" => externalUrl,
@@ -328,6 +332,7 @@ const publicationBlock = /* groq */ `
     slug.current
   ),
   "openInNewTab": select(
+    _type == "youtubeVideo" => true,
     _type == "review" && destinationType == "external" => true,
     _type == "review" && destinationType == "pdf" => true,
     false
@@ -506,7 +511,8 @@ const latestPublicationBlock = /* groq */ `
       ),
       // Default: fetch the latest publication automatically
       *[
-        _type in ["blog-article", "review", "product"] &&
+        _type in ["blog-article", "review", "product", "youtubeVideo"] &&
+        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name) && defined(image.asset))) &&
         !(_id in path("drafts.**")) &&
         // Products must be published with required fields and not archived
         (
@@ -599,7 +605,8 @@ const featuredPublicationsBlock = /* groq */ `
       },
       // Automatic modes: fetch latest publications sorted by publishedDate (or _createdAt as fallback)
       selectionMode == "latest" => *[
-        _type in ["blog-article", "review", "product"] &&
+        _type in ["blog-article", "review", "product", "youtubeVideo"] &&
+        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name) && defined(image.asset))) &&
         !(_id in path("drafts.**")) &&
         // Products must be published with required fields and not archived
         (
@@ -619,7 +626,8 @@ const featuredPublicationsBlock = /* groq */ `
       },
       // Default: secondLatest - skip the first publication, show next 20
       *[
-        _type in ["blog-article", "review", "product"] &&
+        _type in ["blog-article", "review", "product", "youtubeVideo"] &&
+        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name) && defined(image.asset))) &&
         !(_id in path("drafts.**")) &&
         // Products must be published with required fields and not archived
         (

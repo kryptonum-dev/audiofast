@@ -34,11 +34,14 @@ export default function LatestPublication({
   const TitleHeading = index === 0 ? 'h2' : 'h3';
 
   // Determine button text based on publication type
-  const buttonText = isProduct
-    ? 'Zobacz produkt'
-    : _type === 'blog-article'
-      ? 'Czytaj artykuł'
-      : 'Przeczytaj recenzję';
+  const buttonText =
+    _type === 'youtubeVideo'
+      ? 'Obejrzyj na YouTube'
+      : isProduct
+        ? 'Zobacz produkt'
+        : _type === 'blog-article'
+          ? 'Czytaj artykuł'
+          : 'Przeczytaj recenzję';
 
   return (
     <section className={`${styles.latestPublication} max-width`}>
@@ -57,7 +60,7 @@ export default function LatestPublication({
         <header className={styles.header}>
           <DateBox date={publishDate || _createdAt} />
           <PublicationType publicationType={publicationType!} />
-          {isProduct ? (
+          {isProduct || _type === 'youtubeVideo' ? (
             <TitleHeading className={styles.title}>{name}</TitleHeading>
           ) : (
             <PortableText

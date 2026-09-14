@@ -68,7 +68,10 @@ export async function sanityFetch<QueryResponse>({
     cacheTag(...tags);
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.VERCEL_ENV === 'preview'
+  ) {
     cacheLife('seconds');
   } else {
     cacheLife('weeks');

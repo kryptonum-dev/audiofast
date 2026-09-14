@@ -12,6 +12,7 @@ import {
   FolderOpen,
   type LucideIcon,
   MessageSquareText,
+  Play,
   Podcast,
   Settings2,
   Speaker,
@@ -536,6 +537,7 @@ export const structure = (
                 ),
             ]),
         ),
+      S.documentTypeListItem('youtubeVideo').title('Filmy YouTube').icon(Play),
       S.listItem()
         .title('Blog')
         .icon(BookOpen)

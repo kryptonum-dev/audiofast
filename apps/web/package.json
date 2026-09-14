@@ -64,7 +64,8 @@
     "server-only": "^0.0.1",
     "slugify": "^1.6.9",
     "sonner": "^2.0.8",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "@workspace/youtube": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",

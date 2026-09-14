@@ -10,7 +10,7 @@ export const latestPublication = defineType({
   icon: Newspaper,
   type: 'object',
   description:
-    'Sekcja wyświetlająca najnowszą publikację - może być to artykuł blogowy, recenzja produktu lub produkt z danymi publikacji',
+    'Sekcja wyświetlająca najnowszą publikację - może być to artykuł blogowy, recenzja, film YouTube lub produkt z danymi publikacji',
   fields: [
     customPortableText({
       name: 'heading',
@@ -43,7 +43,12 @@ export const latestPublication = defineType({
       description:
         'Wybierz publikację do wyświetlenia - może być to artykuł blogowy, recenzja lub produkt (z obrazem publikacji lub krótkim opisem)',
       hidden: ({ parent }) => parent?.selectionMode !== 'manual',
-      to: [{ type: 'blog-article' }, { type: 'review' }, { type: 'product' }],
+      to: [
+        { type: 'blog-article' },
+        { type: 'review' },
+        { type: 'product' },
+        { type: 'youtubeVideo' },
+      ],
       options: {
         filter: `!(_id in path("drafts.**")) && (
           _type != "product" ||
@@ -99,7 +104,9 @@ export const latestPublication = defineType({
           ? 'Artykuł blogowy'
           : publicationType === 'product'
             ? 'Produkt'
-            : 'Recenzja';
+            : publicationType === 'youtubeVideo'
+              ? 'YouTube'
+              : 'Recenzja';
 
       return {
         title: headingText,

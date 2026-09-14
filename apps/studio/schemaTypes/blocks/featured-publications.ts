@@ -12,7 +12,7 @@ export const featuredPublications = defineType({
   icon: Highlighter,
   type: 'object',
   description:
-    'Sekcja z karuzelą wyróżnionych publikacji - artykułów blogowych, recenzji i produktów z danymi publikacji',
+    'Sekcja z karuzelą wyróżnionych publikacji - artykułów blogowych, recenzji, filmów YouTube i produktów z danymi publikacji',
   fields: [
     customPortableText({
       name: 'heading',
@@ -61,6 +61,7 @@ export const featuredPublications = defineType({
             { type: 'blog-article' },
             { type: 'review' },
             { type: 'product' },
+            { type: 'youtubeVideo' },
           ],
           options: {
             disableNew: true,

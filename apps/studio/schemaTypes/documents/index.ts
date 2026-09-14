@@ -13,6 +13,7 @@ import { reviewAuthor } from './collections/review-author';
 import socialMedia from './collections/social-media';
 import { store } from './collections/store';
 import { teamMember } from './collections/team-member';
+import { youtubeVideo } from './collections/youtube-video';
 import { blog } from './singletons/blog';
 import { brands } from './singletons/brands';
 import { comparatorConfig } from './singletons/comparator-config';
@@ -44,6 +45,7 @@ export const singletons = [
 ];
 
 export const collection = [
+  youtubeVideo,
   page,
   faq,
   socialMedia,

@@ -230,4 +230,34 @@ describe('/api/newsletter/generate', () => {
     expect(response.headers.get('Content-Type')).toContain('text/html');
     expect(await response.text()).toBe('<html><body>Newsletter</body></html>');
   });
+  it('blocks Mailchimp writes in preview even for an authorized operator', async () => {
+    stubSanityEnv();
+    stubAllowedOperator();
+    vi.stubEnv('VERCEL_ENV', 'preview');
+    const response = await POST(
+      createRequest({
+        body: { ...createGeneratePayload(), action: 'create-mailchimp-draft' },
+        headers: { Authorization: 'Bearer sanity-token' },
+      }),
+    );
+    expect(response.status).toBe(403);
+  });
+  it('rejects invalid video destinations', async () => {
+    stubSanityEnv();
+    stubAllowedOperator();
+    const payload = createGeneratePayload();
+    const response = await POST(
+      createRequest({
+        body: {
+          ...payload,
+          content: {
+            ...payload.content,
+            videos: [{ slug: 'javascript:alert(1)' }],
+          },
+        },
+        headers: { Authorization: 'Bearer sanity-token' },
+      }),
+    );
+    expect(response.status).toBe(400);
+  });
 });

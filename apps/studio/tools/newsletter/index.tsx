@@ -46,12 +46,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useClient, useWorkspace, type Workspace } from 'sanity';
+import { useClient, useWorkspace } from 'sanity';
+
+import {
+  getStudioAuthToken,
+  resolveStudioApiUrl,
+} from '../../utils/studio-api';
 
 // Types matching our content structure
 type ContentItem = {
   _id: string;
-  _type: 'blog-article' | 'review' | 'product';
+  _type: 'blog-article' | 'review' | 'product' | 'youtubeVideo';
   title?: string; // articles/reviews
   name?: string; // products/reviews/articles
   description?: string; // plain text (for studio preview)
@@ -74,14 +79,16 @@ type GroupedContent = {
   articles: ContentItem[];
   reviews: ContentItem[];
   products: ContentItem[];
+  videos: ContentItem[];
 };
 
-type ListKey = 'reviews' | 'articles' | 'products';
+type ListKey = 'reviews' | 'articles' | 'products' | 'videos';
 
 const SECTION_LABELS: Record<ListKey, string> = {
   articles: 'Artykuły Blogowe',
   products: 'Produkty',
   reviews: 'Recenzje',
+  videos: 'Filmy YouTube',
 };
 
 // Hero configuration type
@@ -104,83 +111,6 @@ type SanityAsset = {
   };
   _createdAt: string;
 };
-
-const PRODUCTION_NEWSLETTER_API_URL =
-  'https://audiofast.pl/api/newsletter/generate/';
-const LOCAL_NEWSLETTER_API_URL =
-  'http://localhost:3000/api/newsletter/generate/';
-
-function resolveNewsletterApiUrl() {
-  // In local Studio development prefer local web API,
-  // so newsletter HTML generation uses current code changes.
-  if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
-    if (host === 'localhost' || host === '127.0.0.1') {
-      return LOCAL_NEWSLETTER_API_URL;
-    }
-  }
-
-  return PRODUCTION_NEWSLETTER_API_URL;
-}
-
-function normalizeStoredSanityToken(value: string): string {
-  try {
-    const parsed = JSON.parse(value) as unknown;
-
-    if (typeof parsed === 'string') {
-      return parsed;
-    }
-
-    if (
-      parsed &&
-      typeof parsed === 'object' &&
-      'token' in parsed &&
-      typeof parsed.token === 'string'
-    ) {
-      return parsed.token;
-    }
-  } catch {
-    // Studio auth tokens are normally stored as plain strings.
-  }
-
-  return value;
-}
-
-// Sanity v5 keeps the session token in the workspace auth store (backed by
-// the `__studio_auth_token_<projectId>` localStorage key). The store's token
-// observable emits its current value synchronously on subscribe, so a
-// subscribe-and-unsubscribe read is safe. Cookie-based sessions have no
-// token — the observable emits null and the API call cannot be authorized.
-function getAuthStoreToken(auth: Workspace['auth']): string | null {
-  const result: { token: string | null } = { token: null };
-  const subscription = auth.token?.subscribe((value) => {
-    result.token = value;
-  });
-  subscription?.unsubscribe();
-
-  return result.token;
-}
-
-// Pre-v5 Studios stored the token under `__sanity_auth_token_<projectId>` —
-// kept only as a legacy fallback.
-function getLegacyStoredToken(projectId: string): string | null {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  const storedToken = window.localStorage.getItem(
-    `__sanity_auth_token_${projectId}`,
-  );
-
-  return storedToken ? normalizeStoredSanityToken(storedToken) : null;
-}
-
-function getStudioAuthToken({
-  auth,
-  projectId,
-}: Pick<Workspace, 'auth' | 'projectId'>): string | null {
-  return getAuthStoreToken(auth) ?? getLegacyStoredToken(projectId);
-}
 
 // Toolbar preset colors matching the brand palette
 const TOOLBAR_COLORS = [
@@ -562,7 +492,12 @@ export default function NewsletterTool() {
   const client = useClient({ apiVersion: '2024-01-01' });
   const workspace = useWorkspace();
   const toast = useToast();
-  const newsletterApiUrl = useMemo(() => resolveNewsletterApiUrl(), []);
+  const newsletterApiUrl = useMemo(() => resolveStudioApiUrl(), []);
+
+  const [previewHtml, setPreviewHtml] = useState<string | null>(null);
+  const htmlOnly =
+    typeof window !== 'undefined' &&
+    ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
   // State
   const [startDate, setStartDate] = useState<string>(
@@ -577,6 +512,7 @@ export default function NewsletterTool() {
     articles: [],
     reviews: [],
     products: [],
+    videos: [],
   });
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
@@ -585,6 +521,7 @@ export default function NewsletterTool() {
     reviews: true,
     articles: true,
     products: true,
+    videos: true,
   });
 
   // Collapsed/expanded state for dropdowns
@@ -592,6 +529,7 @@ export default function NewsletterTool() {
     reviews: true,
     articles: true,
     products: true,
+    videos: true,
   });
 
   // Section order state (configurable by user)
@@ -599,6 +537,7 @@ export default function NewsletterTool() {
     'articles',
     'products',
     'reviews',
+    'videos',
   ]);
 
   // Hero configuration state
@@ -621,10 +560,10 @@ export default function NewsletterTool() {
   const fetchContent = async () => {
     setIsLoading(true);
     try {
-      const query = `*[_type in ["blog-article", "review", "product"] && !(_id in path("drafts.**")) && coalesce(publishedDate, _createdAt) >= $startDate && coalesce(publishedDate, _createdAt) <= $endDate + "T23:59:59Z"] | order(coalesce(publishedDate, _createdAt) desc) {
+      const query = `*[_type in ["blog-article", "review", "product", "youtubeVideo"] && !(_id in path("drafts.**")) && coalesce(publishedDate, _createdAt) >= $startDate && coalesce(publishedDate, _createdAt) <= $endDate + "T23:59:59Z"] | order(coalesce(publishedDate, _createdAt) desc) {
         _id,
         _type,
-        "title": pt::text(title),
+        "title": select(_type == "youtubeVideo" => name, pt::text(title)),
         name,
         "description": pt::text(description),
         "descriptionBlocks": description,
@@ -643,6 +582,7 @@ export default function NewsletterTool() {
           "default"
         ),
         "slug": select(
+          _type == "youtubeVideo" => videoUrl,
           _type == "review" && destinationType == "page" => slug.current,
           _type == "review" && destinationType == "pdf" => "/recenzje/pdf/" + string::split(lower(pdfFile.asset->originalFilename), ".pdf")[0],
           _type == "review" && destinationType == "external" => externalUrl,
@@ -679,6 +619,7 @@ export default function NewsletterTool() {
         articles: result.filter((item) => item._type === 'blog-article'),
         reviews: result.filter((item) => item._type === 'review'),
         products: result.filter((item) => item._type === 'product'),
+        videos: result.filter((item) => item._type === 'youtubeVideo'),
       };
 
       setContent(grouped);
@@ -688,7 +629,7 @@ export default function NewsletterTool() {
       toast.push({
         status: 'success',
         title: `Znaleziono ${result.length} elementów`,
-        description: `Recenzje: ${grouped.reviews.length}, Artykuły: ${grouped.articles.length}, Produkty: ${grouped.products.length}`,
+        description: `Recenzje: ${grouped.reviews.length}, Artykuły: ${grouped.articles.length}, Produkty: ${grouped.products.length}, Filmy: ${grouped.videos.length}`,
       });
     } catch (err) {
       console.error(err);
@@ -850,12 +791,14 @@ export default function NewsletterTool() {
     (listsEnabled.reviews &&
       content.reviews.some((i) => selectedIds.has(i._id))) ||
     (listsEnabled.products &&
-      content.products.some((i) => selectedIds.has(i._id)));
+      content.products.some((i) => selectedIds.has(i._id))) ||
+    (listsEnabled.videos && content.videos.some((i) => selectedIds.has(i._id)));
 
   // 6. Generate Newsletter
   const handleAction = async (
-    action: 'download-html' | 'create-mailchimp-draft',
+    action: 'download-html' | 'preview-html' | 'create-mailchimp-draft',
   ) => {
+    if (htmlOnly && action === 'create-mailchimp-draft') return;
     // Validate hero image
     if (!heroConfig.imageUrl) {
       toast.push({
@@ -888,6 +831,9 @@ export default function NewsletterTool() {
       reviews: listsEnabled.reviews
         ? content.reviews.filter((i) => selectedIds.has(i._id))
         : [],
+      videos: listsEnabled.videos
+        ? content.videos.filter((i) => selectedIds.has(i._id))
+        : [],
       products: listsEnabled.products
         ? content.products.filter((i) => selectedIds.has(i._id))
         : [],
@@ -896,7 +842,8 @@ export default function NewsletterTool() {
     if (
       payloadContent.articles.length === 0 &&
       payloadContent.reviews.length === 0 &&
-      payloadContent.products.length === 0
+      payloadContent.products.length === 0 &&
+      payloadContent.videos.length === 0
     ) {
       toast.push({
         status: 'warning',
@@ -915,7 +862,7 @@ export default function NewsletterTool() {
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          action,
+          action: action === 'preview-html' ? 'download-html' : action,
           startDate,
           endDate,
           content: payloadContent,
@@ -929,7 +876,9 @@ export default function NewsletterTool() {
         throw new Error(errorData.error || 'Błąd serwera');
       }
 
-      if (action === 'download-html') {
+      if (action === 'preview-html') {
+        setPreviewHtml(await response.text());
+      } else if (action === 'download-html') {
         // Handle file download
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -938,6 +887,7 @@ export default function NewsletterTool() {
         a.download = `newsletter-audiofast-${startDate}.html`;
         document.body.appendChild(a);
         a.click();
+        a.remove();
         window.URL.revokeObjectURL(url);
         toast.push({ status: 'success', title: 'Pobrano plik HTML' });
       } else {
@@ -964,7 +914,8 @@ export default function NewsletterTool() {
   const hasItems =
     content.articles.length > 0 ||
     content.reviews.length > 0 ||
-    content.products.length > 0;
+    content.products.length > 0 ||
+    content.videos.length > 0;
 
   // Count selected items per list
   const getSelectedCount = (items: ContentItem[]) => {
@@ -973,6 +924,21 @@ export default function NewsletterTool() {
 
   return (
     <ToastProvider>
+      {previewHtml && (
+        <Dialog
+          id="newsletter-html-preview"
+          header="Podgląd newslettera"
+          width={3}
+          onClose={() => setPreviewHtml(null)}
+        >
+          <iframe
+            title="Podgląd HTML newslettera"
+            srcDoc={previewHtml}
+            sandbox="allow-popups allow-popups-to-escape-sandbox"
+            style={{ width: '100%', height: '75vh', border: 0 }}
+          />
+        </Dialog>
+      )}
       <Card height="fill" padding={4} overflow="auto">
         <Flex
           direction="column"
@@ -1160,6 +1126,15 @@ export default function NewsletterTool() {
                   </Text>
                   <Flex gap={3}>
                     <Button
+                      text="Podgląd HTML"
+                      onClick={() => handleAction('preview-html')}
+                      disabled={
+                        isGenerating ||
+                        !heroConfig.imageUrl ||
+                        !hasSelectedItems
+                      }
+                    />
+                    <Button
                       mode="ghost"
                       text="Pobierz HTML"
                       onClick={() => handleAction('download-html')}
@@ -1169,17 +1144,21 @@ export default function NewsletterTool() {
                         !hasSelectedItems
                       }
                     />
-                    <Button
-                      icon={hasSelectedItems ? ComposeSparklesIcon : undefined}
-                      tone="primary"
-                      text="Wyślij do Mailchimp"
-                      onClick={() => handleAction('create-mailchimp-draft')}
-                      disabled={
-                        isGenerating ||
-                        !heroConfig.imageUrl ||
-                        !hasSelectedItems
-                      }
-                    />
+                    {!htmlOnly && (
+                      <Button
+                        icon={
+                          hasSelectedItems ? ComposeSparklesIcon : undefined
+                        }
+                        tone="primary"
+                        text="Utwórz draft w Mailchimp"
+                        onClick={() => handleAction('create-mailchimp-draft')}
+                        disabled={
+                          isGenerating ||
+                          !heroConfig.imageUrl ||
+                          !hasSelectedItems
+                        }
+                      />
+                    )}
                   </Flex>
                 </Flex>
               </Card>
