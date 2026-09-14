@@ -96,7 +96,7 @@ export const NewsletterTemplate = ({
     articles: 'Artykuły',
     products: 'Produkty',
     reviews: 'Recenzje',
-    videos: 'Filmy YouTube',
+    videos: 'Najnowsze Filmy',
   };
 
   const previewText = sectionOrder
@@ -242,7 +242,7 @@ export const NewsletterTemplate = ({
     videos.length > 0 ? (
       <Section style={section}>
         <Heading as="h2" style={h2}>
-          Filmy YouTube
+          Najnowsze Filmy
         </Heading>
         {videos.map((item) => (
           <Section key={item._id} style={itemContainer}>

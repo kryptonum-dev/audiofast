@@ -24,7 +24,7 @@ describe('newsletter video section', () => {
         hero={hero}
       />,
     );
-    expect(html).toContain('Filmy YouTube');
+    expect(html).toContain('Najnowsze Filmy');
     expect(html).toContain('Obejrzyj na YouTube');
     expect(html).toContain(video.image);
     expect(
@@ -69,7 +69,7 @@ describe('newsletter video section', () => {
     const html = await render(
       <NewsletterTemplate hero={hero} content={empty} />,
     );
-    expect(html).not.toContain('Filmy YouTube');
+    expect(html).not.toContain('Najnowsze Filmy');
     const disabled = await render(
       <NewsletterTemplate
         hero={hero}
