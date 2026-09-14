@@ -35,6 +35,7 @@ export const youtubeVideo = defineType({
     customPortableText({
       name: 'description',
       title: 'Opis (opcjonalnie)',
+      optional: true,
       include: {
         styles: ['normal'],
         decorators: ['strong', 'em'],

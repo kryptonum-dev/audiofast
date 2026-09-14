@@ -68,11 +68,11 @@ export async function sanityFetch<QueryResponse>({
     cacheTag(...tags);
   }
 
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.VERCEL_ENV === 'preview'
-  ) {
+  if (process.env.NODE_ENV === 'development') {
     cacheLife('seconds');
+  } else if (process.env.VERCEL_ENV === 'preview') {
+    // Revalidate preview content every minute while allowing nested prerenders.
+    cacheLife('minutes');
   } else {
     cacheLife('weeks');
   }
