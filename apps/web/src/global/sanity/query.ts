@@ -512,7 +512,7 @@ const latestPublicationBlock = /* groq */ `
       // Default: fetch the latest publication automatically
       *[
         _type in ["blog-article", "review", "product", "youtubeVideo"] &&
-        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name) && defined(image.asset))) &&
+        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name))) &&
         !(_id in path("drafts.**")) &&
         // Products must be published with required fields and not archived
         (
@@ -606,7 +606,7 @@ const featuredPublicationsBlock = /* groq */ `
       // Automatic modes: fetch latest publications sorted by publishedDate (or _createdAt as fallback)
       selectionMode == "latest" => *[
         _type in ["blog-article", "review", "product", "youtubeVideo"] &&
-        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name) && defined(image.asset))) &&
+        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name))) &&
         !(_id in path("drafts.**")) &&
         // Products must be published with required fields and not archived
         (
@@ -627,7 +627,7 @@ const featuredPublicationsBlock = /* groq */ `
       // Default: secondLatest - skip the first publication, show next 20
       *[
         _type in ["blog-article", "review", "product", "youtubeVideo"] &&
-        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name) && defined(image.asset))) &&
+        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name))) &&
         !(_id in path("drafts.**")) &&
         // Products must be published with required fields and not archived
         (

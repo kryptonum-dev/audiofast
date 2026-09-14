@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type { PublicationType as PublicationTypeProps } from '@/src/global/types';
 import { portableTextToPlainString } from '@/src/global/utils';
 
-import Image from '../../shared/Image';
+import PublicationImage from '../../shared/PublicationImage';
 import Button from '../Button';
 import DateBox from '../DateBox';
 import PublicationType from '../PublicationType';
@@ -69,7 +69,10 @@ export default function PublicationCard({
         {...(openInNewTab && { target: '_blank', rel: 'noopener noreferrer' })}
       >
         <div className={styles.imageBox}>
-          <Image
+          <PublicationImage
+            publicationType={_type}
+            videoUrl={slug}
+            alt={_type === 'youtubeVideo' ? (name ?? '') : undefined}
             image={image}
             sizes={imageSizes}
             priority={priority}

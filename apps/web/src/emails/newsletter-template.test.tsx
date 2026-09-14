@@ -17,6 +17,16 @@ const hero = { imageUrl: 'https://cdn.sanity.io/hero.jpg' };
 const empty: NewsletterContent = { articles: [], products: [], reviews: [] };
 
 describe('newsletter video section', () => {
+  it('uses the YouTube thumbnail when the published video has no Sanity image', async () => {
+    const html = await render(
+      <NewsletterTemplate
+        content={{ ...empty, videos: [{ ...video, image: undefined }] }}
+        hero={hero}
+      />,
+    );
+    expect(html).toContain('https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg');
+    expect(html).toContain('Obejrzyj na YouTube');
+  });
   it('renders a video-only newsletter with clickable image and no description or embedded player', async () => {
     const html = await render(
       <NewsletterTemplate
@@ -27,6 +37,7 @@ describe('newsletter video section', () => {
     expect(html).toContain('Najnowsze Filmy');
     expect(html).toContain('Obejrzyj na YouTube');
     expect(html).toContain(video.image);
+    expect(html).not.toContain('i.ytimg.com');
     expect(
       html.match(
         new RegExp(

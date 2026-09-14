@@ -1,3 +1,9 @@
+/** A stable thumbnail fallback that does not require a Sanity asset. */
+export function getYouTubeThumbnailUrl(input: string): string | undefined {
+  const video = parseYouTubeUrl(input);
+  return video ? `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg` : undefined;
+}
+
 /** Accept individual YouTube videos only; never fetch a user-supplied host. */
 export function parseYouTubeUrl(
   input: string,

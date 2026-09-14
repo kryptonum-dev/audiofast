@@ -1,4 +1,5 @@
 import { render } from '@react-email/render';
+import { getYouTubeThumbnailUrl } from '@workspace/youtube';
 
 import NewsletterTemplate, {
   type NewsletterContent,
@@ -13,13 +14,14 @@ export async function GET(request: Request) {
   const videos = await client
     .withConfig({ perspective: 'published', useCdn: false })
     .fetch<NonNullable<NewsletterContent['videos']>>(
-      `*[_type == "youtubeVideo" && !(_id in path("drafts.**")) && defined(image.asset) && defined(videoUrl)] | order(publishedDate desc)[0...10]{
+      `*[_type == "youtubeVideo" && !(_id in path("drafts.**")) && defined(videoUrl)] | order(publishedDate desc)[0...10]{
       _id, _createdAt, "title": name, "slug": videoUrl, "description": pt::text(description), "image": image.asset->url
     }`,
       {},
       { cache: 'no-store' },
     );
-  const image = videos[0]?.image;
+  const image =
+    videos[0]?.image || getYouTubeThumbnailUrl(videos[0]?.slug ?? '');
   if (!image)
     return new Response(
       'Dodaj i opublikuj film w lokalnym Studio, aby zobaczyć podgląd.',

@@ -12,6 +12,7 @@ import {
   Section,
   Text,
 } from '@react-email/components';
+import { getYouTubeThumbnailUrl } from '@workspace/youtube';
 import * as React from 'react';
 
 export interface NewsletterContent {
@@ -85,7 +86,11 @@ export const NewsletterTemplate = ({
   sectionOrder = DEFAULT_SECTION_ORDER,
 }: NewsletterTemplateProps) => {
   const baseUrl = 'https://audiofast.pl';
-  const { articles = [], reviews = [], products = [], videos = [] } = content;
+  const { articles = [], reviews = [], products = [] } = content;
+  const videos = (content.videos ?? []).map((video) => ({
+    ...video,
+    image: video.image || getYouTubeThumbnailUrl(video.slug),
+  }));
   const hasContent =
     articles.length > 0 ||
     reviews.length > 0 ||

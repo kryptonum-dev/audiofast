@@ -1,7 +1,7 @@
 import type { PagebuilderType, PortableTextProps } from '@/src/global/types';
 
 import PortableText from '../../portableText';
-import Image from '../../shared/Image';
+import PublicationImage from '../../shared/PublicationImage';
 import Button from '../../ui/Button';
 import DateBox from '../../ui/DateBox';
 import PublicationType from '../../ui/PublicationType';
@@ -51,7 +51,10 @@ export default function LatestPublication({
         className={styles.heading}
       />
       <article className={styles.container}>
-        <Image
+        <PublicationImage
+          publicationType={_type}
+          videoUrl={slug}
+          alt={_type === 'youtubeVideo' ? (name ?? '') : undefined}
           image={image}
           priority={index === 0}
           loading={index === 0 ? 'eager' : 'lazy'}
