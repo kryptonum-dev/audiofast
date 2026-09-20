@@ -1,5 +1,4 @@
 import { assist } from '@sanity/assist';
-import { embeddingsIndexDashboard } from '@sanity/embeddings-index-ui';
 import { visionTool } from '@sanity/vision';
 import { GitCompareArrows, Mail } from 'lucide-react';
 import { defineConfig } from 'sanity';
@@ -32,7 +31,6 @@ export default defineConfig({
       structure,
       defaultDocumentNode,
     }),
-    embeddingsIndexDashboard(),
     visionTool(),
     media(),
   ],

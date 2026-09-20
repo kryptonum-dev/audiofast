@@ -24,7 +24,6 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@sanity/assist": "^6.1.21",
-    "@sanity/embeddings-index-ui": "^4.0.17",
     "@sanity/icons": "^3.8.0",
     "@sanity/orderable-document-list": "2.0.20",
     "@sanity/ui": "^3.5.3",

@@ -285,14 +285,14 @@ Protect the existing dirty files `apps/web/next-env.d.ts`, `apps/web/src/generat
 
 ### Phase 2: Integrate and test bounded blog search
 
-- [x] 2.1 Search behavior tests pass
-- [x] 2.2 Generated types and web checks pass
-- [x] 2.3 Production rendering builds
+- [x] 2.1 Search behavior tests pass — 0518228
+- [x] 2.2 Generated types and web checks pass — 0518228
+- [x] 2.3 Production rendering builds — 0518228
 
 ### Phase 3: Remove the unused Studio dashboard
 
-- [ ] 3.1 Studio checks pass
-- [ ] 3.2 Dependency removal is complete
+- [x] 3.1 Studio checks pass
+- [x] 3.2 Dependency removal is complete
 
 ### Phase 4: Validate live behavior and cut over
 

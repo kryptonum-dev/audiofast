@@ -32,7 +32,7 @@ The official website for Audiofast – a premium audio equipment distributor in 
 
 ### 🔍 AI-Powered Semantic Search
 
-Leverages Sanity Embeddings Index for intelligent product and blog search. Users can find content by meaning, not just keywords – making discovery natural and intuitive.
+Blog search supports Sanity dataset embeddings with category/year filtering before its top-50 result set and lexical fallback. Product search remains text-only. During migration, `SANITY_BLOG_SEARCH_BACKEND` selects `legacy`, `dataset`, or `lexical`; dataset mode uses the server-only `SANITY_API_READ_TOKEN`. See [migration operations](context/changes/sanity-dataset-embeddings-migration/operations.md) for readiness, cutover and rollback. The unused Studio Embeddings dashboard is removed; Assist and legacy backend indexes remain.
 
 ### ⚖️ Product Comparison Tool
 

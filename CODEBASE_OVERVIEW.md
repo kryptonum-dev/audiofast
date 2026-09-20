@@ -295,7 +295,7 @@ Filtering uses a **client-side computation** approach for instant responsiveness
 | Custom Dropdowns | Category-specific | Per-category configurable filters (e.g., "Cable Length")      |
 | Range Filters    | Numeric range     | Per-category numeric ranges (e.g., "Impedance: 4-12Ω")        |
 | CPO              | Boolean           | Certified Pre-Owned toggle                                    |
-| Search           | Text              | Matches product name; supports semantic search via embeddings |
+| Search           | Text              | Matches product name; semantic product search stays disabled |
 
 ---
 
@@ -576,7 +576,9 @@ Shared TypeScript configurations:
 | `MS_GRAPH_REPLY_TO`                                         | Email reply-to address                    |
 | `MAILCHIMP_API_KEY`                                         | Mailchimp API key                         |
 | `MAILCHIMP_SERVER_PREFIX`                                   | Mailchimp server prefix                   |
-| `EMBEDDINGS_INDEX_BEARER_TOKEN`                             | Semantic search auth                      |
+| `EMBEDDINGS_INDEX_BEARER_TOKEN`                             | Temporary legacy blog rollback auth       |
+| `SANITY_API_READ_TOKEN`                                    | Server-only published dataset search read |
+| `SANITY_BLOG_SEARCH_BACKEND`                               | Blog backend: legacy, dataset, lexical    |
 | `VERCEL_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_ENV` | Vercel environment                        |
 
 ### Sanity Studio (`apps/studio`)
@@ -634,3 +636,7 @@ bun run generate:redirects   # (in apps/web)
 6. **Fragment-based queries**: GROQ query fragments are composed into larger queries, promoting reuse and consistency across ~2400 lines of query code
 7. **Modular page builder**: 20+ block types allow content editors to compose pages freely without developer intervention
 8. **Cookie-based comparison**: No authentication required — comparison state persists via cookies with a 7-day expiry
+
+### Blog dataset embeddings
+
+`global/sanity/blog-search.ts` isolates published, uncached semantic GROQ from ordinary cached browsing. Visibility/category/year filters precede scoring and the top-50 slice; one result array supplies totals and 12-item pages. Failures and genuinely empty candidate arrays use lexical recovery. The shared Sanity client and product filtering are unchanged. The deprecated Studio dashboard is removed independently of backend indexes, which remain during rollback observation. See [operations](context/changes/sanity-dataset-embeddings-migration/operations.md).
