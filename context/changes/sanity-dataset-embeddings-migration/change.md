@@ -1,7 +1,7 @@
 ---
 change_id: sanity-dataset-embeddings-migration
 title: Migrate semantic search to Sanity dataset embeddings
-status: implementing
+status: implemented
 created: 2026-09-20
 updated: 2026-09-20
 archived_at: null

@@ -296,6 +296,6 @@ Protect the existing dirty files `apps/web/next-env.d.ts`, `apps/web/src/generat
 
 ### Phase 4: Validate live behavior and cut over
 
-- [x] 4.1 Live readiness and semantic validation pass
-- [x] 4.2 Deployed cutover and recovery checks pass
-- [x] 4.3 Validation evidence is complete
+- [x] 4.1 Live readiness and semantic validation pass — 0f33c83
+- [x] 4.2 Deployed cutover and recovery checks pass — 0f33c83
+- [x] 4.3 Validation evidence is complete — 0f33c83
