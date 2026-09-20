@@ -1,0 +1,510 @@
+{
+  "checkedAt": "2026-09-20T05:16:46.381Z",
+  "projectId": "fsw3likv",
+  "dataset": "production",
+  "studioTargetMatches": true,
+  "records": [
+    {
+      "label": "dataset-embeddings-settings",
+      "method": "GET",
+      "url": "https://api.sanity.io/v2026-08-21/projects/fsw3likv/datasets/production/settings/embeddings",
+      "status": 200,
+      "elapsedMs": 122,
+      "data": {
+        "enabled": false,
+        "status": "disabled"
+      }
+    },
+    {
+      "label": "datasets",
+      "method": "GET",
+      "url": "https://fsw3likv.api.sanity.io/v2026-08-21/datasets",
+      "status": 200,
+      "elapsedMs": 128,
+      "data": [
+        {
+          "name": "production",
+          "aclMode": "public",
+          "datasetProfile": "content"
+        }
+      ]
+    },
+    {
+      "label": "legacy-indexes",
+      "method": "GET",
+      "url": "https://fsw3likv.api.sanity.io/vX/embeddings-index/production",
+      "status": 200,
+      "elapsedMs": 248,
+      "data": [
+        {
+          "status": "active",
+          "indexName": "blog",
+          "projectId": "fsw3likv",
+          "dataset": "production",
+          "projection": "{_type,\n_id, name, title, description, keywords, \"seoTitle\": seo.metaTitle, \"seoDescription\": seo.metaDescription}",
+          "filter": "_type == 'blog-article'",
+          "createdAt": "2025-11-12T08:01:46Z",
+          "updatedAt": "2025-11-12T08:03:09Z",
+          "failedDocumentCount": 0,
+          "startDocumentCount": 20,
+          "remainingDocumentCount": 0,
+          "webhookId": "yVAz9Y9GHjuTo9jk"
+        },
+        {
+          "status": "active",
+          "indexName": "products",
+          "projectId": "fsw3likv",
+          "dataset": "production",
+          "projection": "{_type,\n_id, _type, name, subtitle}",
+          "filter": "_type=='product'",
+          "createdAt": "2026-02-02T11:05:44Z",
+          "updatedAt": "2026-02-02T11:23:59Z",
+          "failedDocumentCount": 0,
+          "startDocumentCount": 842,
+          "remainingDocumentCount": 0,
+          "webhookId": "2DWj1QF28zDk0bX4"
+        }
+      ]
+    },
+    {
+      "label": "published-content-read",
+      "method": "GET",
+      "url": "https://fsw3likv.api.sanity.io/v2026-08-21/data/query/production?query=%7B%22articles%22%3Acount%28*%5B_type+%3D%3D+%22blog-article%22%5D%29%2C%22eligibleArticles%22%3Acount%28*%5B_type+%3D%3D+%22blog-article%22+%26%26+defined%28slug.current%29+%26%26+hideFromList+%3D%3D+false%5D%29%2C%22products%22%3Acount%28*%5B_type+%3D%3D+%22product%22%5D%29%2C%22sample%22%3A*%5B_type+%3D%3D+%22blog-article%22+%26%26+defined%28slug.current%29+%26%26+hideFromList+%3D%3D+false%5D%5B0...5%5D%7B_id%2Cname%2C%22category%22%3Acategory-%3Ename%2C%22title%22%3Apt%3A%3Atext%28title%29%2C%22year%22%3Astring%3A%3Asplit%28coalesce%28publishedDate%2C_createdAt%29%2C%22-%22%29%5B0%5D%7D%7D&perspective=published",
+      "status": 200,
+      "elapsedMs": 141,
+      "data": {
+        "query": "{\"articles\":count(*[_type == \"blog-article\"]),\"eligibleArticles\":count(*[_type == \"blog-article\" && defined(slug.current) && hideFromList == false]),\"products\":count(*[_type == \"product\"]),\"sample\":*[_type == \"blog-article\" && defined(slug.current) && hideFromList == false][0...5]{_id,name,\"category\":category->name,\"title\":pt::text(title),\"year\":string::split(coalesce(publishedDate,_createdAt),\"-\")[0]}}",
+        "result": {
+          "articles": 25,
+          "eligibleArticles": 25,
+          "products": 868,
+          "sample": [
+            {
+              "_id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+              "category": "Nagroda",
+              "name": "Audio-Video nagrody 2025/2026",
+              "title": "Audio-Video nagrody 2025/2026",
+              "year": "2026"
+            },
+            {
+              "_id": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+              "category": "Nowości",
+              "name": "STROMTANK w ofercie AUDIFOAST",
+              "title": "Dystrybucja STROMTANK w Polsce",
+              "year": "2026"
+            },
+            {
+              "_id": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+              "category": "Wiedza",
+              "name": "USHER SD-501 i SD-502 – kolumny podłogowe z diamentową kopułką DMD",
+              "title": "Diamenty są wieczne – poznaj kolumny USHER SD-501 i SD-502",
+              "year": "2026"
+            },
+            {
+              "_id": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+              "category": "Wiedza",
+              "name": " Prezentacja wideo - Bricasti Design",
+              "title": "Prezentacja wideo - Bricasti Design - ze studia nagrań pod strzechy naszych domów",
+              "year": "2026"
+            },
+            {
+              "_id": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+              "category": "Wiedza",
+              "name": "Grimm Audio LS1 i MU1 – minimum sprzętu, maksimum muzyki",
+              "title": "Grimm Audio LS1 i MU1 – minimum sprzętu, maksimum muzyki",
+              "year": "2026"
+            }
+          ]
+        },
+        "syncTags": [
+          "s1:DcgBAA",
+          "s1:fjUt5g",
+          "s1:djMttA",
+          "s1:VBpkng",
+          "s1:6iVORg"
+        ],
+        "ms": 76
+      }
+    },
+    {
+      "label": "dataset-semantic-probe-read-token",
+      "method": "GET",
+      "url": "https://fsw3likv.api.sanity.io/v2026-08-21/data/query/production?query=*%5B_type+%3D%3D+%22blog-article%22+%26%26+defined%28slug.current%29+%26%26+hideFromList+%3D%3D+false%5D+%7C+score%28text%3A%3AsemanticSimilarity%28%24search%29%29+%7C+order%28_score+desc%2C+_id+asc%29%5B0...3%5D%7B_id%2Cname%2C_score%7D&perspective=published&%24search=%22wzmacniacz+lampowy%22",
+      "status": 400,
+      "elapsedMs": 58,
+      "data": {
+        "error": {
+          "description": "Embeddings are not enabled for this dataset",
+          "type": "embeddingNotEnabledError"
+        }
+      }
+    },
+    {
+      "label": "article-coverage-and-fixture-inventory",
+      "status": 200,
+      "elapsedMs": 345,
+      "data": {
+        "query": "{\"articleFieldCoverage\":{\"total\":count(*[_type==\"blog-article\"]),\"oldSeoTitle\":count(*[_type==\"blog-article\" && defined(seo.metaTitle)]),\"oldSeoDescription\":count(*[_type==\"blog-article\" && defined(seo.metaDescription)]),\"actualSeoTitle\":count(*[_type==\"blog-article\" && defined(seo.title)]),\"actualSeoDescription\":count(*[_type==\"blog-article\" && defined(seo.description)]),\"withContent\":count(*[_type==\"blog-article\" && count(content)>0]),\"withKeywords\":count(*[_type==\"blog-article\" && count(keywords)>0])},\"articles\":*[_type==\"blog-article\" && defined(slug.current) && hideFromList==false]|order(name asc){_id,name,\"slug\":slug.current,\"category\":category->name,\"categorySlug\":category->slug.current,\"year\":string::split(coalesce(publishedDate,_createdAt),\"-\")[0]}}",
+        "result": {
+          "articleFieldCoverage": {
+            "actualSeoDescription": 15,
+            "actualSeoTitle": 25,
+            "oldSeoDescription": 0,
+            "oldSeoTitle": 0,
+            "total": 25,
+            "withContent": 25,
+            "withKeywords": 0
+          },
+          "articles": [
+            {
+              "_id": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": " Prezentacja wideo - Bricasti Design",
+              "slug": "/blog/prezentacja-wideo-bricasti-design/",
+              "year": "2026"
+            },
+            {
+              "_id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+              "category": "Nagroda",
+              "categorySlug": "/blog/kategoria/nagroda/",
+              "name": "Audio-Video nagrody 2025/2026",
+              "slug": "/blog/audio-video-nagrody-2025-2026/",
+              "year": "2026"
+            },
+            {
+              "_id": "blog-article-392",
+              "category": "Wydarzenia",
+              "categorySlug": "/blog/kategoria/wydarzenia/",
+              "name": "AudioShow 2018",
+              "slug": "/blog/audioshow-2018/",
+              "year": "2018"
+            },
+            {
+              "_id": "blog-article-1435",
+              "category": "Wydarzenia",
+              "categorySlug": "/blog/kategoria/wydarzenia/",
+              "name": "AudioShow 2019",
+              "slug": "/blog/audioshow-2019/",
+              "year": "2019"
+            },
+            {
+              "_id": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": "Grimm Audio LS1 i MU1 – minimum sprzętu, maksimum muzyki",
+              "slug": "/blog/grimm-audio-ls1-i-mu1-minimum-sprzetu-maksimum-muzyki/",
+              "year": "2026"
+            },
+            {
+              "_id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+              "category": "Nagroda",
+              "categorySlug": "/blog/kategoria/nagroda/",
+              "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2",
+              "slug": "/blog/nagroda-roku-2026-hifi-i-muzyka-dla-grimm-audio-mu2/",
+              "year": "2026"
+            },
+            {
+              "_id": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+              "category": "Nagroda",
+              "categorySlug": "/blog/kategoria/nagroda/",
+              "name": "Nagrody EISA 2026–2027 dla Wilson Audio i R_volution",
+              "slug": "/blog/nagrody-eisa-20262027-dla-wilson-audio-i-r-volution/",
+              "year": "2026"
+            },
+            {
+              "_id": "blog-article-2796",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": "Nagrody Golden Ear 2024 The Absolute Sound",
+              "slug": "/blog/nagrody-golden-ear-2024-the-absolute-sound/",
+              "year": "2024"
+            },
+            {
+              "_id": "bde77d09-f703-4a8e-a3b2-5ad61340cb1b",
+              "category": "Nagroda",
+              "categorySlug": "/blog/kategoria/nagroda/",
+              "name": "Nagrody Roku 2026 - FIDELITY AWARDS 2026",
+              "slug": "/blog/nagrody-roku-2026-fidelity-awards-2026/",
+              "year": "2026"
+            },
+            {
+              "_id": "blog-article-2571",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": "Nagrody Stereophile Recommended Components 2024",
+              "slug": "/blog/nagrody-stereophile-recommended-components-2024/",
+              "year": "2024"
+            },
+            {
+              "_id": "blog-article-2748",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": "Nagrody The Absolute Sound - Editors Choice 2025",
+              "slug": "/blog/nagrody-the-absolute-sound-editors-choice-2025/",
+              "year": "2025"
+            },
+            {
+              "_id": "blog-article-2689",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": "Nagrody The Absolute Sound - Product of the Year 2025",
+              "slug": "/blog/nagrody-the-absolute-sound-product-of-the-year-2025/",
+              "year": "2024"
+            },
+            {
+              "_id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+              "category": "Nowości",
+              "categorySlug": "/blog/kategoria/nowosci/",
+              "name": "Nowa marka referencyjnych źródeł cyfrowych Oladra z Nowej Zelandii w ofercie Audiofast",
+              "slug": "/blog/nowa-marka-referencyjnych-zrodel-cyfrowych-oladra-z-nowej-zelandii-w-ofercie-audiofast/",
+              "year": "2026"
+            },
+            {
+              "_id": "993d0647-6970-450e-93dd-b44421136ca1",
+              "category": "Nowości",
+              "categorySlug": "/blog/kategoria/nowosci/",
+              "name": "Nowe oprogramowanie R_volution",
+              "slug": "/blog/nowe-oprogramowanie-r-volution/",
+              "year": "2026"
+            },
+            {
+              "_id": "blog-article-1709",
+              "category": "Wydarzenia",
+              "categorySlug": "/blog/kategoria/wydarzenia/",
+              "name": "Październik z Gryphon Audio Designs",
+              "slug": "/blog/pazdziernik-z-gryphon-audio-designs/",
+              "year": "2020"
+            },
+            {
+              "_id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+              "category": "Nowości",
+              "categorySlug": "/blog/kategoria/nowosci/",
+              "name": "Pendulum z certyfikatem Roon Ready",
+              "slug": "/blog/pendulum-z-certyfikatem-roon-ready/",
+              "year": "2026"
+            },
+            {
+              "_id": "blog-article-1968",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": "Porady na temat doboru bezpieczników Synergistic Research",
+              "slug": "/blog/porady-na-temat-doboru-bezpiecznikow-synergistic-research/",
+              "year": "2022"
+            },
+            {
+              "_id": "blog-article-1680",
+              "category": "Wydarzenia",
+              "categorySlug": "/blog/kategoria/wydarzenia/",
+              "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research",
+              "slug": "/blog/premierowe-prezentacje-wilson-audio-sabrina-x-i-audio-research/",
+              "year": "2020"
+            },
+            {
+              "_id": "blog-article-1737",
+              "category": "Wydarzenia",
+              "categorySlug": "/blog/kategoria/wydarzenia/",
+              "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated",
+              "slug": "/blog/premierowe-prezentacje-integry-dan-dagostino-progression-integrated/",
+              "year": "2020"
+            },
+            {
+              "_id": "blog-article-2078",
+              "category": "Wydarzenia",
+              "categorySlug": "/blog/kategoria/wydarzenia/",
+              "name": "Refleksje po Audio Video Show 2022",
+              "slug": "/blog/refleksje-po-audio-video-show-2022/",
+              "year": "2022"
+            },
+            {
+              "_id": "9304f107-721b-4196-b3e9-32fbd254e207",
+              "category": "Nagroda",
+              "categorySlug": "/blog/kategoria/nagroda/",
+              "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane",
+              "slug": "/blog/rogue-audio-sphinx-v3-magnum-wyroznienia-roku-2026-wzmacniacze-zintegrowane/",
+              "year": "2026"
+            },
+            {
+              "_id": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+              "category": "Nowości",
+              "categorySlug": "/blog/kategoria/nowosci/",
+              "name": "STROMTANK w ofercie AUDIFOAST",
+              "slug": "/blog/nowosc-stromtank/",
+              "year": "2026"
+            },
+            {
+              "_id": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+              "category": "Wiedza",
+              "categorySlug": "/blog/kategoria/wiedza/",
+              "name": "USHER SD-501 i SD-502 – kolumny podłogowe z diamentową kopułką DMD",
+              "slug": "/blog/usher-sd-501-i-sd-502-kolumny-podlogowe-z-diamentowa-kopulka-dmd/",
+              "year": "2026"
+            },
+            {
+              "_id": "b75dbd72-8202-4fdf-a04d-0cac0bb9cd4a",
+              "category": "Nagroda",
+              "categorySlug": "/blog/kategoria/nagroda/",
+              "name": "Usher Diamond SD-500 - Wyróżnienia roku 2026 - Monitory w magazynie HiFi i Muzyka",
+              "slug": "/blog/usher-diamond-sd-500-wyroznienia-roku-2026-monitory-w-magazynie-hifi-i-muzyka/",
+              "year": "2026"
+            },
+            {
+              "_id": "bced065c-4774-469d-975e-e441f64b300c",
+              "category": "Wydarzenia",
+              "categorySlug": "/blog/kategoria/wydarzenia/",
+              "name": "Wewnątrz przetwornika cyfrowo-analogowego dCS Lina Network DAC",
+              "slug": "/blog/wewnatrz-przetwornika-cyfrowo-analogowego-dcs-lina-network-dac/",
+              "year": "2024"
+            }
+          ]
+        },
+        "syncTags": [
+          "s1:DcgBAA",
+          "s1:/QuNCg",
+          "s1:VBpkng",
+          "s1:6iVORg",
+          "s1:djMttA"
+        ],
+        "ms": 140
+      }
+    },
+    {
+      "label": "legacy-blog-runtime-filter",
+      "status": 200,
+      "elapsedMs": 348,
+      "data": [
+        {
+          "score": 0.788918376,
+          "value": {
+            "documentId": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.788368,
+          "value": {
+            "documentId": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.786313653,
+          "value": {
+            "documentId": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.784124851,
+          "value": {
+            "documentId": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.781594574,
+          "value": {
+            "documentId": "9304f107-721b-4196-b3e9-32fbd254e207",
+            "type": "blog-article"
+          }
+        }
+      ]
+    },
+    {
+      "label": "legacy-blog-documented-filter",
+      "status": 200,
+      "elapsedMs": 451,
+      "data": [
+        {
+          "score": 0.788918376,
+          "value": {
+            "documentId": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.788368,
+          "value": {
+            "documentId": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.786313653,
+          "value": {
+            "documentId": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.784124851,
+          "value": {
+            "documentId": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+            "type": "blog-article"
+          }
+        },
+        {
+          "score": 0.781594574,
+          "value": {
+            "documentId": "9304f107-721b-4196-b3e9-32fbd254e207",
+            "type": "blog-article"
+          }
+        }
+      ]
+    },
+    {
+      "label": "project-metadata",
+      "status": 200,
+      "elapsedMs": 128,
+      "data": {
+        "id": "fsw3likv",
+        "displayName": "audiofast",
+        "organizationId": "o5BEPFjvf",
+        "features": [
+          "activityFeed",
+          "contentSourceMapping",
+          "editorialAiFieldActions",
+          "embeddingsIndexApi",
+          "privateDataset",
+          "roleContributor",
+          "roleDeveloper",
+          "roleEditor",
+          "roleViewer",
+          "sanityTasks",
+          "scheduledPublishing",
+          "singleDocRelease",
+          "studioComments",
+          "supportCommunity",
+          "toggle.schema.upload-pause",
+          "toggle.user-application.upload-live-manifest"
+        ]
+      }
+    },
+    {
+      "label": "semantic-probe-existing-api-version",
+      "status": 400,
+      "data": {
+        "error": {
+          "description": "Embeddings are not enabled for this dataset",
+          "type": "embeddingNotEnabledError"
+        }
+      }
+    }
+  ],
+  "managementUi": {
+    "observedAt": "2026-09-20T07:22:15+02:00",
+    "plan": "Growth",
+    "organizationId": "o5BEPFjvf",
+    "embeddingsMonthlyUsage": 0,
+    "embeddingsMonthlyAllowance": 1000,
+    "metricsFreshness": "updated daily; not real-time",
+    "embeddingsUsageUrl": "https://www.sanity.io/organizations/o5BEPFjvf/usage/embeddings",
+    "logExport": {
+      "requested": true,
+      "reportedReady": true,
+      "period": "2026-09-13 through 2026-09-19",
+      "downloadRetrieved": false,
+      "reason": "Download event timed out; no file located. Browser security policy blocked downloads-manager navigation; no bypass attempted."
+    }
+  }
+}

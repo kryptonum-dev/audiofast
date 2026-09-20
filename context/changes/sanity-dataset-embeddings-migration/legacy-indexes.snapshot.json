@@ -1,0 +1,35 @@
+{
+  "checked_at": "2026-09-20T05:16:46.381Z",
+  "project_id": "fsw3likv",
+  "dataset": "production",
+  "indexes": [
+    {
+      "status": "active",
+      "indexName": "blog",
+      "projectId": "fsw3likv",
+      "dataset": "production",
+      "projection": "{_type,\n_id, name, title, description, keywords, \"seoTitle\": seo.metaTitle, \"seoDescription\": seo.metaDescription}",
+      "filter": "_type == 'blog-article'",
+      "createdAt": "2025-11-12T08:01:46Z",
+      "updatedAt": "2025-11-12T08:03:09Z",
+      "failedDocumentCount": 0,
+      "startDocumentCount": 20,
+      "remainingDocumentCount": 0,
+      "webhookId": "yVAz9Y9GHjuTo9jk"
+    },
+    {
+      "status": "active",
+      "indexName": "products",
+      "projectId": "fsw3likv",
+      "dataset": "production",
+      "projection": "{_type,\n_id, _type, name, subtitle}",
+      "filter": "_type=='product'",
+      "createdAt": "2026-02-02T11:05:44Z",
+      "updatedAt": "2026-02-02T11:23:59Z",
+      "failedDocumentCount": 0,
+      "startDocumentCount": 842,
+      "remainingDocumentCount": 0,
+      "webhookId": "2DWj1QF28zDk0bX4"
+    }
+  ]
+}
