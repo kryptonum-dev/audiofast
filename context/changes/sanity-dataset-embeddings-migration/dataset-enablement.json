@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-09-20T05:38:11.778Z",
+  "projectId": "fsw3likv",
+  "dataset": "production",
+  "apiVersion": "2026-08-21",
+  "before": {
+    "enabled": false,
+    "status": "disabled"
+  },
+  "after": {
+    "enabled": true,
+    "status": "ready",
+    "projection": "{_type == \"blog-article\" => {name, title, description, keywords}}"
+  }
+}

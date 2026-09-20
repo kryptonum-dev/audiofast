@@ -29,3 +29,21 @@ Set `SANITY_BLOG_SEARCH_BACKEND=legacy` and redeploy/restart while the old index
 ## Deferred retirement
 
 After one week of full dataset traffic, inspect caller/traffic evidence for zero legacy requests. Then separately remove the legacy helper/types/token environment, old indexes and indexing-only webhooks. Preserve the website content revalidation webhook. Dashboard removal does not delete backend indexes. Never disable dataset embeddings as legacy cleanup. No observation automation is created by this change.
+
+## Readiness caveat verified during implementation
+
+Immediately after enablement, settings briefly reported `ready` while the query API still returned `embeddingNotEnabledError`, then settings changed to `updating`. The wait command now requires both the matching ready projection and a successful published semantic query using `SANITY_API_READ_TOKEN`. It caps data-plane probes at 12 and keeps the ten-minute overall deadline. Never switch traffic based only on the PUT response or the first settings read.
+
+## Reproducible comparison
+
+`bun --conditions=react-server --env-file=apps/web/.env.local apps/web/scripts/verify-blog-search.ts`
+
+The script makes 30 semantic requests for the fixed corpus, category/year checks and real service verification, plus ordinary published reads and one legacy recovery check. Keep all readiness probes, browser checks and retries within the migration comparison budget. It saves sanitized `dataset-query-results.json` and exits nonzero for failures or prior top-five regressions.
+
+Schema fields are unchanged. The Studio `type` command's `--enforce-required-fields` extraction introduced unrelated requiredness churn during implementation. Preserve the checked-in schema and use `bun run --cwd apps/studio sanity typegen generate` for this query-only migration.
+
+## Current rollout state — 2026-09-20
+
+Production and local web now explicitly use dataset mode. Vercel preview retains legacy default. Current production deployment is `audiofast-k814wwbzq-kryptonum.vercel.app`; the preceding verified legacy deployment is `audiofast-3639psd5m-kryptonum.vercel.app`. The website alias is https://audiofast.pl. Runtime source is committed on main; no Git push was performed. The Studio is deployed at https://audiofast.sanity.studio.
+
+For an immediate application rollback, Vercel can restore the preceding deployment (which captured legacy mode), or set the backend to legacy and redeploy the current source. If the old endpoint is unavailable, set lexical and redeploy instead. Do not disable dataset embeddings. The earliest retirement review is 2026-09-27, provided a full week of dataset traffic has been observed and no legacy callers remain; this is not an automatic deletion date.

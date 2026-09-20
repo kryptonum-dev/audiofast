@@ -1,0 +1,802 @@
+{
+  "checkedAt": "2026-09-20T05:42:27.592Z",
+  "projectId": "fsw3likv",
+  "dataset": "production",
+  "apiVersion": "2026-08-21",
+  "projection": "{_type == \"blog-article\" => {name, title, description, keywords}}",
+  "projectionSha256": "0cc490a561d5b8b0cba4fa1a15b47c54d57d6d321135c89b047043d151ffe470",
+  "source": "Curated title/concept baseline; not analytics or human relevance acceptance",
+  "semanticRequests": 30,
+  "results": [
+    {
+      "query": "AudioShow 2018",
+      "expectedId": "blog-article-392",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 144,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-392",
+          "name": "AudioShow 2018"
+        },
+        {
+          "id": "blog-article-1435",
+          "name": "AudioShow 2019"
+        },
+        {
+          "id": "blog-article-2078",
+          "name": "Refleksje po Audio Video Show 2022"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        }
+      ]
+    },
+    {
+      "query": "AudioShow 2019",
+      "expectedId": "blog-article-1435",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 204,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1435",
+          "name": "AudioShow 2019"
+        },
+        {
+          "id": "blog-article-392",
+          "name": "AudioShow 2018"
+        },
+        {
+          "id": "blog-article-2078",
+          "name": "Refleksje po Audio Video Show 2022"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        }
+      ]
+    },
+    {
+      "query": "Bricasti Design",
+      "expectedId": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 215,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+          "name": " Prezentacja wideo - Bricasti Design"
+        },
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+          "name": "Nagrody EISA 2026–2027 dla Wilson Audio i R_volution"
+        },
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        }
+      ]
+    },
+    {
+      "query": "Grimm Audio MU2",
+      "expectedId": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 232,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+          "name": "Grimm Audio LS1 i MU1 – minimum sprzętu, maksimum muzyki"
+        },
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        }
+      ]
+    },
+    {
+      "query": "Grimm LS1 MU1",
+      "expectedId": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 170,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+          "name": "Grimm Audio LS1 i MU1 – minimum sprzętu, maksimum muzyki"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        },
+        {
+          "id": "b75dbd72-8202-4fdf-a04d-0cac0bb9cd4a",
+          "name": "Usher Diamond SD-500 - Wyróżnienia roku 2026 - Monitory w magazynie HiFi i Muzyka"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        }
+      ]
+    },
+    {
+      "query": "USHER SD-501",
+      "expectedId": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 217,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+          "name": "USHER SD-501 i SD-502 – kolumny podłogowe z diamentową kopułką DMD"
+        },
+        {
+          "id": "b75dbd72-8202-4fdf-a04d-0cac0bb9cd4a",
+          "name": "Usher Diamond SD-500 - Wyróżnienia roku 2026 - Monitory w magazynie HiFi i Muzyka"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+          "name": "Nowa marka referencyjnych źródeł cyfrowych Oladra z Nowej Zelandii w ofercie Audiofast"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        }
+      ]
+    },
+    {
+      "query": "Usher Diamond SD-500",
+      "expectedId": "b75dbd72-8202-4fdf-a04d-0cac0bb9cd4a",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 212,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "b75dbd72-8202-4fdf-a04d-0cac0bb9cd4a",
+          "name": "Usher Diamond SD-500 - Wyróżnienia roku 2026 - Monitory w magazynie HiFi i Muzyka"
+        },
+        {
+          "id": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+          "name": "USHER SD-501 i SD-502 – kolumny podłogowe z diamentową kopułką DMD"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+          "name": "Nowa marka referencyjnych źródeł cyfrowych Oladra z Nowej Zelandii w ofercie Audiofast"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        }
+      ]
+    },
+    {
+      "query": "Rogue Audio Sphinx V3 Magnum",
+      "expectedId": "9304f107-721b-4196-b3e9-32fbd254e207",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 389,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        },
+        {
+          "id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+          "name": "Nowa marka referencyjnych źródeł cyfrowych Oladra z Nowej Zelandii w ofercie Audiofast"
+        }
+      ]
+    },
+    {
+      "query": "STROMTANK",
+      "expectedId": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 194,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+          "name": "STROMTANK w ofercie AUDIFOAST"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+          "name": " Prezentacja wideo - Bricasti Design"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        }
+      ]
+    },
+    {
+      "query": "Oladra Nowa Zelandia",
+      "expectedId": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 150,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+          "name": "Nowa marka referencyjnych źródeł cyfrowych Oladra z Nowej Zelandii w ofercie Audiofast"
+        },
+        {
+          "id": "bced065c-4774-469d-975e-e441f64b300c",
+          "name": "Wewnątrz przetwornika cyfrowo-analogowego dCS Lina Network DAC"
+        },
+        {
+          "id": "blog-article-2689",
+          "name": "Nagrody The Absolute Sound - Product of the Year 2025"
+        },
+        {
+          "id": "993d0647-6970-450e-93dd-b44421136ca1",
+          "name": "Nowe oprogramowanie R_volution"
+        },
+        {
+          "id": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+          "name": "STROMTANK w ofercie AUDIFOAST"
+        }
+      ]
+    },
+    {
+      "query": "R_volution oprogramowanie",
+      "expectedId": "993d0647-6970-450e-93dd-b44421136ca1",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 222,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "993d0647-6970-450e-93dd-b44421136ca1",
+          "name": "Nowe oprogramowanie R_volution"
+        },
+        {
+          "id": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+          "name": "Nagrody EISA 2026–2027 dla Wilson Audio i R_volution"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        }
+      ]
+    },
+    {
+      "query": "Pendulum Roon Ready",
+      "expectedId": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 145,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        },
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "993d0647-6970-450e-93dd-b44421136ca1",
+          "name": "Nowe oprogramowanie R_volution"
+        }
+      ]
+    },
+    {
+      "query": "bezpieczniki Synergistic Research",
+      "expectedId": "blog-article-1968",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 160,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1968",
+          "name": "Porady na temat doboru bezpieczników Synergistic Research"
+        },
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        },
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        }
+      ]
+    },
+    {
+      "query": "dCS Lina Network DAC",
+      "expectedId": "bced065c-4774-469d-975e-e441f64b300c",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 213,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "bced065c-4774-469d-975e-e441f64b300c",
+          "name": "Wewnątrz przetwornika cyfrowo-analogowego dCS Lina Network DAC"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+          "name": " Prezentacja wideo - Bricasti Design"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+          "name": "Nowa marka referencyjnych źródeł cyfrowych Oladra z Nowej Zelandii w ofercie Audiofast"
+        }
+      ]
+    },
+    {
+      "query": "Gryphon Audio Designs",
+      "expectedId": "blog-article-1709",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 140,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        },
+        {
+          "id": "blog-article-2796",
+          "name": "Nagrody Golden Ear 2024 The Absolute Sound"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        }
+      ]
+    },
+    {
+      "query": "Dan D’Agostino Progression Integrated",
+      "expectedId": "blog-article-1737",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 141,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "bced065c-4774-469d-975e-e441f64b300c",
+          "name": "Wewnątrz przetwornika cyfrowo-analogowego dCS Lina Network DAC"
+        },
+        {
+          "id": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+          "name": "Nagrody EISA 2026–2027 dla Wilson Audio i R_volution"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        }
+      ]
+    },
+    {
+      "query": "Wilson Audio Sabrina X",
+      "expectedId": "blog-article-1680",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 203,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        },
+        {
+          "id": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+          "name": "Nagrody EISA 2026–2027 dla Wilson Audio i R_volution"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "75d8dd1e-ecbe-4e32-bab4-f2884641ad6b",
+          "name": "Grimm Audio LS1 i MU1 – minimum sprzętu, maksimum muzyki"
+        }
+      ]
+    },
+    {
+      "query": "EISA 2026 2027",
+      "expectedId": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 141,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+          "name": "Nagrody EISA 2026–2027 dla Wilson Audio i R_volution"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "bde77d09-f703-4a8e-a3b2-5ad61340cb1b",
+          "name": "Nagrody Roku 2026 - FIDELITY AWARDS 2026"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        }
+      ]
+    },
+    {
+      "query": "Golden Ear 2024",
+      "expectedId": "blog-article-2796",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 170,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-2796",
+          "name": "Nagrody Golden Ear 2024 The Absolute Sound"
+        },
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "172d5a74-df39-478c-87ad-6556fc86fda6",
+          "name": "Audio-Video nagrody 2025/2026"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        }
+      ]
+    },
+    {
+      "query": "jak dobrać bezpiecznik do sprzętu audio",
+      "expectedId": "blog-article-1968",
+      "oldExpectedInTop5": false,
+      "expectedInTop5": true,
+      "elapsedMs": 193,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1968",
+          "name": "Porady na temat doboru bezpieczników Synergistic Research"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "blog-article-1680",
+          "name": "Premierowe prezentacje Wilson Audio Sabrina X i Audio Research"
+        },
+        {
+          "id": "blog-article-2748",
+          "name": "Nagrody The Absolute Sound - Editors Choice 2025"
+        },
+        {
+          "id": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+          "name": " Prezentacja wideo - Bricasti Design"
+        }
+      ]
+    },
+    {
+      "query": "kolumny z diamentową kopułką",
+      "expectedId": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 154,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+          "name": "USHER SD-501 i SD-502 – kolumny podłogowe z diamentową kopułką DMD"
+        },
+        {
+          "id": "b75dbd72-8202-4fdf-a04d-0cac0bb9cd4a",
+          "name": "Usher Diamond SD-500 - Wyróżnienia roku 2026 - Monitory w magazynie HiFi i Muzyka"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        },
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "bced065c-4774-469d-975e-e441f64b300c",
+          "name": "Wewnątrz przetwornika cyfrowo-analogowego dCS Lina Network DAC"
+        }
+      ]
+    },
+    {
+      "query": "źródła cyfrowe z Nowej Zelandii",
+      "expectedId": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 177,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "fed03705-b0c9-4dd7-b661-3e76b1fb4f8e",
+          "name": "Nowa marka referencyjnych źródeł cyfrowych Oladra z Nowej Zelandii w ofercie Audiofast"
+        },
+        {
+          "id": "bced065c-4774-469d-975e-e441f64b300c",
+          "name": "Wewnątrz przetwornika cyfrowo-analogowego dCS Lina Network DAC"
+        },
+        {
+          "id": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+          "name": "USHER SD-501 i SD-502 – kolumny podłogowe z diamentową kopułką DMD"
+        },
+        {
+          "id": "b4c85eb5-849a-4f7c-931f-fda58ec9745d",
+          "name": "Pendulum z certyfikatem Roon Ready"
+        },
+        {
+          "id": "6852b661-cfe2-4a48-abff-2ca7909e311d",
+          "name": " Prezentacja wideo - Bricasti Design"
+        }
+      ]
+    },
+    {
+      "query": "audio video show relacja 2022",
+      "expectedId": "blog-article-2078",
+      "oldExpectedInTop5": true,
+      "expectedInTop5": true,
+      "elapsedMs": 133,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-2078",
+          "name": "Refleksje po Audio Video Show 2022"
+        },
+        {
+          "id": "blog-article-392",
+          "name": "AudioShow 2018"
+        },
+        {
+          "id": "blog-article-1435",
+          "name": "AudioShow 2019"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "923c83c2-d683-4848-b2e6-b882f994b4a5",
+          "name": "Nagrody EISA 2026–2027 dla Wilson Audio i R_volution"
+        }
+      ]
+    },
+    {
+      "query": "wzmacniacz lampowy",
+      "expectedId": null,
+      "oldExpectedInTop5": null,
+      "expectedInTop5": null,
+      "elapsedMs": 138,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "9304f107-721b-4196-b3e9-32fbd254e207",
+          "name": "Rogue Audio Sphinx V3 Magnum – Wyróżnienia roku 2026 – Wzmacniacze zintegrowane"
+        },
+        {
+          "id": "blog-article-392",
+          "name": "AudioShow 2018"
+        },
+        {
+          "id": "bced065c-4774-469d-975e-e441f64b300c",
+          "name": "Wewnątrz przetwornika cyfrowo-analogowego dCS Lina Network DAC"
+        },
+        {
+          "id": "blog-article-1737",
+          "name": "Premierowe prezentacje integry Dan D'Agostino Progression Integrated"
+        }
+      ]
+    },
+    {
+      "query": "przepis na zupę pomidorową",
+      "expectedId": null,
+      "oldExpectedInTop5": null,
+      "expectedInTop5": null,
+      "elapsedMs": 163,
+      "totalCount": 25,
+      "top5": [
+        {
+          "id": "blog-article-1709",
+          "name": "Październik z Gryphon Audio Designs"
+        },
+        {
+          "id": "92059cb4-b9ec-4383-b9fd-6ad4220b36d6",
+          "name": "Nagroda Roku 2026 - Hifi i Muzyka dla Grimm Audio MU2"
+        },
+        {
+          "id": "45c77f18-3ade-4727-ba88-1e0f8fdae15c",
+          "name": "USHER SD-501 i SD-502 – kolumny podłogowe z diamentową kopułką DMD"
+        },
+        {
+          "id": "2dfa2b58-2d6c-4ee1-9d2b-1ca5c635d43a",
+          "name": "STROMTANK w ofercie AUDIFOAST"
+        },
+        {
+          "id": "blog-article-2689",
+          "name": "Nagrody The Absolute Sound - Product of the Year 2025"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "category": "/blog/kategoria/nagroda/",
+      "year": "",
+      "count": 6
+    },
+    {
+      "category": "",
+      "year": "2026",
+      "count": 13
+    },
+    {
+      "category": "/blog/kategoria/nagroda/",
+      "year": "2026",
+      "count": 6
+    },
+    {
+      "category": "/blog/kategoria/nagroda/",
+      "year": "1900",
+      "count": 0
+    }
+  ],
+  "recovery": [
+    {
+      "backend": "legacy",
+      "outcome": "success",
+      "count": 25
+    },
+    {
+      "backend": "lexical",
+      "outcome": "success",
+      "count": 1
+    },
+    {
+      "backend": "dataset",
+      "outcome": "success",
+      "count": 25
+    }
+  ],
+  "regressions": []
+}

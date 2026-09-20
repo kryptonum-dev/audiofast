@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-09-20T05:42:09.334Z",
+  "semanticProbes": 1,
+  "projectId": "fsw3likv",
+  "dataset": "production",
+  "apiVersion": "2026-08-21",
+  "before": {
+    "enabled": true,
+    "status": "updating",
+    "projection": "{_type == \"blog-article\" => {name, title, description, keywords}}"
+  },
+  "after": {
+    "enabled": true,
+    "status": "ready",
+    "projection": "{_type == \"blog-article\" => {name, title, description, keywords}}"
+  }
+}

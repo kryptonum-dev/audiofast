@@ -291,11 +291,11 @@ Protect the existing dirty files `apps/web/next-env.d.ts`, `apps/web/src/generat
 
 ### Phase 3: Remove the unused Studio dashboard
 
-- [x] 3.1 Studio checks pass
-- [x] 3.2 Dependency removal is complete
+- [x] 3.1 Studio checks pass — f82d69b
+- [x] 3.2 Dependency removal is complete — f82d69b
 
 ### Phase 4: Validate live behavior and cut over
 
-- [ ] 4.1 Live readiness and semantic validation pass
-- [ ] 4.2 Deployed cutover and recovery checks pass
-- [ ] 4.3 Validation evidence is complete
+- [x] 4.1 Live readiness and semantic validation pass
+- [x] 4.2 Deployed cutover and recovery checks pass
+- [x] 4.3 Validation evidence is complete
