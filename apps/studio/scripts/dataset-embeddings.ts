@@ -97,23 +97,56 @@ async function main() {
         projection: config.projection,
       });
   }
+  let semanticProbes = 0;
   if (command === 'wait') {
+    const readToken = process.env.SANITY_API_READ_TOKEN;
+    if (!readToken)
+      throw new Error(
+        'wait requires SANITY_API_READ_TOKEN for a data-plane readiness probe',
+      );
     const deadline = Date.now() + 600000;
-    while (settings.status !== 'ready') {
+    let queryReady = false;
+    while (!queryReady) {
       if (settings.status === 'error' || !settings.enabled)
         throw new Error(`Dataset embeddings status: ${settings.status}`);
       if (Date.now() >= deadline)
         throw new Error('Dataset readiness timed out after 10 minutes');
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      settings = await request();
+      if (settings.status === 'ready') {
+        if (settings.projection !== config.projection)
+          throw new Error(
+            'Ready projection does not match versioned configuration',
+          );
+        if (++semanticProbes > 12)
+          throw new Error('Readiness semantic probe budget exhausted');
+        const probe = await fetch(
+          `https://${config.projectId}.api.sanity.io/v${config.apiVersion}/data/query/${config.dataset}?perspective=published`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${readToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              query:
+                '*[_type == "blog-article"] | score(text::semanticSimilarity("audio"))[0...1]{_id}',
+            }),
+            signal: AbortSignal.timeout(15000),
+          },
+        );
+        if (probe.ok) queryReady = true;
+        else if (probe.status !== 400)
+          throw new Error(`Readiness query failed: HTTP ${probe.status}`);
+      }
+      if (!queryReady) {
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+        settings = await request();
+      }
     }
-    if (settings.projection !== config.projection)
-      throw new Error(
-        'Ready projection does not match versioned configuration',
-      );
   }
+
   const evidence = {
     checkedAt: new Date().toISOString(),
+    semanticProbes,
     projectId: config.projectId,
     dataset: config.dataset,
     apiVersion: config.apiVersion,

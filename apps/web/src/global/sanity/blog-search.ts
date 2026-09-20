@@ -104,7 +104,7 @@ function warn(
     backend,
     outcome,
     status,
-    elapsedMs: Date.now() - started,
+    elapsedMs: performance.now() - started,
   });
 }
 
@@ -126,7 +126,7 @@ export async function searchBlogArticles(input: {
     year: input.year || '',
   };
   let articles: Article[] | undefined;
-  const started = Date.now();
+  const started = performance.now();
   if (backend !== 'lexical') {
     try {
       if (backend === 'dataset') {
