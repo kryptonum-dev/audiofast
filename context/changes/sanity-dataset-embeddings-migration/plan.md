@@ -280,14 +280,14 @@ Protect the existing dirty files `apps/web/next-env.d.ts`, `apps/web/src/generat
 
 ### Phase 1: Prepare configuration and rollback controls
 
-- [x] 1.1 Configuration checks pass
-- [x] 1.2 Read-only preflight succeeds
+- [x] 1.1 Configuration checks pass — 0e84734
+- [x] 1.2 Read-only preflight succeeds — 0e84734
 
 ### Phase 2: Integrate and test bounded blog search
 
-- [ ] 2.1 Search behavior tests pass
-- [ ] 2.2 Generated types and web checks pass
-- [ ] 2.3 Production rendering builds
+- [x] 2.1 Search behavior tests pass
+- [x] 2.2 Generated types and web checks pass
+- [x] 2.3 Production rendering builds
 
 ### Phase 3: Remove the unused Studio dashboard
 

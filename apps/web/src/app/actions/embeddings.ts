@@ -1,10 +1,9 @@
-'use server';
+import 'server-only';
 
 import type { EmbeddingsResponse } from '@/src/global/types';
 
 /**
- * Server Action to fetch embedding results from the Sanity Embeddings Index API
- * Can be called from both Server and Client Components
+ * Temporary server-only rollback helper for the legacy Embeddings Index API
  * @param searchQuery - The search query string
  * @param type - The type of content to search ('products' or 'blog')
  * @returns Array of embedding results with scores and document IDs, or null if no query or error
@@ -37,6 +36,8 @@ export async function fetchEmbeddings(
 
     const response = await fetch(embeddingsUrl, {
       method: 'POST',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(3000),
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -52,15 +53,31 @@ export async function fetchEmbeddings(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Embeddings API error (${response.status}):`, errorText);
+      console.warn('[blog-search] Legacy request failed', {
+        status: response.status,
+      });
       return null;
     }
 
-    const data: EmbeddingsResponse = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching embeddings:', error);
+    const data: unknown = await response.json();
+    if (
+      !Array.isArray(data) ||
+      data.length > 50 ||
+      !data.every(
+        (item) =>
+          item &&
+          typeof item.score === 'number' &&
+          Number.isFinite(item.score) &&
+          typeof item.value?.documentId === 'string' &&
+          item.value.type === typeFilter &&
+          !item.value.documentId.startsWith('drafts.') &&
+          !item.value.documentId.startsWith('versions.'),
+      )
+    )
+      return null;
+    return data as EmbeddingsResponse;
+  } catch {
+    console.warn('[blog-search] Legacy request unavailable');
     return null;
   }
 }

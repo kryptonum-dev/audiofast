@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
-import { fetchEmbeddings } from '@/src/app/actions/embeddings';
+import { searchBlogArticles } from '@/src/global/sanity/blog-search';
+import { normalizeBlogSearch } from '@/src/global/sanity/blog-search-config';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import { getBlogArticlesQuery } from '@/src/global/sanity/query';
@@ -31,39 +32,32 @@ export default async function BlogListing({
 }: BlogListingProps) {
   const params = await searchParams;
 
-  const currentPage = Number(params.page) || 1;
+  const normalized = normalizeBlogSearch(params.search, params.page);
+  const currentPage = normalized.page;
   const itemsPerPage = BLOG_ITEMS_PER_PAGE;
   const searchTerm = params.search || '';
   const year = params.year || '';
-
-  const hasSearchQuery = Boolean(searchTerm);
-
-  // Fetch embeddings if search exists
-  const embeddingResults = hasSearchQuery
-    ? (await fetchEmbeddings(searchTerm, 'blog')) || []
-    : [];
-
-  // Determine sort order
-  const sortBy = hasSearchQuery ? 'relevance' : 'newest';
-
   const offset = (currentPage - 1) * itemsPerPage;
-  const limit = offset + itemsPerPage;
 
-  // Get the correct query based on sortBy parameter
-  const query = getBlogArticlesQuery(sortBy);
-
-  const articlesData = await sanityFetch<QueryBlogArticlesNewestResult>({
-    query,
-    params: {
-      category,
-      search: searchTerm,
-      year,
-      offset,
-      limit,
-      embeddingResults,
-    },
-    tags: ['blog-article'],
-  });
+  const articlesData = normalized.search
+    ? await searchBlogArticles({
+        search: searchTerm,
+        page: currentPage,
+        category,
+        year,
+      })
+    : await sanityFetch<QueryBlogArticlesNewestResult>({
+        query: getBlogArticlesQuery('newest'),
+        params: {
+          category,
+          search: '',
+          year,
+          offset,
+          limit: offset + itemsPerPage,
+          embeddingResults: [],
+        },
+        tags: ['blog-article'],
+      });
 
   if (!articlesData) {
     logWarn('Blog articles data not found');

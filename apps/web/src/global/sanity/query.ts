@@ -1607,6 +1607,32 @@ const blogArticlesFilterConditions = /* groq */ `
   && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
 `;
 
+// Filter before semantic scoring; all counts/pages derive from this bounded array.
+const blogSearchEligibility = /* groq */ `
+  _type == "blog-article"
+  && !(_id in path("drafts.**")) && !(_id in path("versions.**"))
+  && defined(slug.current) && hideFromList == false
+  && ($category == "" || category->slug.current == $category)
+  && ($year == "" || string::split(coalesce(publishedDate, _createdAt), "-")[0] == $year)
+`;
+
+export const queryBlogSemanticSearch = defineQuery(`
+  *[${blogSearchEligibility}]
+  | score(text::semanticSimilarity($search))
+  | order(_score desc, _id asc)[0...50] {
+    ${publicationBlock}
+    _score
+  }
+`);
+
+export const queryBlogLexicalSearch = defineQuery(`
+  *[${blogSearchEligibility} && [name, pt::text(title)] match $search]
+  | order(coalesce(publishedDate, _createdAt) desc, _id asc)[0...50] {
+    ${publicationBlock}
+    "_score": 0
+  }
+`);
+
 // Shared projection fields for blog articles (the {...} block)
 const blogArticlesProjection = /* groq */ `
   ${publicationBlock}

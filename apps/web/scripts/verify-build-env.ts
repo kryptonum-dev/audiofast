@@ -55,3 +55,12 @@ if (process.env.VERCEL_ENV === 'production') {
     throw new Error('Production builds require P24_MODE=production.');
   }
 }
+
+// Fail an invalid search rollout configuration before deploying it.
+const blogBackend = process.env.SANITY_BLOG_SEARCH_BACKEND;
+if (blogBackend && !['legacy', 'dataset', 'lexical'].includes(blogBackend)) {
+  throw new Error('Invalid SANITY_BLOG_SEARCH_BACKEND');
+}
+if (blogBackend === 'dataset' && !process.env.SANITY_API_READ_TOKEN?.trim()) {
+  throw new Error('Dataset blog search requires SANITY_API_READ_TOKEN');
+}
