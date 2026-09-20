@@ -5,6 +5,9 @@ const { search, browse } = vi.hoisted(() => ({
   search: vi.fn(),
   browse: vi.fn(),
 }));
+vi.mock('next/server', () => ({
+  connection: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock('@/src/global/sanity/blog-search', () => ({
   searchBlogArticles: search,
 }));

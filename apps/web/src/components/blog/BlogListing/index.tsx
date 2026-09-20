@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { connection } from 'next/server';
 
 import { searchBlogArticles } from '@/src/global/sanity/blog-search';
 import { normalizeBlogSearch } from '@/src/global/sanity/blog-search-config';
@@ -38,6 +39,9 @@ export default async function BlogListing({
   const searchTerm = params.search || '';
   const year = params.year || '';
   const offset = (currentPage - 1) * itemsPerPage;
+
+  // Prevent prerender probes from entering the timed remote-search/fallback path.
+  if (normalized.search) await connection();
 
   const articlesData = normalized.search
     ? await searchBlogArticles({
