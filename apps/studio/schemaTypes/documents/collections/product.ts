@@ -96,8 +96,6 @@ export const product = defineType({
       title: 'Własny nagłówek H1 (opcjonalny)',
       type: 'object',
       group: [GROUP.MAIN_CONTENT, GROUP.SEO],
-      description:
-        'Zmieniasz tylko widoczny nagłówek na stronie produktu. Obie części tworzą jeden H1. Nazwy w menu, kartach produktów i meta title pozostają niezależne. Dłuższy tekst może zawinąć się na dodatkowe linie.',
       components: { input: ProductHeadingInput },
       fields: [
         defineField({
