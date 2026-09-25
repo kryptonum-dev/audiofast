@@ -62,23 +62,18 @@
 
     .heading {
       grid-area: heading;
-      font-size: var(--typography-header-m, 1.5rem);
-      color: var(--neutral-black, #000000);
+      font-size: var(--typography-header-l, 2.5rem);
+      font-weight: 400;
+      letter-spacing: calc(var(--typography-header-m, 1.5rem) * -0.03);
+      color: var(--neutral-700, #303030);
       -webkit-text-stroke-width: 0;
       -webkit-text-stroke-color: transparent;
 
-      &::first-line {
-        font-size: var(--typography-header-l, 2.5rem);
-        font-weight: 400;
-        color: var(--neutral-700, #303030);
-        -webkit-text-stroke-width: 0;
-        -webkit-text-stroke-color: transparent;
-      }
-
-      br {
+      > span {
         display: block;
-        content: '';
-        margin-bottom: 0.75rem;
+        font-size: var(--typography-header-m, 1.5rem);
+        font-weight: 500;
+        color: var(--neutral-black, #000000);
       }
     }
   }

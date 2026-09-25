@@ -10,6 +10,8 @@ interface GetSEOFieldsOptions {
   descriptionRequired?: boolean;
   /** If true, SEO title field is hidden and not required (useful for auto-generated titles). */
   hideTitle?: boolean;
+  /** Whether editors must provide a title when it is visible. Default: true. */
+  titleRequired?: boolean;
 }
 
 export function getSEOFields(options?: GetSEOFieldsOptions) {
@@ -17,6 +19,7 @@ export function getSEOFields(options?: GetSEOFieldsOptions) {
     exclude = [],
     descriptionRequired = false,
     hideTitle = false,
+    titleRequired = true,
   } = options || {};
 
   const fields = [];
@@ -40,7 +43,7 @@ export function getSEOFields(options?: GetSEOFieldsOptions) {
           hidden: hideTitle,
           readOnly: hideTitle,
           validation: (rule) =>
-            hideTitle
+            hideTitle || !titleRequired
               ? [rule.max(70).warning('Nie więcej niż 70 znaków')]
               : [
                   rule.required().error('Tytuł SEO jest wymagany'),

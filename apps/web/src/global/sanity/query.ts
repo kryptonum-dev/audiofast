@@ -2381,6 +2381,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     _id,
     name,
     subtitle,
+    headingOverride { upper, lower },
     "slug": slug.current,
     basePriceCents,
     isSellableOnline,

@@ -33,6 +33,10 @@ const DEFAULT_ARCHIVED_CTA = {
 interface ProductHeroProps {
   name: string;
   subtitle?: string;
+  headingOverride?: {
+    upper?: string | null;
+    lower?: string | null;
+  } | null;
   brand?: BrandType;
   pricingData?: CompletePricingData | null;
   isBuyable: boolean;
@@ -53,6 +57,7 @@ interface ProductHeroProps {
 export default function ProductHero({
   name,
   subtitle,
+  headingOverride,
   brand,
   pricingData,
   isBuyable,
@@ -67,6 +72,9 @@ export default function ProductHero({
   categories,
   formStateData,
 }: ProductHeroProps) {
+  const headingUpper = headingOverride?.upper?.trim() || brand?.name?.trim();
+  const headingLower = headingOverride?.lower?.trim() || name.trim();
+
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
   const displayAwards = shouldUseMarquee ? [...awards, ...awards] : awards;
@@ -104,9 +112,8 @@ export default function ProductHero({
         </div>
         {subtitle && <span className={styles.prefix}>{subtitle}</span>}
         <h1 className={styles.heading}>
-          {brand!.name && `${brand!.name} `}
-          <br />
-          {name}
+          {headingUpper && `${headingUpper} `}
+          <span>{headingLower}</span>
         </h1>
       </header>
       {shortDescription && shortDescription.length > 0 && (

@@ -6,6 +6,7 @@ import { BookAudio, FileText, Package, Settings, Table } from 'lucide-react';
 import { defineArrayMember, defineField, defineType } from 'sanity';
 
 import { defineSlugForDocument } from '../../../components/define-slug-for-document';
+import { ProductHeadingInput } from '../../../components/product-heading-input';
 import { GROUP, GROUPS } from '../../../utils/constant';
 import { customPortableText } from '../../portableText';
 import { getSEOFields } from '../../shared/seo';
@@ -89,6 +90,31 @@ export const product = defineType({
       description:
         'Opcjonalny krótki opis kategorii produktu (np. "Trójdrożny głośnik wolnostojący"). Jeśli nie zostanie wypełniony, sekcja nie będzie wyświetlana.',
       group: GROUP.MAIN_CONTENT,
+    }),
+    defineField({
+      name: 'headingOverride',
+      title: 'Własny nagłówek H1 (opcjonalny)',
+      type: 'object',
+      group: [GROUP.MAIN_CONTENT, GROUP.SEO],
+      description:
+        'Zmieniasz tylko widoczny nagłówek na stronie produktu. Obie części tworzą jeden H1. Nazwy w menu, kartach produktów i meta title pozostają niezależne. Dłuższy tekst może zawinąć się na dodatkowe linie.',
+      components: { input: ProductHeadingInput },
+      fields: [
+        defineField({
+          name: 'upper',
+          title: 'Górna część nagłówka',
+          type: 'string',
+          description:
+            'Większy tekst w hero. Pozostaw puste, aby użyć nazwy marki.',
+        }),
+        defineField({
+          name: 'lower',
+          title: 'Dolna część nagłówka',
+          type: 'string',
+          description:
+            'Mniejszy tekst pod marką. Pozostaw puste, aby użyć nazwy produktu.',
+        }),
+      ],
     }),
 
     // ----------------------------------------
@@ -782,7 +808,7 @@ export const product = defineType({
       ],
     }),
 
-    ...getSEOFields({ exclude: ['hideFromList'], hideTitle: true }),
+    ...getSEOFields({ exclude: ['hideFromList'], titleRequired: false }),
   ],
   preview: {
     select: {

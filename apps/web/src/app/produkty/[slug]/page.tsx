@@ -95,7 +95,7 @@ export async function generateMetadata({
   const autoTitle = [seoData.brandName?.trim(), seoData.name?.trim()]
     .filter(Boolean)
     .join(' ');
-  const resolvedTitle = autoTitle || seoData.seo?.title?.trim() || undefined;
+  const resolvedTitle = seoData.seo?.title?.trim() || autoTitle || undefined;
 
   return getSEOMetadata({
     seo: {
@@ -215,6 +215,7 @@ export default async function ProductPage(props: ProductPageProps) {
       <ProductHero
         name={product.name || ''}
         subtitle={product.subtitle || ''}
+        headingOverride={product.headingOverride}
         brand={product.brand as unknown as BrandType | undefined}
         pricingData={pricingData}
         isBuyable={productBuyability.isBuyable}
