@@ -6,6 +6,7 @@ import {
   type HistoryRequestClient,
 } from './history-client.js';
 import { mergeNoise } from './merge.js';
+import { attachChangedFields } from './reconstruct.js';
 import { assignSessions } from './sessions.js';
 import { buildDailySummary } from './summary.js';
 import { toRangeIso } from './time.js';
@@ -75,7 +76,7 @@ export type Report = {
 /**
  * Build the whole report for one author and date range:
  * transactions → classify → resolve documents → mergeNoise →
- * (Phase 4: changed fields) → assignSessions → buildDailySummary.
+ * attachChangedFields → assignSessions → buildDailySummary.
  */
 export async function buildReport(
   client: HistoryRequestClient,
@@ -145,10 +146,18 @@ export async function buildReport(
     mergeWindowMinutes: config.limits.mergeWindowMinutes,
   });
 
-  // Phase 4: attachChangedFields(client, config, { events: merged, ... }).
+  const withFields = await attachChangedFields(client, config, {
+    events: merged,
+    authorId,
+    fromTime,
+    toTime,
+    signal,
+    onProgress: (progress) => onProgress?.({ stage: 'changes', ...progress }),
+  });
+  throwIfAborted(signal);
 
   onProgress?.({ stage: 'summary', message: 'Przygotowywanie podsumowania…' });
-  const { events, sessions } = assignSessions(merged, {
+  const { events, sessions } = assignSessions(withFields, {
     gapMinutes,
     minSessionMinutes: config.limits.minSessionMinutes,
   });

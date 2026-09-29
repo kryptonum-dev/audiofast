@@ -5,6 +5,6 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["node", "vite/client"]
   },
-  "include": ["src", "sanity.cli.ts"],
+  "include": ["src", "scripts", "sanity.cli.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -8,7 +8,8 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "check-types": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "generate:labels": "bun run scripts/generate-field-labels.ts"
   },
   "dependencies": {
     "@sanity/icons": "^3.8.0",

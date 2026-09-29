@@ -511,16 +511,16 @@ None. New app, no data model changes, no env changes in the primary design.
 
 ### Phase 3: Report UI and CSV
 
-- [x] 3.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [x] 3.2 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [x] 3.3 Build passes: `cd apps/cms-activity && bun run build`
+- [x] 3.1 Type-check passes: `bun run turbo check-types --filter=cms-activity` — b88ae62
+- [x] 3.2 Lint passes: `bun run turbo lint --filter=cms-activity` — b88ae62
+- [x] 3.3 Build passes: `cd apps/cms-activity && bun run build` — b88ae62
 
 ### Phase 4: Changed Fields (Mendoza Reconstruction)
 
-- [ ] 4.1 Generator runs and output is non-empty: `cd apps/cms-activity && bun run generate:labels && test -s src/generated/field-labels.json`
-- [ ] 4.2 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [ ] 4.3 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [ ] 4.4 Build passes: `cd apps/cms-activity && bun run build`
+- [x] 4.1 Generator runs and output is non-empty: `cd apps/cms-activity && bun run generate:labels && test -s src/generated/field-labels.json`
+- [x] 4.2 Type-check passes: `bun run turbo check-types --filter=cms-activity`
+- [x] 4.3 Lint passes: `bun run turbo lint --filter=cms-activity`
+- [x] 4.4 Build passes: `cd apps/cms-activity && bun run build`
 
 ### Phase 5: Deploy, Docs and Handover
 

@@ -1,0 +1,826 @@
+{
+  "fields": {
+    "accountDetails": "Szczegóły konta",
+    "accountList": "Lista kont bankowych",
+    "address": "Adres",
+    "alt": "Opis obrazu",
+    "analytics": "Analityka",
+    "answer": "Odpowiedź",
+    "archivedProductCta": "Produkt archiwalny – przycisk kontaktu",
+    "author": "Autor (członek zespołu)",
+    "authorType": "Typ autora",
+    "autoWidth": "Automatyczna szerokość",
+    "availabilityStatus": "Status dostępności",
+    "availabilityUpdatedAt": "Status dostępności zaktualizowany",
+    "availableInStores": "Dostępny w salonach",
+    "b2cReturnInstructionsEmail": "Instrukcja zwrotu - treść e-maila",
+    "b2cTransactionalEmailCopyRecipients": "Kopie e-maili transakcyjnych B2C",
+    "b2cWithdrawalForm": "Formularz odstąpienia od umowy",
+    "backgroundImage": "Obraz tła",
+    "bannerImage": "Obraz banera",
+    "basePriceCents": "Cena bazowa (grosze)",
+    "bestsellers": "Bestsellery",
+    "blank": "Otwórz w nowej karcie",
+    "blocks": "Bloki",
+    "blocksHeading": "Nagłówek bloków",
+    "bottomBrands": "Drugi rząd marek",
+    "boxes": "Kafelki z tekstem i ikonami",
+    "brand": "Marka",
+    "brandContentBlocks": "Szczegółowy opis (stary format)",
+    "brandDetailContent": "Szczegółowy opis",
+    "brandName": "Marka",
+    "brands": "Marki",
+    "brandsDisplayMode": "Tryb wyświetlania marek",
+    "button": "Przycisk CTA",
+    "buttonLabel": "Etykieta przycisku",
+    "buttons": "Linki w nawigacji",
+    "buttonText": "Tekst przycisku",
+    "caption": "Podpis",
+    "cartEmptyState": "Pusty koszyk",
+    "cartSupportCard": "Karta wsparcia koszyka",
+    "categories": "Kategorie",
+    "category": "Kategoria",
+    "categoryConfigs": "Konfiguracje kategorii",
+    "city": "Miasto",
+    "column1": "Pierwsza kolumna",
+    "column2": "Druga kolumna",
+    "companyDescription": "Opis firmy",
+    "companyName": "Pełna nazwa firmy",
+    "companyRegistration": "Dane rejestrowe firmy",
+    "confirmationEmail": "Szablon e-maila potwierdzającego",
+    "contactForm": "Formularz kontaktowy",
+    "contactPeople": "Osoby kontaktowe",
+    "contactPersons": "Lista osób kontaktowych",
+    "contactSettings": "Ustawienia formularzy kontaktowych",
+    "content": "Treść",
+    "country": "Kraj",
+    "cta": "Sekcja CTA",
+    "ctaButton": "Przycisk CTA",
+    "ctaParagraph": "Paragraf CTA",
+    "ctaText": "Tekst CTA",
+    "customAddress": "Niestandardowy adres",
+    "customAuthor": "Autor (zewnętrzny)",
+    "customEmail": "Niestandardowy email",
+    "customFilters": "Konfiguracja filtrów",
+    "customFilterValues": "Wartości niestandardowych filtrów",
+    "customLink": "Link wewnętrzny/zewnętrzny",
+    "customPhone": "Niestandardowy telefon",
+    "denormBrandName": "Brand Name (computed)",
+    "denormBrandSlug": "Brand Slug (computed)",
+    "denormCategorySlugs": "Category Slugs (computed)",
+    "denormFilterKeys": "Filter Keys (computed)",
+    "denormLastSync": "Last Denormalization Sync",
+    "denormParentCategorySlugs": "Parent Category Slugs (computed)",
+    "description": "Opis artykułu",
+    "destinationType": "Typ recenzji",
+    "details": "Szczegóły produktu",
+    "displayMode": "Co wyświetlić w sekcji",
+    "displayName": "Nazwa wyświetlana",
+    "distributionYear": "Rok rozpoczęcia dystrybucji",
+    "doNotIndex": "Nie indeksuj tej strony",
+    "doNotShowBrand": "Nie pokazuj marki",
+    "downloadablePdfs": "Pliki do pobrania (PDF)",
+    "email": "Adres e-mail",
+    "enabledParameters": "Włączone parametry",
+    "error": "Błąd",
+    "external": "Adres URL",
+    "externalUrl": "Link zewnętrzny",
+    "faqList": "Lista pytań FAQ",
+    "featuredReviews": "Wyróżnione recenzje",
+    "file": "Plik PDF",
+    "filterName": "Nazwa filtra",
+    "filterType": "Typ filtra",
+    "float": "Pozycja",
+    "formState": "Stan formularza",
+    "ga4_id": "Google Analytics Measurement ID",
+    "geo": "Współrzędne geograficzne",
+    "googleAds_id": "Google Ads Conversion ID",
+    "groups": "Sekcje danych technicznych",
+    "gtm_id": "Google Tag Manager ID",
+    "hasMultiplePrices": "Cena zmienna",
+    "heading": "Nagłówek szczegółów",
+    "headingOverride": "Własny nagłówek H1",
+    "heroImage": "Obraz tła strony marki",
+    "hideFromList": "Ukryj z list",
+    "highlightedSocialMedia": "Wyróżnione media społecznościowe",
+    "holdOrderNumber": "Numer zamówienia rezerwacji",
+    "holdPaymentSessionId": "Sesja płatności rezerwacji",
+    "holdUntil": "Rezerwacja do",
+    "href": "URL",
+    "icon": "Ikona",
+    "iconString": "Tekst ikony",
+    "image": "Obraz główny",
+    "image1": "Pierwsze zdjęcie",
+    "image2": "Drugie zdjęcie",
+    "imageGallery": "Galeria zdjęć marki",
+    "images": "Zdjęcia galerii",
+    "img": "Obraz Open Graph",
+    "internal": "Strona wewnętrzna",
+    "internalProduct": "Produkt z katalogu Audiofast",
+    "isArchived": "Archiwum",
+    "isReturnable": "Zwrot",
+    "isSellableOnline": "Sprzedaż Online",
+    "items": "Elementy listy",
+    "jsonEditor": "Edytor JSON",
+    "keywords": "Słowa kluczowe",
+    "krs": "KRS",
+    "label": "Etykieta sekcji",
+    "lastPricingSync": "Ostatnia synchronizacja cen",
+    "latitude": "Szerokość geograficzna",
+    "layout": "Układ obrazów",
+    "level": "Poziom nagłówka",
+    "link": "Link",
+    "links": "Linki w stopce",
+    "logo": "Logo nagrody",
+    "longitude": "Długość geograficzna",
+    "lower": "Dolna część nagłówka",
+    "mailchimpAudienceId": "Mailchimp Audience ID",
+    "metaConversionToken": "Meta Conversion API Token",
+    "metaPixelId": "ID Meta (Facebook) Pixel",
+    "name": "Nazwa nagrody",
+    "newProducts": "Nowe produkty",
+    "newProductsMode": "Tryb wyboru nowych produktów",
+    "newsletter": "Newsletter",
+    "nip": "NIP",
+    "numericValue": "Wartość liczbowa",
+    "openGraph": "Open Graph",
+    "openInNewTab": "Otwórz w nowej karcie",
+    "overrideGallery": "Nadpisz galerię zdjęć",
+    "pageBuilder": "Niestandardowe sekcje",
+    "paragraph": "Treść akapitu",
+    "parentCategory": "Kategoria nadrzędna",
+    "pdfFile": "Plik PDF",
+    "pdfSlug": "Slug PDF",
+    "phone": "Numer telefonu",
+    "phoneNumber": "Numer telefonu",
+    "position": "Stanowisko",
+    "postalCode": "Kod pocztowy",
+    "previewImage": "Własne zdjęcie główne",
+    "priceCents": "Cena (grosze)",
+    "priceRange": "Przedział cenowy",
+    "primaryDescription": "Opis główny",
+    "primaryHeading": "Nagłówek główny",
+    "productDetailContent": "Szczegółowy opis",
+    "productInquiryFormState": "Formularz zapytania o produkt",
+    "products": "Produkty z tą nagrodą",
+    "productType": "Typ produktu",
+    "publication": "Wybierz publikację",
+    "publication.name": "publication.title",
+    "publicationImage": "Obraz publikacji",
+    "publications": "Wyróżnione publikacje",
+    "publishedDate": "Nadpisz datę publikacji",
+    "question": "Pytanie",
+    "quote": "Treść cytatu",
+    "refreshButton": "Przycisk odświeżenia",
+    "refreshButtonText": "Tekst przycisku odświeżenia",
+    "registryCourt": "Sąd rejestrowy",
+    "regon": "REGON",
+    "relatedProducts": "Powiązane produkty",
+    "review": "Recenzja",
+    "reviewCount": "Liczba recenzji",
+    "reviews": "Recenzje",
+    "rows": "Parametry",
+    "secondaryDescription": "Opis dodatkowy",
+    "secondaryHeading": "Nagłówek dodatkowy",
+    "sectionId": "ID sekcji",
+    "selectedBrands": "Wybrane marki",
+    "selectionMode": "Tryb wyboru publikacji",
+    "seo": "SEO globalne",
+    "shareCapital": "Kapitał zakładowy",
+    "shortDescription": "Krótki opis",
+    "showBlocks": "Pokaż siatkę bloków",
+    "showCta": "Pokaż sekcję CTA",
+    "showProducts": "Wyświetl produkty",
+    "slides": "Slajdy",
+    "slug": "Slug",
+    "soldOrderNumber": "Numer zamówienia sprzedaży",
+    "steps": "Lista kroków",
+    "stores": "Salony dystrybucji",
+    "street": "Ulica i numer",
+    "streetAddress": "Ulica i numer",
+    "structuredData": "Structured Data (Schema.org)",
+    "style": "Styl",
+    "subject": "Temat e-maila",
+    "subtitle": "Podtytuł",
+    "success": "Sukces",
+    "supportEmails": "Adresy e-mail wsparcia",
+    "teamMembers": "Członkowie zespołu",
+    "technicalData": "Dane techniczne",
+    "tel": "Telefon kontaktowy",
+    "text": "Tekst przycisku",
+    "thumbnail": "Miniatura wideo",
+    "title": "Tytuł artykułu",
+    "topBrands": "Pierwszy rząd marek",
+    "transparentBackground": "Przezroczyste tło zdjęcia",
+    "unit": "Jednostka",
+    "upper": "Górna część nagłówka",
+    "url": "Adres URL",
+    "useCustomAddress": "Użyj niestandardowych danych kontaktowych",
+    "useCustomGallery": "Własna galeria zdjęć",
+    "value": "Wartość tekstowa",
+    "values": "Wartości",
+    "variant": "Styl przycisku",
+    "variants": "Warianty produktu",
+    "videoUrl": "Link do filmu YouTube",
+    "vimeoId": "ID wideo Vimeo",
+    "website": "Strona internetowa",
+    "websiteUrl": "Link do strony autora",
+    "width": "Szerokość (px)",
+    "withIcon": "Czy ma ikonę?",
+    "year": "Rok",
+    "youtubeId": "ID wideo YouTube"
+  },
+  "types": {
+    "account": "Konto bankowe",
+    "award": "Nagroda",
+    "blog": "Strona bloga",
+    "blog-article": "Wpis na blogu",
+    "blog-category": "Kategoria bloga",
+    "blurLinesTextImage": "Tekst z obrazem i rozmytymi liniami",
+    "brand": "Marka",
+    "brands": "Strona marek",
+    "brandsByCategoriesSection": "Marki według kategorii",
+    "brandsList": "Lista wszystkich marek",
+    "brandsMarquee": "Lista marek z tekstem",
+    "button": "Przycisk",
+    "buttonWithNoVariant": "Przycisk bez wariantów",
+    "categoryConfig": "Konfiguracja kategorii",
+    "cellValue": "Wartość komórki",
+    "comparatorConfig": "Konfiguracja porównywarki",
+    "contactForm": "Formularz Kontaktowy",
+    "contactMap": "Mapa kontaktowa",
+    "contentBlockHorizontalLine": "Linia pozioma",
+    "contentBlockText": "Blok tekstowy",
+    "contentBlockVimeo": "Wideo Vimeo",
+    "contentBlockYoutube": "Wideo YouTube",
+    "cpoPage": "Strona CPO",
+    "cpoProduct": "Produkt CPO",
+    "cpoProductsListing": "Lista produktów CPO",
+    "customFilterDefinition": "Definicja filtra",
+    "faq": "Element FAQ",
+    "faqSection": "Sekcja FAQ",
+    "featuredProducts": "Wyróżnione produkty",
+    "featuredPublications": "Wyróżnione publikacje",
+    "filterValue": "Wartość filtra",
+    "footer": "Stopka",
+    "gallerySection": "Galeria obrazów",
+    "heroBlock": "Blok Hero",
+    "heroCarousel": "Sekcja Hero z karuzelą",
+    "heroSlide": "Slajd Hero",
+    "heroStatic": "Statyczna sekcja Hero",
+    "homePage": "Strona główna",
+    "imageTextColumns": "Obraz i tekst w kolumnach",
+    "imageWithTextBoxes": "Obraz z polami tekstowymi",
+    "imageWithVideo": "Obraz z wideo",
+    "latestPublication": "Najnowsza publikacja",
+    "navbar": "Nawigacja",
+    "notFound": "Nie znaleziono strony (404)",
+    "page": "Podstrona",
+    "pdfItem": "Plik PDF",
+    "phoneImageCta": "Zdjęcie z telefonem CTA",
+    "privacyPolicy": "Polityka prywatności",
+    "product": "Produkt audio",
+    "productCategoryParent": "Kategoria nadrzędna",
+    "productCategorySub": "Kategoria podrzędna",
+    "products": "Strona produktów",
+    "productsCarousel": "Karuzela produktów",
+    "productsListing": "Lista produktów",
+    "ptArrowList": "Lista ze strzałkami",
+    "ptButton": "Przycisk",
+    "ptCircleNumberedList": "Numerowana lista z czerwonymi kółkami",
+    "ptCtaSection": "Wezwanie do działania",
+    "ptFeaturedProducts": "Polecane produkty",
+    "ptHeading": "Nagłówek z ikoną",
+    "ptHorizontalLine": "Linia pozioma",
+    "ptImage": "Obraz",
+    "ptImageSlider": "Galeria zdjęć",
+    "ptInlineImage": "Obrazek w tekście",
+    "ptMinimalImage": "Minimalny obraz",
+    "ptPageBreak": "Podział kolumn",
+    "ptQuote": "Cytat",
+    "ptReviewEmbed": "Osadzona recenzja",
+    "ptTwoColumnLine": "Granica sekcji dwukolumnowej",
+    "ptTwoColumnTable": "Tabela dwukolumnowa",
+    "ptVimeoVideo": "Wideo Vimeo",
+    "ptYoutubeVideo": "Wideo YouTube",
+    "redirects": "Przekierowania",
+    "review": "Recenzja",
+    "reviewAuthor": "Autor recenzji",
+    "settings": "Ustawienia globalne",
+    "socialMedia": "Media społecznościowe",
+    "step": "Krok",
+    "stepList": "Lista kroków",
+    "store": "Salon",
+    "teamMember": "Członek zespołu",
+    "teamSection": "Sekcja zespołu",
+    "technicalDataGroup": "Sekcja",
+    "technicalDataRow": "Parametr techniczny",
+    "termsAndConditions": "Regulamin",
+    "textBox": "Kafelek z tekstem i ikoną",
+    "youtubeVideo": "Film YouTube"
+  },
+  "byType": {
+    "account": {
+      "accountDetails": "Szczegóły konta",
+      "heading": "Nagłówek konta"
+    },
+    "award": {
+      "logo": "Logo nagrody",
+      "name": "Nazwa nagrody",
+      "products": "Produkty z tą nagrodą"
+    },
+    "blog": {
+      "description": "Opis strony bloga",
+      "heroImage": "Obraz tła strony bloga",
+      "title": "Tytuł strony bloga"
+    },
+    "blog-article": {
+      "author": "Autor (członek zespołu)",
+      "authorType": "Typ autora",
+      "category": "Kategoria",
+      "content": "Treść",
+      "customAuthor": "Autor (zewnętrzny)",
+      "description": "Opis artykułu",
+      "image": "Obraz główny",
+      "keywords": "Słowa kluczowe",
+      "name": "Nazwa artykułu",
+      "publishedDate": "Nadpisz datę publikacji",
+      "title": "Tytuł artykułu"
+    },
+    "blog-category": {
+      "description": "Opis kategorii",
+      "title": "Tytuł kategorii"
+    },
+    "blurLinesTextImage": {
+      "description": "Opis",
+      "heading": "Nagłówek",
+      "image": "Zdjęcie"
+    },
+    "brand": {
+      "bannerImage": "Obraz banera",
+      "brandContentBlocks": "Szczegółowy opis (stary format)",
+      "brandDetailContent": "Szczegółowy opis",
+      "description": "Opis marki (Hero)",
+      "distributionYear": "Rok rozpoczęcia dystrybucji",
+      "doNotShowBrand": "Nie pokazuj marki",
+      "featuredReviews": "Wyróżnione recenzje",
+      "heroImage": "Obraz tła strony marki",
+      "imageGallery": "Galeria zdjęć marki",
+      "logo": "Logo Marki",
+      "stores": "Salony dystrybucji"
+    },
+    "brandsByCategoriesSection": {
+      "button": "Przycisk CTA",
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji"
+    },
+    "brandsList": {
+      "brandsDisplayMode": "Tryb wyświetlania marek",
+      "ctaText": "Tekst CTA",
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji",
+      "selectedBrands": "Wybrane marki"
+    },
+    "brandsMarquee": {
+      "backgroundImage": "Zdjęcie w tle",
+      "bottomBrands": "Drugi rząd marek",
+      "button": "Przycisk CTA",
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji",
+      "topBrands": "Pierwszy rząd marek"
+    },
+    "button": {
+      "text": "Tekst przycisku",
+      "url": "Adres URL",
+      "variant": "Styl przycisku"
+    },
+    "buttonWithNoVariant": {
+      "text": "Tekst przycisku",
+      "url": "Adres URL"
+    },
+    "categoryConfig": {
+      "category": "Kategoria",
+      "enabledParameters": "Włączone parametry"
+    },
+    "cellValue": {
+      "content": "Zawartość"
+    },
+    "comparatorConfig": {
+      "categoryConfigs": "Konfiguracje kategorii"
+    },
+    "contactForm": {
+      "accountList": "Lista kont bankowych",
+      "description": "Opis sekcji",
+      "formState": "Stan formularza",
+      "heading": "Nagłówek sekcji"
+    },
+    "contactMap": {
+      "customAddress": "Niestandardowy adres",
+      "customEmail": "Niestandardowy email",
+      "customPhone": "Niestandardowy telefon",
+      "heading": "Nagłówek sekcji",
+      "useCustomAddress": "Użyj niestandardowych danych kontaktowych"
+    },
+    "contentBlockHorizontalLine": {
+      "style": "Styl"
+    },
+    "contentBlockText": {
+      "content": "Treść"
+    },
+    "contentBlockVimeo": {
+      "thumbnail": "Miniatura wideo",
+      "title": "Tytuł wideo",
+      "vimeoId": "ID wideo Vimeo"
+    },
+    "contentBlockYoutube": {
+      "thumbnail": "Miniatura wideo",
+      "title": "Tytuł wideo",
+      "youtubeId": "ID wideo YouTube"
+    },
+    "cpoProduct": {
+      "availabilityStatus": "Status dostępności",
+      "availabilityUpdatedAt": "Status dostępności zaktualizowany",
+      "brandName": "Marka",
+      "details": "Szczegóły produktu",
+      "externalUrl": "Link zewnętrzny",
+      "holdOrderNumber": "Numer zamówienia rezerwacji",
+      "holdPaymentSessionId": "Sesja płatności rezerwacji",
+      "holdUntil": "Rezerwacja do",
+      "imageGallery": "Galeria zdjęć",
+      "internalProduct": "Produkt z katalogu Audiofast",
+      "isArchived": "Archiwum",
+      "isReturnable": "Zwrot",
+      "isSellableOnline": "Sprzedaż Online",
+      "name": "Nazwa",
+      "previewImage": "Własne zdjęcie główne",
+      "priceCents": "Cena (grosze)",
+      "productType": "Typ produktu",
+      "publishedDate": "Data publikacji",
+      "shortDescription": "Krótki opis",
+      "slug": "Slug",
+      "soldOrderNumber": "Numer zamówienia sprzedaży",
+      "technicalData": "Dane techniczne",
+      "transparentBackground": "Przezroczyste tło zdjęcia",
+      "useCustomGallery": "Własna galeria zdjęć"
+    },
+    "cpoProductsListing": {
+      "heading": "Nagłówek sekcji"
+    },
+    "customFilterDefinition": {
+      "filterType": "Typ filtra",
+      "name": "Nazwa filtra",
+      "unit": "Jednostka"
+    },
+    "customUrl": {
+      "external": "Adres URL",
+      "internal": "Strona wewnętrzna",
+      "openInNewTab": "Otwórz w nowej karcie"
+    },
+    "faq": {
+      "answer": "Odpowiedź",
+      "question": "Pytanie"
+    },
+    "faqSection": {
+      "contactForm": "Formularz kontaktowy",
+      "description": "Opis sekcji",
+      "displayMode": "Co wyświetlić w sekcji",
+      "faqList": "Lista pytań FAQ",
+      "heading": "Nagłówek sekcji"
+    },
+    "featuredProducts": {
+      "bestsellers": "Bestsellery",
+      "button": "Przycisk CTA",
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji",
+      "newProducts": "Nowe produkty",
+      "newProductsMode": "Tryb wyboru nowych produktów"
+    },
+    "featuredPublications": {
+      "heading": "Nagłówek sekcji",
+      "publications": "Wyróżnione publikacje",
+      "selectionMode": "Tryb wyboru publikacji"
+    },
+    "filterValue": {
+      "filterName": "Nazwa filtra",
+      "numericValue": "Wartość liczbowa",
+      "value": "Wartość tekstowa"
+    },
+    "footer": {
+      "highlightedSocialMedia": "Wyróżnione media społecznościowe",
+      "links": "Linki w stopce",
+      "newsletter": "Newsletter"
+    },
+    "gallerySection": {
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji",
+      "images": "Zdjęcia galerii"
+    },
+    "heroBlock": {
+      "description": "Opis bloku",
+      "heading": "Nagłówek bloku",
+      "icon": "Ikona"
+    },
+    "heroCarousel": {
+      "brands": "Marki",
+      "slides": "Slajdy"
+    },
+    "heroSlide": {
+      "button": "Przycisk",
+      "description": "Paragraf",
+      "image": "Zdjęcie w tle",
+      "title": "Nagłówek"
+    },
+    "heroStatic": {
+      "blocks": "Bloki",
+      "blocksHeading": "Nagłówek bloków",
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji",
+      "image": "Zdjęcie w tle",
+      "showBlocks": "Pokaż siatkę bloków"
+    },
+    "imageTextColumns": {
+      "button": "Przycisk CTA",
+      "content": "Treść",
+      "heading": "Nagłówek",
+      "image": "Zdjęcie"
+    },
+    "imageWithTextBoxes": {
+      "boxes": "Kafelki z tekstem i ikonami",
+      "cta": "Sekcja CTA",
+      "heading": "Nagłówek sekcji",
+      "image": "Obraz"
+    },
+    "imageWithVideo": {
+      "button": "Przycisk CTA",
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji",
+      "image": "Obraz",
+      "youtubeId": "ID wideo YouTube"
+    },
+    "latestPublication": {
+      "heading": "Nagłówek sekcji",
+      "publication": "Wybierz publikację",
+      "selectionMode": "Tryb wyboru publikacji"
+    },
+    "navbar": {
+      "buttons": "Linki w nawigacji"
+    },
+    "notFound": {
+      "backgroundImage": "Obrazek tła \"404\"",
+      "buttons": "Przyciski CTA",
+      "description": "Opis",
+      "heading": "Nagłówek",
+      "name": "Nazwa"
+    },
+    "parameter": {
+      "displayName": "Nazwa wyświetlana",
+      "name": "Nazwa parametru"
+    },
+    "pdfItem": {
+      "description": "Opis",
+      "file": "Plik PDF",
+      "title": "Tytuł"
+    },
+    "phoneImageCta": {
+      "ctaButton": "Przycisk CTA",
+      "image": "Zdjęcie",
+      "phoneNumber": "Numer telefonu",
+      "primaryDescription": "Opis główny",
+      "primaryHeading": "Nagłówek główny",
+      "secondaryDescription": "Opis dodatkowy",
+      "secondaryHeading": "Nagłówek dodatkowy"
+    },
+    "privacyPolicy": {
+      "content": "Treść",
+      "description": "Opis"
+    },
+    "product": {
+      "availableInStores": "Dostępny w salonach",
+      "basePriceCents": "Cena bazowa (grosze)",
+      "brand": "Marka",
+      "categories": "Kategorie",
+      "customFilterValues": "Wartości niestandardowych filtrów",
+      "denormBrandName": "Brand Name (computed)",
+      "denormBrandSlug": "Brand Slug (computed)",
+      "denormCategorySlugs": "Category Slugs (computed)",
+      "denormFilterKeys": "Filter Keys (computed)",
+      "denormLastSync": "Last Denormalization Sync",
+      "denormParentCategorySlugs": "Parent Category Slugs (computed)",
+      "details": "Szczegóły produktu",
+      "downloadablePdfs": "Pliki do pobrania (PDF)",
+      "hasMultiplePrices": "Cena zmienna",
+      "headingOverride": "Własny nagłówek H1",
+      "imageGallery": "Galeria zdjęć",
+      "isArchived": "Produkt archiwalny",
+      "isReturnable": "Zwrot",
+      "isSellableOnline": "Sprzedaż Online",
+      "lastPricingSync": "Ostatnia synchronizacja cen",
+      "name": "Nazwa",
+      "pageBuilder": "Niestandardowe sekcje",
+      "previewImage": "Zdjęcie główne produktu",
+      "publicationImage": "Obraz publikacji",
+      "publishedDate": "Nadpisz datę publikacji",
+      "relatedProducts": "Powiązane produkty",
+      "reviews": "Recenzje",
+      "shortDescription": "Krótki opis",
+      "subtitle": "Podtytuł",
+      "technicalData": "Dane techniczne"
+    },
+    "productCategoryParent": {
+      "name": "Nazwa kategorii"
+    },
+    "productCategorySub": {
+      "customFilters": "Konfiguracja filtrów",
+      "description": "Opis kategorii",
+      "heroImage": "Obraz tła kategorii",
+      "pageBuilder": "Niestandardowe sekcje",
+      "parentCategory": "Kategoria nadrzędna",
+      "title": "Tytuł kategorii"
+    },
+    "products": {
+      "description": "Opis strony produktów",
+      "heroImage": "Obraz tła strony produktów",
+      "title": "Tytuł strony produktów"
+    },
+    "productsCarousel": {
+      "heading": "Nagłówek sekcji",
+      "products": "Produkty"
+    },
+    "productsListing": {
+      "heading": "Nagłówek sekcji"
+    },
+    "ptArrowList": {
+      "items": "Elementy listy"
+    },
+    "ptButton": {
+      "button": "Przycisk"
+    },
+    "ptCircleNumberedList": {
+      "items": "Elementy listy"
+    },
+    "ptCtaSection": {
+      "button": "Przycisk",
+      "heading": "Nagłówek",
+      "products": "Produkty",
+      "showProducts": "Wyświetl produkty"
+    },
+    "ptFeaturedProducts": {
+      "products": "Produkty"
+    },
+    "ptHeading": {
+      "icon": "Ikona SVG",
+      "level": "Poziom nagłówka",
+      "text": "Tekst nagłówka"
+    },
+    "ptHorizontalLine": {
+      "style": "Styl"
+    },
+    "ptImage": {
+      "autoWidth": "Automatyczna szerokość",
+      "caption": "Podpis",
+      "image": "Zdjęcie",
+      "image1": "Pierwsze zdjęcie",
+      "image2": "Drugie zdjęcie",
+      "layout": "Układ obrazów"
+    },
+    "ptImageSlider": {
+      "images": "Zdjęcia"
+    },
+    "ptInlineImage": {
+      "alt": "Tekst alternatywny",
+      "float": "Pozycja",
+      "image": "Obrazek",
+      "width": "Szerokość (px)"
+    },
+    "ptMinimalImage": {
+      "image": "Zdjęcie"
+    },
+    "ptPageBreak": {
+      "style": "Styl"
+    },
+    "ptQuote": {
+      "quote": "Treść cytatu"
+    },
+    "ptReviewEmbed": {
+      "review": "Recenzja"
+    },
+    "ptTwoColumnLine": {
+      "style": "Styl"
+    },
+    "ptTwoColumnTable": {
+      "rows": "Wiersze tabeli"
+    },
+    "ptVimeoVideo": {
+      "thumbnail": "Miniatura wideo",
+      "title": "Tytuł wideo",
+      "vimeoId": "ID wideo Vimeo"
+    },
+    "ptYoutubeVideo": {
+      "thumbnail": "Miniatura wideo",
+      "title": "Tytuł wideo",
+      "youtubeId": "ID wideo YouTube"
+    },
+    "redirects": {
+      "jsonEditor": "Edytor JSON"
+    },
+    "review": {
+      "author": "Autor recenzji",
+      "content": "Treść recenzji",
+      "description": "Opis recenzji",
+      "destinationType": "Typ recenzji",
+      "externalUrl": "Link zewnętrzny",
+      "image": "Obraz główny",
+      "imageGallery": "Galeria zdjęć recenzji",
+      "overrideGallery": "Nadpisz galerię zdjęć",
+      "pdfFile": "Plik PDF",
+      "pdfSlug": "Slug PDF",
+      "publishedDate": "Nadpisz datę publikacji",
+      "slug": "Slug",
+      "title": "Tytuł recenzji"
+    },
+    "reviewAuthor": {
+      "name": "Nazwa autora",
+      "reviewCount": "Liczba recenzji",
+      "websiteUrl": "Link do strony autora"
+    },
+    "settings": {
+      "address": "Adres firmy",
+      "analytics": "Analityka",
+      "archivedProductCta": "Produkt archiwalny – przycisk kontaktu",
+      "b2cReturnInstructionsEmail": "Instrukcja zwrotu - treść e-maila",
+      "b2cTransactionalEmailCopyRecipients": "Kopie e-maili transakcyjnych B2C",
+      "b2cWithdrawalForm": "Formularz odstąpienia od umowy",
+      "cartEmptyState": "Pusty koszyk",
+      "cartSupportCard": "Karta wsparcia koszyka",
+      "companyRegistration": "Dane rejestrowe firmy",
+      "contactSettings": "Ustawienia formularzy kontaktowych",
+      "email": "Email kontaktowy",
+      "mailchimpAudienceId": "Mailchimp Audience ID",
+      "productInquiryFormState": "Formularz zapytania o produkt",
+      "seo": "SEO globalne",
+      "structuredData": "Structured Data (Schema.org)",
+      "tel": "Telefon kontaktowy"
+    },
+    "socialMedia": {
+      "icon": "Ikona",
+      "iconString": "Tekst ikony",
+      "link": "Link",
+      "name": "Nazwa"
+    },
+    "step": {
+      "description": "Opis kroku",
+      "heading": "Nagłówek kroku"
+    },
+    "stepList": {
+      "heading": "Nagłówek sekcji",
+      "paragraph": "Paragraf opisowy",
+      "steps": "Lista kroków"
+    },
+    "store": {
+      "address": "Adres",
+      "email": "Adres e-mail",
+      "name": "Nazwa",
+      "phone": "Numer telefonu",
+      "website": "Strona internetowa"
+    },
+    "teamMember": {
+      "description": "Opis",
+      "image": "Zdjęcie",
+      "name": "Imię i nazwisko",
+      "phoneNumber": "Numer telefonu",
+      "position": "Stanowisko"
+    },
+    "teamSection": {
+      "ctaButton": "Przycisk CTA",
+      "description": "Opis sekcji",
+      "heading": "Nagłówek sekcji",
+      "secondaryDescription": "Opis dodatkowy",
+      "secondaryHeading": "Nagłówek dodatkowy",
+      "teamMembers": "Członkowie zespołu"
+    },
+    "technicalDataGroup": {
+      "rows": "Parametry",
+      "title": "Nazwa sekcji"
+    },
+    "technicalDataRow": {
+      "title": "Nazwa parametru",
+      "values": "Wartości"
+    },
+    "termsAndConditions": {
+      "content": "Treść",
+      "description": "Opis"
+    },
+    "textBox": {
+      "description": "Paragraf",
+      "heading": "Nagłówek",
+      "icon": "Ikona (SVG)"
+    },
+    "youtubeVideo": {
+      "description": "Opis",
+      "image": "Miniatura",
+      "name": "Tytuł filmu",
+      "publishedDate": "Data publikacji na Audiofast",
+      "videoUrl": "Link do filmu YouTube"
+    }
+  }
+}

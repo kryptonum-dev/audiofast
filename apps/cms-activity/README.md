@@ -37,6 +37,16 @@ bun run lint
 bun run build
 ```
 
+## Field labels
+
+The "Zmienione pola" column shows Polish field titles taken from the Studio schema sources. They are generated at development time and committed to `src/generated/field-labels.json`; the app never depends on Studio at runtime. After changing schemas in `apps/studio/schemaTypes`, regenerate the dictionary from this folder:
+
+```bash
+bun run generate:labels
+```
+
+Duplicate field names with different titles keep the first occurrence (documents win over blocks and Portable Text members); the conflicts are listed on stderr.
+
 ## Deploy
 
 The owner deploys manually:
