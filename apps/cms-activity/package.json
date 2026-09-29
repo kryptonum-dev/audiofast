@@ -1,0 +1,32 @@
+{
+  "name": "cms-activity",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev --port 3335",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@sanity/icons": "^3.8.0",
+    "@sanity/sdk-react": "^2.20.1",
+    "@sanity/ui": "^3.5.3",
+    "mendoza": "^3.0.8",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sanity": "^6.10.1",
+    "styled-components": "^6.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.3",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.5",
+    "typescript": "5.9.3"
+  }
+}

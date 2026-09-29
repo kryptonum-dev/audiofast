@@ -7,6 +7,7 @@
     "dev": "bun run turbo dev --filter=web --filter=studio",
     "dev:all": "bun run turbo dev",
     "dev:b2c-admin": "bun run turbo dev --filter=b2c-admin",
+    "dev:cms-activity": "bun run turbo dev --filter=cms-activity",
     "lint": "bun run turbo lint",
     "check-types": "bun run turbo check-types",
     "format": "bun run prettier --write \"**/*.{ts,tsx,md}\"",
