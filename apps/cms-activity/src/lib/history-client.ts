@@ -201,10 +201,30 @@ export type FetchDocumentTransactionsParams = {
 };
 
 /**
+ * Merge two views of the same transaction. `includeIdentifiedDocumentsOnly`
+ * strips documents outside the request's id list, so a transaction touching
+ * documents from two batches arrives twice with disjoint `effects`; both
+ * halves are needed to replay both documents.
+ */
+function mergeTransactionViews(
+  a: HistoryTransaction,
+  b: HistoryTransaction,
+): HistoryTransaction {
+  return {
+    ...a,
+    documentIDs: [
+      ...new Set([...(a.documentIDs ?? []), ...(b.documentIDs ?? [])]),
+    ],
+    effects: { ...(a.effects ?? {}), ...(b.effects ?? {}) },
+  };
+}
+
+/**
  * Fetch every transaction (all authors) touching the given documents in the
  * window, via `/transactions/{ids}` with `includeIdentifiedDocumentsOnly`.
  * Ids are batched; each batch is paged like the dataset-wide listing. The
- * result is de-duplicated across batches and sorted ascending.
+ * result is merged by transaction id across batches (effects unioned) and
+ * sorted ascending.
  */
 export async function fetchDocumentTransactions(
   client: HistoryRequestClient,
@@ -250,7 +270,10 @@ export async function fetchDocumentTransactions(
   for (const result of results) {
     truncated ||= result.truncated;
     pages += result.pages;
-    for (const tx of result.transactions) merged.set(tx.id, tx);
+    for (const tx of result.transactions) {
+      const existing = merged.get(tx.id);
+      merged.set(tx.id, existing ? mergeTransactionViews(existing, tx) : tx);
+    }
   }
 
   return {

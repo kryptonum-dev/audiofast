@@ -75,7 +75,12 @@ function revisionOf(doc: unknown): string | undefined {
   return typeof rev === 'string' ? rev : undefined;
 }
 
-/** Raw ids whose history is needed for the given events. */
+/**
+ * Raw ids whose history is needed for the given events, ordered so that the
+ * variants of one document (`X`, `drafts.X`, `versions.<r>.X`) stay adjacent
+ * and usually share a request batch: a transaction that touches several of
+ * them then arrives in one piece more often.
+ */
 function collectIds(events: readonly ActivityEvent[]): string[] {
   const ids = new Set<string>();
   for (const event of events) {
@@ -83,7 +88,10 @@ function collectIds(events: readonly ActivityEvent[]): string[] {
     ids.add(`drafts.${event.documentId}`);
     for (const id of event.touchedIds) ids.add(id);
   }
-  return [...ids].sort();
+  return [...ids].sort((a, b) => {
+    const byDocument = stripDraft(a).localeCompare(stripDraft(b), 'en');
+    return byDocument !== 0 ? byDocument : a.localeCompare(b, 'en');
+  });
 }
 
 /**
