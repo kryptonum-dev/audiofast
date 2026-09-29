@@ -505,15 +505,15 @@ None. New app, no data model changes, no env changes in the primary design.
 
 ### Phase 2: Data Layer (`src/lib`)
 
-- [x] 2.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [x] 2.2 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [x] 2.3 Build passes: `cd apps/cms-activity && bun run build`
+- [x] 2.1 Type-check passes: `bun run turbo check-types --filter=cms-activity` — 423dcd9
+- [x] 2.2 Lint passes: `bun run turbo lint --filter=cms-activity` — 423dcd9
+- [x] 2.3 Build passes: `cd apps/cms-activity && bun run build` — 423dcd9
 
 ### Phase 3: Report UI and CSV
 
-- [ ] 3.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [ ] 3.2 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [ ] 3.3 Build passes: `cd apps/cms-activity && bun run build`
+- [x] 3.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
+- [x] 3.2 Lint passes: `bun run turbo lint --filter=cms-activity`
+- [x] 3.3 Build passes: `cd apps/cms-activity && bun run build`
 
 ### Phase 4: Changed Fields (Mendoza Reconstruction)
 
