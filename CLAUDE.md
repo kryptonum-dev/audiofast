@@ -14,11 +14,12 @@ Read these existing docs before deep work — do not duplicate them here:
 
 ## Monorepo layout
 
-Turborepo + Bun workspaces. Three apps:
+Turborepo + Bun workspaces. Four apps:
 
 - `apps/web` — Next.js 16 (App Router, React 19 + Compiler, Turbopack) public storefront **and** all B2C runtime (checkout, payment, order/customer APIs, server actions).
 - `apps/studio` — Sanity v5 Studio (editorial content model, migrations, custom tools/plugins).
 - `apps/b2c-admin` — separate **Sanity App SDK** React app (runs via `sanity dev`, not Next.js) for operators: Orders, Coupons, Analytics.
+- `apps/cms-activity` — standalone **Sanity App SDK** app "Raport pracy CMS" (History API per-editor activity report + CSV, allowlisted, unlisted in the Dashboard; see its README). Shares nothing with `b2c-admin`.
 
 Shared config in `packages/eslint-config` and `packages/typescript-config`.
 
@@ -63,7 +64,7 @@ The transactional code is concentrated under `apps/web/src/global/b2c/` and `app
 
 ## Conventions worth internalizing
 
-- **Styling:** SCSS Modules co-located as `styles.module.scss`. Strict rules in `.cursorrules`/`scss.mdc` — rem units (not px), media queries nested inside the parent class (breakpoints `56.1875` / `47.9375` / `35.9375` rem), transitions in `ms` with explicit properties (never `transition: all`), camelCase BEM-like names.
+- **Styling:** SCSS Modules co-located as `styles.module.scss`. Strict rules in `.cursorrules`/`scss.mdc` — rem units (not px), media queries nested inside the parent class (breakpoints `56.1875` / `47.9375` / `35.9375` rem), transitions in `ms` with explicit properties (never `transition: all`), camelCase BEM-like names. These SCSS rules apply to `apps/web`/`apps/studio` only; the App SDK apps (`apps/b2c-admin`, `apps/cms-activity`) use Sanity UI plus a small plain `App.css`.
 - **Sanity schemas:** always `defineField`/`defineType`, named exports, a lucide-react (fallback sanity/icons) icon per type. After schema changes run `bun run typegen`.
 - **Env vars:** the full allowlist is `turbo.json` `globalEnv` — add new vars there or Turbo won't pass them through to tasks.
 - **Caching:** Next.js `use cache` with tag-based invalidation via `app/api/revalidate/` (reverse-lookup from Sanity webhooks). See CODEBASE_OVERVIEW.md "Caching & Revalidation" before changing cached query tags.

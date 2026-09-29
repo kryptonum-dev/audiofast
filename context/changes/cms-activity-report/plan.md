@@ -517,14 +517,14 @@ None. New app, no data model changes, no env changes in the primary design.
 
 ### Phase 4: Changed Fields (Mendoza Reconstruction)
 
-- [x] 4.1 Generator runs and output is non-empty: `cd apps/cms-activity && bun run generate:labels && test -s src/generated/field-labels.json`
-- [x] 4.2 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [x] 4.3 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [x] 4.4 Build passes: `cd apps/cms-activity && bun run build`
+- [x] 4.1 Generator runs and output is non-empty: `cd apps/cms-activity && bun run generate:labels && test -s src/generated/field-labels.json` — 10dbceb
+- [x] 4.2 Type-check passes: `bun run turbo check-types --filter=cms-activity` — 10dbceb
+- [x] 4.3 Lint passes: `bun run turbo lint --filter=cms-activity` — 10dbceb
+- [x] 4.4 Build passes: `cd apps/cms-activity && bun run build` — 10dbceb
 
 ### Phase 5: Deploy, Docs and Handover
 
-- [ ] 5.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [ ] 5.2 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [ ] 5.3 Build passes: `cd apps/cms-activity && bun run build`
-- [ ] 5.4 No debug artefacts remain: `! grep -rn "Test połączenia\|console.log" apps/cms-activity/src`
+- [x] 5.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
+- [x] 5.2 Lint passes: `bun run turbo lint --filter=cms-activity`
+- [x] 5.3 Build passes: `cd apps/cms-activity && bun run build`
+- [x] 5.4 No debug artefacts remain: `! grep -rn "Test połączenia\|console.log" apps/cms-activity/src`

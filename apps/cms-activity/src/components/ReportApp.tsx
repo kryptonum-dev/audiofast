@@ -28,7 +28,6 @@ import {
   validateFilters,
 } from '../lib/filters.js';
 import { addDays, formatDate, todayInZone } from '../lib/time.js';
-import { ConnectionTest } from './ConnectionTest.js';
 import { DailySummary } from './DailySummary.js';
 import { EventsTable } from './EventsTable.js';
 import { ExportButton } from './ExportButton.js';
@@ -295,17 +294,6 @@ export function ReportApp() {
           <Suspense fallback={<PeopleFallback />}>
             <ReportScreen />
           </Suspense>
-          {/* TEMPORARY (Phase 1 spike): removed in Phase 5. */}
-          <details className="diagnostics">
-            <summary>
-              <Text as="span" muted size={1}>
-                Diagnostyka
-              </Text>
-            </summary>
-            <Box paddingTop={3}>
-              <ConnectionTest />
-            </Box>
-          </details>
         </Stack>
       </Container>
     </Box>

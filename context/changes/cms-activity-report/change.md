@@ -38,3 +38,13 @@ Risks / open items:
 - Maximum `limit` and inclusive pagination boundaries unverified; paging by `fromTime` with id de-duplication is the safe approach.
 
 Phase 1 outcome (2026-09-29): workspace `apps/cms-activity` scaffolded, type-check/lint/build pass. No `sanity deploy` in this run by owner decision, so `deployment.appId` is not minted yet and the Dashboard-token half of the spike (decision gate for the Fallback design) is deferred to the owner's manual deploy; the local half ("Test połączenia" button) is implemented. Tests: superseded by owner decision — no vitest, phases gate on type-check, lint, build and manual checks.
+
+Phase 5 outcome (2026-09-29): the app is implemented (all five phases) but NOT deployed — it awaits the owner's green flag. The temporary "Test połączenia" button and diagnostics panel are removed; type-check, lint and build pass. Because nothing was deployed, the Dashboard-token half of the Phase 1 spike (the decision gate for the Fallback design) is still unverified, `deployment.appId` is not in `sanity.cli.ts` yet (TODO comment in its place) and there is no Dashboard URL to record. Owner deploy steps, with an org `o5BEPFjvf` admin/developer session (`bunx sanity login`, or `SANITY_AUTH_TOKEN` with "Manage SDK Apps"):
+
+```bash
+cd apps/cms-activity
+bun run build
+bun run deploy   # sanity deploy; visibility 'unlisted' and title come from sanity.cli.ts
+```
+
+Then copy the printed app id into `sanity.cli.ts` as `deployment: { appId: '<id>' }` and commit it, open the printed Dashboard URL as dev@kryptonum.eu, load Damian's last 30 days (a loaded report closes the spike; 401/403/CORS → Fallback design), check the denial card with a non-allowlisted org member, record the app id and Dashboard URL here, fill `{{DASHBOARD_URL}}` in `handover-email.md` and send it to Jarek from Gmail. Full steps in `apps/cms-activity/README.md` → Deploy.

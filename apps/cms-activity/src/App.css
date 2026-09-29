@@ -85,7 +85,3 @@ body,
   margin-left: 0.25em;
   vertical-align: -0.1em;
 }
-
-.diagnostics summary {
-  cursor: pointer;
-}

@@ -21,6 +21,8 @@ The official website for Audiofast – a premium audio equipment distributor in 
 
 - `apps/web`: Main Next.js website application
 - `apps/studio`: Sanity CMS content management system
+- `apps/b2c-admin`: Sanity App SDK operator panel for B2C orders, coupons and analytics
+- `apps/cms-activity`: Sanity App SDK app "Raport pracy CMS" (per-editor CMS activity report from the History API; Sanity UI, SCSS conventions do not apply)
 - `packages/eslint-config`: Shared ESLint configuration
 - `packages/typescript-config`: Shared TypeScript configuration
 

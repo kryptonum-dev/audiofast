@@ -49,21 +49,62 @@ Duplicate field names with different titles keep the first occurrence (documents
 
 ## Deploy
 
-The owner deploys manually:
+**Status (2026-09-29): implemented, not deployed yet.** The owner deploys after the final review. Nothing in this folder deploys automatically; there is no CI job for this app.
 
-```bash
-cd apps/cms-activity
-bun run deploy
-```
+1. Log in with an account that is an admin/developer of the Sanity organization `o5BEPFjvf` (Audiofast):
 
-Deploying App SDK apps requires an organization admin/developer session, or an organization-level robot token with the `Manage SDK Apps` permission exposed as `SANITY_AUTH_TOKEN`.
+   ```bash
+   bunx sanity login
+   ```
 
-The first deploy prints the app id. Add it to `sanity.cli.ts` and commit it, so later deploys update the same app instead of creating a new one:
+   A robot token with the organization-level `Manage SDK Apps` permission, exported as `SANITY_AUTH_TOKEN`, works as well.
 
-```ts
-deployment: {
-  appId: '<printed app id>',
-},
-```
+2. Build and deploy from this folder:
 
-After deploying, open the app from the Sanity Dashboard and use "Test połączenia" to confirm the Dashboard-issued token can read the History API (the temporary button is removed before handover).
+   ```bash
+   cd apps/cms-activity
+   bun run build
+   bun run deploy
+   ```
+
+   `sanity.cli.ts` already sets `visibility: 'unlisted'` and the title "Raport pracy CMS", so the app is not listed on the organization home page and is opened by direct link.
+
+3. The first deploy prints the app id. Add it to `sanity.cli.ts` (replace the TODO comment) and commit it, so later deploys update the same app instead of creating a new one:
+
+   ```ts
+   deployment: {
+     appId: '<printed app id>',
+   },
+   ```
+
+4. Open the printed Dashboard URL as `dev@kryptonum.eu`, pick an editor, keep the default last 30 days and press "Pobierz raport". A loaded report is the proof that the Dashboard-issued token can read the History API. If the request fails with 401/403 or a CORS error, switch to the Fallback design described in `context/changes/cms-activity-report/plan.md` (a thin route in `apps/web`).
+
+5. Check the denial path with any org member who is not on the allowlist: the "Brak dostępu do raportu" card appears and the network tab shows no `/data/history` request.
+
+## Adding or removing a person
+
+1. Find the person's Sanity user id (sanity.io/manage → project `fsw3likv` → Members, or `GET https://fsw3likv.api.sanity.io/v2025-02-19/users/me` while logged in as that person).
+2. Add `{ id, email }` to `allowedUsers` in `src/config.ts` (removing works the same way). Matching is by id or case-insensitive email.
+3. Run the checks and `bun run deploy`.
+
+The person also needs a role in the Sanity project that can read the dataset history (Administrator does; the History API rejects roles without read access). The allowlist only hides the UI, Sanity roles remain the security boundary.
+
+The people in the "Osoba" select are project members that are not robots. Robots (for example the Supabase price sync) and the system author are never listed.
+
+## Reading the report
+
+- **Sesja**: a run of CMS activity where the gap between consecutive changes is shorter than the "Przerwa między sesjami" value (default 30 min). Sessions are numbered across the whole range.
+- **Czas aktywny (ok.)**: the sum of session lengths, from first to last change in the session, with a floor of 5 minutes per session. Reading content without saving leaves no trace in history, so this is an approximation of CMS activity, not working time.
+- **Zapisy**: autosaves of the same document by the same person within 5 minutes are merged into one row; this column shows how many saves were merged.
+- Studio side effects (the denormalization patch right before a product publish, the review author counter after a review publish) are merged away and do not show as separate edits.
+- **Zmienione pola**: top-level fields changed in that row, with the block title for page-builder and other arrays. "(nie udało się odtworzyć)" means the document history could not be replayed for that row; the rest of the report is still correct.
+
+The CSV export ("Eksportuj CSV") has the same columns as the events table plus a Studio link, uses `;` as separator and UTF-8 with BOM so it opens in Excel (pl-PL) by double-click.
+
+## Known limits
+
+- **90 days back.** The from-date cannot be older than 90 days. The project currently keeps longer history, but that is not guaranteed by the plan, so the app does not promise more.
+- **Activity is not working time.** Only saved changes are recorded. Reading, thinking, work outside the CMS and time in other tools are invisible.
+- **One account per person.** The History API records the Sanity user who made the change. If several people share one account, their work is reported as one person and sessions overlap.
+- **History API availability.** Sanity lists the full audit trail as an Enterprise feature; it works on this project today. If Sanity restricts it on the current plan, the report stops loading and shows the error state.
+- **Load time.** A 90-day report for a busy editor downloads a few thousand transactions and replays every touched document; expect up to ~30 s with the progress text updating.
