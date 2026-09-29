@@ -15,6 +15,15 @@ const freshClient = createSanityClient({
   perspective: 'published',
 });
 
+/**
+ * Keep reads on the API CDN (cheap), but never accept a stale CDN entry.
+ * Without `noStale` the CDN serves stale-while-revalidate: a Next cache
+ * regeneration that runs shortly after a bulk mutation (e.g. the Excel price
+ * sync) can capture pre-mutation data and pin it for the whole cacheLife.
+ * `cacheMode` is only sent when `useCdn` is true, so it is a no-op elsewhere.
+ */
+const SANITY_FETCH_OPTIONS = { cacheMode: 'noStale' } as const;
+
 const SANITY_FETCH_ATTEMPTS = 3;
 const SANITY_FETCH_RETRY_DELAY_MS = 500;
 
@@ -78,7 +87,7 @@ export async function sanityFetch<QueryResponse>({
   }
 
   return await fetchSanityWithRetry(() =>
-    client.fetch<QueryResponse>(query, params),
+    client.fetch<QueryResponse>(query, params, SANITY_FETCH_OPTIONS),
   );
 }
 
@@ -97,7 +106,7 @@ export async function sanityFetchDynamic<QueryResponse>({
   params?: QueryParams;
 }): Promise<QueryResponse> {
   return await fetchSanityWithRetry(() =>
-    client.fetch<QueryResponse>(query, params),
+    client.fetch<QueryResponse>(query, params, SANITY_FETCH_OPTIONS),
   );
 }
 
