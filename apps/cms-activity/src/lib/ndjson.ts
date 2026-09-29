@@ -19,7 +19,8 @@ function errorMessage(value: unknown): string {
   return 'Nieznany błąd History API';
 }
 
-function assertNotError(value: unknown): void {
+/** Throw `HistoryApiError` when `value` is an API error object. */
+export function assertNotError(value: unknown): void {
   if (value && typeof value === 'object' && !Array.isArray(value)) {
     const record = value as Record<string, unknown>;
     if ('error' in record) {

@@ -498,16 +498,16 @@ None. New app, no data model changes, no env changes in the primary design.
 
 ### Phase 1: Scaffold, Access Gate and Token Spike
 
-- [x] 1.1 Workspace installs and type-checks: `bun install && bun run turbo check-types --filter=cms-activity`
-- [x] 1.2 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [x] 1.3 App builds: `cd apps/cms-activity && bun run build`
+- [x] 1.1 Workspace installs and type-checks: `bun install && bun run turbo check-types --filter=cms-activity` — 80243fe
+- [x] 1.2 Lint passes: `bun run turbo lint --filter=cms-activity` — 80243fe
+- [x] 1.3 App builds: `cd apps/cms-activity && bun run build` — 80243fe
 - [ ] 1.4 `apps/cms-activity/sanity.cli.ts` contains a non-empty `deployment.appId` after the first deploy
 
 ### Phase 2: Data Layer (`src/lib`)
 
-- [ ] 2.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [ ] 2.2 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [ ] 2.3 Build passes: `cd apps/cms-activity && bun run build`
+- [x] 2.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
+- [x] 2.2 Lint passes: `bun run turbo lint --filter=cms-activity`
+- [x] 2.3 Build passes: `cd apps/cms-activity && bun run build`
 
 ### Phase 3: Report UI and CSV
 
