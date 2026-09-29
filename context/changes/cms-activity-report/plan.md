@@ -524,7 +524,7 @@ None. New app, no data model changes, no env changes in the primary design.
 
 ### Phase 5: Deploy, Docs and Handover
 
-- [x] 5.1 Type-check passes: `bun run turbo check-types --filter=cms-activity`
-- [x] 5.2 Lint passes: `bun run turbo lint --filter=cms-activity`
-- [x] 5.3 Build passes: `cd apps/cms-activity && bun run build`
-- [x] 5.4 No debug artefacts remain: `! grep -rn "Test połączenia\|console.log" apps/cms-activity/src`
+- [x] 5.1 Type-check passes: `bun run turbo check-types --filter=cms-activity` — f0aa7a3
+- [x] 5.2 Lint passes: `bun run turbo lint --filter=cms-activity` — f0aa7a3
+- [x] 5.3 Build passes: `cd apps/cms-activity && bun run build` — f0aa7a3
+- [x] 5.4 No debug artefacts remain: `! grep -rn "Test połączenia\|console.log" apps/cms-activity/src` — f0aa7a3
