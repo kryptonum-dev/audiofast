@@ -1,28 +1,16 @@
-import {
-  ChevronDownIcon,
-  CogIcon,
-  CommentIcon,
-  DocumentIcon,
-  DocumentTextIcon,
-  FolderIcon,
-  HomeIcon,
-  ImageIcon,
-  LaunchIcon,
-  PackageIcon,
-  StarIcon,
-  TagIcon,
-  UserIcon,
-} from '@sanity/icons';
+import { ChevronDownIcon, LaunchIcon } from '@sanity/icons';
 import { Badge, Button, Card, Flex, Heading, Stack, Text } from '@sanity/ui';
-import { type ComponentType, useEffect, useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 import { assetSummary, countLabel, PLURALS } from '../lib/assets.js';
 import { studioEditUrl } from '../lib/documents.js';
+import type { ImageCdnTarget } from '../lib/images.js';
 import { documentLabel, documentTypeLabel } from '../lib/labels.js';
 import { RECONSTRUCTION_FAILED } from '../lib/reconstruct.js';
 import {
   actionKind,
   type ActionCount,
+  type DayGroup,
   type DocumentGroup,
   type SessionView,
 } from '../lib/report-view.js';
@@ -34,35 +22,27 @@ import {
   actionKindTone,
   actionTimesTitle,
 } from './actions.js';
+import { Thumbnail, TypeIcon } from './Thumbnail.js';
 
 /** Field chips shown before the "+ N" toggle. */
 const VISIBLE_FIELDS = 4;
-/** Action badges shown in a collapsed session summary. */
+/** Action badges shown in a collapsed session row. */
 const SUMMARY_BADGES = 3;
+/** Document thumbnails shown in a collapsed session row. */
+const ROW_THUMBNAILS = 3;
+/** Uploaded-image thumbnails shown in the assets line. */
+const ASSET_THUMBNAILS = 4;
 
-const TYPE_ICONS: Record<string, ComponentType> = {
-  product: PackageIcon,
-  cpoProduct: PackageIcon,
-  brand: TagIcon,
-  award: StarIcon,
-  review: CommentIcon,
-  reviewAuthor: UserIcon,
-  'blog-article': DocumentTextIcon,
-  'blog-category': FolderIcon,
-  productCategoryParent: FolderIcon,
-  productCategorySub: FolderIcon,
-  homePage: HomeIcon,
-  settings: CogIcon,
-  navbar: CogIcon,
-  footer: CogIcon,
-  socialMedia: CogIcon,
-  redirects: CogIcon,
+const THUMB_EXPANDED = 52;
+const THUMB_ROW = 32;
+const THUMB_ASSET = 28;
+
+type Shared = {
+  documents: ReadonlyMap<string, ResolvedDocument>;
+  studioUrl: string;
+  timeZone: string;
+  cdn: ImageCdnTarget;
 };
-
-function TypeIcon({ type }: { type: string | undefined }) {
-  const Icon = (type && TYPE_ICONS[type]) || DocumentIcon;
-  return <Icon aria-hidden="true" />;
-}
 
 function ActionBadges({
   actions,
@@ -76,7 +56,7 @@ function ActionBadges({
   const shown = limit ? actions.slice(0, limit) : actions;
   const hidden = actions.length - shown.length;
   return (
-    <span className="badgeRow">
+    <Flex align="center" gap={2} wrap="wrap">
       {shown.map((action) => (
         <Badge
           key={action.kind}
@@ -87,7 +67,7 @@ function ActionBadges({
         </Badge>
       ))}
       {hidden > 0 ? <Text muted size={1}>{`+${hidden}`}</Text> : null}
-    </span>
+    </Flex>
   );
 }
 
@@ -104,20 +84,20 @@ function DocumentName({
   const type = doc?.type ?? group.docType;
   if (!type || doc?.deleted) {
     return (
-      <Text className="docItem__name" size={2} weight="medium">
+      <Text className="docBlock__name" size={2} weight="medium">
         {label}
       </Text>
     );
   }
   return (
-    <Text className="docItem__name" size={2} weight="medium">
+    <Text className="docBlock__name" size={2} weight="medium">
       <a
         href={studioEditUrl(studioUrl, group.documentId, type)}
         rel="noreferrer noopener"
         target="_blank"
       >
         {label}
-        <LaunchIcon aria-hidden="true" className="docItem__linkIcon" />
+        <LaunchIcon aria-hidden="true" className="docBlock__linkIcon" />
         <span className="srOnly"> (otwiera się w nowej karcie)</span>
       </a>
     </Text>
@@ -138,9 +118,9 @@ function FieldChips({
   const hidden = fields.length - shown.length;
 
   return (
-    <div className="badgeRow">
+    <div className="chipRow">
       <span className="srOnly">Zmienione pola:</span>
-      <ul className="plainList badgeRow" id={listId}>
+      <ul className="plainList chipRow" id={listId}>
         {shown.map((field) => (
           <li className="fieldChip" key={field}>
             {field}
@@ -182,16 +162,18 @@ function EventTimes({
   const [open, setOpen] = useState(false);
   const listId = useId();
   return (
-    <div className="docItem__events">
-      <button
-        aria-controls={open ? listId : undefined}
-        aria-expanded={open}
-        className="textButton"
-        onClick={() => setOpen((value) => !value)}
-        type="button"
-      >
-        {open ? 'Ukryj godziny zmian' : 'Pokaż godziny zmian'}
-      </button>
+    <Stack space={3}>
+      <div>
+        <button
+          aria-controls={open ? listId : undefined}
+          aria-expanded={open}
+          className="textButton textButton--flush"
+          onClick={() => setOpen((value) => !value)}
+          type="button"
+        >
+          {open ? 'Ukryj godziny zmian' : 'Pokaż godziny zmian'}
+        </button>
+      </div>
       {open ? (
         <ol className="eventList tabular" id={listId}>
           {group.events.map((event) => {
@@ -216,27 +198,33 @@ function EventTimes({
           })}
         </ol>
       ) : null}
-    </div>
+    </Stack>
   );
 }
 
-function DocumentItem({
+function DocumentBlock({
   group,
-  doc,
-  studioUrl,
-  timeZone,
+  shared,
 }: {
   group: DocumentGroup;
-  doc: ResolvedDocument | undefined;
-  studioUrl: string;
-  timeZone: string;
+  shared: Shared;
 }) {
+  const doc = shared.documents.get(group.documentId);
   const type = doc?.type ?? group.docType;
   return (
-    <li className="docItem">
-      <div className="docItem__main">
-        <DocumentName doc={doc} group={group} studioUrl={studioUrl} />
-        <Flex align="center" gap={2} wrap="wrap">
+    <li className="docBlock">
+      <Thumbnail
+        assetId={doc?.imageRef ?? null}
+        cdn={shared.cdn}
+        size={THUMB_EXPANDED}
+        type={type}
+      />
+      <Stack className="docBlock__body" space={3}>
+        <Flex align="flex-start" gap={3} justify="space-between" wrap="wrap">
+          <DocumentName doc={doc} group={group} studioUrl={shared.studioUrl} />
+          <ActionBadges actions={group.actions} timeZone={shared.timeZone} />
+        </Flex>
+        <Flex align="center" gap={2}>
           <Text muted size={1}>
             <TypeIcon type={type} />
           </Text>
@@ -245,128 +233,191 @@ function DocumentItem({
           </Text>
         </Flex>
         <FieldChips failed={group.failed} fields={group.fields} />
-      </div>
-      <div className="docItem__side">
-        <ActionBadges actions={group.actions} timeZone={timeZone} />
-      </div>
-      <EventTimes group={group} timeZone={timeZone} />
+        <EventTimes group={group} timeZone={shared.timeZone} />
+      </Stack>
     </li>
   );
 }
 
-type SessionCardProps = {
-  view: SessionView;
-  expanded: boolean;
-  onToggle: (index: number) => void;
-  documents: ReadonlyMap<string, ResolvedDocument>;
-  studioUrl: string;
-  timeZone: string;
-};
+function AssetLine({ view, shared }: { view: SessionView; shared: Shared }) {
+  const summary = assetSummary(view.assets);
+  if (!summary) return null;
+  const shown = view.imageAssetIds.slice(0, ASSET_THUMBNAILS);
+  const more = view.imageAssetIds.length - shown.length;
+  return (
+    <Flex align="center" className="assetLine" gap={3} wrap="wrap">
+      <Text muted size={1}>
+        {summary}
+      </Text>
+      {shown.length > 0 ? (
+        <Flex align="center" gap={2}>
+          {shown.map((id) => (
+            <Thumbnail
+              assetId={id}
+              cdn={shared.cdn}
+              key={id}
+              size={THUMB_ASSET}
+              type="sanity.imageAsset"
+            />
+          ))}
+          {more > 0 ? <Text muted size={1}>{`+${more}`}</Text> : null}
+        </Flex>
+      ) : null}
+    </Flex>
+  );
+}
 
-function SessionCard({
-  view,
-  expanded,
-  onToggle,
-  documents,
-  studioUrl,
-  timeZone,
-}: SessionCardProps) {
+function SessionRow({ view, shared }: { view: SessionView; shared: Shared }) {
+  const [open, setOpen] = useState(false);
+  const detailsId = useId();
+  const summaryId = useId();
   const { session } = view;
-  const bodyId = `session-${session.index}-body`;
+
+  const names = view.documents.map((group) =>
+    documentLabel(group.documentId, shared.documents.get(group.documentId)),
+  );
   const assets = assetSummary(view.assets);
-  const first = view.documents[0];
-  const others = view.documents.length - 1;
-  const meta = [
-    `sesja ${session.index}`,
-    formatDuration(session.durationMinutes),
-    countLabel(view.documents.length, PLURALS.document),
-  ];
-  const assetCount = view.assets.images + view.assets.files;
-  if (assetCount > 0 && view.documents.length === 0 && assets) {
-    meta.push(assets.replace('Dodano ', ''));
+  const summaryText = names.length > 0 ? names.join(', ') : (assets ?? '');
+  const span = `${formatTime(session.start, shared.timeZone)}–${formatTime(session.end, shared.timeZone)}`;
+  const meta = [formatDuration(session.durationMinutes)];
+  if (view.documents.length > 1) {
+    meta.push(countLabel(view.documents.length, PLURALS.document));
   }
 
   return (
-    <li id={`session-${session.index}`}>
+    <li className="sessionRow">
+      <div className="sessionRow__summary">
+        <button
+          aria-controls={open ? detailsId : undefined}
+          aria-describedby={open ? undefined : summaryId}
+          aria-expanded={open}
+          aria-label={`${span} · ${meta.join(' · ')}`}
+          className="sessionRow__toggle tabular"
+          onClick={() => setOpen((value) => !value)}
+          title={summaryText}
+          type="button"
+        >
+          <ChevronDownIcon aria-hidden="true" className="chevron" />
+          <span className="sessionRow__time">{span}</span>
+          <span className="sessionRow__meta">{meta.join(' · ')}</span>
+        </button>
+        <div className="sessionRow__docs" hidden={open} id={summaryId}>
+          {view.documents.length > 0 ? (
+            <span aria-hidden="true" className="sessionRow__thumbs">
+              {view.documents.slice(0, ROW_THUMBNAILS).map((group) => {
+                const doc = shared.documents.get(group.documentId);
+                return (
+                  <Thumbnail
+                    assetId={doc?.imageRef ?? null}
+                    cdn={shared.cdn}
+                    key={group.documentId}
+                    size={THUMB_ROW}
+                    type={doc?.type ?? group.docType}
+                  />
+                );
+              })}
+            </span>
+          ) : null}
+          <span className="sessionRow__names">{summaryText}</span>
+        </div>
+        <div className="sessionRow__badges" hidden={open}>
+          <ActionBadges
+            actions={view.actions}
+            limit={SUMMARY_BADGES}
+            timeZone={shared.timeZone}
+          />
+        </div>
+        <span className="sessionRow__index">{`sesja ${session.index}`}</span>
+      </div>
+
+      {open ? (
+        <div className="sessionRow__details" id={detailsId}>
+          <Stack space={4}>
+            {view.documents.length > 0 ? (
+              <Stack as="ul" className="plainList" space={4}>
+                {view.documents.map((group) => (
+                  <DocumentBlock
+                    group={group}
+                    key={group.documentId}
+                    shared={shared}
+                  />
+                ))}
+              </Stack>
+            ) : null}
+            <AssetLine shared={shared} view={view} />
+          </Stack>
+        </div>
+      ) : null}
+    </li>
+  );
+}
+
+function dayMeta(day: DayGroup): string {
+  const parts = [countLabel(day.sessions.length, PLURALS.session)];
+  if (day.daily) {
+    parts.push(
+      formatDuration(day.daily.activeMinutes),
+      `${day.daily.documents} dok.`,
+      `${day.daily.publishes} publ.`,
+    );
+  }
+  return parts.join(' · ');
+}
+
+function DayCard({
+  day,
+  expanded,
+  onToggle,
+  shared,
+}: {
+  day: DayGroup;
+  expanded: boolean;
+  onToggle: (date: string) => void;
+  shared: Shared;
+}) {
+  const bodyId = `day-${day.date}-sessions`;
+  return (
+    <li className="dayCard" id={`day-${day.date}`}>
       <Card border radius={3}>
-        <h3 className="sessionCard__heading">
+        <h3 className="dayCard__heading">
           <button
             aria-controls={expanded ? bodyId : undefined}
             aria-expanded={expanded}
-            className="sessionCard__toggle tabular"
-            data-session-toggle={session.index}
-            onClick={() => onToggle(session.index)}
+            aria-label={`${formatDayLabel(day.date)} · ${dayMeta(day)}`}
+            className="dayCard__toggle tabular"
+            data-day-toggle={day.date}
+            onClick={() => onToggle(day.date)}
             type="button"
           >
-            <ChevronDownIcon
-              aria-hidden="true"
-              className="sessionCard__chevron"
-            />
-            <span className="sessionCard__title">
-              {`${formatDayLabel(view.date)} · ${formatTime(session.start, timeZone)}–${formatTime(session.end, timeZone)}`}
-            </span>
-            <span className="sessionCard__meta">{meta.join(' · ')}</span>
+            <ChevronDownIcon aria-hidden="true" className="chevron" />
+            <span className="dayCard__title">{formatDayLabel(day.date)}</span>
+            <span className="dayCard__meta">{dayMeta(day)}</span>
           </button>
         </h3>
-
-        {!expanded && (first || assets) ? (
-          <div className="sessionCard__summary">
-            <Flex align="center" gap={3} wrap="wrap">
-              {first ? (
-                <Text muted size={1}>
-                  {documentLabel(first.documentId, documents.get(first.documentId)) +
-                    (others > 0
-                      ? ` i ${countLabel(others, PLURALS.other)}`
-                      : '')}
-                </Text>
-              ) : null}
-              <ActionBadges
-                actions={view.actions}
-                limit={SUMMARY_BADGES}
-                timeZone={timeZone}
-              />
-            </Flex>
-          </div>
-        ) : null}
-
         {expanded ? (
-          <div className="sessionCard__body" id={bodyId}>
-            {view.documents.length > 0 ? (
-              <ul className="plainList">
-                {view.documents.map((group) => (
-                  <DocumentItem
-                    doc={documents.get(group.documentId)}
-                    group={group}
-                    key={group.documentId}
-                    studioUrl={studioUrl}
-                    timeZone={timeZone}
-                  />
-                ))}
-              </ul>
-            ) : null}
-            {assets ? (
-              <p className="assetLine">
-                <ImageIcon aria-hidden="true" />
-                {assets}
-              </p>
-            ) : null}
-          </div>
+          <ol className="plainList dayCard__sessions" id={bodyId}>
+            {day.sessions.map((view) => (
+              <SessionRow
+                key={view.session.index}
+                shared={shared}
+                view={view}
+              />
+            ))}
+          </ol>
         ) : null}
       </Card>
     </li>
   );
 }
 
-type SessionListProps = {
-  views: readonly SessionView[];
-  expanded: ReadonlySet<number>;
-  onToggle: (index: number) => void;
+type SessionListProps = Shared & {
+  days: readonly DayGroup[];
+  sessionCount: number;
+  expanded: ReadonlySet<string>;
+  onToggle: (date: string) => void;
   onSetAll: (open: boolean) => void;
-  /** Session to scroll to after the next render, if any. */
-  scrollTarget: { index: number; nonce: number } | null;
-  documents: ReadonlyMap<string, ResolvedDocument>;
-  studioUrl: string;
-  timeZone: string;
+  /** Day to scroll to after the next render, if any. */
+  scrollTarget: { date: string; nonce: number } | null;
 };
 
 /** Instant scroll for reduced motion, and in hidden tabs (no animation). */
@@ -378,9 +429,10 @@ function scrollBehavior(): ScrollBehavior {
     : 'smooth';
 }
 
-/** "Sesje i zmiany": one collapsible card per session, chronological. */
+/** "Sesje i zmiany": one collapsible card per active day, chronological. */
 export function SessionList({
-  views,
+  days,
+  sessionCount,
   expanded,
   onToggle,
   onSetAll,
@@ -388,29 +440,28 @@ export function SessionList({
   documents,
   studioUrl,
   timeZone,
+  cdn,
 }: SessionListProps) {
-  const allOpen = views.length > 0 && expanded.size >= views.length;
+  const allOpen = days.length > 0 && expanded.size >= days.length;
+  const shared: Shared = { documents, studioUrl, timeZone, cdn };
 
   useEffect(() => {
     if (!scrollTarget) return;
-    const item = document.getElementById(`session-${scrollTarget.index}`);
+    const item = document.getElementById(`day-${scrollTarget.date}`);
     if (!item) return;
-    item.scrollIntoView({
-      behavior: scrollBehavior(),
-      block: 'start',
-    });
+    item.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
     item
-      .querySelector<HTMLButtonElement>('[data-session-toggle]')
+      .querySelector<HTMLButtonElement>('[data-day-toggle]')
       ?.focus({ preventScroll: true });
   }, [scrollTarget]);
 
   return (
-    <Stack as="section" aria-labelledby="sessions-heading" space={3}>
+    <Stack as="section" aria-labelledby="sessions-heading" space={4}>
       <Flex align="center" gap={3} justify="space-between" wrap="wrap">
         <Heading as="h2" id="sessions-heading" size={1}>
-          {`Sesje i zmiany (${views.length})`}
+          {`Sesje i zmiany (${sessionCount})`}
         </Heading>
-        {views.length > 1 ? (
+        {days.length > 1 ? (
           <Button
             mode="ghost"
             onClick={() => onSetAll(!allOpen)}
@@ -418,19 +469,17 @@ export function SessionList({
           />
         ) : null}
       </Flex>
-      <ol className="plainList sessionList">
-        {views.map((view) => (
-          <SessionCard
-            documents={documents}
-            expanded={expanded.has(view.session.index)}
-            key={view.session.index}
+      <Stack as="ol" className="plainList" space={3}>
+        {days.map((day) => (
+          <DayCard
+            day={day}
+            expanded={expanded.has(day.date)}
+            key={day.date}
             onToggle={onToggle}
-            studioUrl={studioUrl}
-            timeZone={timeZone}
-            view={view}
+            shared={shared}
           />
         ))}
-      </ol>
+      </Stack>
     </Stack>
   );
 }

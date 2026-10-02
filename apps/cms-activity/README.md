@@ -93,7 +93,7 @@ The people in the "Osoba" select are project members that are not robots. Robots
 
 ## Reading the report
 
-The screen shows, top to bottom: summary tiles, "Dzień po dniu" (one row per active day, one bar per session on a shared hour axis; clicking a day opens and scrolls to its first session) and "Sesje i zmiany" (one collapsible card per session, chronological like the CSV, with the session's changes grouped by document).
+The screen shows, top to bottom: summary tiles, "Dzień po dniu" (one row per active day, one bar per session on a shared hour axis; clicking a day opens and scrolls to its first session) and "Sesje i zmiany" (one collapsible card per active day with its sessions as rows; a session row opens its changes grouped by document, each with a thumbnail of the document's main image).
 
 - **Sesja**: a run of CMS activity where the gap between consecutive changes is shorter than the "Przerwa między sesjami" value (default 30 min). Sessions are numbered across the whole range.
 - **Czas aktywny (ok.)**: the sum of session lengths, from first to last change in the session, with a floor of 5 minutes per session. Reading content without saving leaves no trace in history, so this is an approximation of CMS activity, not working time.

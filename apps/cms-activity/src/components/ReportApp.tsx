@@ -78,6 +78,10 @@ function ReportScreen() {
   const client = useClient({ apiVersion: appConfig.apiVersion });
   const { people, loadingProfiles, profileError } = usePeople();
   const { limits, timeZone, studioUrl } = appConfig;
+  const cdn = useMemo(
+    () => ({ projectId: appConfig.projectId, dataset: appConfig.dataset }),
+    [],
+  );
 
   // "Today" is fixed for the lifetime of the screen; a reload picks up a new day.
   const today = useMemo(() => todayInZone(timeZone), [timeZone]);
@@ -251,6 +255,7 @@ function ReportScreen() {
             <StateCard kind="empty" />
           ) : (
             <ReportView
+              cdn={cdn}
               gapMinutes={data.params.gapMinutes}
               key={`${data.params.authorId}|${data.params.from}|${data.params.to}|${data.params.gapMinutes}|${data.report.meta.toTime}`}
               report={data.report}

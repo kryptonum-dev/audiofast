@@ -62,6 +62,8 @@ export type SessionView = {
   date: string;
   documents: DocumentGroup[];
   assets: AssetCounts;
+  /** Ids of the image assets uploaded in this session (thumbnails). */
+  imageAssetIds: string[];
   /** Action counts over all document groups (assets excluded). */
   actions: ActionCount[];
 };
@@ -100,6 +102,7 @@ export function buildSessionViews(
   return sessions.map((session) => {
     const sessionEvents = bySession.get(session.index) ?? [];
     const assets: AssetCounts = { images: 0, files: 0 };
+    const imageAssetIds: string[] = [];
     const groups = new Map<string, SessionedEvent[]>();
     const contentEvents: SessionedEvent[] = [];
 
@@ -107,6 +110,9 @@ export function buildSessionViews(
       const asset = assetKind(event.docType);
       if (asset === 'image') {
         assets.images += 1;
+        if (!imageAssetIds.includes(event.documentId)) {
+          imageAssetIds.push(event.documentId);
+        }
         continue;
       }
       if (asset === 'file') {
@@ -146,6 +152,7 @@ export function buildSessionViews(
       date: dateKey(session.start, timeZone),
       documents,
       assets,
+      imageAssetIds,
       actions: countActions(contentEvents),
     };
   });
@@ -262,4 +269,35 @@ export function buildTimeline(
     axisStartHour,
     axisEndHour,
   };
+}
+
+export type DayGroup = {
+  /** `YYYY-MM-DD` in the report zone. */
+  date: string;
+  /** Sessions that started that day, chronological. */
+  sessions: SessionView[];
+  /** The day's row of the daily summary (active time, documents, publishes). */
+  daily: DailyRow | null;
+};
+
+/** Session views grouped by the day they started on, chronological. */
+export function groupSessionsByDay(
+  views: readonly SessionView[],
+  daily: DailySummary,
+): DayGroup[] {
+  const rows = new Map(daily.rows.map((row) => [row.date, row]));
+  const groups: DayGroup[] = [];
+  for (const view of views) {
+    const last = groups[groups.length - 1];
+    if (last && last.date === view.date) {
+      last.sessions.push(view);
+    } else {
+      groups.push({
+        date: view.date,
+        sessions: [view],
+        daily: rows.get(view.date) ?? null,
+      });
+    }
+  }
+  return groups;
 }

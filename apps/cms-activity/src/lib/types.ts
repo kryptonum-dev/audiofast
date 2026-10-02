@@ -113,6 +113,8 @@ export type ResolvedDocument = {
   /** Human-readable name, or null when the document has none (singletons). */
   name: string | null;
   type: string | null;
+  /** Image asset id representing the document (`image-…`), if any. */
+  imageRef: string | null;
   /** True when neither the published nor the draft version exists today. */
   deleted: boolean;
 };

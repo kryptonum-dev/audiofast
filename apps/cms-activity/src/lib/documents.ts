@@ -4,6 +4,7 @@ import {
   HISTORY_CONCURRENCY,
   type HistoryRequestClient,
 } from './history-client.js';
+import { documentImageRef, IMAGE_REF_GROQ } from './images.js';
 import type { ResolvedDocument, SanityDocumentLike } from './types.js';
 
 const DRAFTS_PREFIX = 'drafts.';
@@ -23,7 +24,8 @@ const NAMES_QUERY = `*[_id in $ids]{
   question,
   heading,
   label,
-  "brandName": select(_type == "product" => brand->name)
+  "brandName": select(_type == "product" => brand->name),
+  "imageRef": ${IMAGE_REF_GROQ}
 }`;
 
 type NameFields = {
@@ -35,7 +37,14 @@ type NameFields = {
   heading?: unknown;
   label?: unknown;
   brandName?: unknown;
+  imageRef?: unknown;
 };
+
+function imageRefOf(doc: NameFields | undefined): string | null {
+  return typeof doc?.imageRef === 'string' && doc.imageRef !== ''
+    ? doc.imageRef
+    : null;
+}
 
 /** Plain text of a string or a Portable Text value (like GROQ `pt::text`). */
 export function toPlainText(value: unknown): string | null {
@@ -104,7 +113,7 @@ export type ResolveDocumentsParams = {
 };
 
 /**
- * Resolve name and type for every touched document. Queries both the
+ * Resolve name, type and thumbnail image for every touched document. Queries both the
  * published and the draft id (the draft name wins, as that is what the editor
  * sees), then falls back to the last revision from the History API for
  * documents that no longer exist (`deleted: true`).
@@ -139,6 +148,7 @@ export async function resolveDocuments(
         name:
           (draft && documentName(draft)) ?? (pub && documentName(pub)) ?? null,
         type: draft?._type ?? pub?._type ?? null,
+        imageRef: imageRefOf(draft) ?? imageRefOf(pub),
         deleted: false,
       });
     }
@@ -160,6 +170,7 @@ export async function resolveDocuments(
     resolved.set(id, {
       name: revision ? documentName(revision) : null,
       type: revision?._type ?? null,
+      imageRef: revision ? documentImageRef(revision) : null,
       deleted: true,
     });
   });
