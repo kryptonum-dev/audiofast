@@ -47,7 +47,6 @@ export const PLURALS = {
   session: ['sesja', 'sesje', 'sesji'],
   save: ['zapis', 'zapisy', 'zapisów'],
   day: ['dzień', 'dni', 'dni'],
-  transaction: ['transakcja', 'transakcje', 'transakcji'],
   publish: ['publikacja', 'publikacje', 'publikacji'],
   field: ['pole', 'pola', 'pól'],
   other: ['inny', 'inne', 'innych'],

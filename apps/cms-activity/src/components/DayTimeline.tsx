@@ -1,4 +1,4 @@
-import { Card, Heading, Stack, Text } from '@sanity/ui';
+import { Card, Heading, Stack } from '@sanity/ui';
 import type { CSSProperties } from 'react';
 
 import { countLabel, PLURALS } from '../lib/assets.js';
@@ -64,15 +64,9 @@ export function DayTimeline({
   return (
     <Card border padding={[3, 4]} radius={3}>
       <Stack space={4}>
-        <Stack space={2}>
-          <Heading as="h2" id="timeline-heading" size={1}>
-            Dzień po dniu
-          </Heading>
-          <Text muted size={1}>
-            Każdy pasek to jedna sesja. Kliknij dzień, aby przejść do jego
-            sesji.
-          </Text>
-        </Stack>
+        <Heading as="h2" id="timeline-heading" size={1}>
+          Dzień po dniu
+        </Heading>
 
         <div>
           <div aria-hidden="true" className="timeline__axis">

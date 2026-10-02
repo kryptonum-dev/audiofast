@@ -407,14 +407,9 @@ export function SessionList({
   return (
     <Stack as="section" aria-labelledby="sessions-heading" space={3}>
       <Flex align="center" gap={3} justify="space-between" wrap="wrap">
-        <Stack space={2}>
-          <Heading as="h2" id="sessions-heading" size={1}>
-            {`Sesje i zmiany (${views.length})`}
-          </Heading>
-          <Text muted size={1}>
-            Chronologicznie, tak jak w eksporcie CSV.
-          </Text>
-        </Stack>
+        <Heading as="h2" id="sessions-heading" size={1}>
+          {`Sesje i zmiany (${views.length})`}
+        </Heading>
         {views.length > 1 ? (
           <Button
             mode="ghost"

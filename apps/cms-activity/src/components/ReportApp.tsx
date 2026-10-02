@@ -18,7 +18,6 @@ import {
   type ReportFilters,
   validateFilters,
 } from '../lib/filters.js';
-import { countLabel, PLURALS } from '../lib/assets.js';
 import { addDays, formatRangeLabel, todayInZone } from '../lib/time.js';
 import { ExportButton } from './ExportButton.js';
 import { Filters } from './Filters.js';
@@ -226,7 +225,7 @@ function ReportScreen() {
                 {data.params.authorName}
               </Heading>
               <Text className="tabular" muted size={2}>
-                {`${formatRangeLabel(data.params.from, data.params.to)} · ${countLabel(data.report.meta.transactionCount, PLURALS.transaction)} w historii`}
+                {formatRangeLabel(data.params.from, data.params.to)}
                 {state.status !== 'ready' ? ' · poprzedni wynik' : ''}
               </Text>
             </Stack>
