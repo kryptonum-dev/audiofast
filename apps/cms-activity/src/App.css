@@ -15,6 +15,18 @@ body {
   box-sizing: border-box;
 }
 
+/* Everything clickable shows a pointer; Sanity UI buttons default to an arrow. */
+button:not(:disabled),
+a[href],
+select:not(:disabled),
+[role='button']:not([aria-disabled='true']) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 .appRoot {
   min-height: 100vh;
   min-height: 100dvh;
@@ -631,6 +643,15 @@ body {
 
 .vtText {
   view-transition-class: vt-text;
+}
+
+/*
+ * The transition overlay covers the whole page while it runs. Let the pointer
+ * through to the real page, so the cursor stays a pointer over buttons and
+ * clicks keep working mid-animation.
+ */
+::view-transition {
+  pointer-events: none;
 }
 
 ::view-transition-group(*) {
