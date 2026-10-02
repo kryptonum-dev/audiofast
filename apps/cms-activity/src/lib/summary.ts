@@ -1,3 +1,4 @@
+import { isAssetType } from './assets.js';
 import { dateKey } from './time.js';
 import type {
   DailyRow,
@@ -23,7 +24,7 @@ type DayAccumulator = {
  * Daily rollup in `timeZone`. Active time of a session is attributed to the
  * day it started; the session count of a day is the number of distinct
  * sessions with at least one event that day. The totals row counts every
- * session and document once.
+ * session and document once. Image and file assets are not documents.
  */
 export function buildDailySummary(
   events: readonly SessionedEvent[],
@@ -55,7 +56,7 @@ export function buildDailySummary(
     const last = ms(event.lastAt) > ms(event.at) ? event.lastAt : event.at;
     if (ms(last) > ms(acc.lastAt)) acc.lastAt = last;
     acc.sessions.add(event.sessionIndex);
-    acc.documents.add(event.documentId);
+    if (!isAssetType(event.docType)) acc.documents.add(event.documentId);
     if (event.action === 'publish') acc.publishes += 1;
   }
 
@@ -84,7 +85,11 @@ export function buildDailySummary(
     lastAt: lastRow ? lastRow.lastAt : '',
     sessions: sessions.length,
     activeMinutes: sessions.reduce((sum, s) => sum + s.durationMinutes, 0),
-    documents: new Set(events.map((event) => event.documentId)).size,
+    documents: new Set(
+      events
+        .filter((event) => !isAssetType(event.docType))
+        .map((event) => event.documentId),
+    ).size,
     publishes: rows.reduce((sum, row) => sum + row.publishes, 0),
   };
 

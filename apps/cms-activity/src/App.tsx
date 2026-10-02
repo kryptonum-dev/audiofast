@@ -4,6 +4,7 @@ import { buildTheme } from '@sanity/ui/theme';
 
 import { AccessGate } from './access/AccessGate.js';
 import { ReportApp } from './components/ReportApp.js';
+import { ThemeDocument } from './components/ThemeDocument.js';
 import { appConfig } from './config.js';
 import './App.css';
 
@@ -36,6 +37,7 @@ export default function App() {
   return (
     <ThemeProvider scheme={scheme} theme={theme}>
       <Card className="appRoot">
+        <ThemeDocument scheme={scheme} />
         <SanityApp config={sanityConfig} fallback={<AppFallback />}>
           <AccessGate>
             <ReportApp />

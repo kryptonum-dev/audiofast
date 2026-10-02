@@ -1,3 +1,9 @@
+import {
+  ASSET_ACTION_LABELS,
+  ASSET_TYPE_LABELS,
+  assetKind,
+} from './assets.js';
+import { typeLabel } from './field-labels.js';
 import type {
   ActivityAction,
   ActivityEvent,
@@ -36,3 +42,23 @@ export function documentLabel(
 
 /** Placeholder for an empty "changed fields" cell. */
 export const EMPTY_CELL = '—';
+
+/**
+ * Polish label of a document type (`product` → "Produkt audio"), shared by
+ * the report screen and the CSV "Typ" column. Empty for an unknown type.
+ */
+export function documentTypeLabel(type: string | null | undefined): string {
+  if (!type) return '';
+  const asset = assetKind(type);
+  if (asset) return ASSET_TYPE_LABELS[asset];
+  return typeLabel(type);
+}
+
+/** Action label of an event; asset uploads read "Dodanie obrazu/pliku". */
+export function eventActionLabel(
+  event: Pick<ActivityEvent, 'action' | 'direct' | 'docType'>,
+): string {
+  const asset = assetKind(event.docType);
+  if (asset) return ASSET_ACTION_LABELS[asset];
+  return actionLabel(event);
+}

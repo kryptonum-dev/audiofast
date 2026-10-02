@@ -1,6 +1,6 @@
 # Raport pracy CMS (cms-activity)
 
-Standalone Sanity App SDK app for the Audiofast Sanity organization. For a chosen editor and date range it reports CMS activity (daily summary, list of content changes, CSV export) based on the Sanity History API.
+Standalone Sanity App SDK app for the Audiofast Sanity organization. For a chosen editor and date range it reports CMS activity (summary tiles, day-by-day timeline, session cards with content changes, CSV export) based on the Sanity History API.
 
 ## Purpose
 
@@ -93,13 +93,16 @@ The people in the "Osoba" select are project members that are not robots. Robots
 
 ## Reading the report
 
+The screen shows, top to bottom: summary tiles, "Dzień po dniu" (one row per active day, one bar per session on a shared hour axis; clicking a day opens and scrolls to its first session) and "Sesje i zmiany" (one collapsible card per session, chronological like the CSV, with the session's changes grouped by document).
+
 - **Sesja**: a run of CMS activity where the gap between consecutive changes is shorter than the "Przerwa między sesjami" value (default 30 min). Sessions are numbered across the whole range.
 - **Czas aktywny (ok.)**: the sum of session lengths, from first to last change in the session, with a floor of 5 minutes per session. Reading content without saving leaves no trace in history, so this is an approximation of CMS activity, not working time.
-- **Zapisy**: autosaves of the same document by the same person within 5 minutes are merged into one row; this column shows how many saves were merged.
+- **Zapisy**: autosaves of the same document by the same person within 5 minutes are merged into one event; the count shows how many saves were merged.
+- **Dokumenty**: image and file uploads are not counted as documents; a session card shows them as one line ("Dodano 3 obrazy"). In the CSV they stay as rows with Typ "Obraz"/"Plik" and Akcja "Dodanie obrazu"/"Dodanie pliku".
 - Studio side effects (the denormalization patch right before a product publish, the review author counter after a review publish) are merged away and do not show as separate edits.
-- **Zmienione pola**: top-level fields changed in that row, with the block title for page-builder and other arrays. "(nie udało się odtworzyć)" means the document history could not be replayed for that row; the rest of the report is still correct.
+- **Zmienione pola**: top-level fields changed, with the block title for page-builder and other arrays. "(nie udało się odtworzyć)" means the document history could not be replayed for that event; the rest of the report is still correct.
 
-The CSV export ("Eksportuj CSV") has the same columns as the events table plus a Studio link, uses `;` as separator and UTF-8 with BOM so it opens in Excel (pl-PL) by double-click.
+The CSV export ("Eksportuj CSV") is a flat table with one row per event (Data i godzina, Redaktor, Dokument, Typ, Link, Akcja, Zmienione pola, Zapisy, Sesja), uses `;` as separator and UTF-8 with BOM so it opens in Excel (pl-PL) by double-click.
 
 ## Known limits
 

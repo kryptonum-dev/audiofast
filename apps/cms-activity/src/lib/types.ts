@@ -82,7 +82,7 @@ export type DailyRow = {
   sessions: number;
   /** Duration of the sessions that started that day, in minutes. */
   activeMinutes: number;
-  /** Distinct documents touched that day. */
+  /** Distinct documents touched that day (image/file assets excluded). */
   documents: number;
   publishes: number;
 };

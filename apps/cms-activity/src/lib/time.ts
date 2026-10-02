@@ -237,3 +237,68 @@ export function formatMinutes(minutes: number): string {
   const total = Math.max(0, Math.round(minutes));
   return `${Math.floor(total / 60)}h ${total % 60}min`;
 }
+
+/** Minutes since local midnight of an instant in `timeZone` (0–1439). */
+export function minutesOfDay(iso: string, timeZone: string): number {
+  const p = zonedParts(new Date(iso), timeZone);
+  return p.hour * 60 + p.minute + p.second / 60;
+}
+
+const WEEKDAYS_SHORT = ['nd', 'pn', 'wt', 'śr', 'czw', 'pt', 'sob'] as const;
+const MONTHS_SHORT = [
+  'sty',
+  'lut',
+  'mar',
+  'kwi',
+  'maj',
+  'cze',
+  'lip',
+  'sie',
+  'wrz',
+  'paź',
+  'lis',
+  'gru',
+] as const;
+
+/** `YYYY-MM-DD` → Polish weekday abbreviation (`śr`). */
+export function weekdayShort(date: string): string {
+  const parsed = parseDateOnly(date);
+  if (!parsed) return '';
+  const weekday = new Date(
+    Date.UTC(parsed.year, parsed.month - 1, parsed.day),
+  ).getUTCDay();
+  return WEEKDAYS_SHORT[weekday] ?? '';
+}
+
+/** `YYYY-MM-DD` → `śr 03.09`. */
+export function formatDayLabel(date: string): string {
+  const parsed = parseDateOnly(date);
+  if (!parsed) return date;
+  return `${weekdayShort(date)} ${pad(parsed.day)}.${pad(parsed.month)}`;
+}
+
+/**
+ * Readable Polish range: `2 wrz – 2 paź 2026`, `2–15 wrz 2026`,
+ * `15 gru 2025 – 2 sty 2026`, or one day `6 wrz 2026`.
+ */
+export function formatRangeLabel(from: string, to: string): string {
+  const a = parseDateOnly(from);
+  const b = parseDateOnly(to);
+  if (!a || !b) return `${from} – ${to}`;
+  const month = (m: number) => MONTHS_SHORT[m - 1] ?? '';
+  if (a.year !== b.year) {
+    return `${a.day} ${month(a.month)} ${a.year} – ${b.day} ${month(b.month)} ${b.year}`;
+  }
+  if (a.month !== b.month) {
+    return `${a.day} ${month(a.month)} – ${b.day} ${month(b.month)} ${b.year}`;
+  }
+  if (a.day !== b.day) return `${a.day}–${b.day} ${month(b.month)} ${b.year}`;
+  return `${b.day} ${month(b.month)} ${b.year}`;
+}
+
+/** Minutes → `23 min` under an hour, else `1h 19min` (rounded). */
+export function formatDuration(minutes: number): string {
+  const total = Math.max(0, Math.round(minutes));
+  if (total < 60) return `${total} min`;
+  return formatMinutes(total);
+}

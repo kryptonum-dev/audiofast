@@ -2,8 +2,6 @@ import { SearchIcon } from '@sanity/icons';
 import {
   Button,
   Card,
-  Flex,
-  Grid,
   Select,
   Stack,
   Text,
@@ -33,14 +31,16 @@ type FiltersProps = {
 function Field({
   id,
   label,
+  className,
   children,
 }: {
   id: string;
   label: string;
+  className?: string;
   children: ReactNode;
 }) {
   return (
-    <Stack space={2}>
+    <Stack className={className} space={2}>
       <Text as="label" htmlFor={id} size={1} weight="medium">
         {label}
       </Text>
@@ -78,16 +78,17 @@ export function Filters({
     errors.author !== null || errors.range !== null || errors.gap !== null;
 
   return (
-    <Card border padding={4} radius={3}>
+    <Card border padding={[3, 4]} radius={3}>
       <form
+        aria-label="Filtry raportu"
         onSubmit={(event) => {
           event.preventDefault();
           if (!invalid && !loading) onSubmit();
         }}
       >
-        <Stack space={4}>
-          <Grid columns={[1, 2, 4]} gap={3}>
-            <Field id="filter-author" label="Osoba">
+        <Stack space={3}>
+          <div className="filterBar">
+            <Field className="filterBar__person" id="filter-author" label="Osoba">
               <Select
                 disabled={people.length === 0}
                 id="filter-author"
@@ -147,7 +148,19 @@ export function Filters({
                 value={value.gapMinutes}
               />
             </Field>
-          </Grid>
+            <div className="filterBar__actions">
+              <Button
+                disabled={invalid || loading}
+                icon={SearchIcon}
+                text="Pobierz raport"
+                tone="primary"
+                type="submit"
+              />
+              {loading ? (
+                <Button mode="bleed" onClick={onCancel} text="Anuluj" />
+              ) : null}
+            </div>
+          </div>
 
           {peopleError ? (
             <Text muted size={1}>
@@ -157,23 +170,11 @@ export function Filters({
           <FieldError id="filter-range-error" message={errors.range} />
           <FieldError id="filter-gap-error" message={errors.gap} />
 
-          <Flex align="center" gap={3} wrap="wrap">
-            <Button
-              disabled={invalid || loading}
-              icon={SearchIcon}
-              text="Pobierz raport"
-              tone="primary"
-              type="submit"
-            />
-            {loading ? (
-              <Button mode="bleed" onClick={onCancel} text="Anuluj" />
-            ) : null}
-            {errors.author && !loading ? (
-              <Text muted size={1}>
-                {errors.author}
-              </Text>
-            ) : null}
-          </Flex>
+          {errors.author && !loading ? (
+            <Text muted size={1}>
+              {errors.author}
+            </Text>
+          ) : null}
         </Stack>
       </form>
     </Card>

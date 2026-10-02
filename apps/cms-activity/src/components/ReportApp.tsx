@@ -1,14 +1,5 @@
 import { useClient } from '@sanity/sdk-react';
-import {
-  Box,
-  Card,
-  Container,
-  Flex,
-  Heading,
-  Spinner,
-  Stack,
-  Text,
-} from '@sanity/ui';
+import { Card, Flex, Heading, Spinner, Stack, Text } from '@sanity/ui';
 import {
   Suspense,
   useCallback,
@@ -27,11 +18,11 @@ import {
   type ReportFilters,
   validateFilters,
 } from '../lib/filters.js';
-import { addDays, formatDate, todayInZone } from '../lib/time.js';
-import { DailySummary } from './DailySummary.js';
-import { EventsTable } from './EventsTable.js';
+import { countLabel, PLURALS } from '../lib/assets.js';
+import { addDays, formatRangeLabel, todayInZone } from '../lib/time.js';
 import { ExportButton } from './ExportButton.js';
 import { Filters } from './Filters.js';
+import { ReportView } from './ReportView.js';
 import { StateCard } from './StateCard.js';
 import { usePeople } from './usePeople.js';
 
@@ -41,6 +32,7 @@ type LoadedParams = {
   authorName: string;
   from: string;
   to: string;
+  gapMinutes: number;
 };
 
 type LoadedReport = { report: Report; params: LoadedParams };
@@ -127,6 +119,7 @@ function ReportScreen() {
         authorName: person?.label ?? params.authorId,
         from: params.from,
         to: params.to,
+        gapMinutes,
       };
 
       setState((prev) => ({
@@ -226,14 +219,14 @@ function ReportScreen() {
       ) : null}
 
       {data ? (
-        <Stack space={4}>
-          <Flex align="center" gap={3} justify="space-between" wrap="wrap">
-            <Stack space={2}>
-              <Heading as="h2" size={2}>
+        <Stack as="section" aria-labelledby="report-heading" space={5}>
+          <Flex align="flex-end" gap={3} justify="space-between" wrap="wrap">
+            <Stack space={3}>
+              <Heading as="h2" id="report-heading" size={3}>
                 {data.params.authorName}
               </Heading>
-              <Text muted size={1}>
-                {`${formatDate(data.params.from)} – ${formatDate(data.params.to)} · transakcji w historii: ${data.report.meta.transactionCount} · zdarzeń: ${data.report.events.length}`}
+              <Text className="tabular" muted size={2}>
+                {`${formatRangeLabel(data.params.from, data.params.to)} · ${countLabel(data.report.meta.transactionCount, PLURALS.transaction)} w historii`}
                 {state.status !== 'ready' ? ' · poprzedni wynik' : ''}
               </Text>
             </Stack>
@@ -258,18 +251,13 @@ function ReportScreen() {
           {data.report.events.length === 0 ? (
             <StateCard kind="empty" />
           ) : (
-            <>
-              <DailySummary daily={data.report.daily} timeZone={timeZone} />
-              <EventsTable
-                authorName={data.params.authorName}
-                documents={data.report.documents}
-                events={data.report.events}
-                key={`${data.params.authorId}|${data.params.from}|${data.params.to}|${data.report.meta.toTime}`}
-                sessions={data.report.sessions}
-                studioUrl={studioUrl}
-                timeZone={timeZone}
-              />
-            </>
+            <ReportView
+              gapMinutes={data.params.gapMinutes}
+              key={`${data.params.authorId}|${data.params.from}|${data.params.to}|${data.params.gapMinutes}|${data.report.meta.toTime}`}
+              report={data.report}
+              studioUrl={studioUrl}
+              timeZone={timeZone}
+            />
           )}
         </Stack>
       ) : null}
@@ -277,25 +265,23 @@ function ReportScreen() {
   );
 }
 
-/** Report screen: filters, daily summary, events table and CSV export. */
+/** Report screen: filters, summary tiles, day timeline, sessions, CSV. */
 export function ReportApp() {
   return (
-    <Box padding={[3, 4, 5]}>
-      <Container width={5}>
-        <Stack space={5}>
-          <Stack space={3}>
-            <Heading as="h1" size={3}>
-              Raport pracy CMS
-            </Heading>
-            <Text muted size={2}>
-              Aktywność redaktorów w CMS na podstawie historii zmian Sanity.
-            </Text>
-          </Stack>
-          <Suspense fallback={<PeopleFallback />}>
-            <ReportScreen />
-          </Suspense>
+    <main className="page">
+      <Stack space={5}>
+        <Stack space={3}>
+          <Heading as="h1" size={4}>
+            Raport pracy CMS
+          </Heading>
+          <Text muted size={2}>
+            Aktywność redaktorów w CMS na podstawie historii zmian Sanity.
+          </Text>
         </Stack>
-      </Container>
-    </Box>
+        <Suspense fallback={<PeopleFallback />}>
+          <ReportScreen />
+        </Suspense>
+      </Stack>
+    </main>
   );
 }

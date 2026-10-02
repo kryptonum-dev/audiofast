@@ -3,7 +3,7 @@ change_id: cms-activity-report
 title: CMS activity report app
 status: implementing
 created: 2026-09-29
-updated: 2026-09-29
+updated: 2026-10-02
 archived_at: null
 implementation_base: a5eab4bcf53ea8a10ae4323f28f354a1a33c801c
 views: []
@@ -48,3 +48,7 @@ bun run deploy   # sanity deploy; visibility 'unlisted' and title come from sani
 ```
 
 Then copy the printed app id into `sanity.cli.ts` as `deployment: { appId: '<id>' }` and commit it, open the printed Dashboard URL as dev@kryptonum.eu, load Damian's last 30 days (a loaded report closes the spike; 401/403/CORS → Fallback design), check the denial card with a non-allowlisted org member, record the app id and Dashboard URL here, fill `{{DASHBOARD_URL}}` in `handover-email.md` and send it to Jarek from Gmail. Full steps in `apps/cms-activity/README.md` → Deploy.
+
+2026-10-02 — replay fix and report redesign (owner-approved):
+- Fix: the History API documents endpoint adds a synthetic `_rev` to snapshots, while mendoza effects are computed against the stored document without it; mendoza addresses fields by sorted-key index, so patches on pre-existing documents failed. Replay state is now seeded without `_rev` (snapshot revision kept apart for the boundary check). A second failure mode showed up over 90 days: some effects are based on an internal version the snapshot endpoint never returns (e.g. a published version that reads as missing at every `?time=`). On a failed patch the replay now reads the document right after that transaction (`?revision=`), derives its base via the `revert` patch and replays again (max 5 rounds). Damian: 30 days 9 → 0 failed rows, 90 days 119 → 0 of 567.
+- Redesign: centered 1200px layout with a one-row filter bar; report header with readable Polish range; four summary tiles (active time with daily average, active days, sessions with the gap setting, documents/publishes with image/file assets excluded); "Dzień po dniu" timeline (session bars on a data-driven hour axis in Europe/Warsaw, rows open and scroll to the day's first session); "Sesje i zmiany" collapsible session cards (chronological, auto-expanded up to 20 sessions) grouping events by document with Polish type labels, action badges with counts and times, field chips with "+ N" and on-demand event times; image/file uploads folded into "Dodano N obrazów" lines. CSV keeps its 9 columns; Typ now uses the Polish type label and asset rows read "Obraz"/"Plik" + "Dodanie obrazu/pliku" with no fields. The themed background fills the whole viewport. Old `DailySummary`/`EventsTable` removed.

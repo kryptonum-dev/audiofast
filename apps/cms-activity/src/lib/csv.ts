@@ -1,4 +1,9 @@
-import { actionLabel, documentLabel } from './labels.js';
+import { isAssetType } from './assets.js';
+import {
+  documentLabel,
+  documentTypeLabel,
+  eventActionLabel,
+} from './labels.js';
 import { studioEditUrl } from './documents.js';
 import { formatIsoLocal } from './time.js';
 import type { ResolvedDocument, SessionedEvent } from './types.js';
@@ -58,7 +63,10 @@ export type CsvContext = {
   timeZone: string;
 };
 
-/** Header plus one row per event, same columns as the events table. */
+/**
+ * Header plus one row per event. "Typ" is the Polish type label; image and
+ * file uploads read "Obraz"/"Plik" with "Dodanie obrazu/pliku" and no fields.
+ */
 export function eventsToCsvRows(
   events: readonly SessionedEvent[],
   context: CsvContext,
@@ -71,14 +79,15 @@ export function eventsToCsvRows(
       type && !doc?.deleted
         ? studioEditUrl(context.studioUrl, event.documentId, type)
         : '';
+    const asset = isAssetType(type);
     rows.push([
       formatIsoLocal(event.at, context.timeZone),
       context.authorName,
       documentLabel(event.documentId, doc),
-      type,
+      documentTypeLabel(type),
       link,
-      actionLabel(event),
-      event.changedFields.join(', '),
+      eventActionLabel({ ...event, docType: type }),
+      asset ? '' : event.changedFields.join(', '),
       String(event.mergedCount),
       String(event.sessionIndex),
     ]);
