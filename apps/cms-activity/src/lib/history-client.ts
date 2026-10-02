@@ -373,3 +373,54 @@ export async function fetchLastRevision(
     throw error;
   }
 }
+
+/** Documents to read as they were right after transaction `revision`. */
+export type RevisionRequest = {
+  revision: string;
+  ids: readonly string[];
+};
+
+/** Key of a `fetchRevisions` result: `<revision>|<raw document id>`. */
+export function revisionKey(revision: string, id: string): string {
+  return `${revision}|${id}`;
+}
+
+/**
+ * Read documents as they were right after the given transactions
+ * (`/documents/{ids}?revision=`). Every requested pair is present in the
+ * result; null means the document did not exist after that transaction.
+ */
+export async function fetchRevisions(
+  client: HistoryRequestClient,
+  params: {
+    dataset: string;
+    requests: readonly RevisionRequest[];
+    signal?: AbortSignal;
+  },
+): Promise<Map<string, SanityDocumentLike | null>> {
+  const { dataset, requests, signal } = params;
+  const result = new Map<string, SanityDocumentLike | null>();
+
+  await mapWithConcurrency(requests, HISTORY_CONCURRENCY, async (request) => {
+    const ids = [...new Set(request.ids)];
+    if (ids.length === 0) return;
+    let documents: SanityDocumentLike[] = [];
+    try {
+      const raw = await client.request<unknown>({
+        uri: `${datasetPath(dataset)}/documents/${idList(ids)}`,
+        query: { revision: request.revision },
+        signal,
+      });
+      documents = readDocuments(raw);
+    } catch (error) {
+      if (!isNotFound(error)) throw error;
+    }
+    const byId = new Map(documents.map((doc) => [doc._id, doc]));
+    for (const id of ids) {
+      result.set(revisionKey(request.revision, id), byId.get(id) ?? null);
+    }
+  });
+  throwIfAborted(signal);
+
+  return result;
+}

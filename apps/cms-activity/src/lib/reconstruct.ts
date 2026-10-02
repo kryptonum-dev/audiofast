@@ -10,13 +10,19 @@ import {
 } from './field-diff.js';
 import {
   fetchDocumentTransactions,
+  fetchRevisions,
   fetchSnapshots,
   type HistoryRequestClient,
+  revisionKey,
+  type RevisionRequest,
 } from './history-client.js';
 import type { ActivityEvent, HistoryTransaction } from './types.js';
 
 /** Shown in "Zmienione pola" when the document history could not be replayed. */
 export const RECONSTRUCTION_FAILED = '(nie udało się odtworzyć)';
+
+/** Re-seed rounds after failed patches (each round re-reads documents). */
+const MAX_RECOVERY_ROUNDS = 5;
 
 export type ReconstructConfig = {
   dataset: string;
@@ -54,6 +60,11 @@ type ReplayResult = {
   seen: Set<string>;
   /** `txId|publishedId` → the published version existed before that tx. */
   publishedBefore: Map<string, boolean>;
+  /**
+   * First failed patch per raw document id (any author) that has no
+   * recovered post-transaction document yet; input for the next re-seed.
+   */
+  unrecovered: { txId: string; id: string }[];
 };
 
 function txKey(txId: string, id: string): string {
@@ -73,6 +84,21 @@ function revisionOf(doc: unknown): string | undefined {
   if (!doc || typeof doc !== 'object') return undefined;
   const rev = (doc as { _rev?: unknown })._rev;
   return typeof rev === 'string' ? rev : undefined;
+}
+
+/**
+ * The History API documents endpoint adds a synthetic `_rev` to every
+ * document, but mendoza effects were computed against the stored document,
+ * which has no `_rev` key. Mendoza addresses object fields by index into the
+ * sorted key list, so the extra key shifts every later index and patches land
+ * on the wrong field. Replay state must therefore never contain `_rev`.
+ */
+export function withoutRevision(doc: unknown): unknown {
+  if (!doc || typeof doc !== 'object' || Array.isArray(doc)) return doc ?? null;
+  if (!Object.prototype.hasOwnProperty.call(doc, '_rev')) return doc;
+  const rest = { ...(doc as Record<string, unknown>) };
+  delete rest._rev;
+  return rest;
 }
 
 /**
@@ -103,11 +129,28 @@ function collectIds(events: readonly ActivityEvent[]): string[] {
 export function replayTransactions(
   snapshots: ReadonlyMap<string, unknown>,
   transactions: readonly HistoryTransaction[],
-  options: { ids: readonly string[]; authorId: string },
+  options: {
+    ids: readonly string[];
+    authorId: string;
+    /**
+     * `txId|rawDocumentId` → the document right after that transaction
+     * (null when it did not exist), read from the History API. Used when
+     * the transaction's patch does not fit the replayed state.
+     */
+    recovered?: ReadonlyMap<string, unknown>;
+  },
 ): ReplayResult {
   const tracked = new Set(options.ids);
   const state = new Map<string, unknown>();
-  for (const id of tracked) state.set(id, snapshots.get(id) ?? null);
+  // Revision each snapshot was read at; kept apart because replay state is
+  // stored without `_rev` (see `withoutRevision`).
+  const snapshotRevision = new Map<string, string>();
+  for (const id of tracked) {
+    const snapshot = snapshots.get(id) ?? null;
+    const rev = revisionOf(snapshot);
+    if (rev) snapshotRevision.set(id, rev);
+    state.set(id, withoutRevision(snapshot));
+  }
 
   const broken = new Set<string>();
   const result: ReplayResult = {
@@ -115,6 +158,7 @@ export function replayTransactions(
     failures: new Set(),
     seen: new Set(),
     publishedBefore: new Map(),
+    unrecovered: [],
   };
 
   for (const tx of transactions) {
@@ -150,15 +194,36 @@ export function replayTransactions(
       }
       // Snapshot taken at the window start may already contain a boundary
       // transaction: never apply the same revision twice.
-      if (revisionOf(prev) === tx.id) continue;
+      if (snapshotRevision.get(id) === tx.id) {
+        snapshotRevision.delete(id);
+        continue;
+      }
+      snapshotRevision.delete(id);
 
       let next: unknown;
+      // The state the patch was computed against, when it differs from the
+      // replayed one (recovered transactions only).
+      let base = prev;
       try {
         next = applyPatch(prev, effect.apply) as unknown;
       } catch {
-        broken.add(id);
-        if (byAuthor) result.failures.add(key);
-        continue;
+        // The patch was computed against a version the snapshot endpoint
+        // does not expose. Re-seed from the document read right after this
+        // transaction; its `revert` patch gives the version it started from.
+        if (!options.recovered?.has(key)) {
+          broken.add(id);
+          if (byAuthor) result.failures.add(key);
+          result.unrecovered.push({ txId: tx.id, id });
+          continue;
+        }
+        next = withoutRevision(options.recovered.get(key) ?? null);
+        if (next !== null) {
+          try {
+            base = (applyPatch(next, effect.revert) as unknown) ?? null;
+          } catch {
+            base = prev;
+          }
+        }
       }
       state.set(id, next ?? null);
 
@@ -167,11 +232,11 @@ export function replayTransactions(
         // published version before the first edit: diff against that.
         const publishedId = stripDraft(id);
         const baseline =
-          prev === null && isDraftLikeId(id)
+          base === null && isDraftLikeId(id)
             ? ((before.has(publishedId)
                 ? before.get(publishedId)
                 : state.get(publishedId)) ?? null)
-            : prev;
+            : base;
         // A removed version (draft discarded on publish, deleted document)
         // says nothing about which fields the author worked on.
         result.diffs.set(
@@ -262,6 +327,76 @@ function markFailed(event: ActivityEvent): ActivityEvent {
 }
 
 /**
+ * Re-seed documents whose patches did not fit the replayed state: read each
+ * one right after the failing transaction and replay again, a few rounds at
+ * most. Best effort: a failed read keeps the last replay (the affected rows
+ * show `RECONSTRUCTION_FAILED`). Aborts propagate.
+ */
+async function recoverFailedPatches(
+  client: HistoryRequestClient,
+  config: ReconstructConfig,
+  params: {
+    replay: ReplayResult;
+    snapshots: ReadonlyMap<string, unknown>;
+    transactions: readonly HistoryTransaction[];
+    ids: readonly string[];
+    authorId: string;
+    signal?: AbortSignal;
+    onProgress?: (progress: ReconstructProgress) => void;
+  },
+): Promise<ReplayResult> {
+  const { snapshots, transactions, ids, authorId, signal, onProgress } =
+    params;
+  let replay = params.replay;
+  const recovered = new Map<string, unknown>();
+
+  for (
+    let round = 0;
+    round < MAX_RECOVERY_ROUNDS && replay.unrecovered.length > 0;
+    round += 1
+  ) {
+    const byTx = new Map<string, string[]>();
+    for (const { txId, id } of replay.unrecovered) {
+      const list = byTx.get(txId) ?? [];
+      list.push(id);
+      byTx.set(txId, list);
+    }
+    const requests: RevisionRequest[] = [...byTx].map(([revision, docIds]) => ({
+      revision,
+      ids: docIds,
+    }));
+    onProgress?.({
+      message: `Odtwarzanie zmian: uzupełnianie wersji (${replay.unrecovered.length})…`,
+    });
+
+    let documents: Map<string, unknown>;
+    try {
+      documents = await fetchRevisions(client, {
+        dataset: config.dataset,
+        requests,
+        signal,
+      });
+    } catch (error) {
+      if (isAbortError(error, signal)) throw error;
+      return replay;
+    }
+    for (const { txId, id } of replay.unrecovered) {
+      recovered.set(
+        txKey(txId, id),
+        documents.get(revisionKey(txId, id)) ?? null,
+      );
+    }
+    replay = replayTransactions(snapshots, transactions, {
+      ids,
+      authorId,
+      recovered,
+    });
+  }
+
+  return replay;
+}
+
+/**
  * Fill `changedFields` on the selected author's events: snapshot every
  * touched document (published and draft variants) at `fromTime`, fetch all
  * transactions on those documents in the window (every author, so each
@@ -328,6 +463,16 @@ export async function attachChangedFields(
     replay = replayTransactions(snapshots, chains.transactions, {
       ids,
       authorId,
+    });
+
+    replay = await recoverFailedPatches(client, config, {
+      replay,
+      snapshots,
+      transactions: chains.transactions,
+      ids,
+      authorId,
+      signal,
+      onProgress,
     });
   } catch (error) {
     if (isAbortError(error, signal)) throw error;
