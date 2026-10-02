@@ -25,7 +25,7 @@ import { ReportView } from './ReportView.js';
 import { StateCard } from './StateCard.js';
 import { usePeople } from './usePeople.js';
 
-/** The filters a loaded report was built with (labels, CSV file name). */
+/** The filters a loaded report was built with (labels, export file name). */
 type LoadedParams = {
   authorId: string;
   authorName: string;
@@ -269,7 +269,7 @@ function ReportScreen() {
   );
 }
 
-/** Report screen: filters, summary tiles, day timeline, sessions, CSV. */
+/** Report screen: filters, summary tiles, day timeline, sessions, export. */
 export function ReportApp() {
   return (
     <main className="page">

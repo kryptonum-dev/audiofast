@@ -52,13 +52,13 @@ export const PLURALS = {
   other: ['inny', 'inne', 'innych'],
 } as const satisfies Record<string, PluralForms>;
 
-/** CSV "Typ" of an asset row. */
+/** Export "Typ" of an asset row. */
 export const ASSET_TYPE_LABELS: Record<AssetKind, string> = {
   image: 'Obraz',
   file: 'Plik',
 };
 
-/** CSV "Akcja" of an asset row. */
+/** Export "Akcja" of an asset row. */
 export const ASSET_ACTION_LABELS: Record<AssetKind, string> = {
   image: 'Dodanie obrazu',
   file: 'Dodanie pliku',

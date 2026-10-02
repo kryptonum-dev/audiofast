@@ -1,21 +1,15 @@
-import {
-  ChevronDownIcon,
-  ClockIcon,
-  DocumentsIcon,
-  DownloadIcon,
-} from '@sanity/icons';
-import { Button, Menu, MenuButton, MenuItem } from '@sanity/ui';
+import { DownloadIcon } from '@sanity/icons';
+import { Button } from '@sanity/ui';
 
 import { appConfig } from '../config.js';
-import {
-  buildCsv,
-  changesToCsvRows,
-  type CsvContext,
-  type CsvKind,
-  csvFileName,
-  sessionsToCsvRows,
-} from '../lib/csv.js';
 import type { Report } from '../lib/build-report.js';
+import {
+  changesTable,
+  type ExportContext,
+  exportFileName,
+  sessionsTable,
+} from '../lib/export-tables.js';
+import { buildXlsx } from '../lib/xlsx.js';
 
 type ExportButtonProps = {
   report: Report | null;
@@ -25,8 +19,11 @@ type ExportButtonProps = {
   disabled?: boolean;
 };
 
-function downloadText(content: string, fileName: string): void {
-  const blob = new Blob([content], { type: 'text/csv;charset=utf-8' });
+const XLSX_TYPE =
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+function downloadFile(content: Uint8Array, fileName: string): void {
+  const blob = new Blob([content as BlobPart], { type: XLSX_TYPE });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
@@ -39,9 +36,8 @@ function downloadText(content: string, fileName: string): void {
 }
 
 /**
- * Export menu with two Excel-friendly CSV files: sessions (working time)
- * and changes (one row per changed field). Two menu items rather than one
- * button, as browsers often block a second download from a single click.
+ * Downloads the loaded report as one Excel workbook with two sheets:
+ * "Sesje" (one row per session) and "Zmiany" (one row per changed field).
  */
 export function ExportButton({
   report,
@@ -52,49 +48,29 @@ export function ExportButton({
 }: ExportButtonProps) {
   const ready = !!report && report.events.length > 0 && !disabled;
 
-  function handleExport(kind: CsvKind) {
+  function handleExport() {
     if (!report) return;
-    const context: CsvContext = {
+    const context: ExportContext = {
       authorName,
       documents: report.documents,
       studioUrl: appConfig.studioUrl,
       timeZone: appConfig.timeZone,
       cdn: { projectId: appConfig.projectId, dataset: appConfig.dataset },
     };
-    const rows =
-      kind === 'sessions'
-        ? sessionsToCsvRows(report.sessions, report.events, context)
-        : changesToCsvRows(report.events, context);
-    downloadText(buildCsv(rows), csvFileName(authorName, from, to, kind));
+    const workbook = buildXlsx([
+      sessionsTable(report.sessions, report.events, context),
+      changesTable(report.events, context),
+    ]);
+    downloadFile(workbook, exportFileName(authorName, from, to));
   }
 
   return (
-    <MenuButton
-      button={
-        <Button
-          disabled={!ready}
-          icon={DownloadIcon}
-          iconRight={ChevronDownIcon}
-          mode="ghost"
-          text="Eksportuj CSV"
-        />
-      }
-      id="export-csv"
-      menu={
-        <Menu>
-          <MenuItem
-            icon={ClockIcon}
-            onClick={() => handleExport('sessions')}
-            text="Sesje i czas pracy"
-          />
-          <MenuItem
-            icon={DocumentsIcon}
-            onClick={() => handleExport('changes')}
-            text="Zmiany w dokumentach"
-          />
-        </Menu>
-      }
-      popover={{ placement: 'bottom-end', portal: true }}
+    <Button
+      disabled={!ready}
+      icon={DownloadIcon}
+      mode="ghost"
+      onClick={handleExport}
+      text="Eksportuj do Excela"
     />
   );
 }

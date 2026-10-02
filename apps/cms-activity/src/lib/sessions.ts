@@ -10,7 +10,7 @@ function ms(iso: string): number {
  * Session numbers are 1-based and contiguous across the whole range. A
  * session lasts `max(end - start, minSessionMinutes)` so a single save still
  * counts as a few minutes of activity. Durations are whole minutes, so the
- * sessions add up to the daily and range totals (and to a CSV sum).
+ * sessions add up to the daily and range totals (and to the export's column sum).
  */
 export function assignSessions(
   events: readonly ActivityEvent[],

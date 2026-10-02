@@ -1,7 +1,7 @@
 /**
  * Document thumbnails: which image field represents a document of a given
  * type, and how to turn a Sanity image asset id into a CDN thumbnail URL
- * (plus the original file URL of uploads for the CSV).
+ * (plus the original file URL of uploads for the export).
  * One field table drives both the GROQ projection (live documents) and the
  * plain-JS lookup (last revisions of deleted documents).
  */
@@ -158,7 +158,7 @@ const FILE_ID_RE = /^file-([A-Za-z0-9]+)-([A-Za-z0-9]+)$/;
 
 /**
  * Original CDN URL of an uploaded image (`image-…`) or file (`file-…`)
- * asset id, or null for any other id. Used as the CSV link of upload rows.
+ * asset id, or null for any other id. Used as the export link of upload rows.
  */
 export function assetFileUrl(
   assetId: string,

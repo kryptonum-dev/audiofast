@@ -10,7 +10,7 @@ import type {
   ResolvedDocument,
 } from './types.js';
 
-/** Polish label per action, shared by the events table and the CSV export. */
+/** Polish label per action, shared by the report screen and the export. */
 export const ACTION_LABELS: Record<ActivityAction, string> = {
   edit: 'Edycja',
   create: 'Utworzenie',
@@ -45,7 +45,7 @@ export const EMPTY_CELL = '—';
 
 /**
  * Polish label of a document type (`product` → "Produkt audio"), shared by
- * the report screen and the CSV "Typ" column. Empty for an unknown type.
+ * the report screen and the export "Typ" column. Empty for an unknown type.
  */
 export function documentTypeLabel(type: string | null | undefined): string {
   if (!type) return '';

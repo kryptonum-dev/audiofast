@@ -205,7 +205,7 @@ export function formatChangedFields(
 }
 
 /**
- * The same changes one per field and item, for the CSV: `Sekcje` with
+ * The same changes one per field and item, for the export: `Sekcje` with
  * `Sekcja Hero` and `Sekcje` with `Sekcja FAQ` are two entries, and no
  * item is cut off. A field without labelled items is one entry, item null.
  */

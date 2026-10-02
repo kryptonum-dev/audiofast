@@ -84,7 +84,7 @@ function countActions(events: readonly SessionedEvent[]): ActionCount[] {
 }
 
 /**
- * One view per session (chronological, like the CSV): events grouped by
+ * One view per session (chronological, like the export): events grouped by
  * document in order of first appearance, assets counted separately.
  */
 export function buildSessionViews(
