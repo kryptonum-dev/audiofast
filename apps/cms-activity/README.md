@@ -53,6 +53,8 @@ Duplicate field names with different titles keep the first occurrence (documents
 
 Who can see it: Sanity has no per-user access list for SDK apps, only organization-wide Dashboard visibility (`default`, `unlisted`, `disabled`). The app is listed (`default`), so everyone in the organization sees it in the Dashboard. Only the accounts in `allowedUsers` get the report; everyone else gets an explanation screen with the signed-in account and a "Poproś o dostęp" mail link to `accessContact` (both in `src/config.ts`), and the app makes no History API request for them.
 
+Thumbnails: the app's hosting origin `https://jcz3l316qbd0.sanity.studio` must be in the project's CORS origins without credentials (`sanity cors add https://jcz3l316qbd0.sanity.studio --no-credentials --project-id fsw3likv`), because inside the Dashboard thumbnails load from `cdn.sanity.io` as cookie-free CORS requests; a recreated app gets a new host, which has to be added the same way.
+
 The steps below describe the first deploy, for redeploying elsewhere (for example another organization). In unattended mode (`-y`) the CLI refuses to create a new app when the organization already has one, so the first deploy has to be interactive.
 
 1. Log in with an account that is an admin/developer of the Sanity organization `o5BEPFjvf` (Audiofast):

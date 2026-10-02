@@ -52,16 +52,33 @@ type ThumbnailProps = {
 };
 
 /**
+ * Ways to request a thumbnail, tried in order until one loads.
+ *
+ * Inside the Sanity Dashboard the app runs in a cross-site iframe, and there
+ * a plain `<img>` request to `cdn.sanity.io` carries the browser's
+ * `*.sanity.io` cookies and fails (also with any Referrer-Policy). A CORS
+ * request (`crossOrigin="anonymous"`) sends no cookies and loads, provided
+ * the app's hosting origin is one of the project's CORS origins. Local dev
+ * (`localhost`, not a CORS origin) falls back to the plain request, which
+ * works there.
+ */
+const LOAD_MODES = ['anonymous', 'plain'] as const;
+
+/**
  * Decorative square thumbnail (the document name sits next to it, so
  * `alt=""`). Falls back to a placeholder with the type icon when there is
- * no image or it fails to load.
+ * no image or it fails to load in every mode.
  */
 export function Thumbnail({ assetId, size, type, cdn }: ThumbnailProps) {
   const url = assetId ? imageThumbnailUrl(assetId, cdn, size) : null;
-  const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const [failed, setFailed] = useState<{ url: string; count: number } | null>(
+    null,
+  );
+  const failures = failed && failed.url === url ? failed.count : 0;
+  const mode = LOAD_MODES[failures];
   const style = { '--thumb-size': `${size / 16}rem` } as CSSProperties;
 
-  if (!url || failedUrl === url) {
+  if (!url || !mode) {
     return (
       <span
         aria-hidden="true"
@@ -77,15 +94,13 @@ export function Thumbnail({ assetId, size, type, cdn }: ThumbnailProps) {
     <img
       alt=""
       className="thumb"
+      crossOrigin={mode === 'anonymous' ? 'anonymous' : undefined}
       data-thumb="image"
       decoding="async"
       height={size}
+      key={mode}
       loading="lazy"
-      onError={() => setFailedUrl(url)}
-      // Sanity hosting sends a stricter document Referrer-Policy than local
-      // dev; without an explicit policy cdn.sanity.io rejects the request
-      // (same fix as sanity-io/sanity#13665).
-      referrerPolicy="strict-origin-when-cross-origin"
+      onError={() => setFailed({ url, count: failures + 1 })}
       src={url}
       style={style}
       width={size}
