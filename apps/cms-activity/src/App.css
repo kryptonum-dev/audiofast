@@ -234,11 +234,19 @@ body {
   cursor: pointer;
 }
 
+.dayCard__card {
+  overflow: hidden;
+}
+
+/* Day = section header: larger title, stats as a right-aligned group. */
 .dayCard__toggle {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.5rem 1rem;
+  align-items: center;
   width: 100%;
   min-height: 2.75rem;
   padding: 1.25rem 1.5rem;
-  border-radius: inherit;
   transition: background-color 120ms linear;
 }
 
@@ -246,18 +254,41 @@ body {
   background-color: color-mix(in srgb, currentColor 5%, transparent);
 }
 
-.dayCard__title {
-  font-size: 1rem;
-  font-weight: 600;
+.dayCard__toggle[aria-expanded='true'] {
+  border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  background-color: color-mix(in srgb, currentColor 4%, transparent);
 }
 
-.dayCard__meta {
+.dayCard__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+}
+
+.dayCard__title::first-letter {
+  text-transform: uppercase;
+}
+
+.dayCard__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  justify-content: flex-end;
   font-size: 0.875rem;
   color: var(--app-muted-fg);
 }
 
+.dayCard__stat {
+  white-space: nowrap;
+}
+
+.dayCard__statValue {
+  font-weight: 600;
+  color: var(--app-fg, currentColor);
+}
+
 .dayCard__sessions {
-  padding: 0 1.5rem 0.5rem;
+  padding: 0.75rem 1.5rem 1rem;
 }
 
 .chevron {
@@ -266,12 +297,60 @@ body {
   transition: transform 150ms ease-out;
 }
 
+.sessionRow__toggle .chevron {
+  font-size: 1rem;
+  color: var(--app-muted-fg);
+}
+
 [aria-expanded='true'] > .chevron {
   transform: rotate(180deg);
 }
 
+/* Sessions hang off a vertical time rail: one dot per session in the day. */
 .sessionRow {
-  border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+  --rail-x: 0.4375rem;
+  --dot-y: 2rem;
+  position: relative;
+  padding-left: 1.75rem;
+}
+
+/* An open row hides its thumbnails, so the time label sits higher. */
+.sessionRow:has(> .sessionRow__summary > [aria-expanded='true']) {
+  --dot-y: 1.5625rem;
+}
+
+.sessionRow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--rail-x);
+  width: 2px;
+  background-color: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.sessionRow:first-child::before {
+  top: var(--dot-y);
+}
+
+.sessionRow:last-child::before {
+  bottom: calc(100% - var(--dot-y));
+}
+
+.sessionRow:only-child::before {
+  display: none;
+}
+
+.sessionRow::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--dot-y) - 0.3125rem);
+  left: calc(var(--rail-x) - 0.25rem);
+  width: 0.625rem;
+  height: 0.625rem;
+  border: 2px solid var(--app-accent);
+  border-radius: 50%;
+  background-color: var(--app-bg, Canvas);
 }
 
 /* The toggle's ::after covers the whole row, so any click on it toggles. */
@@ -309,7 +388,7 @@ body {
 
 .sessionRow__time {
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .sessionRow__index {
@@ -345,7 +424,7 @@ body {
 }
 
 .sessionRow__details {
-  padding: 0.25rem 0 1.25rem 2rem;
+  padding: 0.25rem 0 1.5rem 1.5rem;
 }
 
 .docBlock {
@@ -370,8 +449,10 @@ body {
   text-underline-offset: 0.15em;
 }
 
+/* Wrapper, not the svg: Sanity UI's Text pulls icons in with negative margins. */
 .docBlock__linkIcon {
-  margin-left: 0.5em;
+  display: inline-block;
+  margin-left: 0.375em;
   vertical-align: -0.1em;
 }
 
@@ -511,11 +592,17 @@ body {
   }
 
   .dayCard__toggle {
+    grid-template-columns: auto minmax(0, 1fr);
     padding: 1rem 1.25rem;
   }
 
+  .dayCard__stats {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
   .dayCard__sessions {
-    padding: 0 1.25rem 0.5rem;
+    padding: 0.5rem 1.25rem 0.75rem;
   }
 }
 

@@ -277,6 +277,20 @@ export function formatDayLabel(date: string): string {
   return `${weekdayShort(date)} ${pad(parsed.day)}.${pad(parsed.month)}`;
 }
 
+/** Full Polish day heading for `YYYY-MM-DD`, e.g. `wtorek, 8 września`. */
+export function formatDayHeading(date: string): string {
+  const parsed = parseDateOnly(date);
+  if (!parsed) return date;
+  // Noon UTC keeps the calendar date stable regardless of the viewer's zone.
+  const at = new Date(Date.UTC(parsed.year, parsed.month - 1, parsed.day, 12));
+  return new Intl.DateTimeFormat('pl-PL', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  }).format(at);
+}
+
 /**
  * Readable Polish range: `2 wrz – 2 paź 2026`, `2–15 wrz 2026`,
  * `15 gru 2025 – 2 sty 2026`, or one day `6 wrz 2026`.

@@ -2,7 +2,12 @@ import { ChevronDownIcon, LaunchIcon } from '@sanity/icons';
 import { Badge, Button, Card, Flex, Heading, Stack, Text } from '@sanity/ui';
 import { useEffect, useId, useState } from 'react';
 
-import { assetSummary, countLabel, PLURALS } from '../lib/assets.js';
+import {
+  assetSummary,
+  countLabel,
+  pluralForm,
+  PLURALS,
+} from '../lib/assets.js';
 import { studioEditUrl } from '../lib/documents.js';
 import type { ImageCdnTarget } from '../lib/images.js';
 import { documentLabel, documentTypeLabel } from '../lib/labels.js';
@@ -14,7 +19,7 @@ import {
   type DocumentGroup,
   type SessionView,
 } from '../lib/report-view.js';
-import { formatDayLabel, formatDuration, formatTime } from '../lib/time.js';
+import { formatDayHeading, formatDuration, formatTime } from '../lib/time.js';
 import type { ResolvedDocument } from '../lib/types.js';
 import {
   actionBadgeText,
@@ -97,7 +102,9 @@ function DocumentName({
         target="_blank"
       >
         {label}
-        <LaunchIcon aria-hidden="true" className="docBlock__linkIcon" />
+        <span aria-hidden="true" className="docBlock__linkIcon">
+          <LaunchIcon />
+        </span>
         <span className="srOnly"> (otwiera się w nowej karcie)</span>
       </a>
     </Text>
@@ -364,6 +371,37 @@ function dayMeta(day: DayGroup): string {
   return parts.join(' · ');
 }
 
+function DayStats({ day }: { day: DayGroup }) {
+  const stats: [string, string][] = [
+    [
+      String(day.sessions.length),
+      pluralForm(day.sessions.length, PLURALS.session),
+    ],
+  ];
+  if (day.daily) {
+    stats.push(
+      [formatDuration(day.daily.activeMinutes), 'aktywnie'],
+      [
+        String(day.daily.documents),
+        pluralForm(day.daily.documents, PLURALS.document),
+      ],
+      [
+        String(day.daily.publishes),
+        pluralForm(day.daily.publishes, PLURALS.publish),
+      ],
+    );
+  }
+  return (
+    <span aria-hidden="true" className="dayCard__stats">
+      {stats.map(([value, word]) => (
+        <span className="dayCard__stat" key={word}>
+          <span className="dayCard__statValue">{value}</span> {word}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function DayCard({
   day,
   expanded,
@@ -378,20 +416,20 @@ function DayCard({
   const bodyId = `day-${day.date}-sessions`;
   return (
     <li className="dayCard" id={`day-${day.date}`}>
-      <Card border radius={3}>
+      <Card border className="dayCard__card" radius={3}>
         <h3 className="dayCard__heading">
           <button
             aria-controls={expanded ? bodyId : undefined}
             aria-expanded={expanded}
-            aria-label={`${formatDayLabel(day.date)} · ${dayMeta(day)}`}
+            aria-label={`${formatDayHeading(day.date)} · ${dayMeta(day)}`}
             className="dayCard__toggle tabular"
             data-day-toggle={day.date}
             onClick={() => onToggle(day.date)}
             type="button"
           >
             <ChevronDownIcon aria-hidden="true" className="chevron" />
-            <span className="dayCard__title">{formatDayLabel(day.date)}</span>
-            <span className="dayCard__meta">{dayMeta(day)}</span>
+            <span className="dayCard__title">{formatDayHeading(day.date)}</span>
+            <DayStats day={day} />
           </button>
         </h3>
         {expanded ? (
