@@ -501,7 +501,7 @@ None. New app, no data model changes, no env changes in the primary design.
 - [x] 1.1 Workspace installs and type-checks: `bun install && bun run turbo check-types --filter=cms-activity` — 80243fe
 - [x] 1.2 Lint passes: `bun run turbo lint --filter=cms-activity` — 80243fe
 - [x] 1.3 App builds: `cd apps/cms-activity && bun run build` — 80243fe
-- [x] 1.4 `apps/cms-activity/sanity.cli.ts` contains a non-empty `deployment.appId` after the first deploy
+- [x] 1.4 `apps/cms-activity/sanity.cli.ts` contains a non-empty `deployment.appId` after the first deploy — 0abdadb
 
 ### Phase 2: Data Layer (`src/lib`)
 
