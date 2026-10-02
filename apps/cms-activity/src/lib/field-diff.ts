@@ -4,6 +4,7 @@ import {
   fieldLabels as defaultLabels,
   type FieldLabels,
 } from './field-labels.js';
+import type { FieldChange } from './types.js';
 
 /** One changed top-level field; `item` identifies a changed array element. */
 export type ChangedField = {
@@ -159,6 +160,31 @@ export function changeKey(change: ChangedField): string {
   return `${change.field}|${item.key ?? ''}|${item.type ?? ''}|${item.name ?? ''}`;
 }
 
+type GroupedChange = { field: string; items: string[] };
+
+/**
+ * Changes grouped per top-level field in first-seen order, with the
+ * de-duplicated labels of their changed array items. Items without a useful
+ * label (Portable Text blocks, bare references) leave the field alone.
+ */
+function groupChanges(
+  changes: readonly ChangedField[],
+  labels: FieldLabels,
+): GroupedChange[] {
+  const groups = new Map<string, string[]>();
+  for (const change of changes) {
+    let items = groups.get(change.field);
+    if (!items) {
+      items = [];
+      groups.set(change.field, items);
+    }
+    if (!change.item) continue;
+    const label = blockLabel(change.item, labels);
+    if (label && !items.includes(label)) items.push(label);
+  }
+  return [...groups].map(([field, items]) => ({ field, items }));
+}
+
 /**
  * Human-readable, de-duplicated list of changed fields, e.g. `Opis`,
  * `Sekcje: Sekcja Hero / Sekcja FAQ`. One entry per top-level field, in
@@ -169,26 +195,45 @@ export function formatChangedFields(
   options: { typeHint?: string; labels?: FieldLabels } = {},
 ): string[] {
   const labels = options.labels ?? defaultLabels;
-  const order: string[] = [];
-  const itemsByField = new Map<string, string[]>();
-
-  for (const change of changes) {
-    if (!itemsByField.has(change.field)) {
-      itemsByField.set(change.field, []);
-      order.push(change.field);
-    }
-    if (!change.item) continue;
-    const label = blockLabel(change.item, labels);
-    const items = itemsByField.get(change.field) as string[];
-    if (label && !items.includes(label)) items.push(label);
-  }
-
-  return order.map((field) => {
+  return groupChanges(changes, labels).map(({ field, items }) => {
     const label = fieldLabel([field], options.typeHint, labels);
-    const items = itemsByField.get(field) ?? [];
     if (items.length === 0) return label;
     const shown = items.slice(0, MAX_ITEMS_PER_FIELD);
     const rest = items.length - shown.length;
     return `${label}: ${shown.join(' / ')}${rest > 0 ? ` / +${rest}` : ''}`;
   });
+}
+
+/**
+ * The same changes one per field and item, for the CSV: `Sekcje` with
+ * `Sekcja Hero` and `Sekcje` with `Sekcja FAQ` are two entries, and no
+ * item is cut off. A field without labelled items is one entry, item null.
+ */
+export function listFieldChanges(
+  changes: readonly ChangedField[],
+  options: { typeHint?: string; labels?: FieldLabels } = {},
+): FieldChange[] {
+  const labels = options.labels ?? defaultLabels;
+  return groupChanges(changes, labels).flatMap(
+    ({ field, items }): FieldChange[] => {
+      const label = fieldLabel([field], options.typeHint, labels);
+      if (items.length === 0) return [{ field: label, item: null }];
+      return items.map((item) => ({ field: label, item }));
+    },
+  );
+}
+
+/** Union of field changes, first-seen order, de-duplicated by field and item. */
+export function mergeFieldChanges(
+  ...lists: readonly (readonly FieldChange[])[]
+): FieldChange[] {
+  const seen = new Set<string>();
+  const merged: FieldChange[] = [];
+  for (const change of lists.flat()) {
+    const key = `${change.field}\u0000${change.item ?? ''}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    merged.push(change);
+  }
+  return merged;
 }

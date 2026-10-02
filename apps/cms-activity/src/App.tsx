@@ -1,5 +1,13 @@
 import { SanityApp, type SanityConfig } from '@sanity/sdk-react';
-import { Card, Flex, Spinner, ThemeProvider, usePrefersDark } from '@sanity/ui';
+import {
+  Card,
+  Flex,
+  LayerProvider,
+  PortalProvider,
+  Spinner,
+  ThemeProvider,
+  usePrefersDark,
+} from '@sanity/ui';
 import { buildTheme } from '@sanity/ui/theme';
 
 import { AccessGate } from './access/AccessGate.js';
@@ -36,14 +44,19 @@ export default function App() {
 
   return (
     <ThemeProvider scheme={scheme} theme={theme}>
-      <Card className="appRoot">
-        <ThemeDocument scheme={scheme} />
-        <SanityApp config={sanityConfig} fallback={<AppFallback />}>
-          <AccessGate>
-            <ReportApp />
-          </AccessGate>
-        </SanityApp>
-      </Card>
+      {/* Layers and a body portal for popovers (the export menu). */}
+      <LayerProvider>
+        <PortalProvider>
+          <Card className="appRoot">
+            <ThemeDocument scheme={scheme} />
+            <SanityApp config={sanityConfig} fallback={<AppFallback />}>
+              <AccessGate>
+                <ReportApp />
+              </AccessGate>
+            </SanityApp>
+          </Card>
+        </PortalProvider>
+      </LayerProvider>
     </ThemeProvider>
   );
 }

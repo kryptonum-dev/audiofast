@@ -6,6 +6,8 @@ import {
   changeKey,
   diffDocuments,
   formatChangedFields,
+  listFieldChanges,
+  mergeFieldChanges,
   type ChangedField,
 } from './field-diff.js';
 import {
@@ -313,12 +315,17 @@ function applyToEvent(
     }
   }
 
-  const formatted = formatChangedFields(changes, { typeHint: event.docType });
+  const options = { typeHint: event.docType };
+  const formatted = formatChangedFields(changes, options);
   const changedFields = [
     ...new Set([...event.changedFields, ...formatted]),
     ...(failed ? [RECONSTRUCTION_FAILED] : []),
   ];
-  return { ...event, action, changedFields };
+  const fieldChanges = mergeFieldChanges(
+    event.fieldChanges,
+    listFieldChanges(changes, options),
+  );
+  return { ...event, action, changedFields, fieldChanges };
 }
 
 function markFailed(event: ActivityEvent): ActivityEvent {
@@ -345,8 +352,7 @@ async function recoverFailedPatches(
     onProgress?: (progress: ReconstructProgress) => void;
   },
 ): Promise<ReplayResult> {
-  const { snapshots, transactions, ids, authorId, signal, onProgress } =
-    params;
+  const { snapshots, transactions, ids, authorId, signal, onProgress } = params;
   let replay = params.replay;
   const recovered = new Map<string, unknown>();
 

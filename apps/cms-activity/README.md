@@ -104,11 +104,14 @@ The screen shows, top to bottom: summary tiles, "Dzień po dniu" (one row per ac
 - **Sesja**: a run of CMS activity where the gap between consecutive changes is shorter than the "Przerwa między sesjami" value (default 30 min). Sessions are numbered across the whole range.
 - **Czas aktywny (ok.)**: the sum of session lengths, from first to last change in the session, with a floor of 5 minutes per session. Reading content without saving leaves no trace in history, so this is an approximation of CMS activity, not working time.
 - **Zapisy**: autosaves of the same document by the same person within 5 minutes are merged into one event; the count shows how many saves were merged.
-- **Dokumenty**: image and file uploads are not counted as documents; a session card shows them as one line ("Dodano 3 obrazy"). In the CSV they stay as rows with Typ "Obraz"/"Plik" and Akcja "Dodanie obrazu"/"Dodanie pliku".
+- **Dokumenty**: image and file uploads are not counted as documents; a session card shows them as one line ("Dodano 3 obrazy"). In the "Zmiany" CSV they stay as rows with Typ "Obraz"/"Plik", Akcja "Dodanie obrazu"/"Dodanie pliku", the original file name and a link to the file.
 - Studio side effects (the denormalization patch right before a product publish, the review author counter after a review publish) are merged away and do not show as separate edits.
 - **Zmienione pola**: top-level fields changed, with the block title for page-builder and other arrays. "(nie udało się odtworzyć)" means the document history could not be replayed for that event; the rest of the report is still correct.
 
-The CSV export ("Eksportuj CSV") is a flat table with one row per event (Data i godzina, Redaktor, Dokument, Typ, Link, Akcja, Zmienione pola, Zapisy, Sesja), uses `;` as separator and UTF-8 with BOM so it opens in Excel (pl-PL) by double-click.
+The "Eksportuj CSV" menu downloads one of two files for the loaded report. Both keep exactly one value per cell, use `;` as separator and UTF-8 with BOM, so they open in Excel (pl-PL) by double-click; dates are `YYYY-MM-DD` and times `HH:mm` in Europe/Warsaw, so Excel reads them as dates and times.
+
+- **Sesje i czas pracy** (`raport-pracy-<osoba>-<od>-<do>-sesje.csv`): one row per session — Data, Sesja, Od, Do, Czas (min), Dokumenty, Publikacje, Obrazy, Redaktor. Session lengths are whole minutes, so the column sum equals the "Czas aktywny" tile; a pivot by Data gives the daily totals.
+- **Zmiany w dokumentach** (`…-zmiany.csv`): one row per changed field — Data, Godzina, Sesja, Dokument, Typ, Akcja, Pole, Element, Redaktor, Link. An edit of three fields is three rows; a changed page-builder section or other array item goes in Element (one row per item, never truncated). Publish, unpublish, delete and discard are one row with Pole empty (their fields already show on the edits), and so is each upload. Link opens the document in the Studio (empty for deleted documents) or, for uploads, the file itself. The app's "zapisy" count is not exported: it counts autosaves, not work.
 
 ## Known limits
 

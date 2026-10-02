@@ -1,3 +1,4 @@
+import { mergeFieldChanges } from './field-diff.js';
 import type { ActivityEvent } from './types.js';
 
 /** Denorm draft patch lands right before the product publish (sync commit). */
@@ -88,9 +89,10 @@ function isMergeable(event: ActivityEvent): boolean {
  * (c) Consecutive `edit`/`create` events on the same document by the same
  * author, each within `mergeWindowMinutes` of the previous one and with no
  * other action on that document in between, become one event: `at` = first,
- * `lastAt` = last, `mergedCount` summed, `changedFields`, `transactionIds`
- * and `touchedIds` unioned. Direct (published) edits only merge with direct
- * edits. The action of the first event wins (`create` + edits = `create`).
+ * `lastAt` = last, `mergedCount` summed, `changedFields`, `fieldChanges`,
+ * `transactionIds` and `touchedIds` unioned. Direct (published) edits only
+ * merge with direct edits. The action of the first event wins (`create` +
+ * edits = `create`).
  */
 export function mergeNoise(
   events: readonly ActivityEvent[],
@@ -126,6 +128,10 @@ export function mergeNoise(
           ms(event.lastAt) > ms(target.lastAt) ? event.lastAt : target.lastAt,
         mergedCount: target.mergedCount + event.mergedCount,
         changedFields: union(target.changedFields, event.changedFields),
+        fieldChanges: mergeFieldChanges(
+          target.fieldChanges,
+          event.fieldChanges,
+        ),
         transactionIds: union(target.transactionIds, event.transactionIds),
         touchedIds: union(target.touchedIds, event.touchedIds).sort(),
       };

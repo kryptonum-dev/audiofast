@@ -226,12 +226,6 @@ export function formatTime(iso: string, timeZone: string): string {
   return `${pad(p.hour)}:${pad(p.minute)}`;
 }
 
-/** Instant → `YYYY-MM-DD HH:mm` in `timeZone` (CSV, sorts as text). */
-export function formatIsoLocal(iso: string, timeZone: string): string {
-  const p = zonedParts(new Date(iso), timeZone);
-  return `${pad(p.year, 4)}-${pad(p.month)}-${pad(p.day)} ${pad(p.hour)}:${pad(p.minute)}`;
-}
-
 /** Minutes → `Xh Ymin` (rounded to whole minutes). */
 export function formatMinutes(minutes: number): string {
   const total = Math.max(0, Math.round(minutes));

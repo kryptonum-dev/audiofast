@@ -1,6 +1,7 @@
 /**
  * Document thumbnails: which image field represents a document of a given
- * type, and how to turn a Sanity image asset id into a CDN thumbnail URL.
+ * type, and how to turn a Sanity image asset id into a CDN thumbnail URL
+ * (plus the original file URL of uploads for the CSV).
  * One field table drives both the GROQ projection (live documents) and the
  * plain-JS lookup (last revisions of deleted documents).
  */
@@ -133,6 +134,10 @@ export function parseImageAssetId(id: string): ImageAssetInfo | null {
 
 export type ImageCdnTarget = { projectId: string; dataset: string };
 
+function cdnBase(kind: 'images' | 'files', target: ImageCdnTarget): string {
+  return `https://cdn.sanity.io/${kind}/${encodeURIComponent(target.projectId)}/${encodeURIComponent(target.dataset)}`;
+}
+
 /**
  * Square CDN thumbnail (`fit=crop`, 2x the CSS size for sharp screens) of an
  * image asset id, or null when the id is not an image asset.
@@ -146,5 +151,26 @@ export function imageThumbnailUrl(
   if (!info) return null;
   const px = Math.max(1, Math.round(cssSize * 2));
   const file = `${info.hash}-${info.width}x${info.height}.${info.extension}`;
-  return `https://cdn.sanity.io/images/${encodeURIComponent(target.projectId)}/${encodeURIComponent(target.dataset)}/${file}?w=${px}&h=${px}&fit=crop&auto=format`;
+  return `${cdnBase('images', target)}/${file}?w=${px}&h=${px}&fit=crop&auto=format`;
+}
+
+const FILE_ID_RE = /^file-([A-Za-z0-9]+)-([A-Za-z0-9]+)$/;
+
+/**
+ * Original CDN URL of an uploaded image (`image-…`) or file (`file-…`)
+ * asset id, or null for any other id. Used as the CSV link of upload rows.
+ */
+export function assetFileUrl(
+  assetId: string,
+  target: ImageCdnTarget,
+): string | null {
+  const image = parseImageAssetId(assetId);
+  if (image) {
+    return `${cdnBase('images', target)}/${image.hash}-${image.width}x${image.height}.${image.extension}`;
+  }
+  const file = FILE_ID_RE.exec(assetId);
+  if (file?.[1] && file[2]) {
+    return `${cdnBase('files', target)}/${file[1]}.${file[2]}`;
+  }
+  return null;
 }

@@ -30,6 +30,12 @@ export type HistoryTransaction = {
 export type ActivityAction =
   'edit' | 'create' | 'publish' | 'unpublish' | 'delete' | 'discard';
 
+/**
+ * One changed field in CSV form: the field label, plus the label of the
+ * changed array item (section, slide…) when the change is inside one.
+ */
+export type FieldChange = { field: string; item: string | null };
+
 /** One row of the events table (before sessions are assigned). */
 export type ActivityEvent = {
   /** Stable id: `<first transaction id>:<published document id>`. */
@@ -49,6 +55,8 @@ export type ActivityEvent = {
   mergedCount: number;
   /** Changed field labels; filled by the changed-fields step (Phase 4). */
   changedFields: string[];
+  /** The same changes one per field and item (CSV rows); filled with `changedFields`. */
+  fieldChanges: FieldChange[];
   /** Every transaction id collapsed into this event, ascending by time. */
   transactionIds: string[];
   /** Raw document ids (published, draft, version) touched by this event. */
@@ -65,7 +73,7 @@ export type Session = {
   start: string;
   /** UTC ISO timestamp of the last activity (last event's `lastAt`). */
   end: string;
-  /** `max(end - start, minSessionMinutes)` in minutes. */
+  /** `max(end - start, minSessionMinutes)` in whole minutes. */
   durationMinutes: number;
   eventCount: number;
 };

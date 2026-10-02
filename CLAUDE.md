@@ -19,7 +19,7 @@ Turborepo + Bun workspaces. Four apps:
 - `apps/web` — Next.js 16 (App Router, React 19 + Compiler, Turbopack) public storefront **and** all B2C runtime (checkout, payment, order/customer APIs, server actions).
 - `apps/studio` — Sanity v5 Studio (editorial content model, migrations, custom tools/plugins).
 - `apps/b2c-admin` — separate **Sanity App SDK** React app (runs via `sanity dev`, not Next.js) for operators: Orders, Coupons, Analytics.
-- `apps/cms-activity` — standalone **Sanity App SDK** app "Raport pracy CMS" (History API per-editor activity report + CSV, allowlisted, unlisted in the Dashboard; see its README). Shares nothing with `b2c-admin`.
+- `apps/cms-activity` — standalone **Sanity App SDK** app "Raport pracy CMS" (History API per-editor activity report + CSV, listed in the Dashboard, report allowlisted; see its README). Shares nothing with `b2c-admin`.
 
 Shared config in `packages/eslint-config` and `packages/typescript-config`.
 

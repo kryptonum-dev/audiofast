@@ -178,6 +178,7 @@ export function classifyTransaction(tx: HistoryTransaction): ActivityEvent[] {
       ...(classified.direct ? { direct: true } : {}),
       mergedCount: 1,
       changedFields: [],
+      fieldChanges: [],
       transactionIds: [tx.id],
       touchedIds: [...ids].sort(),
     });

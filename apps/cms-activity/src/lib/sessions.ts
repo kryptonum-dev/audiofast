@@ -9,7 +9,8 @@ function ms(iso: string): number {
  * previous activity (its `lastAt`) and the next event exceeds `gapMinutes`.
  * Session numbers are 1-based and contiguous across the whole range. A
  * session lasts `max(end - start, minSessionMinutes)` so a single save still
- * counts as a few minutes of activity.
+ * counts as a few minutes of activity. Durations are whole minutes, so the
+ * sessions add up to the daily and range totals (and to a CSV sum).
  */
 export function assignSessions(
   events: readonly ActivityEvent[],
@@ -34,7 +35,7 @@ export function assignSessions(
       index: current.index,
       start: new Date(current.startMs).toISOString(),
       end: new Date(current.endMs).toISOString(),
-      durationMinutes: Math.max(minutes, options.minSessionMinutes),
+      durationMinutes: Math.max(Math.round(minutes), options.minSessionMinutes),
       eventCount: current.count,
     });
   };

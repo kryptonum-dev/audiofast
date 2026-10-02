@@ -14,7 +14,7 @@ const QUERY_BATCH_SIZE = 200;
  * Raw naming fields; the name itself is computed in `documentName` so the same
  * rules apply to live documents and to last revisions of deleted ones.
  * Mirrors the plan's `coalesce(product brand + name, name, pt::text(title),
- * question, heading, label)`.
+ * question, heading, label)`; uploaded assets fall back to their file name.
  */
 const NAMES_QUERY = `*[_id in $ids]{
   _id,
@@ -24,6 +24,7 @@ const NAMES_QUERY = `*[_id in $ids]{
   question,
   heading,
   label,
+  originalFilename,
   "brandName": select(_type == "product" => brand->name),
   "imageRef": ${IMAGE_REF_GROQ}
 }`;
@@ -36,6 +37,7 @@ type NameFields = {
   question?: unknown;
   heading?: unknown;
   label?: unknown;
+  originalFilename?: unknown;
   brandName?: unknown;
   imageRef?: unknown;
 };
@@ -82,7 +84,8 @@ export function documentName(doc: NameFields): string | null {
     toPlainText(doc.title) ??
     toPlainText(doc.question) ??
     toPlainText(doc.heading) ??
-    toPlainText(doc.label)
+    toPlainText(doc.label) ??
+    toPlainText(doc.originalFilename)
   );
 }
 

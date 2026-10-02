@@ -1,8 +1,20 @@
-import { DownloadIcon } from '@sanity/icons';
-import { Button } from '@sanity/ui';
+import {
+  ChevronDownIcon,
+  ClockIcon,
+  DocumentsIcon,
+  DownloadIcon,
+} from '@sanity/icons';
+import { Button, Menu, MenuButton, MenuItem } from '@sanity/ui';
 
 import { appConfig } from '../config.js';
-import { buildCsv, csvFileName, eventsToCsvRows } from '../lib/csv.js';
+import {
+  buildCsv,
+  changesToCsvRows,
+  type CsvContext,
+  type CsvKind,
+  csvFileName,
+  sessionsToCsvRows,
+} from '../lib/csv.js';
 import type { Report } from '../lib/build-report.js';
 
 type ExportButtonProps = {
@@ -26,7 +38,11 @@ function downloadText(content: string, fileName: string): void {
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
-/** Downloads the events of the loaded report as an Excel-friendly CSV. */
+/**
+ * Export menu with two Excel-friendly CSV files: sessions (working time)
+ * and changes (one row per changed field). Two menu items rather than one
+ * button, as browsers often block a second download from a single click.
+ */
 export function ExportButton({
   report,
   authorName,
@@ -36,24 +52,49 @@ export function ExportButton({
 }: ExportButtonProps) {
   const ready = !!report && report.events.length > 0 && !disabled;
 
-  function handleExport() {
+  function handleExport(kind: CsvKind) {
     if (!report) return;
-    const rows = eventsToCsvRows(report.events, {
+    const context: CsvContext = {
       authorName,
       documents: report.documents,
       studioUrl: appConfig.studioUrl,
       timeZone: appConfig.timeZone,
-    });
-    downloadText(buildCsv(rows), csvFileName(authorName, from, to));
+      cdn: { projectId: appConfig.projectId, dataset: appConfig.dataset },
+    };
+    const rows =
+      kind === 'sessions'
+        ? sessionsToCsvRows(report.sessions, report.events, context)
+        : changesToCsvRows(report.events, context);
+    downloadText(buildCsv(rows), csvFileName(authorName, from, to, kind));
   }
 
   return (
-    <Button
-      disabled={!ready}
-      icon={DownloadIcon}
-      mode="ghost"
-      onClick={handleExport}
-      text="Eksportuj CSV"
+    <MenuButton
+      button={
+        <Button
+          disabled={!ready}
+          icon={DownloadIcon}
+          iconRight={ChevronDownIcon}
+          mode="ghost"
+          text="Eksportuj CSV"
+        />
+      }
+      id="export-csv"
+      menu={
+        <Menu>
+          <MenuItem
+            icon={ClockIcon}
+            onClick={() => handleExport('sessions')}
+            text="Sesje i czas pracy"
+          />
+          <MenuItem
+            icon={DocumentsIcon}
+            onClick={() => handleExport('changes')}
+            text="Zmiany w dokumentach"
+          />
+        </Menu>
+      }
+      popover={{ placement: 'bottom-end', portal: true }}
     />
   );
 }
