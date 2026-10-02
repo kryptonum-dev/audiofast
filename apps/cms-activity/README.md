@@ -49,7 +49,11 @@ Duplicate field names with different titles keep the first occurrence (documents
 
 ## Deploy
 
-**Status (2026-09-29): implemented, not deployed yet.** The owner deploys after the final review. Nothing in this folder deploys automatically; there is no CI job for this app.
+**Status (2026-10-02): deployed** as app `vkz2ft2v1wlv5824qsg10qmh` (unlisted) in organization `o5BEPFjvf`: https://www.sanity.io/@o5BEPFjvf/application/vkz2ft2v1wlv5824qsg10qmh. Redeploy with `bun run deploy` from this folder; `deployment.appId` in `sanity.cli.ts` makes it update the same app. Nothing deploys automatically; there is no CI job for this app.
+
+Who can see it: Sanity has no per-user access list for SDK apps, only organization-wide Dashboard visibility (`default`, `unlisted`, `disabled`). The app is `unlisted`, so it is not shown on the organization home page and opens only by direct link. Anyone in the organization who has the link reaches the in-app gate, which shows "Brak dostępu do raportu" to everyone except the accounts in `allowedUsers` and makes no History API request for them.
+
+The steps below describe the first deploy, for redeploying elsewhere (for example another organization). In unattended mode (`-y`) the CLI refuses to create a new app when the organization already has one, so the first deploy has to be interactive.
 
 1. Log in with an account that is an admin/developer of the Sanity organization `o5BEPFjvf` (Audiofast):
 

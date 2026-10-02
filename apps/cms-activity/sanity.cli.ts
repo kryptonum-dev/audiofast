@@ -8,8 +8,9 @@ export default defineCliConfig({
     title: 'Raport pracy CMS',
     visibility: 'unlisted',
   },
-  // TODO: add `deployment: { appId: '<id>' }` after the first `bun run deploy`
-  // (the CLI prints the app id). Not deployed yet; the owner deploys manually.
+  deployment: {
+    appId: 'vkz2ft2v1wlv5824qsg10qmh',
+  },
   vite: (config) => ({
     ...config,
     server: {

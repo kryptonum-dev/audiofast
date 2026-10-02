@@ -1,7 +1,7 @@
 ---
 change_id: cms-activity-report
 title: CMS activity report app
-status: implementing
+status: implemented
 created: 2026-09-29
 updated: 2026-10-02
 archived_at: null
@@ -55,3 +55,4 @@ Then copy the printed app id into `sanity.cli.ts` as `deployment: { appId: '<id>
 
 2026-10-02 — sessions grouped by day, roomier layout, thumbnails (owner-approved): "Sesje i zmiany" is one collapsible card per active day (expanded by default up to 10 days) with sessions as light rows that open inline; timeline rows open and scroll to the day. Document groups show a thumbnail from one GROQ projection in `resolveDocuments` (per-type image fields from `src/lib/images.ts`, then the first page-builder image; draft wins; deleted documents use the last revision), uploaded images show as small thumbnails in the "Dodano N obrazów" line. Damian 90 days: 217/218 document groups with a thumbnail (review author has no image field).
 
+2026-10-02 — deployed (owner green flag): app `vkz2ft2v1wlv5824qsg10qmh`, title "Raport pracy CMS", unlisted, org `o5BEPFjvf`, URL https://www.sanity.io/@o5BEPFjvf/application/vkz2ft2v1wlv5824qsg10qmh. The app was created with the CLI's own `createUserApplication` (org already has b2c-admin, and `sanity deploy -y` refuses to choose between creating and reusing), then deployed with `sanity deploy -y`. Access: Sanity offers no per-user app ACL (Applications API: only `dashboardStatus`/`visibility` default|unlisted|disabled; reading apps is the org-level `sanity.sdk.applications.read` grant), so the restriction is unlisted visibility plus the in-app allowlist (jarek@audiofast.pl, dev@kryptonum.eu). Dashboard-token spike still to be confirmed by opening the deployed app as dev@.
