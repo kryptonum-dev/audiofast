@@ -1,6 +1,6 @@
-import { EnvelopeIcon, LockIcon } from '@sanity/icons';
+import { LockIcon } from '@sanity/icons';
 import { useCurrentUser } from '@sanity/sdk-react';
-import { Button, Card, Flex, Heading, Spinner, Stack, Text } from '@sanity/ui';
+import { Card, Flex, Heading, Spinner, Stack, Text } from '@sanity/ui';
 import type { ReactNode } from 'react';
 
 import { appConfig } from '../config.js';
@@ -34,24 +34,14 @@ export function AccessGate({ children }: AccessGateProps) {
   }
 
   if (!isAllowedUser(user, appConfig.allowedUsers)) {
-    return <AccessDenied email={user.email ?? null} />;
+    return <AccessDenied />;
   }
 
   return <>{children}</>;
 }
 
-function accessRequestHref(email: string | null): string {
-  const { accessContact } = appConfig;
-  const subject = 'Dostęp do raportu pracy CMS';
-  const body = email
-    ? `Cześć, proszę o dostęp do raportu pracy CMS dla konta ${email}.`
-    : 'Cześć, proszę o dostęp do raportu pracy CMS.';
-  return `mailto:${accessContact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
-
 /** Shown to signed-in users outside the allowlist; mounts no data hooks. */
-function AccessDenied({ email }: { email: string | null }) {
-  const { accessContact } = appConfig;
+function AccessDenied() {
   return (
     <Flex align="center" className="appCentered" justify="center" padding={4}>
       <Card
@@ -74,26 +64,7 @@ function AccessDenied({ email }: { email: string | null }) {
               osoby wskazane przez Audiofast. Twoje konto nie jest na tej
               liście.
             </Text>
-            <Text muted size={2}>
-              {`Jeśli potrzebujesz dostępu, napisz do: ${accessContact.name}.`}
-            </Text>
           </Stack>
-          <Flex align="center" gap={4} wrap="wrap">
-            <Button
-              as="a"
-              href={accessRequestHref(email)}
-              icon={EnvelopeIcon}
-              mode="ghost"
-              rel="noreferrer"
-              target="_blank"
-              text="Poproś o dostęp"
-            />
-            {email ? (
-              <Text muted size={1}>
-                {`Zalogowano jako ${email}`}
-              </Text>
-            ) : null}
-          </Flex>
         </Stack>
       </Card>
     </Flex>
