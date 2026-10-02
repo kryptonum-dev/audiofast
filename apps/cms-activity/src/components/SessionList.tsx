@@ -1,6 +1,6 @@
 import { ChevronDownIcon, LaunchIcon } from '@sanity/icons';
 import { Badge, Button, Card, Flex, Heading, Stack, Text } from '@sanity/ui';
-import { type CSSProperties, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 
 import {
   assetSummary,
@@ -28,7 +28,6 @@ import {
   actionTimesTitle,
 } from './actions.js';
 import { Thumbnail, TypeIcon } from './Thumbnail.js';
-import { runViewTransition, transitionName } from './viewTransition.js';
 
 /** Field chips shown before the "+ N" toggle. */
 const VISIBLE_FIELDS = 4;
@@ -50,35 +49,19 @@ type Shared = {
   cdn: ImageCdnTarget;
 };
 
-/** Inline style carrying a `view-transition-name`, or nothing. */
-function vtStyle(name: string | undefined): CSSProperties | undefined {
-  return name ? ({ viewTransitionName: name } as CSSProperties) : undefined;
-}
-
-/** Shared transition names of one document between row and details. */
-type DocTransition = { thumb?: string; name?: string; badges?: string };
-
 function ActionBadges({
   actions,
   timeZone,
   limit,
-  transition,
 }: {
   actions: readonly ActionCount[];
   timeZone: string;
   limit?: number;
-  transition?: string;
 }) {
   const shown = limit ? actions.slice(0, limit) : actions;
   const hidden = actions.length - shown.length;
   return (
-    <Flex
-      align="center"
-      className="vtText"
-      gap={2}
-      style={vtStyle(transition)}
-      wrap="wrap"
-    >
+    <Flex align="center" gap={2} wrap="wrap">
       {shown.map((action) => (
         <Badge
           key={action.kind}
@@ -97,34 +80,22 @@ function DocumentName({
   group,
   doc,
   studioUrl,
-  transition,
 }: {
   group: DocumentGroup;
   doc: ResolvedDocument | undefined;
   studioUrl: string;
-  transition?: string;
 }) {
   const label = documentLabel(group.documentId, doc);
   const type = doc?.type ?? group.docType;
   if (!type || doc?.deleted) {
     return (
-      <Text
-        className="docBlock__name vtText"
-        size={2}
-        style={vtStyle(transition)}
-        weight="medium"
-      >
+      <Text className="docBlock__name" size={2} weight="medium">
         {label}
       </Text>
     );
   }
   return (
-    <Text
-      className="docBlock__name vtText"
-      size={2}
-      style={vtStyle(transition)}
-      weight="medium"
-    >
+    <Text className="docBlock__name" size={2} weight="medium">
       <a
         href={studioEditUrl(studioUrl, group.documentId, type)}
         rel="noreferrer noopener"
@@ -241,11 +212,9 @@ function EventTimes({
 function DocumentBlock({
   group,
   shared,
-  transition,
 }: {
   group: DocumentGroup;
   shared: Shared;
-  transition?: DocTransition;
 }) {
   const doc = shared.documents.get(group.documentId);
   const type = doc?.type ?? group.docType;
@@ -255,22 +224,12 @@ function DocumentBlock({
         assetId={doc?.imageRef ?? null}
         cdn={shared.cdn}
         size={THUMB_EXPANDED}
-        transitionName={transition?.thumb}
         type={type}
       />
       <Stack className="docBlock__body" space={3}>
         <Flex align="flex-start" gap={3} justify="space-between" wrap="wrap">
-          <DocumentName
-            doc={doc}
-            group={group}
-            studioUrl={shared.studioUrl}
-            transition={transition?.name}
-          />
-          <ActionBadges
-            actions={group.actions}
-            timeZone={shared.timeZone}
-            transition={transition?.badges}
-          />
+          <DocumentName doc={doc} group={group} studioUrl={shared.studioUrl} />
+          <ActionBadges actions={group.actions} timeZone={shared.timeZone} />
         </Flex>
         <Flex align="center" gap={2}>
           <Text muted size={1}>
@@ -317,27 +276,9 @@ function AssetLine({ view, shared }: { view: SessionView; shared: Shared }) {
 
 function SessionRow({ view, shared }: { view: SessionView; shared: Shared }) {
   const [open, setOpen] = useState(false);
-  const rowRef = useRef<HTMLLIElement>(null);
   const detailsId = useId();
   const summaryId = useId();
   const { session } = view;
-
-  // Names shared by the row summary and the details, so opening morphs the
-  // thumbnails (and, for one document, its name and badges) into place.
-  const single = view.documents.length === 1;
-  const transitions = new Map<string, DocTransition>(
-    view.documents.map((group, index) => [
-      group.documentId,
-      {
-        thumb:
-          index < ROW_THUMBNAILS
-            ? transitionName('vt-thumb', session.index, group.documentId)
-            : undefined,
-        name: single ? transitionName('vt-name', session.index) : undefined,
-        badges: single ? transitionName('vt-badges', session.index) : undefined,
-      },
-    ]),
-  );
 
   const names = view.documents.map((group) =>
     documentLabel(group.documentId, shared.documents.get(group.documentId)),
@@ -351,7 +292,7 @@ function SessionRow({ view, shared }: { view: SessionView; shared: Shared }) {
   }
 
   return (
-    <li className="sessionRow" ref={rowRef}>
+    <li className="sessionRow">
       <div className="sessionRow__summary">
         <button
           aria-controls={open ? detailsId : undefined}
@@ -359,9 +300,7 @@ function SessionRow({ view, shared }: { view: SessionView; shared: Shared }) {
           aria-expanded={open}
           aria-label={`${span} · ${meta.join(' · ')}`}
           className="sessionRow__toggle tabular"
-          onClick={() =>
-            runViewTransition(() => setOpen((value) => !value), rowRef.current)
-          }
+          onClick={() => setOpen((value) => !value)}
           title={summaryText}
           type="button"
         >
@@ -380,35 +319,19 @@ function SessionRow({ view, shared }: { view: SessionView; shared: Shared }) {
                     cdn={shared.cdn}
                     key={group.documentId}
                     size={THUMB_ROW}
-                    sourceSize={THUMB_EXPANDED}
-                    transitionName={transitions.get(group.documentId)?.thumb}
                     type={doc?.type ?? group.docType}
                   />
                 );
               })}
             </span>
           ) : null}
-          <span
-            className="sessionRow__names vtText"
-            style={vtStyle(
-              single
-                ? transitions.get(view.documents[0]!.documentId)?.name
-                : undefined,
-            )}
-          >
-            {summaryText}
-          </span>
+          <span className="sessionRow__names">{summaryText}</span>
         </div>
         <div className="sessionRow__badges" hidden={open}>
           <ActionBadges
             actions={view.actions}
             limit={SUMMARY_BADGES}
             timeZone={shared.timeZone}
-            transition={
-              single
-                ? transitions.get(view.documents[0]!.documentId)?.badges
-                : undefined
-            }
           />
         </div>
         <span className="sessionRow__index">{`sesja ${session.index}`}</span>
@@ -424,7 +347,6 @@ function SessionRow({ view, shared }: { view: SessionView; shared: Shared }) {
                     group={group}
                     key={group.documentId}
                     shared={shared}
-                    transition={transitions.get(group.documentId)}
                   />
                 ))}
               </Stack>

@@ -49,10 +49,6 @@ type ThumbnailProps = {
   /** Document type for the placeholder icon. */
   type?: string | null;
   cdn: ImageCdnTarget;
-  /** CSS pixels the image is requested at; defaults to `size`. */
-  sourceSize?: number;
-  /** `view-transition-name`, so the thumbnail can morph between places. */
-  transitionName?: string;
 };
 
 /**
@@ -60,22 +56,10 @@ type ThumbnailProps = {
  * `alt=""`). Falls back to a placeholder with the type icon when there is
  * no image or it fails to load.
  */
-export function Thumbnail({
-  assetId,
-  size,
-  type,
-  cdn,
-  sourceSize,
-  transitionName,
-}: ThumbnailProps) {
-  const url = assetId
-    ? imageThumbnailUrl(assetId, cdn, sourceSize ?? size)
-    : null;
+export function Thumbnail({ assetId, size, type, cdn }: ThumbnailProps) {
+  const url = assetId ? imageThumbnailUrl(assetId, cdn, size) : null;
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const style = {
-    '--thumb-size': `${size / 16}rem`,
-    viewTransitionName: transitionName,
-  } as CSSProperties;
+  const style = { '--thumb-size': `${size / 16}rem` } as CSSProperties;
 
   if (!url || failedUrl === url) {
     return (
@@ -98,6 +82,10 @@ export function Thumbnail({
       height={size}
       loading="lazy"
       onError={() => setFailedUrl(url)}
+      // Sanity hosting sends a stricter document Referrer-Policy than local
+      // dev; without an explicit policy cdn.sanity.io rejects the request
+      // (same fix as sanity-io/sanity#13665).
+      referrerPolicy="strict-origin-when-cross-origin"
       src={url}
       style={style}
       width={size}
