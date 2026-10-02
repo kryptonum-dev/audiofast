@@ -6,7 +6,8 @@ export default defineCliConfig({
     entry: './src/App.tsx',
     icon: './app-icon.svg',
     title: 'Raport pracy CMS',
-    visibility: 'unlisted',
+    // Listed for the whole org; the in-app allowlist decides who sees data.
+    visibility: 'default',
   },
   deployment: {
     appId: 'vkz2ft2v1wlv5824qsg10qmh',

@@ -10,7 +10,7 @@ The client (Audiofast) wants to see how much time an editor spends working in th
 
 - The app holds no secrets. All requests go to the project host with the logged-in user's own token (`useClient` from `@sanity/sdk-react`), so Sanity project roles are the security boundary.
 - On top of that, an in-app allowlist in `src/config.ts` (`allowedUsers`, matched by user id or case-insensitive email) decides who sees the report. Everyone else gets a "Brak dostępu do raportu" card and the app makes no History API request.
-- The app is deployed with `visibility: 'unlisted'`: it is not shown on the organization home page and is opened by direct link.
+- The app is deployed with `visibility: 'default'`: it is listed in the Dashboard for the whole organization, and the allowlist decides who sees data.
 
 To give another person access, add `{ id, email }` to `allowedUsers` in `src/config.ts` and redeploy.
 
@@ -49,9 +49,9 @@ Duplicate field names with different titles keep the first occurrence (documents
 
 ## Deploy
 
-**Status (2026-10-02): deployed** as app `vkz2ft2v1wlv5824qsg10qmh` (unlisted) in organization `o5BEPFjvf`: https://www.sanity.io/@o5BEPFjvf/application/vkz2ft2v1wlv5824qsg10qmh. Redeploy with `bun run deploy` from this folder; `deployment.appId` in `sanity.cli.ts` makes it update the same app. Nothing deploys automatically; there is no CI job for this app.
+**Status (2026-10-02): deployed** as app `vkz2ft2v1wlv5824qsg10qmh` (listed) in organization `o5BEPFjvf`: https://www.sanity.io/@o5BEPFjvf/application/vkz2ft2v1wlv5824qsg10qmh. Redeploy with `bun run deploy` from this folder; `deployment.appId` in `sanity.cli.ts` makes it update the same app. Nothing deploys automatically; there is no CI job for this app.
 
-Who can see it: Sanity has no per-user access list for SDK apps, only organization-wide Dashboard visibility (`default`, `unlisted`, `disabled`). The app is `unlisted`, so it is not shown on the organization home page and opens only by direct link. Anyone in the organization who has the link reaches the in-app gate, which shows "Brak dostępu do raportu" to everyone except the accounts in `allowedUsers` and makes no History API request for them.
+Who can see it: Sanity has no per-user access list for SDK apps, only organization-wide Dashboard visibility (`default`, `unlisted`, `disabled`). The app is listed (`default`), so everyone in the organization sees it in the Dashboard. Only the accounts in `allowedUsers` get the report; everyone else gets an explanation screen with the signed-in account and a "Poproś o dostęp" mail link to `accessContact` (both in `src/config.ts`), and the app makes no History API request for them.
 
 The steps below describe the first deploy, for redeploying elsewhere (for example another organization). In unattended mode (`-y`) the CLI refuses to create a new app when the organization already has one, so the first deploy has to be interactive.
 
@@ -71,7 +71,7 @@ The steps below describe the first deploy, for redeploying elsewhere (for exampl
    bun run deploy
    ```
 
-   `sanity.cli.ts` already sets `visibility: 'unlisted'` and the title "Raport pracy CMS", so the app is not listed on the organization home page and is opened by direct link.
+   `sanity.cli.ts` sets `visibility: 'default'` (listed for the whole organization) and the title "Raport pracy CMS".
 
 3. The first deploy prints the app id. Add it to `sanity.cli.ts` (replace the TODO comment) and commit it, so later deploys update the same app instead of creating a new one:
 

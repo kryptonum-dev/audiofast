@@ -38,6 +38,23 @@ button:disabled {
   min-height: 100dvh;
 }
 
+.accessDenied {
+  width: 100%;
+  max-width: 34rem;
+}
+
+.accessDenied__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  font-size: 1.75rem;
+  color: var(--app-muted-fg);
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+}
+
 .srOnly {
   position: absolute;
   width: 1px;
@@ -628,49 +645,6 @@ button:disabled {
   .docBlock {
     flex-direction: column;
   }
-}
-
-/* Opening a session: rows and day cards slide, shared elements morph. */
-.dayCard,
-.sessionRow {
-  view-transition-name: match-element;
-  view-transition-class: vt-box;
-}
-
-.thumb {
-  view-transition-class: vt-thumb;
-}
-
-.vtText {
-  view-transition-class: vt-text;
-}
-
-/*
- * The transition overlay covers the whole page while it runs. Let the pointer
- * through to the real page, so the cursor stays a pointer over buttons and
- * clicks keep working mid-animation.
- */
-::view-transition {
-  pointer-events: none;
-}
-
-::view-transition-group(*) {
-  animation-duration: 280ms;
-  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
-}
-
-/* Text keeps its natural size: it slides and cross-fades, never stretches. */
-::view-transition-old(*.vt-text),
-::view-transition-new(*.vt-text) {
-  width: auto;
-  height: auto;
-}
-
-::view-transition-old(*.vt-box),
-::view-transition-new(*.vt-box) {
-  height: auto;
-  object-fit: none;
-  object-position: top left;
 }
 
 @media (prefers-reduced-motion: reduce) {

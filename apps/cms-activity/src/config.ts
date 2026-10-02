@@ -16,6 +16,8 @@ export const appConfig = {
     { id: 'p54InZnMK', email: 'jarek@audiofast.pl' },
     { id: 'p3oltYQ6U', email: 'dev@kryptonum.eu' },
   ] satisfies AllowedUser[],
+  /** Shown to signed-in users outside `allowedUsers` as who to ask for access. */
+  accessContact: { name: 'Jarek Orszański', email: 'jarek@audiofast.pl' },
   limits: {
     maxRangeDays: 90,
     defaultRangeDays: 30,

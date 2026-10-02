@@ -1,5 +1,6 @@
+import { EnvelopeIcon, LockIcon } from '@sanity/icons';
 import { useCurrentUser } from '@sanity/sdk-react';
-import { Card, Flex, Heading, Spinner, Stack, Text } from '@sanity/ui';
+import { Button, Card, Flex, Heading, Spinner, Stack, Text } from '@sanity/ui';
 import type { ReactNode } from 'react';
 
 import { appConfig } from '../config.js';
@@ -33,22 +34,68 @@ export function AccessGate({ children }: AccessGateProps) {
   }
 
   if (!isAllowedUser(user, appConfig.allowedUsers)) {
-    return (
-      <Flex align="center" className="appCentered" justify="center" padding={4}>
-        <Card padding={5} radius={3} shadow={1} tone="caution">
-          <Stack space={4}>
-            <Heading as="h1" size={2}>
-              Brak dostępu do raportu
-            </Heading>
-            <Text muted size={2}>
-              Twoje konto nie ma uprawnień do tego raportu. Jeśli potrzebujesz
-              dostępu, skontaktuj się z administratorem.
-            </Text>
-          </Stack>
-        </Card>
-      </Flex>
-    );
+    return <AccessDenied email={user.email ?? null} />;
   }
 
   return <>{children}</>;
+}
+
+function accessRequestHref(email: string | null): string {
+  const { accessContact } = appConfig;
+  const subject = 'Dostęp do raportu pracy CMS';
+  const body = email
+    ? `Cześć, proszę o dostęp do raportu pracy CMS dla konta ${email}.`
+    : 'Cześć, proszę o dostęp do raportu pracy CMS.';
+  return `mailto:${accessContact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+/** Shown to signed-in users outside the allowlist; mounts no data hooks. */
+function AccessDenied({ email }: { email: string | null }) {
+  const { accessContact } = appConfig;
+  return (
+    <Flex align="center" className="appCentered" justify="center" padding={4}>
+      <Card
+        as="main"
+        border
+        className="accessDenied"
+        padding={[5, 5, 6]}
+        radius={4}
+      >
+        <Stack space={5}>
+          <span aria-hidden="true" className="accessDenied__icon">
+            <LockIcon />
+          </span>
+          <Stack space={4}>
+            <Heading as="h1" size={3}>
+              Raport pracy CMS jest dostępny tylko dla wybranych osób
+            </Heading>
+            <Text muted size={2}>
+              Raport pokazuje aktywność redaktorów w CMS i widzą go wyłącznie
+              osoby wskazane przez Audiofast. Twoje konto nie jest na tej
+              liście.
+            </Text>
+            <Text muted size={2}>
+              {`Jeśli potrzebujesz dostępu, napisz do: ${accessContact.name}.`}
+            </Text>
+          </Stack>
+          <Flex align="center" gap={4} wrap="wrap">
+            <Button
+              as="a"
+              href={accessRequestHref(email)}
+              icon={EnvelopeIcon}
+              mode="ghost"
+              rel="noreferrer"
+              target="_blank"
+              text="Poproś o dostęp"
+            />
+            {email ? (
+              <Text muted size={1}>
+                {`Zalogowano jako ${email}`}
+              </Text>
+            ) : null}
+          </Flex>
+        </Stack>
+      </Card>
+    </Flex>
+  );
 }
