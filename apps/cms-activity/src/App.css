@@ -424,7 +424,7 @@ body {
 }
 
 .sessionRow__details {
-  padding: 0.25rem 0 1.5rem 1.5rem;
+  padding: 1.25rem 0 1.75rem 1.5rem;
 }
 
 .docBlock {
@@ -535,8 +535,10 @@ body {
   font-weight: 600;
 }
 
-.assetLine {
-  padding-top: 1rem;
+/* Doubled class: Sanity UI's Flex resets padding/margin at class weight. */
+.assetLine.assetLine {
+  margin-top: 0.5rem;
+  padding-top: 1.25rem;
   border-top: 1px dashed color-mix(in srgb, currentColor 12%, transparent);
 }
 
@@ -614,6 +616,40 @@ body {
   .docBlock {
     flex-direction: column;
   }
+}
+
+/* Opening a session: rows and day cards slide, shared elements morph. */
+.dayCard,
+.sessionRow {
+  view-transition-name: match-element;
+  view-transition-class: vt-box;
+}
+
+.thumb {
+  view-transition-class: vt-thumb;
+}
+
+.vtText {
+  view-transition-class: vt-text;
+}
+
+::view-transition-group(*) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Text keeps its natural size: it slides and cross-fades, never stretches. */
+::view-transition-old(*.vt-text),
+::view-transition-new(*.vt-text) {
+  width: auto;
+  height: auto;
+}
+
+::view-transition-old(*.vt-box),
+::view-transition-new(*.vt-box) {
+  height: auto;
+  object-fit: none;
+  object-position: top left;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -49,6 +49,10 @@ type ThumbnailProps = {
   /** Document type for the placeholder icon. */
   type?: string | null;
   cdn: ImageCdnTarget;
+  /** CSS pixels the image is requested at; defaults to `size`. */
+  sourceSize?: number;
+  /** `view-transition-name`, so the thumbnail can morph between places. */
+  transitionName?: string;
 };
 
 /**
@@ -56,10 +60,22 @@ type ThumbnailProps = {
  * `alt=""`). Falls back to a placeholder with the type icon when there is
  * no image or it fails to load.
  */
-export function Thumbnail({ assetId, size, type, cdn }: ThumbnailProps) {
-  const url = assetId ? imageThumbnailUrl(assetId, cdn, size) : null;
+export function Thumbnail({
+  assetId,
+  size,
+  type,
+  cdn,
+  sourceSize,
+  transitionName,
+}: ThumbnailProps) {
+  const url = assetId
+    ? imageThumbnailUrl(assetId, cdn, sourceSize ?? size)
+    : null;
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
-  const style = { '--thumb-size': `${size / 16}rem` } as CSSProperties;
+  const style = {
+    '--thumb-size': `${size / 16}rem`,
+    viewTransitionName: transitionName,
+  } as CSSProperties;
 
   if (!url || failedUrl === url) {
     return (
