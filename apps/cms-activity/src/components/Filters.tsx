@@ -1,12 +1,5 @@
 import { SearchIcon } from '@sanity/icons';
-import {
-  Button,
-  Card,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-} from '@sanity/ui';
+import { Button, Card, Select, Stack, Text, TextInput } from '@sanity/ui';
 import type { ReactNode } from 'react';
 
 import type { FilterErrors, ReportFilters } from '../lib/filters.js';
@@ -88,7 +81,11 @@ export function Filters({
       >
         <Stack space={3}>
           <div className="filterBar">
-            <Field className="filterBar__person" id="filter-author" label="Osoba">
+            <Field
+              className="filterBar__person"
+              id="filter-author"
+              label="Osoba"
+            >
               <Select
                 disabled={people.length === 0}
                 id="filter-author"

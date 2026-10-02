@@ -90,7 +90,8 @@ export function DayTimeline({
 
           <ol aria-labelledby="timeline-heading" className="plainList">
             {days.map((day) => {
-              const target = day.firstSessionIndex ?? day.blocks[0]?.sessionIndex;
+              const target =
+                day.firstSessionIndex ?? day.blocks[0]?.sessionIndex;
               return (
                 <li key={day.date}>
                   <button
