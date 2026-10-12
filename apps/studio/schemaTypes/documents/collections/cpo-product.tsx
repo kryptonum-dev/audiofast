@@ -529,7 +529,7 @@ export const cpoProduct = defineType({
           name: 'productDetailContent',
           title: 'Szczegółowy opis',
           description:
-            'Opis egzemplarza. Dwie kolumny: wstaw „Podział: lewa | prawa kolumna” między treścią lewej i prawej kolumny. Powrót do jednej kolumny: wstaw „Przejście 1 ↔ 2 kolumny” za prawą kolumną.',
+            'Opis egzemplarza. Części opisu oddzielaj „Nową sekcją”. Część z „Podziałem kolumn” ma dwie kolumny (lewa nad podziałem, prawa pod nim), część bez niego ma jedną.',
           optional: true,
           include: {
             styles: ['normal', 'h3'],

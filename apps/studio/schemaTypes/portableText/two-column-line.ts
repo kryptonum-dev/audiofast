@@ -4,10 +4,10 @@ import { defineField, defineType } from 'sanity';
 export const ptTwoColumnLine = defineType({
   name: 'ptTwoColumnLine',
   type: 'object',
-  title: 'Przejście 1 ↔ 2 kolumny',
+  title: 'Nowa sekcja',
   icon: SplitHorizontalIcon,
   description:
-    'Przełącza układ między jedną a dwiema kolumnami. Wstaw za treścią prawej kolumny, żeby dalszy tekst wyświetlał się w jednej kolumnie. Wstaw przed treścią lewej kolumny, jeśli nad sekcją dwukolumnową jest tekst w jednej kolumnie (bez tego trafi on do lewej kolumny).',
+    'Kończy jedną część opisu i zaczyna następną. Część z „Podziałem kolumn” ma dwie kolumny, część bez niego ma jedną.',
   fields: [
     defineField({
       name: 'style',
@@ -20,9 +20,8 @@ export const ptTwoColumnLine = defineType({
   ],
   preview: {
     prepare: () => ({
-      title: 'Przejście 1 ↔ 2 kolumny',
-      subtitle:
-        'Za prawą kolumną: powrót do 1 kolumny. Przed lewą kolumną: start 2 kolumn.',
+      title: 'Nowa sekcja',
+      subtitle: 'Tu kończy się jedna część opisu i zaczyna następna',
       media: SplitHorizontalIcon,
     }),
   },

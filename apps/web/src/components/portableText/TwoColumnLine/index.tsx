@@ -2,9 +2,8 @@ import styles from './styles.module.scss';
 
 /**
  * TwoColumnLine component for portable text
- * Acts as a boundary marker for two-column sections.
- * Content between two TwoColumnLine markers is displayed in two columns.
- * The actual layout logic is handled by the parent UnifiedContentBlocks component.
+ * Section boundary ("Nowa sekcja" in Studio): ends the current section.
+ * The layout logic lives in UnifiedContentBlocks/split-into-sections.ts.
  */
 export function TwoColumnLineComponent() {
   return (

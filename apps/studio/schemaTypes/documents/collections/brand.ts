@@ -103,7 +103,7 @@ export const brand = defineType({
       name: 'brandDetailContent',
       title: 'Szczegółowy opis',
       description:
-        'Opis marki. Dwie kolumny: wstaw „Podział: lewa | prawa kolumna” między treścią lewej i prawej kolumny. Powrót do jednej kolumny: wstaw „Przejście 1 ↔ 2 kolumny” za prawą kolumną.',
+        'Opis marki. Części opisu oddzielaj „Nową sekcją”. Część z „Podziałem kolumn” ma dwie kolumny (lewa nad podziałem, prawa pod nim), część bez niego ma jedną.',
       group: GROUP.MAIN_CONTENT,
       optional: true,
       include: {
