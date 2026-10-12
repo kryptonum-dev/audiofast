@@ -80,6 +80,8 @@ export const brand = defineType({
       name: 'brandContentBlocks',
       title: 'Szczegółowy opis (stary format)',
       type: 'array',
+      // Legacy: every brand has brandDetailContent and the site renders that first
+      hidden: true,
       description:
         "⚠️ STARY FORMAT - Użyj pola 'Szczegółowy opis' poniżej. To pole pozostaje dla kompatybilności wstecznej.",
       group: GROUP.MAIN_CONTENT,
@@ -101,7 +103,7 @@ export const brand = defineType({
       name: 'brandDetailContent',
       title: 'Szczegółowy opis',
       description:
-        "Zunifikowana treść marki. Użyj 'Sekcja dwukolumnowa' do oznaczenia początku i końca sekcji dwukolumnowych, a 'Podział kolumn' do rozdzielenia lewej i prawej kolumny.",
+        'Opis marki. Dwie kolumny: wstaw „Podział: lewa | prawa kolumna” między treścią lewej i prawej kolumny. Powrót do jednej kolumny: wstaw „Przejście 1 ↔ 2 kolumny” za prawą kolumną.',
       group: GROUP.MAIN_CONTENT,
       optional: true,
       include: {

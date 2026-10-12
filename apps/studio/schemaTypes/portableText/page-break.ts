@@ -4,10 +4,10 @@ import { defineField, defineType } from 'sanity';
 export const ptPageBreak = defineType({
   name: 'ptPageBreak',
   type: 'object',
-  title: 'Podział kolumn',
+  title: 'Podział: lewa | prawa kolumna',
   icon: SplitHorizontalIcon,
   description:
-    'Wskazuje podział treści na dwie kolumny. Treść przed tym elementem wyświetli się w lewej kolumnie, a treść po nim w prawej kolumnie.',
+    'Rozdziela lewą i prawą kolumnę. Treść nad nim trafia do lewej kolumny, treść pod nim do prawej, aż do znacznika „Przejście 1 ↔ 2 kolumny” albo końca opisu.',
   fields: [
     defineField({
       name: 'style',
@@ -20,8 +20,9 @@ export const ptPageBreak = defineType({
   ],
   preview: {
     prepare: () => ({
-      title: 'Podział kolumn',
-      subtitle: 'Treść przed → lewa kolumna | Treść po → prawa kolumna',
+      title: 'Podział: lewa | prawa kolumna',
+      subtitle:
+        'Wyżej lewa kolumna, niżej prawa (do „Przejścia 1 ↔ 2 kolumny” albo końca opisu)',
       media: SplitHorizontalIcon,
     }),
   },

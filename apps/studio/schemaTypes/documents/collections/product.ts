@@ -180,6 +180,8 @@ export const product = defineType({
           name: 'content',
           title: 'Treść szczegółów (stary format)',
           type: 'array',
+          // Legacy: every product has productDetailContent and the site renders that first
+          hidden: true,
           description:
             "⚠️ STARY FORMAT - Użyj pola 'Treść zunifikowana' poniżej. To pole pozostaje dla kompatybilności wstecznej.",
           of: [
@@ -200,7 +202,7 @@ export const product = defineType({
           name: 'productDetailContent',
           title: 'Szczegółowy opis',
           description:
-            "Zunifikowana treść produktu. Użyj 'Sekcja dwukolumnowa' do oznaczenia początku i końca sekcji dwukolumnowych, a 'Podział kolumn' do rozdzielenia lewej i prawej kolumny.",
+            'Opis produktu. Dwie kolumny: wstaw „Podział: lewa | prawa kolumna” między treścią lewej i prawej kolumny. Powrót do jednej kolumny: wstaw „Przejście 1 ↔ 2 kolumny” za prawą kolumną.',
           optional: true,
           include: {
             styles: ['normal', 'h3'],

@@ -4,10 +4,10 @@ import { defineField, defineType } from 'sanity';
 export const ptTwoColumnLine = defineType({
   name: 'ptTwoColumnLine',
   type: 'object',
-  title: 'Granica sekcji dwukolumnowej',
+  title: 'Przejście 1 ↔ 2 kolumny',
   icon: SplitHorizontalIcon,
   description:
-    'Oznacza przejście między układem jednokolumnowym a dwukolumnowym. Użyj PRZED sekcją dwukolumnową (jeśli poprzedza ją tekst jednokolumnowy) lub PO niej (jeśli następuje po niej tekst jednokolumnowy). Nie potrzebne jeśli treść zaczyna lub kończy się sekcją dwukolumnową.',
+    'Przełącza układ między jedną a dwiema kolumnami. Wstaw za treścią prawej kolumny, żeby dalszy tekst wyświetlał się w jednej kolumnie. Wstaw przed treścią lewej kolumny, jeśli nad sekcją dwukolumnową jest tekst w jednej kolumnie (bez tego trafi on do lewej kolumny).',
   fields: [
     defineField({
       name: 'style',
@@ -20,8 +20,9 @@ export const ptTwoColumnLine = defineType({
   ],
   preview: {
     prepare: () => ({
-      title: '══ Granica sekcji dwukolumnowej ══',
-      subtitle: 'Przejście między układem 1-kolumnowym a 2-kolumnowym',
+      title: 'Przejście 1 ↔ 2 kolumny',
+      subtitle:
+        'Za prawą kolumną: powrót do 1 kolumny. Przed lewą kolumną: start 2 kolumn.',
       media: SplitHorizontalIcon,
     }),
   },

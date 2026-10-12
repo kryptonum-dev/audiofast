@@ -528,6 +528,8 @@ export const cpoProduct = defineType({
         customPortableText({
           name: 'productDetailContent',
           title: 'Szczegółowy opis',
+          description:
+            'Opis egzemplarza. Dwie kolumny: wstaw „Podział: lewa | prawa kolumna” między treścią lewej i prawej kolumny. Powrót do jednej kolumny: wstaw „Przejście 1 ↔ 2 kolumny” za prawą kolumną.',
           optional: true,
           include: {
             styles: ['normal', 'h3'],
