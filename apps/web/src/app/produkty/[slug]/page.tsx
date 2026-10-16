@@ -21,10 +21,16 @@ import {
   getStandardProductBuyability,
 } from '@/src/global/b2c/utils/buyability';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
+import {
+  getBrandStoresTag,
+  needsBrandStores,
+  pickEffectiveStores,
+} from '@/src/global/products/brand-stores';
 import { sanityFetch } from '@/src/global/sanity/fetch';
 import {
   queryAllProductSlugs,
   queryArchivedProductCta,
+  queryBrandStoresById,
   queryProductBySlug,
   queryProductInquiryFormState,
   queryProductSeoBySlug,
@@ -32,6 +38,7 @@ import {
 import type {
   QueryAllProductSlugsResult,
   QueryArchivedProductCtaResult,
+  QueryBrandStoresByIdResult,
   QueryProductBySlugResult,
   QueryProductInquiryFormStateResult,
   QueryProductSeoBySlugResult,
@@ -61,6 +68,19 @@ async function fetchProductData(slug: string) {
   ]);
 
   return { sanityData, pricingData, formStateData };
+}
+
+// The brand's dealer list lives in its own cache entry, tagged
+// `brand-stores:<brandId>`, so a brand or store publish refreshes it on every
+// product page that inherits it — without expiring the product data above.
+async function fetchBrandStores(brandId: string | null | undefined) {
+  if (!brandId) return null;
+
+  return sanityFetch<QueryBrandStoresByIdResult>({
+    query: queryBrandStoresById,
+    params: { brandId },
+    tags: ['brand-stores', getBrandStoresTag(brandId)],
+  });
 }
 
 export async function generateStaticParams() {
@@ -145,13 +165,15 @@ export default async function ProductPage(props: ProductPageProps) {
   const categorySlugs =
     product.categories?.map((category) => category?.slug).filter(Boolean) ?? [];
 
-  // Determine which stores to display (product stores > brand stores > none)
-  const effectiveStores =
-    product.availableInStores && product.availableInStores.length > 0
-      ? product.availableInStores
-      : product.brand?.stores && product.brand.stores.length > 0
-        ? product.brand.stores
-        : null;
+  // Determine which stores to display (product stores > brand stores > none).
+  // The brand's list is only fetched when the product has no own stores.
+  const brandStores = needsBrandStores(product.availableInStores)
+    ? await fetchBrandStores(product.brand?._id)
+    : null;
+  const effectiveStores = pickEffectiveStores(
+    product.availableInStores,
+    brandStores,
+  );
 
   // Breadcrumbs data
   const breadcrumbsData = [
@@ -264,10 +286,7 @@ export default async function ProductPage(props: ProductPageProps) {
         />
       )}
       {effectiveStores && effectiveStores.length > 0 && (
-        <StoreLocations
-          customId="gdzie-kupic"
-          stores={effectiveStores.filter((s) => s !== null)}
-        />
+        <StoreLocations customId="gdzie-kupic" stores={effectiveStores} />
       )}
       {product.reviews && (
         <FeaturedPublications

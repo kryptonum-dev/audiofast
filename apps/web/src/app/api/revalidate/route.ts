@@ -3,6 +3,8 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
+import { getBrandStoresTag } from '@/src/global/products/brand-stores';
+
 /**
  * Request payload types for the revalidation API.
  *
@@ -88,7 +90,8 @@ const REVERSE_LOOKUP_TYPES = new Set([
   'productCategoryParent',
   // Stores are referenced by brand documents ("Gdzie kupić"), so a store edit
   // has to reach the brand pages that list it — via `brand:<slug>` rather than
-  // the broad `brand` tag.
+  // the broad `brand` tag — and the product pages that inherit those brands'
+  // dealer lists, via `brand-stores:<brandId>`.
   'store',
 ]);
 
@@ -157,15 +160,23 @@ async function getReferencingDocumentTags(
   try {
     const references = await client.fetch<
       Array<{
+        _id: string;
         _type: string;
         slug: string | null;
       }>
     >(
-      `*[references($id) && _type in ["product", "cpoProduct", "page", "homePage", "cpoPage", "review", "blog-article", "brand"] && !(_id in path("drafts.**"))]{ _type, "slug": slug.current }`,
+      `*[references($id) && _type in ["product", "cpoProduct", "page", "homePage", "cpoPage", "review", "blog-article", "brand"] && !(_id in path("drafts.**"))]{ _id, _type, "slug": slug.current }`,
       { id: docId },
     );
 
     for (const ref of references) {
+      // A store edit changes the dealer list of every brand that lists it, and
+      // that list is embedded on all of the brand's product pages under
+      // `brand-stores:<brandId>` (independent of the brand's slug).
+      if (docType === 'store' && ref._type === 'brand' && ref._id) {
+        tags.push(getBrandStoresTag(ref._id));
+      }
+
       // Handle singleton types (no slug needed)
       if (ref._type === 'homePage') {
         tags.push('homePage');
@@ -379,7 +390,8 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   // Brands: brand listing + the shared filter sidebar (which lists brands).
   // The edited brand's own page is invalidated through `brand:<slug>` added by
   // getBrandOwnTags() — deliberately NOT the broad `brand` tag, which would
-  // expire all ~41 brand shells for a single-brand edit.
+  // expire all ~41 brand shells for a single-brand edit. The dealer list on
+  // the brand's product pages is refreshed via `brand-stores:<brandId>`.
   brand: ['brands', 'filter-metadata'],
 
   // Reviews: Also invalidate homePage (latest/featured publication blocks use dynamic queries)
@@ -405,7 +417,9 @@ const TYPE_DEPENDENCY_MAP: Record<string, string[]> = {
   reviewAuthor: ['reviewAuthor'],
   faq: ['faq'],
   // Stores appear on brand pages, but only on the brands that reference them —
-  // resolved to `brand:<slug>` by the reverse lookup instead of the broad tag.
+  // resolved to `brand:<slug>` (brand page) and `brand-stores:<brandId>`
+  // (product pages inheriting the dealer list) by the reverse lookup instead
+  // of the broad tag.
   store: ['store'],
   award: ['award'],
 
@@ -601,6 +615,12 @@ export async function POST(request: NextRequest) {
       // instead of the broad `brand` tag (which covers every brand shell).
       if (doc._type === 'brand') {
         if (doc._id) {
+          // The brand's dealer list is embedded on every product page that
+          // inherits it (cached under `brand-stores:<brandId>`). Those pages
+          // are collateral, so stale-while-revalidate. It is a dedicated tag
+          // rather than `brand:<slug>`: that one is expired immediately and
+          // would turn every product page of the brand into a blocking render.
+          addTag(tags, getBrandStoresTag(doc._id));
           reverseLookupTasks.push(getBrandOwnTags(doc._id, doc.slug));
         } else {
           // No document id to look the slug up with — use whatever the payload
