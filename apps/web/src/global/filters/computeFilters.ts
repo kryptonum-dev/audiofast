@@ -1,3 +1,4 @@
+import { matchesProductSearch, parseProductSearch } from './productSearch';
 import type {
   ActiveFilters,
   ActiveRangeFilter,
@@ -18,17 +19,15 @@ function filterProducts(
     maxPrice?: number;
     customFilters?: CustomFilterValue[];
     rangeFilters?: ActiveRangeFilter[];
-    search?: string; // TEXT-ONLY: Filter by product name
+    search?: string; // Brand + product name, see productSearch.ts
   },
 ): ProductFilterMetadata[] {
   let filtered = products;
 
-  // Apply search filter (TEXT-ONLY: matches product name)
-  if (options.search && options.search.trim()) {
-    const searchLower = options.search.trim().toLowerCase();
-    filtered = filtered.filter(
-      (p) => p.name && p.name.toLowerCase().includes(searchLower),
-    );
+  // Apply search filter (brand + product name, same matcher as the listing)
+  const search = parseProductSearch(options.search ?? '');
+  if (search) {
+    filtered = filtered.filter((p) => matchesProductSearch(p, search));
   }
 
   // Apply category filter
@@ -157,7 +156,7 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    search: activeFilters.search, // TEXT-ONLY: Filter brands by search
+    search: activeFilters.search, // Filter brands by search
   });
 
   const brandCounts = new Map<string, number>();
@@ -177,7 +176,7 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    search: activeFilters.search, // TEXT-ONLY: Filter categories by search
+    search: activeFilters.search, // Filter categories by search
   });
 
   const categoryCounts = new Map<string, number>();
@@ -207,7 +206,7 @@ export function computeAvailableFilters(
     // maxPrice: EXCLUDED
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    search: activeFilters.search, // TEXT-ONLY: Filter price range by search
+    search: activeFilters.search, // Filter price range by search
   });
 
   const prices = productsForPriceRange
@@ -225,7 +224,7 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     rangeFilters: activeFilters.rangeFilters,
-    search: activeFilters.search, // TEXT-ONLY: Include search in total count
+    search: activeFilters.search, // Include search in total count
   });
 
   // Products filtered by everything EXCEPT custom dropdown filters
@@ -239,7 +238,7 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     // customFilters: EXCLUDED - will be applied per-filter inside computeCustomFilterValues
     rangeFilters: activeFilters.rangeFilters,
-    search: activeFilters.search, // TEXT-ONLY: Filter dropdown options by search
+    search: activeFilters.search, // Filter dropdown options by search
   });
 
   // Compute custom filter values
@@ -259,7 +258,7 @@ export function computeAvailableFilters(
     maxPrice: activeFilters.maxPrice,
     customFilters: activeFilters.customFilters,
     // rangeFilters: EXCLUDED - will be applied per-filter inside computeRangeFilterBounds
-    search: activeFilters.search, // TEXT-ONLY: Filter range bounds by search
+    search: activeFilters.search, // Filter range bounds by search
   });
 
   // Compute range filter bounds

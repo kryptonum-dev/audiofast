@@ -2109,40 +2109,43 @@ export const queryProductsPageData = defineQuery(`
 // OPTIMIZED: Uses denormalized fields for faster queries (no dereferencing)
 // - Category/Brand filtering uses denormalized fields (major perf win)
 // - Custom filters use original customFilterValues (rarely used, minimal impact)
-// Parameters:
-// - $customFilters: array of {filterName, value} objects for dropdown filters
+// The GROQ below is kept free of comments: it is sent twice per listing request
+// and the URL-encoded query plus params must stay under @sanity/client's GET
+// limit (~11k chars) or the request falls back to POST.
+// Conditions, in order:
+// - base listing set (same as queryAllProductsFilterMetadata), excluding
+//   products from hidden brands (doNotShowBrand == true)
+// - $category: denormalized denormCategorySlugs
+// - $search / $searchTiers: text search is matched in JS (global/filters/productSearch.ts,
+//   brand + product name, any word order, fragments). ProductsListing passes the
+//   matching ids grouped into PRODUCT_SEARCH_TIER_COUNT (4) relevance tiers;
+//   $search is "" when there is no search.
+// - $brands: denormalized denormBrandSlug
+// - $minPrice/$maxPrice: basePriceCents
+// - $customFilters: array of {filterName, value} for dropdown filters (ALL must match)
 // - $rangeFilters: array of {filterName, minValue, maxValue} for range filters
-//   Note: minValue/maxValue can be null to indicate "no limit"
+//   (minValue/maxValue can be null to indicate "no limit"); not denormalized,
+//   as they require dynamic min/max comparison
 const productsFilterConditions = /* groq */ `
   _type == "product"
   && defined(slug.current)
   && isArchived != true
   && defined(denormCategorySlugs)
   && count(denormCategorySlugs) > 0
-  
-  // Exclude products from hidden brands (doNotShowBrand == true)
   && brand->doNotShowBrand != true
-  
-  // Category filter - uses denormalized denormCategorySlugs (no dereferencing)
   && ($category == "" || $category in denormCategorySlugs)
-  
-  // Search filter - TEXT-ONLY MODE: only matches product name (not subtitle, brand, description)
-  // To re-enable broader search with embeddings, change back to:
-  // && ($search == "" || count($embeddingResults) > 0 || [name, subtitle, denormBrandName, pt::text(shortDescription)] match $search)
-  && ($search == "" || name match $search + "*")
-  
-  // Brand filter - uses denormalized denormBrandSlug (no dereferencing, no string::split)
+  && (
+    $search == ""
+    || _id in $searchTiers[0]
+    || _id in $searchTiers[1]
+    || _id in $searchTiers[2]
+    || _id in $searchTiers[3]
+  )
   && (count($brands) == 0 || denormBrandSlug in $brands)
-  
-  // Price filter - same as before (already fast, just numeric comparison)
   && (
     ($minPrice == 0 && $maxPrice == 999999999) ||
     (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
   )
-  
-  // DROPDOWN FILTERS - uses original customFilterValues (kept for compatibility)
-  // $customFilters is an array of {filterName, value} objects
-  // Note: Not denormalized since custom filters are rarely used (only on category pages)
   && (
     count($customFilters) == 0 ||
     count($customFilters) <= count(customFilterValues[
@@ -2152,9 +2155,6 @@ const productsFilterConditions = /* groq */ `
       )
     ])
   )
-  
-  // RANGE FILTERS - still uses customFilterValues (numeric comparison, no deref needed)
-  // Range filters cannot be pre-computed as they require dynamic min/max comparison
   && (
     count($rangeFilters) == 0 ||
     count($rangeFilters) <= count(customFilterValues[
@@ -2168,9 +2168,6 @@ const productsFilterConditions = /* groq */ `
       )
     ])
   )
-
-  // Embeddings search - same as before
-  && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
 `;
 
 // Shared projection fields for products (the {...} block)
@@ -2206,17 +2203,21 @@ const productsProjection = /* groq */ `
   ${imageFragmentLite('"mainImage": previewImage')}
 `;
 
-// Shared inline score calculation for relevance sorting
-const productsRelevanceScore = /* groq */ `
+// Relevance sorting: search tier first (0 = best, see productSearch.ts),
+// editorial order within a tier. Without a search every product lands in the
+// fallback tier, so the order is plain orderRank.
+const productsRelevanceOrder = /* groq */ `
   select(
-    count($embeddingResults) > 0 => $embeddingResults[value.documentId == ^._id][0].score,
-    0
-  )
+    _id in $searchTiers[0] => 0,
+    _id in $searchTiers[1] => 1,
+    _id in $searchTiers[2] => 2,
+    3
+  ) asc,
+  orderRank asc
 `;
 
 // Reusable fragment for products listing logic
 // This avoids code duplication across different sort queries
-// NEW: Added support for embeddings-based semantic search via $embeddingResults parameter
 const productsListingFragment = (orderClause: string) => /* groq */ `
   {
     "products": *[${productsFilterConditions}] | order(${orderClause}) [$offset...$limit] {
@@ -2229,7 +2230,8 @@ const productsListingFragment = (orderClause: string) => /* groq */ `
 // Query for products listing (filtered and paginated)
 // Parameters:
 // - $category: category slug (optional) - empty string "" for all products
-// - $search: search term (optional) - empty string "" for no search
+// - $search: normalized search term (optional) - empty string "" for no search
+// - $searchTiers: 4 arrays of matching product ids, best tier first (see productSearch.ts)
 // - $offset: pagination offset (e.g., 0, 12, 24)
 // - $limit: pagination limit (e.g., 12)
 // - $brands: array of brand names/slugs (optional) - empty array [] for all brands
@@ -2266,7 +2268,7 @@ export const queryProductsListingOrderRank = defineQuery(
 // Special query for relevance sorting that calculates score inline
 const productsListingRelevanceFragment = /* groq */ `
   {
-    "products": *[${productsFilterConditions}] | order(${productsRelevanceScore} desc) [$offset...$limit] {
+    "products": *[${productsFilterConditions}] | order(${productsRelevanceOrder}) [$offset...$limit] {
       ${productsProjection}
     },
     "totalCount": count(*[${productsFilterConditions}])

@@ -18,7 +18,19 @@ beforeEach(() => {
   legacyMock.mockReset();
 });
 it('keeps product search lexical with the same filters and no embedding candidates', async () => {
-  fetchMock.mockResolvedValue({ products: [], totalCount: 0 });
+  fetchMock
+    .mockResolvedValueOnce({
+      products: [
+        {
+          _id: 'p1',
+          name: 'Alexia V',
+          brandName: 'Wilson Audio',
+          brandSlug: 'wilson',
+          allCategorySlugs: [],
+        },
+      ],
+    })
+    .mockResolvedValueOnce({ products: [], totalCount: 0 });
   await ProductsListing({
     searchParams: Promise.resolve({
       search: 'Wilson',
@@ -28,13 +40,13 @@ it('keeps product search lexical with the same filters and no embedding candidat
     basePath: '/produkty/',
   });
   expect(legacyMock).not.toHaveBeenCalled();
-  const request = fetchMock.mock.calls[0]![0];
+  const request = fetchMock.mock.calls[1]![0];
   expect(request.params).toMatchObject({
-    search: 'Wilson',
+    search: 'wilson',
+    searchTiers: [[], [], ['p1'], []],
     brands: ['wilson'],
     minPrice: 100,
-    embeddingResults: [],
   });
-  expect(request.query).toContain('name match');
+  expect(request.query).toContain('$searchTiers');
   expect(request.query).not.toContain('semanticSimilarity');
 });

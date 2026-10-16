@@ -79,6 +79,14 @@ export default async function CpoProductsListing(
   };
   const searchParamsPromise = Promise.resolve(normalizedParams);
 
+  // The CPO listing query (cpoFilterConditions) still searches the product
+  // name only, so the sidebar must not match brand names either — otherwise
+  // its counts would promise CPO products the listing never returns.
+  const cpoSearchMetadata = filterMetadata.products.map((product) => ({
+    ...product,
+    brandName: null,
+  })) as unknown as ProductFilterMetadata[];
+
   return (
     <ProductsLoadingProvider>
       <section
@@ -86,9 +94,7 @@ export default async function CpoProductsListing(
         className={`${styles.productsListing} max-width`}
       >
         <ProductsAside
-          allProductsMetadata={
-            filterMetadata.products as unknown as ProductFilterMetadata[]
-          }
+          allProductsMetadata={cpoSearchMetadata}
           allCategories={[]}
           allBrands={filterMetadata.brands as unknown as BrandMetadata[]}
           globalMaxPrice={maxPrice}
@@ -101,6 +107,7 @@ export default async function CpoProductsListing(
             priceRange: true,
           }}
           headingLevel="h3"
+          searchPlaceholder="Szukaj"
         />
 
         <SortDropdown

@@ -56,6 +56,8 @@ type ProductsAsideProps = {
   visibleFilters?: VisibleFilters;
   hideBrandFilter?: boolean;
   headingLevel?: 'h2' | 'h3';
+  /** Search input placeholder — product listings also match the brand name */
+  searchPlaceholder?: string;
 
   // Custom filters configuration (for range filter support)
   filterDefinitions?: CustomFilterDefinition[];
@@ -77,6 +79,7 @@ export default function ProductsAside({
   },
   hideBrandFilter = false,
   headingLevel = 'h2',
+  searchPlaceholder = 'Szukaj produktu lub marki',
   filterDefinitions = EMPTY_FILTER_DEFINITIONS,
 }: ProductsAsideProps) {
   const router = useRouter();
@@ -771,7 +774,7 @@ export default function ProductsAside({
               setLocalFilters((prev) => ({ ...prev, search: value }))
             }
             onSubmit={applyFilters}
-            placeholder="Szukaj"
+            placeholder={searchPlaceholder}
           />
         )}
 
