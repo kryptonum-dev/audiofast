@@ -365,6 +365,17 @@ const brandFragment = (name: string = 'brand') => /* groq */ `
   ${imageFragment('logo')},
   }
 `;
+// Commerce fields shared by every projection that feeds ProductCard: the price
+// (with the "od" prefix flag) and the online-sale flag that gates the tile's
+// add-to-cart button. Keep the four card projections in sync through this one
+// constant (productFragment, productProjection, productsProjection and the
+// review's inline product).
+const productCardCommerceFields = /* groq */ `
+  basePriceCents,
+  hasMultiplePrices,
+  isSellableOnline
+`;
+
 // Reusable product fragment for product listings
 const productFragment = (name: string = 'product'): string => /* groq */ `
   ${name} {
@@ -374,8 +385,7 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   "slug": slug.current,
   name,
   subtitle,
-  basePriceCents,
-  hasMultiplePrices,
+  ${productCardCommerceFields},
   isArchived,
   categories[]->{
     _id,
@@ -657,8 +667,7 @@ const productProjection = /* groq */ `
   "slug": slug.current,
   name,
   subtitle,
-  basePriceCents,
-  hasMultiplePrices,
+  ${productCardCommerceFields},
   isArchived,
   categories[]->{
     _id,
@@ -1418,7 +1427,7 @@ export const queryReviewBySlug =
     "slug": slug.current,
     name,
     subtitle,
-    basePriceCents,
+    ${productCardCommerceFields},
     isArchived,
     "brand": brand->{
       name,
@@ -2189,8 +2198,7 @@ const productsProjection = /* groq */ `
   name,
   subtitle,
   "slug": slug.current,
-  basePriceCents,
-  hasMultiplePrices,
+  ${productCardCommerceFields},
   "categories": categories[]->{
     name,
     "slug": slug.current
@@ -2490,6 +2498,25 @@ export const queryProductBySlug = defineQuery(/* groq */ `
         null
       )
     }
+  }
+`);
+
+// Minimal product data for the tile's quick add-to-cart (server action
+// loadProductQuickAdd). Same image/brand fragments as queryProductBySlug so the
+// cart line snapshot matches one added on the product page. $slug is the full
+// route slug ("/produkty/<slug>/"), cached under the product page's tags.
+export const queryProductQuickAddBySlug = defineQuery(/* groq */ `
+  *[_type == "product" && slug.current == $slug][0] {
+    _id,
+    name,
+    isSellableOnline,
+    isReturnable,
+    isArchived,
+    brand->{
+      name,
+      ${imageFragment('logo')}
+    },
+    ${imageFragment('previewImage')}
   }
 `);
 

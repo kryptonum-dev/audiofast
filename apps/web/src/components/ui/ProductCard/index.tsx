@@ -1,10 +1,12 @@
 import Link from 'next/link';
 
 import type { ProductType } from '@/src/global/types';
+import { formatPrice } from '@/src/global/utils';
 
 import Image from '../../shared/Image';
 import Button from '../Button';
 import AddToComparisonButton from './AddToComparisonButton';
+import ProductCardAddToCart from './ProductCardAddToCart';
 import styles from './styles.module.scss';
 
 interface ProductCardProps {
@@ -12,6 +14,8 @@ interface ProductCardProps {
   headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
   showButton?: boolean;
+  /** Shows "Dodaj do koszyka" for products sold online. Defaults to `showButton`. */
+  showCartButton?: boolean;
   layout?: 'horizontal' | 'vertical';
   priority?: boolean;
   loading?: 'eager' | 'lazy';
@@ -23,6 +27,7 @@ export default function ProductCard({
   imageSizes = '400px',
   headingLevel = 'h3',
   showButton = true,
+  showCartButton = showButton,
   priority = false,
   loading = 'lazy',
 }: ProductCardProps) {
@@ -32,6 +37,7 @@ export default function ProductCard({
     subtitle,
     basePriceCents,
     hasMultiplePrices,
+    isSellableOnline,
     brand,
     mainImage,
     _id,
@@ -39,22 +45,29 @@ export default function ProductCard({
   } = product;
   const Heading = headingLevel;
   const productHref = typeof slug === 'string' && slug.length > 0 ? slug : null;
-  const hasLink = productHref !== null;
+  const brandName = brand?.name ?? '';
+  const productName = name ?? '';
+  const hasPrice = typeof basePriceCents === 'number' && basePriceCents > 0;
 
-  // Format price for display (converting cents to PLN)
-  const formatPrice = (priceCents: number | null | undefined) => {
-    if (!priceCents || priceCents === 0) return 'Brak ceny';
-    const priceInPLN = priceCents / 100;
-    return new Intl.NumberFormat('pl-PL', {
-      style: 'currency',
-      currency: 'PLN',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(priceInPLN);
-  };
+  // The whole tile stays clickable through the stretched title link
+  // (.link::after); the action buttons sit above that overlay, outside the
+  // link, so the markup has no interactive elements nested in <a>.
+  const showLearnMore = showButton && productHref !== null;
+  const showAddToCart =
+    showCartButton &&
+    productHref !== null &&
+    isSellableOnline === true &&
+    hasPrice;
 
-  const cardContent = (
+  const titleText = (
     <>
+      {brandName && `${brandName} `}
+      {name}
+    </>
+  );
+
+  return (
+    <article className={styles.productCard} data-layout={layout}>
       <div className={styles.imgBox}>
         <Image
           image={mainImage}
@@ -66,41 +79,52 @@ export default function ProductCard({
         {brand?.logo && (
           <Image image={brand.logo} sizes="90px" loading={loading} />
         )}
-        <AddToComparisonButton
-          productId={_id}
-          productName={name ?? ''}
-          categories={categories}
-          productData={product}
-        />
       </div>
       <div className={styles.container}>
         <Heading className={styles.title}>
-          {brand?.name && `${brand.name} `}
-          {name}
+          {productHref ? (
+            <Link href={productHref} className={styles.link}>
+              {titleText}
+            </Link>
+          ) : (
+            titleText
+          )}
         </Heading>
         <p className={styles.subtitle}>{subtitle}</p>
-        <div className={styles.priceContainer} data-layout={layout}>
+        <div className={styles.priceContainer}>
           <span className={styles.price}>
             {hasMultiplePrices ? 'od ' : ''}
-            {formatPrice(basePriceCents)}
+            {hasPrice ? formatPrice(basePriceCents) : 'Brak ceny'}
           </span>
-          {showButton && hasLink && (
-            <Button tabIndex={-1} text="Dowiedz się więcej" variant="primary" />
+          {productHref && (showAddToCart || showLearnMore) && (
+            <div className={styles.actions}>
+              {showAddToCart ? (
+                <ProductCardAddToCart
+                  slug={productHref}
+                  productName={productName}
+                  brandName={brandName}
+                  className={styles.actionButton}
+                />
+              ) : (
+                <Button
+                  href={productHref}
+                  text="Dowiedz się więcej"
+                  variant="primary"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  className={styles.actionButton}
+                />
+              )}
+            </div>
           )}
         </div>
       </div>
-    </>
-  );
-
-  return (
-    <article className={styles.productCard}>
-      {productHref ? (
-        <Link href={productHref} className={styles.link}>
-          {cardContent}
-        </Link>
-      ) : (
-        <div className={styles.link}>{cardContent}</div>
-      )}
+      <AddToComparisonButton
+        productId={_id}
+        productName={productName}
+        categories={categories}
+        productData={product}
+      />
     </article>
   );
 }

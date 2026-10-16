@@ -2,7 +2,7 @@
 
 Status: closed
 Owner: planning
-Last updated: 2026-04-07
+Last updated: 2026-10-16
 Depends on: resolved storefront flow discussion
 Related files: `customer-auth-and-access.md`, `../business/product-buyability-rules.md`, `../business/pricing-and-tax-rules.md`, `../business/coupon-rules.md`, `cpo-and-b2c-relation.md`
 
@@ -25,6 +25,14 @@ It defines:
 The v1 purchase flow is:
 
 - `PDP -> cart -> checkout -> payment`
+- `product tile -> cart -> checkout -> payment` (added 2026-10-16, change `tile-add-to-cart`)
+
+Product tile entry:
+
+- a standard product with exactly one variant and no option groups is added straight from the tile, followed by the add-to-cart confirmation popup
+- a standard product with several variants or any option group opens a configuration popup on the tile (`tile -> configuration popup -> cart`); after confirming, the same popup switches to an "added to cart" state, with no second popup
+- the server decides which of the two paths applies from current `Supabase` pricing data, not from the cached tile data
+- lines added from a tile are identical to lines added on the PDP (same product key, configuration, price and product snapshot) and go through the same cart revalidation
 
 Rules:
 
@@ -87,24 +95,25 @@ Rules:
 
 The standard v1 add-to-cart confirmation pattern is:
 
-- a right-side add-to-cart panel
+- a minimal popup / modal (superseded the earlier right-side panel idea; see `../phases/phase-05-buyable-pdp-and-cart.md`, "Accepted Direction For This Phase")
 
 It should:
 
 - confirm that the item was added
 - show the added item image, name, and price
-- show related products
-- provide two primary actions:
+- provide two actions:
   - `Go to cart`
   - `Continue buying`
 
+The same popup is used after adding from the PDP and after a direct add from a product tile. When a tile opens the configuration popup, the confirmation is shown as an "added to cart" state inside that popup (with a summary of the chosen configuration and the same two actions) instead of a second popup.
+
 Rules:
 
-- this panel is a lightweight confirmation layer, not a mini-cart
+- this popup is a lightweight confirmation layer, not a mini-cart
 - it should not contain quantity editing, coupon editing, or configuration editing
-- clicking `Continue buying` should close the panel and preserve the current PDP state
-- related products should be link-only suggestions, not quick-add buttons
-- the panel should not include a direct `Go to checkout` shortcut
+- clicking `Continue buying` should close the popup and preserve the current page state (PDP or listing)
+- the popup should not include a direct `Go to checkout` shortcut
+- the "no quick-add" rule applies only to product suggestions inside the confirmation popup: if suggestions are ever shown there, they stay link-only; it does not apply to product tiles, which have their own `Add to cart` button (see `../business/product-buyability-rules.md`, "Product Tiles")
 
 ### 5. Cart Editing And Reconfiguration
 

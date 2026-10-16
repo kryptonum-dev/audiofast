@@ -2,7 +2,7 @@
 
 Status: completed
 Owner: planning
-Last updated: 2026-04-08
+Last updated: 2026-10-16
 Depends on: `excel-contract.md`
 Related files: `pricing-and-tax-rules.md`, `../architecture/cart-and-checkout-model.md`, `../architecture/cpo-and-b2c-relation.md`
 
@@ -76,6 +76,17 @@ Show both:
 Show only:
 
 - `Ask about product`
+
+### Product Tiles
+
+Added 2026-10-16 (change `tile-add-to-cart`). Product tiles on listings, category and brand pages, reviews, portable-text blocks, carousels and PDP related products follow these rules:
+
+- the tile shows `Add to cart` (`Dodaj do koszyka`) above `Learn more` (`Dowiedz się więcej`) only where the tile already shows `Learn more` and the product has runtime `Sprzedaż Online` true and a price greater than zero
+- blocks that intentionally hide the tile CTA (for example CTA sections and the featured carousel) do not show `Add to cart` either
+- non-buyable products keep only `Learn more`
+- the tile uses its data only to decide whether to show the button; on click the server re-checks buyability against current data and refuses a product that is no longer buyable, with a message instead of adding it
+- the server also picks the add path: one variant and no option groups adds the product straight away, several variants or any option group opens the configuration popup
+- the label is the same `Add to cart` in both paths
 
 ## Configuration Rules
 

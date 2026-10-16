@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
+import { useDialogA11y } from '@/src/global/hooks/useDialogA11y';
 import { formatPrice } from '@/src/global/utils';
 
 import Button from '../Button';
@@ -28,22 +29,18 @@ export default function AddToCartConfirmationModal({
   product,
   onClose,
 }: AddToCartConfirmationModalProps) {
-  useEffect(() => {
-    if (!isOpen) return;
+  const titleId = useId();
+  const modalRef = useRef<HTMLDivElement>(null);
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-
-    return () => {
-      document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [isOpen, onClose]);
+  // Focus moves to the panel (announced through the dialog title), Tab stays
+  // inside, Esc closes, the page does not scroll behind the overlay and focus
+  // returns to the "Dodaj do koszyka" button on close.
+  useDialogA11y({
+    isOpen,
+    containerRef: modalRef,
+    initialFocusRef: modalRef,
+    onEscape: onClose,
+  });
 
   if (!isOpen) return null;
 
@@ -58,10 +55,12 @@ export default function AddToCartConfirmationModal({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="add-to-cart-confirmation-title"
+      aria-labelledby={titleId}
     >
       <div
+        ref={modalRef}
         className={styles.modal}
+        tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
       >
         <button
@@ -74,7 +73,7 @@ export default function AddToCartConfirmationModal({
         </button>
 
         <span className={styles.eyebrow}>Dodano do koszyka</span>
-        <h2 id="add-to-cart-confirmation-title" className={styles.title}>
+        <h2 id={titleId} className={styles.title}>
           Produkt został dodany
         </h2>
 

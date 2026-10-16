@@ -25,6 +25,12 @@
     gap: 1.25rem;
     animation: slideUp 350ms cubic-bezier(0.16, 1, 0.3, 1);
 
+    // The panel receives programmatic focus when the dialog opens
+    // (tabIndex -1); the dialog itself is the visible focus context.
+    &:focus {
+      outline: none;
+    }
+
     .closeButton {
       position: absolute;
       top: 1rem;

@@ -276,6 +276,121 @@
     }
   }
 
+  // Quick add from a product tile (ProductQuickAddModal): the content
+  // scrolls between the fixed close button and an always-visible footer.
+  &.quickAddOverlay {
+    .configuratorModal {
+      overflow: hidden;
+      scrollbar-gutter: auto;
+      padding: 0;
+      gap: 0;
+
+      // The panel receives programmatic focus when the dialog opens.
+      &:focus {
+        outline: none;
+      }
+
+      .quickAddContent {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        scrollbar-gutter: stable;
+        scrollbar-width: thin;
+        scrollbar-color: var(--neutral-400, #e7e7e7) transparent;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        padding: clamp(1.25rem, calc(2vw / 0.48), 2rem);
+        padding-bottom: 1.25rem;
+
+        &::-webkit-scrollbar {
+          width: 0.5rem;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: var(--neutral-400, #e7e7e7);
+          border-radius: 999rem;
+        }
+
+        .configuratorBody {
+          padding-bottom: 0;
+
+          .quickAddError {
+            margin: 0;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            background: rgba(255, 106, 0, 0.08);
+            color: var(--neutral-700, #303030);
+            font-size: var(--typography-body-m, 0.875rem);
+            line-height: 1.5;
+          }
+        }
+      }
+
+      .quickAddFooter {
+        flex-shrink: 0;
+        padding: 1rem clamp(1.25rem, calc(2vw / 0.48), 2rem);
+        border-top: 0.0625rem solid var(--neutral-300, #efefef);
+        background: var(--neutral-white, #ffffff);
+      }
+    }
+
+    @media (max-width: 56.1875rem) {
+      .configuratorModal {
+        .quickAddContent {
+          padding: 1.25rem;
+        }
+
+        .quickAddFooter {
+          padding: 1rem 1.25rem;
+        }
+      }
+    }
+
+    // Small screens: full-screen panel, buttons pinned to the bottom.
+    @media (max-width: 35.9375rem) {
+      place-items: stretch;
+      padding: 0;
+
+      .configuratorModal {
+        width: 100%;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+        animation: slideUpMobile 350ms cubic-bezier(0.16, 1, 0.3, 1);
+
+        .configuratorCloseButton {
+          top: 0.75rem;
+          right: 0.75rem;
+        }
+
+        .quickAddContent {
+          padding: 1.5rem 1rem 1.25rem;
+
+          .configuratorHeader {
+            padding-right: 2.75rem;
+          }
+        }
+
+        .quickAddFooter {
+          flex-direction: column;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+
+          > * {
+            width: 100%;
+            max-width: 100%;
+          }
+        }
+      }
+    }
+  }
+
   @media (max-width: 68.6875rem) {
     .configuratorModal {
       width: min(60rem, 100%);
