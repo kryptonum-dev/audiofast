@@ -287,15 +287,26 @@ Filtering uses a **client-side computation** approach for instant responsiveness
 
 #### Filter Types
 
-| Filter           | Type              | Logic                                                         |
-| ---------------- | ----------------- | ------------------------------------------------------------- |
-| Category         | Single select     | Matches against denormalized category slugs                   |
-| Brand            | Multi-select      | Array of brand slugs (OR within, AND with other filters)      |
-| Price            | Range (min/max)   | Cents-based comparison                                        |
-| Custom Dropdowns | Category-specific | Per-category configurable filters (e.g., "Cable Length")      |
-| Range Filters    | Numeric range     | Per-category numeric ranges (e.g., "Impedance: 4-12Ω")        |
-| CPO              | Boolean           | Certified Pre-Owned toggle                                    |
-| Search           | Text              | Matches product name; semantic product search stays disabled |
+| Filter           | Type              | Logic                                                       |
+| ---------------- | ----------------- | ----------------------------------------------------------- |
+| Category         | Single select     | Matches against denormalized category slugs                 |
+| Brand            | Multi-select      | Array of brand slugs (OR within, AND with other filters)    |
+| Price            | Range (min/max)   | Cents-based comparison                                      |
+| Custom Dropdowns | Category-specific | Per-category configurable filters (e.g., "Cable Length")    |
+| Range Filters    | Numeric range     | Per-category numeric ranges (e.g., "Impedance: 4-12Ω")      |
+| CPO              | Boolean           | Certified Pre-Owned toggle                                  |
+| Search           | Text              | Brand + product name, any word order, fragments (see below) |
+
+#### Product Search
+
+Product listings (`/produkty/`, `/produkty/kategoria/[category]/`, `/marki/[slug]/`) share one pure matcher, `global/filters/productSearch.ts`, used by both the server listing and the client sidebar counts (`computeFilters`), so they always agree.
+
+- **Searchable text:** `denormBrandName` + product `name` from the cached `queryAllProductsFilterMetadata` (no schema or data changes needed).
+- **Normalization:** lowercase, diacritics folded (NFD + `ł`/`ø`/… map), surrounding spaces ignored. A term with no letters or digits (`"`, `*`, `'`) counts as no search.
+- **Matching:** every query word must match, in any order, either the start of a word (whitespace chunk with punctuation removed — `LS-3` → `ls3`, `D'Agostino` → `dagostino`, `R_volution` → `rvolution` — or a piece between punctuation), or, for words of 4+ characters, a fragment inside one chunk (`aldi` → Vivaldi).
+- **Server flow:** `ProductsListing` filters the metadata in JS (pre-applying brand/category) and passes the matching ids to GROQ as `$searchTiers` — 4 id arrays by relevance tier (exact name → name word starts → match via brand → fragment). No matches skip the listing query. `productsFilterConditions` keeps only `_id in $searchTiers[n]`; keep its GROQ comment-free, since the query plus params must stay under @sanity/client's ~11k-char GET limit (very broad searches fall back to POST, still cached by `use cache`).
+- **Sorting:** an active search defaults to `relevance` (tier, then `orderRank`), and `SortDropdown` shows "Trafność" only while searching.
+- **CPO listing** still searches the product name only (`cpoFilterConditions`), so its sidebar is passed metadata without `brandName`.
 
 ---
 
@@ -577,8 +588,8 @@ Shared TypeScript configurations:
 | `MAILCHIMP_API_KEY`                                         | Mailchimp API key                         |
 | `MAILCHIMP_SERVER_PREFIX`                                   | Mailchimp server prefix                   |
 | `EMBEDDINGS_INDEX_BEARER_TOKEN`                             | Temporary legacy blog rollback auth       |
-| `SANITY_API_READ_TOKEN`                                    | Server-only published dataset search read |
-| `SANITY_BLOG_SEARCH_BACKEND`                               | Blog backend: legacy, dataset, lexical    |
+| `SANITY_API_READ_TOKEN`                                     | Server-only published dataset search read |
+| `SANITY_BLOG_SEARCH_BACKEND`                                | Blog backend: legacy, dataset, lexical    |
 | `VERCEL_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_ENV` | Vercel environment                        |
 
 ### Sanity Studio (`apps/studio`)

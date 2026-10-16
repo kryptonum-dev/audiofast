@@ -1,13 +1,22 @@
 import { notFound } from 'next/navigation';
 
-// TEXT-ONLY MODE: Embeddings import commented out (to re-enable, uncomment this and the fetchEmbeddings call below)
-// import { fetchEmbeddings } from '@/src/app/actions/embeddings';
 import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
 import type { CustomFilterDefinition } from '@/src/global/filters';
+import {
+  parseProductSearch,
+  PRODUCT_SEARCH_TIER_COUNT,
+  rankProductSearch,
+} from '@/src/global/filters/productSearch';
 import { logWarn } from '@/src/global/logger';
 import { sanityFetch } from '@/src/global/sanity/fetch';
-import { getProductsListingQuery } from '@/src/global/sanity/query';
-import type { QueryProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
+import {
+  getProductsListingQuery,
+  queryAllProductsFilterMetadata,
+} from '@/src/global/sanity/query';
+import type {
+  QueryAllProductsFilterMetadataResult,
+  QueryProductsListingNewestResult,
+} from '@/src/global/sanity/sanity.types';
 import type { ProductType } from '@/src/global/types';
 import {
   parseBrands,
@@ -44,7 +53,7 @@ type ProductsListingProps = {
   // Custom filters configuration
   availableCustomFilters?: string[]; // Dropdown filter names for parsing
   filterDefinitions?: CustomFilterDefinition[]; // All filter definitions (for range filters)
-  defaultSortBy?: string; // Default sort order when no search
+  defaultSortBy?: string; // Default sort order when no search (search defaults to relevance)
 
   // Scroll target for pagination
   scrollTargetId?: string;
@@ -65,8 +74,9 @@ export default async function ProductsListing({
 
   const currentPage = Number(params.page) || 1;
   const itemsPerPage = PRODUCTS_ITEMS_PER_PAGE;
-  const searchTerm = params.search || '';
-  const hasSearchQuery = Boolean(searchTerm);
+  const searchTerm = (params.search || '').trim();
+  // null when the term has nothing searchable (empty, spaces, only punctuation)
+  const productSearch = parseProductSearch(searchTerm);
 
   // Category can come from prop OR from URL search params (for brand pages)
   // Normalize to full path format: /kategoria/slug/
@@ -79,15 +89,14 @@ export default async function ProductsListing({
         : `/kategoria/${categoryFromUrl}/`
       : '');
 
-  // TEXT-ONLY SEARCH: Disabled embeddings for products (using GROQ name match instead)
-  // To re-enable AI embeddings search, uncomment the following and change sortBy default to 'relevance':
-  // const embeddingResults = hasSearchQuery
-  //   ? (await fetchEmbeddings(searchTerm, 'products')) || []
-  //   : [];
-  const embeddingResults: never[] = []; // Always empty - text-only search mode
-
-  // Determine sort order (no 'relevance' option in text-only mode)
-  const sortBy = params.sortBy || defaultSortBy;
+  // An active search sorts by relevance unless the user picked another order.
+  // 'relevance' without a search has nothing to rank, so it falls back too
+  // (mirrors SortDropdown).
+  const effectiveDefaultSortBy = productSearch ? 'relevance' : defaultSortBy;
+  const sortBy =
+    params.sortBy && (productSearch || params.sortBy !== 'relevance')
+      ? params.sortBy
+      : effectiveDefaultSortBy;
 
   // Parse filters from URL
   const brands = parseBrands(params.brands);
@@ -135,25 +144,55 @@ export default async function ProductsListing({
   // If brandSlug is provided, use it for filtering (override brands array)
   const effectiveBrands = brandSlug ? [brandSlug] : brands;
 
+  // Text search runs in JS on the cached filter metadata (same data and matcher
+  // as the sidebar counts in computeFilters), then GROQ only receives the
+  // matching ids grouped by relevance tier. Brand/category are pre-applied here
+  // to keep the id list (and the request URL) short; GROQ re-checks them anyway.
+  let searchTiers: string[][] = Array.from(
+    { length: PRODUCT_SEARCH_TIER_COUNT },
+    () => [],
+  );
+  if (productSearch) {
+    const filterMetadata =
+      await sanityFetch<QueryAllProductsFilterMetadataResult>({
+        query: queryAllProductsFilterMetadata,
+        tags: ['filter-metadata'],
+      });
+    const candidates = (filterMetadata?.products ?? []).filter(
+      (product) =>
+        (effectiveBrands.length === 0 ||
+          (product.brandSlug !== null &&
+            effectiveBrands.includes(product.brandSlug))) &&
+        (!effectiveCategory ||
+          (product.allCategorySlugs ?? []).includes(effectiveCategory)),
+    );
+    searchTiers = rankProductSearch(candidates, productSearch);
+  }
+  const hasSearchMatches = searchTiers.some((tier) => tier.length > 0);
+
   // Get the appropriate query based on sortBy parameter
   const query = getProductsListingQuery(sortBy);
 
-  const productsData = await sanityFetch<QueryProductsListingNewestResult>({
-    query,
-    params: {
-      category: effectiveCategory,
-      search: searchTerm || '',
-      offset,
-      limit,
-      brands: effectiveBrands,
-      minPrice,
-      maxPrice,
-      customFilters, // Original format: [{filterName, value}]
-      rangeFilters,
-      embeddingResults: embeddingResults || [],
-    },
-    tags: ['products'],
-  });
+  // No search matches → skip the listing query and show the empty state
+  const productsData =
+    productSearch && !hasSearchMatches
+      ? { products: [], totalCount: 0 }
+      : await sanityFetch<QueryProductsListingNewestResult>({
+          query,
+          params: {
+            category: effectiveCategory,
+            search: productSearch?.normalized ?? '',
+            searchTiers,
+            offset,
+            limit,
+            brands: effectiveBrands,
+            minPrice,
+            maxPrice,
+            customFilters, // Original format: [{filterName, value}]
+            rangeFilters,
+          },
+          tags: ['products'],
+        });
 
   if (!productsData) {
     logWarn('Products data not found');
@@ -165,7 +204,7 @@ export default async function ProductsListing({
   // Create URLSearchParams for Pagination
   const paginationSearchParams = new URLSearchParams();
   if (searchTerm) paginationSearchParams.set('search', searchTerm);
-  if (sortBy && sortBy !== defaultSortBy)
+  if (sortBy !== effectiveDefaultSortBy)
     paginationSearchParams.set('sortBy', sortBy);
   if (!brandSlug && brands.length > 0) {
     paginationSearchParams.set('brands', brands.join(','));

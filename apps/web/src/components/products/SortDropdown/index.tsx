@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState, useTransition } from 'react';
 
+import { parseProductSearch } from '@/src/global/filters/productSearch';
+
 import { useProductsLoading } from '../ProductsLoadingContext';
 import styles from './styles.module.scss';
 
@@ -32,22 +34,30 @@ export default function SortDropdown({
   const [pendingValue, setPendingValue] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Check if search query exists (read from URL, not props)
-  const hasSearchQuery = Boolean(searchParams.get('search'));
+  // Check if search query exists (read from URL, not props). Same rule as the
+  // listing: a term without searchable characters is no search.
+  const hasSearchQuery =
+    parseProductSearch(searchParams.get('search') ?? '') !== null;
 
-  // TEXT-ONLY MODE: Always filter out 'relevance' option (no AI scores available)
-  // To re-enable relevance sorting with embeddings, change back to:
-  // const availableOptions = hasSearchQuery
-  //   ? options
-  //   : options.filter((opt) => opt.value !== 'orderRank' && opt.value !== 'relevance');
+  // 'relevance' (search tier order) only makes sense with an active search, and
+  // 'orderRank' is hidden without one. Listings that offer 'relevance' sort by
+  // it by default while searching (mirrors ProductsListing's sortBy fallback).
   const availableOptions = hasSearchQuery
-    ? options.filter((opt) => opt.value !== 'relevance') // No relevance in text-only mode
+    ? options
     : options.filter(
         (opt) => opt.value !== 'orderRank' && opt.value !== 'relevance',
       );
+  const effectiveDefaultValue =
+    hasSearchQuery && options.some((opt) => opt.value === 'relevance')
+      ? 'relevance'
+      : defaultValue;
 
   // Determine current value based on URL params
-  const urlValue = searchParams.get('sortBy') || defaultValue;
+  const urlSortBy = searchParams.get('sortBy');
+  const urlValue =
+    urlSortBy && (hasSearchQuery || urlSortBy !== 'relevance')
+      ? urlSortBy
+      : effectiveDefaultValue;
 
   // Use pending value for optimistic UI, fall back to URL value
   const currentValue = pendingValue ?? urlValue;
@@ -111,7 +121,7 @@ export default function SortDropdown({
 
     const params = new URLSearchParams(searchParams.toString());
 
-    if (value === defaultValue) {
+    if (value === effectiveDefaultValue) {
       params.delete('sortBy');
     } else {
       params.set('sortBy', value);

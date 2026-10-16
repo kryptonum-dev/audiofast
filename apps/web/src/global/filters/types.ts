@@ -53,7 +53,7 @@ export type ActiveRangeFilter = {
  * Used as input for filter computation
  */
 export type ActiveFilters = {
-  /** Search term (used for sorting, not filtering in sidebar) */
+  /** Search term (brand + product name, matched by productSearch.ts) */
   search: string;
   /** Array of brand slugs (without /marki/ prefix) */
   brands: string[];
