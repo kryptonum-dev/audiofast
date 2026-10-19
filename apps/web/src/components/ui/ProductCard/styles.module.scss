@@ -276,6 +276,55 @@
       }
     }
   }
+
+  // With the cart button: price on its own row, then "Dodaj do koszyka"
+  // on the left and "Dowiedz się więcej" on the right. Placed last so it
+  // overrides the stacked vertical rules above.
+  .container {
+    .priceContainer[data-with-cart='true'] {
+      flex-direction: row;
+
+      .price {
+        flex-basis: 100%;
+        align-self: flex-start;
+      }
+
+      .actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+
+  // Narrow cards: when the two buttons don't fit side by side they wrap,
+  // and each takes the full width instead of hanging left-aligned.
+  &[data-layout='vertical'] {
+    .container {
+      .priceContainer[data-with-cart='true'] {
+        .actions {
+          .actionButton {
+            flex: 1 1 auto;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 35.9375rem) {
+    .container {
+      .priceContainer[data-with-cart='true'] {
+        .actions {
+          .actionButton {
+            flex: 1 1 auto;
+          }
+        }
+      }
+    }
+  }
 }
 
 @keyframes fadeInTop {

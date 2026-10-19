@@ -91,25 +91,29 @@ export default function ProductCard({
           )}
         </Heading>
         <p className={styles.subtitle}>{subtitle}</p>
-        <div className={styles.priceContainer}>
+        <div
+          className={styles.priceContainer}
+          data-with-cart={showAddToCart ? 'true' : undefined}
+        >
           <span className={styles.price}>
             {hasMultiplePrices ? 'od ' : ''}
             {hasPrice ? formatPrice(basePriceCents) : 'Brak ceny'}
           </span>
           {productHref && (showAddToCart || showLearnMore) && (
             <div className={styles.actions}>
-              {showAddToCart ? (
+              {showAddToCart && (
                 <ProductCardAddToCart
                   slug={productHref}
                   productName={productName}
                   brandName={brandName}
                   className={styles.actionButton}
                 />
-              ) : (
+              )}
+              {showLearnMore && (
                 <Button
                   href={productHref}
                   text="Dowiedz się więcej"
-                  variant="primary"
+                  variant={showAddToCart ? 'secondary' : 'primary'}
                   tabIndex={-1}
                   aria-hidden="true"
                   className={styles.actionButton}
