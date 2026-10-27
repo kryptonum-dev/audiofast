@@ -41,3 +41,7 @@ Gate run: the same build and start command as Phase 4 (`next start -p 3107`), th
 ## Phase 9 — drag-and-drop (lsse level)
 
 Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline` (`runs/2026-10-27T10-53-28-193Z`). Result: 1,125 URLs, all 200, 40 paths differ. The run's `diff.json` is byte-identical to the Phase 8 gate run's (`runs/2026-10-27T10-31-17-391Z`), so every diff is one of the entries above and Phase 9 adds none. Every new annotation is draft-gated and the optimistic layer mounts in draft mode only, so the published HTML is unchanged (0 `data-sanity` on `/`, `/produkty/apex/`, `/marki/`, `/o-nas/`, `/blog/` and the 404).
+
+## Phase 11 — page query latency fix
+
+Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline` (`runs/2026-10-27T15-37-48-947Z`). Result: 1,125 URLs, all 200, 40 paths differ. The run's `diff.json` is byte-identical to the Phase 9 gate run's (`runs/2026-10-27T10-53-28-193Z`), so the fix adds no diff. The page-builder windows return the same documents in the same order (checked directly against the old query on the live dataset), and the brands-by-categories guard only stops the subquery from running for pages that do not hold the block.

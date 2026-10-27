@@ -533,6 +533,68 @@ const heroStaticBlock = /* groq */ `
   }
 `;
 
+// Page-builder subqueries and the Sanity query engine.
+//
+// 1. Hoisting. A `*[...]` subquery that does not reference its block is
+//    evaluated for every page-builder query as soon as the page holds any
+//    block, even inside a `_type == "x" => {...}` branch that matches nothing.
+// 2. Document loads. A filter, ordering or projection that needs a document
+//    field (rather than an index) loads every candidate document. Product and
+//    review documents are large: a scan over ~900 products or ~1,800
+//    publications costs 10-30 s on the API. Before this was fixed, every
+//    `page`, homepage and brands-page query took 25-60 s (draft mode,
+//    Presentation and regeneration timed out); `order(coalesce(publishedDate,
+//    _createdAt) desc)`, `coalesce(destinationType, "page") == "page"` and the
+//    brands-by-categories product scan were the cost.
+//
+// So: a subquery that has to load many documents is guarded with
+// `^._type == "<block>"` (`^` is the page-builder item) and runs only for the
+// block that uses it (brandsByCategoriesSection). Cheap index-backed
+// subqueries (the windows below, the brand list) stay unguarded: a guard in
+// their filter disables the index and makes them slower.
+//
+// Each window orders two halves by an indexed field (`publishedDate` where it
+// is set, `_createdAt` where it is not), keeps the first 21 of each, and
+// re-orders that small union by the coalesced date. The top 21 of the union
+// are exactly the top 21 of the single ordering. Slice a window at most to
+// [1...21].
+const publicationEligibility = /* groq */ `
+  _type in ["blog-article", "review", "product", "youtubeVideo"] &&
+  (_type != "youtubeVideo" || (defined(videoUrl) && defined(name))) &&
+  !(_id in path("drafts.**")) &&
+  // Products must be published with required fields and not archived
+  (
+    _type != "product" ||
+    (defined(publicationImage) && defined(shortDescription) && isArchived != true)
+  ) &&
+  // Reviews must have their required fields based on destinationType
+  // (a missing destinationType means "page")
+  (
+    _type != "review" ||
+    (
+      ((!defined(destinationType) || destinationType == "page") && defined(slug.current)) ||
+      (destinationType == "pdf" && defined(pdfSlug.current) && defined(pdfFile)) ||
+      (destinationType == "external" && defined(externalUrl))
+    )
+  )
+`;
+
+const latestPublicationsWindow = /* groq */ `(
+  (*[${publicationEligibility} && defined(publishedDate)] | order(publishedDate desc)[0...21])
+  + (*[${publicationEligibility} && !defined(publishedDate)] | order(_createdAt desc)[0...21])
+) | order(coalesce(publishedDate, _createdAt) desc)`;
+
+const newestProductEligibility = /* groq */ `
+  _type == "product" &&
+  !(_id in path("drafts.**")) &&
+  isArchived != true
+`;
+
+const newestProductsWindow = /* groq */ `(
+  (*[${newestProductEligibility} && defined(publishedDate)] | order(publishedDate desc)[0...21])
+  + (*[${newestProductEligibility} && !defined(publishedDate)] | order(_createdAt desc)[0...21])
+) | order(coalesce(publishedDate, _createdAt) desc)`;
+
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
     ${portableTextFragment('heading')},
@@ -545,25 +607,7 @@ const latestPublicationBlock = /* groq */ `
         }
       ),
       // Default: fetch the latest publication automatically
-      *[
-        _type in ["blog-article", "review", "product", "youtubeVideo"] &&
-        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name))) &&
-        !(_id in path("drafts.**")) &&
-        // Products must be published with required fields and not archived
-        (
-          _type != "product" ||
-          (defined(publicationImage) && defined(shortDescription) && isArchived != true)
-        ) &&
-        // Reviews must have their required fields based on destinationType
-        (
-          _type != "review" ||
-          (
-            (coalesce(destinationType, "page") == "page" && defined(slug.current)) ||
-            (destinationType == "pdf" && defined(pdfSlug.current) && defined(pdfFile)) ||
-            (destinationType == "external" && defined(externalUrl))
-          )
-        )
-      ] | order(coalesce(publishedDate, _createdAt) desc)[0]{
+      ${latestPublicationsWindow}[0]{
         ${publicationBlock}
       }
     )
@@ -661,45 +705,11 @@ const featuredPublicationsBlock = /* groq */ `
         }
       },
       // Automatic modes: fetch latest publications sorted by publishedDate (or _createdAt as fallback)
-      selectionMode == "latest" => *[
-        _type in ["blog-article", "review", "product", "youtubeVideo"] &&
-        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name))) &&
-        !(_id in path("drafts.**")) &&
-        // Products must be published with required fields and not archived
-        (
-          _type != "product" ||
-          (defined(publicationImage) && defined(shortDescription) && isArchived != true)
-        ) &&
-        (
-          _type != "review" ||
-          (
-            (coalesce(destinationType, "page") == "page" && defined(slug.current)) ||
-            (destinationType == "pdf" && defined(pdfSlug.current) && defined(pdfFile)) ||
-            (destinationType == "external" && defined(externalUrl))
-          )
-        )
-      ] | order(coalesce(publishedDate, _createdAt) desc)[0...20]{
+      selectionMode == "latest" => ${latestPublicationsWindow}[0...20]{
         ${publicationBlock}
       },
       // Default: secondLatest - skip the first publication, show next 20
-      *[
-        _type in ["blog-article", "review", "product", "youtubeVideo"] &&
-        (_type != "youtubeVideo" || (defined(videoUrl) && defined(name))) &&
-        !(_id in path("drafts.**")) &&
-        // Products must be published with required fields and not archived
-        (
-          _type != "product" ||
-          (defined(publicationImage) && defined(shortDescription) && isArchived != true)
-        ) &&
-        (
-          _type != "review" ||
-          (
-            (coalesce(destinationType, "page") == "page" && defined(slug.current)) ||
-            (destinationType == "pdf" && defined(pdfSlug.current) && defined(pdfFile)) ||
-            (destinationType == "external" && defined(externalUrl))
-          )
-        )
-      ] | order(coalesce(publishedDate, _createdAt) desc)[1...21]{
+      ${latestPublicationsWindow}[1...21]{
         ${publicationBlock}
       }
     )
@@ -740,11 +750,7 @@ const featuredProductsBlock = /* groq */ `
         }
       },
       // Default: automatic - fetch 10 newest products
-      *[
-        _type == "product" &&
-        !(_id in path("drafts.**")) &&
-        isArchived != true
-      ] | order(coalesce(publishedDate, _createdAt) desc)[0...10]{
+      ${newestProductsWindow}[0...10]{
         ${productProjection}
       }
     ),
@@ -834,7 +840,7 @@ const brandsByCategoriesSectionBlock = /* groq */ `
     // Per parent category: its sub-category slugs first, then the brands of
     // the visible products whose denormalized category slugs intersect them
     // (no per-product category or brand deref in the scan).
-    "categoriesWithBrands": *[_type == "productCategoryParent" && !(_id in path("drafts.**"))] | order(orderRank) {
+    "categoriesWithBrands": *[^._type == "brandsByCategoriesSection" && _type == "productCategoryParent" && !(_id in path("drafts.**"))] | order(orderRank) {
       _id,
       name,
       "subCategorySlugs": *[
