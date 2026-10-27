@@ -17,7 +17,7 @@ Read these existing docs before deep work — do not duplicate them here:
 Turborepo + Bun workspaces. Four apps:
 
 - `apps/web` — Next.js 16 (App Router, React 19 + Compiler, Turbopack) public storefront **and** all B2C runtime (checkout, payment, order/customer APIs, server actions).
-- `apps/studio` — Sanity v5 Studio (editorial content model, migrations, custom tools/plugins).
+- `apps/studio` — Sanity v6 Studio (`sanity` 6.20; editorial content model, migrations, custom tools/plugins).
 - `apps/b2c-admin` — separate **Sanity App SDK** React app (runs via `sanity dev`, not Next.js) for operators: Orders, Coupons, Analytics.
 - `apps/cms-activity` — standalone **Sanity App SDK** app "Raport pracy CMS" (History API per-editor activity report + Excel export, listed in the Dashboard, report allowlisted; see its README). Shares nothing with `b2c-admin`.
 
@@ -40,8 +40,10 @@ bun run typegen              # regenerate Sanity types (extract schema + typegen
 App-specific (run inside the app dir):
 
 - `apps/web`: `bun run test` / `bun run test:run` (vitest), `bun run test:e2e` (Playwright, uses `.env.e2e.local`), `bun run generate:redirects`, `bun run verify:build-env`. The web `build` script runs `verify:build-env` then `generate:redirects` before `next build`.
-- `apps/studio`: `bun run migrate:denormalize` (+ `:dry`) for batch denorm recompute; studio build/deploy bump Node heap to 8 GB.
+- `apps/studio`: `bun run migrate:denormalize` (+ `:dry`) for batch denorm recompute.
 - `apps/b2c-admin`: `bun run test` (vitest).
+
+**Node:** `.nvmrc` pins Node 24 (the Vercel runtime). Run the vitest suites under Node 24: jsdom 30 needs Node 22.22+ / 24.15+ and does not support Node 25.
 
 **Run a single test:** `cd apps/web && bunx vitest run path/to/file.test.ts` (or `-t "test name"`). Tests are co-located as `*.test.ts(x)` next to source.
 
@@ -72,3 +74,13 @@ The transactional code is concentrated under `apps/web/src/global/b2c/` and `app
 ## Language note
 
 UI copy, route segments, Sanity desk labels, and the `.ai/b2c/` business docs are in **Polish**. Match existing Polish naming for user-facing strings and route segments.
+
+## Held upgrades
+
+Every dependency is at latest except these, which are blocked upstream. Re-check the unblock condition before trying again; do not re-research them.
+
+- **TypeScript 7** (stay on 6.0.x): `typescript-eslint` peers `typescript >=4.8.4 <6.1.0`, and forcing TS 7 crashes ESLint. TS 7 also drops the JS compiler API that `next build` type-checks with. Unblock: a `typescript-eslint` release that peers TS 7, and Next supporting TS 7 outside `experimental.useTypeScriptCli`.
+- **ESLint 10** (stay on 9.39.x, with `@eslint/js` 9): `eslint-plugin-react` 7.37.x peers `^9.7` and its `react/display-name` rule calls the removed `context.getFilename()` (lsse tried 10 and rolled back). Unblock: an `eslint-plugin-react` release that supports ESLint 10 (and `eslint-plugin-import` peering `^10`).
+- **`@sanity/eslint-config-studio` 7** (stay on 6): it requires ESLint 10. Unblock: the ESLint 10 hold above.
+- **`@types/node` 26** (stay on 24.x): `@types/node` follows the deployed runtime, and Vercel runs `apps/web` on Node 24 (`.nvmrc`). Unblock: the Vercel project moving to Node 26.
+- **Bun 1.4** (`packageManager` stays `bun@1.3.2`): out of scope for the dependency pass; both reference repos stay on 1.3.2.
