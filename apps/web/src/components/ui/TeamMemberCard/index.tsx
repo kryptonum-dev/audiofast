@@ -11,6 +11,8 @@ interface TeamMemberCardProps {
   imageSizes?: string;
   index: number;
   isListItem?: boolean;
+  /** Draft-only `data-sanity` for the referenced `teamMember` document. */
+  dataSanity?: string;
 }
 
 export default function TeamMemberCard({
@@ -19,6 +21,7 @@ export default function TeamMemberCard({
   headingLevel = 'h3',
   index,
   isListItem = false,
+  dataSanity,
 }: TeamMemberCardProps) {
   const { name, position, phoneNumber, image, description } = member;
 
@@ -27,7 +30,7 @@ export default function TeamMemberCard({
   const Wrapper = isListItem ? 'li' : 'div';
 
   return (
-    <Wrapper className={styles.teamMemberCard}>
+    <Wrapper className={styles.teamMemberCard} data-sanity={dataSanity}>
       <Image
         image={image}
         sizes={imageSizes}

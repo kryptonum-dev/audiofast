@@ -1,8 +1,12 @@
+import { stegaClean } from 'next-sanity';
+
 import ProductDescription from '@/src/components/products/ProductHero/ProductDescription';
 import productHeroStyles from '@/src/components/products/ProductHero/styles.module.scss';
 import type { SanityRawImage } from '@/src/components/shared/Image';
 import type { FormStateData } from '@/src/components/ui/FormStates';
 import type { PortableTextProps } from '@/src/global/types';
+import { hasText } from '@/src/global/utils/stega-text';
+import {} from '@/src/global/utils/stega-text';
 
 import Image from '../../shared/Image';
 import CpoProductInquirySection from './CpoProductInquirySection';
@@ -40,7 +44,7 @@ export default function CpoProductHero({
   formStateData,
   customId,
 }: CpoProductHeroProps) {
-  const productName = name?.trim() || '';
+  const productName = hasText(name) ? name.trim() : '';
   const hasBrandLogo = !!brand?.logo;
   const hasPtShort =
     Array.isArray(shortDescription) && shortDescription.length > 0;
@@ -94,7 +98,7 @@ export default function CpoProductHero({
         )}
 
         <h1 className={productHeroStyles.heading}>
-          {brand?.name ? (
+          {hasText(brand?.name) ? (
             <>
               {brand.name}
               <br />
@@ -113,8 +117,9 @@ export default function CpoProductHero({
       <CpoProductInquirySection
         productId={productId}
         productKey={productKey}
-        productName={productName}
-        brandName={brand?.name}
+        // Cart line + inquiry payload: machine-read, never stega-encoded.
+        productName={stegaClean(productName)}
+        brandName={stegaClean(brand?.name)}
         brandLogo={brand?.logo || undefined}
         previewImage={previewImage}
         priceCents={priceCents}

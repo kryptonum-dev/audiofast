@@ -1,11 +1,14 @@
 import Link from 'next/link';
+import { stegaClean } from 'next-sanity';
 
 import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
 import Button from '@/src/components/ui/Button';
 import type { FormStateData } from '@/src/components/ui/FormStates';
+import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
 import type { CompletePricingData } from '@/src/global/supabase/types';
 import type { BrandType, PortableTextProps } from '@/src/global/types';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import AddToComparison from './AddToComparison';
 import AwardItem from './AwardItem';
@@ -52,6 +55,8 @@ interface ProductHeroProps {
   productId?: string;
   categories?: Array<{ slug?: string | null; name?: string | null }> | null;
   formStateData?: FormStateData | null;
+  /** Draft mode: referenced awards get `data-sanity` (opens the award). */
+  isDraft?: boolean;
 }
 
 export default function ProductHero({
@@ -71,9 +76,16 @@ export default function ProductHero({
   productId,
   categories,
   formStateData,
+  isDraft = false,
 }: ProductHeroProps) {
-  const headingUpper = headingOverride?.upper?.trim() || brand?.name?.trim();
-  const headingLower = headingOverride?.lower?.trim() || name.trim();
+  // `hasText`, not `.trim()`: in draft mode an override stored as "" still
+  // carries stega markers and would win over the brand name.
+  const headingUpper = hasText(headingOverride?.upper)
+    ? headingOverride.upper.trim()
+    : brand?.name?.trim();
+  const headingLower = hasText(headingOverride?.lower)
+    ? headingOverride.lower.trim()
+    : name.trim();
 
   // Prepare awards for display
   const shouldUseMarquee = awards && awards.length >= 8;
@@ -110,7 +122,7 @@ export default function ProductHero({
             loading="lazy"
           />
         </div>
-        {subtitle && <span className={styles.prefix}>{subtitle}</span>}
+        {hasText(subtitle) && <span className={styles.prefix}>{subtitle}</span>}
         <h1 className={styles.heading}>
           {headingUpper && `${headingUpper} `}
           <span>{headingLower}</span>
@@ -146,14 +158,16 @@ export default function ProductHero({
           <PricingSection
             pricingData={pricingData}
             isBuyable={isBuyable}
-            product={{
+            // Cart lines, the inquiry payload and analytics: machine-read,
+            // so never stega-encoded (B2C isolation).
+            product={stegaClean({
               id: productId || '',
               name,
               brandName: brand?.name || '',
               isReturnable,
               brandLogo: brand?.logo || undefined,
               image: previewImage,
-            }}
+            })}
             formStateData={formStateData}
           />
         )}
@@ -170,14 +184,15 @@ export default function ProductHero({
         {!isUnavailable && (
           <AddToComparison
             productId={productId}
-            categories={categories}
-            productName={name}
-            productData={{
+            // Persisted in the comparison cookie: no stega markers.
+            categories={stegaClean(categories)}
+            productName={stegaClean(name)}
+            productData={stegaClean({
               _id: productId,
               name,
               brand,
               mainImage: previewImage,
-            }}
+            })}
           />
         )}
       </div>
@@ -205,6 +220,11 @@ export default function ProductHero({
                     key={key}
                     award={award}
                     isDuplicate={isDuplicate}
+                    dataSanity={
+                      isDuplicate
+                        ? undefined
+                        : referencedDataSanity(award, isDraft, 'name')
+                    }
                   />
                 );
               })}

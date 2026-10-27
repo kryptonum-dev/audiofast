@@ -1,4 +1,4 @@
-import type { FaqSection } from '@/src/global/sanity/sanity.types';
+import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -10,6 +10,7 @@ import styles from './styles.module.scss';
 
 type FaqSectionProps = PagebuilderType<'faqSection'> & {
   index: number;
+  isDraft?: boolean;
 };
 
 export default function FaqSection({
@@ -20,7 +21,18 @@ export default function FaqSection({
   contactPeople,
   contactForm,
   index,
+  isDraft,
 }: FaqSectionProps) {
+  // Referenced documents open themselves in Presentation (draft only).
+  const faqDataSanity = isDraft
+    ? Object.fromEntries(
+        (faqList ?? []).map((faq) => [
+          faq._id,
+          referencedDataSanity(faq, isDraft, 'question'),
+        ]),
+      )
+    : undefined;
+
   const showFaqList =
     (displayMode === 'both' || displayMode === 'faqOnly') && faqList;
   const showContactSection =
@@ -46,7 +58,9 @@ export default function FaqSection({
           )}
         </header>
       )}
-      {showFaqList && <FaqList faqList={faqList} />}
+      {showFaqList && (
+        <FaqList faqList={faqList} dataSanityById={faqDataSanity} />
+      )}
       {showContactSection && (
         <>
           <div className={styles.contactPeople}>
@@ -71,6 +85,7 @@ export default function FaqSection({
                   key={person._id}
                   className={styles.faqPerson}
                   index={index}
+                  dataSanity={referencedDataSanity(person, isDraft, 'name')}
                 />
               ))}
             </div>

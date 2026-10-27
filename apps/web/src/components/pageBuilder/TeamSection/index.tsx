@@ -1,3 +1,4 @@
+import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -8,6 +9,7 @@ import styles from './styles.module.scss';
 
 type TeamSectionProps = PagebuilderType<'teamSection'> & {
   index: number;
+  isDraft?: boolean;
 };
 
 export default function TeamSection({
@@ -18,6 +20,7 @@ export default function TeamSection({
   secondaryDescription,
   ctaButton,
   index,
+  isDraft,
 }: TeamSectionProps) {
   return (
     <section className={`${styles.teamSection} max-width`}>
@@ -53,6 +56,7 @@ export default function TeamSection({
               headingLevel={index === 0 ? 'h3' : 'h4'}
               imageSizes="400px"
               index={index}
+              dataSanity={referencedDataSanity(member, isDraft, 'name')}
             />
           ))}
         </ul>

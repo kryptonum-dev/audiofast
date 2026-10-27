@@ -12,13 +12,16 @@ import OrganizationSchema from '@/src/components/schema/OrganizationSchema';
 import WebSiteSchema from '@/src/components/schema/WebSiteSchema';
 import Analytics from '@/src/components/shared/Analytics';
 import CookieConsent from '@/src/components/shared/CookieConsent';
+import LiveVisualEditing from '@/src/components/shared/LiveVisualEditing';
+import PreviewBar from '@/src/components/shared/PreviewBar';
 import Footer from '@/src/components/ui/Footer';
 import Header from '@/src/components/ui/Header';
 import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
+import { DraftModeProvider } from '@/src/global/sanity/draft-mode-context';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
 import { renderDraftAware } from '../global/sanity/draft-aware';
-import { sanityFetchPublished } from '../global/sanity/live';
+import { sanityFetchPublished, SanityLive } from '../global/sanity/live';
 import { querySettings } from '../global/sanity/query';
 import type { QuerySettingsResult } from '../global/sanity/sanity.types';
 
@@ -79,27 +82,38 @@ export default async function RootLayout({
           )}
       </head>
       <body>
-        <CartProvider>
-          <Suspense fallback={null}>{renderDraftAware(Header, {})}</Suspense>
-          {children}
-          {renderDraftAware(Footer, {})}
-          {!isDraft && settings && <OrganizationSchema settings={settings} />}
-          {!isDraft && <WebSiteSchema />}
-          {/* No consent banner, GTM or Meta inside a Presentation session:
+        <DraftModeProvider isDraft={isDraft}>
+          <CartProvider>
+            <Suspense fallback={null}>{renderDraftAware(Header, {})}</Suspense>
+            {children}
+            {renderDraftAware(Footer, {})}
+            {!isDraft && settings && <OrganizationSchema settings={settings} />}
+            {!isDraft && <WebSiteSchema />}
+            {/* No consent banner, GTM or Meta inside a Presentation session:
               editors must never emit analytics events. */}
-          {IS_PRODUCTION_DEPLOYMENT && !isDraft && (
-            <>
-              <CookieConsent />
-              <Analytics />
-            </>
-          )}
-          <Suspense fallback={null}>
-            <FloatingComparisonBox />
-          </Suspense>
-          <Toaster position="bottom-center" richColors />
-          {/* Draft-only mount point: PreviewBar, VisualEditing and
-              <SanityLive includeDrafts/> render here from Phase 8. */}
-        </CartProvider>
+            {IS_PRODUCTION_DEPLOYMENT && !isDraft && (
+              <>
+                <CookieConsent />
+                <Analytics />
+              </>
+            )}
+            <Suspense fallback={null}>
+              <FloatingComparisonBox />
+            </Suspense>
+            <Toaster position="bottom-center" richColors />
+            {/* Draft-only: published HTML carries no overlay code, no Live
+              connection and no preview bar. SanityLive mounts in exactly one
+              place and refreshes the route on any content change (chrome
+              singletons included); VisualEditing draws the overlays. */}
+            {isDraft && (
+              <>
+                <PreviewBar />
+                <LiveVisualEditing />
+                <SanityLive includeDrafts />
+              </>
+            )}
+          </CartProvider>
+        </DraftModeProvider>
       </body>
     </html>
   );

@@ -27,3 +27,13 @@ Gate run: `VERCEL_ENV=production VERCEL_PROJECT_PRODUCTION_URL=audiofast.pl P24_
 ## Phase 5 — query efficiency
 
 Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline`. Result: 1,125 URLs, all 200, 39 paths differ. The run's `diff.json` is byte-identical to the Phase 4 gate run's (`runs/2026-10-27T08-37-38-747Z`), so every diff is one of the Phase 4 entries above and Phase 5 adds none. The keyed reference derefs, the explicit page-builder projections and the filter-metadata changes leave the published HTML unchanged.
+
+## Phase 8 — Presentation (web): draft mode, stega, overlays, B2C isolation
+
+Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline` (`runs/2026-10-27T10-31-17-391Z`). Result: 1,125 URLs, all 200, 40 paths differ. 39 of them are byte-identical entries to the Phase 5 gate run's `diff.json` (`runs/2026-10-27T09-11-04-140Z`), so they are the Phase 4 entries above. Phase 8's code adds none: the PageBuilder wrapper is a keyed Fragment outside draft mode, and the published HTML carries no `data-sanity` (0 on every crawled page) and no stega markers.
+
+### 4. `/produkty/master-kio/` — editor publish during the run (content drift, 1 path)
+
+- **What differs:** `title` (`Artesania Audio Master Kio` → `Artesania Audio Master Kio – Referencyjny stolik Hi-End`) and `description` (site default → a product-specific description).
+- **Why:** an editor set the product's SEO title and description. `product-542` has `_updatedAt` 2026-10-27T10:06:48Z, after the baseline crawl and before this run.
+- **Check:** the live `https://audiofast.pl/produkty/master-kio/` (still on the Phase 7 code) serves the same new `<title>`.

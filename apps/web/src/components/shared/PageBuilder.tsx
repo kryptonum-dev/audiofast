@@ -1,5 +1,6 @@
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 
+import { getDataAttribute } from '../../global/sanity/data-attribute';
 import type { DynamicFetchOptions } from '../../global/sanity/live';
 import type {
   QueryCpoPageResult,
@@ -57,6 +58,16 @@ export interface PageBuilderProps {
   readonly slots?: PageBuilderSlots;
   readonly basePath?: string; // Current page path for listing blocks
   readonly indexOffset?: number; // Offset for block index to prevent multiple H1s
+  /**
+   * The document that owns the `pageBuilder` array. With `isDraft`, every block
+   * is wrapped in a `data-sanity` element addressing
+   * `pageBuilder[_key=="…"]`, so the whole block is click-to-edit in
+   * Presentation. Published renders get a keyed Fragment instead, so the
+   * markup is identical to the pre-visual-editing render.
+   */
+  readonly documentId?: string | null;
+  readonly documentType?: string | null;
+  readonly isDraft?: boolean;
 }
 
 type BlockType = PageBuilderBlock['_type'];
@@ -71,6 +82,9 @@ export function PageBuilder({
   slots,
   basePath,
   indexOffset = 0,
+  documentId,
+  documentType,
+  isDraft,
 }: PageBuilderProps) {
   const blocks = initialBlocks;
 
@@ -78,186 +92,213 @@ export function PageBuilder({
     return null;
   }
 
+  // `null` outside draft mode: no wrapper element and no attribute.
+  const dataAttribute = getDataAttribute({
+    id: documentId,
+    type: documentType,
+    isDraft,
+  });
+
   return (
     <>
       {blocks.map((block, index) => {
-        const effectiveIndex = index + indexOffset;
-        switch (block._type as BlockType) {
-          case 'heroCarousel':
-            return (
-              <HeroCarousel
-                key={block._key}
-                {...(block as BlockByType<'heroCarousel'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'heroStatic':
-            return (
-              <HeroStatic
-                key={block._key}
-                {...(block as BlockByType<'heroStatic'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'latestPublication':
-            return (
-              <LatestPublication
-                key={block._key}
-                {...(block as BlockByType<'latestPublication'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'imageTextColumns':
-            return (
-              <ImageTextColumns
-                key={block._key}
-                {...(block as BlockByType<'imageTextColumns'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'blurLinesTextImage':
-            return (
-              <BlurLinesTextImage
-                key={block._key}
-                {...(block as BlockByType<'blurLinesTextImage'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'imageWithVideo':
-            return (
-              <ImageWithVideo
-                key={block._key}
-                {...(block as BlockByType<'imageWithVideo'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'imageWithTextBoxes':
-            return (
-              <ImageWithTextBoxes
-                key={block._key}
-                {...(block as BlockByType<'imageWithTextBoxes'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'featuredPublications':
-            return (
-              <FeaturedPublications
-                key={block._key}
-                {...(block as BlockByType<'featuredPublications'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'featuredProducts':
-            return (
-              <FeaturedProducts
-                key={block._key}
-                {...(block as BlockByType<'featuredProducts'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'productsCarousel':
-            return (
-              <ProductsCarousel
-                key={block._key}
-                {...(block as BlockByType<'productsCarousel'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'cpoProductsListing':
-            return (
-              <CpoProductsListing
-                key={block._key}
-                {...(block as BlockByType<'cpoProductsListing'>)}
-                index={effectiveIndex}
-                basePath={basePath}
-                fetchOptions={fetchOptions}
-                listing={slots?.cpoListing}
-              />
-            );
-          case 'brandsMarquee':
-            return (
-              <BrandsMarquee
-                key={block._key}
-                {...(block as BlockByType<'brandsMarquee'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'brandsList':
-            return (
-              <BrandsList
-                key={block._key}
-                {...(block as BlockByType<'brandsList'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'brandsByCategoriesSection':
-            return (
-              <BrandsByCategoriesSection
-                key={block._key}
-                {...(block as BlockByType<'brandsByCategoriesSection'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'faqSection':
-            return (
-              <FaqSection
-                key={block._key}
-                {...(block as BlockByType<'faqSection'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'contactForm':
-            return (
-              <ContactForm
-                key={block._key}
-                {...(block as BlockByType<'contactForm'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'contactMap':
-            return (
-              <ContactMap
-                key={block._key}
-                {...(block as BlockByType<'contactMap'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'teamSection':
-            return (
-              <TeamSection
-                key={block._key}
-                {...(block as BlockByType<'teamSection'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'gallerySection':
-            return (
-              <GallerySection
-                key={block._key}
-                {...(block as BlockByType<'gallerySection'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'phoneImageCta':
-            return (
-              <PhoneImageCta
-                key={block._key}
-                {...(block as BlockByType<'phoneImageCta'>)}
-                index={effectiveIndex}
-              />
-            );
-          case 'stepList':
-            return (
-              <StepList
-                key={block._key}
-                {...(block as BlockByType<'stepList'>)}
-                index={effectiveIndex}
-              />
-            );
-          default:
-            return null;
+        const element = renderBlock(block, index + indexOffset);
+        if (!element) return null;
+        // Bare `_key` as the React key in both branches: Phase 9's optimistic
+        // reorder matches children on the raw key.
+        if (!dataAttribute) {
+          return <Fragment key={block._key}>{element}</Fragment>;
         }
+        return (
+          <div
+            key={block._key}
+            data-sanity={dataAttribute(['pageBuilder', { _key: block._key }])}
+          >
+            {element}
+          </div>
+        );
       })}
     </>
   );
+
+  function renderBlock(block: PageBuilderBlock, effectiveIndex: number) {
+    switch (block._type as BlockType) {
+      case 'heroCarousel':
+        return (
+          <HeroCarousel
+            key={block._key}
+            {...(block as BlockByType<'heroCarousel'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'heroStatic':
+        return (
+          <HeroStatic
+            key={block._key}
+            {...(block as BlockByType<'heroStatic'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'latestPublication':
+        return (
+          <LatestPublication
+            key={block._key}
+            {...(block as BlockByType<'latestPublication'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'imageTextColumns':
+        return (
+          <ImageTextColumns
+            key={block._key}
+            {...(block as BlockByType<'imageTextColumns'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'blurLinesTextImage':
+        return (
+          <BlurLinesTextImage
+            key={block._key}
+            {...(block as BlockByType<'blurLinesTextImage'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'imageWithVideo':
+        return (
+          <ImageWithVideo
+            key={block._key}
+            {...(block as BlockByType<'imageWithVideo'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'imageWithTextBoxes':
+        return (
+          <ImageWithTextBoxes
+            key={block._key}
+            {...(block as BlockByType<'imageWithTextBoxes'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'featuredPublications':
+        return (
+          <FeaturedPublications
+            key={block._key}
+            {...(block as BlockByType<'featuredPublications'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'featuredProducts':
+        return (
+          <FeaturedProducts
+            key={block._key}
+            {...(block as BlockByType<'featuredProducts'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'productsCarousel':
+        return (
+          <ProductsCarousel
+            key={block._key}
+            {...(block as BlockByType<'productsCarousel'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'cpoProductsListing':
+        return (
+          <CpoProductsListing
+            key={block._key}
+            {...(block as BlockByType<'cpoProductsListing'>)}
+            index={effectiveIndex}
+            basePath={basePath}
+            fetchOptions={fetchOptions}
+            listing={slots?.cpoListing}
+          />
+        );
+      case 'brandsMarquee':
+        return (
+          <BrandsMarquee
+            key={block._key}
+            {...(block as BlockByType<'brandsMarquee'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'brandsList':
+        return (
+          <BrandsList
+            key={block._key}
+            {...(block as BlockByType<'brandsList'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'brandsByCategoriesSection':
+        return (
+          <BrandsByCategoriesSection
+            key={block._key}
+            {...(block as BlockByType<'brandsByCategoriesSection'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'faqSection':
+        return (
+          <FaqSection
+            key={block._key}
+            {...(block as BlockByType<'faqSection'>)}
+            index={effectiveIndex}
+            isDraft={isDraft}
+          />
+        );
+      case 'contactForm':
+        return (
+          <ContactForm
+            key={block._key}
+            {...(block as BlockByType<'contactForm'>)}
+            index={effectiveIndex}
+            isDraft={isDraft}
+          />
+        );
+      case 'contactMap':
+        return (
+          <ContactMap
+            key={block._key}
+            {...(block as BlockByType<'contactMap'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'teamSection':
+        return (
+          <TeamSection
+            key={block._key}
+            {...(block as BlockByType<'teamSection'>)}
+            index={effectiveIndex}
+            isDraft={isDraft}
+          />
+        );
+      case 'gallerySection':
+        return (
+          <GallerySection
+            key={block._key}
+            {...(block as BlockByType<'gallerySection'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'phoneImageCta':
+        return (
+          <PhoneImageCta
+            key={block._key}
+            {...(block as BlockByType<'phoneImageCta'>)}
+            index={effectiveIndex}
+          />
+        );
+      case 'stepList':
+        return (
+          <StepList
+            key={block._key}
+            {...(block as BlockByType<'stepList'>)}
+            index={effectiveIndex}
+          />
+        );
+      default:
+        return null;
+    }
+  }
 }

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import type { PagebuilderType } from '@/src/global/types';
+import { stripStega } from '@/src/global/utils/stega-text';
 
 import PortableText from '../../portableText';
 import Image from '../../shared/Image';
@@ -41,12 +42,12 @@ export default function BrandsList({
           <Link
             key={brand?._id}
             href={brand?.slug || '/'}
-            aria-label={`Przejdź do marki ${brand?.name}`}
+            aria-label={`Przejdź do marki ${stripStega(brand?.name ?? '')}`}
             className={styles.brand}
           >
             <Image
               image={brand?.logo}
-              alt={brand?.name || ''}
+              alt={stripStega(brand?.name ?? '')}
               sizes="190px"
               loading={index === 0 ? 'eager' : 'lazy'}
               priority={index === 0 && idx === 0}

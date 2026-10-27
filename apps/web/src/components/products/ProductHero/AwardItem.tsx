@@ -5,16 +5,20 @@ import { createPortal } from 'react-dom';
 
 import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
+import { hasText, stripStega } from '@/src/global/utils/stega-text';
 
 import styles from './styles.module.scss';
 
 interface AwardItemProps {
   award: {
     _id: string;
+    _type?: string;
     name: string;
     logo?: SanityRawImage | null;
   };
   isDuplicate?: boolean;
+  /** Draft-only `data-sanity` for the referenced `award` (pre-built on the server). */
+  dataSanity?: string;
 }
 
 interface TooltipPosition {
@@ -22,7 +26,11 @@ interface TooltipPosition {
   left: number;
 }
 
-export default function AwardItem({ award, isDuplicate }: AwardItemProps) {
+export default function AwardItem({
+  award,
+  isDuplicate,
+  dataSanity,
+}: AwardItemProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [tooltipPosition, setTooltipPosition] =
     useState<TooltipPosition | null>(null);
@@ -106,7 +114,7 @@ export default function AwardItem({ award, isDuplicate }: AwardItemProps) {
               className={styles.awardTooltipImage}
               loading="lazy"
             />
-            {award.name && (
+            {hasText(award.name) && (
               <span className={styles.awardTooltipName}>{award.name}</span>
             )}
           </div>,
@@ -120,12 +128,15 @@ export default function AwardItem({ award, isDuplicate }: AwardItemProps) {
         ref={itemRef}
         className={styles.awardItem}
         aria-hidden={isDuplicate}
+        data-sanity={dataSanity}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         <Image
           image={award.logo}
-          alt={award.name || 'Nagroda produktu'}
+          alt={
+            hasText(award.name) ? stripStega(award.name) : 'Nagroda produktu'
+          }
           sizes="80px"
           quality={90}
           className={styles.awardLogo}

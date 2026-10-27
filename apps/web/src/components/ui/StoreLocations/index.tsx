@@ -1,5 +1,6 @@
 import { cacheLife, cacheTag } from 'next/cache';
 
+import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
 import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 
 import StoreMapWrapper from './StoreMapWrapper';
@@ -21,6 +22,12 @@ export interface StoreWithLocation extends Store {
 export interface StoreLocationsProps {
   stores: Store[];
   customId?: string;
+  /**
+   * Draft mode (Presentation): render the list without geocoding. Every draft
+   * render reads live, so geocoding would hit Nominatim on each edit, and the
+   * address strings carry stega markers that must not reach a lookup.
+   */
+  isDraft?: boolean;
 }
 
 // Clean street address for geocoding
@@ -172,6 +179,7 @@ async function geocodeAddress(address: {
 export default async function StoreLocations({
   stores,
   customId = 'gdzie-kupic',
+  isDraft = false,
 }: StoreLocationsProps) {
   // Deduplicate stores by _id
   const uniqueStoresMap = new Map<string, Store>();
@@ -190,6 +198,7 @@ export default async function StoreLocations({
   const geocodeResults = await Promise.allSettled(
     uniqueStores.filter(Boolean).map(async (store) => {
       if (
+        !isDraft &&
         store.address?.city &&
         store.address?.street &&
         store.address?.postalCode
@@ -256,7 +265,12 @@ export default async function StoreLocations({
       <h2 className={styles.heading}>Gdzie kupić</h2>
       <ul className={styles.storesList}>
         {[...allStoresWithLocation].map((store, index) => (
-          <li key={store._id + index} id={store._id} className={styles.store}>
+          <li
+            key={store._id + index}
+            id={store._id}
+            className={styles.store}
+            data-sanity={referencedDataSanity(store, isDraft, 'name')}
+          >
             <div className={styles.storeInfo}>
               <p className={styles.storeName}>{store.name}</p>
               {store.address && (

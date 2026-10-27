@@ -1,3 +1,4 @@
+import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -17,6 +18,7 @@ type CompanyRegistration = {
 export type ContactFormProps = PagebuilderType<'contactForm'> & {
   index: number;
   companyRegistration?: CompanyRegistration;
+  isDraft?: boolean;
 };
 
 export default function ContactForm({
@@ -27,6 +29,7 @@ export default function ContactForm({
   companyRegistration,
   formState,
   index,
+  isDraft,
 }: ContactFormProps) {
   const registrationDetails = [
     companyRegistration?.companyName,
@@ -69,6 +72,7 @@ export default function ContactForm({
                 id={person._id}
                 startPos="left"
                 index={index}
+                dataSanity={referencedDataSanity(person, isDraft, 'name')}
               />
             </li>
           ))}

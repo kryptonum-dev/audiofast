@@ -20,6 +20,7 @@ import {
   resolveStandardConfigurationVariant,
   type StandardConfigurationData,
 } from '@/src/global/b2c/configuration/standard-configuration';
+import { useIsDraftMode } from '@/src/global/sanity/draft-mode-context';
 import type {
   CompletePricingData,
   PricingSelection,
@@ -27,6 +28,7 @@ import type {
 
 import AddToCartConfirmationModal from '../../ui/AddToCartConfirmationModal';
 import Button from '../../ui/Button';
+import PreviewPurchaseNote from '../../ui/PreviewPurchaseNote';
 import ProductInquiryModal, {
   type ProductContext,
 } from '../ProductInquiryModal';
@@ -151,7 +153,12 @@ export default function PricingSection({
     setIsModalOpen(false);
   };
 
+  // Draft mode (Presentation): buying is disabled, so no draft or
+  // stega-encoded product string can enter the cart (P10).
+  const isPurchaseDisabled = useIsDraftMode();
+
   const handleAddToCart = () => {
+    if (isPurchaseDisabled) return;
     if (!selectedVariant) return;
 
     const line = createStandardCartLine({
@@ -199,8 +206,10 @@ export default function PricingSection({
             iconUsed="addToCart"
             onClick={handleAddToCart}
             className={styles.inquiryButton}
+            disabled={isPurchaseDisabled}
           />
         ) : null}
+        {isBuyable && isPurchaseDisabled ? <PreviewPurchaseNote /> : null}
 
         <Button
           text="Zapytaj o produkt"

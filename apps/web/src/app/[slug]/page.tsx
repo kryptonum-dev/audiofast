@@ -77,6 +77,7 @@ async function CachedPage({
   slug,
   perspective,
   stega,
+  isDraft,
 }: CachedProps & { slug: string }) {
   'use cache';
   cacheLife('sanity');
@@ -104,6 +105,9 @@ async function CachedPage({
         basePath={pageData.slug || '/'}
         pageBuilder={pageData.pageBuilder || []}
         fetchOptions={{ perspective, stega }}
+        documentId={pageData._id}
+        documentType={pageData._type}
+        isDraft={isDraft}
       />
     </main>
   );

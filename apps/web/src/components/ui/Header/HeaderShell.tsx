@@ -13,9 +13,14 @@ import styles from './styles.module.scss';
 
 type HeaderShellProps = {
   buttons: NonNullable<NonNullable<QueryNavbarResult>['buttons']>;
+  /** Draft-only `data-sanity` for `navbar.buttons` (pre-built on the server). */
+  linksDataSanity?: string;
 };
 
-export default function HeaderShell({ buttons }: HeaderShellProps) {
+export default function HeaderShell({
+  buttons,
+  linksDataSanity,
+}: HeaderShellProps) {
   const pathname = usePathname();
   const isCartMode = pathname?.startsWith('/koszyk') ?? false;
 
@@ -37,7 +42,11 @@ export default function HeaderShell({ buttons }: HeaderShellProps) {
               id="main-navigation"
               aria-label="Główna nawigacja"
             >
-              <div className={styles.primaryLinks} aria-hidden={isCartMode}>
+              <div
+                className={styles.primaryLinks}
+                aria-hidden={isCartMode}
+                data-sanity={linksDataSanity}
+              >
                 <HeaderLinks buttons={buttons} />
               </div>
               <div className={styles.utilityLinks}>

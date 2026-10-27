@@ -76,6 +76,7 @@ async function CachedBlogShell({
   perspective,
   stega,
   listing,
+  isDraft,
 }: CachedProps & { listing: ReactNode }) {
   'use cache';
   cacheLife('sanity');
@@ -132,6 +133,9 @@ async function CachedBlogShell({
       <PageBuilder
         pageBuilder={pageData.pageBuilder || []}
         fetchOptions={{ perspective, stega }}
+        documentId={pageData._id}
+        documentType={pageData._type}
+        isDraft={isDraft}
       />
     </>
   );

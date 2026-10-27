@@ -1,7 +1,13 @@
 import { cacheLife } from 'next/cache';
 import Link from 'next/link';
+import { stegaClean } from 'next-sanity';
 
 import LogoLink from '@/src/components/ui/LogoLink';
+import {
+  dataSanity,
+  getDataAttribute,
+  referencedDataSanity,
+} from '@/src/global/sanity/data-attribute';
 import type { CachedProps } from '@/src/global/sanity/draft-aware';
 import { sanityFetch } from '@/src/global/sanity/live';
 import { queryFooter } from '@/src/global/sanity/query';
@@ -12,7 +18,11 @@ import NewsletterForm from './NewsletterForm';
 import styles from './styles.module.scss';
 
 // Cached leaf, dispatched like Header (root layout, draft-aware).
-export default async function Footer({ perspective, stega }: CachedProps) {
+export default async function Footer({
+  perspective,
+  stega,
+  isDraft,
+}: CachedProps) {
   'use cache';
   cacheLife('sanity');
   const { data: footerData } = await sanityFetch<QueryFooterResult>({
@@ -22,12 +32,20 @@ export default async function Footer({ perspective, stega }: CachedProps) {
     stega,
     tags: ['footer'],
   });
+  const footerAttribute = getDataAttribute({
+    id: footerData?._id,
+    type: footerData?._type,
+    isDraft,
+  });
 
   return (
     <footer className={`${styles.footer} max-width-block`}>
       <div className={styles.logoContainer}>
         <LogoLink />
-        <nav className={styles.socialMedia}>
+        <nav
+          className={styles.socialMedia}
+          data-sanity={dataSanity(footerAttribute, 'highlightedSocialMedia')}
+        >
           {footerData?.highlightedSocialMedia?.map((socialMedia) => (
             <Link
               key={socialMedia.name}
@@ -35,12 +53,16 @@ export default async function Footer({ perspective, stega }: CachedProps) {
               target="_blank"
               rel="noreferrer"
               dangerouslySetInnerHTML={{ __html: socialMedia.iconString! }}
-              aria-label={`Odwiedź nasz ${socialMedia.name}`}
+              aria-label={`Odwiedź nasz ${stegaClean(socialMedia.name)}`}
+              data-sanity={referencedDataSanity(socialMedia, isDraft, 'link')}
             ></Link>
           ))}
         </nav>
       </div>
-      <nav className={styles.linksCol}>
+      <nav
+        className={styles.linksCol}
+        data-sanity={dataSanity(footerAttribute, 'links')}
+      >
         {footerData?.links?.slice(0, 3).map((link) => (
           <Link key={link.text} href={link.href!}>
             {link.text}

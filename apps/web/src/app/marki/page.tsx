@@ -46,7 +46,7 @@ export default async function BrandsPage() {
   return renderDraftAware(CachedBrandsPage, {});
 }
 
-async function CachedBrandsPage({ perspective, stega }: CachedProps) {
+async function CachedBrandsPage({ perspective, stega, isDraft }: CachedProps) {
   'use cache';
   cacheLife('sanity');
   const brandsData = await getBrandsPageData({ perspective, stega });
@@ -74,6 +74,9 @@ async function CachedBrandsPage({ perspective, stega }: CachedProps) {
       <PageBuilder
         pageBuilder={brandsData.pageBuilder || []}
         fetchOptions={{ perspective, stega }}
+        documentId={brandsData._id}
+        documentType={brandsData._type}
+        isDraft={isDraft}
       />
     </main>
   );

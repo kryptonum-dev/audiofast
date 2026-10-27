@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { useMemo } from 'react';
 
+import { hasText } from '@/src/global/utils/stega-text';
+
 import styles from './Button.module.scss';
 
 export type Props = React.HTMLAttributes<HTMLAnchorElement> &
@@ -114,7 +116,11 @@ export default function Button({
         )}
       </div>
       <div className={styles.textContainer}>
-        <span>{text || children}</span>
+        {/* A CMS label stored as "" still carries stega markers in draft
+            mode, so a plain `text || children` would render an empty label. */}
+        <span>
+          {(typeof text === 'string' ? hasText(text) : text) ? text : children}
+        </span>
       </div>
     </Element>
   );

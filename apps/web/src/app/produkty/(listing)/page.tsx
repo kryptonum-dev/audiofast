@@ -106,6 +106,7 @@ async function CachedProductsShell({
   perspective,
   stega,
   listing,
+  isDraft,
 }: CachedProps & { listing: ReactNode }) {
   'use cache';
   cacheLife('sanity');
@@ -179,6 +180,9 @@ async function CachedProductsShell({
       <PageBuilder
         pageBuilder={pageData.pageBuilder || []}
         fetchOptions={{ perspective, stega }}
+        documentId={pageData._id}
+        documentType={pageData._type}
+        isDraft={isDraft}
       />
     </>
   );

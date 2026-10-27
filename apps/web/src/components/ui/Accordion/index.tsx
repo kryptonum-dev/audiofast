@@ -18,12 +18,15 @@ interface AccordionProps {
   faq: FaqType;
   currentOpen: string | null;
   onToggle: () => void;
+  /** Draft-only `data-sanity` for the referenced `faq` document. */
+  dataSanity?: string;
 }
 
 export default function Accordion({
   faq,
   currentOpen,
   onToggle,
+  dataSanity,
 }: AccordionProps) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const isOpen = currentOpen === faq._id;
@@ -33,6 +36,7 @@ export default function Accordion({
       ref={detailsRef}
       className={styles.accordion}
       data-expanded={isOpen}
+      data-sanity={dataSanity}
       open
     >
       <summary

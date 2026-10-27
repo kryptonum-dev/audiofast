@@ -422,6 +422,7 @@ async function CachedCategoryShell({
   listing,
   perspective,
   stega,
+  isDraft,
 }: CachedProps & {
   categorySlug: string;
   filtersBar: ReactNode;
@@ -460,10 +461,17 @@ async function CachedCategoryShell({
   const heroDescription =
     categoryContent?.description || defaultContent.description;
   const heroImage = categoryContent?.heroImage || defaultContent.heroImage;
+  const usesCategoryBlocks = Boolean(
+    categoryContent?.pageBuilder && categoryContent.pageBuilder.length > 0,
+  );
   const pageBuilderSections =
-    categoryContent?.pageBuilder && categoryContent.pageBuilder.length > 0
+    usesCategoryBlocks && categoryContent?.pageBuilder
       ? categoryContent.pageBuilder
       : defaultContent.pageBuilder || [];
+  // The overlay must address the document whose blocks are rendered.
+  const pageBuilderOwner = usesCategoryBlocks
+    ? { _id: categoryContent?._id, _type: 'productCategorySub' }
+    : { _id: defaultContent._id, _type: defaultContent._type };
 
   const filterDefinitions = getFilterDefinitions(categoryContent);
 
@@ -534,6 +542,9 @@ async function CachedCategoryShell({
       <PageBuilder
         pageBuilder={pageBuilderSections}
         fetchOptions={{ perspective, stega }}
+        documentId={pageBuilderOwner._id}
+        documentType={pageBuilderOwner._type}
+        isDraft={isDraft}
       />
     </>
   );

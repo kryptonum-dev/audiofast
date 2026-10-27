@@ -39,7 +39,7 @@ export default async function Page() {
   return renderDraftAware(CachedHomePage, {});
 }
 
-async function CachedHomePage({ perspective, stega }: CachedProps) {
+async function CachedHomePage({ perspective, stega, isDraft }: CachedProps) {
   'use cache';
   cacheLife('sanity');
   const homePageData = await getHomePageData({ perspective, stega });
@@ -53,6 +53,9 @@ async function CachedHomePage({ perspective, stega }: CachedProps) {
       <PageBuilder
         pageBuilder={homePageData.pageBuilder || []}
         fetchOptions={{ perspective, stega }}
+        documentId={homePageData._id}
+        documentType={homePageData._type}
+        isDraft={isDraft}
       />
     </main>
   );

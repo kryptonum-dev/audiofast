@@ -154,6 +154,7 @@ async function CachedBlogCategoryShell({
   listing,
   perspective,
   stega,
+  isDraft,
 }: CachedProps & { categorySlug: string; listing: ReactNode }) {
   'use cache';
   cacheLife('sanity');
@@ -245,6 +246,9 @@ async function CachedBlogCategoryShell({
       <PageBuilder
         pageBuilder={defaultContent.pageBuilder || []}
         fetchOptions={options}
+        documentId={defaultContent._id}
+        documentType={defaultContent._type}
+        isDraft={isDraft}
       />
     </>
   );

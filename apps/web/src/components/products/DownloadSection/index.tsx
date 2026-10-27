@@ -1,6 +1,7 @@
 import { FileDown } from 'lucide-react';
 
 import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import styles from './styles.module.scss';
 
@@ -53,7 +54,7 @@ export default function DownloadSection({
               </span>
               <span className={styles.textContent}>
                 <span className={styles.title}>{pdf.title}</span>
-                {pdf.description && (
+                {hasText(pdf.description) && (
                   <span className={styles.description}>{pdf.description}</span>
                 )}
               </span>

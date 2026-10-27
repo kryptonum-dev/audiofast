@@ -1,7 +1,8 @@
-import NextImage from 'next/image';
 import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import NextImage from 'next/image';
 
 import type { PortableTextProps } from '@/src/global/types';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import Image from '../../shared/Image';
 import styles from '../YouTubeVideo/styles.module.scss';
@@ -82,7 +83,7 @@ export async function VimeoVideoComponent({
   }
 
   // Fetch title from Vimeo if not provided in Sanity
-  const videoTitle = title || (await fetchVimeoTitle(vimeoId));
+  const videoTitle = hasText(title) ? title : await fetchVimeoTitle(vimeoId);
 
   // Try to get Vimeo thumbnail if no Sanity thumbnail is provided
   let thumbnailUrl: string | undefined;

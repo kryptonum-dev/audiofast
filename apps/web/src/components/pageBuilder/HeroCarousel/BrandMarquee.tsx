@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import AppImage from '@/components/shared/Image';
 import type { PagebuilderType } from '@/global/types';
+import { hasText, stripStega } from '@/src/global/utils/stega-text';
 
 import styles from './styles.module.scss';
 
@@ -32,12 +33,14 @@ export default function BrandMarquee({ brands }: BrandMarqueeProps) {
                 className={styles.brandItem}
                 aria-hidden={isDuplicate}
                 href={brand.slug!}
-                aria-label={`Przejdź do marki ${brand.name}`}
+                aria-label={`Przejdź do marki ${stripStega(brand.name ?? '')}`}
                 tabIndex={isDuplicate ? -1 : 0}
               >
                 <AppImage
                   image={brand.logo}
-                  alt={brand.name || 'Logo marki'}
+                  alt={
+                    hasText(brand.name) ? stripStega(brand.name) : 'Logo marki'
+                  }
                   sizes="(max-width: 56.1875rem) 72px, 93px"
                   quality={90}
                   className={styles.brandLogo}

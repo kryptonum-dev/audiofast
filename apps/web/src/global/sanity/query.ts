@@ -363,6 +363,8 @@ const publicationBlock = /* groq */ `
   ),
   "author": select(
     _type == "review" => author->{
+      _id,
+      _type,
       name,
       ${imageFragment('image')}
     },
@@ -455,6 +457,7 @@ const cpoListablePreviewImageCondition = /* groq */ `(
 // Reusable FAQ fields (keyed-deref'd from `faq` reference arrays)
 const faqFields = /* groq */ `
   _id,
+  _type,
   _createdAt,
   question,
   ${portableTextFragment('answer')},
@@ -463,6 +466,7 @@ const faqFields = /* groq */ `
 // Reusable team member fields (keyed-deref'd from `teamMember` reference arrays)
 const teamMemberFields = /* groq */ `
   _id,
+  _type,
   name,
   position,
   phoneNumber,
@@ -1036,13 +1040,19 @@ export const querySettings = defineQuery(`*[_type == "settings"][0]{
 }`);
 
 export const queryNavbar = defineQuery(`*[_type == "navbar"][0]{
+  _id,
+  _type,
   ${buttonFragment('buttons[]')}
 }`);
 
 export const queryFooter = defineQuery(`*[_type == "footer"][0]{
+  _id,
+  _type,
   highlightedSocialMedia[defined(@->)]{
     _key,
     ...@->{
+      _id,
+      _type,
       name,
       link,
       iconString,
@@ -1389,6 +1399,7 @@ export const queryBlogPostBySlug =
     authorType == "external" => { "name": customAuthor },
     author->{
       _id,
+      _type,
       name,
       position,
       ${imageFragment('image')},
@@ -1512,6 +1523,7 @@ export const queryBlogPageContent = defineQuery(`
     "categoryContent": select(
       $category != "" => *[_type == "blog-category" && slug.current == $category][0]{
         _id,
+        _type,
         name,
         "slug": slug.current,
         doNotIndex,
@@ -1687,6 +1699,7 @@ export const queryProductsPageContent = defineQuery(`
     "categoryContent": select(
       $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{
         _id,
+        _type,
         name,
         "slug": slug.current,
         doNotIndex,
@@ -1996,6 +2009,7 @@ export function getProductsListingQuery(sortBy: string = 'newest') {
 // Dealer ("Gdzie kupić") fields shared by the brand and product store lists
 const storeFields = /* groq */ `
   _id,
+  _type,
   name,
   "slug": slug.current,
   address { postalCode, city, street },
@@ -2011,6 +2025,7 @@ const storeFields = /* groq */ `
 export const queryBrandBySlug = defineQuery(/* groq */ `
   *[_type == "brand" && slug.current == $slug][0] {
     _id,
+    _type,
     name,
     "slug": slug.current,
     doNotIndex,
@@ -2082,6 +2097,7 @@ export const queryBrandStoresById = defineQuery(/* groq */ `
 export const queryProductBySlug = defineQuery(/* groq */ `
   *[_type == "product" && slug.current == $slug][0] {
     _id,
+    _type,
     name,
     subtitle,
     headingOverride { upper, lower },
@@ -2104,6 +2120,7 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     },
     "awards": *[_type == "award" && references(^._id)]{
       _id,
+      _type,
       name,
       ${imageFragment('logo')}
     },

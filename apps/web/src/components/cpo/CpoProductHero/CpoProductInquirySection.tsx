@@ -10,9 +10,11 @@ import type { SanityRawImage } from '@/src/components/shared/Image';
 import AddToCartConfirmationModal from '@/src/components/ui/AddToCartConfirmationModal';
 import Button from '@/src/components/ui/Button';
 import type { FormStateData } from '@/src/components/ui/FormStates';
+import PreviewPurchaseNote from '@/src/components/ui/PreviewPurchaseNote';
 import { trackAddToCart } from '@/src/global/b2c/analytics/commerce-events';
 import { createCpoCartLine } from '@/src/global/b2c/cart/cpo-cart-line';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
+import { useIsDraftMode } from '@/src/global/sanity/draft-mode-context';
 import { formatPrice } from '@/src/global/utils';
 
 import productHeroStyles from '../../products/ProductHero/styles.module.scss';
@@ -91,7 +93,11 @@ export default function CpoProductInquirySection({
     };
   }, [brandLogo, brandName, previewImage, priceCents, productId, productName]);
 
+  // Draft mode (Presentation): buying is disabled (P10).
+  const isPurchaseDisabled = useIsDraftMode();
+
   const handleToggleCart = () => {
+    if (isPurchaseDisabled) return;
     if (existingCpoLine) {
       removeLine(existingCpoLine.lineId);
       setIsConfirmationOpen(false);
@@ -140,8 +146,10 @@ export default function CpoProductInquirySection({
               iconUsed={isAlreadyInCart ? 'removeFromCart' : 'addToCart'}
               onClick={handleToggleCart}
               className={productHeroStyles.inquiryButton}
+              disabled={isPurchaseDisabled}
             />
           ) : null}
+          {isBuyable && isPurchaseDisabled ? <PreviewPurchaseNote /> : null}
           <Button
             text="Zapytaj o ten egzemplarz"
             variant={isBuyable ? 'secondary' : 'primary'}

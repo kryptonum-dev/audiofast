@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/src/global/types';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import PortableText from '../../portableText';
 import styles from './styles.module.scss';
@@ -216,7 +217,7 @@ export default function TechnicalData({ data, customId }: TechnicalDataProps) {
 
       {validGroups.map((group, groupIndex) => (
         <React.Fragment key={group._key || groupIndex}>
-          {hasMultipleGroups && group.title && (
+          {hasMultipleGroups && hasText(group.title) && (
             <h3 className={styles.groupHeading}>{group.title}</h3>
           )}
 

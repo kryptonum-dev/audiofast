@@ -3,6 +3,7 @@ import 'server-only';
 import { createClient } from '@sanity/client';
 
 import { SANITY_STUDIO_URL } from '../constants';
+import { stegaFilter } from './stega-filter';
 
 function assertValue<T>(v: T | undefined, errorMessage: string): T {
   if (v === undefined) {
@@ -38,15 +39,6 @@ export const apiVersion =
   process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-02-10';
 
 /**
- * Leaf field names that stega must never encode, because the value is
- * consumed as data (an `=== '…'` comparison, a URL param, an attribute, a
- * server-action payload) rather than rendered as clickable text. Filled in
- * Phase 8 (research/09 §2–3). Stega is off on this client and only switched
- * on per request in draft sessions, so the set is inert until then.
- */
-const STEGA_LOGIC_ONLY_FIELDS = new Set<string>([]);
-
-/**
  * The one Sanity client. There is no environment switch: localhost, Vercel
  * Preview and production all read the published perspective through the API
  * CDN. Drafts are only ever visible through draft mode, where `defineLive`
@@ -71,12 +63,7 @@ export const client = createClient({
   stega: {
     enabled: false,
     studioUrl: SANITY_STUDIO_URL,
-    filter: (props) => {
-      const key = props.sourcePath.at(-1);
-      if (typeof key === 'string' && STEGA_LOGIC_ONLY_FIELDS.has(key)) {
-        return false;
-      }
-      return props.filterDefault(props);
-    },
+    // Logic-only leaf names and subtrees: `stega-filter.ts` (research/09 §2).
+    filter: stegaFilter,
   },
 });

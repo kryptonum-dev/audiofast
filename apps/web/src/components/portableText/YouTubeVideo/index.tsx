@@ -1,7 +1,8 @@
-import NextImage from 'next/image';
 import type { PortableTextTypeComponentProps } from '@portabletext/react';
+import NextImage from 'next/image';
 
 import type { PortableTextProps } from '@/src/global/types';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import Image from '../../shared/Image';
 import styles from './styles.module.scss';
@@ -94,7 +95,9 @@ export async function YoutubeVideoComponent({
   }
 
   // Fetch title from YouTube if not provided in Sanity
-  const videoTitle = title || (await fetchYouTubeTitle(youtubeId));
+  const videoTitle = hasText(title)
+    ? title
+    : await fetchYouTubeTitle(youtubeId);
 
   // Try to get YouTube thumbnail if no Sanity thumbnail is provided
   let thumbnailUrl: string | undefined;

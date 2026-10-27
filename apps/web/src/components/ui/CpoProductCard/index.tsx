@@ -5,6 +5,7 @@ import type {
   PortableTextProps,
   PortableTextPropsBlock,
 } from '@/src/global/types';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import PortableTextRenderer from '../../portableText';
 import Image from '../../shared/Image';
@@ -179,7 +180,7 @@ export default function CpoProductCard({
         data-has-description={hasShortDescriptionPreview}
       >
         <Heading className={styles.title}>
-          {brandName ? `${brandName} ` : null}
+          {hasText(brandName) ? `${brandName} ` : null}
           {name}
         </Heading>
         {hasShortDescriptionPreview && (

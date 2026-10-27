@@ -9,12 +9,15 @@ export default function ContactPerson({
   startPos = 'right',
   className = '',
   index,
+  dataSanity,
 }: {
   person: ContactPersonType;
   id: string;
   startPos?: 'left' | 'right';
   className?: string;
   index: number;
+  /** Draft-only `data-sanity` for the referenced `teamMember` document. */
+  dataSanity?: string;
 }) {
   return (
     <a
@@ -22,6 +25,7 @@ export default function ContactPerson({
       key={id}
       className={`${styles.contactPerson} ${className}`}
       data-start-pos={startPos}
+      data-sanity={dataSanity}
     >
       <span className={styles.name}>{person.name}</span>
       <span className={styles.phone}>{person.phoneNumber}</span>

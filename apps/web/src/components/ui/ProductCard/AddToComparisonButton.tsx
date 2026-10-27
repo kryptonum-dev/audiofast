@@ -9,6 +9,7 @@ import {
   isProductInComparison,
   removeProductFromComparison,
 } from '@/src/global/comparison/cookie-manager';
+import { stripStega } from '@/src/global/utils/stega-text';
 
 import styles from './styles.module.scss';
 
@@ -95,8 +96,8 @@ export default function AddToComparisonButton({
       }
       aria-label={
         isInComparison
-          ? `Usuń ${productName} z porównania`
-          : `Dodaj ${productName} do porównania`
+          ? `Usuń ${stripStega(productName)} z porównania`
+          : `Dodaj ${stripStega(productName)} do porównania`
       }
     >
       <span>

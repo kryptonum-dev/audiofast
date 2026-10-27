@@ -81,6 +81,7 @@ async function CachedCpoPage({
   perspective,
   stega,
   cpoListing,
+  isDraft,
 }: CachedProps & { cpoListing: ReactNode }) {
   'use cache';
   cacheLife('sanity');
@@ -107,6 +108,9 @@ async function CachedCpoPage({
         basePath={pageData.slug || CPO_BASE_PATH}
         pageBuilder={pageData.pageBuilder || []}
         fetchOptions={{ perspective, stega }}
+        documentId={pageData._id}
+        documentType={pageData._type}
+        isDraft={isDraft}
         slots={{ cpoListing }}
       />
     </main>

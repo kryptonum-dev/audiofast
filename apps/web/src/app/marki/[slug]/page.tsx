@@ -176,6 +176,7 @@ async function CachedBrandShell({
   listing,
   perspective,
   stega,
+  isDraft,
 }: CachedProps & { slug: string; listing: ReactNode }) {
   'use cache';
   cacheLife('sanity');
@@ -371,6 +372,7 @@ async function CachedBrandShell({
             <StoreLocations
               customId="gdzie-kupic"
               stores={brand.stores.filter((s) => s !== null)}
+              isDraft={isDraft}
             />
           </Suspense>
         )}

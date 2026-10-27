@@ -1,5 +1,6 @@
 import Image from '@/components/shared/Image';
 import { formatPrice } from '@/src/global/utils';
+import { hasText, stripStega } from '@/src/global/utils/stega-text';
 
 import type { ProductContext } from '.';
 import styles from './styles.module.scss';
@@ -47,12 +48,12 @@ export default function ProductSummary({
             <Image
               image={product.image}
               sizes="120px"
-              alt={`${product.brandName} ${product.name}`}
+              alt={stripStega(`${product.brandName} ${product.name}`)}
               className={styles.cpoImage}
             />
           </div>
           <div className={styles.cpoInfo}>
-            {product.brandName && (
+            {hasText(product.brandName) && (
               <span className={styles.brandName}>{product.brandName}</span>
             )}
             <span className={styles.productName}>{product.name}</span>
@@ -82,7 +83,7 @@ export default function ProductSummary({
           <Image
             image={product.image}
             sizes="88px"
-            alt={`${product.brandName} ${product.name}`}
+            alt={stripStega(`${product.brandName} ${product.name}`)}
           />
         </div>
         <div className={styles.productInfo}>

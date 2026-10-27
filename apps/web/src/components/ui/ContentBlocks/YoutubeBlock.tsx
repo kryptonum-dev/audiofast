@@ -3,6 +3,8 @@
 import NextImage from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
+import { hasText } from '@/src/global/utils/stega-text';
+
 import Image from '../../shared/Image';
 import VideoModal from '../VideoModal';
 import styles from './styles.module.scss';
@@ -48,7 +50,9 @@ export function YoutubeBlock({
   thumbnail,
 }: YoutubeBlockProps) {
   const playButtonRef = useRef<HTMLButtonElement>(null);
-  const [videoTitle, setVideoTitle] = useState<string | null>(title || null);
+  const [videoTitle, setVideoTitle] = useState<string | null>(
+    hasText(title) ? title : null,
+  );
   const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(
     undefined,
   );
@@ -57,7 +61,7 @@ export function YoutubeBlock({
   useEffect(() => {
     async function fetchVideoData() {
       // Fetch title if not provided
-      if (!title) {
+      if (!hasText(title)) {
         try {
           const oEmbedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${youtubeId}&format=json`;
           const response = await fetch(oEmbedUrl);

@@ -286,6 +286,7 @@ async function CachedProduct({
         productId={product._id}
         categories={product.categories}
         formStateData={formStateData}
+        isDraft={isDraft}
       />
       {sections.length > 1 && (
         <PillsStickyNav
@@ -323,7 +324,11 @@ async function CachedProduct({
       )}
       {effectiveStores && effectiveStores.length > 0 && (
         <Suspense fallback={null}>
-          <StoreLocations customId="gdzie-kupic" stores={effectiveStores} />
+          <StoreLocations
+            customId="gdzie-kupic"
+            stores={effectiveStores}
+            isDraft={isDraft}
+          />
         </Suspense>
       )}
       {product.reviews && (
@@ -385,6 +390,9 @@ async function CachedProduct({
           pageBuilder={product.pageBuilder}
           indexOffset={1}
           fetchOptions={options}
+          documentId={product._id}
+          documentType="product"
+          isDraft={isDraft}
         />
       )}
     </main>

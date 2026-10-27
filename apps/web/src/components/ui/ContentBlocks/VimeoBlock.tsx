@@ -3,6 +3,8 @@
 import NextImage from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
+import { hasText } from '@/src/global/utils/stega-text';
+
 import Image from '../../shared/Image';
 import VideoModal from '../VideoModal';
 import styles from './styles.module.scss';
@@ -33,7 +35,9 @@ interface VimeoBlockProps {
 
 export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
   const playButtonRef = useRef<HTMLButtonElement>(null);
-  const [videoTitle, setVideoTitle] = useState<string | null>(title || null);
+  const [videoTitle, setVideoTitle] = useState<string | null>(
+    hasText(title) ? title : null,
+  );
   const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(
     undefined,
   );
@@ -46,7 +50,7 @@ export function VimeoBlock({ vimeoId, title, thumbnail }: VimeoBlockProps) {
         const response = await fetch(oEmbedUrl);
         if (response.ok) {
           const data = await response.json();
-          if (!title && data?.title) {
+          if (!hasText(title) && data?.title) {
             setVideoTitle(data.title);
           }
           if (!thumbnail && data?.thumbnail_url) {

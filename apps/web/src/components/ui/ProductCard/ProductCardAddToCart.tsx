@@ -19,10 +19,12 @@ import {
   type QuickAddResolution,
 } from '@/src/global/b2c/cart/quick-add';
 import { useCart } from '@/src/global/b2c/cart/use-cart';
+import { useIsDraftMode } from '@/src/global/sanity/draft-mode-context';
 import type { CompletePricingData } from '@/src/global/supabase/types';
 
 import AddToCartConfirmationModal from '../AddToCartConfirmationModal';
 import Button from '../Button';
+import PreviewPurchaseNote from '../PreviewPurchaseNote';
 
 type ProductCardAddToCartProps = {
   /** Product route slug, e.g. "/produkty/playermini/". */
@@ -61,6 +63,8 @@ export default function ProductCardAddToCart({
   className,
 }: ProductCardAddToCartProps) {
   const { addLine, isHydrated } = useCart();
+  // Draft mode (Presentation): quick-add is disabled (P10).
+  const isPurchaseDisabled = useIsDraftMode();
   const [isPending, setIsPending] = useState(false);
   const isPendingRef = useRef(false);
   // A successful lookup is reused on the next click (no second request).
@@ -142,7 +146,7 @@ export default function ProductCardAddToCart({
 
   const handleClick = async () => {
     // Adding before the cart is hydrated from storage would be overwritten.
-    if (!isHydrated || isPendingRef.current) return;
+    if (!isHydrated || isPurchaseDisabled || isPendingRef.current) return;
 
     if (resolution) {
       handleResult(resolution);
@@ -188,11 +192,12 @@ export default function ProductCardAddToCart({
         isLoading={isPending}
         // While loading, keep the button focusable (a disabled button drops
         // keyboard focus); the pending ref blocks double clicks instead.
-        disabled={!isHydrated}
+        disabled={!isHydrated || isPurchaseDisabled}
         aria-disabled={isPending || undefined}
         onClick={handleClick}
         className={className}
       />
+      {isPurchaseDisabled ? <PreviewPurchaseNote /> : null}
       <AddToCartConfirmationModal
         isOpen={isConfirmationOpen}
         product={

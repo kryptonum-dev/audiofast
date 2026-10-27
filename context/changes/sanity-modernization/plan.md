@@ -1320,18 +1320,18 @@ After the soak checks pass:
 
 ### Phase 7: Presentation — Studio
 
-- [x] 7.1 Studio tests pass
-- [x] 7.2 Type check passes
-- [x] 7.3 Studio builds
-- [x] 7.4 Completeness test covers all schema types
+- [x] 7.1 Studio tests pass — ef355c6
+- [x] 7.2 Type check passes — ef355c6
+- [x] 7.3 Studio builds — ef355c6
+- [x] 7.4 Completeness test covers all schema types — ef355c6
 
 ### Phase 8: Presentation — web draft mode, stega, overlays, B2C isolation
 
-- [ ] 8.1 Web unit tests pass
-- [ ] 8.2 Type check + lint pass
-- [ ] 8.3 Full build passes
+- [x] 8.1 Web unit tests pass
+- [x] 8.2 Type check + lint pass
+- [x] 8.3 Full build passes
 - [ ] 8.4 Published HTML has no overlays
-- [ ] 8.5 Parity vs baseline still clean
+- [x] 8.5 Parity vs baseline still clean
 - [ ] 8.6 Studio + web deployed
 
 ### Phase 9: Drag-and-drop (lsse level)

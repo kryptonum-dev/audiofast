@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import type { ProductType } from '@/src/global/types';
 import { formatPrice } from '@/src/global/utils';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import Image from '../../shared/Image';
 import Button from '../Button';
@@ -61,7 +62,7 @@ export default function ProductCard({
 
   const titleText = (
     <>
-      {brandName && `${brandName} `}
+      {hasText(brandName) && `${brandName} `}
       {name}
     </>
   );

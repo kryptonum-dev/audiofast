@@ -90,6 +90,7 @@ async function CachedBlogPost({
   slug,
   perspective,
   stega,
+  isDraft,
 }: CachedProps & { slug: string }) {
   'use cache';
   cacheLife('sanity');
@@ -128,6 +129,9 @@ async function CachedBlogPost({
           pageBuilder={pageData.pageBuilder}
           indexOffset={1}
           fetchOptions={{ perspective, stega }}
+          documentId={pageData._id}
+          documentType={pageData._type}
+          isDraft={isDraft}
         />
       )}
     </main>

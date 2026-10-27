@@ -9,7 +9,14 @@ import styles from './styles.module.scss';
 
 type FaqListProps = NonNullable<PagebuilderType<'faqSection'>['faqList']>;
 
-export default function FaqList({ faqList }: { faqList: FaqListProps }) {
+export default function FaqList({
+  faqList,
+  dataSanityById,
+}: {
+  faqList: FaqListProps;
+  /** Draft-only: pre-built `data-sanity` per faq `_id` (built on the server). */
+  dataSanityById?: Record<string, string | undefined>;
+}) {
   const [openAccordionId, setOpenAccordionId] = useState<string | null>(
     faqList?.[0]?._id || null,
   );
@@ -35,6 +42,7 @@ export default function FaqList({ faqList }: { faqList: FaqListProps }) {
             faq={faq}
             currentOpen={openAccordionId}
             onToggle={() => handleAccordionToggle(faq._id)}
+            dataSanity={dataSanityById?.[faq._id]}
           />
         ))}
       </div>
@@ -45,6 +53,7 @@ export default function FaqList({ faqList }: { faqList: FaqListProps }) {
             faq={faq}
             currentOpen={openAccordionId}
             onToggle={() => handleAccordionToggle(faq._id)}
+            dataSanity={dataSanityById?.[faq._id]}
           />
         ))}
       </div>

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import type { PagebuilderType, PortableTextProps } from '@/global/types';
+import { hasText } from '@/src/global/utils/stega-text';
 
 import PortableText from '../../portableText';
 import Button from '../../ui/Button';
@@ -95,7 +96,7 @@ export default function BrandSelector({
 
   const handleBrandHover = useCallback(
     (brand: BrandType) => {
-      if (!brand?.name || !brand?.description) return;
+      if (!hasText(brand?.name) || !brand?.description) return;
 
       // Don't re-animate if it's the same brand
       const isSameBrand = currentBrandRef.current === brand.slug;
