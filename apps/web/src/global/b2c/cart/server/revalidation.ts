@@ -15,7 +15,7 @@ import type {
   StandardCartLine,
   StandardLineRevalidation,
 } from '@/src/global/b2c/cart/types';
-import { releaseExpiredCpoHoldBySlug } from '@/src/global/b2c/checkout/server/cpo-availability';
+import { releaseExpiredCpoHoldsBySlugs } from '@/src/global/b2c/checkout/server/cpo-availability';
 import { validateStandardConfigurationSelection } from '@/src/global/b2c/configuration/standard-configuration';
 import {
   getCpoProductBuyability,
@@ -46,65 +46,158 @@ export type LoadCartPageRuntimeResult = {
   standardPricingByProductKey: Record<string, FetchCartLinePricingResult>;
 };
 
-const queryStandardProductRevalidationBySlug = `
-  *[_type == "product" && slug.current == $slug][0] {
+// One fresh Content Lake read per cart revalidation, whatever the number of
+// lines: every standard and CPO product in the cart is fetched in one batched
+// query (`slug.current in $slugs`) instead of one request per product.
+const queryCartProductsRevalidationBySlugs = `{
+  "standard": *[_type == "product" && slug.current in $standardSlugs] {
+    "slug": slug.current,
     isSellableOnline
-  }
-`;
-
-const queryCpoProductRevalidationBySlug = `
-  *[_type == "cpoProduct" && slug.current == $slug][0] {
+  },
+  "cpo": *[_type == "cpoProduct" && slug.current in $cpoSlugs] {
+    "slug": slug.current,
     isArchived,
     isSellableOnline,
     priceCents,
     availabilityStatus
   }
-`;
+}`;
 
-async function loadStandardRevalidationContext(
-  productSlug: string,
-): Promise<StandardRevalidationContext> {
-  const routeSlug = buildCartProductRouteSlug(productSlug, 'standard');
-  const [pricingData, product] = await Promise.all([
-    fetchProductPricing(productSlug),
-    routeSlug
-      ? sanityFetchFresh<StandardProductRevalidationSnapshot | null>({
-          requestTag: 'cart.revalidate.product',
-          query: queryStandardProductRevalidationBySlug,
-          params: { slug: routeSlug },
-        })
-      : Promise.resolve(null),
-  ]);
+type CartProductsRevalidationResult = {
+  standard?: Array<
+    StandardProductRevalidationSnapshot & { slug?: string | null }
+  > | null;
+  cpo?: Array<CpoProductRevalidationSnapshot & { slug?: string | null }> | null;
+};
 
-  return {
-    pricingData,
-    product,
-  };
-}
+type CartRevalidationContexts = {
+  standard: Map<string, StandardRevalidationContext>;
+  cpo: Map<string, CpoProductRevalidationSnapshot | null>;
+};
 
-async function loadStandardRevalidationContexts(
-  lines: StandardCartLine[],
-): Promise<Map<string, StandardRevalidationContext>> {
-  const uniqueProductSlugs = Array.from(
+function uniqueCartProductSlugs(lines: CartLine[]): string[] {
+  return Array.from(
     new Set(
       lines
         .map((line) => extractCartProductSlug(line.productKey))
         .filter((productSlug): productSlug is string => !!productSlug),
     ),
   );
+}
 
+function toRouteSlugs(
+  productSlugs: string[],
+  lineType: CartLine['lineType'],
+): Map<string, string> {
   return new Map(
-    await Promise.all(
-      uniqueProductSlugs.map(
-        async (
-          productSlug,
-        ): Promise<readonly [string, StandardRevalidationContext]> => [
-          productSlug,
-          await loadStandardRevalidationContext(productSlug),
-        ],
+    productSlugs.flatMap((productSlug) => {
+      const routeSlug = buildCartProductRouteSlug(productSlug, lineType);
+
+      return routeSlug ? [[productSlug, routeSlug] as const] : [];
+    }),
+  );
+}
+
+function indexBySlug<T extends { slug?: string | null }>(
+  rows: T[] | null | undefined,
+): Map<string, T> {
+  return new Map(
+    (rows ?? []).flatMap((row) => (row.slug ? [[row.slug, row] as const] : [])),
+  );
+}
+
+async function fetchCartProductSnapshots(
+  standardRouteSlugs: string[],
+  cpoRouteSlugs: string[],
+): Promise<CartProductsRevalidationResult> {
+  if (standardRouteSlugs.length === 0 && cpoRouteSlugs.length === 0) {
+    return { standard: [], cpo: [] };
+  }
+
+  if (cpoRouteSlugs.length > 0) {
+    // Expired holds go back to `available` before the snapshot is read, so the
+    // cart sees the released state in the same revalidation.
+    await releaseExpiredCpoHoldsBySlugs(cpoRouteSlugs).catch((error) => {
+      console.error(
+        'Failed to release expired CPO holds before revalidation.',
+        {
+          productSlugs: cpoRouteSlugs,
+          error,
+        },
+      );
+    });
+  }
+
+  return (
+    (await sanityFetchFresh<CartProductsRevalidationResult | null>({
+      requestTag: 'cart.revalidate.products',
+      query: queryCartProductsRevalidationBySlugs,
+      params: { standardSlugs: standardRouteSlugs, cpoSlugs: cpoRouteSlugs },
+    })) ?? { standard: [], cpo: [] }
+  );
+}
+
+async function loadRevalidationContexts(
+  standardLines: StandardCartLine[],
+  cpoLines: CpoCartLine[],
+): Promise<CartRevalidationContexts> {
+  const standardProductSlugs = uniqueCartProductSlugs(standardLines);
+  const cpoProductSlugs = uniqueCartProductSlugs(cpoLines);
+  const standardRouteSlugs = toRouteSlugs(standardProductSlugs, 'standard');
+  const cpoRouteSlugs = toRouteSlugs(cpoProductSlugs, 'cpo');
+
+  const [pricingEntries, snapshots] = await Promise.all([
+    Promise.all(
+      standardProductSlugs.map(
+        async (productSlug) =>
+          [productSlug, await fetchProductPricing(productSlug)] as const,
       ),
     ),
-  );
+    fetchCartProductSnapshots(
+      Array.from(standardRouteSlugs.values()),
+      Array.from(cpoRouteSlugs.values()),
+    ),
+  ]);
+
+  const standardBySlug = indexBySlug(snapshots.standard);
+  const cpoBySlug = indexBySlug(snapshots.cpo);
+
+  return {
+    standard: new Map(
+      pricingEntries.map(([productSlug, pricingData]) => {
+        const routeSlug = standardRouteSlugs.get(productSlug);
+        const product = routeSlug ? standardBySlug.get(routeSlug) : undefined;
+
+        return [
+          productSlug,
+          {
+            pricingData,
+            product: product
+              ? { isSellableOnline: product.isSellableOnline }
+              : null,
+          },
+        ];
+      }),
+    ),
+    cpo: new Map(
+      cpoProductSlugs.map((productSlug) => {
+        const routeSlug = cpoRouteSlugs.get(productSlug);
+        const product = routeSlug ? cpoBySlug.get(routeSlug) : undefined;
+
+        return [
+          productSlug,
+          product
+            ? {
+                isArchived: product.isArchived,
+                isSellableOnline: product.isSellableOnline,
+                priceCents: product.priceCents,
+                availabilityStatus: product.availabilityStatus,
+              }
+            : null,
+        ];
+      }),
+    ),
+  };
 }
 
 function createUnavailableStandardLineRevalidation(
@@ -117,53 +210,6 @@ function createUnavailableStandardLineRevalidation(
     isConfigurationValid: false,
     unitPriceCents: null,
   };
-}
-
-async function loadCpoRevalidationContext(
-  productSlug: string,
-): Promise<CpoProductRevalidationSnapshot | null> {
-  const routeSlug = buildCartProductRouteSlug(productSlug, 'cpo');
-
-  if (!routeSlug) {
-    return null;
-  }
-
-  await releaseExpiredCpoHoldBySlug(routeSlug).catch((error) => {
-    console.error('Failed to release expired CPO hold before revalidation.', {
-      productSlug: routeSlug,
-      error,
-    });
-  });
-
-  return sanityFetchFresh<CpoProductRevalidationSnapshot | null>({
-    requestTag: 'cart.revalidate.cpo-product',
-    query: queryCpoProductRevalidationBySlug,
-    params: { slug: routeSlug },
-  });
-}
-
-async function loadCpoRevalidationContexts(
-  lines: CpoCartLine[],
-): Promise<Map<string, CpoProductRevalidationSnapshot | null>> {
-  const uniqueProductSlugs = Array.from(
-    new Set(
-      lines
-        .map((line) => extractCartProductSlug(line.productKey))
-        .filter((productSlug): productSlug is string => !!productSlug),
-    ),
-  );
-
-  return new Map(
-    await Promise.all(
-      uniqueProductSlugs.map(
-        async (
-          productSlug,
-        ): Promise<
-          readonly [string, CpoProductRevalidationSnapshot | null]
-        > => [productSlug, await loadCpoRevalidationContext(productSlug)],
-      ),
-    ),
-  );
 }
 
 function createUnavailableCpoLineRevalidation(
@@ -271,12 +317,12 @@ export async function revalidateStandardCartLines(
     return [];
   }
 
-  const contexts = await loadStandardRevalidationContexts(lines);
+  const contexts = await loadRevalidationContexts(lines, []);
 
   return lines.map((line) =>
     buildStandardLineRevalidation(
       line,
-      contexts.get(extractCartProductSlug(line.productKey) ?? ''),
+      contexts.standard.get(extractCartProductSlug(line.productKey) ?? ''),
     ),
   );
 }
@@ -288,12 +334,12 @@ export async function revalidateCpoCartLines(
     return [];
   }
 
-  const contexts = await loadCpoRevalidationContexts(lines);
+  const contexts = await loadRevalidationContexts([], lines);
 
   return lines.map((line) =>
     buildCpoLineRevalidation(
       line,
-      contexts.get(extractCartProductSlug(line.productKey) ?? ''),
+      contexts.cpo.get(extractCartProductSlug(line.productKey) ?? ''),
     ),
   );
 }
@@ -312,10 +358,19 @@ export async function revalidateCartLines(
     (line): line is CpoCartLine => line.lineType === 'cpo',
   );
 
-  const [standardResults, cpoResults] = await Promise.all([
-    revalidateStandardCartLines(standardLines),
-    revalidateCpoCartLines(cpoLines),
-  ]);
+  const contexts = await loadRevalidationContexts(standardLines, cpoLines);
+  const standardResults = standardLines.map((line) =>
+    buildStandardLineRevalidation(
+      line,
+      contexts.standard.get(extractCartProductSlug(line.productKey) ?? ''),
+    ),
+  );
+  const cpoResults = cpoLines.map((line) =>
+    buildCpoLineRevalidation(
+      line,
+      contexts.cpo.get(extractCartProductSlug(line.productKey) ?? ''),
+    ),
+  );
 
   const resultMap = new Map<string, CartLineRevalidation>(
     [...standardResults, ...cpoResults].map((result) => [
@@ -354,10 +409,8 @@ export async function loadCartPageRuntime(
     (line): line is CpoCartLine => line.lineType === 'cpo',
   );
 
-  const [standardContexts, cpoContexts] = await Promise.all([
-    loadStandardRevalidationContexts(standardLines),
-    loadCpoRevalidationContexts(cpoLines),
-  ]);
+  const { standard: standardContexts, cpo: cpoContexts } =
+    await loadRevalidationContexts(standardLines, cpoLines);
 
   const revalidationResults = lines.map<CartLineRevalidation>((line) => {
     if (line.lineType === 'standard') {

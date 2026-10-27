@@ -74,16 +74,6 @@ const queryCpoAvailabilityBySlugs = `
   }
 `;
 
-const queryCpoAvailabilityBySlug = `
-  *[
-    _type == "cpoProduct" &&
-    !(_id in path("drafts.**")) &&
-    slug.current == $slug
-  ][0] {
-    ${cpoAvailabilityProjection}
-  }
-`;
-
 function createSanityWriteClient(): SanityClient {
   const token = process.env.SANITY_API_WRITE_TOKEN?.trim();
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim();
@@ -219,16 +209,6 @@ async function loadCpoAvailabilityBySlugs(
   );
 }
 
-async function loadCpoAvailabilityBySlug(
-  client: SanityClient,
-  slug: string,
-): Promise<CpoAvailabilitySnapshot | null> {
-  return client.fetch<CpoAvailabilitySnapshot | null>(
-    queryCpoAvailabilityBySlug,
-    { slug },
-  );
-}
-
 function invalidateCpoAvailabilityCache(slug: string | null | undefined): void {
   try {
     revalidateTag('cpoProduct', { expire: 0 });
@@ -268,40 +248,53 @@ async function patchCpoAsAvailable(args: {
   invalidateCpoAvailabilityCache(args.product.slug);
 }
 
-export async function releaseExpiredCpoHoldBySlug(
-  slug: string,
+/**
+ * Releases every expired CPO hold among `slugs` back to `available`. One
+ * Content Lake read for the whole batch (`slug.current in $slugs`), then one
+ * patch per expired hold whose order no longer keeps it. Returns the released
+ * slugs.
+ */
+export async function releaseExpiredCpoHoldsBySlugs(
+  slugs: string[],
   now: Date = new Date(),
-): Promise<boolean> {
-  if (!hasSanityWriteToken()) {
-    return false;
+): Promise<string[]> {
+  const uniqueSlugs = Array.from(new Set(slugs.filter(Boolean)));
+
+  if (uniqueSlugs.length === 0 || !hasSanityWriteToken()) {
+    return [];
   }
 
   const client = createSanityWriteClient();
-  const product = await loadCpoAvailabilityBySlug(client, slug);
+  const productsBySlug = await loadCpoAvailabilityBySlugs(client, uniqueSlugs);
+  const expiredHolds = Array.from(productsBySlug.values()).filter((product) => {
+    if (product.availabilityStatus !== 'on_hold') {
+      return false;
+    }
 
-  if (!product || product.availabilityStatus !== 'on_hold') {
-    return false;
-  }
+    const holdUntil = parseTime(product.holdUntil);
 
-  const holdUntil = parseTime(product.holdUntil);
-
-  if (Number.isNaN(holdUntil) || holdUntil > now.getTime()) {
-    return false;
-  }
-
-  const heldOrder = await loadHeldOrder(product.holdOrderNumber);
-
-  if (shouldKeepExpiredHoldForOrder(heldOrder, now)) {
-    return false;
-  }
-
-  await patchCpoAsAvailable({
-    client,
-    product,
-    changedAt: now.toISOString(),
+    return !Number.isNaN(holdUntil) && holdUntil <= now.getTime();
   });
 
-  return true;
+  const released = await Promise.all(
+    expiredHolds.map(async (product) => {
+      const heldOrder = await loadHeldOrder(product.holdOrderNumber);
+
+      if (shouldKeepExpiredHoldForOrder(heldOrder, now)) {
+        return null;
+      }
+
+      await patchCpoAsAvailable({
+        client,
+        product,
+        changedAt: now.toISOString(),
+      });
+
+      return product.slug ?? null;
+    }),
+  );
+
+  return released.filter((slug): slug is string => !!slug);
 }
 
 export async function reserveCpoItemsForOrder(args: {
@@ -318,11 +311,7 @@ export async function reserveCpoItemsForOrder(args: {
 
   const client = createSanityWriteClient();
   const now = args.now ?? new Date();
-  await Promise.all(
-    productKeys.map((productKey) =>
-      releaseExpiredCpoHoldBySlug(productKey, now),
-    ),
-  );
+  await releaseExpiredCpoHoldsBySlugs(productKeys, now);
 
   const productsBySlug = await loadCpoAvailabilityBySlugs(client, productKeys);
   const unavailableProductKeys = productKeys.filter((productKey) => {

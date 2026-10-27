@@ -12,7 +12,7 @@ import Button from '../Button';
 import styles from './styles.module.scss';
 
 type CpoProductCardProps = {
-  product: QueryCpoProductsListingNewestResult[number];
+  product: QueryCpoProductsListingNewestResult['products'][number];
   headingLevel?: 'h2' | 'h3';
   imageSizes?: string;
   priority?: boolean;

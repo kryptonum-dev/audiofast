@@ -150,6 +150,45 @@ function createCpoLine(overrides?: { lineId?: string; productKey?: string }) {
   });
 }
 
+type ProductSnapshot = Record<string, unknown>;
+
+/**
+ * Mocks the one batched fresh read (`standardSlugs` + `cpoSlugs`) with a
+ * per-slug catalogue; `'all-sellable'` answers every requested standard slug.
+ */
+function mockSanityCatalog(catalog: {
+  standard?: Record<string, ProductSnapshot> | 'all-sellable';
+  cpo?: Record<string, ProductSnapshot>;
+}) {
+  vi.mocked(sanityFetchFresh).mockImplementation(
+    async ({ params }) =>
+      ({
+        standard: ((params?.standardSlugs ?? []) as string[]).flatMap(
+          (slug) => {
+            const snapshot =
+              catalog.standard === 'all-sellable'
+                ? { isSellableOnline: true }
+                : catalog.standard?.[slug];
+
+            return snapshot ? [{ slug, ...snapshot }] : [];
+          },
+        ),
+        cpo: ((params?.cpoSlugs ?? []) as string[]).flatMap((slug) => {
+          const snapshot = catalog.cpo?.[slug];
+
+          return snapshot ? [{ slug, ...snapshot }] : [];
+        }),
+      }) as never,
+  );
+}
+
+const availableCpoSnapshot = {
+  isArchived: false,
+  isSellableOnline: true,
+  priceCents: 250_00,
+  availabilityStatus: 'available',
+};
+
 describe('revalidateStandardCartLines', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -157,9 +196,7 @@ describe('revalidateStandardCartLines', () => {
 
   it('revalidates standard lines against shared pricing truth and fetches each product once', async () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(pricingData);
-    vi.mocked(sanityFetchFresh).mockResolvedValue({
-      isSellableOnline: true,
-    });
+    mockSanityCatalog({ standard: 'all-sellable' });
 
     const result = await revalidateStandardCartLines([
       createConfiguredLine({ lineId: 'line-1' }),
@@ -187,16 +224,14 @@ describe('revalidateStandardCartLines', () => {
     expect(sanityFetchFresh).toHaveBeenCalledTimes(1);
     expect(sanityFetchFresh).toHaveBeenCalledWith({
       query: expect.stringContaining('*[_type == "product"'),
-      params: { slug: '/produkty/test/' },
-      requestTag: 'cart.revalidate.product',
+      params: { standardSlugs: ['/produkty/test/'], cpoSlugs: [] },
+      requestTag: 'cart.revalidate.products',
     });
   });
 
   it('marks a saved configuration as invalid when current product options no longer support it', async () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(pricingData);
-    vi.mocked(sanityFetchFresh).mockResolvedValue({
-      isSellableOnline: true,
-    });
+    mockSanityCatalog({ standard: 'all-sellable' });
 
     const result = await revalidateStandardCartLines([
       createConfiguredLine({
@@ -224,9 +259,7 @@ describe('revalidateStandardCartLines', () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(
       pricingDataWithOptionalGroup,
     );
-    vi.mocked(sanityFetchFresh).mockResolvedValue({
-      isSellableOnline: true,
-    });
+    mockSanityCatalog({ standard: 'all-sellable' });
 
     const legacyOptionlessLine = createStandardCartLine({
       lineId: 'line-optionless',
@@ -289,14 +322,8 @@ describe('revalidateStandardCartLines', () => {
 
   it('normalizes mixed-case pricing keys before querying Supabase and Sanity', async () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(pricingData);
-    vi.mocked(sanityFetchFresh).mockImplementation(async ({ params }) => {
-      if (params?.slug === '/produkty/absolute-rack/') {
-        return {
-          isSellableOnline: true,
-        };
-      }
-
-      return null;
+    mockSanityCatalog({
+      standard: { '/produkty/absolute-rack/': { isSellableOnline: true } },
     });
 
     const result = await revalidateStandardCartLines([
@@ -317,16 +344,14 @@ describe('revalidateStandardCartLines', () => {
     expect(fetchProductPricing).toHaveBeenCalledWith('absolute-rack');
     expect(sanityFetchFresh).toHaveBeenCalledWith({
       query: expect.stringContaining('*[_type == "product"'),
-      params: { slug: '/produkty/absolute-rack/' },
-      requestTag: 'cart.revalidate.product',
+      params: { standardSlugs: ['/produkty/absolute-rack/'], cpoSlugs: [] },
+      requestTag: 'cart.revalidate.products',
     });
   });
 
   it('keeps buyability and configuration validity separate for legacy lines without saved selection', async () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(pricingData);
-    vi.mocked(sanityFetchFresh).mockResolvedValue({
-      isSellableOnline: true,
-    });
+    mockSanityCatalog({ standard: 'all-sellable' });
 
     const legacyLine = createStandardCartLine({
       lineId: 'line-legacy',
@@ -369,17 +394,8 @@ describe('revalidateCpoCartLines', () => {
   });
 
   it('revalidates cpo lines against current availability and price truth', async () => {
-    vi.mocked(sanityFetchFresh).mockImplementation(async ({ params }) => {
-      if (params?.slug === '/certyfikowany-sprzet-uzywany/test-cpo/') {
-        return {
-          isArchived: false,
-          isSellableOnline: true,
-          priceCents: 250_00,
-          availabilityStatus: 'available',
-        };
-      }
-
-      return null;
+    mockSanityCatalog({
+      cpo: { '/certyfikowany-sprzet-uzywany/test-cpo/': availableCpoSnapshot },
     });
 
     const result = await revalidateCpoCartLines([createCpoLine()]);
@@ -396,8 +412,11 @@ describe('revalidateCpoCartLines', () => {
     expect(fetchProductPricing).not.toHaveBeenCalled();
     expect(sanityFetchFresh).toHaveBeenCalledWith({
       query: expect.stringContaining('*[_type == "cpoProduct"'),
-      params: { slug: '/certyfikowany-sprzet-uzywany/test-cpo/' },
-      requestTag: 'cart.revalidate.cpo-product',
+      params: {
+        standardSlugs: [],
+        cpoSlugs: ['/certyfikowany-sprzet-uzywany/test-cpo/'],
+      },
+      requestTag: 'cart.revalidate.products',
     });
   });
 
@@ -428,32 +447,10 @@ describe('revalidateCartLines', () => {
 
   it('delegates mixed cart lines to the correct standard and cpo revalidators', async () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(pricingData);
-    vi.mocked(sanityFetchFresh).mockImplementation(
-      async ({ query, params }) => {
-        if (
-          query.includes('*[_type == "product"') &&
-          params?.slug === '/produkty/test/'
-        ) {
-          return {
-            isSellableOnline: true,
-          };
-        }
-
-        if (
-          query.includes('*[_type == "cpoProduct"') &&
-          params?.slug === '/certyfikowany-sprzet-uzywany/test-cpo/'
-        ) {
-          return {
-            isArchived: false,
-            isSellableOnline: true,
-            priceCents: 250_00,
-            availabilityStatus: 'available',
-          };
-        }
-
-        return null;
-      },
-    );
+    mockSanityCatalog({
+      standard: { '/produkty/test/': { isSellableOnline: true } },
+      cpo: { '/certyfikowany-sprzet-uzywany/test-cpo/': availableCpoSnapshot },
+    });
 
     const result = await revalidateCartLines([
       createConfiguredLine({ lineId: 'line-1' }),
@@ -476,6 +473,8 @@ describe('revalidateCartLines', () => {
         unitPriceCents: 250_00,
       },
     ]);
+    // One fresh Sanity request for the whole cart, not one per line.
+    expect(sanityFetchFresh).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -486,32 +485,10 @@ describe('loadCartPageRuntime', () => {
 
   it('returns revalidation results together with standard pricing cache entries for the cart page', async () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(pricingData);
-    vi.mocked(sanityFetchFresh).mockImplementation(
-      async ({ query, params }) => {
-        if (
-          query.includes('*[_type == "product"') &&
-          params?.slug === '/produkty/test/'
-        ) {
-          return {
-            isSellableOnline: true,
-          };
-        }
-
-        if (
-          query.includes('*[_type == "cpoProduct"') &&
-          params?.slug === '/certyfikowany-sprzet-uzywany/test-cpo/'
-        ) {
-          return {
-            isArchived: false,
-            isSellableOnline: true,
-            priceCents: 250_00,
-            availabilityStatus: 'available',
-          };
-        }
-
-        return null;
-      },
-    );
+    mockSanityCatalog({
+      standard: { '/produkty/test/': { isSellableOnline: true } },
+      cpo: { '/certyfikowany-sprzet-uzywany/test-cpo/': availableCpoSnapshot },
+    });
 
     const standardLine = createConfiguredLine({ lineId: 'line-1' });
     const cpoLine = createCpoLine({ lineId: 'cpo-line-1' });
@@ -548,9 +525,7 @@ describe('loadCartPageRuntime', () => {
     vi.mocked(fetchProductPricing).mockResolvedValue(
       pricingDataWithOptionalGroup,
     );
-    vi.mocked(sanityFetchFresh).mockResolvedValue({
-      isSellableOnline: true,
-    });
+    mockSanityCatalog({ standard: 'all-sellable' });
 
     const optionlessLine = createStandardCartLine({
       lineId: 'line-optionless',

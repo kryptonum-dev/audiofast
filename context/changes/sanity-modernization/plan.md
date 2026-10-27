@@ -1292,20 +1292,20 @@ After the soak checks pass:
 
 ### Phase 4: Three-layer routes, layout, prerender-all
 
-- [x] 4.1 Type check passes
-- [x] 4.2 Lint passes
-- [x] 4.3 Web unit tests pass
-- [x] 4.4 Production-mode build passes with all slugs
-- [x] 4.5 Parity vs baseline clean
+- [x] 4.1 Type check passes — 0a44859
+- [x] 4.2 Lint passes — 0a44859
+- [x] 4.3 Web unit tests pass — 0a44859
+- [x] 4.4 Production-mode build passes with all slugs — 0a44859
+- [x] 4.5 Parity vs baseline clean — 0a44859
 - [ ] 4.6 e2e suite passes
-- [x] 4.7 One-request variant still selected
+- [x] 4.7 One-request variant still selected — 0a44859
 
 ### Phase 5: Query efficiency
 
-- [ ] 5.1 Type check + typegen clean
-- [ ] 5.2 Web unit tests pass
-- [ ] 5.3 No bare deref-to-object projections
-- [ ] 5.4 Parity vs baseline clean
+- [x] 5.1 Type check + typegen clean
+- [x] 5.2 Web unit tests pass
+- [x] 5.3 No bare deref-to-object projections
+- [x] 5.4 Parity vs baseline clean
 - [ ] 5.5 e2e cart/checkout suite passes
 
 ### Phase 6: Sanity Functions — denormalization + sync-tag invalidation (parallel run)

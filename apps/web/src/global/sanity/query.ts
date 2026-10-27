@@ -4,6 +4,20 @@ import { defineQuery } from 'next-sanity';
 // Fragments
 // ----------------------------------------
 
+// Reference arrays are always dereferenced WITH the reference item's `_key`:
+//   refs[defined(@->)]{ _key, ...@->{ … } }
+// A bare array deref returns the same documents but drops `_key`, and without
+// it Presentation cannot address the array item (no click-to-edit on the item,
+// no drag-to-reorder). `defined(@->)` drops dangling or unpublished references
+// instead of leaving `null` holes in the array. (Written out inline: typegen
+// cannot resolve a GROQ helper called with identifier arguments.)
+
+// Hidden brands, resolved once per query instead of one `brand->` deref per
+// product: `brand._ref` is matched against the (small) set of hidden brand ids.
+// Same semantics as `brand->doNotShowBrand != true`: a product with no brand or
+// a dangling brand reference stays listed.
+const visibleBrandCondition = /* groq */ `!(brand._ref in *[_type == "brand" && doNotShowBrand == true]._id)`;
+
 export const imageFragment = (name: string = 'image') => /* groq */ `
   ${name} {
     "id": asset._ref,
@@ -133,7 +147,12 @@ const portableTextFragmentExtended = (
         ),
         "openInNewTab": url.openInNewTab
       },
-      ${productFragment('products[]->')}
+      products[defined(@->)]{
+        _key,
+        ...@->{
+          ${productCardFields}
+        }
+      }
     },
     _type == "ptTwoColumnTable" => {
       ...,
@@ -145,7 +164,12 @@ const portableTextFragmentExtended = (
     },
     _type == "ptFeaturedProducts" => {
       ...,
-      ${productFragment('products[]->')}
+      products[defined(@->)]{
+        _key,
+        ...@->{
+          ${productCardFields}
+        }
+      }
     },
     _type == "ptQuote" => {
       ...,
@@ -346,13 +370,6 @@ const publicationBlock = /* groq */ `
   ),
 `;
 
-// Reusable publication fragment for both reviews and blog articles
-const publicationFragment = (name: string = 'publication') => /* groq */ `
-  ${name} {
-  ${publicationBlock}
-  }
-`;
-
 // Reusable brand fragment for brand listings
 // NOTE: This fragment does NOT filter by doNotShowBrand - callers must filter beforehand
 const brandFragment = (name: string = 'brand') => /* groq */ `
@@ -376,9 +393,22 @@ const productCardCommerceFields = /* groq */ `
   isSellableOnline
 `;
 
-// Reusable product fragment for product listings
-const productFragment = (name: string = 'product'): string => /* groq */ `
-  ${name} {
+// Category summary for product cards and the product page: keyed deref of
+// the product's `categories[]` references.
+const productCategoriesField = /* groq */ `
+  "categories": categories[defined(@->)]{
+    _key,
+    ...@->{
+      _id,
+      "slug": slug.current,
+      name,
+    }
+  }
+`;
+
+// Product card fields (ProductCard) — the body shared by every product card
+// projection below.
+const productCardFields = /* groq */ `
   _id,
   _createdAt,
   "publishDate": coalesce(publishedDate, _createdAt),
@@ -387,11 +417,7 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   subtitle,
   ${productCardCommerceFields},
   isArchived,
-  categories[]->{
-    _id,
-    "slug": slug.current,
-    name,
-  },
+  ${productCategoriesField},
   brand->{
     name,
     "slug": slug.current,
@@ -399,7 +425,6 @@ const productFragment = (name: string = 'product'): string => /* groq */ `
   },
   ${imageFragment('"mainImage": previewImage')},
   ${portableTextFragment('shortDescription')},
-  }
 `;
 
 // Reusable CPO product fragment for listing cards (brandName from Excel; optional inherit images)
@@ -427,26 +452,22 @@ const cpoListablePreviewImageCondition = /* groq */ `(
   || (defined(internalProduct) && defined(internalProduct->previewImage.asset))
 )`;
 
-// Reusable FAQ fragment for FAQ documents
-const faqFragment = (name: string = 'faq') => /* groq */ `
-  ${name} {
+// Reusable FAQ fields (keyed-deref'd from `faq` reference arrays)
+const faqFields = /* groq */ `
   _id,
   _createdAt,
   question,
   ${portableTextFragment('answer')},
-  }
 `;
 
-// Reusable team member fragment for team listings
-const teamMemberFragment = (name: string = 'teamMember') => /* groq */ `
-  ${name} {
+// Reusable team member fields (keyed-deref'd from `teamMember` reference arrays)
+const teamMemberFields = /* groq */ `
   _id,
   name,
   position,
   phoneNumber,
   ${imageFragment('image')},
   ${portableTextFragment('description')},
-  }
 `;
 
 const formStateFragment = (name: string = 'formState') => /* groq */ `
@@ -474,24 +495,25 @@ const formStateFragment = (name: string = 'formState') => /* groq */ `
 
 const heroCarouselBlock = /* groq */ `
   _type == "heroCarousel" => {
-    ...,
     slides[]{
       ${imageFragment('image')},
       ${buttonFragment('button')},
       ${portableTextFragment('title')},
       ${portableTextFragment('description')},
     },
-    "brands": brands[]->{
-      name,
-      "slug": slug.current,
-      ${imageFragment('logo')},
+    "brands": brands[defined(@->)]{
+      _key,
+      ...@->{
+        name,
+        "slug": slug.current,
+        ${imageFragment('logo')},
+      }
     }
   }
 `;
 
 const heroStaticBlock = /* groq */ `
   _type == "heroStatic" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${imageFragment('image')},
@@ -509,7 +531,6 @@ const heroStaticBlock = /* groq */ `
 
 const latestPublicationBlock = /* groq */ `
   _type == "latestPublication" => {
-    ...,
     ${portableTextFragment('heading')},
     selectionMode,
     "publication": select(
@@ -547,7 +568,6 @@ const latestPublicationBlock = /* groq */ `
 
 const imageTextColumnsBlock = /* groq */ `
   _type == "imageTextColumns" => {
-    ...,
     ${imageFragment('image')},
     ${portableTextFragment('heading')},
     ${portableTextFragment('content')},
@@ -557,7 +577,6 @@ const imageTextColumnsBlock = /* groq */ `
 
 const blurLinesTextImageBlock = /* groq */ `
   _type == "blurLinesTextImage" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${imageFragment('image')},
@@ -566,7 +585,6 @@ const blurLinesTextImageBlock = /* groq */ `
 
 const gallerySectionBlock = /* groq */ `
   _type == "gallerySection" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${imageFragment('images[]')}
@@ -575,7 +593,6 @@ const gallerySectionBlock = /* groq */ `
 
 const imageWithTextBoxesBlock = /* groq */ `
   _type == "imageWithTextBoxes" => {
-    ...,
     ${portableTextFragment('heading')},
     ${imageFragment('image')},
     boxes[]{
@@ -594,7 +611,6 @@ const imageWithTextBoxesBlock = /* groq */ `
 
 const imageWithVideoBlock = /* groq */ `
   _type == "imageWithVideo" => {
-    ...,
     ${imageFragment('image')},
     youtubeId,
     ${portableTextFragment('heading')},
@@ -605,13 +621,19 @@ const imageWithVideoBlock = /* groq */ `
 
 const featuredPublicationsBlock = /* groq */ `
   _type == "featuredPublications" => {
-    ...,
     ${portableTextFragment('heading')},
     selectionMode,
     "publications": select(
       // Manual selection: filter out drafts and archived products
-      selectionMode == "manual" => publications[]-> [!(_id in path("drafts.**")) && (_type != "product" || isArchived != true)] {
-        ${publicationBlock}
+      selectionMode == "manual" => publications[
+        defined(@->)
+        && !(@->_id in path("drafts.**"))
+        && (@->_type != "product" || @->isArchived != true)
+      ]{
+        _key,
+        ...@->{
+          ${publicationBlock}
+        }
       },
       // Automatic modes: fetch latest publications sorted by publishedDate (or _createdAt as fallback)
       selectionMode == "latest" => *[
@@ -669,11 +691,7 @@ const productProjection = /* groq */ `
   subtitle,
   ${productCardCommerceFields},
   isArchived,
-  categories[]->{
-    _id,
-    "slug": slug.current,
-    name,
-  },
+  ${productCategoriesField},
   brand->{
     name,
     "slug": slug.current,
@@ -685,14 +703,16 @@ const productProjection = /* groq */ `
 
 const featuredProductsBlock = /* groq */ `
   _type == "featuredProducts" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
     newProductsMode,
     "newProducts": select(
-      newProductsMode == "manual" => newProducts[]->{
-        ${productProjection}
+      newProductsMode == "manual" => newProducts[defined(@->)]{
+        _key,
+        ...@->{
+          ${productProjection}
+        }
       },
       // Default: automatic - fetch 10 newest products
       *[
@@ -703,93 +723,110 @@ const featuredProductsBlock = /* groq */ `
         ${productProjection}
       }
     ),
-    ${productFragment('bestsellers[]->')},
+    bestsellers[defined(@->)]{
+      _key,
+      ...@->{
+        ${productCardFields}
+      }
+    },
   }
 `;
 
 const productsCarouselBlock = /* groq */ `
   _type == "productsCarousel" => {
-    ...,
     ${portableTextFragment('heading')},
-    ${productFragment('products[]->')}
+    products[defined(@->)]{
+      _key,
+      ...@->{
+        ${productCardFields}
+      }
+    }
   }
+`;
+
+// Brand card fields for the marquee and the manual brands list
+const marqueeBrandFields = /* groq */ `
+  _id,
+  _createdAt,
+  "slug": slug.current,
+  name,
+  ${portableTextFragment('description')},
+  ${imageFragment('logo')},
 `;
 
 const brandsMarqueeBlock = /* groq */ `
   _type == "brandsMarquee" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
     ${imageFragment('backgroundImage')},
-    "topBrands": topBrands[]->{
-      _id,
-      _createdAt,
-      "slug": slug.current,
-      name,
-      ${portableTextFragment('description')},
-      ${imageFragment('logo')},
+    "topBrands": topBrands[defined(@->)]{
+      _key,
+      ...@->{
+        ${marqueeBrandFields}
+      }
     },
-    "bottomBrands": bottomBrands[]->{
-      _id,
-      _createdAt,
-      "slug": slug.current,
-      name,
-      ${portableTextFragment('description')},
-      ${imageFragment('logo')},
+    "bottomBrands": bottomBrands[defined(@->)]{
+      _key,
+      ...@->{
+        ${marqueeBrandFields}
+      }
     },
   }
 `;
 
 const brandsListBlock = /* groq */ `
   _type == "brandsList" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${portableTextFragment('ctaText')},
     "brands": select(
       brandsDisplayMode == "all" => ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')},
-      brandsDisplayMode == "manual" => selectedBrands[]->[]{
-        _id,
-        _createdAt,
-        "slug": slug.current,
-        name,
-        ${portableTextFragment('description')},
-        ${imageFragment('logo')},
-      } | order(orderRank),
+      brandsDisplayMode == "manual" => selectedBrands[defined(@->)] | order(@->orderRank) {
+        _key,
+        ...@->{
+          ${marqueeBrandFields}
+        }
+      },
       ${brandFragment('*[_type == "brand" && !(_id in path("drafts.**")) && doNotShowBrand != true] | order(orderRank)')}
     )
   }
 `;
 
+// The listing itself (products, count, filters) is fetched by the block's
+// own components; the block carries only its heading.
 const cpoProductsListingBlock = /* groq */ `
   _type == "cpoProductsListing" => {
-    ...,
     ${portableTextFragment('heading')},
-    "totalCount": count(*[
-      _type == "cpoProduct"
-      && isArchived != true
-      && ${cpoListablePreviewImageCondition}
-    ])
   }
 `;
 
 const brandsByCategoriesSectionBlock = /* groq */ `
   _type == "brandsByCategoriesSection" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     ${buttonFragment('button')},
+    // Per parent category: its sub-category slugs first, then the brands of
+    // the visible products whose denormalized category slugs intersect them
+    // (no per-product category or brand deref in the scan).
     "categoriesWithBrands": *[_type == "productCategoryParent" && !(_id in path("drafts.**"))] | order(orderRank) {
+      _id,
+      name,
+      "subCategorySlugs": *[
+        _type == "productCategorySub"
+        && parentCategory._ref == ^._id
+        && defined(slug.current)
+      ].slug.current
+    }{
       _id,
       name,
       "brands": array::unique(
         *[
-          _type == "product" && 
-          !(_id in path("drafts.**")) && 
-          isArchived != true &&
-          brand->doNotShowBrand != true &&
-          ^._id in categories[]->parentCategory._ref
+          _type == "product"
+          && !(_id in path("drafts.**"))
+          && isArchived != true
+          && ${visibleBrandCondition}
+          && array::intersects(denormCategorySlugs, ^.subCategorySlugs)
         ].brand->{_id, name, "slug": slug.current}
       )
     }[count(brands) > 0]
@@ -798,14 +835,23 @@ const brandsByCategoriesSectionBlock = /* groq */ `
 
 const faqSectionBlock = /* groq */ `
   _type == "faqSection" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     displayMode,
-    ${faqFragment('faqList[]->')},
+    faqList[defined(@->)]{
+      _key,
+      ...@->{
+        ${faqFields}
+      }
+    },
       contactPeople{
         ${portableTextFragment('heading')},
-        ${teamMemberFragment('contactPersons[]->')}
+        contactPersons[defined(@->)]{
+          _key,
+          ...@->{
+            ${teamMemberFields}
+          }
+        }
       },
       contactForm{
         ${portableTextFragment('heading')},
@@ -824,12 +870,16 @@ const faqSectionBlock = /* groq */ `
 
 const contactFormBlock = /* groq */ `
   _type == "contactForm" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     contactPeople{
       ${portableTextFragment('heading')},
-      ${teamMemberFragment('contactPersons[]->')}
+      contactPersons[defined(@->)]{
+        _key,
+        ...@->{
+          ${teamMemberFields}
+        }
+      }
     },
     accountList[]{
       ${portableTextFragment('heading')},
@@ -856,7 +906,6 @@ const contactFormBlock = /* groq */ `
 
 const contactMapBlock = /* groq */ `
   _type == "contactMap" => {
-    ...,
     ${portableTextFragment('heading')},
     useCustomAddress,
     customAddress,
@@ -874,11 +923,15 @@ const contactMapBlock = /* groq */ `
 
 const teamSectionBlock = /* groq */ `
   _type == "teamSection" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
     variant,
-    ${teamMemberFragment('teamMembers[]->')},
+    teamMembers[defined(@->)]{
+      _key,
+      ...@->{
+        ${teamMemberFields}
+      }
+    },
     ${portableTextFragment('secondaryHeading')},
     ${portableTextFragment('secondaryDescription')},
     ${buttonFragment('ctaButton')},
@@ -887,7 +940,6 @@ const teamSectionBlock = /* groq */ `
 
 const phoneImageCtaBlock = /* groq */ `
   _type == "phoneImageCta" => {
-    ...,
     ${imageFragment('image')},
     ${portableTextFragment('primaryHeading')},
     ${portableTextFragment('primaryDescription')},
@@ -900,7 +952,6 @@ const phoneImageCtaBlock = /* groq */ `
 
 const stepListBlock = /* groq */ `
   _type == "stepList" => {
-    ...,
     ${portableTextFragment('heading')},
     ${portableTextFragment('paragraph')},
     steps[]{
@@ -911,9 +962,12 @@ const stepListBlock = /* groq */ `
   }
 `;
 
+// Every block projects its fields explicitly: no `...` spread, so the raw
+// reference arrays and unused fields never ship, and every field a block
+// renders is visible in its fragment (and in the generated types).
 export const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
-    ...,
+    _key,
     _type,
       ${heroCarouselBlock},
       ${heroStaticBlock},
@@ -986,10 +1040,13 @@ export const queryNavbar = defineQuery(`*[_type == "navbar"][0]{
 }`);
 
 export const queryFooter = defineQuery(`*[_type == "footer"][0]{
-  highlightedSocialMedia[]->{
-    name,
-    link,
-    iconString,
+  highlightedSocialMedia[defined(@->)]{
+    _key,
+    ...@->{
+      name,
+      link,
+      iconString,
+    }
   },
   ${buttonFragment('links[]')},
   newsletter{
@@ -1118,10 +1175,15 @@ const cpoFilterConditions = /* groq */ `
   && ($maxPrice == 0 || priceCents <= $maxPrice)
 `;
 
-// Reusable fragment for CPO listing — swap in different order clauses
+// Reusable fragment for CPO listing — swap in different order clauses. The
+// page of products and the total count travel in one request (like the
+// product listing), so a CPO listing render costs one Sanity round trip.
 const cpoListingFragment = (orderClause: string) => /* groq */ `
-  *[${cpoFilterConditions}] | order(${orderClause}) [$offset...$limit] {
-    ${cpoProductFragment}
+  {
+    "products": *[${cpoFilterConditions}] | order(${orderClause}) [$offset...$limit] {
+      ${cpoProductFragment}
+    },
+    "totalCount": count(*[${cpoFilterConditions}])
   }
 `;
 
@@ -1157,12 +1219,11 @@ export function getCpoProductsListingQuery(sortBy: string = 'newest') {
   }
 }
 
-export const queryCpoProductsListingCount = defineQuery(
-  `count(*[${cpoFilterConditions}])`,
-);
-
-export const queryCpoProductsFilterMetadata = defineQuery(`{
-  "products": *[
+// CPO filter sidebar data: one scan of the listable CPO products. The brand
+// list and the price bounds are derived from these rows in JS
+// (`deriveCpoFilterMetadata`), not by three more scans of the same filter.
+export const queryCpoProductsFilterMetadata = defineQuery(`
+  *[
     _type == "cpoProduct"
     && isArchived != true
     && defined(brandName)
@@ -1176,31 +1237,8 @@ export const queryCpoProductsFilterMetadata = defineQuery(`{
     "categorySlug": null,
     "allCategorySlugs": [],
     "customFilterValues": []
-  },
-  "brands": array::unique(*[
-    _type == "cpoProduct"
-    && isArchived != true
-    && defined(brandName)
-    && ${cpoListablePreviewImageCondition}
-  ] {
-    "_id": lower(brandName),
-    "name": brandName,
-    "slug": lower(brandName),
-    "logo": null
-  }),
-  "globalMaxPrice": math::max(*[
-    _type == "cpoProduct"
-    && isArchived != true
-    && ${cpoListablePreviewImageCondition}
-    && defined(priceCents)
-  ].priceCents),
-  "globalMinPrice": math::min(*[
-    _type == "cpoProduct"
-    && isArchived != true
-    && ${cpoListablePreviewImageCondition}
-    && defined(priceCents)
-  ].priceCents)
-}`);
+  }
+`);
 
 export const queryCpoProductBySlug =
   defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal" && isArchived != true][0] {
@@ -1525,7 +1563,7 @@ const blogArticlesFilterConditions = /* groq */ `
   _type == "blog-article"
   && defined(slug.current)
   && hideFromList == false
-  && ($category == "" || category->slug.current == $category)
+  && ($category == "" || category._ref in *[_type == "blog-category" && slug.current == $category]._id)
   && ($year == "" || string::split(coalesce(publishedDate, _createdAt), "-")[0] == $year)
   && ($search == "" || count($embeddingResults) > 0 || [name, pt::text(title)] match $search)
   && (count($embeddingResults) == 0 || _id in $embeddingResults[].value.documentId)
@@ -1536,7 +1574,7 @@ const blogSearchEligibility = /* groq */ `
   _type == "blog-article"
   && !(_id in path("drafts.**")) && !(_id in path("versions.**"))
   && defined(slug.current) && hideFromList == false
-  && ($category == "" || category->slug.current == $category)
+  && ($category == "" || category._ref in *[_type == "blog-category" && slug.current == $category]._id)
   && ($year == "" || string::split(coalesce(publishedDate, _createdAt), "-")[0] == $year)
 `;
 
@@ -1680,11 +1718,14 @@ export const queryProductsPageContent = defineQuery(`
 `);
 
 // Query for all products filter metadata (lightweight)
-// OPTIMIZED: Uses denormalized fields for faster queries (no dereferencing)
-// Used for client-side filter computation in PPR architecture
-// ~150 bytes per product × 551 products = ~80KB total
+// Uses denormalized fields (no per-product dereferencing) and is read with
+// stega off. Used for client-side filter computation in the listing shells.
+// - products: the listable catalogue (same base set as productsFilterConditions)
+// - categories / brands: sidebar lists; the brand logo is not projected (no
+//   filter UI renders it)
+// The global price bounds are computed in JS from `products`
+// (getProductsFilterMetadata) instead of two more catalogue scans.
 // Parameters: none (fetches all data)
-// This query is designed to be cached with "use cache" for PPR static shell
 export const queryAllProductsFilterMetadata = defineQuery(`
   {
     "products": *[
@@ -1693,14 +1734,13 @@ export const queryAllProductsFilterMetadata = defineQuery(`
       && isArchived != true
       && defined(denormCategorySlugs)
       && count(denormCategorySlugs) > 0
-      && brand->doNotShowBrand != true
+      && ${visibleBrandCondition}
     ] {
       _id,
       name,
       "brandSlug": denormBrandSlug,
       "brandName": denormBrandName,
       "categorySlug": denormCategorySlugs[0],
-      "parentCategorySlug": denormParentCategorySlugs[0],
       "allCategorySlugs": denormCategorySlugs,
       basePriceCents,
       customFilterValues[]{
@@ -1722,21 +1762,8 @@ export const queryAllProductsFilterMetadata = defineQuery(`
     "brands": *[_type == "brand" && defined(slug.current) && doNotShowBrand != true] | order(orderRank) {
       _id,
       name,
-      "slug": slug.current,
-      ${imageFragment('logo')}
-    },
-    "globalMaxPrice": math::max(*[
-      _type == "product" 
-      && defined(slug.current)
-      && isArchived != true
-      && defined(basePriceCents)
-    ].basePriceCents),
-    "globalMinPrice": math::min(*[
-      _type == "product" 
-      && defined(slug.current)
-      && isArchived != true
-      && defined(basePriceCents)
-    ].basePriceCents)
+      "slug": slug.current
+    }
   }
 `);
 
@@ -1794,7 +1821,7 @@ const productsFilterConditions = /* groq */ `
   && isArchived != true
   && defined(denormCategorySlugs)
   && count(denormCategorySlugs) > 0
-  && brand->doNotShowBrand != true
+  && ${visibleBrandCondition}
   && ($category == "" || $category in denormCategorySlugs)
   && (
     $search == ""
@@ -1852,9 +1879,12 @@ const productsProjection = /* groq */ `
   subtitle,
   "slug": slug.current,
   ${productCardCommerceFields},
-  "categories": categories[]->{
-    name,
-    "slug": slug.current
+  "categories": categories[defined(@->)]{
+    _key,
+    ...@->{
+      name,
+      "slug": slug.current
+    }
   },
   brand->{
     name,
@@ -1963,6 +1993,16 @@ export function getProductsListingQuery(sortBy: string = 'newest') {
 // Brand Queries
 // ----------------------------------------
 
+// Dealer ("Gdzie kupić") fields shared by the brand and product store lists
+const storeFields = /* groq */ `
+  _id,
+  name,
+  "slug": slug.current,
+  address { postalCode, city, street },
+  phone,
+  website
+`;
+
 // Brand detail query (content only - no filter metadata)
 // NOTE: the filter sidebar on /marki/[slug] is built from queryAllProductsFilterMetadata;
 // no per-brand filter metadata is projected here.
@@ -1985,14 +2025,17 @@ export const queryBrandBySlug = defineQuery(/* groq */ `
     ${brandContentBlocksFragment('brandContentBlocks')},
     ${portableTextFragmentExtended('brandDetailContent')},
     ${imageFragment('imageGallery[]')},
-    ${publicationFragment('featuredReviews[]->')},
-    stores[]->{
-      _id,
-      name,
-      "slug": slug.current,
-      address { postalCode, city, street },
-      phone,
-      website
+    featuredReviews[defined(@->)]{
+      _key,
+      ...@->{
+        ${publicationBlock}
+      }
+    },
+    stores[defined(@->)]{
+      _key,
+      ...@->{
+        ${storeFields}
+      }
     },
     seo {
       title,
@@ -2023,13 +2066,11 @@ export const queryAllBrandSlugs = defineQuery(/* groq */ `
 // cached under `brand-stores:<brandId>` and invalidated on brand/store publish
 // without touching the product page's own cache entry.
 export const queryBrandStoresById = defineQuery(/* groq */ `
-  *[_type == "brand" && _id == $brandId][0].stores[]->{
-    _id,
-    name,
-    "slug": slug.current,
-    address { postalCode, city, street },
-    phone,
-    website
+  *[_type == "brand" && _id == $brandId][0].stores[defined(@->)]{
+    _key,
+    ...@->{
+      ${storeFields}
+    }
   }
 `);
 
@@ -2086,27 +2127,25 @@ export const queryProductBySlug = defineQuery(/* groq */ `
         }
       }
     },
-    availableInStores[]->{
-      _id,
-      name,
-      "slug": slug.current,
-      address{
-        postalCode,
-        city,
-        street
-      },
-      phone,
-      website
+    availableInStores[defined(@->)]{
+      _key,
+      ...@->{
+        ${storeFields}
+      }
     },
-    "categories": categories[]->{
-      _id,
-      name,
-      "slug": slug.current
+    ${productCategoriesField},
+    reviews[defined(@->)]{
+      _key,
+      ...@->{
+        ${publicationBlock}
+      }
     },
-    reviews[]->{
-      ${publicationBlock}
+    relatedProducts[defined(@->)]{
+      _key,
+      ...@->{
+        ${productCardFields}
+      }
     },
-    ${productFragment('relatedProducts[]->')},
     downloadablePdfs[]{
       _key,
       title,
@@ -2185,9 +2224,12 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
       "slug": slug.current,
       ${imageFragment('logo')}
     },
-    "categories": categories[]->{
-    "slug": slug.current,
-    name
+    "categories": categories[defined(@->)]{
+      _key,
+      ...@->{
+        "slug": slug.current,
+        name
+      }
     }
   }
 `);
@@ -2228,9 +2270,12 @@ export const queryComparisonPageData = defineQuery(/* groq */ `{
         }
       }
     },
-    "categories": categories[]->{
-    "slug": slug.current,
-    name
+    "categories": categories[defined(@->)]{
+      _key,
+      ...@->{
+        "slug": slug.current,
+        name
+      }
     }
   },
   "categoryConfigs": *[_type == "comparatorConfig"][0].categoryConfigs[category->slug.current in $categorySlugs] {
@@ -2391,7 +2436,7 @@ export const queryAllProductCategorySlugsForSitemap = defineQuery(`
     _type == "product"
     && defined(slug.current)
     && isArchived != true
-    && brand->doNotShowBrand != true
+    && ${visibleBrandCondition}
     && ^._id in categories[]._ref
   ]) > 0] {
     "slug": slug.current,
@@ -2403,7 +2448,7 @@ export const queryAllProductCategorySlugsForSitemap = defineQuery(`
 // Includes: archived products OR products from hidden brands (doNotShowBrand)
 // This ensures all products in sitemap have at least one internal link (SEO)
 export const queryArchivedProducts = defineQuery(`
-  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && (isArchived == true || brand->doNotShowBrand == true)] | order(name asc) {
+  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && (isArchived == true || !${visibleBrandCondition})] | order(name asc) {
     "slug": slug.current,
     name
   }
@@ -2417,7 +2462,7 @@ export const queryOrphanReviews = defineQuery(`
     _type == "product"
     && defined(slug.current)
     && isArchived != true
-    && brand->doNotShowBrand != true
+    && ${visibleBrandCondition}
     && ^._id in reviews[]._ref
   ]) == 0] | order(pt::text(title) asc) {
     "slug": slug.current,

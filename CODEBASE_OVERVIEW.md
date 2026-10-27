@@ -229,7 +229,8 @@ Queries live in `src/global/sanity/query.ts` (~2400+ lines). They use a **fragme
 - **Page queries**: `queryHomePage`, `queryPageBySlug`, `queryBlogPostBySlug`, `queryReviewBySlug`, `queryProductBySlug`, `queryBrandBySlug`
 - **Listing queries**: `queryProductsListing` with sort variants (newest, oldest, priceAsc, priceDesc, orderRank, relevance)
 - **SEO-only queries**: lightweight variants (e.g., `queryProductSeoBySlug`) that fetch only metadata fields, reducing payload for `generateMetadata()`
-- **Filter metadata**: `queryAllProductsFilterMetadata` — a single lightweight query (~80KB for 500+ products) powering client-side filter computation
+- **Filter metadata**: `queryAllProductsFilterMetadata` — a single lightweight query (~150 KB for ~500 products, no brand logos) powering client-side filter computation. Hidden brands are pre-filtered once per query (`brand._ref in <hidden brand ids>`, not a `brand->` deref per product), and the global price bounds are derived in JS (`global/filters/filterMetadata.ts`, via `getProductsFilterMetadata`). The CPO sidebar works the same way (`deriveCpoFilterMetadata`), and each CPO listing render is one request (page + `totalCount`).
+- **Reference arrays** are always dereferenced with their `_key`: `refs[defined(@->)]{ _key, ...@->{ … } }`, never a bare `refs[]->{ … }` (Presentation needs the item key to address the array item). Page-builder blocks project their fields explicitly (no `...` spread).
 
 #### Denormalization Strategy
 

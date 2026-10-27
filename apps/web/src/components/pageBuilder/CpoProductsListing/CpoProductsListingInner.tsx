@@ -5,14 +5,8 @@ import {
   getDynamicFetchOptions,
   sanityFetchCached,
 } from '@/src/global/sanity/live';
-import {
-  getCpoProductsListingQuery,
-  queryCpoProductsListingCount,
-} from '@/src/global/sanity/query';
-import type {
-  QueryCpoProductsListingCountResult,
-  QueryCpoProductsListingNewestResult,
-} from '@/src/global/sanity/sanity.types';
+import { getCpoProductsListingQuery } from '@/src/global/sanity/query';
+import type { QueryCpoProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
 import { parseBrands, parsePrice } from '@/src/global/utils';
 
 import styles from '../../products/ProductsListing/styles.module.scss';
@@ -78,28 +72,21 @@ export default async function CpoProductsListingInner({
 
   const listingQuery = getCpoProductsListingQuery(sortBy);
 
-  const [products, totalCount] = await Promise.all([
-    sanityFetchCached<QueryCpoProductsListingNewestResult>({
-      requestTag: 'cpo.listing.products',
-      query: listingQuery,
-      params: queryParams,
-      perspective,
-      stega: false,
-      tags: ['cpoProduct'],
-    }),
-    sanityFetchCached<QueryCpoProductsListingCountResult>({
-      requestTag: 'cpo.listing.count',
-      query: queryCpoProductsListingCount,
-      params: queryParams,
-      perspective,
-      stega: false,
-      tags: ['cpoProduct'],
-    }),
-  ]);
+  // Page of products and total count in one request.
+  const listing = await sanityFetchCached<QueryCpoProductsListingNewestResult>({
+    requestTag: 'cpo.listing.products',
+    query: listingQuery,
+    params: queryParams,
+    perspective,
+    stega: false,
+    tags: ['cpoProduct'],
+  });
 
-  if (products === null) {
+  if (!listing?.products) {
     notFound();
   }
+
+  const { products, totalCount } = listing;
 
   const listableProducts = products.filter((p) => p.mainImage?.id);
   const hasProducts = listableProducts.length > 0;

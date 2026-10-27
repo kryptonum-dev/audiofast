@@ -6,6 +6,7 @@ import type {
   BrandMetadata,
   ProductFilterMetadata,
 } from '@/src/global/filters';
+import { deriveCpoFilterMetadata } from '@/src/global/filters/filterMetadata';
 import {
   type DynamicFetchOptions,
   sanityFetchCached,
@@ -43,16 +44,18 @@ export default async function CpoProductsListing(
 
   // Logic data (filter names, brand slugs, prices): never stega-encoded.
   // `cpoProduct` stays as a hand tag: checkout expires it on reserve/sale.
-  const filterMetadata =
+  // One scan of the listable CPO rows; brands and price bounds derive in JS.
+  const filterMetadata = deriveCpoFilterMetadata(
     await sanityFetchCached<QueryCpoProductsFilterMetadataResult>({
       requestTag: 'cpo.listing.filter-metadata',
       query: queryCpoProductsFilterMetadata,
       perspective: fetchOptions?.perspective ?? 'published',
       stega: false,
       tags: ['cpoProduct'],
-    });
+    }),
+  );
 
-  if (!filterMetadata || !filterMetadata.products?.length) {
+  if (!filterMetadata.products.length) {
     return null;
   }
 
@@ -81,7 +84,7 @@ export default async function CpoProductsListing(
         <ProductsAside
           allProductsMetadata={cpoSearchMetadata}
           allCategories={[]}
-          allBrands={filterMetadata.brands as unknown as BrandMetadata[]}
+          allBrands={filterMetadata.brands satisfies BrandMetadata[]}
           globalMaxPrice={maxPrice}
           basePath={basePath}
           heading={heading}

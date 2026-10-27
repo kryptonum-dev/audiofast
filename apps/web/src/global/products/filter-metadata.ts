@@ -2,25 +2,41 @@ import 'server-only';
 
 import type { LivePerspective } from 'next-sanity/live';
 
+import {
+  getGlobalPriceRange,
+  type GlobalPriceRange,
+} from '../filters/filterMetadata';
 import { sanityFetchCached } from '../sanity/live';
 import { queryAllProductsFilterMetadata } from '../sanity/query';
 import type { QueryAllProductsFilterMetadataResult } from '../sanity/sanity.types';
+
+export type ProductsFilterMetadata = QueryAllProductsFilterMetadataResult &
+  GlobalPriceRange;
 
 /**
  * The product filter metadata (sidebar counts, brand/category lists, search
  * candidates). One shared cached entry per perspective for every caller: the
  * listing shells, the category and brand pages and the listing slot's search.
+ * The global price bounds are derived from the cached product rows here.
  *
  * Always read with stega off: it is logic data (slugs compared against URL
  * params, filter names sent back as GROQ params) and is never overlaid. Kept
  * on its own `filter-metadata` hand tag during the webhook parallel run.
  */
-export function getProductsFilterMetadata(perspective: LivePerspective) {
-  return sanityFetchCached<QueryAllProductsFilterMetadataResult>({
-    requestTag: 'products.listing.filter-metadata',
-    query: queryAllProductsFilterMetadata,
-    perspective,
-    stega: false,
-    tags: ['filter-metadata'],
-  });
+export async function getProductsFilterMetadata(
+  perspective: LivePerspective,
+): Promise<ProductsFilterMetadata> {
+  const metadata =
+    await sanityFetchCached<QueryAllProductsFilterMetadataResult>({
+      requestTag: 'products.listing.filter-metadata',
+      query: queryAllProductsFilterMetadata,
+      perspective,
+      stega: false,
+      tags: ['filter-metadata'],
+    });
+
+  return {
+    ...metadata,
+    ...getGlobalPriceRange(metadata.products ?? []),
+  };
 }

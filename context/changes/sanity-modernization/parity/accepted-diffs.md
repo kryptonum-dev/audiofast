@@ -23,3 +23,7 @@ Gate run: `VERCEL_ENV=production VERCEL_PROJECT_PRODUCTION_URL=audiofast.pl P24_
 
 - **What differs:** `words` removed `···` ×2.
 - **Why:** `···` is placeholder text inside the listing's loading skeleton (`ProductsListingSkeleton`), which the old final HTML still carried. The listing is now a pass-through Suspense slot resolved in the same render pass, so the fallback markup is no longer left in the document. The listed products and their count are unchanged.
+
+## Phase 5 — query efficiency
+
+Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline`. Result: 1,125 URLs, all 200, 39 paths differ. The run's `diff.json` is byte-identical to the Phase 4 gate run's (`runs/2026-10-27T08-37-38-747Z`), so every diff is one of the Phase 4 entries above and Phase 5 adds none. The keyed reference derefs, the explicit page-builder projections and the filter-metadata changes leave the published HTML unchanged.

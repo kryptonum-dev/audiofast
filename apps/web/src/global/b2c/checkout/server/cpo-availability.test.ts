@@ -5,6 +5,7 @@ import { createAdminClient } from '@/src/global/supabase/admin';
 import type { CheckoutOrderDraft } from '../order-draft';
 import {
   markCpoItemsSoldForOrder,
+  releaseExpiredCpoHoldsBySlugs,
   reserveCpoItemsForOrder,
 } from './cpo-availability';
 
@@ -236,5 +237,60 @@ describe('CPO availability transitions', () => {
       'holdOrderNumber',
       'holdPaymentSessionId',
     ]);
+  });
+
+  it('releases expired holds for a batch of slugs with one Sanity read', async () => {
+    const patchBuilder = createPatchBuilder();
+    sanityClient.patch.mockReturnValue(patchBuilder);
+    sanityClient.fetch.mockResolvedValueOnce([
+      {
+        _id: 'cpo-expired',
+        _rev: 'rev-expired',
+        slug: '/certyfikowany-sprzet-uzywany/expired/',
+        availabilityStatus: 'on_hold',
+        holdUntil: '2026-04-20T09:00:00.000Z',
+        holdOrderNumber: null,
+      },
+      {
+        _id: 'cpo-active',
+        _rev: 'rev-active',
+        slug: '/certyfikowany-sprzet-uzywany/active/',
+        availabilityStatus: 'on_hold',
+        holdUntil: '2026-04-20T11:00:00.000Z',
+        holdOrderNumber: null,
+      },
+      {
+        _id: 'cpo-available',
+        _rev: 'rev-available',
+        slug: '/certyfikowany-sprzet-uzywany/available/',
+        availabilityStatus: 'available',
+      },
+    ]);
+
+    const released = await releaseExpiredCpoHoldsBySlugs(
+      [
+        '/certyfikowany-sprzet-uzywany/expired/',
+        '/certyfikowany-sprzet-uzywany/active/',
+        '/certyfikowany-sprzet-uzywany/available/',
+        '/certyfikowany-sprzet-uzywany/expired/',
+      ],
+      new Date('2026-04-20T10:00:00.000Z'),
+    );
+
+    expect(released).toEqual(['/certyfikowany-sprzet-uzywany/expired/']);
+    expect(sanityClient.fetch).toHaveBeenCalledTimes(1);
+    expect(sanityClient.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('slug.current in $slugs'),
+      {
+        slugs: [
+          '/certyfikowany-sprzet-uzywany/expired/',
+          '/certyfikowany-sprzet-uzywany/active/',
+          '/certyfikowany-sprzet-uzywany/available/',
+        ],
+      },
+    );
+    expect(sanityClient.patch).toHaveBeenCalledTimes(1);
+    expect(sanityClient.patch).toHaveBeenCalledWith('cpo-expired');
+    expect(patchBuilder.ifRevisionId).toHaveBeenCalledWith('rev-expired');
   });
 });
