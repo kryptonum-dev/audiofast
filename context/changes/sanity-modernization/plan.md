@@ -1254,25 +1254,25 @@ After the soak checks pass:
 
 ### Phase 0: Security hotfix (token leak, committed secret, Meta token)
 
-- [x] 0.1 No `NEXT_PUBLIC_SANITY_API_READ_TOKEN` in code
-- [x] 0.2 No token-shaped literals tracked
-- [x] 0.3 Type check passes
-- [x] 0.4 Web unit tests pass
-- [x] 0.5 Full build passes
-- [x] 0.6 Local build has no token in client chunks
-- [ ] 0.7 Production chunks clean after deploy
+- [x] 0.1 No `NEXT_PUBLIC_SANITY_API_READ_TOKEN` in code — 5049c58
+- [x] 0.2 No token-shaped literals tracked — 5049c58
+- [x] 0.3 Type check passes — 5049c58
+- [x] 0.4 Web unit tests pass — 5049c58
+- [x] 0.5 Full build passes — 5049c58
+- [x] 0.6 Local build has no token in client chunks — 5049c58
+- [x] 0.7 Production chunks clean after deploy — 5049c58
 
 ### Phase 1: Dependencies — Studio, runtime, Sanity UI port
 
-- [ ] 1.1 Studio deployed on ≥6.14.1
-- [ ] 1.2 Typegen has no unexpected drift
-- [ ] 1.3 Type check passes
-- [ ] 1.4 Lint passes with 0 errors
-- [ ] 1.5 Web unit tests pass
-- [ ] 1.6 b2c-admin tests pass
-- [ ] 1.7 Full build (all Sanity apps) passes
-- [ ] 1.8 No duplicate Sanity UI/icons majors
-- [ ] 1.9 React identical across apps
+- [x] 1.1 Studio deployed on ≥6.14.1
+- [x] 1.2 Typegen has no unexpected drift
+- [x] 1.3 Type check passes
+- [x] 1.4 Lint passes with 0 errors
+- [x] 1.5 Web unit tests pass
+- [x] 1.6 b2c-admin tests pass
+- [x] 1.7 Full build (all Sanity apps) passes
+- [x] 1.8 No duplicate Sanity UI/icons majors
+- [x] 1.9 React identical across apps
 - [ ] 1.10 e2e suite passes
 
 ### Phase 2: Published HTML parity crawler + baseline
