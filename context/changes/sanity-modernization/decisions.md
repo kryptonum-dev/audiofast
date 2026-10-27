@@ -167,3 +167,8 @@ Out of scope. Request-time listings stay on `use cache`; the CDN quota absorbs t
 ## P10. B2C in draft mode: published + disabled purchase
 - Cart, checkout, account and thank-you routes are not Presentation targets and always read published content.
 - On product pages in draft mode, "Dodaj do koszyka" and quick-add are disabled, with a short Polish note.
+
+## P11. „Podgląd" hidden in the deployed Studio for now (2026-10-27)
+- Oliwier asked to hide Presentation from editors until he has told Jarek about it. `SANITY_STUDIO_PRESENTATION_ENABLED` gates the tool, the „Treść"/„Podgląd" tab menu and „Otwórz w podglądzie". `sanity dev` always has them; a built Studio only with the flag set to `true`.
+- The web side (draft mode, stega, overlays) stays deployed. It is unreachable without the share secret or the Studio.
+- Re-enable: set `SANITY_STUDIO_PRESENTATION_ENABLED=true` in `apps/studio/.env`, then `bunx sanity deploy` in `apps/studio`. Do not re-enable it as part of this change.

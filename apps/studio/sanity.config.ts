@@ -14,6 +14,7 @@ import { locations } from './presentation/locations';
 import { mainDocuments } from './presentation/main-documents';
 import {
   getPresentationUrl,
+  isPresentationEnabled,
   PRESENTATION_ORIGINS,
 } from './presentation/settings';
 import type { SingletonType } from './schemaTypes';
@@ -28,6 +29,13 @@ const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
 const dataset = process.env.SANITY_STUDIO_DATASET;
 const title = process.env.SANITY_STUDIO_TITLE;
 
+// Hidden in the deployed Studio until editors are told about it
+// (`presentation/settings.ts`). The web side stays deployed either way.
+const presentationEnabled = isPresentationEnabled();
+const presentationActions = presentationEnabled
+  ? [OpenInPresentationAction]
+  : [];
+
 export default defineConfig({
   name: 'default',
   title: title ?? 'Audiofast Studio',
@@ -38,7 +46,9 @@ export default defineConfig({
   // menu itself is Sanity's own (`presentation/contextual-tool-menu.tsx`).
   // `@beta` API: re-check both tabs after every `sanity` bump. Rollback =
   // this line.
-  studio: { components: { toolMenu: ContextualToolMenu } },
+  ...(presentationEnabled && {
+    studio: { components: { toolMenu: ContextualToolMenu } },
+  }),
   plugins: [
     assist(),
     // Tool titles are plain constants inside `sanity` ("Structure",
@@ -50,26 +60,33 @@ export default defineConfig({
       structure,
       defaultDocumentNode,
     }),
-    presentationTool({
-      title: 'Podgląd',
-      previewUrl: {
-        // A function, resolved only when the tool opens: a Studio built
-        // without SANITY_STUDIO_PRESENTATION_URL still boots
-        // (`presentation/settings.ts`).
-        initial: getPresentationUrl,
-        // `shareAccess` is the ONLY working "open draft preview in a tab"
-        // path: the share flow mints a secret and runs a top-level enable
-        // handshake, so the draft cookie is set unpartitioned. The plain
-        // „Otwórz podgląd" action never routes through `enable`, and the
-        // iframe leg's CHIPS-partitioned cookie is invisible to a new tab.
-        // With `trailingSlash: true` on the web, the route answers at
-        // `/api/draft-mode/enable/` (the slashless form costs one 308).
-        previewMode: { enable: '/api/draft-mode/enable', shareAccess: true },
-      },
-      // ⚠️ Each origin needs a Sanity CORS entry WITH credentials.
-      allowOrigins: PRESENTATION_ORIGINS,
-      resolve: { locations, mainDocuments },
-    }),
+    ...(presentationEnabled
+      ? [
+          presentationTool({
+            title: 'Podgląd',
+            previewUrl: {
+              // A function, resolved only when the tool opens: a Studio built
+              // without SANITY_STUDIO_PRESENTATION_URL still boots
+              // (`presentation/settings.ts`).
+              initial: getPresentationUrl,
+              // `shareAccess` is the ONLY working "open draft preview in a tab"
+              // path: the share flow mints a secret and runs a top-level enable
+              // handshake, so the draft cookie is set unpartitioned. The plain
+              // „Otwórz podgląd" action never routes through `enable`, and the
+              // iframe leg's CHIPS-partitioned cookie is invisible to a new tab.
+              // With `trailingSlash: true` on the web, the route answers at
+              // `/api/draft-mode/enable/` (the slashless form costs one 308).
+              previewMode: {
+                enable: '/api/draft-mode/enable',
+                shareAccess: true,
+              },
+            },
+            // ⚠️ Each origin needs a Sanity CORS entry WITH credentials.
+            allowOrigins: PRESENTATION_ORIGINS,
+            resolve: { locations, mainDocuments },
+          }),
+        ]
+      : []),
     visionTool(),
     media(),
   ],
@@ -104,7 +121,7 @@ export default defineConfig({
           ...input.filter(
             ({ action }) => action && singletonActions.has(action),
           ),
-          OpenInPresentationAction,
+          ...presentationActions,
         ];
       }
 
@@ -132,7 +149,7 @@ export default defineConfig({
 
       // Appended last: the first action is the primary button (Publish).
       // Unrouted types get no item (the action returns `null`).
-      return [...actions, OpenInPresentationAction];
+      return [...actions, ...presentationActions];
     },
     newDocumentOptions: (prev, { creationContext }) => {
       const { type, schemaType } = creationContext;

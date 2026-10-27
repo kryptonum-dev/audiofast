@@ -21,6 +21,18 @@ export const PRODUCTION_WEB_ORIGIN = 'https://audiofast.pl';
 export const PRESENTATION_ORIGINS = [LOCAL_WEB_ORIGIN, PRODUCTION_WEB_ORIGIN];
 
 /**
+ * Whether the Presentation tool („Podgląd") and its entry points — the
+ * „Treść" / „Podgląd" tab menu and „Otwórz w podglądzie" — ship in this
+ * Studio. Always on under `sanity dev`; a BUILT Studio needs
+ * `SANITY_STUDIO_PRESENTATION_ENABLED=true` (inlined at build time). Off in
+ * the deployed Studio until editors have been told about the feature.
+ */
+export function isPresentationEnabled(): boolean {
+  if (process.env.NODE_ENV !== 'production') return true;
+  return process.env.SANITY_STUDIO_PRESENTATION_ENABLED === 'true';
+}
+
+/**
  * Where Presentation points its iframe.
  *
  * Resolved LAZILY (passed as a function to `previewUrl.initial`), so a Studio
