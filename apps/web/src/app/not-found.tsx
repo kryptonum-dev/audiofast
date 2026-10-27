@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { cacheLife } from 'next/cache';
 
 import NotFoundComponent from '@/src/components/pageBuilder/NotFound';
+import { getDataAttribute } from '@/src/global/sanity/data-attribute';
 import {
   type CachedProps,
   renderDraftAware,
@@ -42,7 +43,7 @@ export default async function NotFound() {
   return renderDraftAware(CachedNotFound, {});
 }
 
-async function CachedNotFound({ perspective, stega }: CachedProps) {
+async function CachedNotFound({ perspective, stega, isDraft }: CachedProps) {
   'use cache';
   cacheLife('sanity');
   const notFoundData = await getNotFoundPageData({ perspective, stega });
@@ -60,7 +61,14 @@ async function CachedNotFound({ perspective, stega }: CachedProps) {
       {/* Static fallback when the CMS document is missing: calling
           `notFound()` from inside the not-found boundary would recurse. */}
       {notFoundData ? (
-        <NotFoundComponent {...notFoundData} />
+        <NotFoundComponent
+          {...notFoundData}
+          dataAttribute={getDataAttribute({
+            id: notFoundData._id,
+            type: notFoundData._type,
+            isDraft,
+          })}
+        />
       ) : (
         <h1>Nie znaleziono strony</h1>
       )}

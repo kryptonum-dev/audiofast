@@ -11,7 +11,7 @@ interface TeamMemberCardProps {
   imageSizes?: string;
   index: number;
   isListItem?: boolean;
-  /** Draft-only `data-sanity` for the referenced `teamMember` document. */
+  /** Draft-only `data-sanity` (the authored reference item: draggable). */
   dataSanity?: string;
 }
 

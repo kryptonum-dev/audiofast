@@ -37,3 +37,7 @@ Gate run: the same build and start command as Phase 4 (`next start -p 3107`), th
 - **What differs:** `title` (`Artesania Audio Master Kio` → `Artesania Audio Master Kio – Referencyjny stolik Hi-End`) and `description` (site default → a product-specific description).
 - **Why:** an editor set the product's SEO title and description. `product-542` has `_updatedAt` 2026-10-27T10:06:48Z, after the baseline crawl and before this run.
 - **Check:** the live `https://audiofast.pl/produkty/master-kio/` (still on the Phase 7 code) serves the same new `<title>`.
+
+## Phase 9 — drag-and-drop (lsse level)
+
+Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline` (`runs/2026-10-27T10-53-28-193Z`). Result: 1,125 URLs, all 200, 40 paths differ. The run's `diff.json` is byte-identical to the Phase 8 gate run's (`runs/2026-10-27T10-31-17-391Z`), so every diff is one of the entries above and Phase 9 adds none. Every new annotation is draft-gated and the optimistic layer mounts in draft mode only, so the published HTML is unchanged (0 `data-sanity` on `/`, `/produkty/apex/`, `/marki/`, `/o-nas/`, `/blog/` and the 404).

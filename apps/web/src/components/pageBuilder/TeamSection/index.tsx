@@ -1,4 +1,7 @@
-import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
+import {
+  dataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -10,6 +13,13 @@ import styles from './styles.module.scss';
 type TeamSectionProps = PagebuilderType<'teamSection'> & {
   index: number;
   isDraft?: boolean;
+  /**
+   * Draft only: pre-scoped to this block. `teamMembers[1..]` items address the
+   * authored reference item and are draggable among themselves; item 0 renders
+   * in the CTA card (another container) and is not annotated, see
+   * context/changes/sanity-modernization/presentation-arrays.md.
+   */
+  dataAttribute?: ScopedDataAttribute;
 };
 
 export default function TeamSection({
@@ -20,7 +30,7 @@ export default function TeamSection({
   secondaryDescription,
   ctaButton,
   index,
-  isDraft,
+  dataAttribute,
 }: TeamSectionProps) {
   return (
     <section className={`${styles.teamSection} max-width`}>
@@ -56,7 +66,10 @@ export default function TeamSection({
               headingLevel={index === 0 ? 'h3' : 'h4'}
               imageSizes="400px"
               index={index}
-              dataSanity={referencedDataSanity(member, isDraft, 'name')}
+              dataSanity={dataSanity(dataAttribute, [
+                'teamMembers',
+                { _key: member._key },
+              ])}
             />
           ))}
         </ul>

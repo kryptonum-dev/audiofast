@@ -1,5 +1,6 @@
 import type { SanityRawImage } from '@/components/shared/Image';
 import Image from '@/components/shared/Image';
+import type { ScopedDataAttribute } from '@/src/global/sanity/data-attribute';
 import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/src/global/types';
 
@@ -23,6 +24,12 @@ export interface TwoColumnContentProps {
   gallery?: SanityRawImage[];
   className?: string;
   narrowContent?: boolean;
+  /**
+   * Draft only: scoped to the field `unifiedContent` came from
+   * (`details.productDetailContent`, `brandDetailContent`), so nested
+   * custom-block arrays are draggable.
+   */
+  unifiedContentDataAttribute?: ScopedDataAttribute | null;
 }
 
 export default function TwoColumnContent({
@@ -35,6 +42,7 @@ export default function TwoColumnContent({
   gallery,
   className,
   narrowContent = false,
+  unifiedContentDataAttribute,
 }: TwoColumnContentProps) {
   // Check content availability with priority order
   const hasUnifiedContent =
@@ -76,6 +84,7 @@ export default function TwoColumnContent({
         <UnifiedContentBlocks
           content={unifiedContent}
           className={styles.contentWrapper}
+          dataAttribute={unifiedContentDataAttribute}
         />
       )}
 

@@ -20,6 +20,8 @@ interface ProductCardProps {
   layout?: 'horizontal' | 'vertical';
   priority?: boolean;
   loading?: 'eager' | 'lazy';
+  /** Draft only: `data-sanity` of the authored array item rendering this card. */
+  dataSanity?: string;
 }
 
 export default function ProductCard({
@@ -31,6 +33,7 @@ export default function ProductCard({
   showCartButton = showButton,
   priority = false,
   loading = 'lazy',
+  dataSanity,
 }: ProductCardProps) {
   const {
     slug,
@@ -68,7 +71,11 @@ export default function ProductCard({
   );
 
   return (
-    <article className={styles.productCard} data-layout={layout}>
+    <article
+      className={styles.productCard}
+      data-layout={layout}
+      data-sanity={dataSanity}
+    >
       <div className={styles.imgBox}>
         <Image
           image={mainImage}

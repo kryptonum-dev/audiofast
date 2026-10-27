@@ -6,7 +6,6 @@ import LogoLink from '@/src/components/ui/LogoLink';
 import {
   dataSanity,
   getDataAttribute,
-  referencedDataSanity,
 } from '@/src/global/sanity/data-attribute';
 import type { CachedProps } from '@/src/global/sanity/draft-aware';
 import { sanityFetch } from '@/src/global/sanity/live';
@@ -38,6 +37,18 @@ export default async function Footer({
     isDraft,
   });
 
+  // Draft only: every social icon and link addresses its authored array item
+  // (`highlightedSocialMedia[_key==…]`, `links[_key==…]`) so both lists are
+  // draggable. Link labels are stega-cleaned in draft so the text does not
+  // register a second overlay on the item and steal the drag handle. The
+  // links split into two columns at index 3: a drop across columns is a valid
+  // reorder that renders as a jump between columns.
+  const links = (footerData?.links ?? []).map((link) =>
+    footerAttribute ? { ...link, text: stegaClean(link.text) } : link,
+  );
+  const linkDataSanity = (key: string) =>
+    dataSanity(footerAttribute, ['links', { _key: key }]);
+
   return (
     <footer className={`${styles.footer} max-width-block`}>
       <div className={styles.logoContainer}>
@@ -54,7 +65,10 @@ export default async function Footer({
               rel="noreferrer"
               dangerouslySetInnerHTML={{ __html: socialMedia.iconString! }}
               aria-label={`Odwiedź nasz ${stegaClean(socialMedia.name)}`}
-              data-sanity={referencedDataSanity(socialMedia, isDraft, 'link')}
+              data-sanity={dataSanity(footerAttribute, [
+                'highlightedSocialMedia',
+                { _key: socialMedia._key },
+              ])}
             ></Link>
           ))}
         </nav>
@@ -63,15 +77,23 @@ export default async function Footer({
         className={styles.linksCol}
         data-sanity={dataSanity(footerAttribute, 'links')}
       >
-        {footerData?.links?.slice(0, 3).map((link) => (
-          <Link key={link.text} href={link.href!}>
+        {links.slice(0, 3).map((link) => (
+          <Link
+            key={link.text}
+            href={link.href!}
+            data-sanity={linkDataSanity(link._key)}
+          >
             {link.text}
           </Link>
         ))}
       </nav>
       <nav className={styles.linksCol}>
-        {footerData?.links?.slice(3).map((link) => (
-          <Link key={link.text} href={link.href!}>
+        {links.slice(3).map((link) => (
+          <Link
+            key={link.text}
+            href={link.href!}
+            data-sanity={linkDataSanity(link._key)}
+          >
             {link.text}
           </Link>
         ))}

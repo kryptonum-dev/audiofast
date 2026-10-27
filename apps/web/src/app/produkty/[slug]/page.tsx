@@ -28,6 +28,7 @@ import {
   needsBrandStores,
   pickEffectiveStores,
 } from '@/src/global/products/brand-stores';
+import { getDataAttribute } from '@/src/global/sanity/data-attribute';
 import {
   type CachedProps,
   renderDraftAware,
@@ -200,9 +201,25 @@ async function CachedProduct({
 
   // Determine which stores to display (product stores > brand stores > none).
   // The brand's list is only fetched when the product has no own stores.
-  const brandStores = needsBrandStores(product.availableInStores)
+  const usesBrandStores = needsBrandStores(product.availableInStores);
+  const brandStores = usesBrandStores
     ? await fetchBrandStores(product.brand?._id, options)
     : null;
+
+  // Draft only (null otherwise): nested arrays the editor can drag in
+  // Presentation. The store list belongs to whichever document supplied it.
+  const productAttribute = getDataAttribute({
+    id: product._id,
+    type: 'product',
+    isDraft,
+  });
+  const storesAttribute = usesBrandStores
+    ? getDataAttribute({
+        id: product.brand?._id,
+        type: 'brand',
+        isDraft,
+      })?.scope('stores')
+    : productAttribute?.scope('availableInStores');
   const effectiveStores = pickEffectiveStores(
     product.availableInStores,
     brandStores,
@@ -307,6 +324,10 @@ async function CachedProduct({
         }
         customId="szczegoly"
         gallery={product.imageGallery as SanityRawImage[]}
+        unifiedContentDataAttribute={productAttribute?.scope([
+          'details',
+          'productDetailContent',
+        ])}
         className="margin-top-xms"
       />
       {product.technicalData && (
@@ -320,6 +341,7 @@ async function CachedProduct({
           data={product.downloadablePdfs}
           productSlug={product.slug || ''}
           customId="do-pobrania"
+          dataAttribute={productAttribute?.scope('downloadablePdfs')}
         />
       )}
       {effectiveStores && effectiveStores.length > 0 && (
@@ -328,6 +350,7 @@ async function CachedProduct({
             customId="gdzie-kupic"
             stores={effectiveStores}
             isDraft={isDraft}
+            storesAttribute={storesAttribute}
           />
         </Suspense>
       )}

@@ -1,6 +1,10 @@
 import { cacheLife, cacheTag } from 'next/cache';
 
-import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
+import {
+  dataSanity,
+  referencedDataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 
 import StoreMapWrapper from './StoreMapWrapper';
@@ -28,6 +32,15 @@ export interface StoreLocationsProps {
    * address strings carry stega markers that must not reach a lookup.
    */
   isDraft?: boolean;
+  /**
+   * Draft only: a factory scoped to the AUTHORED store array of the document
+   * that owns the rendered list (`product.availableInStores`, or
+   * `brand.stores` when the product inherits its brand's stores). Each store
+   * then addresses its reference item (`[_key==…]`) and is draggable; the
+   * store's stega text still opens the store document. The map markers are
+   * not annotated.
+   */
+  storesAttribute?: ScopedDataAttribute | null;
 }
 
 // Clean street address for geocoding
@@ -180,6 +193,7 @@ export default async function StoreLocations({
   stores,
   customId = 'gdzie-kupic',
   isDraft = false,
+  storesAttribute,
 }: StoreLocationsProps) {
   // Deduplicate stores by _id
   const uniqueStoresMap = new Map<string, Store>();
@@ -269,7 +283,11 @@ export default async function StoreLocations({
             key={store._id + index}
             id={store._id}
             className={styles.store}
-            data-sanity={referencedDataSanity(store, isDraft, 'name')}
+            data-sanity={
+              storesAttribute && store._key
+                ? dataSanity(storesAttribute, [{ _key: store._key }])
+                : referencedDataSanity(store, isDraft, 'name')
+            }
           >
             <div className={styles.storeInfo}>
               <p className={styles.storeName}>{store.name}</p>

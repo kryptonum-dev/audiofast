@@ -1,3 +1,6 @@
+// Presentation: items are deliberately NOT draggable. `details.content` / `brandContentBlocks`: hidden legacy field.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import type { PortableTextProps } from '@/src/global/types';
 
 import PortableText from '../../portableText';

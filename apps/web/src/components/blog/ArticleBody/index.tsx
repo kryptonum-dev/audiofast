@@ -1,3 +1,4 @@
+import type { ScopedDataAttribute } from '@/global/sanity/data-attribute';
 import type { PortableTextProps, ProductType } from '@/global/types';
 import type {
   QueryBlogPostBySlugResult,
@@ -12,8 +13,12 @@ import PublicationType from '../../ui/PublicationType';
 import TableOfContent from '../../ui/TableOfContent';
 import styles from './styles.module.scss';
 
-type Props =
-  NonNullable<QueryBlogPostBySlugResult> | NonNullable<QueryReviewBySlugResult>;
+type Props = (
+  NonNullable<QueryBlogPostBySlugResult> | NonNullable<QueryReviewBySlugResult>
+) & {
+  /** Draft only: scoped to `content`, so nested custom-block arrays are draggable. */
+  contentDataAttribute?: ScopedDataAttribute | null;
+};
 
 export function ArticleBody({
   headings,
@@ -22,6 +27,7 @@ export function ArticleBody({
   image,
   _createdAt,
   _type,
+  contentDataAttribute,
   ...props
 }: Props) {
   const publicationType =
@@ -69,6 +75,7 @@ export function ArticleBody({
         addHeadingIds
         value={content}
         className={`${styles.body} content-body`}
+        dataAttribute={contentDataAttribute}
       />
     </article>
   );

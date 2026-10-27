@@ -7,6 +7,7 @@ import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
+import { getDataAttribute } from '@/src/global/sanity/data-attribute';
 import {
   type CachedProps,
   renderDraftAware,
@@ -123,7 +124,14 @@ async function CachedBlogPost({
     <main id="main" className="page-transition">
       <BlogPostSchema blogPost={pageData} settings={settings} />
       <Breadcrumbs data={breadcrumbsData} />
-      <ArticleBody {...pageData} />
+      <ArticleBody
+        {...pageData}
+        contentDataAttribute={getDataAttribute({
+          id: pageData._id,
+          type: pageData._type,
+          isDraft,
+        })?.scope('content')}
+      />
       {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
         <PageBuilder
           pageBuilder={pageData.pageBuilder}

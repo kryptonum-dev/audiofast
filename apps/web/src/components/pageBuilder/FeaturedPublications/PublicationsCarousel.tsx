@@ -1,5 +1,8 @@
 'use client';
 
+// Presentation: items are deliberately NOT draggable. `featuredPublications.publications`, `product.reviews`, `brand.featuredReviews`: embla loop with cloned slides.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from 'embla-carousel-react';

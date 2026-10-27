@@ -18,7 +18,7 @@ interface AccordionProps {
   faq: FaqType;
   currentOpen: string | null;
   onToggle: () => void;
-  /** Draft-only `data-sanity` for the referenced `faq` document. */
+  /** Draft-only `data-sanity` (the authored `faqList[]` item: draggable). */
   dataSanity?: string;
 }
 

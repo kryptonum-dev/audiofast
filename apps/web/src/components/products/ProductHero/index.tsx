@@ -1,3 +1,6 @@
+// Presentation: items are deliberately NOT draggable. `award.products`: reverse-reference lookup, the order is not authored per product.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import Link from 'next/link';
 import { stegaClean } from 'next-sanity';
 

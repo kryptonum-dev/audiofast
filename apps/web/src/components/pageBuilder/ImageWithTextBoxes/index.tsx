@@ -1,3 +1,7 @@
+import {
+  dataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 import svgToInlineString from '@/src/global/utils';
 
@@ -8,6 +12,8 @@ import styles from './styles.module.scss';
 
 type ImageWithTextBoxesProps = PagebuilderType<'imageWithTextBoxes'> & {
   index: number;
+  /** Draft only: pre-scoped to this block; `boxes[]` items are draggable. */
+  dataAttribute?: ScopedDataAttribute;
 };
 
 export default async function ImageWithTextBoxes({
@@ -16,6 +22,7 @@ export default async function ImageWithTextBoxes({
   boxes,
   cta,
   index,
+  dataAttribute,
 }: ImageWithTextBoxesProps) {
   // Fetch all SVG icons in parallel
   const boxesWithSvgs = await Promise.all(
@@ -43,7 +50,14 @@ export default async function ImageWithTextBoxes({
       />
       <ul className={styles.boxes}>
         {boxesWithSvgs.map((box) => (
-          <li key={box._key} className={styles.box}>
+          <li
+            key={box._key}
+            className={styles.box}
+            data-sanity={dataSanity(dataAttribute, [
+              'boxes',
+              { _key: box._key },
+            ])}
+          >
             {box.svgContent && (
               <div
                 className={styles.icon}

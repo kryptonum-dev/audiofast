@@ -1,3 +1,6 @@
+// Presentation: items are deliberately NOT draggable. `heroCarousel.brands`: CSS marquee with duplicated DOM.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import Link from 'next/link';
 
 import AppImage from '@/components/shared/Image';

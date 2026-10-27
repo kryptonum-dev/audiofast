@@ -1,3 +1,6 @@
+// Presentation: items are deliberately NOT draggable. `brandsList.selectedBrands`: the query re-sorts by `orderRank` (order lives in the orderable brand list) and runs in `select()`.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import Link from 'next/link';
 
 import type { PagebuilderType } from '@/src/global/types';

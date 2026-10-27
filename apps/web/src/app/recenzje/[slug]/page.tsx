@@ -8,6 +8,7 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import ProductGallery from '@/src/components/ui/ProductGallery';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
+import { getDataAttribute } from '@/src/global/sanity/data-attribute';
 import {
   type CachedProps,
   renderDraftAware,
@@ -114,7 +115,14 @@ async function CachedReview({
     <main id="main" className="page-transition">
       <ArticleSchema review={pageData} />
       <Breadcrumbs data={breadcrumbsData} />
-      <ArticleBody {...pageData} />
+      <ArticleBody
+        {...pageData}
+        contentDataAttribute={getDataAttribute({
+          id: pageData._id,
+          type: pageData._type,
+          isDraft,
+        })?.scope('content')}
+      />
       {pageData.gallery && pageData.gallery.length >= 4 && (
         <ProductGallery
           images={pageData.gallery}

@@ -1,5 +1,8 @@
 'use client';
 
+// Presentation: items are deliberately NOT draggable. `featuredProducts.newProducts`/`bestsellers`: embla `loop:true`, tabbed, `select()` (no source map).
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import type { EmblaCarouselType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import { useEffect } from 'react';

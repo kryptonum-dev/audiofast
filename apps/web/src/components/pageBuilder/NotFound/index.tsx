@@ -1,3 +1,9 @@
+import { stegaClean } from 'next-sanity';
+
+import {
+  dataSanity,
+  type DocumentDataAttribute,
+} from '@/global/sanity/data-attribute';
 import { urlFor } from '@/global/sanity/image';
 
 import type { QueryNotFoundPageResult } from '../../../global/sanity/sanity.types';
@@ -5,13 +11,20 @@ import PortableText from '../../portableText';
 import Button from '../../ui/Button';
 import styles from './styles.module.scss';
 
-type NotFoundProps = NonNullable<QueryNotFoundPageResult>;
+type NotFoundProps = NonNullable<QueryNotFoundPageResult> & {
+  /**
+   * Draft only: the `notFound` document. `buttons[]` items are draggable; the
+   * labels are stega-cleaned so the text does not steal the drag handle.
+   */
+  dataAttribute?: DocumentDataAttribute | null;
+};
 
 export default async function NotFound({
   backgroundImage,
   heading,
   description,
   buttons,
+  dataAttribute,
 }: NotFoundProps) {
   const bgImageUrl = urlFor({
     asset: { _ref: backgroundImage!.id },
@@ -55,7 +68,17 @@ export default async function NotFound({
       />
       <nav className={styles.buttons}>
         {buttons!.map((button) => (
-          <Button key={button._key} {...button} />
+          <Button
+            key={button._key}
+            {...button}
+            {...(dataAttribute && {
+              text: stegaClean(button.text),
+              'data-sanity': dataSanity(dataAttribute, [
+                'buttons',
+                { _key: button._key },
+              ]),
+            })}
+          />
         ))}
       </nav>
     </section>

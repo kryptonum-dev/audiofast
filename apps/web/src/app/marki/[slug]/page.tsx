@@ -28,6 +28,7 @@ import {
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { getProductsFilterMetadata } from '@/src/global/products/filter-metadata';
+import { getDataAttribute } from '@/src/global/sanity/data-attribute';
 import {
   type CachedProps,
   renderDraftAware,
@@ -319,6 +320,11 @@ async function CachedBrandShell({
         contentBlocks={brand.brandContentBlocks as ContentBlock[]}
         customId="o-marce"
         distributionYear={brand.distributionYear}
+        unifiedContentDataAttribute={getDataAttribute({
+          id: brand._id,
+          type: 'brand',
+          isDraft,
+        })?.scope('brandDetailContent')}
         gallery={brand.imageGallery as SanityRawImage[]}
       />
 
@@ -373,6 +379,11 @@ async function CachedBrandShell({
               customId="gdzie-kupic"
               stores={brand.stores.filter((s) => s !== null)}
               isDraft={isDraft}
+              storesAttribute={getDataAttribute({
+                id: brand._id,
+                type: 'brand',
+                isDraft,
+              })?.scope('stores')}
             />
           </Suspense>
         )}

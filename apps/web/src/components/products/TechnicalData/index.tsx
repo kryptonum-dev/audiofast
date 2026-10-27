@@ -1,5 +1,8 @@
 'use client';
 
+// Presentation: items are deliberately NOT draggable. `technicalData.*`: hidden field edited in the TechnicalDataView pane (CPO also via `select()`).
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';

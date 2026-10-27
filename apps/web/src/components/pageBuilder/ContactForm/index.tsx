@@ -1,4 +1,7 @@
-import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
+import {
+  dataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -19,6 +22,12 @@ export type ContactFormProps = PagebuilderType<'contactForm'> & {
   index: number;
   companyRegistration?: CompanyRegistration;
   isDraft?: boolean;
+  /**
+   * Draft only: pre-scoped to this block. `contactPeople.contactPersons[]` and
+   * `accountList[]` items are draggable (the person item addresses the
+   * authored reference; its stega text still opens the team member).
+   */
+  dataAttribute?: ScopedDataAttribute;
 };
 
 export default function ContactForm({
@@ -29,7 +38,7 @@ export default function ContactForm({
   companyRegistration,
   formState,
   index,
-  isDraft,
+  dataAttribute,
 }: ContactFormProps) {
   const registrationDetails = [
     companyRegistration?.companyName,
@@ -66,13 +75,19 @@ export default function ContactForm({
         />
         <ul className={styles.personList}>
           {contactPeople!.contactPersons!.map((person) => (
-            <li key={person._id}>
+            <li
+              key={person._id}
+              data-sanity={dataSanity(dataAttribute, [
+                'contactPeople',
+                'contactPersons',
+                { _key: person._key },
+              ])}
+            >
               <ContactPerson
                 person={person}
                 id={person._id}
                 startPos="left"
                 index={index}
-                dataSanity={referencedDataSanity(person, isDraft, 'name')}
               />
             </li>
           ))}
@@ -80,13 +95,26 @@ export default function ContactForm({
       </div>
       <ul className={styles.accountList}>
         {accountList!.map((account, idx: number) => (
-          <li className={styles.accountItem} key={idx}>
+          <li
+            className={styles.accountItem}
+            key={account._key ?? idx}
+            data-sanity={
+              account._key
+                ? dataSanity(dataAttribute, [
+                    'accountList',
+                    { _key: account._key },
+                  ])
+                : undefined
+            }
+          >
             <PortableText
               value={account.heading}
               className={styles.heading}
               headingLevel={index === 0 ? 'h3' : 'h4'}
             />
             <div className={styles.accountDetails}>
+              {/* `accountDetails` is a primitive string[] (no `_key`): not
+                  draggable, see presentation-arrays.md. */}
               {account.accountDetails!.map((detail, idx: number) => (
                 <span key={idx}>{detail}</span>
               ))}

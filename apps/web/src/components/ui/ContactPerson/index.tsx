@@ -16,7 +16,7 @@ export default function ContactPerson({
   startPos?: 'left' | 'right';
   className?: string;
   index: number;
-  /** Draft-only `data-sanity` for the referenced `teamMember` document. */
+  /** Draft-only `data-sanity` (the authored reference item: draggable). */
   dataSanity?: string;
 }) {
   return (

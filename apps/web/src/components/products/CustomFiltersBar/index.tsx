@@ -1,5 +1,8 @@
 'use client';
 
+// Presentation: items are deliberately NOT draggable. `productCategorySub.customFilters`: hidden, edited in a custom pane, feeds a query-driven listing.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, useTransition } from 'react';
 

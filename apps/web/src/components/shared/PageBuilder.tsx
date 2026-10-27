@@ -1,6 +1,9 @@
 import { Fragment, type ReactNode } from 'react';
 
-import { getDataAttribute } from '../../global/sanity/data-attribute';
+import {
+  getDataAttribute,
+  type ScopedDataAttribute,
+} from '../../global/sanity/data-attribute';
 import type { DynamicFetchOptions } from '../../global/sanity/live';
 import type {
   QueryCpoPageResult,
@@ -23,6 +26,7 @@ import ImageTextColumns from '../pageBuilder/ImageTextColumns';
 import ImageWithTextBoxes from '../pageBuilder/ImageWithTextBoxes';
 import ImageWithVideo from '../pageBuilder/ImageWithVideo';
 import LatestPublication from '../pageBuilder/LatestPublication';
+import OptimisticBlocks from '../pageBuilder/OptimisticBlocks';
 import PhoneImageCta from '../pageBuilder/PhoneImageCta';
 import ProductsCarousel from '../pageBuilder/ProductsCarousel';
 import StepList from '../pageBuilder/StepList';
@@ -99,29 +103,50 @@ export function PageBuilder({
     isDraft,
   });
 
-  return (
-    <>
-      {blocks.map((block, index) => {
-        const element = renderBlock(block, index + indexOffset);
-        if (!element) return null;
-        // Bare `_key` as the React key in both branches: Phase 9's optimistic
-        // reorder matches children on the raw key.
-        if (!dataAttribute) {
-          return <Fragment key={block._key}>{element}</Fragment>;
-        }
-        return (
-          <div
-            key={block._key}
-            data-sanity={dataAttribute(['pageBuilder', { _key: block._key }])}
-          >
-            {element}
-          </div>
-        );
-      })}
-    </>
-  );
+  // Keys are the BARE `_key` in both branches, with no index suffix:
+  // `OptimisticReorder` matches rendered children to
+  // `action.document.pageBuilder[]._key` by React key, and a suffix silently
+  // breaks that lookup (the drag then snaps back). Blocks the renderer drops
+  // are filtered out, so the keyed list holds rendered blocks only.
+  const rendered = blocks.flatMap((block, index) => {
+    // Pre-scoped to this block (`pageBuilder[_key=="…"]`), so a block only
+    // appends its own array path: `dataAttribute?.(['steps', { _key }])`.
+    const blockAttribute = dataAttribute?.scope([
+      'pageBuilder',
+      { _key: block._key },
+    ]);
+    const element = renderBlock(block, index + indexOffset, blockAttribute);
+    if (!element) return [];
+    if (!dataAttribute) {
+      return [<Fragment key={block._key}>{element}</Fragment>];
+    }
+    return [
+      <div
+        key={block._key}
+        data-sanity={dataAttribute(['pageBuilder', { _key: block._key }])}
+      >
+        {element}
+      </div>,
+    ];
+  });
 
-  function renderBlock(block: PageBuilderBlock, effectiveIndex: number) {
+  // Draft only: published output stays a list of keyed Fragments with no
+  // client boundary. The reorder layer receives the keyed blocks directly.
+  if (dataAttribute && documentId) {
+    return (
+      <OptimisticBlocks documentId={documentId} fieldName="pageBuilder">
+        {rendered}
+      </OptimisticBlocks>
+    );
+  }
+
+  return <>{rendered}</>;
+
+  function renderBlock(
+    block: PageBuilderBlock,
+    effectiveIndex: number,
+    blockAttribute: ScopedDataAttribute | undefined,
+  ) {
     switch (block._type as BlockType) {
       case 'heroCarousel':
         return (
@@ -137,6 +162,7 @@ export function PageBuilder({
             key={block._key}
             {...(block as BlockByType<'heroStatic'>)}
             index={effectiveIndex}
+            dataAttribute={blockAttribute}
           />
         );
       case 'latestPublication':
@@ -177,6 +203,7 @@ export function PageBuilder({
             key={block._key}
             {...(block as BlockByType<'imageWithTextBoxes'>)}
             index={effectiveIndex}
+            dataAttribute={blockAttribute}
           />
         );
       case 'featuredPublications':
@@ -244,6 +271,7 @@ export function PageBuilder({
             key={block._key}
             {...(block as BlockByType<'faqSection'>)}
             index={effectiveIndex}
+            dataAttribute={blockAttribute}
             isDraft={isDraft}
           />
         );
@@ -253,6 +281,7 @@ export function PageBuilder({
             key={block._key}
             {...(block as BlockByType<'contactForm'>)}
             index={effectiveIndex}
+            dataAttribute={blockAttribute}
             isDraft={isDraft}
           />
         );
@@ -270,6 +299,7 @@ export function PageBuilder({
             key={block._key}
             {...(block as BlockByType<'teamSection'>)}
             index={effectiveIndex}
+            dataAttribute={blockAttribute}
             isDraft={isDraft}
           />
         );
@@ -279,6 +309,7 @@ export function PageBuilder({
             key={block._key}
             {...(block as BlockByType<'gallerySection'>)}
             index={effectiveIndex}
+            dataAttribute={blockAttribute}
           />
         );
       case 'phoneImageCta':
@@ -295,6 +326,7 @@ export function PageBuilder({
             key={block._key}
             {...(block as BlockByType<'stepList'>)}
             index={effectiveIndex}
+            dataAttribute={blockAttribute}
           />
         );
       default:

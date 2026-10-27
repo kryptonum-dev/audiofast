@@ -1,3 +1,4 @@
+import type { ScopedDataAttribute } from '@/src/global/sanity/data-attribute';
 import type { PortableTextProps } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -7,6 +8,8 @@ import styles from './styles.module.scss';
 interface UnifiedContentBlocksProps {
   content: PortableTextProps;
   className?: string;
+  /** Draft only: scoped to the portable-text field (`_key`s survive the split). */
+  dataAttribute?: ScopedDataAttribute | null;
 }
 
 /**
@@ -20,6 +23,7 @@ interface UnifiedContentBlocksProps {
 export default function UnifiedContentBlocks({
   content,
   className,
+  dataAttribute,
 }: UnifiedContentBlocksProps) {
   if (!content || !Array.isArray(content) || content.length === 0) {
     return null;
@@ -40,6 +44,7 @@ export default function UnifiedContentBlocks({
               <PortableText
                 value={section.content}
                 enablePortableTextStyles
+                dataAttribute={dataAttribute}
                 className={styles.columnContent}
               />
             </div>
@@ -53,6 +58,7 @@ export default function UnifiedContentBlocks({
               <PortableText
                 value={section.leftContent}
                 enablePortableTextStyles
+                dataAttribute={dataAttribute}
                 className={styles.columnContent}
               />
             </div>
@@ -60,6 +66,7 @@ export default function UnifiedContentBlocks({
               <PortableText
                 value={section.rightContent}
                 enablePortableTextStyles
+                dataAttribute={dataAttribute}
                 className={styles.columnContent}
               />
             </div>

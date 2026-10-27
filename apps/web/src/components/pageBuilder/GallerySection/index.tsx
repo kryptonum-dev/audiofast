@@ -1,3 +1,7 @@
+import {
+  dataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -6,6 +10,8 @@ import styles from './styles.module.scss';
 
 type GallerySectionProps = PagebuilderType<'gallerySection'> & {
   index: number;
+  /** Draft only: pre-scoped to this block; `images[]` items are draggable. */
+  dataAttribute?: ScopedDataAttribute;
 };
 
 export default function GallerySection({
@@ -13,6 +19,7 @@ export default function GallerySection({
   description,
   images,
   index,
+  dataAttribute,
 }: GallerySectionProps) {
   return (
     <section className={`${styles.gallerySection} max-width`}>
@@ -30,7 +37,15 @@ export default function GallerySection({
       </header>
       <div className={styles.gallery}>
         {images?.map((image, idx) => (
-          <div key={`${image.id}-${idx}`} className={styles.galleryItem}>
+          <div
+            key={image._key ?? `${image.id}-${idx}`}
+            className={styles.galleryItem}
+            data-sanity={
+              image._key
+                ? dataSanity(dataAttribute, ['images', { _key: image._key }])
+                : undefined
+            }
+          >
             <Image
               image={image}
               sizes="(max-width: 27.4375rem) 96vw, (max-width: 37.4375rem) 47vw, (max-width: 56.1875rem) 41vw, (max-width: 85.375rem) 32vw, 430px"

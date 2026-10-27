@@ -1,4 +1,5 @@
 import { cacheLife } from 'next/cache';
+import { stegaClean } from 'next-sanity';
 
 import { dataSanity, getDataAttribute } from '@/global/sanity/data-attribute';
 import type { CachedProps } from '@/global/sanity/draft-aware';
@@ -33,10 +34,35 @@ export default async function Header({
     isDraft,
   });
 
+  const buttons = navbarData?.buttons || [];
+
+  // Draft only: each link addresses `buttons[_key==…]` so the nav is
+  // draggable. Its label is stega-cleaned, because stega text filling the
+  // link would register its own overlay on the same element and steal the
+  // drag handle (lsse audit class C). The item overlay still opens the button.
+  // There is one DOM copy of the links (the mobile drawer restyles the same
+  // nav), so no responsive duplicate needs excluding.
+  const linkDataSanity = navbarAttribute
+    ? Object.fromEntries(
+        buttons.map((button) => [
+          button._key,
+          dataSanity(navbarAttribute, ['buttons', { _key: button._key }]),
+        ]),
+      )
+    : undefined;
+
   return (
     <HeaderShell
-      buttons={navbarData?.buttons || []}
+      buttons={
+        navbarAttribute
+          ? buttons.map((button) => ({
+              ...button,
+              text: stegaClean(button.text),
+            }))
+          : buttons
+      }
       linksDataSanity={dataSanity(navbarAttribute, 'buttons')}
+      linkDataSanity={linkDataSanity}
     />
   );
 }

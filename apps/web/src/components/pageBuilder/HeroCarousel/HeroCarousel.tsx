@@ -1,5 +1,8 @@
 'use client';
 
+// Presentation: items are deliberately NOT draggable. `heroCarousel.slides`: autoplay cross-fade carousel (one visible slide, background layer outside the slide DOM).
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import { getImageProps } from 'next/image';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 

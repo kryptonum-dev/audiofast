@@ -1,5 +1,9 @@
 import { FileDown } from 'lucide-react';
 
+import {
+  dataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { QueryProductBySlugResult } from '@/src/global/sanity/sanity.types';
 import { hasText } from '@/src/global/utils/stega-text';
 
@@ -13,6 +17,8 @@ interface DownloadSectionProps {
   data: DownloadablePdf[];
   productSlug: string;
   customId?: string;
+  /** Draft only: scoped to `downloadablePdfs`; each item is draggable. */
+  dataAttribute?: ScopedDataAttribute;
 }
 
 /**
@@ -31,6 +37,7 @@ export default function DownloadSection({
   data,
   productSlug,
   customId,
+  dataAttribute,
 }: DownloadSectionProps) {
   if (!data || data.length === 0) return null;
 
@@ -42,7 +49,11 @@ export default function DownloadSection({
       <h2 className={styles.heading}>Do pobrania</h2>
       <ul className={styles.list}>
         {data.map((pdf) => (
-          <li key={pdf._key} className={styles.item}>
+          <li
+            key={pdf._key}
+            className={styles.item}
+            data-sanity={dataSanity(dataAttribute, [{ _key: pdf._key }])}
+          >
             <a
               href={pdf._key ? getPdfUrl(productSlug, pdf._key) : '#'}
               target="_blank"

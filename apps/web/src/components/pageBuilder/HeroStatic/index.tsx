@@ -1,6 +1,10 @@
 import { getImageProps } from 'next/image';
 
 import { urlFor } from '@/global/sanity/image';
+import {
+  dataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 import svgToInlineString from '@/src/global/utils';
 
@@ -9,6 +13,8 @@ import styles from './styles.module.scss';
 
 type HeroStaticProps = PagebuilderType<'heroStatic'> & {
   index: number;
+  /** Draft only: pre-scoped to this block; `blocks[]` items are draggable. */
+  dataAttribute?: ScopedDataAttribute;
 };
 
 export default async function HeroStatic({
@@ -19,6 +25,7 @@ export default async function HeroStatic({
   blocksHeading,
   blocks,
   index,
+  dataAttribute,
 }: HeroStaticProps) {
   // Build optimized image URLs for different aspect ratios (server-side)
   const heroImage = image?.id
@@ -123,7 +130,14 @@ export default async function HeroStatic({
           <Heading className={styles.blocksHeading}>{blocksHeading}</Heading>
           <ul className={styles.list}>
             {blocksWithSvgs.map((block) => (
-              <li key={block._key} className={styles.block}>
+              <li
+                key={block._key}
+                className={styles.block}
+                data-sanity={dataSanity(dataAttribute, [
+                  'blocks',
+                  { _key: block._key },
+                ])}
+              >
                 <div
                   className={styles.icon}
                   dangerouslySetInnerHTML={{ __html: block.svgContent! }}

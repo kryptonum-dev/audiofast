@@ -15,11 +15,14 @@ type HeaderShellProps = {
   buttons: NonNullable<NonNullable<QueryNavbarResult>['buttons']>;
   /** Draft-only `data-sanity` for `navbar.buttons` (pre-built on the server). */
   linksDataSanity?: string;
+  /** Draft-only `data-sanity` per `navbar.buttons` item `_key` (draggable). */
+  linkDataSanity?: Record<string, string | undefined>;
 };
 
 export default function HeaderShell({
   buttons,
   linksDataSanity,
+  linkDataSanity,
 }: HeaderShellProps) {
   const pathname = usePathname();
   const isCartMode = pathname?.startsWith('/koszyk') ?? false;
@@ -47,7 +50,10 @@ export default function HeaderShell({
                 aria-hidden={isCartMode}
                 data-sanity={linksDataSanity}
               >
-                <HeaderLinks buttons={buttons} />
+                <HeaderLinks
+                  buttons={buttons}
+                  linkDataSanity={linkDataSanity}
+                />
               </div>
               <div className={styles.utilityLinks}>
                 <HeaderUtilityLinks />

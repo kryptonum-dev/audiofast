@@ -1,5 +1,8 @@
 'use client';
 
+// Presentation: items are deliberately NOT draggable. `imageGallery` (product/brand/review/CPO): embla thumbs `loop:true`, main image is one swapped slot.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 

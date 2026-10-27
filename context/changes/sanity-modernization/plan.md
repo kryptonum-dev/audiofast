@@ -1327,19 +1327,19 @@ After the soak checks pass:
 
 ### Phase 8: Presentation — web draft mode, stega, overlays, B2C isolation
 
-- [x] 8.1 Web unit tests pass
-- [x] 8.2 Type check + lint pass
-- [x] 8.3 Full build passes
-- [ ] 8.4 Published HTML has no overlays
-- [x] 8.5 Parity vs baseline still clean
-- [ ] 8.6 Studio + web deployed
+- [x] 8.1 Web unit tests pass — b207dfc
+- [x] 8.2 Type check + lint pass — b207dfc
+- [x] 8.3 Full build passes — b207dfc
+- [x] 8.4 Published HTML has no overlays — b207dfc
+- [x] 8.5 Parity vs baseline still clean — b207dfc
+- [x] 8.6 Studio + web deployed — b207dfc
 
 ### Phase 9: Drag-and-drop (lsse level)
 
-- [ ] 9.1 Optimistic-order tests pass
-- [ ] 9.2 Type check + lint pass
-- [ ] 9.3 Full build passes
-- [ ] 9.4 Parity vs baseline clean
+- [x] 9.1 Optimistic-order tests pass
+- [x] 9.2 Type check + lint pass
+- [x] 9.3 Full build passes
+- [x] 9.4 Parity vs baseline clean
 
 ### Phase 10: Tier 0 gates
 

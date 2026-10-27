@@ -9,9 +9,11 @@ import styles from './styles.module.scss';
 
 type StepsProps = {
   steps: NonNullable<PagebuilderType<'stepList'>['steps']>;
+  /** Draft only: `data-sanity` per step `_key` (built on the server). */
+  stepDataSanity?: Record<string, string | undefined>;
 };
 
-export default function Steps({ steps }: StepsProps) {
+export default function Steps({ steps, stepDataSanity }: StepsProps) {
   const stepsRef = useRef<HTMLOListElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
 
@@ -91,6 +93,7 @@ export default function Steps({ steps }: StepsProps) {
             key={step._key}
             className={styles.step}
             data-active={index === 0 ? 'true' : undefined}
+            data-sanity={stepDataSanity?.[step._key]}
           >
             <div className={styles.content}>
               <PortableText value={step.heading} className={styles.heading} />

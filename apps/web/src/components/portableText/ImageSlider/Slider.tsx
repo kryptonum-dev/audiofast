@@ -1,5 +1,8 @@
 'use client';
 
+// Presentation: items are deliberately NOT draggable. `ptImageSlider.images`: embla loop with cloned slides.
+// Register: context/changes/sanity-modernization/presentation-arrays.md
+
 import useEmblaCarousel from 'embla-carousel-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';

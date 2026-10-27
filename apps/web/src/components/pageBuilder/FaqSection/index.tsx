@@ -1,4 +1,7 @@
-import { referencedDataSanity } from '@/src/global/sanity/data-attribute';
+import {
+  dataSanity,
+  type ScopedDataAttribute,
+} from '@/src/global/sanity/data-attribute';
 import type { PagebuilderType } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -11,6 +14,12 @@ import styles from './styles.module.scss';
 type FaqSectionProps = PagebuilderType<'faqSection'> & {
   index: number;
   isDraft?: boolean;
+  /**
+   * Draft only: pre-scoped to this block. Items address the AUTHORED reference
+   * item (`faqList[_key==…]`, `contactPeople.contactPersons[_key==…]`) so they
+   * are draggable; the stega text inside still opens the referenced document.
+   */
+  dataAttribute?: ScopedDataAttribute;
 };
 
 export default function FaqSection({
@@ -21,14 +30,14 @@ export default function FaqSection({
   contactPeople,
   contactForm,
   index,
-  isDraft,
+  dataAttribute,
 }: FaqSectionProps) {
-  // Referenced documents open themselves in Presentation (draft only).
-  const faqDataSanity = isDraft
+  // `FaqList` is a client island: pre-built strings per faq `_id`.
+  const faqDataSanity = dataAttribute
     ? Object.fromEntries(
         (faqList ?? []).map((faq) => [
           faq._id,
-          referencedDataSanity(faq, isDraft, 'question'),
+          dataSanity(dataAttribute, ['faqList', { _key: faq._key }]),
         ]),
       )
     : undefined;
@@ -85,7 +94,11 @@ export default function FaqSection({
                   key={person._id}
                   className={styles.faqPerson}
                   index={index}
-                  dataSanity={referencedDataSanity(person, isDraft, 'name')}
+                  dataSanity={dataSanity(dataAttribute, [
+                    'contactPeople',
+                    'contactPersons',
+                    { _key: person._key },
+                  ])}
                 />
               ))}
             </div>

@@ -9,6 +9,7 @@ import {
 import Link from 'next/link';
 import React, { Suspense } from 'react';
 
+import type { ScopedDataAttribute } from '@/global/sanity/data-attribute';
 import type { PortableTextProps } from '@/global/types';
 import { convertToSlug, portableTextToPlainString } from '@/global/utils';
 
@@ -41,6 +42,15 @@ type Props = {
   addHeadingIds?: boolean;
   /** Optional override for custom component types (merges with default registry) */
   customComponentTypes?: PortableTextComponents['types'];
+  /**
+   * Draft only: a factory scoped to THIS portable-text field on its document
+   * (e.g. `content`, `details.productDetailContent`). Custom blocks with
+   * authored arrays (`ptArrowList`, `ptCircleNumberedList`, `ptTwoColumnTable`,
+   * `ptFeaturedProducts`, `ptCtaSection`) then annotate their items as
+   * `<field>[_key==block].<array>[_key==item]`, which makes them draggable.
+   * Omitted everywhere else, so published output is unchanged.
+   */
+  dataAttribute?: ScopedDataAttribute | null;
 };
 
 export function PortableTextRenderer({
@@ -51,6 +61,7 @@ export function PortableTextRenderer({
   enablePortableTextStyles = false,
   addHeadingIds = false,
   customComponentTypes,
+  dataAttribute,
 }: Props) {
   if (!value) return null;
 
@@ -406,6 +417,7 @@ export function PortableTextRenderer({
         },
         ptReviewEmbed: ReviewEmbedComponent,
       },
+      ...(dataAttribute && draggableTypes(dataAttribute)),
       ...customComponentTypes,
     },
   };
@@ -447,3 +459,50 @@ export function PortableTextRenderer({
 }
 
 export default PortableTextRenderer;
+
+/**
+ * The custom blocks whose authored arrays are draggable in Presentation, each
+ * handed a factory pre-scoped to its own block (`[_key=="<block>"]` under the
+ * field). Only built in draft mode.
+ */
+function draggableTypes(
+  fieldAttribute: ScopedDataAttribute,
+): PortableTextComponents['types'] {
+  const scoped = (key: string | undefined) =>
+    key ? fieldAttribute.scope([{ _key: key }]) : undefined;
+  return {
+    ptArrowList: (props: React.ComponentProps<typeof ArrowListComponent>) => (
+      <ArrowListComponent {...props} dataAttribute={scoped(props.value._key)} />
+    ),
+    ptCircleNumberedList: (
+      props: React.ComponentProps<typeof CircleNumberedListComponent>,
+    ) => (
+      <CircleNumberedListComponent
+        {...props}
+        dataAttribute={scoped(props.value._key)}
+      />
+    ),
+    ptTwoColumnTable: (
+      props: React.ComponentProps<typeof TwoColumnTableComponent>,
+    ) => (
+      <TwoColumnTableComponent
+        {...props}
+        dataAttribute={scoped(props.value._key)}
+      />
+    ),
+    ptFeaturedProducts: (
+      props: React.ComponentProps<typeof FeaturedProductsComponent>,
+    ) => (
+      <FeaturedProductsComponent
+        {...props}
+        dataAttribute={scoped(props.value._key)}
+      />
+    ),
+    ptCtaSection: (props: React.ComponentProps<typeof CtaSectionComponent>) => (
+      <CtaSectionComponent
+        {...props}
+        dataAttribute={scoped(props.value._key)}
+      />
+    ),
+  };
+}

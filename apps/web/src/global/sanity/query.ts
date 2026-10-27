@@ -591,7 +591,28 @@ const gallerySectionBlock = /* groq */ `
   _type == "gallerySection" => {
     ${portableTextFragment('heading')},
     ${portableTextFragment('description')},
-    ${imageFragment('images[]')}
+    // Spelled out (not imageFragment) to keep each item _key: the gallery
+    // is draggable in Presentation (Phase 9).
+    images[]{
+      _key,
+      "id": asset._ref,
+      "preview": asset->metadata.lqip,
+      "alt": asset->altText,
+      "naturalWidth": asset->metadata.dimensions.width,
+      "naturalHeight": asset->metadata.dimensions.height,
+      hotspot {
+        x,
+        y,
+        width,
+        height
+      },
+      crop {
+        bottom,
+        left,
+        right,
+        top
+      }
+    }
   }
 `;
 
@@ -886,6 +907,7 @@ const contactFormBlock = /* groq */ `
       }
     },
     accountList[]{
+      _key,
       ${portableTextFragment('heading')},
       accountDetails,
     },
