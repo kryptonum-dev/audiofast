@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { createClient } from 'next-sanity';
+import { createClient } from '@sanity/client';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../constants';
 
