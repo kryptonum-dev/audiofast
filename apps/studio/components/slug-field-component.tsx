@@ -1,4 +1,6 @@
-import { CopyIcon, SyncIcon, WarningOutlineIcon } from '@sanity/icons';
+import { CopyIcon } from '@sanity/icons/Copy';
+import { SyncIcon } from '@sanity/icons/Sync';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
 import {
   Badge,
   Box,
@@ -260,7 +262,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     // Handle special fixed paths
     if (value?.current === '/') {
       return (
-        <Stack space={2}>
+        <Stack gap={2}>
           <Flex gap={1} align="center">
             {/* Root path display */}
             <Card
@@ -288,7 +290,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     // Handle other fixed paths (like /blog, /404, etc.) that don't end with /
     if (value?.current && !value.current.endsWith('/') && readOnly) {
       return (
-        <Stack space={2}>
+        <Stack gap={2}>
           <Flex gap={1} align="center">
             {/* Fixed path display */}
             <Card
@@ -314,7 +316,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     }
 
     return (
-      <Stack space={2}>
+      <Stack gap={2}>
         <Flex gap={1} align="center">
           {/* Leading slash indicator for non-prefix paths */}
           {!prefixPart && (
@@ -418,8 +420,8 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
   ]);
 
   return (
-    <Stack space={3}>
-      <Stack space={2} flex={1}>
+    <Stack gap={3}>
+      <Stack gap={2} flex={1}>
         <Text size={1} weight="semibold">
           {title}
         </Text>
@@ -466,7 +468,7 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
 
       {/* Input validation warnings */}
       {inputValidation && (
-        <Stack space={2}>
+        <Stack gap={2}>
           {inputValidation.map((error, index) => (
             <Badge
               key={index}

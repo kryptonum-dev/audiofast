@@ -1,4 +1,4 @@
-import { LockIcon } from '@sanity/icons';
+import { LockIcon } from '@sanity/icons/Lock';
 import { useCurrentUser } from '@sanity/sdk-react';
 import { Card, Flex, Heading, Spinner, Stack, Text } from '@sanity/ui';
 import type { ReactNode } from 'react';
@@ -51,11 +51,11 @@ function AccessDenied() {
         padding={[5, 5, 6]}
         radius={4}
       >
-        <Stack space={5}>
+        <Stack gap={5}>
           <span aria-hidden="true" className="accessDenied__icon">
             <LockIcon />
           </span>
-          <Stack space={4}>
+          <Stack gap={4}>
             <Heading as="h1" size={3}>
               Raport pracy CMS jest dostępny tylko dla wybranych osób
             </Heading>

@@ -1,4 +1,4 @@
-import { SpinnerIcon } from '@sanity/icons';
+import { SpinnerIcon } from '@sanity/icons/Spinner';
 import { Badge } from '@sanity/ui';
 import styled, { css, keyframes } from 'styled-components';
 

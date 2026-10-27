@@ -1,6 +1,8 @@
 'use client';
 
-import { CheckmarkCircleIcon, CloseCircleIcon, SyncIcon } from '@sanity/icons';
+import { CheckmarkCircleIcon } from '@sanity/icons/CheckmarkCircle';
+import { CloseCircleIcon } from '@sanity/icons/CloseCircle';
+import { SyncIcon } from '@sanity/icons/Sync';
 import {
   Badge,
   Box,
@@ -327,7 +329,7 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
           >
             <Filter size={28} style={{ opacity: 0.4 }} />
           </Box>
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text size={2} weight="semibold" align="center">
               Brak filtrów do uzupełnienia
             </Text>
@@ -344,7 +346,7 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
 
   return (
     <Card padding={4}>
-      <Stack space={5}>
+      <Stack gap={5}>
         {/* Header */}
         <Flex align="center" justify="space-between">
           <Flex align="center" gap={3}>
@@ -361,7 +363,7 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
             >
               <Filter size={20} />
             </Box>
-            <Stack space={2}>
+            <Stack gap={2}>
               <Text size={2} weight="semibold">
                 Filtry produktu
               </Text>
@@ -416,7 +418,7 @@ export function ProductFiltersView({ document }: ProductFiltersViewProps) {
         </Flex>
 
         {/* Filters list */}
-        <Stack space={3}>
+        <Stack gap={3}>
           {allFilters.map(({ filter, categoryName }) => (
             <FilterInputRow
               key={filter.name}
@@ -550,9 +552,7 @@ function FilterInputRow({
             {filter.name}
           </Text>
           <Flex align="center" gap={2} style={{ marginTop: '8px' }}>
-            <Badge mode="outline" fontSize={0}>
-              {isRangeFilter ? 'Zakres' : 'Lista'}
-            </Badge>
+            <Badge fontSize={0}>{isRangeFilter ? 'Zakres' : 'Lista'}</Badge>
             <Text size={0} muted>
               z kategorii: {categoryName}
             </Text>

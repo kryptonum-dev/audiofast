@@ -1,4 +1,4 @@
-import { LinkIcon } from '@sanity/icons';
+import { LinkIcon } from '@sanity/icons/Link';
 import type { Rule } from 'sanity';
 import { defineArrayMember, defineField } from 'sanity';
 

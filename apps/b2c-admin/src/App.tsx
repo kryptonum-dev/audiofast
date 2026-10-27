@@ -1,10 +1,12 @@
+import '@sanity/ui/styles.css';
+import './App.css';
+
 import { SanityApp, type SanityConfig } from '@sanity/sdk-react';
 import { Box, Card, Spinner, ThemeProvider, usePrefersDark } from '@sanity/ui';
 import { buildTheme } from '@sanity/ui/theme';
 
 import { AdminApp } from './admin/AdminApp.js';
 import { sanityAppConfig } from './config.js';
-import './App.css';
 
 const sanityConfig: SanityConfig[] = [
   {

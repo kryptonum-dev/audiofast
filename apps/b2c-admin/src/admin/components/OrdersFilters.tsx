@@ -1,4 +1,5 @@
-import { ResetIcon, SearchIcon } from '@sanity/icons';
+import { ResetIcon } from '@sanity/icons/Reset';
+import { SearchIcon } from '@sanity/icons/Search';
 import { Box, Button, Card, Flex, Grid, Label, TextInput } from '@sanity/ui';
 import { useEffect, useState } from 'react';
 
@@ -50,8 +51,8 @@ export function OrdersFilters({
     <Box paddingX={3} paddingBottom={3}>
       <Card border radius={2}>
         <Box padding={3}>
-          <Grid columns={[1, 1, 7]} gap={3}>
-            <Box column={[1, 1, 2]}>
+          <Grid gridTemplateColumns={[1, 1, 7]} gap={3}>
+            <Box gridColumn={[1, 1, 2]}>
               <Label muted size={1}>
                 Szukaj
               </Label>

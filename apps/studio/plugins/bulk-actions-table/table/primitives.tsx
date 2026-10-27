@@ -65,8 +65,15 @@ export function RowPrimitive(props: TableRowProps) {
 }
 
 // Cell
-const CellWrapper = ({ as, ...props }: { as?: string } & CardProps) => {
-  return <Card as={as || 'td'} {...props} />;
+type CellElement = 'td' | 'th';
+
+const CellWrapper = ({
+  as,
+  ...props
+}: { as?: CellElement } & Omit<CardProps, 'as'>) => {
+  // @sanity/ui 4 types `as` against the default 'div' element props; the
+  // cell only forwards Card props, so rendering it as td/th is safe.
+  return <Card as={(as || 'td') as 'div'} {...props} />;
 };
 
 const StyledCell = styled(CellWrapper)(
@@ -80,7 +87,8 @@ const StyledCell = styled(CellWrapper)(
 );
 
 type TableCellProps = PropsWithChildren<
-  CardProps & {
+  Omit<CardProps, 'as'> & {
+    as?: CellElement;
     colSpan?: number;
     rowSpan?: number;
     className?: string;

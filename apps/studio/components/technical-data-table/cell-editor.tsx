@@ -1,6 +1,6 @@
 'use client';
 
-import { LinkIcon } from '@sanity/icons';
+import { LinkIcon } from '@sanity/icons/Link';
 import {
   Box,
   Button,
@@ -72,7 +72,7 @@ function LinkEditor({
         marginTop: '4px',
       }}
     >
-      <Stack space={3}>
+      <Stack gap={3}>
         <Text size={1} weight="semibold">
           Dodaj link
         </Text>
@@ -527,7 +527,7 @@ export function CellEditor({
 
   return (
     <Box padding={4}>
-      <Stack space={4}>
+      <Stack gap={4}>
         {/* Toolbar */}
         <Card padding={2} border radius={2}>
           <Flex gap={1} wrap="wrap" style={{ position: 'relative' }}>
@@ -623,7 +623,7 @@ export function CellEditor({
         </Card>
 
         {/* Hints */}
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={1} muted>
             Wskazówki:
           </Text>

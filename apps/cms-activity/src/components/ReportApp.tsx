@@ -193,7 +193,7 @@ function ReportScreen() {
   const loading = state.status === 'loading';
 
   return (
-    <Stack space={5}>
+    <Stack gap={5}>
       <Filters
         errors={errors}
         loading={loading}
@@ -222,9 +222,9 @@ function ReportScreen() {
       ) : null}
 
       {data ? (
-        <Stack as="section" aria-labelledby="report-heading" space={5}>
+        <Stack as="section" aria-labelledby="report-heading" gap={5}>
           <Flex align="flex-end" gap={3} justify="space-between" wrap="wrap">
-            <Stack space={3}>
+            <Stack gap={3}>
               <Heading as="h2" id="report-heading" size={3}>
                 {data.params.authorName}
               </Heading>
@@ -273,8 +273,8 @@ function ReportScreen() {
 export function ReportApp() {
   return (
     <main className="page">
-      <Stack space={5}>
-        <Stack space={3}>
+      <Stack gap={5}>
+        <Stack gap={3}>
           <Heading as="h1" size={4}>
             Raport pracy CMS
           </Heading>

@@ -13,14 +13,12 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ComposeSparklesIcon,
-  DragHandleIcon,
-  RefreshIcon,
-  SearchIcon,
-} from '@sanity/icons';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ChevronUpIcon } from '@sanity/icons/ChevronUp';
+import { ComposeSparklesIcon } from '@sanity/icons/ComposeSparkles';
+import { DragHandleIcon } from '@sanity/icons/DragHandle';
+import { RefreshIcon } from '@sanity/icons/Refresh';
+import { SearchIcon } from '@sanity/icons/Search';
 import {
   Box,
   Button,
@@ -36,9 +34,8 @@ import {
   Switch,
   Text,
   TextInput,
-  ToastProvider,
-  useToast,
 } from '@sanity/ui';
+import { ToastProvider, useToast } from '@sanity/ui/toast';
 import React, {
   useCallback,
   useEffect,
@@ -958,8 +955,12 @@ export default function NewsletterTool() {
 
           {/* Date Controls */}
           <Card padding={4} tone="primary" radius={2} shadow={1}>
-            <Grid columns={[1, 2, 3]} gap={3} style={{ alignItems: 'end' }}>
-              <Stack space={2}>
+            <Grid
+              gridTemplateColumns={[1, 2, 3]}
+              gap={3}
+              style={{ alignItems: 'end' }}
+            >
+              <Stack gap={2}>
                 <Label>Data początkowa</Label>
                 <TextInput
                   type="date"
@@ -967,7 +968,7 @@ export default function NewsletterTool() {
                   onChange={(e) => setStartDate(e.currentTarget.value)}
                 />
               </Stack>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Label>Data końcowa</Label>
                 <TextInput
                   type="date"
@@ -987,11 +988,11 @@ export default function NewsletterTool() {
 
           {/* Hero Configuration */}
           <Card padding={4} radius={2} border>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Heading size={1}>Nagłówek newslettera</Heading>
 
               {/* Hero Image */}
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Label>Obraz nagłówka (wymagany)</Label>
                 {heroConfig.imageUrl ? (
                   <Box>
@@ -1042,7 +1043,7 @@ export default function NewsletterTool() {
                     }}
                     onClick={() => setIsAssetBrowserOpen(true)}
                   >
-                    <Stack space={3}>
+                    <Stack gap={3}>
                       <Text size={4} muted>
                         📷
                       </Text>
@@ -1056,7 +1057,7 @@ export default function NewsletterTool() {
               </Stack>
 
               {/* Hero Text */}
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Label>Tekst nagłówka (opcjonalny)</Label>
                 <RichTextEditor
                   value={heroConfig.text}
@@ -1073,7 +1074,7 @@ export default function NewsletterTool() {
 
           {/* Content List */}
           {hasItems ? (
-            <Stack space={4}>
+            <Stack gap={4}>
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -1083,7 +1084,7 @@ export default function NewsletterTool() {
                   items={sectionOrder}
                   strategy={verticalListSortingStrategy}
                 >
-                  <Stack space={3}>
+                  <Stack gap={3}>
                     {sectionOrder.map((key) => {
                       const items = content[key];
                       if (items.length === 0) return null;
@@ -1182,7 +1183,7 @@ export default function NewsletterTool() {
             width={3}
           >
             <Box padding={4}>
-              <Stack space={4}>
+              <Stack gap={4}>
                 {/* Search */}
                 <TextInput
                   icon={SearchIcon}
@@ -1203,7 +1204,7 @@ export default function NewsletterTool() {
                       overflowY: 'auto',
                     }}
                   >
-                    <Grid columns={[2, 3, 4]} gap={3}>
+                    <Grid gridTemplateColumns={[2, 3, 4]} gap={3}>
                       {assets.map((asset) => (
                         <Card
                           key={asset._id}

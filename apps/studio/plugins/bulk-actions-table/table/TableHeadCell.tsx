@@ -1,5 +1,7 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@sanity/icons';
-import { Box, Button, Text, Tooltip } from '@sanity/ui';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ChevronUpIcon } from '@sanity/icons/ChevronUp';
+import { Box, Button, Text } from '@sanity/ui';
+import { Tooltip } from '@sanity/ui/tooltip';
 import { useCallback } from 'react';
 import styled, { css } from 'styled-components';
 
@@ -93,7 +95,7 @@ export function TableHeadCell({ field }: { field: TableField }) {
       >
         <Box display="inline-block">
           <TableHeaderButton
-            space={2}
+            gap={2}
             disabled={!field.sortable}
             paddingX={2}
             paddingY={2}

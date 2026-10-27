@@ -1,4 +1,5 @@
-import { ArrowLeftIcon } from '@sanity/icons';
+import { ArrowLeftIcon } from '@sanity/icons/ArrowLeft';
+import { useAuthToken } from '@sanity/sdk-react';
 import {
   Box,
   Button,
@@ -10,13 +11,12 @@ import {
   Stack,
   Text,
 } from '@sanity/ui';
-import { useAuthToken } from '@sanity/sdk-react';
 import { useEffect, useState } from 'react';
 
 import {
-  getAdminErrorMessage,
   createAdminCoupon,
   fetchAdminCouponProducts,
+  getAdminErrorMessage,
 } from '../api.js';
 import type {
   AdminCoupon,
@@ -179,7 +179,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
 
   return (
     <Box paddingX={3}>
-      <Stack space={4}>
+      <Stack gap={4}>
         {confirmBackOpen ? (
           <Dialog
             id="discard-coupon-dialog"
@@ -188,7 +188,7 @@ export function CouponCreateView({ onBack }: CouponCreateViewProps) {
             width={1}
             footer={
               <Box paddingX={4} paddingBottom={4}>
-                <Inline space={3}>
+                <Inline gap={3}>
                   <Button
                     mode="ghost"
                     onClick={() => setConfirmBackOpen(false)}

@@ -1,4 +1,4 @@
-import { DownloadIcon } from '@sanity/icons';
+import { DownloadIcon } from '@sanity/icons/Download';
 import { Button } from '@sanity/ui';
 
 import { appConfig } from '../config.js';

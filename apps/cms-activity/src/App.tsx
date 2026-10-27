@@ -1,3 +1,6 @@
+import '@sanity/ui/styles.css';
+import './App.css';
+
 import { SanityApp, type SanityConfig } from '@sanity/sdk-react';
 import { Card, Flex, Spinner, ThemeProvider, usePrefersDark } from '@sanity/ui';
 import { buildTheme } from '@sanity/ui/theme';
@@ -6,7 +9,6 @@ import { AccessGate } from './access/AccessGate.js';
 import { ReportApp } from './components/ReportApp.js';
 import { ThemeDocument } from './components/ThemeDocument.js';
 import { appConfig } from './config.js';
-import './App.css';
 
 const sanityConfig: SanityConfig[] = [
   {

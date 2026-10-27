@@ -1,4 +1,5 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@sanity/icons';
+import { ChevronLeftIcon } from '@sanity/icons/ChevronLeft';
+import { ChevronRightIcon } from '@sanity/icons/ChevronRight';
 import { Box, Button, Card, Flex, Inline, Select, Text } from '@sanity/ui';
 
 type AdminPaginationProps = {
@@ -48,7 +49,7 @@ export function AdminPagination({
             {itemLabel}
           </Text>
 
-          <Inline space={2}>
+          <Inline gap={2}>
             <Button
               disabled={disabled || currentPage <= 1}
               icon={ChevronLeftIcon}

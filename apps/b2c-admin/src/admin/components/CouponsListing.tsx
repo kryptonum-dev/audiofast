@@ -1,12 +1,13 @@
-import { AddIcon, RefreshIcon } from '@sanity/icons';
-import { Box, Button, Dialog, Flex, Inline, Text } from '@sanity/ui';
+import { AddIcon } from '@sanity/icons/Add';
+import { RefreshIcon } from '@sanity/icons/Refresh';
 import { useAuthToken } from '@sanity/sdk-react';
+import { Box, Button, Dialog, Flex, Inline, Text } from '@sanity/ui';
 import { useEffect, useState } from 'react';
 
 import {
-  getAdminErrorMessage,
   archiveAdminCoupon,
   fetchAdminCoupons,
+  getAdminErrorMessage,
 } from '../api.js';
 import type {
   AdminCoupon,
@@ -17,8 +18,8 @@ import { AdminLoadingTable } from './AdminLoadingTable.js';
 import { AdminPagination } from './AdminPagination.js';
 import { AdminStateCard } from './AdminStateCard.js';
 import {
-  DEFAULT_COUPONS_FILTERS,
   CouponsFilters as CouponsFiltersControls,
+  DEFAULT_COUPONS_FILTERS,
 } from './CouponsFilters.js';
 import { CouponsTable } from './CouponsTable.js';
 
@@ -315,7 +316,7 @@ export function CouponsListing({
           width={1}
           footer={
             <Box paddingX={4} paddingBottom={4}>
-              <Inline space={3}>
+              <Inline gap={3}>
                 <Button
                   disabled={archiveState.couponId !== null}
                   mode="ghost"
@@ -376,7 +377,7 @@ export function CouponsListing({
           width={1}
           footer={
             <Box paddingX={4} paddingBottom={4}>
-              <Inline space={3}>
+              <Inline gap={3}>
                 <Button
                   disabled={archiveState.bulk}
                   mode="ghost"

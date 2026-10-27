@@ -1,4 +1,7 @@
-import { ArrowLeftIcon, RefreshIcon, TrashIcon } from '@sanity/icons';
+import { ArrowLeftIcon } from '@sanity/icons/ArrowLeft';
+import { RefreshIcon } from '@sanity/icons/Refresh';
+import { TrashIcon } from '@sanity/icons/Trash';
+import { useAuthToken } from '@sanity/sdk-react';
 import {
   Box,
   Button,
@@ -10,14 +13,13 @@ import {
   Stack,
   Text,
 } from '@sanity/ui';
-import { useAuthToken } from '@sanity/sdk-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import {
-  getAdminErrorMessage,
   archiveAdminCoupon,
   fetchAdminCoupon,
   fetchAdminCouponProducts,
+  getAdminErrorMessage,
   updateAdminCoupon,
 } from '../api.js';
 import type {
@@ -299,7 +301,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
 
   return (
     <Box paddingX={3}>
-      <Stack space={4}>
+      <Stack gap={4}>
         {confirmBackOpen ? (
           <Dialog
             id="discard-coupon-edit-dialog"
@@ -308,7 +310,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
             width={1}
             footer={
               <Box paddingX={4} paddingBottom={4}>
-                <Inline space={3}>
+                <Inline gap={3}>
                   <Button
                     mode="ghost"
                     onClick={() => setConfirmBackOpen(false)}
@@ -350,7 +352,7 @@ export function CouponEditView({ couponId, onBack }: CouponEditViewProps) {
             width={1}
             footer={
               <Box paddingX={4} paddingBottom={4}>
-                <Inline space={3}>
+                <Inline gap={3}>
                   <Button
                     disabled={archiveState.status === 'loading'}
                     mode="ghost"

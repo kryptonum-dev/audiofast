@@ -1,4 +1,4 @@
-import { SearchIcon } from '@sanity/icons';
+import { SearchIcon } from '@sanity/icons/Search';
 import { Button, Card, Select, Stack, Text, TextInput } from '@sanity/ui';
 import type { ReactNode } from 'react';
 
@@ -33,7 +33,7 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <Stack className={className} space={2}>
+    <Stack className={className} gap={2}>
       <Text as="label" htmlFor={id} size={1} weight="medium">
         {label}
       </Text>
@@ -79,7 +79,7 @@ export function Filters({
           if (!invalid && !loading) onSubmit();
         }}
       >
-        <Stack space={3}>
+        <Stack gap={3}>
           <div className="filterBar">
             <Field
               className="filterBar__person"

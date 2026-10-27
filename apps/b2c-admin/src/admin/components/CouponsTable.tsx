@@ -1,4 +1,5 @@
-import { EditIcon, TrashIcon } from '@sanity/icons';
+import { EditIcon } from '@sanity/icons/Edit';
+import { TrashIcon } from '@sanity/icons/Trash';
 import {
   Badge,
   Box,
@@ -117,7 +118,7 @@ export function CouponsTable({
                   </td>
                   <td>
                     <Flex align="center" gap={3}>
-                      <Inline space={1}>
+                      <Inline gap={1}>
                         <Button
                           aria-label={`Edytuj kupon ${coupon.code}`}
                           icon={EditIcon}
@@ -145,7 +146,7 @@ export function CouponsTable({
                           type="button"
                         />
                       </Inline>
-                      <Stack space={2}>
+                      <Stack gap={2}>
                         <Text size={1} weight="medium">
                           {coupon.code}
                         </Text>
@@ -164,7 +165,7 @@ export function CouponsTable({
                     </Text>
                   </td>
                   <td>
-                    <Inline space={2}>
+                    <Inline gap={2}>
                       <Badge fontSize={1} padding={2} tone="default">
                         {formatCouponScope(coupon)}
                       </Badge>

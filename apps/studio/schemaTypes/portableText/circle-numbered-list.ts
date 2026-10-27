@@ -1,4 +1,4 @@
-import { UlistIcon } from '@sanity/icons';
+import { UlistIcon } from '@sanity/icons/Ulist';
 import { defineField, defineType } from 'sanity';
 
 import { toPlainText } from '../../utils/helper';

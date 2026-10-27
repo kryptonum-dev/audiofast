@@ -1,9 +1,9 @@
-import { RefreshIcon } from '@sanity/icons';
-import { Box, Button, Flex, Text } from '@sanity/ui';
+import { RefreshIcon } from '@sanity/icons/Refresh';
 import { useAuthToken } from '@sanity/sdk-react';
+import { Box, Button, Flex, Text } from '@sanity/ui';
 import { useEffect, useState } from 'react';
 
-import { getAdminErrorMessage, fetchAdminOrders } from '../api.js';
+import { fetchAdminOrders, getAdminErrorMessage } from '../api.js';
 import type { AdminOrdersResult, OrdersFilters } from '../types.js';
 import { AdminStateCard } from './AdminStateCard.js';
 import {

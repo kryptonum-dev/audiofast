@@ -39,7 +39,7 @@ export function StateCard(props: StateCardProps) {
   const detail = errorDetail(props.error);
   return (
     <Card padding={4} radius={3} role="alert" tone="critical">
-      <Stack space={4}>
+      <Stack gap={4}>
         <Text size={2}>{errorMessage(props.error)}</Text>
         {detail ? (
           <Text muted size={1}>

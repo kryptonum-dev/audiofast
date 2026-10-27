@@ -1,4 +1,6 @@
-import { BlockContentIcon, EditIcon, FilterIcon } from '@sanity/icons';
+import { BlockContentIcon } from '@sanity/icons/BlockContent';
+import { EditIcon } from '@sanity/icons/Edit';
+import { FilterIcon } from '@sanity/icons/Filter';
 import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
   Archive,

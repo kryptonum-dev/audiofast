@@ -17,15 +17,13 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import {
-  AddIcon,
-  CheckmarkIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  DragHandleIcon,
-  SearchIcon,
-  TrashIcon,
-} from '@sanity/icons';
+import { AddIcon } from '@sanity/icons/Add';
+import { CheckmarkIcon } from '@sanity/icons/Checkmark';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ChevronRightIcon } from '@sanity/icons/ChevronRight';
+import { DragHandleIcon } from '@sanity/icons/DragHandle';
+import { SearchIcon } from '@sanity/icons/Search';
+import { TrashIcon } from '@sanity/icons/Trash';
 import {
   Avatar,
   Badge,
@@ -42,9 +40,8 @@ import {
   Stack,
   Text,
   TextInput,
-  ToastProvider,
-  useToast,
 } from '@sanity/ui';
+import { ToastProvider, useToast } from '@sanity/ui/toast';
 import {
   ArrowDownWideNarrow,
   ArrowRightLeft,
@@ -240,10 +237,10 @@ function SortableParameter({
             background: 'var(--card-bg2-color)',
           }}
         >
-          <Stack space={4}>
+          <Stack gap={4}>
             {/* Products WITH the parameter */}
             {products.length > 0 && (
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Flex align="center" gap={2}>
                   <Badge tone="positive" fontSize={0} padding={1}>
                     ✓
@@ -252,7 +249,7 @@ function SortableParameter({
                     Produkty z parametrem ({products.length}):
                   </Text>
                 </Flex>
-                <Stack space={1}>
+                <Stack gap={1}>
                   {products.map((product) => (
                     <Flex key={product._id} align="center" gap={2} padding={1}>
                       <Avatar
@@ -281,7 +278,7 @@ function SortableParameter({
 
             {/* Products MISSING the parameter */}
             {missingProducts.length > 0 && (
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Flex align="center" gap={2}>
                   <Badge tone="caution" fontSize={0} padding={1}>
                     !
@@ -290,7 +287,7 @@ function SortableParameter({
                     Produkty BEZ parametru ({missingProducts.length}):
                   </Text>
                 </Flex>
-                <Stack space={1}>
+                <Stack gap={1}>
                   {missingProducts.map((product) => (
                     <Card
                       key={product._id}
@@ -1167,7 +1164,7 @@ export default function ComparatorTool() {
                 <Spinner muted />
               </Flex>
             ) : (
-              <Stack space={2}>
+              <Stack gap={2}>
                 {groupedCategories.map((group) => {
                   const isCollapsed = collapsedParents.has(group.parentId);
 
@@ -1212,7 +1209,7 @@ export default function ComparatorTool() {
                       {/* Subcategories */}
                       {!isCollapsed && (
                         <Box paddingLeft={3} paddingTop={1}>
-                          <Stack space={1}>
+                          <Stack gap={1}>
                             {group.categories.map((cat) => {
                               const isSelected = cat._id === selectedCategoryId;
 
@@ -1302,7 +1299,7 @@ export default function ComparatorTool() {
               >
                 <GitCompareArrows size={48} strokeWidth={1.5} />
               </Box>
-              <Stack space={2} style={{ textAlign: 'center' }}>
+              <Stack gap={2} style={{ textAlign: 'center' }}>
                 <Text size={2} weight="semibold">
                   Wybierz kategorię
                 </Text>
@@ -1321,7 +1318,7 @@ export default function ComparatorTool() {
                 style={{ borderBottom: '1px solid var(--card-border-color)' }}
               >
                 <Flex align="center" justify="space-between">
-                  <Stack space={2}>
+                  <Stack gap={2}>
                     <Flex align="center" gap={2}>
                       <Package size={18} />
                       <Heading size={2}>{selectedCategory?.name}</Heading>
@@ -1372,9 +1369,9 @@ export default function ComparatorTool() {
                         overflowY: 'auto',
                       }}
                     >
-                      <Stack space={4}>
+                      <Stack gap={4}>
                         <Flex align="center" justify="space-between">
-                          <Stack space={1}>
+                          <Stack gap={1}>
                             <Label size={1}>Wykryte parametry</Label>
                             <Text size={0} muted>
                               {totalFilteredCount} parametrów
@@ -1448,7 +1445,7 @@ export default function ComparatorTool() {
                             </Text>
                           </Card>
                         ) : (
-                          <Stack space={2}>
+                          <Stack gap={2}>
                             {filteredDiscoveredParams.map((param) => {
                               const isEnabled = enabledParams.some(
                                 (e) => e.name === param.name,
@@ -1575,10 +1572,10 @@ export default function ComparatorTool() {
                                         background: 'var(--card-bg2-color)',
                                       }}
                                     >
-                                      <Stack space={3}>
+                                      <Stack gap={3}>
                                         {/* Products WITH the parameter */}
                                         {param.products.length > 0 && (
-                                          <Stack space={2}>
+                                          <Stack gap={2}>
                                             <Flex align="center" gap={2}>
                                               <Badge
                                                 tone="positive"
@@ -1596,7 +1593,7 @@ export default function ComparatorTool() {
                                                 {param.products.length}):
                                               </Text>
                                             </Flex>
-                                            <Stack space={1}>
+                                            <Stack gap={1}>
                                               {param.products.map((product) => (
                                                 <Flex
                                                   key={product._id}
@@ -1637,7 +1634,7 @@ export default function ComparatorTool() {
 
                                         {/* Products MISSING the parameter */}
                                         {param.missingProducts.length > 0 && (
-                                          <Stack space={2}>
+                                          <Stack gap={2}>
                                             <Flex align="center" gap={2}>
                                               <Badge
                                                 tone="caution"
@@ -1655,7 +1652,7 @@ export default function ComparatorTool() {
                                                 {param.missingProducts.length}):
                                               </Text>
                                             </Flex>
-                                            <Stack space={1}>
+                                            <Stack gap={1}>
                                               {param.missingProducts.map(
                                                 (product) => (
                                                   <Card
@@ -1741,8 +1738,8 @@ export default function ComparatorTool() {
 
                     {/* Enabled Parameters */}
                     <Box padding={4} style={{ flex: 1, overflowY: 'auto' }}>
-                      <Stack space={4}>
-                        <Stack space={2}>
+                      <Stack gap={4}>
+                        <Stack gap={2}>
                           <Label size={1}>
                             Parametry do porównania ({enabledParams.length})
                           </Label>
@@ -1760,7 +1757,7 @@ export default function ComparatorTool() {
                             tone="transparent"
                             style={{ textAlign: 'center' }}
                           >
-                            <Stack space={3}>
+                            <Stack gap={3}>
                               <Text size={1} muted>
                                 Brak wybranych parametrów.
                               </Text>
@@ -1780,7 +1777,7 @@ export default function ComparatorTool() {
                               items={enabledParams.map((p) => p._key)}
                               strategy={verticalListSortingStrategy}
                             >
-                              <Stack space={2}>
+                              <Stack gap={2}>
                                 {enabledParams.map((param) => {
                                   const paramData = getParamData(param.name);
                                   return (
@@ -1826,10 +1823,10 @@ export default function ComparatorTool() {
           width={1}
         >
           <Box padding={4}>
-            <Stack space={4}>
+            <Stack gap={4}>
               {/* Source parameter info */}
               <Card padding={3} radius={2} tone="primary">
-                <Stack space={2}>
+                <Stack gap={2}>
                   <Text size={1} weight="medium">
                     Parametr źródłowy:
                   </Text>
@@ -1845,7 +1842,7 @@ export default function ComparatorTool() {
               </Card>
 
               {/* Target selection - Dropdown for existing params */}
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Label size={1}>Przekształć w istniejący parametr:</Label>
                 <Select
                   value={selectedExistingParam}
@@ -1886,7 +1883,7 @@ export default function ComparatorTool() {
               </Flex>
 
               {/* Custom name input */}
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Label size={1}>Nowa nazwa parametru:</Label>
                 <TextInput
                   value={customParamName}
@@ -1909,10 +1906,10 @@ export default function ComparatorTool() {
               {/* Preview with checkboxes */}
               {transformPreview && (
                 <Card padding={3} radius={2} border>
-                  <Stack space={3}>
+                  <Stack gap={3}>
                     {/* Eligible products with checkboxes */}
                     {transformPreview.eligible.length > 0 && (
-                      <Stack space={2}>
+                      <Stack gap={2}>
                         <Flex align="center" justify="space-between">
                           <Flex align="center" gap={2}>
                             <Badge tone="positive">✓</Badge>
@@ -1944,7 +1941,7 @@ export default function ComparatorTool() {
                             />
                           </Flex>
                         </Flex>
-                        <Stack space={1}>
+                        <Stack gap={1}>
                           {transformPreview.eligible.map((p) => (
                             <Flex
                               key={p._id}
@@ -1985,7 +1982,7 @@ export default function ComparatorTool() {
 
                     {/* Skipped products (no checkboxes - just info) */}
                     {transformPreview.skipped.length > 0 && (
-                      <Stack space={2}>
+                      <Stack gap={2}>
                         <Flex align="center" gap={2}>
                           <Badge tone="caution">⚠</Badge>
                           <Text size={1} weight="medium">
@@ -1994,7 +1991,7 @@ export default function ComparatorTool() {
                             {transformPreview.skipped.length}):
                           </Text>
                         </Flex>
-                        <Stack space={1}>
+                        <Stack gap={1}>
                           {transformPreview.skipped.slice(0, 5).map((p) => (
                             <Flex
                               key={p._id}

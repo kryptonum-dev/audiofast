@@ -1,11 +1,10 @@
-import {
-  ArrowLeftIcon,
-  CloseIcon,
-  DocumentPdfIcon,
-  DownloadIcon,
-  RefreshIcon,
-  UploadIcon,
-} from '@sanity/icons';
+import { ArrowLeftIcon } from '@sanity/icons/ArrowLeft';
+import { CloseIcon } from '@sanity/icons/Close';
+import { DocumentPdfIcon } from '@sanity/icons/DocumentPdf';
+import { DownloadIcon } from '@sanity/icons/Download';
+import { RefreshIcon } from '@sanity/icons/Refresh';
+import { UploadIcon } from '@sanity/icons/Upload';
+import { useAuthToken } from '@sanity/sdk-react';
 import {
   Badge,
   Box,
@@ -22,16 +21,15 @@ import {
   TextArea,
   TextInput,
 } from '@sanity/ui';
-import { useAuthToken } from '@sanity/sdk-react';
 import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
 
 import {
-  getAdminErrorMessage,
   attachAdminOrderInvoice,
   closeAdminOrderReturnCase,
   completeAdminOrderReturnCase,
   downloadAdminOrderInvoice,
   fetchAdminOrderDetail,
+  getAdminErrorMessage,
   markAdminOrderReturnCaseAwaitingGoods,
   removeAdminOrderInvoice,
   resolveAdminOrderCancellation,
@@ -162,7 +160,7 @@ export function OrderDetailView({ onBack, orderNumber }: OrderDetailViewProps) {
 
   return (
     <Box paddingX={3}>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Flex align="center" justify="space-between" wrap="wrap">
           <Button
             icon={ArrowLeftIcon}
@@ -228,7 +226,7 @@ function OrderDetailContent({
   order: AdminOrderDetail;
 }) {
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <OrderSummarySection order={order} />
       <PaymentSection order={order} />
       <StatusActionsSection
@@ -244,7 +242,7 @@ function OrderDetailContent({
       <CustomerSection order={order} />
       <ItemsSection order={order} />
       {order.currentStatus !== 'awaiting_payment' ? (
-        <Grid columns={[1, 1, 2]} gap={4}>
+        <Grid gridTemplateColumns={[1, 1, 2]} gap={4}>
           <ShipmentSection
             authToken={authToken}
             onChanged={onChanged}
@@ -276,7 +274,7 @@ function DetailSection({
 }) {
   return (
     <Card border padding={4} radius={2}>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Heading as="h2" size={1}>
           {title}
         </Heading>
@@ -290,8 +288,8 @@ function OrderSummarySection({ order }: { order: AdminOrderDetail }) {
   return (
     <Card border padding={4} radius={2}>
       <Flex align="flex-start" justify="space-between" wrap="wrap">
-        <Stack space={3}>
-          <Inline space={3}>
+        <Stack gap={3}>
+          <Inline gap={3}>
             <Heading as="h1" size={3}>
               {order.orderNumber}
             </Heading>
@@ -301,7 +299,7 @@ function OrderSummarySection({ order }: { order: AdminOrderDetail }) {
             Utworzono {formatDateTime(order.createdAt)}
           </Text>
         </Stack>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text muted size={1}>
             Suma
           </Text>
@@ -317,7 +315,7 @@ function OrderSummarySection({ order }: { order: AdminOrderDetail }) {
 function PaymentSection({ order }: { order: AdminOrderDetail }) {
   return (
     <DetailSection title="Płatność">
-      <Grid columns={[1, 1, 3]} gap={3}>
+      <Grid gridTemplateColumns={[1, 1, 3]} gap={3}>
         <KeyValue
           label="Status płatności"
           value={formatPaymentStatus({
@@ -419,7 +417,7 @@ function StatusActionsSection({
 
   return (
     <DetailSection title="Status i akcje">
-      <Grid columns={[1, 1, 2]} gap={3}>
+      <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
         <KeyValue
           label="Aktualny status"
           value={formatOrderStatus(order.currentStatus)}
@@ -437,9 +435,9 @@ function StatusActionsSection({
       </Grid>
       {order.actions.allowedNextStatuses.length > 0 ? (
         <form onSubmit={submitStatus}>
-          <Stack space={3}>
-            <Grid columns={[1, 1, 2]} gap={3}>
-              <Stack space={2}>
+          <Stack gap={3}>
+            <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Nowy status
                 </Text>
@@ -459,7 +457,7 @@ function StatusActionsSection({
                   ))}
                 </Select>
               </Stack>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Notatka
                 </Text>
@@ -472,12 +470,12 @@ function StatusActionsSection({
               </Stack>
             </Grid>
             {shouldShowStatusDeliveryEstimate ? (
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Text size={1} weight="semibold">
                   Przewidywana dostawa do wiadomości o statusie
                 </Text>
-                <Grid columns={[1, 1, 2]} gap={3}>
-                  <Stack space={2}>
+                <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
+                  <Stack gap={2}>
                     <Text muted size={1}>
                       Od
                     </Text>
@@ -490,7 +488,7 @@ function StatusActionsSection({
                       value={expectedDeliveryFrom}
                     />
                   </Stack>
-                  <Stack space={2}>
+                  <Stack gap={2}>
                     <Text muted size={1}>
                       Do
                     </Text>
@@ -511,7 +509,7 @@ function StatusActionsSection({
                 </Text>
               </Stack>
             ) : null}
-            <Inline space={3}>
+            <Inline gap={3}>
               <Button
                 disabled={
                   actionState.status === 'loading' ||
@@ -611,7 +609,7 @@ function DeliveryEstimateSection({
 
   return (
     <DetailSection title="Przewidywana dostawa">
-      <Grid columns={[1, 1, 2]} gap={3}>
+      <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
         <KeyValue
           label="Aktualny termin"
           value={formatDeliveryEstimate(order.deliveryEstimate)}
@@ -619,9 +617,9 @@ function DeliveryEstimateSection({
       </Grid>
       {order.actions.canEditDeliveryEstimate ? (
         <form onSubmit={submitDeliveryEstimate}>
-          <Stack space={3}>
-            <Grid columns={[1, 1, 2]} gap={3}>
-              <Stack space={2}>
+          <Stack gap={3}>
+            <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Od
                 </Text>
@@ -634,7 +632,7 @@ function DeliveryEstimateSection({
                   value={expectedDeliveryFrom}
                 />
               </Stack>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Do
                 </Text>
@@ -649,7 +647,7 @@ function DeliveryEstimateSection({
                 />
               </Stack>
             </Grid>
-            <Inline space={3}>
+            <Inline gap={3}>
               <Button
                 disabled={
                   actionState.status === 'loading' ||
@@ -696,13 +694,13 @@ function CustomerSection({ order }: { order: AdminOrderDetail }) {
 
   return (
     <DetailSection title="Klient i dostawa">
-      <Grid columns={[1, 1, 2]} gap={3}>
-        <Stack space={4}>
-          <Stack space={3}>
+      <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
+        <Stack gap={4}>
+          <Stack gap={3}>
             <Text size={1} weight="semibold">
               Dane klienta
             </Text>
-            <Grid columns={[1, 1, 2]} gap={3}>
+            <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
               <KeyValue
                 label="Klient"
                 value={order.customer.displayName ?? 'Bez nazwy'}
@@ -716,11 +714,11 @@ function CustomerSection({ order }: { order: AdminOrderDetail }) {
           </Stack>
 
           {hasCompanyData ? (
-            <Stack space={3}>
+            <Stack gap={3}>
               <Text size={1} weight="semibold">
                 Dane firmowe
               </Text>
-              <Grid columns={[1, 1, 2]} gap={3}>
+              <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
                 <KeyValue
                   label="Firma"
                   value={order.invoice.companyName ?? 'Brak'}
@@ -749,7 +747,7 @@ function ItemsSection({ order }: { order: AdminOrderDetail }) {
 
   return (
     <DetailSection title="Produkty i podsumowanie">
-      <Inline space={2}>
+      <Inline gap={2}>
         <Badge fontSize={1} padding={2}>
           {formatLineType(lineTypes)}
         </Badge>
@@ -765,7 +763,7 @@ function ItemsSection({ order }: { order: AdminOrderDetail }) {
         ))}
       </div>
       <Card muted padding={4} radius={2}>
-        <Stack space={3}>
+        <Stack gap={3}>
           <SummaryLine
             label="Suma produktów"
             value={formatMoney(order.subtotalCents)}
@@ -800,7 +798,7 @@ function OrderItemRow({ item }: { item: AdminOrderItem }) {
           placeholderClassName="orderDetailItemImagePlaceholder"
           width={56}
         />
-        <Stack flex={1} space={3}>
+        <Stack flex={1} gap={3}>
           <Text size={2} weight="medium">
             {item.brandName} {item.productName}
           </Text>
@@ -809,7 +807,7 @@ function OrderItemRow({ item }: { item: AdminOrderItem }) {
           </Text>
           {item.details.length > 0 ? (
             <Box paddingTop={1}>
-              <Inline space={2}>
+              <Inline gap={2}>
                 {item.details.map((detail) => (
                   <Badge fontSize={2} key={detail} padding={2} tone="primary">
                     {detail}
@@ -918,7 +916,7 @@ function ShipmentSection({
           width={1}
           footer={
             <Box paddingX={4} paddingBottom={4}>
-              <Inline space={3}>
+              <Inline gap={3}>
                 <Button
                   disabled={actionState.status === 'loading'}
                   mode="ghost"
@@ -942,12 +940,12 @@ function ShipmentSection({
           }
         >
           <Box paddingX={4} paddingTop={4} paddingBottom={5}>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Text size={1}>
                 Zamówienie nie ma jeszcze statusu wysłane. Czy chcesz zapisać
                 dane wysyłki i od razu zmienić status zamówienia na wysłane?
               </Text>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Notatka do zmiany statusu
                 </Text>
@@ -964,7 +962,7 @@ function ShipmentSection({
         </Dialog>
       ) : null}
       {order.shipment?.hasShipment ? (
-        <Grid columns={[1, 1, 2]} gap={3}>
+        <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
           <KeyValue
             label="Numer listu przewozowego"
             value={order.shipment.trackingNumber ?? 'Brak'}
@@ -978,9 +976,9 @@ function ShipmentSection({
       )}
       {order.actions.canEditShipment ? (
         <form onSubmit={submitShipment}>
-          <Stack space={3}>
-            <Grid columns={[1, 1, 2]} gap={3}>
-              <Stack space={2}>
+          <Stack gap={3}>
+            <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Numer listu przewozowego
                 </Text>
@@ -992,7 +990,7 @@ function ShipmentSection({
                   value={trackingNumber}
                 />
               </Stack>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Kurier
                 </Text>
@@ -1004,7 +1002,7 @@ function ShipmentSection({
                 />
               </Stack>
             </Grid>
-            <Inline space={3}>
+            <Inline gap={3}>
               <Button
                 disabled={
                   actionState.status === 'loading' || !trackingNumber.trim()
@@ -1133,7 +1131,7 @@ function InvoiceSection({
           width={1}
           footer={
             <Box paddingX={4} paddingBottom={4}>
-              <Inline space={3}>
+              <Inline gap={3}>
                 <Button
                   disabled={actionState.status === 'loading'}
                   mode="ghost"
@@ -1164,7 +1162,7 @@ function InvoiceSection({
         </Dialog>
       ) : null}
       {order.actions.canAttachInvoice ? (
-        <Stack space={3}>
+        <Stack gap={3}>
           <input
             accept="application/pdf"
             className="invoiceFileInput"
@@ -1176,13 +1174,13 @@ function InvoiceSection({
             type="file"
           />
           {invoiceFilename ? (
-            <Stack space={3}>
+            <Stack gap={3}>
               <Card border padding={3} radius={2}>
                 <Flex align="center" gap={3}>
                   <Card padding={2} radius={2} tone="primary">
                     <DocumentPdfIcon />
                   </Card>
-                  <Stack flex={1} space={2}>
+                  <Stack flex={1} gap={2}>
                     <Text muted size={1}>
                       Plik faktury
                     </Text>
@@ -1202,7 +1200,7 @@ function InvoiceSection({
                   />
                 </Flex>
               </Card>
-              <Inline space={3}>
+              <Inline gap={3}>
                 <Button
                   disabled={actionState.status === 'loading'}
                   icon={UploadIcon}
@@ -1239,7 +1237,7 @@ function InvoiceSection({
               />
             </Box>
           )}
-          <Inline space={3}>
+          <Inline gap={3}>
             <ActionMessage state={actionState} />
           </Inline>
         </Stack>
@@ -1259,7 +1257,7 @@ function ReturnAndCancellationSection({
 }) {
   return (
     <DetailSection title="Anulowania i zwroty">
-      <Grid columns={[1, 1, 2]} gap={4}>
+      <Grid gridTemplateColumns={[1, 1, 2]} gap={4}>
         <CancellationPanel
           authToken={authToken}
           onChanged={onChanged}
@@ -1336,7 +1334,7 @@ function CancellationPanel({
   }
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {cancellationToResolve ? (
         <Dialog
           id="resolve-cancellation-dialog"
@@ -1354,7 +1352,7 @@ function CancellationPanel({
           width={1}
           footer={
             <Box paddingX={4} paddingBottom={4}>
-              <Inline space={3}>
+              <Inline gap={3}>
                 <Button
                   disabled={actionState.status === 'loading'}
                   mode="ghost"
@@ -1389,14 +1387,14 @@ function CancellationPanel({
           }
         >
           <Box paddingX={4} paddingTop={4} paddingBottom={5}>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Text size={1}>
                 {cancellationToResolve.resolution === 'cancel_order'
                   ? 'Czy na pewno chcesz anulować to zamówienie i zamknąć zgłoszenie klienta?'
                   : 'Czy na pewno chcesz odrzucić zgłoszenie anulowania? Zamówienie pozostanie w aktualnym statusie.'}
               </Text>
               {cancellationToResolve.resolution === 'cancel_order' ? (
-                <Stack space={2}>
+                <Stack gap={2}>
                   <Text muted size={1}>
                     Notatka do zmiany statusu
                   </Text>
@@ -1419,7 +1417,7 @@ function CancellationPanel({
         Anulowanie
       </Heading>
       {order.cancellationRequests.length > 0 ? (
-        <Stack space={3}>
+        <Stack gap={3}>
           {order.cancellationRequests.map((cancellationRequest) => {
             const isOpen = cancellationRequest.status === 'open';
 
@@ -1433,7 +1431,7 @@ function CancellationPanel({
                 style={{ opacity: isOpen ? 1 : 0.66 }}
                 tone={isOpen ? 'primary' : 'transparent'}
               >
-                <Stack space={3}>
+                <Stack gap={3}>
                   <Flex align="center" justify="space-between">
                     <Text size={1} weight="semibold">
                       {isOpen ? 'Aktualne zgłoszenie' : 'Historia zgłoszenia'}
@@ -1446,7 +1444,7 @@ function CancellationPanel({
                       {isOpen ? 'Aktywne' : 'Zamknięte'}
                     </Badge>
                   </Flex>
-                  <Grid columns={[1, 1, 2]} gap={3}>
+                  <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
                     <KeyValue
                       label="Status"
                       value={cancellationRequest.status}
@@ -1475,7 +1473,7 @@ function CancellationPanel({
                     ) : null}
                   </Grid>
                   {isOpen && order.actions.canResolveCancellationRequest ? (
-                    <Inline space={3}>
+                    <Inline gap={3}>
                       <Button
                         disabled={actionState.status === 'loading'}
                         onClick={() =>
@@ -1590,7 +1588,7 @@ function ReturnsPanel({
   }
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {returnToComplete ? (
         <Dialog
           id="complete-return-dialog"
@@ -1604,7 +1602,7 @@ function ReturnsPanel({
           width={1}
           footer={
             <Box paddingX={4} paddingBottom={4}>
-              <Inline space={3}>
+              <Inline gap={3}>
                 <Button
                   disabled={actionState.status === 'loading'}
                   mode="ghost"
@@ -1631,12 +1629,12 @@ function ReturnsPanel({
           }
         >
           <Box paddingX={4} paddingTop={4} paddingBottom={5}>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Text size={1}>
                 Czy na pewno chcesz zakończyć tę sprawę zwrotu i zmienić status
                 zamówienia na zwrócone?
               </Text>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text muted size={1}>
                   Notatka do zmiany statusu
                 </Text>
@@ -1656,7 +1654,7 @@ function ReturnsPanel({
         Zwroty
       </Heading>
       {order.returnCases.length > 0 ? (
-        <Stack space={2}>
+        <Stack gap={2}>
           {order.returnCases.map((returnCase) => {
             const isOpen = returnCase.status === 'open';
             const isAwaitingGoods = returnCase.status === 'awaiting_goods';
@@ -1672,7 +1670,7 @@ function ReturnsPanel({
                 style={{ opacity: isActive ? 1 : 0.66 }}
                 tone={isActive ? 'primary' : 'transparent'}
               >
-                <Stack space={3}>
+                <Stack gap={3}>
                   <Flex align="center" justify="space-between">
                     <Text size={1} weight="semibold">
                       {isActive ? 'Aktualna sprawa zwrotu' : 'Historia zwrotu'}
@@ -1685,7 +1683,7 @@ function ReturnsPanel({
                       {isActive ? 'Aktywna' : 'Zamknięta'}
                     </Badge>
                   </Flex>
-                  <Grid columns={[1, 1, 2]} gap={3}>
+                  <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
                     <KeyValue
                       label="Status"
                       value={formatReturnCaseStatus(returnCase.status)}
@@ -1708,7 +1706,7 @@ function ReturnsPanel({
                     />
                   </Grid>
                   {isActive ? (
-                    <Inline space={3}>
+                    <Inline gap={3}>
                       {isOpen ? (
                         <Button
                           disabled={actionState.status === 'loading'}
@@ -1813,7 +1811,7 @@ function TimelineActor({ entry }: { entry: AdminOrderTimelineEntry }) {
           <span>{getTimelineActorInitials(entry)}</span>
         )}
       </div>
-      <Stack className="timelineActorText" space={2}>
+      <Stack className="timelineActorText" gap={2}>
         <Text size={1} weight="semibold">
           {actorName}
         </Text>
@@ -1852,7 +1850,7 @@ function getTimelineStatusTone(status: string) {
 function TimelineSection({ order }: { order: AdminOrderDetail }) {
   return (
     <DetailSection title="Historia statusów">
-      <Stack className="timelineList" space={3}>
+      <Stack className="timelineList" gap={3}>
         {order.timeline.map((entry) => (
           <Card
             border
@@ -1867,7 +1865,7 @@ function TimelineSection({ order }: { order: AdminOrderDetail }) {
               justify="space-between"
               wrap="wrap"
             >
-              <Stack flex={1} space={3}>
+              <Stack flex={1} gap={3}>
                 <Flex align="center" gap={2} wrap="wrap">
                   <span
                     className="timelineStatus"
@@ -1884,7 +1882,7 @@ function TimelineSection({ order }: { order: AdminOrderDetail }) {
                 <TimelineActor entry={entry} />
                 {entry.note ? (
                   <Card className="timelineNote" padding={3} radius={2}>
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       <Text muted size={1}>
                         Notatka
                       </Text>
@@ -1895,7 +1893,7 @@ function TimelineSection({ order }: { order: AdminOrderDetail }) {
                   </Card>
                 ) : null}
               </Stack>
-              <Stack className="timelineDate" space={2}>
+              <Stack className="timelineDate" gap={2}>
                 <Text muted size={1}>
                   Data zmiany
                 </Text>
@@ -1913,7 +1911,7 @@ function TimelineSection({ order }: { order: AdminOrderDetail }) {
 
 function KeyValue({ label, value }: { label: string; value: string }) {
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Text muted size={1}>
         {label}
       </Text>
@@ -1940,7 +1938,7 @@ function AddressBlock({
   ].filter(Boolean);
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Text muted size={1}>
         {label}
       </Text>
@@ -1963,11 +1961,11 @@ function AddressSection({
   const phone = address.phone?.trim();
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <Text size={1} weight="semibold">
         {title}
       </Text>
-      <Grid columns={[1, 1, 2]} gap={3}>
+      <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
         {address.companyName ? (
           <KeyValue label="Firma" value={address.companyName} />
         ) : null}

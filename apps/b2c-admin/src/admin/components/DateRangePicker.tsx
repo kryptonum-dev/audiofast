@@ -1,4 +1,6 @@
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '@sanity/icons';
+import { CalendarIcon } from '@sanity/icons/Calendar';
+import { ChevronLeftIcon } from '@sanity/icons/ChevronLeft';
+import { ChevronRightIcon } from '@sanity/icons/ChevronRight';
 import {
   Box,
   Button,
@@ -7,11 +9,11 @@ import {
   Grid,
   Inline,
   Label,
-  Popover,
   Stack,
   Text,
   TextInput,
 } from '@sanity/ui';
+import { Popover } from '@sanity/ui/popover';
 import { useMemo, useState } from 'react';
 
 import type { AdminDateRangeFilter } from '../types.js';
@@ -85,7 +87,7 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
         <Popover
           content={
             <Card padding={3} radius={2}>
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Flex align="center" justify="space-between">
                   <Button
                     aria-label="Poprzedni miesiąc"
@@ -109,7 +111,7 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
                   />
                 </Flex>
 
-                <Grid columns={7} gap={1}>
+                <Grid gridTemplateColumns={7} gap={1}>
                   {WEEKDAYS.map((weekday) => (
                     <Text align="center" key={weekday} muted size={0}>
                       {weekday}
@@ -140,7 +142,7 @@ export function DateRangePicker({ onChange, value }: DateRangePickerProps) {
                   )}
                 </Grid>
 
-                <Inline space={2}>
+                <Inline gap={2}>
                   <Button
                     mode="ghost"
                     onClick={() => onChange({ from: '', to: '' })}

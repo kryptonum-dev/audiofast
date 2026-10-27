@@ -1,4 +1,4 @@
-import { PlayIcon } from '@sanity/icons';
+import { PlayIcon } from '@sanity/icons/Play';
 import { parseYouTubeUrl } from '@workspace/youtube';
 import { defineField, defineType } from 'sanity';
 

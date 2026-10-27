@@ -1,4 +1,4 @@
-import { TrendUpwardIcon } from '@sanity/icons';
+import { TrendUpwardIcon } from '@sanity/icons/TrendUpward';
 import { defineField, defineType } from 'sanity';
 
 import { toPlainText } from '../../utils/helper';

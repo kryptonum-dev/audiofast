@@ -1,4 +1,6 @@
-import { BarChartIcon, BasketIcon, TagsIcon } from '@sanity/icons';
+import { BarChartIcon } from '@sanity/icons/BarChart';
+import { BasketIcon } from '@sanity/icons/Basket';
+import { TagsIcon } from '@sanity/icons/Tags';
 import {
   Box,
   Card,
@@ -58,9 +60,9 @@ export function AdminShell({
     <Card className="adminAppRoot" tone="default">
       <Container width={4}>
         <Box paddingX={[3, 4, 5]} paddingY={[3, 4]} className="adminAppFrame">
-          <Stack space={5}>
+          <Stack gap={5}>
             <Box paddingX={3} paddingTop={3}>
-              <TabList space={2}>
+              <TabList gap={2}>
                 {ADMIN_AREAS.map((area) => (
                   <Tab
                     key={area.id}

@@ -1,11 +1,11 @@
-import {
-  AddIcon,
-  CheckmarkIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  FolderIcon,
-  SyncIcon,
-} from '@sanity/icons';
+import '@sanity/ui/styles.css';
+
+import { AddIcon } from '@sanity/icons/Add';
+import { CheckmarkIcon } from '@sanity/icons/Checkmark';
+import { ChevronLeftIcon } from '@sanity/icons/ChevronLeft';
+import { ChevronRightIcon } from '@sanity/icons/ChevronRight';
+import { FolderIcon } from '@sanity/icons/Folder';
+import { SyncIcon } from '@sanity/icons/Sync';
 import {
   Box,
   Button,
@@ -16,10 +16,10 @@ import {
   Select,
   Text,
   ThemeProvider,
-  ToastProvider,
-  Tooltip,
 } from '@sanity/ui';
 import { buildTheme } from '@sanity/ui/theme';
+import { ToastProvider } from '@sanity/ui/toast';
+import { Tooltip } from '@sanity/ui/tooltip';
 import classNames from 'classnames';
 import get from 'lodash.get';
 import pluralize, { singular } from 'pluralize';
@@ -180,7 +180,7 @@ const ActionRow = () => {
                 portal
               >
                 <Button
-                  space={2}
+                  gap={2}
                   fontSize={1}
                   padding={2}
                   text="Select"
@@ -190,7 +190,7 @@ const ActionRow = () => {
                 />
               </Tooltip>
               <Button
-                space={2}
+                gap={2}
                 fontSize={1}
                 padding={2}
                 text="Create"

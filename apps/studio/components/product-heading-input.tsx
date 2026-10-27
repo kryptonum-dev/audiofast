@@ -46,10 +46,10 @@ export function ProductHeadingInput(props: ObjectInputProps<HeadingOverride>) {
   const preview = [upper, lower].filter(Boolean).join(' ');
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       {props.renderDefault(props)}
       <Card padding={3} border radius={2}>
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text size={1} weight="semibold">
             Wynikowy nagłówek H1
           </Text>

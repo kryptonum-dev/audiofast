@@ -1,19 +1,17 @@
-import {
-  CogIcon,
-  CommentIcon,
-  DocumentIcon,
-  DocumentTextIcon,
-  FolderIcon,
-  HomeIcon,
-  ImageIcon,
-  PackageIcon,
-  StarIcon,
-  TagIcon,
-  UserIcon,
-} from '@sanity/icons';
+import { CogIcon } from '@sanity/icons/Cog';
+import { CommentIcon } from '@sanity/icons/Comment';
+import { DocumentIcon } from '@sanity/icons/Document';
+import { DocumentTextIcon } from '@sanity/icons/DocumentText';
+import { FolderIcon } from '@sanity/icons/Folder';
+import { HomeIcon } from '@sanity/icons/Home';
+import { ImageIcon } from '@sanity/icons/Image';
+import { PackageIcon } from '@sanity/icons/Package';
+import { StarIcon } from '@sanity/icons/Star';
+import { TagIcon } from '@sanity/icons/Tag';
+import { UserIcon } from '@sanity/icons/User';
 import { type ComponentType, type CSSProperties, useState } from 'react';
 
-import { imageThumbnailUrl, type ImageCdnTarget } from '../lib/images.js';
+import { type ImageCdnTarget, imageThumbnailUrl } from '../lib/images.js';
 
 const TYPE_ICONS: Record<string, ComponentType> = {
   product: PackageIcon,

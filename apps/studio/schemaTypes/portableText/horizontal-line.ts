@@ -1,4 +1,4 @@
-import { RemoveIcon } from '@sanity/icons';
+import { RemoveIcon } from '@sanity/icons/Remove';
 import { defineField, defineType } from 'sanity';
 
 /**

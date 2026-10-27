@@ -11,7 +11,7 @@ export function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
   const tone = ORDER_STATUS_TONES[status as AdminOrderStatus] ?? 'default';
 
   return (
-    <Badge fontSize={1} mode="outline" padding={2} tone={tone}>
+    <Badge fontSize={1} padding={2} tone={tone}>
       {formatOrderStatus(status)}
     </Badge>
   );

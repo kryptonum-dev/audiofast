@@ -56,7 +56,7 @@ export function SummaryTiles({ tiles, gapMinutes }: SummaryTilesProps) {
   ];
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <dl className="tiles">
         {items.map((item) => (
           <Tile key={item.label} {...item} />

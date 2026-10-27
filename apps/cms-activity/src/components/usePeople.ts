@@ -23,7 +23,7 @@ export type PeopleState = {
  * membership list is available (wrap callers in `Suspense`).
  */
 export function usePeople(): PeopleState {
-  const project = useProject({
+  const { data: project } = useProject({
     projectId: appConfig.projectId,
     includeMembers: true,
     includeFeatures: false,
@@ -31,8 +31,8 @@ export function usePeople(): PeopleState {
   const client = useClient({ apiVersion: appConfig.apiVersion });
 
   const humans = useMemo(
-    () => selectHumanMembers(project.members ?? []),
-    [project.members],
+    () => selectHumanMembers(project?.members ?? []),
+    [project?.members],
   );
   const idsKey = humans.map((member) => member.id).join(',');
 

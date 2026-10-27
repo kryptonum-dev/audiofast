@@ -1,6 +1,8 @@
 'use client';
 
-import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@sanity/icons';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ChevronUpIcon } from '@sanity/icons/ChevronUp';
+import { SearchIcon } from '@sanity/icons/Search';
 import {
   Box,
   Button,
@@ -356,7 +358,7 @@ export function ProductFilterValues({
 
   return (
     <Card tone="transparent" padding={2} radius={2}>
-      <Stack space={3}>
+      <Stack gap={3}>
         {/* Toggle button */}
         <Button
           mode="bleed"
@@ -403,7 +405,7 @@ export function ProductFilterValues({
                 Brak produktów w tej kategorii.
               </Text>
             ) : (
-              <Stack space={4}>
+              <Stack gap={4}>
                 {/* Search input */}
                 <TextInput
                   icon={SearchIcon}
@@ -424,11 +426,11 @@ export function ProductFilterValues({
 
                 {/* Products WITH values */}
                 {productsWithValue.length > 0 && (
-                  <Stack space={2}>
+                  <Stack gap={2}>
                     <Text size={1} weight="semibold" muted>
                       Z wartością ({productsWithValue.length})
                     </Text>
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       {productsWithValue.map((product) => (
                         <ProductRow
                           key={product._id}
@@ -446,11 +448,11 @@ export function ProductFilterValues({
 
                 {/* Products WITHOUT values */}
                 {displayedProductsWithoutValue.length > 0 && (
-                  <Stack space={2}>
+                  <Stack gap={2}>
                     <Text size={1} weight="semibold" muted>
                       Bez wartości ({productsWithoutValue.length})
                     </Text>
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       {displayedProductsWithoutValue.map((product) => (
                         <ProductRow
                           key={product._id}

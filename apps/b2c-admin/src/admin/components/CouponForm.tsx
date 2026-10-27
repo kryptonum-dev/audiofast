@@ -151,7 +151,7 @@ export function CouponForm({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack space={4}>
+      <Stack gap={4}>
         {error ? (
           <Card border padding={3} radius={2} tone="critical">
             <Text size={1}>{error}</Text>
@@ -159,8 +159,8 @@ export function CouponForm({
         ) : null}
 
         <Card padding={4} radius={2}>
-          <Stack space={4}>
-            <Grid columns={[1, 1, 2]} gap={4}>
+          <Stack gap={4}>
+            <Grid gridTemplateColumns={[1, 1, 2]} gap={4}>
               <Field label="Kod kuponu">
                 <TextInput
                   disabled={disabled}
@@ -304,7 +304,7 @@ export function CouponForm({
                     updateValue('isActive', event.currentTarget.checked)
                   }
                 />
-                <Stack space={2}>
+                <Stack gap={2}>
                   <Text size={1} weight="medium">
                     Kupon aktywny
                   </Text>

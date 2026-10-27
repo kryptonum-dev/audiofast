@@ -1,15 +1,16 @@
-import { FilterIcon, SearchIcon } from '@sanity/icons';
+import { FilterIcon } from '@sanity/icons/Filter';
+import { SearchIcon } from '@sanity/icons/Search';
 import {
   Box,
   Button,
   Card,
   Checkbox,
   Flex,
-  Popover,
   Stack,
   Text,
   TextInput,
 } from '@sanity/ui';
+import { Popover } from '@sanity/ui/popover';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 
@@ -184,7 +185,7 @@ function ReferenceFilterItem({ config }: { config: ReferenceFilterConfig }) {
             </Text>
           </Box>
         ) : (
-          <Stack space={1}>
+          <Stack gap={1}>
             {filteredOptions.map((option) => {
               const isSelected = selectedIds.has(option._id);
               return (

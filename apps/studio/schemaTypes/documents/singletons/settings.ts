@@ -1,10 +1,8 @@
-import {
-  BlockElementIcon,
-  ComposeIcon,
-  SearchIcon,
-  TrendUpwardIcon,
-  UsersIcon,
-} from '@sanity/icons';
+import { BlockElementIcon } from '@sanity/icons/BlockElement';
+import { ComposeIcon } from '@sanity/icons/Compose';
+import { SearchIcon } from '@sanity/icons/Search';
+import { TrendUpwardIcon } from '@sanity/icons/TrendUpward';
+import { UsersIcon } from '@sanity/icons/Users';
 import { CogIcon } from 'lucide-react';
 import {
   defineArrayMember,

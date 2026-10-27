@@ -1,4 +1,6 @@
-import { BlockContentIcon, DocumentVideoIcon, RemoveIcon } from '@sanity/icons';
+import { BlockContentIcon } from '@sanity/icons/BlockContent';
+import { DocumentVideoIcon } from '@sanity/icons/DocumentVideo';
+import { RemoveIcon } from '@sanity/icons/Remove';
 import { defineField, defineType } from 'sanity';
 
 import { toPlainText } from '../../utils/helper';

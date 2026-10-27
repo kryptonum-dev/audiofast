@@ -63,7 +63,7 @@ export function DayTimeline({
 
   return (
     <Card border padding={[3, 4]} radius={3}>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Heading as="h2" id="timeline-heading" size={1}>
           Dzień po dniu
         </Heading>

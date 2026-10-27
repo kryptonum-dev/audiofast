@@ -1,4 +1,4 @@
-import { StackIcon } from '@sanity/icons';
+import { StackIcon } from '@sanity/icons/Stack';
 import { Columns2 } from 'lucide-react';
 import { defineField, defineType } from 'sanity';
 

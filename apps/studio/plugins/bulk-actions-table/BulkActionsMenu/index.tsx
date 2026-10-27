@@ -1,19 +1,11 @@
-import {
-  ChevronDownIcon,
-  PublishIcon,
-  ResetIcon,
-  TrashIcon,
-  UnpublishIcon,
-} from '@sanity/icons';
-import {
-  Button,
-  Dialog,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  useToast,
-} from '@sanity/ui';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { PublishIcon } from '@sanity/icons/Publish';
+import { ResetIcon } from '@sanity/icons/Reset';
+import { TrashIcon } from '@sanity/icons/Trash';
+import { UnpublishIcon } from '@sanity/icons/Unpublish';
+import { Button, Dialog } from '@sanity/ui';
+import { Menu, MenuButton, MenuDivider, MenuItem } from '@sanity/ui/menu';
+import { useToast } from '@sanity/ui/toast';
 import { nanoid } from 'nanoid';
 import { useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -309,7 +301,7 @@ function BulkActionsMenu({ onDelete }: Props) {
         id={buttonId}
         button={
           <Button
-            space={2}
+            gap={2}
             fontSize={1}
             padding={2}
             text="Update items"

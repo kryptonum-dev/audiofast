@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  Autocomplete,
   Badge,
   Box,
   Button,
@@ -16,8 +15,9 @@ import {
   Stack,
   Text,
   TextInput,
-  useToast,
 } from '@sanity/ui';
+import { Autocomplete } from '@sanity/ui/autocomplete';
+import { useToast } from '@sanity/ui/toast';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useClient } from 'sanity';
 
@@ -640,7 +640,7 @@ export default function ReviewAuthorManager() {
 
   return (
     <Box padding={4}>
-      <Stack space={4}>
+      <Stack gap={4}>
         <Flex align="center" justify="space-between">
           <Heading size={1}>Scalanie autorów recenzji</Heading>
           <Button
@@ -654,7 +654,7 @@ export default function ReviewAuthorManager() {
         </Flex>
 
         <Box padding={1}>
-          <Stack space={4}>
+          <Stack gap={4}>
             <Heading size={1}>1. Scal warianty autorów</Heading>
             <Text size={1} muted>
               Wybierz autora docelowego (kanonicznego), następnie zaznacz
@@ -662,9 +662,11 @@ export default function ReviewAuthorManager() {
               przepięte do autora docelowego.
             </Text>
 
-            <Grid columns={[1, 1, 2]} gap={3}>
-              <Stack space={2}>
-                <Label htmlFor="targetAuthor">Autor docelowy</Label>
+            <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
+              <Stack gap={2}>
+                <Label as="label" htmlFor="targetAuthor">
+                  Autor docelowy
+                </Label>
                 <Autocomplete<AuthorAutocompleteOption>
                   id="targetAuthor"
                   openButton
@@ -706,8 +708,10 @@ export default function ReviewAuthorManager() {
                 ></Autocomplete>
               </Stack>
 
-              <Stack space={2}>
-                <Label htmlFor="sourceSearch">Szukaj autorów źródłowych</Label>
+              <Stack gap={2}>
+                <Label as="label" htmlFor="sourceSearch">
+                  Szukaj autorów źródłowych
+                </Label>
                 <TextInput
                   id="sourceSearch"
                   value={sourceSearch}
@@ -720,7 +724,7 @@ export default function ReviewAuthorManager() {
             </Grid>
 
             <Card padding={3} radius={2}>
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Flex align="center" justify="space-between">
                   <Text size={1} weight="semibold">
                     Autorzy źródłowi
@@ -736,7 +740,7 @@ export default function ReviewAuthorManager() {
                     overflowY: 'auto',
                   }}
                 >
-                  <Stack space={1}>
+                  <Stack gap={1}>
                     {filteredSourceAuthors.length === 0 ? (
                       <Text size={1} muted>
                         Brak wyników dla podanego filtra.
@@ -805,16 +809,18 @@ export default function ReviewAuthorManager() {
             paddingTop: '1.5rem',
           }}
         >
-          <Stack space={4}>
+          <Stack gap={4}>
             <Heading size={1}>2. Przypisz brakujących autorów</Heading>
             <Text size={1} muted>
               Przypisz autora hurtowo do recenzji, które nie mają obecnie
               ustawionego pola `author`.
             </Text>
 
-            <Grid columns={[1, 1, 2]} gap={3}>
-              <Stack space={2}>
-                <Label htmlFor="assignTargetAuthor">Autor docelowy</Label>
+            <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
+              <Stack gap={2}>
+                <Label as="label" htmlFor="assignTargetAuthor">
+                  Autor docelowy
+                </Label>
                 <Autocomplete<AuthorAutocompleteOption>
                   id="assignTargetAuthor"
                   openButton
@@ -847,8 +853,10 @@ export default function ReviewAuthorManager() {
                 />
               </Stack>
 
-              <Stack space={2}>
-                <Label htmlFor="orphanSearch">Szukaj recenzji bez autora</Label>
+              <Stack gap={2}>
+                <Label as="label" htmlFor="orphanSearch">
+                  Szukaj recenzji bez autora
+                </Label>
                 <TextInput
                   id="orphanSearch"
                   value={orphanSearch}
@@ -884,7 +892,7 @@ export default function ReviewAuthorManager() {
                   overflowY: 'auto',
                 }}
               >
-                <Stack space={1}>
+                <Stack gap={1}>
                   {filteredOrphans.length === 0 ? (
                     <Text size={1} muted>
                       Brak recenzji spełniających kryteria.
@@ -911,7 +919,7 @@ export default function ReviewAuthorManager() {
                               checked={selectedOrphanIds.has(review._id)}
                               onChange={() => toggleOrphan(review._id)}
                             />
-                            <Stack space={1}>
+                            <Stack gap={1}>
                               <Text size={1} weight="semibold">
                                 {review.title}
                               </Text>
@@ -969,14 +977,14 @@ export default function ReviewAuthorManager() {
           width={2}
         >
           <Box padding={4}>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Text size={1}>
                 Autor docelowy:{' '}
                 <strong>{targetAuthor?.name ?? 'Nie wybrano'}</strong>
               </Text>
 
               <Card padding={3} radius={2} tone="primary" border>
-                <Stack space={2}>
+                <Stack gap={2}>
                   <Text size={1} weight="semibold">
                     Podgląd operacji
                   </Text>
@@ -984,7 +992,7 @@ export default function ReviewAuthorManager() {
                     Łącznie opublikowanych recenzji do scalenia:{' '}
                     <strong>{mergePreview?.totalPublishedReviews ?? 0}</strong>
                   </Text>
-                  <Stack space={1}>
+                  <Stack gap={1}>
                     {(mergePreview?.bySource ?? []).map((item) => (
                       <Text size={1} key={item._id}>
                         {item.name}: {item.reviewCount}
@@ -1039,14 +1047,14 @@ export default function ReviewAuthorManager() {
           width={2}
         >
           <Box padding={4}>
-            <Stack space={4}>
+            <Stack gap={4}>
               <Text size={1}>
                 Autor docelowy:{' '}
                 <strong>{assignTargetAuthor?.name ?? 'Nie wybrano'}</strong>
               </Text>
 
               <Card padding={3} radius={2} tone="primary" border>
-                <Stack space={2}>
+                <Stack gap={2}>
                   <Text size={1} weight="semibold">
                     Podgląd operacji
                   </Text>
@@ -1054,7 +1062,7 @@ export default function ReviewAuthorManager() {
                     Liczba recenzji do przypisania:{' '}
                     <strong>{selectedOrphanItems.length}</strong>
                   </Text>
-                  <Stack space={1}>
+                  <Stack gap={1}>
                     {selectedOrphanItems.slice(0, 8).map((review) => (
                       <Text size={1} key={review._id}>
                         • {review.title}

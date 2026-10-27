@@ -1,6 +1,6 @@
 'use client';
 
-import { CloseIcon } from '@sanity/icons';
+import { CloseIcon } from '@sanity/icons/Close';
 import {
   Button,
   Card,
@@ -60,9 +60,9 @@ export function FilterEditorDialog({
       open={isOpen}
       onClose={onClose}
     >
-      <Stack space={4} padding={4}>
+      <Stack gap={4} padding={4}>
         {/* Filter Name */}
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text weight="semibold" size={1}>
             Nazwa filtra
           </Text>
@@ -85,7 +85,7 @@ export function FilterEditorDialog({
         </Stack>
 
         {/* Filter Type */}
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text weight="semibold" size={1}>
             Typ filtra
           </Text>
@@ -108,7 +108,7 @@ export function FilterEditorDialog({
 
         {/* Unit (only for range filters) */}
         {editingFilter.filterType === 'range' && (
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text weight="semibold" size={1}>
               Jednostka
             </Text>

@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
 import { Stack } from '@sanity/ui';
+import { useCallback, useMemo, useState } from 'react';
 
 import type { Report } from '../lib/build-report.js';
 import type { ImageCdnTarget } from '../lib/images.js';
@@ -95,7 +95,7 @@ export function ReportView({
   );
 
   return (
-    <Stack space={5}>
+    <Stack gap={5}>
       {tiles ? <SummaryTiles gapMinutes={gapMinutes} tiles={tiles} /> : null}
       <DayTimeline
         onSelectSession={reveal}

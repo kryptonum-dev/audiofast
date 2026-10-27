@@ -1,13 +1,6 @@
-import {
-  Box,
-  Button,
-  Card,
-  Dialog,
-  Stack,
-  Text,
-  Tooltip,
-  useToast,
-} from '@sanity/ui';
+import { Box, Button, Card, Dialog, Stack, Text } from '@sanity/ui';
+import { useToast } from '@sanity/ui/toast';
+import { Tooltip } from '@sanity/ui/tooltip';
 import { Link } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { defineField, defineType, type SlugRule, useClient } from 'sanity';
@@ -68,7 +61,7 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
   }, [value, client, toast]);
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {renderDefault(props)}
       <Button
         tone="caution"
@@ -87,12 +80,12 @@ const ProcessJsonButton = (props: { value: any; renderDefault: any }) => {
           zOffset={1000}
         >
           <Box padding={4}>
-            <Stack space={5}>
+            <Stack gap={5}>
               <Text>
                 Czy na pewno chcesz przetworzyć ten JSON? Spowoduje to
                 nadpisanie wszystkich istniejących przekierowań.
               </Text>
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Button
                   tone="caution"
                   onClick={processJson}
@@ -221,9 +214,9 @@ export default defineType({
       ),
       components: {
         input: (props) => (
-          <Stack space={3}>
+          <Stack gap={3}>
             <Card tone="caution" padding={4} border radius={2}>
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Text weight="semibold">⚠️ Ostrzeżenie: Używaj ostrożnie!</Text>
                 <Text size={1}>
                   Ten edytor nadpisze wszystkie istniejące przekierowania.

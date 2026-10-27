@@ -1,11 +1,9 @@
-import {
-  BlockElementIcon,
-  ComposeIcon,
-  InlineElementIcon,
-  InsertAboveIcon,
-  SearchIcon,
-  UsersIcon,
-} from '@sanity/icons';
+import { BlockElementIcon } from '@sanity/icons/BlockElement';
+import { ComposeIcon } from '@sanity/icons/Compose';
+import { InlineElementIcon } from '@sanity/icons/InlineElement';
+import { InsertAboveIcon } from '@sanity/icons/InsertAbove';
+import { SearchIcon } from '@sanity/icons/Search';
+import { UsersIcon } from '@sanity/icons/Users';
 import type { FieldGroupDefinition } from 'sanity';
 
 import { isProduction } from './helper';

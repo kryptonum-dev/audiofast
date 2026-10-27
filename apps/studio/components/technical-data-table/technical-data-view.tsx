@@ -18,13 +18,11 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import {
-  AddIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  DragHandleIcon,
-  TrashIcon,
-} from '@sanity/icons';
+import { AddIcon } from '@sanity/icons/Add';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { ChevronUpIcon } from '@sanity/icons/ChevronUp';
+import { DragHandleIcon } from '@sanity/icons/DragHandle';
+import { TrashIcon } from '@sanity/icons/Trash';
 import {
   Box,
   Button,
@@ -35,8 +33,8 @@ import {
   Stack,
   Text,
   TextInput,
-  useToast,
 } from '@sanity/ui';
+import { useToast } from '@sanity/ui/toast';
 import { Edit2, FolderPlus } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PortableTextBlock, SanityDocument } from 'sanity';
@@ -1097,10 +1095,10 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
 
   return (
     <Card padding={4} sizing="border">
-      <Stack space={5}>
+      <Stack gap={5}>
         {/* Header */}
         <Flex align="center" justify="space-between">
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text size={3} weight="bold">
               Dane techniczne
             </Text>
@@ -1120,9 +1118,9 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
 
         {/* Variants Section */}
         <Card padding={4} border radius={2} tone="primary">
-          <Stack space={4}>
+          <Stack gap={4}>
             <Flex align="center" justify="space-between">
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Text size={2} weight="semibold">
                   Warianty produktu
                 </Text>
@@ -1151,7 +1149,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                   items={variantKeys}
                   strategy={horizontalListSortingStrategy}
                 >
-                  <Grid columns={[1, 2, 3]} gap={3}>
+                  <Grid gridTemplateColumns={[1, 2, 3]} gap={3}>
                     {variants.map((variant, index) => (
                       <SortableVariant
                         key={variantKeys[index]}
@@ -1170,7 +1168,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
         </Card>
 
         {/* Groups Section */}
-        <Stack space={4}>
+        <Stack gap={4}>
           {/* Only show "Sekcje specyfikacji" header when there are multiple groups */}
           {groups.length > 1 && (
             <Flex align="center" justify="space-between">
@@ -1196,7 +1194,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
 
             return (
               <Card key={group._key} padding={4} border radius={2}>
-                <Stack space={4}>
+                <Stack gap={4}>
                   {/* Group Header */}
                   <Flex align="center" gap={3}>
                     {/* Collapse button - only show when multiple groups */}
@@ -1300,7 +1298,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
                           items={rowKeys}
                           strategy={verticalListSortingStrategy}
                         >
-                          <Stack space={2}>
+                          <Stack gap={2}>
                             {group.rows.map((row, rowIndex) => (
                               <SortableRow
                                 key={row._key}
@@ -1382,7 +1380,7 @@ export function TechnicalDataView({ document }: TechnicalDataViewProps) {
             width={0}
           >
             <Box padding={4}>
-              <Stack space={4}>
+              <Stack gap={4}>
                 <Text size={2}>
                   Czy na pewno chcesz usunąć{' '}
                   {deleteConfirm.type === 'row'

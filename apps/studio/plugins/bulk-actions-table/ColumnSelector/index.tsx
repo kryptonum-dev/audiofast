@@ -1,14 +1,7 @@
-import { CheckmarkIcon, ControlsIcon } from '@sanity/icons';
-import {
-  Box,
-  Button,
-  Flex,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  Text,
-} from '@sanity/ui';
+import { CheckmarkIcon } from '@sanity/icons/Checkmark';
+import { ControlsIcon } from '@sanity/icons/Controls';
+import { Box, Button, Flex, Text } from '@sanity/ui';
+import { Menu, MenuButton, MenuDivider, MenuItem } from '@sanity/ui/menu';
 import { useMemo } from 'react';
 import type { SchemaType } from 'sanity';
 import styled from 'styled-components';

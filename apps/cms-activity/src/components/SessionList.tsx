@@ -1,4 +1,5 @@
-import { ChevronDownIcon, LaunchIcon } from '@sanity/icons';
+import { ChevronDownIcon } from '@sanity/icons/ChevronDown';
+import { LaunchIcon } from '@sanity/icons/Launch';
 import { Badge, Button, Card, Flex, Heading, Stack, Text } from '@sanity/ui';
 import { useEffect, useId, useState } from 'react';
 
@@ -13,8 +14,8 @@ import type { ImageCdnTarget } from '../lib/images.js';
 import { documentLabel, documentTypeLabel } from '../lib/labels.js';
 import { RECONSTRUCTION_FAILED } from '../lib/reconstruct.js';
 import {
-  actionKind,
   type ActionCount,
+  actionKind,
   type DayGroup,
   type DocumentGroup,
   type SessionView,
@@ -169,7 +170,7 @@ function EventTimes({
   const [open, setOpen] = useState(false);
   const listId = useId();
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       <div>
         <button
           aria-controls={open ? listId : undefined}
@@ -226,7 +227,7 @@ function DocumentBlock({
         size={THUMB_EXPANDED}
         type={type}
       />
-      <Stack className="docBlock__body" space={3}>
+      <Stack className="docBlock__body" gap={3}>
         <Flex align="flex-start" gap={3} justify="space-between" wrap="wrap">
           <DocumentName doc={doc} group={group} studioUrl={shared.studioUrl} />
           <ActionBadges actions={group.actions} timeZone={shared.timeZone} />
@@ -339,9 +340,9 @@ function SessionRow({ view, shared }: { view: SessionView; shared: Shared }) {
 
       {open ? (
         <div className="sessionRow__details" id={detailsId}>
-          <Stack space={4}>
+          <Stack gap={4}>
             {view.documents.length > 0 ? (
-              <Stack as="ul" className="plainList" space={4}>
+              <Stack as="ul" className="plainList" gap={4}>
                 {view.documents.map((group) => (
                   <DocumentBlock
                     group={group}
@@ -494,7 +495,7 @@ export function SessionList({
   }, [scrollTarget]);
 
   return (
-    <Stack as="section" aria-labelledby="sessions-heading" space={4}>
+    <Stack as="section" aria-labelledby="sessions-heading" gap={4}>
       <Flex align="center" gap={3} justify="space-between" wrap="wrap">
         <Heading as="h2" id="sessions-heading" size={1}>
           {`Sesje i zmiany (${sessionCount})`}
@@ -507,7 +508,7 @@ export function SessionList({
           />
         ) : null}
       </Flex>
-      <Stack as="ol" className="plainList" space={3}>
+      <Stack as="ol" className="plainList" gap={3}>
         {days.map((day) => (
           <DayCard
             day={day}

@@ -1,4 +1,4 @@
-import { EyeClosedIcon } from '@sanity/icons';
+import { EyeClosedIcon } from '@sanity/icons/EyeClosed';
 import { type DocumentActionComponent, useDocumentOperation } from 'sanity';
 
 /**

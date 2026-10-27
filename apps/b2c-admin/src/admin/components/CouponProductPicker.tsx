@@ -1,4 +1,5 @@
-import { LaunchIcon, SearchIcon } from '@sanity/icons';
+import { LaunchIcon } from '@sanity/icons/Launch';
+import { SearchIcon } from '@sanity/icons/Search';
 import {
   Badge,
   Box,
@@ -75,14 +76,14 @@ export function CouponProductPicker({
 
   return (
     <Card border padding={3} radius={2}>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Flex align="center" justify="space-between" wrap="wrap">
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text size={1} weight="medium">
               Produkty objęte kuponem
             </Text>
           </Stack>
-          <Inline space={2}>
+          <Inline gap={2}>
             <Badge fontSize={1} padding={2} tone="primary">
               {selectedProductCount} wybranych
             </Badge>
@@ -92,7 +93,7 @@ export function CouponProductPicker({
           </Inline>
         </Flex>
 
-        <Grid columns={[1, 1, 2]} gap={3}>
+        <Grid gridTemplateColumns={[1, 1, 2]} gap={3}>
           <TextInput
             disabled={disabled || loading}
             fontSize={1}
@@ -144,7 +145,7 @@ export function CouponProductPicker({
               overflow: 'auto',
             }}
           >
-            <Stack space={2}>
+            <Stack gap={2}>
               {filteredProducts.map((product) => {
                 const isSelected = product.productKeys.every((productKey) =>
                   selectedKeys.has(productKey),
@@ -190,7 +191,7 @@ export function CouponProductPicker({
                         placeholderClassName="couponProductPickerImagePlaceholder"
                         width={44}
                       />
-                      <Stack space={2} flex={1}>
+                      <Stack gap={2} flex={1}>
                         <Flex align="center" gap={2} wrap="wrap">
                           <Text size={1} weight="medium">
                             {productLabel}

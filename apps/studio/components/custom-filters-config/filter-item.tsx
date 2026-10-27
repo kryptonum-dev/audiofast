@@ -2,7 +2,7 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { TrashIcon } from '@sanity/icons';
+import { TrashIcon } from '@sanity/icons/Trash';
 import {
   Box,
   Button,
@@ -85,7 +85,7 @@ export function SortableFilterItem({
         radius={2}
         tone={isDragging ? 'primary' : 'default'}
       >
-        <Stack space={3}>
+        <Stack gap={3}>
           {/* Main row with drag handle, name input, and actions */}
           <Flex align="center" gap={3}>
             {/* Drag Handle */}

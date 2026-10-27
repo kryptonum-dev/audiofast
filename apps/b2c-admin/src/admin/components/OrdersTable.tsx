@@ -50,9 +50,9 @@ export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
                   tabIndex={onOpenOrder ? 0 : undefined}
                 >
                   <td>
-                    <Inline space={3}>
+                    <Inline gap={3}>
                       <OrderLeadImage order={order} />
-                      <Stack space={2}>
+                      <Stack gap={2}>
                         <Text size={1} weight="medium">
                           {order.orderNumber}
                         </Text>
@@ -68,7 +68,7 @@ export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
                     <Text size={1}>{formatDateTime(order.createdAt)}</Text>
                   </td>
                   <td>
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       <Text size={1} weight="medium">
                         {order.customer.displayName ?? 'Bez nazwy'}
                       </Text>
@@ -78,7 +78,7 @@ export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
                     </Stack>
                   </td>
                   <td>
-                    <Inline space={2}>
+                    <Inline gap={2}>
                       <Badge fontSize={1} padding={2} tone="default">
                         {formatLineType(order.itemSummary.lineTypes)}
                       </Badge>
@@ -93,7 +93,7 @@ export function OrdersTable({ onOpenOrder, orders }: OrdersTableProps) {
                     <OrderStatusBadge status={order.currentStatus} />
                   </td>
                   <td>
-                    <Inline space={2}>
+                    <Inline gap={2}>
                       {order.hasOpenCancellationRequest ? (
                         <Badge fontSize={1} padding={2} tone="caution">
                           Anulowanie

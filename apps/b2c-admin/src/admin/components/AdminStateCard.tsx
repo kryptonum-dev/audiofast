@@ -21,7 +21,7 @@ export function AdminStateCard({
       <Card border padding={4} radius={2} tone={tone}>
         <Flex align="center" gap={3}>
           {loading ? <Spinner muted /> : null}
-          <Stack space={3}>
+          <Stack gap={3}>
             <Heading as="h2" size={1}>
               {heading}
             </Heading>

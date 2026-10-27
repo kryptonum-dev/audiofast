@@ -143,9 +143,9 @@ export function YouTubeDocumentInput(props: ObjectInputProps) {
   }, [videoId, metadataVideoId, props.readOnly, loadMetadata]);
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <Card padding={3} border radius={2}>
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text size={1} aria-live="polite">
             {message}
           </Text>

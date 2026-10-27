@@ -15,17 +15,9 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { AddIcon } from '@sanity/icons';
-import {
-  Box,
-  Button,
-  Card,
-  Dialog,
-  Flex,
-  Stack,
-  Text,
-  useToast,
-} from '@sanity/ui';
+import { AddIcon } from '@sanity/icons/Add';
+import { Box, Button, Card, Dialog, Flex, Stack, Text } from '@sanity/ui';
+import { useToast } from '@sanity/ui/toast';
 import { Filter } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { SanityDocument } from 'sanity';
@@ -471,10 +463,10 @@ export function CustomFiltersConfigView({
 
   return (
     <Card padding={4} sizing="border">
-      <Stack space={5}>
+      <Stack gap={5}>
         {/* Header */}
         <Flex align="center" justify="space-between">
-          <Stack space={2}>
+          <Stack gap={2}>
             <Flex align="center" gap={2}>
               <Text size={3} weight="bold">
                 Konfiguracja filtrów
@@ -520,7 +512,7 @@ export function CustomFiltersConfigView({
               items={filterKeys}
               strategy={verticalListSortingStrategy}
             >
-              <Stack space={3}>
+              <Stack gap={3}>
                 {filters.map((filter, index) => (
                   <SortableFilterItem
                     key={filter._key}
@@ -540,7 +532,7 @@ export function CustomFiltersConfigView({
         ) : (
           /* Empty State */
           <Card padding={5} tone="transparent" border>
-            <Stack space={3}>
+            <Stack gap={3}>
               <Box>
                 <Filter size={32} opacity={0.5} />
               </Box>
@@ -563,7 +555,7 @@ export function CustomFiltersConfigView({
             width={1}
           >
             <Box padding={4}>
-              <Stack space={4}>
+              <Stack gap={4}>
                 <Text size={2}>
                   Czy na pewno chcesz usunąć filtr &ldquo;
                   <strong>{filters[deletingIndex]?.name || 'Bez nazwy'}</strong>
@@ -593,7 +585,7 @@ export function CustomFiltersConfigView({
         {/* Info card */}
         {filters.length > 0 && (
           <Card padding={3} tone="primary" border radius={2}>
-            <Stack space={2}>
+            <Stack gap={2}>
               <Text size={1} weight="semibold">
                 Wskazówki:
               </Text>

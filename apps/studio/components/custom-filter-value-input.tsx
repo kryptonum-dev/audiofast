@@ -1,14 +1,6 @@
-import { TrashIcon } from '@sanity/icons';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Card,
-  Flex,
-  Stack,
-  Text,
-  TextInput,
-} from '@sanity/ui';
+import { TrashIcon } from '@sanity/icons/Trash';
+import { Box, Button, Card, Flex, Stack, Text, TextInput } from '@sanity/ui';
+import { Autocomplete } from '@sanity/ui/autocomplete';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ArrayOfObjectsInputProps } from 'sanity';
 import { set, unset, useClient, useFormValue } from 'sanity';
@@ -166,7 +158,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
   if (categoryIds.length > 0 && availableFilters.length === 0) {
     return (
       <Card padding={3} tone="caution">
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text size={1} weight="semibold">
             Brak dostępnych filtrów
           </Text>
@@ -191,7 +183,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
   }
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {filterValues.map((item, index) => {
         const filterDef = availableFilters.find(
           (f) => f.name === item.filterName,
@@ -200,10 +192,10 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
 
         return (
           <Card key={item._key} padding={3} border>
-            <Stack space={3}>
+            <Stack gap={3}>
               <Flex gap={2} align="flex-start">
                 <Box flex={1}>
-                  <Stack space={2}>
+                  <Stack gap={2}>
                     <Text size={1} weight="semibold">
                       Nazwa filtra
                     </Text>
@@ -229,7 +221,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                 {/* Show appropriate input based on filter type */}
                 {isRangeFilter ? (
                   <Box flex={1}>
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       <Text size={1} weight="semibold">
                         Wartość{filterDef?.unit ? ` (${filterDef.unit})` : ''}
                       </Text>
@@ -252,7 +244,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
                   </Box>
                 ) : (
                   <Box flex={1}>
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       <Text size={1} weight="semibold">
                         Wartość
                       </Text>
@@ -305,7 +297,7 @@ export function CustomFilterValueInput(props: ArrayOfObjectsInputProps) {
 
       {availableFilters.length > 0 && (
         <Card padding={3} tone="primary" radius={2}>
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text size={1} weight="semibold">
               Dostępne filtry z wybranych kategorii:
             </Text>

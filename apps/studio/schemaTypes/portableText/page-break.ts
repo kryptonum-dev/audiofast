@@ -1,4 +1,4 @@
-import { SplitHorizontalIcon } from '@sanity/icons';
+import { SplitHorizontalIcon } from '@sanity/icons/SplitHorizontal';
 import { defineField, defineType } from 'sanity';
 
 export const ptPageBreak = defineType({

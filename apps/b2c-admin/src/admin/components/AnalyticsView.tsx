@@ -1,4 +1,6 @@
-import { RefreshIcon, ResetIcon } from '@sanity/icons';
+import { RefreshIcon } from '@sanity/icons/Refresh';
+import { ResetIcon } from '@sanity/icons/Reset';
+import { useAuthToken } from '@sanity/sdk-react';
 import {
   Box,
   Button,
@@ -10,7 +12,6 @@ import {
   Stack,
   Text,
 } from '@sanity/ui';
-import { useAuthToken } from '@sanity/sdk-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
   CartesianGrid,
@@ -22,7 +23,7 @@ import {
   YAxis,
 } from 'recharts';
 
-import { getAdminErrorMessage, fetchAdminAnalytics } from '../api.js';
+import { fetchAdminAnalytics, getAdminErrorMessage } from '../api.js';
 import { formatMoney, formatOptionalDate } from '../formatters.js';
 import type {
   AdminAnalyticsResult,
@@ -164,7 +165,7 @@ export function AnalyticsView() {
       ) : null}
 
       {data ? (
-        <Stack space={3}>
+        <Stack gap={3}>
           <AnalyticsMetricGrid
             data={data}
             loading={analyticsState.status === 'loading'}
@@ -189,8 +190,8 @@ function AnalyticsFiltersCard(props: {
     <Box paddingX={3} paddingBottom={3}>
       <Card border radius={2}>
         <Box padding={3}>
-          <Grid columns={[1, 1, 5]} gap={3}>
-            <Box column={[1, 1, 2]}>
+          <Grid gridTemplateColumns={[1, 1, 5]} gap={3}>
+            <Box gridColumn={[1, 1, 2]}>
               <DateRangePicker
                 value={props.filters.dateRange}
                 onChange={(dateRange) =>
@@ -246,7 +247,7 @@ function AnalyticsMetricGrid(props: {
 }) {
   return (
     <Box paddingX={3}>
-      <Grid columns={[1, 2, 4]} gap={3}>
+      <Grid gridTemplateColumns={[1, 2, 4]} gap={3}>
         <AnalyticsMetricCard
           label="Przychód"
           value={formatMoney(props.data.revenue.revenueCents)}
@@ -280,7 +281,7 @@ function AnalyticsMetricCard(props: {
   return (
     <Card border padding={4} radius={2}>
       <Flex align="flex-start" justify="space-between" gap={3}>
-        <Stack space={3}>
+        <Stack gap={3}>
           <Text muted size={1}>
             {props.label}
           </Text>
@@ -308,14 +309,14 @@ function RevenueChartCard(props: {
     <Box paddingX={3} paddingBottom={3}>
       <Card border radius={2}>
         <Box padding={4}>
-          <Stack space={4}>
+          <Stack gap={4}>
             <Flex
               align="flex-start"
               justify="space-between"
               gap={3}
               wrap="wrap"
             >
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Flex align="center" gap={2}>
                   <Heading as="h2" size={1}>
                     Przychód w czasie
@@ -438,11 +439,11 @@ function AnalyticsChartTooltip(props: {
 
   return (
     <Card className="analyticsChartTooltip" padding={3} radius={2} shadow={2}>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Text size={1} weight="semibold">
           {point.tooltipLabel}
         </Text>
-        <Stack space={2}>
+        <Stack gap={2}>
           <TooltipRow
             label="Wolumen brutto"
             value={formatMoney(point.grossPaidRevenueCents)}
