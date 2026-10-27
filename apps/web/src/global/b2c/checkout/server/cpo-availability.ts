@@ -209,11 +209,21 @@ async function loadCpoAvailabilityBySlugs(
   );
 }
 
+/**
+ * Read-your-writes for the one page that shows `availabilityStatus`: the CPO
+ * detail page (`queryCpoProductBySlug`). Listing fragments, filters and the
+ * sitemap never read availability, so the broad `cpoProduct` tag and the
+ * listing path are NOT expired — doing so made every CPO listing render
+ * blocking on each reserve, release or sale for no visible change.
+ *
+ * `{ expire: 0 }` on purpose (not `'max'`): the buyer's next view of that page
+ * must already show the new status. The sync-tag Function expires the
+ * `sanity:` tags a few seconds later with `'max'`; the double expiry is
+ * harmless. Cart and checkout correctness never depends on this cache — they
+ * read availability fresh.
+ */
 function invalidateCpoAvailabilityCache(slug: string | null | undefined): void {
   try {
-    revalidateTag('cpoProduct', { expire: 0 });
-    revalidatePath('/certyfikowany-sprzet-uzywany/');
-
     if (slug) {
       revalidatePath(slug);
 

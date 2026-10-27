@@ -1,0 +1,18 @@
+{
+  // Sanity Functions run in a Node-only sandbox, so the DOM lib is removed:
+  // `window`/`document` must fail type-checking here instead of failing at
+  // runtime inside `sanity functions logs`.
+  "extends": "@workspace/typescript-config/base.json",
+  "compilerOptions": {
+    "lib": ["es2022"],
+    "types": ["node"],
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true
+  },
+  // `include` reaches up to the root manifest on purpose: type-checking the
+  // blueprint together with the handlers makes a resource/handler mismatch fail
+  // `bun run check-types` instead of `blueprints deploy`.
+  "include": ["**/*.ts", "../../sanity.blueprint.ts"],
+  "exclude": ["node_modules", "**/.build"]
+}

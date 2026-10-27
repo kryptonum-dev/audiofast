@@ -12,9 +12,11 @@
     "check-types": "bun run turbo check-types",
     "format": "bun run prettier --write \"**/*.{ts,tsx,md}\"",
     "typegen": "cd apps/studio && bunx sanity schema extract --force && bunx sanity typegen generate",
-    "check:parity": "bun apps/web/scripts/check-parity.ts"
+    "check:parity": "bun apps/web/scripts/check-parity.ts",
+    "blueprints:deploy": "bunx sanity blueprints deploy"
   },
   "devDependencies": {
+    "@sanity/blueprints": "0.28.0",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
     "prettier": "^3.9.10",

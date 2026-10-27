@@ -3,7 +3,7 @@
  *
  * This script:
  * 1. Fetches all published products
- * 2. Computes denormalized fields (brand slug/name, category slugs, filter keys)
+ * 2. Computes denormalized fields (brand slug/name, category slugs)
  * 3. Patches each product with the computed values
  *
  * Run with: bun run migrate:denormalize
@@ -78,9 +78,6 @@ async function migrateAllProducts() {
             );
             console.log(
               `     Categories: ${denormalized.denormCategorySlugs.join(', ') || 'none'}`,
-            );
-            console.log(
-              `     Filter keys: ${denormalized.denormFilterKeys.length}`,
             );
           }
 

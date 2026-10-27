@@ -1302,21 +1302,21 @@ After the soak checks pass:
 
 ### Phase 5: Query efficiency
 
-- [x] 5.1 Type check + typegen clean
-- [x] 5.2 Web unit tests pass
-- [x] 5.3 No bare deref-to-object projections
-- [x] 5.4 Parity vs baseline clean
+- [x] 5.1 Type check + typegen clean — bded37d
+- [x] 5.2 Web unit tests pass — bded37d
+- [x] 5.3 No bare deref-to-object projections — bded37d
+- [x] 5.4 Parity vs baseline clean — bded37d
 - [ ] 5.5 e2e cart/checkout suite passes
 
 ### Phase 6: Sanity Functions — denormalization + sync-tag invalidation (parallel run)
 
-- [ ] 6.1 Function unit tests pass
-- [ ] 6.2 Route tests pass
-- [ ] 6.3 Type check passes
-- [ ] 6.4 Full build passes
-- [ ] 6.5 Blueprint deployed
-- [ ] 6.6 Function smoke test
-- [ ] 6.7 Denorm parity on live data
+- [x] 6.1 Function unit tests pass
+- [x] 6.2 Route tests pass
+- [x] 6.3 Type check passes
+- [x] 6.4 Full build passes
+- [x] 6.5 Blueprint deployed
+- [x] 6.6 Function smoke test
+- [x] 6.7 Denorm parity on live data
 
 ### Phase 7: Presentation — Studio
 

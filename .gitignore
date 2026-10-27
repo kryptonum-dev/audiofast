@@ -51,3 +51,11 @@ supabase/.temp/
 
 # Parity crawler scratch runs (the baseline is committed)
 context/changes/*/parity/runs/
+
+# Sanity Functions: per-function bundle output, and Blueprint runtime state.
+# blueprint.config.json IS tracked on purpose: it records the Blueprint<->Stack
+# linkage, and re-running `sanity blueprints init` without it mints a duplicate
+# stack.
+apps/functions/**/.build/
+/.sanity/*
+!/.sanity/blueprint.config.json

@@ -1,0 +1,10 @@
+{
+  "name": "invalidate-sync-tags",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "dependencies": {
+    "@sanity/functions": "1.10.1"
+  }
+}

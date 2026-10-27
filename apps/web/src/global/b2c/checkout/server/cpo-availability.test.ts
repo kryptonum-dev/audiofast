@@ -1,3 +1,4 @@
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createAdminClient } from '@/src/global/supabase/admin';
@@ -180,6 +181,15 @@ describe('CPO availability transitions', () => {
       availabilityUpdatedAt: '2026-04-20T10:00:00.000Z',
     });
     expect(transactionCommit).toHaveBeenCalledTimes(1);
+
+    // Only the reserved item's detail page is expired; the broad tag and the
+    // listing path stay cached (availability is not shown there).
+    expect(vi.mocked(revalidateTag).mock.calls).toEqual([
+      ['cpoProduct:test-cpo', { expire: 0 }],
+    ]);
+    expect(vi.mocked(revalidatePath).mock.calls).toEqual([
+      ['/certyfikowany-sprzet-uzywany/test-cpo/'],
+    ]);
   });
 
   it('marks held CPO items sold after payment confirmation', async () => {

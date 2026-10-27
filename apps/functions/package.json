@@ -1,0 +1,24 @@
+{
+  "name": "functions",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "check-types": "tsc --noEmit",
+    "test": "vitest run",
+    "backfill:denorm": "bun scripts/backfill-denorm.ts"
+  },
+  "dependencies": {
+    "@sanity/client": "8.11.0",
+    "@sanity/functions": "1.10.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.5",
+    "typescript": "6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

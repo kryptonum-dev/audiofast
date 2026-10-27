@@ -1,0 +1,11 @@
+{
+  "_id": "product-126",
+  "_type": "product",
+  "basePriceCents": 200,
+  "brand": { "_type": "reference", "_ref": "brand-aurender" },
+  "categories": [
+    { "_key": "a", "_type": "reference", "_ref": "cat-1" },
+    { "_key": "b", "_type": "reference", "_ref": "cat-2" }
+  ],
+  "denormCategorySlugs": ["/kategoria/x/"]
+}
