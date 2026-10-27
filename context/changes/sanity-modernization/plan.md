@@ -1336,18 +1336,18 @@ After the soak checks pass:
 
 ### Phase 9: Drag-and-drop (lsse level)
 
-- [x] 9.1 Optimistic-order tests pass
-- [x] 9.2 Type check + lint pass
-- [x] 9.3 Full build passes
-- [x] 9.4 Parity vs baseline clean
+- [x] 9.1 Optimistic-order tests pass — 551dcf0
+- [x] 9.2 Type check + lint pass — 551dcf0
+- [x] 9.3 Full build passes — 551dcf0
+- [x] 9.4 Parity vs baseline clean — 551dcf0
 
 ### Phase 10: Tier 0 gates
 
-- [ ] 10.1 Gate tests pass
-- [ ] 10.2 Studio completeness test passes
+- [x] 10.1 Gate tests pass
+- [x] 10.2 Studio completeness test passes
 - [ ] 10.3 Published crawl clean on production
-- [ ] 10.4 Draft crawl clean on an isolated local prod build
-- [ ] 10.5 Dataset clean
+- [x] 10.4 Draft crawl clean on an isolated local prod build
+- [x] 10.5 Dataset clean
 
 ### Phase 11: Presentation audit walkthrough (Claude in Chrome)
 

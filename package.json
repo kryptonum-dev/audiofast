@@ -10,9 +10,12 @@
     "dev:cms-activity": "bun run turbo dev --filter=cms-activity",
     "lint": "bun run turbo lint",
     "check-types": "bun run turbo check-types",
+    "test": "bun run turbo test",
     "format": "bun run prettier --write \"**/*.{ts,tsx,md}\"",
     "typegen": "cd apps/studio && bunx sanity schema extract --force && bunx sanity typegen generate",
     "check:parity": "bun apps/web/scripts/check-parity.ts",
+    "check:stega-leaks": "bun apps/web/scripts/check-stega-leaks.ts",
+    "scan:dataset-stega": "bun apps/web/scripts/scan-dataset-stega.ts",
     "blueprints:deploy": "bunx sanity blueprints deploy"
   },
   "devDependencies": {

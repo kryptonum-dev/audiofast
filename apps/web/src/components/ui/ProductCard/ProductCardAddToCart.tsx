@@ -1,5 +1,6 @@
 'use client';
 
+import { stegaClean } from 'next-sanity';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -175,7 +176,11 @@ export default function ProductCardAddToCart({
     handleResult(result);
   };
 
-  const accessibleName = [brandName, productName].filter(Boolean).join(' ');
+  // `stegaClean`: in a draft session the names carry stega markers, which
+  // must not reach an attribute (the Phase 10 stega crawler checks this).
+  const accessibleName = stegaClean(
+    [brandName, productName].filter(Boolean).join(' '),
+  );
 
   return (
     <>

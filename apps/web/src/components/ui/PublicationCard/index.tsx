@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { stegaClean } from 'next-sanity';
 
 import type { PublicationType as PublicationTypeProps } from '@/src/global/types';
 import { portableTextToPlainString } from '@/src/global/utils';
@@ -72,7 +73,7 @@ export default function PublicationCard({
           <PublicationImage
             publicationType={_type}
             videoUrl={slug}
-            alt={_type === 'youtubeVideo' ? (name ?? '') : undefined}
+            alt={_type === 'youtubeVideo' ? stegaClean(name ?? '') : undefined}
             image={image}
             sizes={imageSizes}
             priority={priority}

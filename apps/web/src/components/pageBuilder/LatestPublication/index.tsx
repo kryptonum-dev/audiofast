@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity';
+
 import type { PagebuilderType, PortableTextProps } from '@/src/global/types';
 
 import PortableText from '../../portableText';
@@ -54,7 +56,7 @@ export default function LatestPublication({
         <PublicationImage
           publicationType={_type}
           videoUrl={slug}
-          alt={_type === 'youtubeVideo' ? (name ?? '') : undefined}
+          alt={_type === 'youtubeVideo' ? stegaClean(name ?? '') : undefined}
           image={image}
           priority={index === 0}
           loading={index === 0 ? 'eager' : 'lazy'}

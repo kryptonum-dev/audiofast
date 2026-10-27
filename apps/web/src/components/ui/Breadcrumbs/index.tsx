@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 
 import type { BreadcrumbItem } from '@/src/components/schema/BreadcrumbsSchema';
 import BreadcrumbsSchema from '@/src/components/schema/BreadcrumbsSchema';
+import { stripStega } from '@/src/global/utils/stega-text';
 
 import styles from './styles.module.scss';
 
@@ -39,8 +40,12 @@ export default function Breadcrumbs({ data = [], firstItemType }: Props) {
       >
         {breadcrumbsData.map(({ name, path }, i) => {
           const isLastItem = i === breadcrumbsData.length - 1;
+          // Measure the VISIBLE text: in a draft session `name` carries stega
+          // markers, which would otherwise count toward the 40 characters
+          // and truncate a short label ("Blog...") in Presentation only.
+          const visibleName = stripStega(name);
           const truncatedName =
-            name.length > 40 ? name.slice(0, 40) + '...' : name;
+            visibleName.length > 40 ? visibleName.slice(0, 40) + '...' : name;
           return (
             <Fragment key={i}>
               {!isLastItem ? (

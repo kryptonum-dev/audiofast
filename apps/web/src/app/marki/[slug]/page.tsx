@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
+import { stegaClean } from 'next-sanity';
 import { type ReactNode, Suspense } from 'react';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
@@ -307,7 +308,7 @@ async function CachedBrandShell({
         <section className="max-width-block br-md margin-bottom-lg">
           <Image
             image={brand.bannerImage}
-            alt={brand.name || ''}
+            alt={stegaClean(brand.name || '')}
             className="br-md full-width"
             sizes="(max-width: 37.4375rem) 98vw, (max-width: 85.375rem) 96vw, 1302px"
             loading="lazy"
