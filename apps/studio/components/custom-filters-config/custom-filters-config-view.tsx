@@ -128,42 +128,33 @@ export function CustomFiltersConfigView({
         : documentId;
       const draftId = `drafts.${baseId}`;
 
-      // Check if published and draft exist
-      const [publishedExists, draftExists] = await Promise.all([
-        client.fetch<boolean>(`defined(*[_id == $id][0]._id)`, { id: baseId }),
+      // DRAFT ONLY: the category's own filter configuration is an edit of the
+      // open document, so it goes where every other edit of it goes — the
+      // draft. Presentation (drafts perspective) shows it at once; the site
+      // gets it when the editor publishes the category. A missing draft is
+      // forked from the published document first, exactly like the form.
+      const [publishedDoc, draftExists] = await Promise.all([
+        client.getDocument(baseId),
         client.fetch<boolean>(`defined(*[_id == $id][0]._id)`, { id: draftId }),
       ]);
 
       const transaction = client.transaction();
       const patchData = { customFilters: filtersWithKeys };
 
-      if (publishedExists) {
-        // AUTO-PUBLISH: Patch the PUBLISHED document directly
-        // This makes filter configuration changes instant without requiring manual publish
-        transaction.patch(baseId, (patch) => patch.set(patchData));
-
-        // If a draft also exists, update it to keep in sync
-        if (draftExists) {
-          transaction.patch(draftId, (patch) => patch.set(patchData));
-        }
-      } else if (draftExists) {
-        // Category only exists as draft (never published)
-        // Just patch the draft
-        transaction.patch(draftId, (patch) => patch.set(patchData));
-      } else {
-        // Neither exists - create draft from displayed document
+      if (!draftExists) {
         const {
           _id: _unusedId,
           _type: _unusedType,
+          _rev: _unusedRev,
           ...restOfDocument
-        } = document.displayed;
+        } = (publishedDoc ?? document.displayed) as SanityDocument;
         transaction.createIfNotExists({
           ...restOfDocument,
-          ...patchData,
           _id: draftId,
           _type: 'productCategorySub',
         });
       }
+      transaction.patch(draftId, (patch) => patch.set(patchData));
 
       await transaction.commit();
 
@@ -430,8 +421,12 @@ export function CustomFiltersConfigView({
         const transaction = client.transaction();
 
         if (publishedProduct) {
-          // AUTO-PUBLISH: Patch the PUBLISHED document directly
-          // This makes filter value changes instant without requiring manual publish
+          // AUTO-PUBLISH, deliberately kept (sanity-modernization Phase 7):
+          // this is a bulk, cross-document edit made from the CATEGORY's view
+          // — drafting it would leave one product draft per edited value for
+          // the editor to publish one by one. The existing draft is patched in
+          // the same transaction, so Presentation's drafts perspective still
+          // shows the value (draft when present, published otherwise).
           transaction.patch(baseProductId, (patch) => patch.set(patchData));
 
           // If a draft also exists, update it to keep in sync
@@ -488,8 +483,10 @@ export function CustomFiltersConfigView({
               )}
             </Flex>
             <Text size={1} muted>
-              Zarządzaj filtrami i przypisuj wartości produktom. Zmiany zapisują
-              się automatycznie.
+              Zarządzaj filtrami i przypisuj wartości produktom. Konfiguracja
+              filtrów zapisuje się automatycznie w wersji roboczej kategorii —
+              opublikuj kategorię, aby trafiła na stronę. Wartości produktów
+              zapisują się od razu.
             </Text>
           </Stack>
           <Button

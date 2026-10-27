@@ -97,11 +97,16 @@ const createSingleTon = ({ S, type, title, icon }: CreateSingleTon) => {
   const resolvedTitle = title ?? schema?.title ?? getTitleCase(type);
   const resolvedIcon = icon ?? schema?.icon ?? File;
 
+  // The list item id IS the document id: the „Podgląd" tab
+  // (`presentation/contextual-tool-menu.tsx`) reads the open document off the
+  // rightmost pane id, and an `edit` intent lands back on the same item.
   return S.listItem()
+    .id(type)
     .title(resolvedTitle)
     .icon(resolvedIcon)
     .child(
-      S.document().schemaType(type).documentId(type).views([S.view.form()]), // Only content view, no preview
+      // Form view only: the site preview lives in the „Podgląd" tool.
+      S.document().schemaType(type).documentId(type).views([S.view.form()]),
     );
 };
 
@@ -118,7 +123,7 @@ type CreateCollection = {
 /**
  * Enhanced collection creator with orderable support
  * Set orderable: true to enable drag & drop ordering
- * Only shows content view (no preview)
+ * Only shows the content view (the site preview is the „Podgląd” tool)
  */
 const createCollection = ({
   S,

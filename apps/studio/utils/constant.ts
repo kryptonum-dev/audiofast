@@ -6,6 +6,10 @@ import { SearchIcon } from '@sanity/icons/Search';
 import { UsersIcon } from '@sanity/icons/Users';
 import type { FieldGroupDefinition } from 'sanity';
 
+import {
+  LOCAL_WEB_ORIGIN,
+  PRODUCTION_WEB_ORIGIN,
+} from '../presentation/settings';
 import { isProduction } from './helper';
 
 export const GROUP = {
@@ -48,11 +52,13 @@ export const GROUPS: FieldGroupDefinition[] = [
 ];
 
 /**
- * Global declaration of the base url for the application.
- * This constant is used for constructing full URLs and determining external links.
+ * The public site origin, without a trailing slash (slugs start with `/`).
+ * The deployed Studio points at production; `sanity dev` at the local web app
+ * (P5: no dev-branch deployment URL). Same origins as Presentation
+ * (`presentation/settings.ts`).
  * @constant
  * @type {string}
  */
 export const WEB_BASE_URL: string = isProduction()
-  ? 'https://www.audiofast.pl/'
-  : 'https://audiofast-git-dev-kryptonum.vercel.app/';
+  ? PRODUCTION_WEB_ORIGIN
+  : LOCAL_WEB_ORIGIN;

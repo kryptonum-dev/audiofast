@@ -24,6 +24,8 @@ import {
 } from 'sanity';
 import { styled } from 'styled-components';
 
+import { publicPathForSlug } from '../presentation/routes';
+import { SlugPreviewNavigation } from '../presentation/slug-preview-navigation';
 import { WEB_BASE_URL } from '../utils/constant';
 import { parsePortableTextToString, slugify } from '../utils/helper';
 
@@ -176,7 +178,11 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
     // No longer need to set folder lock state
   }, []);
 
-  const localizedPathname = `${WEB_BASE_URL}${value?.current || '/'}`;
+  // One resolver for the slug field and Presentation (`presentation/routes.ts`):
+  // adds the `/produkty` segment a sub-category is served under, and leaves a
+  // stored full path (`review.pdfSlug`) as is.
+  const publicPath = publicPathForSlug(document?._type, value?.current);
+  const localizedPathname = `${WEB_BASE_URL}${publicPath}`;
 
   // Function to generate slug from name field
   const generateSlug = useCallback(() => {
@@ -465,6 +471,18 @@ export function PathnameFieldComponent(props: PathnameFieldComponentProps) {
       )}
 
       {pathInput}
+
+      {/* Keeps the Presentation preview on a renamed page. Only the routed
+          `slug` field: `review.pdfSlug` is not a page. */}
+      {props.name === 'slug' && document?._id && value?.current && (
+        <SlugPreviewNavigation
+          documentId={document._id}
+          documentType={document._type}
+          pathname={publicPath}
+          segment={value.current}
+          valid={!slugValidationError && !inputValidation}
+        />
+      )}
 
       {/* Input validation warnings */}
       {inputValidation && (

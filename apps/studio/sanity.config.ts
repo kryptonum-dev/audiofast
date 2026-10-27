@@ -2,11 +2,20 @@ import { assist } from '@sanity/assist';
 import { visionTool } from '@sanity/vision';
 import { GitCompareArrows, Mail } from 'lucide-react';
 import { defineConfig } from 'sanity';
+import { presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
 import { media } from 'sanity-plugin-media';
 
 import { applyDenormToPublish, UnpublishAction } from './actions';
 import { Logo } from './components/logo';
+import { OpenInPresentationAction } from './plugins/presentation-url';
+import { ContextualToolMenu } from './presentation/contextual-tool-menu';
+import { locations } from './presentation/locations';
+import { mainDocuments } from './presentation/main-documents';
+import {
+  getPresentationUrl,
+  PRESENTATION_ORIGINS,
+} from './presentation/settings';
 import type { SingletonType } from './schemaTypes';
 import { schemaTypes, singletonActions } from './schemaTypes';
 import { singletons } from './schemaTypes/documents';
@@ -25,11 +34,41 @@ export default defineConfig({
   projectId: projectId,
   icon: Logo,
   dataset: dataset ?? 'production',
+  // The „Treść" / „Podgląd" tabs carry the open document across tools; the
+  // menu itself is Sanity's own (`presentation/contextual-tool-menu.tsx`).
+  // `@beta` API: re-check both tabs after every `sanity` bump. Rollback =
+  // this line.
+  studio: { components: { toolMenu: ContextualToolMenu } },
   plugins: [
     assist(),
+    // Tool titles are plain constants inside `sanity` ("Structure",
+    // "Presentation"), not i18n keys, so we name the tabs ourselves. The menu
+    // above matches tool NAMES, never these titles. Structure stays first so
+    // the Studio still opens on content.
     structureTool({
+      title: 'Treść',
       structure,
       defaultDocumentNode,
+    }),
+    presentationTool({
+      title: 'Podgląd',
+      previewUrl: {
+        // A function, resolved only when the tool opens: a Studio built
+        // without SANITY_STUDIO_PRESENTATION_URL still boots
+        // (`presentation/settings.ts`).
+        initial: getPresentationUrl,
+        // `shareAccess` is the ONLY working "open draft preview in a tab"
+        // path: the share flow mints a secret and runs a top-level enable
+        // handshake, so the draft cookie is set unpartitioned. The plain
+        // „Otwórz podgląd" action never routes through `enable`, and the
+        // iframe leg's CHIPS-partitioned cookie is invisible to a new tab.
+        // With `trailingSlash: true` on the web, the route answers at
+        // `/api/draft-mode/enable/` (the slashless form costs one 308).
+        previewMode: { enable: '/api/draft-mode/enable', shareAccess: true },
+      },
+      // ⚠️ Each origin needs a Sanity CORS entry WITH credentials.
+      allowOrigins: PRESENTATION_ORIGINS,
+      resolve: { locations, mainDocuments },
     }),
     visionTool(),
     media(),
@@ -58,9 +97,15 @@ export default defineConfig({
           .map((singleton) => singleton.name)
           .includes(context.schemaType as SingletonType)
       ) {
-        return input.filter(
-          ({ action }) => action && singletonActions.has(action),
-        );
+        // „Otwórz w podglądzie" is appended LAST in both branches, so
+        // Publish stays the primary button. It returns `null` (no item) for
+        // singletons without a page (settings, navbar, footer, …).
+        return [
+          ...input.filter(
+            ({ action }) => action && singletonActions.has(action),
+          ),
+          OpenInPresentationAction,
+        ];
       }
 
       // For socialMedia - allow only viewing, deleting and custom actions
@@ -85,7 +130,9 @@ export default defineConfig({
         actions = [...actions, UnpublishAction];
       }
 
-      return actions;
+      // Appended last: the first action is the primary button (Publish).
+      // Unrouted types get no item (the action returns `null`).
+      return [...actions, OpenInPresentationAction];
     },
     newDocumentOptions: (prev, { creationContext }) => {
       const { type, schemaType } = creationContext;

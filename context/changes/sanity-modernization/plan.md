@@ -1310,20 +1310,20 @@ After the soak checks pass:
 
 ### Phase 6: Sanity Functions — denormalization + sync-tag invalidation (parallel run)
 
-- [x] 6.1 Function unit tests pass
-- [x] 6.2 Route tests pass
-- [x] 6.3 Type check passes
-- [x] 6.4 Full build passes
-- [x] 6.5 Blueprint deployed
-- [x] 6.6 Function smoke test
-- [x] 6.7 Denorm parity on live data
+- [x] 6.1 Function unit tests pass — 8f62bae
+- [x] 6.2 Route tests pass — 8f62bae
+- [x] 6.3 Type check passes — 8f62bae
+- [x] 6.4 Full build passes — 8f62bae
+- [x] 6.5 Blueprint deployed — 8f62bae
+- [x] 6.6 Function smoke test — 8f62bae
+- [x] 6.7 Denorm parity on live data — 8f62bae
 
 ### Phase 7: Presentation — Studio
 
-- [ ] 7.1 Studio tests pass
-- [ ] 7.2 Type check passes
-- [ ] 7.3 Studio builds
-- [ ] 7.4 Completeness test covers all schema types
+- [x] 7.1 Studio tests pass
+- [x] 7.2 Type check passes
+- [x] 7.3 Studio builds
+- [x] 7.4 Completeness test covers all schema types
 
 ### Phase 8: Presentation — web draft mode, stega, overlays, B2C isolation
 

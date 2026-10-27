@@ -195,10 +195,27 @@ export default function ReviewAuthorManager() {
 
       if (!rows || rows.length === 0) return;
 
+      // `reviewCount` is a derived counter, written to the published author
+      // AND to its draft when one exists — otherwise the drafts perspective
+      // (Presentation, the form) keeps showing the stale count. Merges and
+      // assignments stay direct writes on purpose (sanity-modernization
+      // Phase 7): a merge must re-point every published review before its
+      // source authors can be deleted, so a draft-only merge could never
+      // finish. They already patch draft and published review ids alike.
+      const draftIds = new Set(
+        await client.fetch<string[]>(`*[_id in $ids]._id`, {
+          ids: rows.map((row) => `drafts.${row._id}`),
+        }),
+      );
+
       for (const batch of chunk(rows, BATCH_SIZE)) {
         const tx = client.transaction();
         for (const row of batch) {
-          tx.patch(row._id, { set: { reviewCount: row.reviewCount ?? 0 } });
+          const set = { reviewCount: row.reviewCount ?? 0 };
+          tx.patch(row._id, { set });
+          if (draftIds.has(`drafts.${row._id}`)) {
+            tx.patch(`drafts.${row._id}`, { set });
+          }
         }
         await tx.commit({ visibility: 'sync' });
       }
