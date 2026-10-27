@@ -1,24 +1,33 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { cacheLife } from 'next/cache';
 
 import NotFoundComponent from '@/src/components/pageBuilder/NotFound';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
 import { queryNotFoundPage } from '@/src/global/sanity/query';
 import type { QueryNotFoundPageResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 
-async function fetchNotFoundPageData() {
-  return await sanityFetchPublished<QueryNotFoundPageResult>({
+function getNotFoundPageData(options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryNotFoundPageResult>({
     requestTag: 'not-found.page',
     query: queryNotFoundPage,
+    ...options,
     tags: ['notFound'],
   });
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const notFoundData = await fetchNotFoundPageData();
+  const notFoundData = await getNotFoundPageData(PUBLISHED);
   return getSEOMetadata(
     notFoundData
       ? {
@@ -30,11 +39,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NotFound() {
-  const notFoundData = await fetchNotFoundPageData();
+  return renderDraftAware(CachedNotFound, {});
+}
 
-  if (!notFoundData) {
-    notFound();
-  }
+async function CachedNotFound({ perspective, stega }: CachedProps) {
+  'use cache';
+  cacheLife('sanity');
+  const notFoundData = await getNotFoundPageData({ perspective, stega });
 
   const breadcrumbsData = [
     {
@@ -46,7 +57,13 @@ export default async function NotFound() {
   return (
     <main id="main" className="page-transition">
       <Breadcrumbs data={breadcrumbsData} firstItemType="notFound" />
-      <NotFoundComponent {...notFoundData} />
+      {/* Static fallback when the CMS document is missing: calling
+          `notFound()` from inside the not-found boundary would recurse. */}
+      {notFoundData ? (
+        <NotFoundComponent {...notFoundData} />
+      ) : (
+        <h1>Nie znaleziono strony</h1>
+      )}
     </main>
   );
 }

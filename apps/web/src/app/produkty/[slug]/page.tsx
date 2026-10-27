@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import ProductsCarousel from '@/src/components/pageBuilder/ProductsCarousel';
@@ -26,14 +28,22 @@ import {
   needsBrandStores,
   pickEffectiveStores,
 } from '@/src/global/products/brand-stores';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
 import {
   queryAllProductSlugs,
   queryArchivedProductCta,
   queryBrandStoresById,
   queryProductBySlug,
   queryProductInquiryFormState,
-  queryProductSeoBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllProductSlugsResult,
@@ -41,7 +51,6 @@ import type {
   QueryBrandStoresByIdResult,
   QueryProductBySlugResult,
   QueryProductInquiryFormStateResult,
-  QueryProductSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import { fetchProductPricing } from '@/src/global/supabase/queries';
@@ -51,20 +60,28 @@ type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+// Shared cached data function: metadata (PUBLISHED) and the published page
+// render read the same entry, so the old SEO-only query is gone.
+function getProductData(slug: string, options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryProductBySlugResult>({
+    requestTag: 'product.page',
+    query: queryProductBySlug,
+    params: { slug: `/produkty/${slug}/` },
+    ...options,
+    // Specific tag for this product + broad tag for type
+    tags: ['product', `product:${slug}`],
+  });
+}
+
 // Fetch product data from Sanity and Supabase
-async function fetchProductData(slug: string) {
+async function fetchProductData(slug: string, options: DynamicFetchOptions) {
   const [sanityData, pricingData, formStateData] = await Promise.all([
-    sanityFetchPublished<QueryProductBySlugResult>({
-      requestTag: 'product.page',
-      query: queryProductBySlug,
-      params: { slug: `/produkty/${slug}/` },
-      // Specific tag for this product + broad tag for type
-      tags: ['product', `product:${slug}`],
-    }),
-    fetchProductPricing(slug), // Fetch pricing from Supabase
-    sanityFetchPublished<QueryProductInquiryFormStateResult>({
+    getProductData(slug, options),
+    fetchProductPricing(slug), // Fetch pricing from Supabase (own cache)
+    sanityFetchCached<QueryProductInquiryFormStateResult>({
       requestTag: 'product.inquiry-form',
       query: queryProductInquiryFormState,
+      ...options,
       tags: ['settings'],
     }),
   ]);
@@ -75,19 +92,23 @@ async function fetchProductData(slug: string) {
 // The brand's dealer list lives in its own cache entry, tagged
 // `brand-stores:<brandId>`, so a brand or store publish refreshes it on every
 // product page that inherits it — without expiring the product data above.
-async function fetchBrandStores(brandId: string | null | undefined) {
+async function fetchBrandStores(
+  brandId: string | null | undefined,
+  options: DynamicFetchOptions,
+) {
   if (!brandId) return null;
 
-  return sanityFetchPublished<QueryBrandStoresByIdResult>({
+  return sanityFetchCached<QueryBrandStoresByIdResult>({
     requestTag: 'product.brand-stores',
     query: queryBrandStoresById,
     params: { brandId },
+    ...options,
     tags: ['brand-stores', getBrandStoresTag(brandId)],
   });
 }
 
 export async function generateStaticParams() {
-  const products = await sanityFetchPublished<QueryAllProductSlugsResult>({
+  const products = await sanityFetchStaticParams<QueryAllProductSlugsResult>({
     requestTag: 'product.static-params',
     query: queryAllProductSlugs,
     tags: ['product'],
@@ -99,6 +120,7 @@ export async function generateStaticParams() {
       .map((product) => ({
         slug: product.slug!.replace('/produkty/', '').replace(/\/$/, ''),
       })),
+    { slug: '__placeholder__' },
   );
 }
 
@@ -106,14 +128,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetchPublished<QueryProductSeoBySlugResult>({
-    requestTag: 'product.metadata',
-    query: queryProductSeoBySlug,
-    params: { slug: `/produkty/${slug}/` },
-    // Specific tag for this product + broad tag for type
-    tags: ['product', `product:${slug}`],
-  });
+  const seoData = await getProductData(slug, PUBLISHED);
 
   if (!seoData) return getSEOMetadata();
 
@@ -135,12 +150,23 @@ export async function generateMetadata({
 
 export default async function ProductPage(props: ProductPageProps) {
   const { slug } = await props.params;
+  return renderDraftAware(CachedProduct, { slug });
+}
 
+async function CachedProduct({
+  slug,
+  perspective,
+  stega,
+  isDraft = false,
+}: CachedProps & { slug: string }) {
+  'use cache';
+  cacheLife('sanity');
+  const options = { perspective, stega };
   const {
     sanityData: product,
     pricingData,
     formStateData,
-  } = await fetchProductData(slug);
+  } = await fetchProductData(slug, options);
 
   if (!product) {
     console.error(`Product not found: ${slug}`);
@@ -162,9 +188,10 @@ export default async function ProductPage(props: ProductPageProps) {
   // Contact CTA replaces "Zapytaj o produkt" on unavailable products;
   // fetched only when needed (cached under the 'settings' tag).
   const archivedProductCta = productAvailability.isUnavailable
-    ? await sanityFetchPublished<QueryArchivedProductCtaResult>({
+    ? await sanityFetchCached<QueryArchivedProductCtaResult>({
         requestTag: 'product.archived-cta',
         query: queryArchivedProductCta,
+        ...options,
         tags: ['settings'],
       })
     : null;
@@ -174,7 +201,7 @@ export default async function ProductPage(props: ProductPageProps) {
   // Determine which stores to display (product stores > brand stores > none).
   // The brand's list is only fetched when the product has no own stores.
   const brandStores = needsBrandStores(product.availableInStores)
-    ? await fetchBrandStores(product.brand?._id)
+    ? await fetchBrandStores(product.brand?._id, options)
     : null;
   const effectiveStores = pickEffectiveStores(
     product.availableInStores,
@@ -229,16 +256,19 @@ export default async function ProductPage(props: ProductPageProps) {
 
   return (
     <main id="main" className="page-transition">
-      <ProductViewTracker
-        productId={product._id}
-        productName={product.name ?? ''}
-        pricePLN={pricePLN}
-        brand={{
-          id: product.brand?._id ?? undefined,
-          name: product.brand?.name ?? undefined,
-        }}
-        categories={categorySlugs.filter(Boolean) as string[]}
-      />
+      {/* No Meta/GA events from editors previewing in Presentation. */}
+      {!isDraft && (
+        <ProductViewTracker
+          productId={product._id}
+          productName={product.name ?? ''}
+          pricePLN={pricePLN}
+          brand={{
+            id: product.brand?._id ?? undefined,
+            name: product.brand?.name ?? undefined,
+          }}
+          categories={categorySlugs.filter(Boolean) as string[]}
+        />
+      )}
       <Breadcrumbs data={breadcrumbsData} firstItemType="productPage" />
       <ProductHero
         name={product.name || ''}
@@ -292,7 +322,9 @@ export default async function ProductPage(props: ProductPageProps) {
         />
       )}
       {effectiveStores && effectiveStores.length > 0 && (
-        <StoreLocations customId="gdzie-kupic" stores={effectiveStores} />
+        <Suspense fallback={null}>
+          <StoreLocations customId="gdzie-kupic" stores={effectiveStores} />
+        </Suspense>
       )}
       {product.reviews && (
         <FeaturedPublications
@@ -349,7 +381,11 @@ export default async function ProductPage(props: ProductPageProps) {
         />
       )}
       {product.pageBuilder && (
-        <PageBuilder pageBuilder={product.pageBuilder} indexOffset={1} />
+        <PageBuilder
+          pageBuilder={product.pageBuilder}
+          indexOffset={1}
+          fetchOptions={options}
+        />
       )}
     </main>
   );

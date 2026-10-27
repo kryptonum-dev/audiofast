@@ -1,7 +1,7 @@
 import type {
+  CustomUrl,
   QueryBlogPostBySlugResult,
   QueryHomePageResult,
-  QueryProductsPageDataResult,
 } from './sanity/sanity.types';
 
 export type PageBuilderBlockTypes = NonNullable<
@@ -37,13 +37,68 @@ export type PortableTextPropsBlock = Extract<
   { _type: 'block' }
 >;
 
-export type ProductCategoryType = NonNullable<
-  NonNullable<QueryProductsPageDataResult>['categories']
->[number];
+// Hand-written since the dead `queryProductsPageData` (their old source) was
+// removed; the shapes are unchanged.
+export type ProductCategoryType = {
+  _id: string;
+  name: string | null;
+  description: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: 'span';
+      _key: string;
+    }>;
+    style?: 'h2' | 'normal';
+    listItem?: 'bullet' | 'number';
+    markDefs?: Array<{
+      customLink?: CustomUrl;
+      _type: 'customLink';
+      _key: string;
+    }>;
+    level?: number;
+    _type: 'block';
+    _key: string;
+  }> | null;
+  slug: string | null;
+  parentCategory: {
+    _id: string;
+    name: string | null;
+    slug: null;
+  } | null;
+  count: number;
+};
 
-export type BrandType = NonNullable<
-  NonNullable<QueryProductsPageDataResult>['brands']
->[number];
+type ImageCropHotspot = {
+  hotspot: {
+    x: number | null;
+    y: number | null;
+    width: number | null;
+    height: number | null;
+  } | null;
+  crop: {
+    bottom: number | null;
+    left: number | null;
+    right: number | null;
+    top: number | null;
+  } | null;
+};
+
+export type BrandType = {
+  _id: string;
+  name: string | null;
+  slug: string | null;
+  logo:
+    | ({
+        id: string | null;
+        preview: string | null;
+        alt: string | null;
+        naturalWidth: number | null;
+        naturalHeight: number | null;
+      } & ImageCropHotspot)
+    | null;
+  count: number;
+};
 
 // Embeddings API types
 export type EmbeddingResult = {

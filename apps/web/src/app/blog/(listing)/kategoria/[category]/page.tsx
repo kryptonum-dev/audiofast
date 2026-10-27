@@ -1,6 +1,6 @@
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { type ReactNode, Suspense } from 'react';
 
 import BlogListing from '@/src/components/blog/BlogListing';
 import BlogListingSkeleton from '@/src/components/blog/BlogListing/BlogListingSkeleton';
@@ -12,7 +12,16 @@ import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
 import { queryBlogPageContent } from '@/src/global/sanity/query';
 import type { QueryBlogPageContentResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -42,36 +51,41 @@ type CategoryContent = {
   doNotIndex?: boolean | null;
 };
 
-// Cached static data fetcher for main blog data
-async function getStaticBlogData() {
-  'use cache';
-  cacheTag('blog');
-  cacheLife('sanity');
-
-  return sanityFetchPublished<QueryBlogPageContentResult>({
-    requestTag: 'blog.category.listing-content',
+// Main blog data: the same arguments as the /blog/ listing's content read, so
+// both routes share one cache entry per perspective.
+function getBlogData(options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryBlogPageContentResult>({
+    requestTag: 'blog.listing.content',
     query: queryBlogPageContent,
     params: { category: '' },
+    ...options,
     tags: ['blog'],
   });
 }
 
-// Cached page content fetcher (handles category-specific content)
-async function getPageContent(categorySlug: string) {
-  'use cache';
-  cacheTag('blog', 'blog-category');
-  cacheLife('sanity');
-
-  return sanityFetchPublished<QueryBlogPageContentResult>({
+// Page content (handles category-specific content). Metadata and the
+// published shell share the PUBLISHED entry.
+function getCategoryContent(
+  categorySlug: string,
+  options: DynamicFetchOptions,
+) {
+  return sanityFetchCached<QueryBlogPageContentResult>({
     requestTag: 'blog.category.content',
     query: queryBlogPageContent,
     params: { category: `/blog/kategoria/${categorySlug}/` },
+    ...options,
     tags: ['blog', 'blog-category'],
   });
 }
 
 export async function generateStaticParams() {
-  const blogData = await getStaticBlogData();
+  // Published-only: the same entry as the published /blog/ shell read.
+  const blogData = await sanityFetchStaticParams<QueryBlogPageContentResult>({
+    requestTag: 'blog.listing.content',
+    query: queryBlogPageContent,
+    params: { category: '' },
+    tags: ['blog'],
+  });
 
   return limitBuildTimeStaticParams(
     blogData?.categories
@@ -80,12 +94,13 @@ export async function generateStaticParams() {
         category:
           cat.slug?.replace('/blog/kategoria/', '').replace('/', '') || '',
       })) || [],
+    { category: '__placeholder__' },
   );
 }
 
 export async function generateMetadata(props: CategoryPageProps) {
   const { category: categorySlug } = await props.params;
-  const contentData = await getPageContent(categorySlug);
+  const contentData = await getCategoryContent(categorySlug, PUBLISHED);
 
   // Cast the category content to our manual type
   const categoryContent =
@@ -119,10 +134,33 @@ export async function generateMetadata(props: CategoryPageProps) {
 export default async function CategoryPage(props: CategoryPageProps) {
   const { category: categorySlug } = await props.params;
 
-  // Fetch all cached static data in parallel
+  // Pass-through slot (shape B): built here, outside every cache scope, and
+  // handed to the cached shell untouched.
+  const listing = (
+    <Suspense fallback={<BlogListingSkeleton />}>
+      <BlogListing
+        searchParams={props.searchParams}
+        basePath={`/blog/kategoria/${categorySlug}/`}
+        category={`/blog/kategoria/${categorySlug}/`}
+      />
+    </Suspense>
+  );
+
+  return renderDraftAware(CachedBlogCategoryShell, { categorySlug, listing });
+}
+
+async function CachedBlogCategoryShell({
+  categorySlug,
+  listing,
+  perspective,
+  stega,
+}: CachedProps & { categorySlug: string; listing: ReactNode }) {
+  'use cache';
+  cacheLife('sanity');
+  const options = { perspective, stega };
   const [blogData, contentData] = await Promise.all([
-    getStaticBlogData(),
-    getPageContent(categorySlug),
+    getBlogData(options),
+    getCategoryContent(categorySlug, options),
   ]);
 
   const defaultContent = blogData?.defaultContent;
@@ -201,16 +239,13 @@ export default async function CategoryPage(props: CategoryPageProps) {
           currentCategory={categorySlug}
         />
 
-        {/* Blog listing in Suspense */}
-        <Suspense fallback={<BlogListingSkeleton />}>
-          <BlogListing
-            searchParams={props.searchParams}
-            basePath={`/blog/kategoria/${categorySlug}/`}
-            category={`/blog/kategoria/${categorySlug}/`}
-          />
-        </Suspense>
+        {/* Blog listing slot (Suspense) */}
+        {listing}
       </section>
-      <PageBuilder pageBuilder={defaultContent.pageBuilder || []} />
+      <PageBuilder
+        pageBuilder={defaultContent.pageBuilder || []}
+        fetchOptions={options}
+      />
     </>
   );
 }

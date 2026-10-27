@@ -762,39 +762,6 @@ const brandsListBlock = /* groq */ `
   }
 `;
 
-const productsListingBlock = /* groq */ `
-  _type == "productsListing" => {
-    ...,
-    ${portableTextFragment('heading')},
-    "categories": *[_type == "productCategorySub" && defined(slug.current)] {
-      _id,
-      name,
-      description,
-      "slug": slug.current,
-      parentCategory->{
-        _id,
-        name,
-        "slug": slug.current
-      },
-      "count": count(*[
-        _type == "product" 
-        && defined(slug.current)
-        && isArchived != true
-        && brand->doNotShowBrand != true
-        && count(categories) > 0
-        && references(^._id)
-      ])
-    } [count > 0] | order(orderRank),
-    "totalCount": count(*[
-      _type == "product" 
-      && defined(slug.current)
-      && isArchived != true
-      && brand->doNotShowBrand != true
-      && count(categories) > 0
-    ])
-  }
-`;
-
 const cpoProductsListingBlock = /* groq */ `
   _type == "cpoProductsListing" => {
     ...,
@@ -895,6 +862,13 @@ const contactMapBlock = /* groq */ `
     customAddress,
     customPhone,
     customEmail,
+    // Folded in so the block renders without its own settings fetch (and
+    // follows the page's perspective in draft mode).
+    "settingsContact": *[_type == "settings"][0]{
+      address { streetAddress, postalCode, city, country },
+      tel,
+      email
+    },
   }
 `;
 
@@ -953,7 +927,6 @@ export const pageBuilderFragment = /* groq */ `
       ${productsCarouselBlock},
       ${brandsMarqueeBlock},
       ${brandsListBlock},
-      ${productsListingBlock},
       ${cpoProductsListingBlock},
       ${brandsByCategoriesSectionBlock},
       ${faqSectionBlock},
@@ -1169,9 +1142,6 @@ export const queryCpoProductsListingPriceDesc = defineQuery(
   cpoListingFragment('coalesce(priceCents, -1) desc'),
 );
 
-// Backward-compatible alias (newest first)
-export const queryCpoProductsListing = queryCpoProductsListingNewest;
-
 // Helper function to pick the right query based on sortBy param
 export function getCpoProductsListingQuery(sortBy: string = 'newest') {
   switch (sortBy) {
@@ -1335,6 +1305,15 @@ export const queryCpoProductBySlug =
   },
 }`);
 
+// Static params for /produkty/kategoria/[category]/: every sub-category with a
+// slug (the same set the filter metadata's `categories` lists).
+export const queryAllProductCategorySlugs = defineQuery(`*[
+  _type == "productCategorySub"
+  && defined(slug.current)
+] | order(orderRank) {
+  "slug": slug.current
+}`);
+
 export const queryAllCpoProductSlugs = defineQuery(`*[
   _type == "cpoProduct"
   && defined(slug.current)
@@ -1342,19 +1321,6 @@ export const queryAllCpoProductSlugs = defineQuery(`*[
   && isArchived != true
 ] {
   "slug": slug.current
-}`);
-
-export const queryCpoProductSeoBySlug =
-  defineQuery(`*[_type == "cpoProduct" && slug.current == $slug && productType == "internal" && isArchived != true][0] {
-  "slug": slug.current,
-  name,
-  brandName,
-  seo,
-  openGraph{
-    title,
-    description,
-    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-  },
 }`);
 
 export const queryAllBlogPostSlugs =
@@ -1394,6 +1360,7 @@ export const queryBlogPostBySlug =
   ${portableTextFragmentExtended('content')},
   "headings": content[length(style) == 2 && string::startsWith(style, "h")],
   ${pageBuilderFragment},
+  doNotIndex,
   seo,
   openGraph{
     title,
@@ -1443,6 +1410,7 @@ export const queryReviewBySlug =
     ${imageFragment('*[_type == "product" && references(^._id)][0].imageGallery[]')}
   ),
   ${pageBuilderFragment},
+  doNotIndex,
   seo,
   openGraph{
     title,
@@ -1535,59 +1503,6 @@ export const queryBlogPageContent = defineQuery(`
         "year": string::split(coalesce(publishedDate, _createdAt), "-")[0]
       }.year
     ) | order(@ desc)
-  }
-`);
-
-// Query for blog page data (layout, categories, current category, SEO)
-// Parameters:
-// - $category: category slug (optional) - empty string "" for main blog page
-export const queryBlogPageData = defineQuery(`
-  *[_type == "blog"][0] {
-    _id,
-    _type,
-    "slug": slug.current,
-    name,
-    ${portableTextFragment('title')},
-    ${portableTextFragment('description')},
-    ${imageFragment('heroImage')},
-    ${pageBuilderFragment},
-    seo,
-    openGraph{
-      title,
-      description,
-      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-    },
-    "selectedCategory": select(
-      $category != "" => *[_type == "blog-category" && slug.current == $category][0]{
-        _id,
-        name,
-        "slug": slug.current,
-        ${portableTextFragment('title')},
-        ${portableTextFragment('description')},
-        seo,
-        openGraph{
-          title,
-          description,
-          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-        }
-      },
-      null
-    ),
-    "categories": *[_type == "blog-category" && defined(slug.current)] | order(orderRank){
-      _id,
-      name,
-      "slug": slug.current,
-      "count": count(*[_type == "blog-article" && category._ref == ^._id && !hideFromList])
-    },
-    "totalCount": count(*[_type == "blog-article" && defined(slug.current) && !hideFromList]),
-    "articlesByYear": *[_type == "blog-article" && defined(slug.current) && !hideFromList && ($category == "" || category->slug.current == $category)] | order(coalesce(publishedDate, _createdAt) desc) {
-      _id,
-      name,
-      "slug": slug.current,
-      _createdAt,
-      "publishDate": coalesce(publishedDate, _createdAt),
-      "year": string::split(coalesce(publishedDate, _createdAt), "-")[0]
-    }
   }
 `);
 
@@ -1699,9 +1614,6 @@ export function getBlogArticlesQuery(sortBy: string = 'newest') {
       return queryBlogArticlesNewest;
   }
 }
-
-// Default export for backward compatibility (newest first)
-export const queryBlogArticles = queryBlogArticlesNewest;
 
 // ----------------------------------------
 // Products Queries
@@ -1828,185 +1740,6 @@ export const queryAllProductsFilterMetadata = defineQuery(`
   }
 `);
 
-// ----------------------------------------
-// Products Filter Metadata Fragment
-// ----------------------------------------
-// Reusable fragment for filter metadata (categories, brands, price ranges, counts)
-// OPTIMIZED: Uses denormalized fields for faster queries (no dereferencing)
-// Used in both products page and brand pages to avoid duplication
-// Parameters:
-// - $category: category slug filter
-// - $brands: array of brand slugs filter
-// - $minPrice: minimum price filter
-// - $maxPrice: maximum price filter
-// - $customFilters: array of {filterName, value} objects (original format)
-const productsFilterMetadataFragment = () => /* groq */ `
-  "categories": *[_type == "productCategorySub" && defined(slug.current)] {
-    _id,
-    name,
-    description,
-    "slug": slug.current,
-    parentCategory->{
-      _id,
-      name,
-      "slug": slug.current
-    },
-    "count": count(*[
-      _type == "product" 
-      && defined(slug.current)
-      && isArchived != true
-      && defined(denormCategorySlugs)
-      && count(denormCategorySlugs) > 0
-      && brand->doNotShowBrand != true
-      && ^.slug.current in denormCategorySlugs
-      && ($category == "" || $category in denormCategorySlugs)
-      && (count($brands) == 0 || denormBrandSlug in $brands)
-      && (
-        ($minPrice == 0 && $maxPrice == 999999999) ||
-        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-      )
-      && (
-        count($customFilters) == 0 ||
-        count($customFilters) <= count(customFilterValues[
-          select(
-            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-            false
-          )
-        ])
-      )
-    ])
-  } [count > 0] | order(orderRank),
-  "categoriesAll": *[_type == "productCategorySub" && defined(slug.current)] {
-    _id,
-    name,
-    description,
-    "slug": slug.current,
-    parentCategory->{
-      _id,
-      name,
-      "slug": slug.current
-    },
-    "count": count(*[
-      _type == "product" 
-      && defined(slug.current)
-      && isArchived != true
-      && defined(denormCategorySlugs)
-      && count(denormCategorySlugs) > 0
-      && brand->doNotShowBrand != true
-      && ^.slug.current in denormCategorySlugs
-      && (count($brands) == 0 || denormBrandSlug in $brands)
-      && (
-        ($minPrice == 0 && $maxPrice == 999999999) ||
-        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-      )
-    ])
-  } [count > 0] | order(orderRank),
-  "brands": *[_type == "brand" && defined(slug.current) && doNotShowBrand != true] {
-    _id,
-    name,
-    "slug": slug.current,
-    ${imageFragment('logo')},
-    "count": count(*[
-      _type == "product" 
-      && defined(slug.current)
-      && isArchived != true
-      && defined(denormCategorySlugs)
-      && count(denormCategorySlugs) > 0
-      && brand._ref == ^._id
-      && ($category == "" || $category in denormCategorySlugs)
-      && (
-        ($minPrice == 0 && $maxPrice == 999999999) ||
-        (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-      )
-      && (
-        count($customFilters) == 0 ||
-        count($customFilters) <= count(customFilterValues[
-          select(
-            count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-            false
-          )
-        ])
-      )
-    ])
-  } [count > 0] | order(orderRank),
-  "totalCount": count(*[
-    _type == "product" 
-    && defined(slug.current)
-    && isArchived != true
-    && defined(denormCategorySlugs)
-    && count(denormCategorySlugs) > 0
-    && brand->doNotShowBrand != true
-    && ($category == "" || $category in denormCategorySlugs)
-    && (count($brands) == 0 || denormBrandSlug in $brands)
-    && (
-      ($minPrice == 0 && $maxPrice == 999999999) ||
-      (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-    )
-    && (
-      count($customFilters) == 0 ||
-      count($customFilters) <= count(customFilterValues[
-        select(
-          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-          false
-        )
-      ])
-    )
-  ]),
-  "totalCountAll": count(*[
-    _type == "product" 
-    && defined(slug.current)
-    && isArchived != true
-    && defined(denormCategorySlugs)
-    && count(denormCategorySlugs) > 0
-    && brand->doNotShowBrand != true
-    && (count($brands) == 0 || denormBrandSlug in $brands)
-    && (
-      ($minPrice == 0 && $maxPrice == 999999999) ||
-      (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-    )
-  ]),
-  "maxPrice": math::max(*[
-    _type == "product" 
-    && defined(slug.current)
-    && isArchived != true
-    && defined(denormCategorySlugs)
-    && count(denormCategorySlugs) > 0
-    && brand->doNotShowBrand != true
-    && defined(basePriceCents)
-    && ($category == "" || $category in denormCategorySlugs)
-    && (count($brands) == 0 || denormBrandSlug in $brands)
-    && (
-      count($customFilters) == 0 ||
-      count($customFilters) <= count(customFilterValues[
-        select(
-          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-          false
-        )
-      ])
-    )
-  ].basePriceCents),
-  "minPrice": math::min(*[
-    _type == "product" 
-    && defined(slug.current)
-    && isArchived != true
-    && defined(denormCategorySlugs)
-    && count(denormCategorySlugs) > 0
-    && brand->doNotShowBrand != true
-    && defined(basePriceCents)
-    && ($category == "" || $category in denormCategorySlugs)
-    && (count($brands) == 0 || denormBrandSlug in $brands)
-    && (
-      count($customFilters) == 0 ||
-      count($customFilters) <= count(customFilterValues[
-        select(
-          count($customFilters[filterName == ^.filterName && value == ^.value]) > 0 => true,
-          false
-        )
-      ])
-    )
-  ].basePriceCents)
-`;
-
 // Query for brands page data (layout, SEO)
 export const queryBrandsPageData = defineQuery(`
   *[_type == "brands"][0] {
@@ -2027,86 +1760,6 @@ export const queryBrandsPageData = defineQuery(`
         null
       ),
     }
-  }
-`);
-
-// Query for products page data (layout, categories, current category, SEO)
-// Now includes filter-aware counts for categories, brands, and price range
-// Parameters:
-// - $category: category slug (optional) - empty string "" for main products page
-// - $search: search term (optional) - empty string "" for no search
-// - $brands: array of brand slugs (optional) - empty array [] for all brands
-// - $minPrice: minimum price (optional) - 0 for no minimum
-// - $maxPrice: maximum price (optional) - 999999999 for no maximum
-// - $customFilters: array of custom filter objects (optional) - empty array [] for no custom filters
-export const queryProductsPageData = defineQuery(`
-  *[_type == "products"][0] {
-    _id,
-    _type,
-    "slug": slug.current,
-    name,
-    ${portableTextFragment('title')},
-    ${portableTextFragment('description')},
-    ${imageFragment('heroImage')},
-    ${pageBuilderFragment},
-    seo,
-    openGraph{
-      title,
-      description,
-      "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-    },
-    "selectedCategory": select(
-      $category != "" => *[_type == "productCategorySub" && slug.current == $category][0]{
-        _id,
-        name,
-        "slug": slug.current,
-        ${portableTextFragment('title')},
-        ${portableTextFragment('description')},
-        ${imageFragment('heroImage')},
-        customFilters[]{
-          _key,
-          name,
-          filterType,
-          unit
-        },
-        "productsWithFilters": *[
-          _type == "product" 
-          && defined(slug.current)
-          && isArchived != true
-          && defined(denormCategorySlugs)
-          && count(denormCategorySlugs) > 0
-          && brand->doNotShowBrand != true
-          && $category in denormCategorySlugs
-          && defined(customFilterValues)
-          && (count($brands) == 0 || denormBrandSlug in $brands)
-          && (
-            ($minPrice == 0 && $maxPrice == 999999999) ||
-            (defined(basePriceCents) && basePriceCents >= $minPrice && basePriceCents <= $maxPrice)
-          )
-        ]{
-          _id,
-          customFilterValues[]{
-            filterName,
-            value,
-            numericValue
-          }
-        },
-        ${pageBuilderFragment},
-        seo,
-        openGraph{
-          title,
-          description,
-          "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-        },
-        parentCategory->{
-          _id,
-          name,
-          "slug": slug.current
-        }
-      },
-      null
-    ),
-    ${productsFilterMetadataFragment()}
   }
 `);
 
@@ -2306,33 +1959,13 @@ export function getProductsListingQuery(sortBy: string = 'newest') {
   }
 }
 
-// Default export for backward compatibility (newest first)
-export const queryProductsListing = queryProductsListingNewest;
-
-// Lightweight query for category metadata only
-// Used to validate custom filters before main query
-export const queryCategoryMetadata = defineQuery(`
-  *[_type == "productCategorySub" && slug.current == $category][0]{
-    _id,
-    name,
-    "slug": slug.current,
-    customFilters[]{
-      _key,
-      name,
-      filterType,
-      unit
-    }
-  }
-`);
-
 // ----------------------------------------
 // Brand Queries
 // ----------------------------------------
 
 // Brand detail query (content only - no filter metadata)
-// NOTE: the filter sidebar on /marki/[slug] is built from queryAllProductsFilterMetadata,
-// so productsFilterMetadataFragment() is deliberately NOT injected here - it scanned the
-// whole product collection on every brand page load without anything reading the result.
+// NOTE: the filter sidebar on /marki/[slug] is built from queryAllProductsFilterMetadata;
+// no per-brand filter metadata is projected here.
 // Parameters:
 // - $slug: brand slug (e.g., "/marki/yamaha/")
 export const queryBrandBySlug = defineQuery(/* groq */ `
@@ -2412,6 +2045,9 @@ export const queryProductBySlug = defineQuery(/* groq */ `
     subtitle,
     headingOverride { upper, lower },
     "slug": slug.current,
+    doNotIndex,
+    // Metadata title fallback (stale ref / pipeline lag safe).
+    "brandName": coalesce(brand->name, denormBrandName),
     basePriceCents,
     isSellableOnline,
     isReturnable,
@@ -2564,7 +2200,7 @@ export const queryComparisonProductsMinimal = defineQuery(/* groq */ `
 //   so products sharing a common category can be compared even when they
 //   each also belong to other categories.
 export const queryComparisonPageData = defineQuery(/* groq */ `{
-  "products": *[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && count((categories[]->slug.current)[@ in $categorySlugs]) > 0] | order(name asc) {
+  "products": *[_type == "product" && !(_id in path("drafts.**")) && isArchived != true && count(denormCategorySlugs[@ in $categorySlugs]) > 0] | order(name asc) {
     _id,
     name,
     "slug": slug.current,
@@ -2694,77 +2330,6 @@ export const queryProductInquiryFormState = defineQuery(/* groq */ `
     }
   }
 `);
-
-// ----------------------------------------
-// Lightweight SEO-Only Queries (for generateMetadata)
-// These queries fetch ONLY the fields needed for SEO metadata
-// to reduce deployment metadata size on Vercel
-// ----------------------------------------
-
-// SEO-only query for reviews (used in generateMetadata)
-export const queryReviewSeoBySlug =
-  defineQuery(`*[_type == "review" && destinationType == "page" && slug.current == $slug][0]{
-  "slug": slug.current,
-  doNotIndex,
-  seo,
-  openGraph{
-    title,
-    description,
-    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-  }
-}`);
-
-// SEO-only query for products (used in generateMetadata)
-// brandName uses denormBrandName when brand->name is missing (stale ref / pipeline lag).
-export const queryProductSeoBySlug =
-  defineQuery(`*[_type == "product" && slug.current == $slug][0]{
-  "slug": slug.current,
-  name,
-  "brandName": coalesce(brand->name, denormBrandName),
-  doNotIndex,
-  seo {
-    description,
-    title
-  },
-  openGraph {
-    title,
-    description,
-    // Scoped inside openGraph{}: image is relative to it, while previewImage
-    // is a document-level field and needs a caret to hop back out. Both paths
-    // were previously resolved against openGraph and always yielded null.
-    "seoImage": select(
-      defined(image) => image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-      defined(^.previewImage) => ^.previewImage.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-      null
-    )
-  }
-}`);
-
-// SEO-only query for blog posts (used in generateMetadata)
-export const queryBlogPostSeoBySlug =
-  defineQuery(`*[_type == "blog-article" && slug.current == $slug][0]{
-  "slug": slug.current,
-  doNotIndex,
-  seo,
-  openGraph{
-    title,
-    description,
-    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-  }
-}`);
-
-// SEO-only query for generic pages (used in generateMetadata)
-export const queryPageSeoBySlug =
-  defineQuery(`*[_type == "page" && slug.current == $slug][0]{
-  "slug": slug.current,
-  doNotIndex,
-  seo,
-  openGraph{
-    title,
-    description,
-    "seoImage": image.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100",
-  }
-}`);
 
 // ----------------------------------------
 // Sitemap Queries

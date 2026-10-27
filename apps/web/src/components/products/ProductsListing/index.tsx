@@ -8,15 +8,13 @@ import {
   rankProductSearch,
 } from '@/src/global/filters/productSearch';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import { getProductsFilterMetadata } from '@/src/global/products/filter-metadata';
 import {
-  getProductsListingQuery,
-  queryAllProductsFilterMetadata,
-} from '@/src/global/sanity/query';
-import type {
-  QueryAllProductsFilterMetadataResult,
-  QueryProductsListingNewestResult,
-} from '@/src/global/sanity/sanity.types';
+  getDynamicFetchOptions,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
+import { getProductsListingQuery } from '@/src/global/sanity/query';
+import type { QueryProductsListingNewestResult } from '@/src/global/sanity/sanity.types';
 import type { ProductType } from '@/src/global/types';
 import {
   parseBrands,
@@ -69,8 +67,14 @@ export default async function ProductsListing({
   defaultSortBy = 'orderRank',
   scrollTargetId,
 }: ProductsListingProps) {
-  // Await and parse searchParams
-  const params = await searchParams;
+  // Rendered as a pass-through slot under a request-time Suspense hole, built
+  // outside every cache scope: it resolves the request's search params and
+  // perspective itself. Listing data feeds filter logic (GROQ params, slug
+  // compares), so it is always read with stega off.
+  const [params, { perspective }] = await Promise.all([
+    searchParams,
+    getDynamicFetchOptions(),
+  ]);
 
   const currentPage = Number(params.page) || 1;
   const itemsPerPage = PRODUCTS_ITEMS_PER_PAGE;
@@ -153,12 +157,7 @@ export default async function ProductsListing({
     () => [],
   );
   if (productSearch) {
-    const filterMetadata =
-      await sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
-        requestTag: 'products.listing.search-metadata',
-        query: queryAllProductsFilterMetadata,
-        tags: ['filter-metadata'],
-      });
+    const filterMetadata = await getProductsFilterMetadata(perspective);
     const candidates = (filterMetadata?.products ?? []).filter(
       (product) =>
         (effectiveBrands.length === 0 ||
@@ -178,7 +177,7 @@ export default async function ProductsListing({
   const productsData =
     productSearch && !hasSearchMatches
       ? { products: [], totalCount: 0 }
-      : await sanityFetchPublished<QueryProductsListingNewestResult>({
+      : await sanityFetchCached<QueryProductsListingNewestResult>({
           requestTag: 'products.listing.products',
           query,
           params: {
@@ -193,6 +192,8 @@ export default async function ProductsListing({
             customFilters, // Original format: [{filterName, value}]
             rangeFilters,
           },
+          perspective,
+          stega: false,
           tags: ['products'],
         });
 

@@ -5,7 +5,7 @@ import {
   getCpoProductBuyability,
   getStandardProductBuyability,
 } from '@/src/global/b2c/utils/buyability';
-import { sanityFetchDynamic } from '@/src/global/sanity/fetch';
+import { sanityFetchUncachedPublished } from '@/src/global/sanity/fetch';
 import { createClient } from '@/src/global/supabase/server';
 
 type ProductImageDto = {
@@ -219,11 +219,11 @@ export async function loadAdminCouponProducts(): Promise<
 > {
   const [standardProducts, cpoProducts, pricingVariantsBySlug] =
     await Promise.all([
-      sanityFetchDynamic<StandardProductSnapshot[]>({
+      sanityFetchUncachedPublished<StandardProductSnapshot[]>({
         requestTag: 'admin.coupon.standard-products',
         query: queryCouponStandardProducts,
       }),
-      sanityFetchDynamic<CpoProductSnapshot[]>({
+      sanityFetchUncachedPublished<CpoProductSnapshot[]>({
         requestTag: 'admin.coupon.cpo-products',
         query: queryCouponCpoProducts,
       }),

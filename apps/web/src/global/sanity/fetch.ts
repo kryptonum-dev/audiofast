@@ -8,10 +8,10 @@ import { minifyGroq } from './minify-groq';
 import { fetchSanityWithRetry } from './retry';
 
 // The non-live Sanity helpers. Every cached read goes through `live.ts`
-// (`sanityFetch` / `sanityFetchPublished`); what stays here is the uncached
-// published read for request-time paths that are not cache scopes yet
-// (`sanityFetchDynamic`) and the fresh, token-bearing read for checkout
-// correctness (`sanityFetchFresh`).
+// (`sanityFetch` / `sanityFetchCached` / `sanityFetchPublished`); what stays
+// here is the uncached published read for the admin coupon picker, which wants
+// live catalogue data (`sanityFetchUncachedPublished`), and the fresh,
+// token-bearing read for checkout correctness (`sanityFetchFresh`).
 
 const freshClient = createSanityClient({
   projectId,
@@ -30,11 +30,11 @@ const freshClient = createSanityClient({
 const SANITY_DYNAMIC_FETCH_OPTIONS = { cacheMode: 'noStale' } as const;
 
 /**
- * Uncached published read for request-time paths outside any cache scope
- * (pages that already read cookies, admin and legal-document reads). API CDN
- * with `noStale`; no Next cache. Phase 4 moves these to cached helpers.
+ * Uncached published read for the operator admin (coupon product picker):
+ * rare, and it must show the live catalogue. API CDN with `noStale`; no Next
+ * cache.
  */
-export async function sanityFetchDynamic<QueryResponse>({
+export async function sanityFetchUncachedPublished<QueryResponse>({
   query,
   params = {},
   requestTag,

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cacheLife, cacheTag } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 import CpoProductGallerySection from '@/src/components/cpo/CpoProductGallerySection';
@@ -13,17 +14,24 @@ import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import { getCpoProductBuyability } from '@/src/global/b2c/utils/buyability';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
 import {
   queryAllCpoProductSlugs,
   queryCpoProductBySlug,
-  queryCpoProductSeoBySlug,
   queryProductInquiryFormState,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllCpoProductSlugsResult,
   QueryCpoProductBySlugResult,
-  QueryCpoProductSeoBySlugResult,
   QueryProductInquiryFormStateResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -60,11 +68,13 @@ function hasTwoColumnContentBlocks(blocks: unknown) {
 }
 
 export async function generateStaticParams() {
-  const products = await sanityFetchPublished<QueryAllCpoProductSlugsResult>({
-    requestTag: 'cpo-product.static-params',
-    query: queryAllCpoProductSlugs,
-    tags: ['cpoProduct'],
-  });
+  const products = await sanityFetchStaticParams<QueryAllCpoProductSlugsResult>(
+    {
+      requestTag: 'cpo-product.static-params',
+      query: queryAllCpoProductSlugs,
+      tags: ['cpoProduct'],
+    },
+  );
 
   return limitBuildTimeStaticParams(
     products
@@ -80,17 +90,26 @@ export async function generateStaticParams() {
   );
 }
 
+// Shared cached data function: metadata (PUBLISHED) and the published page
+// render read the same entry, so the old SEO-only query is gone.
+// `cpoProduct` / `cpoProduct:<slug>` stay: checkout expires them on reserve,
+// sale and release (`cpo-availability.ts`).
+function getCpoProductData(slug: string, options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryCpoProductBySlugResult>({
+    requestTag: 'cpo-product.page',
+    query: queryCpoProductBySlug,
+    params: { slug: `/certyfikowany-sprzet-uzywany/${slug}/` },
+    ...options,
+    tags: ['cpoProduct', `cpoProduct:${slug}`],
+  });
+}
+
 export async function generateMetadata({
   params,
 }: CpoProductPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const seoData = await sanityFetchPublished<QueryCpoProductSeoBySlugResult>({
-    requestTag: 'cpo-product.metadata',
-    query: queryCpoProductSeoBySlug,
-    params: { slug: `/certyfikowany-sprzet-uzywany/${slug}/` },
-    tags: ['cpoProduct', `cpoProduct:${slug}`],
-  });
+  const seoData = await getCpoProductData(slug, PUBLISHED);
 
   if (!seoData) return getSEOMetadata();
 
@@ -111,27 +130,30 @@ export async function generateMetadata({
   });
 }
 
-async function fetchCpoProduct(slug: string) {
+export default async function CpoProductPage({ params }: CpoProductPageProps) {
+  const { slug } = await params;
+  return renderDraftAware(CachedCpoProduct, { slug });
+}
+
+async function CachedCpoProduct({
+  slug,
+  perspective,
+  stega,
+  isDraft = false,
+}: CachedProps & { slug: string }) {
+  'use cache';
+  cacheLife('sanity');
+  cacheTag('cpoProduct', `cpoProduct:${slug}`);
   const [product, formStateData] = await Promise.all([
-    sanityFetchPublished<QueryCpoProductBySlugResult>({
-      requestTag: 'cpo-product.page',
-      query: queryCpoProductBySlug,
-      params: { slug: `/certyfikowany-sprzet-uzywany/${slug}/` },
-      tags: ['cpoProduct', `cpoProduct:${slug}`],
-    }),
-    sanityFetchPublished<QueryProductInquiryFormStateResult>({
+    getCpoProductData(slug, { perspective, stega }),
+    sanityFetchCached<QueryProductInquiryFormStateResult>({
       requestTag: 'cpo-product.inquiry-form',
       query: queryProductInquiryFormState,
+      perspective,
+      stega,
       tags: ['settings'],
     }),
   ]);
-
-  return { product, formStateData };
-}
-
-export default async function CpoProductPage({ params }: CpoProductPageProps) {
-  const { slug } = await params;
-  const { product, formStateData } = await fetchCpoProduct(slug);
 
   if (!product) {
     notFound();
@@ -197,13 +219,16 @@ export default async function CpoProductPage({ params }: CpoProductPageProps) {
 
   return (
     <main id="main" className="page-transition">
-      <ProductViewTracker
-        productId={product._id}
-        productName={product.name ?? ''}
-        pricePLN={pricePLN}
-        brand={{ name: product.brandName ?? undefined }}
-        categories={['cpo']}
-      />
+      {/* No Meta/GA events from editors previewing in Presentation. */}
+      {!isDraft && (
+        <ProductViewTracker
+          productId={product._id}
+          productName={product.name ?? ''}
+          pricePLN={pricePLN}
+          brand={{ name: product.brandName ?? undefined }}
+          categories={['cpo']}
+        />
+      )}
       <Breadcrumbs data={breadcrumbsData} firstItemType="productPage" />
       <CpoProductHero
         productId={product._id}

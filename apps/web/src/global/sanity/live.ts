@@ -2,6 +2,7 @@ import 'server-only';
 
 import { cacheLife } from 'next/cache';
 import { cookies, draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 import type { ContentSourceMap, QueryParams } from 'next-sanity';
 import {
   defineLive,
@@ -53,6 +54,27 @@ export { SanityLive };
 export interface DynamicFetchOptions {
   perspective: LivePerspective;
   stega: boolean;
+}
+
+/**
+ * The options every published render passes to a cached component. Also the
+ * `generateMetadata` key: metadata calls a page's shared cached data function
+ * with `PUBLISHED`, which is the same cache entry the published page render
+ * reads, so a page and its metadata cost one Sanity round trip.
+ */
+export const PUBLISHED = {
+  perspective: 'published',
+  stega: false,
+} as const satisfies DynamicFetchOptions;
+
+/**
+ * `notFound()` outside draft mode only. In a draft session a never-published
+ * document has no published version, so a published-pinned check (metadata,
+ * a published existence probe) must not 404 the editor's preview.
+ */
+export async function notFoundUnlessDraft(): Promise<void> {
+  const { isEnabled: isDraft } = await draftMode();
+  if (!isDraft) notFound();
 }
 
 /**
@@ -167,6 +189,23 @@ export async function sanityFetchPublished<TResult = unknown>({
     tags,
     requestTag,
   });
+  return data;
+}
+
+/**
+ * Cached data function for reads that follow the request's perspective but
+ * are not owned by one page's L3 scope: listing slots (resolved under a
+ * request-time Suspense hole), self-fetching components and shared page data
+ * functions. `perspective` and `stega` are arguments, so they are part of the
+ * cache key; a published call with the same query and params shares its entry
+ * with every other published caller. Returns the data only.
+ */
+export async function sanityFetchCached<TResult = unknown>(
+  args: SanityFetchArgs,
+): Promise<TResult> {
+  'use cache';
+  cacheLife('sanity');
+  const { data } = await sanityFetch<TResult>(args);
   return data;
 }
 

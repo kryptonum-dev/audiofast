@@ -5,7 +5,10 @@ const { fetchMock, legacyMock } = vi.hoisted(() => ({
   legacyMock: vi.fn(),
 }));
 vi.mock('@/src/global/sanity/live', () => ({
-  sanityFetchPublished: fetchMock,
+  sanityFetchCached: fetchMock,
+  getDynamicFetchOptions: vi
+    .fn()
+    .mockResolvedValue({ perspective: 'published', stega: false }),
 }));
 vi.mock('@/src/app/actions/embeddings', () => ({
   fetchEmbeddings: legacyMock,
@@ -51,4 +54,6 @@ it('keeps product search lexical with the same filters and no embedding candidat
   });
   expect(request.query).toContain('$searchTiers');
   expect(request.query).not.toContain('semanticSimilarity');
+  // Listing data is logic data: always stega off, request perspective.
+  expect(request).toMatchObject({ perspective: 'published', stega: false });
 });

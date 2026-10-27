@@ -1,13 +1,20 @@
+/**
+ * Production deploys prerender every slug (P6): all ~1.4k product, review,
+ * blog, CPO, brand and category pages are in the static output, so nothing
+ * goes cold after a deploy. Every other build (local, CI, Vercel preview)
+ * prerenders one row per route family to stay fast.
+ *
+ * `LIMIT_BUILD_TIME_STATIC_PARAMS=0|1` overrides either way.
+ */
 export function shouldLimitBuildTimeStaticParams(): boolean {
   if (process.env.LIMIT_BUILD_TIME_STATIC_PARAMS === '0') {
     return false;
   }
+  if (process.env.LIMIT_BUILD_TIME_STATIC_PARAMS === '1') {
+    return true;
+  }
 
-  return (
-    process.env.NODE_ENV === 'production' ||
-    process.env.VERCEL_ENV === 'preview' ||
-    process.env.LIMIT_BUILD_TIME_STATIC_PARAMS === '1'
-  );
+  return process.env.VERCEL_ENV !== 'production';
 }
 
 export function allBuildTimeStaticParams<TParam>(

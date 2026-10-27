@@ -1,14 +1,17 @@
+import type { ReactNode } from 'react';
+
+import type { DynamicFetchOptions } from '../../global/sanity/live';
 import type {
   QueryCpoPageResult,
   QueryHomePageResult,
 } from '../../global/sanity/sanity.types';
 import BlurLinesTextImage from '../pageBuilder/BlurLinesTextImage';
-import CpoProductsListing from '../pageBuilder/CpoProductsListing';
 import BrandsByCategoriesSection from '../pageBuilder/BrandsByCategoriesSection';
 import BrandsList from '../pageBuilder/BrandsList';
 import BrandsMarquee from '../pageBuilder/BrandsMarquee';
 import ContactForm from '../pageBuilder/ContactForm';
 import ContactMap from '../pageBuilder/ContactMap';
+import CpoProductsListing from '../pageBuilder/CpoProductsListing';
 import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
@@ -37,20 +40,22 @@ type CpoPageBuilderBlock = NonNullable<
 // Union of both types to support all blocks
 export type PageBuilderBlock = StandardPageBuilderBlock | CpoPageBuilderBlock;
 
-interface SearchParams {
-  page?: string;
-  category?: string;
-  sortBy?: string | string[];
-  search?: string;
-  brands?: string | string[];
-  minPrice?: string;
-  maxPrice?: string;
+/**
+ * Request-time content built by the page OUTSIDE every cache scope and passed
+ * through the cached page untouched (shape B, research/08 §1). PageBuilder
+ * renders a slot where its block sits.
+ */
+export interface PageBuilderSlots {
+  /** `cpoProductsListing`: the searchParams-driven listing in Suspense. */
+  readonly cpoListing?: ReactNode;
 }
 
 export interface PageBuilderProps {
   readonly pageBuilder?: PageBuilderBlock[];
-  readonly searchParams?: SearchParams;
-  readonly basePath?: string; // Current page path for ProductsListing block
+  /** The page's perspective/stega, for blocks that read Sanity on their own. */
+  readonly fetchOptions?: DynamicFetchOptions;
+  readonly slots?: PageBuilderSlots;
+  readonly basePath?: string; // Current page path for listing blocks
   readonly indexOffset?: number; // Offset for block index to prevent multiple H1s
 }
 
@@ -62,7 +67,8 @@ type BlockByType<T extends BlockType> = Extract<PageBuilderBlock, { _type: T }>;
  */
 export function PageBuilder({
   pageBuilder: initialBlocks = [],
-  searchParams,
+  fetchOptions,
+  slots,
   basePath,
   indexOffset = 0,
 }: PageBuilderProps) {
@@ -163,8 +169,9 @@ export function PageBuilder({
                 key={block._key}
                 {...(block as BlockByType<'cpoProductsListing'>)}
                 index={effectiveIndex}
-                searchParams={searchParams}
                 basePath={basePath}
+                fetchOptions={fetchOptions}
+                listing={slots?.cpoListing}
               />
             );
           case 'brandsMarquee':

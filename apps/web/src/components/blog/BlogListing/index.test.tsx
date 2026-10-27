@@ -12,7 +12,10 @@ vi.mock('@/src/global/sanity/blog-search', () => ({
   searchBlogArticles: search,
 }));
 vi.mock('@/src/global/sanity/live', () => ({
-  sanityFetchPublished: browse,
+  sanityFetchCached: browse,
+  getDynamicFetchOptions: vi
+    .fn()
+    .mockResolvedValue({ perspective: 'published', stega: false }),
 }));
 vi.mock('../../ui/PublicationCard', () => ({
   default: ({ publication }: { publication: { _id: string } }) => (

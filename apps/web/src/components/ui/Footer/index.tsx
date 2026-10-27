@@ -1,7 +1,9 @@
+import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 
 import LogoLink from '@/src/components/ui/LogoLink';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import type { CachedProps } from '@/src/global/sanity/draft-aware';
+import { sanityFetch } from '@/src/global/sanity/live';
 import { queryFooter } from '@/src/global/sanity/query';
 import type { QueryFooterResult } from '@/src/global/sanity/sanity.types';
 
@@ -9,11 +11,15 @@ import CookieButton from './CookieButton';
 import NewsletterForm from './NewsletterForm';
 import styles from './styles.module.scss';
 
-export default async function Footer() {
+// Cached leaf, dispatched like Header (root layout, draft-aware).
+export default async function Footer({ perspective, stega }: CachedProps) {
   'use cache';
-  const footerData = await sanityFetchPublished<QueryFooterResult>({
+  cacheLife('sanity');
+  const { data: footerData } = await sanityFetch<QueryFooterResult>({
     requestTag: 'footer',
     query: queryFooter,
+    perspective,
+    stega,
     tags: ['footer'],
   });
 

@@ -67,6 +67,13 @@ const nextConfig: NextConfig = {
   staticPageGenerationTimeout: 180,
   experimental: {
     inlineCss: true,
+    // Build hardening for prerendering every slug (~1.4k pages, P6), as in
+    // lsse-www: bound the parallel page renders so the Sanity API CDN,
+    // Supabase pricing and Nominatim see a steady trickle instead of a burst,
+    // and retry a page once on a transient fetch failure instead of failing
+    // the whole deploy.
+    staticGenerationMaxConcurrency: 4,
+    staticGenerationRetryCount: 1,
   },
   images: {
     minimumCacheTTL: 31536000,

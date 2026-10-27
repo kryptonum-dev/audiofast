@@ -1,24 +1,34 @@
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 import { LegalBody } from '@/src/components/legal/LegalBody';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
 import { queryTermsAndConditions } from '@/src/global/sanity/query';
 import type { QueryTermsAndConditionsResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import type { PortableTextProps } from '@/src/global/types';
 
-async function fetchTermsAndConditionsData() {
-  return await sanityFetchPublished<QueryTermsAndConditionsResult>({
+function getTermsAndConditionsData(options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryTermsAndConditionsResult>({
     requestTag: 'terms.page',
     query: queryTermsAndConditions,
+    ...options,
     tags: ['termsAndConditions'],
   });
 }
 
 export async function generateMetadata() {
-  const pageData = await fetchTermsAndConditionsData();
+  const pageData = await getTermsAndConditionsData(PUBLISHED);
 
   if (!pageData) {
     logWarn('Terms and conditions page data not found');
@@ -33,7 +43,16 @@ export async function generateMetadata() {
 }
 
 export default async function TermsAndConditionsPage() {
-  const pageData = await fetchTermsAndConditionsData();
+  return renderDraftAware(CachedTermsAndConditionsPage, {});
+}
+
+async function CachedTermsAndConditionsPage({
+  perspective,
+  stega,
+}: CachedProps) {
+  'use cache';
+  cacheLife('sanity');
+  const pageData = await getTermsAndConditionsData({ perspective, stega });
 
   if (!pageData) {
     logWarn('Terms and conditions page data not found, returning 404');

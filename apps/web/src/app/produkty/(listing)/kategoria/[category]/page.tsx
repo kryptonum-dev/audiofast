@@ -1,6 +1,7 @@
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { stegaClean } from 'next-sanity';
+import { type ReactNode, Suspense } from 'react';
 
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import CustomFiltersBar from '@/src/components/products/CustomFiltersBar';
@@ -25,13 +26,24 @@ import {
   type CustomFilterDefinition,
 } from '@/src/global/filters';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import { getProductsFilterMetadata } from '@/src/global/products/filter-metadata';
 import {
-  queryAllProductsFilterMetadata,
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  getDynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
+import {
+  queryAllProductCategorySlugs,
   queryProductsPageContent,
 } from '@/src/global/sanity/query';
 import type {
-  QueryAllProductsFilterMetadataResult,
+  QueryAllProductCategorySlugsResult,
   QueryProductsPageContentResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -63,64 +75,102 @@ type CategoryContentType = NonNullable<
   doNotIndex?: boolean | null;
 };
 
+type CategorySearchParams = {
+  page?: string;
+  search?: string;
+  sortBy?: string;
+  brands?: string | string[];
+  minPrice?: string;
+  maxPrice?: string;
+  [key: string]: string | string[] | undefined;
+};
+
 type CategoryPageProps = {
   params: Promise<{ category: string }>;
-  searchParams: Promise<{
-    page?: string;
-    search?: string;
-    sortBy?: string;
-    brands?: string | string[];
-    minPrice?: string;
-    maxPrice?: string;
-    [key: string]: string | string[] | undefined;
-  }>;
+  searchParams: Promise<CategorySearchParams>;
 };
 
 // ----------------------------------------
-// Cached Static Data Fetchers
+// Shared cached data + pure helpers
 // ----------------------------------------
 
-// Shared filter metadata (same for all category pages)
-// Carries the dedicated `filter-metadata` tag instead of the broad
-// `products` / `brands` tags — see the brand page for the full rationale.
-async function getStaticFilterMetadata() {
-  'use cache';
-  cacheTag('filter-metadata');
-  cacheLife('sanity');
-
-  return sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
-    requestTag: 'products.category.filter-metadata',
-    query: queryAllProductsFilterMetadata,
-    tags: ['filter-metadata'],
-  });
-}
-
-// Page content (handles both default and category-specific content)
-async function getPageContent(categorySlug: string) {
-  'use cache';
-  cacheTag('products', 'productCategorySub');
-  cacheLife('sanity');
-
-  return sanityFetchPublished<QueryProductsPageContentResult>({
+// Page content (handles both default and category-specific content). One
+// cached entry per (category, perspective, stega): metadata and the published
+// shell share the PUBLISHED entry; the listing slots read it with stega off.
+function getCategoryPageContent(
+  categorySlug: string,
+  options: DynamicFetchOptions,
+) {
+  return sanityFetchCached<QueryProductsPageContentResult>({
     requestTag: 'products.category.content',
     query: queryProductsPageContent,
     params: { category: `/kategoria/${categorySlug}/` },
+    ...options,
     tags: ['products', 'productCategorySub'],
   });
+}
+
+// Filter definitions drive URL param names (`slugifyFilterName`) and GROQ
+// params, so they must never carry stega markers: `stegaClean` before they
+// leave the draft-capable read.
+function getFilterDefinitions(
+  categoryContent: CategoryContentType | null,
+): CustomFilterDefinition[] {
+  // Filter out null/incomplete filter items (empty filters in Sanity, deleted items, etc.)
+  return stegaClean(
+    categoryContent?.customFilters
+      ?.filter(
+        (f): f is NonNullable<typeof f> =>
+          f !== null && !!f._key && !!f.name && !!f.filterType,
+      )
+      ?.map((f) => ({
+        _key: f._key,
+        name: f.name,
+        filterType: f.filterType,
+        unit: f.unit,
+      })) || [],
+  );
+}
+
+function getDropdownFilterNames(filterDefinitions: CustomFilterDefinition[]) {
+  return filterDefinitions
+    .filter((f) => f.filterType === 'dropdown')
+    .map((f) => f.name);
+}
+
+// The listing slots' own read: logic data, so always stega off.
+async function getListingCategoryData(categorySlug: string) {
+  const { perspective } = await getDynamicFetchOptions();
+  const contentData = await getCategoryPageContent(categorySlug, {
+    perspective,
+    stega: false,
+  });
+  const categoryContent =
+    contentData?.categoryContent as CategoryContentType | null;
+  return {
+    perspective,
+    filterDefinitions: getFilterDefinitions(categoryContent),
+  };
 }
 
 // ----------------------------------------
 // Static Params Generation
 // ----------------------------------------
 export async function generateStaticParams() {
-  const filterMetadata = await getStaticFilterMetadata();
+  const categories =
+    await sanityFetchStaticParams<QueryAllProductCategorySlugsResult>({
+      requestTag: 'products.category.static-params',
+      query: queryAllProductCategorySlugs,
+      tags: ['productCategorySub'],
+    });
 
   return limitBuildTimeStaticParams(
-    filterMetadata?.categories
-      ?.filter((cat) => cat.slug)
+    categories
+      .filter((cat) => cat.slug)
       .map((cat) => ({
-        category: cat.slug?.replace('/kategoria/', '').replace(/\/$/, '') || '',
-      })) || [],
+        category: cat.slug!.replace('/kategoria/', '').replace(/\/$/, ''),
+      })),
+    { category: '__placeholder__' },
   );
 }
 
@@ -129,7 +179,7 @@ export async function generateStaticParams() {
 // ----------------------------------------
 export async function generateMetadata({ params }: CategoryPageProps) {
   const { category: categorySlug } = await params;
-  const contentData = await getPageContent(categorySlug);
+  const contentData = await getCategoryPageContent(categorySlug, PUBLISHED);
 
   const categoryContent =
     contentData?.categoryContent as unknown as CategoryContentType | null;
@@ -149,74 +199,87 @@ export async function generateMetadata({ params }: CategoryPageProps) {
 }
 
 // ----------------------------------------
-// Page Component
+// Page Component (orchestrator)
 // ----------------------------------------
 export default async function CategoryPage({
   params,
   searchParams,
 }: CategoryPageProps) {
   const { category: categorySlug } = await params;
-  const searchParamsData = await searchParams;
 
-  // Fetch all cached static data in parallel
-  const [contentData, filterMetadata] = await Promise.all([
-    getPageContent(categorySlug),
-    getStaticFilterMetadata(),
-  ]);
-
-  const defaultContent = contentData?.defaultContent;
-  // Cast categoryContent - GROQ select() type is incorrectly inferred as `null`
-  const categoryContent =
-    contentData?.categoryContent as CategoryContentType | null;
-
-  if (!defaultContent || !filterMetadata) {
-    logWarn(`Category page data not found for: ${categorySlug}`);
-    notFound();
-  }
-
-  // Check if category exists
-  const categoryExists = filterMetadata.categories?.some(
-    (cat) => cat.slug === `/kategoria/${categorySlug}/`,
+  // Pass-through slots (shape B): the two searchParams-driven parts are built
+  // here, outside every cache scope, and handed to the cached shell untouched,
+  // so the shell (hero, sidebar, filter metadata, PageBuilder) prerenders.
+  const filtersBar = (
+    <Suspense fallback={null}>
+      <CategoryFiltersBar
+        categorySlug={categorySlug}
+        searchParams={searchParams}
+      />
+    </Suspense>
+  );
+  const listing = (
+    <Suspense fallback={<ProductsListingSkeleton />}>
+      <CategoryListing
+        categorySlug={categorySlug}
+        searchParams={searchParams}
+      />
+    </Suspense>
   );
 
-  if (!categoryExists) {
-    logWarn(`Category "${categorySlug}" does not exist`);
-    notFound();
+  return renderDraftAware(CachedCategoryShell, {
+    categorySlug,
+    filtersBar,
+    listing,
+  });
+}
+
+// ----------------------------------------
+// Request-time slots
+// ----------------------------------------
+async function CategoryListing({
+  categorySlug,
+  searchParams,
+}: {
+  categorySlug: string;
+  searchParams: Promise<CategorySearchParams>;
+}) {
+  const { filterDefinitions } = await getListingCategoryData(categorySlug);
+
+  return (
+    <ProductsListing
+      searchParams={searchParams}
+      basePath={`/produkty/kategoria/${categorySlug}/`}
+      category={`/kategoria/${categorySlug}/`}
+      availableCustomFilters={getDropdownFilterNames(filterDefinitions)}
+      filterDefinitions={filterDefinitions}
+      defaultSortBy="priceAsc"
+    />
+  );
+}
+
+// Custom filters bar (for categories with custom filters): its active state
+// and computed values depend on the request's search params.
+async function CategoryFiltersBar({
+  categorySlug,
+  searchParams,
+}: {
+  categorySlug: string;
+  searchParams: Promise<CategorySearchParams>;
+}) {
+  const [searchParamsData, { perspective, filterDefinitions }] =
+    await Promise.all([searchParams, getListingCategoryData(categorySlug)]);
+
+  if (filterDefinitions.length === 0) {
+    return null;
   }
 
-  // Use category content if available, otherwise fallback to default
-  const heroTitle = categoryContent?.title || defaultContent.title;
-  const heroDescription =
-    categoryContent?.description || defaultContent.description;
-  const heroImage = categoryContent?.heroImage || defaultContent.heroImage;
-  const pageBuilderSections =
-    categoryContent?.pageBuilder && categoryContent.pageBuilder.length > 0
-      ? categoryContent.pageBuilder
-      : defaultContent.pageBuilder || [];
+  const filterMetadata = await getProductsFilterMetadata(perspective);
+  const dropdownFilterNames = getDropdownFilterNames(filterDefinitions);
 
   // ----------------------------------------
   // Custom Filters Processing
   // ----------------------------------------
-
-  // Get filter definitions from category (with filterType and unit)
-  // Filter out null/incomplete filter items (empty filters in Sanity, deleted items, etc.)
-  const filterDefinitions: CustomFilterDefinition[] =
-    categoryContent?.customFilters
-      ?.filter(
-        (f): f is NonNullable<typeof f> =>
-          f !== null && !!f._key && !!f.name && !!f.filterType,
-      )
-      ?.map((f) => ({
-        _key: f._key,
-        name: f.name,
-        filterType: f.filterType,
-        unit: f.unit,
-      })) || [];
-
-  // Get dropdown filter names for backward compatibility
-  const dropdownFilterNames = filterDefinitions
-    .filter((f) => f.filterType === 'dropdown')
-    .map((f) => f.name);
 
   // Parse dropdown filters from URL
   const rawCustomFilters = extractRawCustomFilters(searchParamsData);
@@ -321,7 +384,7 @@ export default async function CategoryPage({
 
   // Compute available filters (this gives us dropdown values and range bounds)
   const computedFilters = computeAvailableFilters(
-    filterMetadata.products || [],
+    filterMetadata?.products || [],
     activeFiltersForComputation,
   );
 
@@ -336,6 +399,73 @@ export default async function CategoryPage({
       };
     })
     .filter((filter) => filter.values.length > 0);
+
+  return (
+    <CustomFiltersBar
+      filterDefinitions={filterDefinitions}
+      customFilters={processedFilterValues}
+      activeFilters={activeCustomFilters}
+      activeRangeFilters={activeRangeFilters}
+      rangeFilterBounds={computedFilters.rangeFilterBounds}
+      basePath={`/produkty/kategoria/${categorySlug}/`}
+      currentSearchParams={currentSearchParams}
+    />
+  );
+}
+
+// ----------------------------------------
+// Cached shell
+// ----------------------------------------
+async function CachedCategoryShell({
+  categorySlug,
+  filtersBar,
+  listing,
+  perspective,
+  stega,
+}: CachedProps & {
+  categorySlug: string;
+  filtersBar: ReactNode;
+  listing: ReactNode;
+}) {
+  'use cache';
+  cacheLife('sanity');
+
+  const [contentData, filterMetadata] = await Promise.all([
+    getCategoryPageContent(categorySlug, { perspective, stega }),
+    getProductsFilterMetadata(perspective),
+  ]);
+
+  const defaultContent = contentData?.defaultContent;
+  // Cast categoryContent - GROQ select() type is incorrectly inferred as `null`
+  const categoryContent =
+    contentData?.categoryContent as CategoryContentType | null;
+
+  if (!defaultContent || !filterMetadata) {
+    logWarn(`Category page data not found for: ${categorySlug}`);
+    notFound();
+  }
+
+  // Check if category exists
+  const categoryExists = filterMetadata.categories?.some(
+    (cat) => cat.slug === `/kategoria/${categorySlug}/`,
+  );
+
+  if (!categoryExists) {
+    logWarn(`Category "${categorySlug}" does not exist`);
+    notFound();
+  }
+
+  // Use category content if available, otherwise fallback to default
+  const heroTitle = categoryContent?.title || defaultContent.title;
+  const heroDescription =
+    categoryContent?.description || defaultContent.description;
+  const heroImage = categoryContent?.heroImage || defaultContent.heroImage;
+  const pageBuilderSections =
+    categoryContent?.pageBuilder && categoryContent.pageBuilder.length > 0
+      ? categoryContent.pageBuilder
+      : defaultContent.pageBuilder || [];
+
+  const filterDefinitions = getFilterDefinitions(categoryContent);
 
   const breadcrumbsData = [
     {
@@ -386,18 +516,9 @@ export default async function CategoryPage({
             filterDefinitions={filterDefinitions}
           />
 
-          {/* Custom filters bar (for categories with custom filters) */}
-          {filterDefinitions.length > 0 && (
-            <CustomFiltersBar
-              filterDefinitions={filterDefinitions}
-              customFilters={processedFilterValues}
-              activeFilters={activeCustomFilters}
-              activeRangeFilters={activeRangeFilters}
-              rangeFilterBounds={computedFilters.rangeFilterBounds}
-              basePath={`/produkty/kategoria/${categorySlug}/`}
-              currentSearchParams={currentSearchParams}
-            />
-          )}
+          {/* Custom filters bar (request-time slot, renders nothing for
+              categories without custom filters) */}
+          {filtersBar}
 
           <SortDropdown
             options={[RELEVANCE_SORT_OPTION, ...PRODUCT_SORT_OPTIONS]}
@@ -406,22 +527,14 @@ export default async function CategoryPage({
           />
 
           {/* Products listing - container shows overlay skeleton on filter changes */}
-          <ProductsListingContainer>
-            <Suspense fallback={<ProductsListingSkeleton />}>
-              <ProductsListing
-                searchParams={searchParams}
-                basePath={`/produkty/kategoria/${categorySlug}/`}
-                category={`/kategoria/${categorySlug}/`}
-                availableCustomFilters={dropdownFilterNames}
-                filterDefinitions={filterDefinitions}
-                defaultSortBy="priceAsc"
-              />
-            </Suspense>
-          </ProductsListingContainer>
+          <ProductsListingContainer>{listing}</ProductsListingContainer>
         </section>
       </ProductsLoadingProvider>
 
-      <PageBuilder pageBuilder={pageBuilderSections} />
+      <PageBuilder
+        pageBuilder={pageBuilderSections}
+        fetchOptions={{ perspective, stega }}
+      />
     </>
   );
 }

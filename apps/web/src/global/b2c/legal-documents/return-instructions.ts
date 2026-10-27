@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { sanityFetchDynamic } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryB2cReturnInstructionsEmail } from '@/src/global/sanity/query';
 import type { QueryB2cReturnInstructionsEmailResult } from '@/src/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/src/global/types';
@@ -16,8 +16,9 @@ export type B2cReturnInstructionsEmail = {
 
 export async function loadB2cReturnInstructionsEmail(): Promise<B2cReturnInstructionsEmail | null> {
   const settings =
-    await sanityFetchDynamic<QueryB2cReturnInstructionsEmailResult>({
+    await sanityFetchPublished<QueryB2cReturnInstructionsEmailResult>({
       requestTag: 'b2c.return-instructions',
+      tags: ['settings'],
       query: queryB2cReturnInstructionsEmail,
     });
   const content = settings?.b2cReturnInstructionsEmail;

@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity';
+
 import { BASE_URL } from '@/src/global/constants';
 import type { PagebuilderType } from '@/src/global/types';
 import { portableTextToHtml } from '@/src/global/utils';
@@ -14,7 +16,10 @@ type FaqSchemaProps = NonNullable<PagebuilderType<'faqSection'>['faqList']>;
  * @see https://schema.org/FAQPage
  * @see https://developers.google.com/search/docs/appearance/structured-data/faqpage
  */
-export default function FaqSchema({ faqList }: { faqList: FaqSchemaProps }) {
+export default function FaqSchema(rawProps: { faqList: FaqSchemaProps }) {
+  // JSON-LD is published-only output: strip stega markers a draft render
+  // may have threaded into the props (idempotent on clean data).
+  const { faqList } = stegaClean(rawProps);
   if (!faqList || faqList.length === 0) {
     return null;
   }

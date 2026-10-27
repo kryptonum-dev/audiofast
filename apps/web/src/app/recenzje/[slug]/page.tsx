@@ -1,3 +1,4 @@
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 import { ArticleBody } from '@/src/components/blog/ArticleBody';
@@ -7,16 +8,23 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import ProductGallery from '@/src/components/ui/ProductGallery';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
 import {
   queryAllReviewSlugs,
   queryReviewBySlug,
-  queryReviewSeoBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllReviewSlugsResult,
   QueryReviewBySlugResult,
-  QueryReviewSeoBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
@@ -24,58 +32,66 @@ type ReviewPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-async function fetchReviewData(slug: string) {
-  return await sanityFetchPublished<QueryReviewBySlugResult>({
+// Shared cached data function: metadata (PUBLISHED) and the published page
+// render read the same entry, so the old SEO-only query is gone.
+function getReviewData(slug: string, options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryReviewBySlugResult>({
     requestTag: 'review.page',
     query: queryReviewBySlug,
     params: { slug: `/recenzje/${slug}/` },
+    ...options,
     // Specific tag for this review + broad tag for type
     tags: ['review', `review:${slug}`],
   });
 }
 
 export async function generateStaticParams() {
-  const reviews = await sanityFetchPublished<QueryAllReviewSlugsResult>({
+  const reviews = await sanityFetchStaticParams<QueryAllReviewSlugsResult>({
     requestTag: 'review.static-params',
     query: queryAllReviewSlugs,
     tags: ['review'],
   });
 
   return limitBuildTimeStaticParams(
-    reviews.map((review) => ({
-      slug: review.slug!.replace('/recenzje/', '').replace(/\/$/, ''),
-    })),
+    reviews
+      .filter((review) => review.slug)
+      .map((review) => ({
+        slug: review.slug!.replace('/recenzje/', '').replace(/\/$/, ''),
+      })),
+    { slug: '__placeholder__' },
   );
 }
 
 export async function generateMetadata(props: ReviewPageProps) {
   const { slug } = await props.params;
-  // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetchPublished<QueryReviewSeoBySlugResult>({
-    requestTag: 'review.metadata',
-    query: queryReviewSeoBySlug,
-    params: { slug: `/recenzje/${slug}/` },
-    // Specific tag for this review + broad tag for type
-    tags: ['review', `review:${slug}`],
-  });
+  const pageData = await getReviewData(slug, PUBLISHED);
 
-  if (!seoData) {
+  if (!pageData) {
     logWarn(`Review SEO data not found for slug: ${slug}`);
     return getSEOMetadata();
   }
 
   return getSEOMetadata({
-    seo: seoData.seo,
-    slug: seoData.slug,
-    openGraph: seoData.openGraph,
-    noNotIndex: seoData.doNotIndex,
+    seo: pageData.seo,
+    slug: pageData.slug,
+    openGraph: pageData.openGraph,
+    noNotIndex: pageData.doNotIndex,
   });
 }
 
 export default async function ReviewPage(props: ReviewPageProps) {
   const { slug } = await props.params;
+  return renderDraftAware(CachedReview, { slug });
+}
 
-  const pageData = await fetchReviewData(slug);
+async function CachedReview({
+  slug,
+  perspective,
+  stega,
+}: CachedProps & { slug: string }) {
+  'use cache';
+  cacheLife('sanity');
+  const pageData = await getReviewData(slug, { perspective, stega });
 
   if (!pageData) {
     logWarn(`Review data not found for slug: ${slug}, returning 404`);
@@ -105,7 +121,11 @@ export default async function ReviewPage(props: ReviewPageProps) {
         />
       )}
       {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
-        <PageBuilder pageBuilder={pageData.pageBuilder} indexOffset={1} />
+        <PageBuilder
+          pageBuilder={pageData.pageBuilder}
+          indexOffset={1}
+          fetchOptions={{ perspective, stega }}
+        />
       )}
     </main>
   );

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { type ReactNode, Suspense } from 'react';
 
 import FeaturedPublications from '@/src/components/pageBuilder/FeaturedPublications';
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
@@ -27,15 +27,23 @@ import {
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import { getProductsFilterMetadata } from '@/src/global/products/filter-metadata';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
 import {
   queryAllBrandSlugs,
-  queryAllProductsFilterMetadata,
   queryBrandBySlug,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllBrandSlugsResult,
-  QueryAllProductsFilterMetadataResult,
   QueryBrandBySlugResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -59,17 +67,14 @@ type BrandPageProps = {
 // ----------------------------------------
 
 // Brand content (specific to each brand, but cacheable)
-async function getBrandContent(slug: string) {
-  'use cache';
-  cacheTag('brand', `brand:${slug}`);
-  cacheLife('sanity');
-
-  return sanityFetchPublished<QueryBrandBySlugResult>({
+function getBrandContent(slug: string, options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryBrandBySlugResult>({
     requestTag: 'brand.page',
     query: queryBrandBySlug,
     params: {
       slug: `/marki/${slug}/`,
     },
+    ...options,
     tags: ['brand', `brand:${slug}`],
   });
 }
@@ -84,23 +89,13 @@ async function getBrandContent(slug: string) {
 // shell (tags propagate from nested `use cache` entries to the outer one), so
 // keeping it off `products` is what stops every product publish from cooling
 // all ~41 brand shells.
-async function getStaticFilterMetadata() {
-  'use cache';
-  cacheTag('filter-metadata');
-  cacheLife('sanity');
-
-  return sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
-    requestTag: 'brand.filter-metadata',
-    query: queryAllProductsFilterMetadata,
-    tags: ['filter-metadata'],
-  });
-}
+// (`getProductsFilterMetadata`, shared with the other listing routes.)
 
 // ----------------------------------------
 // Static Params Generation
 // ----------------------------------------
 export async function generateStaticParams() {
-  const brands = await sanityFetchPublished<QueryAllBrandSlugsResult>({
+  const brands = await sanityFetchStaticParams<QueryAllBrandSlugsResult>({
     requestTag: 'brand.static-params',
     query: queryAllBrandSlugs,
     // `brands` is what a brand publish invalidates now that the broad `brand`
@@ -108,15 +103,9 @@ export async function generateStaticParams() {
     tags: ['brand', 'brands'],
   });
 
-  // Brands are the one route that prerenders its full set at build time —
-  // `allBuildTimeStaticParams` instead of `limitBuildTimeStaticParams`. Every
-  // other content type keeps the "build one, render the rest on demand" default,
-  // because products alone are ~866 pages and prerendering them would blow up
-  // both build time and ISR write cost. Brands are exempt because there are only
-  // ~41 of them, they are linked directly from the main navigation and the
-  // homepage (so the long tail is hit immediately, not rarely), and their
-  // per-page render cost collapsed from ~5.5 s to a few ms once the dead
-  // fragment was removed from `queryBrandBySlug`.
+  // Brands always prerender their full set (`allBuildTimeStaticParams`), even
+  // in local builds that limit the other routes: there are only ~41, linked
+  // from the main navigation and the homepage.
   return allBuildTimeStaticParams(
     brands
       .filter((brand) => brand.slug)
@@ -144,7 +133,7 @@ export async function generateMetadata({
   // keyed on (query, params, tags) — so `generateMetadata` and `BrandPage` hit one
   // cache entry and therefore one Sanity round trip. Previously this issued a
   // second, uncached `queryBrandSeoBySlug` fetch for the same document.
-  const brand = await getBrandContent(slug);
+  const brand = await getBrandContent(slug, PUBLISHED);
 
   if (!brand) return getSEOMetadata();
 
@@ -165,10 +154,34 @@ export default async function BrandPage({
 }: BrandPageProps) {
   const { slug } = await params;
 
-  // Fetch all cached static data in parallel
+  // Pass-through slot (shape B): built here, outside every cache scope, and
+  // handed to the cached shell untouched.
+  const listing = (
+    <Suspense fallback={<ProductsListingSkeleton />}>
+      <ProductsListing
+        searchParams={searchParams}
+        basePath={`/marki/${slug}/`}
+        brandSlug={slug}
+        defaultSortBy="newest"
+        scrollTargetId="produkty"
+      />
+    </Suspense>
+  );
+
+  return renderDraftAware(CachedBrandShell, { slug, listing });
+}
+
+async function CachedBrandShell({
+  slug,
+  listing,
+  perspective,
+  stega,
+}: CachedProps & { slug: string; listing: ReactNode }) {
+  'use cache';
+  cacheLife('sanity');
   const [brand, filterMetadata] = await Promise.all([
-    getBrandContent(slug),
-    getStaticFilterMetadata(),
+    getBrandContent(slug, { perspective, stega }),
+    getProductsFilterMetadata(perspective),
   ]);
 
   if (!brand) {
@@ -284,17 +297,7 @@ export default async function BrandPage({
           />
 
           {/* Products listing - container shows overlay skeleton on filter changes */}
-          <ProductsListingContainer>
-            <Suspense fallback={<ProductsListingSkeleton />}>
-              <ProductsListing
-                searchParams={searchParams}
-                basePath={`/marki/${slug}/`}
-                brandSlug={slug}
-                defaultSortBy="newest"
-                scrollTargetId="produkty"
-              />
-            </Suspense>
-          </ProductsListingContainer>
+          <ProductsListingContainer>{listing}</ProductsListingContainer>
         </section>
       </ProductsLoadingProvider>
 

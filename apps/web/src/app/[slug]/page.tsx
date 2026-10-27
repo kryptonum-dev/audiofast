@@ -4,20 +4,26 @@ import { notFound } from 'next/navigation';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
-  queryAllPageSlugs,
-  queryPageBySlug,
-  queryPageSeoBySlug,
-} from '@/src/global/sanity/query';
-import type {
-  QueryPageBySlugResult,
-  QueryPageSeoBySlugResult,
-} from '@/src/global/sanity/sanity.types';
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
+import { queryAllPageSlugs, queryPageBySlug } from '@/src/global/sanity/query';
+import type { QueryPageBySlugResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
+type PageProps = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateStaticParams() {
-  const pages = await sanityFetchPublished<{ slug: string }[]>({
+  const pages = await sanityFetchStaticParams<{ slug: string | null }[]>({
     requestTag: 'page.static-params',
     query: queryAllPageSlugs,
     tags: ['page'],
@@ -25,61 +31,56 @@ export async function generateStaticParams() {
 
   return limitBuildTimeStaticParams(
     pages
-      .filter((page) => page.slug)
+      .filter((page): page is { slug: string } => Boolean(page.slug))
       .map((page) => ({
         slug: page.slug.replace(/^\//, '').replace(/\/$/, ''),
       })),
+    { slug: '__placeholder__' },
   );
 }
 
-async function fetchPageData(slug: string) {
+// Shared cached data function: metadata (PUBLISHED) and the published page
+// render read the same entry, so the old SEO-only query is gone.
+function getPageData(slug: string, options: DynamicFetchOptions) {
   const sanitySlug = `/${slug.replace(/^\/+/, '').replace(/\/+$/, '')}/`;
 
-  return await sanityFetchPublished<NonNullable<QueryPageBySlugResult>>({
+  return sanityFetchCached<QueryPageBySlugResult>({
     requestTag: 'page.content',
     query: queryPageBySlug,
     params: { slug: sanitySlug },
+    ...options,
     // Only slug-specific tag — no broad 'page' tag to avoid invalidating all CMS pages
     tags: [`page:${slug}`],
   });
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const sanitySlug = `/${slug.replace(/^\/+/, '').replace(/\/+$/, '')}/`;
+  const pageData = await getPageData(slug, PUBLISHED);
 
-  // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetchPublished<QueryPageSeoBySlugResult>({
-    requestTag: 'page.metadata',
-    query: queryPageSeoBySlug,
-    params: { slug: sanitySlug },
-    // Only slug-specific tag — no broad 'page' tag
-    tags: [`page:${slug}`],
-  });
-
-  if (!seoData) return getSEOMetadata();
+  if (!pageData) return getSEOMetadata();
 
   return getSEOMetadata({
-    seo: seoData.seo,
-    slug: seoData.slug,
-    openGraph: seoData.openGraph,
-    noNotIndex: seoData.doNotIndex,
+    seo: pageData.seo,
+    slug: pageData.slug,
+    openGraph: pageData.openGraph,
+    noNotIndex: pageData.doNotIndex,
   });
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params;
+  return renderDraftAware(CachedPage, { slug });
+}
+
+async function CachedPage({
+  slug,
+  perspective,
+  stega,
+}: CachedProps & { slug: string }) {
   'use cache';
   cacheLife('sanity');
-  const { slug } = await params;
-  const pageData = await fetchPageData(slug);
+  const pageData = await getPageData(slug, { perspective, stega });
 
   if (!pageData) {
     notFound();
@@ -102,6 +103,7 @@ export default async function Page({
       <PageBuilder
         basePath={pageData.slug || '/'}
         pageBuilder={pageData.pageBuilder || []}
+        fetchOptions={{ perspective, stega }}
       />
     </main>
   );

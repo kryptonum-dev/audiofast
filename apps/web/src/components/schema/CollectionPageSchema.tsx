@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity';
+
 import { BASE_URL } from '@/src/global/constants';
 import type { PortableTextProps } from '@/src/global/types';
 import { portableTextToPlainString } from '@/src/global/utils';
@@ -17,11 +19,10 @@ type Props = {
  *
  * @see https://schema.org/CollectionPage
  */
-export default function CollectionPageSchema({
-  name,
-  url,
-  description,
-}: Props) {
+export default function CollectionPageSchema(rawProps: Props) {
+  // JSON-LD is published-only output: strip stega markers a draft render
+  // may have threaded into the props (idempotent on clean data).
+  const { name, url, description } = stegaClean(rawProps);
   // Build full URL
   const fullUrl = `${BASE_URL}${url}`;
 

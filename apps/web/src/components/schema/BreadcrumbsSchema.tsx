@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity';
+
 import { BASE_URL } from '@/src/global/constants';
 
 export type BreadcrumbItem = {
@@ -9,7 +11,10 @@ type Props = {
   data: BreadcrumbItem[];
 };
 
-export default function BreadcrumbsSchema({ data }: Props) {
+export default function BreadcrumbsSchema(rawProps: Props) {
+  // JSON-LD is published-only output: strip stega markers a draft render
+  // may have threaded into the props (idempotent on clean data).
+  const { data } = stegaClean(rawProps);
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',

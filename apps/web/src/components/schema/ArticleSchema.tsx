@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity';
+
 import { BASE_URL, SITE_TITLE } from '@/src/global/constants';
 import type { QueryReviewBySlugResult } from '@/src/global/sanity/sanity.types';
 import { portableTextToPlainString } from '@/src/global/utils';
@@ -16,7 +18,10 @@ type Props = {
  * @see https://schema.org/Article
  * @see https://developers.google.com/search/docs/appearance/structured-data/article
  */
-export default function ArticleSchema({ review }: Props) {
+export default function ArticleSchema(rawProps: Props) {
+  // JSON-LD is published-only output: strip stega markers a draft render
+  // may have threaded into the props (idempotent on clean data).
+  const { review } = stegaClean(rawProps);
   if (!review) {
     return null;
   }

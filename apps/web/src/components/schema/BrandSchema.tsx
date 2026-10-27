@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity';
+
 import { BASE_URL } from '@/src/global/constants';
 import type { QueryBrandBySlugResult } from '@/src/global/sanity/sanity.types';
 import { portableTextToPlainString } from '@/src/global/utils';
@@ -15,7 +17,10 @@ type Props = {
  *
  * @see https://schema.org/Brand
  */
-export default function BrandSchema({ brand }: Props) {
+export default function BrandSchema(rawProps: Props) {
+  // JSON-LD is published-only output: strip stega markers a draft render
+  // may have threaded into the props (idempotent on clean data).
+  const { brand } = stegaClean(rawProps);
   if (!brand) {
     return null;
   }

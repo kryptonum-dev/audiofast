@@ -75,7 +75,14 @@ export default function ProductInquiryForm({
   const formStateData = externalFormStateData ?? defaultFormStateData;
   const [formState, setFormState] = useState<FormState>('idle');
   // Timestamp of the first render - used to reject submits that are too fast to be human
-  const renderedAt = useRef(Date.now());
+  // Form-open time for the anti-bot `elapsedMs` check. Stamped on mount,
+  // not during render: `Date.now()` in a Client Component render breaks
+  // the static prerender under Cache Components, which then client-renders
+  // the whole page (no server HTML for the page body).
+  const renderedAt = useRef<number | null>(null);
+  useEffect(() => {
+    renderedAt.current = Date.now();
+  }, []);
 
   const {
     register,
@@ -150,7 +157,7 @@ export default function ProductInquiryForm({
         message: data.message,
         consent: data.consent,
         ref2: data.ref2,
-        elapsedMs: Date.now() - renderedAt.current,
+        elapsedMs: Date.now() - (renderedAt.current ?? Date.now()),
         product: {
           name: product.name,
           brandName: product.brandName,

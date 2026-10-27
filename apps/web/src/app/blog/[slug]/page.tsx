@@ -1,3 +1,4 @@
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 import { ArticleBody } from '@/src/components/blog/ArticleBody';
@@ -6,17 +7,25 @@ import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+  sanityFetchPublished,
+  sanityFetchStaticParams,
+} from '@/src/global/sanity/live';
 import {
   queryAllBlogPostSlugs,
   queryBlogPostBySlug,
-  queryBlogPostSeoBySlug,
   querySettings,
 } from '@/src/global/sanity/query';
 import type {
   QueryAllBlogPostSlugsResult,
   QueryBlogPostBySlugResult,
-  QueryBlogPostSeoBySlugResult,
   QuerySettingsResult,
 } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -25,65 +34,73 @@ type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
 
-async function fetchBlogPostData(slug: string) {
-  return await sanityFetchPublished<QueryBlogPostBySlugResult>({
+// Shared cached data function: metadata (PUBLISHED) and the published page
+// render read the same entry, so the old SEO-only query is gone.
+function getBlogPostData(slug: string, options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryBlogPostBySlugResult>({
     requestTag: 'blog-article.page',
     query: queryBlogPostBySlug,
     params: { slug: `/blog/${slug}/` },
+    ...options,
     // Specific tag for this article + broad tag for type
     tags: ['blog-article', `blog-article:${slug}`],
   });
 }
 
 export async function generateStaticParams() {
-  const posts = await sanityFetchPublished<QueryAllBlogPostSlugsResult>({
+  const posts = await sanityFetchStaticParams<QueryAllBlogPostSlugsResult>({
     requestTag: 'blog-article.static-params',
     query: queryAllBlogPostSlugs,
     tags: ['blog-article'],
   });
 
   return limitBuildTimeStaticParams(
-    posts.map((post) => ({
-      slug: post.slug!.replace('/blog/', '').replace(/\/$/, ''),
-    })),
+    posts
+      .filter((post) => post.slug)
+      .map((post) => ({
+        slug: post.slug!.replace('/blog/', '').replace(/\/$/, ''),
+      })),
+    { slug: '__placeholder__' },
   );
 }
 
 export async function generateMetadata(props: BlogPostPageProps) {
   const { slug } = await props.params;
-  // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetchPublished<QueryBlogPostSeoBySlugResult>({
-    requestTag: 'blog-article.metadata',
-    query: queryBlogPostSeoBySlug,
-    params: { slug: `/blog/${slug}/` },
-    // Specific tag for this article + broad tag for type
-    tags: ['blog-article', `blog-article:${slug}`],
-  });
+  const pageData = await getBlogPostData(slug, PUBLISHED);
 
-  if (!seoData) {
+  if (!pageData) {
     logWarn(`Blog post SEO data not found for slug: ${slug}`);
     return getSEOMetadata();
   }
 
   return getSEOMetadata({
-    seo: seoData.seo,
-    slug: seoData.slug,
-    openGraph: seoData.openGraph,
-    noNotIndex: seoData.doNotIndex,
+    seo: pageData.seo,
+    slug: pageData.slug,
+    openGraph: pageData.openGraph,
+    noNotIndex: pageData.doNotIndex,
   });
 }
 
 export default async function BlogPostPage(props: BlogPostPageProps) {
   const { slug } = await props.params;
+  return renderDraftAware(CachedBlogPost, { slug });
+}
 
-  const pageData = await fetchBlogPostData(slug);
+async function CachedBlogPost({
+  slug,
+  perspective,
+  stega,
+}: CachedProps & { slug: string }) {
+  'use cache';
+  cacheLife('sanity');
+  const pageData = await getBlogPostData(slug, { perspective, stega });
 
   if (!pageData) {
     logWarn(`Blog post data not found for slug: ${slug}, returning 404`);
     notFound();
   }
 
-  // Fetch settings for structured data publisher info
+  // Publisher info for the JSON-LD: published-only, never stega-encoded.
   const settings = await sanityFetchPublished<QuerySettingsResult>({
     requestTag: 'blog-article.settings',
     query: querySettings,
@@ -107,7 +124,11 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
       <Breadcrumbs data={breadcrumbsData} />
       <ArticleBody {...pageData} />
       {pageData.pageBuilder && pageData.pageBuilder.length > 0 && (
-        <PageBuilder pageBuilder={pageData.pageBuilder} indexOffset={1} />
+        <PageBuilder
+          pageBuilder={pageData.pageBuilder}
+          indexOffset={1}
+          fetchOptions={{ perspective, stega }}
+        />
       )}
     </main>
   );

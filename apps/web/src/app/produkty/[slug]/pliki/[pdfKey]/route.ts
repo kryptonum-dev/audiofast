@@ -59,6 +59,11 @@ export async function GET(request: NextRequest, props: RouteParams) {
         'Content-Length': String(pdfBuffer.byteLength),
         // Long cache - PDFs don't change
         'Cache-Control': 'public, max-age=31536000, immutable',
+        // Vercel's CDN ignores plain `max-age`: without an `s-maxage` every
+        // download re-ran this function (a Sanity read + a full PDF proxy).
+        // Edge-cache for a day, then serve stale while it refreshes.
+        'CDN-Cache-Control':
+          'public, s-maxage=86400, stale-while-revalidate=2592000',
         // SEO: Tell search engines not to index this PDF URL
         'X-Robots-Tag': 'noindex, nofollow',
       },

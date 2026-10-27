@@ -1,7 +1,10 @@
 import { notFound } from 'next/navigation';
 
 import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  getDynamicFetchOptions,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
 import {
   getCpoProductsListingQuery,
   queryCpoProductsListingCount,
@@ -20,7 +23,7 @@ import Pagination from '../../ui/Pagination';
 type SearchParamsType = {
   page?: string;
   search?: string;
-  sortBy?: string;
+  sortBy?: string | string[];
   brands?: string | string[];
   minPrice?: string;
   maxPrice?: string;
@@ -39,7 +42,19 @@ export default async function CpoProductsListingInner({
   defaultSortBy = 'newest',
   scrollTargetId,
 }: CpoProductsListingInnerProps) {
-  const params = await searchParams;
+  // Rendered as a pass-through slot under a request-time Suspense hole, built
+  // outside every cache scope: it resolves the request's search params and
+  // perspective itself. Listing data is logic data, so stega stays off.
+  const [rawParams, { perspective }] = await Promise.all([
+    searchParams,
+    getDynamicFetchOptions(),
+  ]);
+  const params = {
+    ...rawParams,
+    sortBy: Array.isArray(rawParams.sortBy)
+      ? rawParams.sortBy[0]
+      : rawParams.sortBy,
+  };
 
   const currentPage = Number(params.page) || 1;
   const itemsPerPage = PRODUCTS_ITEMS_PER_PAGE;
@@ -64,16 +79,20 @@ export default async function CpoProductsListingInner({
   const listingQuery = getCpoProductsListingQuery(sortBy);
 
   const [products, totalCount] = await Promise.all([
-    sanityFetchPublished<QueryCpoProductsListingNewestResult>({
+    sanityFetchCached<QueryCpoProductsListingNewestResult>({
       requestTag: 'cpo.listing.products',
       query: listingQuery,
       params: queryParams,
+      perspective,
+      stega: false,
       tags: ['cpoProduct'],
     }),
-    sanityFetchPublished<QueryCpoProductsListingCountResult>({
+    sanityFetchCached<QueryCpoProductsListingCountResult>({
       requestTag: 'cpo.listing.count',
       query: queryCpoProductsListingCount,
       params: queryParams,
+      perspective,
+      stega: false,
       tags: ['cpoProduct'],
     }),
   ]);

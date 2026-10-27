@@ -1,0 +1,25 @@
+# Accepted parity diffs
+
+Intentional or explained differences between a phase's crawl and `baseline/` (captured at `347555f`, built with `VERCEL_ENV=preview`). Each entry names the phase, the paths, the reason and how it was checked.
+
+## Phase 4 — three-layer routes, layout, prerender-all
+
+Gate run: `VERCEL_ENV=production VERCEL_PROJECT_PRODUCTION_URL=audiofast.pl P24_MODE=production E2E_DISABLE_ANALYTICS=1 bun run build --force`, then `next start -p 3107` with the same env, then `bun run check:parity --compare parity/baseline`. Result: 1,125 URLs, all 200, 39 paths differ. All 39 are explained below; none is a content loss.
+
+### 1. Main content now server-rendered on `/`, `/marki/`, `/o-nas/` (3 paths, improvement)
+
+- **What differs:** `words` (only additions: +1,036, +417, +737 words), `jsonLd` (page-level blocks added: `FAQPage` on `/`; `CollectionPage` + `BreadcrumbList` on `/marki/`; `BreadcrumbList` + `FAQPage` on `/o-nas/`), and `ssrErrors` (two `client-render digest=""` entries in the baseline, none now).
+- **Why:** the README's "known state" item. Fully static pages that render the contact form client-rendered their whole page body: `ContactForm` (and the FAQ / product-inquiry forms) called `Date.now()` during render (`useRef(Date.now())`). Under Cache Components a Client Component reading the clock during a static prerender aborts the boundary, and React falls back to client rendering. Phase 4 made `/certyfikowany-sprzet-uzywany/` fully static too, which exposed the same failure there, so the timestamp moved to a mount effect. The page bodies, and their JSON-LD, are now in the server HTML.
+- **Check:** `.next/server/app/{index,marki,certyfikowany-sprzet-uzywany}.html` contain `<main>` and zero `$RX(` fallbacks.
+
+### 2. Word joins around inline markup on 35 product, review and blog pages (environment artifact)
+
+- **Paths:** `/blog/dcs-bartok-i-rossini-z-firmware-30-nowe-mozliwosci-brzmienia-i-obsluga-dsdx4/`, 20 `/produkty/<slug>/` pages (`acoustic-diode`, `alexia-v`, `altaira-x`, `apex`, `black-diamond-dlc`, `diablo-300-dac`, `eos-5`, `evo-100-phono-preamplifier`, `ex-8`, `foundation-rack`, `galileo-discovery-ac`, `omega-x-ic`, `omega-x-phono`, `osiris-rack`, `ref10-nano`, `relentless-epic-1600`, `roon`, `varese`, `vibratron-sx`, `vip-ic`) and 14 `/recenzje/<slug>/` pages (full list in the run's `diff.json`).
+- **What differs:** only tokenisation. The same characters split differently around inline elements, for example `. V` (baseline) against `V.` (now), or `brzmienia. Mapper` against `brzmienia.Mapper`. Every diff is +n/−2n of the same characters; no word appears or disappears.
+- **Why:** the Phase 4 gate builds with `VERCEL_ENV=production` (it has to, to prerender every slug), while the baseline was built with `VERCEL_ENV=preview`. Production mode changes the base URL, so the Portable Text link and markup output around these spots differs.
+- **Check:** for all 35 paths in this group, the word bag of the live `https://audiofast.pl` page (still on the Phase 3 code) equals the Phase 4 crawl exactly. It is not content drift either: the sampled documents (`apex`, `eos-5`, `roon`, the DCS blog article) were last edited between 2026-09-25 and 2026-10-19, and the dataset has no content writes after 2026-10-27T07:30Z, before the baseline crawl finished.
+
+### 3. `/produkty/?search=wzmacniacz` — skeleton placeholder gone (1 path)
+
+- **What differs:** `words` removed `···` ×2.
+- **Why:** `···` is placeholder text inside the listing's loading skeleton (`ProductsListingSkeleton`), which the old final HTML still carried. The listing is now a pass-through Suspense slot resolved in the same render pass, so the fallback markup is no longer left in the document. The listed products and their count are unchanged.

@@ -1,7 +1,7 @@
 import 'server-only';
 
 import type { EmailAttachment } from '@/src/global/microsoft-graph/client';
-import { sanityFetchDynamic } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryB2cWithdrawalForm } from '@/src/global/sanity/query';
 
 import type { ParsedOrderInvoiceData } from '../utils/orders';
@@ -37,8 +37,9 @@ export function canReceiveB2cWithdrawalForm(
 }
 
 async function loadWithdrawalFormSettings(): Promise<WithdrawalFormSettings> {
-  return sanityFetchDynamic<WithdrawalFormSettings>({
+  return sanityFetchPublished<WithdrawalFormSettings>({
     requestTag: 'b2c.withdrawal-form',
+    tags: ['settings'],
     query: queryB2cWithdrawalForm,
   });
 }

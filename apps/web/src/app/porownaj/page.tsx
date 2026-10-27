@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
-import { fetchComparisonPageData } from '@/src/app/actions/comparison';
 import ComparisonTable from '@/src/components/comparison/ComparisonTable';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import EmptyState from '@/src/components/ui/EmptyState';
 import { getComparisonCookieServer } from '@/src/global/comparison/cookie-manager';
+import { getComparisonPageData } from '@/src/global/comparison/page-data';
+import { getDynamicFetchOptions } from '@/src/global/sanity/live';
 
 import styles from '../../components/comparison/ComparisonTable/styles.module.scss';
 
@@ -67,10 +68,14 @@ export default async function ComparisonPage() {
 
   const categorySlugs = comparisonCookie.categorySlugs;
 
+  // Shape D: the route reads cookies anyway, so it resolves the draft options
+  // inline and passes the perspective to the cached data function.
+  const { perspective } = await getDynamicFetchOptions();
+
   // Fetch products and comparator config in a single query
   const { products: allCategoryProducts, enabledParameters } =
     categorySlugs.length > 0
-      ? await fetchComparisonPageData(categorySlugs)
+      ? await getComparisonPageData({ categorySlugs, perspective })
       : { products: [], enabledParameters: [] };
 
   // Split products: ones in comparison vs ones available to add

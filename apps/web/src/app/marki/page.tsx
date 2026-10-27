@@ -1,20 +1,34 @@
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 
 import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
 import { queryBrandsPageData } from '@/src/global/sanity/query';
 import type { QueryBrandsPageDataResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
-export async function generateMetadata() {
-  const brandsData = await sanityFetchPublished<QueryBrandsPageDataResult>({
-    requestTag: 'brands.metadata',
+function getBrandsPageData(options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryBrandsPageDataResult>({
+    requestTag: 'brands.page',
     query: queryBrandsPageData,
+    ...options,
     tags: ['brands'],
   });
+}
+
+export async function generateMetadata() {
+  const brandsData = await getBrandsPageData(PUBLISHED);
 
   if (!brandsData) {
     logWarn('Brands page data not found');
@@ -29,11 +43,13 @@ export async function generateMetadata() {
 }
 
 export default async function BrandsPage() {
-  const brandsData = await sanityFetchPublished<QueryBrandsPageDataResult>({
-    requestTag: 'brands.page',
-    query: queryBrandsPageData,
-    tags: ['brands'],
-  });
+  return renderDraftAware(CachedBrandsPage, {});
+}
+
+async function CachedBrandsPage({ perspective, stega }: CachedProps) {
+  'use cache';
+  cacheLife('sanity');
+  const brandsData = await getBrandsPageData({ perspective, stega });
 
   if (!brandsData) {
     logWarn('Brands page data not found');
@@ -55,7 +71,10 @@ export default async function BrandsPage() {
     <main id="main" className="page-transition">
       <CollectionPageSchema name={brandsData.name || 'Marki'} url="/marki/" />
       <Breadcrumbs data={breadcrumbsData} firstItemType="heroStatic" />
-      <PageBuilder pageBuilder={brandsData.pageBuilder || []} />
+      <PageBuilder
+        pageBuilder={brandsData.pageBuilder || []}
+        fetchOptions={{ perspective, stega }}
+      />
     </main>
   );
 }

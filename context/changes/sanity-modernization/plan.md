@@ -1283,22 +1283,22 @@ After the soak checks pass:
 
 ### Phase 3: defineLive fetch seam, client, cache config
 
-- [x] 3.1 Type check passes
-- [x] 3.2 Web unit tests pass
-- [x] 3.3 Full build passes
-- [x] 3.4 One-request variant selected
-- [x] 3.5 No env-switched Sanity config remains
-- [ ] 3.6 Parity vs baseline clean
+- [x] 3.1 Type check passes — b898fb8
+- [x] 3.2 Web unit tests pass — b898fb8
+- [x] 3.3 Full build passes — b898fb8
+- [x] 3.4 One-request variant selected — b898fb8
+- [x] 3.5 No env-switched Sanity config remains — b898fb8
+- [x] 3.6 Parity vs baseline clean — b898fb8
 
 ### Phase 4: Three-layer routes, layout, prerender-all
 
-- [ ] 4.1 Type check passes
-- [ ] 4.2 Lint passes
-- [ ] 4.3 Web unit tests pass
-- [ ] 4.4 Production-mode build passes with all slugs
-- [ ] 4.5 Parity vs baseline clean
+- [x] 4.1 Type check passes
+- [x] 4.2 Lint passes
+- [x] 4.3 Web unit tests pass
+- [x] 4.4 Production-mode build passes with all slugs
+- [x] 4.5 Parity vs baseline clean
 - [ ] 4.6 e2e suite passes
-- [ ] 4.7 One-request variant still selected
+- [x] 4.7 One-request variant still selected
 
 ### Phase 5: Query efficiency
 

@@ -1,6 +1,6 @@
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { type ReactNode, Suspense } from 'react';
 
 import HeroStatic from '@/src/components/pageBuilder/HeroStatic';
 import ProductsAside from '@/src/components/products/ProductsAside';
@@ -18,15 +18,18 @@ import {
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import { getProductsFilterMetadata } from '@/src/global/products/filter-metadata';
 import {
-  queryAllProductsFilterMetadata,
-  queryProductsPageContent,
-} from '@/src/global/sanity/query';
-import type {
-  QueryAllProductsFilterMetadataResult,
-  QueryProductsPageContentResult,
-} from '@/src/global/sanity/sanity.types';
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
+import { queryProductsPageContent } from '@/src/global/sanity/query';
+import type { QueryProductsPageContentResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
 type ProductsPageProps = {
@@ -41,38 +44,27 @@ type ProductsPageProps = {
 };
 
 // ----------------------------------------
-// Cached Static Data Fetcher
+// Shared cached data function
 // ----------------------------------------
 // `products` covers the editorial page content; the shared filter sidebar data
-// rides its own `filter-metadata` tag so that product/brand/category publishes
-// no longer have to reach for a broad tag to refresh it.
-async function getStaticPageData() {
-  'use cache';
-  cacheTag('products', 'filter-metadata');
-  cacheLife('sanity');
-
-  const [contentData, filterMetadata] = await Promise.all([
-    sanityFetchPublished<QueryProductsPageContentResult>({
-      requestTag: 'products.listing.content',
-      query: queryProductsPageContent,
-      params: { category: '' },
-      tags: ['products'],
-    }),
-    sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
-      requestTag: 'products.listing.filter-metadata',
-      query: queryAllProductsFilterMetadata,
-      tags: ['filter-metadata'],
-    }),
-  ]);
-
-  return { contentData, filterMetadata };
+// (`getProductsFilterMetadata`) rides its own `filter-metadata` tag. Metadata
+// reads the content with PUBLISHED only, so it no longer pulls the filter
+// metadata along.
+function getProductsPageContent(options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryProductsPageContentResult>({
+    requestTag: 'products.listing.content',
+    query: queryProductsPageContent,
+    params: { category: '' },
+    ...options,
+    tags: ['products'],
+  });
 }
 
 // ----------------------------------------
 // Metadata Generation
 // ----------------------------------------
 export async function generateMetadata() {
-  const { contentData } = await getStaticPageData();
+  const contentData = await getProductsPageContent(PUBLISHED);
   const pageData = contentData?.defaultContent;
 
   if (!pageData) {
@@ -93,8 +85,34 @@ export async function generateMetadata() {
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
-  // Fetch cached static data (instant after first load)
-  const { contentData, filterMetadata } = await getStaticPageData();
+  // Pass-through slot (shape B): the searchParams-driven listing is built here,
+  // outside every cache scope, and handed to the cached shell untouched, so
+  // the shell (hero, sidebar, filter metadata, PageBuilder) prerenders.
+  const listing = (
+    <Suspense fallback={<ProductsListingSkeleton />}>
+      <ProductsListing
+        searchParams={searchParams}
+        basePath="/produkty/"
+        defaultSortBy="priceAsc"
+        scrollTargetId="products-listing"
+      />
+    </Suspense>
+  );
+
+  return renderDraftAware(CachedProductsShell, { listing });
+}
+
+async function CachedProductsShell({
+  perspective,
+  stega,
+  listing,
+}: CachedProps & { listing: ReactNode }) {
+  'use cache';
+  cacheLife('sanity');
+  const [contentData, filterMetadata] = await Promise.all([
+    getProductsPageContent({ perspective, stega }),
+    getProductsFilterMetadata(perspective),
+  ]);
   const pageData = contentData?.defaultContent;
 
   if (!pageData || !filterMetadata) {
@@ -154,20 +172,14 @@ export default async function ProductsPage({
           />
 
           {/* Products listing - container shows overlay skeleton on filter changes */}
-          <ProductsListingContainer>
-            <Suspense fallback={<ProductsListingSkeleton />}>
-              <ProductsListing
-                searchParams={searchParams}
-                basePath="/produkty/"
-                defaultSortBy="priceAsc"
-                scrollTargetId="products-listing"
-              />
-            </Suspense>
-          </ProductsListingContainer>
+          <ProductsListingContainer>{listing}</ProductsListingContainer>
         </section>
       </ProductsLoadingProvider>
 
-      <PageBuilder pageBuilder={pageData.pageBuilder || []} />
+      <PageBuilder
+        pageBuilder={pageData.pageBuilder || []}
+        fetchOptions={{ perspective, stega }}
+      />
     </>
   );
 }

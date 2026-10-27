@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import Button from '@/src/components/ui/Button';
@@ -32,7 +32,14 @@ export default function ContactFormComponent({
 }: ContactFormComponentProps) {
   const [formState, setFormState] = useState<FormState>('idle');
   // Timestamp of the first render - used to reject submits that are too fast to be human
-  const renderedAt = useRef(Date.now());
+  // Form-open time for the anti-bot `elapsedMs` check. Stamped on mount,
+  // not during render: `Date.now()` in a Client Component render breaks
+  // the static prerender under Cache Components, which then client-renders
+  // the whole page (no server HTML for the page body).
+  const renderedAt = useRef<number | null>(null);
+  useEffect(() => {
+    renderedAt.current = Date.now();
+  }, []);
 
   const {
     register,
@@ -87,7 +94,7 @@ export default function ContactFormComponent({
 
       const result = await sendContactForm({
         ...data,
-        elapsedMs: Date.now() - renderedAt.current,
+        elapsedMs: Date.now() - (renderedAt.current ?? Date.now()),
       });
 
       if (result.success) {

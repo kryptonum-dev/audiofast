@@ -5,7 +5,10 @@ import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
 import { searchBlogArticles } from '@/src/global/sanity/blog-search';
 import { normalizeBlogSearch } from '@/src/global/sanity/blog-search-config';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  getDynamicFetchOptions,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
 import { getBlogArticlesQuery } from '@/src/global/sanity/query';
 import type { QueryBlogArticlesNewestResult } from '@/src/global/sanity/sanity.types';
 
@@ -31,7 +34,14 @@ export default async function BlogListing({
   basePath,
   category = '',
 }: BlogListingProps) {
-  const params = await searchParams;
+  // Rendered as a pass-through slot under a request-time Suspense hole, built
+  // outside every cache scope: it resolves the request's search params and
+  // perspective itself. Search stays on the raw published search client, so
+  // in draft mode search results are published (accepted, research/08 §2).
+  const [params, { perspective }] = await Promise.all([
+    searchParams,
+    getDynamicFetchOptions(),
+  ]);
 
   const normalized = normalizeBlogSearch(params.search, params.page);
   const currentPage = normalized.page;
@@ -50,7 +60,7 @@ export default async function BlogListing({
         category,
         year,
       })
-    : await sanityFetchPublished<QueryBlogArticlesNewestResult>({
+    : await sanityFetchCached<QueryBlogArticlesNewestResult>({
         requestTag: 'blog.listing.articles',
         query: getBlogArticlesQuery('newest'),
         params: {
@@ -61,6 +71,8 @@ export default async function BlogListing({
           limit: offset + itemsPerPage,
           embeddingResults: [],
         },
+        perspective,
+        stega: false,
         tags: ['blog-article'],
       });
 

@@ -1,8 +1,5 @@
-import type { QuerySettingsResult } from '@/src/global/sanity/sanity.types';
 import type { PagebuilderType } from '@/src/global/types';
 
-import { sanityFetchPublished } from '../../../global/sanity/live';
-import { querySettings } from '../../../global/sanity/query';
 import PortableText from '../../portableText';
 import styles from './styles.module.scss';
 
@@ -10,21 +7,17 @@ type ContactMapProps = PagebuilderType<'contactMap'> & {
   index: number;
 };
 
-export default async function ContactMap({
+export default function ContactMap({
   heading,
   useCustomAddress,
   customAddress,
   customPhone,
   customEmail,
+  settingsContact,
   index,
 }: ContactMapProps) {
-  const settings = useCustomAddress
-    ? null
-    : await sanityFetchPublished<QuerySettingsResult>({
-        requestTag: 'block.contact-map.settings',
-        query: querySettings,
-        tags: ['settings'],
-      });
+  // Settings contact data comes folded into the block projection.
+  const settings = useCustomAddress ? null : settingsContact;
 
   // Format structured address into display string
   const formatAddress = (

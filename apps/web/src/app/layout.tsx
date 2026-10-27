@@ -1,6 +1,7 @@
 import '../global/global.scss';
 
 import { BotIdClient } from 'botid/client';
+import { draftMode } from 'next/headers';
 import { Suspense } from 'react';
 import { preconnect, prefetchDNS } from 'react-dom';
 import { Toaster } from 'sonner';
@@ -16,6 +17,7 @@ import Header from '@/src/components/ui/Header';
 import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
+import { renderDraftAware } from '../global/sanity/draft-aware';
 import { sanityFetchPublished } from '../global/sanity/live';
 import { querySettings } from '../global/sanity/query';
 import type { QuerySettingsResult } from '../global/sanity/sanity.types';
@@ -25,12 +27,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  'use cache';
+  // No 'use cache' here. A cached scope around `children` is what hung
+  // Najbar's cold `next dev` loads (research/01 §5.9), and the draft branch
+  // must read the request cookie. Reading `draftMode()` does not opt the route
+  // out of prerendering: during a prerender it resolves to `false`, so the
+  // static shell is the published branch. Every data read below has its own
+  // cache scope (`sanityFetchPublished`, the cached Header/Footer leaves).
+  const { isEnabled: isDraft } = await draftMode();
   preconnect('https://cdn.sanity.io');
   prefetchDNS('https://cdn.sanity.io');
   preconnect('https://vercel.live');
   prefetchDNS('https://vercel.live');
 
+  // Published-only: the settings feed the GTM preconnect and the Organization
+  // JSON-LD, neither of which may carry stega or unpublished data.
   const settings = await sanityFetchPublished<QuerySettingsResult>({
     requestTag: 'layout.settings',
     query: querySettings,
@@ -56,23 +66,28 @@ export default async function RootLayout({
           ]}
         />
         {/* Preconnect to Google Tag Manager for faster loading */}
-        {settings?.analytics?.gtm_id && IS_PRODUCTION_DEPLOYMENT && (
-          <>
-            <link rel="preconnect" href="https://www.googletagmanager.com" />
-            <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-          </>
-        )}
+        {settings?.analytics?.gtm_id &&
+          IS_PRODUCTION_DEPLOYMENT &&
+          !isDraft && (
+            <>
+              <link rel="preconnect" href="https://www.googletagmanager.com" />
+              <link
+                rel="dns-prefetch"
+                href="https://www.googletagmanager.com"
+              />
+            </>
+          )}
       </head>
       <body>
         <CartProvider>
-          <Suspense fallback={null}>
-            <Header />
-          </Suspense>
+          <Suspense fallback={null}>{renderDraftAware(Header, {})}</Suspense>
           {children}
-          <Footer />
-          {settings && <OrganizationSchema settings={settings} />}
-          <WebSiteSchema />
-          {IS_PRODUCTION_DEPLOYMENT && (
+          {renderDraftAware(Footer, {})}
+          {!isDraft && settings && <OrganizationSchema settings={settings} />}
+          {!isDraft && <WebSiteSchema />}
+          {/* No consent banner, GTM or Meta inside a Presentation session:
+              editors must never emit analytics events. */}
+          {IS_PRODUCTION_DEPLOYMENT && !isDraft && (
             <>
               <CookieConsent />
               <Analytics />
@@ -82,6 +97,8 @@ export default async function RootLayout({
             <FloatingComparisonBox />
           </Suspense>
           <Toaster position="bottom-center" richColors />
+          {/* Draft-only mount point: PreviewBar, VisualEditing and
+              <SanityLive includeDrafts/> render here from Phase 8. */}
         </CartProvider>
       </body>
     </html>

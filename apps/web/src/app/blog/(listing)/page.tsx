@@ -1,6 +1,6 @@
-import { cacheLife, cacheTag } from 'next/cache';
+import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
+import { type ReactNode, Suspense } from 'react';
 
 import BlogListing from '@/src/components/blog/BlogListing';
 import BlogListingSkeleton from '@/src/components/blog/BlogListing/BlogListingSkeleton';
@@ -11,7 +11,15 @@ import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetchPublished } from '@/src/global/sanity/live';
+import {
+  type CachedProps,
+  renderDraftAware,
+} from '@/src/global/sanity/draft-aware';
+import {
+  type DynamicFetchOptions,
+  PUBLISHED,
+  sanityFetchCached,
+} from '@/src/global/sanity/live';
 import { queryBlogPageContent } from '@/src/global/sanity/query';
 import type { QueryBlogPageContentResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -24,22 +32,20 @@ type BlogPageProps = {
   }>;
 };
 
-// Cached static data fetcher
-async function getStaticPageData() {
-  'use cache';
-  cacheTag('blog');
-  cacheLife('sanity');
-
-  return sanityFetchPublished<QueryBlogPageContentResult>({
+// Shared cached data function: metadata (PUBLISHED) and the published shell
+// read the same entry.
+function getBlogPageContent(options: DynamicFetchOptions) {
+  return sanityFetchCached<QueryBlogPageContentResult>({
     requestTag: 'blog.listing.content',
     query: queryBlogPageContent,
     params: { category: '' },
+    ...options,
     tags: ['blog'],
   });
 }
 
 export async function generateMetadata() {
-  const contentData = await getStaticPageData();
+  const contentData = await getBlogPageContent(PUBLISHED);
   const pageData = contentData?.defaultContent;
 
   if (!pageData) {
@@ -55,8 +61,25 @@ export async function generateMetadata() {
 }
 
 export default async function BlogPage({ searchParams }: BlogPageProps) {
-  // Fetch cached static data (instant after first load)
-  const contentData = await getStaticPageData();
+  // Pass-through slot (shape B): built here, outside every cache scope, and
+  // handed to the cached shell untouched.
+  const listing = (
+    <Suspense fallback={<BlogListingSkeleton />}>
+      <BlogListing searchParams={searchParams} basePath="/blog/" />
+    </Suspense>
+  );
+
+  return renderDraftAware(CachedBlogShell, { listing });
+}
+
+async function CachedBlogShell({
+  perspective,
+  stega,
+  listing,
+}: CachedProps & { listing: ReactNode }) {
+  'use cache';
+  cacheLife('sanity');
+  const contentData = await getBlogPageContent({ perspective, stega });
   const pageData = contentData?.defaultContent;
 
   if (!pageData || !contentData) {
@@ -103,12 +126,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           currentCategory={null}
         />
 
-        {/* Blog listing in Suspense - only this shows skeleton */}
-        <Suspense fallback={<BlogListingSkeleton />}>
-          <BlogListing searchParams={searchParams} basePath="/blog/" />
-        </Suspense>
+        {/* Blog listing slot (Suspense) - only this shows skeleton */}
+        {listing}
       </section>
-      <PageBuilder pageBuilder={pageData.pageBuilder || []} />
+      <PageBuilder
+        pageBuilder={pageData.pageBuilder || []}
+        fetchOptions={{ perspective, stega }}
+      />
     </>
   );
 }

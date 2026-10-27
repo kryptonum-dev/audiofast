@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { sanityFetchDynamic } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 
 import {
   buildB2cWithdrawalFormEmailAttachment,
@@ -8,8 +8,8 @@ import {
   hasB2cWithdrawalFormDocument,
 } from './withdrawal-form';
 
-vi.mock('@/src/global/sanity/fetch', () => ({
-  sanityFetchDynamic: vi.fn(),
+vi.mock('@/src/global/sanity/live', () => ({
+  sanityFetchPublished: vi.fn(),
 }));
 
 describe('B2C withdrawal form document helpers', () => {
@@ -41,7 +41,7 @@ describe('B2C withdrawal form document helpers', () => {
   });
 
   it('detects when a CMS withdrawal form is configured', async () => {
-    vi.mocked(sanityFetchDynamic).mockResolvedValue({
+    vi.mocked(sanityFetchPublished).mockResolvedValue({
       assetUrl: 'https://cdn.sanity.io/form.pdf',
       mimeType: 'application/pdf',
       originalFilename: 'source.pdf',
@@ -51,7 +51,7 @@ describe('B2C withdrawal form document helpers', () => {
   });
 
   it('builds a PDF email attachment for B2C invoices', async () => {
-    vi.mocked(sanityFetchDynamic).mockResolvedValue({
+    vi.mocked(sanityFetchPublished).mockResolvedValue({
       assetUrl: 'https://cdn.sanity.io/form.pdf',
       mimeType: 'application/pdf',
       originalFilename: 'formularz-odstapienia.pdf',
@@ -74,11 +74,11 @@ describe('B2C withdrawal form document helpers', () => {
     });
 
     expect(result).toBeNull();
-    expect(sanityFetchDynamic).not.toHaveBeenCalled();
+    expect(sanityFetchPublished).not.toHaveBeenCalled();
   });
 
   it('returns null when the CMS form is missing', async () => {
-    vi.mocked(sanityFetchDynamic).mockResolvedValue(null);
+    vi.mocked(sanityFetchPublished).mockResolvedValue(null);
 
     const result = await buildB2cWithdrawalFormEmailAttachment({
       invoice: { recipientType: 'private' },

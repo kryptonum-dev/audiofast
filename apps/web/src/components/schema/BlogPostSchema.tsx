@@ -1,3 +1,5 @@
+import { stegaClean } from 'next-sanity';
+
 import { BASE_URL } from '@/src/global/constants';
 import type {
   QueryBlogPostBySlugResult,
@@ -23,7 +25,10 @@ type Props = {
  * @see https://schema.org/BlogPosting
  * @see https://developers.google.com/search/docs/appearance/structured-data/article
  */
-export default function BlogPostSchema({ blogPost, settings }: Props) {
+export default function BlogPostSchema(rawProps: Props) {
+  // JSON-LD is published-only output: strip stega markers a draft render
+  // may have threaded into the props (idempotent on clean data).
+  const { blogPost, settings } = stegaClean(rawProps);
   if (!blogPost || !settings) {
     return null;
   }
