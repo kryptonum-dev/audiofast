@@ -1,0 +1,17 @@
+{
+  "path": "/blog/parity-probe-missing-article/",
+  "status": 200,
+  "location": null,
+  "title": "Strony nie znaleziono",
+  "description": "Przepraszamy, ten adres nie istnieje lub został przeniesiony. Zapraszamy do zapoznania się z naszym katalogiem produktów.",
+  "canonical": "{origin}/404/",
+  "robots": "index, follow || noindex",
+  "jsonLd": [
+    {"@context":"https://schema.org","@id":"{origin}#organization","@type":["Organization","LocalBusiness","Store"],"address":{"@type":"PostalAddress","addressCountry":"PL","addressLocality":"Łódź","postalCode":"91-174","streetAddress":"ul. Romanowska 55e, pasaż lok. 9"},"contactPoint":{"@type":"ContactPoint","availableLanguage":["pl","en"],"contactType":"customer service","email":"info@audiofast.pl","telephone":"426 133 750"},"description":"Oferujemy sprzęt audio klasy premium – urządzenia, które od lat wyznaczają standardy doskonałości. Poczuj brzmienie, które przeniesie Cię bliżej muzyki niż kiedykolwiek wcześniej.","email":"info@audiofast.pl","geo":{"@type":"GeoCoordinates","latitude":51.7592485,"longitude":19.4559833},"image":"https://cdn.sanity.io/images/fsw3likv/production/a6a4e1253977ee75afc4456116789378930b5165-433x436.svg","logo":"https://cdn.sanity.io/images/fsw3likv/production/a6a4e1253977ee75afc4456116789378930b5165-433x436.svg","name":"AUDIOFAST Sp. z o.o.","priceRange":"$$$$","sameAs":["https://www.instagram.com/audiofast.pl/","https://www.linkedin.com/feed/","https://www.youtube.com/@audiofast-pl","https://www.facebook.com/audiofast/?locale=pl_PL"],"telephone":"426 133 750","url":"{origin}"},
+    {"@context":"https://schema.org","@id":"{origin}/#website","@type":"WebSite","description":"Jesteśmy dystrybutorem sprzętu audio klasy premium. Oferujemy wyłącznie starannie wyselekcjonowane marki, które łączą technologiczną precyzję z zapewnieniem doskonałego dźwięku.","inLanguage":"pl-PL","name":"Audiofast","publisher":{"@id":"{origin}#organization"},"url":"{origin}"}
+  ],
+  "words": {"2026":1,"Adres":1,"Akceptuję":1,"AudiofastStworzone":1,"Blog":2,"Certyfikowany":1,"Kontakt":2,"Konto":1,"Koszyk":1,"Kryptonum":1,"Marki":1,"MenuZamknij":1,"O":1,"Polityka":1,"Produkty":1,"Przejdź":1,"Regulamin":1,"Serwis":1,"Zapisz":2,"Zarządzaj":1,"cookies":1,"do":2,"e-mail":1,"głównej":1,"klienta":1,"nas":1,"newslettera":1,"plikami":1,"politykę":1,"prywatności":2,"przez":1,"się":2,"sprzęt":1,"treści":1,"używany":1,"©":1},
+  "wordCount": 42,
+  "ssrErrors": ["client-render digest=\"NEXT_HTTP_ERROR_FALLBACK;404\""],
+  "dataSanity": 0
+}

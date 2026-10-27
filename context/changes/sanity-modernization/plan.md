@@ -1264,22 +1264,22 @@ After the soak checks pass:
 
 ### Phase 1: Dependencies — Studio, runtime, Sanity UI port
 
-- [x] 1.1 Studio deployed on ≥6.14.1
-- [x] 1.2 Typegen has no unexpected drift
-- [x] 1.3 Type check passes
-- [x] 1.4 Lint passes with 0 errors
-- [x] 1.5 Web unit tests pass
-- [x] 1.6 b2c-admin tests pass
-- [x] 1.7 Full build (all Sanity apps) passes
-- [x] 1.8 No duplicate Sanity UI/icons majors
-- [x] 1.9 React identical across apps
+- [x] 1.1 Studio deployed on ≥6.14.1 — 347555f
+- [x] 1.2 Typegen has no unexpected drift — 347555f
+- [x] 1.3 Type check passes — 347555f
+- [x] 1.4 Lint passes with 0 errors — 347555f
+- [x] 1.5 Web unit tests pass — 347555f
+- [x] 1.6 b2c-admin tests pass — 347555f
+- [x] 1.7 Full build (all Sanity apps) passes — 347555f
+- [x] 1.8 No duplicate Sanity UI/icons majors — 347555f
+- [x] 1.9 React identical across apps — 347555f
 - [ ] 1.10 e2e suite passes
 
 ### Phase 2: Published HTML parity crawler + baseline
 
-- [ ] 2.1 Crawler unit tests pass
-- [ ] 2.2 Baseline captured
-- [ ] 2.3 Self-compare is clean
+- [x] 2.1 Crawler unit tests pass
+- [x] 2.2 Baseline captured
+- [x] 2.3 Self-compare is clean
 
 ### Phase 3: defineLive fetch seam, client, cache config
 

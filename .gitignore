@@ -48,3 +48,6 @@ npm-debug.log*
 
 # Supabase local CLI state
 supabase/.temp/
+
+# Parity crawler scratch runs (the baseline is committed)
+context/changes/*/parity/runs/

@@ -11,7 +11,8 @@
     "lint": "bun run turbo lint",
     "check-types": "bun run turbo check-types",
     "format": "bun run prettier --write \"**/*.{ts,tsx,md}\"",
-    "typegen": "cd apps/studio && bunx sanity schema extract --force && bunx sanity typegen generate"
+    "typegen": "cd apps/studio && bunx sanity schema extract --force && bunx sanity typegen generate",
+    "check:parity": "bun apps/web/scripts/check-parity.ts"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
