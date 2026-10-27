@@ -2687,10 +2687,7 @@ export type CpoProduct = {
   publishedDate?: string;
   isArchived?: boolean;
   availabilityStatus?:
-    | 'available'
-    | 'on_hold'
-    | 'sold_out'
-    | 'manually_unavailable';
+    'available' | 'on_hold' | 'sold_out' | 'manually_unavailable';
   holdUntil?: string;
   holdOrderNumber?: string;
   holdPaymentSessionId?: string;
@@ -12970,11 +12967,7 @@ export type QueryCpoProductBySlugResult = {
   isReturnable: boolean | null;
   isArchived: boolean | null;
   availabilityStatus:
-    | 'available'
-    | 'manually_unavailable'
-    | 'on_hold'
-    | 'sold_out'
-    | null;
+    'available' | 'manually_unavailable' | 'on_hold' | 'sold_out' | null;
   transparentBackground: boolean | null;
   productType: 'external' | 'internal' | null;
   brandName: string | null;
@@ -42481,8 +42474,7 @@ export type QueryOrphanReviewsResult = Array<{
 }>;
 
 // Query TypeMap
-import '@sanity/client';
-declare module '@sanity/client' {
+declare global {
   interface SanityQueries {
     '*[_type == "settings"][0]{\n  "defaultOGImage": seo.img.asset->url + "?w=1200&h=630&dpr=3&fit=max&q=100"\n}': QueryDefaultOGImageResult;
     '*[_type == "homePage" && _id == "homePage"][0]{\n  "description": seo.description\n}': QueryHomePageSeoDescriptionResult;
@@ -42560,4 +42552,8 @@ declare module '@sanity/client' {
     '\n  *[_type == "product" && defined(slug.current) && !(_id in path("drafts.**")) && (isArchived == true || brand->doNotShowBrand == true)] | order(name asc) {\n    "slug": slug.current,\n    name\n  }\n': QueryArchivedProductsResult;
     '\n  *[_type == "review" && destinationType == "page" && defined(slug.current) && !(_id in path("drafts.**")) && count(*[\n    _type == "product"\n    && defined(slug.current)\n    && isArchived != true\n    && brand->doNotShowBrand != true\n    && ^._id in reviews[]._ref\n  ]) == 0] | order(pt::text(title) asc) {\n    "slug": slug.current,\n    "name": pt::text(title)\n  }\n': QueryOrphanReviewsResult;
   }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module '@sanity/client' {
+  interface SanityQueries extends globalThis.SanityQueries {}
 }

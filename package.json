@@ -46,6 +46,10 @@
     ]
   },
   "dependencies": {
-    "@sanity/cli": "^8.2.1"
+    "@sanity/cli": "^8.24.0"
+  },
+  "overrides": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
   }
 }
