@@ -4,7 +4,6 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import type { AnalyticsUser } from '@/global/analytics/types';
-import { client as sanityClient } from '@/global/sanity/client';
 
 type MetaRequestBody = {
   event_name: string;
@@ -21,18 +20,6 @@ type MetaRequestBody = {
     utm_term?: string;
     utm_content?: string;
   };
-};
-
-const META_ANALYTICS_QUERY = `
-  {
-    "metaPixelId": *[_type == "settings"][0].analytics.metaPixelId,
-    "metaConversionToken": *[_type == "settings"][0].analytics.metaConversionToken
-  }
-`;
-
-type MetaAnalyticsConfig = {
-  metaPixelId: string | null;
-  metaConversionToken: string | null;
 };
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
@@ -129,26 +116,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let config: MetaAnalyticsConfig;
-  try {
-    config =
-      await sanityClient.fetch<MetaAnalyticsConfig>(META_ANALYTICS_QUERY);
-  } catch (error) {
-    console.error(
-      '[Meta CAPI] Failed to load analytics config from Sanity',
-      error,
-    );
-    return NextResponse.json(
-      { success: false, message: 'Meta not configured' },
-      { status: 500 },
-    );
-  }
-
-  const pixelId = config.metaPixelId;
-  const accessToken = config.metaConversionToken;
+  // Server-only env (never the dataset, which is publicly readable), so the
+  // route makes no Sanity request per tracking event.
+  const pixelId = process.env.META_PIXEL_ID;
+  const accessToken = process.env.META_CONVERSION_TOKEN;
 
   if (!pixelId || !accessToken) {
-    console.error('[Meta CAPI] Missing Meta Pixel configuration in Sanity');
+    console.error('[Meta CAPI] Missing META_PIXEL_ID or META_CONVERSION_TOKEN');
     return NextResponse.json(
       { success: false, message: 'Meta not configured' },
       { status: 400 },

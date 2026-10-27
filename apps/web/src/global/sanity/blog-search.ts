@@ -62,24 +62,8 @@ function parseArticles(value: unknown): Article[] {
   return value as Article[];
 }
 
-async function fetchArticles(
-  query: string,
-  params: Record<string, unknown>,
-  legacy = false,
-) {
-  // Old deployments can still roll back before the new server-only token is provisioned.
-  const config =
-    legacy && !process.env.SANITY_API_READ_TOKEN
-      ? {
-          projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-          dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-          apiVersion: '2026-08-21',
-          token: process.env.NEXT_PUBLIC_SANITY_API_READ_TOKEN,
-          useCdn: false,
-          perspective: 'published' as const,
-          maxRetries: 0,
-        }
-      : getBlogSearchClientConfig();
+async function fetchArticles(query: string, params: Record<string, unknown>) {
+  const config = getBlogSearchClientConfig();
   const client = createClient(config);
   return client.fetch<unknown>(query, params, {
     cache: 'no-store',
@@ -141,16 +125,12 @@ export async function searchBlogArticles(input: {
         if (!embeddingResults) throw new Error('Legacy unavailable');
         if (!embeddingResults.length) articles = [];
         else {
-          const data = await fetchArticles(
-            queryBlogArticlesRelevance,
-            {
-              ...params,
-              embeddingResults,
-              offset: 0,
-              limit: BLOG_SEARCH_LIMIT,
-            },
-            true,
-          );
+          const data = await fetchArticles(queryBlogArticlesRelevance, {
+            ...params,
+            embeddingResults,
+            offset: 0,
+            limit: BLOG_SEARCH_LIMIT,
+          });
           if (!data || typeof data !== 'object' || !('articles' in data))
             throw new Error('Invalid legacy hydration');
           // Preserve the old post-filtered candidate behavior during rollback.

@@ -1,7 +1,7 @@
 import type { SanityImageSource } from '@sanity/asset-utils';
 import Image from 'next/image';
 
-import { urlFor } from '@/global/sanity/client';
+import { urlFor } from '@/global/sanity/image';
 
 const DEFAULT_BLUR_DATA_URL =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mMUltCqBwABcQDWMIsO5gAAAABJRU5ErkJggg==';

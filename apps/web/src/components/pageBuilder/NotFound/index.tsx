@@ -1,4 +1,4 @@
-import { urlFor } from '@/global/sanity/client';
+import { urlFor } from '@/global/sanity/image';
 
 import type { QueryNotFoundPageResult } from '../../../global/sanity/sanity.types';
 import PortableText from '../../portableText';

@@ -1,7 +1,5 @@
-import {
-  createImageUrlBuilder,
-  type SanityImageSource,
-} from '@sanity/image-url';
+import 'server-only';
+
 import { createClient } from 'next-sanity';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../constants';
@@ -21,16 +19,13 @@ export const projectId = assertValue(
   'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID',
 );
 
-if (process.env.NEXT_PUBLIC_SANITY_PROJECT_ID === undefined) {
-  throw new Error(
-    'Missing environment variable: NEXT_PUBLIC_SANITY_PROJECT_ID',
-  );
-}
-
-export const readToken = assertValue(
-  process.env.NEXT_PUBLIC_SANITY_API_READ_TOKEN,
-  'Missing environment variable: SANITY_API_READ_TOKEN',
-);
+/**
+ * Server-only read token. Never prefix it with `NEXT_PUBLIC_`: Next.js
+ * inlines public variables into every client bundle that imports them.
+ * Optional because the published dataset is readable without a token
+ * (Vercel Preview has no token set); local dev needs it for drafts.
+ */
+export const readToken: string | undefined = process.env.SANITY_API_READ_TOKEN;
 
 /**
  * see https://www.sanity.io/docs/api-versioning for how versioning works
@@ -51,10 +46,5 @@ export const client = createClient({
   apiVersion,
   useCdn: IS_PRODUCTION_DEPLOYMENT,
   perspective: process.env.VERCEL_ENV ? 'published' : 'drafts',
-  ...(!IS_PRODUCTION_DEPLOYMENT ? { token: readToken } : {}),
+  ...(!IS_PRODUCTION_DEPLOYMENT && readToken ? { token: readToken } : {}),
 });
-
-const imageBuilder = createImageUrlBuilder({ projectId, dataset });
-
-export const urlFor = (source: SanityImageSource) =>
-  imageBuilder.image(source).auto('format').fit('max').format('webp');

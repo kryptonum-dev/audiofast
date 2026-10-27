@@ -7,7 +7,7 @@ import { type SanityRawImage } from '@/components/shared/Image';
 import ArrowButton from '@/components/ui/ArrowButton';
 import Button from '@/components/ui/Button';
 import PaginationDots from '@/components/ui/PaginationDots';
-import { urlFor } from '@/global/sanity/client';
+import { urlFor } from '@/global/sanity/image';
 import type { PagebuilderType } from '@/global/types';
 import PortableText from '@/src/components/portableText';
 

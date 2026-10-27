@@ -16316,13 +16316,6 @@
                 "type": "string"
               },
               "optional": true
-            },
-            "metaConversionToken": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "string"
-              },
-              "optional": true
             }
           }
         },

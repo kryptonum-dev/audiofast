@@ -26,7 +26,7 @@ Production-scoped variables currently present:
 - `NEXT_PUBLIC_SANITY_DATASET`
 - `NEXT_PUBLIC_SANITY_API_VERSION`
 - `NEXT_PUBLIC_SANITY_STUDIO_URL`
-- `NEXT_PUBLIC_SANITY_API_READ_TOKEN`
+- `SANITY_API_READ_TOKEN`
 - `SANITY_API_WRITE_TOKEN`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -244,7 +244,7 @@ NEXT_PUBLIC_SANITY_PROJECT_ID=<production project id>
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=<pinned API version>
 NEXT_PUBLIC_SANITY_STUDIO_URL=<production Studio URL>
-NEXT_PUBLIC_SANITY_API_READ_TOKEN=<read token>
+SANITY_API_READ_TOKEN=<server-only Viewer read token, never NEXT_PUBLIC_>
 SANITY_API_WRITE_TOKEN=<write token used by B2C CPO availability and denormalization writes>
 SANITY_AUTH_TOKEN=<token used by Studio deployment if needed>
 ```

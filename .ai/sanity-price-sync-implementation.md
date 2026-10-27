@@ -94,7 +94,7 @@ The existing workflow continues to work:
 
 All required environment variables are already configured in Supabase:
 
-- `SANITY_PROJECT_ID`: skSK2XY0ToEWcGHXOhwmBJYllGsafS6GeGhaGgn5NKxOBEQFwQpuGZDVCfKPaUkMEI86i0na4Xa83fy9ws8uKnro78cnklRwR8wevOQnH2ezKt6xJaE8aymcNbUQ7r4YN8w53RhkWnRCK7qcHEIAJtq1yNPyrIEGi4a1l26nNaaPpxw13F0j
+- `SANITY_PROJECT_ID`: <redacted; secret, set only in Supabase>
 - `SANITY_DATASET`: production
 - `SANITY_API_TOKEN`: (write token already set)
 - `EXCEL_PUBLISH_TOKEN`: (authentication token already set)

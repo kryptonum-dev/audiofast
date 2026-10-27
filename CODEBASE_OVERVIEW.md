@@ -102,7 +102,7 @@ All routes use the Next.js App Router with trailing slashes.
 | `/api/newsletter/`          | POST   | Newsletter subscription (Mailchimp)  |
 | `/api/newsletter/generate/` | POST   | Newsletter HTML generation           |
 | `/api/contact/`             | POST   | Contact & product inquiry forms      |
-| `/api/analytics/meta/`      | GET    | Analytics metadata                   |
+| `/api/analytics/meta/`      | POST   | Meta CAPI relay (env, no Sanity)     |
 
 **Generated Files:**
 
@@ -574,25 +574,27 @@ Shared TypeScript configurations:
 
 ### Web App (`apps/web`)
 
-| Variable                                                    | Purpose                                   |
-| ----------------------------------------------------------- | ----------------------------------------- |
-| `SANITY_API_READ_TOKEN`                                     | Sanity read access                        |
-| `SANITY_API_WRITE_TOKEN`                                    | Sanity write access (revalidation denorm) |
-| `SANITY_WEBHOOK_SECRET`                                     | Webhook authentication                    |
-| `NEXT_REVALIDATE_TOKEN`                                     | Cache revalidation auth                   |
-| `NEXT_PUBLIC_SUPABASE_URL`                                  | Supabase endpoint                         |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY`                             | Supabase public key                       |
-| `AZURE_TENANT_ID`                                           | Microsoft Graph auth                      |
-| `AZURE_CLIENT_ID`                                           | Microsoft Graph auth                      |
-| `AZURE_CLIENT_SECRET`                                       | Microsoft Graph auth                      |
-| `MS_GRAPH_SENDER_EMAIL`                                     | Email sender address                      |
-| `MS_GRAPH_REPLY_TO`                                         | Email reply-to address                    |
-| `MAILCHIMP_API_KEY`                                         | Mailchimp API key                         |
-| `MAILCHIMP_SERVER_PREFIX`                                   | Mailchimp server prefix                   |
-| `EMBEDDINGS_INDEX_BEARER_TOKEN`                             | Temporary legacy blog rollback auth       |
-| `SANITY_API_READ_TOKEN`                                     | Server-only published dataset search read |
-| `SANITY_BLOG_SEARCH_BACKEND`                                | Blog backend: legacy, dataset, lexical    |
-| `VERCEL_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_ENV` | Vercel environment                        |
+| Variable                                                    | Purpose                                              |
+| ----------------------------------------------------------- | ---------------------------------------------------- |
+| `SANITY_API_READ_TOKEN`                                     | Server-only Sanity read token (never `NEXT_PUBLIC_`) |
+| `META_PIXEL_ID`                                             | Meta Pixel ID for the Conversion API route           |
+| `META_CONVERSION_TOKEN`                                     | Meta Conversion API token (server-only)              |
+| `SANITY_API_WRITE_TOKEN`                                    | Sanity write access (revalidation denorm)            |
+| `SANITY_WEBHOOK_SECRET`                                     | Webhook authentication                               |
+| `NEXT_REVALIDATE_TOKEN`                                     | Cache revalidation auth                              |
+| `NEXT_PUBLIC_SUPABASE_URL`                                  | Supabase endpoint                                    |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`                             | Supabase public key                                  |
+| `AZURE_TENANT_ID`                                           | Microsoft Graph auth                                 |
+| `AZURE_CLIENT_ID`                                           | Microsoft Graph auth                                 |
+| `AZURE_CLIENT_SECRET`                                       | Microsoft Graph auth                                 |
+| `MS_GRAPH_SENDER_EMAIL`                                     | Email sender address                                 |
+| `MS_GRAPH_REPLY_TO`                                         | Email reply-to address                               |
+| `MAILCHIMP_API_KEY`                                         | Mailchimp API key                                    |
+| `MAILCHIMP_SERVER_PREFIX`                                   | Mailchimp server prefix                              |
+| `EMBEDDINGS_INDEX_BEARER_TOKEN`                             | Temporary legacy blog rollback auth                  |
+| `SANITY_API_READ_TOKEN`                                     | Server-only published dataset search read            |
+| `SANITY_BLOG_SEARCH_BACKEND`                                | Blog backend: legacy, dataset, lexical               |
+| `VERCEL_URL`, `VERCEL_PROJECT_PRODUCTION_URL`, `VERCEL_ENV` | Vercel environment                                   |
 
 ### Sanity Studio (`apps/studio`)
 

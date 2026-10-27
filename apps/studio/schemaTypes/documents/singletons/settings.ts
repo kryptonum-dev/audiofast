@@ -371,14 +371,7 @@ export const settings = defineType({
           type: 'string',
           title: 'ID Meta (Facebook) Pixel',
           description:
-            'Format: XXXXXXXXXX. Używane do śledzenia Meta Pixel i API konwersji.',
-        }),
-        defineField({
-          name: 'metaConversionToken',
-          type: 'string',
-          title: 'Meta Conversion API Token',
-          description:
-            'Tajny token dostępu do Meta Conversion API. Przechowuj go w bezpieczny sposób.',
+            'Format: XXXXXXXXXX. Używane do śledzenia Meta Pixel w przeglądarce. API konwersji (CAPI) korzysta z konfiguracji serwera, więc zmianę ID zgłoś też deweloperom.',
         }),
       ],
     }),

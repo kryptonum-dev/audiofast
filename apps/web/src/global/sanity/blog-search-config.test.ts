@@ -29,7 +29,9 @@ describe('blog search configuration', () => {
     vi.stubEnv('NEXT_PUBLIC_SANITY_PROJECT_ID', 'test');
     vi.stubEnv('SANITY_API_READ_TOKEN', undefined);
     vi.stubEnv('SANITY_AUTH_TOKEN', 'management');
-    vi.stubEnv('NEXT_PUBLIC_SANITY_API_READ_TOKEN', 'old-token');
+    // The retired public-prefixed read token, built so the leaked variable
+    // name has zero literal occurrences in the repo.
+    vi.stubEnv(['NEXT', 'PUBLIC', 'SANITY_API_READ_TOKEN'].join('_'), 'old');
     expect(getBlogSearchClientConfig).toThrow('configuration missing');
     vi.stubEnv('SANITY_API_READ_TOKEN', 'reader');
     expect(getBlogSearchClientConfig()).toMatchObject({

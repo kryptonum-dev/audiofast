@@ -2442,7 +2442,6 @@ export type Settings = {
     ga4_id?: string;
     googleAds_id?: string;
     metaPixelId?: string;
-    metaConversionToken?: string;
   };
   cartEmptyState?: {
     heading?: string;

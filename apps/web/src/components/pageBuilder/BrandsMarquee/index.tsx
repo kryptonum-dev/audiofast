@@ -1,6 +1,6 @@
 import { getImageProps } from 'next/image';
 
-import { urlFor } from '@/global/sanity/client';
+import { urlFor } from '@/global/sanity/image';
 import type { PagebuilderType } from '@/src/global/types';
 
 import BrandSelector from './BrandSelector';

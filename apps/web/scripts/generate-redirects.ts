@@ -16,7 +16,7 @@ const client = createClient({
   apiVersion: '2024-12-19',
   useCdn: false,
   perspective: 'published',
-  token: process.env.NEXT_PUBLIC_SANITY_API_READ_TOKEN,
+  token: process.env.SANITY_API_READ_TOKEN,
 });
 
 interface SanityRedirect {
