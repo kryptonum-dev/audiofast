@@ -16,7 +16,7 @@ import Header from '@/src/components/ui/Header';
 import { CartProvider } from '@/src/global/b2c/cart/cart-provider';
 
 import { IS_PRODUCTION_DEPLOYMENT } from '../global/constants';
-import { sanityFetch } from '../global/sanity/fetch';
+import { sanityFetchPublished } from '../global/sanity/live';
 import { querySettings } from '../global/sanity/query';
 import type { QuerySettingsResult } from '../global/sanity/sanity.types';
 
@@ -31,7 +31,8 @@ export default async function RootLayout({
   preconnect('https://vercel.live');
   prefetchDNS('https://vercel.live');
 
-  const settings = await sanityFetch<QuerySettingsResult>({
+  const settings = await sanityFetchPublished<QuerySettingsResult>({
+    requestTag: 'layout.settings',
     query: querySettings,
     tags: ['settings'],
   });

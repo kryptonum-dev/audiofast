@@ -220,9 +220,11 @@ export async function loadAdminCouponProducts(): Promise<
   const [standardProducts, cpoProducts, pricingVariantsBySlug] =
     await Promise.all([
       sanityFetchDynamic<StandardProductSnapshot[]>({
+        requestTag: 'admin.coupon.standard-products',
         query: queryCouponStandardProducts,
       }),
       sanityFetchDynamic<CpoProductSnapshot[]>({
+        requestTag: 'admin.coupon.cpo-products',
         query: queryCouponCpoProducts,
       }),
       loadPricingVariantsByProductSlug(),

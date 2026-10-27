@@ -25,7 +25,7 @@ import {
   type CustomFilterDefinition,
 } from '@/src/global/filters';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllProductsFilterMetadata,
   queryProductsPageContent,
@@ -86,9 +86,10 @@ type CategoryPageProps = {
 async function getStaticFilterMetadata() {
   'use cache';
   cacheTag('filter-metadata');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryAllProductsFilterMetadataResult>({
+  return sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
+    requestTag: 'products.category.filter-metadata',
     query: queryAllProductsFilterMetadata,
     tags: ['filter-metadata'],
   });
@@ -98,9 +99,10 @@ async function getStaticFilterMetadata() {
 async function getPageContent(categorySlug: string) {
   'use cache';
   cacheTag('products', 'productCategorySub');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryProductsPageContentResult>({
+  return sanityFetchPublished<QueryProductsPageContentResult>({
+    requestTag: 'products.category.content',
     query: queryProductsPageContent,
     params: { category: `/kategoria/${categorySlug}/` },
     tags: ['products', 'productCategorySub'],

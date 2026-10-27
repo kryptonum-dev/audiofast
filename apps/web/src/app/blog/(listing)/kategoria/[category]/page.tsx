@@ -12,7 +12,7 @@ import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryBlogPageContent } from '@/src/global/sanity/query';
 import type { QueryBlogPageContentResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -46,9 +46,10 @@ type CategoryContent = {
 async function getStaticBlogData() {
   'use cache';
   cacheTag('blog');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryBlogPageContentResult>({
+  return sanityFetchPublished<QueryBlogPageContentResult>({
+    requestTag: 'blog.category.listing-content',
     query: queryBlogPageContent,
     params: { category: '' },
     tags: ['blog'],
@@ -59,9 +60,10 @@ async function getStaticBlogData() {
 async function getPageContent(categorySlug: string) {
   'use cache';
   cacheTag('blog', 'blog-category');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryBlogPageContentResult>({
+  return sanityFetchPublished<QueryBlogPageContentResult>({
+    requestTag: 'blog.category.content',
     query: queryBlogPageContent,
     params: { category: `/blog/kategoria/${categorySlug}/` },
     tags: ['blog', 'blog-category'],

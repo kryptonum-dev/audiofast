@@ -7,7 +7,7 @@ import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import ProductGallery from '@/src/components/ui/ProductGallery';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllReviewSlugs,
   queryReviewBySlug,
@@ -25,7 +25,8 @@ type ReviewPageProps = {
 };
 
 async function fetchReviewData(slug: string) {
-  return await sanityFetch<QueryReviewBySlugResult>({
+  return await sanityFetchPublished<QueryReviewBySlugResult>({
+    requestTag: 'review.page',
     query: queryReviewBySlug,
     params: { slug: `/recenzje/${slug}/` },
     // Specific tag for this review + broad tag for type
@@ -34,7 +35,8 @@ async function fetchReviewData(slug: string) {
 }
 
 export async function generateStaticParams() {
-  const reviews = await sanityFetch<QueryAllReviewSlugsResult>({
+  const reviews = await sanityFetchPublished<QueryAllReviewSlugsResult>({
+    requestTag: 'review.static-params',
     query: queryAllReviewSlugs,
     tags: ['review'],
   });
@@ -49,7 +51,8 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: ReviewPageProps) {
   const { slug } = await props.params;
   // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetch<QueryReviewSeoBySlugResult>({
+  const seoData = await sanityFetchPublished<QueryReviewSeoBySlugResult>({
+    requestTag: 'review.metadata',
     query: queryReviewSeoBySlug,
     params: { slug: `/recenzje/${slug}/` },
     // Specific tag for this review + broad tag for type

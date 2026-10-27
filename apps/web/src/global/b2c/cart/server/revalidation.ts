@@ -69,6 +69,7 @@ async function loadStandardRevalidationContext(
     fetchProductPricing(productSlug),
     routeSlug
       ? sanityFetchFresh<StandardProductRevalidationSnapshot | null>({
+          requestTag: 'cart.revalidate.product',
           query: queryStandardProductRevalidationBySlug,
           params: { slug: routeSlug },
         })
@@ -135,6 +136,7 @@ async function loadCpoRevalidationContext(
   });
 
   return sanityFetchFresh<CpoProductRevalidationSnapshot | null>({
+    requestTag: 'cart.revalidate.cpo-product',
     query: queryCpoProductRevalidationBySlug,
     params: { slug: routeSlug },
   });

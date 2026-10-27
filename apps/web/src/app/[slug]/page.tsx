@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllPageSlugs,
   queryPageBySlug,
@@ -17,7 +17,8 @@ import type {
 import { getSEOMetadata } from '@/src/global/seo';
 
 export async function generateStaticParams() {
-  const pages = await sanityFetch<{ slug: string }[]>({
+  const pages = await sanityFetchPublished<{ slug: string }[]>({
+    requestTag: 'page.static-params',
     query: queryAllPageSlugs,
     tags: ['page'],
   });
@@ -34,7 +35,8 @@ export async function generateStaticParams() {
 async function fetchPageData(slug: string) {
   const sanitySlug = `/${slug.replace(/^\/+/, '').replace(/\/+$/, '')}/`;
 
-  return await sanityFetch<NonNullable<QueryPageBySlugResult>>({
+  return await sanityFetchPublished<NonNullable<QueryPageBySlugResult>>({
+    requestTag: 'page.content',
     query: queryPageBySlug,
     params: { slug: sanitySlug },
     // Only slug-specific tag — no broad 'page' tag to avoid invalidating all CMS pages
@@ -51,7 +53,8 @@ export async function generateMetadata({
   const sanitySlug = `/${slug.replace(/^\/+/, '').replace(/\/+$/, '')}/`;
 
   // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetch<QueryPageSeoBySlugResult>({
+  const seoData = await sanityFetchPublished<QueryPageSeoBySlugResult>({
+    requestTag: 'page.metadata',
     query: queryPageSeoBySlug,
     params: { slug: sanitySlug },
     // Only slug-specific tag — no broad 'page' tag
@@ -74,7 +77,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   'use cache';
-  cacheLife('max');
+  cacheLife('sanity');
   const { slug } = await params;
   const pageData = await fetchPageData(slug);
 

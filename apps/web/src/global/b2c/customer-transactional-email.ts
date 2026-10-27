@@ -5,7 +5,7 @@ import {
   sendTransactionalEmail,
   type TransactionalEmailInput,
 } from '@/src/global/email/service';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryB2cTransactionalEmailCopyRecipients } from '@/src/global/sanity/query';
 import type { QueryB2cTransactionalEmailCopyRecipientsResult } from '@/src/global/sanity/sanity.types';
 
@@ -16,10 +16,13 @@ export async function sendB2cCustomerTransactionalEmail(
 
   try {
     const recipients =
-      await sanityFetch<QueryB2cTransactionalEmailCopyRecipientsResult>({
-        query: queryB2cTransactionalEmailCopyRecipients,
-        tags: ['settings'],
-      });
+      await sanityFetchPublished<QueryB2cTransactionalEmailCopyRecipientsResult>(
+        {
+          requestTag: 'b2c.email.copy-recipients',
+          query: queryB2cTransactionalEmailCopyRecipients,
+          tags: ['settings'],
+        },
+      );
 
     bcc = recipients
       ?.map((recipient) => recipient.trim().toLowerCase())

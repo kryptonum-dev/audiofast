@@ -15,7 +15,7 @@ import {
   REGEX,
 } from '@/global/constants';
 import { isGraphConfigured } from '@/global/microsoft-graph/client';
-import { sanityFetch } from '@/global/sanity/fetch';
+import { sanityFetchPublished } from '@/global/sanity/live';
 import { queryContactSettings } from '@/global/sanity/query';
 import type { QueryContactSettingsResult } from '@/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/global/types';
@@ -378,7 +378,8 @@ export async function POST(request: NextRequest) {
   // Fetch contact settings from Sanity
   let contactSettings;
   try {
-    contactSettings = await sanityFetch<QueryContactSettingsResult>({
+    contactSettings = await sanityFetchPublished<QueryContactSettingsResult>({
+      requestTag: 'contact.settings',
       query: queryContactSettings,
       tags: ['settings'],
     });

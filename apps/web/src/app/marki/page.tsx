@@ -4,13 +4,14 @@ import CollectionPageSchema from '@/src/components/schema/CollectionPageSchema';
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryBrandsPageData } from '@/src/global/sanity/query';
 import type { QueryBrandsPageDataResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
 export async function generateMetadata() {
-  const brandsData = await sanityFetch<QueryBrandsPageDataResult>({
+  const brandsData = await sanityFetchPublished<QueryBrandsPageDataResult>({
+    requestTag: 'brands.metadata',
     query: queryBrandsPageData,
     tags: ['brands'],
   });
@@ -28,7 +29,8 @@ export async function generateMetadata() {
 }
 
 export default async function BrandsPage() {
-  const brandsData = await sanityFetch<QueryBrandsPageDataResult>({
+  const brandsData = await sanityFetchPublished<QueryBrandsPageDataResult>({
+    requestTag: 'brands.page',
     query: queryBrandsPageData,
     tags: ['brands'],
   });

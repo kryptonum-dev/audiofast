@@ -41,11 +41,9 @@ export async function fetchProductPricing(
   // Specific tag for this product's pricing + broad tag for type
   cacheTag('product-pricing', `product-pricing:${productSlug}`);
 
-  if (process.env.NODE_ENV === 'development') {
-    cacheLife('seconds');
-  } else {
-    cacheLife('weeks');
-  }
+  // `pricing` profile (next.config.ts): near-instant in dev, a 30-day ceiling
+  // in production; freshness comes from the tags above.
+  cacheLife('pricing');
 
   try {
     const supabase = createServerClient();

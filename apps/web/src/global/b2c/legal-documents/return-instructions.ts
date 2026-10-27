@@ -17,6 +17,7 @@ export type B2cReturnInstructionsEmail = {
 export async function loadB2cReturnInstructionsEmail(): Promise<B2cReturnInstructionsEmail | null> {
   const settings =
     await sanityFetchDynamic<QueryB2cReturnInstructionsEmailResult>({
+      requestTag: 'b2c.return-instructions',
       query: queryB2cReturnInstructionsEmail,
     });
   const content = settings?.b2cReturnInstructionsEmail;

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { PRODUCTS_ITEMS_PER_PAGE } from '@/src/global/constants';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   getCpoProductsListingQuery,
   queryCpoProductsListingCount,
@@ -64,12 +64,14 @@ export default async function CpoProductsListingInner({
   const listingQuery = getCpoProductsListingQuery(sortBy);
 
   const [products, totalCount] = await Promise.all([
-    sanityFetch<QueryCpoProductsListingNewestResult>({
+    sanityFetchPublished<QueryCpoProductsListingNewestResult>({
+      requestTag: 'cpo.listing.products',
       query: listingQuery,
       params: queryParams,
       tags: ['cpoProduct'],
     }),
-    sanityFetch<QueryCpoProductsListingCountResult>({
+    sanityFetchPublished<QueryCpoProductsListingCountResult>({
+      requestTag: 'cpo.listing.count',
       query: queryCpoProductsListingCount,
       params: queryParams,
       tags: ['cpoProduct'],

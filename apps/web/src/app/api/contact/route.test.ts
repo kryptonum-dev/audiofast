@@ -6,7 +6,7 @@ import { persistSubmission } from '@/global/anti-spam/submission-log';
 import { FALLBACK_SUPPORT_EMAIL } from '@/global/constants';
 import { sendTransactionalEmails } from '@/src/global/email/service';
 import { isGraphConfigured } from '@/src/global/microsoft-graph/client';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import type { QueryContactSettingsResult } from '@/src/global/sanity/sanity.types';
 
 import { POST } from './route';
@@ -27,8 +27,8 @@ vi.mock('@/src/global/microsoft-graph/client', () => ({
   isGraphConfigured: vi.fn(),
 }));
 
-vi.mock('@/src/global/sanity/fetch', () => ({
-  sanityFetch: vi.fn(),
+vi.mock('@/src/global/sanity/live', () => ({
+  sanityFetchPublished: vi.fn(),
 }));
 
 vi.mock('@/src/emails/contact-confirmation-template', () => ({
@@ -92,7 +92,9 @@ describe('contact API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(isGraphConfigured).mockReturnValue(true);
-    vi.mocked(sanityFetch).mockResolvedValue(createContactSettings([]));
+    vi.mocked(sanityFetchPublished).mockResolvedValue(
+      createContactSettings([]),
+    );
     botIdUnknown();
     vi.mocked(sendTransactionalEmails).mockResolvedValue([
       { success: true },
@@ -101,7 +103,7 @@ describe('contact API', () => {
   });
 
   it('sends product inquiry notifications to configured Sanity support emails', async () => {
-    vi.mocked(sanityFetch).mockResolvedValue(
+    vi.mocked(sanityFetchPublished).mockResolvedValue(
       createContactSettings([
         ' Sprzedaz@audiofast.pl ',
         'sprzedaz@audiofast.pl',
@@ -141,7 +143,9 @@ describe('contact API', () => {
   });
 
   it('falls back to the configured sender fallback when Sanity has no recipients', async () => {
-    vi.mocked(sanityFetch).mockResolvedValue(createContactSettings([]));
+    vi.mocked(sanityFetchPublished).mockResolvedValue(
+      createContactSettings([]),
+    );
 
     const response = await POST(
       createContactRequest({

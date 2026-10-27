@@ -7,7 +7,7 @@ import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
 import type { SupportCardData } from '@/src/components/b2c/shared/SupportCard';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { loadCheckoutPageData } from '@/src/global/b2c/checkout/server/load-checkout';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryCartSupportCard } from '@/src/global/sanity/query';
 
 export const metadata: Metadata = {
@@ -45,7 +45,8 @@ type CheckoutDetailsContentProps = {
 
 async function loadCheckoutSupportCard(): Promise<SupportCardData | null> {
   try {
-    return await sanityFetch<SupportCardData | null>({
+    return await sanityFetchPublished<SupportCardData | null>({
+      requestTag: 'cart.checkout.support-card',
       query: queryCartSupportCard,
       tags: ['settings'],
     });

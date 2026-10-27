@@ -6,7 +6,7 @@ import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllBlogPostSlugs,
   queryBlogPostBySlug,
@@ -26,7 +26,8 @@ type BlogPostPageProps = {
 };
 
 async function fetchBlogPostData(slug: string) {
-  return await sanityFetch<QueryBlogPostBySlugResult>({
+  return await sanityFetchPublished<QueryBlogPostBySlugResult>({
+    requestTag: 'blog-article.page',
     query: queryBlogPostBySlug,
     params: { slug: `/blog/${slug}/` },
     // Specific tag for this article + broad tag for type
@@ -35,7 +36,8 @@ async function fetchBlogPostData(slug: string) {
 }
 
 export async function generateStaticParams() {
-  const posts = await sanityFetch<QueryAllBlogPostSlugsResult>({
+  const posts = await sanityFetchPublished<QueryAllBlogPostSlugsResult>({
+    requestTag: 'blog-article.static-params',
     query: queryAllBlogPostSlugs,
     tags: ['blog-article'],
   });
@@ -50,7 +52,8 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: BlogPostPageProps) {
   const { slug } = await props.params;
   // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetch<QueryBlogPostSeoBySlugResult>({
+  const seoData = await sanityFetchPublished<QueryBlogPostSeoBySlugResult>({
+    requestTag: 'blog-article.metadata',
     query: queryBlogPostSeoBySlug,
     params: { slug: `/blog/${slug}/` },
     // Specific tag for this article + broad tag for type
@@ -81,7 +84,8 @@ export default async function BlogPostPage(props: BlogPostPageProps) {
   }
 
   // Fetch settings for structured data publisher info
-  const settings = await sanityFetch<QuerySettingsResult>({
+  const settings = await sanityFetchPublished<QuerySettingsResult>({
+    requestTag: 'blog-article.settings',
     query: querySettings,
     tags: ['settings'],
   });

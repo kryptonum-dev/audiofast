@@ -7,15 +7,15 @@ import type {
   BrandMetadata,
   ProductFilterMetadata,
 } from '@/src/global/filters';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryCpoProductsFilterMetadata } from '@/src/global/sanity/query';
 import type { QueryCpoProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
 
 import ProductsAside from '../../products/ProductsAside';
-import ProductsListingContainer from '../../products/ProductsListingContainer';
-import { ProductsLoadingProvider } from '../../products/ProductsLoadingContext';
 import ProductsListingSkeleton from '../../products/ProductsListing/ProductsListingSkeleton';
 import styles from '../../products/ProductsListing/styles.module.scss';
+import ProductsListingContainer from '../../products/ProductsListingContainer';
+import { ProductsLoadingProvider } from '../../products/ProductsLoadingContext';
 import SortDropdown from '../../products/SortDropdown';
 import CpoProductsListingInner from './CpoProductsListingInner';
 
@@ -44,9 +44,10 @@ type CpoProductsListingProps = CpoProductsListingBlockType & {
 async function getCpoFilterMetadata() {
   'use cache';
   cacheTag('cpoProduct');
-  cacheLife('hours');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryCpoProductsFilterMetadataResult>({
+  return sanityFetchPublished<QueryCpoProductsFilterMetadataResult>({
+    requestTag: 'cpo.listing.filter-metadata',
     query: queryCpoProductsFilterMetadata,
     tags: ['cpoProduct'],
   });

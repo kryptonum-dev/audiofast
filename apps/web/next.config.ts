@@ -1,5 +1,19 @@
 import { withBotId } from 'botid/next/config';
 import type { NextConfig } from 'next';
+import { sanity as sanityCacheLife } from 'next-sanity/live/cache-life';
+
+const THIRTY_DAYS = 2592000;
+const ONE_YEAR = 31536000;
+const IS_DEV = process.env.NODE_ENV === 'development';
+// Development profile for Sanity and pricing reads: refresh in the background
+// after 1 s, like the old helper's `seconds`, but with `expire` at the 5-minute
+// floor so the entry is not "short-lived". A short-lived entry (expire < 5 min)
+// becomes a dynamic hole, and now that outer shells name `sanity` too, that
+// would turn whole dev shells dynamic. `stale` stays at 30 s, not 0: the root
+// layout is still a `'use cache'` shell around `children` until Phase 4, and a
+// nested dev `stale` below 30 s is what hung Najbar's cold dev loads
+// (research/01 §5.9).
+const DEV_PROFILE = { stale: 30, revalidate: 1, expire: 300 };
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -12,36 +26,40 @@ const nextConfig: NextConfig = {
   // server render.
   partialPrefetching: true,
 
-  // Override default cache profiles to prevent 5-minute stale window.
-  // Default presets have stale: 300s (5 min) which causes every page to
-  // regenerate (ISR write) every 5 minutes when visited by bots/users.
-  // Since we use on-demand revalidation via Sanity webhooks, pages should
-  // stay fresh until explicitly invalidated — no time-based regeneration.
+  // Cache lifetimes. Freshness is tag-driven: Sanity entries register
+  // `sanity:` sync tags (expired by the sync-tag Function from Phase 6) plus
+  // the hand tags the `/api/revalidate` webhook still expires during the
+  // parallel run, so the windows below are ceilings, not the freshness
+  // mechanism. Every `'use cache'` scope names one of these profiles.
   cacheLife: {
+    // Outer scopes without an explicit `cacheLife` (and the profile
+    // `defineLive`'s own inline `cacheLife(sanity)` inherits `stale`/`expire`
+    // from). Kept long so a forgotten `cacheLife` never imposes the built-in
+    // 15-minute window on a shell.
     default: {
-      stale: 2592000, // 30 days
-      revalidate: 2592000, // 30 days
-      expire: 31536000, // 1 year
+      stale: THIRTY_DAYS,
+      revalidate: THIRTY_DAYS,
+      expire: ONE_YEAR,
     },
-    hours: {
-      stale: 2592000, // 30 days
-      revalidate: 2592000, // 30 days
-      expire: 2592000, // 30 days
-    },
-    days: {
-      stale: 2592000, // 30 days
-      revalidate: 2592000, // 30 days
-      expire: 2592000, // 30 days
-    },
-    weeks: {
-      stale: 2592000, // 30 days
-      revalidate: 2592000, // 30 days
-      expire: 2592000, // 30 days
-    },
-    max: {
-      stale: 2592000, // 30 days
-      revalidate: 2592000, // 30 days
-      expire: 31536000, // 1 year
+    // Sanity reads (`live.ts` `sanityFetchPublished`, and the outer cached
+    // shells that compose them). Production: next-sanity's `sanity` profile
+    // (1-year revalidate), stale/expire made explicit. Development keeps the
+    // near-instant refresh (`DEV_PROFILE` above), so local editing never
+    // waits on the cache.
+    sanity: IS_DEV
+      ? DEV_PROFILE
+      : { ...sanityCacheLife, stale: THIRTY_DAYS, expire: ONE_YEAR },
+    // Supabase pricing (`global/supabase/queries.ts`). Invalidated by the
+    // `product-pricing` / `product-pricing:<slug>` tags; time is a ceiling.
+    pricing: IS_DEV
+      ? DEV_PROFILE
+      : { stale: THIRTY_DAYS, revalidate: THIRTY_DAYS, expire: THIRTY_DAYS },
+    // Nominatim geocoding of store addresses (`StoreLocations`). Addresses
+    // rarely change, and the public Nominatim API must not be hammered.
+    geocode: {
+      stale: THIRTY_DAYS,
+      revalidate: THIRTY_DAYS,
+      expire: ONE_YEAR,
     },
   },
 

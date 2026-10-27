@@ -18,7 +18,7 @@ import {
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllProductsFilterMetadata,
   queryProductsPageContent,
@@ -49,15 +49,17 @@ type ProductsPageProps = {
 async function getStaticPageData() {
   'use cache';
   cacheTag('products', 'filter-metadata');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
   const [contentData, filterMetadata] = await Promise.all([
-    sanityFetch<QueryProductsPageContentResult>({
+    sanityFetchPublished<QueryProductsPageContentResult>({
+      requestTag: 'products.listing.content',
       query: queryProductsPageContent,
       params: { category: '' },
       tags: ['products'],
     }),
-    sanityFetch<QueryAllProductsFilterMetadataResult>({
+    sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
+      requestTag: 'products.listing.filter-metadata',
       query: queryAllProductsFilterMetadata,
       tags: ['filter-metadata'],
     }),

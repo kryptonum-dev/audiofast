@@ -188,6 +188,7 @@ describe('revalidateStandardCartLines', () => {
     expect(sanityFetchFresh).toHaveBeenCalledWith({
       query: expect.stringContaining('*[_type == "product"'),
       params: { slug: '/produkty/test/' },
+      requestTag: 'cart.revalidate.product',
     });
   });
 
@@ -317,6 +318,7 @@ describe('revalidateStandardCartLines', () => {
     expect(sanityFetchFresh).toHaveBeenCalledWith({
       query: expect.stringContaining('*[_type == "product"'),
       params: { slug: '/produkty/absolute-rack/' },
+      requestTag: 'cart.revalidate.product',
     });
   });
 
@@ -395,6 +397,7 @@ describe('revalidateCpoCartLines', () => {
     expect(sanityFetchFresh).toHaveBeenCalledWith({
       query: expect.stringContaining('*[_type == "cpoProduct"'),
       params: { slug: '/certyfikowany-sprzet-uzywany/test-cpo/' },
+      requestTag: 'cart.revalidate.cpo-product',
     });
   });
 

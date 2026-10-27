@@ -38,6 +38,7 @@ export function canReceiveB2cWithdrawalForm(
 
 async function loadWithdrawalFormSettings(): Promise<WithdrawalFormSettings> {
   return sanityFetchDynamic<WithdrawalFormSettings>({
+    requestTag: 'b2c.withdrawal-form',
     query: queryB2cWithdrawalForm,
   });
 }

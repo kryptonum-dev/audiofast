@@ -1277,17 +1277,17 @@ After the soak checks pass:
 
 ### Phase 2: Published HTML parity crawler + baseline
 
-- [x] 2.1 Crawler unit tests pass
-- [x] 2.2 Baseline captured
-- [x] 2.3 Self-compare is clean
+- [x] 2.1 Crawler unit tests pass — 0a2ed58
+- [x] 2.2 Baseline captured — 0a2ed58
+- [x] 2.3 Self-compare is clean — 0a2ed58
 
 ### Phase 3: defineLive fetch seam, client, cache config
 
-- [ ] 3.1 Type check passes
-- [ ] 3.2 Web unit tests pass
-- [ ] 3.3 Full build passes
-- [ ] 3.4 One-request variant selected
-- [ ] 3.5 No env-switched Sanity config remains
+- [x] 3.1 Type check passes
+- [x] 3.2 Web unit tests pass
+- [x] 3.3 Full build passes
+- [x] 3.4 One-request variant selected
+- [x] 3.5 No env-switched Sanity config remains
 - [ ] 3.6 Parity vs baseline clean
 
 ### Phase 4: Three-layer routes, layout, prerender-all

@@ -10,7 +10,7 @@ import {
   type QuickAddResolution,
   resolveQuickAdd,
 } from '@/src/global/b2c/cart/quick-add';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryProductQuickAddBySlug } from '@/src/global/sanity/query';
 import type { QueryProductQuickAddBySlugResult } from '@/src/global/sanity/sanity.types';
 import { fetchProductPricing } from '@/src/global/supabase/queries';
@@ -79,7 +79,8 @@ export async function loadProductQuickAdd(
   try {
     const [pricingData, product] = await Promise.all([
       fetchProductPricing(normalizedSlug),
-      sanityFetch<QueryProductQuickAddBySlugResult>({
+      sanityFetchPublished<QueryProductQuickAddBySlugResult>({
+        requestTag: 'product.quick-add',
         query: queryProductQuickAddBySlug,
         params: { slug: routeSlug },
         tags: ['product', `product:${normalizedSlug}`],

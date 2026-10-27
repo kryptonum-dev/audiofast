@@ -11,7 +11,7 @@ import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import BlogAside from '@/src/components/ui/BlogAside';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryBlogPageContent } from '@/src/global/sanity/query';
 import type { QueryBlogPageContentResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -28,9 +28,10 @@ type BlogPageProps = {
 async function getStaticPageData() {
   'use cache';
   cacheTag('blog');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryBlogPageContentResult>({
+  return sanityFetchPublished<QueryBlogPageContentResult>({
+    requestTag: 'blog.listing.content',
     query: queryBlogPageContent,
     params: { category: '' },
     tags: ['blog'],

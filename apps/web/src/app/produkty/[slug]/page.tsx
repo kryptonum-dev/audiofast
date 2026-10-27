@@ -26,7 +26,7 @@ import {
   needsBrandStores,
   pickEffectiveStores,
 } from '@/src/global/products/brand-stores';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllProductSlugs,
   queryArchivedProductCta,
@@ -54,14 +54,16 @@ type ProductPageProps = {
 // Fetch product data from Sanity and Supabase
 async function fetchProductData(slug: string) {
   const [sanityData, pricingData, formStateData] = await Promise.all([
-    sanityFetch<QueryProductBySlugResult>({
+    sanityFetchPublished<QueryProductBySlugResult>({
+      requestTag: 'product.page',
       query: queryProductBySlug,
       params: { slug: `/produkty/${slug}/` },
       // Specific tag for this product + broad tag for type
       tags: ['product', `product:${slug}`],
     }),
     fetchProductPricing(slug), // Fetch pricing from Supabase
-    sanityFetch<QueryProductInquiryFormStateResult>({
+    sanityFetchPublished<QueryProductInquiryFormStateResult>({
+      requestTag: 'product.inquiry-form',
       query: queryProductInquiryFormState,
       tags: ['settings'],
     }),
@@ -76,7 +78,8 @@ async function fetchProductData(slug: string) {
 async function fetchBrandStores(brandId: string | null | undefined) {
   if (!brandId) return null;
 
-  return sanityFetch<QueryBrandStoresByIdResult>({
+  return sanityFetchPublished<QueryBrandStoresByIdResult>({
+    requestTag: 'product.brand-stores',
     query: queryBrandStoresById,
     params: { brandId },
     tags: ['brand-stores', getBrandStoresTag(brandId)],
@@ -84,7 +87,8 @@ async function fetchBrandStores(brandId: string | null | undefined) {
 }
 
 export async function generateStaticParams() {
-  const products = await sanityFetch<QueryAllProductSlugsResult>({
+  const products = await sanityFetchPublished<QueryAllProductSlugsResult>({
+    requestTag: 'product.static-params',
     query: queryAllProductSlugs,
     tags: ['product'],
   });
@@ -103,7 +107,8 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   // Use lightweight SEO-only query to reduce deployment metadata size
-  const seoData = await sanityFetch<QueryProductSeoBySlugResult>({
+  const seoData = await sanityFetchPublished<QueryProductSeoBySlugResult>({
+    requestTag: 'product.metadata',
     query: queryProductSeoBySlug,
     params: { slug: `/produkty/${slug}/` },
     // Specific tag for this product + broad tag for type
@@ -157,7 +162,8 @@ export default async function ProductPage(props: ProductPageProps) {
   // Contact CTA replaces "Zapytaj o produkt" on unavailable products;
   // fetched only when needed (cached under the 'settings' tag).
   const archivedProductCta = productAvailability.isUnavailable
-    ? await sanityFetch<QueryArchivedProductCtaResult>({
+    ? await sanityFetchPublished<QueryArchivedProductCtaResult>({
+        requestTag: 'product.archived-cta',
         query: queryArchivedProductCta,
         tags: ['settings'],
       })

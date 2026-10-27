@@ -38,6 +38,17 @@ export const IS_PRODUCTION_DEPLOYMENT: boolean =
   process.env.VERCEL_ENV === 'production';
 
 /**
+ * The deployed Sanity Studio. Stega-encoded strings point edit intents here
+ * (draft mode only). Not environment-switched: every deployment edits the one
+ * production dataset through the one Studio.
+ * @constant
+ * @type {string}
+ */
+export const SANITY_STUDIO_URL: string =
+  process.env.NEXT_PUBLIC_SANITY_STUDIO_URL?.trim() ||
+  'https://audiofast.sanity.studio';
+
+/**
  * Global declaration of regex.
  * @constant
  * @type {Object}

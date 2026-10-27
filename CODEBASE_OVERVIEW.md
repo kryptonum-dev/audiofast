@@ -247,10 +247,13 @@ These fields are automatically recomputed when a product is published (via a cus
 
 The application uses **Next.js `use cache`** directive with a sophisticated invalidation strategy:
 
-#### Cache Lifecycle
+#### Fetch layer and cache lifecycle
 
-- **Development**: `cacheLife('seconds')` — fresh data on every request
-- **Production**: `cacheLife('weeks')` — 30-day stale window, invalidated on demand
+- Every cached Sanity read goes through `global/sanity/live.ts`: a strict `defineLive` instance (`sanityFetch`, which takes `perspective`, `stega`, `tags` and a `requestTag`), plus `sanityFetchPublished` (own `'use cache'`, published, stega off; aliased `sanityFetchMetadata` / `sanityFetchStaticParams`). Each result registers `sanity:` sync tags next to the hand tags below.
+- One client (`global/sanity/client.ts`): published + API CDN everywhere, no environment switch. Drafts are only visible in draft mode. `requestTagPrefix: 'audiofast-web'` plus per-call request tags attribute usage.
+- `global/sanity/fetch.ts` keeps the non-live helpers: `sanityFetchDynamic` (uncached, CDN) and `sanityFetchFresh` (live API with a token, for cart and checkout).
+- Queries are whitespace-minified at the fetch funnel (`minify-groq.ts`).
+- Cache profiles (`next.config.ts`): `sanity` (1-year revalidate in production, a 1-second background refresh in development), `pricing`, `geocode`, and a 30-day `default`.
 
 #### Tag-Based Invalidation
 

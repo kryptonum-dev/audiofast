@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 
 import CartPageClient from '@/src/components/b2c/CartPage/CartPageClient';
 import type { CartEmptyStateData } from '@/src/components/b2c/CartPage/types';
-import type { SupportCardData } from '@/src/components/b2c/shared/SupportCard';
 import CheckoutSteps from '@/src/components/b2c/CheckoutSteps';
+import type { SupportCardData } from '@/src/components/b2c/shared/SupportCard';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryCartEmptyState,
   queryCartSupportCard,
@@ -38,11 +38,13 @@ const breadcrumbsData = [
 
 export default async function CartPage() {
   const [supportCard, emptyStateContent] = await Promise.all([
-    sanityFetch<SupportCardData | null>({
+    sanityFetchPublished<SupportCardData | null>({
+      requestTag: 'cart.support-card',
       query: queryCartSupportCard,
       tags: ['settings'],
     }),
-    sanityFetch<CartEmptyStateData | null>({
+    sanityFetchPublished<CartEmptyStateData | null>({
+      requestTag: 'cart.empty-state',
       query: queryCartEmptyState,
       tags: ['settings'],
     }),

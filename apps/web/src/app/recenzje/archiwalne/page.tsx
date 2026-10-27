@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryOrphanReviews } from '@/src/global/sanity/query';
 import type { QueryOrphanReviewsResult } from '@/src/global/sanity/sanity.types';
 
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ArchivedReviewsPage() {
-  const reviews = await sanityFetch<QueryOrphanReviewsResult>({
+  const reviews = await sanityFetchPublished<QueryOrphanReviewsResult>({
+    requestTag: 'reviews.archived',
     query: queryOrphanReviews,
     tags: ['review'],
   });

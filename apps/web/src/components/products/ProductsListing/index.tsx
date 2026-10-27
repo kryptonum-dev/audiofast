@@ -8,7 +8,7 @@ import {
   rankProductSearch,
 } from '@/src/global/filters/productSearch';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   getProductsListingQuery,
   queryAllProductsFilterMetadata,
@@ -154,7 +154,8 @@ export default async function ProductsListing({
   );
   if (productSearch) {
     const filterMetadata =
-      await sanityFetch<QueryAllProductsFilterMetadataResult>({
+      await sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
+        requestTag: 'products.listing.search-metadata',
         query: queryAllProductsFilterMetadata,
         tags: ['filter-metadata'],
       });
@@ -177,7 +178,8 @@ export default async function ProductsListing({
   const productsData =
     productSearch && !hasSearchMatches
       ? { products: [], totalCount: 0 }
-      : await sanityFetch<QueryProductsListingNewestResult>({
+      : await sanityFetchPublished<QueryProductsListingNewestResult>({
+          requestTag: 'products.listing.products',
           query,
           params: {
             category: effectiveCategory,

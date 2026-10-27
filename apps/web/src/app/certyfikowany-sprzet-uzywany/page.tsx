@@ -2,13 +2,14 @@ import { notFound } from 'next/navigation';
 
 import { PageBuilder } from '@/src/components/shared/PageBuilder';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryCpoPage } from '@/src/global/sanity/query';
 import type { QueryCpoPageResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 
 export async function generateMetadata() {
-  const pageData = await sanityFetch<QueryCpoPageResult>({
+  const pageData = await sanityFetchPublished<QueryCpoPageResult>({
+    requestTag: 'cpo.page.metadata',
     query: queryCpoPage,
     tags: ['cpoPage'],
   });
@@ -37,7 +38,8 @@ export default async function CpoPage({
   }>;
 }) {
   const searchParamsResult = await searchParams;
-  const pageData = await sanityFetch<QueryCpoPageResult>({
+  const pageData = await sanityFetchPublished<QueryCpoPageResult>({
+    requestTag: 'cpo.page.content',
     query: queryCpoPage,
     tags: ['cpoPage'],
   });

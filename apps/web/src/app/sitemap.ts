@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { BASE_URL } from '@/global/constants';
-import { sanityFetch } from '@/global/sanity/fetch';
+import { sanityFetchPublished } from '@/global/sanity/live';
 import {
   queryAllBlogCategorySlugsForSitemap,
   queryAllBlogPostSlugsForSitemap,
@@ -29,37 +29,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     blogCategories,
     productCategories,
   ] = await Promise.all([
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.pages',
       query: queryAllPageSlugsForSitemap,
       tags: ['page'],
     }),
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.blog-articles',
       query: queryAllBlogPostSlugsForSitemap,
       tags: ['blog-article'],
     }),
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.brands',
       query: queryAllBrandSlugsForSitemap,
       // A brand publish invalidates `brands` (the broad `brand` tag is now a
       // fallback only), so the sitemap has to listen on both.
       tags: ['brand', 'brands'],
     }),
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.cpo-products',
       query: queryAllCpoProductSlugsForSitemap,
       tags: ['cpoProduct'],
     }),
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.products',
       query: queryAllProductSlugsForSitemap,
       tags: ['product'],
     }),
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.reviews',
       query: queryAllReviewSlugsForSitemap,
       tags: ['review'],
     }),
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.blog-categories',
       query: queryAllBlogCategorySlugsForSitemap,
       tags: ['blog-category'],
     }),
-    sanityFetch<SitemapEntry[]>({
+    sanityFetchPublished<SitemapEntry[]>({
+      requestTag: 'sitemap.product-categories',
       query: queryAllProductCategorySlugsForSitemap,
       tags: ['productCategorySub'],
     }),

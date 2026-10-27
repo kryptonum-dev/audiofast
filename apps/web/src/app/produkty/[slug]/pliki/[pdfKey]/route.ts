@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { logError, logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryProductPdfBySlugAndKey } from '@/src/global/sanity/query';
 import type { QueryProductPdfBySlugAndKeyResult } from '@/src/global/sanity/sanity.types';
 
@@ -18,11 +18,13 @@ export async function GET(request: NextRequest, props: RouteParams) {
 
   try {
     // Fetch PDF data from Sanity using product slug and PDF key
-    const pdfData = await sanityFetch<QueryProductPdfBySlugAndKeyResult>({
-      query: queryProductPdfBySlugAndKey,
-      params: { slug: fullSlug, pdfKey },
-      tags: ['product'],
-    });
+    const pdfData =
+      await sanityFetchPublished<QueryProductPdfBySlugAndKeyResult>({
+        requestTag: 'product.pdf',
+        query: queryProductPdfBySlugAndKey,
+        params: { slug: fullSlug, pdfKey },
+        tags: ['product'],
+      });
 
     if (!pdfData || !pdfData.fileUrl) {
       logWarn(`PDF not found for product: ${fullSlug}, key: ${pdfKey}`);

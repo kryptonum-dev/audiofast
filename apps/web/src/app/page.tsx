@@ -1,13 +1,14 @@
 import { notFound } from 'next/navigation';
 
 import { PageBuilder } from '../components/shared/PageBuilder';
-import { sanityFetch } from '../global/sanity/fetch';
+import { sanityFetchPublished } from '../global/sanity/live';
 import { queryHomePage } from '../global/sanity/query';
 import type { QueryHomePageResult } from '../global/sanity/sanity.types';
 import { getSEOMetadata } from '../global/seo';
 
 async function fetchHomePageData() {
-  return await sanityFetch<QueryHomePageResult>({
+  return await sanityFetchPublished<QueryHomePageResult>({
+    requestTag: 'home.page',
     query: queryHomePage,
     tags: ['homePage'],
   });

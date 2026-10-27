@@ -13,7 +13,7 @@ import PillsStickyNav from '@/src/components/ui/PillsStickyNav';
 import TwoColumnContent from '@/src/components/ui/TwoColumnContent';
 import { getCpoProductBuyability } from '@/src/global/b2c/utils/buyability';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllCpoProductSlugs,
   queryCpoProductBySlug,
@@ -60,7 +60,8 @@ function hasTwoColumnContentBlocks(blocks: unknown) {
 }
 
 export async function generateStaticParams() {
-  const products = await sanityFetch<QueryAllCpoProductSlugsResult>({
+  const products = await sanityFetchPublished<QueryAllCpoProductSlugsResult>({
+    requestTag: 'cpo-product.static-params',
     query: queryAllCpoProductSlugs,
     tags: ['cpoProduct'],
   });
@@ -84,7 +85,8 @@ export async function generateMetadata({
 }: CpoProductPageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  const seoData = await sanityFetch<QueryCpoProductSeoBySlugResult>({
+  const seoData = await sanityFetchPublished<QueryCpoProductSeoBySlugResult>({
+    requestTag: 'cpo-product.metadata',
     query: queryCpoProductSeoBySlug,
     params: { slug: `/certyfikowany-sprzet-uzywany/${slug}/` },
     tags: ['cpoProduct', `cpoProduct:${slug}`],
@@ -111,12 +113,14 @@ export async function generateMetadata({
 
 async function fetchCpoProduct(slug: string) {
   const [product, formStateData] = await Promise.all([
-    sanityFetch<QueryCpoProductBySlugResult>({
+    sanityFetchPublished<QueryCpoProductBySlugResult>({
+      requestTag: 'cpo-product.page',
       query: queryCpoProductBySlug,
       params: { slug: `/certyfikowany-sprzet-uzywany/${slug}/` },
       tags: ['cpoProduct', `cpoProduct:${slug}`],
     }),
-    sanityFetch<QueryProductInquiryFormStateResult>({
+    sanityFetchPublished<QueryProductInquiryFormStateResult>({
+      requestTag: 'cpo-product.inquiry-form',
       query: queryProductInquiryFormState,
       tags: ['settings'],
     }),

@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
 import { logError, logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryPdfReviewBySlug } from '@/src/global/sanity/query';
 import type { QueryPdfReviewBySlugResult } from '@/src/global/sanity/sanity.types';
 
@@ -18,7 +18,8 @@ export async function GET(request: NextRequest, props: RouteParams) {
 
   try {
     // Fetch PDF review data from Sanity using the full slug
-    const pdfReview = await sanityFetch<QueryPdfReviewBySlugResult>({
+    const pdfReview = await sanityFetchPublished<QueryPdfReviewBySlugResult>({
+      requestTag: 'review.pdf',
       query: queryPdfReviewBySlug,
       params: { slug: fullSlug },
       tags: ['review'],

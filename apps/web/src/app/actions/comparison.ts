@@ -4,7 +4,8 @@ import type {
   ComparisonProduct,
   EnabledParameter,
 } from '@/src/global/comparison/types';
-import { sanityFetch, sanityFetchDynamic } from '@/src/global/sanity/fetch';
+import { sanityFetchDynamic } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryComparisonPageData,
   queryComparisonProductsMinimal,
@@ -36,7 +37,8 @@ export async function fetchComparisonProducts(
   productIds: string[],
 ): Promise<ProductType[] | null> {
   try {
-    const result = await sanityFetch<ProductType[]>({
+    const result = await sanityFetchPublished<ProductType[]>({
+      requestTag: 'comparison.products-minimal',
       query: queryComparisonProductsMinimal,
       params: { productIds },
       tags: ['product'],
@@ -71,6 +73,7 @@ export async function fetchComparisonPageData(
         enabledParameters: EnabledParameter[] | null;
       }> | null;
     }>({
+      requestTag: 'comparison.page-data',
       query: queryComparisonPageData,
       params: { categorySlugs },
     });

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryArchivedProducts } from '@/src/global/sanity/query';
 import type { QueryArchivedProductsResult } from '@/src/global/sanity/sanity.types';
 
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ArchivedProductsPage() {
-  const products = await sanityFetch<QueryArchivedProductsResult>({
+  const products = await sanityFetchPublished<QueryArchivedProductsResult>({
+    requestTag: 'products.archived',
     query: queryArchivedProducts,
     tags: ['product'],
   });

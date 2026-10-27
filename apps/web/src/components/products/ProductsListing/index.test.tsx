@@ -4,7 +4,9 @@ const { fetchMock, legacyMock } = vi.hoisted(() => ({
   fetchMock: vi.fn(),
   legacyMock: vi.fn(),
 }));
-vi.mock('@/src/global/sanity/fetch', () => ({ sanityFetch: fetchMock }));
+vi.mock('@/src/global/sanity/live', () => ({
+  sanityFetchPublished: fetchMock,
+}));
 vi.mock('@/src/app/actions/embeddings', () => ({
   fetchEmbeddings: legacyMock,
 }));

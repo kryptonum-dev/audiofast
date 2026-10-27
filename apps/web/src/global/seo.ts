@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { capitalize } from '@/global/utils';
 
 import { BASE_URL, SITE_DESCRIPTION, SITE_TITLE } from './constants';
-import { sanityFetch } from './sanity/fetch';
+import { sanityFetchPublished } from './sanity/live';
 import {
   queryDefaultOGImage,
   queryHomePageSeoDescription,
@@ -78,7 +78,8 @@ export async function getSEOMetadata(
 
   // If no SEO data is provided and 404 fallback is enabled, fetch 404 page data
   if (!page.seo || Object.keys(page).length === 0) {
-    const notFoundData = await sanityFetch<QueryNotFoundPageResult>({
+    const notFoundData = await sanityFetchPublished<QueryNotFoundPageResult>({
+      requestTag: 'seo.not-found',
       query: queryNotFoundPage,
       tags: ['notFound'],
     });
@@ -104,13 +105,15 @@ export async function getSEOMetadata(
 
   // Fetch default OG image and home page description in parallel
   const [ogImageData, homePageSeoData] = await Promise.all([
-    sanityFetch<{ defaultOGImage: string | null }>({
+    sanityFetchPublished<{ defaultOGImage: string | null }>({
+      requestTag: 'seo.default-og-image',
       query: queryDefaultOGImage,
       tags: ['settings'],
     }),
     // Fetch home page description for fallback (only if current page has no description)
     !seo?.description
-      ? sanityFetch<QueryHomePageSeoDescriptionResult>({
+      ? sanityFetchPublished<QueryHomePageSeoDescriptionResult>({
+          requestTag: 'seo.home-description',
           query: queryHomePageSeoDescription,
           tags: ['homePage'],
         })

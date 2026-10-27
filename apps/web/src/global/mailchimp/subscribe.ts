@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import { sanityFetch } from '@/global/sanity/fetch';
+import { sanityFetchPublished } from '@/global/sanity/live';
 import { queryMailchimpSettings } from '@/global/sanity/query';
 
 import { mailchimpClient } from './client';
@@ -43,7 +43,8 @@ export async function subscribeToNewsletter(
   // Fetch Mailchimp Audience ID from Sanity
   let audienceId: string | null;
   try {
-    audienceId = await sanityFetch<string | null>({
+    audienceId = await sanityFetchPublished<string | null>({
+      requestTag: 'mailchimp.settings',
       query: queryMailchimpSettings,
       tags: ['mailchimp-settings'],
     });

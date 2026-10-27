@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 
+import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
+import { logWarn } from '@/src/global/logger';
 import { searchBlogArticles } from '@/src/global/sanity/blog-search';
 import { normalizeBlogSearch } from '@/src/global/sanity/blog-search-config';
-import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { getBlogArticlesQuery } from '@/src/global/sanity/query';
 import type { QueryBlogArticlesNewestResult } from '@/src/global/sanity/sanity.types';
-import { BLOG_ITEMS_PER_PAGE } from '@/src/global/constants';
 
 import EmptyState from '../../ui/EmptyState';
 import Pagination from '../../ui/Pagination';
@@ -50,7 +50,8 @@ export default async function BlogListing({
         category,
         year,
       })
-    : await sanityFetch<QueryBlogArticlesNewestResult>({
+    : await sanityFetchPublished<QueryBlogArticlesNewestResult>({
+        requestTag: 'blog.listing.articles',
         query: getBlogArticlesQuery('newest'),
         params: {
           category,

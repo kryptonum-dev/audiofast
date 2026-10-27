@@ -2,7 +2,7 @@ import { cacheLife, cacheTag } from 'next/cache';
 import { Suspense } from 'react';
 
 import { PRODUCT_SORT_OPTIONS } from '@/src/global/constants';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryAllProductsFilterMetadata } from '@/src/global/sanity/query';
 import type { QueryAllProductsFilterMetadataResult } from '@/src/global/sanity/sanity.types';
 import type { PortableTextProps } from '@/src/global/types';
@@ -36,9 +36,10 @@ type ProductsListingProps = {
 async function getStaticFilterMetadata() {
   'use cache';
   cacheTag('filter-metadata');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryAllProductsFilterMetadataResult>({
+  return sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
+    requestTag: 'block.products-listing.filter-metadata',
     query: queryAllProductsFilterMetadata,
     tags: ['filter-metadata'],
   });

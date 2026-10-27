@@ -11,7 +11,9 @@ vi.mock('next/server', () => ({
 vi.mock('@/src/global/sanity/blog-search', () => ({
   searchBlogArticles: search,
 }));
-vi.mock('@/src/global/sanity/fetch', () => ({ sanityFetch: browse }));
+vi.mock('@/src/global/sanity/live', () => ({
+  sanityFetchPublished: browse,
+}));
 vi.mock('../../ui/PublicationCard', () => ({
   default: ({ publication }: { publication: { _id: string } }) => (
     <article>{publication._id}</article>

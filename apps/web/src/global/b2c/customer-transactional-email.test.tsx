@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { sendTransactionalEmail } from '@/src/global/email/service';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 
 import { sendB2cCustomerTransactionalEmail } from './customer-transactional-email';
 
@@ -9,19 +9,19 @@ vi.mock('@/src/global/email/service', () => ({
   sendTransactionalEmail: vi.fn(),
 }));
 
-vi.mock('@/src/global/sanity/fetch', () => ({
-  sanityFetch: vi.fn(),
+vi.mock('@/src/global/sanity/live', () => ({
+  sanityFetchPublished: vi.fn(),
 }));
 
 describe('sendB2cCustomerTransactionalEmail', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(sendTransactionalEmail).mockResolvedValue({ success: true });
-    vi.mocked(sanityFetch).mockResolvedValue(null);
+    vi.mocked(sanityFetchPublished).mockResolvedValue(null);
   });
 
   it('injects configured Sanity copy recipients as BCC recipients', async () => {
-    vi.mocked(sanityFetch).mockResolvedValue([
+    vi.mocked(sanityFetchPublished).mockResolvedValue([
       ' zamowienia@audiofast.pl ',
       'ZAMOWIENIA@audiofast.pl',
       'not-an-email',
@@ -45,7 +45,9 @@ describe('sendB2cCustomerTransactionalEmail', () => {
   });
 
   it('does not block customer delivery when Sanity settings cannot be loaded', async () => {
-    vi.mocked(sanityFetch).mockRejectedValue(new Error('Sanity unavailable'));
+    vi.mocked(sanityFetchPublished).mockRejectedValue(
+      new Error('Sanity unavailable'),
+    );
 
     await sendB2cCustomerTransactionalEmail({
       react: <div>Test</div>,

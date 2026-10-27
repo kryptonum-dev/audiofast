@@ -3,14 +3,15 @@ import { notFound } from 'next/navigation';
 import { LegalBody } from '@/src/components/legal/LegalBody';
 import Breadcrumbs from '@/src/components/ui/Breadcrumbs';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryPrivacyPolicy } from '@/src/global/sanity/query';
 import type { QueryPrivacyPolicyResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
 import type { PortableTextProps } from '@/src/global/types';
 
 async function fetchPrivacyPolicyData() {
-  return await sanityFetch<QueryPrivacyPolicyResult>({
+  return await sanityFetchPublished<QueryPrivacyPolicyResult>({
+    requestTag: 'privacy-policy.page',
     query: queryPrivacyPolicy,
     tags: ['privacyPolicy'],
   });

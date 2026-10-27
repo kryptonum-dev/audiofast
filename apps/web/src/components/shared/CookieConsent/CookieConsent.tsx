@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { sanityFetch } from '@/global/sanity/fetch';
+import { sanityFetchPublished } from '@/global/sanity/live';
 import { querySettings } from '@/src/global/sanity/query';
 
 import CookieConsentClient from './CookieConsentClient';
@@ -15,7 +15,8 @@ type AnalyticsConfig = {
 };
 
 async function getAnalyticsConfig() {
-  const data = await sanityFetch<AnalyticsConfig>({
+  const data = await sanityFetchPublished<AnalyticsConfig>({
+    requestTag: 'cookie-consent.settings',
     query: querySettings,
     tags: ['settings'],
   });

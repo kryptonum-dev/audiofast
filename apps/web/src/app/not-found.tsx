@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import NotFoundComponent from '@/src/components/pageBuilder/NotFound';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import { queryNotFoundPage } from '@/src/global/sanity/query';
 import type { QueryNotFoundPageResult } from '@/src/global/sanity/sanity.types';
 import { getSEOMetadata } from '@/src/global/seo';
@@ -10,7 +10,8 @@ import { getSEOMetadata } from '@/src/global/seo';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
 
 async function fetchNotFoundPageData() {
-  return await sanityFetch<QueryNotFoundPageResult>({
+  return await sanityFetchPublished<QueryNotFoundPageResult>({
+    requestTag: 'not-found.page',
     query: queryNotFoundPage,
     tags: ['notFound'],
   });

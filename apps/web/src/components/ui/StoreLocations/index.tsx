@@ -61,7 +61,7 @@ async function geocodeAddress(address: {
 }): Promise<{ lat: number; lng: number } | null> {
   'use cache';
   cacheTag('geocode');
-  cacheLife('max');
+  cacheLife('geocode');
 
   const cleanStreet = cleanStreetForGeocoding(address.street);
 

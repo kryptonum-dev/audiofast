@@ -27,7 +27,7 @@ import {
   RELEVANCE_SORT_OPTION,
 } from '@/src/global/constants';
 import { logWarn } from '@/src/global/logger';
-import { sanityFetch } from '@/src/global/sanity/fetch';
+import { sanityFetchPublished } from '@/src/global/sanity/live';
 import {
   queryAllBrandSlugs,
   queryAllProductsFilterMetadata,
@@ -62,9 +62,10 @@ type BrandPageProps = {
 async function getBrandContent(slug: string) {
   'use cache';
   cacheTag('brand', `brand:${slug}`);
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryBrandBySlugResult>({
+  return sanityFetchPublished<QueryBrandBySlugResult>({
+    requestTag: 'brand.page',
     query: queryBrandBySlug,
     params: {
       slug: `/marki/${slug}/`,
@@ -86,9 +87,10 @@ async function getBrandContent(slug: string) {
 async function getStaticFilterMetadata() {
   'use cache';
   cacheTag('filter-metadata');
-  cacheLife('weeks');
+  cacheLife('sanity');
 
-  return sanityFetch<QueryAllProductsFilterMetadataResult>({
+  return sanityFetchPublished<QueryAllProductsFilterMetadataResult>({
+    requestTag: 'brand.filter-metadata',
     query: queryAllProductsFilterMetadata,
     tags: ['filter-metadata'],
   });
@@ -98,7 +100,8 @@ async function getStaticFilterMetadata() {
 // Static Params Generation
 // ----------------------------------------
 export async function generateStaticParams() {
-  const brands = await sanityFetch<QueryAllBrandSlugsResult>({
+  const brands = await sanityFetchPublished<QueryAllBrandSlugsResult>({
+    requestTag: 'brand.static-params',
     query: queryAllBrandSlugs,
     // `brands` is what a brand publish invalidates now that the broad `brand`
     // tag is reserved for fallbacks — keep both so the slug list stays current.
