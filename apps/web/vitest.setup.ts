@@ -11,7 +11,7 @@ import { server } from '@/src/test/msw/server';
 vi.mock('server-only', () => ({}));
 
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'error' });
+  server.listen({ onUnhandledFrame: 'error' });
 });
 
 afterEach(() => {
