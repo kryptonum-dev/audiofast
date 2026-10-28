@@ -17,8 +17,8 @@ import { fetchSanityWithRetry } from './retry';
 // The Live Content API fetch layer: one strict `defineLive` instance serving
 // every Sanity read the app caches (page content, metadata, static params,
 // sitemap, actions and route handlers). Every result registers its
-// `sanity:`-prefixed sync tags through `cacheTag()` plus the call site's own
-// hand tags (parallel run with the `/api/revalidate` webhook until Phase 12).
+// `sanity:`-prefixed sync tags through `cacheTag()`; the `invalidate-sync-tags`
+// Sanity Function expires them on publish via `/api/revalidate-tags/`.
 //
 // `defineLive` re-configures the base client for its own fetches: a published
 // read rides the API CDN with `cacheMode: 'noStale'` (except during
@@ -102,10 +102,11 @@ export type SanityFetchArgs = {
   perspective: LivePerspective;
   stega: boolean;
   /**
-   * Hand cache tags (`product:<slug>`, `filter-metadata`, …), registered next
-   * to the sync tags. Kept unchanged during the parallel run with the old
-   * webhook; pruned in Phase 12 except `product-pricing*`, `cpoProduct:<slug>`
-   * and `geocode`.
+   * Extra hand cache tags, registered next to the sync tags. Only for data a
+   * sync tag cannot expire on time: today just `cpoProduct:<slug>` (checkout
+   * expires it on reserve, sale and release). Sync tags cover every other
+   * Sanity read; the other allowlisted hand tags (`product-pricing*`,
+   * `geocode`) live on non-Sanity caches.
    */
   tags?: string[];
   /**

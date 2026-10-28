@@ -45,3 +45,7 @@ Gate run: the same build and start command as Phase 4 (`next start -p 3107`), th
 ## Phase 11 — page query latency fix
 
 Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline` (`runs/2026-10-27T15-37-48-947Z`). Result: 1,125 URLs, all 200, 40 paths differ. The run's `diff.json` is byte-identical to the Phase 9 gate run's (`runs/2026-10-27T10-53-28-193Z`), so the fix adds no diff. The page-builder windows return the same documents in the same order (checked directly against the old query on the live dataset), and the brands-by-categories guard only stops the subquery from running for pages that do not hold the block.
+
+## Phase 12 — cut-over and closeout
+
+Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline` (`runs/2026-10-28T07-40-30-076Z`). Result: 1,125 URLs, all 200, 40 paths differ. The run's `diff.json` is byte-identical to the Phase 11 gate run's (`runs/2026-10-27T15-37-48-947Z`), so pruning the hand tags and deleting `/api/revalidate` add no diff: cache tags never reach the HTML.

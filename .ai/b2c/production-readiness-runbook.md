@@ -31,7 +31,7 @@ Production-scoped variables currently present:
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `NEXT_REVALIDATE_TOKEN`
+- `SANITY_REVALIDATE_TAGS_SECRET`
 - `MAILCHIMP_API_KEY`
 - `MAILCHIMP_SERVER_PREFIX`
 - `AZURE_CLIENT_ID`
@@ -58,7 +58,7 @@ The environment variable names are now in place, but production readiness still 
 2. Patching known launch blockers in the code.
 3. Confirming sensitive Vercel values manually.
 4. Applying Supabase migrations and storage setup.
-5. Preparing Sanity content and webhooks.
+5. Preparing Sanity content and the Sanity Functions (cache invalidation).
 6. Deploying the web app and Sanity App SDK admin app in the right order.
 7. Running production smoke tests.
 
@@ -171,7 +171,7 @@ Relevant files:
 Production requirement:
 
 - `SANITY_API_WRITE_TOKEN` must be configured in production with permission to patch `cpoProduct` documents.
-- Sanity webhooks should still target `/api/revalidate/` so public CPO PDP/listing cache updates after availability changes.
+- Checkout expires the CPO detail page's `cpoProduct:<slug>` tag itself on reserve, release and sale; the `invalidate-sync-tags` Sanity Function refreshes listings from the same Sanity patch a few seconds later.
 
 ## 3. Confirm Vercel Production Values Manually
 
@@ -402,30 +402,16 @@ Relevant schema:
 
 - `apps/studio/schemaTypes/documents/singletons/settings.ts`
 
-### 5.3 Configure Sanity Revalidation Webhook
+### 5.3 Verify Sanity Cache Invalidation (Functions)
 
-Production freshness depends on the revalidation endpoint because Next cache profiles are long-lived.
+Production freshness depends on tag invalidation because Next cache profiles are long-lived. Since the 2026-10 cut-over (change `sanity-modernization`) there is **no** `/api/revalidate` webhook any more:
 
-Configure a Sanity webhook:
+- Publishes: the `invalidate-sync-tags` Sanity Function (root `sanity.blueprint.ts`, `apps/functions/`) POSTs the publish's sync tags to `https://audiofast.pl/api/revalidate-tags/` (trailing slash required) with `Authorization: Bearer <SANITY_REVALIDATE_TAGS_SECRET>`. Its env is set with `bunx sanity functions env add invalidate-sync-tags …`.
+- Product denormalization: the `denormalize-products` Sanity Function.
+- Excel price runs: the Supabase `pricing-ingest` Edge Function POSTs `{ "customTags": ["product-pricing"] }` to the same route; the Supabase secret `SANITY_REVALIDATE_TAGS_SECRET` must be byte-identical to the Vercel value.
+- Check: `bun run blueprints:deploy` is current, and `bunx sanity functions logs invalidate-sync-tags` shows `Invalidated N sync tag(s)` after a publish.
 
-- URL: `https://audiofast.pl/api/revalidate/`
-- Method: `POST`
-- Authorization: `Bearer <NEXT_REVALIDATE_TOKEN>`
-- Dataset: `production`
-- Projection must include `_type`, `_id`, `operation`, and string slug where available.
-
-Example payload shape:
-
-```json
-{
-  "_type": "product",
-  "_id": "product-id",
-  "operation": "update",
-  "slug": "/produkty/example/"
-}
-```
-
-Important follow-up: `NEXT_REVALIDATE_TOKEN` currently also acts as the Sanity write token for denormalization in `apps/web/src/app/api/revalidate/route.ts`. Split this into separate secrets before final hardening, or knowingly use a least-privilege Sanity token and rotate it.
+`SANITY_API_WRITE_TOKEN` is the only Sanity write token the web holds (CPO holds and sales).
 
 ## 6. Admin App SDK Preparation
 
@@ -648,7 +634,7 @@ Recommended order:
 5. Prepare Sanity production content.
 6. Confirm Vercel production env values manually.
 7. Deploy the web app to production.
-8. Configure or verify the Sanity production revalidation webhook.
+8. Verify the Sanity Functions stack is deployed (`bunx sanity functions logs invalidate-sync-tags`).
 9. Deploy the Sanity Studio if schema changes need publication.
 10. Deploy the B2C admin Sanity App SDK with `VITE_B2C_ADMIN_API_BASE_URL=https://audiofast.pl/`.
 11. Run production smoke tests.
@@ -705,9 +691,9 @@ Recommended order:
 
 1. Edit a product in Sanity.
 2. Publish it.
-3. Confirm the production page updates after webhook revalidation.
-4. Confirm no webhook auth failures in logs.
-5. Confirm denormalization writes still work for brand/category changes.
+3. Confirm the production page updates within seconds (sync-tag Function → `/api/revalidate-tags/`).
+4. Confirm `bunx sanity functions logs invalidate-sync-tags` shows no 401/500.
+5. Confirm `bunx sanity functions logs denormalize-products` shows the fan-out for brand/category changes.
 
 ## 10. Monitoring During First Launch Window
 
@@ -715,14 +701,14 @@ Monitor:
 
 - Vercel function logs for `/api/payment/status/`
 - Vercel function logs for `/api/admin/*`
-- Vercel function logs for `/api/revalidate/`
+- Vercel function logs for `/api/revalidate-tags/`
 - Supabase orders table
 - Supabase auth activity
 - Supabase storage invoice bucket
 - P24 transaction panel
 - Microsoft Graph email send failures
 - Mailchimp API failures
-- Sanity webhook delivery logs
+- `bunx sanity functions logs invalidate-sync-tags`
 
 Roll back or disable B2C checkout if:
 
@@ -737,10 +723,9 @@ Roll back or disable B2C checkout if:
 
 These are strongly recommended even if launch proceeds after the blocker fixes:
 
-1. Split `NEXT_REVALIDATE_TOKEN` from the Sanity write token used for denormalization.
-2. Add P24 webhook IP allowlist enforcement if Vercel source IP handling can be made reliable.
-3. Add CI for web/admin typecheck, lint, tests, and build.
-4. Update stale GitHub workflow runtime from Node 18 to Node 20+.
-5. Lower invoice upload size below Vercel request limits or switch to direct signed Supabase uploads.
-6. Add operational indexing review for admin analytics and order filters.
-7. Add automated CPO reservation/sold-state handling if CPO checkout remains enabled.
+1. Add P24 webhook IP allowlist enforcement if Vercel source IP handling can be made reliable.
+2. Add CI for web/admin typecheck, lint, tests, and build.
+3. Update stale GitHub workflow runtime from Node 18 to Node 20+.
+4. Lower invoice upload size below Vercel request limits or switch to direct signed Supabase uploads.
+5. Add operational indexing review for admin analytics and order filters.
+6. Add automated CPO reservation/sold-state handling if CPO checkout remains enabled.

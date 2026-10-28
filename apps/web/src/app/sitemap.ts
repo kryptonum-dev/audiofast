@@ -32,44 +32,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.pages',
       query: queryAllPageSlugsForSitemap,
-      tags: ['page'],
     }),
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.blog-articles',
       query: queryAllBlogPostSlugsForSitemap,
-      tags: ['blog-article'],
     }),
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.brands',
       query: queryAllBrandSlugsForSitemap,
-      // A brand publish invalidates `brands` (the broad `brand` tag is now a
-      // fallback only), so the sitemap has to listen on both.
-      tags: ['brand', 'brands'],
     }),
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.cpo-products',
       query: queryAllCpoProductSlugsForSitemap,
-      tags: ['cpoProduct'],
     }),
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.products',
       query: queryAllProductSlugsForSitemap,
-      tags: ['product'],
     }),
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.reviews',
       query: queryAllReviewSlugsForSitemap,
-      tags: ['review'],
     }),
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.blog-categories',
       query: queryAllBlogCategorySlugsForSitemap,
-      tags: ['blog-category'],
     }),
     sanityFetchPublished<SitemapEntry[]>({
       requestTag: 'sitemap.product-categories',
       query: queryAllProductCategorySlugsForSitemap,
-      tags: ['productCategorySub'],
     }),
   ]);
 

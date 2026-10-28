@@ -46,7 +46,6 @@ export async function subscribeToNewsletter(
     audienceId = await sanityFetchPublished<string | null>({
       requestTag: 'mailchimp.settings',
       query: queryMailchimpSettings,
-      tags: ['mailchimp-settings'],
     });
   } catch (error) {
     console.error('[Mailchimp] Failed to fetch settings', error);

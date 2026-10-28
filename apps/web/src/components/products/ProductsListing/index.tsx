@@ -194,7 +194,6 @@ export default async function ProductsListing({
           },
           perspective,
           stega: false,
-          tags: ['products'],
         });
 
   if (!productsData) {

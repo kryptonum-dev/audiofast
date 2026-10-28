@@ -81,7 +81,6 @@ export async function getSEOMetadata(
     const notFoundData = await sanityFetchPublished<QueryNotFoundPageResult>({
       requestTag: 'seo.not-found',
       query: queryNotFoundPage,
-      tags: ['notFound'],
     });
     if (notFoundData) {
       effectivePage = {
@@ -108,14 +107,12 @@ export async function getSEOMetadata(
     sanityFetchPublished<{ defaultOGImage: string | null }>({
       requestTag: 'seo.default-og-image',
       query: queryDefaultOGImage,
-      tags: ['settings'],
     }),
     // Fetch home page description for fallback (only if current page has no description)
     !seo?.description
       ? sanityFetchPublished<QueryHomePageSeoDescriptionResult>({
           requestTag: 'seo.home-description',
           query: queryHomePageSeoDescription,
-          tags: ['homePage'],
         })
       : Promise.resolve(null),
   ]);

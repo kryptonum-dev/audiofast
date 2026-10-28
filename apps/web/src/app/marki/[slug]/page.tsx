@@ -77,20 +77,13 @@ function getBrandContent(slug: string, options: DynamicFetchOptions) {
       slug: `/marki/${slug}/`,
     },
     ...options,
-    tags: ['brand', `brand:${slug}`],
   });
 }
 
-// Global filter metadata (shared across all pages, heavily cached)
-// Tagged with its own `filter-metadata` tag rather than the broad `products` /
-// `brands` tags. This data really does derive from every product, brand and
-// category, so it still has to be invalidated when any of them is published —
-// but it is now an explicit, single-purpose dependency instead of riding tags
-// that also carry page content. Because this fetch is awaited alongside the
-// brand document, whatever tags it carries end up on the brand page's static
-// shell (tags propagate from nested `use cache` entries to the outer one), so
-// keeping it off `products` is what stops every product publish from cooling
-// all ~41 brand shells.
+// Global filter metadata (shared across all pages, heavily cached). It derives
+// from every product, brand and category, so its sync tags are broad, and they
+// reach the brand page's static shell (tags propagate from nested `use cache`
+// entries to the outer one).
 // (`getProductsFilterMetadata`, shared with the other listing routes.)
 
 // ----------------------------------------
@@ -100,9 +93,6 @@ export async function generateStaticParams() {
   const brands = await sanityFetchStaticParams<QueryAllBrandSlugsResult>({
     requestTag: 'brand.static-params',
     query: queryAllBrandSlugs,
-    // `brands` is what a brand publish invalidates now that the broad `brand`
-    // tag is reserved for fallbacks — keep both so the slug list stays current.
-    tags: ['brand', 'brands'],
   });
 
   // Brands always prerender their full set (`allBuildTimeStaticParams`), even

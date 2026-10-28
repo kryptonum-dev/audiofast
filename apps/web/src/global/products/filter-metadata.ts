@@ -20,8 +20,7 @@ export type ProductsFilterMetadata = QueryAllProductsFilterMetadataResult &
  * The global price bounds are derived from the cached product rows here.
  *
  * Always read with stega off: it is logic data (slugs compared against URL
- * params, filter names sent back as GROQ params) and is never overlaid. Kept
- * on its own `filter-metadata` hand tag during the webhook parallel run.
+ * params, filter names sent back as GROQ params) and is never overlaid.
  */
 export async function getProductsFilterMetadata(
   perspective: LivePerspective,
@@ -32,7 +31,6 @@ export async function getProductsFilterMetadata(
       query: queryAllProductsFilterMetadata,
       perspective,
       stega: false,
-      tags: ['filter-metadata'],
     });
 
   return {

@@ -22,7 +22,6 @@ export async function GET(request: NextRequest, props: RouteParams) {
       requestTag: 'review.pdf',
       query: queryPdfReviewBySlug,
       params: { slug: fullSlug },
-      tags: ['review'],
     });
 
     if (!pdfReview || !pdfReview.pdfUrl) {

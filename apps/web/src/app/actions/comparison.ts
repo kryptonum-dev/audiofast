@@ -25,7 +25,6 @@ export async function fetchComparisonProducts(
       requestTag: 'comparison.products-minimal',
       query: queryComparisonProductsMinimal,
       params: { productIds },
-      tags: ['product'],
     });
     return result;
   } catch (error) {

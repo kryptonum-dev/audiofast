@@ -29,7 +29,6 @@ export default async function Footer({
     query: queryFooter,
     perspective,
     stega,
-    tags: ['footer'],
   });
   const footerAttribute = getDataAttribute({
     id: footerData?._id,

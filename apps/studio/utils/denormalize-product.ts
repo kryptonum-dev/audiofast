@@ -1,12 +1,11 @@
 /**
- * Denormalized product fields written by the Studio publish wrapper
- * (`actions/wrap-publish-with-denorm.ts`) for zero-lag denorm on publish.
+ * Denormalized product fields, as recomputed by the batch migration script
+ * (`scripts/migrate-denormalized-fields.ts`, `bun run migrate:denormalize`).
  *
- * The server-side owner is the `denormalize-products` Sanity Function
+ * The owner is the `denormalize-products` Sanity Function
  * (`apps/functions/denormalize-products/denorm.ts`), which computes the SAME
- * three fields with the same rules; during the parallel run both writers must
- * agree, or every publish would flip a product's primary category back and
- * forth. Keep the two in lockstep.
+ * three fields with the same rules on every publish. Keep the two in lockstep,
+ * or a migration run would flip a product's primary category back and forth.
  *
  * `denormParentCategorySlugs` (always empty: parents have no slug) and
  * `denormFilterKeys` (never read by the web) are no longer written.

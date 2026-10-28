@@ -8,17 +8,18 @@ Audiofast is a premium audio distributor's site (Next.js storefront + Sanity CMS
 
 Read these existing docs before deep work — do not duplicate them here:
 
-- `CODEBASE_OVERVIEW.md` — definitive deep-dive on the storefront, Sanity content model, GROQ query system, caching/revalidation, filtering, and Studio internals. **Note:** it predates the B2C layer and still says the site is "not e-commerce" — that is now outdated (see below).
+- `CODEBASE_OVERVIEW.md` — definitive deep-dive on the storefront, Sanity content model, GROQ query system, caching/invalidation, Presentation, filtering, and Studio internals. The B2C layer is documented in `.ai/b2c/` (see below).
 - `.ai/b2c/` — the living planning hub for the B2C initiative. Start at `.ai/b2c/README.md` → `b2c-implementation-overview.md` → `open-threads.md`. Business rules, architecture decisions, phases, and the production-readiness runbook all live here.
 - `.cursor/rules/` — enforced conventions: `scss.mdc` (also `.cursorrules`), `next.mdc`, `sanity-rules.mdc`. Follow these; SCSS in particular has strict nesting/units/transition rules.
 
 ## Monorepo layout
 
-Turborepo + Bun workspaces. Four apps:
+Turborepo + Bun workspaces. Five apps:
 
 - `apps/web` — Next.js 16 (App Router, React 19 + Compiler, Turbopack) public storefront **and** all B2C runtime (checkout, payment, order/customer APIs, server actions).
 - `apps/studio` — Sanity v6 Studio (`sanity` 6.20; editorial content model, migrations, custom tools/plugins).
 - `apps/b2c-admin` — separate **Sanity App SDK** React app (runs via `sanity dev`, not Next.js) for operators: Orders, Coupons, Analytics.
+- `apps/functions` — **Sanity Functions** declared in the root `sanity.blueprint.ts`: `invalidate-sync-tags` (publish → `/api/revalidate-tags/`) and `denormalize-products` (product `denorm*` fields). Each function directory has its own `package.json`; deploy with `bun run blueprints:deploy` (manual, not CI).
 - `apps/cms-activity` — standalone **Sanity App SDK** app "Raport pracy CMS" (History API per-editor activity report + Excel export, listed in the Dashboard, report allowlisted; see its README). Shares nothing with `b2c-admin`.
 
 Shared config in `packages/eslint-config` and `packages/typescript-config`.
@@ -35,12 +36,18 @@ bun run lint                 # turbo lint
 bun run check-types          # turbo tsc --noEmit
 bun run format               # prettier across repo
 bun run typegen              # regenerate Sanity types (extract schema + typegen) — run after editing studio schemas
+bun run blueprints:deploy    # deploy the Sanity Functions stack (sanity.blueprint.ts)
+bun run check:parity --base <url> --out <dir> [--compare <baselineDir>]   # published HTML parity crawl (run against an isolated `next start`, never a dev server)
+bun run check:stega-leaks --base <url> --mode published|draft|both        # stega/data-sanity leak crawl
+bun run scan:dataset-stega   # read-only dataset scan for stored stega markers
+bun run walkthrough:summary <run>/results.md   # Presentation audit summariser (exit 0 = no FAIL rows)
 ```
 
 App-specific (run inside the app dir):
 
 - `apps/web`: `bun run test` / `bun run test:run` (vitest), `bun run test:e2e` (Playwright, uses `.env.e2e.local`), `bun run generate:redirects`, `bun run verify:build-env`. The web `build` script runs `verify:build-env` then `generate:redirects` before `next build`.
-- `apps/studio`: `bun run migrate:denormalize` (+ `:dry`) for batch denorm recompute.
+- `apps/studio`: `bun run test` (vitest: Presentation routes/locations completeness), `bun run migrate:denormalize` (+ `:dry`) for batch denorm recompute.
+- `apps/functions`: `bun run test` (vitest), `bunx sanity functions logs <name>` (from the repo root) to see Function runs.
 - `apps/b2c-admin`: `bun run test` (vitest).
 
 **Node:** `.nvmrc` pins Node 24 (the Vercel runtime). Run the vitest suites under Node 24: jsdom 30 needs Node 22.22+ / 24.15+ and does not support Node 25.
@@ -51,7 +58,7 @@ App-specific (run inside the app dir):
 
 This is the most important architectural fact:
 
-- **Sanity CMS** = all editorial/catalog content (products, brands, blog, reviews, pages, page-builder blocks, settings, redirects). GROQ queries live in `apps/web/src/global/sanity/query.ts` (~2400 lines, fragment-composed). Products carry **denormalized fields** (`denormBrandSlug`, `denormCategorySlugs`, `denormFilterKeys`, …) recomputed on publish and via the revalidation webhook — don't read these expecting live joins; they're maintained automatically.
+- **Sanity CMS** = all editorial/catalog content (products, brands, blog, reviews, pages, page-builder blocks, settings, redirects). GROQ queries live in `apps/web/src/global/sanity/query.ts` (~2400 lines, fragment-composed). Products carry **denormalized fields** (`denormBrandSlug`, `denormBrandName`, `denormCategorySlugs`) maintained by the `denormalize-products` Sanity Function — don't read these expecting live joins.
 - **Supabase (Postgres)** = structured + transactional data. Originally just product pricing (`pricing_*` tables); now **also the B2C system of record**: orders, order items, customer profiles, coupons, returns, invoice storage. Clients in `apps/web/src/global/supabase/` (`server.ts`, `client.ts`, `admin.ts` service-role, `server-auth.ts`). SQL migrations in `supabase/migrations/`. RLS is enforced — see `rls.integration.test.ts` and the hardening migrations; respect it when adding queries.
 
 ## B2C layer (apps/web)
@@ -69,7 +76,9 @@ The transactional code is concentrated under `apps/web/src/global/b2c/` and `app
 - **Styling:** SCSS Modules co-located as `styles.module.scss`. Strict rules in `.cursorrules`/`scss.mdc` — rem units (not px), media queries nested inside the parent class (breakpoints `56.1875` / `47.9375` / `35.9375` rem), transitions in `ms` with explicit properties (never `transition: all`), camelCase BEM-like names. These SCSS rules apply to `apps/web`/`apps/studio` only; the App SDK apps (`apps/b2c-admin`, `apps/cms-activity`) use Sanity UI plus a small plain `App.css`.
 - **Sanity schemas:** always `defineField`/`defineType`, named exports, a lucide-react (fallback sanity/icons) icon per type. After schema changes run `bun run typegen`.
 - **Env vars:** the full allowlist is `turbo.json` `globalEnv` — add new vars there or Turbo won't pass them through to tasks.
-- **Caching:** Next.js `use cache` with tag-based invalidation via `app/api/revalidate/` (reverse-lookup from Sanity webhooks). See CODEBASE_OVERVIEW.md "Caching & Revalidation" before changing cached query tags.
+- **Sanity fetching:** every cached Sanity read goes through strict `defineLive` in `global/sanity/live.ts` (`sanityFetch` / `sanityFetchCached` / `sanityFetchPublished`); pass `perspective` + `stega` from `getDynamicFetchOptions()` resolved outside `'use cache'`, and never put `children` inside a cache scope. Cart/checkout correctness reads stay on `sanityFetchFresh`.
+- **Caching:** Next.js `use cache` with **sync-tag** invalidation: publish → `invalidate-sync-tags` Function → `app/api/revalidate-tags/` (`revalidateTag('sanity:'+tag, 'max')` + warm). Do not add hand cache tags: the only ones left are `product-pricing*` (Supabase, expired by `pricing-ingest`), `cpoProduct:<slug>` (checkout) and `geocode`. See CODEBASE_OVERVIEW.md "Caching & Revalidation".
+- **Presentation:** „Podgląd” in the Studio is gated by `SANITY_STUDIO_PRESENTATION_ENABLED` (keep it `false` in deployed Studios until Oliwier enables it). Metadata, JSON-LD, sitemap and B2C must stay published and stega-free; run `check:stega-leaks` and the parity crawl after touching fetch or render code.
 
 ## Language note
 

@@ -24,7 +24,6 @@ export default async function Header({
     query: queryNavbar,
     perspective,
     stega,
-    tags: ['navbar'],
   });
 
   // `HeaderShell` is a client island: it gets the attribute as a string.

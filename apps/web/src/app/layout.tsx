@@ -47,7 +47,6 @@ export default async function RootLayout({
   const settings = await sanityFetchPublished<QuerySettingsResult>({
     requestTag: 'layout.settings',
     query: querySettings,
-    tags: ['settings'],
   });
 
   return (

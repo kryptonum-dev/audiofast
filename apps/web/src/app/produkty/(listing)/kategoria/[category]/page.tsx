@@ -106,7 +106,6 @@ function getCategoryPageContent(
     query: queryProductsPageContent,
     params: { category: `/kategoria/${categorySlug}/` },
     ...options,
-    tags: ['products', 'productCategorySub'],
   });
 }
 
@@ -161,7 +160,6 @@ export async function generateStaticParams() {
     await sanityFetchStaticParams<QueryAllProductCategorySlugsResult>({
       requestTag: 'products.category.static-params',
       query: queryAllProductCategorySlugs,
-      tags: ['productCategorySub'],
     });
 
   return limitBuildTimeStaticParams(

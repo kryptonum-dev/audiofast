@@ -85,7 +85,7 @@ describe('sanityFetch', () => {
     liveFetchMock.mockResolvedValue({
       data: { title: 'x' },
       sourceMap: null,
-      tags: ['product:a', 'sanity:s1:abc'],
+      tags: ['cpoProduct:a', 'sanity:s1:abc'],
     });
 
     const result = await sanityFetch<{ title: string }>({
@@ -95,7 +95,7 @@ describe('sanityFetch', () => {
       params: { slug: '/produkty/a/' },
       perspective: 'published',
       stega: false,
-      tags: ['product:a'],
+      tags: ['cpoProduct:a'],
       requestTag: 'product.page',
     });
 
@@ -104,13 +104,13 @@ describe('sanityFetch', () => {
       params: { slug: '/produkty/a/' },
       perspective: 'published',
       stega: false,
-      tags: ['product:a'],
+      tags: ['cpoProduct:a'],
       requestTag: 'product.page',
     });
     expect(result).toEqual({
       data: { title: 'x' },
       sourceMap: null,
-      tags: ['product:a', 'sanity:s1:abc'],
+      tags: ['cpoProduct:a', 'sanity:s1:abc'],
     });
   });
 });

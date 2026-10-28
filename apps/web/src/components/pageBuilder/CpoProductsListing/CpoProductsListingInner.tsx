@@ -79,7 +79,6 @@ export default async function CpoProductsListingInner({
     params: queryParams,
     perspective,
     stega: false,
-    tags: ['cpoProduct'],
   });
 
   if (!listing?.products) {

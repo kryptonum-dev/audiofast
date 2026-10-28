@@ -23,7 +23,6 @@ function getBrandsPageData(options: DynamicFetchOptions) {
     requestTag: 'brands.page',
     query: queryBrandsPageData,
     ...options,
-    tags: ['brands'],
   });
 }
 

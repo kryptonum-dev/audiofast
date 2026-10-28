@@ -41,12 +41,10 @@ export default async function CartPage() {
     sanityFetchPublished<SupportCardData | null>({
       requestTag: 'cart.support-card',
       query: queryCartSupportCard,
-      tags: ['settings'],
     }),
     sanityFetchPublished<CartEmptyStateData | null>({
       requestTag: 'cart.empty-state',
       query: queryCartEmptyState,
-      tags: ['settings'],
     }),
   ]);
 

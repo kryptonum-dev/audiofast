@@ -72,7 +72,6 @@ export async function generateStaticParams() {
     {
       requestTag: 'cpo-product.static-params',
       query: queryAllCpoProductSlugs,
-      tags: ['cpoProduct'],
     },
   );
 
@@ -92,15 +91,15 @@ export async function generateStaticParams() {
 
 // Shared cached data function: metadata (PUBLISHED) and the published page
 // render read the same entry, so the old SEO-only query is gone.
-// `cpoProduct` / `cpoProduct:<slug>` stay: checkout expires them on reserve,
-// sale and release (`cpo-availability.ts`).
+// `cpoProduct:<slug>` is the one hand tag left besides pricing and geocode:
+// checkout expires it on reserve, sale and release (`cpo-availability.ts`).
 function getCpoProductData(slug: string, options: DynamicFetchOptions) {
   return sanityFetchCached<QueryCpoProductBySlugResult>({
     requestTag: 'cpo-product.page',
     query: queryCpoProductBySlug,
     params: { slug: `/certyfikowany-sprzet-uzywany/${slug}/` },
     ...options,
-    tags: ['cpoProduct', `cpoProduct:${slug}`],
+    tags: [`cpoProduct:${slug}`],
   });
 }
 
@@ -143,7 +142,7 @@ async function CachedCpoProduct({
 }: CachedProps & { slug: string }) {
   'use cache';
   cacheLife('sanity');
-  cacheTag('cpoProduct', `cpoProduct:${slug}`);
+  cacheTag(`cpoProduct:${slug}`);
   const [product, formStateData] = await Promise.all([
     getCpoProductData(slug, { perspective, stega }),
     sanityFetchCached<QueryProductInquiryFormStateResult>({
@@ -151,7 +150,6 @@ async function CachedCpoProduct({
       query: queryProductInquiryFormState,
       perspective,
       stega,
-      tags: ['settings'],
     }),
   ]);
 

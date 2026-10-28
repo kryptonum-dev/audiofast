@@ -40,7 +40,6 @@ function getBlogPageContent(options: DynamicFetchOptions) {
     query: queryBlogPageContent,
     params: { category: '' },
     ...options,
-    tags: ['blog'],
   });
 }
 

@@ -23,7 +23,6 @@ function getNotFoundPageData(options: DynamicFetchOptions) {
     requestTag: 'not-found.page',
     query: queryNotFoundPage,
     ...options,
-    tags: ['notFound'],
   });
 }
 

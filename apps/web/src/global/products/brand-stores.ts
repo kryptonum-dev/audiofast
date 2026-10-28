@@ -1,24 +1,4 @@
 /**
- * Cache tag for a brand's dealer list ("Gdzie kupić") as embedded on product
- * pages. Product pages that inherit the brand's stores fetch them under this
- * tag, and /api/revalidate invalidates it on brand and store publishes.
- *
- * Keyed by the brand's document id (not its slug) so a product page can build
- * it straight from the `brand._ref` it already has, and so it survives a brand
- * slug change.
- */
-export const BRAND_STORES_TAG = 'brand-stores';
-
-export function getBrandStoresTag(brandId: string): string {
-  return `${BRAND_STORES_TAG}:${toPublishedId(brandId)}`;
-}
-
-/** `drafts.abc` -> `abc`; published ids pass through unchanged. */
-export function toPublishedId(id: string): string {
-  return id.replace(/^drafts\./, '');
-}
-
-/**
  * Pick the dealer list a product page should show: the product's own
  * `availableInStores` when it has any, otherwise the brand's stores, otherwise
  * nothing.

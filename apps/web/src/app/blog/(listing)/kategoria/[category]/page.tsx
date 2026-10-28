@@ -59,7 +59,6 @@ function getBlogData(options: DynamicFetchOptions) {
     query: queryBlogPageContent,
     params: { category: '' },
     ...options,
-    tags: ['blog'],
   });
 }
 
@@ -74,7 +73,6 @@ function getCategoryContent(
     query: queryBlogPageContent,
     params: { category: `/blog/kategoria/${categorySlug}/` },
     ...options,
-    tags: ['blog', 'blog-category'],
   });
 }
 
@@ -84,7 +82,6 @@ export async function generateStaticParams() {
     requestTag: 'blog.listing.content',
     query: queryBlogPageContent,
     params: { category: '' },
-    tags: ['blog'],
   });
 
   return limitBuildTimeStaticParams(

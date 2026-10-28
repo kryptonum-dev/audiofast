@@ -381,7 +381,6 @@ export async function POST(request: NextRequest) {
     contactSettings = await sanityFetchPublished<QueryContactSettingsResult>({
       requestTag: 'contact.settings',
       query: queryContactSettings,
-      tags: ['settings'],
     });
   } catch (error) {
     console.error('[Contact API] Failed to fetch contact settings', error);

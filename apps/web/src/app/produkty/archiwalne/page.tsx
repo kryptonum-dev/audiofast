@@ -17,7 +17,6 @@ export default async function ArchivedProductsPage() {
   const products = await sanityFetchPublished<QueryArchivedProductsResult>({
     requestTag: 'products.archived',
     query: queryArchivedProducts,
-    tags: ['product'],
   });
 
   return (

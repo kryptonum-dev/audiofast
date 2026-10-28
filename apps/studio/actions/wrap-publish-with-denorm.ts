@@ -1,8 +1,7 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import type { DocumentActionComponent, DocumentActionsContext } from 'sanity';
 import { useClient } from 'sanity';
 
-import { computeDenormalizedFields } from '../utils/denormalize-product';
 import { fetchReviewAuthorCounts } from '../utils/review-author-counts';
 
 async function syncReviewAuthorCounts(
@@ -26,95 +25,57 @@ async function syncReviewAuthorCounts(
 }
 
 /**
- * Wraps the default publish action to auto-sync denormalized fields before publishing.
- * The UI remains exactly the same as the default publish action.
+ * Wraps the default publish action of a review so the affected review
+ * authors' `reviewCount` is recomputed after the publish. The UI stays exactly
+ * the same as the default publish action.
+ *
+ * Products are no longer wrapped: their `denorm*` fields are owned by the
+ * `denormalize-products` Sanity Function (`apps/functions`), which reacts to
+ * every brand, sub-category and product change server-side.
  */
 export function wrapPublishWithDenorm(
   originalPublishAction: DocumentActionComponent,
 ): DocumentActionComponent {
   const WrappedAction: DocumentActionComponent = (props) => {
-    const { draft, published, id, type } = props;
+    const { draft, published } = props;
     const client = useClient({ apiVersion: '2024-01-01' });
-    const [isProcessing, setIsProcessing] = useState(false);
 
     // Get the original action result
     const originalResult = originalPublishAction(props);
 
     // Keep a ref to the latest onHandle so the async callback always calls the
-    // most current version, even if a re-render (triggered by the pre-publish
-    // patch arriving via the realtime listener) has produced a new handler.
+    // most current version, even if a re-render has produced a new handler.
     const originalOnHandleRef = useRef(originalResult?.onHandle);
     originalOnHandleRef.current = originalResult?.onHandle;
 
-    const wrappedOnHandle = useCallback(async () => {
+    const wrappedOnHandle = useCallback(() => {
       if (!draft) {
         // No draft, just run original
         originalOnHandleRef.current?.();
         return;
       }
 
-      setIsProcessing(true);
+      const previousAuthorId = (published as any)?.author?._ref as
+        string | undefined;
+      const nextAuthorId = (draft as any)?.author?._ref as string | undefined;
+      const affectedAuthorIds = [previousAuthorId, nextAuthorId].filter(
+        Boolean,
+      ) as string[];
 
-      try {
-        // Review publish flow: sync author counters after publish completes.
-        if (type === 'review') {
-          const previousAuthorId = (published as any)?.author?._ref as
-            string | undefined;
-          const nextAuthorId = (draft as any)?.author?._ref as
-            string | undefined;
-          const affectedAuthorIds = [previousAuthorId, nextAuthorId].filter(
-            Boolean,
-          ) as string[];
+      originalOnHandleRef.current?.();
 
-          originalOnHandleRef.current?.();
-
-          // Publish action is async in Studio internals; delay recount slightly.
-          setTimeout(() => {
-            void syncReviewAuthorCounts(client, affectedAuthorIds).catch(
-              (error) => {
-                console.error(
-                  'Failed to sync reviewAuthor counts after publish:',
-                  error,
-                );
-              },
+      // Publish action is async in Studio internals; delay recount slightly.
+      setTimeout(() => {
+        void syncReviewAuthorCounts(client, affectedAuthorIds).catch(
+          (error) => {
+            console.error(
+              'Failed to sync reviewAuthor counts after publish:',
+              error,
             );
-          }, 800);
-
-          return;
-        }
-
-        if (type !== 'product') {
-          originalOnHandleRef.current?.();
-          return;
-        }
-
-        // Step 1: Compute denormalized fields from draft
-        const denormalized = await computeDenormalizedFields(
-          client,
-          draft as Parameters<typeof computeDenormalizedFields>[1],
+          },
         );
-
-        // Step 2: Patch the draft with denormalized fields.
-        // visibility: "sync" blocks until the mutation is confirmed applied,
-        // ensuring the Studio's realtime listener has received the updated draft
-        // (and thus originalOnHandleRef.current reflects the new _rev) before
-        // we trigger the publish.
-        await client
-          .patch(`drafts.${id}`)
-          .set(denormalized)
-          .commit({ visibility: 'sync' });
-
-        // Step 3: Execute the original publish using the latest handler, which
-        // now reflects the patched draft state received via the realtime listener.
-        originalOnHandleRef.current?.();
-      } catch (error) {
-        console.error('Failed to denormalize before publish:', error);
-        // Still try to publish even if denormalization fails
-        originalOnHandleRef.current?.();
-      } finally {
-        setIsProcessing(false);
-      }
-    }, [client, draft, id, published, type]);
+      }, 800);
+    }, [client, draft, published]);
 
     // If the original action returns null, return as-is
     if (!originalResult) {
@@ -123,9 +84,6 @@ export function wrapPublishWithDenorm(
 
     return {
       ...originalResult,
-      // Keep original label but show processing state
-      label: isProcessing ? 'Publishing...' : originalResult.label,
-      disabled: isProcessing || originalResult.disabled,
       onHandle: wrappedOnHandle,
     };
   };
@@ -134,14 +92,13 @@ export function wrapPublishWithDenorm(
 }
 
 /**
- * Helper to apply denormalization wrapper to publish action in document.actions config
+ * Helper to apply the review publish wrapper in the document.actions config.
  */
 export function applyDenormToPublish(
   actions: DocumentActionComponent[],
   context: DocumentActionsContext,
 ): DocumentActionComponent[] {
-  // Wrap for product and review documents.
-  if (!['product', 'review'].includes(context.schemaType)) {
+  if (context.schemaType !== 'review') {
     return actions;
   }
 

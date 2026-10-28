@@ -1351,17 +1351,17 @@ After the soak checks pass:
 
 ### Phase 11: Presentation audit walkthrough (Claude in Chrome)
 
-- [x] 11.1 Summariser tests pass
-- [x] 11.2 Final run summary clean
-- [x] 11.3 Cleanup asserted
-- [ ] 11.4 All Tier 0 gates still green
+- [x] 11.1 Summariser tests pass — 3de7859
+- [x] 11.2 Final run summary clean — 3de7859
+- [x] 11.3 Cleanup asserted — 3de7859
+- [x] 11.4 All Tier 0 gates still green — 3de7859
 
 ### Phase 12: Cut-over and closeout
 
-- [ ] 12.1 No references to the old route
-- [ ] 12.2 Only allowlisted hand tags remain
-- [ ] 12.3 Type check, lint, all tests
-- [ ] 12.4 Full build passes
-- [ ] 12.5 Parity vs baseline clean
+- [x] 12.1 No references to the old route
+- [x] 12.2 Only allowlisted hand tags remain
+- [x] 12.3 Type check, lint, all tests
+- [x] 12.4 Full build passes
+- [x] 12.5 Parity vs baseline clean
 - [ ] 12.6 Published stega crawl clean
-- [ ] 12.7 Webhooks list shows 2 remaining
+- [x] 12.7 Webhooks list shows 2 remaining

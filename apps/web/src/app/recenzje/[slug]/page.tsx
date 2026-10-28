@@ -41,8 +41,6 @@ function getReviewData(slug: string, options: DynamicFetchOptions) {
     query: queryReviewBySlug,
     params: { slug: `/recenzje/${slug}/` },
     ...options,
-    // Specific tag for this review + broad tag for type
-    tags: ['review', `review:${slug}`],
   });
 }
 
@@ -50,7 +48,6 @@ export async function generateStaticParams() {
   const reviews = await sanityFetchStaticParams<QueryAllReviewSlugsResult>({
     requestTag: 'review.static-params',
     query: queryAllReviewSlugs,
-    tags: ['review'],
   });
 
   return limitBuildTimeStaticParams(

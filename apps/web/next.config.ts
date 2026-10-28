@@ -27,10 +27,10 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
 
   // Cache lifetimes. Freshness is tag-driven: Sanity entries register
-  // `sanity:` sync tags (expired by the sync-tag Function from Phase 6) plus
-  // the hand tags the `/api/revalidate` webhook still expires during the
-  // parallel run, so the windows below are ceilings, not the freshness
-  // mechanism. Every `'use cache'` scope names one of these profiles.
+  // `sanity:` sync tags, expired by the `invalidate-sync-tags` Function through
+  // `/api/revalidate-tags/` (plus the few allowlisted hand tags), so the
+  // windows below are ceilings, not the freshness mechanism. Every
+  // `'use cache'` scope names one of these profiles.
   cacheLife: {
     // Outer scopes without an explicit `cacheLife` (and the profile
     // `defineLive`'s own inline `cacheLife(sanity)` inherits `stale`/`expire`

@@ -4,7 +4,7 @@
 
 Audiofast ([audiofast.pl](https://audiofast.pl)) is a Polish high-end audio equipment distributor based in Łódź, operating for over 20 years. They carry premium brands like Wilson Audio, dCS, Gryphon, Audio Research, Dan D'Agostino, Aurender, Shunyata, Ayre, PrimaLuna, Weiss Engineering, Usher Audio, GoldenEar, Keces Audio, and StromTank. Their offerings include amplifiers, speakers, DACs, streamers, cables, and power conditioners — products at the top tier of audiophile equipment.
 
-The website serves as their digital storefront: a product catalog, brand showcase, blog/review hub, and contact point for potential buyers. It is **not** a traditional e-commerce store with a checkout flow — instead it presents products with pricing and provides inquiry forms for purchase consultation.
+The website serves as their digital storefront: a product catalog, brand showcase, blog/review hub, and contact point for potential buyers. Most products are presented with pricing and inquiry forms for purchase consultation; a **B2C direct-sales layer** (cart, checkout, Przelewy24 payment, orders, customer accounts, coupons, returns) sells the online-buyable ones. This document covers the editorial side; the B2C layer is documented in `.ai/b2c/` (start at `.ai/b2c/README.md`).
 
 ---
 
@@ -96,13 +96,14 @@ All routes use the Next.js App Router with trailing slashes.
 
 **API Routes:**
 
-| Endpoint                    | Method | Purpose                              |
-| --------------------------- | ------ | ------------------------------------ |
-| `/api/revalidate/`          | POST   | Cache invalidation (Sanity webhooks) |
-| `/api/newsletter/`          | POST   | Newsletter subscription (Mailchimp)  |
-| `/api/newsletter/generate/` | POST   | Newsletter HTML generation           |
-| `/api/contact/`             | POST   | Contact & product inquiry forms      |
-| `/api/analytics/meta/`      | POST   | Meta CAPI relay (env, no Sanity)     |
+| Endpoint                    | Method | Purpose                                           |
+| --------------------------- | ------ | ------------------------------------------------- |
+| `/api/revalidate-tags/`     | POST   | Cache invalidation (sync tags, pricing)           |
+| `/api/draft-mode/enable/`   | GET    | Presentation draft mode (`defineEnableDraftMode`) |
+| `/api/newsletter/`          | POST   | Newsletter subscription (Mailchimp)               |
+| `/api/newsletter/generate/` | POST   | Newsletter HTML generation                        |
+| `/api/contact/`             | POST   | Contact & product inquiry forms                   |
+| `/api/analytics/meta/`      | POST   | Meta CAPI relay (env, no Sanity)                  |
 
 **Generated Files:**
 
@@ -240,46 +241,39 @@ Products store **denormalized fields** to avoid expensive dereferencing in GROQ:
 - `denormCategorySlugs`, `denormParentCategorySlugs` — avoids category reference resolution
 - `denormFilterKeys` — pre-computed filter keys
 
-These fields are automatically recomputed when a product is published (via a custom Sanity publish action) and when brands/categories change (via the revalidation webhook).
+The web reads only `denormBrandSlug`, `denormBrandName` and `denormCategorySlugs` (`[0]` is the primary category, in the editor's `categories[]` order). They are maintained by the `denormalize-products` **Sanity Function** (`apps/functions/denormalize-products/`, declared in the root `sanity.blueprint.ts`): it fires on brand, sub-category and product changes, diffs, and patches only on a change, so its own patches never re-trigger it. `bun run migrate:denormalize` in `apps/studio` recomputes everything in batch.
 
 ---
 
 ### Caching & Revalidation
 
-The application uses **Next.js `use cache`** directive with a sophisticated invalidation strategy:
+The application uses **Next.js Cache Components (`use cache`)** with Sanity **sync tags** as the invalidation mechanism.
 
 #### Fetch layer and cache lifecycle
 
-- Every cached Sanity read goes through `global/sanity/live.ts`: a strict `defineLive` instance (`sanityFetch`, which takes `perspective`, `stega`, `tags` and a `requestTag`), plus `sanityFetchPublished` (own `'use cache'`, published, stega off; aliased `sanityFetchMetadata` / `sanityFetchStaticParams`). Each result registers `sanity:` sync tags next to the hand tags below.
+- Every cached Sanity read goes through `global/sanity/live.ts`: a strict `defineLive` instance (`sanityFetch`, which takes `perspective`, `stega`, optional `tags` and a `requestTag`), plus `sanityFetchPublished` (own `'use cache'`, published, stega off; aliased `sanityFetchMetadata` / `sanityFetchStaticParams`) and `sanityFetchCached` (perspective-following shared entries). Each result registers its `sanity:` sync tags with `cacheTag()`.
+- Pages follow the three-layer shape: an orchestrator resolves `getDynamicFetchOptions()` (draft cookie → `perspective` + `stega`) outside the cache, and the cached component receives them as props. `children` are never inside `'use cache'`.
 - One client (`global/sanity/client.ts`): published + API CDN everywhere, no environment switch. Drafts are only visible in draft mode. `requestTagPrefix: 'audiofast-web'` plus per-call request tags attribute usage.
-- `global/sanity/fetch.ts` keeps the non-live helpers: `sanityFetchDynamic` (uncached, CDN) and `sanityFetchFresh` (live API with a token, for cart and checkout).
+- `global/sanity/fetch.ts` keeps the non-live helpers: `sanityFetchUncachedPublished` (uncached, CDN, for the admin coupon picker) and `sanityFetchFresh` (live API with a token, for cart and checkout correctness).
 - Queries are whitespace-minified at the fetch funnel (`minify-groq.ts`).
-- Cache profiles (`next.config.ts`): `sanity` (1-year revalidate in production, a 1-second background refresh in development), `pricing`, `geocode`, and a 30-day `default`.
+- Cache profiles (`next.config.ts`): `sanity` (1-year revalidate in production, a 1-second background refresh in development), `pricing`, `geocode`, and a 30-day `default`. They are ceilings; tags drive freshness.
+- Production builds prerender every slug (`global/build.ts`); `apps/web/scripts/verify-live-variant.ts` fails the build if the two-request `next-sanity/live` variant is bundled.
 
-#### Tag-Based Invalidation
+#### Invalidation
 
-Every cached query is tagged with specific identifiers:
+- **Sanity content:** a publish → the `invalidate-sync-tags` Sanity Function (`apps/functions/invalidate-sync-tags/`) → `POST https://audiofast.pl/api/revalidate-tags/` with `{ tags }` → `revalidateTag('sanity:' + tag, 'max')` (stale-while-revalidate), then a throttled warm of `/` and `/produkty/`. Auth is `Authorization: Bearer <SANITY_REVALIDATE_TAGS_SECRET>`, compared in constant time. The **trailing slash** is required: the site 308s slashless paths and drops the body.
+- **Supabase pricing:** the `pricing-ingest` Edge Function (`supabase/functions/pricing-ingest/`) posts `{ customTags: ['product-pricing'] }` to the same route once per Excel run. Custom tags go through an allowlist (`product-pricing`, `product-pricing:<slug>`).
+- **CPO availability:** checkout's `cpo-availability.ts` expires `cpoProduct:<slug>` with `{ expire: 0 }` on reserve, release and sale (read-your-writes for the detail page). `cpo-product-sync` makes only Sanity mutations, so sync tags cover it.
+- **Hand tags** are gone except `product-pricing*` (Supabase), `cpoProduct:<slug>` (checkout) and `geocode` (Nominatim, never invalidated). Everything else is sync tags.
+- Redirect changes still trigger a Vercel deploy through the `Vercel Deploy on Redirect Change` webhook (redirects are generated at build time).
+- Functions are deployed manually: `bun run blueprints:deploy` from the repo root; logs with `bunx sanity functions logs <name>`.
 
-- `product:yamaha-thr10ii` — a specific product page
-- `brand:wilson-audio` — a specific brand page
-- `products` — the products listing page
-- `blog-article:some-slug` — a specific blog post
-- `product-pricing:slug` — pricing data for a product
+#### Presentation (visual editing)
 
-#### Reverse Lookup Mechanism
-
-When a Sanity document is edited, the `/api/revalidate/` endpoint performs a **reverse lookup** to find all pages that reference that document:
-
-1. Receives webhook from Sanity with the edited document ID
-2. Queries Sanity: `*[references($id) && _type in [...]]` to find referencing documents
-3. Extracts slugs from those documents
-4. Invalidates only the specific cache tags for affected pages
-
-This avoids the naive approach of invalidating entire categories when a single product changes.
-
-#### Denormalization Sync
-
-When a brand or category is updated, the revalidation endpoint also triggers **denormalization updates** — it patches all referencing products with the new denormalized values, ensuring data consistency without manual intervention.
+- The Studio's „Podgląd” tool (`apps/studio/presentation/`) resolves every document type to a route, a "Używany na" panel or a static message (a completeness test enforces it). It is gated by `SANITY_STUDIO_PRESENTATION_ENABLED` in built Studios.
+- Draft mode: `/api/draft-mode/enable/` (`defineEnableDraftMode`), a disable server action, `PreviewBar`, and draft-only `<VisualEditing>` + `<SanityLive includeDrafts>`. Published HTML carries no `data-sanity`, no stega and no SanityLive.
+- Stega uses a leaf-name filter (`global/sanity/client.ts`); `global/utils/stega-text.ts` cleans attributes and emptiness checks. Metadata, JSON-LD, sitemap and B2C stay published and stega-free; buying is disabled in draft mode.
+- Gates: `bun run check:parity` (published HTML vs the baseline), `bun run check:stega-leaks` (published/draft crawl), `bun run scan:dataset-stega`, `apps/web/scripts/presentation-gates/*.test.ts`, and `bun run walkthrough:summary` for the audit runs (`context/changes/sanity-modernization/audit/`).
 
 ---
 
@@ -520,13 +514,9 @@ Configures the product comparison feature:
 
 ### Custom Actions
 
-#### Denormalization Wrapper (`actions/wrap-publish-with-denorm.ts`)
+#### Review Publish Wrapper (`actions/wrap-publish-with-denorm.ts`)
 
-Wraps the standard publish action for products:
-
-1. Before publishing, computes denormalized fields (brand slug/name, category slugs, filter keys)
-2. Patches the draft with computed values
-3. Then proceeds with the standard publish
+Wraps the standard publish action for reviews: after the publish it recomputes `reviewCount` on the previous and the new review author. Product denormalization is not done here any more; the `denormalize-products` Sanity Function owns it.
 
 #### Unpublish Action (`actions/unpublish-action.tsx`)
 
@@ -583,9 +573,8 @@ Shared TypeScript configurations:
 | `SANITY_API_READ_TOKEN`                                     | Server-only Sanity read token (never `NEXT_PUBLIC_`) |
 | `META_PIXEL_ID`                                             | Meta Pixel ID for the Conversion API route           |
 | `META_CONVERSION_TOKEN`                                     | Meta Conversion API token (server-only)              |
-| `SANITY_API_WRITE_TOKEN`                                    | Sanity write access (revalidation denorm)            |
-| `SANITY_WEBHOOK_SECRET`                                     | Webhook authentication                               |
-| `NEXT_REVALIDATE_TOKEN`                                     | Cache revalidation auth                              |
+| `SANITY_API_WRITE_TOKEN`                                    | Sanity write access (CPO checkout holds and sales)   |
+| `SANITY_REVALIDATE_TAGS_SECRET`                             | Bearer secret of `/api/revalidate-tags/`             |
 | `NEXT_PUBLIC_SUPABASE_URL`                                  | Supabase endpoint                                    |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY`                             | Supabase public key                                  |
 | `AZURE_TENANT_ID`                                           | Microsoft Graph auth                                 |
@@ -602,11 +591,17 @@ Shared TypeScript configurations:
 
 ### Sanity Studio (`apps/studio`)
 
-| Variable                   | Purpose             |
-| -------------------------- | ------------------- |
-| `SANITY_STUDIO_PROJECT_ID` | Sanity project ID   |
-| `SANITY_STUDIO_DATASET`    | Sanity dataset name |
-| `SANITY_STUDIO_TITLE`      | Studio title        |
+| Variable                             | Purpose                                                        |
+| ------------------------------------ | -------------------------------------------------------------- |
+| `SANITY_STUDIO_PROJECT_ID`           | Sanity project ID                                              |
+| `SANITY_STUDIO_DATASET`              | Sanity dataset name                                            |
+| `SANITY_STUDIO_TITLE`                | Studio title                                                   |
+| `SANITY_STUDIO_PRESENTATION_URL`     | Presentation origin (`https://audiofast.pl`), inlined at build |
+| `SANITY_STUDIO_PRESENTATION_ENABLED` | `true` shows „Podgląd” in a built Studio                       |
+
+### Sanity Functions (`apps/functions`)
+
+`invalidate-sync-tags` reads `REVALIDATE_ENDPOINT_URL` (`https://audiofast.pl/api/revalidate-tags/`) and `SANITY_REVALIDATE_TAGS_SECRET`, set with `bunx sanity functions env add`. `denormalize-products` needs no env.
 
 ---
 
@@ -650,8 +645,8 @@ bun run generate:redirects   # (in apps/web)
 1. **Partial Pre-Rendering (PPR)**: Static shell rendered at build time with dynamic islands hydrated on request — fastest possible Time to First Byte
 2. **Dual database**: Content in Sanity (editorial flexibility) + pricing in Supabase (structured data with relational integrity)
 3. **Client-side filter computation**: Lightweight metadata shipped to the browser enables instant filtering without server round-trips
-4. **Denormalization**: Pre-computed fields on products avoid expensive joins in GROQ queries, maintained automatically via publish hooks and revalidation webhooks
-5. **Granular cache invalidation**: Reverse lookup mechanism ensures only affected pages are invalidated when content changes, rather than purging entire categories
+4. **Denormalization**: Pre-computed fields on products avoid expensive joins in GROQ queries, maintained by the `denormalize-products` Sanity Function
+5. **Granular cache invalidation**: Sanity sync tags expire only the cache entries whose query results a publish can change, via the `invalidate-sync-tags` Function and `/api/revalidate-tags/`
 6. **Fragment-based queries**: GROQ query fragments are composed into larger queries, promoting reuse and consistency across ~2400 lines of query code
 7. **Modular page builder**: 20+ block types allow content editors to compose pages freely without developer intervention
 8. **Cookie-based comparison**: No authentication required — comparison state persists via cookies with a 7-day expiry

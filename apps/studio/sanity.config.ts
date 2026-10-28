@@ -133,7 +133,7 @@ export default defineConfig({
         });
       }
 
-      // Apply denorm publish wrapper for all other types
+      // Review publish wrapper (recomputes review author counts)
       let actions = applyDenormToPublish(input, context);
 
       // Document types that should always have unpublish action available

@@ -24,7 +24,6 @@ import {
 } from '@/src/global/b2c/utils/buyability';
 import { limitBuildTimeStaticParams } from '@/src/global/build';
 import {
-  getBrandStoresTag,
   needsBrandStores,
   pickEffectiveStores,
 } from '@/src/global/products/brand-stores';
@@ -69,8 +68,6 @@ function getProductData(slug: string, options: DynamicFetchOptions) {
     query: queryProductBySlug,
     params: { slug: `/produkty/${slug}/` },
     ...options,
-    // Specific tag for this product + broad tag for type
-    tags: ['product', `product:${slug}`],
   });
 }
 
@@ -83,16 +80,15 @@ async function fetchProductData(slug: string, options: DynamicFetchOptions) {
       requestTag: 'product.inquiry-form',
       query: queryProductInquiryFormState,
       ...options,
-      tags: ['settings'],
     }),
   ]);
 
   return { sanityData, pricingData, formStateData };
 }
 
-// The brand's dealer list lives in its own cache entry, tagged
-// `brand-stores:<brandId>`, so a brand or store publish refreshes it on every
-// product page that inherits it — without expiring the product data above.
+// The brand's dealer list lives in its own cache entry, so its sync tags (the
+// brand and its stores) are not mixed into the product data above: a brand or
+// store publish refreshes it on every product page that inherits it.
 async function fetchBrandStores(
   brandId: string | null | undefined,
   options: DynamicFetchOptions,
@@ -104,7 +100,6 @@ async function fetchBrandStores(
     query: queryBrandStoresById,
     params: { brandId },
     ...options,
-    tags: ['brand-stores', getBrandStoresTag(brandId)],
   });
 }
 
@@ -112,7 +107,6 @@ export async function generateStaticParams() {
   const products = await sanityFetchStaticParams<QueryAllProductSlugsResult>({
     requestTag: 'product.static-params',
     query: queryAllProductSlugs,
-    tags: ['product'],
   });
 
   return limitBuildTimeStaticParams(
@@ -187,13 +181,12 @@ async function CachedProduct({
     pricingData,
   });
   // Contact CTA replaces "Zapytaj o produkt" on unavailable products;
-  // fetched only when needed (cached under the 'settings' tag).
+  // fetched only when needed.
   const archivedProductCta = productAvailability.isUnavailable
     ? await sanityFetchCached<QueryArchivedProductCtaResult>({
         requestTag: 'product.archived-cta',
         query: queryArchivedProductCta,
         ...options,
-        tags: ['settings'],
       })
     : null;
   const categorySlugs =

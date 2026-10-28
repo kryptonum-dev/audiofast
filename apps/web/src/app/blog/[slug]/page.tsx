@@ -43,8 +43,6 @@ function getBlogPostData(slug: string, options: DynamicFetchOptions) {
     query: queryBlogPostBySlug,
     params: { slug: `/blog/${slug}/` },
     ...options,
-    // Specific tag for this article + broad tag for type
-    tags: ['blog-article', `blog-article:${slug}`],
   });
 }
 
@@ -52,7 +50,6 @@ export async function generateStaticParams() {
   const posts = await sanityFetchStaticParams<QueryAllBlogPostSlugsResult>({
     requestTag: 'blog-article.static-params',
     query: queryAllBlogPostSlugs,
-    tags: ['blog-article'],
   });
 
   return limitBuildTimeStaticParams(
@@ -106,7 +103,6 @@ async function CachedBlogPost({
   const settings = await sanityFetchPublished<QuerySettingsResult>({
     requestTag: 'blog-article.settings',
     query: querySettings,
-    tags: ['settings'],
   });
 
   const breadcrumbsData = [

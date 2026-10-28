@@ -17,7 +17,6 @@ export default async function ArchivedReviewsPage() {
   const reviews = await sanityFetchPublished<QueryOrphanReviewsResult>({
     requestTag: 'reviews.archived',
     query: queryOrphanReviews,
-    tags: ['review'],
   });
 
   return (

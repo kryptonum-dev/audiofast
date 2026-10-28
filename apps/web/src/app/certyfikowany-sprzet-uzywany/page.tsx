@@ -38,7 +38,6 @@ function getCpoPageData(options: DynamicFetchOptions) {
     requestTag: 'cpo.page.content',
     query: queryCpoPage,
     ...options,
-    tags: ['cpoPage'],
   });
 }
 

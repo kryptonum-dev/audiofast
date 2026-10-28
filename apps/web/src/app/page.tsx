@@ -22,7 +22,6 @@ function getHomePageData(options: DynamicFetchOptions) {
     requestTag: 'home.page',
     query: queryHomePage,
     ...options,
-    tags: ['homePage'],
   });
 }
 

@@ -12,7 +12,7 @@ import {
  * Keeps product `denorm*` fields (brand slug/name, category slugs) in sync with
  * the brand, sub-category and product documents they are copied from.
  *
- * Replaced the denorm block of the old `/api/revalidate` webhook, which ran
+ * Replaced the denorm block of the retired Next.js revalidation webhook, which ran
  * fire-and-forget on Vercel (not awaited, so it could be frozen mid-run), fired
  * on every brand save regardless of what changed, and resolved category refs
  * one product at a time in index order.

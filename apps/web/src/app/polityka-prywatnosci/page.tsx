@@ -23,7 +23,6 @@ function getPrivacyPolicyData(options: DynamicFetchOptions) {
     requestTag: 'privacy-policy.page',
     query: queryPrivacyPolicy,
     ...options,
-    tags: ['privacyPolicy'],
   });
 }
 

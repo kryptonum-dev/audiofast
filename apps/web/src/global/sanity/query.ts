@@ -2105,9 +2105,9 @@ export const queryAllBrandSlugs = defineQuery(/* groq */ `
 // ----------------------------------------
 
 // Brand dealer list ("Gdzie kupić") shown on product pages that have no own
-// `availableInStores`. Kept separate from queryProductBySlug so it can be
-// cached under `brand-stores:<brandId>` and invalidated on brand/store publish
-// without touching the product page's own cache entry.
+// `availableInStores`. Kept separate from queryProductBySlug so it is its own
+// cache entry: a brand/store publish expires it through its sync tags without
+// touching the product page's own entry.
 export const queryBrandStoresById = defineQuery(/* groq */ `
   *[_type == "brand" && _id == $brandId][0].stores[defined(@->)]{
     _key,
@@ -2119,9 +2119,9 @@ export const queryBrandStoresById = defineQuery(/* groq */ `
 
 // Product detail query.
 // The brand's dealer list ("Gdzie kupić") is deliberately NOT embedded in
-// brand->{} here: it comes from queryBrandStoresById under its own
-// `brand-stores:<brandId>` cache tag, so a brand/store publish refreshes every
-// product page that inherits the list (see /api/revalidate).
+// brand->{} here: it comes from queryBrandStoresById as its own cache entry,
+// so a brand/store publish refreshes every product page that inherits the list
+// through that entry's sync tags.
 export const queryProductBySlug = defineQuery(/* groq */ `
   *[_type == "product" && slug.current == $slug][0] {
     _id,

@@ -55,7 +55,6 @@ export async function getComparisonPageData({
       params: { categorySlugs },
       perspective,
       stega: false,
-      tags: ['product', 'comparatorConfig'],
     });
 
     // The comparison can share more than one category (a product may belong to

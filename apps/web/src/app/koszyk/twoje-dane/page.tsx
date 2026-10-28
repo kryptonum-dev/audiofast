@@ -48,7 +48,6 @@ async function loadCheckoutSupportCard(): Promise<SupportCardData | null> {
     return await sanityFetchPublished<SupportCardData | null>({
       requestTag: 'cart.checkout.support-card',
       query: queryCartSupportCard,
-      tags: ['settings'],
     });
   } catch (error) {
     console.error('Failed to load checkout support card.', error);

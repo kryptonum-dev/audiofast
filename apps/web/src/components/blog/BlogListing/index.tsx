@@ -73,7 +73,6 @@ export default async function BlogListing({
         },
         perspective,
         stega: false,
-        tags: ['blog-article'],
       });
 
   if (!articlesData) {

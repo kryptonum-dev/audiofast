@@ -46,17 +46,15 @@ type ProductsPageProps = {
 // ----------------------------------------
 // Shared cached data function
 // ----------------------------------------
-// `products` covers the editorial page content; the shared filter sidebar data
-// (`getProductsFilterMetadata`) rides its own `filter-metadata` tag. Metadata
-// reads the content with PUBLISHED only, so it no longer pulls the filter
-// metadata along.
+// The editorial page content only; the shared filter sidebar data
+// (`getProductsFilterMetadata`) is its own cache entry. Metadata reads the
+// content with PUBLISHED only, so it no longer pulls the filter metadata along.
 function getProductsPageContent(options: DynamicFetchOptions) {
   return sanityFetchCached<QueryProductsPageContentResult>({
     requestTag: 'products.listing.content',
     query: queryProductsPageContent,
     params: { category: '' },
     ...options,
-    tags: ['products'],
   });
 }
 

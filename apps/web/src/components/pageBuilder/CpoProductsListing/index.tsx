@@ -43,7 +43,6 @@ export default async function CpoProductsListing(
   const { heading, basePath = '/', fetchOptions, listing } = props;
 
   // Logic data (filter names, brand slugs, prices): never stega-encoded.
-  // `cpoProduct` stays as a hand tag: checkout expires it on reserve/sale.
   // One scan of the listable CPO rows; brands and price bounds derive in JS.
   const filterMetadata = deriveCpoFilterMetadata(
     await sanityFetchCached<QueryCpoProductsFilterMetadataResult>({
@@ -51,7 +50,6 @@ export default async function CpoProductsListing(
       query: queryCpoProductsFilterMetadata,
       perspective: fetchOptions?.perspective ?? 'published',
       stega: false,
-      tags: ['cpoProduct'],
     }),
   );
 

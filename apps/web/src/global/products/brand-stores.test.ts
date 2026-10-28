@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  getBrandStoresTag,
   needsBrandStores,
   pickEffectiveStores,
 } from './brand-stores';
@@ -9,13 +8,6 @@ import {
 type Store = { _id: string };
 const a: Store = { _id: 'a' };
 const b: Store = { _id: 'b' };
-
-describe('getBrandStoresTag', () => {
-  it('builds the tag from the published brand id', () => {
-    expect(getBrandStoresTag('brand-1')).toBe('brand-stores:brand-1');
-    expect(getBrandStoresTag('drafts.brand-1')).toBe('brand-stores:brand-1');
-  });
-});
 
 describe('pickEffectiveStores', () => {
   it("prefers the product's own stores", () => {

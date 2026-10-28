@@ -23,7 +23,6 @@ export async function GET(request: NextRequest, props: RouteParams) {
         requestTag: 'product.pdf',
         query: queryProductPdfBySlugAndKey,
         params: { slug: fullSlug, pdfKey },
-        tags: ['product'],
       });
 
     if (!pdfData || !pdfData.fileUrl) {

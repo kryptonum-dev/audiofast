@@ -20,7 +20,6 @@ export async function sendB2cCustomerTransactionalEmail(
         {
           requestTag: 'b2c.email.copy-recipients',
           query: queryB2cTransactionalEmailCopyRecipients,
-          tags: ['settings'],
         },
       );
 

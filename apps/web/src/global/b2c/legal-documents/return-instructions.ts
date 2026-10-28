@@ -18,7 +18,6 @@ export async function loadB2cReturnInstructionsEmail(): Promise<B2cReturnInstruc
   const settings =
     await sanityFetchPublished<QueryB2cReturnInstructionsEmailResult>({
       requestTag: 'b2c.return-instructions',
-      tags: ['settings'],
       query: queryB2cReturnInstructionsEmail,
     });
   const content = settings?.b2cReturnInstructionsEmail;

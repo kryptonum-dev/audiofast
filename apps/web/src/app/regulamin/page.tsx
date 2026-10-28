@@ -23,7 +23,6 @@ function getTermsAndConditionsData(options: DynamicFetchOptions) {
     requestTag: 'terms.page',
     query: queryTermsAndConditions,
     ...options,
-    tags: ['termsAndConditions'],
   });
 }
 

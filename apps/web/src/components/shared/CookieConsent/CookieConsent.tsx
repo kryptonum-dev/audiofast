@@ -18,7 +18,6 @@ async function getAnalyticsConfig() {
   const data = await sanityFetchPublished<AnalyticsConfig>({
     requestTag: 'cookie-consent.settings',
     query: querySettings,
-    tags: ['settings'],
   });
 
   return data?.analytics ?? null;

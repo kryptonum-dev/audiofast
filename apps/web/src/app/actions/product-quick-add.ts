@@ -83,7 +83,6 @@ export async function loadProductQuickAdd(
         requestTag: 'product.quick-add',
         query: queryProductQuickAddBySlug,
         params: { slug: routeSlug },
-        tags: ['product', `product:${normalizedSlug}`],
       }),
     ]);
 

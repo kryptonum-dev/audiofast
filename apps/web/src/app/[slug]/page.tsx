@@ -26,7 +26,6 @@ export async function generateStaticParams() {
   const pages = await sanityFetchStaticParams<{ slug: string | null }[]>({
     requestTag: 'page.static-params',
     query: queryAllPageSlugs,
-    tags: ['page'],
   });
 
   return limitBuildTimeStaticParams(
@@ -49,8 +48,6 @@ function getPageData(slug: string, options: DynamicFetchOptions) {
     query: queryPageBySlug,
     params: { slug: sanitySlug },
     ...options,
-    // Only slug-specific tag — no broad 'page' tag to avoid invalidating all CMS pages
-    tags: [`page:${slug}`],
   });
 }
 
