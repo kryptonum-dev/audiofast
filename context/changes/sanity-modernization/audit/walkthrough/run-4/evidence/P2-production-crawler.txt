@@ -1,0 +1,11 @@
+P2 / gate 11.4 — bun run check:stega-leaks --base https://audiofast.pl --mode published (production at 3de7859, dpl_Aq1yc7vCMMu8DR2GScDYtdbvUQ9t), 2026-10-28
+$ bun apps/web/scripts/check-stega-leaks.ts --base https://audiofast.pl --mode published
+sitemap: 1104 URLs; probes: 13; modes: published; concurrency 4
+50/1117 published 200 /marki/dcs/
+…
+1117/1117 published 200 /this-page-does-not-exist/
+
+pages: 1117
+published: 0 page(s) with findings
+result: CLEAN (exit 0)
+exit 0

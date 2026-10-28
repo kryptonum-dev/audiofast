@@ -1,0 +1,8 @@
+I1 — consent dialog and trackers suppressed in draft (lane D, https://audiofast.pl at 3de7859, 2026-10-28T07:23:52Z)
+Plain draft tab (share-access enable, perspective drafts), fresh context, no consent stored:
+[{"step":"goto","status":200,"url":"/"},{"step":"draft-home","value":{"path":"/","dialog":null,"gtmFb":0,"scriptsGtmFb":1,"previewBar":true}},{"step":"goto","status":200,"url":"/qa-presentation/"},{"step":"draft-qa","value":{"path":"/qa-presentation/","dialog":null,"gtmFb":0}}]
+  The one inline script matching /facebook/ is an RSC flight payload (self.__next_f.push) carrying the footer link https://www.facebook.com/audiofast/ — not a tracker load.
+Control, published tab, fresh context:
+[{"step":"goto","status":200,"url":"/"},{"step":"control-published-home","value":{"path":"/","dialog":"present","anyDialog":["Ustawienia cookie"],"gtmFb":0}}]
+Iframe half: SKIPPED — Podgląd hidden in deployed Studio (P11); the deployed Presentation iframe cannot be opened.
+Verdict (draft tab): [role=dialog][aria-label="Ustawienia cookie"] null on / and /qa-presentation/; googletagmanager/facebook resources 0. Published control shows the dialog.

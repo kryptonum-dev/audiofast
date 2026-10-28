@@ -1,0 +1,32 @@
+{
+  "frozenAt": "2026-10-28T07:21:47.503Z",
+  "lane": "D",
+  "head": "3de7859cfb12855dbcbae02b7172cd9b4e244a0f (production dpl_Aq1yc7vCMMu8DR2GScDYtdbvUQ9t READY)",
+  "studio": "https://audiofast.sanity.studio (deployed 2026-10-28 at 3de7859, Podgląd hidden P11; not used)",
+  "web": "https://audiofast.pl",
+  "browser": "headless Playwright (repo @playwright/test) + curl",
+  "versions": {
+    "next": "16.4.3",
+    "next-sanity": "^13.4",
+    "sanity": "^6.20"
+  },
+  "tokens": {
+    "SANITY_AUTH_TOKEN": "present",
+    "SANITY_API_READ_TOKEN": "present"
+  },
+  "presentationEnabledInDeployedStudio": false,
+  "ids": [
+    "qa-presentation"
+  ],
+  "fixtureDrafts": [],
+  "pendingDraftCount": 196,
+  "revs": [
+    {
+      "_id": "qa-presentation",
+      "_rev": "6LbxA4c5p2VL183Rwcp8pK",
+      "_type": "page",
+      "_updatedAt": "2026-10-27T11:44:00Z"
+    }
+  ],
+  "shareAccess": 1
+}

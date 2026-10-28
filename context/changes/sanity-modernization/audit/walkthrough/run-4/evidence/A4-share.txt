@@ -1,0 +1,8 @@
+A4 — share link vs plain URL on production (lane D, https://audiofast.pl at 3de7859, 2026-10-28T07:23:46Z)
+Draft edit: drafts.qa-presentation created from the published QA doc with " QA11R4A4" appended to qa-phone-image-cta-1 primaryHeading (tx CCTk887xkbiaIA1nfjBi1Z); deleted at cleanup.
+Share tab: fresh headless context, GET /api/draft-mode/enable/?sanity-preview-secret=<share-access secret, REDACTED>&sanity-preview-perspective=drafts&sanity-preview-pathname=/qa-presentation/ (redirect manual):
+{"status":307,"location":"/qa-presentation/?sanity-preview-perspective=drafts","setCookie":[{"name":"__prerender_bypass","deletion":false,"attrs":"Path,Secure,HttpOnly,SameSite"},{"name":"sanity-preview-perspective","deletion":false,"attrs":"Path,Secure,HttpOnly,SameSite"},{"name":"sanity-preview-variant","deletion":true,"attrs":"Path,Expires,Secure,HttpOnly,SameSite"}]}
+[{"step":"goto","status":200,"url":"/qa-presentation/"},{"step":"share","value":{"path":"/qa-presentation/","token":true,"dataSanity":72,"previewBar":true}},{"step":"cookies","value":[{"name":"__prerender_bypass","httpOnly":false},{"name":"sanity-preview-perspective","httpOnly":false,"value":"drafts"}]}]
+Plain tab: fresh context without the enable step:
+[{"step":"goto","status":200,"url":"/qa-presentation/"},{"step":"plain","value":{"path":"/qa-presentation/","token":false,"dataSanity":0}}]
+Verdict: share tab body contains QA11R4A4 (token true, [data-sanity] 72, PreviewBar shown); plain tab token false, [data-sanity] 0.

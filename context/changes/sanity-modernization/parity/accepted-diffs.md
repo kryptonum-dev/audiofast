@@ -49,3 +49,7 @@ Gate run: the same build and start command as Phase 4 (`next start -p 3107`), th
 ## Phase 12 — cut-over and closeout
 
 Gate run: the same build and start command as Phase 4 (`next start -p 3107`), then `bun run check:parity --compare parity/baseline` (`runs/2026-10-28T07-40-30-076Z`). Result: 1,125 URLs, all 200, 40 paths differ. The run's `diff.json` is byte-identical to the Phase 11 gate run's (`runs/2026-10-27T15-37-48-947Z`), so pruning the hand tags and deleting `/api/revalidate` add no diff: cache tags never reach the HTML.
+
+## Whole-change review — final gate run on `3115314`
+
+Gate run: the same build and start command as Phase 4 (`next start -p 3107`) on a clean checkout of `3115314`, then `bun run check:parity --compare parity/baseline` (`runs/2026-10-28T07-59-46-401Z`, summary `gitSha: 3115314a`). Result: 1,125 URLs, all 200, 40 paths differ. The run's `diff.json` is byte-identical to the Phase 12 gate run's (`runs/2026-10-28T07-40-30-076Z`, which crawled the Phase 12 tree before its commit landed), so the committed change adds no diff beyond the entries above.

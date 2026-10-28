@@ -1,0 +1,7 @@
+P1 — production HTML (lane D, https://audiofast.pl at 3de7859, 2026-10-28T07:21:47Z)
+/  status=200  grep -c data-sanity: 0
+/o-nas/  status=200  grep -c data-sanity: 0
+/qa-presentation/  status=200  grep -c data-sanity: 0
+/qa-presentation/ robots meta: <meta name="robots" content="noindex, nofollow"/>
+sitemap.xml qa-presentation count: 0
+x-vercel-id/age on /: age: 5 x-vercel-cache: HIT 

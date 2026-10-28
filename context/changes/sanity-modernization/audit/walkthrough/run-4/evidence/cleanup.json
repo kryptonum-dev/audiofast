@@ -1,0 +1,15 @@
+{
+ "at": "2026-10-28T07:23:58.758Z",
+ "query": "{\"drafts\": *[_id in $draftIds]._id, \"revs\": *[_id in $ids]{_id,_rev}, \"neverPublished\": *[_id in $deleted || _id in $deletedDrafts]._id}",
+ "params": {
+  "ids": [
+   "qa-presentation"
+  ],
+  "deleted": []
+ },
+ "drafts": [],
+ "neverPublishedRemaining": [],
+ "revChanged": [],
+ "checked": 1,
+ "pass": true
+}

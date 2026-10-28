@@ -1358,10 +1358,10 @@ After the soak checks pass:
 
 ### Phase 12: Cut-over and closeout
 
-- [x] 12.1 No references to the old route
-- [x] 12.2 Only allowlisted hand tags remain
-- [x] 12.3 Type check, lint, all tests
-- [x] 12.4 Full build passes
-- [x] 12.5 Parity vs baseline clean
-- [ ] 12.6 Published stega crawl clean
-- [x] 12.7 Webhooks list shows 2 remaining
+- [x] 12.1 No references to the old route — 3115314
+- [x] 12.2 Only allowlisted hand tags remain — 3115314
+- [x] 12.3 Type check, lint, all tests — 3115314
+- [x] 12.4 Full build passes — 3115314
+- [x] 12.5 Parity vs baseline clean — 3115314
+- [x] 12.6 Published stega crawl clean — 3115314
+- [x] 12.7 Webhooks list shows 2 remaining — 3115314
