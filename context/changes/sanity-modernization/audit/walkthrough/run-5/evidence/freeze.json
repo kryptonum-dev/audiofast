@@ -1,0 +1,33 @@
+{
+  "frozenAt": "2026-10-28T08:28:41Z",
+  "lane": "D",
+  "head": "265ca9848d1c6bc3818e603ba97fd6623f757146 (origin/main)",
+  "studio": "https://audiofast.sanity.studio (app dlwt2zhgkk7rjx6dj8rdyjfz), opened inside the sanity.io dashboard (https://www.sanity.io/@o5BEPFjvf/studio/dlwt2zhgkk7rjx6dj8rdyjfz/default); deployed 2026-10-28 after 7ae387d/265ca98 with SANITY_STUDIO_PRESENTATION_ENABLED=true (P12). Tool menu observed: Treść, Podgląd, Media, Newsletter, Porównywarka (no Vision, no Releases, no Scheduled Drafts)",
+  "web": "https://audiofast.pl",
+  "webDeployment": "dpl_6EW8b31atS3AZTF8WgyVq7nJSZDa READY, production, aliased to audiofast.pl, source SHA 181759333b7683fbd6701bfd387a5704045106bf (7ae387d and 265ca98 touch apps/studio, CLAUDE.md and decisions.md only; their production builds dpl_9dg5xpSMJPhYpsU7D8cHzkDoJfyZ / dpl_6zf7CsiZNk1yQ34j9oMcxE9uk1EK were BUILDING / QUEUED at freeze)",
+  "browser": "Claude desktop built-in browser pane (Chromium), tab-2, signed in to sanity.io by Oliwier",
+  "presentationOrigins": ["http://localhost:3000", "https://audiofast.pl"],
+  "tokens": {
+    "SANITY_AUTH_TOKEN": "present (not printed)",
+    "SANITY CLI user session": "present (not printed)"
+  },
+  "presentationEnabledInDeployedStudio": true,
+  "ids": ["qa-presentation"],
+  "fixtureDrafts": [],
+  "fixtureVersions": [],
+  "pendingDraftCount": 136,
+  "revs": [
+    {
+      "_id": "qa-presentation",
+      "_rev": "6LbxA4c5p2VL183Rwcp8pK",
+      "_type": "page",
+      "_updatedAt": "2026-10-27T11:44:00Z"
+    }
+  ],
+  "a2Field": {
+    "path": "pageBuilder[_key==\"qa-phone-image-cta-1\"].primaryHeading[_key==\"qa-phone-image-cta-1-1\"].children[_key==\"4f8bec2175c8\"].text",
+    "publishedText": "Kto serwisuje sprzęt w AUDIOFAST?"
+  },
+  "shareAccess": 1,
+  "query": "bunx sanity documents query --api-version v2021-06-07 (raw perspective): {revs: *[_id in [\"qa-presentation\"]]{_id,_rev,_type,_updatedAt}, drafts: *[_id in [\"drafts.qa-presentation\"]]._id, versions: *[_id in path(\"versions.**.qa-presentation\")]._id, pending: count(*[_id in path(\"drafts.**\")]), share: count(*[_id==\"sanity-preview-url-secret.share-access\"])}"
+}

@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-28T08:38:48.000Z",
+  "revert": {
+    "at": "2026-10-28T08:38:40Z",
+    "mutation": "transaction [patch drafts.qa-presentation ifRevisionID 5c13221b-afbe-4338-ae17-463b60d5949b (unset no-op guard), delete drafts.qa-presentation]",
+    "transactionId": "5cyTuyNJJJ5tloebA3tUKH",
+    "results": [{ "id": "drafts.qa-presentation", "operation": "delete" }]
+  },
+  "query": "{\"drafts\": *[_id in $draftIds]._id, \"versions\": *[_id in path(\"versions.**.qa-presentation\")]._id, \"revs\": *[_id in $ids]{_id,_rev,_updatedAt}}  (raw perspective, api v2021-06-07)",
+  "params": {
+    "ids": ["qa-presentation"],
+    "draftIds": ["drafts.qa-presentation"],
+    "deleted": []
+  },
+  "drafts": [],
+  "versions": [],
+  "revs": [
+    { "_id": "qa-presentation", "_rev": "6LbxA4c5p2VL183Rwcp8pK", "_updatedAt": "2026-10-27T11:44:00Z" }
+  ],
+  "baselineRevs": [
+    { "_id": "qa-presentation", "_rev": "6LbxA4c5p2VL183Rwcp8pK" }
+  ],
+  "publishedHeading": "Kto serwisuje sprzęt w AUDIOFAST?",
+  "revChanged": [],
+  "neverPublishedRemaining": [],
+  "otherDraftsInRunWindow": "8 drafts.* of type sanity.previewUrlSecret (08:30–08:38Z), created by the Studio on each Presentation load; ignored per brief §8.2. No other draft was created or touched by this run (pending drafts 136 at freeze, 144 now = those 8).",
+  "checked": 1,
+  "pass": true
+}

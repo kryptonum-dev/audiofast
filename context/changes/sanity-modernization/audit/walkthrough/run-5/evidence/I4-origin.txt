@@ -1,0 +1,18 @@
+I4 — unlisted origin rejected by the deployed Presentation tool (lane D, Studio app dlwt2zhgkk7rjx6dj8rdyjfz inside the sanity.io dashboard, 2026-10-28)
+Config under test: apps/studio/presentation/settings.ts PRESENTATION_ORIGINS = ["http://localhost:3000", "https://audiofast.pl"] (presentationTool allowOrigins).
+Literal reads come from the Studio route in the dashboard tab URL (javascript_tool on the top frame: new URL(location.href).searchParams.get('preview')); the Studio's `preview` param is the URL the iframe is actually on.
+
+Step 1 — URL bar, unlisted origin. Studio on page/qa-presentation, iframe on https://audiofast.pl/qa-presentation/?sanity-preview-perspective=drafts. Selected the preview URL bar, typed "https://example.com/", Enter, waited 4 s.
+  {"at":"2026-10-28T08:37:27.843Z","preview":"https://audiofast.pl/qa-presentation/?sanity-preview-perspective=drafts"}
+  The iframe kept rendering audiofast.pl (CTA heading still visible); the URL bar turned red with an error icon (screenshot only).
+Step 2 — restore production. Typed "https://audiofast.pl/qa-presentation/" in the URL bar, Enter, waited 6 s.
+  {"at":"2026-10-28T08:37:42.424Z","preview":"https://audiofast.pl/qa-presentation/?sanity-preview-perspective=drafts"}  (error state cleared)
+Control — an allowed URL does navigate. Typed "https://audiofast.pl/o-nas/", Enter, waited 8 s.
+  {"at":"2026-10-28T08:37:58.287Z","path":"/page/212b234b-1ddc-4c8c-a4bb-a4c6fbe27ba5","preview":"https://audiofast.pl/o-nas/"}
+  (Studio resolved the "O nas" page document, so the bar is live and the step-1 rejection is origin-based.)
+Step 3 — same origin forced through the Studio route: opened …/default/presentation?preview=https%3A%2F%2Fexample.com%2F, waited 10 s.
+  {"at":"2026-10-28T08:38:16.988Z","path":"/homePage/homePage","preview":"https://audiofast.pl/?sanity-preview-perspective=drafts"}
+  Studio toast (read from the screenshot): "Blocked preview URL — The router wants to navigate to https://example.com/, but the origin https://example.com is not allowed. Update your presentationTool.allowOrigins configuration to allow it."
+  The iframe fell back to the production home page.
+Verdict: PASS. https://example.com was rejected both from the URL bar and from the route param (preview stays on / falls back to https://audiofast.pl); production restored (preview "https://audiofast.pl/qa-presentation/?sanity-preview-perspective=drafts" after step 2, home page after step 3).
+No document was edited during I4.

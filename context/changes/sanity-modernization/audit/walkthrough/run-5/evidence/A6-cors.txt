@@ -1,0 +1,37 @@
+A6 — CORS with credentials for the Presentation iframe origin (lane D, https://audiofast.pl, project fsw3likv, dataset production)
+Part 1 — curl probes with Origin: https://audiofast.pl at 2026-10-28T08:33:52Z. The iframe's <SanityLive includeDrafts> (next-sanity) opens GET https://fsw3likv.api.sanity.io/v2025-02-10/data/live/events/production?includeDrafts=true with an Authorization header (browser token), so the browser preflights it; on reconnect it calls /check/cors.
+$ curl -X OPTIONS -H 'Origin: https://audiofast.pl' -H 'Access-Control-Request-Method: GET' -H 'Access-Control-Request-Headers: authorization' https://fsw3likv.api.sanity.io/v2025-02-10/data/live/events/production?includeDrafts=true
+HTTP/2 204 
+access-control-allow-origin: https://audiofast.pl
+access-control-allow-credentials: true
+access-control-allow-headers: authorization
+access-control-allow-methods: GET
+$ curl -H 'Origin: https://audiofast.pl' -H 'Accept: text/event-stream' https://fsw3likv.api.sanity.io/v2025-02-10/data/live/events/production   (headers only, 4 s)
+HTTP/2 200 
+content-type: text/event-stream
+access-control-allow-origin: https://audiofast.pl
+access-control-allow-credentials: true
+$ curl -H 'Origin: https://audiofast.pl' https://fsw3likv.api.sanity.io/v2025-02-10/data/query/production?query=count(*[_id=="qa-presentation"])
+HTTP/2 200 
+access-control-allow-origin: https://audiofast.pl
+access-control-allow-credentials: true
+$ curl -H 'Origin: https://audiofast.pl' https://fsw3likv.api.sanity.io/v2025-02-10/check/cors
+HTTP/2 200 
+{"result":{"allowed":true,"withCredentials":true}}
+
+
+Part 2 — browser on the iframe origin. Claude desktop built-in browser pane, top-level tab on https://audiofast.pl/qa-presentation/ (the origin the Presentation iframe loads), fresh navigation, probes run between console markers at 2026-10-28T08:34:22Z:
+{"origin":"https://audiofast.pl",
+ "queryCredentialsInclude":{"status":200,"body":"{\"query\":\"count(*[_id==\\\"qa-presentation\\\"])\",\"result\":1,\"syncTags\":[\"s1:JF4LRA\"],\"ms\":7}"},
+ "liveEventsCredentialsInclude":{"status":200,"contentType":"text/event-stream"},"liveEventsFirstEvent":"event: welcome",
+ "checkCorsAsClient":{"status":200,"body":"{\"result\":{\"allowed\":true,\"withCredentials\":true}}"}}
+fetch(..., {credentials:'include'}) resolves only when the response carries access-control-allow-credentials: true and a non-wildcard allow-origin, so the two 200s are the browser-side proof.
+Console between [log] A6-MARK-START and [log] A6-MARK-END: 0 entries (0 CORS errors).
+Probe note: an earlier exploratory call fetched /check/cors with credentials:'include' and was blocked ("must not be the wildcard '*' when the request's credentials mode is 'include'"). That was the probe's own mistake, not the app: /check/cors answers allow-origin * by design, and @sanity/client calls it with credentials only when the client uses withCredentials. The web client uses a browser token (Authorization header), so it calls /check/cors without credentials, as re-probed above (200, allowed true).
+Unrelated console finding on the same published page (outside the markers, before the probes): "Uncaught Error: Minified React error #418 (args HTML)" on load of https://audiofast.pl/qa-presentation/ — a hydration text mismatch on the published page. Not a CORS error and not an A6 observable; listed in done.md for a human look.
+
+Part 3 — the deployed Presentation iframe itself. Studio tab https://www.sanity.io/@o5BEPFjvf/studio/dlwt2zhgkk7rjx6dj8rdyjfz/default/presentation/page/qa-presentation?preview=/qa-presentation/ (deployed app inside the sanity.io dashboard). The Studio resolved the iframe to https://audiofast.pl/qa-presentation/?sanity-preview-perspective=drafts, the Edit toggle came on and overlays drew (outline around the CTA heading), and the A2 draft edit appeared in the iframe without a reload (screenshot only, see A2-iframe.txt).
+Studio tab console (read_console_messages, whole buffer, 2026-10-28T08:33Z): 0 entries matching CORS / Access-Control / "unable to connect"; only warnings ("The `uri` request option has been renamed", "Unrecognized feature: 'local-network-access'", "This is an experimental API version").
+Limit: the audiofast.pl iframe is a cross-origin frame two levels deep (sanity.io dashboard → audiofast.sanity.studio → audiofast.pl). The pane's console reader does not surface that frame's own console (its "<SanityLive includeDrafts> is connected" info line is absent), and its network list shows only top-frame requests. The CORS observables are therefore read on the iframe origin (Part 1 + Part 2), as brief §6 allows.
+
+Verdict: PASS. Status 200 (query, live/events) from the iframe origin with credentials included; access-control-allow-origin: https://audiofast.pl and access-control-allow-credentials: true on the preflight (204) and on both GETs; 0 CORS console errors on the iframe origin and 0 in the Studio tab.
