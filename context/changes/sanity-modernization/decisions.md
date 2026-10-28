@@ -172,3 +172,8 @@ Out of scope. Request-time listings stay on `use cache`; the CDN quota absorbs t
 - Oliwier asked to hide Presentation from editors until he has told Jarek about it. `SANITY_STUDIO_PRESENTATION_ENABLED` gates the tool, the „Treść"/„Podgląd" tab menu and „Otwórz w podglądzie". `sanity dev` always has them; a built Studio only with the flag set to `true`.
 - The web side (draft mode, stega, overlays) stays deployed. It is unreachable without the share secret or the Studio.
 - Re-enable: set `SANITY_STUDIO_PRESENTATION_ENABLED=true` in `apps/studio/.env`, then `bunx sanity deploy` in `apps/studio`. Do not re-enable it as part of this change.
+
+## P12. „Podgląd" enabled in the deployed Studio; Vision and Releases dev-only (2026-10-28)
+- Oliwier asked to enable Presentation for editors now. `SANITY_STUDIO_PRESENTATION_ENABLED=true` in `apps/studio/.env`; this supersedes P11's "do not re-enable". Hide it again by setting the flag to `false` and running `bunx sanity deploy`.
+- Vision and Releases are not needed by the client, so the deployed Studio no longer ships them: `visionTool()` and `releases.enabled` are on only under `sanity dev` (`NODE_ENV !== 'production'`). No release was active when Releases was turned off.
+- Vercel preview deployments stay enabled, but they are not part of the workflow: production on audiofast.pl plus localhost. Presentation only allows those two origins.

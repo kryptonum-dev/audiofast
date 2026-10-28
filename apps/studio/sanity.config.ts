@@ -29,7 +29,11 @@ const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
 const dataset = process.env.SANITY_STUDIO_DATASET;
 const title = process.env.SANITY_STUDIO_TITLE;
 
-// Hidden in the deployed Studio until editors are told about it
+// Vision and Releases are developer tools the client does not use: only
+// `sanity dev` shows them, the deployed Studio does not.
+const isDevStudio = process.env.NODE_ENV !== 'production';
+
+// Gated by SANITY_STUDIO_PRESENTATION_ENABLED in a built Studio
 // (`presentation/settings.ts`). The web side stays deployed either way.
 const presentationEnabled = isPresentationEnabled();
 const presentationActions = presentationEnabled
@@ -42,6 +46,7 @@ export default defineConfig({
   projectId: projectId,
   icon: Logo,
   dataset: dataset ?? 'production',
+  releases: { enabled: isDevStudio },
   // The „Treść" / „Podgląd" tabs carry the open document across tools; the
   // menu itself is Sanity's own (`presentation/contextual-tool-menu.tsx`).
   // `@beta` API: re-check both tabs after every `sanity` bump. Rollback =
@@ -87,7 +92,7 @@ export default defineConfig({
           }),
         ]
       : []),
-    visionTool(),
+    ...(isDevStudio ? [visionTool()] : []),
     media(),
   ],
   tools: (prev) => [
