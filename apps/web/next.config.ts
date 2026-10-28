@@ -65,8 +65,10 @@ const nextConfig: NextConfig = {
 
   enablePrerenderSourceMaps: false,
   staticPageGenerationTimeout: 180,
+  // No `inlineCss`: it copied the whole site's CSS, twice, into every page's
+  // RSC payload (~755 KB of an 843 KB blog post), which made client-side
+  // navigation about twice as slow as lsse-www (measured 2026-10-28).
   experimental: {
-    inlineCss: true,
     // Build hardening for prerendering every slug (~1.4k pages, P6), as in
     // lsse-www: bound the parallel page renders so the Sanity API CDN,
     // Supabase pricing and Nominatim see a steady trickle instead of a burst,
