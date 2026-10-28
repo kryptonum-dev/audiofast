@@ -175,5 +175,5 @@ Out of scope. Request-time listings stay on `use cache`; the CDN quota absorbs t
 
 ## P12. „Podgląd" enabled in the deployed Studio; Vision and Releases dev-only (2026-10-28)
 - Oliwier asked to enable Presentation for editors now. `SANITY_STUDIO_PRESENTATION_ENABLED=true` in `apps/studio/.env`; this supersedes P11's "do not re-enable". Hide it again by setting the flag to `false` and running `bunx sanity deploy`.
-- Vision and Releases are not needed by the client, so the deployed Studio no longer ships them: `visionTool()` and `releases.enabled` are on only under `sanity dev` (`NODE_ENV !== 'production'`). No release was active when Releases was turned off.
+- Vision and Releases are not needed by the client, so the deployed Studio no longer ships them: `visionTool()`, `releases.enabled` and `scheduledDrafts.enabled` (Sanity shows a „Scheduled Drafts” tool once Releases is off) are on only under `sanity dev` (`NODE_ENV !== 'production'`). No release was active when Releases was turned off.
 - Vercel preview deployments stay enabled, but they are not part of the workflow: production on audiofast.pl plus localhost. Presentation only allows those two origins.
