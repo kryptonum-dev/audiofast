@@ -16,6 +16,7 @@ import BrandsMarquee from '../pageBuilder/BrandsMarquee';
 import ContactForm from '../pageBuilder/ContactForm';
 import ContactMap from '../pageBuilder/ContactMap';
 import CpoProductsListing from '../pageBuilder/CpoProductsListing';
+import DraftBlock from '../pageBuilder/DraftBlock';
 import FaqSection from '../pageBuilder/FaqSection';
 import FeaturedProducts from '../pageBuilder/FeaturedProducts';
 import FeaturedPublications from '../pageBuilder/FeaturedPublications';
@@ -121,12 +122,13 @@ export function PageBuilder({
       return [<Fragment key={block._key}>{element}</Fragment>];
     }
     return [
-      <div
+      <DraftBlock
         key={block._key}
-        data-sanity={dataAttribute(['pageBuilder', { _key: block._key }])}
+        type={block._type}
+        dataSanity={dataAttribute(['pageBuilder', { _key: block._key }])}
       >
         {element}
-      </div>,
+      </DraftBlock>,
     ];
   });
 
