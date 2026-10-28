@@ -1,0 +1,3 @@
+Draft tab /kontakt/ (same tab, no reload). patch drafts.0c2ca645-… question = …G2LIVE, wait 20 s:
+G2-mutate   {"transactionId":"UinCA4YgHLRzSA5S8Heslv","results":[{"id":"drafts.0c2ca645-6b1e-41dc-bdeb-678b3abe78bc","operation":"update"}]}
+G2   {"faqLive":true}

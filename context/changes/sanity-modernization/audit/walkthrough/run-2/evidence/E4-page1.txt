@@ -1,0 +1,6 @@
+E4 — /produkty/?page=1 (lane L)
+Final iframe URL: http://localhost:3000/produkty/?page=1&sanity-preview-perspective=drafts (no redirect)
+Studio path: /presentation/products/products/   title "Produkty | Audiofast Studio"
+Highlighted location / panel: "Used on 6 pages: Produkty /produkty/, Strona główna /, Sprzęt CPO /certyfikowany-sprzet-uzywany/, O nas /o-nas/, QA Presentation /qa-presentation/, Serwis /serwis/"
+curl http://localhost:3000/produkty/?page=1 -> 200 ; no Presentation error card.
+Verdict: PASS (URL and location recorded; no 404).

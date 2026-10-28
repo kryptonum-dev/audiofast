@@ -1,0 +1,6 @@
+QA draft tab, unset pageBuilder[qa-hero-static-1].description, wait 75 s (QA query ~25-60 s in draft):
+D6-clear   {"transactionId":"SuuhvLsVVjqUvYUiGCWTP3","results":[{"id":"drafts.qa-presentation","operation":"update"}]}
+D6-cleared   {"found":true,"descPresent":false,"emptyP":0}
+after reload: D-after-reload   {"descPresent":false,"emptyP":0,"stepHeading":false,"emptyHeadings":0}
+First attempt with a 25 s wait (out2.json) still showed the old text: the QA page refresh is slower than 25 s.
+Restored via patch set (original value from spec2.json) after the run.

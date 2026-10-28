@@ -1,0 +1,21 @@
+F10 — ReviewAuthorManager ("Recenzje > Scalanie autorów recenzji") — run 2, lane L — NOT OPENED (inspection of the write targets in source + Lake dry run)
+2026-10-28
+Why not opened: the pane writes PUBLISHED documents on mount, which the draft-only run contract forbids.
+  apps/studio/components/review-author-manager/index.tsx
+    :262-267  useEffect(init) -> await syncReviewAuthorCounts()            (no author ids -> every published reviewAuthor)
+    :192-220  syncReviewAuthorCounts: tx.patch(row._id, { set: { reviewCount } }) on the PUBLISHED author, plus drafts.<id> when a draft exists
+    :198-204  code note: "Merges and assignments stay direct writes on purpose (sanity-modernization Phase 7): a merge must re-point every
+              published review before its source authors can be deleted, so a draft-only merge could never finish."
+    :478-491  merge:  tx.patch(reviewId, { set: { author } }) for ALL review ids (published + drafts) of the source authors
+    :590-603  assign: tx.patch(reviewId, { set: { author } }) for published + draft ids of the selected orphan reviews
+  apps/studio/utils/review-author-counts.ts: fetchReviewAuthorCounts returns a row for EVERY author (not only changed counts).
+  The mount sync predates this change (same code at implementation_base 533d857, index.tsx:192-264).
+Lake dry run of the same mount patch on fixture 427e2d0b-… (reviewCount 3 -> 3, identical value), not committed:
+  operation "update", resulting _rev "pNjRlwpL36ngfYzMoLrC7D" (frozen _rev T3rRAhXlRSZcnoSVfDcGuI) -> opening the pane would change the
+  fixture's published _rev and break the cleanup assertion.
+Fixture state (unchanged, no draft):
+{"_id":"427e2d0b-6fbf-41ca-a021-1de724cae960","_rev":"T3rRAhXlRSZcnoSVfDcGuI","name":"hificlube.net","reviewCount":3}
+[{"_id":"review-2880","_rev":"T3rRAhXlRSZcnoSVfDBSwc"},{"_id":"review-2957","_rev":"XNQh23oop7n7SfU9AQFDnv"},{"_id":"review-2983","_rev":"T3rRAhXlRSZcnoSVfDBSwc"}]
+Plan Phase 7 intent: "CustomFiltersConfigView and ReviewAuthorManager write drafts instead of published documents". The filters view meets it for
+the category config (F8); ReviewAuthorManager does not (count sync, merge, assign), by a deliberate Phase 7 implementation choice. Product decision
+for Oliwier -> needs-human.md.

@@ -1,0 +1,9 @@
+{
+ "qaAfterScroll": {
+  "reports": null
+ },
+ "homeAfterScroll": {
+  "reports": null,
+  "dataSanity": 31
+ }
+}

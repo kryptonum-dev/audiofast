@@ -1,0 +1,7 @@
+G3 — console of top-level draft tabs after the run-1 fix
+Headless Playwright draft tab (share-access session, perspective drafts) on http://localhost:3000 (next dev, web HEAD 62d15b4). Run 2026-10-28T06:32:14.313Z .. 2026-10-28T06:35:16.037Z. Spec: spec-r2a.json
+enable: {"status":307,"location":"/kontakt/?sanity-preview-perspective=drafts","setCookie":[{"name":"__prerender_bypass","deletion":false,"attrs":"Path,HttpOnly,SameSite"},{"name":"sanity-preview-perspective","deletion":false,"attrs":"Path,HttpOnly,SameSite"},{"name":"sanity-preview-variant","deletion":true,"attrs":"Path,Expires,HttpOnly,SameSite"}]}
+
+G3-errors-kontakt  []
+G3-console-after-refresh  ["[info] <SanityLive includeDrafts> is connected and listening for live events to all content including drafts and version documents in content releases."]
+G3-errors-qa  []

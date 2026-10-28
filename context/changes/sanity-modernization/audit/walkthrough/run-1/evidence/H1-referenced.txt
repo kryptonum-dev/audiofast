@@ -1,0 +1,9 @@
+Local Studio Presentation, locations panel text read from the Studio DOM (javascript_tool), 2026-10-27:
+store 0172f25a-528f-cff0-df24-f0b8c9ab9dd3          -> "Used on 19 pages"
+award 1f1dfffb-f35c-482c-af6c-78bc3f13499e          -> "Used on one page"
+teamMember 1321b880-9a4e-4ea3-bd5e-f598e5dce8ce     -> "Used on 5 pages"
+faq 0c2ca645-6b1e-41dc-bdeb-678b3abe78bc            -> "Used on 4 pages"
+reviewAuthor 427e2d0b-6fbf-41ca-a021-1de724cae960   -> "Used on 3 pages"
+youtubeVideo d09c3d53-390c-479a-b946-f312fd656d2d   -> "Not used on any pages"
+productCategoryParent parent-cat-speakers           -> "Used on 7 pages"
+No document showed an absent panel.

@@ -1,0 +1,6 @@
+E3 — /blog/?page=2 (lane L)
+Studio path: /presentation/blog/blog/   title "Blog | Audiofast Studio"
+preview: http://localhost:3000/blog/?page=2&sanity-preview-perspective=drafts
+"Used on" panel: "Used on one page\nBlog\n/blog/"  (main-document match is non-strict: the ?page param matches /blog/)
+curl http://localhost:3000/blog/?page=2 -> 200
+Verdict: PASS (main document blog; its locations list the page URL /blog/).

@@ -1,0 +1,77 @@
+{
+ "koszyk": [
+  {
+   "url": "/koszyk/",
+   "title": "Koszyk | Audiofast",
+   "dataSanityCount": 16,
+   "attrFindings": [],
+   "attrFindingCount": 0,
+   "headFindings": 0,
+   "overlaySample": [
+    "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+   ],
+   "stegaReports": null,
+   "stegaReportCount": null,
+   "cookieNames": [
+    "__prerender_bypass",
+    "sanity-preview-perspective"
+   ],
+   "previewBar": true
+  },
+  {
+   "inputMarkerHits": 0
+  }
+ ],
+ "twojeDane": [
+  {
+   "url": "/koszyk/twoje-dane/",
+   "title": "Twoje dane | Audiofast",
+   "dataSanityCount": 16,
+   "attrFindings": [],
+   "attrFindingCount": 0,
+   "headFindings": 0,
+   "overlaySample": [
+    "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+   ],
+   "stegaReports": null,
+   "stegaReportCount": null,
+   "cookieNames": [
+    "__prerender_bypass",
+    "sanity-preview-perspective"
+   ],
+   "previewBar": true
+  },
+  {
+   "inputMarkerHits": 0
+  }
+ ],
+ "kontoKlienta": [
+  {
+   "url": "/konto-klienta/",
+   "title": "Konto klienta | Audiofast",
+   "dataSanityCount": 16,
+   "attrFindings": [],
+   "attrFindingCount": 0,
+   "headFindings": 0,
+   "overlaySample": [
+    "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+   ],
+   "stegaReports": null,
+   "stegaReportCount": null,
+   "cookieNames": [
+    "__prerender_bypass",
+    "sanity-preview-perspective"
+   ],
+   "previewBar": true
+  },
+  {
+   "inputMarkerHits": 0
+  }
+ ]
+}

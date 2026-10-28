@@ -1,0 +1,399 @@
+{
+ "base": "http://localhost:3000",
+ "session": "draft",
+ "startedAt": "2026-10-27T15:43:36.341Z",
+ "results": [
+  {
+   "step": "qa",
+   "status": 200,
+   "url": "/qa-presentation/"
+  },
+  {
+   "step": "qa-probe",
+   "value": {
+    "url": "/qa-presentation/",
+    "title": "QA Presentation — strona testowa audytu",
+    "dataSanityCount": 72,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [
+     "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+    ],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "__prerender_bypass",
+     "sanity-preview-perspective"
+    ],
+    "previewBar": true
+   }
+  },
+  {
+   "step": "qa-blocks",
+   "value": {
+    "blocks": [
+     "pageBuilder:qa-hero-static-1",
+     "pageBuilder:qa-hero-carousel-1",
+     "pageBuilder:qa-latest-publication-1",
+     "pageBuilder:qa-image-text-columns-1",
+     "pageBuilder:qa-featured-publications-1",
+     "pageBuilder:qa-featured-products-1",
+     "pageBuilder:qa-products-carousel-1",
+     "pageBuilder:qa-brands-marquee-1",
+     "pageBuilder:qa-brands-list-1",
+     "pageBuilder:qa-brands-by-categories-section-1",
+     "pageBuilder:qa-faq-section-1",
+     "pageBuilder:qa-contact-form-1",
+     "pageBuilder:qa-contact-map-1",
+     "pageBuilder:qa-image-with-video-1",
+     "pageBuilder:qa-image-with-text-boxes-1",
+     "pageBuilder:qa-blur-lines-text-image-1",
+     "pageBuilder:qa-gallery-section-1",
+     "pageBuilder:qa-team-section-1",
+     "pageBuilder:qa-phone-image-cta-1",
+     "pageBuilder:qa-step-list-1"
+    ],
+    "mainText": 558053
+   }
+  },
+  {
+   "step": "B6",
+   "value": {
+    "imgAlt": 155,
+    "altHits": 0,
+    "aHref": 232,
+    "hrefHits": 0
+   }
+  },
+  {
+   "step": "D5",
+   "value": {
+    "found": true,
+    "iframes": [],
+    "ariaLabels": [
+     {
+      "tag": "BUTTON",
+      "label": "Odtwórz wideo",
+      "hit": false
+     }
+    ]
+   }
+  },
+  {
+   "step": "I3-qa",
+   "value": {
+    "reports": null
+   }
+  },
+  {
+   "step": "home",
+   "status": 200,
+   "url": "/"
+  },
+  {
+   "step": "I3-home",
+   "value": {
+    "reports": null,
+    "dataSanity": 31
+   }
+  },
+  {
+   "step": "product",
+   "status": 200,
+   "url": "/produkty/triton-two/"
+  },
+  {
+   "step": "product-probe",
+   "value": {
+    "url": "/produkty/triton-two/",
+    "title": "Goldenear Technology Triton Two+",
+    "dataSanityCount": 52,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [
+     "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+    ],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "__prerender_bypass",
+     "sanity-preview-perspective"
+    ],
+    "previewBar": true
+   }
+  },
+  {
+   "step": "K1",
+   "value": {
+    "buttons": [],
+    "note": false
+   }
+  },
+  {
+   "step": "K4-draft",
+   "value": [
+    "23 400 zł"
+   ]
+  },
+  {
+   "step": "blog",
+   "status": 200,
+   "url": "/blog/dcs-bartok-i-rossini-z-firmware-30-nowe-mozliwosci-brzmienia-i-obsluga-dsdx4/"
+  },
+  {
+   "step": "blog-probe",
+   "value": {
+    "url": "/blog/dcs-bartok-i-rossini-z-firmware-30-nowe-mozliwosci-brzmienia-i-obsluga-dsdx4/",
+    "title": "dCS Bartók i Rossini – aktualizacja firmware 3.0",
+    "dataSanityCount": 16,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [
+     "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+    ],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "__prerender_bypass",
+     "sanity-preview-perspective"
+    ],
+    "previewBar": true
+   }
+  },
+  {
+   "step": "I2-before",
+   "value": {
+    "title": "dCS Bartók i Rossini – aktualizacja firmware 3.0",
+    "ld": [
+     6990,
+     588
+    ],
+    "ldHits": 0
+   }
+  },
+  {
+   "step": "listing",
+   "status": 200,
+   "url": "/produkty/"
+  },
+  {
+   "step": "K2",
+   "value": {
+    "count": 0,
+    "disabled": 0,
+    "labelHits": 0,
+    "sample": []
+   }
+  },
+  {
+   "step": "cart",
+   "status": 200,
+   "url": "/koszyk/"
+  },
+  {
+   "step": "K3-cart",
+   "value": {
+    "url": "/koszyk/",
+    "title": "Koszyk | Audiofast",
+    "dataSanityCount": 16,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [
+     "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+    ],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "__prerender_bypass",
+     "sanity-preview-perspective"
+    ],
+    "previewBar": true
+   }
+  },
+  {
+   "step": "K3-cartvalues",
+   "value": 0
+  },
+  {
+   "step": "checkout",
+   "status": 200,
+   "url": "/koszyk/twoje-dane/"
+  },
+  {
+   "step": "K3-checkout",
+   "value": {
+    "url": "/koszyk/twoje-dane/",
+    "title": "Twoje dane | Audiofast",
+    "dataSanityCount": 16,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [
+     "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+    ],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "__prerender_bypass",
+     "sanity-preview-perspective"
+    ],
+    "previewBar": true
+   }
+  },
+  {
+   "step": "K3-checkoutvalues",
+   "value": 0
+  },
+  {
+   "step": "account",
+   "status": 200,
+   "url": "/konto-klienta/"
+  },
+  {
+   "step": "K3-account",
+   "value": {
+    "url": "/konto-klienta/",
+    "title": "Konto klienta | Audiofast",
+    "dataSanityCount": 16,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [
+     "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+    ],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "__prerender_bypass",
+     "sanity-preview-perspective"
+    ],
+    "previewBar": true
+   }
+  },
+  {
+   "step": "K3-accountvalues",
+   "value": 0
+  },
+  {
+   "step": "A5",
+   "status": 200,
+   "url": "/o-nas/"
+  },
+  {
+   "step": "A5-before",
+   "value": {
+    "url": "/o-nas/",
+    "title": "O nas – pasja i doświadczenie w audio high-end",
+    "dataSanityCount": 45,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [
+     "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+     "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+    ],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "__prerender_bypass",
+     "sanity-preview-perspective"
+    ],
+    "previewBar": true
+   }
+  },
+  {
+   "step": "A5-cookies-before",
+   "value": [
+    {
+     "name": "__prerender_bypass",
+     "httpOnly": false
+    },
+    {
+     "name": "sanity-preview-perspective",
+     "httpOnly": false
+    }
+   ]
+  },
+  {
+   "step": "A5-click",
+   "url": "/o-nas/"
+  },
+  {
+   "step": "A5-reload",
+   "status": 200
+  },
+  {
+   "step": "A5-after",
+   "value": {
+    "url": "/o-nas/",
+    "title": "O nas – pasja i doświadczenie w audio high-end",
+    "dataSanityCount": 0,
+    "attrFindings": [],
+    "attrFindingCount": 0,
+    "headFindings": 0,
+    "overlaySample": [],
+    "stegaReports": null,
+    "stegaReportCount": null,
+    "cookieNames": [
+     "sanity-preview-perspective"
+    ],
+    "previewBar": false
+   }
+  },
+  {
+   "step": "A5-cookies-after",
+   "value": [
+    {
+     "name": "sanity-preview-perspective",
+     "httpOnly": false
+    }
+   ]
+  },
+  {
+   "step": "console",
+   "value": [
+    "[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')",
+    "[error] Error: Route \"/[slug]\": Next.js encountered URL data during prerendering or a navigation.\n\n`params` or `searchParams` accessed outside of `<Suspense>` may prevent the navigation from being instant, leading to a slower user experience.\n\nWays to fix this:\n  - [stream] Provide a placeholder with `<Susp"
+   ]
+  }
+ ],
+ "enable": {
+  "status": 307,
+  "location": "/?sanity-preview-perspective=drafts",
+  "setCookie": [
+   {
+    "name": "__prerender_bypass",
+    "deletion": false,
+    "attrs": "Path,HttpOnly,SameSite"
+   },
+   {
+    "name": "sanity-preview-perspective",
+    "deletion": false,
+    "attrs": "Path,HttpOnly,SameSite"
+   },
+   {
+    "name": "sanity-preview-variant",
+    "deletion": true,
+    "attrs": "Path,Expires,HttpOnly,SameSite"
+   }
+  ]
+ },
+ "endedAt": "2026-10-27T15:48:30.039Z"
+}

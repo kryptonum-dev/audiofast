@@ -1,0 +1,14 @@
+F3 — PathnameFieldComponent (slug) on the E7 draft — run 2, lane L (Studio pane)
+2026-10-28T06:56:47Z
+Typed "qa-e8-run2" into the Slug input (between the fixed "/" prefix and "/" suffix) of drafts.8f8f9974-b92b-4713-91e7-09fa1627dbe6.
+Studio DOM: input value "qa-e8-run2"; URL preview line "http://localhost:3000/qa-e8-run2/"; double slash (outside the scheme): false.
+Lake (raw) right after typing:
+{
+ "_id": "drafts.8f8f9974-b92b-4713-91e7-09fa1627dbe6",
+ "name": "QA E7 run2",
+ "slug": {
+  "_type": "slug",
+  "current": "/qa-e8-run2/"
+ }
+}
+Document list subtitle changed from "no-slug" to "/qa-e8-run2/"; the panel shows "Used on one page".

@@ -1,0 +1,8 @@
+H5 — cd apps/studio && bun run test (Node 24.18.0), HEAD e5bdeb2f, 2026-10-28
+
+ Test Files  9 passed (9)
+      Tests  128 passed (128)
+   Start at  08:12:31
+   Duration  1.76s (import 93%, tests 4%, transform 3%, worker 1%)
+
+E1 retest not needed: E1 PASS in run 2 (category selected), the pagination change does not touch main-document resolution.

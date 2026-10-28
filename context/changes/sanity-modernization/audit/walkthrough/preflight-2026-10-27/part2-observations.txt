@@ -1,0 +1,12 @@
+Phase 11 part 2 (2026-10-27) — observations from the headless draft tab on localhost:3000 (page did not finish streaming, so
+only navbar/footer were rendered; these are not verdicts)
+
+- data-sanity values carry base=https%3A%2F%2Ffsw3likv.sanity.studio: apps/web/.env.local has
+  NEXT_PUBLIC_SANITY_STUDIO_URL="https://fsw3likv.sanity.studio" while the deployed Studio is https://audiofast.sanity.studio
+  (studioHost 'audiofast'). Check the Vercel value before the [D] rows (click-to-edit from a plain draft tab).
+- window.__stegaReports in dev held 2 reports of kind "script" on inline `self.__next_f.push(...)` RSC flight scripts
+  (stega strings serialized into client-component props). lsse's I3 saw `undefined`. Decide whether kind "script" on
+  __next_f is expected (draft-only payload) or should be filtered in LiveVisualEditing before judging I3.
+- "Wyjdź z podglądu" click removed __prerender_bypass; after it, [data-sanity] count 0 and PreviewBar absent; the
+  sanity-preview-perspective cookie stays (A5 observable only names __prerender_bypass).
+- Header [data-sanity] paths: navbar buttons / buttons:<key>; footer highlightedSocialMedia / highlightedSocialMedia:<key>.

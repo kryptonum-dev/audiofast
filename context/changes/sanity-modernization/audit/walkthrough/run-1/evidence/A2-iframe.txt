@@ -1,0 +1,4 @@
+Studio pane: overlay click on CTA heading -> Studio URL /presentation/page/qa-presentation/pageBuilder[_key=="qa-phone-image-cta-1"].primaryHeading[_key=="qa-phone-image-cta-1-1"].children[_key=="4f8bec2175c8"].text; typed " QA11A2TOKEN" in Nagłówek główny; iframe heading updated live (pane screenshot, not decisive).
+Draft GROQ: drafts.qa-presentation pageBuilder[qa-phone-image-cta-1].primaryHeading[0].children[0].text = "Kto serwisuje sprzęt w AUDIOFAST? QA11A2TOKEN"
+Fresh draft tab /qa-presentation/:
+{"token":true,"dataSanity":72,"attrHits":0,"textNodeHasMarker":{"stega":true,"parent":"H3"}}

@@ -1,0 +1,11 @@
+F7 — ProductFiltersView value change — run 2, lane L
+2026-10-28
+Adaptation: product-130's only category (679c2830-…) defines no custom filters (Studio "Filtry" view: "Brak filtrów do uzupełnienia"), so the row ran on
+product-816 "Bricasti M12" (/produkty/m12/, published, no pre-existing draft, frozen _rev olGAgOM7pKeK5Hk1SoXoeq; filters from category
+18c5d9b9-… "Przedwzmacniacze liniowe").
+Studio pane: product-816 view "Filtry" -> "Ilość wejść Phono MM/MC" 0 -> 2 -> Tab; view shows "Zapisano".
+Lake (raw), customFilterValues:
+{"_id":"drafts.product-816","_rev":"CCTk887xkbiaIA1nfjBB7p","cfv":[{"_key":"filter-0","filterName":"Ilość wejść RCA","numericValue":1},{"_key":"filter-1","filterName":"Ilość wejść Phono MM/MC","numericValue":2},{"_key":"filter-2","filterName":"Ilość wejść HT XLR","numericValue":0},{"_key":"filter-3","filterName":"Ilość wyjść RCA (regulowanych)","numericValue":1},{"_key":"filter-4","filterName":"Ilość wyjść XLR (regulowanych)","numericValue":1},{"_key":"filter-5","filterName":"Ilość wejść XLR","numericValue":1}]}
+{"_id":"product-816","_rev":"olGAgOM7pKeK5Hk1SoXoeq","cfv":[{"_key":"if3da0h84","filterName":"Ilość wejść RCA","numericValue":1},{"_key":"9lrgoz55u","filterName":"Ilość wejść Phono MM/MC","numericValue":0},{"_key":"q05706e0z","filterName":"Ilość wejść HT XLR","numericValue":0},{"_key":"oqpp1lyv6","filterName":"Ilość wyjść RCA (regulowanych)","numericValue":1},{"_key":"xa5uytdwo","filterName":"Ilość wyjść XLR (regulowanych)","numericValue":1},{"_key":"xvxpaxt96","filterName":"Ilość wejść XLR","numericValue":1}]}
+drafts.product-816.customFilterValues changed (Phono 0 -> 2); published product-816 unchanged (_rev olGAgOM7pKeK5Hk1SoXoeq, Phono 0).
+Observation (not a verdict): the view rewrites the whole array with keys "filter-<index>" instead of keeping the existing _keys; all 6 entries and values are kept.

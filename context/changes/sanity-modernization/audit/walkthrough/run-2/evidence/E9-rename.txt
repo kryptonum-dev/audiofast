@@ -1,0 +1,22 @@
+E9 — rename the slug of the never-published page draft while it is open in Presentation — run 2, lane L
+2026-10-28
+Attempt 1 (/qa-e8-run2/ -> /qa-e9-run2/, typed in the Presentation document pane):
+  Studio URL followed: ?preview=http://localhost:3000/qa-e9-run2/?sanity-preview-perspective=drafts; iframe URL bar "http://localhost:3000/qa-e9-run2/".
+  The iframe first rendered the 404 page (the per-keystroke navigation reached the server before the final slug write was visible), then Presentation showed
+  "An error occurred / Could not connect to the preview / OVERLAY CONNECTION STATUS Reconnecting / LOADER CONNECTION STATUS Connecting".
+  "Retry" reloaded the ORIGINAL iframe src (pathname /qa-e8-run2/) -> "Missing a main document for /qa-e8-run2/".
+  Headless draft tab GET /qa-e9-run2/ right after: 200, main "Strona główna / QA E7 run2" (the draft renders at the new slug).
+  Re-opened /presentation/page/8f8f9974-…/?preview=/qa-e9-run2/ -> iframe renders the draft (breadcrumb "QA E7 run2").
+Attempt 2 (/qa-e9-run2/ -> /qa-e9-run2qa-e9b-run2/; cmd+a did not select in the pane, so the text was appended):
+  Studio URL followed: ?preview=http://localhost:3000/qa-e9-run2qa-e9b-run2/?sanity-preview-perspective=drafts
+  10 s and 30 s later: iframe shows the draft (breadcrumb "QA E7 run2"); "Could not connect": false; "Missing a main document": null.
+Lake (raw) after attempt 2:
+{
+ "_id": "drafts.8f8f9974-b92b-4713-91e7-09fa1627dbe6",
+ "_updatedAt": "2026-10-28T06:59:34Z",
+ "slug": {
+  "_type": "slug",
+  "current": "/qa-e9-run2qa-e9b-run2/"
+ }
+}
+Verdict: the preview re-navigates after the slug save (follows). Attempt 1 showed a transient 404 + lost connection that "Retry" does not recover (it reloads the original src); recorded as an observation for Oliwier.

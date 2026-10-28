@@ -1,0 +1,3 @@
+/produkty/triton-two/ main price
+draft: ["23 400 zł"]
+published: ["23 400 zł"]

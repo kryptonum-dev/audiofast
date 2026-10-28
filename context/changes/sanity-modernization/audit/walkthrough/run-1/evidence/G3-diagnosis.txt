@@ -1,0 +1,29 @@
+G3 diagnosis (run 1, 2026-10-27, lane L, /kontakt/ draft tab, headless Playwright)
+
+1. Before the fix: pageerror stacks (3 per draft load; 0 in a published session)
+[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')
+    at $RS (http://localhost:3000/kontakt/:302:22839)
+    at http://localhost:3000/kontakt/:302:334105
+[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')
+    at $RS (http://localhost:3000/kontakt/:302:22839)
+    at http://localhost:3000/kontakt/:302:335456
+[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')
+    at $RS (http://localhost:3000/kontakt/:302:22839)
+    at http://localhost:3000/kontakt/:302:336721
+
+2. Draft HTML of /kontakt/ (fetched with the draft cookie): boundary map
+   main > <!--$?--><template id="B:6"> = OptimisticBlocks Suspense; its FALLBACK (children copy) holds placeholders P:7, P:8, P:9, P:a
+   S:6 (the CONTENT copy of the same blocks) holds P:b..P:e; $RC("B:6","S:6") precedes $RS("S:7","P:7")..$RS("S:a","P:a")
+   Error columns 334105 / 335456 / 336721 = $RS("S:8") / $RS("S:9") / $RS("S:a") (deltas 1351 / 1265 match the HTML).
+
+3. DOM trace (init-script wrapper on removeChild/remove/replaceChildren/innerHTML/textContent): the node holding P:8 is removed by
+[{"name":"removeChild","self":"MAIN#main.page-transition","stack":"    at proto.<computed> [as removeChild] (<anonymous>:2:523) |     at $RV (http://localhost:3000/kontakt/:257:32834)"}]
+   i.e. React's batched reveal $RV for B:6 removed the fallback (with its still-pending P:8..P:a) before their segments streamed in.
+
+Cause: components/pageBuilder/OptimisticBlocks.tsx rendered <Suspense fallback={children}>, so Fizz streamed every page-builder block twice in draft mode; async segments of the fallback copy arrive after the content is revealed.
+
+4. After the fix (fallback null on the server and during hydration): pageerror lines
+[[],[]]
+[{"url":"/kontakt/","dataSanityCount":28,"attrFindingCount":0,"previewBar":true},{"url":"/o-nas/","dataSanityCount":45,"attrFindingCount":0,"previewBar":true}]
+
+Mutation console.debug: next-sanity VisualEditing logs '<VisualEditing /> refresh called with source "mutation"' only when the Studio drives the refresh through the Presentation iframe (node_modules/next-sanity/dist/VisualEditing.js:127). G1/G2 in run 1 were Lake patches against a headless tab, so no such line could appear: re-run G3 inside the Studio iframe in run 2.

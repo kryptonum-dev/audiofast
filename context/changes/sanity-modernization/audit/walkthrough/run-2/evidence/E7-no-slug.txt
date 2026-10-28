@@ -1,0 +1,18 @@
+E7 — new page draft without slug, „Otwórz w podglądzie” — run 2, lane L (Studio pane http://localhost:3333)
+2026-10-28T06:56:28Z
+1. Created a new page via /intent/create/template=page;type=page/ -> structure/page;8f8f9974-b92b-4713-91e7-09fa1627dbe6 (never published; deleted at cleanup).
+2. Typed Nazwa "QA E7 run2". Lake (raw):
+[
+ {
+  "_id": "drafts.8f8f9974-b92b-4713-91e7-09fa1627dbe6",
+  "_rev": "19f7194a-2e6a-484c-91b2-49568841d0e8",
+  "_type": "page",
+  "name": "QA E7 run2",
+  "slug": null
+ }
+]
+3. Document actions menu items (DOM role=menuitem): Schedule publish (disabled), Duplicate, Discard changes, Delete, Otwórz w podglądzie.
+4. Clicked „Otwórz w podglądzie”. 800 ms later (Studio DOM):
+   location: /structure/page;8f8f9974-b92b-4713-91e7-09fa1627dbe6%2Ctemplate%3Dpage   (no navigation to /presentation)
+   toast: "Brak adresu strony" / "Uzupełnij adres URL dokumentu, aby otworzyć podgląd."
+Also shown in the form: banner "Uzupełnij adres URL, aby zobaczyć, gdzie ta strona żyje." and list subtitle "no-slug".

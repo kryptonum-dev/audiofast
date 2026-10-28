@@ -1,0 +1,203 @@
+{
+ "base": "http://localhost:3000",
+ "session": "draft",
+ "startedAt": "2026-10-27T15:53:02.710Z",
+ "results": [
+  {
+   "step": "qa",
+   "status": 200,
+   "url": "/qa-presentation/"
+  },
+  {
+   "step": "A2-F1",
+   "value": {
+    "token": true,
+    "dataSanity": 72,
+    "attrHits": 0,
+    "textNodeHasMarker": {
+     "stega": true,
+     "parent": "H3"
+    }
+   }
+  },
+  {
+   "step": "A3-cookie-drafts",
+   "value": [
+    {
+     "name": "__prerender_bypass",
+     "httpOnly": false
+    },
+    {
+     "name": "sanity-preview-perspective",
+     "httpOnly": false,
+     "value": "drafts"
+    }
+   ]
+  },
+  {
+   "step": "G1-mutate",
+   "error": "Error: The operation timed out (traceId: 926efd262b122033279f165197c4868b)"
+  },
+  {
+   "step": "G1-wait"
+  },
+  {
+   "step": "G1",
+   "value": {
+    "headerHasNew": false,
+    "url": "/qa-presentation/"
+   }
+  },
+  {
+   "step": "G2-mutate",
+   "error": "Error: The operation timed out (traceId: b547839145d1beab16d2a84539b191ff)"
+  },
+  {
+   "step": "G2-wait"
+  },
+  {
+   "step": "G2",
+   "value": {
+    "faqHasNew": false
+   }
+  },
+  {
+   "step": "D6-clear",
+   "value": {
+    "transactionId": "zLs2IdSZazYtuQ7lWZG2Po",
+    "results": [
+     {
+      "id": "drafts.qa-presentation",
+      "operation": "update"
+     }
+    ]
+   }
+  },
+  {
+   "step": "D6-wait"
+  },
+  {
+   "step": "D6-cleared",
+   "value": {
+    "found": true,
+    "descPresent": true,
+    "emptyP": 0
+   }
+  },
+  {
+   "step": "D6-restore",
+   "value": {
+    "transactionId": "9h99spxVlRdyRtcHfMyDV3",
+    "results": [
+     {
+      "id": "drafts.qa-presentation",
+      "operation": "update"
+     }
+    ]
+   }
+  },
+  {
+   "step": "D6-wait2"
+  },
+  {
+   "step": "D6-restored",
+   "value": {
+    "descPresent": true
+   }
+  },
+  {
+   "step": "D7-clear",
+   "value": {
+    "transactionId": "9h99spxVlRdyRtcHfMyFTT",
+    "results": [
+     {
+      "id": "drafts.qa-presentation",
+      "operation": "update"
+     }
+    ]
+   }
+  },
+  {
+   "step": "D7-wait"
+  },
+  {
+   "step": "D7",
+   "value": {
+    "found": true,
+    "items": 5,
+    "firstText": "Zgłoszenie sprzętu​​​​‌﻿‍﻿​‍​‍‌‍﻿﻿‌﻿​‍‌‍‍‌‌‍‌﻿‌‍‍‌‌‍﻿‍​‍​‍​﻿‍‍​‍​‍‌﻿​﻿‌‍​‌‌‍﻿‍‌‍",
+    "emptyHeadings": 0,
+    "headingStillThere": true
+   }
+  },
+  {
+   "step": "D7-restore",
+   "value": {
+    "transactionId": "APV5YfrP4nfNfKbm1WFMNl",
+    "results": [
+     {
+      "id": "drafts.qa-presentation",
+      "operation": "update"
+     }
+    ]
+   }
+  },
+  {
+   "step": "G3",
+   "value": [
+    "[info] <SanityLive includeDrafts> is connected and listening for live events to all content including drafts and version documents in content releases.",
+    "[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/506446bdf367b4d7d99e964400161cb147d958ae-310x66.webp?w=310&h=66&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRead",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/305349cbfafa5705ba492afb421730d25115ae4a-811x619.png?w=811&h=619&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRea",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/b2e9486c4c9e85b479179415950f404bd6638a15-309x51.webp?w=309&h=51&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRead",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/a58e57b7a2675bd1adef1273111ff00c14116cfe-694x280.png?w=694&h=280&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRea",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/d811270360ba5a7401180fd4f79bf0a7f4518ca9-310x99.webp?w=310&h=99&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRead",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/7b15444db1ac8d734599a6c011733e44d3cb2368-385x223.webp?w=385&h=223&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRe",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/2e4bf3fef642911a65fb1ab557e62660bc2eed9e-310x123.webp?w=310&h=123&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRe",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/1ffba375d097faec75c81ca195c3027734158ad5-310x310.webp?w=310&h=310&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRe",
+    "[warning] Image with src \"https://cdn.sanity.io/images/fsw3likv/production/5ec487c526761b3ae3caa39baff5dacf98febe67-300x86.webp?w=300&h=86&fm=webp&fit=crop&auto=format\" is using quality \"80\" which is not configured in images.qualities [50, 75, 90, 100]. Please update your config to [100, 50, 75, 80, 90].\nRead"
+   ]
+  },
+  {
+   "step": "I2-mutate",
+   "error": "Error: The operation timed out (traceId: 25d0835a8fef97a9caa4b87282d7e3d1)"
+  },
+  {
+   "step": "blog",
+   "status": 200,
+   "url": "/blog/dcs-bartok-i-rossini-z-firmware-30-nowe-mozliwosci-brzmienia-i-obsluga-dsdx4/"
+  },
+  {
+   "step": "I2",
+   "value": {
+    "title": "dCS Bartók i Rossini – aktualizacja firmware 3.0",
+    "titleHasToken": false,
+    "ldHasToken": false,
+    "ldHits": 0,
+    "metaHits": 0
+   }
+  }
+ ],
+ "enable": {
+  "status": 307,
+  "location": "/?sanity-preview-perspective=drafts",
+  "setCookie": [
+   {
+    "name": "__prerender_bypass",
+    "deletion": false,
+    "attrs": "Path,HttpOnly,SameSite"
+   },
+   {
+    "name": "sanity-preview-perspective",
+    "deletion": false,
+    "attrs": "Path,HttpOnly,SameSite"
+   },
+   {
+    "name": "sanity-preview-variant",
+    "deletion": true,
+    "attrs": "Path,Expires,HttpOnly,SameSite"
+   }
+  ]
+ },
+ "endedAt": "2026-10-27T16:05:26.657Z"
+}

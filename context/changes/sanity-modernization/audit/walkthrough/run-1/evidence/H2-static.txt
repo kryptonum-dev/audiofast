@@ -1,0 +1,8 @@
+settings/settings            -> "Ustawienia globalne wpływają na każdą stronę serwisu (dane kontaktowe, SEO, dane strukturalne)."
+navbar/navbar                -> "Nawigacja pojawia się na każdej stronie serwisu."
+footer/footer                -> "Stopka pojawia się na każdej stronie serwisu."
+notFound/notFound            -> "Strona 404 — otwórz dowolny nieistniejący adres, aby ją podejrzeć."
+redirects/redirects          -> "Przekierowania działają przed stroną — nie mają podglądu."
+comparatorConfig/WibOQy2bUr7bZQESUry4uT -> "Konfiguracja porównywarki steruje tabelą na stronie /porownaj/ — dodaj produkty do porównania, aby ją podejrzeć."
+socialMedia/2ba190f6-…       -> "Profile społecznościowe pojawiają się w stopce i w danych strukturalnych każdej strony."
+All equal apps/studio/presentation/locations.ts STATIC_LOCATIONS.

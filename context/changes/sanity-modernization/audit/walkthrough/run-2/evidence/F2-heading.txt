@@ -1,0 +1,23 @@
+F2 — ProductHeadingInput (headingOverride) on product-130 /produkty/triton-two/ — run 2, lane L
+2026-10-28
+Studio pane: typed "QA11F2UP" into "Górna część nagłówka". The input's own preview block then read
+  "Wynikowy nagłówek H1 / QA11F2UP Triton Two+".
+Lake (raw):
+[
+ {
+  "_id": "drafts.product-130",
+  "_rev": "e0372562-945b-48e8-96bf-193590c14b39",
+  "headingOverride": {
+   "upper": "QA11F2UP"
+  }
+ },
+ {
+  "_id": "product-130",
+  "_rev": "nuGTdZLrlZy0BbgxbO6zR0",
+  "headingOverride": null
+ }
+]
+Headless draft tab GET /produkty/triton-two/: main h1 innerText (stega stripped) "QA11F2UP\nTriton Two+"
+Headless published tab:                     main h1 innerText "Goldenear Technology\nTriton Two+"
+The h1 carries no data-sanity (coalesce of override and brand/product name -> no overlay, brief §5).
+Draft value and product hero heading match.

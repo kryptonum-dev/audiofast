@@ -1,0 +1,66 @@
+B7 — filter-only field rendered as text (product price, Supabase source) — run 2, lane L
+Fixture: product-130 /produkty/triton-two/ (draft tab, headless Playwright, share-access enable 307)
+Observable: price elements carry no data-sanity, no ancestor/descendant data-sanity, no stega; stega is active elsewhere in main (stegaInMain true) -> no overlay on the price, expected (brief §5: values not from Sanity / filter-only).
+
+{
+  "enableStatus": 307,
+  "startedAt": "2026-10-28T06:54:49.754Z",
+  "endedAt": "2026-10-28T06:55:00.420Z",
+  "results": [
+    {
+      "step": "goto",
+      "status": 200,
+      "url": "/produkty/triton-two/"
+    },
+    {
+      "step": "price",
+      "value": {
+        "pathname": "/produkty/triton-two/",
+        "count": 2,
+        "items": [
+          {
+            "cls": "styles-module-scss-module__2jlFEa__priceWrapper",
+            "text": "Cena całkowita:23 400 złZapytaj o produktDodaj do porównania",
+            "stega": false,
+            "ownDataSanity": null,
+            "closestDataSanity": null,
+            "descDataSanity": 0
+          },
+          {
+            "cls": "PricingConfigurator-module-scss-module__dZRF_W__priceDisplay",
+            "text": "Cena całkowita:23 400 zł",
+            "stega": false,
+            "ownDataSanity": null,
+            "closestDataSanity": null,
+            "descDataSanity": 0
+          }
+        ],
+        "dataSanityTotal": 52,
+        "stegaInMain": true
+      }
+    },
+    {
+      "step": "probe",
+      "value": {
+        "url": "/produkty/triton-two/",
+        "title": "Goldenear Technology Triton Two+",
+        "dataSanityCount": 52,
+        "attrFindings": [],
+        "attrFindingCount": 0,
+        "headFindings": 0,
+        "overlaySample": [
+          "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+          "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+          "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+        ],
+        "stegaReports": null,
+        "stegaReportCount": null,
+        "cookieNames": [
+          "__prerender_bypass",
+          "sanity-preview-perspective"
+        ],
+        "previewBar": true
+      }
+    }
+  ]
+}

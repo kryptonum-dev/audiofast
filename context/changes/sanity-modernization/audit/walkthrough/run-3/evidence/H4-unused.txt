@@ -1,0 +1,2 @@
+H4 — unused store (lane L, local Studio at e5bdeb2f, 2026-10-28)
+store 2e39534e-f745-8f2f-9ed8-9c20744bfef4 "SOUNDClub Sp. z o.o." -> "Not used on any pages"; URL-like strings in the Studio text outside /presentation|/structure: [] (no fabricated URL).

@@ -1,0 +1,35 @@
+F6 — TechnicalDataView cell edit on product-130 /produkty/triton-two/ — run 2, lane L
+2026-10-28
+Studio pane: product-130 view "Dane techniczne" -> row "Impedancja:" pencil -> dialog "Edytuj zawartość komórki" -> appended " QA11F6" -> "Zapisz".
+Lake (raw), technicalData row Impedancja (key mxuc4mii):
+[
+ {
+  "_id": "drafts.product-130",
+  "_rev": "CCTk887xkbiaIA1nfjB9fj",
+  "imp": [
+   {
+    "_key": "mxuc4mii",
+    "title": "Impedancja:",
+    "v": [
+     "8 ohm QA11F6"
+    ]
+   }
+  ]
+ },
+ {
+  "_id": "product-130",
+  "_rev": "nuGTdZLrlZy0BbgxbO6zR0",
+  "imp": [
+   {
+    "_key": "mxuc4mii",
+    "title": "Impedancja:",
+    "v": [
+     "8 ohm"
+    ]
+   }
+  ]
+ }
+]
+Headless draft tab GET /produkty/triton-two/ (stega stripped): "Impedancja:\t\n\n8 ohm QA11F6"; token true
+Headless published tab: "Impedancja:\t\n\n8 ohm"; token false
+drafts.product-130.technicalData changed; the product page specs show it.

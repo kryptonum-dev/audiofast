@@ -1,0 +1,58 @@
+{
+ "before": {
+  "cookies": [
+   {
+    "name": "__prerender_bypass",
+    "httpOnly": false
+   },
+   {
+    "name": "sanity-preview-perspective",
+    "httpOnly": false
+   }
+  ],
+  "probe": {
+   "url": "/o-nas/",
+   "title": "O nas – pasja i doświadczenie w audio high-end",
+   "dataSanityCount": 45,
+   "attrFindings": [],
+   "attrFindingCount": 0,
+   "headFindings": 0,
+   "overlaySample": [
+    "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+    "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+   ],
+   "stegaReports": null,
+   "stegaReportCount": null,
+   "cookieNames": [
+    "__prerender_bypass",
+    "sanity-preview-perspective"
+   ],
+   "previewBar": true
+  }
+ },
+ "clickedText": "Wyjdź z podglądu",
+ "after": {
+  "cookies": [
+   {
+    "name": "sanity-preview-perspective",
+    "httpOnly": false
+   }
+  ],
+  "probe": {
+   "url": "/o-nas/",
+   "title": "O nas – pasja i doświadczenie w audio high-end",
+   "dataSanityCount": 0,
+   "attrFindings": [],
+   "attrFindingCount": 0,
+   "headFindings": 0,
+   "overlaySample": [],
+   "stegaReports": null,
+   "stegaReportCount": null,
+   "cookieNames": [
+    "sanity-preview-perspective"
+   ],
+   "previewBar": false
+  }
+ }
+}

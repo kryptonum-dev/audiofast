@@ -1,0 +1,41 @@
+{
+ "at": "2026-10-28T07:12:38.155Z",
+ "query": "{\"drafts\": *[_id in $draftIds]._id, \"revs\": *[_id in $ids]{_id,_rev}, \"neverPublished\": *[_id in $deleted || _id in $deletedDrafts]._id}",
+ "params": {
+  "ids": [
+   "01618d8a-572e-4092-b897-55a6ca319d77",
+   "0172f25a-528f-cff0-df24-f0b8c9ab9dd3",
+   "0c2ca645-6b1e-41dc-bdeb-678b3abe78bc",
+   "0d447ff5-3a93-4970-9797-186fa1af6d1a",
+   "1321b880-9a4e-4ea3-bd5e-f598e5dce8ce",
+   "17592c4a-7ceb-4756-8d33-5a4ff7d2a9a2",
+   "1e0f5761-34d3-dfc5-aff7-9547062b1742",
+   "1f1dfffb-f35c-482c-af6c-78bc3f13499e",
+   "1f63efc2-5759-48c9-a735-b446a956ac62",
+   "2e39534e-f745-8f2f-9ed8-9c20744bfef4",
+   "427e2d0b-6fbf-41ca-a021-1de724cae960",
+   "440dafbd-9f7d-4f29-a290-6fd01964378c",
+   "6e318432-8c83-478b-bee0-b1ee648e532f",
+   "85c9cef8-8609-4406-aab2-368fc57f5a47",
+   "WibOQy2bUr7bZQESUry4uT",
+   "b1d26aa1-075d-4793-8925-4458a68f6247",
+   "d09c3d53-390c-479a-b946-f312fd656d2d",
+   "footer",
+   "homePage",
+   "navbar",
+   "notFound",
+   "parent-cat-speakers",
+   "product-130",
+   "product-816",
+   "qa-presentation",
+   "redirects",
+   "settings"
+  ],
+  "deleted": []
+ },
+ "drafts": [],
+ "neverPublishedRemaining": [],
+ "revChanged": [],
+ "checked": 27,
+ "pass": true
+}

@@ -1,0 +1,9 @@
+A3 — perspective drafts -> published -> drafts (lane L, 2026-10-28; A2 draft with " QA11R2A2" exists)
+Studio side (navigate with ?perspective=…, read the iframe src and Studio URL):
+  drafts:    iframe src sanity-preview-perspective=drafts
+  published: Studio URL "?preview=http://localhost:3000/qa-presentation/?sanity-preview-perspective=published&perspective=published"; iframe src sanity-preview-perspective=published; perspective button "Published"
+  drafts:    Studio URL "?preview=…?sanity-preview-perspective=drafts&perspective=drafts"; iframe src sanity-preview-perspective=drafts
+Web side (headless sessions opened through the same enable route with the matching perspective):
+  published (a3-published.json): cookie sanity-preview-perspective=published; {"token":false,"dataSanity":72}
+  drafts    (a3-drafts.json):    cookie sanity-preview-perspective=drafts;    {"token":true,"dataSanity":72}
+Verdict: PASS (token present -> absent -> present; perspective drafts -> published -> drafts).

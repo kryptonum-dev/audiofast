@@ -1,0 +1,21 @@
+kontakt 200  undefined
+G-onload   {"header":true,"faq":true}
+G1-mutate   {"transactionId":"SuuhvLsVVjqUvYUiGCWNSj","results":[{"id":"drafts.navbar","operation":"update"}]}
+G1-wait   undefined
+G1   {"headerLive":true,"navigations":1}
+G2-mutate   {"transactionId":"UinCA4YgHLRzSA5S8Heslv","results":[{"id":"drafts.0c2ca645-6b1e-41dc-bdeb-678b3abe78bc","operation":"update"}]}
+G2-wait   undefined
+G2   {"faqLive":true}
+G3   ["[info] <SanityLive includeDrafts> is connected and listening for live events to all content including drafts and version documents in content releases.","[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')","[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')","[pageerror] TypeError: Cannot read properties of null (reading 'parentNode')"]
+qa 200  undefined
+D6-clear   {"transactionId":"SuuhvLsVVjqUvYUiGCWTP3","results":[{"id":"drafts.qa-presentation","operation":"update"}]}
+D6-wait   undefined
+D6-cleared   {"found":true,"descPresent":false,"emptyP":0}
+D7-clear   {"transactionId":"olGAgOM7pKeK5Hk1St6T4q","results":[{"id":"drafts.qa-presentation","operation":"update"}]}
+D7-wait   undefined
+D7   {"items":5,"firstText":"Wypełniasz formularz na naszej stronie lub kontaktujesz się z nami telefonicznie","emptyHeadings":0,"headingStillThere":false}
+D6-reload-check 200  undefined
+D-wait   undefined
+D-after-reload   {"descPresent":false,"emptyP":0,"stepHeading":false,"emptyHeadings":0}
+
+[exited with code 0]

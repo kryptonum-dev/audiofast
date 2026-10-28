@@ -1343,17 +1343,17 @@ After the soak checks pass:
 
 ### Phase 10: Tier 0 gates
 
-- [x] 10.1 Gate tests pass
-- [x] 10.2 Studio completeness test passes
-- [ ] 10.3 Published crawl clean on production
-- [x] 10.4 Draft crawl clean on an isolated local prod build
-- [x] 10.5 Dataset clean
+- [x] 10.1 Gate tests pass — fe6f351
+- [x] 10.2 Studio completeness test passes — fe6f351
+- [x] 10.3 Published crawl clean on production — fe6f351
+- [x] 10.4 Draft crawl clean on an isolated local prod build — fe6f351
+- [x] 10.5 Dataset clean — fe6f351
 
 ### Phase 11: Presentation audit walkthrough (Claude in Chrome)
 
-- [ ] 11.1 Summariser tests pass
-- [ ] 11.2 Final run summary clean
-- [ ] 11.3 Cleanup asserted
+- [x] 11.1 Summariser tests pass
+- [x] 11.2 Final run summary clean
+- [x] 11.3 Cleanup asserted
 - [ ] 11.4 All Tier 0 gates still green
 
 ### Phase 12: Cut-over and closeout

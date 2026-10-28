@@ -1,0 +1,11 @@
+E8 — never-published page draft with slug /qa-e8-run2/, „Otwórz w podglądzie” — run 2, lane L
+2026-10-28
+Studio: document actions -> „Otwórz w podglądzie” on drafts.8f8f9974-b92b-4713-91e7-09fa1627dbe6 navigated to
+  /presentation/page/8f8f9974-b92b-4713-91e7-09fa1627dbe6/?preview=http://localhost:3000/qa-e8-run2/?sanity-preview-perspective=drafts
+  iframe src = http://localhost:3000/api/draft-mode/enable?sanity-preview-secret=<REDACTED>&sanity-preview-perspective=drafts&sanity-preview-pathname=%2Fqa-e8-run2%2F
+  -> the iframe URL carries the slug /qa-e8-run2/.
+Headless draft tab (share-access enable 307), GET /qa-e8-run2/:
+  status 200; main innerText "Strona główna\nQA E7 run2" (breadcrumb renders the draft name; no 404 body); main [data-sanity] 0 (page has no blocks)
+Headless published tab, GET /qa-e8-run2/:
+  status 200 (next dev streaming soft-404), main "… Nie znaleziono strony 404 Strona nie została odnaleziona …"
+Note (expected, brief §5 "head stays published"): <title> in the draft tab is "Strony nie znaleziono" because generateMetadata reads published content only.

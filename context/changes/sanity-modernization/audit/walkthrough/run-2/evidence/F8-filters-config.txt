@@ -1,0 +1,25 @@
+F8 — CustomFiltersConfigView on category 1e0f5761-… "Przetworniki cyfrowo-analogowe" — run 2, lane L
+2026-10-28
+Studio pane: category view "Konfiguracja filtrów" (empty: "Brak zdefiniowanych filtrów dla tej kategorii.") -> "Dodaj pierwszy filtr" -> name "QA11F8 filtr", type "Lista rozwijana" -> autosave ("Zapisywanie...").
+No product values were assigned (the view writes product values to published products by design, "Wartości produktów zapisują się od razu"; not exercised).
+Lake (raw):
+[
+ {
+  "_id": "1e0f5761-34d3-dfc5-aff7-9547062b1742",
+  "_rev": "XNQh23oop7n7SfU9ADm7fi",
+  "customFilters": []
+ },
+ {
+  "_id": "drafts.1e0f5761-34d3-dfc5-aff7-9547062b1742",
+  "_rev": "pNjRlwpL36ngfYzMoLr9Ho",
+  "customFilters": [
+   {
+    "_key": "rgtqfqi8o",
+    "filterType": "dropdown",
+    "name": "QA11F8 filtr"
+   }
+  ]
+ }
+]
+Writes drafts.1e0f5761-…; published _rev XNQh23oop7n7SfU9ADm7fi unchanged (= frozen).
+Products referencing the category (41 published): every _rev unchanged before/after (diff empty).

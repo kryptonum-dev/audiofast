@@ -1,0 +1,22 @@
+H3 — parent-location URLs vs the pages (lane L, 2026-10-28)
+Studio: http://localhost:3333 (sanity dev, HEAD 62d15b4 before the run-2 pagination fix). Read via javascript_tool after clicking "Used on N pages".
+Pages read from the isolated production build http://localhost:3108 (next start, same HEAD): curl + headless Playwright.
+
+product-130 "Goldenear Technology Triton Two+" — "Used on 4 pages":
+  /produkty/triton-two/                      (own page)   200, "Triton Two+" x66                      OK
+  /produkty/?page=7  ("Produkty — strona 7")              200, 0 a[href="/produkty/triton-two/"]       WRONG PAGE
+  /produkty/kategoria/glosniki-podlogowe/                  200, 2 a[href="/produkty/triton-two/"]       OK (page 1)
+  /marki/goldenear/                                        200, 0 a[href="/produkty/triton-two/"]       WRONG PAGE
+  Scan: curl /produkty/?page=1..42 -> only "page 23: 1"; /marki/goldenear/?page=1..4 -> "brand page 4: 1".
+  GROQ (published perspective) of the web's own listing filter:
+    main listing, order(coalesce(basePriceCents, 999999999) asc): idx 271 -> page 23
+    category /produkty/kategoria/glosniki-podlogowe/, priceAsc:   idx 6   -> page 1
+    brand (denormBrandSlug == "goldenear"), newest:              idx 38  -> page 4
+
+blog-article 1f63efc2-… — "Used on 3 pages":
+  /blog/dcs-bartok-i-rossini-z-firmware-30-nowe-mozliwosci-brzmienia-i-obsluga-dsdx4/  200, title x12  OK
+  /blog/                                                                               200, 1 link    OK (page 1)
+  /blog/kategoria/nowosci/                                                             200, 1 link    OK (page 1)
+
+Verdict: FAIL.
+Cause: apps/studio/presentation/pagination.ts paged /produkty/ by `orderRank asc`, but app/produkty/(listing)/page.tsx passes defaultSortBy="priceAsc" (since before implementation_base), so the row promises page 7 while the product is on page 23; the brand-grid and category rows are never paged, so /marki/goldenear/ (page 1) does not show the product (it is on page 4).

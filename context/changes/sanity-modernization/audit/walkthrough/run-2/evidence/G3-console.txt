@@ -1,0 +1,18 @@
+G3 — iframe console during a Studio-driven edit (lane L, Presentation on /kontakt/, web HEAD 62d15b4 with the run-1 fix)
+Edit: footer link 19c76b65… "Tekst przycisku" typed in the Studio pane (" R2G3", then "B"); drafts.footer then deleted (see cleanup).
+read_console_messages on the Studio tab includes the iframe (origin localhost:3000) console.
+
+Session 1 (iframe loaded before the edit):
+  [debug] <VisualEditing /> refresh called with source "mutation", … (x2)
+  then Presentation lost the iframe ("An error occurred — Could not connect to the preview", overlays "Reconnecting", loader "Connecting"),
+  preceded by [warn] [@sanity/comlink] Received no response to message 'comlink/heartbeat' (x2) and one Next.js dev diagnostic:
+  [error] Error: Route "/[slug]": Next.js encountered URL data during prerendering or a navigation. … https://nextjs.org/docs/messages/instant-shell-url-data
+  (dev-only instant-navigation check; not a runtime exception). "Retry" reconnected; the iframe showed "O nas R2G3".
+Session 2 (after Retry, fresh iframe):
+  [log] [HMR] connected
+  [info] <SanityLive includeDrafts> is connected and listening …
+  (typed "B")
+  [debug] <VisualEditing /> refresh called with source "mutation", if you want automatic refresh when this happens, …
+  footer showed "O nas R2G3B" within 8 s; no [error] and no pageerror after the mutation line.
+Top-level draft tabs (G3-console-toplevel.txt): pageerror [] on /kontakt/ and /qa-presentation/ (run 1 had 3x "$RS … parentNode" on every draft load).
+Verdict: PASS (mutation console.debug present; the run-1 $RS error is gone; session 2 has no error). The session-1 disconnect and the dev diagnostic are recorded, not reproduced in session 2.

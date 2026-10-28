@@ -1,0 +1,33 @@
+Phase 11 part 2 (2026-10-27) — queryPageBySlug latency (apps/web/src/global/sanity/query.ts, requestTag 'page.content')
+
+Symptom: in `next dev` (lane L), /o-nas/, /kontakt/ and /qa-presentation/ never finish streaming (published and draft).
+Dev log: "Sanity fetch failed; retrying (n/3). Error: slow lane timeout: context deadline exceeded" — HTTP 429
+tooManyRequestsError, server-timing api;dur≈60000, sanity-query-class: slow, for both
+apicdn ...perspective=published&tag=audiofast-web.page.content and api ...perspective=drafts&resultSourceMap=withKeyArraySelector.
+"/" (homePage query) loads in 0.5 s. Production is unaffected for visitors (prerendered + Vercel cache HIT).
+
+Direct timings, published perspective, useCdn false, no token (bun + @sanity/client, sequential):
+  HEAD b38b3e6  /o-nas/ 38906 ms (8 blocks) | /qa-presentation/ 524 timeout at 60260 ms | /kontakt/ 35016 ms (3 blocks)
+  HEAD rerun    /o-nas/ 34219 ms | /qa-presentation/ timeout 60232 ms
+  bded37d (p5)  /o-nas/ 50261 ms
+  533d857 (implementation_base) /o-nas/ timeout 60183 ms     -> pre-existing, not a regression of this change
+  query length 103950 chars (pageBuilder item projection = 22 `_type == "x" => {...}` branches)
+
+Bisect (published, /kontakt/ params unless noted):
+  pageBuilder[_type == "zzz"] (no item matches)            573 ms
+  projection without pageBuilder                           433 ms
+  single-branch-only projection (heroStatic)               198 ms (server 83 ms)
+  full projection minus latestPublication/featuredPublications/featuredProducts branches: 15918 ms
+  pageBuilder[_type == "heroStatic"] on QA (full projection, one matching item): 40967 ms; contactForm 36792; faqSection 32400; contactMap 33135; featuredPublications 56264
+  => cost does not depend on which block matches: the engine evaluates the uncorrelated subqueries of NON-matching
+     branches once any item exists (hoisting). A lone false-conditional micro query stayed lazy (306 ms), so the
+     hoisting shows only in the large projection.
+  Standalone subquery cost: *[_type in ["blog-article","review","product"]] | order(coalesce(publishedDate,_createdAt) desc)[0...20]{_id,"b":brand->name}
+     35177 ms (server api;dur=34920, class=normal).
+  Guard experiment: prefixing the 7 uncorrelated item-level subqueries (latestPublication default, featuredPublications x2,
+     featuredProducts default, brandsList x2, brandsByCategoriesSection outer) with `^._type == "<block>" &&`:
+     /kontakt/ 22032 ms, /o-nas/ 23124 ms, /qa-presentation/ still 524 at 60106 ms -> partial; other branches
+     (faqSection 17 KB, contactForm 17 KB projections) still carry cost. Not shipped.
+
+Impact on this audit: every Presentation/draft render of a `page` document takes 25-60 s or fails; the QA fixture
+(all 20 blocks) cannot render at all in dev or draft. All rows anchored on /qa-presentation/ are blocked by it.

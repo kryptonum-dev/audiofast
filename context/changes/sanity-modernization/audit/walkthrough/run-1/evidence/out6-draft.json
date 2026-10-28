@@ -1,0 +1,101 @@
+{
+ "base": "http://localhost:3000",
+ "session": "draft",
+ "startedAt": "2026-10-27T16:14:38.490Z",
+ "results": [
+  {
+   "step": "K1",
+   "status": 200,
+   "url": "/produkty/nas/"
+  },
+  {
+   "step": "K1v",
+   "value": {
+    "buttons": [
+     {
+      "disabled": true,
+      "label": "",
+      "labelHit": false
+     }
+    ],
+    "note": true
+   }
+  },
+  {
+   "step": "K2",
+   "status": 200,
+   "url": "/marki/r-volution/"
+  },
+  {
+   "step": "K2v",
+   "value": {
+    "buttons": [
+     {
+      "disabled": true,
+      "label": "Dodaj do koszyka: R_volution Chassis DIY-X700",
+      "labelHit": false
+     },
+     {
+      "disabled": true,
+      "label": "Dodaj do koszyka: R_volution NAS",
+      "labelHit": false
+     },
+     {
+      "disabled": true,
+      "label": "Dodaj do koszyka: R_volution PlayerMini",
+      "labelHit": false
+     },
+     {
+      "disabled": true,
+      "label": "Dodaj do koszyka: R_volution PlayerOne 8K",
+      "labelHit": false
+     },
+     {
+      "disabled": true,
+      "label": "Dodaj do koszyka: R_volution PlayerPro 8K",
+      "labelHit": false
+     },
+     {
+      "disabled": true,
+      "label": "Dodaj do koszyka: R_volution PlayerPro 8K TV",
+      "labelHit": false
+     }
+    ],
+    "note": true
+   }
+  },
+  {
+   "step": "K4",
+   "status": 200,
+   "url": "/produkty/triton-two/"
+  },
+  {
+   "step": "K4v",
+   "value": [
+    "23 400 zł"
+   ]
+  }
+ ],
+ "enable": {
+  "status": 307,
+  "location": "/?sanity-preview-perspective=drafts",
+  "setCookie": [
+   {
+    "name": "__prerender_bypass",
+    "deletion": false,
+    "attrs": "Path,HttpOnly,SameSite"
+   },
+   {
+    "name": "sanity-preview-perspective",
+    "deletion": false,
+    "attrs": "Path,HttpOnly,SameSite"
+   },
+   {
+    "name": "sanity-preview-variant",
+    "deletion": true,
+    "attrs": "Path,Expires,HttpOnly,SameSite"
+   }
+  ]
+ },
+ "endedAt": "2026-10-27T16:15:56.893Z"
+}

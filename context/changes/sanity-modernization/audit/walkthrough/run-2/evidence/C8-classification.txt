@@ -1,0 +1,22 @@
+C8 — classification of the 31 non-draggable arrays (context/changes/sanity-modernization/presentation-arrays.md, 'Not draggable (31)') vs component notes — run 2
+2026-10-28; source tree at e5bdeb2 (+ uncommitted Phase 11 files, none in these components)
+
+Rows with a component path -> first matching note (head -40, or the inline comment where the array renders):
+  apps/web/src/components/pageBuilder/HeroCarousel/HeroCarousel.tsx:3:// Presentation: items are deliberately NOT draggable. `heroCarousel.slides`: autoplay cross-fade carousel (one visible slide, background layer outside the slide DOM).
+  apps/web/src/components/pageBuilder/HeroCarousel/BrandMarquee.tsx:1:// Presentation: items are deliberately NOT draggable. `heroCarousel.brands`: CSS marquee with duplicated DOM.
+  apps/web/src/components/pageBuilder/BrandsMarquee/BrandMarqueeList.tsx:1:// Presentation: items are deliberately NOT draggable. `brandsMarquee.topBrands`/`bottomBrands`: marquee with duplicated DOM.
+  apps/web/src/components/pageBuilder/FeaturedProducts/ProductsCarousel.tsx:3:// Presentation: items are deliberately NOT draggable. `featuredProducts.newProducts`/`bestsellers`: embla `loop:true`, tabbed, `select()` (no source map).
+  apps/web/src/components/pageBuilder/FeaturedPublications/PublicationsCarousel.tsx:3:// Presentation: items are deliberately NOT draggable. `featuredPublications.publications`, `product.reviews`, `brand.featuredReviews`: embla loop with cloned slides.
+  apps/web/src/components/pageBuilder/ProductsCarousel/ProductsCarouselWrapper.tsx:3:// Presentation: items are deliberately NOT draggable. `productsCarousel.products`, `product.relatedProducts`: embla loop with cloned slides.
+  apps/web/src/components/pageBuilder/BrandsList/index.tsx:1:// Presentation: items are deliberately NOT draggable. `brandsList.selectedBrands`: the query re-sorts by `orderRank` (order lives in the orderable brand list) and runs in `select()`.
+  apps/web/src/components/ui/ProductGallery/index.tsx:3:// Presentation: items are deliberately NOT draggable. `imageGallery` (product/brand/review/CPO): embla thumbs `loop:true`, main image is one swapped slot.
+  apps/web/src/components/products/TechnicalData/index.tsx:3:// Presentation: items are deliberately NOT draggable. `technicalData.*`: hidden field edited in the TechnicalDataView pane (CPO also via `select()`).
+  apps/web/src/components/ui/ContentBlocks/index.tsx:1:// Presentation: items are deliberately NOT draggable. `details.content` / `brandContentBlocks`: hidden legacy field.
+  apps/web/src/components/products/CustomFiltersBar/index.tsx:3:// Presentation: items are deliberately NOT draggable. `productCategorySub.customFilters`: hidden, edited in a custom pane, feeds a query-driven listing.
+  apps/web/src/components/products/ProductHero/index.tsx:1:// Presentation: items are deliberately NOT draggable. `award.products`: reverse-reference lookup, the order is not authored per product.
+  apps/web/src/components/portableText/ImageSlider/Slider.tsx:3:// Presentation: items are deliberately NOT draggable. `ptImageSlider.images`: embla loop with cloned slides.
+  apps/web/src/components/pageBuilder/ContactForm/index.tsx: {/* `accountDetails` is a primitive string[] (no `_key`): not  draggable, see presentation-arrays.md. */} 
+
+Table rows covered by those files: heroCarousel.slides, heroCarousel.brands, brandsMarquee.topBrands, brandsMarquee.bottomBrands, featuredProducts.newProducts, featuredProducts.bestsellers, featuredPublications.publications, product.reviews, brand.featuredReviews, productsCarousel.products, product.relatedProducts, brandsList.selectedBrands, contactForm.accountList[].accountDetails, product/brand/review/cpoProduct.imageGallery (4), product.technicalData.*, cpoProduct.technicalData.*, product.details.content/brand.brandContentBlocks, productCategorySub.customFilters, award.products, ptImageSlider.images = 23 rows.
+Rows marked (no component)/(renderer), reason in the table itself: product.categories, product.customFilterValues, blog-article.keywords, settings support/copy emails, redirects.redirects, comparatorConfig enabledParameters, Portable text top-level blocks, productsListing/cpoProductsListing/brandsByCategoriesSection/latestPublication = 8 rows.
+Total 31: every row has a Reason; every row with a component path has a 'NOT draggable' note in that component (14 files, 0 missing).

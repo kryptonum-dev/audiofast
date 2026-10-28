@@ -1,0 +1,2 @@
+QA qa-image-with-video-1 (facade: iframe mounts only after play click)
+{"found":true,"iframes":[],"ariaLabels":[{"tag":"BUTTON","label":"Odtwórz wideo","hit":false}]}

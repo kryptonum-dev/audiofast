@@ -1,0 +1,5 @@
+# CORS probe 2026-10-27T11:42:21Z: GET https://fsw3likv.api.sanity.io/v2025-10-01/data/query/production with Origin header
+http://localhost:3000 -> access-control-allow-origin: http://localhost:3000 access-control-allow-credentials: true 
+https://audiofast.pl -> access-control-allow-origin: https://audiofast.pl access-control-allow-credentials: true 
+http://localhost:3333 -> access-control-allow-origin: http://localhost:3333 access-control-allow-credentials: true 
+https://audiofast.sanity.studio -> access-control-allow-origin: https://audiofast.sanity.studio access-control-allow-credentials: true 

@@ -1,0 +1,5 @@
+E1 — category URL selects the category (lane L, Studio navigate /presentation?preview=/produkty/kategoria/przetworniki-dac/, 30 s settle)
+Studio path: /presentation/productCategorySub/1e0f5761-34d3-dfc5-aff7-9547062b1742/
+preview: http://localhost:3000/produkty/kategoria/przetworniki-dac/?sanity-preview-perspective=drafts
+title: "Przetworniki cyfrowo-analogowe | Audiofast Studio"
+Verdict: PASS (main document 1e0f5761-… of type productCategorySub, not a product).

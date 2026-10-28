@@ -3,6 +3,8 @@
 import type { VisualEditingProps } from 'next-sanity/visual-editing';
 import { VisualEditing } from 'next-sanity/visual-editing';
 
+import { isRscFlightScript } from './isRscFlightScript';
+
 /**
  * The Presentation overlay mount, and nothing else. Rendered by the root
  * layout in draft mode only, so published HTML carries no overlay code.
@@ -45,7 +47,12 @@ declare global {
 }
 
 function reportSuspiciousStega(reports: SuspiciousStegaReports): void {
-  const records: StegaReportRecord[] = reports.map((report) => ({
+  const leaks = reports.filter(
+    (report) =>
+      !(report.kind === 'script' && isRscFlightScript(report.element)),
+  );
+  if (leaks.length === 0) return;
+  const records: StegaReportRecord[] = leaks.map((report) => ({
     kind: report.kind,
     element: report.element?.tagName.toLowerCase(),
     attribute: report.attribute,

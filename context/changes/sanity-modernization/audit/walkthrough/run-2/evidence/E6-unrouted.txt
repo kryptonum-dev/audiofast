@@ -1,0 +1,8 @@
+E6 — unrouted type has no „Otwórz w podglądzie" (lane L, Studio http://localhost:3333, 2026-10-28)
+Read via javascript_tool on the Studio DOM after clicking the footer button aria-label="Open document actions".
+
+faq 0c2ca645-6b1e-41dc-bdeb-678b3abe78bc (/structure/faq;0c2ca645-…) menu items:
+  ["Duplicate", "Delete | Ctrl | Option | D"]
+Control — page qa-presentation (/structure/page;qa-presentation) menu items:
+  ["Duplicate", "Delete | Ctrl | Option | D", "Otwórz w podglądzie"]
+Verdict: PASS (faq menu has no „Otwórz w podglądzie"; a routed type shows it).

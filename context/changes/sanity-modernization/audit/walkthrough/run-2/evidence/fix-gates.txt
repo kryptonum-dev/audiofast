@@ -1,0 +1,17 @@
+Gates for cause group 1 (run 1 fixes.md, G3: duplicated draft block stream) — 2026-10-28, Node v24.18.0
+Fix commit: 62d15b438e45b0cbfe7d56080140e0817221204c  fix(sanity-modernization): duplicated draft block stream (run 1)
+
+bun run check-types                      -> Tasks: 5 successful, 5 total
+bun run lint                             -> 0 errors (web 2711 warnings, b2c-admin 20 warnings; pre-existing)
+cd apps/web && bun run test:run          -> Test Files 127 passed | 1 skipped (128); Tests 812 passed | 15 skipped
+cd apps/studio && bun run test           -> Test Files 9 passed (9); Tests 126 passed (126)
+bunx vitest run scripts/walkthrough      -> Test Files 1 passed; Tests 5 passed
+cd apps/web && bun run next build        -> exit 0 (109 static pages)
+next start -p 3108 (isolated, started by this run)
+bun run check:stega-leaks --base http://localhost:3108 --mode both
+  pages: 1121
+  published: 0 page(s) with findings
+  draft: 0 page(s) with findings, 109576 visible-text marker runs (expected)
+  divergence: 665 page(s) (informational, 132 pending draft(s))
+  never-published drafts probed: 4
+  result: CLEAN (exit 0)

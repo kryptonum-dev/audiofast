@@ -1,0 +1,22 @@
+Headless request (probe.ts, redirect manual) GET /api/draft-mode/enable/?sanity-preview-secret=<share secret, not printed>&sanity-preview-perspective=drafts&sanity-preview-pathname=/
+{
+ "status": 307,
+ "location": "/?sanity-preview-perspective=drafts",
+ "setCookie": [
+  {
+   "name": "__prerender_bypass",
+   "deletion": false,
+   "attrs": "Path,HttpOnly,SameSite"
+  },
+  {
+   "name": "sanity-preview-perspective",
+   "deletion": false,
+   "attrs": "Path,HttpOnly,SameSite"
+  },
+  {
+   "name": "sanity-preview-variant",
+   "deletion": true,
+   "attrs": "Path,Expires,HttpOnly,SameSite"
+  }
+ ]
+}

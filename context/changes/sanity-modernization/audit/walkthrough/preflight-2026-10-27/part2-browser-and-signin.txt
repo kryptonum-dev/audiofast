@@ -1,0 +1,14 @@
+Phase 11 part 2 (2026-10-27) — executor surface
+
+- Claude in Chrome: list_connected_browsers = [] (not connected).
+- Claude desktop built-in browser pane: signed in to sanity.io as the Sanity user of provider "sanity" (e-mail/password),
+  name "Kryptonum Team" (checked with GET api.sanity.io/v2021-06-07/users/me from the sanity.io tab; email not recorded here).
+- Local Studio http://localhost:3333 (sanity dev, started by the executor on a free port) shows "Choose login provider".
+  Google lists other accounts (not the Sanity user). Clicking "E-mail / password" was refused by the session's
+  permission classifier, so the executor cannot sign in to the local Studio.
+- Fallback tried: dashboard dev mode https://www.sanity.io/@o5BEPFjvf?dev=http://localhost:3333 -> the iframe stays blank
+  (reloaded twice, 20 s+; no console errors in the top page). Not usable.
+- Deployed Studio https://audiofast.sanity.studio is signed in, but Presentation is hidden there (P11).
+- Headless Playwright draft tab against localhost:3000 works (share-access secret read via the Lake, never printed):
+  enable -> 307, Set-Cookie names __prerender_bypass, sanity-preview-perspective, deletion of sanity-preview-variant;
+  no sanity-preview-partitioned on localhost.

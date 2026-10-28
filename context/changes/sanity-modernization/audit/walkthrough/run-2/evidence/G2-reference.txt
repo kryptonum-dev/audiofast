@@ -1,0 +1,8 @@
+G2 — faq 0c2ca645-… draft question on /kontakt/
+Headless Playwright draft tab (share-access session, perspective drafts) on http://localhost:3000 (next dev, web HEAD 62d15b4). Run 2026-10-28T06:32:14.313Z .. 2026-10-28T06:35:16.037Z. Spec: spec-r2a.json
+enable: {"status":307,"location":"/kontakt/?sanity-preview-perspective=drafts","setCookie":[{"name":"__prerender_bypass","deletion":false,"attrs":"Path,HttpOnly,SameSite"},{"name":"sanity-preview-perspective","deletion":false,"attrs":"Path,HttpOnly,SameSite"},{"name":"sanity-preview-variant","deletion":true,"attrs":"Path,Expires,HttpOnly,SameSite"}]}
+
+G2-create  {"transactionId":"pNjRlwpL36ngfYzMoLnX2B","results":[{"id":"drafts.0c2ca645-6b1e-41dc-bdeb-678b3abe78bc","operation":"create"}]}
+G2  {"faqLive":true,"navigations":1}
+G-cleanup  {"transactionId":"5cyTuyNJJJ5tloebA3nP1J","results":[{"id":"drafts.navbar","operation":"delete"},{"id":"drafts.0c2ca645-6b1e-41dc-bdeb-678b3abe78bc","operation":"delete"}]}
+Verdict: PASS (body shows the R2G2 draft question without reload, navigation entries 1)

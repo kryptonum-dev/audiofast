@@ -16,7 +16,9 @@
     "check:parity": "bun apps/web/scripts/check-parity.ts",
     "check:stega-leaks": "bun apps/web/scripts/check-stega-leaks.ts",
     "scan:dataset-stega": "bun apps/web/scripts/scan-dataset-stega.ts",
-    "blueprints:deploy": "bunx sanity blueprints deploy"
+    "blueprints:deploy": "bunx sanity blueprints deploy",
+    "walkthrough:summary": "bun scripts/walkthrough/summarize-results.ts",
+    "seed:qa-presentation": "cd apps/studio && bun run scripts/seed/apply-qa-presentation.ts"
   },
   "devDependencies": {
     "@sanity/blueprints": "0.28.0",

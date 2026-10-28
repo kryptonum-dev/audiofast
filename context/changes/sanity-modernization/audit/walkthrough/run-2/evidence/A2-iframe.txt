@@ -1,0 +1,9 @@
+A2 — Studio edit reaches the preview (lane L, 2026-10-28)
+1. Studio /presentation/page/qa-presentation/pageBuilder[_key=="qa-phone-image-cta-1"] (built-in pane, 1440x900).
+2. Clicked into the "Nagłówek główny" PT editor and typed " QA11R2A2". Studio URL became
+   …/pageBuilder[_key=="qa-phone-image-cta-1"].primaryHeading[_key=="qa-phone-image-cta-1-1"].children[_key=="4f8bec2175c8"].text
+   Studio editor text: "Kto serwisuje sprzęt w AUDIOFAST? QA11R2A2"
+3. Lake (raw): { "_rev": "990c9dcb-caf9-469e-b6af-422ced654521", "_updatedAt": "2026-10-28T06:48:25Z", "h": "Kto serwisuje sprzęt w AUDIOFAST? QA11R2A2"}
+4. Draft render (headless draft tab, perspective drafts, spec a3-drafts.json): {"token":true,"dataSanity":72}
+   The Presentation iframe itself is not scriptable from the Studio (cross-origin); the draft tab renders the same draft.
+Verdict: PASS (token in the body; [data-sanity] 72 > 0).

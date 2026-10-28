@@ -1,0 +1,2603 @@
+{
+  "documents": [
+    {
+      "_id": "qa-presentation",
+      "_type": "page",
+      "name": "QA Presentation (audyt — nie publikować zmian)",
+      "slug": {
+        "_type": "slug",
+        "current": "/qa-presentation/"
+      },
+      "doNotIndex": true,
+      "seo": {
+        "title": "QA Presentation — strona testowa audytu",
+        "description": "Strona testowa audytu Presentation. Ukryta: noindex, poza sitemapą i listingami.",
+        "openGraph": {
+          "title": "QA Presentation",
+          "description": "Strona testowa audytu Presentation.",
+          "image": {
+            "_type": "image",
+            "asset": {
+              "_type": "reference",
+              "_ref": "image-ea6cfcf39dac124af37d1321f0e2c49363f6910f-2732x1800-webp"
+            }
+          }
+        }
+      },
+      "pageBuilder": [
+        {
+          "_key": "qa-hero-static-1",
+          "_type": "heroStatic",
+          "blocks": [
+            {
+              "_key": "qa-hero-static-1-1",
+              "_type": "heroBlock",
+              "description": [
+                {
+                  "_key": "qa-hero-static-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "4d7648c5e7f8",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Precyzyjna analiza i szybkie wykrywanie usterek."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-hero-static-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "b2c3a620057a",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Diagnostyka sprzętu"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-aaa34c9ad9c35e12f4f5d1c3c82fc059830fbe04-24x24-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-hero-static-1-2",
+              "_type": "heroBlock",
+              "description": [
+                {
+                  "_key": "qa-hero-static-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "d747e9bfa156",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Przywracamy pełną sprawność i brzmienie urządzeń."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-hero-static-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "1145d193d55f",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Naprawy gwarancyjne i pogwarancyjne"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-252ee9d26df161c79fdd2bcd0c9b659c095d8452-25x25-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-hero-static-1-3",
+              "_type": "heroBlock",
+              "description": [
+                {
+                  "_key": "qa-hero-static-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "c5c760f0b535",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Dbamy o długowieczność sprzętu i niezmienną czystość dźwięku."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-hero-static-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "1469fa2209b1",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Konserwacja i czyszczenie"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-f27b851c1ab7ae6ff84350f17d412c4943efb755-24x24-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-hero-static-1-4",
+              "_type": "heroBlock",
+              "description": [
+                {
+                  "_key": "qa-hero-static-1-4-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "e000a6f60711",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Instalujemy najnowsze wersje firmware’u, aby system\ndziałał bezbłędnie."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-hero-static-1-4-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "988104b0778b",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Aktualizacje oprogramowania"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-4e4d106c58be8f5a7a83071437cb8f4da940d46b-24x24-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-hero-static-1-5",
+              "_type": "heroBlock",
+              "description": [
+                {
+                  "_key": "qa-hero-static-1-5-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "79358ce21dc3",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Dostosowujemy sprzęt, aby grał perfekcyjnie w Twojej\nprzestrzeni."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-hero-static-1-5-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "8cca078417bd",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Kalibracja urządzeń"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-e36af24435bf33441499b70a3adf8f8df7667414-25x25-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-hero-static-1-6",
+              "_type": "heroBlock",
+              "description": [
+                {
+                  "_key": "qa-hero-static-1-6-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "869c5181b5f5",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Stosujemy wyłącznie oryginalne części rekomendowane przez producentów."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-hero-static-1-6-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "785aefb7d303",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Wymiana podzespołów"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-db838e638e9d4c007534f1e63c2423df1590d297-24x24-svg",
+                  "_type": "reference"
+                }
+              }
+            }
+          ],
+          "blocksHeading": "Co możemy dla Ciebie zrobić?",
+          "description": [
+            {
+              "_key": "qa-hero-static-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ce5ee34922a9",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Specjalizujemy się w konserwacji i naprawie urządzeń audio. Wykorzystujemy oryginalne komponenty i sprawdzone metody naprawy. Przywracamy pełnię brzmienia i gwarantujemy, że Twój system pozostanie w doskonałej formie przez kolejne lata!"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-hero-static-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "7325ea700f62",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Profesjonalny serwis high-end audio – Twój sprzęt w najlepszych rękach"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "image": {
+            "_type": "image",
+            "asset": {
+              "_ref": "image-ea6cfcf39dac124af37d1321f0e2c49363f6910f-2732x1800-webp",
+              "_type": "reference"
+            },
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "bottom": 0.01553060649778068,
+              "left": 0,
+              "right": 0,
+              "top": 0
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.43061481412283253,
+              "width": 1,
+              "x": 0.5,
+              "y": 0.21530740706141627
+            }
+          },
+          "showBlocks": true
+        },
+        {
+          "_key": "qa-hero-carousel-1",
+          "_type": "heroCarousel",
+          "brands": [
+            {
+              "_key": "qa-hero-carousel-1-1",
+              "_ref": "988e9213-ff50-4a8b-a87b-3e3478126485",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-hero-carousel-1-2",
+              "_ref": "bfad2cf6-37cc-4d0d-ab1d-71c298831e3d",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-hero-carousel-1-3",
+              "_ref": "audio-research-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-hero-carousel-1-4",
+              "_ref": "dcs-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-hero-carousel-1-5",
+              "_ref": "gryphon-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-hero-carousel-1-6",
+              "_ref": "c7f14a8e-dd41-4c93-86b1-2c6bc651afc8",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-hero-carousel-1-7",
+              "_ref": "wilson-audio-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-hero-carousel-1-8",
+              "_ref": "dan-dagostino-brand-001",
+              "_type": "reference"
+            }
+          ],
+          "slides": [
+            {
+              "_key": "qa-hero-carousel-1-1",
+              "_type": "heroSlide",
+              "button": {
+                "_type": "button",
+                "text": "Zobacz produkty",
+                "url": {
+                  "_type": "customUrl",
+                  "href": "#",
+                  "internal": {
+                    "_ref": "products",
+                    "_type": "reference"
+                  },
+                  "openInNewTab": false,
+                  "type": "internal"
+                },
+                "variant": "secondary"
+              },
+              "description": [
+                {
+                  "_key": "qa-hero-carousel-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "2d9bbf64f293",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Oferujemy sprzęt audio klasy premium – urządzenia, które od lat wyznaczają standardy doskonałości. Poczuj brzmienie, które przeniesie Cię bliżej muzyki niż kiedykolwiek wcześniej."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "image": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-453f27f344f59f89b1343ddc206ad43a9928a687-1400x580-jpg",
+                  "_type": "reference"
+                },
+                "crop": {
+                  "_type": "sanity.imageCrop",
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0,
+                  "top": 0
+                },
+                "hotspot": {
+                  "_type": "sanity.imageHotspot",
+                  "height": 0.4381879561576516,
+                  "width": 1,
+                  "x": 0.5,
+                  "y": 0.4693174754546838
+                }
+              },
+              "title": [
+                {
+                  "_key": "qa-hero-carousel-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "ebda646bfeaf",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Odkryj audio, które zmienia sposób słuchania muzyki"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            },
+            {
+              "_key": "qa-hero-carousel-1-2",
+              "_type": "heroSlide",
+              "button": {
+                "_type": "button",
+                "text": "Zobacz produkty",
+                "url": {
+                  "_type": "customUrl",
+                  "href": "#",
+                  "internal": {
+                    "_ref": "products",
+                    "_type": "reference"
+                  },
+                  "openInNewTab": false,
+                  "type": "internal"
+                },
+                "variant": "secondary"
+              },
+              "description": [
+                {
+                  "_key": "qa-hero-carousel-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "873789ca6828",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "W naszej ofercie znajdziesz starannie wyselekcjonowane urządzenia audio klasy high-end. To sprzęt, który pozwoli Ci przeżyć muzykę bez kompromisów – z pełnią emocji i naturalnością brzmienia."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "image": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-c931a078298dcb81d49a0015454d3ef7784f4f91-1400x580-jpg",
+                  "_type": "reference"
+                }
+              },
+              "title": [
+                {
+                  "_key": "qa-hero-carousel-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "bc0eb10fe81b",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Audio dla koneserów dźwięku – poznaj brzmienie bez granic"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            },
+            {
+              "_key": "qa-hero-carousel-1-3",
+              "_type": "heroSlide",
+              "button": {
+                "_type": "button",
+                "text": "Zobacz produkty",
+                "url": {
+                  "_type": "customUrl",
+                  "href": "#",
+                  "internal": {
+                    "_ref": "products",
+                    "_type": "reference"
+                  },
+                  "openInNewTab": false,
+                  "type": "internal"
+                },
+                "variant": "secondary"
+              },
+              "description": [
+                {
+                  "_key": "qa-hero-carousel-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "4cac3427707d",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Na tej stronie znajdziesz wszystkie marki dostępne w naszej ofercie – od legendarnych konstruktorów wzmacniaczy i kolumn, przez specjalistów w dziedzinie przetworników DAC."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "image": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-aabc5fd7c5f92f991ff479352494364f72216c47-1400x580-jpg",
+                  "_type": "reference"
+                }
+              },
+              "title": [
+                {
+                  "_key": "qa-hero-carousel-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "3188038bc2db",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Sprzęt high-end renomowanych marek dla najbardziej wymagających "
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "_key": "qa-latest-publication-1",
+          "_type": "latestPublication",
+          "heading": [
+            {
+              "_key": "qa-latest-publication-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "100a453d7338",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Najnowsza publikacja"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "publication": {
+            "_ref": "review-3003",
+            "_type": "reference"
+          },
+          "selectionMode": "latest"
+        },
+        {
+          "_key": "qa-image-text-columns-1",
+          "_type": "imageTextColumns",
+          "button": {
+            "_type": "buttonWithNoVariant",
+            "text": "Sprawdź ofertę",
+            "url": {
+              "_type": "customUrl",
+              "href": "#",
+              "internal": {
+                "_ref": "products",
+                "_type": "reference"
+              },
+              "openInNewTab": false,
+              "type": "internal"
+            }
+          },
+          "content": [
+            {
+              "_key": "qa-image-text-columns-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "16b764930fc0",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Nasz serwis to połączenie wieloletniego doświadczenia, doskonałej znajomości urządzeń marek premium oraz dostępu do oryginalnych części i dokumentacji technicznej. Dzięki temu każda naprawa, konserwacja czy kalibracja realizowana jest z najwyższą precyzją i troską o detale."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "qa-image-text-columns-1-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "49a629d98f04",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Oferujemy szeroki zakres usług – od podstawowej diagnostyki i napraw gwarancyjnych, przez konserwację i czyszczenie, aż po aktualizacje oprogramowania, kalibrację urządzeń czy wymianę podzespołów."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "qa-image-text-columns-1-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "654bd6e3ead5",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Specjalizujemy się w serwisie urządzeń światowych producentów high-end audio i wideo. Obsługujemy wzmacniacze, kolumny głośnikowe, odtwarzacze, DAC-i, streamery, gramofony oraz akcesoria, które wymagają fachowej opieki i oryginalnych komponentów. Współpracujemy bezpośrednio z producentami, co daje pewność, że Twój sprzęt pozostaje w najlepszych rękach."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-image-text-columns-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "25635b6873f5",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Profesjonalny serwis sprzętu audio high-end – AUDIOFAST"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "image": {
+            "_type": "image",
+            "asset": {
+              "_ref": "image-17d92698815ebea5a3e29f12e213dcbe8e2b5e15-1002x650-webp",
+              "_type": "reference"
+            }
+          }
+        },
+        {
+          "_key": "qa-featured-publications-1",
+          "_type": "featuredPublications",
+          "heading": [
+            {
+              "_key": "qa-featured-publications-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "29b3f272d68a",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Polecane artykuły i recenzje"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "publications": [
+            {
+              "_key": "qa-featured-publications-1-1",
+              "_ref": "review-3001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-publications-1-2",
+              "_ref": "review-2998",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-publications-1-3",
+              "_ref": "review-2995",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-publications-1-4",
+              "_ref": "review-2867",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-publications-1-5",
+              "_ref": "review-2991",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-publications-1-6",
+              "_ref": "review-2989",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-publications-1-7",
+              "_ref": "review-2987",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-publications-1-8",
+              "_ref": "review-2951",
+              "_type": "reference"
+            }
+          ],
+          "selectionMode": "secondLatest"
+        },
+        {
+          "_key": "qa-featured-products-1",
+          "_type": "featuredProducts",
+          "bestsellers": [
+            {
+              "_key": "qa-featured-products-1-1",
+              "_ref": "product-1006",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-2",
+              "_ref": "product-512",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-3",
+              "_ref": "product-885",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-4",
+              "_ref": "product-622",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-5",
+              "_ref": "product-584",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-6",
+              "_ref": "product-866",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-7",
+              "_ref": "product-826",
+              "_type": "reference"
+            }
+          ],
+          "button": {
+            "_type": "button",
+            "text": "Sprawdź ofertę",
+            "url": {
+              "_type": "customUrl",
+              "href": "#",
+              "internal": {
+                "_ref": "products",
+                "_type": "reference"
+              },
+              "openInNewTab": false,
+              "type": "internal"
+            },
+            "variant": "primary"
+          },
+          "description": [
+            {
+              "_key": "qa-featured-products-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "f6279498f24d",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Odkryj sprzęt, z którym osiągniesz najwyższy poziom satysfakcji ze słuchania."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-featured-products-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "75b65a65aa04",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Najchętniej wybierane rozwiązania audio klasy high-end"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "newProducts": [
+            {
+              "_key": "qa-featured-products-1-1",
+              "_ref": "product-1005",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-2",
+              "_ref": "product-683",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-3",
+              "_ref": "product-242",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-4",
+              "_ref": "product-73",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-5",
+              "_ref": "product-688",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-featured-products-1-6",
+              "_ref": "product-1006",
+              "_type": "reference"
+            }
+          ],
+          "newProductsMode": "automatic"
+        },
+        {
+          "_type": "productsCarousel",
+          "_key": "qa-products-carousel-1",
+          "heading": [
+            {
+              "_key": "qa-products-carousel-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "75b65a65aa04",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Najchętniej wybierane rozwiązania audio klasy high-end"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "products": [
+            {
+              "_key": "qa-products-carousel-1-1",
+              "_ref": "product-1006",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-products-carousel-1-2",
+              "_ref": "product-512",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-products-carousel-1-3",
+              "_ref": "product-885",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-products-carousel-1-4",
+              "_ref": "product-622",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-products-carousel-1-5",
+              "_ref": "product-584",
+              "_type": "reference"
+            }
+          ]
+        },
+        {
+          "_key": "qa-brands-marquee-1",
+          "_type": "brandsMarquee",
+          "backgroundImage": {
+            "_type": "image",
+            "asset": {
+              "_ref": "image-0fb150e5a18cbdca9ae1d1d1b5fa22a014eaa0ec-843x843-webp",
+              "_type": "reference"
+            },
+            "crop": {
+              "_type": "sanity.imageCrop",
+              "bottom": 0,
+              "left": 0,
+              "right": 0,
+              "top": 0
+            },
+            "hotspot": {
+              "_type": "sanity.imageHotspot",
+              "height": 0.5249395279005755,
+              "width": 0.9625281508049045,
+              "x": 0.5,
+              "y": 0.5
+            }
+          },
+          "bottomBrands": [
+            {
+              "_key": "qa-brands-marquee-1-1",
+              "_ref": "gryphon-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-2",
+              "_ref": "audio-research-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-3",
+              "_ref": "primaluna-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-4",
+              "_ref": "usher-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-5",
+              "_ref": "bfad2cf6-37cc-4d0d-ab1d-71c298831e3d",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-6",
+              "_ref": "988e9213-ff50-4a8b-a87b-3e3478126485",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-7",
+              "_ref": "wilson-audio-brand-001",
+              "_type": "reference"
+            }
+          ],
+          "button": {
+            "_type": "buttonWithNoVariant",
+            "text": "Zobacz wszystkie marki",
+            "url": {
+              "_type": "customUrl",
+              "href": "#",
+              "internal": {
+                "_ref": "brands",
+                "_type": "reference"
+              },
+              "openInNewTab": false,
+              "type": "internal"
+            }
+          },
+          "description": [
+            {
+              "_key": "qa-brands-marquee-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "b08ccd063849",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Znajdziesz u nas marki, które od lat kształtują wyobrażenie o doskonałości brzmienia. To ikony hi-end audio, cenione za bezkompromisową jakość i niepowtarzalną sygnaturę dźwięku."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "qa-brands-marquee-1-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "b91689f30493",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Od subtelnych przetworników po majestatyczne systemy stereo, które zaczarują przestrzeń i przeniosą Cię w samo serce muzycznego doświadczenia!"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-brands-marquee-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "5fa0d2be9621",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Jakie marki oferujemy?"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "topBrands": [
+            {
+              "_key": "qa-brands-marquee-1-1",
+              "_ref": "c7f14a8e-dd41-4c93-86b1-2c6bc651afc8",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-2",
+              "_ref": "bfad2cf6-37cc-4d0d-ab1d-71c298831e3d",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-3",
+              "_ref": "primaluna-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-4",
+              "_ref": "usher-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-5",
+              "_ref": "wilson-audio-brand-001",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-6",
+              "_ref": "988e9213-ff50-4a8b-a87b-3e3478126485",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-brands-marquee-1-7",
+              "_ref": "dan-dagostino-brand-001",
+              "_type": "reference"
+            }
+          ]
+        },
+        {
+          "_key": "qa-brands-list-1",
+          "_type": "brandsList",
+          "brandsDisplayMode": "all",
+          "ctaText": [
+            {
+              "_key": "qa-brands-list-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a9e60e0cec38",
+                  "_type": "span",
+                  "marks": [
+                    "strong"
+                  ],
+                  "text": "Wybierz markę"
+                },
+                {
+                  "_key": "6f37c5639fbc",
+                  "_type": "span",
+                  "marks": [],
+                  "text": ", aby dowiedzieć się o niej więcej"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "description": [
+            {
+              "_key": "qa-brands-list-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "04fad059552c",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Współpracujemy z renomowanymi producentami audio, dzięki czemu mamy dostęp do dokumentacji technicznej i "
+                },
+                {
+                  "_key": "4aa45055a930",
+                  "_type": "span",
+                  "marks": [
+                    "strong"
+                  ],
+                  "text": "oryginalnych komponentów"
+                },
+                {
+                  "_key": "6244b584e34a",
+                  "_type": "span",
+                  "marks": [],
+                  "text": ". Z nami nie martwisz się o jakość serwisu – przywracamy urządzeniom pełnię możliwości, dbając o ich niezawodność i doskonałe brzmienie."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-brands-list-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "3c23d147352e",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Jakie marki serwisujemy?"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ]
+        },
+        {
+          "_key": "qa-brands-by-categories-section-1",
+          "_type": "brandsByCategoriesSection",
+          "button": {
+            "_type": "buttonWithNoVariant",
+            "text": "Skontaktuj się z nami",
+            "url": {
+              "_type": "customUrl",
+              "href": "#",
+              "internal": {
+                "_ref": "65468308-9e56-4e30-b4bd-9d51ff714ff9",
+                "_type": "reference"
+              },
+              "openInNewTab": false,
+              "type": "internal"
+            }
+          },
+          "description": [
+            {
+              "_key": "qa-brands-by-categories-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "ff182f8e3217",
+                  "_type": "span",
+                  "text": "Tworząc swój system, możesz mieć pewność, że niezależnie od kategorii wybierasz produkty "
+                },
+                {
+                  "_key": "f79ad580bb3e",
+                  "_type": "span",
+                  "marks": [
+                    "strong"
+                  ],
+                  "text": "światowych marek"
+                },
+                {
+                  "_key": "dd0452139eeb",
+                  "_type": "span",
+                  "text": ". To innowacyjność, precyzja wykonania i referencyjne parametry brzmienia w każdym produkcie!"
+                }
+              ],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-brands-by-categories-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "f17f757abfbf",
+                  "_type": "span",
+                  "text": "Sprawdź nasze produkty"
+                }
+              ],
+              "style": "normal"
+            }
+          ]
+        },
+        {
+          "_key": "qa-faq-section-1",
+          "_type": "faqSection",
+          "contactForm": {
+            "buttonText": "Wyślij wiadomość",
+            "formState": {
+              "error": {
+                "heading": [
+                  {
+                    "_key": "qa-faq-section-1-1",
+                    "_type": "block",
+                    "children": [
+                      {
+                        "_key": "b0c030ee3f460",
+                        "_type": "span",
+                        "marks": [],
+                        "text": "Ups… coś poszło nie tak. Spróbuj ponownie."
+                      }
+                    ],
+                    "markDefs": [],
+                    "style": "normal"
+                  }
+                ],
+                "paragraph": [
+                  {
+                    "_key": "qa-faq-section-1-1",
+                    "_type": "block",
+                    "children": [
+                      {
+                        "_key": "640c8ab70cba0",
+                        "_type": "span",
+                        "marks": [],
+                        "text": "Niestety nie udało się wysłać formularza. Mogło to być spowodowane chwilowym problemem technicznym lub brakiem połączenia z internetem."
+                      }
+                    ],
+                    "markDefs": [],
+                    "style": "normal"
+                  }
+                ],
+                "refreshButton": true,
+                "refreshButtonText": "Spróbuj ponownie",
+                "withIcon": true
+              },
+              "success": {
+                "heading": [
+                  {
+                    "_key": "qa-faq-section-1-1",
+                    "_type": "block",
+                    "children": [
+                      {
+                        "_key": "539e16d1343b0",
+                        "_type": "span",
+                        "marks": [],
+                        "text": "Dziękujemy za wysłanie nam wiadomości!"
+                      }
+                    ],
+                    "markDefs": [],
+                    "style": "normal"
+                  }
+                ],
+                "paragraph": [
+                  {
+                    "_key": "qa-faq-section-1-1",
+                    "_type": "block",
+                    "children": [
+                      {
+                        "_key": "b1c1d6105cb50",
+                        "_type": "span",
+                        "marks": [],
+                        "text": "Nasz zespół skontaktuje się z Tobą tak szybko, jak to możliwe."
+                      }
+                    ],
+                    "markDefs": [],
+                    "style": "normal"
+                  }
+                ],
+                "refreshButton": false,
+                "refreshButtonText": "Odśwież",
+                "withIcon": true
+              }
+            },
+            "heading": [
+              {
+                "_key": "qa-faq-section-1-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "initial-span-kxr1yejwk",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Zadaj nam pytanie"
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ]
+          },
+          "contactPeople": {
+            "contactPersons": [
+              {
+                "_key": "qa-faq-section-1-1",
+                "_ref": "1321b880-9a4e-4ea3-bd5e-f598e5dce8ce",
+                "_type": "reference"
+              },
+              {
+                "_key": "qa-faq-section-1-2",
+                "_ref": "e7689077-91d6-4f1e-b34c-3e84985a8968",
+                "_type": "reference"
+              }
+            ],
+            "heading": [
+              {
+                "_key": "qa-faq-section-1-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "initial-span-2xi36i9rm",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Jesteśmy do Twojej dyspozycji!"
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ]
+          },
+          "description": [
+            {
+              "_key": "qa-faq-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "a2f6172d958a",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Zebraliśmy odpowiedzi na pytania, które najczęściej słyszymy od naszych klientów — zarówno tych rozpoczynających swoją przygodę z high-end audio, jak i doświadczonych melomanów."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "displayMode": "both",
+          "faqList": [
+            {
+              "_key": "qa-faq-section-1-1",
+              "_ref": "0c2ca645-6b1e-41dc-bdeb-678b3abe78bc",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-faq-section-1-2",
+              "_ref": "6e318432-8c83-478b-bee0-b1ee648e532f",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-faq-section-1-3",
+              "_ref": "85c9cef8-8609-4406-aab2-368fc57f5a47",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-faq-section-1-4",
+              "_ref": "0d447ff5-3a93-4970-9797-186fa1af6d1a",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-faq-section-1-5",
+              "_ref": "17592c4a-7ceb-4756-8d33-5a4ff7d2a9a2",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-faq-section-1-6",
+              "_ref": "b1d26aa1-075d-4793-8925-4458a68f6247",
+              "_type": "reference"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-faq-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "c9a7f074393d",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Najczęściej zadawane pytania"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ]
+        },
+        {
+          "_key": "qa-contact-form-1",
+          "_type": "contactForm",
+          "accountList": [
+            {
+              "_key": "qa-contact-form-1-1",
+              "_type": "account",
+              "accountDetails": [
+                "Bieżący (PLN): 62 1140 2004 0000 3202 7801 9385",
+                "IBAN (EURO): PL39114020040000391206961199",
+                "IBAN (USD): PL82114020040000301224817402",
+                "IBAN (GBP): PL37114020040000391226667949",
+                "SWIFT: BREXPLPWMBK",
+                "mBank S.A., Skrytka pocztowa 2108, 90-959 Łódź 2, Polska."
+              ],
+              "heading": [
+                {
+                  "_key": "qa-contact-form-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "7fabbaa74eca",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Rachunki bankowe w mBank S.A."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            },
+            {
+              "_key": "qa-contact-form-1-2",
+              "_type": "account",
+              "accountDetails": [
+                "Bieżący (PLN): 62 1140 2004 0000 3202 7801 9385",
+                "IBAN (EURO): PL39114020040000391206961199",
+                "IBAN (USD): PL82114020040000301224817402",
+                "IBAN (GBP): PL37114020040000391226667949",
+                "SWIFT: BREXPLPWMBK",
+                "mBank S.A., Skrytka pocztowa 2108, 90-959 Łódź 2, Polska."
+              ],
+              "heading": [
+                {
+                  "_key": "qa-contact-form-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "7fabbaa74eca",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Rachunki bankowe w mBank S.A."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            }
+          ],
+          "contactPeople": {
+            "contactPersons": [
+              {
+                "_key": "qa-contact-form-1-1",
+                "_ref": "1321b880-9a4e-4ea3-bd5e-f598e5dce8ce",
+                "_type": "reference"
+              },
+              {
+                "_key": "qa-contact-form-1-2",
+                "_ref": "e7689077-91d6-4f1e-b34c-3e84985a8968",
+                "_type": "reference"
+              }
+            ],
+            "heading": [
+              {
+                "_key": "qa-contact-form-1-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "4ef6042e5485",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Jesteśmy do Twojej dyspozycji"
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ]
+          },
+          "description": [
+            {
+              "_key": "qa-contact-form-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "3fdb6a66eef1",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Masz problem ze swoim sprzętem audio? Wypełnij krótki formularz i opisz usterkę – nasz zespół "
+                },
+                {
+                  "_key": "1d00ea3c5816",
+                  "_type": "span",
+                  "marks": [
+                    "strong"
+                  ],
+                  "text": "skontaktuje się z Tobą najszybciej, jak to możliwe"
+                },
+                {
+                  "_key": "08860ff2c05f",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "formState": {
+            "error": {
+              "heading": [
+                {
+                  "_key": "qa-contact-form-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "b0c030ee3f460",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Ups… coś poszło nie tak. Spróbuj ponownie."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "paragraph": [
+                {
+                  "_key": "qa-contact-form-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "640c8ab70cba0",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Niestety nie udało się wysłać formularza. Mogło to być spowodowane chwilowym problemem technicznym lub brakiem połączenia z internetem."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "refreshButton": true,
+              "refreshButtonText": "Spróbuj ponownie",
+              "withIcon": true
+            },
+            "success": {
+              "heading": [
+                {
+                  "_key": "qa-contact-form-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "539e16d1343b0",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Dziękujemy za wysłanie nam wiadomości!"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "paragraph": [
+                {
+                  "_key": "qa-contact-form-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "b1c1d6105cb50",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Nasz zespół skontaktuje się z Tobą tak szybko, jak to możliwe."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "refreshButton": false,
+              "refreshButtonText": "Odśwież",
+              "withIcon": true
+            }
+          },
+          "heading": [
+            {
+              "_key": "qa-contact-form-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "5af7e2b3dc88",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Zgłoś serwis swojego sprzętu audio"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ]
+        },
+        {
+          "_key": "qa-contact-map-1",
+          "_type": "contactMap",
+          "heading": [
+            {
+              "_key": "qa-contact-map-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "c485083c861b",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "AUDIOFAST – czekamy na Ciebie"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "useCustomAddress": false
+        },
+        {
+          "_key": "qa-image-with-video-1",
+          "_type": "imageWithVideo",
+          "button": {
+            "_type": "button",
+            "text": "Sprawdź ofertę",
+            "url": {
+              "_type": "customUrl",
+              "href": "#",
+              "internal": {
+                "_ref": "products",
+                "_type": "reference"
+              },
+              "openInNewTab": false,
+              "type": "internal"
+            }
+          },
+          "description": [
+            {
+              "_key": "qa-image-with-video-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "12db8af06521",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Od "
+                },
+                {
+                  "_key": "8c4511748550",
+                  "_type": "span",
+                  "marks": [
+                    "strong"
+                  ],
+                  "text": "ponad 20"
+                },
+                {
+                  "_key": "830c4b2bff90",
+                  "_type": "span",
+                  "marks": [],
+                  "text": " lat zajmujemy się dostarczaniem systemów audio najwyższej klasy. Pomagamy tworzyć niepowtarzalne wrażenia muzyczne, które pozwalają w pełni odkryć emocje zawarte w nagraniu."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-image-with-video-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "61f1fa0dbb64",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "AUDIOFAST – dowiedz się o nas więcej"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "image": {
+            "_type": "image",
+            "asset": {
+              "_ref": "image-7c72951a07ea0a2bae9b6e8525bb06a4cd5ca0b9-2604x1440-webp",
+              "_type": "reference"
+            }
+          },
+          "youtubeId": "sOKvTB4suh8"
+        },
+        {
+          "_key": "qa-image-with-text-boxes-1",
+          "_type": "imageWithTextBoxes",
+          "boxes": [
+            {
+              "_key": "qa-image-with-text-boxes-1-1",
+              "_type": "textBox",
+              "description": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "37a1a617cb81",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Naszym celem nie jest szybka transakcja, lecz świadomy wybór klienta. Proponujemy rozwiązania dopasowane do indywidualnych potrzeb."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "cd59cb9723ac",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Doradztwo bez naciskania na sprzedaż"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-f66b5709782a7d7c857f58e50f77367635ef617f-25x25-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-image-with-text-boxes-1-2",
+              "_type": "textBox",
+              "description": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "12305ef98910",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Od 2003 roku pomagamy klientom tworzyć systemy audio, które zachwycają jakością brzmienia. Znamy rynek, technologie i zwracamy uwagę na niuanse, które robią różnicę w odsłuchu."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "c56bef757b03",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "22 lata doświadczenia"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-c16a26b5a0627a0ec663110982019e6d1d289a2a-25x25-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-image-with-text-boxes-1-3",
+              "_type": "textBox",
+              "description": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "936cfbaaa88c",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Oferujemy starannie sprawdzone urządzenia z drugiej ręki, które przeszły pełną kontrolę techniczną. To pewny i tańszy sposób, aby wejść w świat high-end audio."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "20092cc31dd5",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Certyfikowany sprzęt używany (CPO)"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-3ac71ae7c6c6e949aaebc60722a75397d8457113-25x25-svg",
+                  "_type": "reference"
+                }
+              }
+            },
+            {
+              "_key": "qa-image-with-text-boxes-1-4",
+              "_type": "textBox",
+              "description": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-4-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "920e6bd9ff20",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Zapewniamy pełne wsparcie posprzedażowe, zgodne ze standardami marek, które reprezentujemy."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-image-with-text-boxes-1-4-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "e752addb6df8",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Własny serwis autoryzowany i certyfikowany"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "icon": {
+                "_type": "image",
+                "asset": {
+                  "_ref": "image-7c4b8e67393fc4a134e5778d22b1d2db654e3e86-25x25-svg",
+                  "_type": "reference"
+                }
+              }
+            }
+          ],
+          "cta": {
+            "ctaButton": {
+              "_type": "buttonWithNoVariant",
+              "text": "Skontaktuj się z nami",
+              "url": {
+                "_type": "customUrl",
+                "internal": {
+                  "_ref": "65468308-9e56-4e30-b4bd-9d51ff714ff9",
+                  "_type": "reference"
+                },
+                "type": "internal"
+              }
+            },
+            "ctaParagraph": [
+              {
+                "_key": "qa-image-with-text-boxes-1-1",
+                "_type": "block",
+                "children": [
+                  {
+                    "_key": "5f76e2dff63c",
+                    "_type": "span",
+                    "marks": [],
+                    "text": "Chcesz stworzyć swój idealny system audio? Wspólnie zaprojektujemy brzmienie, które będzie skrojone dokładnie pod Ciebie."
+                  }
+                ],
+                "markDefs": [],
+                "style": "normal"
+              }
+            ],
+            "showCta": true
+          },
+          "heading": [
+            {
+              "_key": "qa-image-with-text-boxes-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "96d857b66f40",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Dlaczego warto wybrać AUDIOFAST?"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "image": {
+            "_type": "image",
+            "asset": {
+              "_ref": "image-2de3314bd4f6654426b5551a68baa1abf5d0891f-946x823-webp",
+              "_type": "reference"
+            }
+          }
+        },
+        {
+          "_key": "qa-blur-lines-text-image-1",
+          "_type": "blurLinesTextImage",
+          "description": [
+            {
+              "_key": "qa-blur-lines-text-image-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "6d7f62f21a1a",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "AUDIOFAST to przede wszystkim przestrzeń, w której dzielimy się "
+                },
+                {
+                  "_key": "9be4cbf351d7",
+                  "_type": "span",
+                  "marks": [
+                    "strong"
+                  ],
+                  "text": "wiedzą, pasją i miłością do muzyki"
+                },
+                {
+                  "_key": "2a18c36584ad",
+                  "_type": "span",
+                  "marks": [],
+                  "text": ". Nie chodzi tylko o sprzęt, ale o emocje, które rodzą się w chwili, gdy dźwięk staje się niezapomnianym doświadczeniem."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "qa-blur-lines-text-image-1-2",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "44d76d55b0cd",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Co nas wyróżnia?"
+                }
+              ],
+              "markDefs": [],
+              "style": "h3"
+            },
+            {
+              "_key": "qa-blur-lines-text-image-1-3",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "6821dd638a20",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Ponad 20 lat doświadczenia w branży high-end"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "qa-blur-lines-text-image-1-4",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "4385ff1830b9",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Ekskluzywna oferta światowych marek audio"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "qa-blur-lines-text-image-1-5",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "1f2312f3f6a2",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Indywidualne doradztwo i pełne wsparcie na każdym etapie"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            },
+            {
+              "_key": "qa-blur-lines-text-image-1-6",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "09845757b338",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Profesjonalny zespół, który dzieli się pasją i wiedzą"
+                }
+              ],
+              "level": 1,
+              "listItem": "bullet",
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-blur-lines-text-image-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "17436fb1c0ee",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Odkryj historię naszej marki"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "image": {
+            "_type": "image",
+            "asset": {
+              "_ref": "image-43c1157c7fa09005b152979f185431e322560193-1200x992-webp",
+              "_type": "reference"
+            }
+          }
+        },
+        {
+          "_key": "qa-gallery-section-1",
+          "_type": "gallerySection",
+          "description": [
+            {
+              "_key": "qa-gallery-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "5bd1bb10e355",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "W naszej galerii znajdziesz zdjęcia z realizacji, prezentacji oraz wydarzeń, które pokazują kulisy świata high-end audio."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-gallery-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "d9518cbd1efa",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Za kulisami doskonałego brzmienia – galeria"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "images": [
+            {
+              "_key": "qa-gallery-section-1-1",
+              "_type": "image",
+              "asset": {
+                "_ref": "image-a05e1b255285158a20bbc5c87ea4e7fe247ba6f5-843x843-webp",
+                "_type": "reference"
+              }
+            },
+            {
+              "_key": "qa-gallery-section-1-2",
+              "_type": "image",
+              "asset": {
+                "_ref": "image-0fb150e5a18cbdca9ae1d1d1b5fa22a014eaa0ec-843x843-webp",
+                "_type": "reference"
+              }
+            },
+            {
+              "_key": "qa-gallery-section-1-3",
+              "_type": "image",
+              "asset": {
+                "_ref": "image-0e1f2a68b7a0836d39eaec008ce4cfbfa5008667-843x474-webp",
+                "_type": "reference"
+              }
+            },
+            {
+              "_key": "qa-gallery-section-1-4",
+              "_type": "image",
+              "asset": {
+                "_ref": "image-e27b999ebf90722838c6db9435b7b50e2036d311-843x474-webp",
+                "_type": "reference"
+              }
+            },
+            {
+              "_key": "qa-gallery-section-1-5",
+              "_type": "image",
+              "asset": {
+                "_ref": "image-8c489e14a880fffbc44473bb1b482184f928763c-843x843-webp",
+                "_type": "reference"
+              }
+            },
+            {
+              "_key": "qa-gallery-section-1-6",
+              "_type": "image",
+              "asset": {
+                "_ref": "image-5ed2674369bbb1d0588ae352aa5518154466e5aa-844x843-webp",
+                "_type": "reference"
+              }
+            },
+            {
+              "_key": "qa-gallery-section-1-7",
+              "_type": "image",
+              "asset": {
+                "_ref": "image-fa159db2ae4c9bbd8a238e22429e0bbba57aade3-844x843-webp",
+                "_type": "reference"
+              }
+            }
+          ]
+        },
+        {
+          "_key": "qa-team-section-1",
+          "_type": "teamSection",
+          "ctaButton": {
+            "_type": "button",
+            "text": "Skontaktuj się z nami",
+            "url": {
+              "_type": "customUrl",
+              "href": "#",
+              "internal": {
+                "_ref": "65468308-9e56-4e30-b4bd-9d51ff714ff9",
+                "_type": "reference"
+              },
+              "openInNewTab": false,
+              "type": "internal"
+            }
+          },
+          "description": [
+            {
+              "_key": "qa-team-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "cf9ddac0ba8c",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Za jakością AUDIOFAST stoją ludzie – nasz zespół "
+                },
+                {
+                  "_key": "0268bb0e5a33",
+                  "_type": "span",
+                  "marks": [
+                    "strong"
+                  ],
+                  "text": "pasjonatów i specjalistów"
+                },
+                {
+                  "_key": "75dfac115649",
+                  "_type": "span",
+                  "marks": [],
+                  "text": " od high-end audio."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "heading": [
+            {
+              "_key": "qa-team-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "e5e43776976a",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Poznaj naszych ekspertów"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "secondaryDescription": [
+            {
+              "_key": "qa-team-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "32670be9f886",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Audiofast tworzą pasjonaci hi-end audio, którzy od lat oddają się muzyce z pełnym zaangażowaniem."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "secondaryHeading": [
+            {
+              "_key": "qa-team-section-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "8a06d3295377",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Poznaj nasz zespół"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "teamMembers": [
+            {
+              "_key": "qa-team-section-1-1",
+              "_ref": "e7689077-91d6-4f1e-b34c-3e84985a8968",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-team-section-1-2",
+              "_ref": "1321b880-9a4e-4ea3-bd5e-f598e5dce8ce",
+              "_type": "reference"
+            },
+            {
+              "_key": "qa-team-section-1-3",
+              "_ref": "3e21e512-1485-441f-8ab8-8e89f5a26289",
+              "_type": "reference"
+            }
+          ]
+        },
+        {
+          "_key": "qa-phone-image-cta-1",
+          "_type": "phoneImageCta",
+          "ctaButton": {
+            "_type": "buttonWithNoVariant",
+            "text": "Skontaktuj się z nami",
+            "url": {
+              "_type": "customUrl",
+              "href": "#",
+              "internal": {
+                "_ref": "65468308-9e56-4e30-b4bd-9d51ff714ff9",
+                "_type": "reference"
+              },
+              "openInNewTab": false,
+              "type": "internal"
+            }
+          },
+          "image": {
+            "_type": "image",
+            "asset": {
+              "_ref": "image-b22b112f8cb373fc2122dea6b3b6be52342169b3-1254x929-webp",
+              "_type": "reference"
+            }
+          },
+          "phoneNumber": "+48 693 901 183",
+          "primaryDescription": [
+            {
+              "_key": "qa-phone-image-cta-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "c59a13f56db6",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Za serwisem stoi Jarosław Orszański – założyciel AUDIOFAST i pasjonat high-end audio, obecny w branży od samego początku. Od lat osobiście czuwa nad jakością każdego urządzenia, które trafia do naszego serwisu"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "primaryHeading": [
+            {
+              "_key": "qa-phone-image-cta-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "4f8bec2175c8",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Kto serwisuje sprzęt w AUDIOFAST?"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "secondaryDescription": [
+            {
+              "_key": "qa-phone-image-cta-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "354f36676f8e",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Każdy serwis – od drobnej kalibracji po złożoną konserwację – realizowany jest z najwyższą dbałością o detale. Dzięki temu masz pewność, że Twój sprzęt wróci do Ciebie w idealnej formie, gotowy, aby ponownie dostarczać pełnię emocji i niezapomnianych muzycznych przeżyć."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "secondaryHeading": [
+            {
+              "_key": "qa-phone-image-cta-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "5fe5bfad9535",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Potrzebujesz pomocy? Odezwij się do nas"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ]
+        },
+        {
+          "_key": "qa-step-list-1",
+          "_type": "stepList",
+          "heading": [
+            {
+              "_key": "qa-step-list-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "c4b4cefd9907",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Jak wygląda proces serwisowy?"
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "paragraph": [
+            {
+              "_key": "qa-step-list-1-1",
+              "_type": "block",
+              "children": [
+                {
+                  "_key": "6cdfa95c8f18",
+                  "_type": "span",
+                  "marks": [],
+                  "text": "Działamy w przejrzysty sposób, aby maksymalnie ułatwić Ci współpracę z nami. Zobacz etapy naszego procesu."
+                }
+              ],
+              "markDefs": [],
+              "style": "normal"
+            }
+          ],
+          "steps": [
+            {
+              "_key": "qa-step-list-1-1",
+              "_type": "step",
+              "description": [
+                {
+                  "_key": "qa-step-list-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "44586e98f54d",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Wypełniasz formularz na naszej stronie lub kontaktujesz się z nami telefonicznie."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-step-list-1-1-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "0a6c4e7515fe",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Zgłoszenie sprzętu"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            },
+            {
+              "_key": "qa-step-list-1-2",
+              "_type": "step",
+              "description": [
+                {
+                  "_key": "qa-step-list-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "347461deecee",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Możesz dostarczyć sprzęt osobiście lub wysłać kurierem na adres naszego salonu."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-step-list-1-2-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "998f75f149ab",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Przekazanie urządzenia"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            },
+            {
+              "_key": "qa-step-list-1-3",
+              "_type": "step",
+              "description": [
+                {
+                  "_key": "qa-step-list-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "0df294b694b9",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Sprawdzamy usterkę, wspólnie omawiamy problem i przedstawiamy wycenę usługi."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-step-list-1-3-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "f12edb34e8db",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Diagnostyka i wycena"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            },
+            {
+              "_key": "qa-step-list-1-4",
+              "_type": "step",
+              "description": [
+                {
+                  "_key": "qa-step-list-1-4-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "2627bb7fa77f",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Po akceptacji przystępujemy do prac serwisowych."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-step-list-1-4-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "4061109ae883",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Naprawa lub konserwacja"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            },
+            {
+              "_key": "qa-step-list-1-5",
+              "_type": "step",
+              "description": [
+                {
+                  "_key": "qa-step-list-1-5-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "ea9db3e36447",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Sprzęt wraca do Ciebie – to czas na upewnienie się, że wszystko działa jak należy."
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ],
+              "heading": [
+                {
+                  "_key": "qa-step-list-1-5-1",
+                  "_type": "block",
+                  "children": [
+                    {
+                      "_key": "138fb98f7325",
+                      "_type": "span",
+                      "marks": [],
+                      "text": "Odbiór i testy"
+                    }
+                  ],
+                  "markDefs": [],
+                  "style": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

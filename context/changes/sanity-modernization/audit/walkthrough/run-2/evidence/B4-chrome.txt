@@ -1,0 +1,10 @@
+B4 — header nav and footer click-to-edit (lane L, Studio http://localhost:3333/presentation, iframe http://localhost:3000/kontakt/, 2026-10-28)
+Executor: Claude desktop built-in browser pane, Studio tab at 1440x900. Harness note: Presentation keeps the iframe at inline opacity 0 in this pane (its motion "active" animation does not complete), so a Studio-side style `iframe{opacity:1!important;transform:none!important}` was injected to see the iframe; clicks reach the iframe either way.
+
+1. hover + click the header nav "Produkty" overlay -> Studio URL
+   /presentation/navbar/navbar/buttons[_key=="b12ed8623c8deddc26eb320389731b08"]?preview=http://localhost:3000/kontakt/?sanity-preview-perspective=drafts
+   document.title "Nawigacja | Audiofast Studio"
+2. scroll the iframe to the footer, hover + click "O nas" -> Studio URL
+   /presentation/footer/footer/links[_key=="19c76b654a22b6bcc839316e812b9684"]?preview=…
+   document.title "Stopka | Audiofast Studio"
+Verdict: PASS (pane documents navbar, then footer).

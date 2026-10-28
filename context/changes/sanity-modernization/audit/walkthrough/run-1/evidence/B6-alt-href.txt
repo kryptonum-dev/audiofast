@@ -1,0 +1,2 @@
+QA /qa-presentation/ draft tab
+{"imgAlt":155,"altHits":0,"aHref":232,"hrefHits":0}

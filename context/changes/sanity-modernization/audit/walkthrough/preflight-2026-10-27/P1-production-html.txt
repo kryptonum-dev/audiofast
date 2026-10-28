@@ -1,0 +1,7 @@
+# P1 probe 2026-10-27T11:44:32Z against https://audiofast.pl
+/ status=200 data-sanity=0
+/o-nas/ status=200 data-sanity=0
+/qa-presentation/ status=200 data-sanity=0
+qa robots:
+<meta name="robots" content="noindex, nofollow"/>
+sitemap qa-presentation count: 0

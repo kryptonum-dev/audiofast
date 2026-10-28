@@ -1,0 +1,5 @@
+QA draft tab, unset steps[qa-step-list-1-1].heading, wait 75 s:
+D7-clear   {"transactionId":"olGAgOM7pKeK5Hk1St6T4q","results":[{"id":"drafts.qa-presentation","operation":"update"}]}
+D7   {"items":5,"firstText":"Wypełniasz formularz na naszej stronie lub kontaktujesz się z nami telefonicznie","emptyHeadings":0,"headingStillThere":false}
+after reload: D-after-reload   {"descPresent":false,"emptyP":0,"stepHeading":false,"emptyHeadings":0}
+Restored after the run.

@@ -1,0 +1,10 @@
+# Why the QA fixture id is `qa-presentation`, not `page.qa-presentation` (2026-10-27)
+
+11:37Z  seeded `page.qa-presentation` (published, tx olGAgOM7pKeK5Hk1Sp25xc)
+11:39Z  production /qa-presentation/ cached as HTTP 404 ("Strony nie znaleziono", x-vercel-cache: HIT)
+probe   unauthenticated CDN read, perspective published:
+        *[_type == "page" && slug.current == "/qa-presentation/"][0]{_id}  -> null, syncTags ["s1:dIv7yQ"]
+cause   ids containing "." are not publicly readable; the web's published reads use the unauthenticated API CDN
+fix     re-seeded as `qa-presentation` (tx 6LbxA4c5p2VL183Rwcp8pK), deleted `page.qa-presentation` (dry run first)
+11:44Z  production /qa-presentation/ -> HTTP 200, x-vercel-cache: REVALIDATED
+        (the cached 404 carried the query's s1: sync tag; the publish of the new id invalidated it within seconds)

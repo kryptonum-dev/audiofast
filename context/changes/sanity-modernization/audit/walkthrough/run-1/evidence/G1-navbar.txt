@@ -1,0 +1,3 @@
+Draft tab /kontakt/ (no reload; performance navigation entries = 1). patch drafts.navbar buttons[b12ed862…].text = ProduktyG1LIVE, wait 20 s:
+G1-mutate   {"transactionId":"SuuhvLsVVjqUvYUiGCWNSj","results":[{"id":"drafts.navbar","operation":"update"}]}
+G1   {"headerLive":true,"navigations":1}

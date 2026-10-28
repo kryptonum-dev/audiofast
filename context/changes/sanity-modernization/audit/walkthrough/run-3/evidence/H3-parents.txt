@@ -1,0 +1,17 @@
+H3 — parent-location URLs vs the pages (lane L, local Studio sanity dev at e5bdeb2f, web next dev :3000, 2026-10-28)
+Studio: navigate /presentation/<type>/<id>?preview=<own URL>, click "Used on N pages", read the panel (javascript_tool).
+Web: curl -s http://localhost:3000<url> (published), count a[href="<document URL>"].
+
+product-130 "Goldenear Technology Triton Two+" — "Used on 4 pages":
+  Goldenear Technology Triton Two+      /produkty/triton-two/                    200, own page ("Triton Two+" x42)          OK
+  Produkty — strona 23                  /produkty/?page=23                       200, a[href="/produkty/triton-two/"] 2      OK
+  Głośniki podłogowe                    /produkty/kategoria/glosniki-podlogowe/  200, a[href="/produkty/triton-two/"] 2      OK
+  Goldenear Technology — strona 4       /marki/goldenear/?page=4                 200, a[href="/produkty/triton-two/"] 2      OK
+  (run 2 listed /produkty/?page=7 and /marki/goldenear/ — both wrong; fixed in e5bdeb2)
+
+blog-article 1f63efc2-5759-48c9-a735-b446a956ac62 — "Used on 3 pages":
+  dCS Bartók i Rossini z firmware 3.0 …  /blog/dcs-bartok-i-rossini-z-firmware-30-nowe-mozliwosci-brzmienia-i-obsluga-dsdx4/  200, <title>dCS Bartók i Rossini – aktualizacja firmware 3.0</title>  OK
+  Blog                                   /blog/                    200, 1 link   OK
+  Nowości                                /blog/kategoria/nowosci/  200, 1 link   OK
+
+Verdict: PASS (every listed URL renders that document).

@@ -1,0 +1,151 @@
+{
+ "frozenAt": "2026-10-28T06:31:48.320Z",
+ "lane": "L",
+ "head": "62d15b438e45b0cbfe7d56080140e0817221204c (web, G3 fix) / Studio HMR at e5bdeb2f after the H3 fix",
+ "studio": "http://localhost:3333 (sanity dev started by the orchestrator; Oliwier signed in)",
+ "web": "http://localhost:3000 (next dev started by the orchestrator via preview_start)",
+ "browser": "Claude desktop built-in browser pane (Chromium); headless Playwright (repo @playwright/test) for draft-tab DOM probes",
+ "versions": {
+  "next": "16.4.3",
+  "next-sanity": "^13.4",
+  "sanity": "^6.20"
+ },
+ "tokens": {
+  "SANITY_AUTH_TOKEN": "present",
+  "SANITY_API_READ_TOKEN": "present"
+ },
+ "presentationEnabledInDeployedStudio": false,
+ "ids": [
+  "qa-presentation",
+  "homePage",
+  "navbar",
+  "footer",
+  "settings",
+  "product-130",
+  "440dafbd-9f7d-4f29-a290-6fd01964378c",
+  "1f63efc2-5759-48c9-a735-b446a956ac62",
+  "01618d8a-572e-4092-b897-55a6ca319d77",
+  "1e0f5761-34d3-dfc5-aff7-9547062b1742",
+  "0c2ca645-6b1e-41dc-bdeb-678b3abe78bc",
+  "2e39534e-f745-8f2f-9ed8-9c20744bfef4",
+  "0d447ff5-3a93-4970-9797-186fa1af6d1a",
+  "17592c4a-7ceb-4756-8d33-5a4ff7d2a9a2",
+  "6e318432-8c83-478b-bee0-b1ee648e532f",
+  "85c9cef8-8609-4406-aab2-368fc57f5a47",
+  "b1d26aa1-075d-4793-8925-4458a68f6247",
+  "427e2d0b-6fbf-41ca-a021-1de724cae960"
+ ],
+ "fixtureDrafts": [],
+ "pendingDraftCount": 176,
+ "revs": [
+  {
+   "_id": "01618d8a-572e-4092-b897-55a6ca319d77",
+   "_rev": "mP75QonLwGFvqzIo5VDTPj",
+   "_type": "review",
+   "_updatedAt": "2026-09-09T07:55:57Z"
+  },
+  {
+   "_id": "0c2ca645-6b1e-41dc-bdeb-678b3abe78bc",
+   "_rev": "QX7MXRkJXxZXLDPNds2X4o",
+   "_type": "faq",
+   "_updatedAt": "2026-01-19T14:37:31Z"
+  },
+  {
+   "_id": "0d447ff5-3a93-4970-9797-186fa1af6d1a",
+   "_rev": "EvGQ6sd56grSJFi2FfA74Y",
+   "_type": "faq",
+   "_updatedAt": "2026-01-06T14:04:51Z"
+  },
+  {
+   "_id": "17592c4a-7ceb-4756-8d33-5a4ff7d2a9a2",
+   "_rev": "EvGQ6sd56grSJFi2FfAPj6",
+   "_type": "faq",
+   "_updatedAt": "2026-01-06T14:06:34Z"
+  },
+  {
+   "_id": "1e0f5761-34d3-dfc5-aff7-9547062b1742",
+   "_rev": "XNQh23oop7n7SfU9ADm7fi",
+   "_type": "productCategorySub",
+   "_updatedAt": "2026-02-20T07:49:03Z"
+  },
+  {
+   "_id": "1f63efc2-5759-48c9-a735-b446a956ac62",
+   "_rev": "runUBEz4s7d1MPyK8thBWK",
+   "_type": "blog-article",
+   "_updatedAt": "2026-10-15T10:40:20Z"
+  },
+  {
+   "_id": "2e39534e-f745-8f2f-9ed8-9c20744bfef4",
+   "_rev": "9VPhhnugJeDadNDy1DM0ag",
+   "_type": "store",
+   "_updatedAt": "2025-11-25T06:57:22Z"
+  },
+  {
+   "_id": "427e2d0b-6fbf-41ca-a021-1de724cae960",
+   "_rev": "T3rRAhXlRSZcnoSVfDcGuI",
+   "_type": "reviewAuthor",
+   "_updatedAt": "2026-02-21T08:30:40Z"
+  },
+  {
+   "_id": "440dafbd-9f7d-4f29-a290-6fd01964378c",
+   "_rev": "5wuN3TqTIFgKliUjbNAUsk",
+   "_type": "brand",
+   "_updatedAt": "2026-09-01T18:44:24Z"
+  },
+  {
+   "_id": "6e318432-8c83-478b-bee0-b1ee648e532f",
+   "_rev": "SppSr2DbnQ5nZJYIqy3RpE",
+   "_type": "faq",
+   "_updatedAt": "2026-01-06T14:09:26Z"
+  },
+  {
+   "_id": "85c9cef8-8609-4406-aab2-368fc57f5a47",
+   "_rev": "SppSr2DbnQ5nZJYIqy3BNw",
+   "_type": "faq",
+   "_updatedAt": "2026-01-06T14:05:58Z"
+  },
+  {
+   "_id": "b1d26aa1-075d-4793-8925-4458a68f6247",
+   "_rev": "5v8OuqFn5O4X8PYE57cXvA",
+   "_type": "faq",
+   "_updatedAt": "2025-10-06T13:27:45Z"
+  },
+  {
+   "_id": "footer",
+   "_rev": "GQ8uPE162k1OK1zMbvpMxq",
+   "_type": "footer",
+   "_updatedAt": "2025-12-16T05:56:12Z"
+  },
+  {
+   "_id": "homePage",
+   "_rev": "p5zN8tc5qJzIMnoOFEoYYu",
+   "_type": "homePage",
+   "_updatedAt": "2026-09-01T18:51:25Z"
+  },
+  {
+   "_id": "navbar",
+   "_rev": "f0Su6FTlHvSQMSplV0OB4o",
+   "_type": "navbar",
+   "_updatedAt": "2026-06-01T14:02:07Z"
+  },
+  {
+   "_id": "product-130",
+   "_rev": "nuGTdZLrlZy0BbgxbO6zR0",
+   "_type": "product",
+   "_updatedAt": "2026-09-25T05:45:11Z"
+  },
+  {
+   "_id": "qa-presentation",
+   "_rev": "6LbxA4c5p2VL183Rwcp8pK",
+   "_type": "page",
+   "_updatedAt": "2026-10-27T11:44:00Z"
+  },
+  {
+   "_id": "settings",
+   "_rev": "6LbxA4c5p2VL183Rwbj4AY",
+   "_type": "settings",
+   "_updatedAt": "2026-10-27T06:50:50Z"
+  }
+ ],
+ "shareAccess": 1
+}

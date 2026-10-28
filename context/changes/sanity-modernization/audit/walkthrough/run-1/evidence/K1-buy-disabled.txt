@@ -1,0 +1,3 @@
+product-130 (triton-two) is not sellable online (isSellableOnline false: no buy button), so K1 uses the sellable product 121c63c8-… /produkty/nas/ (read-only observation).
+draft: {"buttons":[{"disabled":true,"label":"","labelHit":false}],"note":true}
+published: {"buttons":[{"disabled":false,"label":"","labelHit":false}],"note":false}

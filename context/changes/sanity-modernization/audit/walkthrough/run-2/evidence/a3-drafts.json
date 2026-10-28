@@ -1,0 +1,1 @@
+{"session":"draft","perspective":"drafts","enablePath":"/qa-presentation/","steps":[{"goto":"/qa-presentation/","settle":40000},{"name":"token","eval":"({token: document.body.innerText.includes('QA11R2A2'), dataSanity: document.querySelectorAll('[data-sanity]').length})"},{"name":"cookies","cookies":true}]}

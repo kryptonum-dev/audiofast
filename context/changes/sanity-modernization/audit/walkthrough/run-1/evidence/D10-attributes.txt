@@ -1,0 +1,62 @@
+{
+ "qa": {
+  "url": "/qa-presentation/",
+  "title": "QA Presentation — strona testowa audytu",
+  "dataSanityCount": 72,
+  "attrFindings": [],
+  "attrFindingCount": 0,
+  "headFindings": 0,
+  "overlaySample": [
+   "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+   "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+   "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+  ],
+  "stegaReports": null,
+  "stegaReportCount": null,
+  "cookieNames": [
+   "__prerender_bypass",
+   "sanity-preview-perspective"
+  ],
+  "previewBar": true
+ },
+ "product": {
+  "url": "/produkty/triton-two/",
+  "title": "Goldenear Technology Triton Two+",
+  "dataSanityCount": 52,
+  "attrFindings": [],
+  "attrFindingCount": 0,
+  "headFindings": 0,
+  "overlaySample": [
+   "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+   "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+   "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+  ],
+  "stegaReports": null,
+  "stegaReportCount": null,
+  "cookieNames": [
+   "__prerender_bypass",
+   "sanity-preview-perspective"
+  ],
+  "previewBar": true
+ },
+ "blog": {
+  "url": "/blog/dcs-bartok-i-rossini-z-firmware-30-nowe-mozliwosci-brzmienia-i-obsluga-dsdx4/",
+  "title": "dCS Bartók i Rossini – aktualizacja firmware 3.0",
+  "dataSanityCount": 16,
+  "attrFindings": [],
+  "attrFindingCount": 0,
+  "headFindings": 0,
+  "overlaySample": [
+   "id=navbar;type=navbar;path=buttons;base=https%3A%2F%2Faudiofast.sanity.studio",
+   "id=navbar;type=navbar;path=buttons:b12ed8623c8deddc26eb320389731b08;base=https%3A%2F%2Faudiofast.sanity.studio",
+   "id=navbar;type=navbar;path=buttons:05f9932ad58f2aff1c7399031d703bd1;base=https%3A%2F%2Faudiofast.sanity.studio"
+  ],
+  "stegaReports": null,
+  "stegaReportCount": null,
+  "cookieNames": [
+   "__prerender_bypass",
+   "sanity-preview-perspective"
+  ],
+  "previewBar": true
+ }
+}
