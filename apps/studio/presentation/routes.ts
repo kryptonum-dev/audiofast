@@ -232,14 +232,15 @@ const PRODUCT_VISIBLE = 'isArchived != true && brand->doNotShowBrand != true';
  */
 export const PARENT_LOCATIONS: Record<string, ParentLocation[]> = {
   product: [
-    // app/produkty/(listing)/page.tsx — default sort `orderRank`.
+    // app/produkty/(listing)/page.tsx — default sort `priceAsc`.
     listing('Produkty', '/produkty/', undefined, { paginated: true }),
     // app/produkty/(listing)/kategoria/[category]/page.tsx lists a product in
-    // every category it carries.
+    // every category it carries (paginated: `pagination.ts` subLists).
     computed(
       `select(${PRODUCT_VISIBLE} => categories[]->{"title": coalesce(name, "Kategoria produktów"), "href": "/produkty" + slug.current})`,
     ),
-    // app/marki/[slug]/page.tsx — the brand's own product grid.
+    // app/marki/[slug]/page.tsx — the brand's own product grid (paginated:
+    // `pagination.ts` subLists).
     computed(
       `select(${PRODUCT_VISIBLE} => [{"title": coalesce(brand->name, "Marka"), "href": brand->slug.current}])`,
     ),

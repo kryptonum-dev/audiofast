@@ -90,7 +90,8 @@ describe('routed locations, evaluated', () => {
   });
 
   test('a product on the second listing page points at ?page=2', async () => {
-    // 13 fixture products in orderRank order: index 12 sits on page 2.
+    // 13+ fixture products in price order (no prices: ties keep dataset
+    // order): index 12 sits on page 2.
     const state = await routed('product', 'product.12');
     expect(hrefs(state)).toContain('/produkty/?page=2');
     expect(hrefs(state)).not.toContain('/produkty/');
@@ -98,7 +99,8 @@ describe('routed locations, evaluated', () => {
 
   test('a product in two categories lists both', async () => {
     const state = await routed('product', 'product.two-cats');
-    expect(hrefs(state)).toEqual(
+    // Each category row is paged on its own (`?page=N` dropped here).
+    expect(hrefs(state).map((href) => href.split('?')[0])).toEqual(
       expect.arrayContaining([
         '/produkty/kategoria/przetworniki/',
         '/produkty/kategoria/wzmacniacze/',
@@ -260,9 +262,8 @@ describe('the resolver itself', () => {
       locations: [{ title: 'Produkty', href: '/produkty/' }],
       parentPagination: {
         id: 'x',
-        ids: ['a', 'x'],
-        href: '/produkty/',
         pageSize: 1,
+        lists: [{ href: '/produkty/', ids: ['a', 'x'] }],
       },
     });
     const values: unknown[] = [];

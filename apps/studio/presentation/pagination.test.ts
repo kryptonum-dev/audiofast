@@ -13,9 +13,12 @@ import {
   CPO_LISTING_FILTER,
   LISTING_PAGE_SIZE,
   listingPageHref,
+  NEWEST_ORDER,
   PAGINATED_PARENTS,
+  parentPaginationProjection,
   type ParentPaginationState,
   PRODUCT_LISTING_FILTER,
+  PRODUCT_PRICE_ASC_ORDER,
   resolvePaginatedParent,
 } from './pagination';
 import { PARENT_LOCATIONS } from './routes';
@@ -28,11 +31,15 @@ function state(index: number, size: number): ParentPaginationState {
     ],
     parentPagination: {
       id: 'target',
-      ids: Array.from({ length: Math.max(index + 1, 0) }, (_, i) =>
-        i === index ? 'target' : `item-${i}`,
-      ),
-      href: '/produkty/',
       pageSize: size,
+      lists: [
+        {
+          href: '/produkty/',
+          ids: Array.from({ length: Math.max(index + 1, 0) }, (_, i) =>
+            i === index ? 'target' : `item-${i}`,
+          ),
+        },
+      ],
     },
   };
 }
@@ -60,6 +67,54 @@ describe('paginated parent locations', () => {
     expect(resolvePaginatedParent(draft)).not.toHaveProperty(
       'parentPagination',
     );
+  });
+
+  test('each listing row is paged by its own list; rows without a list stay', () => {
+    const multi: ParentPaginationState = {
+      locations: [
+        { title: 'Own', href: '/own/' },
+        { title: 'Produkty', href: '/produkty/' },
+        { title: 'Głośniki', href: '/produkty/kategoria/glosniki/' },
+        { title: 'Marka', href: '/marki/x/' },
+        { title: 'Archiwum', href: '/produkty/archiwalne/' },
+        { title: 'Ukryta', href: '/produkty/kategoria/ukryta/' },
+      ],
+      parentPagination: {
+        id: 'drafts.t',
+        pageSize: 12,
+        lists: [
+          { href: '/produkty/', ids: [...Array(271).fill('x'), 't'] },
+          { href: '/produkty/kategoria/glosniki/', ids: ['a', 't'] },
+          { href: '/marki/x/', ids: [...Array(38).fill('x'), 't'] },
+          { href: '/produkty/kategoria/ukryta/', ids: ['a'] },
+          { href: null, ids: null },
+        ],
+      },
+    };
+    expect(resolvePaginatedParent(multi)?.locations).toEqual([
+      { title: 'Own', href: '/own/' },
+      { title: 'Produkty — strona 23', href: '/produkty/?page=23' },
+      { title: 'Głośniki', href: '/produkty/kategoria/glosniki/' },
+      { title: 'Marka — strona 4', href: '/marki/x/?page=4' },
+      { title: 'Archiwum', href: '/produkty/archiwalne/' },
+    ]);
+  });
+
+  test('sub-listings use the category/brand filters and their page sorts', () => {
+    const product = parentPaginationProjection(PAGINATED_PARENTS.product!);
+    expect(product).toContain(
+      `^.slug.current in denormCategorySlugs] | order(${PRODUCT_PRICE_ASC_ORDER})`,
+    );
+    expect(product).toContain(
+      `denormBrandSlug == ^.denormBrandSlug] | order(${NEWEST_ORDER})`,
+    );
+    const blog = parentPaginationProjection(PAGINATED_PARENTS['blog-article']!);
+    expect(blog).toContain(
+      `category._ref == ^.category._ref] | order(${NEWEST_ORDER})`,
+    );
+    expect(
+      parentPaginationProjection(PAGINATED_PARENTS.cpoProduct!),
+    ).not.toContain('] + ');
   });
 
   test('every paginated parent has its literal row in PARENT_LOCATIONS', () => {
@@ -150,7 +205,10 @@ describe('source parity with the web listings', () => {
       `queryBlogArticlesNewest = defineQuery(\n  blogArticlesFragment('${PAGINATED_PARENTS['blog-article']!.order}'),`,
     );
     expect(QUERY_SOURCE).toContain(
-      `queryProductsListingOrderRank = defineQuery(\n  productsListingFragment('${PAGINATED_PARENTS.product!.order}'),`,
+      `queryProductsListingPriceAsc = defineQuery(\n  productsListingFragment('${PAGINATED_PARENTS.product!.order}'),`,
+    );
+    expect(QUERY_SOURCE).toContain(
+      `queryProductsListingNewest = defineQuery(\n  productsListingFragment('${NEWEST_ORDER}'),`,
     );
     expect(QUERY_SOURCE).toContain(
       `queryCpoProductsListingNewest = defineQuery(\n  cpoListingFragment('${PAGINATED_PARENTS.cpoProduct!.order}'),`,
@@ -158,8 +216,15 @@ describe('source parity with the web listings', () => {
     expect(web('components/blog/BlogListing/index.tsx')).toContain(
       "getBlogArticlesQuery('newest')",
     );
-    expect(web('components/products/ProductsListing/index.tsx')).toContain(
-      "defaultSortBy = 'orderRank'",
+    // The pages override the component default (`orderRank`).
+    expect(web('app/produkty/(listing)/page.tsx')).toContain(
+      'defaultSortBy="priceAsc"',
+    );
+    expect(
+      web('app/produkty/(listing)/kategoria/[category]/page.tsx'),
+    ).toContain('defaultSortBy="priceAsc"');
+    expect(web('app/marki/[slug]/page.tsx')).toContain(
+      'defaultSortBy="newest"',
     );
     expect(
       web(
