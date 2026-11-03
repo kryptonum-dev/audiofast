@@ -90,8 +90,9 @@ export const PAGINATED_PARENTS: Record<string, PaginatedParent> = {
     listenTypes: ['product', 'brand'],
     // app/produkty/(listing)/kategoria/[category]/page.tsx (`$category in
     // denormCategorySlugs`, priceAsc) and app/marki/[slug]/page.tsx
-    // (`denormBrandSlug in $brands`, newest).
-    subLists: `coalesce(categories[]->{"href": "/produkty" + slug.current, "ids": ${listIds(`${PRODUCT_LISTING_FILTER} && ^.slug.current in denormCategorySlugs`, PRODUCT_PRICE_ASC_ORDER)}}, []) + select(defined(brand->slug.current) => [{"href": brand->slug.current, "ids": ${listIds(`${PRODUCT_LISTING_FILTER} && denormBrandSlug == ^.denormBrandSlug`, NEWEST_ORDER)}}], [])`,
+    // (`denormBrandSlug in $brands`, newest). An empty or dangling category
+    // reference dereferences to null; `[defined(href)]` drops it.
+    subLists: `coalesce((categories[]->{"href": "/produkty" + slug.current, "ids": ${listIds(`${PRODUCT_LISTING_FILTER} && ^.slug.current in denormCategorySlugs`, PRODUCT_PRICE_ASC_ORDER)}})[defined(href)], []) +select(defined(brand->slug.current) => [{"href": brand->slug.current, "ids": ${listIds(`${PRODUCT_LISTING_FILTER} && denormBrandSlug == ^.denormBrandSlug`, NEWEST_ORDER)}}], [])`,
   },
   cpoProduct: {
     filter: CPO_LISTING_FILTER,
@@ -124,7 +125,7 @@ export type ParentPaginationState = DocumentLocationsState & {
   parentPagination?: {
     id: string;
     pageSize: number;
-    lists: PaginatedList[] | null;
+    lists: (PaginatedList | null)[] | null;
   } | null;
 };
 
@@ -147,7 +148,7 @@ export function resolvePaginatedParent(
   return {
     ...result,
     locations: result.locations?.flatMap((location) => {
-      const list = parent.lists?.find((entry) => entry.href === location.href);
+      const list = parent.lists?.find((entry) => entry?.href === location.href);
       if (!list) return [location];
       const index = (list.ids ?? []).findIndex(
         (id) => publishedId(id) === target,

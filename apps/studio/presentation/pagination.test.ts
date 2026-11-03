@@ -100,6 +100,21 @@ describe('paginated parent locations', () => {
     ]);
   });
 
+  test('a null list entry (empty category reference) does not throw', () => {
+    const empty = state(12, 12);
+    empty.parentPagination!.lists = [
+      null,
+      ...empty.parentPagination!.lists!,
+    ];
+    expect(resolvePaginatedParent(empty)?.locations).toEqual([
+      { title: 'Own', href: '/own/' },
+      { title: 'Produkty — strona 2', href: '/produkty/?page=2' },
+    ]);
+    expect(parentPaginationProjection(PAGINATED_PARENTS.product!)).toContain(
+      '})[defined(href)], [])',
+    );
+  });
+
   test('sub-listings use the category/brand filters and their page sorts', () => {
     const product = parentPaginationProjection(PAGINATED_PARENTS.product!);
     expect(product).toContain(
