@@ -23,7 +23,7 @@ The website serves as their digital storefront: a product catalog, brand showcas
 | **Analytics**       | Google Tag Manager + Meta Pixel (dual tracking)          |
 | **Maps**            | Leaflet (react-leaflet) for store locators               |
 | **Deployment**      | Vercel (web), Sanity hosting (studio)                    |
-| **CI/CD**           | GitHub Actions (Sanity deploy), Vercel (web auto-deploy) |
+| **CI/CD**           | Vercel (web auto-deploy); studio deployed manually       |
 
 ---
 
